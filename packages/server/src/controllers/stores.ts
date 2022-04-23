@@ -16,7 +16,8 @@ import type {
     SerializedStoreInfo,
     SerializedStoreItem,
     StoreData,
-    StoreItem
+    StoreItem,
+    RawStore
 } from '@kaetram/common/types/stores';
 
 interface StoreInfo {
@@ -194,12 +195,18 @@ export default class Stores {
 
         itemToAdd.count = count;
 
-        // Decrement the item count by the amount we are buying.
-        item.count -= count;
-
         // Add the item to the player's inventory.
         if (!player.inventory.add(itemToAdd))
             return player.notify(`You don't have enough inventory space to purchase this item.`);
+
+        // Decrement the item count by the amount we are buying.
+        item.count -= count;
+
+        // Remove item from store if it is out of stock and not original to the store.
+        if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
+            store.items = _.filter(store.items, (storeItem) => {
+                return storeItem.key !== itemKey;
+            });
 
         player.inventory.remove(currency, item.price * count);
 
@@ -261,13 +268,15 @@ export default class Stores {
         count = 1,
         index: number
     ): void {
-        if (!this.verifyStore(player, storeKey) || !index) return;
+        if (!this.verifyStore(player, storeKey) || isNaN(index)) return;
 
         let store = this.stores[storeKey],
             item = _.find(store.items, { key: itemKey });
 
         // Check if item exists
         if (!item) item = player.inventory.getItem(player.inventory.get(index));
+
+        if (item.key === store.currency) return player.notify(`You cannot sell this item.`);
 
         if (item.key !== itemKey)
             return log.warning(`[${player.username}] Invalid item index selection.`);
@@ -366,6 +375,24 @@ export default class Stores {
 
     public getCurrency(key: string, count: number): Item {
         return new Item(key, -1, -1, false, count);
+    }
+
+    /**
+     * Checks if the item is original stock of the store by comparing the
+     * item's key against the store's JSON data. This is used to remove
+     * items when they're fully bought out if they're not part of the original stock.
+     * @param storeKey The store we are checking the item for.
+     * @param itemKey The item we are checking if it's in the original stock.
+     * @returns Whether an item is part of the original JSON data or not.
+     */
+
+    public isOriginalItem(storeKey: string, itemKey: string): boolean {
+        let store = (storeData as RawStore)[storeKey];
+
+        if (!store) return false;
+
+        // Return if the itemKey exists in the store's original stock.
+        return !_.some(store.items, { key: itemKey });
     }
 
     /**
