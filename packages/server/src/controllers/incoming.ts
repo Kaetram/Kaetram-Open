@@ -122,7 +122,6 @@ export default class Incoming {
         if (username) {
             // Format username by making it all lower case, shorter than 32 characters, and no spaces.
             this.player.username = username.toLowerCase().slice(0, 32).trim();
-            this.player.name = this.player.username;
 
             if (password) this.player.password = password.slice(0, 32);
             if (email) this.player.email = email;
@@ -146,7 +145,6 @@ export default class Incoming {
             case Opcodes.Login.Guest:
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
                 this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
-                this.player.name = this.player.username;
 
                 return this.player.load(Creator.serializePlayer(this.player));
         }
