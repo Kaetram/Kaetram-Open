@@ -10,7 +10,6 @@ import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Enchant from './enchant';
 import Friends from './friends';
 import Handler from './handler';
 import Mana from '../points/mana';
@@ -129,7 +128,6 @@ export default class Player extends Character {
 
     public abilities;
     public friends;
-    public enchant;
     public trade;
     public warp;
 
@@ -196,7 +194,6 @@ export default class Player extends Character {
         // TODO - Refactor
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
-        this.enchant = new Enchant(this);
         this.trade = new Trade(this);
         this.warp = new Warp(this);
 
@@ -323,7 +320,6 @@ export default class Player extends Character {
         this.handler = null!;
         this.inventory = null!;
         this.abilities = null!;
-        this.enchant = null!;
         this.bank = null!;
         this.trade = null!;
         this.warp = null!;
