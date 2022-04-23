@@ -49,6 +49,20 @@ export interface ProcessedArea {
 export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
 export type Rock = 'BlueSteel';
 
+export interface ProcessedDoor {
+    x: number;
+    y: number;
+    orientation: string;
+    quest?: string;
+    stage?: number;
+}
+
+export interface ProcessedTree {
+    data: number[]; // What is considered a tree.
+    stump: number[]; // The tree's stump
+    cutStump: number[]; // What the tree gets replaced with when cut.
+}
+
 export interface ProcessedTileset {
     name: string;
     firstGID: number;
@@ -79,12 +93,5 @@ export interface ProcessedMap {
     objects: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-}
-
-export interface ProcessedDoor {
-    x: number;
-    y: number;
-    orientation: string;
-    quest?: string;
-    stage?: number;
+    trees: { [key: string]: ProcessedTree };
 }
