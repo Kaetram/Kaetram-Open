@@ -190,12 +190,12 @@ export default class Player extends Character {
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
         this.handler = new Handler(this);
+        this.warp = new Warp(this);
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
         this.trade = new Trade(this);
-        this.warp = new Warp(this);
 
         this.webSocketClient = connection.type === 'WebSocket';
     }
