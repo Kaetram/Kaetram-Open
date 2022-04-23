@@ -1122,10 +1122,7 @@ export default class Renderer {
 
             if (Array.isArray(indexData)) {
                 let layerIndex = 0;
-                for (let data of indexData) {
-                    callback(data, index, layerIndex);
-                    layerIndex++;
-                }
+                for (let data of indexData) callback(data, index, layerIndex++);
             } else if (this.map.data[index]) callback(this.map.data[index], index);
         }, offset);
     }
