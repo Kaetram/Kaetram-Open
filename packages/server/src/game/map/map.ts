@@ -46,7 +46,7 @@ export default class Map {
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: ProcessedDoor };
     public warps: ProcessedArea[] = map.areas.warps || [];
-    public trees: { [key: string]: ProcessedTree } = map.trees || [];
+    public trees: ProcessedTree[] = map.trees || [];
 
     // Static chest areas, named as singular to prevent confusion with `chests` area.
     public chest: ProcessedArea[] = map.areas.chest || [];
