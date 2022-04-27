@@ -5,6 +5,7 @@ import log from '../lib/log';
 import { isInt } from '../utils/util';
 
 import type Game from '../game';
+import { ProcessedAnimation } from '@kaetram/common/types/map';
 
 type MapDataType = typeof mapData;
 export interface MapData extends MapDataType {
@@ -67,7 +68,7 @@ export default class Map {
     private collisions!: number[];
     private high!: MapHigh;
     private lights!: number[];
-    private animatedTiles = [];
+    private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = {};
     private depth!: MapDepth;
 
     public constructor(private game: Game) {
