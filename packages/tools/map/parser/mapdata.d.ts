@@ -41,10 +41,16 @@ export interface ObjectGroup {
     }[];
 }
 
+export interface Animation {
+    duration: number;
+    tileid: number;
+}
+
 export interface Tile {
     id: number;
     objectgroup: ObjectGroup;
     properties: Property[];
+    animation?: Animation[];
 }
 
 export interface Tileset {
