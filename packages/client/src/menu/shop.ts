@@ -99,6 +99,7 @@ export default class Shop {
 
     private remove(): void {
         this.moveBack(this.selectedItem!.index!);
+        this.clearSellSlot();
         this.resize();
 
         this.selectedItem = undefined;
