@@ -9,5 +9,7 @@ import Map from '../../map/map';
  */
 
 export default class Tree {
+    public data: { [index: number]: number | number[] } = {};
+
     public constructor(public type: string) {}
 }
