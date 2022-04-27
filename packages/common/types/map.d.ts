@@ -61,6 +61,7 @@ export interface ProcessedTree {
     data: number[]; // What is considered a tree.
     stump: number[]; // The tree's stump
     cutStump: number[]; // What the tree gets replaced with when cut.
+    type: string; // Store type.
 }
 
 export interface ProcessedTileset {
@@ -93,5 +94,5 @@ export interface ProcessedMap {
     objects: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    trees: { [key: string]: ProcessedTree };
+    trees: ProcessedTree[];
 }
