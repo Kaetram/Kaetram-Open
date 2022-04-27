@@ -4,7 +4,7 @@ import zlib from 'zlib';
 import log from '@kaetram/common/util/log';
 
 import { Modules } from '@kaetram/common/network';
-import type { ProcessedMap } from '@kaetram/common/types/map';
+import type { ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
 import type { Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
@@ -12,6 +12,7 @@ export default class ProcessMap {
     private tilesetEntities: { [tileId: number]: string } = {};
 
     #collisionTiles: { [tileId: number]: boolean } = {};
+    #trees: { [key: string]: ProcessedTree } = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -48,7 +49,7 @@ export default class ProcessMap {
             objects: [],
             areas: {},
             cursors: {},
-            trees: {}
+            trees: []
         };
 
         this.parseTilesets();
@@ -82,6 +83,9 @@ export default class ProcessMap {
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
+
+            // Convert local tree dictionary into an array for the server.
+            _.each(this.#trees, (tree) => this.map.trees.push(tree));
         });
     }
 
@@ -327,31 +331,33 @@ export default class ProcessMap {
     /**
      * Takes tree property data and stores it into the map trees property.
      * If a tree already exists within said property, it appends data to it.
-     * Tree data is split into `data,` `stump,` and `cutStump.`
+     * Tree data is split into `data,` `stump,` and `cutStump.` After we
+     * store the tree data, we convert it into an array for the server to parse.
      * @param name The name of the property.
      */
 
     private parseTreeProperty(name: string, tileId: number, value: never): void {
-        if (!(value in this.map.trees))
-            this.map.trees[value] = {
+        if (!(value in this.#trees))
+            this.#trees[value] = {
                 data: [],
                 stump: [],
-                cutStump: []
+                cutStump: [],
+                type: value
             };
 
         // Organize tree data into their respective arrays.
         switch (name) {
             case 'tree':
-                this.map.trees[value].data.push(tileId);
-                return;
+                this.#trees[value].data.push(tileId);
+                break;
 
             case 'stump':
-                this.map.trees[value].stump.push(tileId);
-                return;
+                this.#trees[value].stump.push(tileId);
+                break;
 
             case 'cutstump':
-                this.map.trees[value].cutStump.push(tileId);
-                return;
+                this.#trees[value].cutStump.push(tileId);
+                break;
         }
     }
 
