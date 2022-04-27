@@ -89,8 +89,6 @@ export default class Equipments {
         equipment.update(item);
 
         this.equipCallback?.(equipment);
-
-        this.player.sync();
     }
 
     /**
@@ -120,8 +118,6 @@ export default class Equipments {
         equipment.empty();
 
         this.unequipCallback?.(type);
-
-        this.player.sync();
     }
 
     /**
