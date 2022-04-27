@@ -4,13 +4,12 @@ export default class Tile {
     public x!: number;
     public y!: number;
 
-    private animationInfo;
     private animationIndex = 0;
     private lastTime = 0;
     // private canDraw = true;
 
-    public constructor(public id: number, public index: number, map: Map) {
-        this.animationInfo = map.getTileAnimation(id);
+    public constructor(public id: number, public index: number, public animationInfo: any) {
+        console.log(this.animationInfo);
     }
 
     public setPosition(position: Position): void {
@@ -19,7 +18,7 @@ export default class Tile {
     }
 
     private update(): void {
-        this.id = this.animationInfo[this.animationIndex].tileid;
+        this.id = this.animationInfo[this.animationIndex].tileId;
         // this.canDraw = true;
     }
 

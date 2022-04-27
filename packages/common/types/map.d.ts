@@ -72,6 +72,11 @@ export interface ProcessedTileset {
     scale: number;
 }
 
+export interface ProcessedAnimation {
+    duration: number;
+    tileId: number;
+}
+
 export interface ProcessedMap {
     width: number;
     height: number;
@@ -85,7 +90,7 @@ export interface ProcessedMap {
 
     // tilesetId: firstGid
     tilesets?: { [tilesetId: number]: number };
-    animations?: unknown[];
+    animations?: { [tileId: number]: ProcessedAnimation[] };
     depth?: number;
 
     plateau: { [index: number]: number };

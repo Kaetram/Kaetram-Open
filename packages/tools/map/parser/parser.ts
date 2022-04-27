@@ -4,8 +4,8 @@ import zlib from 'zlib';
 import log from '@kaetram/common/util/log';
 
 import { Modules } from '@kaetram/common/network';
-import type { ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
-import type { Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { ProcessedAnimation, ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
+import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
@@ -40,7 +40,7 @@ export default class ProcessMap {
             entities: {},
 
             tilesets: {},
-            animations: [],
+            animations: {},
             depth: 1,
 
             plateau: {},
@@ -131,16 +131,32 @@ export default class ProcessMap {
      */
 
     private parseTileset(tileset: Tileset): void {
-        let { tiles } = tileset;
+        let { tiles, firstgid } = tileset;
 
         _.each(tiles, (tile: Tile) => {
             let tileId = this.getTileId(tileset, tile);
+
+            if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
             _.each(tile.properties, (property: Property) => {
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
             });
         });
+    }
+
+    private parseAnimation(tileId: number, firstgid: number, animations: Animation[]): void {
+        // Temporary storage for animation data.
+        let data: ProcessedAnimation[] = [];
+
+        _.each(animations, (animation: Animation) => {
+            data.push({
+                duration: animation.duration,
+                tileId: this.getId(firstgid, animation.tileid, -1)
+            });
+        });
+
+        this.map.animations![tileId] = data;
     }
 
     /**
@@ -460,6 +476,8 @@ export default class ProcessMap {
         return tileset.name.toLowerCase() === 'entities';
     }
 
+    //private isAnimationTile()
+
     /**
      * A function to check if a property is colliding. We have
      * a separate function as we will add more properties that
@@ -470,6 +488,19 @@ export default class ProcessMap {
 
     private isCollisionProperty(propertyName: string): boolean {
         return propertyName === 'c' || propertyName === 'o';
+    }
+
+    /**
+     * A barebones function for adding firstgid, id, and offset together
+     * when trying to determine the overall tileId of a tile.
+     * @param firstgid The first tileId in the tileset.
+     * @param id The tileId of the current tile.
+     * @param offset Offset if we want.
+     * @returns The tileId globally amongst tilesets.
+     */
+
+    private getId(firstgid: number, id: number, offset = 0): number {
+        return firstgid + id + offset;
     }
 
     /**
@@ -484,7 +515,7 @@ export default class ProcessMap {
      */
 
     private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
-        return tileset.firstgid + tile.id + offset;
+        return this.getId(tileset.firstgid, tile.id, offset);
     }
 
     /**
