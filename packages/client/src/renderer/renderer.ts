@@ -1032,8 +1032,6 @@ export default class Renderer {
              * it every time the tile moves slightly.
              */
 
-            id -= 1;
-
             if (!this.map.isAnimatedTile(id)) return;
 
             /**
@@ -1041,7 +1039,7 @@ export default class Renderer {
              */
 
             if (!(index in this.animatedTiles)) {
-                let tile = new Tile(id, index, this.map),
+                let tile = new Tile(id, index, this.map.getTileAnimation(id)),
                     position = this.map.indexToCoord(tile.index);
 
                 tile.setPosition(position);
