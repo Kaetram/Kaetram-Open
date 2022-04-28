@@ -842,8 +842,10 @@ export default class Connection {
             }
         });
 
-        this.messages.onRespawn((id, x, y) => {
-            if (id !== this.game.player.id) {
+        this.messages.onRespawn((info) => {
+            let { instance, x, y } = info;
+
+            if (instance !== this.game.player.id) {
                 log.error('Player id mismatch.');
                 return;
             }
