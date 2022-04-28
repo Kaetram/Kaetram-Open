@@ -66,7 +66,6 @@ export default class MongoDB {
      * Takes the player's username and extracts the data from the server. Checks
      * the password and creates a callback if an error is present.
      * @param player The player object to extract password and username from.
-     * @param callback The UTF8 string for the connection to be rejected with.
      */
 
     public login(player: Player): void {

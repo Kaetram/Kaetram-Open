@@ -5,6 +5,7 @@ import Database from './database/database';
 import World from './game/world';
 import SocketHandler from './network/sockethandler';
 import Loader from './loader';
+import Console from './console';
 
 import type Connection from './network/connection';
 import { exit } from 'process';
@@ -38,6 +39,8 @@ class Main {
         log.info(`************** ${config.name} World **************`);
 
         this.world = new World(this.socketHandler, this.database);
+
+        new Console(this.world);
     }
 
     /**
