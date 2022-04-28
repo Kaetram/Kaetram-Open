@@ -7,6 +7,7 @@ import type { Opcodes } from '@kaetram/common/network';
 import type {
     MovementCallback,
     CombatCallback,
+    RespawnCallback,
     StoreCallback
 } from '@kaetram/common/types/messages/outgoing';
 
@@ -102,7 +103,6 @@ interface NPCCallback {
     (opcode: Opcodes.NPC.Enchant, data: NPCEnchantData): void;
     (opcode: Opcodes.NPC.Countdown, data: NPCCountdownData): void;
 }
-type RespawnCallback = (id: string, x: number, y: number) => void;
 type EnchantCallback = (opcode: Opcodes.Enchant, data: EnchantData) => void;
 type GuildCallback = (opcode: Opcodes.Guild, data: unknown) => void;
 interface PointerCallback {
