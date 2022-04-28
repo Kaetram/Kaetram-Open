@@ -3,11 +3,12 @@ import { Opcodes, Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
+import Item from '../game/entity/objects/item';
+import Quest from '../game/entity/character/player/quest/quest';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
-import Item from '../game/entity/objects/item';
-import { Command, Map, Pointer, Network, Notification, Quest } from '../network/packets';
+import { Command, Map, Pointer, Network, Notification } from '../network/packets';
 
 export default class Commands {
     private world;
@@ -154,7 +155,9 @@ export default class Commands {
             instance: string,
             target: string,
             entity: Character,
-            targetEntity: Character;
+            targetEntity: Character,
+            questKey: string,
+            quest: Quest;
 
         switch (command) {
             case 'spawn': {
@@ -406,6 +409,31 @@ export default class Commands {
                     return this.player.notify(`Could not find entity instances specified.`);
 
                 entity.combat.attack(targetEntity);
+
+                break;
+
+            case 'kill':
+                username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kill username`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (player) player.hit(player.hitPoints.getHitPoints());
+
+                break;
+
+            case 'finishquest':
+                questKey = blocks.shift()!;
+
+                if (!questKey)
+                    return this.player.notify(`Malformed command, expected /finishquest questKey`);
+
+                quest = this.player.quests.getQuest(questKey);
+
+                if (quest) quest.setStage(9999);
+                else this.player.notify(`Could not find quest with key: ${questKey}`);
 
                 break;
         }

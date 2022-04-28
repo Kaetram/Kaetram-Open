@@ -19,6 +19,8 @@ export interface MovementPacket {
 
 export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) => void;
 
+////////////////////////////////////////////////////////////////////////////////
+
 export interface CombatPacket {
     instance: string; // The entity the combat packet revolves around.
     target: string; // Instance of the targeted entity.
@@ -26,6 +28,18 @@ export interface CombatPacket {
 }
 
 export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface RespawnPacket {
+    instance: string;
+    x: number; // Spawn x coordinate
+    y: number; // Spawn y coordinate
+}
+
+export type RespawnCallback = (opcode: Opcodes.Respawn, info: RespawnPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
 
 export interface StorePacket {
     opcode: Opcodes.Store;
@@ -36,3 +50,5 @@ export interface StorePacket {
 }
 
 export type StoreCallback = (opcode: Opcodes.Store, info: StorePacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
