@@ -23,7 +23,7 @@ export default abstract class Quest {
     private description = '';
     private stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
-    private stageCount = 0; // How long the quest is.
+    protected stageCount = 0; // How long the quest is.
 
     private stageData: StageData; // Current stage data, constantly updated when progression occurs.
     private stages: { [id: number]: RawStage } = {}; // All the stages from the JSON data.
@@ -78,10 +78,9 @@ export default abstract class Quest {
     }
 
     /**
-     * Callback handler for when talking to a quest
-     * NPC required for progression.
-     * @param npc The NPC we are talking to.
-     * @param talkIndex Current progress in the conversation.
+     * Callback handler for when a player talks to an NPC.
+     * @param npc The NPC that the player interacted with.
+     * @param player The player that interacts with the NPC.
      */
 
     private handleTalk(npc: NPC, player: Player): void {
@@ -114,11 +113,9 @@ export default abstract class Quest {
     }
 
     /**
-     * Callback handler for when the player attempts to pass through the door.
-     * @param x The door's x grid coordinate.
-     * @param y The door's y grid coordinate.
-     * @param destX The door's destination x coordinate.
-     * @param destY The door's destination y coordinate.
+     * Callback handler for when a player attemps to pass through a door.
+     * @param door The door that the player is trying to enter.
+     * @param player The player instance that we send actions to.
      */
 
     private handleDoor(door: ProcessedDoor, player: Player): void {
