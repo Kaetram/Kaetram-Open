@@ -45,8 +45,6 @@ export interface Config {
     maxPlayers: number;
     updateTime: number;
     gver: string;
-    administrators: string[];
-    moderators: string[];
 
     discordEnabled: boolean;
     discordChannelId: string;
