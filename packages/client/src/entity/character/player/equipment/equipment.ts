@@ -14,27 +14,11 @@ export default abstract class Equipment {
         return !!this.string;
     }
 
-    // getName(): string {
-    //     return this.name;
-    // }
-
     public getString(): string {
         return this.string;
     }
 
-    // getCount(): number {
-    //     return this.count;
-    // }
-
-    // getAbility(): number {
-    //     return this.ability;
-    // }
-
-    // getAbilityLevel(): number {
-    //     return this.abilityLevel;
-    // }
-
-    update(
+    public update(
         name: string,
         string: string,
         count: number,

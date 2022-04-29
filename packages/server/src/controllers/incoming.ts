@@ -153,29 +153,24 @@ export default class Incoming {
     private handleReady(data: ReadyPacket): void {
         let { hasMapData, userAgent } = data;
 
-        if (this.player.regionsLoaded.length > 0 && !hasMapData) this.player.regionsLoaded = [];
-
         this.player.loadEquipment();
         this.player.loadInventory();
         this.player.loadBank();
         this.player.loadQuests();
 
-        //this.world.regions.syncRegions(this.player);
+        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
-        if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
-            this.player.setPosition(50, 89);
-
-        if (this.player.userAgent !== userAgent) {
+        // TODO - cleanup
+        if (
+            (this.player.regionsLoaded.length > 0 && !hasMapData) ||
+            this.player.userAgent !== userAgent
+        ) {
             this.player.userAgent = userAgent;
 
             this.player.regionsLoaded = [];
             this.player.updateRegion(true);
         }
-
-        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
-        this.world.discord.sendMessage(this.player.username, 'has logged in!');
-
-        this.player.readyCallback?.();
 
         this.player.ready = true;
     }

@@ -208,6 +208,8 @@ export default class Connection {
 
             if (data.equipments) _.each(data.equipments, entity.setEquipment.bind(entity));
 
+            entity.setSprite(this.game.getSprite(entity.armour.string));
+
             this.menu.profile.update();
         });
 
@@ -226,8 +228,6 @@ export default class Connection {
                 }
 
                 case Opcodes.Movement.Follow: {
-                    console.log(info);
-
                     let entity = this.entities.get<Character>(info.instance),
                         target = this.entities.get<Character>(info.target!);
 
