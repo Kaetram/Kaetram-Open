@@ -1,3 +1,16 @@
+// Tile that has undergone rotation
+export interface RotatedTile {
+    tileId: number;
+    h: boolean;
+    v: boolean;
+    d: boolean;
+}
+
+// These are tiles straight from the map file.
+export type Tile = number | number[];
+
+// Map data information
+
 export interface ProcessedArea {
     // Common
     id: number;

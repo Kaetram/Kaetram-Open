@@ -10,20 +10,19 @@ import Grids from './grids';
 import Regions from './regions';
 
 import type {
+    Tile,
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
     ProcessedTree
 } from '@kaetram/common/types/map';
+
+import type { RegionTile } from '@kaetram/common/types/region';
+
 import type World from '../world';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
-
-export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
-export type AnimatedTile = { tileId: string; name: string };
-export type ParsedTile = RotatedTile | Tile | RotatedTile[];
-export type Tile = number | number[];
 
 export default class Map {
     public regions: Regions;
@@ -292,24 +291,25 @@ export default class Map {
 
     /**
      * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
+     * The object is a region tile that is later used to send map data to the client.
      * @param index Gets tile information at an index in the map.
      * @returns Returns tile information (a number or number array)
      */
 
-    public getTileData(index: number): ParsedTile {
+    public getTileData(index: number): RegionTile {
         let data = this.data[index];
 
         if (!data) return [];
 
         let isArray = Array.isArray(data),
-            parsedData: ParsedTile = isArray ? [] : 0;
+            parsedData: RegionTile = isArray ? [] : 0;
 
         this.forEachTile(data, (tileId: number) => {
-            let tile: ParsedTile = tileId;
+            let tile: RegionTile = tileId;
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as ParsedTile[]).push(tile);
+            if (isArray) (parsedData as RegionTile[]).push(tile);
             else parsedData = tile;
         });
 
@@ -327,7 +327,7 @@ export default class Map {
      * @returns A parsed tile of type `RotatedTile`.
      */
 
-    public getFlippedTile(tileId: number): ParsedTile {
+    public getFlippedTile(tileId: number): RegionTile {
         let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
