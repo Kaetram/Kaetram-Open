@@ -379,7 +379,7 @@ export default class Game {
         audio.play(Modules.AudioTypes.SFX, 'revive');
         app.body.removeClass('death');
 
-        socket.send(Packets.Respawn, [player.id]);
+        socket.send(Packets.Respawn, []);
     }
 
     // tradeWith(player: Player): void {
