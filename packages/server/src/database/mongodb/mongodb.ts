@@ -21,7 +21,7 @@ export default class MongoDB {
 
     public constructor(
         private host: string,
-        private port: number | undefined,
+        private port: number,
         private username: string,
         private password: string,
         private databaseName: string,
