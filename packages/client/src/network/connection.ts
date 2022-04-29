@@ -296,13 +296,9 @@ export default class Connection {
                 entity.setGridPosition(info.x, info.y);
 
                 if (isPlayer) {
-                    this.entities.clearPlayers(this.game.player);
                     this.game.player.clearHealthBar();
                     this.renderer.camera.centreOn(entity);
                     this.renderer.updateAnimatedTiles();
-                } else if (entity.isPlayer()) {
-                    delete this.entities.entities[entity.id];
-                    return;
                 }
 
                 this.socket.send(Packets.Request, [this.game.player.id]);
