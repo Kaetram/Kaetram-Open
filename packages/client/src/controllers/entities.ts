@@ -248,6 +248,8 @@ export default class EntitiesController {
                 player.setHitPoints(info.hitPoints);
                 player.setMaxHitPoints(info.maxHitPoints);
 
+                console.log(info);
+
                 player.setSprite(this.getSprite(player.armour.string));
                 player.idle();
 
