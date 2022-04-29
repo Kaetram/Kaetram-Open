@@ -131,7 +131,7 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        this.player.teleport(door.x, door.y, true);
+        this.player.teleport(door.x, door.y);
 
         log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
     }
