@@ -34,10 +34,11 @@ export interface Config {
     skipDatabase: boolean;
 
     mongodbHost: string;
-    mongodbPort: number;
+    mongodbPort: number | undefined;
     mongodbUser: string;
     mongodbPassword: string;
     mongodbDatabase: string;
+    mongodbSrv: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;
