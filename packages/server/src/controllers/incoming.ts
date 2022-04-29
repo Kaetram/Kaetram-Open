@@ -89,7 +89,7 @@ export default class Incoming {
                     case Packets.Container:
                         return this.handleContainer(message);
                     case Packets.Respawn:
-                        return this.handleRespawn(message);
+                        return this.handleRespawn();
                     case Packets.Trade:
                         return this.handleTrade(message);
                     case Packets.Enchant:
@@ -657,10 +657,8 @@ export default class Incoming {
         // }
     }
 
-    private handleRespawn(message: [string]): void {
-        let [instance] = message;
-
-        if (this.player.instance !== instance) return;
+    private handleRespawn(): void {
+        if (!this.player.dead) return log.warning(`Invalid respawn request.`);
 
         let spawn = this.player.getSpawn();
 
