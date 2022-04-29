@@ -301,8 +301,6 @@ export default class Connection {
                     this.renderer.updateAnimatedTiles();
                 }
 
-                this.socket.send(Packets.Request, [this.game.player.id]);
-
                 this.entities.registerPosition(entity);
                 entity.frozen = false;
 
