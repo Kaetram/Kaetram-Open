@@ -545,7 +545,7 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.x, position.y, false, true);
+                this.player.teleport(position.x, position.y, true);
 
                 break;
             }
@@ -874,6 +874,6 @@ export default class Incoming {
             ({ x, y } = spawn);
         }
 
-        this.player.teleport(x, y, false, true);
+        this.player.teleport(x, y, true);
     }
 }
