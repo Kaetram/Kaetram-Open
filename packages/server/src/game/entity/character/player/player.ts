@@ -167,7 +167,6 @@ export default class Player extends Character {
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
-    public readyCallback?(): void;
 
     private teleportCallback?: TeleportCallback;
     private cheatScoreCallback?(): void;
@@ -991,9 +990,5 @@ export default class Player extends Character {
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
-    }
-
-    public onReady(callback: () => void): void {
-        this.readyCallback = callback;
     }
 }
