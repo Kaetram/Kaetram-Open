@@ -72,8 +72,6 @@ export default class Incoming {
                         return this.handleEquipment(message);
                     case Packets.Movement:
                         return this.handleMovement(message);
-                    case Packets.Request:
-                        return this.handleRequest(message);
                     case Packets.Target:
                         return this.handleTarget(message);
                     case Packets.Combat:
@@ -379,14 +377,6 @@ export default class Incoming {
                 log.debug(`Zoning orientation: ${orientation}`);
                 break;
         }
-    }
-
-    private handleRequest(message: [string]): void {
-        let [id] = message;
-
-        if (id !== this.player.instance) return;
-
-        //this.world.region.push(this.player);
     }
 
     private handleTarget(message: [Opcodes.Target, string]): void {

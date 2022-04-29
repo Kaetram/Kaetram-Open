@@ -11,7 +11,6 @@ enum Packets {
     Sync,
     Movement,
     Teleport,
-    Request,
     Despawn,
     Target,
     Combat,
