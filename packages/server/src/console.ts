@@ -4,6 +4,12 @@ import MongoDB from './database/mongodb/mongodb';
 import Player from './game/entity/character/player/player';
 import World from './game/world';
 
+/**
+ * The console lives on top of the server. It allows an admin to directly
+ * control events within the server from the console instead
+ * of logging in. The commands available are listed below in a switch statement.
+ */
+
 export default class Console {
     private database: MongoDB;
 
@@ -45,19 +51,51 @@ export default class Console {
                 case 'kill':
                     username = blocks.join(' ');
 
-                    if (!this.world.isOnline(username)) {
-                        log.info('Player is not logged in.');
-                        return;
-                    }
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
                     player = this.world.getPlayerByName(username);
 
-                    if (!player) {
-                        log.info('An error has occurred.');
-                        return;
-                    }
+                    if (!player) return log.info('An error has occurred.');
 
                     player.hit(player.hitPoints.getHitPoints());
+
+                    break;
+
+                case 'setadmin':
+                case 'setmod':
+                    username = blocks.join(' ');
+
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+
+                    player = this.world.getPlayerByName(username);
+
+                    if (!player) return log.info(`Player not found.`);
+
+                    player.rights = command === 'setadmin' ? 2 : 1;
+
+                    log.info(
+                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
+                    );
+
+                    break;
+
+                case 'removeadmin':
+                case 'removemod':
+                    username = blocks.join(' ');
+
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+
+                    player = this.world.getPlayerByName(username);
+
+                    if (!player) return log.info(`Player not found.`);
+
+                    player.rights = command === 'removeadmin' ? 2 : 1;
+
+                    log.info(
+                        `${player.username} is now a ${
+                            command === 'removeadmin' ? 'admin' : 'mod'
+                        }!`
+                    );
 
                     break;
             }
