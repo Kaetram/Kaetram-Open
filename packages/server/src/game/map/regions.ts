@@ -4,13 +4,14 @@ import log from '@kaetram/common/util/log';
 
 import World from '../world';
 import Region from './region';
-import Map, { AnimatedTile, ParsedTile } from './map';
+import Map from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
 import { List, Spawn, Map as MapPacket } from '../../network/packets';
+import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 
 /**
  * Class responsible for chunking up the map.
@@ -20,8 +21,6 @@ import { List, Spawn, Map as MapPacket } from '../../network/packets';
  * they are only broadcast to the region itself (animation events).
  */
 
-type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile; c?: boolean };
-type RegionData = { [region: number]: TileInfo[] };
 type RegionCallback = (region: number) => void;
 type PRegionCallback = (entity: Entity, region: number) => void;
 
@@ -391,11 +390,11 @@ export default class Regions {
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number): TileInfo {
+    private buildTile(x: number, y: number, index?: number): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
-        let tile: TileInfo = {
+        let tile: RegionTileData = {
             x,
             y,
             data: this.map.getTileData(index)
@@ -422,7 +421,7 @@ export default class Regions {
      * @returns The mapped tileInfo.
      */
 
-    private buildDynamicTile(player: Player, area: Area, x: number, y: number): TileInfo {
+    private buildDynamicTile(player: Player, area: Area, x: number, y: number): RegionTileData {
         let original = this.buildTile(x, y);
 
         // Does not proceed any further if the player does not fulfill the requirements
