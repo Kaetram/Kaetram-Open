@@ -8,7 +8,8 @@ import {
     Quest,
     Equipment as EquipmentPacket,
     NPC as NPCPacket,
-    Death
+    Death,
+    Despawn
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -114,6 +115,8 @@ export default class Handler {
         this.player.combat.stop();
 
         this.player.send(new Death(this.player.instance));
+
+        this.player.sendToRegions(new Despawn(this.player.instance), true);
     }
 
     /**
