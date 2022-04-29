@@ -198,7 +198,7 @@ export default class Commands {
                     y = parseInt(blocks.shift()!),
                     withAnimation = parseInt(blocks.shift()!);
 
-                if (x && y) this.player.teleport(x, y, false, !!withAnimation);
+                if (x && y) this.player.teleport(x, y, !!withAnimation);
 
                 return;
             }

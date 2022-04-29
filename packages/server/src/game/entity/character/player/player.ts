@@ -54,7 +54,6 @@ import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 
-type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -168,7 +167,6 @@ export default class Player extends Character {
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
 
-    private teleportCallback?: TeleportCallback;
     private cheatScoreCallback?(): void;
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
@@ -413,9 +411,7 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public teleport(x: number, y: number, isDoor = false, withAnimation = false): void {
-        this.teleportCallback?.(x, y, isDoor);
-
+    public teleport(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
                 id: this.instance,
@@ -425,7 +421,7 @@ export default class Player extends Character {
             })
         );
 
-        this.setPosition(x, y);
+        this.setPosition(x, y, false, true);
         this.world.cleanCombat(this);
     }
 
@@ -604,7 +600,7 @@ export default class Player extends Character {
      * Setters
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, forced = false, teleport = false): void {
         if (this.dead) return;
 
         if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
@@ -615,8 +611,8 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
-                forced: false,
-                teleport: false
+                forced,
+                teleport
             }),
             true
         );
@@ -971,11 +967,6 @@ export default class Player extends Character {
     public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
-
-    public onTeleport(callback: TeleportCallback): void {
-        this.teleportCallback = callback;
-    }
-
     public onProfile(callback: InterfaceCallback): void {
         this.profileToggleCallback = callback;
     }
