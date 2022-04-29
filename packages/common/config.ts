@@ -34,7 +34,7 @@ export interface Config {
     skipDatabase: boolean;
 
     mongodbHost: string;
-    mongodbPort: number | undefined;
+    mongodbPort: number;
     mongodbUser: string;
     mongodbPassword: string;
     mongodbDatabase: string;
