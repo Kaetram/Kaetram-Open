@@ -347,6 +347,18 @@ export default class Map {
     }
 
     /**
+     * Updates the global map data with provided data. This
+     * function will be visible to all players, so it must be
+     * used only when necessary.
+     * @param index Index of the data we are updating.
+     * @param data The data we are writing to the map.
+     */
+
+    public setData(index: number, data: Tile): void {
+        this.data[index] = data;
+    }
+
+    /**
      * A callback function used to iterate through all the areas in the map.
      * Specifically used in the player's handler, it is used to check
      * various activities within the areas.
