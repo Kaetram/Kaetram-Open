@@ -83,9 +83,15 @@ export default class ProcessMap {
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
+        });
 
-            // Convert local tree dictionary into an array for the server.
-            _.each(this.#trees, (tree) => this.map.trees.push(tree));
+        // Convert local tree dictionary into an array for the server.
+        _.each(this.#trees, (tree: ProcessedTree) => {
+            // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
+            if (tree.stump.length !== tree.cutStump.length)
+                return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
+
+            this.map.trees.push(tree);
         });
     }
 
