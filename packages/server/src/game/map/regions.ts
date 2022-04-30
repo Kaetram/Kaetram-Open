@@ -327,8 +327,8 @@ export default class Regions {
     /**
      * Iterates through the regions and determines which region index (in the array)
      * belongs to the gridX and gridY specified.
-     * @param gridX The player's x position in the grid (floor(x / tileSize))
-     * @param gridY The player's y position in the grid (floor(y / tileSize))
+     * @param x The player's x position in the grid (floor(x / tileSize))
+     * @param y The player's y position in the grid (floor(y / tileSize))
      * @returns The region id the coordinates are in.
      */
 
