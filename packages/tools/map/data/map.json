@@ -3925,7 +3925,7 @@
  "nextobjectid":213,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.0",
+ "tiledversion":"1.8.4",
  "tileheight":16,
  "tilesets":[
         {
@@ -10336,7 +10336,7 @@
                          "value":""
                         }, 
                         {
-                         "name":"stumpcut",
+                         "name":"cutstump",
                          "type":"string",
                          "value":"palm"
                         }]
@@ -10584,7 +10584,7 @@
                          "value":""
                         }, 
                         {
-                         "name":"stumpcut",
+                         "name":"cutstump",
                          "type":"string",
                          "value":"palm"
                         }]
@@ -11222,7 +11222,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":2288,
                  "properties":[
@@ -31208,7 +31209,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":2456,
                  "properties":[
@@ -37040,6 +37042,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.6",
+ "version":"1.8",
  "width":704
 }
