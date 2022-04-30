@@ -12,5 +12,5 @@ export interface RegionTileData {
 }
 
 export interface RegionData {
-    [index: number]: TileInfo[];
+    [index: number]: RegionTileData[];
 }
