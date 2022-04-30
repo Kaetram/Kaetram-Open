@@ -5,7 +5,7 @@ import Map from '../map/map';
 import Tree from './impl/tree';
 
 import log from '@kaetram/common/util/log';
-import { ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
+import { ProcessedMap, ProcessedTree, Tile } from '@kaetram/common/types/map';
 
 import mapData from '../../../data/map/world.json';
 
@@ -15,6 +15,8 @@ export default class Trees {
     private map: Map;
 
     private trees: Tree[] = [];
+    private cutTrees: Tree[] = [];
+
     // Create a clone of the map data
     private data: (number | number[])[] = _.clone(mapInfo.data);
 
@@ -33,17 +35,18 @@ export default class Trees {
      */
 
     private load(): void {
-        let stop = false;
-
         _.each(this.data, (tile: number | number[], index: number) => {
             this.map.forEachTile(tile, (tileId: number) => {
                 let treeInfo = this.getTree(tileId);
 
-                if (!treeInfo || stop) return;
+                if (!treeInfo) return;
 
                 let tree = new Tree(treeInfo.type);
 
-                this.find(treeInfo, tree, index!);
+                this.search(treeInfo, tree, index!);
+
+                // Initialize tree cut data.
+                tree.load(treeInfo);
 
                 this.trees.push(tree);
 
@@ -76,14 +79,14 @@ export default class Trees {
      * @param index Index where we start the search.
      */
 
-    private find(treeInfo: ProcessedTree, tree: Tree, index: number): boolean {
+    private search(treeInfo: ProcessedTree, tree: Tree, index: number): boolean {
         let intersection = _.intersection([this.data[index]].flat(), treeInfo.data);
 
         // If we find no intersection, then tile contains no tree data.
         if (intersection.length === 0) return false;
 
-        // Add the intersection data onto the tree.
-        tree.data[index] = intersection;
+        // Add the entire tile data onto the tree.
+        tree.data[index] = this.data[index];
 
         // Remove the tree tile from the tiles we are searching.
         if (Array.isArray(this.data[index]))
@@ -91,12 +94,42 @@ export default class Trees {
         else this.data[index] = 0;
 
         // Search for tiles recursively right, left, down, up respectively.
-        if (this.find(treeInfo, tree, index + 1)) return true;
-        if (this.find(treeInfo, tree, index - 1)) return true;
-        if (this.find(treeInfo, tree, index + this.map.width)) return true;
-        if (this.find(treeInfo, tree, index - this.map.width)) return true;
+        if (this.search(treeInfo, tree, index + 1)) return true;
+        if (this.search(treeInfo, tree, index - 1)) return true;
+        if (this.search(treeInfo, tree, index + this.map.width)) return true;
+        if (this.search(treeInfo, tree, index - this.map.width)) return true;
 
         return false;
+    }
+
+    /**
+     * Cuts a tree by grabbing the cut map data from the tree
+     * and updating the map and the region associated with the tree.
+     * @param tree The tree we are cutting.
+     */
+
+    public cutTree(tree: Tree): void {
+        this.cutTrees.push(tree);
+    }
+
+    /**
+     * Updates the global map data with the provided data from a tree.
+     * @param data The new data we are writing to the map.
+     */
+
+    public setMapData(data: { [index: number]: Tile }): void {
+        _.each(data, (tile: Tile, key: string) => this.map.setData(parseInt(key), tile));
+    }
+
+    /**
+     * Searches the tree instances and finds which tree contains
+     * the index data in its data.
+     * @param index The index coordinate we are searching for.
+     * @returns A tree object if found, otherwise undefined.
+     */
+
+    public findTree(index: number): Tree | undefined {
+        return _.find(this.trees, (tree: Tree) => index in tree.data);
     }
 
     /**
