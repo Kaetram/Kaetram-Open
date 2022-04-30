@@ -155,7 +155,19 @@ export default class Region {
 
     public forEachTile(callback: (x: number, y: number) => void): void {
         for (let i = this.y; i < this.y + this.height; i++)
-            for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+            for (let j = this.x; j < this.x + this.width; j++)
+                if (!this.getDynamicArea(j, i)) callback(j, i);
+    }
+
+    /**
+     * Iterates through the dynamic areas and returns each tile within that area.
+     * @param callback The tile coordinate.
+     */
+
+    public forEachDynamicTile(callback: (x: number, y: number, area: Area) => void): void {
+        for (let area of this.dynamicAreas)
+            for (let i = area.y; i < area.y + area.height; i++)
+                for (let j = area.x; j < area.x + area.width; j++) callback(j, i, area);
     }
 
     /**

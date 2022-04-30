@@ -358,27 +358,54 @@ export default class Regions {
             region = this.getRegion(player.x, player.y);
 
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
-            if (player.hasLoadedRegion(surroundingRegion) && !force) return;
-
             let region = this.regions[surroundingRegion];
 
-            // Initialize empty array with tile data for the region.
+            // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            region.forEachTile((x: number, y: number) => {
-                let dynamicArea = region.getDynamicArea(x, y),
-                    tileInfo =
-                        region.hasDynamicAreas() && dynamicArea
-                            ? this.buildDynamicTile(player, dynamicArea, x, y)
-                            : this.buildTile(x, y);
+            if (region.hasDynamicAreas())
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTileData(region, true, player)
+                ];
 
-                data[surroundingRegion].push(tileInfo);
-            });
+            // We skip if the region is loaded and we are not forcing static data.
+            if (!player.hasLoadedRegion(surroundingRegion) || force) {
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTileData(region)
+                ];
 
-            player.loadRegion(surroundingRegion);
+                player.loadRegion(surroundingRegion);
+            }
+
+            // Remove data to prevent client from parsing unnecessarily.
+            if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
         });
 
         return data;
+    }
+
+    /**
+     * Iterates through a specified region paramater and extracts the tile data into an array.
+     * It returns that array. If the `dynamic` paramater is set to true, it will parse through
+     * the dynamic tiles instead. Note that the dynamic tiles are not contained in the static tiles.
+     * @param region The region used to extract tile data from.
+     * @param dynamic Parameter definining whether or not to grab dynamic tile data instead.
+     * @param player Optional parameter only necessary when grabbing dynamic tile data.
+     * @returns A RegionTileData array with all the tile data in that region.
+     */
+
+    private getRegionTileData(region: Region, dynamic = false, player?: Player): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        if (dynamic)
+            region.forEachDynamicTile((x: number, y: number, area: Area) =>
+                tileData.push(this.buildDynamicTile(player!, area, x, y))
+            );
+        else region.forEachTile((x: number, y: number) => tileData.push(this.buildTile(x, y)));
+
+        return tileData;
     }
 
     /**
