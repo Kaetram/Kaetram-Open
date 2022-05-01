@@ -426,7 +426,19 @@ export default class Regions {
             region.forEachDynamicTile((x: number, y: number, area: Area) =>
                 tileData.push(this.buildDynamicTile(player!, area, x, y))
             );
-        else region.forEachTile((x: number, y: number) => tileData.push(this.buildTile(x, y)));
+        else
+            region.forEachTile((x: number, y: number) => {
+                let tile = this.buildTile(x, y);
+
+                /**
+                 * Empty static tile data should be ignored. Otherwise this
+                 * will cause issues when trying to send tree data.
+                 */
+
+                if (tile.data < 1) return;
+
+                tileData.push(tile);
+            });
 
         return tileData;
     }
