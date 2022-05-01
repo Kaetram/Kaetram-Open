@@ -374,6 +374,14 @@ export default class Regions {
             // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
+            // Parse and send tree data.
+            if (region.hasTrees())
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTreeData(region, player)
+                ];
+
+            // Parse and send dynamic areas.
             if (region.hasDynamicAreas())
                 data[surroundingRegion] = [
                     ...data[surroundingRegion],
@@ -389,18 +397,6 @@ export default class Regions {
 
                 player.loadRegion(surroundingRegion);
             }
-
-            /**
-             * Trees are added after parsing region data. This is because when
-             * we initially parsed the trees we marked the tree tiles as 0.
-             * We essentially add the tree tiles after parsing static tiles.
-             */
-
-            if (region.hasTrees())
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionTreeData(region, player)
-                ];
 
             // Remove data to prevent client from parsing unnecessarily.
             if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
@@ -453,15 +449,9 @@ export default class Regions {
     private getRegionTreeData(region: Region, player: Player): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        /**
-         * TODO - After region saving is implemented, we need to verify
-         * whether or not the tree should be parsed depending on a player's
-         * information regarding this tree. (Each player will save a list
-         * of trees and their states to prevent reloading trees unnecessarily).
-         */
-
         // Iterate through all the trees in the region.
         region.forEachTree((tree: Tree) => {
+            // No need to reload trees that haven't changed.
             if (player.hasLoadedTree(tree)) return;
 
             // Parse tree tiles.
@@ -483,7 +473,7 @@ export default class Regions {
         let tileData: RegionTileData[] = [];
 
         tree.forEachTile((data: Tile, index: number) => {
-            // Perhaps we can move this into the tree itself?
+            // Perhaps we can optimize further by storing this directly in the tree?
             let coord = this.map.indexToCoord(index),
                 tile: RegionTileData = {
                     x: coord.x,
