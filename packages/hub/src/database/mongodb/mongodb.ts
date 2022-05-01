@@ -20,11 +20,10 @@ export default class MongoDB {
         password: string,
         private databaseName: string
     ) {
-        let { mongodbSrv } = config;
-
-        let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb';
-        let authInsert = !!username && !!password ? `${username}:${password}@` : '';
-        let portInsert = !!port && port > 0 ? `:${port}` : '';
+        let { mongodbSrv } = config,
+            srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
+            authInsert = !!username && !!password ? `${username}:${password}@` : '',
+            portInsert = !!port && port > 0 ? `:${port}` : '';
 
         this.url = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
     }
