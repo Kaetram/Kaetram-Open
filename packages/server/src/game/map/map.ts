@@ -35,7 +35,7 @@ export default class Map {
     public tileSize = map.tileSize;
 
     // Map data and collisions
-    private data: (number | number[])[] = map.data;
+    public data: (number | number[])[] = map.data;
     private collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
@@ -344,18 +344,6 @@ export default class Map {
             v,
             d
         };
-    }
-
-    /**
-     * Updates the global map data with provided data. This
-     * function will be visible to all players, so it must be
-     * used only when necessary.
-     * @param index Index of the data we are updating.
-     * @param data The data we are writing to the map.
-     */
-
-    public setData(index: number, data: Tile): void {
-        this.data[index] = data;
     }
 
     /**

@@ -138,6 +138,7 @@ export default class Player extends Character {
     private currentSong: string | null = null;
 
     public regionsLoaded: number[] = [];
+    public treesLoaded: { [instance: string]: boolean } = {};
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
