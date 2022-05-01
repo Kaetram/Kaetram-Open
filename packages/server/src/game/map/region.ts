@@ -3,12 +3,14 @@ import _ from 'lodash';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Area from './areas/area';
+import Tree from '../globals/impl/tree';
 
 export default class Region {
     private entities: { [instance: string]: Entity } = {};
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
+    private trees: Tree[] = [];
 
     public constructor(
         public x: number,
@@ -92,6 +94,23 @@ export default class Region {
     }
 
     /**
+     * Adds a tree to the region.
+     * @param tree The tree we are adding to the region.
+     */
+
+    public addTree(tree: Tree): void {
+        this.trees.push(tree);
+    }
+
+    /**
+     * @returns If the amount of trees in the array is greater than 0.
+     */
+
+    public hasTrees(): boolean {
+        return this.trees.length > 0;
+    }
+
+    /**
      * Grab a list of entity instances and remove the `reject` from the list.
      * @param reject Entity that we are ignoring (typically a player).
      * @returns A list of entity instances.
@@ -168,6 +187,15 @@ export default class Region {
         for (let area of this.dynamicAreas)
             for (let i = area.y; i < area.y + area.height; i++)
                 for (let j = area.x; j < area.x + area.width; j++) callback(j, i, area);
+    }
+
+    /**
+     * Iterates through all the trees and returns each tree.
+     * @param callback Tree that is being iterated.
+     */
+
+    public forEachTree(callback: (tree: Tree) => void): void {
+        _.each(this.trees, callback);
     }
 
     /**
