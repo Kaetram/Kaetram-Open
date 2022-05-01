@@ -12,6 +12,8 @@ import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
 import { List, Spawn, Map as MapPacket } from '../../network/packets';
 import { RegionData, RegionTileData } from '@kaetram/common/types/region';
+import { Tile } from '@kaetram/common/types/map';
+import Tree from '../globals/impl/tree';
 
 /**
  * Class responsible for chunking up the map.
@@ -379,6 +381,18 @@ export default class Regions {
                 player.loadRegion(surroundingRegion);
             }
 
+            /**
+             * Trees are added after parsing region data. This is because when
+             * we initially parsed the trees we marked the tree tiles as 0.
+             * We essentially add the tree tiles after parsing static tiles.
+             */
+
+            if (region.hasTrees())
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTreeData(region)
+                ];
+
             // Remove data to prevent client from parsing unnecessarily.
             if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
         });
@@ -404,6 +418,44 @@ export default class Regions {
                 tileData.push(this.buildDynamicTile(player!, area, x, y))
             );
         else region.forEachTile((x: number, y: number) => tileData.push(this.buildTile(x, y)));
+
+        return tileData;
+    }
+
+    /**
+     * Parses through all the trees within the region specified and
+     * grabs tile data from them. It returns a RegionTileData array.
+     * @param region The region we are looking for trees in.
+     * @returns RegionTileData containing tree information.
+     */
+
+    private getRegionTreeData(region: Region): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        /**
+         * TODO - After region saving is implemented, we need to verify
+         * whether or not the tree should be parsed depending on a player's
+         * information regarding this tree. (Each player will save a list
+         * of trees and their states to prevent reloading trees unnecessarily).
+         */
+
+        // Iterate through all the trees in the region.
+        region.forEachTree((tree: Tree) => {
+            // Parse tree tiles.
+            tree.forEachTile((data: Tile, index: number) => {
+                let coord = this.map.indexToCoord(index),
+                    tile: RegionTileData = {
+                        x: coord.x,
+                        y: coord.y,
+                        data
+                    };
+
+                // Check for collision of the tile.
+                if (this.map.isCollisionIndex(index)) tile.c = true;
+
+                tileData.push(tile);
+            });
+        });
 
         return tileData;
     }
@@ -445,7 +497,7 @@ export default class Regions {
      * @param area The area containing the dynamic tiles - used for mapping.
      * @param x The original tile x grid coordinate.
      * @param y The original tile y grid coordinate.
-     * @returns The mapped tileInfo.
+     * @returns The mapped region tile data.
      */
 
     private buildDynamicTile(player: Player, area: Area, x: number, y: number): RegionTileData {
