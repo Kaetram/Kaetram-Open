@@ -282,7 +282,8 @@ export const enum Constants {
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
+    TUTORIAL_SPAWN_POINT = '375,40', // 'x,y' values
+    TREE_REGROW = 30_000
 }
 
 export enum APIConstants {
