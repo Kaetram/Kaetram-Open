@@ -62,6 +62,7 @@ export default class Trees {
         // Initialize cut tree's data.
         tree.load(treeInfo);
 
+        // Add tree to the region.
         if (region) region.addTree(tree);
 
         /**
@@ -74,7 +75,11 @@ export default class Trees {
         if (Object.keys(tree.data).length !== treeInfo.data.length)
             log.warning(`Tree x: ${coords.x} y: ${coords.y} contains partial data.`);
 
+        // Add our tree to our list of trees.
         this.trees[tree.instance] = tree;
+
+        // Send an update when a tree's state undergoes a change.
+        tree.onStateChange(() => this.regions.sendUpdate(region));
     }
 
     /**

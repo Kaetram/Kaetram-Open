@@ -167,7 +167,7 @@ export default class Incoming {
             this.player.userAgent = userAgent;
 
             this.player.regionsLoaded = [];
-            this.player.updateRegion(true);
+            //this.player.updateRegion(true);
         }
 
         this.player.ready = true;

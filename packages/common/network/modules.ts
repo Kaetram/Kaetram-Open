@@ -184,17 +184,6 @@ export enum Professions {
     Mining
 }
 
-export enum Trees {
-    Oak,
-    Palm,
-    IceOak,
-    IcePalm
-}
-
-export enum Rocks {
-    BlueSteel
-}
-
 export enum Enchantment {
     Bloodsucking,
     Critical,
@@ -337,4 +326,11 @@ export enum EntityType {
     Chest,
     Projectile,
     Object
+}
+
+// States that a tree can be in. We can obviously add more
+// as more pixel art is added.
+export enum TreeState {
+    Default,
+    Cut
 }
