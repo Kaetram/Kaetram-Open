@@ -23,6 +23,7 @@ export default class Tree {
 
     public state: Modules.TreeState = Modules.TreeState.Default;
 
+    private respawnTimeout?: NodeJS.Timeout | undefined;
     private stateCallback?: () => void;
 
     public constructor(public type: string) {}
@@ -78,15 +79,23 @@ export default class Tree {
     }
 
     /**
-     * Iterates through each tile in the data (depending on the state of the tree).
-     * @param callback The data tile alongside its parsed number index.
+     * Cuts a tree by updating its state. We create a respawn
+     * timeout that regrows the tree and updates the nearby
+     * region when the timeout expires.
      */
 
-    public forEachTile(callback: (data: Tile, index: number) => void): void {
-        // Data depends on the state of the tree.
-        let data = this.isCut() ? this.cutData : this.data;
+    private cut(): void {
+        // Cannot cut a tree that's already cut.
+        if (this.respawnTimeout) return;
 
-        _.each(data, (tile: Tile, index: string) => callback(tile, parseInt(index)));
+        this.setState(Modules.TreeState.Cut);
+
+        // Reset the tree once the timeout expires.
+        this.respawnTimeout = setTimeout(() => {
+            this.setState(Modules.TreeState.Default);
+
+            this.respawnTimeout = undefined;
+        }, Modules.Constants.TREE_REGROW);
     }
 
     /**
@@ -104,10 +113,21 @@ export default class Tree {
      */
 
     private setState(state: Modules.TreeState): void {
-        log.debug('updating tree state');
         this.state = state;
 
         this.stateCallback?.();
+    }
+
+    /**
+     * Iterates through each tile in the data (depending on the state of the tree).
+     * @param callback The data tile alongside its parsed number index.
+     */
+
+    public forEachTile(callback: (data: Tile, index: number) => void): void {
+        // Data depends on the state of the tree.
+        let data = this.isCut() ? this.cutData : this.data;
+
+        _.each(data, (tile: Tile, index: string) => callback(tile, parseInt(index)));
     }
 
     /**

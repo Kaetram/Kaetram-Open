@@ -210,67 +210,6 @@ export default class Incoming {
             case Opcodes.Equipment.Unequip:
                 return this.player.equipment.unequip(type);
         }
-
-        // let [opcode, type] = message;
-
-        // switch (opcode) {
-        //     case Opcodes.Equipment.Unequip: {
-        //         if (!this.player.inventory.hasSpace()) {
-        //             this.player.send(
-        //                 new Notification(Opcodes.Notification.Text, {
-        //                     message: 'You do not have enough space in your inventory.'
-        //                 })
-        //             );
-        //             return;
-        //         }
-
-        //         // switch (type) {
-        //         //     case 'weapon':
-        //         //         if (!this.player.hasWeapon()) return;
-
-        //         //         this.player.inventory.add(this.player.weapon.getItem());
-        //         //         this.player.setWeapon(-1, -1, -1, -1);
-
-        //         //         break;
-
-        //         //     case 'armour':
-        //         //         if (this.player.hasArmour() && this.player.armour.id === 114) return;
-
-        //         //         this.player.inventory.add(this.player.armour.getItem());
-        //         //         this.player.setArmour(114, 1, -1, -1);
-
-        //         //         break;
-
-        //         //     case 'pendant':
-        //         //         if (!this.player.hasPendant()) return;
-
-        //         //         this.player.inventory.add(this.player.pendant.getItem());
-        //         //         this.player.setPendant(-1, -1, -1, -1);
-
-        //         //         break;
-
-        //         //     case 'ring':
-        //         //         if (!this.player.hasRing()) return;
-
-        //         //         this.player.inventory.add(this.player.ring.getItem());
-        //         //         this.player.setRing(-1, -1, -1, -1);
-
-        //         //         break;
-
-        //         //     case 'boots':
-        //         //         if (!this.player.hasBoots()) return;
-
-        //         //         this.player.inventory.add(this.player.boots.getItem());
-        //         //         this.player.setBoots(-1, -1, -1, -1);
-
-        //         //         break;
-        //         // }
-
-        //         this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
-
-        //         break;
-        //     }
-        // }
     }
 
     private handleMovement(data: MovementPacket): void {

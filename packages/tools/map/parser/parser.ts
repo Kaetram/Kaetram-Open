@@ -482,8 +482,6 @@ export default class ProcessMap {
         return tileset.name.toLowerCase() === 'entities';
     }
 
-    //private isAnimationTile()
-
     /**
      * A function to check if a property is colliding. We have
      * a separate function as we will add more properties that
