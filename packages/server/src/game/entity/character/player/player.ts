@@ -53,6 +53,7 @@ import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import Tree from '../../../globals/impl/tree';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -138,7 +139,7 @@ export default class Player extends Character {
     private currentSong: string | null = null;
 
     public regionsLoaded: number[] = [];
-    public treesLoaded: { [instance: string]: boolean } = {};
+    public treesLoaded: { [instance: string]: Modules.TreeState } = {};
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
@@ -701,8 +702,27 @@ export default class Player extends Character {
         this.regionsLoaded.push(region);
     }
 
+    /**
+     * Adds a tree to our loaded tree instances.
+     * @param tree The tree we are adding.
+     */
+
+    public loadTree(tree: Tree): void {
+        this.treesLoaded[tree.instance] = tree.state;
+    }
+
     public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
+    }
+
+    /**
+     * Checks if the tree is within our loaded trees and that the state matches.
+     * @param tree The tree we are chceking.
+     * @returns If the tree is loaded and the state matches.
+     */
+
+    public hasLoadedTree(tree: Tree): boolean {
+        return tree.instance in this.treesLoaded && this.treesLoaded[tree.instance] === tree.state;
     }
 
     public hasLoadedLight(light: number): boolean {

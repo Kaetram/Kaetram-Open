@@ -317,6 +317,15 @@ export default class Regions {
     }
 
     /**
+     * Sends a region update to all the players within the nearby regions.
+     * @param region The region to pivot the update around.
+     */
+
+    public sendUpdate(region: Region): void {
+        region.forEachPlayer((player: Player) => this.sendRegion(player));
+    }
+
+    /**
      * Grabs a region from our list based on the region parameter.
      * @param region The region id that we are attempting to grab.
      * @returns Returns the region object with the respective id.
@@ -390,7 +399,7 @@ export default class Regions {
             if (region.hasTrees())
                 data[surroundingRegion] = [
                     ...data[surroundingRegion],
-                    ...this.getRegionTreeData(region)
+                    ...this.getRegionTreeData(region, player)
                 ];
 
             // Remove data to prevent client from parsing unnecessarily.
@@ -429,7 +438,7 @@ export default class Regions {
      * @returns RegionTileData containing tree information.
      */
 
-    private getRegionTreeData(region: Region): RegionTileData[] {
+    private getRegionTreeData(region: Region, player: Player): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
         /**
@@ -441,20 +450,39 @@ export default class Regions {
 
         // Iterate through all the trees in the region.
         region.forEachTree((tree: Tree) => {
+            if (player.hasLoadedTree(tree)) return;
+
             // Parse tree tiles.
-            tree.forEachTile((data: Tile, index: number) => {
-                let coord = this.map.indexToCoord(index),
-                    tile: RegionTileData = {
-                        x: coord.x,
-                        y: coord.y,
-                        data
-                    };
+            tileData = [...tileData, ...this.getTreeData(tree)];
 
-                // Check for collision of the tile.
-                if (this.map.isCollisionIndex(index)) tile.c = true;
+            player.loadTree(tree);
+        });
 
-                tileData.push(tile);
-            });
+        return tileData;
+    }
+
+    /**
+     * Grabs individual tree data from a specified tree.
+     * @param tree The tree we are grabbing data for.
+     * @returns RegionTileData array containing tree information.
+     */
+
+    private getTreeData(tree: Tree): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        tree.forEachTile((data: Tile, index: number) => {
+            // Perhaps we can move this into the tree itself?
+            let coord = this.map.indexToCoord(index),
+                tile: RegionTileData = {
+                    x: coord.x,
+                    y: coord.y,
+                    data
+                };
+
+            // Check for collision of the tile.
+            if (this.map.isCollisionIndex(index)) tile.c = true;
+
+            tileData.push(tile);
         });
 
         return tileData;
