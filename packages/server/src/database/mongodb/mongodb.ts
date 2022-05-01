@@ -27,10 +27,9 @@ export default class MongoDB {
         private databaseName: string,
         private mongodbSrv: boolean
     ) {
-        let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb';
-        let authInsert = !!username && !!password ? `${username}:${password}@` : '';
-        let portInsert = !!port && port > 0 ? `:${port}` : '';
-
+        let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
+            authInsert = !!username && !!password ? `${username}:${password}@` : '',
+            portInsert = !!port && port > 0 ? `:${port}` : '';
         this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
 
         // Attempt to connect to MongoDB.
