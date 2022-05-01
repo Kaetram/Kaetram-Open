@@ -96,7 +96,7 @@ export default class Trees {
         tree.data[index] = this.map.data[index];
 
         // Remove all tiles from the map data.
-        this.map.data[index] = 0;
+        this.map.data[index] = -1;
 
         // Search for tiles recursively right, left, down, up respectively.
         if (this.search(treeInfo, tree, index + 1)) return true;
