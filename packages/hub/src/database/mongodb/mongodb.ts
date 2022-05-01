@@ -20,11 +20,12 @@ export default class MongoDB {
         password: string,
         private databaseName: string
     ) {
-        let hasAuthentication = !!username && !!password;
+        let { mongodbSrv } = config,
+            srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
+            authInsert = !!username && !!password ? `${username}:${password}@` : '',
+            portInsert = !!port && port > 0 ? `:${port}` : '';
 
-        this.url = hasAuthentication
-            ? `mongodb://${username}:${password}@${host}:${port}/${databaseName}`
-            : `mongodb://${host}:${port}/${databaseName}`;
+        this.url = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
     }
 
     public async getConnection(): Promise<Db> {
