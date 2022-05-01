@@ -2,6 +2,8 @@ import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 
 import { ProcessedTree, Tile } from '@kaetram/common/types/map';
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 /**
  * Tree is an object that stores information about the
@@ -11,11 +13,15 @@ import { ProcessedTree, Tile } from '@kaetram/common/types/map';
  */
 
 export default class Tree {
+    public instance = Utils.createInstance(Modules.EntityType.Object);
+
     // Data contains original tile data from the map
     public data: { [index: number]: Tile } = {};
 
     // Tile data if the tree has been cut.
     public cutData: { [index: number]: Tile } = {};
+
+    public cut = false;
 
     public constructor(public type: string) {}
 
@@ -67,5 +73,12 @@ export default class Tree {
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.cutData[index]].flat().length === 0) this.cutData[index] = 0;
         });
+    }
+
+    public forEachTile(callback: (data: Tile, index: number) => void): void {
+        // Data depends on the state of the tree.
+        let data = this.cut ? this.cutData : this.data;
+
+        _.each(data, (tile: Tile, index: string) => callback(tile, parseInt(index)));
     }
 }
