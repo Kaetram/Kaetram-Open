@@ -84,7 +84,7 @@ export default class Tree {
      * region when the timeout expires.
      */
 
-    private cut(): void {
+    public cut(): void {
         // Cannot cut a tree that's already cut.
         if (this.respawnTimeout) return;
 
