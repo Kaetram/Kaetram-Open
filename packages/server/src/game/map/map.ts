@@ -215,6 +215,22 @@ export default class Map {
     }
 
     /**
+     * Checks if the tile data (at an index) is an object.
+     * @param data The tile data (number or number array) we are checking.
+     * @returns Boolean conditional if the tile data contains an object.
+     */
+
+    public isObject(data: Tile): boolean {
+        let isObject = false;
+
+        this.forEachTile(data, (tileId: number) => {
+            if (this.objects.includes(tileId)) isObject = true;
+        });
+
+        return isObject;
+    }
+
+    /**
      * Grabs the chest areas group parsed in the map.
      * @returns The chests areas parsed upon loading.
      */
@@ -246,18 +262,20 @@ export default class Map {
     }
 
     /**
-     * Checks and returns the cursor type of a specific tile. For example,
-     * tiles of certain trees will have an 'axe' cursor whereas the default
-     * is a normal hand. We check in the global objects for a cursor.
-     * @param tileIndex The index of the tile we are checking.
-     * @param tileId The tileId we are checking.
-     * @returns A string of the cursor for the specified tileIndex or tileId.
+     * Looks for cursor data in the provided tile data. The tile data
+     * is directly extracted from the map data at a certain index.
+     * @param data The tile data we are checking.
+     * @returns The cursor name if it exists.
      */
 
-    public getCursor(tileIndex: number, tileId: number): string | undefined {
-        if (tileId in this.cursors) return this.cursors[tileId];
+    public getCursor(data: Tile): string {
+        let cursor = '';
 
-        return Objects.getCursor(this.getObjectId(tileIndex));
+        this.forEachTile(data, (tileId: number) => {
+            if (tileId in this.cursors) cursor = this.cursors[tileId];
+        });
+
+        return cursor;
     }
 
     /**

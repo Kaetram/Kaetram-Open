@@ -6,6 +6,7 @@ import { isInt } from '../utils/util';
 
 import type Game from '../game';
 import { ProcessedAnimation } from '@kaetram/common/types/map';
+import { RegionData, RegionTileData } from './../../../common/types/region';
 
 type MapDataType = typeof mapData;
 export interface MapData extends MapDataType {
@@ -39,7 +40,7 @@ export type Cursors =
     | 'axe';
 
 export interface CursorsTiles {
-    [key: number]: Cursors | null;
+    [key: number]: string;
 }
 
 export type FlippedTile = { tileId: number; h: boolean; v: boolean; d: boolean };
@@ -105,19 +106,20 @@ export default class Map {
     }
 
     // TODO - Specify type
-    public synchronize(regionData: any): void {
+    public synchronize(regionData: RegionData): void {
         _.each(regionData, (region) => {
             this.loadRegion(region);
         });
     }
 
     // TODO - Specify type
-    public loadRegion(data: any): void {
+    public loadRegion(data: RegionTileData[]): void {
         // Use traditional for-loop instead of _
 
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
-                collisionIndex = this.collisions.indexOf(index);
+                collisionIndex = this.collisions.indexOf(index),
+                objectIndex = this.objects.indexOf(index);
 
             this.data[index] = tile.data;
 
@@ -134,13 +136,13 @@ export default class Map {
                 this.grid[position.y][position.x] = 0;
             }
 
-            // if (tile.isObject && objectIndex < 0) this.objects.push(index);
+            if (tile.o && objectIndex < 0) this.objects.push(index);
 
-            // if (!tile.isObject && objectIndex > -1) this.objects.splice(objectIndex, 1);
+            if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
 
-            // if (tile.cursor) this.cursorTiles[index] = tile.cursor;
+            if (tile.cur) this.cursorTiles[index] = tile.cur;
 
-            // if (!tile.cursor && index in this.cursorTiles) this.cursorTiles[index] = null;
+            if (!tile.cur && index in this.cursorTiles) this.cursorTiles[index] = '';
         }
 
         this.saveRegionData();
@@ -247,13 +249,13 @@ export default class Map {
     }
 
     public isObject(x: number, y: number): boolean {
-        let index = this.coordToIndex(x, y) - 1;
+        let index = this.coordToIndex(x, y);
 
         return this.objects.includes(index);
     }
 
-    public getTileCursor(x: number, y: number): Cursors | null {
-        let index = this.coordToIndex(x, y) - 1;
+    public getTileCursor(x: number, y: number): string | null {
+        let index = this.coordToIndex(x, y);
 
         if (!(index in this.cursorTiles)) return null;
 
