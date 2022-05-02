@@ -479,10 +479,13 @@ export default class Regions {
                     x: coord.x,
                     y: coord.y,
                     data
-                };
+                },
+                cursor = this.map.getCursor(data);
 
             // Check for collision of the tile.
             if (this.map.isCollisionIndex(index)) tile.c = true;
+            if (this.map.isObject(data)) tile.o = true;
+            if (cursor) tile.cur = cursor;
 
             tileData.push(tile);
         });

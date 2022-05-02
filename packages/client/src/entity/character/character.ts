@@ -529,6 +529,7 @@ export default class Character extends Entity {
 
         let character = new Character(`${x}-${y}`, 'object');
         character.setGridPosition(x, y);
+        character.type = Modules.EntityType.Object;
 
         this.setTarget(character);
     }
