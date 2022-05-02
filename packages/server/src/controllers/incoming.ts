@@ -360,10 +360,17 @@ export default class Incoming {
                 break;
 
             case Opcodes.Target.Object: {
-                let target = this.entities.get(instance) as Character;
+                let coords = instance.split('-'),
+                    index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+                    tree = this.world.trees.findTree(index);
 
-                this.player.setTarget(target);
-                this.player.handleObject(instance);
+                if (tree) tree.cut();
+
+                console.log(message);
+                // let target = this.entities.get(instance) as Character;
+
+                // this.player.setTarget(target);
+                // this.player.handleObject(instance);
 
                 break;
             }
