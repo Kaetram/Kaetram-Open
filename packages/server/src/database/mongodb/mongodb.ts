@@ -20,17 +20,17 @@ export default class MongoDB {
     public failCallback?: (error: Error) => void;
 
     public constructor(
-        host: string,
-        port: number,
-        username: string,
-        password: string,
-        private databaseName: string
+        private host: string,
+        private port: number,
+        private username: string,
+        private password: string,
+        private databaseName: string,
+        private mongodbSrv: boolean
     ) {
-        let hasAuthentication = !!username && !!password;
-
-        this.connectionUrl = hasAuthentication
-            ? `mongodb://${username}:${password}@${host}:${port}/${databaseName}`
-            : `mongodb://${host}:${port}/${databaseName}`;
+        let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
+            authInsert = !!username && !!password ? `${username}:${password}@` : '',
+            portInsert = !!port && port > 0 ? `:${port}` : '';
+        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
 
         // Attempt to connect to MongoDB.
         this.createConnection();
