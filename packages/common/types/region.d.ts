@@ -9,6 +9,8 @@ export interface RegionTileData {
     y: number;
     data: RegionTile;
     c?: boolean; // collision property
+    cur?: string; // cursor property
+    o?: boolean; // object property
 }
 
 export interface RegionData {
