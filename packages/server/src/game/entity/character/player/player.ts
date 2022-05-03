@@ -10,10 +10,8 @@ import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Friends from './friends';
 import Handler from './handler';
 import Mana from '../points/mana';
-import Trade from './trade';
 import Warp from './warp';
 
 import type { ExperienceCombatData } from '@kaetram/common/types/messages';
@@ -125,8 +123,6 @@ export default class Player extends Character {
     public webSocketClient;
 
     public abilities;
-    public friends;
-    public trade;
     public warp;
 
     public team?: string; // TODO
@@ -190,8 +186,6 @@ export default class Player extends Character {
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
-        this.friends = new Friends(this);
-        this.trade = new Trade(this);
 
         this.webSocketClient = connection.type === 'WebSocket';
     }
@@ -316,7 +310,6 @@ export default class Player extends Character {
         this.inventory = null!;
         this.abilities = null!;
         this.bank = null!;
-        this.trade = null!;
         this.warp = null!;
 
         this.connection = null!;
