@@ -32,6 +32,7 @@ export default class Item extends Entity {
     public movementSpeed = -1;
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
+    public lumberjacking = -1;
 
     private respawnTime = 30_000;
     private despawnDuration = 7000;
@@ -81,6 +82,7 @@ export default class Item extends Entity {
         this.ringLevel = this.data.ringLevel || this.ringLevel;
         this.bootsLevel = this.data.bootsLevel || this.bootsLevel;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
+        this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
     }
 
     /**
