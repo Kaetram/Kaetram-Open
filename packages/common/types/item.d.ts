@@ -22,4 +22,5 @@ export interface ItemData {
     ringLevel?: number;
     bootsLevel?: number;
     movementSpeed?: number;
+    lumberjacking?: number;
 }
