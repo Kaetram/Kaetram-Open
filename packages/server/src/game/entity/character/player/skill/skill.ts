@@ -41,16 +41,21 @@ export default abstract class Skill {
     }
 
     /**
-     * Serializes general data about the skill.
+     * Serializes general data about the skill. The level is sometimes not
+     * included when we just store the skill to the database.
+     * @param includeLevel Whether or not to include the level into the serializing.
      * @returns SkillData object containing information about the skill.
      */
 
-    public serialize(): SkillData {
-        return {
+    public serialize(includeLevel = false): SkillData {
+        let data: SkillData = {
             type: this.type,
-            experience: this.experience,
-            level: this.getLevel()
+            experience: this.experience
         };
+
+        if (includeLevel) data.level = this.getLevel();
+
+        return data;
     }
 
     /**
