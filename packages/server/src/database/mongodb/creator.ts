@@ -121,6 +121,16 @@ export default class Creator {
     }
 
     /**
+     * Serializes all the skills and stores the data into the database.
+     */
+
+    private saveSkills(player: Player): void {
+        let collection = this.database.collection('player_skills');
+
+        this.updateCollection(collection, player.username, player.skills.serialize());
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
