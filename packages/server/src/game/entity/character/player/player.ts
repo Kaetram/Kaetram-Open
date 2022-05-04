@@ -52,6 +52,7 @@ import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import Tree from '../../../globals/impl/tree';
+import Skills from './skills';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -88,6 +89,7 @@ export default class Player extends Character {
     private handler: Handler;
 
     public quests: Quests;
+    public skills: Skills;
     public equipment: Equipments;
     public mana: Mana = new Mana(Modules.Defaults.MANA);
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
@@ -181,6 +183,7 @@ export default class Player extends Character {
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
+        this.skills = new Skills(this);
         this.handler = new Handler(this);
         this.warp = new Warp(this);
 
@@ -309,6 +312,8 @@ export default class Player extends Character {
         this.handler = null!;
         this.inventory = null!;
         this.abilities = null!;
+        this.skills = null!;
+        this.quests = null!;
         this.bank = null!;
         this.warp = null!;
 
