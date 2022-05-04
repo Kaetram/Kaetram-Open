@@ -44,7 +44,7 @@ export default class InputController {
     public keyMovement = true;
     public cursorMoved = false;
 
-    private cursors: { [cursor in Cursors]?: Sprite | undefined } = {};
+    private cursors: { [cursor: string]: Sprite | undefined } = {};
     public lastMousePosition: Position = { x: 0, y: 0 };
 
     public hovering!: Modules.Hovering | null;
