@@ -155,6 +155,7 @@ export default class Incoming {
         this.player.loadInventory();
         this.player.loadBank();
         this.player.loadQuests();
+        this.player.loadSkills();
 
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
