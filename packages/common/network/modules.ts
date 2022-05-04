@@ -178,9 +178,8 @@ export enum Warps {
     Patsow
 }
 
-export enum Professions {
+export enum Skills {
     Lumberjacking,
-    Fishing,
     Mining
 }
 
