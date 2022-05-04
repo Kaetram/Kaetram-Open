@@ -11,6 +11,10 @@ export default class Skills {
 
     public constructor(private player: Player) {}
 
+    public load(data: SkillData[]): void {
+        console.log(data);
+    }
+
     /**
      * Iterates through all the skills and serializes their data.
      * The data is stored in an array so that it can be parsed.

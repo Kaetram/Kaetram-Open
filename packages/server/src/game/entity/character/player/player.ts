@@ -260,6 +260,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Loads the skill data from the database.
+     */
+
+    public loadSkills(): void {
+        this.database.loader?.loadSkills(this, this.skills.load.bind(this.skills));
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
