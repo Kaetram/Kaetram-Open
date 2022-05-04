@@ -39,9 +39,8 @@ export default class Trees {
             });
         });
 
-        log.info(
-            `Loaded ${this.trees.length} tree${Object.keys(this.trees).length > 1 ? 's' : ''}.`
-        );
+        let amount = Object.keys(this.trees).length;
+        log.info(`Loaded ${amount} tree${amount > 1 ? 's' : ''}.`);
     }
 
     /**
@@ -104,10 +103,12 @@ export default class Trees {
         this.map.data[index] = -1;
 
         // Search for tiles recursively right, left, down, up respectively.
-        if (this.search(treeInfo, tree, index + 1)) return true;
-        if (this.search(treeInfo, tree, index - 1)) return true;
-        if (this.search(treeInfo, tree, index + this.map.width)) return true;
-        if (this.search(treeInfo, tree, index - this.map.width)) return true;
+        if (treeInfo.data.length > 1) {
+            if (this.search(treeInfo, tree, index + 1)) return true;
+            if (this.search(treeInfo, tree, index - 1)) return true;
+            if (this.search(treeInfo, tree, index + this.map.width)) return true;
+            if (this.search(treeInfo, tree, index - this.map.width)) return true;
+        }
 
         return false;
     }
