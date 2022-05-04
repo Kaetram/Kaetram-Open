@@ -1,11 +1,11 @@
 import log from '@kaetram/common/util/log';
 
 import type { Db } from 'mongodb';
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 import type Player from '../../game/entity/character/player/player';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
 import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
-import type { SerializedSkills } from '@kaetram/common/types/skills';
+import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
 
 export default class Loader {
     public constructor(private database: Db) {}
@@ -41,6 +41,9 @@ export default class Loader {
 
     public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
         this.load(player.username, 'player_equipment', (info: unknown) => {
+            if ((info as SerializedEquipment[]).length === 0)
+                return log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+
             let [{ equipments }] = info as SerializedEquipment[];
 
             callback(equipments);
@@ -55,6 +58,9 @@ export default class Loader {
 
     public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_inventory', (info: unknown) => {
+            if ((info as SerializedContainer[]).length === 0)
+                return log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+
             let [{ slots }] = info as SerializedContainer[];
 
             callback(slots);
@@ -69,6 +75,9 @@ export default class Loader {
 
     public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_bank', (info: unknown) => {
+            if ((info as SerializedContainer[]).length === 0)
+                return log.warning(`[player_bank] No bank found for ${player.username}.`);
+
             let [{ slots }] = info as SerializedContainer[];
 
             callback(slots);
@@ -76,21 +85,33 @@ export default class Loader {
     }
 
     /**
-     * Loads teh quest data from the database and returns it into a QuestData array object.
+     * Loads the quest data from the database and returns it into a QuestData array object.
+     * Quest is one of the few objects where we must send empty data if we can't find any.
      * @param player The player we are extracting the quest data from.
      * @param callback The quest data in an array format of type QuestData.
      */
 
     public loadQuests(player: Player, callback: (questData: QuestData[]) => void): void {
         this.load(player.username, 'player_quests', (info: unknown) => {
+            if ((info as SerializedQuest[]).length === 0) return callback([]);
+
             let [{ quests }] = info as SerializedQuest[];
 
             callback(quests);
         });
     }
 
-    public loadSkills(player: Player, callback: (skills: unknown) => void): void {
+    /**
+     * Loads the skill data from the database and returns it into a SkillData array object.
+     * @param player The player we are extracting the skill data from.
+     * @param callback The skill data in an array format of type SkillData.
+     */
+
+    public loadSkills(player: Player, callback: (skills: SkillData[]) => void): void {
         this.load(player.username, 'player_skills', (info: unknown) => {
+            if ((info as SerializedSkills[]).length === 0)
+                return log.warning(`[player_skills] No skills found for ${player.username}.`);
+
             let [{ skills }] = info as SerializedSkills[];
 
             callback(skills);
