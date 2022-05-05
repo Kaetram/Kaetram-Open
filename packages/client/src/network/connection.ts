@@ -733,7 +733,7 @@ export default class Connection {
                     break;
                 }
 
-                case Opcodes.Experience.Profession:
+                case Opcodes.Experience.Skill:
                     if (!entity || !entity.isPlayer()) return;
 
                     if (entity.id === this.game.player.id)
