@@ -16,17 +16,17 @@ export default class Loader {
      * information in Kaetram is stored in a similar fashion, thus cleaning up the code.
      * @param username The username we are searching for in the collection.
      * @param collection The name of the collection.
-     * @param callback Raw data from the database.
+     * @param callback Raw data from the database or nothing if a problem occurs.
      */
 
-    public load(username: string, collection: string, callback: (data: never) => void): void {
+    public load(username: string, collection: string, callback: (data?: never) => void): void {
         let cursor = this.database.collection(collection).find({ username });
 
         cursor.toArray().then((info) => {
             if (info.length > 1) log.warning(`[${collection}] Duplicate entry for ${username}.`);
 
             // Return empty array if we can't find any data.
-            if (info.length === 0) return callback([] as never);
+            if (info.length === 0) return callback();
 
             // Return the raw data from the database.
             callback(info as never);
@@ -41,7 +41,7 @@ export default class Loader {
 
     public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
         this.load(player.username, 'player_equipment', (info: unknown) => {
-            if ((info as SerializedEquipment[]).length === 0)
+            if (!info)
                 return log.warning(`[player_equipment] No equipment found for ${player.username}.`);
 
             let [{ equipments }] = info as SerializedEquipment[];
@@ -58,7 +58,7 @@ export default class Loader {
 
     public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_inventory', (info: unknown) => {
-            if ((info as SerializedContainer[]).length === 0)
+            if (!info)
                 return log.warning(`[player_inventory] No inventory found for ${player.username}.`);
 
             let [{ slots }] = info as SerializedContainer[];
@@ -75,8 +75,7 @@ export default class Loader {
 
     public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_bank', (info: unknown) => {
-            if ((info as SerializedContainer[]).length === 0)
-                return log.warning(`[player_bank] No bank found for ${player.username}.`);
+            if (!info) return log.warning(`[player_bank] No bank found for ${player.username}.`);
 
             let [{ slots }] = info as SerializedContainer[];
 
@@ -93,7 +92,7 @@ export default class Loader {
 
     public loadQuests(player: Player, callback: (questData: QuestData[]) => void): void {
         this.load(player.username, 'player_quests', (info: unknown) => {
-            if ((info as SerializedQuest[]).length === 0) return callback([]);
+            if (!info) return callback([]);
 
             let [{ quests }] = info as SerializedQuest[];
 
@@ -109,7 +108,7 @@ export default class Loader {
 
     public loadSkills(player: Player, callback: (skills: SkillData[]) => void): void {
         this.load(player.username, 'player_skills', (info: unknown) => {
-            if ((info as SerializedSkills[]).length === 0)
+            if (!info)
                 return log.warning(`[player_skills] No skills found for ${player.username}.`);
 
             let [{ skills }] = info as SerializedSkills[];
