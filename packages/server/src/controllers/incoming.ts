@@ -248,7 +248,10 @@ export default class Incoming {
                 )
                     return;
 
-                if (!targetInstance) this.player.combat.stop();
+                if (!targetInstance) {
+                    this.player.skills.stop();
+                    this.player.combat.stop();
+                }
 
                 this.player.moving = true;
 
@@ -365,13 +368,9 @@ export default class Incoming {
                     index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
                     tree = this.world.trees.findTree(index);
 
-                if (tree) tree.cut();
+                if (!tree) return log.warning(`Couldn't find tree at ${index}.`);
 
-                console.log(message);
-                // let target = this.entities.get(instance) as Character;
-
-                // this.player.setTarget(target);
-                // this.player.handleObject(instance);
+                this.player.skills.getLumberjacking().cut(this.player, tree);
 
                 break;
             }
