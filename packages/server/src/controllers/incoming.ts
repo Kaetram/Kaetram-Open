@@ -364,6 +364,8 @@ export default class Incoming {
                 break;
 
             case Opcodes.Target.Object: {
+                this.player.cheatScore = 0;
+
                 let coords = instance.split('-'),
                     index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
                     tree = this.world.trees.findTree(index);
