@@ -1,5 +1,7 @@
 import Formulas from '../../../../../info/formulas';
 
+import log from '@kaetram/common/util/log';
+
 import { Modules } from '@kaetram/common/network';
 import { SkillData } from '@kaetram/common/types/skills';
 
@@ -9,6 +11,14 @@ export default abstract class Skill {
     private experienceCallback?: (experience: number) => void;
 
     public constructor(public type: Modules.Skills) {}
+
+    /**
+     * Unimplemented `stop()` function for the subclasses.
+     */
+
+    public stop(): void {
+        log.debug(`[Skill] stop() uninitialized in ${this.type}`);
+    }
 
     /**
      * Converts the skill's experience to a level integer.

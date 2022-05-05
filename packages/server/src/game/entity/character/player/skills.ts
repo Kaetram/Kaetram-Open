@@ -1,8 +1,11 @@
+import _ from 'lodash';
+
 import Player from './player';
 import Skill from './skill/skill';
 import Lumberjacking from './skill/impl/lumberjacking';
+
+import { Modules } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import _ from 'lodash';
 
 export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
@@ -11,8 +14,48 @@ export default class Skills {
 
     public constructor(private player: Player) {}
 
+    /**
+     * Iterates through the data from the database and finds the
+     * matching skill based on the type. Loads the experience into
+     * that skill if found.
+     * @param data Raw database data containing skill type and experience.
+     */
+
     public load(data: SkillData[]): void {
-        console.log(data);
+        _.each(data, (skillData: SkillData) => {
+            let skill = this.get(skillData.type);
+
+            if (skill) skill.setExperience(skillData.experience);
+        });
+    }
+
+    /**
+     * Skills such as lumberjacking may have loops that need to be stopped
+     * whenever an action such as movement or being attacked occurs. This is
+     * an overload function that calls the stop() function on all skills.
+     */
+
+    public stop(): void {
+        this.forEachSkill((skill: Skill) => skill.stop());
+    }
+
+    /**
+     * Grabs a skill from our array of skills based on its type.
+     * @param type The skill type identifier to look for.
+     * @returns The instance of the skill if found, otherwise undefined.
+     */
+
+    private get(type: Modules.Skills): Skill | undefined {
+        return _.find(this.skills, (skill: Skill) => skill.type === type);
+    }
+
+    /**
+     * Shortcut function for grabbing the lumberjacking instance.
+     * @returns The lumberjacking class instance.
+     */
+
+    public getLumberjacking(): Lumberjacking {
+        return this.lumberjacking;
     }
 
     /**

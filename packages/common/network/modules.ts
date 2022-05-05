@@ -282,7 +282,8 @@ export const enum Constants {
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '375,40', // 'x,y' values
-    TREE_REGROW = 30_000
+    TREE_REGROW = 30_000,
+    SKILL_LOOP = 1000 // How often we check the loop of a skill
 }
 
 export enum APIConstants {

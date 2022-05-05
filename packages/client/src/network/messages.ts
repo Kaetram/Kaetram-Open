@@ -7,13 +7,13 @@ import type { Opcodes } from '@kaetram/common/network';
 import type {
     MovementCallback,
     CombatCallback,
+    AnimationCallback,
     RespawnCallback,
     StoreCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 // TODO: Slowly remove all these.
 import type {
-    AnimationData,
     BubbleData,
     ChatData,
     CommandData,
@@ -67,7 +67,6 @@ type EntityListCallback = (ids: string[]) => void;
 type SyncCallback = (data: EntityData) => void;
 type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
-type AnimationCallback = (id: string, data: AnimationData) => void;
 interface ProjectileCallback {
     (opcode: Opcodes.Projectile, data: ProjectileData): void;
 }
