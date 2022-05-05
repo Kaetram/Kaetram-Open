@@ -79,7 +79,7 @@ export enum Notification {
 
 export enum Experience {
     Combat,
-    Profession
+    Skill
 }
 
 export enum NPC {

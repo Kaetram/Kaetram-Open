@@ -5,12 +5,19 @@ import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 import { SkillData } from '@kaetram/common/types/skills';
 
+type ExperienceCallback = (
+    name: string,
+    experience: number,
+    level: number,
+    newLevel?: boolean
+) => void;
+
 export default abstract class Skill {
     public experience = 0;
 
-    private experienceCallback?: (experience: number) => void;
+    private experienceCallback?: ExperienceCallback;
 
-    public constructor(public type: Modules.Skills) {}
+    public constructor(public type: Modules.Skills, public name = '') {}
 
     /**
      * Unimplemented `stop()` function for the subclasses.
@@ -30,24 +37,31 @@ export default abstract class Skill {
     }
 
     /**
-     * Adds experience to the skill.
+     * Adds experience to the skill and creates a callback. The callback
+     * contains the name of the skill, experience we are adding, the
+     * current level after adding experience, and whether the
+     * experience added resulted in a level-up.
      * @param experience How much exp we are adding to the skill.
      */
 
     public addExperience(experience: number): void {
+        let level = this.getLevel();
+
         this.setExperience(this.experience + experience);
+
+        // Level after adding experience.
+        let currentLevel = this.getLevel();
+
+        this.experienceCallback?.(this.name, experience, currentLevel, level !== currentLevel);
     }
 
     /**
-     * Sets the experience of the skill to the parameter provided
-     * and creates a callback each time exp changes.
+     * Sets the experience of the skill to the parameter provided.
      * @param experience The experience we are setting the skill to.
      */
 
     public setExperience(experience: number): void {
         this.experience = experience;
-
-        this.experienceCallback?.(experience);
     }
 
     /**
@@ -73,7 +87,7 @@ export default abstract class Skill {
      * @param callback The new experience of the skill.
      */
 
-    public onExperience(callback: (experience: number) => void): void {
+    public onExperience(callback: ExperienceCallback): void {
         this.experienceCallback = callback;
     }
 }
