@@ -1,0 +1,8 @@
+{
+    "oak": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    }
+}

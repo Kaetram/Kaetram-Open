@@ -21,7 +21,8 @@ export default class Equipment {
         public abilityLevel = -1,
         public power = 1,
         public rangedWeapon = false,
-        public amplifier = 1
+        public amplifier = 1,
+        public lumberjacking = -1
     ) {}
 
     /**
@@ -35,6 +36,7 @@ export default class Equipment {
         this.count = item.count;
         this.ability = item.ability;
         this.abilityLevel = item.abilityLevel;
+        this.lumberjacking = item.lumberjacking;
 
         this.updateCallback?.(this);
     }
@@ -49,6 +51,8 @@ export default class Equipment {
         this.ability = -1;
         this.abilityLevel = -1;
         this.power = 0;
+        this.amplifier = 1;
+        this.lumberjacking = -1;
     }
 
     /**
@@ -58,6 +62,16 @@ export default class Equipment {
 
     public isEmpty(): boolean {
         return !this.key;
+    }
+
+    /**
+     * Checks if the item is a lumberjacking item. Lumberjacking items are
+     * defined by equipments that have a lumberjacking value greater than 0.
+     * @returns If the lumberjacking attribute is greater than 0.
+     */
+
+    public isLumberjacking(): boolean {
+        return this.lumberjacking > 0;
     }
 
     /**

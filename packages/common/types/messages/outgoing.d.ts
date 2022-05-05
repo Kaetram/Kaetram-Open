@@ -31,6 +31,15 @@ export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => voi
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface AnimationPacket {
+    instance: string;
+    action: Modules.Actions;
+}
+
+export type AnimationCallback = (info: AnimationPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 export interface RespawnPacket {
     instance: string;
     x: number; // Spawn x coordinate
