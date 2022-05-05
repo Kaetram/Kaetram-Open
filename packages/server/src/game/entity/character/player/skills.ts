@@ -4,15 +4,18 @@ import Player from './player';
 import Skill from './skill/skill';
 import Lumberjacking from './skill/impl/lumberjacking';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import { Experience } from '@kaetram/server/src/network/packets';
 
 export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
 
     private skills: Skill[] = [this.lumberjacking];
 
-    public constructor(private player: Player) {}
+    public constructor(private player: Player) {
+        this.loadCallbacks();
+    }
 
     /**
      * Iterates through the data from the database and finds the
@@ -30,6 +33,16 @@ export default class Skills {
     }
 
     /**
+     * Loads all the callbacks for skills. Currently this implies only
+     * the experience callback. We use this to determine packets to send
+     * to the player's client.
+     */
+
+    private loadCallbacks(): void {
+        this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
+    }
+
+    /**
      * Skills such as lumberjacking may have loops that need to be stopped
      * whenever an action such as movement or being attacked occurs. This is
      * an overload function that calls the stop() function on all skills.
@@ -37,6 +50,27 @@ export default class Skills {
 
     public stop(): void {
         this.forEachSkill((skill: Skill) => skill.stop());
+    }
+
+    private handleExperience(
+        name: string,
+        experience: number,
+        level: number,
+        newLevel?: boolean
+    ): void {
+        if (newLevel)
+            this.player.popup(
+                'Skill level up!',
+                `Congratulations, your ${name} skill has reached level ${level}!`,
+                '#9933ff'
+            );
+
+        this.player.send(
+            new Experience(Opcodes.Experience.Skill, {
+                id: this.player.instance,
+                amount: experience
+            })
+        );
     }
 
     /**
