@@ -91,7 +91,7 @@ type BlinkCallback = (instance: string) => void;
 type HealCallback = (data: HealData) => void;
 interface ExperienceCallback {
     (Opcodes: Opcodes.Experience.Combat, data: ExperienceCombatData): void;
-    (Opcodes: Opcodes.Experience.Profession, data: ExperienceProfessionData): void;
+    (Opcodes: Opcodes.Experience.Skill, data: ExperienceProfessionData): void;
 }
 type DeathCallback = (id: string) => void;
 type AudioCallback = (song: AudioName) => void;
