@@ -33,6 +33,7 @@ import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import { SerializedStoreInfo, SerializedStoreItem } from '@kaetram/common/types/stores';
+import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
 export default class Connection {
     private app;
     private audio;
@@ -506,8 +507,8 @@ export default class Connection {
             }*/
         });
 
-        this.messages.onAnimation((id, info) => {
-            let character = this.entities.get<Character>(id);
+        this.messages.onAnimation((info: AnimationPacket) => {
+            let character = this.entities.get<Character>(info.instance);
 
             if (!character) return;
 

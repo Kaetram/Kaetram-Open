@@ -112,10 +112,13 @@ export default class Handler {
     private handleDeath(): void {
         this.player.dead = true;
 
+        this.player.skills.stop();
         this.player.combat.stop();
 
+        // Send death packet only to the player.
         this.player.send(new Death(this.player.instance));
 
+        // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(new Despawn(this.player.instance), true);
     }
 

@@ -313,6 +313,9 @@ export default class Player extends Character {
     }
 
     public destroy(): void {
+        this.combat.stop();
+        this.skills.stop();
+
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = null;

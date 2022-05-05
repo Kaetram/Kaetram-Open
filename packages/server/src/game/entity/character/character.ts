@@ -122,6 +122,7 @@ export default abstract class Character extends Entity {
         // Stop hitting if entity is dead.
         if (this.isDead()) return;
 
+        // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
 
         // Sync the change in hitpoints to nearby entities.
@@ -134,13 +135,9 @@ export default abstract class Character extends Entity {
         });
 
         // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) {
-            // Stops the attacker's combat if the character is dead.
-            if (attacker) attacker.combat.stop();
+        if (this.isDead()) return this.deathCallback?.(attacker);
 
-            return this.deathCallback?.(attacker);
-        }
-
+        // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
     }
 
