@@ -66,6 +66,9 @@ export default class Handler {
      */
 
     private handleDeath(attacker?: Character): void {
+        // Stops the attacker's combat if the character is dead.
+        if (attacker) attacker.combat.stop();
+
         // Spawn item drops.
         let drop = this.mob.getDrop();
 

@@ -103,7 +103,7 @@ export default class Tree {
      * @returns If the current state is that of a cut tree state.
      */
 
-    private isCut(): boolean {
+    public isCut(): boolean {
         return this.state === Modules.TreeState.Cut;
     }
 

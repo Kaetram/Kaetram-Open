@@ -29,3 +29,4 @@ export { default as Store } from './store';
 export { default as Overlay } from './overlay';
 export { default as Camera } from './camera';
 export { default as Bubble } from './bubble';
+export { default as Animation } from './animation';
