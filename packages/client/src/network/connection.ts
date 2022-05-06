@@ -9,16 +9,10 @@ import log from '../lib/log';
 import * as Detect from '../utils/detect';
 
 import type {
-    CombatHitData,
-    CombatSyncData,
     ContainerBatchData,
     ContainerAddData,
     ContainerRemoveData,
     ExperienceCombatData,
-    MovementFollowData,
-    MovementMoveData,
-    MovementOrientateData,
-    MovementStateData,
     MovementStopData,
     NPCCountdownData,
     NPCTalkData,
@@ -31,20 +25,15 @@ import type {
     PointerRelativeData,
     ProfessionBatchData,
     ProfessionUpdateData,
-    QuestAchievementBatchData,
     QuestBatchData,
-    QuestFinishData,
-    QuestProgressData,
-    ShopOpenData,
-    ShopRefreshData,
-    ShopRemoveData,
-    ShopSelectData
+    QuestProgressData
 } from '@kaetram/common/types/messages';
 import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import { QuestData } from '@kaetram/common/types/quest';
+import { SerializedStoreInfo, SerializedStoreItem } from '@kaetram/common/types/stores';
+import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
 export default class Connection {
     private app;
     private audio;
@@ -220,32 +209,32 @@ export default class Connection {
 
             if (data.equipments) _.each(data.equipments, entity.setEquipment.bind(entity));
 
+            entity.setSprite(this.game.getSprite(entity.armour.string));
+
             this.menu.profile.update();
         });
 
         this.messages.onMovement((opcode, info) => {
             switch (opcode) {
                 case Opcodes.Movement.Move: {
-                    let data = info as MovementMoveData,
-                        entity = this.entities.get<Character>(data.id);
+                    let entity = this.entities.get<Character>(info.instance);
 
-                    if (!entity) return;
+                    if (!entity || !info.x || !info.y) return;
 
-                    if (data.forced) entity.stop(true);
+                    if (info.forced) entity.stop(true);
 
-                    entity.go(data.x, data.y);
+                    entity.go(info.x, info.y);
 
                     break;
                 }
 
                 case Opcodes.Movement.Follow: {
-                    let data = info as MovementFollowData,
-                        follower = this.entities.get<Character>(data.attackerId),
-                        followee = this.entities.get<Character>(data.targetId);
+                    let entity = this.entities.get<Character>(info.instance),
+                        target = this.entities.get<Character>(info.target!);
 
-                    if (!followee || !follower) return;
+                    if (!entity || !target) return;
 
-                    follower.follow(followee);
+                    entity.follow(target);
 
                     break;
                 }
@@ -263,22 +252,20 @@ export default class Connection {
                 }
                 case Opcodes.Movement.Freeze:
                 case Opcodes.Movement.Stunned: {
-                    let data = info as MovementStateData,
-                        pEntity = this.entities.get<Character>(data.id);
+                    let entity = this.entities.get<Character>(info.instance);
 
-                    if (!pEntity) return;
+                    if (!entity) return;
 
-                    if (data.state) pEntity.stop(false);
+                    if (info.state) entity.stop(false);
 
-                    if (opcode === Opcodes.Movement.Stunned) pEntity.stunned = data.state;
-                    else if (opcode === Opcodes.Movement.Freeze) pEntity.frozen = data.state;
+                    if (opcode === Opcodes.Movement.Stunned) entity.stunned = !!info.state;
+                    else if (opcode === Opcodes.Movement.Freeze) entity.frozen = !!info.state;
 
                     break;
                 }
 
                 case Opcodes.Movement.Orientate: {
-                    let [player, orientation] = info as MovementOrientateData,
-                        entity = this.entities.get<Character>(player);
+                    let entity = this.entities.get<Character>(info.instance);
 
                     // entity.stop();
                     entity.performAction(orientation, Modules.Actions.Orientate);
@@ -310,16 +297,10 @@ export default class Connection {
                 entity.setGridPosition(info.x, info.y);
 
                 if (isPlayer) {
-                    this.entities.clearPlayers(this.game.player);
                     this.game.player.clearHealthBar();
                     this.renderer.camera.centreOn(entity);
                     this.renderer.updateAnimatedTiles();
-                } else if (entity.isPlayer()) {
-                    delete this.entities.entities[entity.id];
-                    return;
                 }
-
-                this.socket.send(Packets.Request, [this.game.player.id]);
 
                 this.entities.registerPosition(entity);
                 entity.frozen = false;
@@ -406,35 +387,73 @@ export default class Connection {
         });
 
         this.messages.onCombat((opcode, info) => {
-            let attacker = this.entities.get<Character>(info.attackerId!),
+            let attacker = this.entities.get<Character>(info.instance),
+                target = this.entities.get<Character>(info.target!);
+
+            if (!attacker || !target) return;
+
+            switch (opcode) {
+                case Opcodes.Combat.Hit: {
+                    let isPlayer = target.id === this.game.id;
+
+                    if (!info.hit.aoe && !info.hit.poison) {
+                        attacker.lookAt(target);
+                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+                    } else if (info.hit.terror) target.terror = true;
+
+                    switch (info.hit.type) {
+                        case Modules.Hits.Critical:
+                            target.critical = true;
+
+                            break;
+
+                        default:
+                            if (attacker.id === this.game.player.id && info.hit.damage > 0)
+                                this.audio.play(
+                                    Modules.AudioTypes.SFX,
+                                    `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
+                                );
+
+                            break;
+                    }
+
+                    this.info.create(
+                        info.hit.type,
+                        [info.hit.damage, isPlayer],
+                        target.x,
+                        target.y
+                    );
+
+                    if (target.hurtSprite) {
+                        target.sprite = target.hurtSprite;
+                        window.setTimeout(() => {
+                            target.sprite = target.normalSprite;
+                        }, 75);
+                    }
+
+                    attacker.triggerHealthBar();
+                    target.triggerHealthBar();
+
+                    if (isPlayer && info.hit.damage > 0)
+                        this.audio.play(Modules.AudioTypes.SFX, 'hurt');
+                }
+            }
+
+            /*let attacker = this.entities.get<Character>(info.attackerId!),
                 target = this.entities.get<Character>(info.targetId!);
 
             if (!target || !attacker) return;
 
             switch (opcode) {
-                case Opcodes.Combat.Initiate:
-                    attacker.setTarget(target);
-
-                    target.addAttacker(attacker);
-
-                    if (target.id === this.game.player.id || attacker.id === this.game.player.id)
-                        this.socket.send(Packets.Combat, [
-                            Opcodes.Combat.Initiate,
-                            attacker.id,
-                            target.id
-                        ]);
-
-                    break;
-
                 case Opcodes.Combat.Hit: {
                     let data = info as CombatHitData,
                         hit = data.hitInfo!,
                         isPlayer = target.id === this.game.player.id;
 
-                    if (!hit.isAoE && !hit.isPoison) {
+                    if (!hit.aoe && !hit.poison) {
                         attacker.lookAt(target);
                         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                    } else if (hit.hasTerror) target.terror = true;
+                    } else if (hit.terror) target.terror = true;
 
                     switch (hit.type) {
                         case Modules.Hits.Critical:
@@ -485,11 +504,11 @@ export default class Connection {
 
                     break;
                 }
-            }
+            }*/
         });
 
-        this.messages.onAnimation((id, info) => {
-            let character = this.entities.get<Character>(id);
+        this.messages.onAnimation((info: AnimationPacket) => {
+            let character = this.entities.get<Character>(info.instance);
 
             if (!character) return;
 
@@ -714,7 +733,7 @@ export default class Connection {
                     break;
                 }
 
-                case Opcodes.Experience.Profession:
+                case Opcodes.Experience.Skill:
                     if (!entity || !entity.isPlayer()) return;
 
                     if (entity.id === this.game.player.id)
@@ -818,8 +837,10 @@ export default class Connection {
             }
         });
 
-        this.messages.onRespawn((id, x, y) => {
-            if (id !== this.game.player.id) {
+        this.messages.onRespawn((info) => {
+            let { instance, x, y } = info;
+
+            if (instance !== this.game.player.id) {
                 log.error('Player id mismatch.');
                 return;
             }
@@ -917,55 +938,71 @@ export default class Connection {
             }
         });
 
-        this.messages.onShop((opcode, info) => {
+        this.messages.onStore((opcode, info) => {
             let { shop } = this.menu;
 
+            console.log(opcode);
+            console.log(info);
+
             switch (opcode) {
-                case Opcodes.Shop.Open: {
-                    let { shopData } = info as ShopOpenData;
+                case Opcodes.Store.Open:
+                case Opcodes.Store.Update:
+                    return shop.open(info as SerializedStoreInfo);
 
-                    shop.open(shopData.id);
-                    shop.update(shopData);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Buy:
-                    break;
-
-                case Opcodes.Shop.Sell:
-                    break;
-
-                case Opcodes.Shop.Select: {
-                    let data = info as ShopSelectData;
-
-                    if (shop.isShopOpen(data.id)) shop.move(data);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Remove: {
-                    let { id, index } = info as ShopRemoveData;
-
-                    if (shop.isShopOpen(id)) shop.moveBack(index);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Refresh: {
-                    let data = info as ShopRefreshData;
-
-                    if (shop.isShopOpen(data.id)) shop.update(data);
-
-                    break;
-                }
+                case Opcodes.Store.Select:
+                    return shop.move(info.item!);
             }
+
+            // let { shop } = this.menu;
+
+            // switch (opcode) {
+            //     case Opcodes.Store.Open: {
+            //         let { shopData } = info as ShopOpenData;
+
+            //         shop.open(shopData.id);
+            //         shop.update(shopData);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Buy:
+            //         break;
+
+            //     case Opcodes.Store.Sell:
+            //         break;
+
+            //     case Opcodes.Store.Select: {
+            //         let data = info as ShopSelectData;
+
+            //         if (shop.isShopOpen(data.id)) shop.move(data);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Remove: {
+            //         let { id, index } = info as ShopRemoveData;
+
+            //         if (shop.isShopOpen(id)) shop.moveBack(index);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Refresh: {
+            //         let data = info as ShopRefreshData;
+
+            //         if (shop.isShopOpen(data.id)) shop.update(data);
+
+            //         break;
+            //     }
+            // }
         });
 
         this.messages.onMap((opcode: Opcodes.Map, info: string) => {
             let bufferData = window
                     .atob(info)
+                    // eslint-disable-next-line unicorn/prefer-spread
                     .split('')
+                    // eslint-disable-next-line unicorn/prefer-code-point
                     .map((char) => char.charCodeAt(0)),
                 inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
                 reigon = JSON.parse(inflatedString);

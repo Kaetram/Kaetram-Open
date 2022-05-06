@@ -4,14 +4,15 @@ import zlib from 'zlib';
 import log from '@kaetram/common/util/log';
 
 import { Modules } from '@kaetram/common/network';
-import type { ProcessedMap } from '@kaetram/common/types/map';
-import type { Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { ProcessedAnimation, ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
+import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
     #collisionTiles: { [tileId: number]: boolean } = {};
+    #trees: { [key: string]: ProcessedTree } = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -39,7 +40,7 @@ export default class ProcessMap {
             entities: {},
 
             tilesets: {},
-            animations: [],
+            animations: {},
             depth: 1,
 
             plateau: {},
@@ -47,7 +48,8 @@ export default class ProcessMap {
             high: [],
             objects: [],
             areas: {},
-            cursors: {}
+            cursors: {},
+            trees: []
         };
 
         this.parseTilesets();
@@ -81,6 +83,15 @@ export default class ProcessMap {
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
+        });
+
+        // Convert local tree dictionary into an array for the server.
+        _.each(this.#trees, (tree: ProcessedTree) => {
+            // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
+            if (tree.stump.length !== tree.cutStump.length)
+                return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
+
+            this.map.trees.push(tree);
         });
     }
 
@@ -126,16 +137,32 @@ export default class ProcessMap {
      */
 
     private parseTileset(tileset: Tileset): void {
-        let { tiles } = tileset;
+        let { tiles, firstgid } = tileset;
 
         _.each(tiles, (tile: Tile) => {
             let tileId = this.getTileId(tileset, tile);
+
+            if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
             _.each(tile.properties, (property: Property) => {
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
             });
         });
+    }
+
+    private parseAnimation(tileId: number, firstgid: number, animations: Animation[]): void {
+        // Temporary storage for animation data.
+        let data: ProcessedAnimation[] = [];
+
+        _.each(animations, (animation: Animation) => {
+            data.push({
+                duration: animation.duration,
+                tileId: this.getId(firstgid, animation.tileid, -1)
+            });
+        });
+
+        this.map.animations![tileId] = data;
     }
 
     /**
@@ -165,6 +192,11 @@ export default class ProcessMap {
             case 'cursor':
                 cursors[tileId] = value;
                 break;
+
+            case 'tree':
+            case 'stump':
+            case 'cutstump':
+                return this.parseTreeProperty(name, tileId, value);
         }
     }
 
@@ -199,7 +231,7 @@ export default class ProcessMap {
      *
      * Subsequently, any tile indexes that are colliding are added to the collision
      * array.
-     * @param data The raw data for each tile layer.
+     * @param mapData The raw data for each tile layer.
      */
 
     private parseTileLayerData(mapData: number[]): void {
@@ -275,7 +307,6 @@ export default class ProcessMap {
     /**
      * We parse through pre-defined object layers and add them
      * to the map data.
-     *
      * @param layer An object layer from Tiled map.
      */
 
@@ -293,8 +324,9 @@ export default class ProcessMap {
     }
 
     /**
+     * Takes data from Tiled properties and stores it into the areas of the map.
      * @param areaName The name of the area we are storing objects in.
-     * @param info The raw data received from Tiled.
+     * @param object The raw layer object data from Tiled.
      */
 
     private parseObject(areaName: string, object: LayerObject) {
@@ -316,6 +348,39 @@ export default class ProcessMap {
 
             this.map.areas[areaName][index][name as never] = value;
         });
+    }
+
+    /**
+     * Takes tree property data and stores it into the map trees property.
+     * If a tree already exists within said property, it appends data to it.
+     * Tree data is split into `data,` `stump,` and `cutStump.` After we
+     * store the tree data, we convert it into an array for the server to parse.
+     * @param name The name of the property.
+     */
+
+    private parseTreeProperty(name: string, tileId: number, value: never): void {
+        if (!(value in this.#trees))
+            this.#trees[value] = {
+                data: [],
+                stump: [],
+                cutStump: [],
+                type: value
+            };
+
+        // Organize tree data into their respective arrays.
+        switch (name) {
+            case 'tree':
+                this.#trees[value].data.push(tileId);
+                break;
+
+            case 'stump':
+                this.#trees[value].stump.push(tileId);
+                break;
+
+            case 'cutstump':
+                this.#trees[value].cutStump.push(tileId);
+                break;
+        }
     }
 
     /**
@@ -430,6 +495,19 @@ export default class ProcessMap {
     }
 
     /**
+     * A barebones function for adding firstgid, id, and offset together
+     * when trying to determine the overall tileId of a tile.
+     * @param firstgid The first tileId in the tileset.
+     * @param id The tileId of the current tile.
+     * @param offset Offset if we want.
+     * @returns The tileId globally amongst tilesets.
+     */
+
+    private getId(firstgid: number, id: number, offset = 0): number {
+        return firstgid + id + offset;
+    }
+
+    /**
      * We are using a unified function in case we need to make adjustments
      * to how we process tiling indexes. An example is not having to go through
      * all the instances of tileId calculations to modify one variable. This
@@ -441,7 +519,7 @@ export default class ProcessMap {
      */
 
     private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
-        return tileset.firstgid + tile.id + offset;
+        return this.getId(tileset.firstgid, tile.id, offset);
     }
 
     /**
@@ -462,7 +540,8 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities
+            entities,
+            trees
         } = this.map;
 
         return JSON.stringify({
@@ -477,7 +556,8 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities
+            entities,
+            trees
         });
     }
 

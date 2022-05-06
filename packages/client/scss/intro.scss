@@ -1,10 +1,67 @@
 @use 'media';
 
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5,
-h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong,
-sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset,
-form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
     margin: 0;
     padding: 0;
     border: 0;
@@ -16,12 +73,11 @@ form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
 
 canvas {
     position: absolute;
-    image-rendering: optimizeSpeed;             /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
-    image-rendering: -webkit-optimize-contrast; /* Safari                        */
-    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
-    image-rendering: pixelated;                 /* Awesome future-browsers       */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+    image-rendering: optimizespeed;     /* Older versions of FF          */
+    image-rendering: crisp-edges;       /* FF 6.0+                       */
+    image-rendering: optimize-contrast; /* Safari                        */
+    image-rendering: -o-crisp-edges;    /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated;         /* Awesome future-browsers       */
 }
 
 html {
@@ -29,7 +85,7 @@ html {
 }
 
 #background,
-#textCanvas,
+#text-canvas,
 #foreground,
 #cursor,
 #overlay {
@@ -53,7 +109,7 @@ html {
 }
 
 footer {
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     position: absolute;
     bottom: 5%;
     left: 0;
@@ -93,7 +149,7 @@ footer div {
 #canvas,
 #foreground,
 #background,
-#textCanvas,
+#text-canvas,
 #overlay,
 #container,
 #border,
@@ -114,10 +170,9 @@ footer div {
 .parchment-middle,
 .parchment-right,
 #respawn {
-    -ms-interpolation-mode: nearest-neighbor;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -o-pixelated;
+    image-rendering: optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
     image-rendering: pixelated;
 }
 
@@ -132,7 +187,7 @@ footer div {
 #parchment,
 #parchment input,
 #parchment select {
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
 }
 
 #parchment input {
@@ -172,7 +227,7 @@ footer div {
     background-color: #d83939;
     color: #eee;
     font-size: 20px;
-    font-family: 'AdvoCut', arial, sans-serif;
+    font-family: AdvoCut, arial, sans-serif;
     text-align: center;
     line-height: 50px;
     border-bottom: 1px solid #000;
@@ -180,6 +235,17 @@ footer div {
 
 #parchment {
     opacity: 0;
+}
+
+#parchment,
+#create-character,
+#load-character,
+#error {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    text-align: center;
+    z-index: 2;
 }
 
 .intro {
@@ -196,14 +262,14 @@ footer div {
 }
 
 #parchment p {
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
 }
 
 #credits,
 #git,
 #about,
-#loadCharacter,
-#createCharacter,
+#load-character,
+#create-character,
 #death,
 #error {
     opacity: 0;
@@ -212,7 +278,7 @@ footer div {
     position: absolute;
     left: 50%;
     text-align: center;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     z-index: 1000;
 }
 
@@ -223,8 +289,8 @@ footer div {
     top: 50%;
 }
 
-#loadCharacter,
-#createCharacter {
+#load-character,
+#create-character {
     form {
         position: relative;
     }
@@ -235,8 +301,8 @@ footer div {
 .git #git,
 .death #death,
 .error #error,
-.createCharacter #createCharacter,
-.loadCharacter #loadCharacter {
+.create-character #create-character,
+.load-character #load-character {
     opacity: 1;
     pointer-events: auto;
     transition: 0.5s opacity linear;
@@ -275,7 +341,7 @@ footer div {
     margin-top: 25%;
 }
 
-.loader__dot {
+.loader-dot {
     animation: 1s blink infinite;
 
     &:nth-child(2) {
@@ -305,28 +371,6 @@ footer div {
 
     // background: url('/img/1/border.png') no-repeat;
     // background-size: 100% 100%;
-}
-
-#parchment,
-#createCharacter,
-#loadCharacter,
-#error {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    text-align: center;
-    z-index: 2;
-}
-
-.parchment-left,
-.parchment-middle,
-.parchment-right,
-#respawn {
-    -ms-interpolation-mode: nearest-neighbor;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -o-pixelated;
-    image-rendering: pixelated;
 }
 
 @each $size, $i in media.$sizes {
@@ -370,8 +414,8 @@ footer div {
         }
 
         #parchment,
-        #createCharacter,
-        #loadCharacter,
+        #create-character,
+        #load-character,
         #error {
             width: 422px * $i;
             height: 182px * $i;
@@ -405,13 +449,13 @@ footer div {
     }
 
     #parchment,
-    #createCharacter,
-    #loadCharacter,
+    #create-character,
+    #load-character,
     #error {
         font-size: 20px;
     }
 
-    #parchment.createCharacter input {
+    #parchment.create-character input {
         margin-top: 24px;
         height: 45px;
     }
@@ -445,13 +489,13 @@ footer div {
 
 @media (--md) {
     #parchment,
-    #createCharacter,
-    #loadCharacter,
+    #create-character,
+    #load-character,
     #error {
         font-size: 20px;
     }
 
-    #parchment.createCharacter input {
+    #parchment.create-character input {
         margin-top: 15px;
         height: 30px;
     }
@@ -480,13 +524,13 @@ footer div {
 
 @media (--sm) {
     #parchment,
-    #createCharacter,
-    #loadCharacter,
+    #create-character,
+    #load-character,
     #error {
         font-size: 10px;
     }
 
-    #parchment.createCharacter input {
+    #parchment.create-character input {
         margin-top: 8px;
         height: 15px;
     }
@@ -515,7 +559,7 @@ footer div {
     #canvas,
     #foreground,
     #background,
-    #textCanvas,
+    #text-canvas,
     #overlay,
     #container,
     #border,

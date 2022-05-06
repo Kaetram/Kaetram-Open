@@ -115,8 +115,7 @@ export default class Network {
      */
 
     public send(player: Player, packet: Packet): void {
-        if (!player) return;
-        if (!(player.instance in this.packets)) return;
+        if (!player || !(player.instance in this.packets)) return;
 
         this.packets[player.instance].push(packet.serialize());
     }

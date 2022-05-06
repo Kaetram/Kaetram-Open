@@ -20,15 +20,14 @@ export default class Equipment {
         public ability = -1,
         public abilityLevel = -1,
         public power = 1,
-        public rangedWeapon = false
+        public rangedWeapon = false,
+        public amplifier = 1,
+        public lumberjacking = -1
     ) {}
 
     /**
-     * Updates the equipment with the given item information.
-     * @param key The item's key.
-     * @param count The count of items (if we are wearing arrows)
-     * @param ability Ability type of the item.
-     * @param abilityLevel Ability level of the item.
+     * Updates the item in the slot.
+     * @param item Item instance used to update the slot with.
      */
 
     public update(item: Item): void {
@@ -37,6 +36,7 @@ export default class Equipment {
         this.count = item.count;
         this.ability = item.ability;
         this.abilityLevel = item.abilityLevel;
+        this.lumberjacking = item.lumberjacking;
 
         this.updateCallback?.(this);
     }
@@ -51,6 +51,8 @@ export default class Equipment {
         this.ability = -1;
         this.abilityLevel = -1;
         this.power = 0;
+        this.amplifier = 1;
+        this.lumberjacking = -1;
     }
 
     /**
@@ -60,6 +62,27 @@ export default class Equipment {
 
     public isEmpty(): boolean {
         return !this.key;
+    }
+
+    /**
+     * Checks if the item is a lumberjacking item. Lumberjacking items are
+     * defined by equipments that have a lumberjacking value greater than 0.
+     * @returns If the lumberjacking attribute is greater than 0.
+     */
+
+    public isLumberjacking(): boolean {
+        return this.lumberjacking > 0;
+    }
+
+    /**
+     * Returns the amplifier bonus used to calculate
+     * extra damage. Generally associated with pendants,
+     * rings, and boots.
+     * @returns Integer value of the amplifier.
+     */
+
+    public getAmplifier(): number {
+        return this.amplifier;
     }
 
     /**

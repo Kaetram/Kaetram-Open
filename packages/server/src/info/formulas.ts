@@ -7,6 +7,17 @@ import type Player from '../game/entity/character/player/player';
 export default {
     LevelExp: [] as number[],
 
+    /**
+     * Damage is calculated on a random basis. We first calculate the maximum
+     * attainable damage of the attacker against the target. We then use a random
+     * accuracy metric picking a number between 0 and the attacker's level. Finally
+     * we use that range between the accuracy and the max damage to determine damage output.
+     * @param attacker The attacker hitting the target.
+     * @param target The target taking the damage.
+     * @param special Whether the attack has special damage associated with it.
+     * @returns Integer value of the damage.
+     */
+
     getDamage(attacker: Character, target: Character, special = false): number {
         let maxDamage = this.getMaxDamage(attacker, target, special)!,
             accuracy = Utils.randomInt(0, attacker.level);

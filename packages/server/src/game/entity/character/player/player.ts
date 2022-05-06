@@ -10,11 +10,8 @@ import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Enchant from './enchant';
-import Friends from './friends';
 import Handler from './handler';
 import Mana from '../points/mana';
-import Trade from './trade';
 import Warp from './warp';
 
 import type { ExperienceCombatData } from '@kaetram/common/types/messages';
@@ -47,7 +44,6 @@ import Equipments from './equipments';
 import Quests from './quests';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
-import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
 import { EntityData } from '../../entity';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
@@ -55,8 +51,9 @@ import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import Tree from '../../../globals/impl/tree';
+import Skills from './skills';
 
-type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -86,13 +83,13 @@ export default class Player extends Character {
     public map: Map;
     private regions: Regions;
     private entities: Entities;
-    private globalObjects: GlobalObjects;
 
     public incoming: Incoming;
 
     private handler: Handler;
 
     public quests: Quests;
+    public skills: Skills;
     public equipment: Equipments;
     public mana: Mana = new Mana(Modules.Defaults.MANA);
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
@@ -128,9 +125,6 @@ export default class Player extends Character {
     public webSocketClient;
 
     public abilities;
-    public friends;
-    public enchant;
-    public trade;
     public warp;
 
     public team?: string; // TODO
@@ -143,9 +137,12 @@ export default class Player extends Character {
     private currentSong: string | null = null;
 
     public regionsLoaded: number[] = [];
+    public treesLoaded: { [instance: string]: Modules.TreeState } = {};
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
+    // Currently open store of the player.
+    public storeOpen = '';
 
     public movementStart!: number;
     public pingTime!: number;
@@ -166,16 +163,15 @@ export default class Player extends Character {
 
     //--------------------------------------
 
-    private teleportCallback?: TeleportCallback;
+    public killCallback?: KillCallback;
+    public npcTalkCallback?: NPCTalkCallback;
+    public doorCallback?: DoorCallback;
+
     private cheatScoreCallback?(): void;
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
     private orientationCallback?(): void;
-    private killCallback?: KillCallback;
-    public npcTalkCallback?: NPCTalkCallback;
-    public doorCallback?: DoorCallback;
-    public readyCallback?(): void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
@@ -183,19 +179,16 @@ export default class Player extends Character {
         this.map = world.map;
         this.regions = world.map.regions;
         this.entities = world.entities;
-        this.globalObjects = world.globalObjects;
 
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
+        this.skills = new Skills(this);
         this.handler = new Handler(this);
+        this.warp = new Warp(this);
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
-        this.friends = new Friends(this);
-        this.enchant = new Enchant(this);
-        this.trade = new Trade(this);
-        this.warp = new Warp(this);
 
         this.webSocketClient = connection.type === 'WebSocket';
     }
@@ -206,6 +199,7 @@ export default class Player extends Character {
      */
 
     public load(data: PlayerInfo): void {
+        this.name = data.username;
         this.rights = data.rights;
         this.experience = data.experience;
         this.ban = data.ban;
@@ -266,6 +260,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Loads the skill data from the database.
+     */
+
+    public loadSkills(): void {
+        this.database.loader?.loadSkills(this, this.skills.load.bind(this.skills));
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
@@ -277,11 +279,10 @@ export default class Player extends Character {
             this.connection.close(`Player: ${this.username} is banned.`);
         }
 
-        if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0)
+            this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
-
-        this.verifyRights();
 
         let info = {
             instance: this.instance,
@@ -312,6 +313,9 @@ export default class Player extends Character {
     }
 
     public destroy(): void {
+        this.combat.stop();
+        this.skills.stop();
+
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = null;
@@ -319,19 +323,12 @@ export default class Player extends Character {
         this.handler = null!;
         this.inventory = null!;
         this.abilities = null!;
-        this.enchant = null!;
+        this.skills = null!;
+        this.quests = null!;
         this.bank = null!;
-        this.trade = null!;
         this.warp = null!;
 
         this.connection = null!;
-    }
-
-    private verifyRights(): void {
-        if (config.moderators.includes(this.username.toLowerCase())) this.rights = 1;
-
-        if (config.administrators.includes(this.username.toLowerCase()) || config.skipDatabase)
-            this.rights = 2;
     }
 
     public addExperience(exp: number): void {
@@ -425,17 +422,7 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public die(): void {
-        this.dead = true;
-
-        this.deathCallback?.();
-
-        this.send(new Death(this.instance));
-    }
-
-    public teleport(x: number, y: number, isDoor = false, withAnimation = false): void {
-        this.teleportCallback?.(x, y, isDoor);
-
+    public teleport(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
                 id: this.instance,
@@ -445,7 +432,7 @@ export default class Player extends Character {
             })
         );
 
-        this.setPosition(x, y);
+        this.setPosition(x, y, false, true);
         this.world.cleanCombat(this);
     }
 
@@ -462,31 +449,7 @@ export default class Player extends Character {
      * in order to organize data more neatly.
      */
     public handleObject(id: string): void {
-        let info = this.globalObjects.getInfo(id);
-
-        if (!info) return;
-
-        switch (info.type) {
-            case 'sign': {
-                let data = this.globalObjects.getSignData(id);
-
-                if (!data) return;
-
-                let text = this.globalObjects.talk(data.object, this);
-
-                this.send(
-                    new Bubble({
-                        id,
-                        text,
-                        duration: 5000,
-                        isObject: true,
-                        info: data.info
-                    })
-                );
-
-                break;
-            }
-        }
+        //
     }
 
     public handleBankOpen(): void {
@@ -630,14 +593,6 @@ export default class Player extends Character {
         return this.mana.getMaxMana();
     }
 
-    public override getHitPoints(): number {
-        return this.hitPoints.getHitPoints();
-    }
-
-    public override getMaxHitPoints(): number {
-        return this.hitPoints.getMaxHitPoints();
-    }
-
     private getMovementSpeed(): number {
         // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
         //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
@@ -656,7 +611,7 @@ export default class Player extends Character {
      * Setters
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, forced = false, teleport = false): void {
         if (this.dead) return;
 
         if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
@@ -664,11 +619,11 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y,
-                forced: false,
-                teleport: false
+                forced,
+                teleport
             }),
             true
         );
@@ -715,7 +670,7 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
-        if (config.tutorialEnabled && !this.quests.isTutorialFinished())
+        if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
@@ -756,8 +711,27 @@ export default class Player extends Character {
         this.regionsLoaded.push(region);
     }
 
+    /**
+     * Adds a tree to our loaded tree instances.
+     * @param tree The tree we are adding.
+     */
+
+    public loadTree(tree: Tree): void {
+        this.treesLoaded[tree.instance] = tree.state;
+    }
+
     public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
+    }
+
+    /**
+     * Checks if the tree is within our loaded trees and that the state matches.
+     * @param tree The tree we are chceking.
+     * @returns If the tree is loaded and the state matches.
+     */
+
+    public hasLoadedTree(tree: Tree): boolean {
+        return tree.instance in this.treesLoaded && this.treesLoaded[tree.instance] === tree.state;
     }
 
     public hasLoadedLight(light: number): boolean {
@@ -809,19 +783,6 @@ export default class Player extends Character {
         this.world.push(PacketType.Player, {
             packet,
             player: this
-        });
-    }
-
-    /**
-     * Sends a packet to all regions surrounding the player.
-     * @param packet The packet we are sending to the regions.
-     */
-
-    public sendToRegions(packet: Packet, ignore?: boolean): void {
-        this.world.push(PacketType.Regions, {
-            region: this.region,
-            packet,
-            ignore: ignore ? this.instance : ''
         });
     }
 
@@ -1021,10 +982,6 @@ export default class Player extends Character {
         return data;
     }
 
-    public killCharacter(character: Character): void {
-        this.killCallback?.(character);
-    }
-
     public onOrientation(callback: () => void): void {
         this.orientationCallback = callback;
     }
@@ -1040,11 +997,6 @@ export default class Player extends Character {
     public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
-
-    public onTeleport(callback: TeleportCallback): void {
-        this.teleportCallback = callback;
-    }
-
     public onProfile(callback: InterfaceCallback): void {
         this.profileToggleCallback = callback;
     }
@@ -1059,9 +1011,5 @@ export default class Player extends Character {
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
-    }
-
-    public onReady(callback: () => void): void {
-        this.readyCallback = callback;
     }
 }
