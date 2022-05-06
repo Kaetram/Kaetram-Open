@@ -178,21 +178,9 @@ export enum Warps {
     Patsow
 }
 
-export enum Professions {
+export enum Skills {
     Lumberjacking,
-    Fishing,
     Mining
-}
-
-export enum Trees {
-    Oak,
-    Palm,
-    IceOak,
-    IcePalm
-}
-
-export enum Rocks {
-    BlueSteel
 }
 
 export enum Enchantment {
@@ -281,22 +269,28 @@ export enum NPCRole {
 }
 
 export const enum Constants {
-    MAX_STACK = 2_147_483_647,
-    MAX_LEVEL = 135,
+    MAX_STACK = 2_147_483_647, // Maximum default stack size for a stackable item.
+    MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
     BANK_SIZE = 52, // Maximum bank size
     HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 10_000, // healing every 10 seconds
-    ROAMING_FREQUENCY = 7000,
-    DIAGONAL_FLAG = 0x20_00_00_00,
-    VERTICAL_FLAG = 0x40_00_00_00,
-    HORIZONTAL_FLAG = 0x80_00_00_00,
+    STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial
-    TUTORIAL_QUEST_KEY = 'tutorial',
-    TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
+    TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
+    TUTORIAL_SPAWN_POINT = '375,40', // 'x,y' values
+    TREE_REGROW = 30_000,
+    SKILL_LOOP = 1000 // How often we check the loop of a skill
+}
+
+export enum APIConstants {
+    UNHANDLED_HTTP_METHOD,
+    NOT_FOUND_ERROR,
+    MALFORMED_PARAMETERS,
+    PLAYER_NOT_ONLINE
 }
 
 // Defaults that apply to all types of entities
@@ -313,15 +307,16 @@ export enum MobDefaults {
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
+    ROAM_FREQUENCY = 7000, // Roam interval every 7 seconds
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }
 
-export enum APIConstants {
-    UNHANDLED_HTTP_METHOD,
-    NOT_FOUND_ERROR,
-    MALFORMED_PARAMETERS,
-    PLAYER_NOT_ONLINE
+// Flags used by Tiled to determine tile rotation.
+export enum MapFlags {
+    DIAGONAL_FLAG = 0x20_00_00_00,
+    VERTICAL_FLAG = 0x40_00_00_00,
+    HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
 export enum EntityType {
@@ -332,4 +327,11 @@ export enum EntityType {
     Chest,
     Projectile,
     Object
+}
+
+// States that a tree can be in. We can obviously add more
+// as more pixel art is added.
+export enum TreeState {
+    Default,
+    Cut
 }

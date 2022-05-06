@@ -7,21 +7,23 @@ import Page from '../page';
 
 import type Game from '../../../game';
 
+import Utils from '../../../utils/util';
+
 export default class State extends Page {
     private player;
 
-    private name = $('#profileName');
-    private level = $('#profileLevel');
-    private experience = $('#profileExperience');
+    private name = $('#profile-name');
+    private level = $('#profile-level');
+    private experience = $('#profile-experience');
 
-    private weaponSlot = $('#weaponSlot');
-    private armourSlot = $('#armourSlot');
-    private pendantSlot = $('#pendantSlot');
-    private ringSlot = $('#ringSlot');
-    private bootsSlot = $('#bootsSlot');
+    private weaponSlot = $('#weapon-slot');
+    private armourSlot = $('#armour-slot');
+    private pendantSlot = $('#pendant-slot');
+    private ringSlot = $('#ring-slot');
+    private bootsSlot = $('#boots-slot');
 
-    private weaponSlotInfo = $('#weaponSlotInfo');
-    private armourSlotInfo = $('#armourSlotInfo');
+    private weaponSlotInfo = $('#weapon-slot-info');
+    private armourSlotInfo = $('#armour-slot-info');
 
     private slots = [
         this.weaponSlot,
@@ -34,7 +36,7 @@ export default class State extends Page {
     // public loaded = false;
 
     public constructor(private game: Game) {
-        super('#statePage');
+        super('#state-page');
 
         this.player = game.player;
 
@@ -93,11 +95,11 @@ export default class State extends Page {
     }
 
     private loadSlots(): void {
-        this.weaponSlot.css('background-image', this.getImageFormat(this.player.weapon.string));
-        this.armourSlot.css('background-image', this.getImageFormat(this.player.armour.string));
-        this.pendantSlot.css('background-image', this.getImageFormat(this.player.pendant.string));
-        this.ringSlot.css('background-image', this.getImageFormat(this.player.ring.string));
-        this.bootsSlot.css('background-image', this.getImageFormat(this.player.boots.string));
+        this.weaponSlot.css('background-image', Utils.getImageURL(this.player.weapon.string));
+        this.armourSlot.css('background-image', Utils.getImageURL(this.player.armour.string));
+        this.pendantSlot.css('background-image', Utils.getImageURL(this.player.pendant.string));
+        this.ringSlot.css('background-image', Utils.getImageURL(this.player.ring.string));
+        this.bootsSlot.css('background-image', Utils.getImageURL(this.player.boots.string));
 
         this.forEachSlot((slot) => slot.css('background-size', '600%'));
     }

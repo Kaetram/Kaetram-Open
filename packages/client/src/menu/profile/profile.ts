@@ -13,8 +13,8 @@ import type Game from '../../game';
 import type Page from './page';
 
 export default class Profile {
-    private body = $('#profileDialog');
-    private button = $('#profileButton');
+    private body = $('#profile-dialog');
+    private button = $('#profile-button');
 
     private next = $('#next');
     private previous = $('#previous');

@@ -10,12 +10,14 @@ import type Slot from './container/slot';
 import MenuController from '../controllers/menu';
 import { SlotData } from '@kaetram/common/types/slot';
 
+import Utils from '../utils/util';
+
 export default class Inventory {
     private actions;
 
     private body = $('#inventory');
-    private button = $('#inventoryButton');
-    // private action = $('#actionContainer');
+    private button = $('#inventory-button');
+    // private action = $('#action-container');
 
     public container: Container;
 
@@ -41,8 +43,10 @@ export default class Inventory {
 
         for (let index = 0; index < this.size; index++) {
             // Create an empty item slot.
-            let itemSlot = $(`<div id="slot${index}" class="itemSlot"></div>`),
-                itemSlotCount = $(`<div id="itemCount${index}" class="inventoryItemCount"></div>`),
+            let itemSlot = $(`<div id="slot${index}" class="item-slot"></div>`),
+                itemSlotCount = $(
+                    `<div id="item-count${index}" class="inventory-item-count"></div>`
+                ),
                 slotElement = $('<li></li>').append(itemSlot).append(itemSlotCount);
 
             itemSlot.dblclick((event) => this.clickDouble(event));
@@ -77,7 +81,7 @@ export default class Inventory {
 
         let cssSlot = item.find(`#slot${info.index}`);
 
-        cssSlot.css('background-image', this.container.getImageFormat(slot.key));
+        cssSlot.css('background-image', Utils.getImageURL(slot.key));
 
         cssSlot.css('background-size', '600%');
 
@@ -89,13 +93,13 @@ export default class Inventory {
         else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
         else if (count < 2) itemCount = '';
 
-        item.find(`#itemCount${info.index}`).text(itemCount);
+        item.find(`#item-count${info.index}`).text(itemCount);
 
         if (ability! > -1) {
             let eList = Object.keys(Modules.Enchantment), // enchantment list
                 enchantment = eList[ability!];
 
-            if (enchantment) item.find(`#itemCount${info.index}`).text(enchantment);
+            if (enchantment) item.find(`#item-count${info.index}`).text(enchantment);
         }
     }
 
@@ -119,11 +123,11 @@ export default class Inventory {
 
         this.actions.loadDefaults('inventory');
 
-        if (slot.edible) this.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
+        if (slot.edible) this.actions.add($('<div id="eat" class="action-button">Eat</div>'));
         else if (slot.equippable)
-            this.actions.add($('<div id="wield" class="actionButton">Wield</div>'));
+            this.actions.add($('<div id="wield" class="action-button">Wield</div>'));
         else if (slot.count > 999_999)
-            this.actions.add($('<div id="itemInfo" class="actionButton">Info</div>'));
+            this.actions.add($('<div id="item-info" class="action-button">Info</div>'));
 
         if (!this.actions.isVisible()) this.actions.show();
 
@@ -189,8 +193,8 @@ export default class Inventory {
 
                 break;
 
-            case 'dropAccept': {
-                let count = parseInt($('#dropCount').val() as string);
+            case 'drop-accept': {
+                let count = parseInt($('#drop-count').val() as string);
 
                 if (isNaN(count) || count < 1) return;
 
@@ -206,7 +210,7 @@ export default class Inventory {
                 break;
             }
 
-            case 'dropCancel':
+            case 'drop-cancel':
                 this.actions.hideDrop();
                 this.clearSelection();
 
@@ -237,11 +241,11 @@ export default class Inventory {
 
         if (slot.count === 1) itemCount = '';
 
-        item.find(`#itemCount${index}`).text(itemCount);
+        item.find(`#item-count${index}`).text(itemCount);
 
         if (slot.count < 1) {
             item.find(`#slot${index}`).css('background-image', '');
-            item.find(`#itemCount${index}`).text('');
+            item.find(`#item-count${index}`).text('');
             slot.empty();
         }
     }
@@ -256,7 +260,7 @@ export default class Inventory {
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', this.container.getImageFormat(slot.key));
+            else item.css('background-image', Utils.getImageURL(slot.key));
         }
     }
 

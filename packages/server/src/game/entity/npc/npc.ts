@@ -21,7 +21,9 @@ export default class NPC extends Entity {
     private data: NPCData;
 
     private text: string[] = [];
+
     public role?: string;
+    public store = '';
 
     public constructor(key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.NPC), key, x, y);
@@ -37,6 +39,7 @@ export default class NPC extends Entity {
         this.name = this.data.name!;
         this.text = this.data.text || this.text;
         this.role = this.data.role!;
+        this.store = this.data.store || '';
     }
 
     /**

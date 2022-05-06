@@ -201,10 +201,14 @@ export default class Player extends Character {
         switch (type) {
             case Modules.Equipment.Armour:
                 this.armour.update('Cloth Armour', 'clotharmor', 1, -1, -1);
+
+                this.updateArmourCallback?.('clotharmor');
                 break;
 
             case Modules.Equipment.Weapon:
                 this.weapon.update('', '', -1, -1, -1);
+
+                this.updateWeaponCallback?.('', 1);
                 break;
 
             case Modules.Equipment.Pendant:

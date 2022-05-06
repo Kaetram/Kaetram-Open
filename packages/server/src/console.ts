@@ -1,6 +1,14 @@
+import log from '@kaetram/common/util/log';
+
 import MongoDB from './database/mongodb/mongodb';
 import Player from './game/entity/character/player/player';
 import World from './game/world';
+
+/**
+ * The console lives on top of the server. It allows an admin to directly
+ * control events within the server from the console instead
+ * of logging in. The commands available are listed below in a switch statement.
+ */
 
 export default class Console {
     private database: MongoDB;
@@ -8,114 +16,89 @@ export default class Console {
     public constructor(private world: World) {
         this.database = world.database;
 
-        // let stdin = process.openStdin();
+        let stdin = process.openStdin();
 
-        // stdin.addListener('data', (data: Buffer) => {
-        //     let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
-        //         type = message.charAt(0);
+        stdin.addListener('data', (data: Buffer) => {
+            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+                type = message.charAt(0);
 
-        //     if (type !== '/') return;
+            if (type !== '/') return;
 
-        //     let blocks = message.slice(1).split(' '),
-        //         command = blocks.shift()!;
+            let blocks = message.slice(1).split(' '),
+                command = blocks.shift()!;
 
-        //     if (!command) return;
+            if (!command) return;
 
-        //     let username: string,
-        //         player: Player,
-        //         newX: number,
-        //         newY: number,
-        //         itemId: number,
-        //         itemCount: number;
+            let username: string, player: Player;
 
-        //     switch (command) {
-        //         case 'players':
-        //             log.info(`There are a total of ${this.getPopulation()} player(s) logged in.`);
+            switch (command) {
+                case 'players':
+                    log.info(
+                        `There are a total of ${
+                            this.world.entities.getPlayerUsernames().length
+                        } player(s) logged in.`
+                    );
 
-        //             break;
+                    break;
 
-        //         case 'registered':
-        //             this.database.registeredCount((count) => {
-        //                 log.info(`There are ${count} users registered.`);
-        //             });
+                case 'total':
+                    this.database.registeredCount((count) => {
+                        log.info(`There are ${count} users registered.`);
+                    });
 
-        //             break;
+                    break;
 
-        //         case 'kill':
-        //             username = blocks.join(' ');
+                case 'kill':
+                    username = blocks.join(' ');
 
-        //             if (!this.world.isOnline(username)) {
-        //                 log.info('Player is not logged in.');
-        //                 return;
-        //             }
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-        //             player = this.world.getPlayerByName(username);
+                    player = this.world.getPlayerByName(username);
 
-        //             if (!player) {
-        //                 log.info('An error has occurred.');
-        //                 return;
-        //             }
+                    if (!player) return log.info('An error has occurred.');
 
-        //             this.world.kill(player);
+                    player.hit(player.hitPoints.getHitPoints());
 
-        //             break;
+                    break;
 
-        //         case 'resetPositions':
-        //             newX = parseInt(blocks.shift()!);
-        //             newY = parseInt(blocks.shift()!);
+                case 'setadmin':
+                case 'setmod':
+                    username = blocks.join(' ');
 
-        //             // x: 325, y: 87
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-        //             if (!newX || !newY) {
-        //                 log.info(
-        //                     'Invalid command parameters. Expected: /resetPositions <newX> <newY>'
-        //                 );
-        //                 return;
-        //             }
+                    player = this.world.getPlayerByName(username);
 
-        //             /**
-        //              * We are iterating through all of the users in the database
-        //              * and resetting their position to the parameters inputted.
-        //              * This is to be used when doing some game-breaking map
-        //              * updates. This command is best used in tandem with the
-        //              * `allowConnectionsToggle` to prevent users from logging
-        //              * in.
-        //              */
+                    if (!player) return log.info(`Player not found.`);
 
-        //             this.database.resetPositions(newX, newY, (result) => {
-        //                 log.info(result);
-        //             });
+                    player.rights = command === 'setadmin' ? 2 : 1;
 
-        //             break;
+                    log.info(
+                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
+                    );
 
-        //         case 'allowConnections':
-        //             this.world.allowConnections = !this.world.allowConnections;
+                    break;
 
-        //             if (this.world.allowConnections)
-        //                 log.info('Server is now allowing connections.');
-        //             else log.info('The server is not allowing connections.');
+                case 'removeadmin':
+                case 'removemod':
+                    username = blocks.join(' ');
 
-        //             break;
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-        //         case 'give':
-        //             itemId = parseInt(blocks.shift()!);
-        //             itemCount = parseInt(blocks.shift()!);
+                    player = this.world.getPlayerByName(username);
 
-        //             username = blocks.join(' ');
+                    if (!player) return log.info(`Player not found.`);
 
-        //             player = this.world.getPlayerByName(username);
+                    player.rights = command === 'removeadmin' ? 2 : 1;
 
-        //             if (!player) return;
+                    log.info(
+                        `${player.username} is now a ${
+                            command === 'removeadmin' ? 'admin' : 'mod'
+                        }!`
+                    );
 
-        //             player.inventory.add({
-        //                 id: itemId,
-        //                 count: itemCount,
-        //                 ability: -1,
-        //                 abilityLevel: -1
-        //             });
-
-        //             break;
-        //     }
-        //});
+                    break;
+            }
+        });
     }
 }
