@@ -125,7 +125,7 @@ export default class Game {
         let background = document.querySelector<HTMLCanvasElement>('#background')!,
             foreground = document.querySelector<HTMLCanvasElement>('#foreground')!,
             overlay = document.querySelector<HTMLCanvasElement>('#overlay')!,
-            textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!,
+            textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!,
             entities = document.querySelector<HTMLCanvasElement>('#entities')!,
             cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
@@ -297,8 +297,8 @@ export default class Game {
     }
 
     private loadStorage(): void {
-        let loginName = $('#loginNameInput'),
-            loginPassword = $('#loginPasswordInput');
+        let loginName = $('#login-name-input'),
+            loginPassword = $('#login-password-input');
 
         loginName.prop('readonly', false);
         loginPassword.prop('readonly', false);
@@ -309,7 +309,7 @@ export default class Game {
 
         if (this.getStoragePassword() !== '') loginPassword.val(this.getStoragePassword()!);
 
-        $('#rememberMe').prop('checked', true);
+        $('#remember-me').prop('checked', true);
     }
 
     public findPath(
@@ -379,7 +379,7 @@ export default class Game {
         audio.play(Modules.AudioTypes.SFX, 'revive');
         app.body.removeClass('death');
 
-        socket.send(Packets.Respawn, [player.id]);
+        socket.send(Packets.Respawn, []);
     }
 
     // tradeWith(player: Player): void {

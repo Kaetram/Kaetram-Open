@@ -2,37 +2,36 @@ import type { Modules } from '@kaetram/common/network';
 import type { HitData } from '@kaetram/common/types/info';
 
 export default class Hit {
-    private ranged = false;
-    private aoe = false;
-    private terror = false;
-    public poison = false;
+    public constructor(
+        public type: Modules.Hits,
+        private damage = 0,
+        private ranged = false,
+        private aoe = false,
+        private poison = false,
+        private terror = false
+    ) {}
 
-    public constructor(public type: Modules.Hits, public damage: number) {}
+    /**
+     * @returns The damage integer of the hit.
+     */
 
-    private isRanged(): boolean {
-        return this.ranged;
-    }
-
-    private isAoE(): boolean {
-        return this.aoe;
-    }
-
-    private isPoison(): boolean {
-        return this.poison;
-    }
-
-    private getDamage(): number {
+    public getDamage(): number {
         return this.damage;
     }
 
-    public getData(): HitData {
+    /**
+     * Serializes the Hit object and converts
+     * it into a JSON object.
+     */
+
+    public serialize(): HitData {
         return {
             type: this.type,
-            damage: this.getDamage(),
-            isRanged: this.isRanged(),
-            isAoE: this.isAoE(),
-            hasTerror: this.terror,
-            isPoison: this.isPoison()
+            damage: this.damage,
+            ranged: this.ranged,
+            aoe: this.aoe,
+            poison: this.poison,
+            terror: this.terror
         };
     }
 }

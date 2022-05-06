@@ -57,6 +57,7 @@ export default class Creator {
             this.saveInventory(player);
             this.saveBank(player);
             this.saveQuests(player);
+            this.saveSkills(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             log.error(error);
@@ -118,6 +119,16 @@ export default class Creator {
         let collection = this.database.collection('player_quests');
 
         this.updateCollection(collection, player.username, player.quests.serialize());
+    }
+
+    /**
+     * Serializes all the skills and stores the data into the database.
+     */
+
+    private saveSkills(player: Player): void {
+        let collection = this.database.collection('player_skills');
+
+        this.updateCollection(collection, player.username, player.skills.serialize());
     }
 
     /**

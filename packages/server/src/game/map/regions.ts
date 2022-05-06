@@ -4,13 +4,16 @@ import log from '@kaetram/common/util/log';
 
 import World from '../world';
 import Region from './region';
-import Map, { AnimatedTile, ParsedTile } from './map';
+import Map from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
 import { List, Spawn, Map as MapPacket } from '../../network/packets';
+import { RegionData, RegionTileData } from '@kaetram/common/types/region';
+import { Tile } from '@kaetram/common/types/map';
+import Tree from '../globals/impl/tree';
 
 /**
  * Class responsible for chunking up the map.
@@ -20,8 +23,6 @@ import { List, Spawn, Map as MapPacket } from '../../network/packets';
  * they are only broadcast to the region itself (animation events).
  */
 
-type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile; c?: boolean };
-type RegionData = { [region: number]: TileInfo[] };
 type RegionCallback = (region: number) => void;
 type PRegionCallback = (entity: Entity, region: number) => void;
 
@@ -316,6 +317,15 @@ export default class Regions {
     }
 
     /**
+     * Sends a region update to all the players within the nearby regions.
+     * @param region The region to pivot the update around.
+     */
+
+    public sendUpdate(region: Region): void {
+        region.forEachPlayer((player: Player) => this.sendRegion(player));
+    }
+
+    /**
      * Grabs a region from our list based on the region parameter.
      * @param region The region id that we are attempting to grab.
      * @returns Returns the region object with the respective id.
@@ -328,8 +338,8 @@ export default class Regions {
     /**
      * Iterates through the regions and determines which region index (in the array)
      * belongs to the gridX and gridY specified.
-     * @param gridX The player's x position in the grid (floor(x / tileSize))
-     * @param gridY The player's y position in the grid (floor(y / tileSize))
+     * @param x The player's x position in the grid (floor(x / tileSize))
+     * @param y The player's y position in the grid (floor(y / tileSize))
      * @returns The region id the coordinates are in.
      */
 
@@ -359,27 +369,128 @@ export default class Regions {
             region = this.getRegion(player.x, player.y);
 
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
-            if (player.hasLoadedRegion(surroundingRegion) && !force) return;
-
             let region = this.regions[surroundingRegion];
 
-            // Initialize empty array with tile data for the region.
+            // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            region.forEachTile((x: number, y: number) => {
-                let dynamicArea = region.getDynamicArea(x, y),
-                    tileInfo =
-                        region.hasDynamicAreas() && dynamicArea
-                            ? this.buildDynamicTile(player, dynamicArea, x, y)
-                            : this.buildTile(x, y);
+            // Parse and send tree data.
+            if (region.hasTrees())
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTreeData(region, player)
+                ];
 
-                data[surroundingRegion].push(tileInfo);
-            });
+            // Parse and send dynamic areas.
+            if (region.hasDynamicAreas())
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTileData(region, true, player)
+                ];
 
-            player.loadRegion(surroundingRegion);
+            // We skip if the region is loaded and we are not forcing static data.
+            if (!player.hasLoadedRegion(surroundingRegion) || force) {
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...this.getRegionTileData(region)
+                ];
+
+                player.loadRegion(surroundingRegion);
+            }
+
+            // Remove data to prevent client from parsing unnecessarily.
+            if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
         });
 
         return data;
+    }
+
+    /**
+     * Iterates through a specified region paramater and extracts the tile data into an array.
+     * It returns that array. If the `dynamic` paramater is set to true, it will parse through
+     * the dynamic tiles instead. Note that the dynamic tiles are not contained in the static tiles.
+     * @param region The region used to extract tile data from.
+     * @param dynamic Parameter definining whether or not to grab dynamic tile data instead.
+     * @param player Optional parameter only necessary when grabbing dynamic tile data.
+     * @returns A RegionTileData array with all the tile data in that region.
+     */
+
+    private getRegionTileData(region: Region, dynamic = false, player?: Player): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        if (dynamic)
+            region.forEachDynamicTile((x: number, y: number, area: Area) =>
+                tileData.push(this.buildDynamicTile(player!, area, x, y))
+            );
+        else
+            region.forEachTile((x: number, y: number) => {
+                let tile = this.buildTile(x, y);
+
+                /**
+                 * Empty static tile data should be ignored. Otherwise this
+                 * will cause issues when trying to send tree data.
+                 */
+
+                if (tile.data < 1) return;
+
+                tileData.push(tile);
+            });
+
+        return tileData;
+    }
+
+    /**
+     * Parses through all the trees within the region specified and
+     * grabs tile data from them. It returns a RegionTileData array.
+     * @param region The region we are looking for trees in.
+     * @returns RegionTileData containing tree information.
+     */
+
+    private getRegionTreeData(region: Region, player: Player): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        // Iterate through all the trees in the region.
+        region.forEachTree((tree: Tree) => {
+            // No need to reload trees that haven't changed.
+            if (player.hasLoadedTree(tree)) return;
+
+            // Parse tree tiles.
+            tileData = [...tileData, ...this.getTreeData(tree)];
+
+            player.loadTree(tree);
+        });
+
+        return tileData;
+    }
+
+    /**
+     * Grabs individual tree data from a specified tree.
+     * @param tree The tree we are grabbing data for.
+     * @returns RegionTileData array containing tree information.
+     */
+
+    private getTreeData(tree: Tree): RegionTileData[] {
+        let tileData: RegionTileData[] = [];
+
+        tree.forEachTile((data: Tile, index: number) => {
+            // Perhaps we can optimize further by storing this directly in the tree?
+            let coord = this.map.indexToCoord(index),
+                tile: RegionTileData = {
+                    x: coord.x,
+                    y: coord.y,
+                    data
+                },
+                cursor = this.map.getCursor(data);
+
+            // Check for collision of the tile.
+            if (this.map.isCollisionIndex(index)) tile.c = true;
+            if (this.map.isObject(data)) tile.o = true;
+            if (cursor) tile.cur = cursor;
+
+            tileData.push(tile);
+        });
+
+        return tileData;
     }
 
     /**
@@ -391,11 +502,11 @@ export default class Regions {
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number): TileInfo {
-        // Calculate our index or use the one specified if not undefined.
+    private buildTile(x: number, y: number, index?: number): RegionTileData {
+        // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
-        let tile: TileInfo = {
+        let tile: RegionTileData = {
             x,
             y,
             data: this.map.getTileData(index)
@@ -419,10 +530,10 @@ export default class Regions {
      * @param area The area containing the dynamic tiles - used for mapping.
      * @param x The original tile x grid coordinate.
      * @param y The original tile y grid coordinate.
-     * @returns The mapped tileInfo.
+     * @returns The mapped region tile data.
      */
 
-    private buildDynamicTile(player: Player, area: Area, x: number, y: number): TileInfo {
+    private buildDynamicTile(player: Player, area: Area, x: number, y: number): RegionTileData {
         let original = this.buildTile(x, y);
 
         // Does not proceed any further if the player does not fulfill the requirements

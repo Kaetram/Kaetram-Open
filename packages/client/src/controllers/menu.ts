@@ -21,14 +21,14 @@ export default class MenuController {
     private notify = $('#notify');
     private confirm = $('#confirm');
     private message = $('#message');
-    private fade = $('#notifyFade');
-    private done = $('#notifyDone');
+    private fade = $('#notify-fade');
+    private done = $('#notify-done');
 
     private notification = $('#notification');
     /** Notification title */
-    private title = $('#notificationTextTitle');
+    private title = $('#notification-text-title');
     /** Notification description */
-    private description = $('#notificationTextDescription');
+    private description = $('#notification-text-description');
 
     private notificationTimeout!: number | null;
 

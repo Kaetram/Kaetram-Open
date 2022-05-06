@@ -68,7 +68,7 @@ export default class Discord {
     public sendRawMessage(message: string): void {
         if (!this.client) return;
 
-        (this.client.channels.get(config.discordChannelId) as TextChannel).send(message);
+        (this.client.channels.cache.get(config.discordChannelId) as TextChannel).send(message);
     }
 
     /**

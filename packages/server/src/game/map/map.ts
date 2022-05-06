@@ -9,16 +9,20 @@ import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
-import type { ProcessedArea, ProcessedDoor, ProcessedMap } from '@kaetram/common/types/map';
+import type {
+    Tile,
+    ProcessedArea,
+    ProcessedDoor,
+    ProcessedMap,
+    ProcessedTree
+} from '@kaetram/common/types/map';
+
+import type { RegionTile } from '@kaetram/common/types/region';
+
 import type World from '../world';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
-
-export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
-export type AnimatedTile = { tileId: string; name: string };
-export type ParsedTile = RotatedTile | Tile | RotatedTile[];
-export type Tile = number | number[];
 
 export default class Map {
     public regions: Regions;
@@ -31,17 +35,20 @@ export default class Map {
     public tileSize = map.tileSize;
 
     // Map data and collisions
-    private data: (number | number[])[] = map.data;
+    public data: (number | number[])[] = map.data;
     private collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
-    public high: number[] = map.high || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: ProcessedDoor };
     public warps: ProcessedArea[] = map.areas.warps || [];
+    public trees: ProcessedTree[] = map.trees || [];
+
+    // Static chest areas, named as singular to prevent confusion with `chests` area.
+    public chest: ProcessedArea[] = map.areas.chest || [];
 
     private areas!: { [name: string]: Areas };
 
@@ -153,7 +160,7 @@ export default class Map {
      */
 
     public isFlipped(tileId: number): boolean {
-        return tileId > Modules.Constants.DIAGONAL_FLAG;
+        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
@@ -208,6 +215,22 @@ export default class Map {
     }
 
     /**
+     * Checks if the tile data (at an index) is an object.
+     * @param data The tile data (number or number array) we are checking.
+     * @returns Boolean conditional if the tile data contains an object.
+     */
+
+    public isObject(data: Tile): boolean {
+        let isObject = false;
+
+        this.forEachTile(data, (tileId: number) => {
+            if (this.objects.includes(tileId)) isObject = true;
+        });
+
+        return isObject;
+    }
+
+    /**
      * Grabs the chest areas group parsed in the map.
      * @returns The chests areas parsed upon loading.
      */
@@ -239,18 +262,20 @@ export default class Map {
     }
 
     /**
-     * Checks and returns the cursor type of a specific tile. For example,
-     * tiles of certain trees will have an 'axe' cursor whereas the default
-     * is a normal hand. We check in the global objects for a cursor.
-     * @param tileIndex The index of the tile we are checking.
-     * @param tileId The tileId we are checking.
-     * @returns A string of the cursor for the specified tileIndex or tileId.
+     * Looks for cursor data in the provided tile data. The tile data
+     * is directly extracted from the map data at a certain index.
+     * @param data The tile data we are checking.
+     * @returns The cursor name if it exists.
      */
 
-    public getCursor(tileIndex: number, tileId: number): string | undefined {
-        if (tileId in this.cursors) return this.cursors[tileId];
+    public getCursor(data: Tile): string {
+        let cursor = '';
 
-        return Objects.getCursor(this.getObjectId(tileIndex));
+        this.forEachTile(data, (tileId: number) => {
+            if (tileId in this.cursors) cursor = this.cursors[tileId];
+        });
+
+        return cursor;
     }
 
     /**
@@ -284,24 +309,25 @@ export default class Map {
 
     /**
      * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
+     * The object is a region tile that is later used to send map data to the client.
      * @param index Gets tile information at an index in the map.
      * @returns Returns tile information (a number or number array)
      */
 
-    public getTileData(index: number): ParsedTile {
+    public getTileData(index: number): RegionTile {
         let data = this.data[index];
 
         if (!data) return [];
 
         let isArray = Array.isArray(data),
-            parsedData: ParsedTile = isArray ? [] : 0;
+            parsedData: RegionTile = isArray ? [] : 0;
 
         this.forEachTile(data, (tileId: number) => {
-            let tile: ParsedTile = tileId;
+            let tile: RegionTile = tileId;
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as ParsedTile[]).push(tile);
+            if (isArray) (parsedData as RegionTile[]).push(tile);
             else parsedData = tile;
         });
 
@@ -319,15 +345,15 @@ export default class Map {
      * @returns A parsed tile of type `RotatedTile`.
      */
 
-    public getFlippedTile(tileId: number): ParsedTile {
-        let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
-            v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
-            d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
+    public getFlippedTile(tileId: number): RegionTile {
+        let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
+            v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
+            d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
 
         tileId &= ~(
-            Modules.Constants.DIAGONAL_FLAG |
-            Modules.Constants.VERTICAL_FLAG |
-            Modules.Constants.HORIZONTAL_FLAG
+            Modules.MapFlags.DIAGONAL_FLAG |
+            Modules.MapFlags.VERTICAL_FLAG |
+            Modules.MapFlags.HORIZONTAL_FLAG
         );
 
         return {

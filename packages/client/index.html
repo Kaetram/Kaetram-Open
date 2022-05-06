@@ -185,10 +185,10 @@
         </noscript>
         <div id="intro">
             <!-- <h1 id="logo"></h1> -->
-            <section id="parchment" class="loadCharacter">
+            <section id="parchment" class="load-character">
                 <div class="parchment-left"></div>
                 <div class="parchment-middle">
-                    <article id="loadCharacter">
+                    <article id="load-character">
                         <h1>
                             <span class="left-ornament"></span>
                             Kaetram
@@ -197,7 +197,7 @@
                         <form>
                             <input
                                 type="text"
-                                id="loginNameInput"
+                                id="login-name-input"
                                 class="stroke"
                                 name="player-name"
                                 placeholder="Username"
@@ -209,7 +209,7 @@
                             />
                             <input
                                 type="password"
-                                id="loginPasswordInput"
+                                id="login-password-input"
                                 class="stroke"
                                 name="player-password"
                                 placeholder="Password"
@@ -219,14 +219,14 @@
                                 readonly
                             />
 
-                            <label id="rememberMe" class="check">
-                                <div id="rememberMeText">Remember Me</div>
-                                <input type="checkbox" aria-labelledby="rememberMeText" />
+                            <label id="remember-me" class="check">
+                                <div id="remember-me-text">Remember Me</div>
+                                <input type="checkbox" aria-labelledby="remember-me-text" />
                                 <span class="checkmark"></span>
                             </label>
                             <label id="guest" class="check">
-                                <div id="guestText">Play as a guest</div>
-                                <input type="checkbox" aria-labelledby="guestText" />
+                                <div id="guest-text">Play as a guest</div>
+                                <input type="checkbox" aria-labelledby="guest-text" />
                                 <span class="checkmark"></span>
                             </label>
 
@@ -241,13 +241,13 @@
                                 title="New Account"
                                 aria-label="New Account"
                                 type="button"
-                                id="newAccount"
+                                id="new-account"
                             ></button>
 
                             <div class="validation-summary"></div>
                         </form>
                     </article>
-                    <article id="createCharacter">
+                    <article id="create-character">
                         <h1>
                             <span class="left-ornament"></span>
                             New Character
@@ -256,7 +256,7 @@
                         <form>
                             <input
                                 type="text"
-                                id="registerNameInput"
+                                id="register-name-input"
                                 class="stroke"
                                 name="player-name"
                                 placeholder="Username"
@@ -266,7 +266,7 @@
                             />
                             <input
                                 type="password"
-                                id="registerPasswordInput"
+                                id="register-password-input"
                                 class="stroke"
                                 name="player-password"
                                 placeholder="Password"
@@ -276,7 +276,7 @@
                             />
                             <input
                                 type="password"
-                                id="registerPasswordConfirmationInput"
+                                id="register-password-confirmation-input"
                                 class="stroke"
                                 name="player-password2"
                                 placeholder="Confirm Password"
@@ -286,7 +286,7 @@
                             />
                             <input
                                 type="email"
-                                id="registerEmailInput"
+                                id="register-email-input"
                                 class="stroke"
                                 name="player-email"
                                 placeholder="Email Address"
@@ -301,7 +301,7 @@
                                 title="Cancel"
                                 aria-label="Cancel"
                                 type="button"
-                                id="cancelButton"
+                                id="cancel-button"
                             ></button>
                             <button title="Play" aria-label="Play" type="submit" id="play"></button>
 
@@ -314,7 +314,7 @@
                             <span class="title">Credits</span>
                             <span class="right-ornament"></span>
                         </h1>
-                        <p id="cDescription">
+                        <p id="c-description">
                             <br />
                             Special thanks to
                             <a
@@ -388,7 +388,7 @@
                             <span class="title"> About </span>
                             <span class="right-ornament"></span>
                         </h1>
-                        <p id="aDescription">
+                        <p id="a-description">
                             Kaetram is a 2D open-source experiment. The game is still very early in
                             development, so please be wary of that. If you would like to check out
                             the source code, visit our
@@ -408,8 +408,8 @@
                 </div>
                 <div class="parchment-right"></div>
                 <div class="loader" hidden>
-                    Connecting<span class="loader__dot">.</span><span class="loader__dot">.</span
-                    ><span class="loader__dot">.</span>
+                    Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span
+                    ><span class="loader-dot">.</span>
                 </div>
 
                 <button
@@ -451,63 +451,63 @@
                     <canvas id="foreground"></canvas>
                     <canvas id="cursor"></canvas>
                     <canvas id="overlay"></canvas>
-                    <canvas id="textCanvas"></canvas>
+                    <canvas id="text-canvas"></canvas>
                 </div>
                 <div id="buttons">
                     <ul>
-                        <li><div id="inventoryButton"></div></li>
-                        <li><div id="profileButton"></div></li>
-                        <li><div id="warpButton"></div></li>
-                        <li><div id="chatButton"></div></li>
-                        <li><div id="settingsButton"></div></li>
+                        <li><div id="inventory-button"></div></li>
+                        <li><div id="profile-button"></div></li>
+                        <li><div id="warp-button"></div></li>
+                        <li><div id="chat-button"></div></li>
+                        <li><div id="settings-button"></div></li>
                     </ul>
                 </div>
-                <div id="actionContainer">
+                <div id="action-container">
                     <ul></ul>
                 </div>
-                <div id="dropDialog">
-                    <div id="dropTitle">Input drop count.</div>
+                <div id="drop-dialog">
+                    <div id="drop-title">Input drop count.</div>
                     <div align="center">
                         <input
-                            title="dropCount"
+                            title="drop-count"
                             type="text"
-                            id="dropCount"
+                            id="drop-count"
                             size="6"
                             maxlength="11"
                         />
-                        <span id="dropAccept">&nbsp;Accept&nbsp;</span>
-                        <span id="dropCancel">&nbsp;Cancel&nbsp;</span>
+                        <span id="drop-accept">&nbsp;Accept&nbsp;</span>
+                        <span id="drop-cancel">&nbsp;Cancel&nbsp;</span>
                     </div>
                 </div>
-                <div id="profileDialog">
-                    <div id="statePage" class="page">
-                        <div id="profileName" class="profileInfo"></div>
-                        <div id="profileLevel" class="profileInfo"></div>
-                        <div id="profileExperience" class="profileInfo"></div>
-                        <div id="weaponSlot" class="profileSlot"></div>
-                        <div id="weaponSlotInfo" class="profileItemInfo"></div>
-                        <div id="armourSlot" class="profileSlot"></div>
-                        <div id="armourSlotInfo" class="profileItemInfo"></div>
-                        <div id="pendantSlot" class="profileSlot"></div>
-                        <div id="ringSlot" class="profileSlot"></div>
-                        <div id="bootsSlot" class="profileSlot"></div>
+                <div id="profile-dialog">
+                    <div id="state-page" class="page">
+                        <div id="profile-name" class="profile-info"></div>
+                        <div id="profile-level" class="profile-info"></div>
+                        <div id="profile-experience" class="profile-info"></div>
+                        <div id="weapon-slot" class="profile-slot"></div>
+                        <div id="weapon-slot-info" class="profile-item-info"></div>
+                        <div id="armour-slot" class="profile-slot"></div>
+                        <div id="armour-slot-info" class="profile-item-info"></div>
+                        <div id="pendant-slot" class="profile-slot"></div>
+                        <div id="ring-slot" class="profile-slot"></div>
+                        <div id="boots-slot" class="profile-slot"></div>
                     </div>
-                    <div id="questPage" class="page">
-                        <div id="achievementCount" class="stroke"></div>
-                        <div id="achievementList"><ul></ul></div>
-                        <div id="questCount" class="stroke"></div>
-                        <div id="questList"><ul></ul></div>
+                    <div id="quest-page" class="page">
+                        <div id="achievement-count" class="stroke"></div>
+                        <div id="achievement-list"><ul></ul></div>
+                        <div id="quest-count" class="stroke"></div>
+                        <div id="quest-list"><ul></ul></div>
                     </div>
-                    <div id="professionsPage" class="page">
-                        <div id="professionsList"><ul></ul></div>
+                    <div id="professions-page" class="page">
+                        <div id="professions-list"><ul></ul></div>
                     </div>
-                    <div id="guildPage" class="page"></div>
+                    <div id="guild-page" class="page"></div>
                     <div id="navigator">
                         <div id="previous"></div>
                         <div id="next"></div>
                     </div>
                 </div>
-                <div id="settingsPage" class="page">
+                <div id="settings-page" class="page">
                     <div id="sliders">
                         <input
                             title="Volume"
@@ -541,120 +541,120 @@
                         />
                     </div>
                     <div id="texts">
-                        <p id="volumeText">Volume</p>
-                        <p id="sfxText">SFX</p>
-                        <p id="brightnessText">Brightness</p>
-                        <p id="soundCheckText">Sound</p>
-                        <p id="cameraCheckText">Centred Camera</p>
-                        <p id="debugCheckText">Debugging</p>
-                        <p id="centreCheckText">Auto Centre</p>
-                        <p id="nameCheckText">Names</p>
-                        <p id="levelCheckText">Levels</p>
+                        <p id="volume-text">Volume</p>
+                        <p id="sfx-text">SFX</p>
+                        <p id="brightness-text">Brightness</p>
+                        <p id="sound-check-text">Sound</p>
+                        <p id="camera-check-text">Centred Camera</p>
+                        <p id="debug-check-text">Debugging</p>
+                        <p id="centre-check-text">Auto Centre</p>
+                        <p id="name-check-text">Names</p>
+                        <p id="level-check-text">Levels</p>
                     </div>
                     <div id="info"></div>
-                    <div id="checkMarks">
-                        <label id="soundCheck" class="check">
+                    <div id="check-marks">
+                        <label id="sound-check" class="check">
                             <input type="checkbox" aria-labelledby="soundCheckText" />
                             <span class="checkmark"></span>
                         </label>
-                        <label id="cameraCheck" class="check">
+                        <label id="camera-check" class="check">
                             <input type="checkbox" aria-labelledby="cameraCheckText" />
                             <span class="checkmark" />
                         </label>
-                        <label id="debugCheck" class="check">
+                        <label id="debug-check" class="check">
                             <input type="checkbox" aria-labelledby="debugCheckText" />
                             <span class="checkmark" />
                         </label>
-                        <label id="centreCheck" class="check">
+                        <label id="centre-check" class="check">
                             <input type="checkbox" aria-labelledby="centreCheckText" />
                             <span class="checkmark" />
                         </label>
-                        <label id="nameCheck" class="check">
+                        <label id="name-check" class="check">
                             <input type="checkbox" aria-labelledby="nameCheckText" />
                             <span class="checkmark" />
                         </label>
-                        <label id="levelCheck" class="check">
+                        <label id="level-check" class="check">
                             <input type="checkbox" aria-labelledby="levelCheckText" />
                             <span class="checkmark" />
                         </label>
                     </div>
                 </div>
-                <div id="attackInfo">
+                <div id="attack-info">
                     <div class="name"></div>
                     <div class="details"></div>
                     <div class="health"></div>
                 </div>
-                <div id="mapFrame">
-                    <div id="warp1" class="mapButton"></div>
-                    <div id="warp2" class="mapButton"></div>
-                    <div id="warp3" class="mapButton"></div>
-                    <div id="warp4" class="mapButton"></div>
-                    <div id="warp5" class="mapButton"></div>
-                    <div id="warp6" class="mapButton"></div>
-                    <div id="closeMapFrame" class="close"></div>
+                <div id="map-frame">
+                    <div id="warp1" class="map-button"></div>
+                    <div id="warp2" class="map-button"></div>
+                    <div id="warp3" class="map-button"></div>
+                    <div id="warp4" class="map-button"></div>
+                    <div id="warp5" class="map-button"></div>
+                    <div id="warp6" class="map-button"></div>
+                    <div id="close-map-frame" class="close"></div>
                 </div>
                 <div id="inventory"><ul></ul></div>
                 <div id="bank">
-                    <div id="closeBank" class="close"></div>
-                    <div id="bankContainer">
-                        <div id="bankSlots"><ul></ul></div>
+                    <div id="close-bank" class="close"></div>
+                    <div id="bank-container">
+                        <div id="bank-slot"><ul></ul></div>
                     </div>
-                    <div id="bankInventoryContainer">
-                        <div id="bankInventorySlots" class="inventorySlots">
+                    <div id="bank-inventory-container">
+                        <div id="bank-inventory-slots" class="inventory-slots">
                             <ul></ul>
                         </div>
                     </div>
                 </div>
                 <div id="trade">
-                    <div id="closeTrade" class="close"></div>
-                    <div id="tradePlayerContainer"></div>
-                    <div id="tradeOPlayerContainer"></div>
+                    <div id="close-trade" class="close"></div>
+                    <div id="trade-player-container"></div>
+                    <div id="trade-o-player-container"></div>
                 </div>
                 <div id="enchant">
-                    <div id="closeEnchant" class="close"></div>
-                    <div id="confirmEnchant" class="ok"></div>
-                    <div id="enchantContainer">
-                        <div id="enchantInventorySlots" class="inventorySlots">
+                    <div id="close-enchant" class="close"></div>
+                    <div id="confirm-enchant" class="ok"></div>
+                    <div id="enchant-container">
+                        <div id="enchant-inventory-slots" class="inventory-slots">
                             <ul></ul>
                         </div>
                     </div>
-                    <div id="enchantSelectedItem"></div>
-                    <div id="enchantShards">
-                        <div id="shardsCount" class="itemCount"></div>
+                    <div id="enchant-selected-item"></div>
+                    <div id="enchant-shards">
+                        <div id="shards-count" class="item-count"></div>
                     </div>
                 </div>
                 <div id="shop">
-                    <div id="closeShop" class="close"></div>
-                    <div id="shopContainer"><ul></ul></div>
-                    <div id="shopInventoryContainer">
-                        <div id="shopInventorySlots" class="inventorySlots">
+                    <div id="close-shop" class="close"></div>
+                    <div id="shop-container"><ul></ul></div>
+                    <div id="shop-inventory-container">
+                        <div id="shop-inventory-slots" class="inventory-slots">
                             <ul></ul>
                         </div>
 
-                        <div id="shopSellSlot">
-                            <div id="shopSellSlotText" class="itemCount"></div>
+                        <div id="shop-sell-slot">
+                            <div id="shop-sell-slot-text" class="item-count"></div>
                         </div>
-                        <div id="shopSellSlotReturn">
-                            <div id="shopSellSlotReturnText" class="itemCount"></div>
+                        <div id="shop-sell-slot-return">
+                            <div id="shop-sell-slot-return-text" class="item-count"></div>
                         </div>
 
-                        <div id="confirmSell" class="ok"></div>
+                        <div id="confirm-sell" class="ok"></div>
                     </div>
                 </div>
                 <div id="bubbles"></div>
                 <div id="notification">
-                    <div id="notificationTextTitle"></div>
-                    <div id="notificationTextDescription"></div>
+                    <div id="notification-text-title"></div>
+                    <div id="notification-text-description"></div>
                 </div>
                 <div id="notifications">
-                    <div id="notifyFade" class="fade"></div>
+                    <div id="notify-fade" class="fade"></div>
                     <div id="notify">
                         <div id="exclamation"></div>
-                        <div id="notifyDone" class="done"></div>
+                        <div id="notify-done" class="done"></div>
                     </div>
                     <div id="confirm">
                         <div id="question"></div>
-                        <div id="confirmDone" class="done"></div>
+                        <div id="confirm-done" class="done"></div>
                         <div id="cancel"></div>
                     </div>
                     <div id="message"></div>
@@ -664,7 +664,7 @@
                         <form>
                             <input
                                 title="Enter your message!"
-                                id="chatInput"
+                                id="chat-input"
                                 type="text"
                                 maxlength="256"
                                 autocomplete="off"
@@ -672,15 +672,15 @@
                             />
                         </form>
                     </div>
-                    <div id="chatLog"></div>
+                    <div id="chat-log"></div>
                 </div>
-                <div id="playerInfo">
+                <div id="player-info">
                     <div id="health"></div>
-                    <div id="healthBar">
-                        <div id="healthBarText"></div>
+                    <div id="health-bar">
+                        <div id="health-bar-text"></div>
                     </div>
                     <div id="exp"></div>
-                    <div id="expBar"></div>
+                    <div id="exp-bar"></div>
                 </div>
             </div>
         </div>

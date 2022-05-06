@@ -15,10 +15,24 @@ export interface Door {
     y: number;
 }
 
+// All possible string properties for tiles
+export interface PropertyValues {
+    roaming?: boolean;
+    type?: string;
+    v?: never;
+    o?: never;
+    tree?: string;
+    stump?: string;
+    cutstump?: string;
+    rock?: never;
+    cursor?: never;
+}
+
 export interface Property {
-    name: keyof Entity;
+    name: keyof PropertyValues;
     value: never;
 }
+
 export interface ObjectGroup {
     objects: {
         polygon: Position[];
@@ -27,10 +41,16 @@ export interface ObjectGroup {
     }[];
 }
 
+export interface Animation {
+    duration: number;
+    tileid: number;
+}
+
 export interface Tile {
     id: number;
     objectgroup: ObjectGroup;
     properties: Property[];
+    animation?: Animation[];
 }
 
 export interface Tileset {
@@ -68,14 +88,4 @@ export interface MapData {
     tilewidth: number;
     tilesets: Tileset[];
     layers: Layer[];
-}
-
-export interface Entity {
-    roaming?: boolean;
-    type?: string;
-    v?: never;
-    o?: never;
-    tree?: never;
-    rock?: never;
-    cursor?: never;
 }

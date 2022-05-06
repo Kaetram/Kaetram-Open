@@ -2,20 +2,17 @@ import { Modules } from '@kaetram/common/network';
 
 import Entity, { EntityData } from '../entity';
 
-import type Character from '../character/character';
+import Hit from '../character/combat/hit';
+import Character from '../character/character';
 import Utils from '@kaetram/common/util/utils';
 
 export default class Projectile extends Entity {
-    public damage = -1;
-
     public hitType = Modules.Hits.Damage;
 
-    public constructor(
-        key: Modules.Projectiles,
-        public owner: Character,
-        public target: Character
-    ) {
+    public constructor(public owner: Character, public target: Character, public hit: Hit) {
         super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', owner.x, owner.y);
+
+        this.key = owner.projectileName;
     }
 
     /**
@@ -29,7 +26,7 @@ export default class Projectile extends Entity {
         data.name = this.owner.projectileName;
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
-        data.damage = this.damage;
+        data.damage = this.hit.getDamage() || 0;
         data.hitType = this.hitType;
 
         return data;
