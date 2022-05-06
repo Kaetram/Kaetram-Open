@@ -37,7 +37,7 @@ export default class BubbleController {
             $(`#${id} p`).html(message);
         } else {
             let element = $(
-                `<div id="${id}" class="bubble"><p>${message}</p><div class="bubbleTip"></div></div>`
+                `<div id="${id}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
             );
 
             $(element).appendTo(container);

@@ -3,7 +3,6 @@ import type Mob from './mob';
 import Utils from '@kaetram/common/util/utils';
 import Map from '../../../map/map';
 import World from '../../../world';
-import Entities from '@kaetram/server/src/controllers/entities';
 import Character from '../character';
 import log from '@kaetram/common/util/log';
 
@@ -14,14 +13,12 @@ import log from '@kaetram/common/util/log';
 
 export default class Handler {
     private world: World;
-    private entities: Entities;
     private map: Map;
 
     private plateauLevel: number;
 
     public constructor(private mob: Mob) {
         this.world = this.mob.world;
-        this.entities = this.world.entities;
         this.map = this.world.map;
 
         // Store the original plateau level.
@@ -29,6 +26,7 @@ export default class Handler {
 
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
+        this.mob.onDeath(this.handleDeath.bind(this));
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onForceTalk(this.handleForceTalk.bind(this));
@@ -39,18 +37,51 @@ export default class Handler {
      */
 
     private handleMovement(): void {
-        if (this.mob.shouldReturnToSpawn()) this.mob.sendToSpawn();
+        if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
+
+        // /**
+        //  * We check if the user's target is outside the roaming area and
+        //  * pick a new one if that is the case.
+        //  */
+
+        if (this.mob.outsideRoaming(this.mob.target))
+            if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
+            else this.mob.sendToSpawn();
     }
 
     /**
      * Callback for whenever a mob gets hit.
      */
 
-    private handleHit(attacker: Character): void {
-        if (this.mob.dead) return;
-        if (this.mob.combat.started) return;
+    private handleHit(damage: number, attacker?: Character): void {
+        if (this.mob.dead || !attacker) return;
 
-        this.mob.combat.begin(attacker);
+        if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
+
+        if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
+    }
+
+    /**
+     * Callback for when a death occurs and who the last attacker was.
+     */
+
+    private handleDeath(attacker?: Character): void {
+        // Stops the attacker's combat if the character is dead.
+        if (attacker) attacker.combat.stop();
+
+        // Spawn item drops.
+        let drop = this.mob.getDrop();
+
+        if (drop) this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count);
+
+        if (attacker?.isPlayer()) {
+            attacker.addExperience(this.mob.experience);
+            attacker.killCallback?.(this.mob);
+        }
+
+        this.world.entities.remove(this.mob);
+
+        this.mob.destroy();
     }
 
     /**
@@ -59,8 +90,9 @@ export default class Handler {
 
     private handleRespawn(): void {
         this.mob.dead = false;
+        this.mob.hitPoints.reset();
 
-        this.entities.addMob(this.mob);
+        this.world.entities.addMob(this.mob);
     }
 
     /**
@@ -82,20 +114,14 @@ export default class Handler {
             newY = spawnY + Utils.randomInt(-roamDistance, roamDistance),
             distance = Utils.getDistance(spawnX, spawnY, newX, newY);
 
-        // Check if the new position is a collision.
-        if (this.map.isColliding(newX, newY)) return;
-
-        // Don't have mobs block a door.
-        if (this.map.isDoor(newX, newY)) return;
+        // Do not roam while in combat.
+        if (combat.started) return;
 
         // Prevent mobs from going outside of their roaming radius.
         if (distance < roamDistance) return;
 
         // No need to move if the new position is the same as the current.
         if (newX === x && newY === y) return;
-
-        // Do not roam while in combat.
-        if (combat.started) return;
 
         /**
          * A plateau defines an imaginary z-axis in a 2D space. A mob is essentially
@@ -107,6 +133,12 @@ export default class Handler {
          */
 
         if (this.plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
+
+        // Check if the new position is a collision.
+        if (this.map.isColliding(newX, newY)) return;
+
+        // Don't have mobs block a door.
+        if (this.map.isDoor(newX, newY)) return;
 
         this.mob.move(newX, newY);
     }

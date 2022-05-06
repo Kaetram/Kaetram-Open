@@ -1,11 +1,14 @@
 import config from '@kaetram/common/config';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import Character from '../game/entity/character/character';
+import Mob from '../game/entity/character/mob/mob';
+import Item from '../game/entity/objects/item';
+import Quest from '../game/entity/character/player/quest/quest';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
-import Item from '../game/entity/objects/item';
-import { Command, Map, Pointer, Network, Notification, Quest } from '../network/packets';
+import { Command, Map, Pointer, Network, Notification } from '../network/packets';
 
 export default class Commands {
     private world;
@@ -145,7 +148,16 @@ export default class Commands {
     }
 
     private handleAdminCommands(command: string, blocks: string[]): void {
-        let username: string, player: Player;
+        let username: string,
+            player: Player,
+            x: number,
+            y: number,
+            instance: string,
+            target: string,
+            entity: Character,
+            targetEntity: Character,
+            questKey: string,
+            quest: Quest;
 
         switch (command) {
             case 'spawn': {
@@ -186,7 +198,7 @@ export default class Commands {
                     y = parseInt(blocks.shift()!),
                     withAnimation = parseInt(blocks.shift()!);
 
-                if (x && y) this.player.teleport(x, y, false, !!withAnimation);
+                if (x && y) this.player.teleport(x, y, !!withAnimation);
 
                 return;
             }
@@ -256,16 +268,6 @@ export default class Commands {
                 });
 
                 return;
-
-            case 'attackaoe': {
-                let radius = parseInt(blocks.shift()!);
-
-                if (!radius) radius = 1;
-
-                this.player.combat.dealAoE(radius);
-
-                return;
-            }
 
             case 'addexp': {
                 let exp = parseInt(blocks.shift()!);
@@ -342,11 +344,6 @@ export default class Commands {
 
                 break;
 
-            case 'die':
-                this.world.handleDeath(this.player);
-
-                break;
-
             case 'ms': {
                 let movementSpeed = parseInt(blocks.shift()!);
 
@@ -377,6 +374,66 @@ export default class Commands {
                         colour: '#00000'
                     })
                 );
+
+                break;
+
+            case 'movenpc':
+                instance = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+                y = parseInt(blocks.shift()!);
+
+                if (!instance)
+                    return this.player.notify(`Malformed command, expected /movenpc instance x y`);
+
+                entity = this.entities.get(instance) as Character;
+
+                if (!entity) return this.player.notify(`Entity not found.`);
+
+                console.log(entity.isMob());
+
+                if (entity.isMob()) (entity as Mob).move(x, y);
+
+                break;
+
+            case 'nvn': // NPC vs NPC (specify two instances)
+                instance = blocks.shift()!;
+                target = blocks.shift()!;
+
+                if (!instance || !target)
+                    return this.player.notify(`Malformed command, expected /nvn instance target`);
+
+                entity = this.entities.get(instance) as Character;
+                targetEntity = this.entities.get(target) as Character;
+
+                if (!entity || !targetEntity)
+                    return this.player.notify(`Could not find entity instances specified.`);
+
+                entity.combat.attack(targetEntity);
+
+                break;
+
+            case 'kill':
+                username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kill username`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (player) player.hit(player.hitPoints.getHitPoints());
+
+                break;
+
+            case 'finishquest':
+                questKey = blocks.shift()!;
+
+                if (!questKey)
+                    return this.player.notify(`Malformed command, expected /finishquest questKey`);
+
+                quest = this.player.quests.getQuest(questKey);
+
+                if (quest) quest.setStage(9999);
+                else this.player.notify(`Could not find quest with key: ${questKey}`);
 
                 break;
         }

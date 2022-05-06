@@ -54,7 +54,7 @@ export default class Slot {
     }
 
     /**
-     * Checks if the given item can be held slot.
+     * Checks if the current slot can hold the item.
      * @param item The item to check.
      * @returns Whether or not the item can be held.
      */

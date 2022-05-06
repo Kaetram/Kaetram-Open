@@ -3,30 +3,28 @@ import _ from 'lodash';
 import { Modules, Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
+
 import type {
-    AnimationData,
+    MovementCallback,
+    CombatCallback,
+    AnimationCallback,
+    RespawnCallback,
+    StoreCallback
+} from '@kaetram/common/types/messages/outgoing';
+
+// TODO: Slowly remove all these.
+import type {
     BubbleData,
     ChatData,
-    CombatData,
-    CombatHitData,
-    CombatSyncData,
     CommandData,
     ContainerAddData,
     ContainerBatchData,
     ContainerRemoveData,
     EnchantData,
-    EquipmentBatchData,
-    EquipmentEquipData,
-    EquipmentUnequipData,
     ExperienceCombatData,
     ExperienceProfessionData,
     HandshakeData,
     HealData,
-    MovementFollowData,
-    MovementMoveData,
-    MovementOrientateData,
-    MovementStateData,
-    MovementStopData,
     NotificationData,
     NPCBankData,
     NPCCountdownData,
@@ -45,18 +43,10 @@ import type {
     ProfessionBatchData,
     ProfessionUpdateData,
     ProjectileData,
-    QuestAchievementBatchData,
     QuestBatchData,
     QuestFinishData,
     QuestProgressData,
-    ShopBuyData,
-    ShopOpenData,
-    ShopRefreshData,
-    ShopRemoveData,
-    ShopSelectData,
-    ShopSellData,
     SpawnData,
-    SyncData,
     TeleportData,
     WelcomeData
 } from '@kaetram/common/types/messages';
@@ -75,21 +65,8 @@ interface EquipmentCallback {
 }
 type EntityListCallback = (ids: string[]) => void;
 type SyncCallback = (data: EntityData) => void;
-interface MovementCallback {
-    (opcode: Opcodes.Movement.Move, info: MovementMoveData): void;
-    (opcode: Opcodes.Movement.Follow, info: MovementFollowData): void;
-    (opcode: Opcodes.Movement.Stop, info: MovementStopData): void;
-    (opcode: Opcodes.Movement.Freeze | Opcodes.Movement.Stunned, info: MovementStateData): void;
-    (opcode: Opcodes.Movement.Orientate, info: MovementOrientateData): void;
-}
 type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
-interface CombatCallback {
-    (opcode: Opcodes.Combat, data: CombatData): void;
-    (opcode: Opcodes.Combat.Hit, data: CombatHitData): void;
-    (opcode: Opcodes.Combat.Sync, data: CombatSyncData): void;
-}
-type AnimationCallback = (id: string, data: AnimationData) => void;
 interface ProjectileCallback {
     (opcode: Opcodes.Projectile, data: ProjectileData): void;
 }
@@ -114,7 +91,7 @@ type BlinkCallback = (instance: string) => void;
 type HealCallback = (data: HealData) => void;
 interface ExperienceCallback {
     (Opcodes: Opcodes.Experience.Combat, data: ExperienceCombatData): void;
-    (Opcodes: Opcodes.Experience.Profession, data: ExperienceProfessionData): void;
+    (Opcodes: Opcodes.Experience.Skill, data: ExperienceProfessionData): void;
 }
 type DeathCallback = (id: string) => void;
 type AudioCallback = (song: AudioName) => void;
@@ -125,7 +102,6 @@ interface NPCCallback {
     (opcode: Opcodes.NPC.Enchant, data: NPCEnchantData): void;
     (opcode: Opcodes.NPC.Countdown, data: NPCCountdownData): void;
 }
-type RespawnCallback = (id: string, x: number, y: number) => void;
 type EnchantCallback = (opcode: Opcodes.Enchant, data: EnchantData) => void;
 type GuildCallback = (opcode: Opcodes.Guild, data: unknown) => void;
 interface PointerCallback {
@@ -136,14 +112,6 @@ interface PointerCallback {
     (opcode: Opcodes.Pointer.Button, data: PointerButtonData): void;
 }
 type PVPCallback = (id: string, pvp: boolean) => void;
-interface ShopCallback {
-    (opcode: Opcodes.Shop.Open, data: ShopOpenData): void;
-    (opcode: Opcodes.Shop.Buy, data: ShopBuyData): void;
-    (opcode: Opcodes.Shop.Sell, data: ShopSellData): void;
-    (opcode: Opcodes.Shop.Refresh, data: ShopRefreshData): void;
-    (opcode: Opcodes.Shop.Select, data: ShopSelectData): void;
-    (opcode: Opcodes.Shop.Remove, data: ShopRemoveData): void;
-}
 type MapCallback = (opcode: Opcodes.Map, data: string) => void;
 interface OverlayCallback {
     (opcode: Opcodes.Overlay, data: undefined): void;
@@ -193,7 +161,7 @@ export default class Messages {
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
-    private shopCallback?: ShopCallback;
+    private storeCallback?: StoreCallback;
     private mapCallback?: MapCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
@@ -245,7 +213,7 @@ export default class Messages {
         messages[Packets.Guild] = () => this.guildCallback;
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
-        messages[Packets.Shop] = () => this.shopCallback;
+        messages[Packets.Store] = () => this.storeCallback;
         messages[Packets.Map] = () => this.mapCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
@@ -472,8 +440,8 @@ export default class Messages {
         this.pvpCallback = callback;
     }
 
-    public onShop(callback: ShopCallback): void {
-        this.shopCallback = callback;
+    public onStore(callback: StoreCallback): void {
+        this.storeCallback = callback;
     }
 
     public onMap(callback: MapCallback): void {
