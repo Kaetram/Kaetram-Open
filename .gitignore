@@ -197,9 +197,6 @@ web_modules/
 # Generated output
 dist
 
-# Cache directory
-.cache
-
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
@@ -376,10 +373,10 @@ $RECYCLE.BIN/
 !.yarn/versions
 
 # if you are NOT using Zero-installs, then:
-# comment the following lines
-!.yarn/cache
+# uncomment the following lines
+# !.yarn/cache
 
-# and uncomment the following lines
-# .pnp.*
+# and comment the following lines
+.pnp.*
 
 # https://www.toptal.com/developers/gitignore/api/git,node,yarn,linux,macos,windows,visualstudiocode,webstorm,vim,emacs

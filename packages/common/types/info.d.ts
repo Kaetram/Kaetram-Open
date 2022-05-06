@@ -3,10 +3,10 @@ import type { Modules } from '../network';
 export interface HitData {
     type: Modules.Hits;
     damage: number;
-    isRanged: boolean;
-    isAoE: boolean;
-    hasTerror: boolean;
-    isPoison: boolean;
+    ranged?: boolean;
+    aoe?: boolean;
+    terror?: boolean;
+    poison?: boolean;
 }
 
 export interface QuestInfo {

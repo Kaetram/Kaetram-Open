@@ -39,7 +39,7 @@ export default class Warp {
             return this.player.notify(`You must be at least level ${warp.level} to warp here!`);
 
         // Perform warping.
-        this.player.teleport(warp.x, warp.y, false, true);
+        this.player.teleport(warp.x, warp.y, true);
         this.player.notify(`You have been warped to ${Utils.formatName(warp.name)}!`);
 
         this.setLastWarp();

@@ -11,10 +11,10 @@ interface ActionsData {
 }
 
 export default class Actions {
-    private body = $('#actionContainer');
+    private body = $('#action-container');
 
-    private drop = $('#dropDialog');
-    private dropInput = $('#dropCount');
+    private drop = $('#drop-dialog');
+    private dropInput = $('#drop-count');
 
     private activeClass: string | null = null;
     private miscButton: JQuery | null = null;
@@ -27,8 +27,8 @@ export default class Actions {
     }
 
     private load(): void {
-        let dropAccept = $('#dropAccept'),
-            dropCancel = $('#dropCancel');
+        let dropAccept = $('#drop-accept'),
+            dropCancel = $('#drop-cancel');
 
         dropAccept.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
@@ -56,7 +56,7 @@ export default class Actions {
                     left: '10%'
                 });
 
-                let dropButton = $('<div id="drop" class="actionButton">Drop</div>');
+                let dropButton = $('<div id="drop" class="action-button">Drop</div>');
 
                 this.add(dropButton);
 
@@ -123,8 +123,8 @@ export default class Actions {
     }
 
     public clear(): void {
-        $('#dropAccept').off('click');
-        $('#dropCancel').off('click');
+        $('#drop-accept').off('click');
+        $('#drop-cancel').off('click');
 
         this.trade?.off('click');
         this.follow?.off('click');
@@ -147,19 +147,19 @@ export default class Actions {
     }
 
     private getAttackButton(): JQuery {
-        return $('<div id="attack" class="actionButton">Attack</div>');
+        return $('<div id="attack" class="action-button">Attack</div>');
     }
 
     private getFollowButton(): JQuery {
-        return $('<div id="follow" class="actionButton">Follow</div>');
+        return $('<div id="follow" class="action-button">Follow</div>');
     }
 
     // getTradeButton(): JQuery {
-    //     return $('<div id="trade" class="actionButton">Trade</div>');
+    //     return $('<div id="trade" class="action-button">Trade</div>');
     // }
 
     private getTalkButton(): JQuery {
-        return $('<div id="talkButton" class="actionButton">Talk</div>');
+        return $('<div id="talk-button" class="action-button">Talk</div>');
     }
 
     private getButtons(): JQuery {

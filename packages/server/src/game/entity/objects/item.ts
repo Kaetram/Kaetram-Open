@@ -19,7 +19,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
-    public maxStackSize = 1;
+    public maxStackSize: number = Modules.Constants.MAX_STACK;
     public plugin = '';
     public price = 1;
     public storeCount = -1;
@@ -30,6 +30,9 @@ export default class Item extends Entity {
     public ringLevel = 0;
     public bootsLevel = 0;
     public movementSpeed = -1;
+    public stockAmount = 1; // Used for stores to increase count by this amount.
+    public maxCount = 1; // Used for stores to know maximum limit.
+    public lumberjacking = -1;
 
     private respawnTime = 30_000;
     private despawnDuration = 7000;
@@ -60,6 +63,9 @@ export default class Item extends Entity {
             return;
         }
 
+        // Count cannot be less than 1 if the key is not null.
+        if (!!key && this.count < 1) this.count = 1;
+
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
         this.name = this.data.name;
@@ -76,6 +82,7 @@ export default class Item extends Entity {
         this.ringLevel = this.data.ringLevel || this.ringLevel;
         this.bootsLevel = this.data.bootsLevel || this.bootsLevel;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
+        this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
     }
 
     /**

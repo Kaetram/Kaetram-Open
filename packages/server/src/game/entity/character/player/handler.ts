@@ -7,7 +7,9 @@ import {
     Container,
     Quest,
     Equipment as EquipmentPacket,
-    NPC as NPCPacket
+    NPC as NPCPacket,
+    Death,
+    Despawn
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -108,7 +110,16 @@ export default class Handler {
      */
 
     private handleDeath(): void {
+        this.player.dead = true;
+
+        this.player.skills.stop();
         this.player.combat.stop();
+
+        // Send death packet only to the player.
+        this.player.send(new Death(this.player.instance));
+
+        // Send despawn packet to all the nearby entities except the player.
+        this.player.sendToRegions(new Despawn(this.player.instance), true);
     }
 
     /**
@@ -123,7 +134,7 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        this.player.teleport(door.x, door.y, true);
+        this.player.teleport(door.x, door.y);
 
         log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
     }
@@ -140,6 +151,8 @@ export default class Handler {
         this.detectAreas(x, y);
 
         this.detectClipping(x, y);
+
+        this.player.storeOpen = '';
     }
 
     /**
@@ -288,27 +301,17 @@ export default class Handler {
      */
 
     private handleTalkToNPC(npc: NPC): void {
+        // Primarily for the prevention of packet injection.
+        if (!this.player.isAdjacent(npc))
+            return log.warning(
+                `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
+            );
+
         let quest = this.player.quests.getQuestFromNPC(npc);
 
-        if (quest) {
-            quest.talkCallback?.(npc, this.player);
-            return;
-        }
+        if (quest) return quest.talkCallback?.(npc, this.player);
 
-        // if (this.player.quests.isQuestNPC(npc)) {
-        //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-        //     return;
-        // }
-
-        // if (this.player.quests.isAchievementNPC(npc)) {
-        //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-        //     return;
-        // }
-
-        // if (Shops.isShopNPC(npc.id)) {
-        //     this.world.shops.open(this.player, npc.id);
-        //     return;
-        // }
+        if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
             case 'banker':
@@ -482,10 +485,10 @@ export default class Handler {
             return;
         }
 
-        let hit = new Hit(Modules.Hits.Poison, damage);
+        // let hit = new Hit(Modules.Hits.Poison, damage);
 
-        hit.poison = true;
+        // hit.poison = true;
 
-        this.player.combat.hit(this.player, this.player, hit.getData());
+        // this.player.combat.hit(this.player, this.player, hit.getData());
     }
 }
