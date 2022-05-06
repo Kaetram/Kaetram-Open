@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-    - name: 🤔 Questions & Discussions
+    - name: 💬 Discord Server
       url: https://discord.gg/MmbGAaw
-      about: Please ask and answer questions here.
+      about: Please ask and discuss questions here.
     - name: 📃 Documentation
-      url: https://github.com/Kaetram/Kaetram-Open#kaetram
+      url: https://github.com/Kaetram/Kaetram-Open#get-started
       about: Please refer to it as our main documentation.

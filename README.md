@@ -1,97 +1,153 @@
 # Kaetram
 
-[![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open)
-[![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/blob/master/LICENSE)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F&style=flat)](https://kaetram.com/)
-[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/issues)
-[![Watch This Repo](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription)
-[![Star This Repo](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers)
-[![Fork This Repo](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork)
-[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)](https://discord.gg/MmbGAaw)
+[![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/releases/latest 'Version')
+[![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open)][license]
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com&style=flat)](https://kaetram.com 'Website')
+[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions 'Workflow Status')
+[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)][issues]
 
-Kaetram is an open-source game-engine created to aid those interested in entering the game
-development realm. The codebase is simple, clean, and intuitive. This project is intended to be used
-as a learning tool. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest
-(BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been
-written from scratch, using more modern approaches.
+[![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
+[![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
+[![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)][discord]
+[![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
+
+Kaetram is an open-source game engine created to aid those interested in entering the game
+development realm, and intended to be used as a learning tool. The codebase is simple, clean, and
+intuitive. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest (BQ), and
+uses original BQ assets as well as custom-made ones. The entire codebase has been rewritten from
+scratch using more modern approaches.
 
 Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-Patreon &ndash; <https://www.patreon.com/kaetram>
+![Demo 1](https://i.imgur.com/slnzrZB.png 'Demo 1')
 
-![Demo1](https://i.imgur.com/slnzrZB.png)
-![Demo2](https://i.imgur.com/jS5d3oq.png)
-![Demo3](https://i.imgur.com/cZTFqnd.png)
+![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
 
-## Table of Contents
+![Demo 3](https://i.imgur.com/cZTFqnd.png 'Demo 3')
 
-- [Kaetram](#kaetram)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-    - [Regions](#regions)
-    - [Tilemap](#tilemap)
-    - [Map Parsing](#map-parsing)
-    - [Kaetram Hub](#kaetram-hub)
-  - [Get Started](#get-started)
-    - [Prerequisites](#prerequisites)
-      - [NOTE: Node.js](#note-nodejs)
-      - [NOTE: MongoDB](#note-mongodb)
-    - [Installing and Running](#installing-and-running)
-  - [Roadmap](#roadmap)
-    - [TODO](#todo)
-      - [Gameplay](#gameplay)
-      - [Code-base Development](#code-base-development)
-      - [Miscellaneous](#miscellaneous)
-  - [License](#license)
-
-## Features
+## Technologies
 
 BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only
-served to advance. Kaetram contains a lot of ideas and features that builds on top of its
-predecessor, a couple are:
+served to advance. Kaetram contains a lot of ideas and [features](#features) that build on top of
+its predecessor, a couple being:
 
-- Multiplayer using [Socket.IO](https://socket.io)
-- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles)
-- Region system (client receives only necessary data and saves it)
+- Multiplayer using [Socket.IO](https://socket.io).
+- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles).
+- Region system (client receives only necessary data and saves it).
 - Questing and achievements system.
 - Plugin-based combat system (for bosses/special enemies).
 - Supports RESTful API.
 - Discord server integration.
 - Cross-server private messaging and interactions.
-- Lerna monorepo packaging
-- And much more
+- Yarn v3 with workspaces for monorepo packaging.
+- And much more!
+
+## Get Started
+
+### Prerequisites
+
+You must first [install Node.js](https://nodejs.org/en/download/) to run the project, and
+_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data on
+the server.
+
+#### NOTE: Node.js
+
+> You need to use a Node.js version greater than or equal to `v12.20.0`, following the
+> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases/), to have the most stable
+> experience when developing/experimenting with Kaetram. Older versions would not work with our
+> current package manager and dependencies.
+
+#### NOTE: MongoDB
+
+> MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
+> install it and run an online environment with all the features enabled. To do this, see
+> [Configuration](#configuration), and set `OFFLINE_MODE=false`.
+> _If you do choose to install MongoDB, a user is not necessary, but you can enable authentication
+> with the `MONGODB_AUTH` setting._
+
+### Installing
+
+You will then need to install Yarn using
+
+```console
+npm install -g yarn
+```
+
+After installing Yarn, install the dependencies by simply running
+
+```console
+yarn
+```
+
+### Running
+
+To run live development builds, use
+
+```console
+yarn dev
+```
+
+To create production builds, run
+
+```console
+yarn build
+```
+
+Then, to run each production build, use
+
+```console
+yarn start
+```
+
+Add `--host` to the end to make the game visible on your network.
+
+### Configuration
+
+_Optionally_, if you would want some additional configuration, There will see a file named
+[`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
+file, or by setting environmental variables.
+
+Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
+
+Keep in mind, you have to rebuild the client every time you change your configuration.
+
+## Features
 
 ### Regions
 
 The region system sends data to the client according to the map data of the server. The collisions
 are checked both server-side and client-side to avoid cheating. The region system makes use of
 dynamic tiles, which are unlocked according to a player's progress. Furthermore, there is integrated
-support for instancing, where we can use a section of the map (or clone it) and reuse it for certain
-groups of players. The instancing is perfect for activities such as minigames, where we will want to
-run multiple instances in parallel.
+support for instancing, where we can use a section of the map (or clone it), and reuse it for
+certain groups of players. The instancing is perfect for activities such as minigames, where we will
+want to run multiple instances in parallel.
 
 ### Tilemap
 
 Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The
-tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our
-map parsing tool located in [`tools/map/exportmap.js`](tools/map/exportmap.js) you can easily export
-your creation to both the client and the server.
+tilemap can easily be constructed using the [Tiled Map Editor](https://www.mapeditor.org/). Using
+our [map parsing](#map-parsing) tool, you can easily export your creation to both the client and the
+server.
 
 ### Map Parsing
 
-Once you finish modifying your map in `tools/maps/data` you can parse the map data by executing
-`exportmap.js` in `tools/maps` directory. Example command:
+Once finished modifying your map in [`packages/tools/map/data/`](packages/tools/map/data/), you can
+parse the map data by executing `yarn exportmap` inside the [`packages/tools/`](packages/tools/)
+directory.
+
+Example command:
 
 ```console
-./exportmap.js ./data/map.json
+yarn exportmap ./data/map.json
 ```
 
-In order to build the current game map you can run
+To build the current game map, you can run
 
 ```console
-npm run map
+yarn map
 ```
 
 ### Kaetram Hub
@@ -101,51 +157,11 @@ players to interact with their friends across them in a variety of ways (private
 guilds). Furthermore, the hub serves as a gateway for determining what server to place players in.
 If a server is full, it simply returns another server that has room for the player.
 
-## Get Started
+To enable using the hub server, see [Configuration](#configuration), and set these values to `true`.
 
-### Prerequisites
-
-You must first [install Node.js](https://nodejs.org/en/download/) to run the server, and
-[install MongoDB](https://www.mongodb.com/download-center/community) database to store user data.
-
-#### NOTE: Node.js
-
-> Node.js version must be greater than or equal to `10.0.0` as anything under this version would
-> interpret something like `catch {}` instead of the usual `catch (err) {}` as a Syntax Error. _This
-> error is not in this codebase, it's in one of the necessary node modules currently installed_
-
-#### NOTE: MongoDB
-
-> MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-> your own limited version if you do not want to install MongoDB. To do this, set
-> `Config.offlineMode = true` in the server configuration. _If you do choose to install MongoDB, a
-> user is not necessary, but you can enable authentication with the `Config.mongoAuth` variable in
-> the [server configuration](packages/server/config.ts)._
-
-After installing Node.js, install all packages by running
-
-```console
-npm install
-```
-
-### Installing and Running
-
-Before starting Kaetram, there is some configuration that must be done. In `server/` directory,
-rename `config.js-dist` to `config.js`. Modify the file as to fit your needs. Similar procedure for
-the `client/data` directory, simply rename `config.json-dist` to `config.json`. Make sure the
-settings in the client match those in the server.
-
-MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-your own limited version if you do not want to install MongoDB. To do this, set `offlineMode = true`
-in the server configuration.
-
-If you do choose to install MongoDB, a user is not necessary, but you can enable authentication with
-the `mongoAuth` variable in the server configuration.
-
-As of now a production build is not available so for running a development server, run
-
-```console
-npm run dev
+```sh
+API_ENABLED=true
+HUB_ENABLED=true
 ```
 
 ## Roadmap
@@ -154,8 +170,7 @@ Here we have [The Roadmap Project Board](https://github.com/Kaetram/Kaetram-Open
 is the main board of the Kaetram-Open project. A kind of Kanban tasks board for tracking and
 presenting the progress to the community. Here we plan, prioritize and track our work.
 
-See also the [open issues](https://github.com/Kaetram/Kaetram-Open/issues) for a list of proposed
-features (and known issues).
+See also the [open issues][issues] for a list of proposed features (and known issues).
 
 ### TODO
 
@@ -176,7 +191,7 @@ features (and known issues).
 - Make bosses more responsive
 - All trees in the world must be cuttable
 
-#### Code-base Development
+#### Codebase Development
 
 - Write documentation outlining the entirety of the source code.
 - Improvements and optimizations to the lighting system.
@@ -185,31 +200,33 @@ features (and known issues).
 
 - Add (continue) to NPC talking&mdash;spacebar when talking
 
-<!-- ## Running Tests
+## Donations
 
-> TODO: Tests are unfinished, yet alone barley even started.
+### Sponsor
 
-Tests _and coverage_ are ran with [Jest](https://jestjs.io/) To run the tests,
-simply run
+Patreon &ndash; <https://www.patreon.com/kaetram>
 
-```console
-npm test
-``` -->
+Open Collective &ndash; <https://opencollective.com/kaetram>
 
-<!-- ## Contributing
+### Crypto
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+`BTC` &ndash; `bc1qeh0tdlkuc5q82j2qk9h3sqmwe6uy75qpjtc0dv`
 
-Contributions are what make the open source community such an amazing place to be learn, inspire,
-and create. Any contributions you make are **greatly appreciated**.
+`LTC` &ndash; `MMRo7dfAi2T8rJrx7m3DmzhsgHRC7XJ83f`
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request -->
+`ETH` &ndash; `0x4c6de7175f789DAf0f531477753B07402EEfedaC`
 
-## License
+`BCH` &ndash; `bitcoincash:qzx6uqunqj4mtv74jng97pea0mfcl4nmyqsew92enu`
 
-This project is distributed under the MPL-2.0 License. See [`LICENSE`](LICENSE) for more
-information.
+## License & Commission
+
+For all inquiries about purchasing a different license or commission work, please contact
+**@Vanity** on [Discord][discord].
+
+This project is distributed under the
+**[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
+[`LICENSE`][license] for more information.
+
+[license]: LICENSE 'Project License'
+[issues]: https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues'
+[discord]: https://discord.gg/MmbGAaw 'Join Discord'

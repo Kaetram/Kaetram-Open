@@ -1,33 +1,66 @@
 {
     "root": true,
-    "env": {
-        "browser": true,
-        "es2020": true,
-        "node": true
-    },
     "extends": [
         "eslint:recommended",
-        "plugin:prettier/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:unicorn/recommended",
+        "plugin:prettier/recommended"
     ],
-    "plugins": ["@typescript-eslint"],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 11,
-        "sourceType": "module"
-    },
+    "plugins": ["prefer-let"],
     "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off",
+
+        "unicorn/prefer-node-protocol": "off",
+        "unicorn/prefer-module": "off",
+        "unicorn/no-null": "off",
+        "unicorn/prefer-number-properties": "off",
+        "unicorn/prevent-abbreviations": "off",
+        "unicorn/no-array-reduce": "off",
+        // "unicorn/prefer-at": "error",
+        // "unicorn/prefer-object-has-own": "error",
+        "unicorn/prefer-string-replace-all": "error",
+
         "prettier/prettier": "warn",
-        "indent": [
-            "error",
-            4,
+
+        "prefer-let/prefer-let": "error",
+
+        "no-fallthrough": "off",
+        "prefer-const": "off",
+
+        "prefer-template": "warn",
+        "curly": ["warn", "multi"],
+        "one-var": ["warn", "consecutive"],
+        "yoda": "warn",
+        "no-else-return": "warn",
+        "object-shorthand": "warn",
+        "operator-assignment": "warn",
+        "prefer-destructuring": [
+            "warn",
             {
-                "SwitchCase": 1
+                "object": true,
+                "array": true
             }
         ],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"]
-    }
+
+        "array-callback-return": "error",
+        "default-case-last": "error",
+        "dot-notation": "error",
+        "eqeqeq": "error",
+        "max-classes-per-file": "error",
+        "no-useless-backreference": "error",
+        "no-unsafe-optional-chaining": "error",
+        "no-unreachable-loop": "error",
+        "no-template-curly-in-string": "error",
+        "no-promise-executor-return": "error",
+        "no-prototype-builtins": "error",
+        "no-div-regex": "error",
+        "no-regex-spaces": "error",
+        "no-control-regex": "error",
+        "no-eval": "error",
+        "no-extend-native": "error",
+        "no-implied-eval": "error",
+        "no-iterator": "error",
+        "no-labels": "error"
+    },
+    "ignorePatterns": ["node_modules", "dist"]
 }

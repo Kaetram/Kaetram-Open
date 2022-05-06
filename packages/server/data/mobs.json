@@ -1,63 +1,63 @@
 {
-  "Rat": {
+  "rat": {
     "name": "Rat",
     "id": 128,
     "drops": {"flask": 10},
     "hitPoints": 30,
     "armour": 2,
     "weapon": 1,
-    "xp": 6,
+    "experience": 6,
     "level": 1,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1400,
     "movementSpeed": 500,
-    "spawnDelay": 10000
+    "respawnDelay": 10000
   },
 
-  "Bat": {
+  "bat": {
     "name": "Batterfly",
     "id": 1,
     "drops": {"flask": 50},
     "hitPoints": 45,
     "armour": 2,
     "weapon": 2,
-    "xp": 7,
+    "experience": 7,
     "level": 2,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
-  "Crab": {
+  "crab": {
     "name": "Crab",
     "id": 2,
     "drops": {"flask": 100},
     "hitPoints": 50,
     "armour": 2,
     "weapon": 3,
-    "xp": 8,
+    "experience": 8,
     "level": 2,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1200,
     "movementSpeed": 300,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
-  "Wizard": {
+  "wizard": {
     "name": "Wizard",
     "id": 3,
     "drops": {"axe": 10, "morningstar": 10, "woodenbow": 5, "sword2": 50},
     "hitPoints": 100,
     "armour": 4,
     "weapon": 3,
-    "xp": 15,
+    "experience": 15,
     "level": 7,
     "aggroRange": 3,
     "attackRange": 4,
@@ -65,258 +65,257 @@
     "attackRate": 1100,
     "movementSpeed": 350,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Goblin": {
+  "goblin": {
     "name": "Goblin",
     "id": 4,
     "drops": {"leatherarmor": 100, "plasticbow": 100, "gold": 500, "leatherarcherarmor": 100, "sword2": 100},
     "hitPoints": 70,
     "armour": 1,
     "weapon": 3,
-    "xp": 15,
+    "experience": 15,
     "level": 5,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1400,
     "movementSpeed": 300,
-    "spawnDelay": 55000
+    "respawnDelay": 55000
   },
 
-  "Skeleton": {
+  "skeleton": {
     "name": "Spooky Skeleton",
     "id": 5,
     "drops": {"gold": 300, "flask": 200},
     "hitPoints": 110,
     "armour": 4,
     "weapon": 4,
-    "xp": 17,
+    "experience": 17,
     "level": 6,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "Ogre": {
+  "ogre": {
     "name": "Ogre",
     "id": 6,
     "drops": {"axe": 10, "gold": 75, "bluesword": 5, "mailarmor": 20, "ironbow": 15, "mailarcherarmor": 20},
     "hitPoints": 60,
     "armour": 3,
     "weapon": 2,
-    "xp": 25,
+    "experience": 25,
     "level": 8,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1250,
     "movementSpeed": 300,
-    "spawnDelay": 45000
+    "respawnDelay": 45000
   },
 
-  "Skeleton2": {
+  "skeleton2": {
     "name": "Scary Skeleton",
     "id": 7,
     "drops": {"axe": 50, "morningstar": 20, "platearmor": 15, "platearcherarmor": 15},
     "hitPoints": 350,
     "armour": 5,
     "weapon": 2,
-    "xp": 53,
+    "experience": 53,
     "level": 25,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 60000
+    "respawnDelay": 60000
   },
 
-  "Snek": {
+  "snek": {
     "name": "Snek",
     "id": 8,
     "drops": {"gold": 25, "morningstar": 5, "platearmor": 5},
     "hitPoints": 85,
     "armour": 6,
     "weapon": 2,
-    "xp": 28,
+    "experience": 28,
     "level": 8,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "spawnDelay": 35000,
-    "combatPlugin": "snek"
+    "respawnDelay": 35000
   },
 
-  "Spectre": {
+  "spectre": {
     "name": "Spectre",
     "id": 9,
     "drops": {"redarmor": 30, "axe": 75, "bluesword": 20},
     "hitPoints": 170,
     "armour": 6,
     "weapon": 2,
-    "xp": 63,
+    "experience": 63,
     "level": 27,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Eye": {
+  "eye": {
     "name": "Eye",
     "id": 10,
     "drops": {"redarcherarmor": 20, "gold": 100, "bluesword": 20},
     "hitPoints": 160,
     "armour": 3,
     "weapon": 4,
-    "xp": 61,
+    "experience": 61,
     "level": 26,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Deathknight": {
+  "deathknight": {
     "name": "Death Knight",
     "id": 11,
     "drops": {"redsword": 20, "redarmor": 20, "morningstar": 80},
     "hitPoints": 145,
     "armour": 8,
     "weapon": 3,
-    "xp": 48,
+    "experience": 48,
     "level": 21,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "Adherer": {
+  "adherer": {
     "name": "Dark Mage",
     "id": 12,
     "drops": {"rose": 20, "redlightbow": 10, "redmetalsword": 10, "adhererarcherarmor": 10, "adhererrobe": 10},
     "hitPoints": 200,
     "armour": 5,
     "weapon": 1,
-    "xp": 59,
-    "level": 24,
-    "aggroRange": 16,
-    "attackRange": 12,
+    "experience": 96,
+    "level": 36,
+    "aggroRange": 6,
+    "attackRange": 4,
     "aggressive": true,
-    "attackRate": 7000,
-    "movementSpeed": 1000,
+    "attackRate": 2000,
+    "movementSpeed": 750,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Ant": {
+  "ant": {
     "name": "Worker Ant",
     "id": 13,
     "drops": {"gold": 50},
     "hitPoints": 650,
     "armour": 8,
     "weapon": 1,
-    "xp": 50,
+    "experience": 50,
     "level": 39,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1000,
     "movementSpeed": 600,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "BabySpider": {
+  "babyspider": {
     "name": "Baby Spooder",
     "id": 14,
     "drops": {"gold": 50},
     "hitPoints": 400,
     "armour": 3,
     "weapon": 7,
-    "xp": 50,
+    "experience": 50,
     "level": 35,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
 
   },
 
-  "Beetle": {
+  "beetle": {
     "name": "Beetle",
     "id": 15,
     "drops": {"gold": 50},
     "hitPoints": 600,
     "armour": 5,
     "weapon": 10,
-    "xp": 235,
+    "experience": 235,
     "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "BlackPirateSkeleton": {
+  "blackpirateskeleton": {
     "name": "Pirate Skeleton",
     "id": 16,
     "drops": {"gold": 200},
     "hitPoints": 400,
     "armour": 10,
     "weapon": 3,
-    "xp": 76,
+    "experience": 76,
     "level": 31,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "GreenPirateSkeleton": {
+  "greenpirateskeleton": {
     "name": "Pirate Skeleton",
     "id": 16,
     "drops": {"gold": 200},
     "hitPoints": 410,
     "armour": 8,
     "weapon": 3,
-    "xp": 78,
+    "experience": 78,
     "level": 32,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "BlackWizard": {
+  "blackwizard": {
     "name": "Dark Wizard",
     "id": 17,
     "drops": {"bastardsword": 100, "wizardrobe": 100, "redlightbow": 125, "topazring": 15},
-    "hitPoints": 700,
+    "hitPoints": 150,
     "armour": 4,
     "weapon": 10,
-    "xp": 50,
+    "experience": 50,
     "level": 16,
     "aggroRange": 4,
     "attackRange": 5,
@@ -324,1422 +323,1414 @@
     "attackRate": 900,
     "movementSpeed": 400,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "BlazeSpider": {
+  "blazespider": {
     "name": "Blaze Spooder",
     "id": 18,
     "drops": {"gold": 50},
     "hitPoints": 915,
     "armour": 0,
     "weapon": 3,
-    "xp": 115,
+    "experience": 115,
     "level": 60,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "BlueCockroach": {
+  "bluecockroach": {
     "name": "Blue Cockroach",
     "id": 19,
     "drops": {"cockroachsuit": 40, "gayarcherarmor": 20, "sickle": 40},
     "hitPoints": 785,
     "armour": 5,
     "weapon": 0,
-    "xp": 50,
+    "experience": 50,
     "level": 55,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "BluePreta": {
+  "bluePpeta": {
     "name": "Blue Preta",
     "id": 20,
     "drops": {"bluescimitar": 20, "bluewingarcherarmor": 20, "bluewingarmor": 20, "gold": 40},
     "hitPoints": 600,
     "armour": 5,
     "weapon": 8,
-    "xp": 55,
+    "experience": 55,
     "level": 34,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Cactus": {
+  "cactus": {
     "name": "Cactus",
     "id": 21,
     "drops": {"gold": 50, "cactusaxe": 10},
     "hitPoints": 160,
     "armour": 14,
     "weapon": 1,
-    "xp": 35,
+    "experience": 35,
     "level": 16,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
-    "hiddenName": true,
-    "combatPlugin": "cactus"
+    "respawnDelay": 35000,
+    "hiddenName": true
   },
 
-  "Cat": {
+  "cat": {
     "name": "Cat",
     "id": 22,
     "drops": {"catarmor": 25},
     "hitPoints": 600,
     "armour": 1,
     "weapon": 4,
-    "xp": 210,
+    "experience": 210,
     "level": 35,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Clam": {
+  "clam": {
     "name": "Clam",
     "id": 23,
     "drops": {"gold": 50, "spear": 40},
     "hitPoints": 200,
     "armour": 6,
     "weapon": 1,
-    "xp": 45,
+    "experience": 45,
     "level": 18,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Cobra": {
+  "cobra": {
     "name": "Cobra",
     "id": 24,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "armour": 3,
     "weapon": 10,
-    "xp": 730,
+    "experience": 730,
     "level": 91,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "CrystalScolpion": {
+  "crystalscolpion": {
     "name": "Crystal Scorpion",
     "id": 25,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "armour": 15,
     "weapon": 5,
-    "xp": 825,
+    "experience": 825,
     "level": 105,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "CursedHahoeMask": {
+  "cursedhahoemask": {
     "name": "Cursed Hahoe Mask",
     "id": 26,
     "drops": {"gold": 50},
     "hitPoints": 2100,
     "armour": 25,
     "weapon": 5,
-    "xp": 1325,
+    "experience": 1325,
     "level": 115,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "CursedDjangseung": {
+  "curseddjangseung": {
     "name": "Cursed Djangseung",
     "id": 27,
     "drops": {"gold": 50},
     "hitPoints": 1900,
     "armour": 25,
     "weapon": 10,
-    "xp": 1020,
+    "experience": 1020,
     "level": 110,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "DarkOgre": {
+  "darkogre": {
     "name": "Dark Ogre",
     "id": 28,
     "drops": {"ring1": 50, "skylightbow": 400, "gold": 550},
     "hitPoints": 130,
     "armour": 5,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 25,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "DarkScolpion": {
+  "darkscolpion": {
     "name": "Dark Scorpion",
     "id": 29,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "armour": 10,
     "weapon": 15,
-    "xp": 840,
+    "experience": 840,
     "level": 101,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "DarkSkeleton": {
+  "darkskeleton": {
     "name": "Dark Skeleton",
     "id": 30,
     "drops": {"sproutring": 25, "hammer": 250, "hunterbow": 450, "gold": 275},
     "hitPoints": 300,
     "armour": 5,
     "weapon": 2,
-    "xp": 55,
+    "experience": 55,
     "level": 26,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "DesertScolpion": {
+  "desertscolpion": {
     "name": "Desert Scorpion",
     "id": 31,
     "drops": {"gold": 50},
     "hitPoints": 1300,
     "armour": 10,
     "weapon": 15,
-    "xp": 595,
+    "experience": 595,
     "level": 90,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "DevilKazya": {
+  "devilkazya": {
     "name": "Devil Blox",
     "id": 32,
     "drops": {"gold": 50},
     "hitPoints": 2300,
     "armour": 30,
     "weapon": 25,
-    "xp": 2500,
+    "experience": 2500,
     "level": 135,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "EarthWorm": {
+  "earthworm": {
     "name": "Earth Worm",
     "id": 33,
     "drops": {"gold": 50},
     "hitPoints": 970,
     "armour": 5,
     "weapon": 5,
-    "xp": 550,
+    "experience": 550,
     "level": 78,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "FireSpider": {
+  "firespider": {
     "name": "Fire Spooder",
     "id": 34,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "armour": 3,
     "weapon": 4,
-    "xp": 765,
+    "experience": 765,
     "level": 83,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "FlareDanceKnight": {
+  "flaredanceknight": {
     "name": "Cursed Knight",
     "id": 35,
     "drops": {"gold": 50},
     "hitPoints": 1000,
     "armour": 15,
     "weapon": 10,
-    "xp": 450,
+    "experience": 450,
     "level": 65,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Frog": {
+  "frog": {
     "name": "Frog",
     "id": 36,
     "drops": {"gold": 50},
     "hitPoints": 1850,
     "armour": 10,
     "weapon": 15,
-    "xp": 830,
+    "experience": 830,
     "level": 89,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "GhostRider": {
+  "ghostrider": {
     "name": "Skeleton Knight",
     "id": 37,
     "drops": {"gold": 50},
     "hitPoints": 700,
     "armour": 30,
     "weapon": 15,
-    "xp": 45,
+    "experience": 45,
     "level": 19,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "GoldGolem": {
+  "goldgolem": {
     "name": "Golden Golem",
     "id": 38,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "armour": 10,
     "weapon": 15,
-    "xp": 200,
+    "experience": 200,
     "level": 75,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Golem": {
+  "golem": {
     "name": "Golem",
     "id": 39,
     "drops": {"deathbow": 5, "bluesword": 10, "gold": 50},
     "hitPoints": 350,
     "armour": 25,
     "weapon": 15,
-    "xp": 75,
+    "experience": 75,
     "level": 18,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 750,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "GreenFish": {
+  "greenfish": {
     "name": "Green Fesh",
     "id": 40,
     "drops": {"spear": 125, "pendant1": 25, "greenarcherarmor": 150, "gold": 700},
     "hitPoints": 200,
     "armour": 1,
     "weapon": 1,
-    "xp": 50,
+    "experience": 50,
     "level": 29,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "HellSpider": {
+  "hellspider": {
     "name": "Hell Spooder",
     "id": 41,
     "drops": {"gold": 50},
     "hitPoints": 2000,
     "armour": 10,
     "weapon": 15,
-    "xp": 855,
+    "experience": 855,
     "level": 91,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "HermitCrab": {
+  "hermitcrab": {
     "name": "Hermit Crab",
     "id": 42,
     "drops": {"flask": 200, "gold": 200},
     "hitPoints": 155,
     "armour": 10,
     "weapon": 4,
-    "xp": 65,
+    "experience": 65,
     "level": 15,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Hobgoblin": {
+  "hobgoblin": {
     "name": "Hobgoblin",
     "id": 43,
     "drops": {"mailarmor": 200, "platearmor": 400, "platearcherarmor": 200, "mailarcherarmor": 200},
     "hitPoints": 130,
     "armour": 6,
     "weapon": 4,
-    "xp": 55,
+    "experience": 55,
     "level": 20,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "HongCheol": {
+  "hongcheol": {
     "name": "Hong Chul",
     "id": 44,
     "drops": {"gold": 50},
     "hitPoints": 1550,
     "armour": 15,
     "weapon": 15,
-    "xp": 315,
+    "experience": 315,
     "level": 100,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "IceGolem": {
+  "icegolem": {
     "name": "Ice Golem",
     "id": 45,
     "drops": {"bluesword": 450, "crystalarmor": 20, "crystalarcherarmor": 20, "gold": 500},
     "hitPoints": 700,
     "armour": 9,
     "weapon": 5,
-    "xp": 90,
+    "experience": 90,
     "level": 46,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "IceKnight": {
+  "iceknight": {
     "name": "Ice Knight",
     "id": 46,
     "drops": {"gold": 150, "icerose": 10},
     "hitPoints": 550,
     "armour": 12,
     "weapon": 8,
-    "xp": 106,
+    "experience": 106,
     "level": 33,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "IceVulture": {
+  "icevulture": {
     "name": "Ice Vulture",
     "id": 47,
     "drops": {"gold": 50},
     "hitPoints": 300,
     "armour": 1,
     "weapon": 3,
-    "xp": 70,
+    "experience": 70,
     "level": 38,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "InfectedGuard": {
+  "infectedguard": {
     "name": "Infected Guard",
     "id": 48,
     "drops": {"gold": 50},
     "hitPoints": 2000,
     "armour": 8,
     "weapon": 4,
-    "xp": 105,
+    "experience": 105,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "IronOgre": {
+  "ironogre": {
     "name": "Iron Ogre",
     "id": 49,
     "drops": {"bluescimitar": 400, "gold": 600},
     "hitPoints": 300,
     "armour": 5,
     "weapon": 4,
-    "xp": 55,
+    "experience": 55,
     "level": 25,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "LivingArmor": {
+  "livingarmor": {
     "name": "Living armor",
     "id": 50,
     "drops": {"whip": 10, "dovakinarcherarmor": 100, "dovakinarmor": 100, "skylightbow": 100, "gold": 690},
     "hitPoints": 340,
     "armour": 4,
     "weapon": 1,
-    "xp": 125,
+    "experience": 125,
     "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Mantis": {
+  "mantis": {
     "name": "Praying Mantis",
     "id": 51,
     "drops": {"gold": 50},
     "hitPoints": 2400,
     "armour": 15,
     "weapon": 10,
-    "xp": 950,
+    "experience": 950,
     "level": 89,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Mermaid": {
+  "mermaid": {
     "name": "Mermaid",
     "id": 52,
     "drops": {"gold": 600, "trident": 200, "mermaidbow": 200},
     "hitPoints": 150,
     "armour": 3,
     "weapon": 1,
-    "xp": 131,
+    "experience": 131,
     "level": 35,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Mimic": {
+  "mimic": {
     "name": "Mimic",
     "id": 53,
     "drops": {"gold": 20, "bluescimitar": 20, "flask": 100},
     "hitPoints": 1200,
     "armour": 2,
     "weapon": 16,
-    "xp": 45,
+    "experience": 45,
     "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
+    "respawnDelay": 35000,
     "hiddenName": true
   },
 
-  "MiniIceKnight": {
+  "miniiceknight": {
     "name": "Mini Ice Knight",
     "id": 54,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "armour": 4,
     "weapon": 3,
-    "xp": 150,
+    "experience": 150,
     "level": 24,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "MiniKnight": {
+  "miniknight": {
     "name": "Mini Knight",
     "id": 55,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "armour": 3,
     "weapon": 5,
-    "xp": 110,
+    "experience": 110,
     "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "OldOgre": {
+  "oldogre": {
     "name": "Old Ogre",
     "id": 56,
     "drops": {"pendant1": 25, "skylightbow": 475, "gold": 500},
     "hitPoints": 256,
     "armour": 5,
     "weapon": 1,
-    "xp": 45,
+    "experience": 45,
     "level": 23,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Orc": {
+  "orc": {
     "name": "Orc",
     "id": 57,
     "drops": {"redsword": 300, "violetbow": 300, "redarcherarmor": 400},
     "hitPoints": 75,
     "armour": 5,
     "weapon": 4,
-    "xp": 60,
+    "experience": 60,
     "level": 13,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Pain": {
+  "pain": {
     "name": "Infected Villager",
     "id": 58,
     "drops": {"gold": 50},
     "hitPoints": 1550,
     "armour": 5,
     "weapon": 1,
-    "xp": 750,
+    "experience": 750,
     "level": 73,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Penguin": {
+  "penguin": {
     "name": "Penguin",
     "id": 59,
     "drops": {"bluewingarcherarmor": 200, "bluewingarmor": 200, "icerose": 200, "marinebow": 200, "gold": 200},
     "hitPoints": 526,
     "armour": 4,
     "weapon": 1,
-    "xp": 325,
+    "experience": 325,
     "level": 41,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Pierrot": {
+  "pierrot": {
     "name": "Clown",
     "id": 60,
     "drops": {"gold": 50},
     "hitPoints": 150,
     "armour": 30,
     "weapon": 15,
-    "xp": 75,
+    "experience": 75,
     "level": 12,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "PinkElf": {
+  "pinkelf": {
     "name": "Pink Elf",
     "id": 61,
     "drops": {"gold": 50},
     "hitPoints": 625,
     "armour": 8,
     "weapon": 4,
-    "xp": 315,
+    "experience": 315,
     "level": 43,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "PoisonSpider": {
+  "poisonspider": {
     "name": "Red Spider",
     "id": 62,
     "drops": {"gold": 50},
     "hitPoints": 990,
     "armour": 30,
     "weapon": 15,
-    "xp": 625,
+    "experience": 625,
     "level": 49,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "isPoisonous": true,
+    "poisonous": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Preta": {
+  "preta": {
     "name": "Preta",
     "id": 63,
     "drops": {"greenpendant": 40, "bluewingarcherarmor": 200, "bluewingarmor": 360, "gold": 400},
     "hitPoints": 495,
     "armour": 1,
     "weapon": 7,
-    "xp": 65,
+    "experience": 65,
     "level": 36,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "PurplePreta": {
+  "purplepreta": {
     "name": "Preta",
     "id": 64,
     "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
     "hitPoints": 431,
     "armour": 1,
     "weapon": 6,
-    "xp": 65,
+    "experience": 65,
     "level": 31,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedCockroach": {
+  "redcockroach": {
     "name": "Red Cockroach",
     "id": 65,
     "drops": {"gold": 50},
     "hitPoints": 1200,
     "armour": 2,
     "weapon": 4,
-    "xp": 165,
+    "experience": 165,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedElf": {
+  "redelf": {
     "name": "Red Elf",
     "id": 66,
     "drops": {"gold": 50},
     "hitPoints": 1750,
     "armour": 5,
     "weapon": 5,
-    "xp": 235,
+    "experience": 235,
     "level": 70,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedFish": {
+  "redfish": {
     "name": "Red Fesh",
     "id": 67,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "armour": 1,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 30,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedGuard": {
+  "redguard": {
     "name": "Bandit",
     "id": 68,
     "drops": {"redguardarmor": 300, "redguardarcherarmor": 325, "ring1": 25, "scimitar": 150, "watermelonbow": 200},
     "hitPoints": 135,
     "armour": 1,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 18,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedMouse": {
+  "redmouse": {
     "name": "Red Mouse",
     "id": 69,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 160,
     "armour": 1,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 24,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "RedPirateSkeleton": {
+  "redpirateskeleton": {
     "name": "Pirate Skeleton",
     "id": 70,
     "drops": {"gold": 300},
     "hitPoints": 650,
     "armour": 10,
     "weapon": 4,
-    "xp": 89,
+    "experience": 89,
     "level": 29,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "Rhaphidophoridae": {
+  "rhaphidophoridae": {
     "name": "Cricket",
     "id": 71,
     "drops": {"gold": 50},
     "hitPoints": 3500,
     "armour": 5,
     "weapon": 10,
-    "xp": 400,
+    "experience": 400,
     "level": 93,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Rudolf": {
+  "rudolf": {
     "name": "Raindeer",
     "id": 72,
     "drops": {"gold": 50},
     "hitPoints": 5550,
     "armour": 10,
     "weapon": 15,
-    "xp": 2250,
+    "experience": 2250,
     "level": 129,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SantaElf": {
+  "santaelf": {
     "name": "Santa's Elf",
     "id": 73,
     "drops": {"gold": 50},
     "hitPoints": 6100,
     "armour": 10,
     "weapon": 15,
-    "xp": 3250,
+    "experience": 3250,
     "level": 144,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Scorpion": {
+  "scorpion": {
     "name": "Scorpion",
     "id": 74,
     "drops": {"gold": 50},
     "hitPoints": 2700,
     "armour": 10,
     "weapon": 15,
-    "xp": 225,
+    "experience": 225,
     "level": 80,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SkyElf": {
+  "skyelf": {
     "name": "Sky Elf",
     "id": 75,
     "drops": {"gold": 50},
     "hitPoints": 2100,
     "armour": 6,
     "weapon": 6,
-    "xp": 280,
+    "experience": 280,
     "level": 74,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Slime": {
+  "slime": {
     "name": "Slime",
     "id": 76,
     "drops": {"gold": 50},
     "hitPoints": 3055,
     "armour": 5,
     "weapon": 5,
-    "xp": 360,
+    "experience": 360,
     "level": 88,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SmallDevil": {
+  "smalldevil": {
     "name": "Corrupted Bat",
     "id": 77,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "armour": 3,
     "weapon": 5,
-    "xp": 65,
+    "experience": 65,
     "level": 10,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SnowElf": {
+  "snowelf": {
     "name": "Snow Elf",
     "id": 78,
     "drops": {"gold": 50},
     "hitPoints": 3400,
     "armour": 10,
     "weapon": 15,
-    "xp": 650,
+    "experience": 650,
     "level": 99,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Snowman": {
+  "snowman": {
     "name": "Snowman",
     "id": 79,
     "drops": {"gold": 50},
     "hitPoints": 750,
     "armour": 3,
     "weapon": 3,
-    "xp": 352,
+    "experience": 352,
     "level": 43,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SnowRabbit": {
+  "snowrabbit": {
     "name": "Snow Rabbit",
     "id": 80,
     "drops": {"gold": 50},
     "hitPoints": 295,
     "armour": 4,
     "weapon": 1,
-    "xp": 175,
+    "experience": 175,
     "level": 29,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SnowWolf": {
+  "snowwolf": {
     "name": "Snow Wolf",
     "id": 81,
     "drops": {"gold": 850, "icerose": 50, "wolfarmor": 100},
     "hitPoints": 1185,
     "armour": 8,
     "weapon": 3,
-    "xp": 135,
+    "experience": 135,
     "level": 54,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "IceGoblin": {
+  "icegoblin": {
     "name": "Frost Goblin",
     "id": 82,
     "drops": {"gold": 50},
     "hitPoints": 475,
     "armour": 3,
     "weapon": 8,
-    "xp": 84,
+    "experience": 84,
     "level": 28,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SoldierAnt": {
+  "soldierant": {
     "name": "Soldier Ant",
     "id": 83,
     "drops": {"gold": 50},
     "hitPoints": 890,
     "armour": 6,
     "weapon": 1,
-    "xp": 75,
+    "experience": 75,
     "level": 43,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SoyBeanBug": {
+  "soybeanbug": {
     "name": "Soy Bean Bug",
     "id": 84,
     "drops": {"gold": 50},
     "hitPoints": 3500,
     "armour": 30,
     "weapon": 15,
-    "xp": 950,
+    "experience": 950,
     "level": 103,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Spider": {
+  "spider": {
     "name": "Spooder",
     "id": 85,
     "drops": {"gold": 50},
     "hitPoints": 2900,
     "armour": 45,
     "weapon": 1,
-    "xp": 750,
+    "experience": 750,
     "level": 91,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Squirrel": {
+  "squirrel": {
     "name": "Squirrel",
     "id": 86,
     "drops": {"gold": 50},
     "hitPoints": 150,
     "armour": 3,
     "weapon": 7,
-    "xp": 100,
+    "experience": 100,
     "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "SuicideGhost": {
+  "suicideghost": {
     "name": "Ghost",
     "id": 87,
     "drops": {"gold": 50},
     "hitPoints": 750,
     "armour": 1,
     "weapon": 5,
-    "xp": 70,
+    "experience": 70,
     "level": 62,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Vulture": {
+  "vulture": {
     "name": "Vulture",
     "id": 88,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "armour": 5,
     "weapon": 1,
-    "xp": 44,
+    "experience": 44,
     "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "WhiteBear": {
+  "whitebear": {
     "name": "Molar Bear",
     "id": 89,
     "drops": {"gold": 50},
     "hitPoints": 1300,
     "armour": 7,
     "weapon": 10,
-    "xp": 750,
+    "experience": 750,
     "level": 63,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "WhiteMouse": {
+  "whitemouse": {
     "name": "Mouse",
     "id": 90,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 950,
     "armour": 10,
     "weapon": 3,
-    "xp": 55,
+    "experience": 55,
     "level": 53,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "WhiteTiger": {
+  "whitetiger": {
     "name": "Tiger",
     "id": 91,
     "drops": {"tigerarmor": 500, "gold": 500},
     "hitPoints": 3350,
     "armour": 1,
     "weapon": 15,
-    "xp": 850,
+    "experience": 850,
     "level": 98,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Wolf": {
+  "wolf": {
     "name": "Wolf",
     "id": 92,
     "drops": {"wolfarmor": 10, "wolfarcherarmor": 10, "gold": 700},
     "hitPoints": 300,
     "armour": 3,
     "weapon": 12,
-    "xp": 40,
+    "experience": 40,
     "level": 26,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "YellowBat": {
+  "yellowbat": {
     "name": "Mutated Bat",
     "id": 93,
     "drops": {"gold": 50},
     "hitPoints": 350,
     "armour": 30,
     "weapon": 15,
-    "xp": 175,
+    "experience": 175,
     "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "YellowFish": {
+  "yellowfish": {
     "name": "Yellow Fesh",
     "id": 94,
     "drops": {"gold": 50},
     "hitPoints": 135,
     "armour": 3,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 27,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "YellowMouse": {
+  "yellowmouse": {
     "name": "Yellow Mouse",
     "id": 95,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 750,
     "armour": 3,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 39,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "YellowPreta": {
+  "yellowpreta": {
     "name": "Preta",
     "id": 96,
     "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
     "hitPoints": 526,
     "armour": 4,
     "weapon": 4,
-    "xp": 70,
+    "experience": 70,
     "level": 39,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Zombie": {
+  "zombie": {
     "name": "Zombie",
     "id": 97,
     "drops": {"gold": 50},
     "hitPoints": 1250,
     "armour": 1,
     "weapon": 1,
-    "xp": 55,
+    "experience": 55,
     "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Adminarmor": {
-    "name": "Death",
-    "id": 98
-  },
-
-  "Skeletonking": {
+  "skeletonking": {
     "name": "Skeleton King",
     "id": 99,
     "drops": {"goldensword": 400, "bigflask": 100, "goldenbow": 400, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2650,
     "armour": 15,
     "weapon": 16,
-    "xp": 150,
+    "experience": 150,
     "level": 23,
     "aggroRange": 3,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 50000,
-    "combatPlugin":"skeletonking"
+    "respawnDelay": 50000
   },
 
-  "OgreLord": {
+  "ogrelord": {
     "name": "Ogre Lord",
     "id": 100,
     "drops": {"sidesword": 300, "bigflask": 100, "goldensword": 500, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
     "armour": 50,
     "weapon": 23,
-    "xp": 650,
+    "experience": 650,
     "level": 35,
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 600,
-    "spawnDelay": 75000,
-    "combatPlugin":"ogrelord"
+    "respawnDelay": 75000
   },
 
-  "WindGuardian": {
+  "windguardian": {
     "name": "Wind Guardian",
     "id": 101,
     "drops": {"gold": 50},
     "hitPoints": 15000,
     "armour": 40,
     "weapon": 1,
-    "xp": 2000,
+    "experience": 2000,
     "projectileName": "projectile-iceball",
     "level": 195,
     "aggroRange": 3,
@@ -1747,205 +1738,152 @@
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 500,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "LightningGuardian": {
+  "lightningguardian": {
     "name": "Lightning Guardian",
     "id": 102,
     "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "bridalmask": 50, "gold": 850},
     "hitPoints": 4500,
     "armour": 25,
     "weapon": 35,
-    "xp": 1000,
+    "experience": 1000,
     "level": 64,
     "aggroRange": 6,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1750,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "SnowLady": {
-    "name": "Gemina",
-    "id": 103
-  },
-
-  "DarkRegion": {
+  "darkregion": {
     "name": "Tenebris",
     "id": 104,
     "drops": {"spiritring": 25, "regionarmor": 25, "paewoldo": 25, "gold": 925},
     "hitPoints": 4000,
     "armour": 20,
     "weapon": 40,
-    "xp": 1000,
+    "experience": 1000,
     "level": 79,
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000,
-    "combatPlugin": "tenebris"
+    "respawnDelay": 95000
   },
 
-  "DarkRegionIllusion": {
+  "darkregionillusion": {
     "name": "Tenebris",
     "id": 105,
-    "drops": null,
     "hitPoints": 500,
     "armour": 4,
     "weapon": 5,
-    "xp": 10,
+    "experience": 10,
     "level": 79,
     "aggroRange": 8,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 800,
-    "spawnDelay": -1,
-    "combatPlugin": "tenebris"
+    "respawnDelay": -1
   },
 
-  "MiniSeaDragon": {
+  "miniseadragon": {
     "name": "Mini Sea Dragon",
     "id": 106,
     "drops": {"miniseadragonarmor": 300, "daywalker": 300, "gold": 400},
     "hitPoints": 100,
     "armour": 5,
     "weapon": 10,
-    "xp": 135,
+    "experience": 135,
     "level": 11,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "MoleKing": {
-    "name": "Mole King",
-    "id": 107
-  },
-
-  "NightmareRegion": {
-    "name": "Qntal",
-    "id": 108
-  },
-
-  "RegionHenchman": {
-    "name": "Optio",
-    "id": 109
-  },
-
-  "Santa": {
-    "name": "Santa",
-    "id": 110
-  },
-
-  "FrostQueen": {
-    "name": "Aurora",
-    "id": 111
-  },
-
-  "ForestDragon": {
+  "forestdragon": {
     "name": "Gragon",
     "id": 112,
     "drops": {"dragonarmor": 25, "bamboospear": 25, "gold": 900, "marblependant": 25, "essentialrage": 25},
     "hitPoints": 25000,
     "armour": 300,
     "weapon": 120,
-    "xp": 3000,
+    "experience": 3000,
     "level": 153,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 800,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "Eliminator": {
-    "name": "Eliminator",
-    "id": 113
-  },
-
-  "Enel": {
+  "enel": {
     "name": "Lucendi",
     "id": 114,
     "drops": {"redenelbow": 25, "enelarmor": 25, "eneltrident": 50, "marblependant": 100, "gold": 800},
     "hitPoints": 25000,
     "armour": 150,
     "weapon": 120,
-    "xp": 4500,
+    "experience": 4500,
     "level": 256,
     "aggroRange": 2,
     "attackRange": 2,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 800,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "SeaDragon": {
+  "seadragon": {
     "name": "Sea Dragon",
     "id": 115,
     "drops": {"seadragonarmor": 100, "seahorsebow": 300, "gold": 400},
     "hitPoints": 100,
     "armour": 5,
     "weapon": 10,
-    "xp": 135,
+    "experience": 135,
     "level": 11,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "MiniDragon": {
+  "minidragon": {
     "name": "Mini Dragon",
     "id": 116,
     "drops": {"dragonarmor": 300, "spiritring": 200, "gold": 400},
     "hitPoints": 100,
     "armour": 5,
     "weapon": 10,
-    "xp": 135,
+    "experience": 135,
     "level": 11,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "JirisanMoonBear": {
-    "name": "Moon Bear",
-    "id": 117
-  },
-
-  "Kaonashi": {
-    "name": "Kaonashi",
-    "id": 118
-  },
-
-  "MiniEmperor": {
-    "name": "Mini Emperor",
-    "id": 119
-  },
-
-  "PirateCaptain": {
+  "piratecaptain": {
     "name": "Pirate Captain",
     "id": 120,
     "drops": {"scimitar": 100, "piratearcherarmor": 100, "bluepiratearmor": 100, "marblependant": 200, "gold": 500},
     "hitPoints": 1500,
     "armour": 5,
     "weapon": 10,
-    "xp": 200,
+    "experience": 200,
     "level": 46,
     "aggroRange": 4,
     "attackRange": 7,
@@ -1953,40 +1891,34 @@
     "projectileName": "projectile-iceball",
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 115000,
-    "combatPlugin":"piratecaptain"
+    "respawnDelay": 115000
   },
 
-  "PirateKing": {
-    "name": "Pirate King",
-    "id": 121
-  },
-
-  "PirateSkeleton": {
+  "pirateskeleton": {
     "name": "Pirate Skeleton",
     "id": 122,
     "drops": {"morningstar": 400, "redbow": 400, "gold": 300},
     "hitPoints": 420,
     "armour": 5,
     "weapon": 10,
-    "xp": 79,
+    "experience": 79,
     "level": 33,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "QueenAnt": {
+  "queenant": {
     "name": "Ziana",
     "id": 123,
     "drops": {"ironknightarmor": 25, "justicebow": 25, "whip": 25, "gold": 100},
     "hitPoints": 2000,
     "armour": 50,
     "weapon": 100,
-    "xp": 750,
+    "experience": 750,
     "level": 54,
     "aggroRange": 5,
     "attackRange": 1,
@@ -1994,45 +1926,34 @@
     "attackRate": 1500,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "spawnDelay": 95000,
-    "combatPlugin":"queenant"
+    "respawnDelay": 95000
   },
 
-  "QueenSpider": {
-    "name": "Spooder Queen",
-    "id": 124
-  },
-
-  "ShadowRegion": {
-    "name": "Umbra",
-    "id": 125
-  },
-
-  "SkyDinosaur": {
+  "skydinosaur": {
     "name": "Fulgur",
     "id": 126,
     "drops": {"conferencecall": 25, "essentialrage": 50, "gold": 100},
     "hitPoints": 50000,
     "armour": 400,
     "weapon": 200,
-    "xp": 52500,
+    "experience": 52500,
     "level": 435,
     "aggroRange": 4,
     "attackRange": 2,
     "aggressive": true,
     "attackRate": 1800,
     "movementSpeed": 500,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
-  "Squid": {
+  "squid": {
     "name": "Great Squid",
     "id": 127,
     "drops": {"searage": 10, "frostarmor": 25, "bluewingarcherarmor": 25, "gold": 250},
     "hitPoints": 2800,
     "armour": 45,
     "weapon": 30,
-    "xp": 2250,
+    "experience": 2250,
     "level": 71,
     "aggroRange": 7,
     "attackRange": 4,
@@ -2040,94 +1961,90 @@
     "projectileName": "projectile-terror",
     "attackRate": 1300,
     "movementSpeed": 1200,
-    "spawnDelay": 95000,
-    "combatPlugin": "greatsquid"
+    "respawnDelay": 95000
   },
 
-  "BrownMouse": {
+  "brownmouse": {
     "name": "Brown Mouse",
     "id": 129,
     "drops": {"ratarcherarmor": 30, "ratarmor": 30, "gold": 80},
     "hitPoints": 140,
     "armour": 1,
     "weapon": 1,
-    "xp": 40,
+    "experience": 40,
     "level": 22,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
-  "Pickle": {
+  "pickle": {
     "name": "Pickle Brick",
     "id": 130,
     "drops": {"pickle": 1, "gold": 100},
     "hitPoints": 5000,
     "armour": 3,
     "weapon": 25,
-    "xp": 200,
+    "experience": 200,
     "level": 60,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1300,
     "movementSpeed": 1000,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
-  "IceRat": {
+  "icerat": {
     "name": "Ice Rat",
     "id": 131,
-    "drops": null,
     "hitPoints": 75,
     "armour": 2,
     "weapon": 5,
-    "xp": 47,
+    "experience": 47,
     "level": 10,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1500,
     "movementSpeed": 500,
-    "spawnDelay": 10000
+    "respawnDelay": 10000
   },
 
-  "IceBat": {
+  "icebat": {
     "name": "Frozen Bat",
     "id": 132,
     "drops": {"manaflask": 20, "flask": 50},
     "hitPoints": 125,
     "armour": 2,
     "weapon": 6,
-    "xp": 52,
+    "experience": 52,
     "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
-  "IceCrab": {
+  "icecrab": {
     "name": "Ice Crab",
     "id": 133,
     "drops": {"bigflask": 50},
     "hitPoints": 50,
     "armour": 2,
     "weapon": 3,
-    "xp": 8,
+    "experience": 8,
     "level": 19,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "attackRate": 1200,
     "movementSpeed": 300,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   }
-
-
 }

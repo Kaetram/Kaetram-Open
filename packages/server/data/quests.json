@@ -1,188 +1,106 @@
 {
-  "Introduction": {
-    "id": 0,
-    "name": "Introduction",
-    "description": "Teaching you the basics about Kaetram",
-    "npcs": [17, 16, 8],
-    "mobs": [128],
-    "stages": 23,
-    "conversations": {
-      "17": {
-        "0": ["Hey there! Welcome to Kaetram.", "I am a fellow programmer, I make sure",
-            "this place runs accordingly.", "We are still under construction, so please be considerate of that.",
-            "First and foremost, let's get you accustomed to the interface."],
-        "1": ["Click the blinking button"],
-        "2": ["This is your inventory. As far as we know", "its size is limited.", "But who knows, there may be ways",
-              "of getting more space.."],
-        "3": ["Click the second blinking button"],
-        "4": ["This is your character menu.", "Here you can see information about your character.", "On the second page you can find",
-            "your completed achievements and quests.", "The third page shows your abilities and their levels."],
-        "5": ["Click the third blinking button"],
-        "6": ["This is the warp menu, here you can travel all", "across the realm.", "However, there is a level requirement for each warp.",
-            "I think that is all I can teach you for now adventurer.", "Please proceed through the exit below."],
-        "7": ["What, still here?"]
-
+  "tutorial": {
+    "name": "Welcome to Kaetram",
+    "description": "Teaching you the very basics of Kaetram.",
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "coder",
+        "text": [
+          "Hello there, I am the programmer of this world.",
+          "You'll first need to complete this tutorial",
+          "before you can proceed.", "Do not worry, I coded it to be pretty short.",
+          "Off you go!"],
+        "completedText": ["Why don't you just walk through that door over there eh?"],
+        "pointer": {
+          "type": 0,
+          "x": 372,
+          "y": 38
+        }
       },
 
-      "8": {
-        "8": ["Hello there. I'm a fellow guardian of this cave.", "I suppose you are interested in learning how to fight.",
-            "In your inventory you should find a sword.", "Equip it and kill five of those rats for me."],
-        "9": ["You still need to kill 5 rats."],
-        "10": ["You still need to kill 4 rats."],
-        "11": ["You still need to kill 3 rats."],
-        "12": ["You still need to kill 2 rats."],
-        "13": ["You still need to kill 1 rat."],
-        "14": ["Great job adventurer!", "You may continue your journey by going through the portal."],
-        "15": ["What, still here?"]
-      },
-
-      "16": {
-          "16": ["Oh, what do we have here, another adventurer!", "My job is to teach you the use of ranged attacks.",
-            "In your inventory, you should have a bow.", "Equip it and kill 5 of those rats."],
-          "17": ["Kill 5 rats."],
-          "18": ["Kill 4 rats."],
-          "19": ["Kill 3 rats."],
-          "20": ["Kill 2 rats."],
-          "21": ["Kill 1 rats."],
-          "22": ["Well that did not take too long.", "I think you have what it takes to go on with your adventure.",
-              "You may progress by going through the portal."],
-          "23": ["What, still here?"]
-      }
-
-    },
-
-    "pointers": {
-      "0": [0, 372, 38],
-      "1": [4, "inventoryButton"],
-      "2": [0, 372, 38],
-      "3": [4, "profileButton"],
-      "4": [0, 372, 38],
-      "5": [4, "warpButton"],
-      "6": [0, 372, 38],
-      "7": [0, 373, 45],
-
-      "8": [0, 333, 27],
-      "14": [0, 333, 27],
-      "15": [0, 323, 24],
-      "16": [0, 414, 21],
-      "22": [0, 414, 21],
-      "23": [0, 406, 20]
-    },
-
-    "doors": {
-      "7": [373, 44],
-      "15": [323, 23],
-      "23": [406, 19]
-    },
-
-    "task": {
-      "0": "talk",
-      "1": "click",
-      "2": "talk",
-      "3": "click",
-      "4": "talk",
-      "5": "click",
-      "6": "talk",
-      "7": "door",
-      "8": "talk",
-      "9": "kill",
-      "10": "kill",
-      "11": "kill",
-      "12": "kill",
-      "13": "kill",
-      "14": "talk",
-      "15": "door",
-      "16": "talk",
-      "17": "kill",
-      "18": "kill",
-      "19": "kill",
-      "20": "kill",
-      "21": "kill",
-      "22": "talk",
-      "23": "door"
-    },
-
-    "kill": {
-        "9": 128,
-        "10": 128,
-        "11": 128,
-        "12": 128,
-        "13": 128,
-        "17": 128,
-        "18": 128,
-        "19": 128,
-        "20": 128,
-        "21": 128
-    }
-  },
-
-  "BulkySituation": {
-    "id": 1,
-    "name": "Bulky Situation",
-    "description": "Bulky mooscles require bulky armoor.",
-    "npcs": [2],
-    "itemReq": {
-      "1": 115,
-      "3": 116
-    },
-    "itemReward": {
-      "id": 202,
-      "count": 300
-    },
-    "stages": 4,
-    "conversations": {
-      "2": {
-        "0": ["Hoho! Heii", "Adventr, i ned hlp. Yu se.", "i lost me armur.",
-            "i wil giv u 300 gold if u find.", "its aboot ze siz of me body",
-            "and it made lether of."],
-
-        "1": ["Plz, how progrs goin'?", "I ned lethr armur."],
-
-        "2": ["Hono, tht iz rong armur. But i take anyway.", "i ment tu sey chain meil, but srry.",
-              "plz, find armr mde of chein"],
-
-        "3": ["Plz, i weight. I weight fur me chein meil armr.", "Pls bring."],
-
-        "4": ["Dank u adventurer.", "U hav helpd alot."]
-      }
-    },
-
-    "task": {
-      "0": "talk",
-      "1": "item",
-      "2": "talk",
-      "3": "item",
-      "4": "talk"
-    }
-
-  },
-
-  "TheLie": {
-    "id": 2,
-    "name": "The Lie",
-    "description": "Keep going, and do not ever look back.",
-    "npcs": [1],
-    "questReq": [0, 1, 3, 4, 5, 6],
-    "itemReq": {
-
-    },
-    "stages": 50,
-    "conversations": {
       "1": {
-        "0": ["Ah, so you would like to know how it all began..", "Perhaps it is a story that is best left untold.",
-              "I'll spare you the details for the most part.", "But one must understand the very core of his pain."],
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 373,
+          "y": 45
+        }
+      },
 
-        "1": ["It mustn't make much sense at this point.", "It's alright though. I ask this of you.", "Find me a potato.",
-              "It's pretty important for this."]
+      "2": {
+        "task": "talk",
+        "npc": "guard",
+        "text": [
+          "I see... a new adventurer.",
+          "Let me tell you a bit about these lands.",
+          "You'll be killing stuff...",
+          "A lot of stuff actually...",
+          "And when you're not killing stuff...",
+          "You'll still be killing stuff!",
+          "So for now, go kill 5 of them rats."
+        ],
+        "completedText": ["What are you waiting for?", "Kill some of them rats."],
+        "itemKey": "sword1",
+        "popup": {
+          "title": "Item acquired!",
+          "text": "You've just received a sword! Equip it using your inventory!",
+          "colour": "#33cc33"
+        },
+        "pointer": {
+          "type": 0,
+          "x": 333,
+          "y": 27
+        }
+      },
+
+      "3": {
+        "task": "kill",
+        "mob": ["rat"],
+        "mobCountRequirement": 5
+      },
+
+      "4": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 323,
+          "y": 23
+        }
+      },
+
+      "5": {
+        "task": "talk",
+        "npc": "sorcerer",
+        "text": ["Sup there young one!", "I am a spooky mage in this cave!", "Here, take this bow and kill 4 of those rats!"],
+        "completedText": ["Well then, hurry up and kill those rats.", "Then you can get out of here!"],
+        "itemKey": "woodenbow",
+        "popup": {
+          "title": "Item acquired!",
+          "text": "You've just received a bow! Equip it using your inventory!",
+          "colour": "#33cc33"
+        },
+        "pointer": {
+          "type": 0,
+          "x": 414,
+          "y": 21
+        }
+      },
+
+      "6": {
+        "task": "kill",
+        "mob": ["rat"],
+        "mobCountRequirement": 4
+      },
+
+      "7": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 406,
+          "y": 19
+        }
       }
     }
-  },
-
-  "TooSpooky": {
-    "id": 3,
-    "name": "Too Spooky",
-    "description": "Help the pirate girl recover her lost pendant.",
-    "npcs" : [28],
-    "stages": 3
   }
 }

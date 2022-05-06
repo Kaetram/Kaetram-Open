@@ -1,28 +1,45 @@
 {
     "name": "@kaetram/client",
-    "version": "1.0.0",
-    "author": "Veradictus",
-    "description": "Kaetram's web server",
-    "homepage": "https://kaetram.com/",
-    "main": "./js/main.js",
     "scripts": {
-        "build": "webpack",
-        "start": "webpack-dev-server",
-        "dev": "webpack-dev-server",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev": "vite",
+        "build": "tsc --noEmit && vite build",
+        "start": "sirv dist -p 9000 --no-logs"
     },
     "dependencies": {
+        "@kaetram/common": "workspace:*",
         "gl-tiled": "^1.0.0",
-        "jquery": "^3.5.1",
-        "socket.io-client": "^2.3.0",
-        "underscore": "^1.10.2"
+        "illuminated": "^1.3.0",
+        "jquery": "^3.6.0",
+        "lodash": "^4.17.21",
+        "pako": "^2.0.4",
+        "socket.io-client": "^4.4.1"
     },
     "devDependencies": {
-        "gulp": "^4.0.2",
-        "html-webpack-plugin": "^4.3.0",
-        "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.11",
-        "webpack-dev-server": "^3.11.0",
-        "workbox-build": "^5.1.3"
+        "@types/dotenv-parse-variables": "^2.0.1",
+        "@types/html-minifier-terser": "^6.1.0",
+        "@types/jquery": "^3.5.14",
+        "@types/lodash": "^4.14.181",
+        "@types/node": "^17.0.23",
+        "@types/pako": "^1.0.3",
+        "@types/workbox-build": "^5.0.1",
+        "@vitejs/plugin-legacy": "^1.8.0",
+        "autoprefixer": "^10.4.4",
+        "dotenv-extended": "^2.9.0",
+        "dotenv-parse-variables": "^2.0.0",
+        "postcss": "^8.4.12",
+        "postcss-custom-media": "^8.0.0",
+        "postcss-preset-env": "^7.4.3",
+        "postcss-scss": "^4.0.3",
+        "sass": "^1.50.0",
+        "sirv-cli": "^2.0.2",
+        "stylelint": "^14.6.1",
+        "stylelint-config-standard-scss": "^3.0.0",
+        "stylelint-high-performance-animation": "^1.6.0",
+        "typescript": "^4.6.3",
+        "vite": "^2.9.1",
+        "vite-plugin-compress": "^2.1.1",
+        "vite-plugin-html": "^3.2.0",
+        "vite-plugin-pwa": "^0.11.13",
+        "workbox-window": "^6.5.2"
     }
 }

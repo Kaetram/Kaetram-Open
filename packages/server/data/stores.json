@@ -1,0 +1,23 @@
+{
+  "startshop": {
+    "items": [
+      {
+        "key": "axe",
+        "count": 10,
+        "price": 100
+      },
+      {
+        "key": "sword2",
+        "count": 10,
+        "price": 100
+      },
+      {
+        "key": "bluesword",
+        "count": 1,
+        "price": 500
+      }
+    ],
+    "refresh": 60000,
+    "currency": "gold"
+  }
+}

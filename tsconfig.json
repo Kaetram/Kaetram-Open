@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "es2020",
+
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "strictNullChecks": true,
+        "exactOptionalPropertyTypes": true,
+
+        "rootDir": ".",
+        "baseUrl": "./packages",
+        "paths": {
+            "@kaetram/*": ["*"]
+        }
+    }
+}

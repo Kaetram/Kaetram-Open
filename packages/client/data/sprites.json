@@ -6722,6 +6722,19 @@
     "offsetY": -8
   },
   {
+    "id": "royalguard",
+    "width": 25,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -5,
+    "offsetY": -8
+  },
+  {
     "id": "halberd",
     "width": 48,
     "height": 48,
@@ -18771,7 +18784,7 @@
         "row": 8
       }
     },
-    "offsetX": -5,
+    "offsetX": -8,
     "offsetY": -13
   },
 

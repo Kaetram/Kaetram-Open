@@ -1,12 +1,13 @@
 {
     "name": "@kaetram/common",
-    "version": "1.0.0",
-    "description": "Kaetram set of shared resources across server and client",
-    "homepage": "https://kaetram.com/",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Veradictus",
-    "license": "MPL-2.0"
+    "types": "types/index.d.ts",
+    "devDependencies": {
+        "@types/dotenv-parse-variables": "^2.0.1",
+        "@types/lodash": "^4.14.181",
+        "@types/node": "^17.0.23",
+        "discord.js": "^12.5.3",
+        "dotenv-extended": "^2.9.0",
+        "dotenv-parse-variables": "^2.0.0",
+        "lodash": "^4.17.21"
+    }
 }

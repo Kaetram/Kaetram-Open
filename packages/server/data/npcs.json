@@ -1,242 +1,202 @@
 {
-  "King": {
-    "id": 45,
+  "king": {
     "name": "King"
   },
 
-  "VillageGirl": {
+  "villagegirl": {
     "name": "Azaria",
-    "id": 1,
     "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
   },
 
-  "Villager": {
-    "id": 2,
+  "villager": {
     "name": "Bulk Bogan",
     "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
           "nearby future regarding further adventures."]
   },
 
-  "BeachNpc": {
-    "id": 3,
+  "beachnpc": {
     "name": "Bubba",
     "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
   },
 
-  "Agent": {
-    "id": 4,
+  "agent": {
     "name": "Secret Agent"
   },
 
-  "Nyan": {
-    "id": 5,
+  "nyan": {
     "name": "Nyan Cat (Stale Meme)"
   },
 
-  "Rick": {
-    "id": 6,
+  "rick": {
     "name": "Rick"
   },
 
-  "Priest": {
-    "id": 7,
+  "priest": {
     "name": "Priest"
   },
 
-  "Guard": {
-    "id": 8,
+  "guard": {
     "name": "Guard"
   },
 
-  "Scientist": {
-    "id": 9,
+  "scientist": {
     "name": "Scientist"
   },
 
-  "DesertNpc": {
-    "id": 10,
+  "desertnpc": {
     "name": "Billey"
   },
 
-  "LavaNpc": {
-    "id": 11,
+  "lavanpc": {
     "name": "Dying Man"
   },
 
-  "Boxingman": {
-    "id": 12,
+  "boxingman": {
     "name": "Mike Tyson",
-    "text": "Woosh."
+    "text": ["Woosh."]
   },
 
-  "Vampire": {
-    "id": 13,
+  "vampire": {
     "name": "Vampire"
   },
 
-  "Doctor": {
-    "id": 14,
+  "doctor": {
     "name": "Doctor"
   },
 
-  "Oddeyecat": {
-    "id": 15,
+  "oddeyecat": {
     "name": "Odd-Eyed Cat"
   },
 
-  "Sorcerer": {
-    "id": 16,
+  "sorcerer": {
     "name": "Sorcerer"
   },
 
-  "Coder": {
-    "id": 17,
+  "coder": {
     "name": "Programmer",
     "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
             "It's definitely not because we're running low on pixel art..", "Regardless.. If you want to join the community",
             "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>"]
   },
 
-  "ForestNpc": {
-    "id": 18,
+  "forestNpc": {
     "name": "Forester"
   },
 
-  "Octocat": {
-    "id": 19,
+  "octocat": {
     "name": "Octocat",
     "text": ["Hey there!",
             "I am the Octocat, the programmer and I",
             "are very well acquainted.",
             "In case you did not know, Kaetram is completely open-source.",
-            "You can <a target=\"_blank\" href=\"https://github.com/Veradictus/Kaetram-Open\">check out the source on GitHub!</a>"]
+            "You can <a target=\"_blank\" href=\"https://github.com/Kaetram/Kaetram-Open\">check out the source on GitHub!</a>"]
   },
 
-  "Soldier": {
-    "id": 20,
+  "soldier": {
     "name": "Soldier"
   },
 
-  "Fisherman": {
-    "id": 21,
+  "fisherman": {
     "name": "Fisherman"
   },
 
-  "Octopus": {
-    "id": 22,
+  "octopus": {
     "name": "Octopus"
   },
 
-  "Mermaidnpc": {
-    "id": 23,
+  "mermaidnpc": {
     "name": "Mermaid"
   },
 
-  "Sponge": {
-    "id": 24,
+  "sponge": {
     "name": "Picklebob"
   },
 
-  "Fairynpc": {
-    "id": 25,
+  "fairynpc": {
     "name": "Fairy"
   },
 
-  "Shepherdboy": {
-    "id": 26,
+  "shepherdboy": {
     "name": "Shepherd Boy"
   },
 
-  "Zombiegf": {
-    "id": 27,
+  "zombiegf": {
     "name": "Zombie Girlfriend"
   },
 
-  "Pirategirlnpc": {
-    "id": 28,
+  "pirategirlnpc": {
     "name": "Pirate Girl",
     "text": ["Hi"]
   },
 
-  "Bluebikinigirlnpc": {
-    "id": 29,
+  "bluebikinigirlnpc": {
     "name": "Pretzel"
   },
 
-  "Redbikinigirlnpc": {
-    "id": 30,
+  "redbikinigirlnpc": {
     "name": "Flaris"
   },
 
-  "Iamverycoldnpc": {
-    "id": 31,
+  "iamverycoldnpc": {
     "name": "Babushka"
   },
 
-  "Iceelfnpc": {
-    "id": 32,
+  "iceelfnpc": {
     "name": "Ice Elf"
   },
 
-  "Elfnpc": {
-    "id": 33,
+  "elfnpc": {
     "name": "Elf"
   },
 
-  "Snowshepherdboy": {
-    "id": 34,
+  "snowshepherdboy": {
     "name": "Some Boy"
   },
 
-  "Angelnpc": {
-    "id": 35,
+  "angelnpc": {
     "name": "Angel"
   },
 
-  "Momangelnpc": {
-    "id": 36,
+  "momangelnpc": {
     "name": "Archangel"
   },
 
-  "Superiorangelnpc": {
-    "id": 37,
+  "superiorangelnpc": {
     "name": "Mentor"
   },
 
-  "Firstsonangelnpc": {
-    "id": 38,
+  "firstsonangelnpc": {
     "name": "Angel"
   },
 
-  "Secondsonangelnpc": {
-    "id": 39,
+  "secondsonangelnpc": {
     "name": "Superior Angel"
   },
 
-  "Mojojojonpc": {
-    "id": 40,
+  "mojojojonpc": {
     "name": "Monky"
   },
 
-  "Ancientmanumentnpc": {
-    "id": 41,
+  "ancientmanumentnpc": {
     "name": "Ancient Monument"
   },
 
-  "Vendingmachine": {
-    "id": 42,
+  "vendingmachine": {
     "name": "Enchantment Table",
-    "type": "enchanter"
+    "role": "enchanter"
   },
 
-  "Redstoremannpc": {
-    "id": 43,
+  "redstoremannpc": {
     "name": "Banker",
-    "type": "banker"
+    "role": "banker"
   },
 
-  "Bluestoremannpc": {
-    "id": 44,
-    "name": "Clerk"
+  "bluestoremannpc": {
+    "name": "Clerk",
+    "store": "startshop"
+  },
+
+  "royalguard": {
+    "name": "Royal Guard"
   }
 }

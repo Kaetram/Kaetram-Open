@@ -1,0 +1,589 @@
+@use 'media';
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background-color: transparent;
+}
+
+canvas {
+    position: absolute;
+    image-rendering: optimizespeed;     /* Older versions of FF          */
+    image-rendering: crisp-edges;       /* FF 6.0+                       */
+    image-rendering: optimize-contrast; /* Safari                        */
+    image-rendering: -o-crisp-edges;    /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated;         /* Awesome future-browsers       */
+}
+
+html {
+    background-color: #000;
+}
+
+#background,
+#text-canvas,
+#foreground,
+#cursor,
+#overlay {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    z-index: 100;
+    background-color: rgb(0 0 0 / 20%);
+    transition: 1s opacity linear;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    position: inherit;
+
+    // width: 490px;
+    // height: 266px;
+    // margin: -126px auto auto -245px;
+    // position: absolute;
+}
+
+footer {
+    font-family: AdvoCut, sans-serif;
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    color: #c6c0a3;
+    text-shadow: 0 1px 0 black;
+    transition: 0.2s opacity linear;
+    font-size: 18px;
+}
+
+.link:hover {
+    cursor: pointer;
+    color: #d83939;
+}
+
+.game footer {
+    color: #8a8a8a;
+    opacity: 0;
+}
+
+.intro footer,
+footer:hover {
+    opacity: 1;
+}
+
+footer div {
+    display: inline-block;
+    padding: 0 5px;
+
+    span:hover {
+        color: #fcda5c;
+        cursor: pointer;
+    }
+}
+
+#canvas,
+#foreground,
+#background,
+#text-canvas,
+#overlay,
+#container,
+#border,
+#cursor {
+    user-select: none;
+    cursor: none;
+}
+
+#foreground,
+#background,
+#entities,
+#cursor,
+#overlay {
+    transform: translateZ(0);
+}
+
+.parchment-left,
+.parchment-middle,
+.parchment-right,
+#respawn {
+    image-rendering: optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: pixelated;
+}
+
+#death p {
+    margin-top: 10%;
+}
+
+#respawn {
+    margin-top: 5%;
+}
+
+#parchment,
+#parchment input,
+#parchment select {
+    font-family: AdvoCut, sans-serif;
+}
+
+#parchment input {
+    width: 50%;
+    background-color: rgb(0 0 0 / 5%);
+    text-align: center;
+    color: #eee;
+    animation: glow 0.5s linear infinite alternate;
+
+    &:focus {
+        border-color: rgb(0 0 0 / 30%);
+        background-color: rgb(0 0 0 / 10%);
+        color: #fff;
+        animation: none;
+    }
+
+    &.field-error {
+        background-color: rgb(255 0 0 / 10%);
+        border-color: #f84444;
+    }
+}
+
+#parchment select {
+    width: 25%;
+    background-color: rgb(0 0 0 / 5%);
+    text-align: center;
+    color: black;
+}
+
+#intro {
+    transition: 0.4s opacity linear;
+}
+
+#alert {
+    height: 50px;
+    width: 100%;
+    background-color: #d83939;
+    color: #eee;
+    font-size: 20px;
+    font-family: AdvoCut, arial, sans-serif;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: 1px solid #000;
+}
+
+#parchment {
+    opacity: 0;
+}
+
+#parchment,
+#create-character,
+#load-character,
+#error {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    text-align: center;
+    z-index: 2;
+}
+
+.intro {
+    footer,
+    #logo,
+    #parchment {
+        opacity: 1;
+    }
+
+    #container {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+#parchment p {
+    font-family: AdvoCut, sans-serif;
+}
+
+#credits,
+#git,
+#about,
+#load-character,
+#create-character,
+#death,
+#error {
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
+    position: absolute;
+    left: 50%;
+    text-align: center;
+    font-family: AdvoCut, sans-serif;
+    z-index: 1000;
+}
+
+#credits,
+#about,
+#death,
+#git {
+    top: 50%;
+}
+
+#load-character,
+#create-character {
+    form {
+        position: relative;
+    }
+}
+
+.credits #credits,
+.about #about,
+.git #git,
+.death #death,
+.error #error,
+.create-character #create-character,
+.load-character #load-character {
+    opacity: 1;
+    pointer-events: auto;
+    transition: 0.5s opacity linear;
+}
+
+.parchment-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.parchment-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.parchment-middle {
+    position: absolute;
+    left: 50%;
+    top: 0;
+}
+
+.animate {
+    .parchment-left {
+        animation: parchleft 1s ease-in-out 1;
+    }
+
+    .parchment-right {
+        animation: parchright 1s ease-in-out 1;
+    }
+}
+
+.loader {
+    position: relative;
+    margin-top: 25%;
+}
+
+.loader-dot {
+    animation: 1s blink infinite;
+
+    &:nth-child(2) {
+        animation-delay: 250ms;
+    }
+
+    &:nth-child(3) {
+        animation-delay: 500ms;
+    }
+}
+
+// #container {
+//     top: 48%;
+//     left: 50%;
+// }
+
+#border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    margin-left: 0;
+    border: 0;
+    padding: 0;
+    background: none;
+
+    // background: url('/img/1/border.png') no-repeat;
+    // background-size: 100% 100%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #credits,
+        #about,
+        #death,
+        #git {
+            width: 422px * $i;
+            height: 182px * $i;
+            margin-left: -211px * $i;
+            margin-top: -91px * $i;
+            font-size: 10px * $i;
+        }
+
+        .parchment-left,
+        .parchment-middle,
+        .parchment-right,
+        #respawn {
+            background-image: url('/img/#{$i}/spritesheet.png');
+            background-size: 422px * $i auto;
+        }
+
+        .parchment-left {
+            width: 38px * $i;
+            height: 182px * $i;
+            background-position: 0 -294px * $i;
+        }
+
+        .parchment-middle {
+            width: 346px * $i;
+            height: 182px * $i;
+            background-position: -38px * $i -294px * $i;
+            margin-left: -173px * $i;
+        }
+
+        .parchment-right {
+            width: 38px * $i;
+            height: 182px * $i;
+            background-position: -384px * $i -294px * $i;
+        }
+
+        #parchment,
+        #create-character,
+        #load-character,
+        #error {
+            width: 422px * $i;
+            height: 182px * $i;
+            margin-left: -211px * $i;
+            margin-top: -91px * $i;
+        }
+
+        #parchment input,
+        #parchment select {
+            padding: 0 5px * $i;
+            border: 1px * $i dashed #b2af9b;
+            font-size: 10px * $i;
+            border-radius: 3px * $i;
+        }
+
+        #parchment input {
+            margin-top: 10px * $i;
+            height: 20px * $i;
+        }
+
+        #parchment select {
+            margin-top: 8px * $i;
+            height: 16px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    .intro footer {
+        font-size: 28px;
+    }
+
+    #parchment,
+    #create-character,
+    #load-character,
+    #error {
+        font-size: 20px;
+    }
+
+    #parchment.create-character input {
+        margin-top: 24px;
+        height: 45px;
+    }
+
+    .animate .parchment-middle {
+        animation: parchmiddle3 1s ease-in-out 1;
+    }
+
+    .game.death .parchment-middle {
+        width: 1038px;
+        margin-left: -519px;
+        background-position: -114px -882px;
+    }
+
+    .loader {
+        margin-top: 27%;
+        font-size: 26px;
+    }
+
+    #respawn {
+        width: 375px;
+        height: 153px;
+        margin: 63px auto 0;
+        background-position: 0 -1428px;
+
+        &:active {
+            background-position: -375px -1428px;
+        }
+    }
+}
+
+@media (--md) {
+    #parchment,
+    #create-character,
+    #load-character,
+    #error {
+        font-size: 20px;
+    }
+
+    #parchment.create-character input {
+        margin-top: 15px;
+        height: 30px;
+    }
+
+    .animate .parchment-middle {
+        animation: parchmiddle2 1s ease-in-out 1;
+    }
+
+    .game.death .parchment-middle {
+        width: 692px;
+        margin-left: -346px;
+        background-position: -76px -588px;
+    }
+
+    #respawn {
+        width: 250px;
+        height: 102px;
+        margin: 42px auto 0;
+        background-position: 0 -952px;
+
+        &:active {
+            background-position: -250px -952px;
+        }
+    }
+}
+
+@media (--sm) {
+    #parchment,
+    #create-character,
+    #load-character,
+    #error {
+        font-size: 10px;
+    }
+
+    #parchment.create-character input {
+        margin-top: 8px;
+        height: 15px;
+    }
+
+    .animate .parchment-middle {
+        animation: parchmiddle1 1s ease-in-out 1;
+    }
+
+    .game.death .parchment-middle {
+        width: 346px;
+        margin-left: -173px;
+        background-position: -38px -294px;
+    }
+
+    #respawn {
+        width: 125px;
+        height: 51px;
+        margin: 21px auto 0;
+        background-position: 0 -476px;
+
+        &:active {
+            background-position: -125px -476px;
+        }
+    }
+
+    #canvas,
+    #foreground,
+    #background,
+    #text-canvas,
+    #overlay,
+    #container,
+    #border,
+    #cursor {
+        cursor: default;
+    }
+}
+
+.tablet .animate {
+    .parchment-left,
+    .parchment-right,
+    .parchment-middle {
+        animation: none;
+    }
+}
+
+.patreon-widget {
+    display: none;
+    float: right;
+    padding: 1em;
+    width: 176px;
+    height: 35px !important;
+}
+
+.intro .patreon-widget {
+    display: block;
+}
