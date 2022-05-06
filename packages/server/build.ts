@@ -8,7 +8,7 @@ build({
     bundle: true,
     minify: true,
     platform: 'node',
-    target: 'node12',
+    target: 'node14',
     sourcemap: true,
     plugins: [nodeExternalsPlugin({ allowList: ['@kaetram/common'] })]
 });
