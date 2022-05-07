@@ -548,16 +548,16 @@ export default class ProcessMap {
      */
 
     public getClientMap(): string {
-        let { width, height, version, high, tilesets, animations, tileSize } = this.map;
+        let { width, height, tileSize, version, high, tilesets, animations } = this.map;
 
         return JSON.stringify({
             width,
             height,
+            tileSize,
             version,
             high,
             tilesets,
-            animations,
-            tileSize
+            animations
         });
     }
 }
