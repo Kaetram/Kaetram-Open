@@ -95,20 +95,7 @@ export default abstract class Entity {
     public nextGridY!: number;
     public fadingAlpha!: number;
 
-    protected constructor(public id: string, public kind: string) {
-        // this.loadDirty();
-    }
-
-    // /**
-    //  * This is important for when the client is
-    //  * on a mobile screen. So the sprite has to be
-    //  * handled differently.
-    //  */
-    // protected loadDirty(): void {
-    //     this.dirty = true;
-
-    //     this.dirtyCallback?.();
-    // }
+    protected constructor(public id: string, public kind: string) {}
 
     public fadeIn(time: number): void {
         this.fading = true;
@@ -218,33 +205,6 @@ export default abstract class Entity {
         return x > y ? x : y;
     }
 
-    // getCoordDistance(toX: number, toY: number): number {
-    //     let x = Math.abs(this.gridX - toX);
-    //     let y = Math.abs(this.gridY - toY);
-
-    //     return x > y ? x : y;
-    // }
-
-    // inAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 2 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // inExtraAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 3 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // getSprite(): string {
-    //     return this.sprite.name;
-    // }
-
     public getAngle(): number {
         return 0;
     }
@@ -296,12 +256,4 @@ export default abstract class Entity {
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
     }
-
-    // onReady(callback: () => void): void {
-    //     this.readyCallback = callback;
-    // }
-
-    // onDirty(callback: () => void): void {
-    //     this.dirtyCallback = callback;
-    // }
 }
