@@ -1,12 +1,11 @@
 import _ from 'lodash';
 
-import Renderer from '../renderer/renderer';
-import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
+import mapData from '../../data/maps/map.json';
 
 import type Game from '../game';
 import { isInt } from '../utils/util';
-import { ProcessedAnimation, ProcessedClientMap } from '@kaetram/common/types/map';
+import { ProcessedAnimation } from '@kaetram/common/types/map';
 import { RegionData, RegionTile, RegionTileData } from './../../../common/types/region';
 
 export type CursorTiles = { [tileId: number]: string };
@@ -31,14 +30,14 @@ export default class Map {
     private objects: number[] = [];
     private lights: number[] = [];
 
-    private rawTilesets: { [key: string]: number } = mapData.tilesets; // Key is tileset name, value is the firstGID
+    private rawTilesets: { [key: string]: number } = mapData.tilesets; // Key is tileset id, value is the firstGID
     private tilesets: { [key: string]: TilesetInfo } = {};
     private cursorTiles: CursorTiles = {};
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
 
-    private tilesetsLoaded = false;
     public mapLoaded = false;
     public preloadedData = false;
+    private tilesetsLoaded = false;
 
     private readyCallback?(): void;
 
@@ -132,28 +131,46 @@ export default class Map {
         }
     }
 
+    /**
+     * Iterates through the raw tileset data from the map parser. The key
+     * of the raw tileset data is the tileset id, and the value is the
+     * firstGID. Because loading tilesets occurs asynchronously, we need
+     * to keep track of how many tilesets we've loaded. Once the tilesets
+     * loaded match the number of raw tilesets, we can then toggle the
+     * `tilesetsLoaded` flag so that the map can be loaded (see `ready` function).
+     */
+
     private loadTilesets(): void {
+        // Used to compare how many tilesets are loaded.
         let rawTilesetLength = Object.keys(this.rawTilesets).length;
 
-        if (rawTilesetLength === 0) return;
-
         _.each(this.rawTilesets, (firstGID: number, key: string) => {
-            this.loadTileset(firstGID, key, (tileset) => {
+            this.loadTileset(firstGID, parseInt(key), (tileset: TilesetInfo) => {
                 this.tilesets[key] = tileset;
 
+                // If we've loaded all the tilesets, map is now allowed to be marked as ready.
                 if (Object.keys(this.tilesets).length === rawTilesetLength)
                     this.tilesetsLoaded = true;
             });
         });
     }
 
+    /**
+     * Function responsible for loading the tilesheet into the game.
+     * Due to the nature of HTML5, when we load an image, it must be
+     * done so asynchronously.
+     * @param firstGID FirstGID is the value of the rawTileset dictionary.
+     * @param tilesetId The tileset number ID as a string.
+     * @param callback Parsed client tileset of type TilesetInfo.
+     */
+
     private loadTileset(
         firstGID: number,
-        tilesetId: string,
+        tilesetId: number,
         callback: (tileset: TilesetInfo) => void
     ): void {
         let tileset = new Image() as TilesetInfo,
-            path = `/img/tilesets/tilesheet-${parseInt(tilesetId) + 1}.png`;
+            path = `/img/tilesets/tilesheet-${tilesetId + 1}.png`; // tileset path in the client.
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;
@@ -163,9 +180,10 @@ export default class Map {
         tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
         tileset.loaded = true;
 
+        // Listener for when the image has finished loading. Equivalent of `image.onload`
         tileset.addEventListener('load', () => {
+            // Prevent uneven tilemaps from loading.
             if (tileset.width % this.tileSize > 0)
-                // Prevent uneven tilemaps from loading.
                 throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
             callback(tileset);
@@ -174,6 +192,33 @@ export default class Map {
         tileset.addEventListener('error', () => {
             throw new Error(`Could not find tile set: ${tileset.path}`);
         });
+    }
+
+    /**
+     * Saves the current map's data, grid, objects, and cursors to the local storage.
+     */
+
+    private saveRegionData(): void {
+        this.game.storage.setRegionData(this.data, this.grid, this.objects, this.cursorTiles);
+    }
+
+    /**
+     * Loads the data from the storage into our map.
+     * If the region data exists, then we mark the client's map
+     * as having been preloaded. This will get relayed to the server.
+     */
+
+    public loadRegionData(): void {
+        let data = this.game.storage.getRegionData();
+
+        if (data.regionData.length > 0) {
+            this.data = data.regionData;
+            this.preloadedData = true;
+        }
+
+        this.grid = data.grid;
+        this.objects = data.objects;
+        this.cursorTiles = data.cursorTiles;
     }
 
     /**
@@ -213,79 +258,103 @@ export default class Map {
         return this.grid[y][x] === 1;
     }
 
+    /**
+     * Converts the x and y grid coordinate parameters into an index and checks
+     * whether that index is contained within our objects array.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether or not the x and y grid index is in our objects array.
+     */
+
     public isObject(x: number, y: number): boolean {
         let index = this.coordToIndex(x, y);
 
         return this.objects.includes(index);
     }
 
-    public getTileCursor(x: number, y: number): string | null {
-        let index = this.coordToIndex(x, y);
+    /**
+     * Converts the x and y grid coordinate into an index and checks
+     * our cursor tiles dictionary for an entry of the index. If it's not
+     * found, it returns undefined by default.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns The name of the cursor at the tile index if exists, otherwise undefined.
+     */
 
-        if (!(index in this.cursorTiles)) return null;
+    public getTileCursor(x: number, y: number): string {
+        let index = this.coordToIndex(x, y);
 
         return this.cursorTiles[index];
     }
 
-    public isHighTile(id: number): boolean {
-        return this.high.includes(id);
+    /**
+     * Checks if the tileId parameter is part of our high tiles array.
+     * @param tileId The tileId we are checking.
+     * @returns Whether the tileId is contained in our high tiles array.
+     */
+
+    public isHighTile(tileId: number): boolean {
+        return this.high.includes(tileId);
     }
 
-    public isLightTile(id: number): boolean {
-        return this.lights.includes(id + 1);
+    /**
+     * Checks if the tileId parameter is part of our lights array.
+     * @param tileId The tileId we are checking.
+     * @returns Whether or not the tileId is contained in our lights array.
+     */
+
+    public isLightTile(tileId: number): boolean {
+        return this.lights.includes(tileId);
     }
 
-    public isAnimatedTile(id: number): boolean {
-        return id in this.animatedTiles;
+    /**
+     * Checks if there's an entry for the tileId in our animations dictionary.
+     * @param tileId The tileId we are checking animations of.
+     * @returns Whether the tileId is contained in our animations dictionary.
+     */
+
+    public isAnimatedTile(tileId: number): boolean {
+        return tileId in this.animatedTiles;
     }
+
+    /**
+     * Verifies if x and y are integers and whether or not they are within the bounds of
+     * the map. That is, whether x and y are not smaller than 0, and no greater than the
+     * width and height of the map respectively.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether or not the x and y grid coordinates are within the bounds of the map.
+     */
 
     public isOutOfBounds(x: number, y: number): boolean {
         return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
     }
 
-    private getX(index: number, width: number): number {
-        if (index === 0) return 0;
+    /**
+     * Grabs an array of animated tile information based on tileId.
+     * @param tileId THe tileId we are looking for.
+     * @returns A ProcessedAnimation object array from our animated tiles.
+     */
 
-        return index % width === 0 ? width - 1 : (index % width) - 1;
+    public getTileAnimation(tileId: number): ProcessedAnimation[] {
+        return this.animatedTiles[tileId];
     }
 
-    public getTileAnimation(id: number): any {
-        return this.animatedTiles[id];
-    }
+    /**
+     * Finds the tileset that the tileId belongs to.
+     * @param tileId The tileId we are trying to determine tileset of.
+     * @returns The tileset of the tileId if found or otherwise undefined.
+     */
 
-    public getTilesetFromId(id: number): TilesetInfo | null {
+    public getTilesetFromId(tileId: number): TilesetInfo | undefined {
         for (let index in this.tilesets)
-            if (id < this.tilesets[index].lastGID) return this.tilesets[index];
+            if (tileId < this.tilesets[index].lastGID) return this.tilesets[index];
 
-        return null;
+        return undefined;
     }
-
     /**
-     * Saves the current map's data, grid, objects, and cursors to the local storage.
+     * Callback for when the map is ready to be used (preliminary data is loaded).
      */
-
-    private saveRegionData(): void {
-        this.game.storage.setRegionData(this.data, this.grid, this.objects, this.cursorTiles);
-    }
-
-    /**
-     * Loads the data from the storage into our map.
-     * If the region data exists, then we mark the client's map
-     * as having been preloaded. This will get relayed to the server.
-     */
-
-    public loadRegionData(): void {
-        let data = this.game.storage.getRegionData();
-
-        if (data.regionData.length > 0) {
-            this.data = data.regionData;
-            this.preloadedData = true;
-        }
-
-        this.grid = data.grid;
-        this.objects = data.objects;
-        this.cursorTiles = data.cursorTiles;
-    }
 
     public onReady(callback: () => void): void {
         this.readyCallback = callback;
