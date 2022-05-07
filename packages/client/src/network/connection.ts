@@ -1009,27 +1009,11 @@ export default class Connection {
 
             switch (opcode) {
                 case Opcodes.Map.Render:
-                    this.map.synchronize(reigon);
+                    this.map.loadRegions(reigon);
 
                     break;
-
-                case Opcodes.Map.Modify:
-                    this.map.data[reigon.index] = reigon.data;
-
-                    break;
-
-                case Opcodes.Map.Update: {
-                    let entity = this.entities.get(reigon.id);
-
-                    if (!entity || entity.id === this.game.player.id) return;
-
-                    this.entities.removeEntity(entity);
-
-                    break;
-                }
             }
 
-            this.map.updateCollisions();
             this.entities.grids.resetPathingGrid();
 
             this.renderer.forceRendering = true;
