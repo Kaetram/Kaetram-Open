@@ -5,10 +5,8 @@ import { Modules } from '@kaetram/common/network';
 
 export default class Projectile extends Entity {
     public override type = Modules.EntityType.Projectile;
-    // public name = '';
 
     public speed = 150;
-    // public angle = 0;
 
     public override readonly fadingDuration = 100;
 
@@ -43,10 +41,6 @@ export default class Projectile extends Entity {
     public getSpeed(): number {
         return 1;
     }
-
-    // public hasPath(): boolean {
-    //     return false;
-    // }
 
     public updateAngle(): void {
         if (!this.target) return;
