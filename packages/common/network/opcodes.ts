@@ -139,12 +139,7 @@ export enum TeamWar {
 }
 
 export enum Map {
-    Render,
-    Modify,
-    Collision,
-    Update,
-    Reset,
-    Tileset
+    Render
 }
 
 export enum Overlay {

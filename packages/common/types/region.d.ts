@@ -14,5 +14,5 @@ export interface RegionTileData {
 }
 
 export interface RegionData {
-    [index: number]: RegionTileData[];
+    [regionId: number]: RegionTileData[];
 }
