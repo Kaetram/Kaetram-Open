@@ -41,7 +41,6 @@ export default class ProcessMap {
 
             tilesets: {},
             animations: {},
-            depth: 1,
 
             plateau: {},
 
@@ -54,7 +53,6 @@ export default class ProcessMap {
 
         this.parseTilesets();
         this.parseLayers();
-        this.parseDepth();
     }
 
     /**
@@ -111,23 +109,6 @@ export default class ProcessMap {
                     break;
             }
         });
-    }
-
-    /**
-     * Map depth represents the tileIndex with most
-     * amount of layers
-     */
-
-    private parseDepth(): void {
-        let depth = 1;
-
-        _.each(this.map.data, (info) => {
-            if (!_.isArray(info)) return;
-
-            if (info.length > depth) depth = info.length;
-        });
-
-        this.map.depth = depth;
     }
 
     /**
@@ -567,12 +548,11 @@ export default class ProcessMap {
      */
 
     public getClientMap(): string {
-        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.map;
+        let { width, height, version, high, tilesets, animations, tileSize } = this.map;
 
         return JSON.stringify({
             width,
             height,
-            depth,
             version,
             high,
             tilesets,
