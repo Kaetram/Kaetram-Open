@@ -279,27 +279,6 @@ export default class Commands {
                 return;
             }
 
-            case 'region': {
-                let tileX = parseInt(blocks.shift()!),
-                    tileY = parseInt(blocks.shift()!),
-                    tileInfo = parseInt(blocks.shift()!);
-
-                if (!tileX || !tileY) return;
-
-                let index = this.world.map.coordToIndex(tileX - 1, tileY);
-
-                log.info(`Sending Tile: ${index}`);
-
-                this.player.send(
-                    new Map(Opcodes.Map.Modify, {
-                        index,
-                        data: tileInfo
-                    })
-                );
-
-                return;
-            }
-
             case 'getregion':
                 this.player.notify(`Current Region: ${this.player.region}`);
                 return;

@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
-
 import type App from '../app';
-import type { CursorsTiles } from '../map/map';
+
+import { Modules } from '@kaetram/common/network';
+import { CursorTiles } from '../map/map';
 
 interface PlayerData {
     username: string;
@@ -26,9 +26,9 @@ interface Settings {
 
 interface RegionMapData {
     regionData: number[];
-    collisions: number[];
-    objects: unknown[];
-    cursorTiles: CursorsTiles;
+    grid: number[][];
+    objects: number[];
+    cursorTiles: CursorTiles;
 }
 
 interface StorageData {
@@ -88,7 +88,7 @@ export default class Storage {
 
             map: {
                 regionData: [],
-                collisions: [],
+                grid: [],
                 objects: [],
                 cursorTiles: {}
             }
@@ -133,18 +133,40 @@ export default class Storage {
     //     this.save();
     // }
 
+    /**
+     * Sets the data loaded so far from the map into the storage.
+     * @param regionData The tile data for each index.
+     * @param grid The collision grid for the map.
+     * @param objects The object tileIds.
+     * @param cursorTiles The cursor tileIds.
+     */
+
     public setRegionData(
         regionData: number[],
-        collisionData: number[],
-        objects: unknown[],
-        cursorTiles: CursorsTiles
+        grid: number[][],
+        objects: number[],
+        cursorTiles: CursorTiles
     ): void {
         this.data.map.regionData = regionData;
-        this.data.map.collisions = collisionData;
+        this.data.map.grid = grid;
         this.data.map.objects = objects;
         this.data.map.cursorTiles = cursorTiles;
 
         this.save();
+    }
+
+    /**
+     * Grabs the local storage data of the map.
+     * @returns RegionMapData object containing all the data stored so far.
+     */
+
+    public getRegionData(): RegionMapData {
+        return {
+            regionData: this.data.map.regionData,
+            grid: this.data.map.grid,
+            objects: this.data.map.objects,
+            cursorTiles: this.data.map.cursorTiles
+        };
     }
 
     public getPlayer(): PlayerData {
@@ -153,20 +175,5 @@ export default class Storage {
 
     public getSettings(): Settings {
         return this.data.settings;
-    }
-
-    public getRegionData(): number[] {
-        return this.data.map.regionData;
-    }
-
-    public getCollisions(): number[] {
-        return this.data.map.collisions;
-    }
-
-    public getObjects(): unknown[] {
-        return this.data.map.objects;
-    }
-    public getCursorTiles(): CursorsTiles {
-        return this.data.map.cursorTiles;
     }
 }
