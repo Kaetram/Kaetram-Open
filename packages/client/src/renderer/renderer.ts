@@ -1,3 +1,4 @@
+import { RegionTile } from './../../../common/types/region.d';
 import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
 import _ from 'lodash';
@@ -18,7 +19,6 @@ import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Splat from './infos/splat';
-import { FlippedTile } from '../map/map';
 
 interface RendererTile {
     relativeTileId: number;
@@ -332,29 +332,29 @@ export default class Renderer {
 
         this.updateDrawingView();
 
-        this.forEachVisibleTile((id, index) => {
-            let isHighTile = this.map.isHighTile(id),
+        this.forEachVisibleTile((tile, index) => {
+            let isHighTile = this.map.isHighTile(tile),
                 context = isHighTile ? this.foreContext : this.backContext;
 
             // Only do the lighting logic if there is an overlay.
             if (this.game.overlays.getFog()) {
-                let isLightTile = this.map.isLightTile(id);
+                let isLightTile = this.map.isLightTile(tile);
 
                 context = isLightTile ? this.overlayContext : context;
             }
 
             let rotation: number[] = [];
 
-            if (this.isFlipped(id)) {
-                if ((id as unknown as FlippedTile).h) rotation.push(ROT_NEG_90_DEG);
-                if ((id as unknown as FlippedTile).v) rotation.push(ROT_90_DEG);
-                if ((id as unknown as FlippedTile).d) rotation.push(ROT_180_DEG);
+            if (this.isFlipped(tile)) {
+                if (tile.h) rotation.push(ROT_NEG_90_DEG);
+                if (tile.v) rotation.push(ROT_90_DEG);
+                if (tile.d) rotation.push(ROT_180_DEG);
 
-                id = (id as unknown as FlippedTile).tileId;
+                tile = tile.tileId;
             }
 
-            if (!this.map.isAnimatedTile(id) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, id - 1, index, rotation);
+            if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
+                this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, rotation);
         });
 
         this.restoreDrawing();
@@ -557,7 +557,7 @@ export default class Renderer {
     private drawEntityFore(entity: Entity): void {
         if (entity instanceof Character) {
             if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
-                let weapon = this.entities.getSprite((entity as Player).weapon.getString());
+                let weapon = this.entities.getSprite((entity as Player).getWeapon().key);
 
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();
@@ -869,7 +869,7 @@ export default class Renderer {
         }
     }
 
-    private isFlipped(tileInfo: any): boolean {
+    private isFlipped(tileInfo: RegionTile): boolean {
         return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 
@@ -1109,7 +1109,7 @@ export default class Renderer {
     }
 
     private forEachVisibleTile(
-        callback: (data: number, index: number) => void,
+        callback: (data: RegionTile, index: number) => void,
         offset?: number
     ): void {
         if (!this.map || !this.map.mapLoaded) return;

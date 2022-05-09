@@ -765,7 +765,7 @@ export default class Player extends Character {
      */
 
     public override isRanged(): boolean {
-        return this.equipment.getWeapon().rangedWeapon;
+        return this.equipment.getWeapon().ranged;
     }
 
     /**
