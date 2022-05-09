@@ -98,30 +98,40 @@ export default class Updater {
 
             entity.movement.start(
                 this.game.time,
+                isHorizontal ? entity.x + (isLeft ? -1 : 1) : entity.y + (isUp ? -1 : 1),
+                isHorizontal
+                    ? entity.x + (isLeft ? -this.tileSize : this.tileSize)
+                    : entity.y + (isUp ? -this.tileSize : this.tileSize),
+                entity.movementSpeed,
                 (value) => {
                     if (isHorizontal) entity.x = value;
                     if (isVertical) entity.y = value;
 
+                    // Callback for when an entity has moved.
                     entity.moved();
                 },
                 () => {
                     if (isHorizontal) entity.x = entity.movement.endValue;
                     if (isVertical) entity.y = entity.movement.endValue;
 
+                    // Callback for an entity movement.
                     entity.moved();
                     entity.nextStep();
-                },
-                isHorizontal ? entity.x + (isLeft ? -1 : 1) : entity.y + (isUp ? -1 : 1),
-                isHorizontal
-                    ? entity.x + (isLeft ? -this.tileSize : this.tileSize)
-                    : entity.y + (isUp ? -this.tileSize : this.tileSize),
-                entity.movementSpeed
+                }
             );
         });
     }
 
+    /**
+     * Fading occurs when an entity first spawns into
+     * the world. It essentially gradually increases the
+     * alpha of the entity until it is fully visible
+     * when it first spawns into the world.
+     * @param entity The entity we are fading in for.
+     */
+
     private updateFading(entity: Entity): void {
-        if (!entity || !entity.fading) return;
+        if (!entity.fading) return;
 
         let { time } = this.game,
             dt = time - entity.fadingTime;
