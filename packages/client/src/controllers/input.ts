@@ -9,7 +9,6 @@ import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type { Cursors } from '../map/map';
 import type Actions from '../menu/actions';
 
 interface TargetData {

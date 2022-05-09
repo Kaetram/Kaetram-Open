@@ -1,3 +1,4 @@
+import { Equipment } from './../../../../../common/network/opcodes';
 import $ from 'jquery';
 
 import { Modules } from '@kaetram/common/network';
@@ -9,8 +10,8 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
-import type { WelcomeData } from '@kaetram/common/types/messages';
 import type Game from '../../../game';
+import type { WelcomeData } from '@kaetram/common/types/messages';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Player extends Character {
@@ -40,22 +41,22 @@ export default class Player extends Character {
     public moveUp = false;
     public moveDown = false;
 
+    public poison = false;
     public disableAction = false;
 
     private lastLogin!: number | null;
 
-    public armour: Armour = new Armour();
-    public pendant: Pendant = new Pendant();
-    public ring: Ring = new Ring();
-    public boots: Boots = new Boots();
-    public weapon: Weapon = new Weapon();
+    // Mapping of all equipments to their type.
+    public equipments = {
+        [Modules.Equipment.Armour]: new Armour(),
+        [Modules.Equipment.Boots]: new Boots(),
+        [Modules.Equipment.Pendant]: new Pendant(),
+        [Modules.Equipment.Ring]: new Ring(),
+        [Modules.Equipment.Weapon]: new Weapon()
+    };
 
-    public poison = false;
-
-    private experienceCallback?(): void;
-    private updateArmourCallback?(string: string, power?: number): void;
-    private updateWeaponCallback?(string: string, power?: number): void;
-    private updateEquipmentCallback?(type: number, power?: number): void;
+    private experienceCallback?: () => void;
+    private equipmentCallback?: () => void;
 
     // private tempcBlinkTimeout!: number;
     public moving!: boolean;
@@ -109,16 +110,30 @@ export default class Player extends Character {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
     }
 
+    public equip(equipment: EquipmentData): void {
+        let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
+
+        this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
+
+        this.equipmentCallback?.();
+    }
+
+    public unequip(type: Modules.Equipment): void {
+        this.equipments[type].update();
+
+        this.equipmentCallback?.();
+    }
+
     public setId(id: string): void {
         this.id = id;
     }
 
     public isRanged(): boolean {
-        return this.weapon?.ranged || false;
+        return this.equipments[Modules.Equipment.Weapon].ranged;
     }
 
     public override hasWeapon(): boolean {
-        return this.weapon?.exists() || false;
+        return this.equipments[Modules.Equipment.Weapon].exists();
     }
 
     public override setName(name: string): void {
@@ -127,7 +142,27 @@ export default class Player extends Character {
     }
 
     public getSpriteName(): string {
-        return this.armour ? this.armour.string : 'clotharmor';
+        return this.equipments[Modules.Equipment.Armour].key;
+    }
+
+    public getArmour(): Armour {
+        return this.equipments[Modules.Equipment.Armour] as Armour;
+    }
+
+    public getBoots(): Boots {
+        return this.equipments[Modules.Equipment.Boots] as Boots;
+    }
+
+    public getPendant(): Pendant {
+        return this.equipments[Modules.Equipment.Pendant] as Pendant;
+    }
+
+    public getRing(): Ring {
+        return this.equipments[Modules.Equipment.Ring] as Ring;
+    }
+
+    public getWeapon(): Weapon {
+        return this.equipments[Modules.Equipment.Weapon] as Weapon;
     }
 
     public setMana(mana: number): void {
@@ -164,87 +199,11 @@ export default class Player extends Character {
         this.setMana(mana);
     }
 
-    public setEquipment(equipment: EquipmentData): void {
-        let { type, name, key, count, ability, abilityLevel, power } = equipment;
-
-        switch (type) {
-            case Modules.Equipment.Armour:
-                this.armour.update(name, key, count, ability, abilityLevel, power);
-
-                this.updateArmourCallback?.(key, power);
-
-                break;
-
-            case Modules.Equipment.Weapon:
-                this.weapon.update(name, key, count, ability, abilityLevel, power);
-
-                this.weapon.ranged = key.includes('bow');
-
-                this.updateWeaponCallback?.(key, power);
-
-                break;
-
-            case Modules.Equipment.Pendant:
-                return this.pendant.update(name, key, count, ability, abilityLevel, power);
-
-            case Modules.Equipment.Ring:
-                return this.ring.update(name, key, count, ability, abilityLevel, power);
-
-            case Modules.Equipment.Boots:
-                return this.boots.update(name, key, count, ability, abilityLevel, power);
-        }
-
-        this.updateEquipmentCallback?.(type, power);
-    }
-
-    public unequip(type: Modules.Equipment): void {
-        switch (type) {
-            case Modules.Equipment.Armour:
-                this.armour.update('Cloth Armour', 'clotharmor', 1, -1, -1);
-
-                this.updateArmourCallback?.('clotharmor');
-                break;
-
-            case Modules.Equipment.Weapon:
-                this.weapon.update('', '', -1, -1, -1);
-
-                this.updateWeaponCallback?.('', 1);
-                break;
-
-            case Modules.Equipment.Pendant:
-                this.pendant.update('', '', -1, -1, -1);
-                break;
-
-            case Modules.Equipment.Ring:
-                this.ring.update('', '', -1, -1, -1);
-                break;
-
-            case Modules.Equipment.Boots:
-                this.boots.update('', '', -1, -1, -1);
-                break;
-        }
-    }
-
-    // tempBlink(): void {
-    //     this.blink(90);
-
-    //     if (!this.tempBlinkTimeout)
-    //         this.tempBlinkTimeout = window.setTimeout(() => this.stopBlinking(), 500);
-    // }
-
-    public onUpdateArmour(callback: (armourName: string, power: number) => void): void {
-        this.updateArmourCallback = callback;
-    }
-
-    public onUpdateWeapon(callback: (string: string, power: number) => void): void {
-        this.updateWeaponCallback = callback;
-    }
-
-    public onUpdateEquipment(callback: (type: number, power: number) => void): void {
-        this.updateEquipmentCallback = callback;
-    }
-
     public onExperience(callback: () => void): void {
         this.experienceCallback = callback;
+    }
+
+    public onEquipment(callback: () => void): void {
+        this.equipmentCallback = callback;
     }
 }

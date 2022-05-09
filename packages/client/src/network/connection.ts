@@ -155,13 +155,13 @@ export default class Connection {
             switch (opcode) {
                 case Opcodes.Equipment.Batch:
                     _.each((info as SerializedEquipment).equipments, (info) => {
-                        this.game.player.setEquipment(info);
+                        this.game.player.equip(info);
                     });
 
                     break;
 
                 case Opcodes.Equipment.Equip:
-                    this.game.player.setEquipment(info as EquipmentData);
+                    this.game.player.equip(info as EquipmentData);
                     break;
 
                 case Opcodes.Equipment.Unequip:
@@ -207,9 +207,9 @@ export default class Connection {
 
             entity.orientation = data.orientation;
 
-            if (data.equipments) _.each(data.equipments, entity.setEquipment.bind(entity));
+            if (data.equipments) _.each(data.equipments, entity.equip.bind(entity));
 
-            entity.setSprite(this.game.getSprite(entity.armour.string));
+            entity.setSprite(this.game.getSprite(entity.getSpriteName()));
 
             this.menu.profile.update();
         });

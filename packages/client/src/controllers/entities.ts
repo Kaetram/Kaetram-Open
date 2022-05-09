@@ -250,7 +250,7 @@ export default class EntitiesController {
 
                 console.log(info);
 
-                player.setSprite(this.getSprite(player.armour.string));
+                player.setSprite(this.getSprite(player.getSpriteName()));
                 player.idle();
 
                 player.loadHandler(game);
