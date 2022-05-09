@@ -968,10 +968,6 @@ export default class Renderer {
                     case TileFlip.Diagonal:
                         // A diagonal flip is actually a transpose of 90deg clockwise.
                         context.rotate(Math.PI / 2);
-
-                        // if (cellId === 84_547) console.log(`dx: ${dx} dy: ${dy}`);
-
-                        // // Flip the context2d diagonally
                         context.translate(0, -cell.height);
 
                         (dx = dy), (dy = -tempX);
