@@ -13,10 +13,10 @@ export default class Overlay {
     }
 
     private loadOverlay(overlayName: string): HTMLImageElement {
-        let overlay = new Image();
+        let overlay = new Image(),
+            image = `/img/overlays/${overlayName}.png`;
 
         overlay.crossOrigin = 'Anonymous';
-        let image = `/img/overlays/${overlayName}.png`;
         overlay.src = image;
 
         overlay.addEventListener('load', () => log.debug(`Loaded ${overlayName}`));
