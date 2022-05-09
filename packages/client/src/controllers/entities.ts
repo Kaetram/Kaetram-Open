@@ -21,7 +21,7 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import Projectile from '../entity/objects/projectile';
 
 interface EntitiesCollection {
-    [id: string]: Entity;
+    [instance: string]: Entity;
 }
 
 export interface Movable {
