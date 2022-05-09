@@ -33,7 +33,7 @@ interface RendererCell {
     dy: number;
     width: number;
     height: number;
-    rotation: number[];
+    rotation: number;
 }
 
 interface Bounds {
@@ -340,12 +340,12 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            let rotation: number[] = [];
+            let rotation: number;
 
             if (this.isFlipped(tile)) {
-                if (tile.h) rotation.push(ROT_NEG_90_DEG);
-                if (tile.v) rotation.push(ROT_90_DEG);
-                if (tile.d) rotation.push(ROT_180_DEG);
+                if (tile.h) rotation = ROT_NEG_90_DEG;
+                else if (tile.v) rotation = ROT_90_DEG;
+                else if (tile.d) rotation = ROT_180_DEG;
 
                 tile = tile.tileId;
             }
@@ -879,7 +879,7 @@ export default class Renderer {
         context: CanvasRenderingContext2D,
         tileId: number,
         cellId: number,
-        rotation: number[] = []
+        rotation = 0
     ): void {
         if (tileId < 0) return;
 
@@ -908,7 +908,7 @@ export default class Renderer {
             };
         }
 
-        if (!(cellId in this.cells)) {
+        if (!(cellId in this.cells) || rotation) {
             let scale = this.superScaling;
 
             this.cells[cellId] = {
@@ -934,39 +934,36 @@ export default class Renderer {
 
         if (!context) return;
 
-        if (cell.rotation.length > 0) {
-            console.log(cell.rotation);
+        if (cell.rotation) {
             ({ dx, dy } = cell);
 
             context.save();
 
-            for (let rotation of cell.rotation) {
-                context.rotate(rotation);
+            context.rotate(cell.rotation);
 
-                let temporary = cell.dx;
+            let tempX = cell.dx;
 
-                switch (rotation) {
-                    case ROT_90_DEG:
-                        context.translate(0, -cell.height);
+            switch (cell.rotation) {
+                case ROT_90_DEG:
+                    context.translate(0, -cell.height);
 
-                        (dx = dy), (dy = -temporary);
+                    (dx = dy), (dy = -tempX);
 
-                        break;
+                    break;
 
-                    case ROT_NEG_90_DEG:
-                        context.translate(-cell.width, 0);
+                case ROT_NEG_90_DEG:
+                    context.translate(-cell.width, 0);
 
-                        (dx = -dy), (dy = temporary);
+                    (dx = -dy), (dy = tempX);
 
-                        break;
+                    break;
 
-                    case ROT_180_DEG:
-                        context.translate(-cell.width, -cell.height);
+                case ROT_180_DEG:
+                    context.translate(-cell.width, -cell.height);
 
-                        (dx = -dx), (dy = -dy);
+                    (dx = -dx), (dy = -dy);
 
-                        break;
-                }
+                    break;
             }
         }
 
@@ -982,7 +979,7 @@ export default class Renderer {
             cell.height // Destination Height
         );
 
-        if (cell.rotation.length > 0) context.restore();
+        if (cell.rotation) context.restore();
     }
 
     private drawText(
