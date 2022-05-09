@@ -356,13 +356,6 @@ export default class Map {
             Modules.MapFlags.HORIZONTAL_FLAG
         );
 
-        // Special case where we flip both h and v.
-        if (h && v) {
-            h = false;
-            v = false;
-            d = true;
-        }
-
         return {
             tileId,
             h,

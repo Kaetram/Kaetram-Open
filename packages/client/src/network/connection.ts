@@ -175,7 +175,7 @@ export default class Connection {
         this.messages.onSpawn((data) => this.entities.create(data as EntityData));
 
         this.messages.onEntityList((data) => {
-            let ids = _.map(this.entities.getAll(), 'id'),
+            let ids = _.map(this.entities.getAll(), 'instance'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
 

@@ -142,6 +142,14 @@ export default class Updater {
         } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
+    /**
+     * Updater for key input. When we toggle an arrow key
+     * or WSAD key, we monitor the status of the move conditionals
+     * within the player character. Depending on which one is active,
+     * we change the player's current position and let the input
+     * controller handle the movement itself.
+     */
+
     private updateKeyboard(): void {
         let { player } = this.game,
             position = {
@@ -149,15 +157,24 @@ export default class Updater {
                 y: player.gridY
             };
 
-        if (player.frozen) return;
+        /**
+         * Disable input if the player is frozen or if we
+         * do not have any of the conditionals active.
+         */
+        if (player.frozen || !player.hasKeyboardMovement()) return;
 
         if (player.moveUp) position.y--;
         else if (player.moveDown) position.y++;
         else if (player.moveRight) position.x++;
         else if (player.moveLeft) position.x--;
 
-        if (player.hasKeyboardMovement()) this.input.keyMove(position);
+        this.input.keyMove(position);
     }
+
+    /**
+     * Updates the target animation (spinning tile selected animation) and
+     * the sparks animation displayed around items.
+     */
 
     private updateAnimations(): void {
         let target = this.input.targetAnimation;
@@ -171,15 +188,29 @@ export default class Updater {
         sparks?.update(this.game.time);
     }
 
+    /**
+     * Runs the info update with the current game time.
+     */
+
     private updateInfos(): void {
         this.game.info.update(this.game.time);
     }
+
+    /**
+     * Updates the bubbles displayed around entities
+     * and posts the current game time.
+     */
 
     private updateBubbles(): void {
         this.game.bubble?.update(this.game.time);
 
         this.game.pointer?.update();
     }
+
+    /**
+     * Sets the sprite controller so that the updater can use it.
+     * @param sprites The sprites controller object.
+     */
 
     public setSprites(sprites: SpritesController): void {
         this.sprites = sprites;

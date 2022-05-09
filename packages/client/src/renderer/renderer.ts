@@ -33,7 +33,7 @@ interface RendererCell {
     dy: number;
     width: number;
     height: number;
-    rotation: number;
+    flips: number[];
 }
 
 interface Bounds {
@@ -61,9 +61,11 @@ interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-const ROT_90_DEG = Math.PI / 2,
-    ROT_NEG_90_DEG = ROT_90_DEG * -1,
-    ROT_180_DEG = Math.PI;
+enum TileFlip {
+    Horizontal,
+    Vertical,
+    Diagonal
+}
 
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
@@ -340,18 +342,22 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            let rotation: number;
+            let flips: number[] = [];
 
             if (this.isFlipped(tile)) {
-                if (tile.h) rotation = ROT_NEG_90_DEG;
-                else if (tile.v) rotation = ROT_90_DEG;
-                else if (tile.d) rotation = ROT_180_DEG;
+                if (tile.d) flips.push(TileFlip.Diagonal);
+                if (tile.v) flips.push(TileFlip.Vertical);
+                if (tile.h) flips.push(TileFlip.Horizontal);
+
+                if (index === 97_207) flips.push();
+
+                //if (tile.h && tile.d) flips.push(TileFlip.Vertical);
 
                 tile = tile.tileId;
             }
 
             if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, rotation);
+                this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, flips);
         });
 
         this.restoreDrawing();
@@ -879,7 +885,7 @@ export default class Renderer {
         context: CanvasRenderingContext2D,
         tileId: number,
         cellId: number,
-        rotation = 0
+        flips: number[] = []
     ): void {
         if (tileId < 0) return;
 
@@ -908,7 +914,7 @@ export default class Renderer {
             };
         }
 
-        if (!(cellId in this.cells) || rotation) {
+        if (!(cellId in this.cells) || flips.length > 0) {
             let scale = this.superScaling;
 
             this.cells[cellId] = {
@@ -916,7 +922,7 @@ export default class Renderer {
                 dy: Math.floor(cellId / this.map.width) * this.tileSize * scale,
                 width: this.tileSize * scale,
                 height: this.tileSize * scale,
-                rotation
+                flips
             };
         }
 
@@ -930,41 +936,51 @@ export default class Renderer {
         cell: RendererCell
     ): void {
         // let scale = this.superScaling;
-        let dx!: number, dy!: number; // this.superScaling * 1.5;
+        let dx = 0,
+            dy = 0,
+            isFlipped = cell.flips.length > 0;
 
         if (!context) return;
 
-        if (cell.rotation) {
+        if (isFlipped) {
             ({ dx, dy } = cell);
 
             context.save();
 
-            context.rotate(cell.rotation);
+            let tempX = dx;
 
-            let tempX = cell.dx;
+            for (let index of cell.flips)
+                switch (index) {
+                    case TileFlip.Horizontal:
+                        // Flip the context2d horizontally
+                        dx = -dx - cell.width;
+                        context.scale(-1, 1);
 
-            switch (cell.rotation) {
-                case ROT_90_DEG:
-                    context.translate(0, -cell.height);
+                        break;
 
-                    (dx = dy), (dy = -tempX);
+                    case TileFlip.Vertical:
+                        // Flip the context2d vertically
+                        dy = -dy - cell.height;
+                        context.scale(1, -1);
 
-                    break;
+                        break;
 
-                case ROT_NEG_90_DEG:
-                    context.translate(-cell.width, 0);
+                    case TileFlip.Diagonal:
+                        // A diagonal flip is actually a transpose of 90deg clockwise.
+                        context.rotate(Math.PI / 2);
 
-                    (dx = -dy), (dy = tempX);
+                        // if (cellId === 84_547) console.log(`dx: ${dx} dy: ${dy}`);
 
-                    break;
+                        // // Flip the context2d diagonally
+                        context.translate(0, -cell.height);
 
-                case ROT_180_DEG:
-                    context.translate(-cell.width, -cell.height);
+                        (dx = dy), (dy = -tempX);
 
-                    (dx = -dx), (dy = -dy);
+                        // Flip horizontall to arrange tiles after transposing.
+                        cell.flips.push(TileFlip.Horizontal);
 
-                    break;
-            }
+                        break;
+                }
         }
 
         context.drawImage(
@@ -979,7 +995,7 @@ export default class Renderer {
             cell.height // Destination Height
         );
 
-        if (cell.rotation) context.restore();
+        if (isFlipped) context.restore();
     }
 
     private drawText(
