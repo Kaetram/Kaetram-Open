@@ -162,13 +162,7 @@ export default class PlayerHandler {
             if (player.target) player.follow(player.target);
         });
 
-        player.onUpdateArmour((armourName) => {
-            player.setSprite(game.getSprite(armourName));
-
-            if (game.menu && game.menu.profile) game.menu.profile.update();
-        });
-
-        player.onUpdateEquipment(() => {
+        player.onEquipment(() => {
             if (game.menu && game.menu.profile) game.menu.profile.update();
         });
     }
