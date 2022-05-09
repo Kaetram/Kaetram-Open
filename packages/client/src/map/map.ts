@@ -176,8 +176,7 @@ export default class Map {
         tileset.path = path;
         tileset.src = path;
         tileset.firstGID = firstGID;
-        // Equivalent of firstGID + (tileset.width / this.tileSize) * (tileset.height / this.tileSize)
-        tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
+
         tileset.loaded = true;
 
         // Listener for when the image has finished loading. Equivalent of `image.onload`
@@ -186,20 +185,15 @@ export default class Map {
             if (tileset.width % this.tileSize > 0)
                 throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
+            // Equivalent of firstGID + (tileset.width / this.tileSize) * (tileset.height / this.tileSize)
+            tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
+
             callback(tileset);
         });
 
         tileset.addEventListener('error', () => {
             throw new Error(`Could not find tile set: ${tileset.path}`);
         });
-    }
-
-    /**
-     * Saves the current map's data, grid, objects, and cursors to the local storage.
-     */
-
-    private saveRegionData(): void {
-        this.game.storage.setRegionData(this.data, this.grid, this.objects, this.cursorTiles);
     }
 
     /**
@@ -214,11 +208,21 @@ export default class Map {
         if (data.regionData.length > 0) {
             this.data = data.regionData;
             this.preloadedData = true;
+
+            console.log('preloaded?');
         }
 
         this.grid = data.grid;
         this.objects = data.objects;
         this.cursorTiles = data.cursorTiles;
+    }
+
+    /**
+     * Saves the current map's data, grid, objects, and cursors to the local storage.
+     */
+
+    private saveRegionData(): void {
+        this.game.storage.setRegionData(this.data, this.grid, this.objects, this.cursorTiles);
     }
 
     /**
