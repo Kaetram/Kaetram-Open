@@ -26,10 +26,6 @@ export enum Orientation {
     Right
 }
 
-export enum Types {
-    Player
-}
-
 export enum InputType {
     Key,
     LeftClick,
@@ -297,7 +293,7 @@ export enum APIConstants {
 export enum Defaults {
     MANA = 50,
     HITPOINTS = 69, // nice.
-    MOVEMENT_SPEED = 250, // 250 pixels per frame?
+    MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000 // every 1 second
 }
 

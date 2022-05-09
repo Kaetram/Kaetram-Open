@@ -15,8 +15,6 @@ import type { WelcomeData } from '@kaetram/common/types/messages';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Player extends Character {
-    public username = '';
-
     public rights = 0;
     public wanted = false;
 
@@ -44,7 +42,7 @@ export default class Player extends Character {
     public poison = false;
     public disableAction = false;
 
-    private lastLogin!: number | null;
+    public moving!: boolean;
 
     // Mapping of all equipments to their type.
     public equipments = {
@@ -58,44 +56,33 @@ export default class Player extends Character {
     private experienceCallback?: () => void;
     private equipmentCallback?: () => void;
 
-    // private tempcBlinkTimeout!: number;
-    public moving!: boolean;
-
-    public constructor() {
-        super('-1', Modules.Types.Player.toString());
+    public constructor(instance: string) {
+        super(instance, Modules.EntityType.Player);
     }
 
-    public load({
-        instance,
-        username,
-        x,
-        y,
-        hitPoints,
-        mana,
-        experience,
-        nextExperience,
-        prevExperience,
-        level,
-        lastLogin,
-        orientation,
-        movementSpeed
-    }: WelcomeData): void {
-        this.setId(instance);
-        this.setName(username);
-        this.setGridPosition(x, y);
-        this.setPointsData(hitPoints, mana);
-        this.setExperience(experience, nextExperience!, prevExperience);
+    /**
+     * Loads the player based on the serialzied player
+     * data sent from the server.
+     * @param data Player data containing essentials.
+     */
 
-        this.level = level;
+    public load(data: WelcomeData): void {
+        this.instance = data.instance;
+        this.name = data.username;
+        this.level = data.level;
+        this.orientation = data.orientation;
+        this.movementSpeed = data.movementSpeed;
 
-        this.lastLogin = lastLogin;
-
-        this.orientation = orientation;
-
-        this.movementSpeed = movementSpeed;
-
-        this.type = Modules.EntityType.Player;
+        this.setGridPosition(data.x, data.y);
+        this.setPointsData(data.hitPoints, data.mana);
+        this.setExperience(data.experience, data.nextExperience!, data.prevExperience);
     }
+
+    /**
+     * Loads the player handler and sets the game instance to
+     * the current player object.
+     * @param game The game instance object controlling the game.
+     */
 
     public loadHandler(game: Game): void {
         /**
@@ -124,21 +111,12 @@ export default class Player extends Character {
         this.equipmentCallback?.();
     }
 
-    public setId(id: string): void {
-        this.id = id;
-    }
-
     public isRanged(): boolean {
         return this.equipments[Modules.Equipment.Weapon].ranged;
     }
 
     public override hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
-    }
-
-    public override setName(name: string): void {
-        this.username = name;
-        this.name = name;
     }
 
     public getSpriteName(): string {
