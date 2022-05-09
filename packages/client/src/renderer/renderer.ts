@@ -61,10 +61,7 @@ interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-const HORIZONTAL_FLIP_FLAG = 0x80_00_00_00,
-    VERTICAL_FLIP_FLAG = 0x40_00_00_00,
-    DIAGONAL_FLIP_FLAG = 0x20_00_00_00,
-    ROT_90_DEG = Math.PI / 2,
+const ROT_90_DEG = Math.PI / 2,
     ROT_NEG_90_DEG = ROT_90_DEG * -1,
     ROT_180_DEG = Math.PI;
 
@@ -332,7 +329,7 @@ export default class Renderer {
 
         this.updateDrawingView();
 
-        this.forEachVisibleTile((tile, index) => {
+        this.forEachVisibleTile((tile: RegionTile, index: number) => {
             let isHighTile = this.map.isHighTile(tile),
                 context = isHighTile ? this.foreContext : this.backContext;
 
@@ -671,7 +668,7 @@ export default class Renderer {
         if (entity.rights > 1) colour = '#ba1414';
         else if (entity.rights > 0) colour = '#a59a9a';
 
-        if (entity.id === this.game.player.id) colour = '#fcda5c';
+        if (entity.instance === this.game.player.instance) colour = '#fcda5c';
 
         if (entity.nameColour) colour = entity.nameColour;
 
@@ -812,7 +809,7 @@ export default class Renderer {
             if (!this.input.entity) return;
 
             this.drawText(
-                `x: ${x} y: ${y} instance: ${this.input.entity.id}`,
+                `x: ${x} y: ${y} instance: ${this.input.entity.instance}`,
                 10,
                 71,
                 false,
@@ -884,13 +881,6 @@ export default class Renderer {
         cellId: number,
         rotation: number[] = []
     ): void {
-        let originalTileId = tileId;
-
-        /**
-         * `originalTileId` is the tileId prior to doing any
-         * bitwise operations (for rotations).
-         */
-
         if (tileId < 0) return;
 
         let tileset = this.map.getTilesetFromId(tileId);
@@ -904,11 +894,11 @@ export default class Renderer {
          * split up and messed with.
          */
 
-        if (!(originalTileId in this.tiles)) {
+        if (!(tileId in this.tiles)) {
             let setWidth = tileset.width / this.tileSize,
                 relativeTileId = tileId - tileset.firstGID;
 
-            this.tiles[originalTileId] = {
+            this.tiles[tileId] = {
                 relativeTileId,
                 setWidth,
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
@@ -930,7 +920,7 @@ export default class Renderer {
             };
         }
 
-        this.drawImage(context, tileset, this.tiles[originalTileId], this.cells[cellId]);
+        this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId]);
     }
 
     private drawImage(
@@ -945,6 +935,7 @@ export default class Renderer {
         if (!context) return;
 
         if (cell.rotation.length > 0) {
+            console.log(cell.rotation);
             ({ dx, dy } = cell);
 
             context.save();

@@ -51,7 +51,7 @@ export default class BubbleController {
     public setTo(info: BubbleInfo | undefined): void {
         if (!info) return;
 
-        let bubble = this.get(info.id),
+        let bubble = this.get(info.instance),
             camera = this.game.getCamera(),
             scale = this.game.renderer.getScale(),
             tileSize = 48, // 16 * scale

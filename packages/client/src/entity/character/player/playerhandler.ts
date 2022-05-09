@@ -98,10 +98,10 @@ export default class PlayerHandler {
 
             camera.clip();
 
-            let id = null,
+            let instance = '',
                 entity = game.getEntityAt(x, y, true);
 
-            if (entity) ({ id } = entity);
+            if (entity) ({ instance } = entity);
 
             log.debug('Stopping pathing.');
 
@@ -109,7 +109,7 @@ export default class PlayerHandler {
                 opcode: Opcodes.Movement.Stop,
                 playerX: x,
                 playerY: y,
-                targetInstance: id,
+                targetInstance: instance,
                 hasTarget: !!player.target,
                 orientation: player.orientation
             });
@@ -205,7 +205,7 @@ export default class PlayerHandler {
     private getTargetId(): string | null {
         let { target } = this.player;
 
-        return target ? target.id : null;
+        return target ? target.instance : null;
     }
 
     private getTargetType(): Opcodes.Target {
