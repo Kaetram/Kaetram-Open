@@ -42,7 +42,7 @@ export default class EntityHandler {
 
                 if (!attacker.target) return;
 
-                if (attacker.target.id !== entity.id) return;
+                if (attacker.target.instance !== entity.instance) return;
 
                 if (attacker.stunned) return;
 
@@ -52,7 +52,7 @@ export default class EntityHandler {
             if (entity.isMob() && entity.hasTarget())
                 game.socket.send(Packets.Movement, {
                     opcode: Opcodes.Movement.Entity,
-                    targetInstance: entity.id,
+                    targetInstance: entity.instance,
                     requestX: entity.gridX,
                     requestY: entity.gridY
                 });

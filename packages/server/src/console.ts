@@ -73,6 +73,8 @@ export default class Console {
 
                     player.rights = command === 'setadmin' ? 2 : 1;
 
+                    player.sync();
+
                     log.info(
                         `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
                     );

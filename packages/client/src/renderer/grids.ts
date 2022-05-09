@@ -45,9 +45,9 @@ export default class Grids {
     }
 
     public addToRenderingGrid(entity: Entity): void {
-        let { id, gridX: x, gridY: y } = entity;
+        let { instance, gridX: x, gridY: y } = entity;
 
-        if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][id] = entity;
+        if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][instance] = entity;
     }
 
     public addToPathingGrid(x: number, y: number): void {
@@ -55,13 +55,13 @@ export default class Grids {
     }
 
     public addToItemGrid(item: Item): void {
-        let { id, gridX: x, gridY: y } = item;
+        let { instance, gridX: x, gridY: y } = item;
 
-        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][id] = item;
+        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][instance] = item;
     }
 
-    public removeFromRenderingGrid({ id, gridX, gridY }: Entity): void {
-        delete this.renderingGrid[gridY][gridX][id];
+    public removeFromRenderingGrid({ instance, gridX, gridY }: Entity): void {
+        delete this.renderingGrid[gridY][gridX][instance];
     }
 
     public removeFromPathingGrid(x: number, y: number): void {
@@ -72,8 +72,8 @@ export default class Grids {
     //     this.map.grid[y][x] = 0;
     // }
 
-    public removeFromItemGrid({ id, gridX, gridY }: Entity): void {
-        delete this.itemGrid[gridY][gridX][id];
+    public removeFromItemGrid({ instance, gridX, gridY }: Entity): void {
+        delete this.itemGrid[gridY][gridX][instance];
     }
 
     public removeEntity(entity: Entity): void {

@@ -14,12 +14,8 @@ export default class Projectile extends Entity {
 
     private impactCallback?(): void;
 
-    public constructor(id: string, kind: string, public owner: Entity) {
-        super(id, kind);
-    }
-
-    public getId(): string {
-        return this.id;
+    public constructor(instance: string, public owner: Entity) {
+        super(instance, Modules.EntityType.Projectile);
     }
 
     public impact(): void {
@@ -40,6 +36,10 @@ export default class Projectile extends Entity {
 
     public getSpeed(): number {
         return 1;
+    }
+
+    public override getTimeDiff(): number {
+        return (Date.now() - this.lastUpdate) / 1000;
     }
 
     public updateAngle(): void {
