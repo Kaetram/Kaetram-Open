@@ -48,8 +48,6 @@ export default class State extends Page {
     }
 
     public override load(): void {
-        if (!this.game.player.armour) return;
-
         this.name.text(this.player.username);
         this.level.text(this.player.level);
         this.experience.text(this.player.experience);
@@ -95,18 +93,18 @@ export default class State extends Page {
     }
 
     private loadSlots(): void {
-        this.weaponSlot.css('background-image', Utils.getImageURL(this.player.weapon.string));
-        this.armourSlot.css('background-image', Utils.getImageURL(this.player.armour.string));
-        this.pendantSlot.css('background-image', Utils.getImageURL(this.player.pendant.string));
-        this.ringSlot.css('background-image', Utils.getImageURL(this.player.ring.string));
-        this.bootsSlot.css('background-image', Utils.getImageURL(this.player.boots.string));
+        this.armourSlot.css('background-image', Utils.getImageURL(this.player.getArmour().key));
+        this.bootsSlot.css('background-image', Utils.getImageURL(this.player.getBoots().key));
+        this.pendantSlot.css('background-image', Utils.getImageURL(this.player.getPendant().key));
+        this.ringSlot.css('background-image', Utils.getImageURL(this.player.getRing().key));
+        this.weaponSlot.css('background-image', Utils.getImageURL(this.player.getWeapon().key));
 
         this.forEachSlot((slot) => slot.css('background-size', '600%'));
     }
 
     public update(): void {
-        let weaponPower = this.player.weapon.power,
-            armourPower = this.player.armour.power;
+        let weaponPower = this.player.getWeapon().power,
+            armourPower = this.player.getArmour().power;
 
         this.level.text(this.player.level);
         this.experience.text(this.player.experience);

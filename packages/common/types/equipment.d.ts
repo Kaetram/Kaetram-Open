@@ -8,6 +8,7 @@ export interface EquipmentData {
     ability: number;
     abilityLevel: number;
     power: number;
+    ranged?: boolean; // Specifically for weapon type.
 }
 
 export interface SerializedEquipment {
