@@ -395,7 +395,7 @@ export default class Game {
     }
 
     public createPlayer(): void {
-        this.player = new Player();
+        this.player = new Player('');
     }
 
     public isDebug(): boolean {

@@ -118,13 +118,7 @@ export default class EntitiesController {
 
         switch (info.type) {
             case Modules.EntityType.Chest: {
-                /**
-                 * Here we will parse the different types of chests..
-                 * We can go Dark Souls style and implement mimics
-                 * the proper way -ahem- Kaetram V1.0
-                 */
-
-                let chest = new Chest(info.instance, info.key);
+                let chest = new Chest(info.instance, info.type);
 
                 entity = chest;
 
@@ -132,7 +126,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.NPC: {
-                let npc = new NPC(info.instance, info.key);
+                let npc = new NPC(info.instance, info.type);
 
                 entity = npc;
 
@@ -140,13 +134,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Item: {
-                let item = new Item(
-                    info.instance,
-                    info.key,
-                    info.count,
-                    info.ability,
-                    info.abilityLevel
-                );
+                let item = new Item(info.instance, info.count, info.ability, info.abilityLevel);
 
                 entity = item;
 
@@ -154,7 +142,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Mob: {
-                let mob = new Mob(info.instance, info.key);
+                let mob = new Mob(info.instance, info.type);
 
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
@@ -178,7 +166,7 @@ export default class EntitiesController {
 
                 attacker.lookAt(target);
 
-                let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
+                let projectile = new Projectile(info.instance, attacker);
 
                 projectile.name = info.name;
 
@@ -201,18 +189,18 @@ export default class EntitiesController {
                      * there is nothing you can change for the actual damage output here.
                      */
 
-                    if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
+                    if (this.isPlayer(projectile.owner.instance) || this.isPlayer(target.instance))
                         game.socket.send(Packets.Projectile, {
                             opcode: Opcodes.Projectile.Impact,
                             instance: info.instance,
-                            target: target.id
+                            target: target.instance
                         });
 
                     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
                     game.info.create(
                         Modules.Hits.Damage,
-                        [info.damage, this.isPlayer(target.id)],
+                        [info.damage, this.isPlayer(target.instance)],
                         target.x,
                         target.y
                     );
@@ -220,7 +208,7 @@ export default class EntitiesController {
                     target.triggerHealthBar();
 
                     this.unregisterPosition(projectile);
-                    delete entities[projectile.getId()];
+                    delete entities[projectile.instance];
                 });
 
                 this.addEntity(projectile);
@@ -232,12 +220,11 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Player: {
-                let player = new Player();
+                let player = new Player(info.instance);
 
-                player.setId(info.instance);
-                player.setName(info.name);
                 player.setGridPosition(info.x, info.y);
 
+                player.name = info.name;
                 player.rights = info.rights;
                 player.level = info.level;
                 player.attackRange = info.attackRange;
@@ -247,8 +234,6 @@ export default class EntitiesController {
 
                 player.setHitPoints(info.hitPoints);
                 player.setMaxHitPoints(info.maxHitPoints);
-
-                console.log(info);
 
                 player.setSprite(this.getSprite(player.getSpriteName()));
                 player.idle();
@@ -288,8 +273,9 @@ export default class EntitiesController {
             info.type === Modules.EntityType.Item ? `item-${info.key}` : info.key
         )!;
 
+        entity.name = info.name;
+
         entity.setGridPosition(info.x, info.y);
-        entity.setName(info.name);
 
         entity.setSprite(sprite);
 
@@ -319,7 +305,7 @@ export default class EntitiesController {
     private isPlayer(id: string): boolean {
         let { player } = this.game;
 
-        return player ? player.id === id : false;
+        return player ? player.instance === id : false;
     }
 
     public get<E extends Entity>(id: string): E {
@@ -332,7 +318,7 @@ export default class EntitiesController {
         grids.removeFromPathingGrid(entity.gridX, entity.gridY);
         grids.removeFromRenderingGrid(entity);
 
-        delete entities[entity.id];
+        delete entities[entity.instance];
     }
 
     public clean(): void {
@@ -343,7 +329,7 @@ export default class EntitiesController {
         _.each(decrepit, (entity: Entity) => {
             let { player } = game;
 
-            if (player ? entity.id === player.id : false) return;
+            if (player ? entity.instance === player.instance : false) return;
 
             this.removeEntity(entity);
         });
@@ -355,7 +341,8 @@ export default class EntitiesController {
         let { entities, grids } = this;
 
         _.each(entities, (entity) => {
-            if (entity.id !== exception.id && entity.isPlayer()) this.removeEntity(entity);
+            if (entity.instance !== exception.instance && entity.isPlayer())
+                this.removeEntity(entity);
         });
 
         grids.resetPathingGrid();
@@ -364,9 +351,9 @@ export default class EntitiesController {
     public addEntity(entity: Entity): void {
         let { entities, renderer, game } = this;
 
-        if (entities[entity.id]) return;
+        if (entities[entity.instance]) return;
 
-        entities[entity.id] = entity;
+        entities[entity.instance] = entity;
         this.registerPosition(entity);
 
         if (!(entity instanceof Item && entity.dropped) && !renderer.isPortableDevice())
@@ -381,7 +368,7 @@ export default class EntitiesController {
         grids.removeFromItemGrid(item);
         grids.removeFromRenderingGrid(item);
 
-        delete entities[item.id];
+        delete entities[item.instance];
     }
 
     public registerPosition(entity: Entity): void {
@@ -423,9 +410,20 @@ export default class EntitiesController {
         if (name) return this.sprites.sprites[name];
     }
 
+    /**
+     * Shortcut for grabbing entity dictionary. Primarily used to increase
+     * readability when accessing the `entities` class. (Prevent .entities.entities)
+     * @returns The entities collection containing all loaded entities.
+     */
+
     public getAll(): EntitiesCollection {
         return this.entities;
     }
+
+    /**
+     * Iterates through all the loaded entities and makes a callback for each one.
+     * @param callback Contains the entity object currently being iterated.
+     */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);

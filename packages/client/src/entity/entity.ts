@@ -28,8 +28,6 @@ export default abstract class Entity {
 
     public name = '';
 
-    public type = -1;
-
     public sprite!: Sprite;
 
     public spriteFlipX = false;
@@ -94,8 +92,9 @@ export default abstract class Entity {
     public nextGridX!: number;
     public nextGridY!: number;
     public fadingAlpha!: number;
+    public lastUpdate = Date.now();
 
-    protected constructor(public id: string, public kind: string) {}
+    public constructor(public instance: string, public type: Modules.EntityType) {}
 
     public fadeIn(time: number): void {
         this.fading = true;
@@ -116,10 +115,6 @@ export default abstract class Entity {
 
     public idle(): void {
         //
-    }
-
-    public setName(name: string): void {
-        this.name = name;
     }
 
     public setSprite(sprite: Sprite | undefined): void {
@@ -206,6 +201,10 @@ export default abstract class Entity {
     }
 
     public getAngle(): number {
+        return 0;
+    }
+
+    public getTimeDiff(): number {
         return 0;
     }
 

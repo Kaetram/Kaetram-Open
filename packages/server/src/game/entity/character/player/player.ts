@@ -25,10 +25,8 @@ import Map from '../../../map/map';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
     Audio,
-    Bubble,
     Camera,
     Chat,
-    Death,
     Experience,
     Heal,
     Movement,
@@ -118,7 +116,6 @@ export default class Player extends Character {
 
     public talkIndex = 0;
     public cheatScore = 0;
-    public defaultMovementSpeed = 250; // For fallback.
 
     // TODO - REFACTOR THESE ------------
 
@@ -604,7 +601,7 @@ export default class Player extends Character {
 
         // this.movementSpeed = movementSpeed;
 
-        return this.defaultMovementSpeed;
+        return this.movementSpeed;
     }
 
     /**

@@ -181,7 +181,9 @@ export default class Connection {
 
             this.entities.decrepit = _.reject(
                 this.entities.getAll(),
-                (entity) => _.includes(known, entity.id) || entity.id === this.game.player.id
+                (entity) =>
+                    _.includes(known, entity.instance) ||
+                    entity.instance === this.game.player.instance
             );
 
             this.entities.clean();
@@ -196,6 +198,8 @@ export default class Connection {
 
             entity.setHitPoints(data.hitPoints);
             entity.setMaxHitPoints(data.maxHitPoints!);
+
+            entity.rights = data.rights;
 
             entity.level = data.level;
 
@@ -277,7 +281,7 @@ export default class Connection {
 
         this.messages.onTeleport((info) => {
             let entity = this.entities.get<Player>(info.id),
-                isPlayer = info.id === this.game.player.id;
+                isPlayer = info.id === this.game.player.instance;
 
             if (!entity) return;
 
@@ -353,7 +357,7 @@ export default class Connection {
 
                     entity.setAnimation('death', 120, 1, () => {
                         this.entities.unregisterPosition(entity);
-                        delete this.entities.entities[entity.id];
+                        delete this.entities.entities[entity.instance];
                     });
 
                     return;
@@ -363,14 +367,17 @@ export default class Connection {
 
             entity.stop();
 
-            this.bubble.destroy(entity.id);
+            this.bubble.destroy(entity.instance);
 
-            if (this.game.player.target && this.game.player.target.id === entity.id)
+            if (this.game.player.target && this.game.player.target.instance === entity.instance)
                 this.game.player.removeTarget();
 
             this.entities.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
 
-            if (entity.id !== this.game.player.id && this.game.player.getDistance(entity) < 5)
+            if (
+                entity.instance !== this.game.player.instance &&
+                this.game.player.getDistance(entity) < 5
+            )
                 this.audio.play(
                     Modules.AudioTypes.SFX,
                     `kill${Math.floor(Math.random() * 2 + 1) as 1 | 2}` as const
@@ -382,7 +389,7 @@ export default class Connection {
 
             entity.animate('death', 120, 1, () => {
                 this.entities.unregisterPosition(entity);
-                delete this.entities.entities[entity.id];
+                delete this.entities.entities[entity.instance];
             });
         });
 
@@ -394,7 +401,7 @@ export default class Connection {
 
             switch (opcode) {
                 case Opcodes.Combat.Hit: {
-                    let isPlayer = target.id === this.game.id;
+                    let isPlayer = target.instance === this.game.id;
 
                     if (!info.hit.aoe && !info.hit.poison) {
                         attacker.lookAt(target);
@@ -408,7 +415,10 @@ export default class Connection {
                             break;
 
                         default:
-                            if (attacker.id === this.game.player.id && info.hit.damage > 0)
+                            if (
+                                attacker.instance === this.game.player.instance &&
+                                info.hit.damage > 0
+                            )
                                 this.audio.play(
                                     Modules.AudioTypes.SFX,
                                     `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
@@ -448,7 +458,7 @@ export default class Connection {
                 case Opcodes.Combat.Hit: {
                     let data = info as CombatHitData,
                         hit = data.hitInfo!,
-                        isPlayer = target.id === this.game.player.id;
+                        isPlayer = target.id === this.game.player.instance;
 
                     if (!hit.aoe && !hit.poison) {
                         attacker.lookAt(target);
@@ -462,7 +472,7 @@ export default class Connection {
                             break;
 
                         default:
-                            if (attacker.id === this.game.player.id && hit.damage > 0)
+                            if (attacker.id === this.game.player.instance && hit.damage > 0)
                                 this.audio.play(
                                     Modules.AudioTypes.SFX,
                                     `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
@@ -537,10 +547,10 @@ export default class Connection {
 
                 if (
                     this.game.player.target &&
-                    this.game.player.target.id === entity.id &&
+                    this.game.player.target.instance === entity.instance &&
                     this.input.overlay.updateCallback
                 )
-                    this.input.overlay.updateCallback(entity.id, data.hitPoints);
+                    this.input.overlay.updateCallback(entity.instance, data.hitPoints);
             }
 
             if (data.mana) entity.setMana(data.mana);
@@ -712,8 +722,8 @@ export default class Connection {
                      * we update the experience bar and create an info.
                      */
 
-                    if (entity.id === this.game.player.id) {
-                        if (info.id === this.game.player.id)
+                    if (entity.instance === this.game.player.instance) {
+                        if (info.id === this.game.player.instance)
                             this.game.player.setExperience(
                                 data.experience,
                                 data.nextExperience!,
@@ -736,7 +746,7 @@ export default class Connection {
                 case Opcodes.Experience.Skill:
                     if (!entity || !entity.isPlayer()) return;
 
-                    if (entity.id === this.game.player.id)
+                    if (entity.instance === this.game.player.instance)
                         this.info.create(
                             Modules.Hits.Profession,
                             [info.amount],
@@ -751,7 +761,7 @@ export default class Connection {
         this.messages.onDeath((id) => {
             let entity = this.entities.get(id);
 
-            if (!entity || id !== this.game.player.id) return;
+            if (!entity || id !== this.game.player.instance) return;
 
             this.audio.stop();
 
@@ -840,7 +850,7 @@ export default class Connection {
         this.messages.onRespawn((info) => {
             let { instance, x, y } = info;
 
-            if (instance !== this.game.player.id) {
+            if (instance !== this.game.player.instance) {
                 log.error('Player id mismatch.');
                 return;
             }
@@ -891,7 +901,7 @@ export default class Connection {
 
                     if (!entity) return;
 
-                    this.pointer.create(entity.id, opcode);
+                    this.pointer.create(entity.instance, opcode);
                     this.pointer.setToEntity(entity);
 
                     break;
@@ -930,7 +940,7 @@ export default class Connection {
         });
 
         this.messages.onPVP((id, pvp) => {
-            if (this.game.player.id === id) this.game.pvp = pvp;
+            if (this.game.player.instance === id) this.game.pvp = pvp;
             else {
                 let entity = this.entities.get(id);
 

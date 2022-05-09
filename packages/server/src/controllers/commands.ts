@@ -335,7 +335,7 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.defaultMovementSpeed = movementSpeed;
+                this.player.movementSpeed = movementSpeed;
 
                 this.player.sync();
 
