@@ -48,7 +48,7 @@ export default class State extends Page {
     }
 
     public override load(): void {
-        this.name.text(this.player.username);
+        this.name.text(this.player.name);
         this.level.text(this.player.level);
         this.experience.text(this.player.experience);
 

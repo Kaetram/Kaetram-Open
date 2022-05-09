@@ -154,7 +154,7 @@ export default class PointerController {
     }
 
     public setToEntity(entity: Entity): void {
-        let pointer = this.get(entity.id);
+        let pointer = this.get(entity.instance);
 
         if (!pointer) return;
 

@@ -299,12 +299,12 @@ export default class InputController {
             if (this.isTargetable(entity)) player.setTarget(entity);
 
             if (player.getDistance(entity) < 7 && player.isRanged() && this.isAttackable(entity)) {
-                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
+                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.instance]);
                 player.lookAt(entity);
                 return;
             }
 
-            game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
+            game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.instance]);
 
             if (this.isTargetable(entity)) {
                 player.follow(entity);
@@ -366,7 +366,7 @@ export default class InputController {
 
         overlay.update(entity);
 
-        if (!entity || entity.id === player.id)
+        if (!entity || entity.instance === player.instance)
             if (map.isObject(position.x, position.y)) {
                 let cursor = map.getTileCursor(position.x, position.y);
 

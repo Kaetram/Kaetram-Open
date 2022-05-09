@@ -38,7 +38,7 @@ export default class OverlayController {
 
         this.hovering = entity;
 
-        name.html(entity instanceof Player ? entity.username : entity.name);
+        name.html(entity.name);
 
         if (this.hasHealth() && entity instanceof Character) {
             health.css({
@@ -56,7 +56,7 @@ export default class OverlayController {
             let { hovering } = this;
             if (
                 hovering &&
-                hovering.id === entityId &&
+                hovering.instance === entityId &&
                 hovering instanceof NPC &&
                 hovering instanceof Item
             )
@@ -72,7 +72,9 @@ export default class OverlayController {
     }
 
     private validEntity(entity: Entity): boolean {
-        return entity && entity.id !== this.input.getPlayer().id && entity.isProjectile();
+        return (
+            entity && entity.instance !== this.input.getPlayer().instance && entity.isProjectile()
+        );
     }
 
     private hasHealth(): boolean {

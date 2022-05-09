@@ -67,13 +67,12 @@ export default class Character extends Entity {
     private hitPointsCallback?(hitPoints: number): void;
     private maxHitPointsCallback?(maxHitPoints: number): void;
 
-    public instance!: string;
     public forced!: boolean;
 
     public handler = new EntityHandler(this);
 
-    public constructor(id: string, kind: string) {
-        super(id, kind);
+    public constructor(instance: string, type: Modules.EntityType) {
+        super(instance, type);
 
         this.loadGlobals();
     }
@@ -527,7 +526,7 @@ export default class Character extends Entity {
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${x}-${y}`, 'object');
+        let character = new Character(`${x}-${y}`, Modules.EntityType.Object);
         character.setGridPosition(x, y);
         character.type = Modules.EntityType.Object;
 

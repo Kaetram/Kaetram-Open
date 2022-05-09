@@ -7,12 +7,12 @@ export default class Transition {
 
     private count!: number;
 
-    private updateFunction?(interval: number): void;
+    private updateFunction?(value: number): void;
     private stopFunction?(): void;
 
     public start(
         currentTime: number,
-        updateFunction: ((interval: number) => void) | undefined,
+        updateFunction: ((value: number) => void) | undefined,
         stopFunction: (() => void) | undefined,
         startValue: number,
         endValue: number,
@@ -47,18 +47,6 @@ export default class Transition {
             } else this.updateFunction?.(interval);
         }
     }
-
-    // restart(currentTime: number, startValue: number, endValue: number): void {
-    //     this.start(
-    //         currentTime,
-    //         this.updateFunction,
-    //         this.stopFunction,
-    //         startValue,
-    //         endValue,
-    //         this.duration
-    //     );
-    //     this.step(currentTime);
-    // }
 
     private stop(): void {
         this.inProgress = false;

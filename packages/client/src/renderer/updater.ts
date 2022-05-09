@@ -1,117 +1,122 @@
 import { Modules } from '@kaetram/common/network';
 
+import Game from '../game';
+import Entity from '../entity/entity';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
-
-import type SpritesController from '../controllers/sprites';
-import type Entity from '../entity/entity';
-import type Game from '../game';
+import SpritesController from '../controllers/sprites';
 
 export default class Updater {
     private input;
 
     private sprites: SpritesController | null = null;
 
-    private timeDifferential!: number;
-    private lastUpdate!: Date;
+    private tileSize = -1;
 
     public constructor(private game: Game) {
         this.input = game.input;
+        this.tileSize = game.map.tileSize;
     }
 
     public update(): void {
-        this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
-
         this.updateEntities();
         this.input.updateCursor();
         this.updateKeyboard();
         this.updateAnimations();
         this.updateInfos();
         this.updateBubbles();
-
-        this.lastUpdate = new Date();
     }
 
+    /**
+     * Iterates through all the entities and updates their animation data.
+     * If an entity is moving, we process that movement and update the entity's position.
+     */
+
     private updateEntities(): void {
-        this.game.entities.forEachEntity((entity) => {
-            if (!entity) return;
+        this.game.entities.forEachEntity((entity: Entity) => {
+            // Nothing to render if no sprite is loaded.
+            if (!entity.spriteLoaded) return;
 
-            if (entity.spriteLoaded) {
-                this.updateFading(entity);
+            this.updateFading(entity);
 
-                let animation = entity.currentAnimation;
+            entity.currentAnimation?.update(this.game.time);
 
-                animation?.update(this.game.time);
+            // Handle projectile instances separately.
+            if (entity instanceof Projectile) {
+                let mDistance = entity.speed * entity.getTimeDiff(),
+                    dx = entity.target.x - entity.x, // delta x current position to target
+                    dy = entity.target.y - entity.y, // delta y current position to target
+                    tDistance = Math.sqrt(dx * dx + dy * dy), // pythagorean theorem uwu
+                    amount = mDistance / tDistance;
 
-                if (entity instanceof Character) {
-                    if (entity.movement?.inProgress) entity.movement.step(this.game.time);
+                // Always angle the projectile towards the target.
+                entity.updateAngle();
 
-                    if (entity.hasPath() && !entity.movement.inProgress)
-                        switch (entity.orientation) {
-                            case Modules.Orientation.Left:
-                            case Modules.Orientation.Right: {
-                                let isLeft = entity.orientation === Modules.Orientation.Left;
+                if (amount > 1) amount = 1;
 
-                                entity.movement.start(
-                                    this.game.time,
-                                    (x) => {
-                                        entity.x = x;
-                                        entity.moved();
-                                    },
-                                    () => {
-                                        entity.x = entity.movement.endValue;
-                                        entity.moved();
-                                        entity.nextStep();
-                                    },
-                                    entity.x + (isLeft ? -1 : 1),
-                                    entity.x + (isLeft ? -16 : 16),
-                                    entity.movementSpeed
-                                );
+                // Increment the projectile's position.
+                entity.x += dx * amount;
+                entity.y += dy * amount;
 
-                                break;
-                            }
+                if (tDistance < 5) entity.impact();
 
-                            case Modules.Orientation.Up:
-                            case Modules.Orientation.Down: {
-                                let isUp = entity.orientation === Modules.Orientation.Up;
+                entity.lastUpdate = this.game.time;
 
-                                entity.movement.start(
-                                    this.game.time,
-                                    (y) => {
-                                        entity.y = y;
-                                        entity.moved();
-                                    },
-                                    () => {
-                                        entity.y = entity.movement.endValue;
-                                        entity.moved();
-                                        entity.nextStep();
-                                    },
-                                    entity.y + (isUp ? -1 : 1),
-                                    entity.y + (isUp ? -16 : 16),
-                                    entity.movementSpeed
-                                );
-
-                                break;
-                            }
-                        }
-                } else if (entity instanceof Projectile) {
-                    let projectile = entity,
-                        mDistance = projectile.speed * this.timeDifferential,
-                        dx = projectile.target.x - entity.x,
-                        dy = projectile.target.y - entity.y,
-                        tDistance = Math.sqrt(dx * dx + dy * dy),
-                        amount = mDistance / tDistance;
-
-                    projectile.updateAngle();
-
-                    if (amount > 1) amount = 1;
-
-                    entity.x += dx * amount;
-                    entity.y += dy * amount;
-
-                    if (tDistance < 5) projectile.impact();
-                }
+                return;
             }
+
+            // Only characters receive pathing/movement updates.
+            if (!(entity instanceof Character)) return;
+
+            // If a movement transition is in progress, we just update that transition.
+            if (entity.movement.inProgress) return entity.movement.step(this.game.time);
+
+            // Do not update if no pathing is in progress.
+            if (!entity.hasPath()) return;
+
+            // Check if the type of movement is on the x or y axis.
+            let isHorizontal =
+                    entity.orientation === Modules.Orientation.Left ||
+                    entity.orientation === Modules.Orientation.Right,
+                isVertical =
+                    entity.orientation === Modules.Orientation.Up ||
+                    entity.orientation === Modules.Orientation.Down,
+                isLeft,
+                isUp;
+
+            // Determine the specific direction for the movement.
+            if (isHorizontal) isLeft = entity.orientation === Modules.Orientation.Left;
+            if (isVertical) isUp = entity.orientation === Modules.Orientation.Up;
+
+            /**
+             * Here we essentially start a transition update loop for an entity. Depending
+             * on the entity's movement speed, we increment the entity's x/y position by a
+             * single pixel. We proceed to do this for the length of the tile size. For example
+             * for a movement speed of 100, the entity will traverse a tile of size 16x16 pixels
+             * in 100 milliseconds.
+             */
+
+            entity.movement.start(
+                this.game.time,
+                (value) => {
+                    if (isHorizontal) entity.x = value;
+                    if (isVertical) entity.y = value;
+
+                    entity.moved();
+                },
+                () => {
+                    if (isHorizontal) entity.x = entity.movement.endValue;
+                    if (isVertical) entity.y = entity.movement.endValue;
+
+                    entity.moved();
+                    entity.nextStep();
+                },
+                isHorizontal ? entity.x + (isLeft ? -1 : 1) : entity.y + (isUp ? -1 : 1),
+                isHorizontal
+                    ? entity.x + (isLeft ? -this.tileSize : this.tileSize)
+                    : entity.y + (isUp ? -this.tileSize : this.tileSize),
+                entity.movementSpeed
+            );
         });
     }
 
