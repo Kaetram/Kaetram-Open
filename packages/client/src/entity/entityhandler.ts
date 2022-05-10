@@ -19,9 +19,7 @@ export default class EntityHandler {
         entity.onRequestPath((x, y) => {
             if (entity.gridX === x && entity.gridY === y) return [];
 
-            let ignores = [entity];
-
-            return game.findPath(entity, x, y, ignores);
+            return game.findPath(entity, x, y);
         });
 
         entity.onBeforeStep(() => entities.unregisterPosition(entity));
