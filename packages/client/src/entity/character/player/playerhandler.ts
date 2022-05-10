@@ -114,7 +114,7 @@ export default class PlayerHandler {
                 orientation: player.orientation
             });
 
-            socket.send(Packets.Target, [this.getTargetType(), this.getTargetId()]);
+            socket.send(Packets.Target, [this.getTargetType(), instance]);
 
             if (player.target) {
                 player.lookAt(player.target);

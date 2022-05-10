@@ -360,7 +360,6 @@ export default class EntitiesController {
 
         let { grids, entities } = this;
 
-        grids.removeFromItemGrid(item);
         grids.removeFromRenderingGrid(item);
 
         delete entities[item.instance];
@@ -379,8 +378,6 @@ export default class EntitiesController {
         //         this.grids.addToPathingGrid(entity.gridX, entity.gridY);
         // }
 
-        if (entity instanceof Item) this.grids.addToItemGrid(entity);
-
         this.grids.addToRenderingGrid(entity);
     }
 
@@ -398,7 +395,7 @@ export default class EntitiesController {
     public unregisterPosition(entity: Entity): void {
         if (!entity) return;
 
-        this.grids.removeEntity(entity);
+        this.grids.removeFromRenderingGrid(entity);
     }
 
     public getSprite(name: string | undefined): Sprite | undefined {
