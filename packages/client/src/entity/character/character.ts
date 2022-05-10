@@ -467,10 +467,6 @@ export default class Character extends Entity {
         _.each(this.attackers, (attacker) => callback(attacker));
     }
 
-    // isAttacked(): boolean {
-    //     return Object.keys(this.attackers).length > 0;
-    // }
-
     public override hasWeapon(): boolean {
         return false;
     }

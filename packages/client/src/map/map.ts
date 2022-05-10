@@ -141,16 +141,12 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        // Used to compare how many tilesets are loaded.
-        let rawTilesetLength = Object.keys(this.rawTilesets).length;
-
         _.each(this.rawTilesets, (firstGID: number, key: string) => {
             this.loadTileset(firstGID, parseInt(key), (tileset: TilesetInfo) => {
                 this.tilesets[key] = tileset;
 
                 // If we've loaded all the tilesets, map is now allowed to be marked as ready.
-                if (Object.keys(this.tilesets).length === rawTilesetLength)
-                    this.tilesetsLoaded = true;
+                if (_.size(this.tilesets) === _.size(this.rawTilesets)) this.tilesetsLoaded = true;
             });
         });
     }
