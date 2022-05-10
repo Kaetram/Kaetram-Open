@@ -225,6 +225,10 @@ export default class ProcessMap {
             else if (_.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
+            // Remove flip flags for the sake of calculating collisions.
+            if (this.isFlipped(value)) value = this.removeFlipFlags(value);
+
+            // Add collision indexes to the map.
             if (value in this.#collisionTiles) collisions.push(index);
         });
     }
@@ -407,6 +411,25 @@ export default class ProcessMap {
     }
 
     /**
+     * Tiles that undergo transformations have their tileId altered.
+     * We must temporarily remove that in order to calculate collision
+     * indexes.
+     * @param tileId The tileId with transformation flags applied.
+     * @returns The original tileId without transformation flags.
+     */
+
+    private removeFlipFlags(tileId: number): number {
+        return (
+            tileId &
+            ~(
+                Modules.MapFlags.DIAGONAL_FLAG |
+                Modules.MapFlags.VERTICAL_FLAG |
+                Modules.MapFlags.HORIZONTAL_FLAG
+            )
+        );
+    }
+
+    /**
      * This function allows us to decompress data from the Tiled editor
      * map file. Thus far, our parser only supports zlib, gzip, and CSV
      * in the JSON file-format. Further support is not entirely necessary
@@ -473,6 +496,16 @@ export default class ProcessMap {
 
     private isCollisionProperty(propertyName: string): boolean {
         return propertyName === 'c' || propertyName === 'o';
+    }
+
+    /**
+     * Checks if the tileId specified has undergone any translations.
+     * @param tileId The tileId we are checking.
+     * @returns Whether the tileId is greater than the lowest bitwise flag.
+     */
+
+    private isFlipped(tileId: number): boolean {
+        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
