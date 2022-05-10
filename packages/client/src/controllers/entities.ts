@@ -315,7 +315,6 @@ export default class EntitiesController {
     public removeEntity(entity: Entity): void {
         let { grids, entities } = this;
 
-        grids.removeFromPathingGrid(entity.gridX, entity.gridY);
         grids.removeFromRenderingGrid(entity);
 
         delete entities[entity.instance];
@@ -333,8 +332,6 @@ export default class EntitiesController {
 
             this.removeEntity(entity);
         });
-
-        grids.resetPathingGrid();
     }
 
     public clearPlayers(exception: Player): void {
@@ -344,8 +341,6 @@ export default class EntitiesController {
             if (entity.instance !== exception.instance && entity.isPlayer())
                 this.removeEntity(entity);
         });
-
-        grids.resetPathingGrid();
     }
 
     public addEntity(entity: Entity): void {

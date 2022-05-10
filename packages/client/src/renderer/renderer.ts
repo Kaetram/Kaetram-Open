@@ -826,14 +826,14 @@ export default class Renderer {
     }
 
     private drawCollisions(): void {
-        let { pathingGrid } = this.entities.grids;
+        let { width, height, grid } = this.map;
 
-        if (!pathingGrid) return;
+        if (!grid) return;
 
         this.camera.forEachVisiblePosition((x, y) => {
-            if (x < 0 || y < 0 || x > this.map.width - 1 || y > this.map.height - 1) return;
+            if (x < 0 || y < 0 || x > width - 1 || y > height - 1) return;
 
-            if (pathingGrid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
+            if (grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
         });
     }
 
