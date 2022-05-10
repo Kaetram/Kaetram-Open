@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import Entity, { EntityData } from '../entity';
 import Combat from './combat/combat';
 
@@ -241,7 +243,7 @@ export default abstract class Character extends Entity {
      */
 
     public getAttackerCount(): number {
-        return Object.keys(this.attackers).length;
+        return _.size(this.attackers);
     }
 
     /**
