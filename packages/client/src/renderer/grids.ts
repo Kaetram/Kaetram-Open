@@ -1,59 +1,50 @@
 import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
 import type Map from '../map/map';
 
 import log from '../lib/log';
 
 export default class Grids {
+    // Grid used for rendering entities.
     public renderingGrid: { [id: string]: Entity }[][] = [];
-    public itemGrid: { [id: string]: Item }[][] = [];
 
     public constructor(private map: Map) {
         this.load();
     }
 
+    /**
+     * Loads a rendering grid based on the proportions of the map's
+     * width and height. The rendering grid saves the entities near
+     * the players. We use this grid in order to render them.
+     */
+
     private load(): void {
-        let { map, renderingGrid, itemGrid } = this,
-            { height, width, grid } = map;
+        for (let i = 0; i < this.map.height; i++) {
+            this.renderingGrid[i] = [];
 
-        for (let i = 0; i < height; i++) {
-            renderingGrid[i] = [];
-            itemGrid[i] = [];
-
-            for (let j = 0; j < width; j++) {
-                renderingGrid[i][j] = {};
-                itemGrid[i][j] = {};
-            }
+            for (let j = 0; j < this.map.width; j++) this.renderingGrid[i][j] = {};
         }
 
-        log.debug('Finished generating grids.');
+        log.debug('Finished generating the rendering grid.');
     }
+
+    /**
+     * Adds an entity to the rendering grid.
+     * @param entity The entity we are adding to the rendering grid.
+     */
 
     public addToRenderingGrid(entity: Entity): void {
         let { instance, gridX: x, gridY: y } = entity;
 
+        // Ensure the position is valid.
         if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][instance] = entity;
     }
 
-    public addToItemGrid(item: Item): void {
-        let { instance, gridX: x, gridY: y } = item;
-
-        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][instance] = item;
-    }
+    /**
+     * Adds an entity to the grid.
+     * @param entity The entity parameter we are extracting instance, gridX, and gridY from.
+     */
 
     public removeFromRenderingGrid({ instance, gridX, gridY }: Entity): void {
         delete this.renderingGrid[gridY][gridX][instance];
-    }
-
-    // removeFromMapGrid(x: number, y: number): void {
-    //     this.map.grid[y][x] = 0;
-    // }
-
-    public removeFromItemGrid({ instance, gridX, gridY }: Entity): void {
-        delete this.itemGrid[gridY][gridX][instance];
-    }
-
-    public removeEntity(entity: Entity): void {
-        if (entity) this.removeFromRenderingGrid(entity);
     }
 }

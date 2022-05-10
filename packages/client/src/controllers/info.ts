@@ -128,7 +128,7 @@ export default class InfoController {
     }
 
     public getCount(): number {
-        return Object.keys(this.infos).length;
+        return _.size(this.infos);
     }
 
     private addInfo(info: Info): void {
