@@ -51,11 +51,7 @@ export default class Stores {
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
 
-        log.info(
-            `Loaded ${Object.keys(this.stores).length} shop${
-                Object.keys(this.stores).length > 1 ? 's' : ''
-            }.`
-        );
+        log.info(`Loaded ${_.size(this.stores)} shop${_.size(this.stores) > 1 ? 's' : ''}.`);
     }
 
     /**

@@ -39,7 +39,8 @@ export default class Trees {
             });
         });
 
-        let amount = Object.keys(this.trees).length;
+        let amount = _.size(this.trees);
+
         log.info(`Loaded ${amount} tree${amount > 1 ? 's' : ''}.`);
     }
 
@@ -71,7 +72,7 @@ export default class Trees {
          * at least one tile in between trees.
          */
 
-        if (Object.keys(tree.data).length !== treeInfo.data.length)
+        if (_.size(tree.data) !== treeInfo.data.length)
             log.warning(`Tree x: ${coords.x} y: ${coords.y} contains partial data.`);
 
         // Add our tree to our list of trees.
