@@ -49,16 +49,16 @@ its predecessor, a couple being:
 
 ### Prerequisites
 
-You must first [install Node.js](https://nodejs.org/en/download/) to run the project, and
-_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data on
-the server.
+You must first [install Node.js](https://nodejs.org/en/download) to run the project, and
+_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data
+on the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `v12.20.0`, following the
-> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases/), to have the most stable
-> experience when developing/experimenting with Kaetram. Older versions would not work with our
-> current package manager and dependencies.
+> You need to use a Node.js version greater than or equal to `14.19.0`, following the
+> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most
+> stable experience when developing/experimenting with Kaetram. Older versions would not work
+> with our current dependencies and package manager.
 
 #### NOTE: MongoDB
 
@@ -68,15 +68,26 @@ the server.
 > _If you do choose to install MongoDB, a user is not necessary, but you can enable authentication
 > with the `MONGODB_AUTH` setting._
 
-### Installing
+#### Yarn
 
-You will then need to install Yarn using
+You will also need to enable Yarn to manage your dependencies.
+
+> The preferred way to manage Yarn is through
+> [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html)
+>
+> <https://yarnpkg.com/getting-started/install>
+
+Starting from Node.js `14.19.0`, Corepack is included by default with, but is currently opt-in.
+
+To enable it, run
 
 ```console
-npm install -g yarn
+corepack enable
 ```
 
-After installing Yarn, install the dependencies by simply running
+### Installing
+
+Install the dependencies by simply running
 
 ```console
 yarn
@@ -102,7 +113,7 @@ Then, to run each production build, use
 yarn start
 ```
 
-Add `--host` to the end to make the game visible on your network.
+Add `--host` at the end to make the game visible on your network.
 
 ### Configuration
 
@@ -112,7 +123,7 @@ file, or by setting environmental variables.
 
 Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
 
-Keep in mind, you have to rebuild the client every time you change your configuration.
+_Keep in mind_, you have to rebuild the client and restart the server every time you change your configuration.
 
 ## Features
 
@@ -221,7 +232,7 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 ## License & Commission
 
 For all inquiries about purchasing a different license or commission work, please contact
-**@Vanity** on [Discord][discord].
+**@Keros** on [Discord][discord].
 
 This project is distributed under the
 **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
