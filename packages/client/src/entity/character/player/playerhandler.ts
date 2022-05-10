@@ -42,7 +42,7 @@ export default class PlayerHandler {
 
             if (player.gridX === x && player.gridY === y) return [];
 
-            let ignores = [player];
+            let ignores = [];
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, {

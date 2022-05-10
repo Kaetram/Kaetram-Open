@@ -35,6 +35,8 @@ import type { APIData } from '@kaetram/common/types/api';
 export default class Game {
     public id!: string;
 
+    public pathfinder: Pathfinder = new Pathfinder();
+
     public socket!: Socket;
     public messages!: Messages;
     public renderer!: Renderer;
@@ -43,7 +45,6 @@ export default class Game {
     public entities!: EntitiesController;
     public input!: InputController;
     public map!: Map;
-    private pathfinder!: Pathfinder;
     public zoning!: Zoning;
     public info!: InfoController;
     public menu!: MenuController;
@@ -222,10 +223,6 @@ export default class Game {
 
             if (!this.isDebug()) map.loadRegionData();
 
-            app.sendStatus('Loading the pathfinder');
-
-            this.setPathfinder(new Pathfinder(map.width, map.height));
-
             renderer.setMap(map);
             renderer.loadCamera();
 
@@ -312,26 +309,34 @@ export default class Game {
         $('#remember-me').prop('checked', true);
     }
 
+    /**
+     * Determines a path from the character's current position to the
+     * specified `x` and `y` grid coordinate parameters.
+     * @param character The character we are finding the path for.
+     * @param x The destination x grid coordinate.
+     * @param y The destination y grid coordinate.
+     * @param ignores The list of character objects that we are ignoring.
+     * @param isObject Whether or not we are finding path to an object.
+     * @returns A 2D array of grid coordinates that represent the path.
+     */
+
     public findPath(
         character: Character,
         x: number,
         y: number,
-        ignores: Character[],
+        ignores: Character[] = [],
         isObject = false
     ): number[][] {
-        let { entities, map, pathfinder } = this,
-            grid = entities.grids.pathingGrid,
+        let { map, pathfinder } = this,
             path: number[][] = [];
 
-        if (map.isColliding(x, y) && !map.isObject(x, y)) return path;
+        if (!pathfinder || (map.isColliding(x, y) && !map.isObject(x, y))) return path;
 
-        if (!pathfinder) return path;
+        if (ignores) _.each(ignores, (entity) => pathfinder.addIgnore(entity));
 
-        if (ignores) _.each(ignores, (entity) => pathfinder.ignoreEntity(entity));
+        path = pathfinder.find(map.grid, character.gridX, character.gridY, x, y);
 
-        path = pathfinder.find(grid, character, x, y, false);
-
-        if (ignores) pathfinder.clearIgnores();
+        if (ignores) pathfinder.clearIgnores(map.grid);
 
         if (isObject) path.pop(); // Remove the last path index
 

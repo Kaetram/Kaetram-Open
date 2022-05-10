@@ -372,8 +372,6 @@ export default class Connection {
             if (this.game.player.target && this.game.player.target.instance === entity.instance)
                 this.game.player.removeTarget();
 
-            this.entities.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
-
             if (
                 entity.instance !== this.game.player.instance &&
                 this.game.player.getDistance(entity) < 5
@@ -1023,8 +1021,6 @@ export default class Connection {
 
                     break;
             }
-
-            this.entities.grids.resetPathingGrid();
 
             this.renderer.forceRendering = true;
             this.renderer.updateAnimatedTiles();

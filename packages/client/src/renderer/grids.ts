@@ -6,7 +6,6 @@ import log from '../lib/log';
 
 export default class Grids {
     public renderingGrid: { [id: string]: Entity }[][] = [];
-    public pathingGrid: number[][] = [];
     public itemGrid: { [id: string]: Item }[][] = [];
 
     public constructor(private map: Map) {
@@ -14,17 +13,15 @@ export default class Grids {
     }
 
     private load(): void {
-        let { map, renderingGrid, pathingGrid, itemGrid } = this,
+        let { map, renderingGrid, itemGrid } = this,
             { height, width, grid } = map;
 
         for (let i = 0; i < height; i++) {
             renderingGrid[i] = [];
-            pathingGrid[i] = [];
             itemGrid[i] = [];
 
             for (let j = 0; j < width; j++) {
                 renderingGrid[i][j] = {};
-                pathingGrid[i][j] = grid[i][j];
                 itemGrid[i][j] = {};
             }
         }
@@ -32,26 +29,10 @@ export default class Grids {
         log.debug('Finished generating grids.');
     }
 
-    public resetPathingGrid(): void {
-        this.pathingGrid = [];
-
-        let { pathingGrid, map } = this;
-
-        for (let i = 0; i < map.height; i++) {
-            pathingGrid[i] = [];
-
-            for (let j = 0; j < map.width; j++) pathingGrid[i][j] = map.grid[i][j];
-        }
-    }
-
     public addToRenderingGrid(entity: Entity): void {
         let { instance, gridX: x, gridY: y } = entity;
 
         if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][instance] = entity;
-    }
-
-    public addToPathingGrid(x: number, y: number): void {
-        this.pathingGrid[y][x] = 1;
     }
 
     public addToItemGrid(item: Item): void {
@@ -64,10 +45,6 @@ export default class Grids {
         delete this.renderingGrid[gridY][gridX][instance];
     }
 
-    public removeFromPathingGrid(x: number, y: number): void {
-        this.pathingGrid[y][x] = 0;
-    }
-
     // removeFromMapGrid(x: number, y: number): void {
     //     this.map.grid[y][x] = 0;
     // }
@@ -77,13 +54,6 @@ export default class Grids {
     }
 
     public removeEntity(entity: Entity): void {
-        if (entity) {
-            let { gridX, gridY, nextGridX, nextGridY } = entity;
-
-            this.removeFromPathingGrid(gridX, gridY);
-            this.removeFromRenderingGrid(entity);
-
-            if (nextGridX > -1 && nextGridY > -1) this.removeFromPathingGrid(nextGridX, nextGridY);
-        }
+        if (entity) this.removeFromRenderingGrid(entity);
     }
 }
