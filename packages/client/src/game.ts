@@ -419,16 +419,23 @@ export default class Game {
         return this.entities.getSprite(spriteName);
     }
 
+    /**
+     * Determines an entity at a specific grid coordinate.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @param ignoreSelf Whether or not to exclude the player from the check.
+     * @returns The first entity in the list that is at the grid coordinate.
+     */
+
     public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
         if (!this.entities) return;
 
-        let items = this.entities.grids.itemGrid[y][x];
+        let entities = this.entities.grids.renderingGrid[y][x],
+            keys = _.keys(entities);
 
-        if (_.size(items) > 0) return items[_.keys(items)[0]];
+        if (ignoreSelf) keys.splice(keys.indexOf(this.player.instance), 1);
 
-        let entities = this.entities.grids.renderingGrid[y][x];
-
-        if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
+        if (_.size(entities) > 0) return entities[keys[0]];
     }
 
     private getStorageUsername(): string | undefined {
