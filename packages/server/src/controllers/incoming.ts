@@ -431,49 +431,22 @@ export default class Incoming {
         }
     }
 
+    /**
+     * Receives a raw chat input from the client, sanitizes it, and parses
+     * whether it is just a message or a command.
+     * @param message Raw string input from the client.
+     */
+
     private handleChat(message: [string]): void {
+        // Message sanitization.
         let text = sanitizer.escape(sanitizer.sanitize(message[0]));
 
         if (!text || text.length === 0 || !/\S/.test(text)) return;
 
-        if (text.charAt(0) === '/' || text.charAt(0) === ';') this.commands.parse(text);
-        else {
-            if (this.player.isMuted()) {
-                this.player.send(
-                    new Notification(Opcodes.Notification.Text, {
-                        message: 'You are currently muted.'
-                    })
-                );
-                return;
-            }
+        // Handle commands if the prefix is / or ;
+        if (text.charAt(0) === '/' || text.charAt(0) === ';') return this.commands.parse(text);
 
-            if (!this.player.canTalk) {
-                this.player.send(
-                    new Notification(Opcodes.Notification.Text, {
-                        message: 'You are not allowed to talk for the duration of this event.'
-                    })
-                );
-                return;
-            }
-
-            log.debug(`${this.player.username} - ${text}`);
-
-            if (config.discordEnabled)
-                this.world.discord.sendMessage(this.player.username, text, undefined, true);
-
-            if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatName(this.player.username), text, true);
-
-            this.player.sendToRegions(
-                new Chat({
-                    id: this.player.instance,
-                    name: this.player.username,
-                    withBubble: true,
-                    text,
-                    duration: 7000
-                })
-            );
-        }
+        this.player.chat(text);
     }
 
     private handleCommand(message: [Opcodes.Command, Position]): void {
