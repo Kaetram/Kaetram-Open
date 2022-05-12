@@ -136,8 +136,8 @@ export default class World {
         this.entities.forEachEntity((entity: Entity) => {
             if (entity.instance !== character.instance) return;
 
-            // if (entity instanceof Character && entity.combat.hasAttacker(character))
-            //     entity.combat.removeAttacker(character);
+            if (entity instanceof Character && entity.hasAttacker(character))
+                entity.removeAttacker(character);
         });
     }
 
