@@ -10,6 +10,9 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Actions from '../menu/actions';
+import type App from '../app';
+import type Renderer from '../renderer/renderer';
+import type Map from '../map/map';
 
 interface TargetData {
     sprite: Sprite;
@@ -24,9 +27,9 @@ interface TargetData {
 }
 
 export default class InputController {
-    private app;
-    private renderer;
-    private map;
+    private app: App;
+    private renderer: Renderer;
+    private map: Map;
 
     public selectedCellVisible = false;
     private cursorVisible = true;
@@ -54,8 +57,8 @@ export default class InputController {
      * This is the animation for the target
      * cell spinner sprite (only on desktop)
      */
-    public targetAnimation!: Animation;
-    public chatHandler!: Chat;
+    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
+    public chatHandler: Chat = new Chat(this.game);
     public overlay!: Overlay;
     public entity: Entity | undefined;
 
@@ -68,10 +71,8 @@ export default class InputController {
     }
 
     private load(): void {
-        this.targetAnimation = new Animation('move', 4, 0, 16, 16);
         this.targetAnimation.setSpeed(50);
 
-        this.chatHandler = new Chat(this.game);
         this.overlay = new Overlay(this);
     }
 
@@ -263,8 +264,7 @@ export default class InputController {
          * on mobile, and it is far harder to control.
          */
 
-        if (renderer.mobile && chatHandler.input.is(':visible') && chatHandler.input.val() === '')
-            chatHandler.hideInput();
+        if (renderer.mobile && chatHandler.inputVisible()) chatHandler.toggle();
 
         if (map.isOutOfBounds(position.x, position.y)) return;
 
