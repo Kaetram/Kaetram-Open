@@ -1,91 +1,81 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
+import Game from '../game';
 import Blob from '../renderer/bubbles/blob';
 
-import type { BubbleInfo } from '@kaetram/common/types/info';
-import type Game from '../game';
-
 export default class BubbleController {
-    private bubbles: { [id: string]: Blob } = {};
-    private container = $('#bubbles');
+    private container: JQuery<HTMLElement> = $('#bubbles');
+
+    // Each entity's instance is associated with a bubble for the duration of a bubble.
+    private bubbles: { [instance: string]: Blob } = {};
 
     public constructor(private game: Game) {}
 
     /**
-     * This creates the blob that will be used to display text.
+     * This creates the blob that will be used to display text. The bubble
+     * is created above an entity (or static object if specified), and for the
+     * duration of its existence, is updated if another `create` is called.
      *
-     * @param id - An identifier for the bubble we are creating.
+     * @param instance - An identifier for the bubble we are creating.
      * @param message - A string of the text we are displaying.
      * @param duration - How long the bubble will display for.
-     * @param isObject - Value used to determine object.
-     * @param info - Used in conjunction with `isObject` to specify object data.
+     * @param static - Static bubbles are assigned to a position rather than entity.
      */
-    public create(
-        id: string,
-        message: string,
-        duration = 5000,
-        isObject = false,
-        info?: BubbleInfo
-    ): void {
-        let { bubbles, game, container } = this,
-            bubble = bubbles[id];
+    public create(instance: string, message: string, duration = 5000, position?: Position): void {
+        let bubble = this.bubbles[instance];
 
-        if (bubble) {
-            bubble.reset(game.time);
+        // Just update the bubble if it already exists.
+        if (bubble) return bubble.update(message, this.game.time);
 
-            $(`#${id} p`).html(message);
-        } else {
-            let element = $(
-                `<div id="${id}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
-            );
+        // Create a new bubble.
+        this.bubbles[instance] = new Blob(instance, message, duration, position);
 
-            $(element).appendTo(container);
-
-            bubbles[id] = new Blob(id, element, duration, isObject, info);
-
-            // return bubbles[id];
-        }
+        // Add the newly created bubble element to the container of bubbles.
+        this.bubbles[instance].element.appendTo(this.container);
     }
 
-    public setTo(info: BubbleInfo | undefined): void {
-        if (!info) return;
-
-        let bubble = this.get(info.instance),
+    public setTo(instance: string, x: number, y: number): void {
+        let bubble = this.bubbles[instance],
             camera = this.game.getCamera(),
             scale = this.game.renderer.getScale(),
             tileSize = 48, // 16 * scale
-            x = (info.x - camera.x) * scale,
             width = parseInt(bubble.element.css('width')) + 24,
             offset = width / 2 - tileSize / 2,
-            offsetY = -20,
-            y = (info.y - camera.y) * scale - tileSize * 2 - offsetY;
+            offsetY = -20;
+
+        x = (x - camera.x) * scale;
+        y = (y - camera.y) * scale - tileSize * 2 - offsetY;
 
         bubble.element.css({ left: `${x - offset + 3}px`, top: `${y}px` });
     }
 
+    /**
+     * Update function for the bubbles. Iterates through all the bubbles
+     * and updates their positioning relative to the screen. This gets called
+     * every frame so that the bubbles are following the entity adequately
+     * as it moves or the camera moves.
+     * @param time The current game time.
+     */
+
     public update(time: number): void {
-        let { bubbles, game } = this;
+        _.each(this.bubbles, (bubble) => {
+            let entity = this.game.entities.get(bubble.instance);
 
-        _.each(bubbles, (bubble) => {
-            if (!bubble) return;
+            // If there is an entity, we set the bubble to its position.
+            if (entity) this.setTo(entity.instance, entity.x, entity.y);
 
-            let entity = game.entities.get(bubble.id);
+            // If the bubble is static its position is always the specified one.
+            if (bubble.static) this.setTo(bubble.instance, bubble.position!.x, bubble.position!.y);
 
-            if (entity) this.setTo(entity);
-
-            if (bubble.type === 'object') this.setTo(bubble.info);
-
-            if (bubble.isOver(time)) {
-                bubble.destroy();
-                delete bubbles[bubble.id];
-            }
+            // Destroy once the timer runs out.
+            if (bubble.isOver(time)) this.destroy(bubble);
         });
     }
 
-    private get(id: string): Blob {
-        return this.bubbles[id];
-    }
+    /**
+     * Clears all the bubbles from the screen.
+     */
 
     public clean(): void {
         _.each(this.bubbles, (bubble) => bubble.destroy());
@@ -93,26 +83,13 @@ export default class BubbleController {
         this.bubbles = {};
     }
 
-    public destroy(id: string): void {
-        let bubble = this.get(id);
-
-        if (!bubble) return;
-
-        bubble.destroy();
-        delete this.bubbles[id];
-    }
-
     /**
-     * Creates a JQuery HTML element of the bubble with the specified
-     * id and message contents.
-     * @param id
-     * @param message
-     * @returns
+     * Destroys the bubble and removes it from our dictionary.
+     * @param bubble The bubble we are unloading.
      */
 
-    public createBubble(id: string, message: string): JQuery<HTMLElement> {
-        return $(
-            `<div id="${id}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
-        );
+    public destroy(bubble: Blob): void {
+        bubble.destroy();
+        delete this.bubbles[bubble.instance];
     }
 }
