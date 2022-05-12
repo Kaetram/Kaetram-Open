@@ -1,6 +1,9 @@
 import $ from 'jquery';
 
 import log from '../lib/log';
+
+import Game from '../game';
+
 import Actions from '../menu/actions';
 import Bank from '../menu/bank';
 import Enchant from '../menu/enchant';
@@ -9,11 +12,10 @@ import Inventory from '../menu/inventory';
 import Profile from '../menu/profile/profile';
 import Shop from '../menu/shop';
 import Warp from '../menu/warp';
+import Slot from '../menu/container/slot';
+import Professions from '../menu/profile/pages/professions';
+import Quest from '../menu/profile/pages/quest';
 
-import type Game from '../game';
-import type Slot from '../menu/container/slot';
-import type Professions from '../menu/profile/pages/professions';
-import type Quest from '../menu/profile/pages/quest';
 import { Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
 
@@ -32,25 +34,18 @@ export default class MenuController {
 
     private notificationTimeout!: number | null;
 
-    public inventory!: Inventory;
-    public profile!: Profile;
-    public bank!: Bank;
-    public actions!: Actions;
-    public enchant!: Enchant;
-    public shop!: Shop;
     private header!: Header;
-    public warp!: Warp;
+
+    public inventory: Inventory = new Inventory(this.game, this, Modules.Constants.INVENTORY_SIZE);
+    public bank: Bank = new Bank(this.game, this, Modules.Constants.BANK_SIZE);
+    public actions: Actions = new Actions(this);
+    public enchant: Enchant = new Enchant(this.game, this);
+    public shop: Shop = new Shop(this.game, this);
+    public warp: Warp = new Warp(this.game);
+
+    public profile!: Profile;
 
     public constructor(public game: Game) {
-        this.loadNotifications();
-        this.loadActions();
-        this.loadWarp();
-        this.loadShop();
-        this.loadEnchant();
-
-        this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
-        this.loadBank(Modules.Constants.BANK_SIZE, []);
-
         this.done.on('click', () => this.hideNotify());
     }
 
@@ -72,42 +67,8 @@ export default class MenuController {
         this.resizeNotification();
     }
 
-    /**
-     * This can be called multiple times and can be used
-     * to completely refresh the inventory.
-     */
-    public loadInventory(size: number, data: SlotData[]): void {
-        this.inventory = new Inventory(this.game, this, size, data);
-    }
-
-    /**
-     * Similar structure as the inventory, just that it
-     * has two containers. The bank and the inventory.
-     */
-    public loadBank(size: number, data: SlotData[]): void {
-        this.bank = new Bank(this.game, this, size, data);
-
-        this.loadEnchant();
-    }
-
     public loadProfile(): void {
         this.profile ||= new Profile(this.game);
-    }
-
-    private loadActions(): void {
-        this.actions ||= new Actions(this);
-    }
-
-    private loadEnchant(): void {
-        this.enchant ||= new Enchant(this.game, this);
-    }
-
-    private loadWarp(): void {
-        this.warp ||= new Warp(this.game);
-    }
-
-    private loadShop(): void {
-        this.shop ||= new Shop(this.game, this);
     }
 
     public loadHeader(): void {
