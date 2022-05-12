@@ -27,7 +27,7 @@ export default class Bank {
         private game: Game,
         private menu: MenuController,
         private size: number,
-        data: SlotData[]
+        data: SlotData[] = []
     ) {
         this.container = new Container(size);
 
