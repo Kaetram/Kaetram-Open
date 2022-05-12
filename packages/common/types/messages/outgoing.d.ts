@@ -41,10 +41,12 @@ export type AnimationCallback = (info: AnimationPacket) => void;
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface ChatPacket {
-    instance: string; // Entity that the chat packet belongs to.
+    instance?: string; // Entity that the chat packet belongs to.
     message: string; // Message contents of the packet.
     withBubble?: boolean; // If the message should have a bubble.
+    global?: boolean; // Whether to prefix `[Global]` to the message.
     colour?: string; // Colour of the message.
+    source?: string;
 }
 
 export type ChatCallback = (info: ChatPacket) => void;

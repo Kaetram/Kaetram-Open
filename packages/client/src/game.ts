@@ -433,6 +433,7 @@ export default class Game {
         let entities = this.entities.grids.renderingGrid[y][x],
             keys = _.keys(entities);
 
+        // Remove player instance from the keys of entities.
         if (ignoreSelf) keys.splice(keys.indexOf(this.player.instance), 1);
 
         if (_.size(entities) > 0) return entities[keys[0]];
