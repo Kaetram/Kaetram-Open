@@ -1,28 +1,42 @@
+import Warp from './warp';
+import Skills from './skills';
+import Quests from './quests';
+import Hit from '../combat/hit';
+import Handler from './handler';
+import Mana from '../points/mana';
+import Map from '../../../map/map';
+import Character from '../character';
+import Equipments from './equipments';
+import Item from '../../objects/item';
+import Bank from './containers/impl/bank';
+import Regions from '../../../map/regions';
+import Tree from '../../../globals/impl/tree';
+import Abilities from './abilities/abilities';
+import Container from './containers/container';
+import Formulas from '../../../../info/formulas';
+import Inventory from './containers/impl/inventory';
+import Packet from '@kaetram/server/src/network/packet';
+import Incoming from '../../../../controllers/incoming';
+import Entities from '@kaetram/server/src/controllers/entities';
+
+import type World from '../../../world';
+import type MongoDB from '../../../../database/mongodb/mongodb';
+import type Connection from '../../../../network/connection';
+import type NPC from '../../npc/npc';
+import type Area from '../../../map/areas/area';
+import type { PlayerInfo } from './../../../../database/mongodb/creator';
+import type { ExperienceCombatData } from '@kaetram/common/types/messages';
+
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Incoming from '../../../../controllers/incoming';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
-import Hit from '../combat/hit';
-import Abilities from './abilities/abilities';
-import Bank from './containers/impl/bank';
-import Inventory from './containers/impl/inventory';
-import Handler from './handler';
-import Mana from '../points/mana';
-import Warp from './warp';
-
-import type { ExperienceCombatData } from '@kaetram/common/types/messages';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Area from '../../../map/areas/area';
-import type Connection from '../../../../network/connection';
-import type World from '../../../world';
-import type NPC from '../../npc/npc';
-import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import Map from '../../../map/map';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
+import { PlayerData } from '@kaetram/common/types/player';
+import { SlotData, SlotType } from '@kaetram/common/types/slot';
+import { PointerData } from '@kaetram/common/types/pointer';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 import {
     Audio,
     Camera,
@@ -37,20 +51,6 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
-import Packet from '@kaetram/server/src/network/packet';
-import Equipments from './equipments';
-import Quests from './quests';
-import Regions from '../../../map/regions';
-import Entities from '@kaetram/server/src/controllers/entities';
-import { EntityData } from '../../entity';
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import Container from './containers/container';
-import Item from '../../objects/item';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import Tree from '../../../globals/impl/tree';
-import Skills from './skills';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -67,14 +67,6 @@ export interface ObjectData {
         isObject: boolean;
         cursor: string | undefined;
     };
-}
-
-interface PlayerData extends EntityData {
-    rights: number;
-    pvp: boolean;
-    orientation: number;
-
-    equipments: EquipmentData[];
 }
 
 export default class Player extends Character {
@@ -983,6 +975,8 @@ export default class Player extends Character {
     public override serialize(withEquipment?: boolean): PlayerData {
         let data = super.serialize() as PlayerData;
 
+        // Sprite key is the armour key.
+        data.key = this.equipment.getArmour().key || 'clotharmor';
         data.rights = this.rights;
         data.level = this.level;
         data.hitPoints = this.hitPoints.getHitPoints();

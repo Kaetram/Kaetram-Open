@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
@@ -9,6 +7,11 @@ import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
+import Projectile from '../entity/objects/projectile';
+
+import { EntityData } from '@kaetram/common/types/entity';
+import { PlayerData } from '@kaetram/common/types/player';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../entity/character/character';
@@ -17,8 +20,6 @@ import type Weapon from '../entity/character/player/equipment/weapon';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import Projectile from '../entity/objects/projectile';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -30,43 +31,6 @@ export interface Movable {
     targetId: string;
     attackerId: string;
     hitType: number;
-}
-
-// Replace AnyEntity with this soon..
-export interface EntityData {
-    // Entity data
-    instance: string;
-    type: number;
-    key: string;
-    name: string;
-    x: number;
-    y: number;
-
-    // Character data
-    movementSpeed: number;
-    hitPoints: number;
-    maxHitPoints: number;
-    attackRange: number;
-    level: number;
-    hiddenName: boolean;
-
-    // Item data
-    count: number;
-    ability: number;
-    abilityLevel: number;
-
-    // Player Data
-    rights: number;
-    pvp: boolean;
-    orientation: number;
-
-    // Projectile info
-    ownerInstance: string;
-    targetInstance: string;
-    damage: number;
-    hitType: Modules.Hits;
-
-    equipments: EquipmentData[];
 }
 
 export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
@@ -108,295 +72,323 @@ export default class EntitiesController {
     }
 
     public create(info: EntityData): void {
-        let { entities, game } = this,
-            entity: Entity = null!;
-
+        // Don't spawn if we receive our own player data somehow.
         if (this.isPlayer(info.instance)) return;
 
-        // Don't initialize things twice.
-        if (info.instance in entities) return;
+        // Entity already exists, don't respawn.
+        if (info.instance in this.entities) return;
+
+        let entity: Entity;
 
         switch (info.type) {
-            case Modules.EntityType.Chest: {
-                let chest = new Chest(info.instance, info.type);
-
-                entity = chest;
-
+            case Modules.EntityType.Chest:
+                entity = this.createChest(info.instance);
                 break;
-            }
 
-            case Modules.EntityType.NPC: {
-                let npc = new NPC(info.instance, info.type);
-
-                entity = npc;
-
+            case Modules.EntityType.NPC:
+                entity = this.createNPC(info.instance);
                 break;
-            }
 
-            case Modules.EntityType.Item: {
-                let item = new Item(info.instance, info.count, info.ability, info.abilityLevel);
-
-                entity = item;
-
+            case Modules.EntityType.Item:
+                entity = this.createItem(info);
                 break;
-            }
 
-            case Modules.EntityType.Mob: {
-                let mob = new Mob(info.instance, info.type);
-
-                mob.setHitPoints(info.hitPoints);
-                mob.setMaxHitPoints(info.maxHitPoints);
-
-                mob.attackRange = info.attackRange;
-                mob.level = info.level;
-                mob.hiddenName = info.hiddenName;
-                mob.movementSpeed = info.movementSpeed;
-
-                entity = mob;
-
+            case Modules.EntityType.Mob:
+                entity = this.createMob(info);
                 break;
-            }
 
-            // TODO REFACTOR THIS
-            case Modules.EntityType.Projectile: {
-                let attacker = this.get<Character>(info.ownerInstance),
-                    target = this.get<Character>(info.targetInstance);
+            case Modules.EntityType.Projectile:
+                entity = this.createProjectile(info)!;
+                break;
 
-                if (!attacker || !target) return;
-
-                attacker.lookAt(target);
-
-                let projectile = new Projectile(info.instance, attacker);
-
-                projectile.name = info.name;
-
-                projectile.setStart(attacker.x, attacker.y);
-                projectile.setTarget(target);
-
-                projectile.setSprite(this.getSprite(projectile.name));
-                projectile.setAnimation('travel', projectile.getSpeed());
-
-                projectile.angled = true;
-                projectile.type = info.type;
-
-                /**
-                 * Move this into the external overall function
-                 */
-
-                projectile.onImpact(() => {
-                    /**
-                     * The data in the projectile is only for rendering purposes
-                     * there is nothing you can change for the actual damage output here.
-                     */
-
-                    if (this.isPlayer(projectile.owner.instance) || this.isPlayer(target.instance))
-                        game.socket.send(Packets.Projectile, {
-                            opcode: Opcodes.Projectile.Impact,
-                            instance: info.instance,
-                            target: target.instance
-                        });
-
-                    if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
-
-                    game.info.create(
-                        Modules.Hits.Damage,
-                        [info.damage, this.isPlayer(target.instance)],
-                        target.x,
-                        target.y
-                    );
-
-                    target.triggerHealthBar();
-
-                    this.unregisterPosition(projectile);
-                    delete entities[projectile.instance];
-                });
-
-                this.addEntity(projectile);
-
-                attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                attacker.triggerHealthBar();
-
-                return;
-            }
-
-            case Modules.EntityType.Player: {
-                let player = new Player(info.instance);
-
-                player.setGridPosition(info.x, info.y);
-
-                player.name = info.name;
-                player.rights = info.rights;
-                player.level = info.level;
-                player.attackRange = info.attackRange;
-                player.orientation = info.orientation;
-                player.type = info.type;
-                player.movementSpeed = info.movementSpeed;
-
-                player.setHitPoints(info.hitPoints);
-                player.setMaxHitPoints(info.maxHitPoints);
-
-                player.setSprite(this.getSprite(player.getSpriteName()));
-                player.idle();
-
-                player.loadHandler(game);
-
-                this.addEntity(player);
-
-                // player.setMana(manaData[0]);
-                // player.setMaxMana(manaData[1]);
-
-                // player.setSprite(this.getSprite(info.armour.string));
-                // player.idle();
-
-                // _.each(equipments, (equipment) => {
-                //     player.setEquipment(
-                //         equipment.type,
-                //         equipment.name,
-                //         equipment.string,
-                //         equipment.count,
-                //         equipment.ability,
-                //         equipment.abilityLevel
-                //     );
-                // });
-
-                // player.loadHandler(game);
-
-                // this.addEntity(player);
-
-                return;
-            }
+            case Modules.EntityType.Player:
+                entity = this.createPlayer(info as PlayerData);
+                break;
         }
 
-        if (!entity) return;
+        if (!entity!) return;
 
-        let sprite = this.getSprite(
-            info.type === Modules.EntityType.Item ? `item-${info.key}` : info.key
-        )!;
+        let sprite = this.getSprite(entity.isItem() ? `item-${entity.name}` : info.key);
 
         entity.name = info.name;
 
+        entity.setSprite(sprite);
         entity.setGridPosition(info.x, info.y);
 
-        entity.setSprite(sprite);
-
-        entity.setIdleSpeed(sprite.idleSpeed);
+        if (sprite) entity.setIdleSpeed(sprite.idleSpeed);
 
         entity.idle();
-        entity.type = info.type;
-
-        // if (info.nameColour) entity.nameColour = info.nameColour;
-
-        // if (info.customScale) entity.customScale = info.customScale;
 
         this.addEntity(entity);
 
-        let { handler } = entity as Character;
-
-        if (info.type !== Modules.EntityType.Item && handler) {
-            handler.setGame(game);
-            handler.load();
+        // Add handler to character subclasses.
+        if ((entity as Character).handler) {
+            (entity as Character).handler.setGame(this.game);
+            (entity as Character).handler.load();
         }
+    }
+
+    /**
+     * Creates a new chest entity with the instance provided.
+     * @param instance The instance of the chest entity.
+     * @returns A new chest object.
+     */
+
+    private createChest(instance: string): Chest {
+        return new Chest(instance);
+    }
+
+    /**
+     * Creates a new NPC object with the instance string provided.
+     * @param instance The instance of the NPC character.
+     * @returns A new NPC object.
+     */
+
+    private createNPC(instance: string): NPC {
+        return new NPC(instance);
+    }
+
+    /**
+     * Creates a new item object with the instance, count, ability, and abilityLevel.
+     * @param info EntityData object containing item information.
+     * @returns A new item object.
+     */
+
+    private createItem(info: EntityData): Item {
+        return new Item(info.instance, info.count, info.ability, info.abilityLevel);
+    }
+
+    /**
+     * Creates a new mob object, sets data such as its health,
+     * attack range, level, etc, and returns that object.
+     * @param info The entity data object containing mob information.
+     * @returns A new mob object.
+     */
+
+    private createMob(info: EntityData): Mob {
+        let mob = new Mob(info.instance);
+
+        mob.setHitPoints(info.hitPoints!);
+        mob.setMaxHitPoints(info.maxHitPoints!);
+
+        mob.attackRange = info.attackRange!;
+        mob.level = info.level!;
+        mob.hiddenName = info.hiddenName!;
+        mob.movementSpeed = info.movementSpeed!;
+
+        return mob;
+    }
+
+    /**
+     * Creates a projectile based on the provided entity data. The projectile
+     * is a bit special in that it handles callbacks. This function will be further
+     * refactored, and timing for projectile collision will be handled server-sided
+     * instead of relying on the client to detect collision. Client should only
+     * be responsible for rendering. Right now, this could potentially be exploited.
+     * @param info Entity data containing projectile information.
+     * @returns New projectile object.
+     */
+
+    private createProjectile(info: EntityData): Projectile | undefined {
+        let attacker = this.get<Character>(info.ownerInstance!),
+            target = this.get<Character>(info.targetInstance!);
+
+        if (!attacker || !target) return undefined;
+
+        attacker.lookAt(target);
+
+        let projectile = new Projectile(info.instance, attacker);
+
+        projectile.name = info.name;
+
+        projectile.setStart(attacker.x, attacker.y);
+        projectile.setTarget(target);
+
+        projectile.setSprite(this.getSprite(projectile.name));
+        projectile.setAnimation('travel', projectile.getSpeed());
+
+        projectile.angled = true;
+        projectile.type = info.type;
 
         /**
-         * Get ready for errors!
+         * Move this into the external overall function
          */
+
+        projectile.onImpact(() => {
+            /**
+             * The data in the projectile is only for rendering purposes
+             * there is nothing you can change for the actual damage output here.
+             */
+
+            if (this.isPlayer(projectile.owner.instance) || this.isPlayer(target.instance))
+                this.game.socket.send(Packets.Projectile, {
+                    opcode: Opcodes.Projectile.Impact,
+                    instance: info.instance,
+                    target: target.instance
+                });
+
+            if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
+
+            this.game.info.create(
+                Modules.Hits.Damage,
+                [info.damage!, this.isPlayer(target.instance)],
+                target.x,
+                target.y
+            );
+
+            target.triggerHealthBar();
+
+            this.unregisterPosition(projectile);
+            delete this.entities[projectile.instance];
+        });
+
+        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+        attacker.triggerHealthBar();
     }
 
-    private isPlayer(id: string): boolean {
-        let { player } = this.game;
+    /**
+     * Creates a new player object based on the info provided.
+     * @param info Entity data info to spawn the player.
+     * @returns A new player object.
+     */
 
-        return player ? player.instance === id : false;
+    private createPlayer(info: PlayerData): Player {
+        let player = new Player(info.instance);
+
+        player.rights = info.rights!;
+        player.level = info.level!;
+        player.attackRange = info.attackRange!;
+        player.orientation = info.orientation!;
+        player.movementSpeed = info.movementSpeed!;
+
+        player.setHitPoints(info.hitPoints!);
+        player.setMaxHitPoints(info.maxHitPoints!);
+
+        player.loadHandler(this.game);
+
+        return player;
     }
 
-    public get<E extends Entity>(id: string): E {
-        return this.entities[id] as E;
+    /**
+     * Checks if the instance provided is the same as the main player.
+     * @param instance The instance we are checking.
+     * @returns If the instance is the same as the main player's instance.
+     */
+
+    private isPlayer(instance: string): boolean {
+        return this.game.player.instance === instance;
     }
+
+    /**
+     * Gets an entity based on its instance, an entity type
+     * can be specified as long as its a sublcass of Entity.
+     * @param instance The instance of the entity we are looking for.
+     * @returns An entity object or subclass of Entity.
+     */
+
+    public get<E extends Entity>(instance: string): E {
+        return this.entities[instance] as E;
+    }
+
+    /**
+     * Adds an entity to the rendering grid and the list of entities.
+     * We do not render in the fading if the user is on a mobile device.
+     * @param entity The entity object we are adding.
+     */
+
+    public addEntity(entity: Entity): void {
+        this.entities[entity.instance] = entity;
+        this.registerPosition(entity);
+
+        if (!(entity instanceof Item && entity.dropped) && !this.renderer.isPortableDevice())
+            entity.fadeIn(this.game.time);
+    }
+
+    /**
+     * Removes an entity from the rendering grid, and also deletes
+     * it from our entity controller list.
+     * @param entity The entity we are removing.
+     */
 
     public removeEntity(entity: Entity): void {
-        let { grids, entities } = this;
+        this.grids.removeFromRenderingGrid(entity);
 
-        grids.removeFromRenderingGrid(entity);
-
-        delete entities[entity.instance];
+        delete this.entities[entity.instance];
     }
 
+    /**
+     * Removes an item entity from the rendering grid and
+     * deletes it from our controller's list of entities.
+     * @param item The item instance we are removing.
+     */
+
+    public removeItem(item: Entity): void {
+        this.grids.removeFromRenderingGrid(item);
+
+        delete this.entities[item.instance];
+    }
+
+    /**
+     * Registers an entity's position on the renderin grid.
+     * @param entity The entity we are adding to rendering grid.
+     */
+
+    public registerPosition(entity: Entity): void {
+        this.grids.addToRenderingGrid(entity);
+    }
+
+    /**
+     * Registers an entity on another rendering grid simultaneously.
+     * @param entity The entity we are registering.
+     */
+
+    public registerDuality(entity: Character): void {
+        this.grids.addToRenderingGrid(entity);
+    }
+
+    /**
+     * Removes an entity from the renderin grid.
+     * @param entity The entity we are removing.
+     */
+
+    public unregisterPosition(entity: Entity): void {
+        this.grids.removeFromRenderingGrid(entity);
+    }
+
+    /**
+     * Decrepit entities are entities that are queued for deletion.
+     * This occurs when we traverse regions and the need to despawn
+     * entities no longer visible becomes necessary.
+     */
+
     public clean(): void {
-        let { decrepit, game, grids } = this;
+        if (this.decrepit.length === 0) return;
 
-        if (decrepit.length === 0) return;
-
-        _.each(decrepit, (entity: Entity) => {
-            let { player } = game;
-
-            if (player ? entity.instance === player.instance : false) return;
+        _.each(this.decrepit, (entity: Entity) => {
+            // Don't remove the main player.
+            if (this.isPlayer(entity.instance)) return;
 
             this.removeEntity(entity);
         });
     }
 
-    public clearPlayers(exception: Player): void {
-        let { entities, grids } = this;
+    /**
+     * Clears all player entities from our list.
+     * @param exception A player type entity that we are excluding from the clear.
+     */
 
-        _.each(entities, (entity) => {
-            if (entity.instance !== exception.instance && entity.isPlayer())
+    public clearPlayers(exception: Player): void {
+        _.each(this.entities, (entity) => {
+            if (entity.isPlayer() && entity.instance !== exception.instance)
                 this.removeEntity(entity);
         });
     }
 
-    public addEntity(entity: Entity): void {
-        let { entities, renderer, game } = this;
-
-        if (entities[entity.instance]) return;
-
-        entities[entity.instance] = entity;
-        this.registerPosition(entity);
-
-        if (!(entity instanceof Item && entity.dropped) && !renderer.isPortableDevice())
-            entity.fadeIn(game.time);
-    }
-
-    public removeItem(item: Entity): void {
-        if (!item) return;
-
-        let { grids, entities } = this;
-
-        grids.removeFromRenderingGrid(item);
-
-        delete entities[item.instance];
-    }
-
-    public registerPosition(entity: Entity): void {
-        if (!entity) return;
-
-        // if (
-        //     entity.isPlayer() ||
-        //     entity.isMob() ||
-        //     entity.isNPC() ||
-        //     entity.type === 'chest'
-        // ) {
-        //     if (entity.type !== 'player' || entity.nonPathable)
-        //         this.grids.addToPathingGrid(entity.gridX, entity.gridY);
-        // }
-
-        this.grids.addToRenderingGrid(entity);
-    }
-
-    public registerDuality(entity: Character): void {
-        if (!entity) return;
-
-        this.grids.addToRenderingGrid(entity);
-
-        // if (entity.nextGridX > -1 && entity.nextGridY > -1 && !(entity instanceof Player))
-        //     this.grids.pathingGrid[(entity as Character).nextGridY][
-        //         (entity as Character).nextGridX
-        //     ] = 1;
-    }
-
-    public unregisterPosition(entity: Entity): void {
-        if (!entity) return;
-
-        this.grids.removeFromRenderingGrid(entity);
-    }
+    /**
+     * Grabs a sprite object based on the name string.
+     * @param name The string of the sprite we're attempting to grab.
+     * @returns A sprite object if found, otherwise undefined.
+     */
 
     public getSprite(name: string | undefined): Sprite | undefined {
         if (name) return this.sprites.sprites[name];
