@@ -827,10 +827,10 @@ export default class Player extends Character {
      * @param message The string data we are sending to the client.
      * @param global Whether or not the message is relayed to all players in the world or just region.
      * @param withBubble Whether or not to display a visual bubble with message in it.
-     * @param colour The colour of the message.
+     * @param colour The colour of the message. Defaults client-sided if not specified.
      */
 
-    public chat(message: string, global = false, withBubble = true, colour?: string): void {
+    public chat(message: string, global = false, withBubble = true, colour = ''): void {
         if (this.isMuted()) return this.notify('You are currently muted.', 'crimson');
         if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
 
@@ -841,6 +841,7 @@ export default class Player extends Character {
                 instance: this.instance,
                 message,
                 withBubble,
+                global,
                 colour
             });
 
