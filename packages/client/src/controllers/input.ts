@@ -101,7 +101,7 @@ export default class InputController {
 
         switch (inputType) {
             case Modules.InputType.Key:
-                if (chatHandler.isActive()) {
+                if (chatHandler.inputVisible()) {
                     chatHandler.key(data as Modules.Keys);
                     return;
                 }
@@ -141,9 +141,6 @@ export default class InputController {
                         this.updateFrozen(player.frozen);
 
                         break;
-
-                    case Modules.Keys.Slash:
-                        chatHandler.input.val('/');
 
                     case Modules.Keys.Enter:
                         chatHandler.toggle();

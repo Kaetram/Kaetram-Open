@@ -5,127 +5,161 @@ import { Modules, Packets } from '@kaetram/common/network';
 import type Game from '../game';
 
 export default class ChatController {
-    private chat = $('#chat');
-    private log = $('#chat-log');
-    public input = $('#chat-input');
+    private chatBox: JQuery<HTMLElement> = $('#chat');
+    private log: JQuery<HTMLElement> = $('#chat-log');
+    private input: JQuery<HTMLElement> = $('#chat-input');
     private button = $('#chat-button');
 
-    private visible = false;
-
     private readonly fadingDuration = 5000;
-    private fadingTimeout!: number | null;
+    private fadingTimeout!: number | undefined;
 
     public constructor(private game: Game) {
-        let { button, input } = this;
-
-        button.on('click', () => {
-            button.trigger('blur');
-
-            if (input.is(':visible')) this.hideInput();
-            else this.toggle();
-        });
+        this.button.on('click', () => this.toggle());
     }
 
-    public add(source: string, text: string, colour?: string): void {
-        let element = $(`<p>${source} » ${text}</p>`);
+    /**
+     * Handles key input from the handler. Pressing the ENTER
+     * key will trigger the chat input similar to the button.
+     * @param data The key that is currently being pressed.
+     */
 
-        this.showChat();
+    public key(data: Modules.Keys): void {
+        if (data === Modules.Keys.Enter && this.input.val() !== '') return this.send();
+        if (data === Modules.Keys.Esc || data === Modules.Keys.Enter) this.toggle();
+    }
 
-        if (!this.isActive()) this.hideInput();
+    /**
+     * Adds an entry to the chat box with the source,
+     * message, and optional colour (defaults to white).
+     * @param source Who is sending the message (username).
+     * @param message The contents of the message being sent.
+     * @param colour Optional parameter for the colour of the message.
+     */
 
-        this.hideChat();
+    public add(source: string, message: string, colour = ''): void {
+        let element = this.createElement(source, message);
 
         element.css('color', colour || 'white');
 
-        this.log.append(element).scrollTop(99_999);
+        // Scroll to the bottom of the chat log.
+        this.log.append(element).scrollTop(this.log.prop('scrollHeight'));
+
+        this.displayChatBox();
+
+        // Start the timeout for hiding the chatbox.
+        this.hideChatBox();
     }
 
-    public key(data: Modules.Keys): void {
-        switch (data) {
-            case Modules.Keys.Esc:
-                this.toggle();
+    /**
+     * Creates a chatbox element that we use to append to the chat log.
+     * @param source Who is sending the message, the player's username.
+     * @param message The contents of the message.
+     */
 
-                break;
-
-            case Modules.Keys.Enter:
-                if (this.input.val() === '') this.toggle();
-                else this.send();
-
-                break;
-        }
+    private createElement(source: string, message: string): JQuery<HTMLElement> {
+        return $(`<p>${source} » ${message}</p>`);
     }
 
-    private send(): void {
+    /**
+     * Sends a packet to the server with the string
+     * of the chat message in the input field.
+     */
+
+    public send(): void {
         this.game.socket.send(Packets.Chat, [this.input.val()]);
-        this.toggle();
+
+        this.hide();
     }
+
+    /**
+     * Toggles the chat input and box.
+     */
 
     public toggle(): void {
-        this.clean();
+        this.clearTimeout();
 
-        if (this.visible && !this.isActive()) this.showInput();
-        else if (this.visible) {
-            this.hideInput();
-            this.hideChat();
-        } else {
-            this.showChat();
-            this.showInput();
-        }
+        if (this.inputVisible()) this.hide();
+        else this.display();
     }
 
-    private showChat(): void {
-        this.chat.fadeIn('fast');
+    /**
+     * Makes the input field for the chat visible.
+     * It also updates the state of the chat button.
+     */
 
-        this.visible = true;
-    }
-
-    private showInput(): void {
+    private display(): void {
         this.button.addClass('active');
 
-        this.input.fadeIn('fast');
-        this.input.val('');
-        this.input.trigger('focus');
+        this.displayChatBox();
 
-        this.clean();
+        // Fade input in, clear the input field, and focus it.
+        this.input.fadeIn('fast').val('').trigger('focus');
     }
 
-    private hideChat(): void {
-        let { fadingTimeout, chat, fadingDuration } = this;
+    /**
+     * Fades in the entire chatbox.
+     */
 
-        if (fadingTimeout) {
-            clearTimeout(fadingTimeout);
-            this.fadingTimeout = null;
-        }
-
-        this.fadingTimeout = window.setTimeout(() => {
-            if (!this.isActive()) {
-                chat.fadeOut('slow');
-
-                this.visible = false;
-            }
-        }, fadingDuration);
+    private displayChatBox(): void {
+        this.chatBox.fadeIn('fast');
     }
 
-    public hideInput(): void {
-        let { button, input } = this;
+    /**
+     * Clears the input field and hides it from the view.
+     * It also updates the state of the chat button.
+     */
 
-        button.removeClass('active');
+    private hide(): void {
+        this.button.removeClass('active');
 
-        input.val('').fadeOut('fast').trigger('blur');
+        this.hideChatBox();
 
-        this.hideChat();
+        // Fade input out and clear the input field.
+        this.input.fadeOut('fast').val('').trigger('blur');
     }
+
+    /**
+     * Hides the chatbox after running a timeout for
+     * `fadingDuration` period of time.
+     */
+
+    private hideChatBox(): void {
+        this.fadingTimeout = window.setTimeout(
+            () => this.chatBox.fadeOut('slow'),
+            this.fadingDuration
+        );
+    }
+
+    /**
+     * Checks if the input element has a visible value.
+     * @returns Whether `:visible` flag is in the HTML element.
+     */
+
+    public inputVisible(): boolean {
+        return this.input.is(':visible');
+    }
+
+    /**
+     * Cleans all the chat inputs and hides everything if
+     * the input is visible.
+     */
 
     public clear(): void {
-        this.button.off('click');
+        if (this.inputVisible()) this.toggle();
+
+        this.clearTimeout();
     }
 
-    private clean(): void {
-        clearTimeout(this.fadingTimeout!);
-        this.fadingTimeout = null;
-    }
+    /**
+     * Clears the fading timeout. The fading timeout represents
+     * the delay before the chat box fades out.
+     */
 
-    public isActive(): boolean {
-        return this.input.is(':focus');
+    public clearTimeout(): void {
+        if (this.fadingTimeout) {
+            clearTimeout(this.fadingTimeout);
+
+            this.fadingTimeout = undefined;
+        }
     }
 }

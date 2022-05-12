@@ -129,7 +129,7 @@ export default class MenuController {
 
         if (profile?.isVisible() || profile.settings.isVisible()) profile.hide();
 
-        if (game.input.chatHandler.input.is(':visible')) game.input.chatHandler.hideInput();
+        game.input.chatHandler.clear();
 
         if (bank?.isVisible()) bank.hide();
 
