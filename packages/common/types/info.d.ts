@@ -50,12 +50,6 @@ export interface TilesetData {
     };
 }
 
-export interface BubbleInfo {
-    instance: string;
-    x: number;
-    y: number;
-}
-
 export interface ProfessionsInfo {
     id: number;
     name: string;

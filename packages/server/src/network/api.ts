@@ -78,23 +78,25 @@ export default class API {
     private handleChat(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
 
-        let text = Utils.parseMessage(request.body.text),
-            source = Utils.parseMessage(request.body.source),
-            { colour, username } = request.body;
+        log.info(`[API] Server chat API not implemented.`);
 
-        if (username) {
-            let player = this.world.getPlayerByName(username);
+        // let text = Utils.parseMessage(request.body.text),
+        //     source = Utils.parseMessage(request.body.source),
+        //     { colour, username } = request.body;
 
-            player?.chat(source, text, colour);
+        // if (username) {
+        //     let player = this.world.getPlayerByName(username);
 
-            response.json({ status: 'success' });
+        //     player?.chat(source, text, colour);
 
-            return;
-        }
+        //     response.json({ status: 'success' });
 
-        this.world.globalMessage(source, text, colour);
+        //     return;
+        // }
 
-        response.json({ status: 'success' });
+        // this.world.globalMessage(source, text, colour);
+
+        // response.json({ status: 'success' });
     }
 
     private handlePlayers(request: express.Request, response: express.Response): void {

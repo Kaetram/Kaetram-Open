@@ -113,24 +113,14 @@ export default class World {
      * @param source Who is sending the message.
      * @param message The contents of the broadcast.
      * @param colour The message's colour.
-     * @param isGlobal Whether we display the chat as a global message.
-     * @param withBubble Whether to display a bubble above the player.
      */
 
-    public globalMessage(
-        source: string,
-        message: string,
-        colour?: string,
-        isGlobal = false,
-        withBubble = false
-    ): void {
+    public globalMessage(source: string, message: string, colour = ''): void {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
-                name: source,
-                text: message,
-                colour,
-                isGlobal,
-                withBubble
+                source,
+                message,
+                colour
             })
         });
     }
