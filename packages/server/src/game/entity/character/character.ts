@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import Entity, { EntityData } from '../entity';
+import Entity from '../entity';
 import Combat from './combat/combat';
 
 import World from '../../world';
@@ -10,6 +10,7 @@ import HitPoints from './points/hitpoints';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Movement, Points } from '../../../network/packets';
 import { PacketType } from '@kaetram/common/network/modules';
+import { EntityData } from '@kaetram/common/types/entity';
 
 type StunCallback = (stun: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;

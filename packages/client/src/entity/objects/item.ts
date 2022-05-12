@@ -6,9 +6,9 @@ export default class Item extends Entity {
 
     public constructor(
         instance: string,
-        public count: number,
-        public ability: number,
-        public abilityLevel: number
+        public count: number = 1,
+        public ability: number = -1,
+        public abilityLevel: number = -1
     ) {
         super(instance, Modules.EntityType.Item);
     }

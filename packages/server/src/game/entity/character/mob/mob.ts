@@ -1,20 +1,21 @@
 import Utils from '@kaetram/common/util/utils';
 
-import Character from '../character';
+import Entity from '../../entity';
+import World from '../../../world';
 import MobHandler from './handler';
+import Character from '../character';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
-import Entity, { EntityData } from '../../entity';
-import { MobData } from '@kaetram/common/types/mob';
-
 import rawData from '../../../../../data/mobs.json';
 import log from '@kaetram/common/util/log';
-import World from '../../../world';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { MobData } from '@kaetram/common/types/mob';
 import { Movement } from '@kaetram/server/src/network/packets';
+import { EntityData } from '@kaetram/common/types/entity';
 
 type RawData = {
     [key: string]: MobData;
