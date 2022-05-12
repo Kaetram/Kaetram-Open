@@ -289,7 +289,7 @@ export default class Connection {
             entity.frozen = true;
 
             if (isPlayer) this.bubble.clean();
-            else this.bubble.destroy(info.id);
+            else this.bubble.clear(info.id);
 
             /**
              * Teleporting an entity seems to cause a glitch with the
@@ -367,7 +367,7 @@ export default class Connection {
 
             entity.stop();
 
-            this.bubble.destroy(entity.instance);
+            this.bubble.clear(entity.instance);
 
             if (this.game.player.target && this.game.player.target.instance === entity.instance)
                 this.game.player.removeTarget();
@@ -799,20 +799,20 @@ export default class Connection {
                     if (isNPC)
                         if (!message) {
                             sound = 'npc-end';
-                            this.bubble.destroy(data.id!);
+                            this.bubble.clear(data.id!);
                         } else {
                             sound = 'npc';
 
                             this.bubble.create(data.id!, message);
 
-                            this.bubble.setTo(entity);
+                            this.bubble.setTo(data.id!, entity.x, entity.y);
 
                             if (this.renderer.mobile && this.renderer.autoCentre)
                                 this.renderer.camera.centreOn(this.game.player);
                         }
                     else {
                         this.bubble.create(data.id!, message!, this.time);
-                        this.bubble.setTo(entity);
+                        this.bubble.setTo(data.id!, entity.x, entity.y);
                     }
 
                     this.audio.play(Modules.AudioTypes.SFX, sound);
@@ -1120,13 +1120,13 @@ export default class Connection {
 
         this.messages.onBubble((info) => {
             if (!info.text) {
-                this.bubble.destroy(info.id);
+                this.bubble.clear(info.id);
                 return;
             }
 
-            this.bubble.create(info.id, info.text, info.duration, info.isObject, info.info);
+            this.bubble.create(info.id, info.text, info.duration, info.info);
 
-            this.bubble.setTo(info.info);
+            this.bubble.setTo(info.id, info.info.x, info.info);
         });
 
         this.messages.onProfession((opcode, info) => {

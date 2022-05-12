@@ -28,7 +28,7 @@ export default class Inventory {
         private game: Game,
         private menu: MenuController,
         public size: number,
-        data: SlotData[]
+        data: SlotData[] = []
     ) {
         this.actions = this.menu.actions;
         this.container = new Container(this.size);
