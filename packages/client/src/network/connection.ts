@@ -32,7 +32,7 @@ import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import { SerializedStoreInfo, SerializedStoreItem } from '@kaetram/common/types/stores';
+import { SerializedStoreInfo } from '@kaetram/common/types/stores';
 import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
 export default class Connection {
     private app;
@@ -557,24 +557,28 @@ export default class Connection {
         this.messages.onNetwork(() => this.socket.send(Packets.Network, [Opcodes.Network.Pong]));
 
         this.messages.onChat((info) => {
-            let entity = this.entities.get<Character>(info.instance);
+            // Messages with source are static, we add them directly to the chatbox.
+            if (info.source)
+                return this.input.chatHandler.add(info.source, info.message, info.colour);
 
-            // log.debug(info);
+            let entity = this.entities.get<Character>(info.instance!);
 
-            // if (info.withBubble) {
-            //     let entity = this.entities.get(info.id!) as Character;
+            if (!entity) return;
 
-            //     if (entity) {
-            //         this.bubble.create(info.id!, info.text, info.duration);
-            //         this.bubble.setTo(entity);
+            // Add to the chatbox, if global, we prefix it to the entity's name.
+            this.input.chatHandler.add(
+                `${info.global ? '[Global]:' : ''} ${entity.name}`,
+                info.message,
+                info.colour
+            );
 
-            //         this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
-            //     }
-            // }
+            // Draw bubble and play audio.
+            if (info.withBubble) {
+                this.bubble.create(info.instance!, info.message);
+                this.bubble.setTo(info.instance!, entity.x, entity.y);
 
-            // if (info.isGlobal) info.name = `[Global] ${entity.name}`;
-
-            // this.input.chatHandler.add(info.name, info.text, info.colour);
+                this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
+            }
         });
 
         this.messages.onCommand((info) => {

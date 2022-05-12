@@ -222,6 +222,11 @@ export default class Messages {
         this.messages = messages;
     }
 
+    /**
+     * Parses through the data and calls the appropriate callback.
+     * @param data Packet data containing packet opcode and data.
+     */
+
     public handleData(data: [Packets, ...never[]]): void {
         let packet = data.shift()!,
             message = this.messages[packet]();
@@ -229,9 +234,21 @@ export default class Messages {
         if (message && _.isFunction(message)) message.call(this, ...data);
     }
 
+    /**
+     * Packet data received in an array format calls `handleData`
+     * for each iteration of packet data.
+     * @param data Packet data array.
+     */
+
     public handleBulkData(data: never[]): void {
-        _.each(data, (message) => this.handleData(message));
+        _.each(data, this.handleData.bind(this));
     }
+
+    /**
+     * UTF8 messages handler. These are simple messages that are pure
+     * strings. These errors are displayed on the login page.
+     * @param message UTF8 message received from the server.
+     */
 
     public handleUTF8(message: string): void {
         this.app.toggleLogin(false);
@@ -308,7 +325,7 @@ export default class Messages {
     }
 
     /**
-     * Universal Callbacks
+     * Packet callbacks.
      */
 
     public onHandshake(callback: HandshakeCallback): void {
