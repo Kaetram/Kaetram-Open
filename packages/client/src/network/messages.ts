@@ -8,6 +8,7 @@ import type {
     MovementCallback,
     CombatCallback,
     AnimationCallback,
+    ChatCallback,
     RespawnCallback,
     StoreCallback
 } from '@kaetram/common/types/messages/outgoing';
@@ -15,7 +16,6 @@ import type {
 // TODO: Slowly remove all these.
 import type {
     BubbleData,
-    ChatData,
     CommandData,
     ContainerAddData,
     ContainerBatchData,
@@ -73,7 +73,6 @@ interface ProjectileCallback {
 type PopulationCallback = (population: number) => void;
 type PointsCallback = (data: PointsData) => void;
 type NetworkCallback = () => void;
-type ChatCallback = (data: ChatData) => void;
 type CommandCallback = (data: CommandData) => void;
 interface ContainerCallback {
     (opcode: Opcodes.Container.Batch, info: ContainerBatchData): void;

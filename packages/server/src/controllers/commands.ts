@@ -65,15 +65,7 @@ export default class Commands {
                 return;
 
             case 'global':
-                this.world.globalMessage(
-                    this.player.username,
-                    blocks.join(' '),
-                    'rgba(191, 191, 63, 1.0)',
-                    true,
-                    false
-                );
-
-                return;
+                return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
 
             case 'region':
                 log.info(this.player.region);
