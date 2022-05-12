@@ -20,7 +20,7 @@ export default class BubbleController {
      * @param instance - An identifier for the bubble we are creating.
      * @param message - A string of the text we are displaying.
      * @param duration - How long the bubble will display for.
-     * @param static - Static bubbles are assigned to a position rather than entity.
+     * @param position - Position containing x and y coordinates. Uses those and marks the bubble as static.
      */
     public create(instance: string, message: string, duration = 5000, position?: Position): void {
         let bubble = this.bubbles[instance];
@@ -74,13 +74,13 @@ export default class BubbleController {
     }
 
     /**
-     * Clears all the bubbles from the screen.
+     * Removes a bubble based on its instance. Checks if it exists
+     * first then calls the destroy command with the bubble.
+     * @param instance The instance of the bubble we are checking.
      */
 
-    public clean(): void {
-        _.each(this.bubbles, (bubble) => bubble.destroy());
-
-        this.bubbles = {};
+    public clear(instance: string): void {
+        if (this.bubbles[instance]) this.destroy(this.bubbles[instance]);
     }
 
     /**
@@ -91,5 +91,15 @@ export default class BubbleController {
     public destroy(bubble: Blob): void {
         bubble.destroy();
         delete this.bubbles[bubble.instance];
+    }
+
+    /**
+     * Clears all the bubbles from the screen.
+     */
+
+    public clean(): void {
+        _.each(this.bubbles, (bubble) => bubble.destroy());
+
+        this.bubbles = {};
     }
 }
