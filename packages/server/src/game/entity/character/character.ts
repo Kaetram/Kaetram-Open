@@ -323,6 +323,17 @@ export default abstract class Character extends Entity {
         });
     }
 
+    /**
+     * Broadcasts a message to all the players in the world.
+     * @param packet The packet to send globally.
+     */
+
+    public sendBroadcast(packet: Packet): void {
+        this.world.push(PacketType.Broadcast, {
+            packet
+        });
+    }
+
     // End of packet sending functions
 
     /**
