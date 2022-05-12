@@ -59,7 +59,7 @@ export default class BubbleController {
      */
 
     public update(time: number): void {
-        _.each(this.bubbles, (bubble) => {
+        _.each(this.bubbles, (bubble: Blob) => {
             let entity = this.game.entities.get(bubble.instance);
 
             // If there is an entity, we set the bubble to its position.
