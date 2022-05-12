@@ -822,6 +822,40 @@ export default class Player extends Character {
     }
 
     /**
+     * Sends a chat message with the specified text string. The message
+     * can be global or only sent to nearby regions.
+     * @param message The string data we are sending to the client.
+     * @param global Whether or not the message is relayed to all players in the world or just region.
+     * @param withBubble Whether or not to display a visual bubble with message in it.
+     * @param colour The colour of the message.
+     */
+
+    public chat(message: string, global = false, withBubble = true, colour?: string): void {
+        if (this.isMuted()) return this.notify('You are currently muted.', 'crimson');
+        if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
+
+        log.debug(`[${this.username}] ${message}`);
+
+        let name = Utils.formatName(this.username),
+            packet = new Chat({
+                instance: this.instance,
+                message,
+                withBubble,
+                colour
+            });
+
+        // Relay the message to the discord channel.
+        if (config.discordEnabled) this.world.discord.sendMessage(name, message, undefined, true);
+
+        // API relays the message to the discord server from multiple worlds.
+        if (config.hubEnabled) this.world.api.sendChat(name, message, global);
+
+        // Send globally or to nearby regions.
+        if (global) this.sendBroadcast(packet);
+        else this.sendToRegions(packet);
+    }
+
+    /**
      * Sends a popup message to the player (generally used
      * for quests or achievements);
      * @param title The header text for the popup.
@@ -868,41 +902,23 @@ export default class Player extends Character {
         this.lastNotify = Date.now();
     }
 
-    public pointer(type: Opcodes.Pointer, info: PointerData): void {
+    /**
+     * Sends a pointer data packet to the player. Removes all
+     * existing pointers first to prevent multiple pointers.
+     * @param opcode The pointer opcode we are sending.
+     * @param info Information for the pointer such as position.
+     */
+
+    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
         // Remove all existing pointers first.
         this.send(new Pointer(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(type in Opcodes.Pointer)) return;
+        if (!(opcode in Opcodes.Pointer)) return;
 
         info.instance = this.instance;
 
-        this.send(new Pointer(type, info));
-    }
-
-    /**
-     * Sends a chat packet that can be used to
-     * show special messages to the player.
-     */
-
-    public chat(
-        source: string,
-        text: string,
-        colour?: string,
-        isGlobal = false,
-        withBubble = false
-    ): void {
-        if (!source || !text) return;
-
-        this.send(
-            new Chat({
-                name: source,
-                text,
-                colour,
-                isGlobal,
-                withBubble
-            })
-        );
+        this.send(new Pointer(opcode, info));
     }
 
     /**
@@ -910,6 +926,7 @@ export default class Player extends Character {
      * them in between tiles. Should only be used if they are
      * being transported elsewhere.
      */
+
     public stopMovement(force = false): void {
         this.send(
             new Movement(Opcodes.Movement.Stop, {

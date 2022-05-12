@@ -40,6 +40,17 @@ export type AnimationCallback = (info: AnimationPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface ChatPacket {
+    instance: string; // Entity that the chat packet belongs to.
+    message: string; // Message contents of the packet.
+    withBubble?: boolean; // If the message should have a bubble.
+    colour?: string; // Colour of the message.
+}
+
+export type ChatCallback = (info: ChatPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 export interface RespawnPacket {
     instance: string;
     x: number; // Spawn x coordinate

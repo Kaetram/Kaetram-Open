@@ -557,24 +557,24 @@ export default class Connection {
         this.messages.onNetwork(() => this.socket.send(Packets.Network, [Opcodes.Network.Pong]));
 
         this.messages.onChat((info) => {
-            log.debug(info);
+            let entity = this.entities.get<Character>(info.instance);
 
-            if (info.withBubble) {
-                let entity = this.entities.get(info.id!);
+            // log.debug(info);
 
-                if (entity) {
-                    info.name = info.name.charAt(0).toUpperCase() + info.name.slice(1);
+            // if (info.withBubble) {
+            //     let entity = this.entities.get(info.id!) as Character;
 
-                    this.bubble.create(info.id!, info.text, info.duration);
-                    this.bubble.setTo(entity);
+            //     if (entity) {
+            //         this.bubble.create(info.id!, info.text, info.duration);
+            //         this.bubble.setTo(entity);
 
-                    this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
-                }
-            }
+            //         this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
+            //     }
+            // }
 
-            if (info.isGlobal) info.name = `[Global] ${info.name}`;
+            // if (info.isGlobal) info.name = `[Global] ${entity.name}`;
 
-            this.input.chatHandler.add(info.name, info.text, info.colour);
+            // this.input.chatHandler.add(info.name, info.text, info.colour);
         });
 
         this.messages.onCommand((info) => {
