@@ -101,4 +101,18 @@ export default class BubbleController {
         bubble.destroy();
         delete this.bubbles[id];
     }
+
+    /**
+     * Creates a JQuery HTML element of the bubble with the specified
+     * id and message contents.
+     * @param id
+     * @param message
+     * @returns
+     */
+
+    public createBubble(id: string, message: string): JQuery<HTMLElement> {
+        return $(
+            `<div id="${id}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
+        );
+    }
 }
