@@ -131,7 +131,7 @@ export default class Socket {
 
         this.game.app.sendError(
             null,
-            this.game.isDebug()
+            window.config.debug
                 ? `Couldn't connect to ${host}:${port}`
                 : 'Could not connect to the game server.'
         );

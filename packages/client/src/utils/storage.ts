@@ -34,7 +34,7 @@ interface RegionMapData {
 interface StorageData {
     new: boolean;
     world: number;
-    clientVersion: number;
+    clientVersion: string;
     player: PlayerData;
     settings: Settings;
     map: RegionMapData;
@@ -46,14 +46,14 @@ let storage = window.localStorage,
 export default class Storage {
     public data!: StorageData;
 
-    public constructor(private app: App) {
+    public constructor() {
         this.load();
     }
 
     private load(): void {
         this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
 
-        if (this.data.clientVersion !== parseFloat(this.app.config.version)) {
+        if (this.data.clientVersion !== window.config.version) {
             this.data = this.create();
             this.save();
         }
@@ -63,7 +63,7 @@ export default class Storage {
         return {
             new: true,
             world: window.config.serverId,
-            clientVersion: parseFloat(this.app.config.version),
+            clientVersion: window.config.version,
 
             player: {
                 username: '',
@@ -167,6 +167,18 @@ export default class Storage {
             objects: this.data.map.objects,
             cursorTiles: this.data.map.cursorTiles
         };
+    }
+
+    public getUsername(): string {
+        return this.data.player.username;
+    }
+
+    public getPassword(): string {
+        return this.data.player.password;
+    }
+
+    public hasRemember(): boolean {
+        return this.data.player.rememberMe;
     }
 
     public getPlayer(): PlayerData {
