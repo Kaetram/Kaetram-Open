@@ -141,7 +141,7 @@ export default class App {
 
             body.trigger('focus');
 
-            if (game.started) game.handleInput(Modules.InputType.Key, key);
+            if (game.started) game.input.handle(Modules.InputType.Key, key);
             else if (key === Modules.Keys.Enter) this.login();
         });
 
