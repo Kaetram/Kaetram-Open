@@ -109,30 +109,6 @@ export default class Camera {
         this.centreOn(this.player);
     }
 
-    // handlePanning(direction: Modules.Keys): void {
-    //     let { panning, x, y } = this;
-
-    //     if (!panning) return;
-
-    //     switch (direction) {
-    //         case Modules.Keys.Up:
-    //             this.setPosition(x, y - 1);
-    //             break;
-
-    //         case Modules.Keys.Down:
-    //             this.setPosition(x, y + 1);
-    //             break;
-
-    //         case Modules.Keys.Left:
-    //             this.setPosition(x - 1, y);
-    //             break;
-
-    //         case Modules.Keys.Right:
-    //             this.setPosition(x + 1, y);
-    //             break;
-    //     }
-    // }
-
     public centreOn(player: Player | null): void {
         if (!player) return;
 

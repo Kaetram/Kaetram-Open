@@ -1,9 +1,10 @@
 import _ from 'lodash';
 
-import spriteData from '../../data/sprites.json';
-import Animation from '../entity/animation';
-import Sprite from '../entity/sprite';
 import log from '../lib/log';
+import Sprite from '../entity/sprite';
+import Animation from '../entity/animation';
+
+import spriteData from '../../data/sprites.json';
 
 import type { SpriteData } from '../entity/sprite';
 
@@ -15,10 +16,13 @@ export default class SpritesController {
         this.sparksAnimation.setSpeed(120);
     }
 
-    public load(): void {
-        let sprites = spriteData as SpriteData[];
+    /**
+     * Iterates through all the sprites in the JSON file
+     * and initializes sprites based on their key and data.
+     */
 
-        for (let data of sprites) {
+    public load(): void {
+        for (let data of spriteData as SpriteData[]) {
             let sprite = new Sprite(data);
 
             sprite.loadSprite();
@@ -28,6 +32,11 @@ export default class SpritesController {
 
         log.debug('Finished loading sprite data...');
     }
+
+    /**
+     * Iterates through all the sprites loaded and sends
+     * an update signal.
+     */
 
     public updateSprites(): void {
         _.each(this.sprites, (sprite) => sprite.update());
