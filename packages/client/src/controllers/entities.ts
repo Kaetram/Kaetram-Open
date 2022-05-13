@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+import log from '../lib/log';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
@@ -13,13 +14,13 @@ import { EntityData } from '@kaetram/common/types/entity';
 import { PlayerData } from '@kaetram/common/types/player';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
-import type { ProjectileData } from '@kaetram/common/types/messages';
-import type Character from '../entity/character/character';
-import type Equipment from '../entity/character/player/equipment/equipment';
-import type Weapon from '../entity/character/player/equipment/weapon';
+import type Game from '../game';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
-import type Game from '../game';
+import type Character from '../entity/character/character';
+import type Weapon from '../entity/character/player/equipment/weapon';
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type { ProjectileData } from '@kaetram/common/types/messages';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -78,7 +79,7 @@ export default class EntitiesController {
         // Entity already exists, don't respawn.
         if (info.instance in this.entities) return;
 
-        let entity: Entity;
+        let entity!: Entity;
 
         switch (info.type) {
             case Modules.EntityType.Chest:
@@ -106,7 +107,8 @@ export default class EntitiesController {
                 break;
         }
 
-        if (!entity!) return;
+        // Something went wrong creating the entity.
+        if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
         let sprite = this.getSprite(entity.isItem() ? `item-${entity.name}` : info.key);
 
