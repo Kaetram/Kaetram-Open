@@ -70,16 +70,30 @@ enum TileFlip {
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
-    private context; // Entities;
+    private background = document.querySelector<HTMLCanvasElement>('#background')!;
+    private foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
+    private overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
+    private textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
+    private entitiesCanvas = document.querySelector<HTMLCanvasElement>('#entities')!;
+    private cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
-    public backContext;
+    private context: CanvasRenderingContext2D;
 
-    private foreContext; // Foreground
-    private overlayContext; // Lighting
-    private textContext; // Texts
-    private cursorContext; // Cursor
+    public backContext: CanvasRenderingContext2D;
 
-    private canvases: HTMLCanvasElement[];
+    private foreContext: CanvasRenderingContext2D; // Foreground
+    private overlayContext: CanvasRenderingContext2D; // Lighting
+    private textContext: CanvasRenderingContext2D; // Texts
+    private cursorContext: CanvasRenderingContext2D; // Cursor
+
+    private canvases: HTMLCanvasElement[] = [
+        this.background,
+        this.entitiesCanvas,
+        this.foreground,
+        this.overlay,
+        this.textCanvas,
+        this.cursor
+    ];
 
     private allContexts: RenderingContext[];
 
@@ -139,23 +153,13 @@ export default class Renderer {
     private transitionInterval!: number;
     private tileset: unknown;
 
-    public constructor(
-        public background: HTMLCanvasElement,
-        public entitiesCanvas: HTMLCanvasElement,
-        public foreground: HTMLCanvasElement,
-        public overlay: HTMLCanvasElement,
-        public textCanvas: HTMLCanvasElement,
-        public cursor: HTMLCanvasElement,
-        public game: Game
-    ) {
-        this.context = entitiesCanvas.getContext('2d')!; // Entities;
-        this.backContext = background.getContext('2d')!; // Background
-        this.foreContext = foreground.getContext('2d')!; // Foreground
-        this.overlayContext = overlay.getContext('2d')!; // Lighting
-        this.textContext = textCanvas.getContext('2d')!; // Texts
-        this.cursorContext = cursor.getContext('2d')!; // Cursor
-
-        this.canvases = [background, entitiesCanvas, foreground, overlay, textCanvas, cursor];
+    public constructor(public game: Game) {
+        this.context = this.entitiesCanvas.getContext('2d')!; // Entities;
+        this.backContext = this.background.getContext('2d')!; // Background
+        this.foreContext = this.foreground.getContext('2d')!; // Foreground
+        this.overlayContext = this.overlay.getContext('2d')!; // Lighting
+        this.textContext = this.textCanvas.getContext('2d')!; // Texts
+        this.cursorContext = this.cursor.getContext('2d')!; // Cursor
 
         let { context, backContext, foreContext, overlayContext, textContext, cursorContext } =
             this;
