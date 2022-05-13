@@ -1,4 +1,5 @@
 import { HitData } from '../info';
+import { EntityData } from '../entity';
 import { SerializedStoreItem } from '../stores';
 
 import type { Modules, Opcodes } from '../../network';
@@ -6,6 +7,12 @@ import type { Modules, Opcodes } from '../../network';
 /**
  * Packet interfaces of data being sent from the server to the client.
  */
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type SpawnCallback = (data: EntityData) => void;
+
+////////////////////////////////////////////////////////////////////////////////
 
 export interface MovementPacket {
     instance: string; // Main entity involved in the movement.

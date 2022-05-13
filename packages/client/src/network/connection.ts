@@ -28,12 +28,12 @@ import type {
     QuestBatchData,
     QuestProgressData
 } from '@kaetram/common/types/messages';
-import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import { SerializedStoreInfo } from '@kaetram/common/types/stores';
 import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
+import { EntityData } from '@kaetram/common/types/entity';
 export default class Connection {
     private app;
     private audio;
@@ -75,7 +75,7 @@ export default class Connection {
 
         this.app = app;
         this.audio = audio;
-        this.messages = messages;
+        this.messages = socket.messages;
         this.storage = storage;
         this.socket = socket;
         this.input = input;
@@ -93,13 +93,7 @@ export default class Connection {
 
     private load(): void {
         this.messages.onHandshake((data) => {
-            this.game.id = data.id;
-
             this.game.ready = true;
-
-            if (!this.game.player) this.game.createPlayer();
-
-            if (!this.map) this.game.loadMap();
 
             this.app.updateLoader('Logging in');
 
@@ -128,7 +122,7 @@ export default class Connection {
                     password
                 });
 
-                if (this.game.hasRemember()) {
+                if (this.storage.hasRemember()) {
                     this.storage.data.player.username = username;
                     this.storage.data.player.password = password;
                 } else {
@@ -172,7 +166,7 @@ export default class Connection {
             this.menu.profile.update();
         });
 
-        this.messages.onSpawn((data) => this.entities.create(data as EntityData));
+        this.messages.onSpawn((data) => this.entities.create(data));
 
         this.messages.onEntityList((data) => {
             let ids = _.map(this.entities.getAll(), 'instance'),
@@ -191,12 +185,13 @@ export default class Connection {
             this.socket.send(Packets.Who, newIds);
         });
 
-        this.messages.onSync((data) => {
+        // TODO - REFACTOR
+        this.messages.onSync((data: any) => {
             let entity = this.entities.get<Player>(data.instance);
 
             if (!entity || !entity.isPlayer()) return;
 
-            entity.setHitPoints(data.hitPoints);
+            entity.setHitPoints(data.hitPoints!);
             entity.setMaxHitPoints(data.maxHitPoints!);
 
             entity.rights = data.rights;
@@ -399,7 +394,7 @@ export default class Connection {
 
             switch (opcode) {
                 case Opcodes.Combat.Hit: {
-                    let isPlayer = target.instance === this.game.id;
+                    let isPlayer = target.instance === this.game.player.instance;
 
                     if (!info.hit.aoe && !info.hit.poison) {
                         attacker.lookAt(target);
