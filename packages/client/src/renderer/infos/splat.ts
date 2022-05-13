@@ -5,13 +5,13 @@ export default class Splat {
     private lastTime = 0;
     private speed = 100;
 
-    private updateSpeed;
-    private duration;
+    private updateSpeed = 1;
+    private duration = 1000;
 
     public fill!: string;
     public stroke!: string;
 
-    private destroyCallback?(id: string): void;
+    private destroyCallback?: (id: string) => void;
 
     public constructor(
         public id: string,
@@ -21,18 +21,16 @@ export default class Splat {
         public y: number,
         private statique: boolean
     ) {
-        this.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
-        this.duration = type === Modules.Hits.Heal ? 400 : 1000;
+        if (type === Modules.Hits.Heal) {
+            this.updateSpeed = 2;
+            this.duration = 400;
+        }
     }
 
     public setColours(fill: string, stroke: string): void {
         this.fill = fill;
         this.stroke = stroke;
     }
-
-    // setDuration(duration: number): void {
-    //     this.duration = duration;
-    // }
 
     private tick(): void {
         if (!this.statique) this.y -= this.updateSpeed;
