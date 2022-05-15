@@ -67,10 +67,13 @@ enum TileFlip {
     Diagonal
 }
 
+const MAXIMUM_ZOOM = 6,
+    MINIMUM_ZOOM = 2.6;
+
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
-    private background = document.querySelector<HTMLCanvasElement>('#background')!;
+    public background = document.querySelector<HTMLCanvasElement>('#background')!;
     private foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
     private overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
     private textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
@@ -106,7 +109,7 @@ export default class Renderer {
     public camera!: Camera;
     private input!: InputController;
 
-    public tileSize = 16;
+    public tileSize = this.game.map.tileSize;
     private fontSize = 16;
     private screenWidth = 0;
     private screenHeight = 0;
@@ -136,8 +139,8 @@ export default class Renderer {
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
 
-    private scale!: number;
-    private superScaling!: number;
+    public zoomFactor = 3;
+
     private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
@@ -191,9 +194,6 @@ export default class Renderer {
     }
 
     private load(): void {
-        this.scale = this.getScale();
-        this.superScaling = this.getSuperScaling();
-
         this.loadLights();
         this.checkDevice();
     }
@@ -216,13 +216,13 @@ export default class Renderer {
     private loadSizes(): void {
         if (!this.camera) return;
 
-        this.lightTileSize = this.tileSize * this.superScaling;
+        this.lightTileSize = this.tileSize * this.zoomFactor;
 
         this.screenWidth = this.camera.gridWidth * this.tileSize;
         this.screenHeight = this.camera.gridHeight * this.tileSize;
 
-        this.canvasWidth = this.screenWidth * this.superScaling;
-        this.canvasHeight = this.screenHeight * this.superScaling;
+        this.canvasWidth = this.screenWidth * this.zoomFactor;
+        this.canvasHeight = this.screenHeight * this.zoomFactor;
 
         this.forEachCanvas((canvas) => {
             canvas.width = this.canvasWidth;
@@ -257,34 +257,30 @@ export default class Renderer {
     }
 
     public resize(): void {
-        this.stopRendering = true;
+        //this.stopRendering = true;
 
-        this.clear();
+        //this.clear();
 
         this.checkDevice();
 
-        if (!this.resizeTimeout)
-            this.resizeTimeout = window.setTimeout(() => {
-                this.scale = this.getScale();
-                this.clearScreen(this.cursorContext);
+        this.cells = {};
 
-                this.camera.update();
+        this.clearScreen(this.cursorContext);
 
-                this.loadSizes();
+        this.camera.update();
 
-                this.entities?.update();
+        this.camera.centreOn(this.game.player);
 
-                this.camera.centreOn(this.game.player);
+        this.loadSizes();
 
-                this.game.menu.resize();
+        this.game.menu.resize();
 
-                this.stopRendering = false;
-                this.resizeTimeout = null;
+        //this.stopRendering = false;
+        this.resizeTimeout = null;
 
-                this.updateAnimatedTiles();
+        this.updateAnimatedTiles();
 
-                this.forceRendering = true;
-            }, 500);
+        this.forceRendering = true;
     }
 
     public render(): void {
@@ -397,8 +393,8 @@ export default class Renderer {
                 this.overlayContext.fillRect(
                     0,
                     0,
-                    this.screenWidth * this.superScaling,
-                    this.screenHeight * this.superScaling
+                    this.screenWidth * this.zoomFactor,
+                    this.screenHeight * this.zoomFactor
                 );
                 this.overlayContext.fill();
             }
@@ -471,11 +467,11 @@ export default class Renderer {
         if (!sprite || !animation || !entity.isVisible()) return;
 
         let frame = animation.currentFrame,
-            x = frame.x * this.superScaling,
-            y = frame.y * this.superScaling,
-            dx = entity.x * this.superScaling,
-            dy = entity.y * this.superScaling,
-            flipX = dx + this.tileSize * this.superScaling,
+            { x } = frame,
+            { y } = frame,
+            dx = entity.x * this.zoomFactor,
+            dy = entity.y * this.zoomFactor,
+            flipX = dx + this.tileSize * this.zoomFactor,
             flipY = dy + data.height;
 
         this.context.save();
@@ -483,18 +479,18 @@ export default class Renderer {
         if (data.sprite !== sprite) {
             data.sprite = sprite;
 
-            data.width = sprite.width * this.superScaling;
-            data.height = sprite.height * this.superScaling;
-            data.ox = sprite.offsetX * this.superScaling;
-            data.oy = sprite.offsetY * this.superScaling;
+            data.width = sprite.width;
+            data.height = sprite.height;
+            data.ox = sprite.offsetX;
+            data.oy = sprite.offsetY;
 
             if (angled && !entity.isProjectile()) data.angle = (angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
-                data.shadowWidth = this.shadowSprite.width * this.superScaling;
-                data.shadowHeight = this.shadowSprite.height * this.superScaling;
+                data.shadowWidth = this.shadowSprite.width;
+                data.shadowHeight = this.shadowSprite.height;
 
-                data.shadowOffsetY = shadowOffsetY * this.superScaling;
+                data.shadowOffsetY = shadowOffsetY;
             }
         }
 
@@ -507,6 +503,8 @@ export default class Renderer {
             this.context.translate(dx, flipY);
             this.context.scale(1, -1);
         } else this.context.translate(dx, dy);
+
+        this.context.scale(this.zoomFactor, this.zoomFactor);
 
         if (customScale) this.context.scale(customScale, customScale);
 
@@ -576,10 +574,10 @@ export default class Renderer {
                             frame.index < weaponAnimationData.length
                                 ? frame.index
                                 : frame.index % weaponAnimationData.length,
-                        weaponX = weapon.width * index * this.superScaling,
-                        weaponY = weapon.height * animation.row * this.superScaling,
-                        weaponWidth = weapon.width * this.superScaling,
-                        weaponHeight = weapon.height * this.superScaling;
+                        weaponX = weapon.width * index,
+                        weaponY = weapon.height * animation.row,
+                        weaponWidth = weapon.width,
+                        weaponHeight = weapon.height;
 
                     this.context.drawImage(
                         weapon.image,
@@ -587,8 +585,8 @@ export default class Renderer {
                         weaponY,
                         weaponWidth,
                         weaponHeight,
-                        weapon.offsetX * this.superScaling,
-                        weapon.offsetY * this.superScaling,
+                        weapon.offsetX,
+                        weapon.offsetY,
                         weaponWidth,
                         weaponHeight
                     );
@@ -603,23 +601,19 @@ export default class Renderer {
 
                     let animation = entity.getEffectAnimation()!,
                         { index } = animation.currentFrame,
-                        x = sprite.width * index * this.superScaling,
-                        y = sprite.height * animation.row * this.superScaling,
-                        width = sprite.width * this.superScaling,
-                        height = sprite.height * this.superScaling,
-                        offsetX = sprite.offsetX * this.superScaling,
-                        offsetY = sprite.offsetY * this.superScaling;
+                        x = sprite.width * index,
+                        y = sprite.height * animation.row;
 
                     this.context.drawImage(
                         sprite.image,
                         x,
                         y,
-                        width,
-                        height,
-                        offsetX,
-                        offsetY,
-                        width,
-                        height
+                        sprite.width,
+                        sprite.height,
+                        sprite.offsetX,
+                        sprite.offsetY,
+                        sprite.width,
+                        sprite.height
                     );
 
                     animation.update(this.game.time);
@@ -630,21 +624,19 @@ export default class Renderer {
         if (entity instanceof Item) {
             let { sparksAnimation } = this.entities.sprites,
                 sparksFrame = sparksAnimation.currentFrame,
-                sparksX = this.sparksSprite.width * sparksFrame.index * this.superScaling,
-                sparksY = this.sparksSprite.height * sparksAnimation.row * this.superScaling,
-                sparksWidth = this.sparksSprite.width * this.superScaling,
-                sparksHeight = this.sparksSprite.height * this.superScaling;
+                sparksX = this.sparksSprite.width * sparksFrame.index,
+                sparksY = this.sparksSprite.height * sparksAnimation.row;
 
             this.context.drawImage(
                 this.sparksSprite.image,
                 sparksX,
                 sparksY,
-                sparksWidth,
-                sparksHeight,
+                this.sparksSprite.width,
+                this.sparksSprite.height,
                 0,
                 0,
-                sparksWidth,
-                sparksHeight
+                this.sparksSprite.width,
+                this.sparksSprite.height
             );
         }
     }
@@ -653,18 +645,18 @@ export default class Renderer {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
         let barLength = 16,
-            healthX = entity.x * this.superScaling - barLength / 2 + 8,
-            healthY = (entity.y - entity.sprite.height / 4) * this.superScaling,
+            healthX = entity.x * this.zoomFactor - barLength / 2 + 8,
+            healthY = (entity.y - entity.sprite.height / 4) * this.zoomFactor,
             healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.superScaling
+                (entity.hitPoints / entity.maxHitPoints) * barLength * this.zoomFactor
             ),
-            healthHeight = 2 * this.superScaling;
+            healthHeight = 2 * this.zoomFactor;
 
         this.textContext.save();
         this.setCameraView(this.textContext);
         this.textContext.strokeStyle = '#00000';
         this.textContext.lineWidth = 1;
-        this.textContext.strokeRect(healthX, healthY, barLength * this.superScaling, healthHeight);
+        this.textContext.strokeRect(healthX, healthY, barLength * this.zoomFactor, healthHeight);
         this.textContext.fillStyle = '#FD0000';
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         this.textContext.restore();
@@ -747,12 +739,11 @@ export default class Renderer {
     }
 
     private drawCursor(): void {
-        let { input, cursorContext, tablet, mobile, superScaling } = this;
+        let { input, cursorContext, tablet, mobile } = this;
 
         if (tablet || mobile || this.hasRenderedMouse() || input.cursorMoved) return;
 
-        let { cursor, mouse } = input,
-            scaling = 14 * superScaling;
+        let { cursor, mouse } = input;
 
         this.clearScreen(cursorContext);
         cursorContext.save();
@@ -761,17 +752,7 @@ export default class Renderer {
             if (!cursor.loaded) cursor.load();
 
             if (cursor.loaded)
-                cursorContext.drawImage(
-                    cursor.image,
-                    0,
-                    0,
-                    scaling,
-                    scaling,
-                    mouse.x,
-                    mouse.y,
-                    scaling,
-                    scaling
-                );
+                cursorContext.drawImage(cursor.image, 0, 0, 16, 16, mouse.x, mouse.y, 48, 48);
         }
 
         cursorContext.restore();
@@ -918,17 +899,14 @@ export default class Renderer {
             };
         }
 
-        if (!(cellId in this.cells) || flips.length > 0) {
-            let scale = this.superScaling;
-
+        if (!(cellId in this.cells) || flips.length > 0)
             this.cells[cellId] = {
-                dx: this.getX(cellId + 1, this.map.width) * this.tileSize * scale,
-                dy: Math.floor(cellId / this.map.width) * this.tileSize * scale,
-                width: this.tileSize * scale,
-                height: this.tileSize * scale,
+                dx: this.getX(cellId + 1, this.map.width) * this.tileSize * this.zoomFactor,
+                dy: Math.floor(cellId / this.map.width) * this.tileSize * this.zoomFactor,
+                width: this.tileSize * this.zoomFactor,
+                height: this.tileSize * this.zoomFactor,
                 flips
             };
-        }
 
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId]);
     }
@@ -939,7 +917,6 @@ export default class Renderer {
         tile: RendererTile,
         cell: RendererCell
     ): void {
-        // let scale = this.superScaling;
         let dx = 0,
             dy = 0,
             isFlipped = cell.flips.length > 0;
@@ -1018,9 +995,9 @@ export default class Renderer {
             context.strokeStyle = strokeColour || '#373737';
             context.lineWidth = strokeSize;
             context.font = `${fontSize || this.fontSize}px AdvoCut`;
-            context.strokeText(text, x * this.superScaling, y * this.superScaling);
+            context.strokeText(text, x * this.zoomFactor, y * this.zoomFactor);
             context.fillStyle = colour || 'white';
-            context.fillText(text, x * this.superScaling, y * this.superScaling);
+            context.fillText(text, x * this.zoomFactor, y * this.zoomFactor);
 
             context.restore();
         }
@@ -1054,12 +1031,12 @@ export default class Renderer {
     }
 
     private drawCellRect(x: number, y: number, colour: string): void {
-        let multiplier = this.tileSize * this.superScaling;
+        let multiplier = this.tileSize * this.zoomFactor;
 
         this.context.save();
         this.setCameraView(this.context);
 
-        this.context.lineWidth = 2 * this.superScaling;
+        this.context.lineWidth = 2 * this.zoomFactor;
 
         this.context.translate(x + 2, y + 2);
 
@@ -1071,8 +1048,8 @@ export default class Renderer {
 
     private drawCellHighlight(x: number, y: number, colour: string): void {
         this.drawCellRect(
-            x * this.superScaling * this.tileSize,
-            y * this.superScaling * this.tileSize,
+            x * this.zoomFactor * this.tileSize,
+            y * this.zoomFactor * this.tileSize,
             colour
         );
     }
@@ -1141,23 +1118,10 @@ export default class Renderer {
         });
     }
 
-    public getScale(): number {
-        return this.game.getScaleFactor();
-    }
-
-    public getSuperScaling(): number {
-        return 3;
-    }
-
     private clear(): void {
         this.forEachContext((context) =>
             context.clearRect(0, 0, context.canvas.width, context.canvas.height)
         );
-    }
-
-    private clearText(): void {
-        this.textContext.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
-        this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
     }
 
     private clearDrawing(): void {
@@ -1199,6 +1163,22 @@ export default class Renderer {
         this.forceRendering = false;
     }
 
+    /**
+     * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
+     * we zoom out, if it's positive we zoom in. The function also checks
+     * maximum zoom.
+     * @param zoomAmount Float value we are zooming by.
+     */
+
+    public zoom(zoomAmount: number): void {
+        this.zoomFactor += zoomAmount;
+
+        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
+        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+
+        this.resize();
+    }
+
     public transition(duration: number, forward: boolean, callback: () => void): void {
         let textCanvas = $('#text-canvas'),
             hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
@@ -1235,7 +1215,7 @@ export default class Renderer {
     private setCameraView(context: CanvasRenderingContext2D): void {
         if (!this.camera || this.stopRendering) return;
 
-        context.translate(-this.camera.x * this.superScaling, -this.camera.y * this.superScaling);
+        context.translate(-this.camera.x * this.zoomFactor, -this.camera.y * this.zoomFactor);
     }
 
     private clearScreen(context: CanvasRenderingContext2D): void {
@@ -1472,10 +1452,10 @@ export default class Renderer {
     public getTargetBounds(tx: number, ty: number): Bounds {
         let sx = tx || this.input.selectedX,
             sy = ty || this.input.selectedY,
-            x = (sx * this.tileSize - this.camera.x) * this.superScaling,
-            y = (sy * this.tileSize - this.camera.y) * this.superScaling,
-            width = this.tileSize * this.superScaling,
-            height = this.tileSize * this.superScaling,
+            x = (sx * this.tileSize - this.camera.x) * this.zoomFactor,
+            y = (sy * this.tileSize - this.camera.y) * this.zoomFactor,
+            width = this.tileSize * this.zoomFactor,
+            height = this.tileSize * this.zoomFactor,
             bounds: Bounds = {
                 x,
                 y,

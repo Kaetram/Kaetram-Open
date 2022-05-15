@@ -96,7 +96,7 @@ export default class InputController {
     }
 
     public handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
-        let { chatHandler, game } = this,
+        let { chatHandler, game, renderer } = this,
             { menu, socket } = game,
             player = this.getPlayer();
 
@@ -165,6 +165,14 @@ export default class InputController {
 
                     case Modules.Keys.Esc:
                         menu.hideAll();
+                        break;
+
+                    case Modules.Keys.Plus:
+                        renderer.zoom(0.1);
+                        break;
+
+                    case Modules.Keys.Minus:
+                        renderer.zoom(-0.1);
                         break;
                 }
 
@@ -445,7 +453,7 @@ export default class InputController {
 
         if (!renderer.camera) return;
 
-        let tileScale = renderer.tileSize * renderer.getSuperScaling(),
+        let tileScale = renderer.tileSize * renderer.zoomFactor,
             offsetX = mouse.x % tileScale,
             offsetY = mouse.y % tileScale,
             camera = game.getCamera(),
@@ -456,26 +464,26 @@ export default class InputController {
     }
 
     public getTargetData(): TargetData | undefined {
-        let { targetAnimation, renderer, game, selectedX, selectedY } = this,
+        let { targetAnimation, game, selectedX, selectedY, renderer } = this,
             sprite = game.getSprite('target');
 
         if (!sprite) return;
 
         let frame = targetAnimation.currentFrame,
-            superScale = renderer.getSuperScaling();
+            { tileSize, zoomFactor } = renderer;
 
         if (!sprite.loaded) sprite.load();
 
         return {
             sprite,
-            x: frame.x * superScale,
-            y: frame.y * superScale,
-            width: sprite.width * superScale,
-            height: sprite.height * superScale,
-            dx: selectedX * 16 * superScale,
-            dy: selectedY * 16 * superScale,
-            dw: sprite.width * superScale,
-            dh: sprite.height * superScale
+            x: frame.x,
+            y: frame.y,
+            width: sprite.width,
+            height: sprite.height,
+            dx: selectedX * tileSize * zoomFactor,
+            dy: selectedY * tileSize * zoomFactor,
+            dw: sprite.width * zoomFactor,
+            dh: sprite.height * zoomFactor
         };
     }
 
