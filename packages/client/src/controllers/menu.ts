@@ -36,9 +36,9 @@ export default class MenuController {
 
     private header!: Header;
 
+    public actions: Actions = new Actions(this);
     public inventory: Inventory = new Inventory(this.game, this, Modules.Constants.INVENTORY_SIZE);
     public bank: Bank = new Bank(this.game, this, Modules.Constants.BANK_SIZE);
-    public actions: Actions = new Actions(this);
     public enchant: Enchant = new Enchant(this.game, this);
     public shop: Shop = new Shop(this.game, this);
     public warp: Warp = new Warp(this.game);
