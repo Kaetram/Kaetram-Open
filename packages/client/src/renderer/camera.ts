@@ -1,13 +1,14 @@
 import { Modules } from '@kaetram/common/network';
+import App from '../app';
 
 import Player from '../entity/character/player/player';
 import Entity from '../entity/entity';
-import Renderer from './renderer';
+import Map from '../map/map';
+
+const MAXIMUM_ZOOM = 6,
+    MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
-    private map;
-    private app;
-
     // offset = 0.5;
 
     public x = 0;
@@ -18,6 +19,8 @@ export default class Camera {
     public gridY = 0;
     // private prevGridX = 0;
     // private prevGridY = 0;
+
+    public zoomFactor = 3;
 
     private tileSize;
 
@@ -33,21 +36,18 @@ export default class Camera {
     private borderX!: number;
     private borderY!: number;
 
-    public constructor(private renderer: Renderer) {
-        this.map = renderer.map;
-        this.app = renderer.game.app;
-
-        this.tileSize = renderer.tileSize;
+    public constructor(private app: App, private map: Map) {
+        this.tileSize = map.tileSize;
 
         this.update();
     }
 
     public update(): void {
-        let { renderer, app, tileSize, map } = this,
+        let { app, tileSize, map, zoomFactor } = this,
             borderWidth = app.border.width()!,
             borderHeight = app.border.height()!,
-            factorWidth = Math.ceil(borderWidth / tileSize / renderer.zoomFactor),
-            factorHeight = Math.ceil(borderHeight / tileSize / renderer.zoomFactor);
+            factorWidth = Math.ceil(borderWidth / tileSize / zoomFactor),
+            factorHeight = Math.ceil(borderHeight / tileSize / zoomFactor);
 
         this.gridWidth = factorWidth;
         this.gridHeight = factorHeight;
@@ -174,6 +174,22 @@ export default class Camera {
         }
 
         this.zoneClip();
+    }
+
+    /**
+     * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
+     * we zoom out, if it's positive we zoom in. The function also checks
+     * maximum zoom.
+     * @param zoomAmount Float value we are zooming by.
+     */
+
+    public zoom(zoomAmount: number): void {
+        this.zoomFactor += zoomAmount;
+
+        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
+        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+
+        this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
     }
 
     /**
