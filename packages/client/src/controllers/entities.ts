@@ -110,7 +110,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.getSprite(entity.isItem() ? `item-${entity.name}` : info.key);
+        let sprite = this.getSprite(entity.isItem() ? `item-${info.key}` : info.key);
 
         entity.name = info.name;
 
