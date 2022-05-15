@@ -121,7 +121,10 @@ export enum Keys {
     T = 84,
     I = 73,
     P = 80,
-    M = 77
+    M = 77,
+
+    Plus = 187,
+    Minus = 189
 }
 
 export enum AudioTypes {
