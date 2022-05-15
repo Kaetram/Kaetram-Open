@@ -982,25 +982,25 @@ export default class Renderer {
         centered: boolean,
         colour: string,
         strokeColour?: string,
-        fontSize?: number
+        fontSize: number = this.fontSize
     ): void {
         let strokeSize = 3,
             context = this.textContext;
 
-        if (text && x && y) {
-            context.save();
+        context.save();
 
-            if (centered) context.textAlign = 'center';
+        if (centered) context.textAlign = 'center';
 
-            context.strokeStyle = strokeColour || '#373737';
-            context.lineWidth = strokeSize;
-            context.font = `${fontSize || this.fontSize}px AdvoCut`;
-            context.strokeText(text, x * this.zoomFactor, y * this.zoomFactor);
-            context.fillStyle = colour || 'white';
-            context.fillText(text, x * this.zoomFactor, y * this.zoomFactor);
+        fontSize += this.zoomFactor * 2;
 
-            context.restore();
-        }
+        context.strokeStyle = strokeColour || '#373737';
+        context.lineWidth = strokeSize;
+        context.font = `${fontSize}px AdvoCut`;
+        context.strokeText(text, x * this.zoomFactor, y * this.zoomFactor);
+        context.fillStyle = colour || 'white';
+        context.fillText(text, x * this.zoomFactor, y * this.zoomFactor);
+
+        context.restore();
     }
 
     public updateAnimatedTiles(): void {
@@ -1175,6 +1175,8 @@ export default class Renderer {
 
         if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
         if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+
+        this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
 
         this.resize();
     }
