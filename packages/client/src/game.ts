@@ -44,9 +44,11 @@ export default class Game {
     public pathfinder: Pathfinder = new Pathfinder();
     public audio: AudioController = new AudioController(this);
 
+    private input!: InputController;
+
     public updater!: Updater;
     public entities!: EntitiesController;
-    public input!: InputController;
+    //public input!: InputController;
     public zoning!: Zoning;
     public info!: InfoController;
     public menu!: MenuController;
@@ -140,6 +142,11 @@ export default class Game {
         this.audio = null!;
     }
 
+    /**
+     * Callback handler for when the map has finished loading. We use the map
+     * and assign it to the renderer.
+     */
+
     private handleMap(): void {
         if (!window.config.debug) this.map.loadRegionData();
 
@@ -156,6 +163,9 @@ export default class Game {
 
         this.app.ready();
     }
+
+    /**
+     */
 
     private loadControllers(): void {
         this.app.sendStatus('Loading local storage');
@@ -360,22 +370,12 @@ export default class Game {
         socket.send(Packets.Respawn, []);
     }
 
-    // tradeWith(player: Player): void {
-    //     if (!player || player.id === this.player.id) return;
-
-    //     this.socket.send(Packets.Trade, [Opcodes.Trade.Request, player.id]);
-    // }
-
     public resize(): void {
         this.renderer.resize();
 
         this.pointer.resize();
 
         this.menu.resize();
-    }
-
-    public getScaleFactor(): number {
-        return this.app.getScaleFactor();
     }
 
     public getSprite(spriteName: string): Sprite | undefined {

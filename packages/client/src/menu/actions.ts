@@ -154,10 +154,6 @@ export default class Actions {
         return $('<div id="follow" class="action-button">Follow</div>');
     }
 
-    // getTradeButton(): JQuery {
-    //     return $('<div id="trade" class="action-button">Trade</div>');
-    // }
-
     private getTalkButton(): JQuery {
         return $('<div id="talk-button" class="action-button">Talk</div>');
     }
@@ -165,14 +161,6 @@ export default class Actions {
     private getButtons(): JQuery {
         return this.body.find('ul').find('li');
     }
-
-    // getGame(): Game {
-    //     return this.menu.game;
-    // }
-
-    // getPlayer(): Player {
-    //     return this.menu.game.player;
-    // }
 
     public isVisible(): boolean {
         return this.body.css('display') === 'block';

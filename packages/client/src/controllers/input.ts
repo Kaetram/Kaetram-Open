@@ -97,7 +97,7 @@ export default class InputController {
 
     public handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
         let { chatHandler, game, renderer } = this,
-            { menu, socket } = game,
+            { menu, socket, camera } = game,
             player = this.getPlayer();
 
         switch (inputType) {
@@ -168,11 +168,14 @@ export default class InputController {
                         break;
 
                     case Modules.Keys.Plus:
-                        renderer.zoom(0.1);
+                        camera.zoom(0.1);
+                        renderer.resize();
                         break;
 
                     case Modules.Keys.Minus:
-                        renderer.zoom(-0.1);
+                        camera.zoom(-0.1);
+
+                        renderer.resize();
                         break;
                 }
 
@@ -333,12 +336,6 @@ export default class InputController {
 
         if (entity) {
             let actions = this.getActions();
-
-            // actions.loadDefaults(entity.type, {
-            //     mouseX: mouse.x,
-            //     mouseY: mouse.y,
-            //     pvp: entity.pvp
-            // });
 
             actions.show();
         } else if (hovering === Modules.Hovering.Object) {
