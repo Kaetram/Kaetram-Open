@@ -432,10 +432,6 @@ export default class App {
         this.game = game;
     }
 
-    public getScaleFactor(): number {
-        return 3;
-    }
-
     public getUIScale(): number {
         let width = window.innerWidth,
             height = window.innerHeight;
