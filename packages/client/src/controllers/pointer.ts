@@ -218,10 +218,10 @@ export default class PointerController {
     }
 
     private updateCamera(): void {
-        this.camera = this.game.renderer.camera;
+        this.camera = this.game.camera;
     }
 
     private getScale(): number {
-        return this.game.getScaleFactor();
+        return 3;
     }
 }
