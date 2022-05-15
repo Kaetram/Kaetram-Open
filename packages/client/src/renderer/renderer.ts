@@ -5,11 +5,11 @@ import _ from 'lodash';
 
 import { Modules } from '@kaetram/common/network';
 
-import Character from '../entity/character/character';
+import Tile from './tile';
+import Camera from './camera';
 import Item from '../entity/objects/item';
 import * as Detect from '../utils/detect';
-import Camera from './camera';
-import Tile from './tile';
+import Character from '../entity/character/character';
 
 import type EntitiesController from '../controllers/entities';
 import type InputController from '../controllers/input';
@@ -461,16 +461,16 @@ export default class Renderer {
             fadingAlpha,
             spriteFlipX,
             spriteFlipY,
-            customScale
+            customScale,
+            x,
+            y
         } = entity;
 
         if (!sprite || !animation || !entity.isVisible()) return;
 
         let frame = animation.currentFrame,
-            { x } = frame,
-            { y } = frame,
-            dx = entity.x * this.zoomFactor,
-            dy = entity.y * this.zoomFactor,
+            dx = x * this.zoomFactor,
+            dy = y * this.zoomFactor,
             flipX = dx + this.tileSize * this.zoomFactor,
             flipY = dy + data.height;
 
@@ -530,8 +530,8 @@ export default class Renderer {
 
         this.context.drawImage(
             sprite.image,
-            x,
-            y,
+            frame.x,
+            frame.y,
             data.width,
             data.height,
             data.ox,
