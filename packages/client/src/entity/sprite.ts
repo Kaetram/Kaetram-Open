@@ -92,12 +92,6 @@ export default class Sprite {
         this.idleSpeed = sprite.idleSpeed ?? 450;
     }
 
-    public update(): void {
-        this.loadSprite();
-
-        this.load();
-    }
-
     public createAnimations(): Animations {
         let { animationData, width, height } = this,
             animations: Animations = {};

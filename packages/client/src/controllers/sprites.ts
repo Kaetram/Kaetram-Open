@@ -32,15 +32,4 @@ export default class SpritesController {
 
         log.debug('Finished loading sprite data...');
     }
-
-    /**
-     * Iterates through all the sprites loaded and sends
-     * an update signal.
-     */
-
-    public updateSprites(): void {
-        _.each(this.sprites, (sprite) => sprite.update());
-
-        log.debug('Sprites updated upon scaling.');
-    }
 }
