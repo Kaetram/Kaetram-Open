@@ -449,16 +449,11 @@ export default class InputController {
     }
 
     public getCoords(): Position | undefined {
-        let { renderer, mouse, game } = this;
-
-        if (!renderer.camera) return;
-
-        let tileScale = renderer.tileSize * renderer.zoomFactor,
-            offsetX = mouse.x % tileScale,
-            offsetY = mouse.y % tileScale,
-            camera = game.getCamera(),
-            x = (mouse.x - offsetX) / tileScale + camera.gridX,
-            y = (mouse.y - offsetY) / tileScale + camera.gridY;
+        let tileScale = this.renderer.tileSize * this.renderer.zoomFactor,
+            offsetX = this.mouse.x % tileScale,
+            offsetY = this.mouse.y % tileScale,
+            x = (this.mouse.x - offsetX) / tileScale + this.game.camera.gridX,
+            y = (this.mouse.y - offsetY) / tileScale + this.game.camera.gridY;
 
         return { x, y };
     }
