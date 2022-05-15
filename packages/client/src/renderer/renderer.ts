@@ -80,9 +80,9 @@ export default class Renderer {
     private entitiesCanvas = document.querySelector<HTMLCanvasElement>('#entities')!;
     private cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
-    private context: CanvasRenderingContext2D;
+    private entitiesContext: CanvasRenderingContext2D; // Entities
 
-    public backContext: CanvasRenderingContext2D;
+    public backContext: CanvasRenderingContext2D; // Backgrond
 
     private foreContext: CanvasRenderingContext2D; // Foreground
     private overlayContext: CanvasRenderingContext2D; // Lighting
@@ -110,7 +110,7 @@ export default class Renderer {
     private input!: InputController;
 
     public tileSize = this.game.map.tileSize;
-    private fontSize = 16;
+    private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
     private time = new Date();
@@ -157,27 +157,24 @@ export default class Renderer {
     private tileset: unknown;
 
     public constructor(public game: Game) {
-        this.context = this.entitiesCanvas.getContext('2d')!; // Entities;
+        this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
         this.backContext = this.background.getContext('2d')!; // Background
         this.foreContext = this.foreground.getContext('2d')!; // Foreground
         this.overlayContext = this.overlay.getContext('2d')!; // Lighting
         this.textContext = this.textCanvas.getContext('2d')!; // Texts
         this.cursorContext = this.cursor.getContext('2d')!; // Cursor
 
-        let { context, backContext, foreContext, overlayContext, textContext, cursorContext } =
-            this;
-
         this.allContexts = [
-            context,
-            backContext,
-            foreContext,
-            overlayContext,
-            textContext,
-            cursorContext
+            this.entitiesContext,
+            this.backContext,
+            this.foreContext,
+            this.overlayContext,
+            this.textContext,
+            this.cursorContext
         ];
 
-        this.contexts = [context, textContext, overlayContext];
-        this.drawingContexts = [backContext, foreContext];
+        this.contexts = [this.entitiesContext, this.textContext, this.overlayContext];
+        this.drawingContexts = [this.backContext, this.foreContext];
 
         this.load();
     }
@@ -368,18 +365,18 @@ export default class Renderer {
     private drawAnimatedTiles(): void {
         if (!this.animateTiles) return;
 
-        this.context.save();
-        this.setCameraView(this.context);
+        this.entitiesContext.save();
+        this.setCameraView(this.entitiesContext);
 
         this.forEachAnimatedTile((tile) => {
             if (!this.camera.isVisible(tile.x, tile.y, 3, 1)) return;
 
             tile.animate(this.game.time);
 
-            this.drawTile(this.context, tile.id, tile.index);
+            this.drawTile(this.entitiesContext, tile.id, tile.index);
         });
 
-        this.context.restore();
+        this.entitiesContext.restore();
     }
 
     private drawOverlays(): void {
@@ -440,7 +437,7 @@ export default class Renderer {
     private drawEntities(): void {
         if (this.game.player.dead) return;
 
-        this.setCameraView(this.context);
+        this.setCameraView(this.entitiesContext);
 
         this.forEachVisibleEntity((entity) => {
             if (!entity) return;
@@ -474,7 +471,7 @@ export default class Renderer {
             flipX = dx + this.tileSize * this.zoomFactor,
             flipY = dy + data.height;
 
-        this.context.save();
+        this.entitiesContext.save();
 
         if (data.sprite !== sprite) {
             data.sprite = sprite;
@@ -494,26 +491,27 @@ export default class Renderer {
             }
         }
 
-        if (fading) this.context.globalAlpha = fadingAlpha;
+        if (fading) this.entitiesContext.globalAlpha = fadingAlpha;
 
         if (spriteFlipX) {
-            this.context.translate(flipX, dy);
-            this.context.scale(-1, 1);
+            this.entitiesContext.translate(flipX, dy);
+            this.entitiesContext.scale(-1, 1);
         } else if (spriteFlipY) {
-            this.context.translate(dx, flipY);
-            this.context.scale(1, -1);
-        } else this.context.translate(dx, dy);
+            this.entitiesContext.translate(dx, flipY);
+            this.entitiesContext.scale(1, -1);
+        } else this.entitiesContext.translate(dx, dy);
 
-        this.context.scale(this.zoomFactor, this.zoomFactor);
+        this.entitiesContext.scale(this.zoomFactor, this.zoomFactor);
 
-        if (customScale) this.context.scale(customScale, customScale);
+        if (customScale) this.entitiesContext.scale(customScale, customScale);
 
-        if (angled) this.context.rotate(entity.isProjectile() ? entity.getAngle() : data.angle);
+        if (angled)
+            this.entitiesContext.rotate(entity.isProjectile() ? entity.getAngle() : data.angle);
 
         if (entity.hasShadow()) {
-            this.context.globalCompositeOperation = 'source-over';
+            this.entitiesContext.globalCompositeOperation = 'source-over';
 
-            this.context.drawImage(
+            this.entitiesContext.drawImage(
                 this.shadowSprite.image,
                 0,
                 0,
@@ -528,7 +526,7 @@ export default class Renderer {
 
         // this.drawEntityBack(entity);
 
-        this.context.drawImage(
+        this.entitiesContext.drawImage(
             sprite.image,
             frame.x,
             frame.y,
@@ -542,7 +540,7 @@ export default class Renderer {
 
         this.drawEntityFore(entity);
 
-        this.context.restore();
+        this.entitiesContext.restore();
 
         this.drawHealth(entity as Character);
 
@@ -579,7 +577,7 @@ export default class Renderer {
                         weaponWidth = weapon.width,
                         weaponHeight = weapon.height;
 
-                    this.context.drawImage(
+                    this.entitiesContext.drawImage(
                         weapon.image,
                         weaponX,
                         weaponY,
@@ -604,7 +602,7 @@ export default class Renderer {
                         x = sprite.width * index,
                         y = sprite.height * animation.row;
 
-                    this.context.drawImage(
+                    this.entitiesContext.drawImage(
                         sprite.image,
                         x,
                         y,
@@ -627,7 +625,7 @@ export default class Renderer {
                 sparksX = this.sparksSprite.width * sparksFrame.index,
                 sparksY = this.sparksSprite.height * sparksAnimation.row;
 
-            this.context.drawImage(
+            this.entitiesContext.drawImage(
                 this.sparksSprite.image,
                 sparksX,
                 sparksY,
@@ -838,10 +836,10 @@ export default class Renderer {
         let tD = this.input.getTargetData(); // target data
 
         if (tD) {
-            this.context.save();
-            this.setCameraView(this.context);
+            this.entitiesContext.save();
+            this.setCameraView(this.entitiesContext);
 
-            this.context.drawImage(
+            this.entitiesContext.drawImage(
                 tD.sprite.image,
                 tD.x,
                 tD.y,
@@ -853,19 +851,24 @@ export default class Renderer {
                 tD.dh
             );
 
-            this.context.restore();
+            this.entitiesContext.restore();
         }
-    }
-
-    private isFlipped(tileInfo: RegionTile): boolean {
-        return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 
     /**
      * Primitive drawing functions
      */
 
-    //TODO - Refactor types
+    /**
+     * Draws a tile with a specified tileId, at a specified index. The flips
+     * represent an array of transformations that the tile can undergo. If the
+     * array is empty, then there are no transformations.
+     * @param context The canvas that we are drawing the tile on.
+     * @param tileId The tile id is used to extract the tile from the tileset.
+     * @param cellId The cell id is the index of the tile in the map.
+     * @param flips An array containing transformations the tile will undergo.
+     */
+
     private drawTile(
         context: CanvasRenderingContext2D,
         tileId: number,
@@ -879,10 +882,10 @@ export default class Renderer {
         if (!tileset) return;
 
         /**
-         * Removed tilesetScale (tileset.scale) variables since it
-         * is generally always 1. The reason for the variable was
-         * due to the usage of the large PNG file, which Chrome
-         * split up and messed with.
+         * To prevent redrawing and reculating the same tile, we
+         * cache the tileId in our list of tiles. These are heavy
+         * calculations that we attempt to prevent from occurring
+         * every frame. The same applies for the cells below.
          */
 
         if (!(tileId in this.tiles)) {
@@ -898,6 +901,12 @@ export default class Renderer {
                 height: this.tileSize
             };
         }
+
+        /**
+         * Cell cache stores data about every index coordinate the player
+         * has explored. This may create overhead in terms of memory usage,
+         * but it is a necessary optimization.
+         */
 
         if (!(cellId in this.cells) || flips.length > 0)
             this.cells[cellId] = {
@@ -923,13 +932,24 @@ export default class Renderer {
 
         if (!context) return;
 
+        /**
+         * A tile rotation or flip is a combination of horizontal
+         * and vertical flips, with a transpose that rotates the tile
+         * 90 degrees. A transpose in our case is a rotation, followed by
+         * a horizontal flip. When a tile undergoes any transformation,
+         * we use these combinations to change its drawing.
+         */
+
         if (isFlipped) {
             ({ dx, dy } = cell);
 
+            // Save the context when we begin tile translations.
             context.save();
 
+            // Store our delta x if we need to transpose.
             let tempX = dx;
 
+            // Iterate through every type of flip in our array.
             for (let index of cell.flips)
                 switch (index) {
                     case TileFlip.Horizontal:
@@ -1033,17 +1053,17 @@ export default class Renderer {
     private drawCellRect(x: number, y: number, colour: string): void {
         let multiplier = this.tileSize * this.zoomFactor;
 
-        this.context.save();
-        this.setCameraView(this.context);
+        this.entitiesContext.save();
+        this.setCameraView(this.entitiesContext);
 
-        this.context.lineWidth = 2 * this.zoomFactor;
+        this.entitiesContext.lineWidth = 2 * this.zoomFactor;
 
-        this.context.translate(x + 2, y + 2);
+        this.entitiesContext.translate(x + 2, y + 2);
 
-        this.context.strokeStyle = colour;
-        this.context.strokeRect(0, 0, multiplier - 4, multiplier - 4);
+        this.entitiesContext.strokeStyle = colour;
+        this.entitiesContext.strokeRect(0, 0, multiplier - 4, multiplier - 4);
 
-        this.context.restore();
+        this.entitiesContext.restore();
     }
 
     private drawCellHighlight(x: number, y: number, colour: string): void {
@@ -1221,7 +1241,12 @@ export default class Renderer {
     }
 
     private clearScreen(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+        context.clearRect(
+            0,
+            0,
+            this.entitiesContext.canvas.width,
+            this.entitiesContext.canvas.height
+        );
     }
 
     private hasRenderedMouse(): boolean {
@@ -1298,6 +1323,17 @@ export default class Renderer {
 
     public isPortableDevice(): boolean {
         return this.mobile || this.tablet;
+    }
+
+    /**
+     * A flipped tile is any tile that contains a flip
+     * flag or transpose flag.
+     * @param tileInfo Tile data received from the server.
+     * @returns Whether or not the tile contains and flip flags.
+     */
+
+    private isFlipped(tileInfo: RegionTile): boolean {
+        return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 
     public updateDarkMask(color: string): void {
