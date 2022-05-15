@@ -44,11 +44,10 @@ export default class Camera {
 
     public update(): void {
         let { renderer, app, tileSize, map } = this,
-            scale = renderer.getScale(),
             borderWidth = app.border.width()!,
             borderHeight = app.border.height()!,
-            factorWidth = Math.ceil(borderWidth / tileSize / scale),
-            factorHeight = Math.ceil(borderHeight / tileSize / scale);
+            factorWidth = Math.ceil(borderWidth / tileSize / renderer.zoomFactor),
+            factorHeight = Math.ceil(borderHeight / tileSize / renderer.zoomFactor);
 
         this.gridWidth = factorWidth;
         this.gridHeight = factorHeight;
@@ -58,17 +57,6 @@ export default class Camera {
         this.borderX = map.width * tileSize - gridWidth * tileSize;
         this.borderY = map.height * tileSize - gridHeight * tileSize;
     }
-
-    // private setPosition(x: number, y: number): void {
-    //     this.x = x;
-    //     this.y = y;
-
-    //     // this.prevGridX = this.gridX;
-    //     // this.prevGridY = this.gridY;
-
-    //     this.gridX = Math.floor(x / 16);
-    //     this.gridY = Math.floor(y / 16);
-    // }
 
     public clip(): void {
         this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
@@ -93,14 +81,11 @@ export default class Camera {
     }
 
     private setGridPosition(x: number, y: number): void {
-        // this.prevGridX = this.gridX;
-        // this.prevGridY = this.gridY;
-
         this.gridX = x;
         this.gridY = y;
 
-        this.x = this.gridX * 16;
-        this.y = this.gridY * 16;
+        this.x = this.gridX * this.tileSize;
+        this.y = this.gridY * this.tileSize;
     }
 
     public setPlayer(player: Player): void {
