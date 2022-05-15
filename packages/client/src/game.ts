@@ -75,6 +75,11 @@ export default class Game {
         app.setGame(this);
     }
 
+    /**
+     * Starts the game by fading the main menu out
+     * and beginning the game loop `tick()`.
+     */
+
     public start(): void {
         if (this.started) return;
 
@@ -84,20 +89,30 @@ export default class Game {
         this.tick();
     }
 
+    /**
+     * Setting `started` to false will stop the game loop `tick()`.
+     */
+
     private stop(): void {
         this.started = false;
         this.ready = false;
     }
 
+    /**
+     * Tick is a recursive function that calls for as long as the
+     * game is running. We use `requestAnimationFrame` to get the
+     * browser to call us back at the next available opportunity.
+     */
+
     private tick(): void {
-        if (this.ready) {
-            this.time = Date.now();
+        if (!this.ready) return;
 
-            this.renderer.render();
-            this.updater.update();
+        this.time = Date.now();
 
-            if (this.started) requestAnimationFrame(() => this.tick());
-        }
+        this.renderer.render();
+        this.updater.update();
+
+        if (this.started) requestAnimationFrame(() => this.tick());
     }
 
     /**
@@ -220,42 +235,39 @@ export default class Game {
      * by the server and the client received the connection.
      */
     public postLoad(): void {
-        let { renderer, player, entities, updater, storage, socket, map } = this;
-        if (!(renderer && player && entities && updater)) return;
+        this.renderer.loadStaticSprites();
 
-        renderer.loadStaticSprites();
+        this.camera.setPlayer(this.player);
 
-        this.getCamera().setPlayer(player);
+        this.entities.addEntity(this.player);
 
-        entities.addEntity(player);
+        let defaultSprite = this.getSprite(this.player.getSpriteName());
 
-        let defaultSprite = this.getSprite(player.getSpriteName());
+        this.player.setSprite(defaultSprite);
 
-        player.setSprite(defaultSprite);
+        if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
 
-        if (storage) player.setOrientation(storage.data.player.orientation);
+        this.player.idle();
 
-        player.idle();
-
-        if (map)
-            socket.send(Packets.Ready, {
-                hasMapData: map.preloadedData,
+        if (this.map)
+            this.socket.send(Packets.Ready, {
+                hasMapData: this.map.preloadedData,
                 userAgent: agent
             });
 
-        new PlayerHandler(this, player);
+        new PlayerHandler(this, this.player);
 
-        renderer.updateAnimatedTiles();
+        this.renderer.updateAnimatedTiles();
 
         this.zoning = new Zoning();
 
-        updater.setSprites(entities.sprites);
+        this.updater.setSprites(this.entities.sprites);
 
-        renderer.verifyCentration();
+        this.renderer.verifyCentration();
 
-        if (storage.data.new) {
-            storage.data.new = false;
-            storage.save();
+        if (this.storage.data.new) {
+            this.storage.data.new = false;
+            this.storage.save();
         }
     }
 
@@ -364,10 +376,6 @@ export default class Game {
 
     public getScaleFactor(): number {
         return this.app.getScaleFactor();
-    }
-
-    public getCamera(): Camera {
-        return this.renderer.camera!;
     }
 
     public getSprite(spriteName: string): Sprite | undefined {
