@@ -35,6 +35,7 @@ export default class Game {
     public player: Player = new Player('');
 
     public map: Map = new Map(this);
+    public camera: Camera = new Camera(this.app, this.map);
     public renderer: Renderer = new Renderer(this);
 
     public socket: Socket = new Socket(this);
@@ -62,7 +63,6 @@ export default class Game {
     // private connectionHandler!: Connection;
     public pointer!: Pointer;
     public bubble!: BubbleController;
-    public camera!: Camera;
     public inventory!: Inventory;
 
     public world!: APIData;
@@ -358,6 +358,8 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
+
+        this.menu.resize();
     }
 
     public getScaleFactor(): number {
