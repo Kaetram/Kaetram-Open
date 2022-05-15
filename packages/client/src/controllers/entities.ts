@@ -68,10 +68,6 @@ export default class EntitiesController {
         this.grids ||= new Grids(game.map);
     }
 
-    public update(): void {
-        this.sprites?.updateSprites();
-    }
-
     public create(info: EntityData): void {
         // Don't spawn if we receive our own player data somehow.
         if (this.isPlayer(info.instance)) return;
@@ -112,13 +108,20 @@ export default class EntitiesController {
 
         let sprite = this.getSprite(entity.isItem() ? `item-${info.key}` : info.key);
 
+        // Don't add entities that don't have a sprite.
+        if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
+
+        // The name the player sees for an entity.
         entity.name = info.name;
 
-        entity.setSprite(sprite);
+        // Server-sided x and y coordinates are the `gridX` and `gridY` client coordinates.
         entity.setGridPosition(info.x, info.y);
 
-        if (sprite) entity.setIdleSpeed(sprite.idleSpeed);
+        // Set the sprite and sprite idle speed.
+        entity.setSprite(sprite);
+        entity.setIdleSpeed(sprite.idleSpeed);
 
+        // Begin the idling animation.
         entity.idle();
 
         this.addEntity(entity);
