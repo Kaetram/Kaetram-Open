@@ -1,28 +1,25 @@
-import { Packets, Opcodes } from '@kaetram/common/network';
-
 import log from '../../../lib/log';
 
+import type Map from '../../../map/map';
+import type Camera from '../../../renderer/camera';
+import type InputController from '../../../controllers/input';
+import type EntitiesController from '../../../controllers/entities';
+import type Socket from '../../../network/socket';
+import type Renderer from '../../../renderer/renderer';
 import type Game from '../../../game';
 import type Player from './player';
 
+import { Packets, Opcodes } from '@kaetram/common/network';
+
 export default class PlayerHandler {
-    private map;
-    private camera;
-    private input;
-    private entities;
-    private socket;
-    private renderer;
+    private map: Map = this.game.map;
+    private camera: Camera = this.game.camera;
+    private input: InputController = this.game.input;
+    private entities: EntitiesController = this.game.entities;
+    private socket: Socket = this.game.socket;
+    private renderer: Renderer = this.game.renderer;
 
     public constructor(private game: Game, private player: Player) {
-        let { map, input, entities, socket, renderer } = game;
-
-        this.map = map;
-        this.camera = game.getCamera();
-        this.input = input;
-        this.entities = entities;
-        this.socket = socket;
-        this.renderer = renderer;
-
         this.load();
     }
 

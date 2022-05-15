@@ -37,15 +37,14 @@ export default class BubbleController {
 
     public setTo(instance: string, x: number, y: number): void {
         let bubble = this.bubbles[instance],
-            camera = this.game.getCamera(),
             { zoomFactor } = this.game.renderer,
             tileSize = 48, // 16 * scale
             width = parseInt(bubble.element.css('width')) + 24,
             offset = width / 2 - tileSize / 2,
             offsetY = -20;
 
-        x = (x - camera.x) * zoomFactor;
-        y = (y - camera.y) * zoomFactor - tileSize * 2 - offsetY;
+        x = (x - this.game.camera.x) * zoomFactor;
+        y = (y - this.game.camera.y) * zoomFactor - tileSize * 2 - offsetY;
 
         bubble.element.css({ left: `${x - offset + 3}px`, top: `${y}px` });
     }
