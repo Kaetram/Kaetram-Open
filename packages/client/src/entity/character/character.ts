@@ -171,28 +171,11 @@ export default class Character extends Entity {
         this.move(x, y);
     }
 
-    // attack(attacker: Entity, character: Character): void {
-    //     this.attacking = true;
-
-    //     this.follow(character);
-    // }
-
-    // backOff(): void {
-    //     // this.attacking = false;
-    //     this.following = false;
-
-    //     this.removeTarget();
-    // }
-
     public addAttacker(character: Character): void {
         if (this.hasAttacker(character)) return;
 
         this.attackers[character.instance] = character;
     }
-
-    // removeAttacker(character: Character): void {
-    //     if (this.hasAttacker(character)) delete this.attackers[character.id];
-    // }
 
     private hasAttacker(character: Character): boolean {
         let { attackers } = this;
@@ -291,9 +274,6 @@ export default class Character extends Entity {
 
         if (this.step % 2 === 0 && this.secondStepCallback) this.secondStepCallback();
 
-        // this.prevGridX = this.gridX;
-        // this.prevGridY = this.gridY;
-
         if (!this.hasPath()) return;
 
         this.beforeStepCallback?.();
@@ -373,13 +353,6 @@ export default class Character extends Entity {
     }
 
     private move(x: number, y: number, forced = false): void {
-        // this.destination = {
-        //     gridX: x,
-        //     gridY: y
-        // };
-
-        // this.adjacentTiles = {};
-
         if (this.hasPath() && !forced) this.proceed(x, y);
         else this.followPath(this.requestPathfinding(x, y));
     }
