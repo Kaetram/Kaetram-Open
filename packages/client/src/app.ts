@@ -487,12 +487,4 @@ export default class App {
             backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #c5c5c5))`
         });
     }
-
-    // updateOrientation(): void {
-    //     this.orientation = this.getOrientation();
-    // }
-
-    // getOrientation(): 'portrait' | 'landscape' {
-    //     return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-    // }
 }
