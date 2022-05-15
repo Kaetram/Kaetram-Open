@@ -67,9 +67,6 @@ enum TileFlip {
     Diagonal
 }
 
-const MAXIMUM_ZOOM = 6,
-    MINIMUM_ZOOM = 2.6;
-
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
@@ -106,8 +103,9 @@ export default class Renderer {
     private lightings: RendererLighting[] = [];
 
     private entities!: EntitiesController;
-    public camera!: Camera;
     private input!: InputController;
+
+    private camera: Camera = this.game.camera;
 
     public tileSize = this.game.map.tileSize;
     private fontSize = 10;
@@ -122,8 +120,6 @@ export default class Renderer {
     private animatedTiles: { [index: number]: Tile } = {};
     private drawnTiles: Tile[] = [];
 
-    private resizeTimeout: number | null = null;
-
     public autoCentre = false;
     // drawTarget = false;
     // selectedCellVisible = false;
@@ -136,19 +132,24 @@ export default class Renderer {
     public forceRendering = false;
     // animatedTilesDrawCalls = 0;
 
+    public mobile = Detect.isMobile();
+    private mEdge = Detect.isEdge();
+    private tablet = Detect.isTablet();
+
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
 
     public zoomFactor = 3;
 
+    private darkMask: DarkMask = new DarkMask({
+        lights: [],
+        color: 'rgba(0, 0, 0, 0.84)'
+    });
+
     private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
     public map!: Map;
-    private mEdge!: boolean;
-    private tablet!: boolean;
-    public mobile!: boolean;
-    private darkMask!: DarkMask;
     private shadowSprite!: Sprite;
     private sparksSprite!: Sprite;
     private realFPS!: number;
@@ -157,6 +158,7 @@ export default class Renderer {
     private tileset: unknown;
 
     public constructor(public game: Game) {
+        // Grab the Canvas2D context from the HTML canvas.
         this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
         this.backContext = this.background.getContext('2d')!; // Background
         this.foreContext = this.foreground.getContext('2d')!; // Foreground
@@ -164,6 +166,7 @@ export default class Renderer {
         this.textContext = this.textCanvas.getContext('2d')!; // Texts
         this.cursorContext = this.cursor.getContext('2d')!; // Cursor
 
+        // Store all the contexts in an array so we can parse when needed.
         this.allContexts = [
             this.entitiesContext,
             this.backContext,
@@ -173,42 +176,20 @@ export default class Renderer {
             this.cursorContext
         ];
 
+        // We split contexts into two arrays, one for tilemap rendering and one for the rest.
         this.contexts = [this.entitiesContext, this.textContext, this.overlayContext];
         this.drawingContexts = [this.backContext, this.foreContext];
 
-        this.load();
+        // Dark mask is used for the lighting system.
+        this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    public stop(): void {
-        this.camera = null!;
-        this.input = null!;
-        this.stopRendering = true;
-
-        this.forEachContext((context) => {
-            context.fillStyle = '#12100D';
-            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-        });
-    }
-
-    private load(): void {
-        this.loadLights();
-        this.checkDevice();
-    }
-
-    private removeSmoothing(): void {
-        this.forAllContexts((context) => {
-            if (!context) return;
-
-            context.imageSmoothingQuality = 'low';
-
-            context.imageSmoothingEnabled = false;
-            /** @deprecated */
-            // ctx.webkitImageSmoothingEnabled = false;
-            // ctx.mozImageSmoothingEnabled = false;
-            // ctx.msImageSmoothingEnabled = false;
-            // ctx.oImageSmoothingEnabled = false;
-        });
-    }
+    /**
+     * The screen width/height are calculated according to the dimensions
+     * obtained from the camera. The canvas sizes are calculated according
+     * to the screen width and height with the zoom factor applied. After
+     * calculating the canvas size, we apply that onto each of the canvases.
+     */
 
     private loadSizes(): void {
         if (!this.camera) return;
@@ -221,7 +202,8 @@ export default class Renderer {
         this.canvasWidth = this.screenWidth * this.zoomFactor;
         this.canvasHeight = this.screenHeight * this.zoomFactor;
 
-        this.forEachCanvas((canvas) => {
+        // Iterate through the canvases and apply the new size.
+        this.forEachCanvas((canvas: HTMLCanvasElement) => {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
@@ -229,8 +211,6 @@ export default class Renderer {
 
     public loadCamera(): void {
         let { storage } = this.game;
-
-        this.camera = new Camera(this);
 
         this.loadSizes();
 
@@ -244,23 +224,22 @@ export default class Renderer {
         }
     }
 
-    private loadLights(): void {
-        this.darkMask = new DarkMask({
-            lights: [],
-            color: 'rgba(0, 0, 0, 0.84)'
-        });
-
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
-    }
+    /**
+     * Prepares the renderer for screen resizing. This is automatically
+     * called through a HTML5 callback for when the screen undergoes a change.
+     * We recalculate all the dimensions and positions of the canvas elements.
+     * We also request that all cells are redrawn by clearing the cache.
+     */
 
     public resize(): void {
-        //this.stopRendering = true;
-
-        //this.clear();
-
-        this.checkDevice();
-
+        // Clear cells to be redrawn.
         this.cells = {};
+
+        this.zoomFactor = this.camera.zoomFactor;
+
+        this.mobile = Detect.isMobile();
+
+        this.loadSizes();
 
         this.clearScreen(this.cursorContext);
 
@@ -268,16 +247,31 @@ export default class Renderer {
 
         this.camera.centreOn(this.game.player);
 
-        this.loadSizes();
-
-        this.game.menu.resize();
-
-        //this.stopRendering = false;
-        this.resizeTimeout = null;
-
-        this.updateAnimatedTiles();
-
         this.forceRendering = true;
+    }
+
+    public stop(): void {
+        this.camera = null!;
+        this.input = null!;
+        this.stopRendering = true;
+
+        this.forEachContext((context) => {
+            context.fillStyle = '#12100D';
+            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        });
+    }
+
+    /**
+     * Image smoothing is automatically applied to a 2D
+     * rendering canvas. We must manually disable it for
+     * each time we draw onto the context.
+     */
+
+    private removeSmoothing(): void {
+        this.forAllContexts((context) => {
+            context.imageSmoothingQuality = 'low';
+            context.imageSmoothingEnabled = false;
+        });
     }
 
     public render(): void {
@@ -346,10 +340,6 @@ export default class Renderer {
                 if (tile.v) flips.push(TileFlip.Vertical);
                 if (tile.h) flips.push(TileFlip.Horizontal);
 
-                if (index === 97_207) flips.push();
-
-                //if (tile.h && tile.d) flips.push(TileFlip.Vertical);
-
                 tile = tile.tileId;
             }
 
@@ -369,7 +359,7 @@ export default class Renderer {
         this.setCameraView(this.entitiesContext);
 
         this.forEachAnimatedTile((tile) => {
-            if (!this.camera.isVisible(tile.x, tile.y, 3, 1)) return;
+            if (!this.camera.isVisible(tile.x, tile.y, 3, 2)) return;
 
             tile.animate(this.game.time);
 
@@ -920,6 +910,14 @@ export default class Renderer {
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId]);
     }
 
+    /**
+     * Responsible for drawing an image at a specified tile index.
+     * @param context The Canvas2D context we are drawing the image on.
+     * @param image The image source to draw from (tileset).
+     * @param tile The renderer tile containing information such as x, y, width, height, etc.
+     * @param cell The renderer cell containing information such as dx, dy, width, height, flips.
+     */
+
     private drawImage(
         context: CanvasRenderingContext2D,
         image: CanvasImageSource,
@@ -1011,6 +1009,7 @@ export default class Renderer {
 
         if (centered) context.textAlign = 'center';
 
+        // Decrease font size relative to zoom out.
         fontSize += this.zoomFactor * 2;
 
         context.strokeStyle = strokeColour || '#373737';
@@ -1022,6 +1021,13 @@ export default class Renderer {
 
         context.restore();
     }
+
+    /**
+     * Iterates through all the currently visible tiles and appends tiles
+     * that are animated to our list of animated tiles. This function ensures
+     * that animated tiles are initialzied only once and stored for the
+     * duration of the client's session.
+     */
 
     public updateAnimatedTiles(): void {
         if (!this.animateTiles) return;
@@ -1183,24 +1189,6 @@ export default class Renderer {
         this.forceRendering = false;
     }
 
-    /**
-     * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
-     * we zoom out, if it's positive we zoom in. The function also checks
-     * maximum zoom.
-     * @param zoomAmount Float value we are zooming by.
-     */
-
-    public zoom(zoomAmount: number): void {
-        this.zoomFactor += zoomAmount;
-
-        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
-        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
-
-        this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
-
-        this.resize();
-    }
-
     public transition(duration: number, forward: boolean, callback: () => void): void {
         let textCanvas = $('#text-canvas'),
             hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
@@ -1309,12 +1297,6 @@ export default class Renderer {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    private checkDevice(): void {
-        this.mobile = Detect.isMobile();
-        this.tablet = Detect.isTablet();
-        this.mEdge = Detect.isEdge();
     }
 
     public verifyCentration(): void {
