@@ -6,13 +6,12 @@ import { isMobile } from './utils/detect';
 
 import Util from './utils/util';
 
+type EmptyCallback = () => void;
 type KeyDownCallback = (e: JQuery.KeyDownEvent) => void;
 type KeyUpCallback = (e: JQuery.KeyUpEvent) => void;
-type LoginCallback = () => void;
 type LeftClickCallback = (e: JQuery.ClickEvent) => void;
 type RightClickCallback = (e: JQuery.ContextMenuEvent) => void;
 type MouseMoveCallback = (e: JQuery.MouseMoveEvent) => void;
-type ResizeCallback = () => void;
 
 export default class App {
     public config = window.config;
@@ -59,11 +58,12 @@ export default class App {
 
     public keyDownCallback?: KeyDownCallback;
     public keyUpCallback?: KeyUpCallback;
-    public loginCallback?: LoginCallback;
+    public loginCallback?: EmptyCallback;
     public leftClickCallback?: LeftClickCallback;
     public rightClickCallback?: RightClickCallback;
     public mouseMoveCallback?: MouseMoveCallback;
-    public resizeCallback?: ResizeCallback;
+    public resizeCallback?: EmptyCallback;
+    public respawnCallback?: EmptyCallback;
 
     public constructor() {
         this.sendStatus(`Initializing the game client...`);
@@ -87,6 +87,8 @@ export default class App {
         this.about.on('click', () => this.openScroll('about'));
         this.credits.on('click', () => this.openScroll('credits'));
         this.discord.on('click', () => window.open('https://discord.gg/MmbGAaw'));
+
+        this.respawn.on('click', () => this.respawnCallback?.());
 
         this.parchment.on('click', () => {
             if (this.hasFooterOpen()) this.openScroll('load-character');
@@ -544,7 +546,7 @@ export default class App {
      * if the user is registering.
      */
 
-    public onLogin(callback: LoginCallback): void {
+    public onLogin(callback: EmptyCallback): void {
         this.loginCallback = callback;
     }
 
@@ -582,7 +584,15 @@ export default class App {
      * to undergo resizing.
      */
 
-    public onResize(callback: ResizeCallback): void {
+    public onResize(callback: EmptyCallback): void {
         this.resizeCallback = callback;
+    }
+
+    /**
+     * Callback for when the respawn button is pressed.
+     */
+
+    public onRespawn(callback: EmptyCallback): void {
+        this.respawnCallback = callback;
     }
 }
