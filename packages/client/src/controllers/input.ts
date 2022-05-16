@@ -68,7 +68,24 @@ export default class InputController {
         this.map = game.map;
 
         this.load();
+
+        this.app.onLeftClick((event: JQuery.ClickEvent) =>
+            this.handle(Modules.InputType.LeftClick, event)
+        );
+
+        //this.app.onKeyDown(this.handle.bind(this));
+        this.app.onMouseMove((event: JQuery.MouseMoveEvent) => {
+            if (!this.game.started) return;
+
+            this.setCoords(event);
+            this.moveCursor();
+        });
     }
+
+    /**
+     * Sets the target animation speed and begins
+     * loading the overlay system.
+     */
 
     private load(): void {
         this.targetAnimation.setSpeed(50);
