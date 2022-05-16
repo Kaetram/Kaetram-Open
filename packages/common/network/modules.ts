@@ -52,10 +52,6 @@ export enum Hits {
     Profession
 }
 
-export enum Infos {
-    Countdown
-}
-
 export enum Projectiles {
     Arrow,
     Boulder,
@@ -210,52 +206,51 @@ export interface Colours {
 }
 
 export let DamageColours = {
-    received: {
+    // Received damage
+    [Hits.Damage]: {
         fill: 'rgb(255, 50, 50)',
-        stroke: 'rgb(255, 180, 180)'
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'white',
+            stroke: '#373737'
+        }
     },
 
-    receivedCritical: {
+    [Hits.Critical]: {
         fill: 'rgb(204, 0, 204)',
-        stroke: 'rgb(255, 180, 180)'
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'rgb(255, 153, 204)',
+            stroke: '#373737'
+        }
     },
 
-    inflicted: {
-        fill: 'white',
-        stroke: '#373737'
-    },
-
-    inflictedCritical: {
-        fill: 'rgb(255, 153, 204)',
-        stroke: '#373737'
-    },
-
-    healed: {
-        fill: 'rgb(80, 255, 80)',
-        stroke: 'rgb(50, 120, 50)'
-    },
-
-    mana: {
-        fill: 'rgb(73, 94, 228)',
-        stroke: 'rgb(56, 63, 133)'
-    },
-
-    health: {
-        fill: 'white',
-        stroke: '#373737'
-    },
-
-    exp: {
-        fill: 'rgb(80, 180, 255)',
-        stroke: 'rgb(15, 85, 138)'
-    },
-
-    poison: {
+    [Hits.Poison]: {
         fill: 'rgb(66, 183, 77)',
         stroke: 'rgb(50, 120 , 50)'
     },
 
-    profession: {
+    [Hits.Heal]: {
+        fill: 'rgb(80, 255, 80)',
+        stroke: 'rgb(50, 120, 50)'
+    },
+
+    [Hits.Mana]: {
+        fill: 'rgb(73, 94, 228)',
+        stroke: 'rgb(56, 63, 133)'
+    },
+
+    [Hits.Experience]: {
+        fill: 'rgb(80, 180, 255)',
+        stroke: 'rgb(15, 85, 138)'
+    },
+
+    [Hits.LevelUp]: {
+        fill: 'rgb(80, 180, 255)',
+        stroke: 'rgb(15, 85, 138)'
+    },
+
+    [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
     }

@@ -35,10 +35,19 @@ export default class BubbleController {
         this.bubbles[instance].element.appendTo(this.container);
     }
 
+    /**
+     * Sets a bubble to an instance and the position associated
+     * with it. The instance is any entity's instance, and
+     * the x and y are absolute values in pixels.
+     * @param instance The instance to store the bubble as.
+     * @param x The x position of the bubble.
+     * @param y The y position of the bubble.
+     */
+
     public setTo(instance: string, x: number, y: number): void {
         let bubble = this.bubbles[instance],
             { zoomFactor } = this.game.renderer,
-            tileSize = 48, // 16 * scale
+            tileSize = this.game.renderer.tileSize * zoomFactor,
             width = parseInt(bubble.element.css('width')) + 24,
             offset = width / 2 - tileSize / 2,
             offsetY = -20;
