@@ -33,7 +33,7 @@ import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import { SerializedStoreInfo } from '@kaetram/common/types/stores';
 import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
-import { EntityData } from '@kaetram/common/types/entity';
+
 export default class Connection {
     private app;
     private audio;
@@ -97,25 +97,20 @@ export default class Connection {
 
             this.app.updateLoader('Logging in');
 
-            if (this.app.isRegistering()) {
-                let registerInfo = this.app.registerFields,
-                    username = registerInfo[0].val(),
-                    password = registerInfo[1].val(),
-                    email = registerInfo[3].val();
+            let username = this.app.getUsername(),
+                password = this.app.getPassword(),
+                email = this.app.getEmail();
 
+            if (this.app.isRegistering())
                 this.socket.send(Packets.Login, {
                     opcode: Opcodes.Login.Register,
                     username,
                     password,
                     email
                 });
-            } else if (this.app.isGuest())
+            else if (this.app.isGuest())
                 this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
             else {
-                let loginInfo = this.app.loginFields,
-                    username = loginInfo[0].val() as string,
-                    password = loginInfo[1].val() as string;
-
                 this.socket.send(Packets.Login, {
                     opcode: Opcodes.Login.Login,
                     username,

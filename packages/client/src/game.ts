@@ -74,7 +74,8 @@ export default class Game {
 
         this.loadControllers();
 
-        app.setGame(this);
+        this.app.onLogin(this.connect.bind(this));
+        this.app.onResize(this.resize.bind(this));
     }
 
     /**
@@ -230,11 +231,7 @@ export default class Game {
     }
 
     public connect(): void {
-        let { app, socket } = this;
-
-        app.cleanErrors();
-
-        socket.connect();
+        this.socket.connect();
 
         // this.connectionHandler =
         new Connection(this);

@@ -10,5 +10,17 @@ export default {
 
     getImageURL(key = 'null'): string {
         return `url("/img/sprites/item-${key}.png")`;
+    },
+
+    /**
+     * Checks the email string against regular expression.
+     * @param email Email string to verify.
+     * @returns Whether or not the email string follows the proper Regex pattern.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
     }
 };
