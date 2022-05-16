@@ -126,18 +126,16 @@ export default class World {
     }
 
     /**
-     * Iterates through all the entities and removes the `character`
-     * parameter from their attackers list. We call this function
-     * when the `character` logs out or dies.
-     * @param character The character we are removing from other entity's character.
+     * Iterates through all the characters in the world and checks whether
+     * the `cleanCharacter` is their target. If it is, we remove it.
+     * @param cleanCharacter The character that we are removing as target.
      */
 
-    public cleanCombat(character: Character): void {
-        this.entities.forEachEntity((entity: Entity) => {
-            if (entity.instance !== character.instance) return;
+    public cleanCombat(cleanCharacter: Character): void {
+        this.entities.forEachCharacter((character: Character) => {
+            if (!character.hasTarget()) return;
 
-            if (entity instanceof Character && entity.hasAttacker(character))
-                entity.removeAttacker(character);
+            if (character.target?.instance === cleanCharacter.instance) character.clearTarget();
         });
     }
 
