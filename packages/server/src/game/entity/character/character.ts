@@ -98,8 +98,14 @@ export default abstract class Character extends Entity {
      */
 
     public heal(amount = 1): void {
-        if (this.dead || this.poison) return;
+        // Cannot heal if dead or poisoned.
+        if (this.isDead() || this.poison) return;
+
+        // Cannot heal if engaged in combat.
         if (this.combat.started) return;
+
+        // Cannot heal if character is being attacked.
+        if (this.getAttackerCount() > 0) return;
 
         this.hitPoints.increment(amount);
     }

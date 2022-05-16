@@ -43,6 +43,9 @@ export default class Handler {
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
 
+        // Hit callback
+        this.player.onHit(this.handleHit.bind(this));
+
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
         this.player.onMovement(this.handleMovement.bind(this));
@@ -103,6 +106,8 @@ export default class Handler {
         }
 
         this.world.entities.removePlayer(this.player);
+
+        this.world.cleanCombat(this.player);
     }
 
     /**
@@ -120,6 +125,10 @@ export default class Handler {
 
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(new Despawn(this.player.instance), true);
+    }
+
+    private handleHit(damage: number, attacker?: Character): void {
+        if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
     }
 
     /**
