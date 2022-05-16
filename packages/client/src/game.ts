@@ -42,6 +42,7 @@ export default class Game {
     public storage: Storage = new Storage();
     public overlays: Overlay = new Overlay();
     public pathfinder: Pathfinder = new Pathfinder();
+    public info: InfoController = new InfoController();
     public audio: AudioController = new AudioController(this);
 
     private input!: InputController;
@@ -50,7 +51,6 @@ export default class Game {
     public entities!: EntitiesController;
     //public input!: InputController;
     public zoning!: Zoning;
-    public info!: InfoController;
     public menu!: MenuController;
 
     public started = false;
