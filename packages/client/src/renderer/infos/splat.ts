@@ -40,6 +40,7 @@ export default class Splat {
             this.stroke = this.colour.inflicted!.stroke;
         }
 
+        // Text gets marked as MISS if this is a damage type and the value is 0.
         if (this.isDamage() && value < 1) this.text = 'MISS';
 
         if (this.isPoison()) this.prefix = '--';
