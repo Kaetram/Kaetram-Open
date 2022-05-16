@@ -415,12 +415,7 @@ export default class Connection {
                             break;
                     }
 
-                    this.info.create(
-                        info.hit.type,
-                        [info.hit.damage, isPlayer],
-                        target.x,
-                        target.y
-                    );
+                    this.info.create(info.hit.type, info.hit.damage, target.x, target.y, isPlayer);
 
                     if (target.hurtSprite) {
                         target.sprite = target.hurtSprite;
@@ -436,73 +431,6 @@ export default class Connection {
                         this.audio.play(Modules.AudioTypes.SFX, 'hurt');
                 }
             }
-
-            /*let attacker = this.entities.get<Character>(info.attackerId!),
-                target = this.entities.get<Character>(info.targetId!);
-
-            if (!target || !attacker) return;
-
-            switch (opcode) {
-                case Opcodes.Combat.Hit: {
-                    let data = info as CombatHitData,
-                        hit = data.hitInfo!,
-                        isPlayer = target.id === this.game.player.instance;
-
-                    if (!hit.aoe && !hit.poison) {
-                        attacker.lookAt(target);
-                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                    } else if (hit.terror) target.terror = true;
-
-                    switch (hit.type) {
-                        case Modules.Hits.Critical:
-                            target.critical = true;
-
-                            break;
-
-                        default:
-                            if (attacker.id === this.game.player.instance && hit.damage > 0)
-                                this.audio.play(
-                                    Modules.AudioTypes.SFX,
-                                    `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
-                                );
-
-                            break;
-                    }
-
-                    this.info.create(hit.type, [hit.damage, isPlayer], target.x, target.y);
-
-                    if (target.hurtSprite) {
-                        target.sprite = target.hurtSprite;
-                        window.setTimeout(() => {
-                            target.sprite = target.normalSprite;
-                        }, 75);
-                    }
-
-                    attacker.triggerHealthBar();
-                    target.triggerHealthBar();
-
-                    if (isPlayer && hit.damage > 0) this.audio.play(Modules.AudioTypes.SFX, 'hurt');
-
-                    break;
-                }
-
-                case Opcodes.Combat.Finish:
-                    if (target) {
-                        target.removeTarget();
-                        target.forget();
-                    }
-
-                    attacker?.removeTarget();
-
-                    break;
-
-                case Opcodes.Combat.Sync: {
-                    let data = info as CombatSyncData;
-                    if (target.x !== data.x || target.y !== data.y) target.go(data.x, data.y);
-
-                    break;
-                }
-            }*/
         });
 
         this.messages.onAnimation((info: AnimationPacket) => {
@@ -677,14 +605,14 @@ export default class Connection {
 
             switch (info.type) {
                 case 'health':
-                    this.info.create(Modules.Hits.Heal, [info.amount], entity.x, entity.y);
+                    this.info.create(Modules.Hits.Heal, info.amount, entity.x, entity.y);
 
                     this.game.player.healing = true;
 
                     break;
 
                 case 'mana':
-                    this.info.create(Modules.Hits.Mana, [info.amount], entity.x, entity.y);
+                    this.info.create(Modules.Hits.Mana, info.amount, entity.x, entity.y);
 
                     break;
             }
@@ -706,7 +634,7 @@ export default class Connection {
                      */
                     if (entity.level !== data.level) {
                         entity.level = data.level;
-                        this.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
+                        this.info.create(Modules.Hits.LevelUp, 0, entity.x, entity.y);
                     }
 
                     /**
@@ -722,12 +650,7 @@ export default class Connection {
                                 data.prevExperience
                             );
 
-                        this.info.create(
-                            Modules.Hits.Experience,
-                            [info.amount],
-                            entity.x,
-                            entity.y
-                        );
+                        this.info.create(Modules.Hits.Experience, info.amount, entity.x, entity.y);
                     }
 
                     this.menu.profile.update();
@@ -739,12 +662,7 @@ export default class Connection {
                     if (!entity || !entity.isPlayer()) return;
 
                     if (entity.instance === this.game.player.instance)
-                        this.info.create(
-                            Modules.Hits.Profession,
-                            [info.amount],
-                            entity.x,
-                            entity.y
-                        );
+                        this.info.create(Modules.Hits.Profession, info.amount, entity.x, entity.y);
 
                     break;
             }

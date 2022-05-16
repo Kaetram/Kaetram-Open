@@ -398,15 +398,21 @@ export default class Renderer {
     }
 
     private drawInfos(): void {
-        if (this.game.info.getCount() === 0) return;
+        if (this.game.info.isEmpty()) return;
 
-        this.game.info.forEachInfo((info) => {
-            let { opacity, text, x, y, fill, stroke } = info as Splat;
-
+        this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
             this.setCameraView(this.textContext);
-            this.textContext.globalAlpha = opacity;
-            this.drawText(`${text}`, Math.floor(x + 8), Math.floor(y), true, fill, stroke, 26);
+            this.textContext.globalAlpha = info.opacity;
+            this.drawText(
+                `${info.getText()}`,
+                Math.floor(info.x + 8),
+                Math.floor(info.y),
+                true,
+                info.fill,
+                info.stroke,
+                26
+            );
             this.textContext.restore();
         });
     }

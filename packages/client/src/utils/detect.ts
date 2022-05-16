@@ -35,13 +35,6 @@ export function androidVersion(): number | undefined {
     if (split.length > 1) return parseFloat(split[1].split(';')[0]);
 }
 
-export function supportsWebGL(): boolean {
-    // let canvas = document.createElement('canvas'),
-    //     gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-
-    return false;
-}
-
 export let isAppleDevice = (): boolean => agent.startsWith('ip');
 
 // Older mobile devices will default to non-centred camera mode
