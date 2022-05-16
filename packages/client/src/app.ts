@@ -1,17 +1,20 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import log from './lib/log';
-
-import { Modules } from '@kaetram/common/network';
-
 import install from './lib/pwa';
-import { isMobile, isTablet } from './utils/detect';
+import { isMobile } from './utils/detect';
 
-import type Game from './game';
+import Util from './utils/util';
+
+type KeyDownCallback = (e: JQuery.KeyDownEvent) => void;
+type KeyUpCallback = (e: JQuery.KeyUpEvent) => void;
+type LoginCallback = () => void;
+type LeftClickCallback = (e: JQuery.ClickEvent) => void;
+type RightClickCallback = (e: JQuery.ContextMenuEvent) => void;
+type MouseMoveCallback = (e: JQuery.MouseMoveEvent) => void;
+type ResizeCallback = () => void;
 
 export default class App {
-    // `window.config` is replaced by vite during build process
     public config = window.config;
 
     public body = $('body');
@@ -24,12 +27,15 @@ export default class App {
 
     private forms = $('#intro form');
 
+    private passwordConfirmation: JQuery<HTMLInputElement> = $(
+        '#register-password-confirmation-input'
+    );
+    private emailField: JQuery<HTMLElement> = $('#register-email-input');
+
     private loginButton = $('#login');
-    // private createButton = $('#play');
     private registerButton = $('#new-account');
     private helpButton = $('#help-button');
     private cancelButton = $('#cancel-button');
-    private loading = $('.loader');
 
     private respawn = $('#respawn');
 
@@ -39,338 +45,259 @@ export default class App {
     private about = $('#toggle-about');
     private credits = $('#toggle-credits');
     private discord = $('#toggle-discord');
-    private git = $('#toggle-git');
+
+    private loading = $('.loader');
 
     private footer = $('footer');
 
-    public loginFields: JQuery<HTMLInputElement>[] = [];
-    public registerFields: JQuery<HTMLInputElement>[] = [];
-
-    public game!: Game;
-
-    private loaded = false;
-
+    private currentScroll = 'load-character';
     private parchmentAnimating = false;
-    private loggingIn = false;
+    private loggingIn = false; // Used to prevent interactions when trying to log in.
+    private menuHidden = false; // Used to reroute key input to the callback.
 
-    public statusMessage!: string | null;
-    // orientation: string;
+    public statusMessage = '';
+
+    public keyDownCallback?: KeyDownCallback;
+    public keyUpCallback?: KeyUpCallback;
+    public loginCallback?: LoginCallback;
+    public leftClickCallback?: LeftClickCallback;
+    public rightClickCallback?: RightClickCallback;
+    public mouseMoveCallback?: MouseMoveCallback;
+    public resizeCallback?: ResizeCallback;
 
     public constructor() {
-        log.debug('Loading the game app.');
-
         this.sendStatus(`Initializing the game client...`);
-
-        // this.updateOrientation();
 
         this.load();
     }
 
+    /**
+     * Loads all the callbacks responsible
+     * for interactions. Things such as mouse clicks,
+     * keyboard presses, interaction with main menu
+     * elements, etc.
+     */
+
     private load(): void {
-        let {
-            forms,
-            registerButton,
-            cancelButton,
-            parchment,
-            about,
-            credits,
-            discord,
-            git,
-            rememberMe,
-            respawn,
-            body,
-            canvas
-        } = this;
+        this.forms.on('submit', (e: Event) => this.login(e));
 
-        forms.on('submit', (event) => {
-            event.preventDefault();
+        this.registerButton.on('click', () => this.openScroll('create-character'));
+        this.cancelButton.on('click', () => this.openScroll('load-character'));
 
-            this.login();
+        this.about.on('click', () => this.openScroll('about'));
+        this.credits.on('click', () => this.openScroll('credits'));
+        this.discord.on('click', () => window.open('https://discord.gg/MmbGAaw'));
+
+        this.parchment.on('click', () => {
+            if (this.hasFooterOpen()) this.openScroll('load-character');
         });
 
-        registerButton.on('click', () => this.openScroll('load-character', 'create-character'));
+        // Document callbacks such as clicks and keystrokes.
+        $(document).on('keydown', (e: JQuery.KeyDownEvent) => e.key !== 'Enter'); // Prevent enter key from submitting forms.
+        $(document).on('keydown', this.handleKeyDown.bind(this));
+        $(document).on('keyup', (e: JQuery.KeyUpEvent) => this.keyUpCallback?.(e));
+        $(document).on('mousemove', (e: JQuery.MouseMoveEvent) => this.mouseMoveCallback?.(e));
 
-        cancelButton.on('click', () => this.openScroll('create-character', 'load-character'));
+        // Canvas callbacks
+        this.canvas.on('click', (e: JQuery.ClickEvent) => this.leftClickCallback?.(e));
 
-        parchment.on('click', () => {
-            if (
-                parchment.hasClass('about') ||
-                parchment.hasClass('credits') ||
-                parchment.hasClass('git')
-            ) {
-                parchment.removeClass('about credits git');
-                this.displayScroll('load-character');
-            }
-        });
+        // Window callbacks
+        this.window.on('resize', () => this.resizeCallback?.());
 
-        about.on('click', () => this.displayScroll('about'));
-
-        credits.on('click', () => this.displayScroll('credits'));
-
-        discord.on('click', () => window.open('https://discord.gg/MmbGAaw'));
-
-        git.on('click', () => this.displayScroll('git'));
-
-        rememberMe.on('change', () => {
-            let { game } = this;
-
-            if (!game.storage) return;
-
-            let active = rememberMe.prop('checked');
-
-            game.storage.toggleRemember(!active);
-        });
-
-        respawn.on('click', () => {
-            let { game } = this;
-
-            if (game.player.dead) game.respawn();
-        });
-
-        window.scrollTo(0, 1);
-
-        this.window.on('resize', () => this.game.resize());
-
-        $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
-
-        $(document).on('keydown', ({ which, keyCode }) => {
-            let key: Modules.Keys = which || keyCode || 0,
-                { game } = this;
-
-            if (!game) return;
-
-            body.trigger('focus');
-
-            if (game.started) game.input.handle(Modules.InputType.Key, key);
-            else if (key === Modules.Keys.Enter) this.login();
-        });
-
-        $(document).on('keyup', ({ which }) => {
-            let { game } = this,
-                key = which;
-
-            if (!game || !game.started) return;
-
-            game.input.keyUp(key);
-        });
-
-        $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
-            let { game } = this;
-
-            if (!game || !game.input || !game.started || event.target.id !== 'text-canvas') return;
-
-            game.input.setCoords(event);
-            game.input.moveCursor();
-        });
-
-        $('body').on('contextmenu', '#canvas', (event) => {
-            this.game.input.handle(Modules.InputType.RightClick, event);
-
-            return false;
-        });
-
-        canvas.on('click', (event) => {
-            let { game } = this;
-
-            if (!game || !game.started || event.button !== 0) return;
-
-            window.scrollTo(0, 1);
-
-            game.input.handle(Modules.InputType.LeftClick, event);
-        });
-
-        $('input[type="range"]').on('input', (_e, input: HTMLInputElement) =>
-            this.updateRange($(input))
+        // Body callbacks
+        this.body.on('contextmenu', '#canvas', (e: JQuery.ContextMenuEvent) =>
+            this.handleRightClick(e)
         );
-
-        if (location.hostname === 'kaetram.com')
-            $.ajax({
-                url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
-                dataType: 'script',
-                async: true
-            });
-
-        if (this.config.worldSwitch) $('#world-switch').show();
     }
 
-    public ready(): void {
-        this.sendStatus(null);
+    /**
+     * Handler for key down input event. When the menu is hidden,
+     * that is, the game has started, we redirect all input to the
+     * callback function.
+     * @param e Event containing key data.
+     */
 
-        this.loaded = true;
+    public handleKeyDown(e: JQuery.KeyDownEvent): void {
+        if (this.menuHidden) return this.keyDownCallback?.(e);
+
+        if (e.key === 'Enter') this.login();
+    }
+
+    /**
+     * Handles the left click action onto the canvas and
+     * returns false so that it cancels the default action.
+     * @param e Event containing click information.
+     * @returns False to cancel default action.
+     */
+
+    public handleRightClick(e: JQuery.ContextMenuEvent): boolean {
+        this.rightClickCallback?.(e);
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /**
+     * Clears all the status messages and allows the
+     * login button to be pressed. This function generally
+     * gets called once the map has finished loading.
+     */
+
+    public ready(): void {
+        this.sendStatus();
 
         this.loginButton.prop('disabled', false);
     }
 
-    private login(): void {
-        let { loggingIn, loaded, statusMessage, game } = this;
+    /**
+     * Attempts to log in by checking all the necessary fields and creating
+     * a callback should all checks pass.
+     * @param e Optional event parameter (for when we receive a form submission).
+     */
 
-        if (loggingIn || !loaded || statusMessage || !this.verifyForm()) return;
+    private login(e?: Event): void {
+        if (e) e.preventDefault();
 
+        if (this.loggingIn || this.statusMessage || !this.verifyForm()) return;
+
+        this.clearErrors();
         this.toggleLogin(true);
-        game.connect();
 
+        // Creates a callback with all the fields.
+        this.loginCallback?.();
+
+        // Installs the PWA.
         install();
     }
 
-    public fadeMenu(): void {
-        let { body, footer } = this;
+    /**
+     * Shows all the elements regarding the main
+     * menu and hides the game element.
+     */
 
-        this.updateLoader(null);
+    public showMenu(): void {
+        this.body.removeClass('game');
+        this.body.removeClass('started');
+        this.body.addClass('intro');
+
+        this.footer.show();
+    }
+
+    /**
+     * Clears the loader and begins showing
+     * the game after a 500 millisecond timeout.
+     */
+
+    public fadeMenu(): void {
+        this.updateLoader();
 
         window.setTimeout(() => {
-            body.addClass('game');
-            body.addClass('started');
+            this.body.addClass('game');
+            this.body.addClass('started');
 
-            body.removeClass('intro');
+            this.body.removeClass('intro');
 
-            footer.hide();
+            this.footer.hide();
         }, 500);
     }
 
-    public showMenu(): void {
-        let { body, footer } = this;
+    /**
+     * Opens a scroll by changing to the destination. Clears
+     * errors from the current scroll, and checks if to animate
+     * or not depending on if the dimensions match that of a mobile.
+     * @param destination The new scroll we are setting to.
+     */
 
-        body.removeClass('game');
-        body.removeClass('started');
-        body.addClass('intro');
+    public openScroll(destination: string): void {
+        if (this.loggingIn || this.parchmentAnimating) return;
 
-        footer.show();
+        // Clears all errors that may have been displayed.
+        this.clearErrors();
+
+        this.changeScroll(destination, !isMobile());
     }
 
-    // showDeath(): void {}
+    /**
+     * Changes a scroll with or without an animation. It updates the current scroll
+     * variable in the class as well.
+     * @param destination The destination of the scroll we're changing to.
+     * @param withAnimation Whether or not to use animation when changing scrolls.
+     */
 
-    public openScroll(origin: string | undefined, destination: string): void {
-        let { loggingIn, parchmentAnimating, parchment } = this;
-
-        if (!destination || loggingIn) return;
-
-        this.cleanErrors();
-
-        if (!isMobile()) {
-            if (parchmentAnimating) return;
-
+    public changeScroll(destination: string, withAnimation = false): void {
+        if (withAnimation) {
             this.parchmentAnimating = true;
 
-            parchment.toggleClass('animate').removeClass(origin);
+            // Toggle animation and remove the current scroll class from parchment.
+            this.parchment.toggleClass('animate').removeClass(this.currentScroll);
 
-            window.setTimeout(
-                () => {
-                    parchment.toggleClass('animate').addClass(destination);
-                    this.parchmentAnimating = false;
+            // Set a timeout for the animation before displaying data.
+            window.setTimeout(() => {
+                // Toggle so that we can allow changing scrolls again.
+                this.parchmentAnimating = false;
 
-                    $(`#${destination} input`)[0]?.focus();
-                },
-                isTablet() ? 0 : 1000
-            );
-        } else parchment.removeClass(origin).addClass(destination);
+                // Animate again and add the new destination scroll.
+                this.parchment.toggleClass('animate').addClass(destination);
+
+                // Focus on the first text field in the new scroll.
+                $(`#${destination} input`)[0]?.focus();
+            }, 1000);
+        } else this.parchment.removeClass(this.currentScroll).addClass(destination);
+
+        // Update the current scroll we're on to the destination.
+        this.currentScroll = destination;
     }
 
-    private displayScroll(content: string): void {
-        let { parchment, game, body, helpButton } = this,
-            state = parchment.attr('class');
-
-        if (game.started) {
-            parchment.removeClass().addClass(content);
-
-            body.removeClass('credits legal about').toggleClass(content);
-
-            if (game.player) body.toggleClass('death');
-
-            if (content !== 'about') helpButton.removeClass('active');
-        } else if (state !== 'animate')
-            this.openScroll(state, state === content ? 'load-character' : content);
-    }
+    /**
+     * Verifies the form inputs. Checks that the username, password,
+     * and email (if registering) are valid. It also checks against
+     * whether the password confirmation matches the password inputted.
+     * @returns True if all the checks pass, false otherwise.
+     */
 
     private verifyForm(): boolean {
-        let activeForm = this.getActiveForm();
+        // Guest users don't need to input anything.
+        if (this.isGuest()) return true;
 
-        if (activeForm === 'null') return false;
+        // Check the username is not empty.
+        if (!this.getUsername())
+            return this.sendError('Please enter a username.', this.getUsernameField());
 
-        switch (activeForm) {
-            case 'load-character': {
-                let nameInput: JQuery<HTMLInputElement> = $('#login-name-input'),
-                    passwordInput: JQuery<HTMLInputElement> = $('#login-password-input');
+        // Check if the password is not empty.
+        if (!this.getPassword())
+            return this.sendError('Please enter a password.', this.getPasswordField());
 
-                if (this.loginFields.length === 0) this.loginFields = [nameInput, passwordInput];
+        // Handle registration page.
+        if (this.isRegistering()) {
+            // Password must be at least 3 characters long.
+            if (this.getPassword().length < 3)
+                return this.sendError(
+                    'Password must be at least 3 characters long.',
+                    this.getPasswordField()
+                );
 
-                if (!nameInput.val() && !this.isGuest()) {
-                    this.sendError(nameInput, 'Please enter a username.');
-                    return false;
-                }
+            // Check that the password matches the password confirmation.
+            if (this.getPassword() !== this.getPasswordConfirmation())
+                return this.sendError('Passwords do not match.', this.passwordConfirmation);
 
-                if (!passwordInput.val() && !this.isGuest()) {
-                    this.sendError(passwordInput, 'Please enter a password.');
-                    return false;
-                }
-
-                break;
-            }
-
-            case 'create-character': {
-                let characterName: JQuery<HTMLInputElement> = $('#register-name-input'),
-                    registerPassword: JQuery<HTMLInputElement> = $('#register-password-input'),
-                    registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
-                        '#register-password-confirmation-input'
-                    ),
-                    email: JQuery<HTMLInputElement> = $('#register-email-input');
-
-                if (this.registerFields.length === 0)
-                    this.registerFields = [
-                        characterName,
-                        registerPassword,
-                        registerPasswordConfirmation,
-                        email
-                    ];
-
-                if (!characterName.val()) {
-                    this.sendError(characterName, 'A username is necessary you silly.');
-                    return false;
-                }
-
-                if (!registerPassword.val()) {
-                    this.sendError(registerPassword, 'You must enter a password.');
-                    return false;
-                }
-
-                if (registerPasswordConfirmation.val() !== registerPassword.val()) {
-                    this.sendError(registerPasswordConfirmation, 'The passwords do not match!');
-                    return false;
-                }
-
-                if (registerPassword.val()!.toString().length < 3) {
-                    this.sendError(
-                        registerPassword,
-                        'Your password must be at least 3 characters long.'
-                    );
-                    return false;
-                }
-
-                if (!email.val() || !this.isEmail(email.val() as string)) {
-                    this.sendError(email, `The email you've entered is not valid.`);
-                    return false;
-                }
-
-                break;
-            }
+            // Verify email against regex.
+            if (!Util.isEmail(this.getEmail()))
+                return this.sendError(`The email you've entered is not valid.`, this.emailField);
         }
 
         return true;
     }
 
     /**
-     * Checks the email string against regular expression.
-     * @param email Email string to verify.
-     * @returns Whether or not the email string follows the proper Regex pattern.
+     * A status is a form of message used during the loading
+     * of the client. It is the blue text shown when we are
+     * initializing the map, renderer, etc.
+     * @param message Status string message to display.
      */
 
-    private isEmail(email: string): boolean {
-        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email
-        );
-    }
-
-    public sendStatus(message: string | null): void {
-        this.cleanErrors();
+    public sendStatus(message = ''): void {
+        this.clearErrors();
 
         this.statusMessage = message;
 
@@ -381,21 +308,46 @@ export default class App {
             text: message
         }).appendTo('.validation-summary');
 
-        $('.status').append(
-            '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>'
-        );
+        $('.status').append(this.getLoaderDots());
     }
 
-    public sendError(field: JQuery | null, error: string): void {
-        this.cleanErrors();
+    /**
+     * A loader functions as a status update which is displayed
+     * during the connection process. It shows black letters followed
+     * by the loader dots.
+     * @param message The message to display.
+     */
 
+    public updateLoader(message = ''): void {
+        if (message) this.loading.html(message + this.getLoaderDots());
+        else this.loading.html('');
+    }
+
+    /**
+     * An error is a red message displayed on the login
+     * or registration page. This is generally when something
+     * goes wrong, like an invalid input, server responding
+     * with an error, or a malfunction in the client.
+     * @param field A field can be specified to point out an error.
+     * @param error An error message is specified to be displayed.
+     * @returns Defaults to returning false so that it can be used
+     * during the form validation as a return statement for cleanliness.
+     */
+
+    public sendError(error: string, field?: JQuery<HTMLElement>): boolean {
+        // Clear existing errors.
+        this.clearErrors();
+
+        // Appends an error component to the validation summary.
         $('<span></span>', {
             class: 'validation-error blink',
             text: error
         }).appendTo('.validation-summary');
 
-        if (!field) return;
+        // Stop here if no field is specified.
+        if (!field) return false;
 
+        // Circles a field with a red border.
         field.addClass('field-error').trigger('select');
         field.on('keypress', function (event) {
             field.removeClass('field-error');
@@ -404,33 +356,65 @@ export default class App {
 
             $(this).off(event);
         });
+
+        return false;
     }
 
-    public cleanErrors(): void {
-        let activeForm = this.getActiveForm(),
-            fields = activeForm === 'load-character' ? this.loginFields : this.registerFields;
+    /**
+     * Clears all the errors that may have been displayed.
+     * This goes through all the fields as well as erasing
+     * the messages displayed.
+     */
 
-        for (let i = 0; i < fields.length; i++) fields[i].removeClass('field-error');
+    public clearErrors(): void {
+        this.getUsernameField().removeClass('field-error');
+        this.getPasswordField().removeClass('field-error');
+
+        this.passwordConfirmation.removeClass('field-error');
+        this.emailField.removeClass('field-error');
 
         $('.validation-error').remove();
         $('.status').remove();
     }
 
-    private getActiveForm() {
-        return this.parchment[0].className as 'null' | 'load-character' | 'create-character';
+    /**
+     * Prepares the main menu for the login status. We disable
+     * ability to change between scrolls, the login/register
+     * buttons, as well as hide certain elements.
+     */
+
+    public toggleLogin(toggle: boolean): void {
+        this.updateLoader('Connecting');
+
+        this.toggleTyping(toggle);
+
+        this.loggingIn = toggle;
+
+        if (toggle) this.loading.removeAttr('hidden');
+        else this.loading.attr('hidden', 'true');
+
+        this.loginButton.prop('disabled', toggle);
+        this.registerButton.prop('disabled', toggle);
     }
 
-    public isRegistering(): boolean {
-        return this.getActiveForm() === 'create-character';
+    /**
+     * Toggles the readonly state of the input fields.
+     * @param state Boolean value to set the readonly state to.
+     */
+
+    private toggleTyping(state: boolean): void {
+        this.getUsernameField().prop('readonly', state);
+        this.getPasswordField().prop('readonly', state);
+
+        this.passwordConfirmation.prop('readonly', state);
+        this.emailField.prop('readonly', state);
     }
 
-    public isGuest(): boolean {
-        return this.guest.prop('checked');
-    }
-
-    public setGame(game: Game): void {
-        this.game = game;
-    }
+    /**
+     * UI scaling determines which size of assets to use depending
+     * on the screen size. It also adjusts the CSS accordingly.
+     * @returns UI scale from 1 to 3.
+     */
 
     public getUIScale(): number {
         let width = window.innerWidth,
@@ -439,52 +423,166 @@ export default class App {
         return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
     }
 
-    private revertLoader(): void {
-        this.updateLoader('Connecting');
+    /**
+     * Checks if any of the footer items (about and credits) are active.
+     * @returns Whether or not parchment contains `about` or `credits`.
+     */
+
+    private hasFooterOpen(): boolean {
+        return this.parchment.hasClass('about') || this.parchment.hasClass('credits');
     }
 
-    public updateLoader(message: string | null): void {
-        let { loading } = this;
+    /**
+     * @returns Whether or not the guest toggle is checked.
+     */
 
-        if (message) {
-            let dots =
-                '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>';
-
-            loading.html(message + dots);
-        } else loading.html('');
+    public isGuest(): boolean {
+        return this.guest.prop('checked');
     }
 
-    public toggleLogin(toggle: boolean): void {
-        let { loading, loginButton, registerButton } = this;
+    /**
+     * Checks whether or not the current activity in the main
+     * menu is the register screen.
+     * @returns Whether or not the current scroll is the `create-character` scroll.
+     */
 
-        this.revertLoader();
-
-        this.toggleTyping(toggle);
-
-        this.loggingIn = toggle;
-
-        if (toggle) loading.removeAttr('hidden');
-        else loading.attr('hidden', 'true');
-
-        loginButton.prop('disabled', toggle);
-        registerButton.prop('disabled', toggle);
+    public isRegistering(): boolean {
+        return this.currentScroll === 'create-character';
     }
 
-    private toggleTyping(state: boolean): void {
-        let { loginFields, registerFields } = this;
+    /**
+     * @returns The jQuery HTML element of the username field
+     * depending on the currently open scroll.
+     */
 
-        if (loginFields) _.each(loginFields, (field) => field.prop('readonly', state));
-
-        if (registerFields) _.each(registerFields, (field) => field.prop('readOnly', state));
+    private getUsernameField(): JQuery<HTMLInputElement> {
+        return $(this.isRegistering() ? '#register-name-input' : '#login-name-input');
     }
 
-    public updateRange(obj: JQuery<HTMLInputElement>): void {
-        let min = parseInt(obj.attr('min')!),
-            max = parseInt(obj.attr('max')!),
-            val = (parseInt(obj.val() as string) - min) / (max - min);
+    /**
+     * Grabs the username field value from either the login screen or the register
+     * screen depending on the status of the current scroll open.
+     * @returns String value of the input field.
+     */
 
-        obj.css({
-            backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #c5c5c5))`
-        });
+    public getUsername(): string {
+        return this.getUsernameField().val()! as string;
+    }
+
+    /**
+     * @returns The JQuery HTML element of the password field
+     * depending on the currently open scroll.
+     */
+
+    private getPasswordField(): JQuery<HTMLInputElement> {
+        return $(this.isRegistering() ? '#register-password-input' : '#login-password-input');
+    }
+
+    /**
+     * Grabs the password value from the field. Acts the same as `getUsername` in that
+     * it selects the adequate field depending on the currently open scroll.
+     * @returns Raw string value of the password field.
+     */
+
+    public getPassword(): string {
+        return this.getPasswordField().val()! as string;
+    }
+
+    /**
+     * @returns The password confirmation field input string.
+     */
+
+    private getPasswordConfirmation(): string {
+        return this.passwordConfirmation.val()! as string;
+    }
+
+    /**
+     * Grabs the email field input from the register screen. If we are
+     * not on the registering screen, we return an empty string.
+     * @returns String value of the email field or an empty string if
+     * we are not on the register screen.
+     */
+
+    public getEmail(): string {
+        if (!this.isRegistering()) return '';
+
+        return this.emailField.val()! as string;
+    }
+
+    /**
+     * Returns a static string for the loader dots. We're
+     * essentially creating a `span` HTML element that
+     * we can just pull when needed.
+     * @returns A string containing the loader dots HTML.
+     */
+
+    public getLoaderDots(): string {
+        return '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>';
+    }
+
+    /**
+     * Handles the event of a key being initially pressed down.
+     * @param callback Contains event data about the key pressed.
+     */
+
+    public onKeyDown(callback: KeyDownCallback): void {
+        this.keyDownCallback = callback;
+    }
+
+    /**
+     * Handles the event of a key being released.
+     * @param callback Contains event data about the key released.
+     */
+
+    public onKeyUp(callback: KeyUpCallback): void {
+        this.keyUpCallback = callback;
+    }
+
+    /**
+     * Handles when an attempt to log in is made.
+     * @param callback Data contains username, password, and email
+     * if the user is registering.
+     */
+
+    public onLogin(callback: LoginCallback): void {
+        this.loginCallback = callback;
+    }
+
+    /**
+     * Callback for when left mouse click occurs.
+     * @param callback Event data about the left mouse click.
+     */
+
+    public onLeftClick(callback: LeftClickCallback): void {
+        this.leftClickCallback = callback;
+    }
+
+    /**
+     * Callback about context menu activation. Also known
+     * as right click in the browser.
+     * @param callback Callback containing ContextMenuData.
+     */
+
+    public onRightClick(callback: RightClickCallback): void {
+        this.rightClickCallback = callback;
+    }
+
+    /**
+     * Callback for whenever the mouse moves.
+     * @param callback Contains mouse movement event data.
+     */
+
+    public onMouseMove(callback: MouseMoveCallback): void {
+        this.mouseMoveCallback = callback;
+    }
+
+    /**
+     * An empty callback signal containing a signal
+     * for the renderer and various other elements
+     * to undergo resizing.
+     */
+
+    public onResize(callback: ResizeCallback): void {
+        this.resizeCallback = callback;
     }
 }

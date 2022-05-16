@@ -239,11 +239,11 @@ export default class Renderer {
 
         this.mobile = Detect.isMobile();
 
+        this.camera.update();
+
         this.loadSizes();
 
         this.clearScreen(this.cursorContext);
-
-        this.camera.update();
 
         this.camera.centreOn(this.game.player);
 
