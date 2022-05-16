@@ -85,6 +85,8 @@ export default class Combat {
     private handleLoop(): void {
         if (!this.character.hasTarget() || this.character.target?.isDead()) return this.stop();
 
+        console.log('[Combat]', this.character.name, 'is attacking', this.character.target!.name);
+
         if (this.character.isNearTarget() && this.canAttack()) {
             let hit = this.createHit();
 

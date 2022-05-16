@@ -171,6 +171,8 @@ export default class Incoming {
             //this.player.updateRegion(true);
         }
 
+        if (this.player.isDead()) this.player.deathCallback?.();
+
         this.player.ready = true;
     }
 
