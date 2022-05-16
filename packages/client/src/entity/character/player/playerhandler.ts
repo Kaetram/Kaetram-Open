@@ -134,7 +134,7 @@ export default class PlayerHandler {
         player.onStep(() => {
             if (player.hasNextStep()) entities.registerDuality(player);
 
-            if (!camera.centered || camera.lockX || camera.lockY) this.checkBounds();
+            if (!camera.isCentered() || camera.lockX || camera.lockY) this.checkBounds();
 
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
@@ -157,7 +157,7 @@ export default class PlayerHandler {
              * This is a callback representing the absolute exact position of the player.
              */
 
-            if (camera.centered) camera.centreOn(player);
+            if (camera.isCentered()) camera.centreOn(player);
 
             if (player.target) player.follow(player.target);
         });
