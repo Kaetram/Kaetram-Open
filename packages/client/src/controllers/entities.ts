@@ -236,9 +236,10 @@ export default class EntitiesController {
 
             this.game.info.create(
                 Modules.Hits.Damage,
-                [info.damage!, this.isPlayer(target.instance)],
+                info.damage!,
                 target.x,
-                target.y
+                target.y,
+                this.isPlayer(target.instance)
             );
 
             target.triggerHealthBar();

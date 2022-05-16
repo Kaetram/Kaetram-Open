@@ -2,6 +2,18 @@ export let isInt = (n: number): boolean => n % 1 === 0;
 
 export default {
     /**
+     * Creates a unique ID for a given time.
+     * @param time The time in milliseconds.
+     * @param x Optional parameter to concatenate to the ID.
+     * @param y Optional parameter to concatenate to the ID.
+     * @returns A concatenated string of the time and optional parameters.
+     */
+
+    createId(time: number, x = 0, y = 0): string {
+        return `${time}${x}${y}`;
+    },
+
+    /**
      * Converts an item's key into an image URL for the client.
      * It defaults to `null` if parameter is not specified.
      * @param key The item's key.
