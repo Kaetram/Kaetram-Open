@@ -129,12 +129,13 @@ export default class Renderer {
     private brightness = 100;
     public drawNames = true;
     public drawLevels = true;
-    public forceRendering = false;
     // animatedTilesDrawCalls = 0;
 
     public mobile = Detect.isMobile();
     private mEdge = Detect.isEdge();
     private tablet = Detect.isTablet();
+
+    public forceRendering = (this.mobile || this.tablet) && this.camera.isCentered();
 
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
@@ -217,7 +218,7 @@ export default class Renderer {
         if (!storage.data.new) return;
 
         if (this.mEdge || Detect.useCenteredCamera()) {
-            this.camera.centered = false;
+            this.camera.decenter();
 
             storage.data.settings.centerCamera = false;
             storage.save();
@@ -1179,7 +1180,7 @@ export default class Renderer {
     }
 
     private hasRenderedFrame(): boolean {
-        if (this.forceRendering || (this.mobile && this.camera.centered)) return false;
+        if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
 
         if (!this.camera || this.stopRendering || !this.input) return true;
 
@@ -1187,7 +1188,7 @@ export default class Renderer {
     }
 
     private saveFrame(): void {
-        if (this.mobile && this.camera.centered) return;
+        if (this.mobile && this.camera.isCentered()) return;
 
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
@@ -1303,10 +1304,6 @@ export default class Renderer {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    public verifyCentration(): void {
-        this.forceRendering = (this.mobile || this.tablet) && this.camera.centered;
     }
 
     public isPortableDevice(): boolean {
