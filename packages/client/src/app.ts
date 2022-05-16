@@ -22,7 +22,6 @@ export default class App {
     private window = $(window);
 
     public canvas = $('#canvas');
-    public border = $('#border');
 
     private forms = $('#intro form');
 

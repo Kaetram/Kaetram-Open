@@ -35,7 +35,7 @@ export default class Game {
     public player: Player = new Player('');
 
     public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.app, this.map);
+    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
     public renderer: Renderer = new Renderer(this);
 
     public socket: Socket = new Socket(this);
@@ -245,12 +245,10 @@ export default class Game {
     public postLoad(): void {
         this.renderer.loadStaticSprites();
 
-        this.camera.setPlayer(this.player);
-
+        this.camera.centreOn(this.player);
         this.entities.addEntity(this.player);
 
         let defaultSprite = this.getSprite(this.player.getSpriteName());
-
         this.player.setSprite(defaultSprite);
 
         if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
@@ -270,8 +268,6 @@ export default class Game {
         this.zoning = new Zoning();
 
         this.updater.setSprites(this.entities.sprites);
-
-        this.renderer.verifyCentration();
 
         if (this.storage.data.new) {
             this.storage.data.new = false;
