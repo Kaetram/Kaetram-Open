@@ -994,7 +994,7 @@ export default class Connection {
                 return;
             }
 
-            if (!this.renderer.camera.centered) return;
+            if (!this.camera.isCentered()) return;
 
             this.renderer.camera.forceCentre(this.game.player);
             this.renderer.forceRendering = true;
