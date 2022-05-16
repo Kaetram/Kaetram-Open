@@ -1,154 +1,206 @@
+import $ from 'jquery';
 import { Modules } from '@kaetram/common/network';
-import App from '../app';
 
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Map from '../map/map';
+import type Player from '../entity/character/player/player';
 
 const MAXIMUM_ZOOM = 6,
     MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
-    // offset = 0.5;
+    // Border is used to determine the screen size of the website (not browser).
+    public border: JQuery<HTMLElement> = $('#border');
 
+    // x and y are absolute pixel coordinates
     public x = 0;
     public y = 0;
-    // dX = 0;
-    // dY = 0;
+
+    // Grid x and y are the absolute coordinates divided by tileSize.
     public gridX = 0;
     public gridY = 0;
-    // private prevGridX = 0;
-    // private prevGridY = 0;
 
+    // Grid width and height represent how many grids are visible horizontally and vertically.
+    public gridWidth = 0;
+    public gridHeight = 0;
+
+    // The maximum camera position for the bottom and right edges of the map.
+    private borderX = 0;
+    private borderY = 0;
+
+    // How zoomed in we are.
     public zoomFactor = 3;
 
-    private tileSize;
+    // Whether to centre the camera on a specific entity.
+    private centered = true;
 
-    // speed = 1;
-    // private panning = false;
-    public centered = true;
-    private player: Player | null = null;
+    // Whether to bound the camera horizontally or vertically.
     public lockX = false;
     public lockY = false;
 
-    public gridWidth!: number;
-    public gridHeight!: number;
-    private borderX!: number;
-    private borderY!: number;
-
-    public constructor(private app: App, private map: Map) {
-        this.tileSize = map.tileSize;
-
+    public constructor(private width: number, private height: number, private tileSize = 16) {
         this.update();
     }
 
+    /**
+     * Calculates the amount of tiles horizontally and vertically
+     * depending on the dimensions of the screen and the zoom factor.
+     * The border acts as a bounding box for when the camera approaches
+     * edges of the map.
+     */
+
     public update(): void {
-        let { app, tileSize, map, zoomFactor } = this,
-            borderWidth = app.border.width()!,
-            borderHeight = app.border.height()!,
-            factorWidth = Math.ceil(borderWidth / tileSize / zoomFactor),
-            factorHeight = Math.ceil(borderHeight / tileSize / zoomFactor);
+        let borderWidth = this.border.width()!,
+            borderHeight = this.border.height()!;
 
-        this.gridWidth = factorWidth;
-        this.gridHeight = factorHeight;
+        /**
+         * The grid width and height are defined by how many tiles we can fit into
+         * the dimensions of the border. Note that the border is the size of the contents
+         * visible on the website itself, not the size of the browser window. The zoom
+         * factor is divided again to get the amount of grids are visible horizontally
+         * and vertically after the zoom.
+         */
 
-        let { gridWidth, gridHeight } = this;
+        this.gridWidth = Math.ceil(borderWidth / this.tileSize / this.zoomFactor);
+        this.gridHeight = Math.ceil(borderHeight / this.tileSize / this.zoomFactor);
 
-        this.borderX = map.width * tileSize - gridWidth * tileSize;
-        this.borderY = map.height * tileSize - gridHeight * tileSize;
+        /**
+         * The border x and y are the boundaries of how far the map can go. The maximum
+         * camera position is from x = 0 and y = 0 (left/top edge of the map), to the maximum possible
+         * position defined by the map width/height minus one screen size. These are proportions
+         * used to bind the camera when we reach the right/bottom edge of the map.
+         */
+
+        this.borderX = (this.width - this.gridWidth) * this.tileSize;
+        this.borderY = (this.height - this.gridHeight) * this.tileSize;
     }
+
+    /**
+     * Takes two grid coordinates and sets their position onto the camera.
+     * We then use the grid coordinates to calculate the absolute pixel
+     * coordinates by multiplying against the tileSize.
+     * @param gridX The x coordinate in the grid.
+     * @param gridY The y coordinate in the grid.
+     */
+
+    private setGridPosition(gridX: number, gridY: number): void {
+        this.gridX = gridX;
+        this.gridY = gridY;
+
+        this.x = gridX * this.tileSize;
+        this.y = gridY * this.tileSize;
+    }
+
+    /**
+     * A clip takes place when we want to move the camera to the
+     * edges of the nearest tile. For example, if we decentre the
+     * camera while the player is moving, this will leave
+     * the camera in between tiles, we want to clip to the nearest
+     * tile to prevent any issues.
+     */
 
     public clip(): void {
-        this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
+        this.setGridPosition(
+            Math.round(this.x / this.tileSize),
+            Math.round(this.y / this.tileSize)
+        );
     }
+
+    /**
+     * Toggles the centered state of the camera.
+     */
 
     public center(): void {
-        if (this.centered) return;
-
         this.centered = true;
-        this.centreOn(this.player);
-
-        this.renderer.verifyCentration();
     }
+
+    /**
+     * Untoggle the camera centration state and clip
+     * the camera to the nearest tile.
+     */
 
     public decenter(): void {
-        if (!this.centered) return;
-
-        this.clip();
         this.centered = false;
 
-        this.renderer.verifyCentration();
+        this.clip();
     }
 
-    private setGridPosition(x: number, y: number): void {
-        this.gridX = x;
-        this.gridY = y;
+    /**
+     * The camera is centered about the specified player character. This
+     * is generally the main character playing the game (unless cutscenes)
+     * will be implemented later.
+     * @param player The player entity we are centering the camera on.
+     */
 
-        this.x = this.gridX * this.tileSize;
-        this.y = this.gridY * this.tileSize;
-    }
+    public centreOn(player: Player): void {
+        let width = Math.floor(this.gridWidth / 2),
+            height = Math.floor(this.gridHeight / 2),
+            nextX = player.x - width * this.tileSize,
+            nextY = player.y - height * this.tileSize;
 
-    public setPlayer(player: Player): void {
-        this.player = player;
+        /**
+         * We check whether the x and y coordinates that are about
+         * to be calculated are within the boundaries of the map. If
+         * they are, then we update the camera position both horizontally
+         * and vertically.
+         */
 
-        this.centreOn(this.player);
-    }
-
-    public centreOn(player: Player | null): void {
-        if (!player) return;
-
-        let { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this,
-            width = Math.floor(gridWidth / 2),
-            height = Math.floor(gridHeight / 2),
-            nextX = player.x - width * tileSize,
-            nextY = player.y - height * tileSize;
-
-        if (nextX >= 0 && nextX <= borderX && !lockX) {
+        if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
             this.x = nextX;
-            this.gridX = Math.round(player.x / 16) - width;
-        } else this.offsetX(nextX);
+            this.gridX = Math.round(player.x / this.tileSize) - width;
+        } else this.offsetX(nextX); // Bind to the x edge.
 
-        if (nextY >= 0 && nextY <= borderY && !lockY) {
+        if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
             this.y = nextY;
-            this.gridY = Math.round(player.y / 16) - height;
-        } else this.offsetY(nextY);
+            this.gridY = Math.round(player.y / this.tileSize) - height;
+        } else this.offsetY(nextY); // Bind to the y edge.
     }
 
-    public forceCentre(entity: Entity): void {
-        if (!entity) return;
-
-        let { gridWidth, gridHeight, tileSize } = this,
-            width = Math.floor(gridWidth / 2),
-            height = Math.floor(gridHeight / 2);
-
-        this.x = entity.x - width * tileSize;
-        this.gridX = Math.round(entity.x / 16) - width;
-
-        this.y = entity.y - height * tileSize;
-        this.gridY = Math.round(entity.y / 16) - height;
-    }
+    /**
+     * Checks whether the camera is nearing the left or right edge of
+     * the map by comparing against a tileSize or the borderX. We use
+     * the `tileSize` in order to offset the camera binding to the left
+     * edge by one tile. Otherwise the player will see a black border
+     * alongside the left edge of the map. If the upcoming x coordinate
+     * exits the boundaries, we then continuously set the x camera position
+     * to either 0 (for left edge case) or the borderX (for right edge case).
+     * @param nextX The camera x coordinate we are testing against going out of bounds.
+     */
 
     private offsetX(nextX: number): void {
-        if (nextX <= 16) {
+        if (nextX <= this.tileSize) {
+            // Left edge case
             this.x = 0;
             this.gridX = 0;
         } else if (nextX >= this.borderX) {
+            // The right edge case
             this.x = this.borderX;
-            this.gridX = Math.round(this.borderX / 16);
+            this.gridX = Math.round(this.borderX / this.tileSize);
         }
     }
+
+    /**
+     * Similar to `offsetX`, we check against the top of the map and the
+     * bottom of the map and prevent the camera from going out of bounds.
+     * @param nextY The camera y coordinate we are testing against going out of bounds.
+     */
 
     private offsetY(nextY: number): void {
-        let { borderY } = this;
-
-        if (nextY <= 16) {
+        if (nextY <= this.tileSize) {
             this.y = 0;
             this.gridY = 0;
-        } else if (nextY >= borderY) {
-            this.y = borderY;
-            this.gridY = Math.round(borderY / 16);
+        } else if (nextY >= this.borderY) {
+            this.y = this.borderY;
+            this.gridY = Math.round(this.borderY / this.tileSize);
         }
     }
+
+    /**
+     * Shifts the map horizontally or vertically (depending on the direction)
+     * and updates the coordinates accordingly. The +- 3 are added in order
+     * to offset the camera by a few tiles. This is done because otherwise the
+     * player would get caught in a weird zoning loop where the zone that was
+     * just entered would immediately trigger movement to the zone we just left.
+     * @param direction The direction we are moving the camera in.
+     */
 
     public zone(direction: Modules.Orientation): void {
         switch (direction) {
@@ -177,6 +229,21 @@ export default class Camera {
     }
 
     /**
+     * Clip the map to the boundaries of the map if
+     * we zone somewhere outside of the limitations.
+     */
+
+    private zoneClip(): void {
+        if (this.gridX < 0) this.setGridPosition(0, this.gridY);
+
+        if (this.gridX > this.width) this.setGridPosition(this.width, this.gridY);
+
+        if (this.gridY < 0) this.setGridPosition(this.gridX, 0);
+
+        if (this.gridY > this.height) this.setGridPosition(this.gridX, this.height);
+    }
+
+    /**
      * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
      * we zoom out, if it's positive we zoom in. The function also checks
      * maximum zoom.
@@ -193,39 +260,40 @@ export default class Camera {
     }
 
     /**
-     * Clip the map to the boundaries of the map if
-     * we zone somewhere out of the limitations.
+     * @returns Whether or not the camera is centered.
      */
-    private zoneClip(): void {
-        let { width, height } = this.map;
 
-        if (this.gridX < 0) this.setGridPosition(0, this.gridY);
-
-        if (this.gridX > width) this.setGridPosition(width, this.gridY);
-
-        if (this.gridY < 0) this.setGridPosition(this.gridX, 0);
-
-        if (this.gridY > height) this.setGridPosition(this.gridX, height);
+    public isCentered(): boolean {
+        return this.centered;
     }
 
-    public forEachVisiblePosition(callback: (x: number, y: number) => void, offset?: number): void {
-        let { gridX, gridY, gridWidth, gridHeight } = this;
+    /**
+     * Checks whether the specified x and y coordinates are in the camera's view.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @param offsetX How far to the right and left to check outside the bounds.
+     * @param offsetY How far down to check outside the y bounds.
+     * @returns Whether or not the coordinates are within the viewport.
+     */
 
-        offset ||= 1;
-
-        for (let y = gridY - offset, maxY = y + gridHeight + offset * 2; y < maxY; y++)
-            for (let x = gridX - offset, maxX = x + gridWidth + offset * 2; x < maxX; x++)
-                callback(x, y);
-    }
-
-    public isVisible(x: number, y: number, offset: number, offset2: number): boolean {
-        let { gridX, gridY, gridWidth, gridHeight } = this;
-
+    public isVisible(x: number, y: number, offsetX: number, offsetY: number): boolean {
         return (
-            x > gridX - offset &&
-            x < gridX + gridWidth &&
-            y > gridY - offset &&
-            y < gridY + gridHeight + offset2
+            x > this.gridX - offsetX &&
+            x < this.gridX + this.gridWidth &&
+            y > this.gridY - offsetX &&
+            y < this.gridY + this.gridHeight + offsetY
         );
+    }
+
+    /**
+     * Iterates through every grid coordinate in the view port.
+     * @param callback Callback contains the grid coordinates being iterated in the view.
+     * @param offset How much to look outside the width and height of the viewport.
+     */
+
+    public forEachVisiblePosition(callback: (x: number, y: number) => void, offset = 1): void {
+        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
+            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++)
+                callback(x, y);
     }
 }
