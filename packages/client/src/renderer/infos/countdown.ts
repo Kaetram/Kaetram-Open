@@ -1,12 +1,13 @@
 export default class Countdown {
     public string: string | null = null;
 
+    private time = Date.now();
     private lastTime = 0;
     private updateTime = 1000; // Update every second.
 
     private destroyCallback?(id: string): void;
 
-    public constructor(public id: string, private time: number) {}
+    public constructor(public id: string) {}
 
     private tick(): void {
         if (this.time < 1) return;
