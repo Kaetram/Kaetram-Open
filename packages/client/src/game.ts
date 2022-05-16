@@ -76,6 +76,7 @@ export default class Game {
 
         this.app.onLogin(this.connect.bind(this));
         this.app.onResize(this.resize.bind(this));
+        this.app.onRespawn(this.respawn.bind(this));
     }
 
     /**
@@ -359,7 +360,9 @@ export default class Game {
     }
 
     public respawn(): void {
-        let { audio, app, socket, player } = this;
+        let { audio, app, socket } = this;
+
+        console.log('yo???');
 
         audio.play(Modules.AudioTypes.SFX, 'revive');
         app.body.removeClass('death');
