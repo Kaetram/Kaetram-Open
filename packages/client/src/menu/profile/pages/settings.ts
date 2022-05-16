@@ -31,6 +31,10 @@ export default class Settings {
         this.renderer = game.renderer;
 
         this.load();
+
+        $('input[type="range"]').on('input', (_e, input: HTMLInputElement) =>
+            this.updateSlider($(input))
+        );
     }
 
     private load(): void {
@@ -56,9 +60,9 @@ export default class Settings {
         sfx.val(this.getSFXLevel());
         brightness.val(this.getBrightness());
 
-        game.app.updateRange(volume);
-        game.app.updateRange(sfx);
-        game.app.updateRange(brightness);
+        this.updateSlider(volume);
+        this.updateSlider(sfx);
+        this.updateSlider(brightness);
 
         renderer.adjustBrightness(this.getBrightness());
 
@@ -168,6 +172,21 @@ export default class Settings {
         this.brightness.off('input');
         this.volume.off('input');
         this.sfx.off('input');
+    }
+
+    /**
+     * Updates the colour gradient of the sliders.
+     * @param slider The slider object we are updating.
+     */
+
+    public updateSlider(slider: JQuery<HTMLInputElement>): void {
+        let min = parseInt(slider.attr('min')!),
+            max = parseInt(slider.attr('max')!),
+            val = (parseInt(slider.val() as string) - min) / (max - min);
+
+        slider.css({
+            backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #c5c5c5))`
+        });
     }
 
     private setMusicLevel(musicLevel: number): void {
