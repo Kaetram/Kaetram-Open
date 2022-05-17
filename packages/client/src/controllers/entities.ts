@@ -250,6 +250,8 @@ export default class EntitiesController {
 
         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         attacker.triggerHealthBar();
+
+        return projectile;
     }
 
     /**
@@ -396,8 +398,8 @@ export default class EntitiesController {
      * @returns A sprite object if found, otherwise undefined.
      */
 
-    public getSprite(name: string | undefined): Sprite | undefined {
-        if (name) return this.sprites.sprites[name];
+    public getSprite(name: string): Sprite {
+        return this.sprites.sprites[name];
     }
 
     /**
