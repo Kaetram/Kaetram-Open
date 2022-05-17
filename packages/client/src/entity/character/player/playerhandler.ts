@@ -96,7 +96,7 @@ export default class PlayerHandler {
             camera.clip();
 
             let instance = '',
-                entity = game.getEntityAt(x, y, true);
+                entity = game.getEntityAt(x, y);
 
             if (entity) ({ instance } = entity);
 

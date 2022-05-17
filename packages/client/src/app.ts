@@ -183,6 +183,8 @@ export default class App {
         this.body.addClass('intro');
 
         this.footer.show();
+
+        this.menuHidden = false;
     }
 
     /**
@@ -200,6 +202,8 @@ export default class App {
             this.body.removeClass('intro');
 
             this.footer.hide();
+
+            this.menuHidden = true;
         }, 500);
     }
 
