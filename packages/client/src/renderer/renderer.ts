@@ -736,7 +736,7 @@ export default class Renderer {
     private drawCursor(): void {
         let { input, cursorContext, tablet, mobile } = this;
 
-        if (tablet || mobile || this.hasRenderedMouse() || input.cursorMoved) return;
+        if (tablet || mobile || this.hasRenderedMouse()) return;
 
         let { cursor, mouse } = input;
 
@@ -826,7 +826,14 @@ export default class Renderer {
     }
 
     private drawSelectedCell(): void {
-        if (!this.input.selectedCellVisible || this.input.keyMovement) return;
+        if (
+            !this.input.selectedCellVisible ||
+            this.game.player.moveLeft ||
+            this.game.player.moveRight ||
+            this.game.player.moveUp ||
+            this.game.player.moveDown
+        )
+            return;
 
         // let posX = this.input.selectedX,
         //     posY = this.input.selectedY,

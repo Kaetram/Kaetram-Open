@@ -20,7 +20,6 @@ export default class Updater {
 
     public update(): void {
         this.updateEntities();
-        this.input.updateCursor();
         this.updateKeyboard();
         this.updateAnimations();
         this.updateInfos();

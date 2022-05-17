@@ -20,12 +20,12 @@ export default class ChatController {
     /**
      * Handles key input from the handler. Pressing the ENTER
      * key will trigger the chat input similar to the button.
-     * @param data The key that is currently being pressed.
+     * @param key The key identifier from the JQuery KeyDownEvent.
      */
 
-    public key(data: Modules.Keys): void {
-        if (data === Modules.Keys.Enter && this.input.val() !== '') return this.send();
-        if (data === Modules.Keys.Esc || data === Modules.Keys.Enter) this.toggle();
+    public keyDown(key: string): void {
+        if (key === 'Enter' && this.input.val() !== '') return this.send();
+        if (key === 'Escape' || key === 'Enter') this.toggle();
     }
 
     /**
