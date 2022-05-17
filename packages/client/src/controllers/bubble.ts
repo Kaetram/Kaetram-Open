@@ -26,7 +26,7 @@ export default class BubbleController {
         let bubble = this.bubbles[instance];
 
         // Just update the bubble if it already exists.
-        if (bubble) return bubble.update(message, this.game.time);
+        if (bubble) return bubble.update(message, Date.now());
 
         // Create a new bubble.
         this.bubbles[instance] = new Blob(instance, message, duration, position);

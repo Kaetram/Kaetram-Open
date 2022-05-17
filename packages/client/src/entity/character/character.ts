@@ -489,17 +489,17 @@ export default class Character extends Entity {
         return !!this.target;
     }
 
-    public setObjectTarget(x: number, y: number): void {
+    public setObjectTarget(position: Position): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${x}-${y}`, Modules.EntityType.Object);
-        character.setGridPosition(x, y);
-        character.type = Modules.EntityType.Object;
+        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
+        character.setGridPosition(position.x, position.y);
 
         this.setTarget(character);
+        this.followPosition(position.x, position.y);
     }
 
     public setHitPoints(hitPoints: number): void {
