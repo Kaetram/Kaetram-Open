@@ -9,7 +9,6 @@ import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type Actions from '../menu/actions';
 import type App from '../app';
 import type Renderer from '../renderer/renderer';
 import type Map from '../map/map';
@@ -27,26 +26,21 @@ interface TargetData {
 }
 
 export default class InputController {
-    private app: App;
-    private renderer: Renderer;
-    private map: Map;
+    private app: App = this.game.app;
+    private map: Map = this.game.map;
+    private renderer: Renderer = this.game.renderer;
+    public player: Player = this.game.player;
 
     public selectedCellVisible = false;
-    private cursorVisible = true;
     public targetVisible = true;
     public selectedX = -1;
     public selectedY = -1;
 
     public cursor!: Sprite;
-    private newCursor!: Sprite;
 
-    public targetColour!: string;
-    private newTargetColour!: string;
+    public targetColour = 'rgba(255, 255, 255, 0.5)';
 
-    public keyMovement = true;
-    public cursorMoved = false;
-
-    private cursors: { [cursor: string]: Sprite | undefined } = {};
+    private cursors: { [cursor: string]: Sprite } = {};
     public lastMousePosition: Position = { x: 0, y: 0 };
 
     public hovering!: Modules.Hovering | null;
@@ -63,15 +57,13 @@ export default class InputController {
     public entity: Entity | undefined;
 
     public constructor(private game: Game) {
-        this.app = game.app;
-        this.renderer = game.renderer;
-        this.map = game.map;
-
         this.load();
 
-        this.app.onLeftClick((event: JQuery.ClickEvent) =>
-            this.handle(Modules.InputType.LeftClick, event)
-        );
+        this.app.onLeftClick(this.handleLeftClick.bind(this));
+        this.app.onRightClick(this.handleRightClick.bind(this));
+
+        this.app.onKeyDown(this.handleKeyDown.bind(this));
+        this.app.onKeyUp(this.handleKeyUp.bind(this));
 
         //this.app.onKeyDown(this.handle.bind(this));
         this.app.onMouseMove((event: JQuery.MouseMoveEvent) => {
@@ -93,377 +85,386 @@ export default class InputController {
         this.overlay = new Overlay(this);
     }
 
+    /**
+     * Loads all the cursors one by one and inputs
+     * them in our dictionary of cursors.
+     */
+
     public loadCursors(): void {
-        let { cursors, game } = this;
-
-        cursors.hand = game.getSprite('hand');
-        cursors.sword = game.getSprite('sword');
-        cursors.loot = game.getSprite('loot');
-        cursors.target = game.getSprite('target');
-        cursors.arrow = game.getSprite('arrow');
-        cursors.talk = game.getSprite('talk');
-        cursors.spell = game.getSprite('spell');
-        cursors.bow = game.getSprite('bow');
-        cursors.axe = game.getSprite('axe_cursor');
-
-        this.newCursor = cursors.hand!;
-        this.newTargetColour = 'rgba(255, 255, 255, 0.5)';
+        this.cursors.hand = this.game.getSprite('hand');
+        this.cursors.sword = this.game.getSprite('sword');
+        this.cursors.loot = this.game.getSprite('loot');
+        this.cursors.target = this.game.getSprite('target');
+        this.cursors.arrow = this.game.getSprite('arrow');
+        this.cursors.talk = this.game.getSprite('talk');
+        this.cursors.spell = this.game.getSprite('spell');
+        this.cursors.bow = this.game.getSprite('bow');
+        this.cursors.axe = this.game.getSprite('axe_cursor');
 
         log.debug('Loaded Cursors!');
     }
 
-    public handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
-        let { chatHandler, game, renderer } = this,
-            { menu, socket, camera } = game,
-            player = this.getPlayer();
+    /**
+     * Handles the input coming from the left click of the mouse.
+     * This is the equivalent to a tap on a mobile device.
+     * @param event JQuery event containing click data on the screen.
+     */
 
-        switch (inputType) {
-            case Modules.InputType.Key:
-                if (chatHandler.inputVisible()) {
-                    chatHandler.key(data as Modules.Keys);
-                    return;
-                }
+    private handleLeftClick(event: JQuery.ClickEvent): void {
+        this.setCoords(event);
 
-                switch (data) {
-                    case Modules.Keys.W:
-                    case Modules.Keys.Up:
-                        player.moveUp = true;
+        this.game.player.disableAction = false;
 
-                        break;
+        // Admin command for teleporting to a location.
+        if (this.isCtrlKey())
+            return this.game.socket.send(Packets.Command, [
+                Opcodes.Command.CtrlClick,
+                this.getCoords()
+            ]);
 
-                    case Modules.Keys.A:
-                    case Modules.Keys.Left:
-                        player.moveLeft = true;
+        this.move(this.getCoords());
+    }
 
-                        break;
+    /**
+     * A right click is called a ContextMenuEvent. Here we determine
+     * the coordinates of the click, and use that to activate the
+     * action menu at that location.
+     * @param event JQuery event containing click position information.
+     */
 
-                    case Modules.Keys.S:
-                    case Modules.Keys.Down:
-                        player.moveDown = true;
+    private handleRightClick(event: JQuery.ContextMenuEvent): void {
+        this.setCoords(event);
 
-                        break;
+        let position = this.getCoords(),
+            entity = this.game.getEntityAt(position.x, position.y);
 
-                    case Modules.Keys.D:
-                    case Modules.Keys.Right:
-                        player.moveRight = true;
+        if (!entity) return;
 
-                        break;
+        this.game.menu.actions.show();
+    }
 
-                    case Modules.Keys.Spacebar:
-                        if (player.moving) break;
+    /**
+     * Input handler for when a key goes down. Note that this only
+     * gets toggled in the event that the key is pressed down, and until
+     * the key is released (key up event) and pressed again, it won't call.
+     * @param event The JQuery event containing key information.
+     */
 
-                        if (!player.isRanged()) break;
+    private handleKeyDown(event: JQuery.KeyDownEvent): void {
+        if (this.chatHandler.inputVisible()) return this.chatHandler.keyDown(event.key);
 
-                        player.frozen = true;
+        switch (event.key) {
+            case 'w':
+            case 'ArrowUp':
+                this.game.player.moveUp = true;
+                return;
 
-                        this.updateFrozen(player.frozen);
+            case 'a':
+            case 'ArrowLeft':
+                this.game.player.moveLeft = true;
+                return;
 
-                        break;
+            case 's':
+            case 'ArrowDown':
+                this.game.player.moveDown = true;
+                return;
 
-                    case Modules.Keys.Enter:
-                        chatHandler.toggle();
+            case 'd':
+            case 'ArrowRight':
+                this.game.player.moveRight = true;
+                return;
 
-                        break;
+            case 'Enter':
+                this.chatHandler.toggle();
+                return;
 
-                    case Modules.Keys.I:
-                        menu.inventory?.open();
+            case 'i':
+                this.game.menu.inventory.open();
+                return;
 
-                        break;
+            case 'm':
+                this.game.menu.warp.open();
+                return;
 
-                    case Modules.Keys.M:
-                        menu.warp?.open();
+            case 'p':
+                this.game.menu.profile.open();
+                return;
 
-                        break;
+            case 'Escape':
+                this.game.menu.hideAll();
+                return;
 
-                    case Modules.Keys.P:
-                        menu.profile?.open();
+            case 'Plus':
+                this.game.camera.zoom(0.1);
+                this.game.renderer.resize();
+                return;
 
-                        break;
-
-                    case Modules.Keys.Esc:
-                        menu.hideAll();
-                        break;
-
-                    case Modules.Keys.Plus:
-                        camera.zoom(0.1);
-                        renderer.resize();
-                        break;
-
-                    case Modules.Keys.Minus:
-                        camera.zoom(-0.1);
-
-                        renderer.resize();
-                        break;
-                }
-
-                break;
-
-            case Modules.InputType.LeftClick:
-                player.disableAction = false;
-                this.keyMovement = false;
-                this.setCoords(data as JQuery.MouseMoveEvent);
-
-                if ((window.event as MouseEvent).ctrlKey) {
-                    log.info('Control key is pressed lmao');
-
-                    socket.send(Packets.Command, [Opcodes.Command.CtrlClick, this.getCoords()]);
-                    return;
-                }
-
-                this.leftClick(this.getCoords());
-
-                break;
-
-            case Modules.InputType.RightClick:
-                this.rightClick(this.getCoords());
-
-                break;
+            case 'Minus':
+                this.game.camera.zoom(-0.1);
+                this.game.renderer.resize();
+                return;
         }
     }
 
-    public keyUp(key: Modules.Keys): void {
-        let player = this.getPlayer();
+    /**
+     * Event handler for when the key is released. This function's
+     * primary purpose is to stop movement when the key is released.
+     * @param event JQuery event data containing key information.
+     */
 
-        switch (key) {
-            case Modules.Keys.W:
-            case Modules.Keys.Up:
-                player.moveUp = false;
+    public handleKeyUp(event: JQuery.KeyUpEvent): void {
+        switch (event.key) {
+            case 'w':
+            case 'ArrowUp':
+                this.game.player.moveUp = false;
+                return;
 
-                break;
+            case 'a':
+            case 'ArrowLeft':
+                this.game.player.moveLeft = false;
+                return;
 
-            case Modules.Keys.A:
-            case Modules.Keys.Left:
-                player.moveLeft = false;
+            case 's':
+            case 'ArrowDown':
+                this.game.player.moveDown = false;
+                return;
 
-                break;
-
-            case Modules.Keys.S:
-            case Modules.Keys.Down:
-                player.moveDown = false;
-
-                break;
-
-            case Modules.Keys.D:
-            case Modules.Keys.Right:
-                player.moveRight = false;
-
-                break;
-
-            case Modules.Keys.Spacebar:
-                if (player.moving) break;
-
-                if (!player.isRanged()) break;
-
-                player.frozen = false;
-
-                this.updateFrozen(player.frozen);
-
-                break;
+            case 'd':
+            case 'ArrowRight':
+                this.game.player.moveRight = false;
+                return;
         }
 
-        player.disableAction = false;
+        this.game.player.disableAction = false;
     }
+
+    /**
+     * Receives position data from the updater and attempts
+     * to move the player to the specified grid coordinates.
+     * We essentially pass the coordinates through the same
+     * function responsible for targeting movement from a
+     * left click. Note that although the position type is
+     * that of `Position` the x and y values are actually
+     * grid coordinates.
+     * @param position Position object containing player's
+     * requested grid coordinates.
+     */
 
     public keyMove(position: Position): void {
-        let player = this.getPlayer();
+        if (this.game.player.hasPath()) return;
 
-        if (!player.hasPath()) {
-            this.keyMovement = true;
-            this.cursorMoved = false;
-
-            log.debug('--- keyMove ---');
-            log.debug(position);
-            log.debug('---------------');
-
-            this.leftClick(position, true);
-        }
+        this.move(position);
     }
 
-    private leftClick(position: Position | undefined, keyMovement = false): void {
-        let { renderer, chatHandler, map, game } = this,
-            player = this.getPlayer();
+    /**
+     * Function responsible for the movement of the player. If we detect
+     * an entity at the specific position (one that can be targeted or
+     * attacked) we initiate a target action. Otherwise, we just move
+     * the player to the new position and start the pathing.
+     * @param position The grid coordinates of the position we're requesting.
+     */
 
-        if (player.stunned || !position) return;
+    private move(position: Position): void {
+        if (this.player.stunned) return;
 
+        // Default the target to the passive one.
         this.setPassiveTarget();
 
-        /**
-         * It can be really annoying having the chat open
-         * on mobile, and it is far harder to control.
-         */
+        // Prevent any input when actions are disabled or we are zoning.
+        if (this.player.disableAction || this.game.zoning.direction) return;
 
-        if (renderer.mobile && chatHandler.inputVisible()) chatHandler.toggle();
+        // Prevent input outside map boundaries.
+        if (this.game.map.isOutOfBounds(position.x, position.y)) return;
 
-        if (map.isOutOfBounds(position.x, position.y)) return;
+        // If chat is open on mobile we automatically toggle it so it gets out of the way.
+        if (this.game.renderer.mobile && this.chatHandler.inputVisible()) this.chatHandler.toggle();
 
-        if (game.zoning.direction || player.disableAction) return;
+        // Hides all game menus (profile, inventory, warps, etc.)
+        this.game.menu.hideAll();
 
-        game.menu.hideAll();
+        // Handle object interaction.
+        if (this.game.map.isObject(position.x, position.y))
+            return this.player.setObjectTarget(position);
 
-        if (map.isObject(position.x, position.y)) {
-            player.setObjectTarget(position.x, position.y);
-            player.followPosition(position.x, position.y);
+        // Remove player's targets prior to an action.
+        this.player.removeTarget();
+
+        // Handle NPC interaction.
+        this.entity = this.game.getEntityAt(position.x, position.y);
+
+        if (this.entity) {
+            this.setAttackTarget();
+
+            // Set target and follow a targetable entity.
+            if (this.isTargetable(this.entity)) {
+                this.player.setTarget(this.entity);
+                this.player.follow(this.entity);
+            }
+
+            // Request attack for target.
+            if (this.isAttackable(this.entity)) {
+                this.game.socket.send(Packets.Target, [
+                    Opcodes.Target.Attack,
+                    this.entity.instance
+                ]);
+                return;
+            }
+        }
+
+        // Move the player to the new position.
+        this.player.go(position.x, position.y);
+    }
+
+    /**
+     * Function every time the cursor moves on the webpage. We essentially
+     * grab the cursor's grid position within the game and check if there
+     * are any entities or objects at that location. We update the cursor
+     * sprite depending on the type of entity or object.
+     */
+
+    public moveCursor(): void {
+        if (this.renderer.mobile) return;
+
+        let position = this.getCoords();
+
+        // The entity we are currently hovering over.
+        this.entity = this.game.getEntityAt(position.x, position.y);
+
+        // Update the overlay with entity information.
+        this.overlay.update(this.entity);
+
+        if (!this.entity) {
+            /**
+             * Because objects aren't exactly entities, we have a special
+             * case for checking if the hovering coordinates are objects.
+             */
+
+            if (this.map.isObject(position.x, position.y)) {
+                let cursor = this.map.getTileCursor(position.x, position.y);
+
+                // Default to the talk if no cursor is specified for the object.
+                this.setCursor(this.cursors[cursor || 'talk']);
+                this.hovering = Modules.Hovering.Object;
+
+                return;
+            }
+
+            // Default to hand cursor when no entities or objects are present.
+            this.setCursor(this.cursors.hand);
+            this.hovering = null;
 
             return;
         }
 
-        if (renderer.mobile || keyMovement)
-            this.entity = game.getEntityAt(
-                position.x,
-                position.y,
-                position.x === player.gridX && position.y === player.gridY
-            );
+        switch (this.entity.type) {
+            case Modules.EntityType.Item:
+            case Modules.EntityType.Chest:
+                this.setCursor(this.cursors.loot);
+                this.hovering = Modules.Hovering.Item;
+                break;
 
-        let { entity } = this;
+            case Modules.EntityType.Mob:
+                this.setCursor(this.getAttackCursor());
+                this.hovering = Modules.Hovering.Mob;
+                break;
 
-        if (entity) {
-            player.disableAction = true;
+            case Modules.EntityType.NPC:
+                this.setCursor(this.cursors.talk);
+                this.hovering = Modules.Hovering.NPC;
+                break;
 
-            this.setAttackTarget();
-
-            if (this.isTargetable(entity)) player.setTarget(entity);
-
-            if (player.getDistance(entity) < 7 && player.isRanged() && this.isAttackable(entity)) {
-                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.instance]);
-                player.lookAt(entity);
-                return;
-            }
-
-            game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.instance]);
-
-            if (this.isTargetable(entity)) {
-                player.follow(entity);
-                return;
-            }
-        }
-
-        player.removeTarget();
-        player.go(position.x, position.y);
-    }
-
-    private rightClick(position: Position | undefined): void {
-        if (!position) return;
-
-        let { renderer, game, mouse, hovering } = this;
-
-        if (renderer.mobile)
-            this.entity = game.getEntityAt(position.x, position.y, this.isSamePosition(position));
-
-        let { entity } = this;
-
-        if (entity) {
-            let actions = this.getActions();
-
-            actions.show();
-        } else if (hovering === Modules.Hovering.Object) {
-            // TODO
-        }
-    }
-
-    public updateCursor(): void {
-        let { cursorVisible, newCursor, cursor, newTargetColour, targetColour } = this;
-
-        if (!cursorVisible) return;
-
-        if (newCursor !== cursor) this.cursor = newCursor;
-
-        if (newTargetColour !== targetColour) this.targetColour = newTargetColour;
-    }
-
-    public moveCursor(): void {
-        let { renderer, game, overlay, entity, map, cursors } = this;
-
-        if (!renderer || renderer.mobile || !renderer.camera) return;
-
-        let position = this.getCoords(),
-            player = this.getPlayer();
-
-        if (!position) return;
-
-        // The entity we are currently hovering over.
-        this.entity = game.getEntityAt(position.x, position.y, this.isSamePosition(position));
-
-        overlay.update(entity);
-
-        if (!entity || entity.instance === player.instance)
-            if (map.isObject(position.x, position.y)) {
-                let cursor = map.getTileCursor(position.x, position.y);
-
-                this.setCursor(cursors[cursor || 'talk']);
-                this.hovering = Modules.Hovering.Object;
-            } else {
-                this.setCursor(cursors.hand);
-                this.hovering = null;
-            }
-        else
-            switch (entity.type) {
-                case Modules.EntityType.Item:
-                case Modules.EntityType.Chest:
-                    this.setCursor(cursors.loot);
-                    this.hovering = Modules.Hovering.Item;
-                    break;
-
-                case Modules.EntityType.Mob:
+            case Modules.EntityType.Player:
+                if (this.entity.pvp && this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
-                    this.hovering = Modules.Hovering.Mob;
-                    break;
-
-                case Modules.EntityType.NPC:
-                    this.setCursor(cursors.talk);
-                    this.hovering = Modules.Hovering.NPC;
-                    break;
-
-                case Modules.EntityType.Player:
-                    if (entity.pvp && game.pvp) {
-                        this.setCursor(this.getAttackCursor());
-                        this.hovering = Modules.Hovering.Player;
-                    }
-
-                    break;
-            }
+                    this.hovering = Modules.Hovering.Player;
+                }
+                break;
+        }
     }
+
+    /**
+     * Sets the grid coordinate position of the
+     * currently selected x and y coordinates.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     */
 
     public setPosition(x: number, y: number): void {
         this.selectedX = x;
         this.selectedY = y;
     }
 
-    public setCoords(event: JQuery.MouseMoveEvent<Document>): void {
-        let { app, renderer, mouse } = this,
-            offset = app.canvas.offset()!,
-            { width, height } = renderer.background;
+    /**
+     * Updates the current cursor with the new cursor provided.
+     * @param cursor Sprite of the cursor we are updating our current one with.
+     */
 
-        this.cursorMoved = false;
-
-        mouse.x = Math.round(event.pageX - offset.left);
-        mouse.y = Math.round(event.pageY - offset.top);
-
-        if (mouse.x >= width) mouse.x = width - 1;
-        else if (mouse.x <= 0) mouse.x = 0;
-
-        if (mouse.y >= height) mouse.y = height - 1;
-        else if (mouse.y <= 0) mouse.y = 0;
+    private setCursor(cursor: Sprite): void {
+        if (cursor) this.cursor = cursor;
     }
 
-    private setCursor(cursor: Sprite | undefined): void {
-        if (cursor) this.newCursor = cursor;
-        else log.error(`Cursor: ${cursor} could not be found.`);
-    }
-
-    private setAttackTarget(): void {
-        this.targetAnimation.setRow(1);
-    }
+    /**
+     * Sets the animation for the target when requesting a
+     * position to the green spinning square target sprite.
+     */
 
     public setPassiveTarget(): void {
         this.targetAnimation.setRow(0);
     }
 
-    private getAttackCursor(): Sprite | undefined {
-        return this.cursors[this.getPlayer().isRanged() ? 'bow' : 'sword'];
+    /**
+     * Sets the animation for the target to the red
+     * spinning sprite indicating a target-based
+     * movement is occurring.
+     */
+
+    private setAttackTarget(): void {
+        this.targetAnimation.setRow(1);
     }
 
-    public getCoords(): Position | undefined {
-        let tileScale = this.renderer.tileSize * this.renderer.zoomFactor,
+    /**
+     * Updates the mouse's position using the `pageX` and `pageY`
+     * properties contained within the event parameter. Function
+     * also checks if the mouse somehow magically exits the boundaries
+     * of the canvas and binds it to the edge.test
+     * @param event The event object containing the mouse's position.
+     */
+
+    public setCoords(
+        event: JQuery.MouseMoveEvent | JQuery.ClickEvent | JQuery.ContextMenuEvent
+    ): void {
+        let { width, height } = this.game.renderer.background;
+
+        // Set the mouse position to the x and y coordinates within the event.
+        this.mouse.x = event.pageX;
+        this.mouse.y = event.pageY;
+
+        // Add horizontal boundaries to the mouse.
+        if (this.mouse.x >= width) this.mouse.x = width - 1;
+        else if (this.mouse.x <= 0) this.mouse.x = 0;
+
+        // Add vertical boundaries to the mouse.
+        if (this.mouse.y >= height) this.mouse.y = height - 1;
+        else if (this.mouse.y <= 0) this.mouse.y = 0;
+    }
+
+    /**
+     * @returns A bow sprite if the player is ranged, otherwise a sword
+     * when targeting an entity.
+     */
+
+    private getAttackCursor(): Sprite {
+        return this.cursors[this.player.isRanged() ? 'bow' : 'sword'];
+    }
+
+    /**
+     * Uses the mouse x and y position to calculate the exact grid
+     * coordinate on the screen.
+     * @returns A position object containing the grid coordinates.
+     */
+
+    public getCoords(): Position {
+        let tileScale = this.game.renderer.tileSize * this.game.renderer.zoomFactor,
             offsetX = this.mouse.x % tileScale,
             offsetY = this.mouse.y % tileScale,
             x = (this.mouse.x - offsetX) / tileScale + this.game.camera.gridX,
@@ -472,15 +473,24 @@ export default class InputController {
         return { x, y };
     }
 
+    /**
+     * Prepares the target data for the renderer to use.
+     * Though this function would belong more-so in the
+     * renderer, it is best to have it here since target
+     * data is associated with input information.
+     * @returns A TargetData object ready for the renderer.
+     */
+
     public getTargetData(): TargetData | undefined {
-        let { targetAnimation, game, selectedX, selectedY, renderer } = this,
-            sprite = game.getSprite('target');
+        let sprite = this.game.getSprite('target');
 
         if (!sprite) return;
 
-        let frame = targetAnimation.currentFrame,
-            { tileSize, zoomFactor } = renderer;
+        let frame = this.targetAnimation.currentFrame,
+            { tileSize } = this.game.map,
+            { zoomFactor } = this.game.camera;
 
+        // Load the sprite if it isn't loaded.
         if (!sprite.loaded) sprite.load();
 
         return {
@@ -489,39 +499,38 @@ export default class InputController {
             y: frame.y,
             width: sprite.width,
             height: sprite.height,
-            dx: selectedX * tileSize * zoomFactor,
-            dy: selectedY * tileSize * zoomFactor,
+            dx: this.selectedX * tileSize * zoomFactor,
+            dy: this.selectedY * tileSize * zoomFactor,
             dw: sprite.width * zoomFactor,
             dh: sprite.height * zoomFactor
         };
     }
 
-    private updateFrozen(state: boolean): void {
-        this.game.socket.send(Packets.Movement, {
-            opcode: Opcodes.Movement.Freeze,
-            frozen: state
-        });
+    /**
+     * Checks if the CTRL key is currently being held down. This
+     * is generally used for administrators to teleport.
+     * @returns Whether the CTRL key is active in the window.
+     */
+
+    private isCtrlKey(): boolean {
+        return (window.event as MouseEvent).ctrlKey;
     }
+
+    /**
+     * Targetable entities are those that can be attacked, NPCs, and chests.
+     * @param entity The entity we're comparing.
+     */
 
     private isTargetable(entity: Entity): boolean {
         return this.isAttackable(entity) || entity.isNPC() || entity.isChest();
     }
 
+    /**
+     * An attackable entity is either a mob or a player in a PVP area.
+     * @param entity The entity we are checking.
+     */
+
     private isAttackable(entity: Entity): boolean {
         return entity.isMob() || (entity.isPlayer() && entity.pvp && this.game.pvp);
-    }
-
-    private isSamePosition(position: Position): boolean {
-        let player = this.getPlayer();
-
-        return position.x === player.gridX && position.y === player.gridY;
-    }
-
-    public getPlayer(): Player {
-        return this.game.player;
-    }
-
-    private getActions(): Actions {
-        return this.game.menu.actions;
     }
 }

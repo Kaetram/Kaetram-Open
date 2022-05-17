@@ -45,7 +45,7 @@ export default class Game {
     public info: InfoController = new InfoController();
     public audio: AudioController = new AudioController(this);
 
-    private input!: InputController;
+    public input!: InputController;
 
     public updater!: Updater;
     public entities!: EntitiesController;
@@ -182,8 +182,6 @@ export default class Game {
         this.app.sendStatus('Loading controllers');
 
         this.setEntityController(new EntitiesController(this));
-
-        this.setInfo(new InfoController(this));
 
         this.setBubble(new BubbleController(this));
 
@@ -374,7 +372,7 @@ export default class Game {
         this.menu.resize();
     }
 
-    public getSprite(spriteName: string): Sprite | undefined {
+    public getSprite(spriteName: string): Sprite {
         return this.entities.getSprite(spriteName);
     }
 
@@ -382,20 +380,21 @@ export default class Game {
      * Determines an entity at a specific grid coordinate.
      * @param x The x grid coordinate we are checking.
      * @param y The y grid coordinate we are checking.
-     * @param ignoreSelf Whether or not to exclude the player from the check.
      * @returns The first entity in the list that is at the grid coordinate.
      */
 
-    public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
+    public getEntityAt(x: number, y: number): Entity | undefined {
         if (!this.entities) return;
 
         let entities = this.entities.grids.renderingGrid[y][x],
-            keys = _.keys(entities);
+            keys = _.keys(entities),
+            index = keys.indexOf(this.player.instance);
 
         // Remove player instance from the keys of entities.
-        if (ignoreSelf) keys.splice(keys.indexOf(this.player.instance), 1);
+        if (index !== -1) keys.splice(index, 1);
 
-        if (_.size(entities) > 0) return entities[keys[0]];
+        // Returns entity if there is a key, otherwise just undefined.
+        return entities[keys[0]];
     }
 
     private setUpdater(updater: Updater): void {
