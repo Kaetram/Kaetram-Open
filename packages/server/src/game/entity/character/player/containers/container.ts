@@ -7,29 +7,37 @@ import { SlotData } from '@kaetram/common/types/slot';
 import Slot from './slot';
 import Item from '../../../objects/item';
 
-interface SerializedContainer {
-    slots: SlotData[];
+interface SerializedContainer<SD extends SlotData> {
+    slots: SD[];
 }
 
-export default abstract class Container {
-    private slots: Slot[] = [];
+export default abstract class Container<
+    CI extends ContainerItem = ContainerItem,
+    SD extends SlotData = SlotData,
+    S extends Slot<SD> = Slot<SD>
+> {
+    protected slots: S[] = [];
 
-    private emptySpaces = 0;
+    protected emptySpaces = 0;
 
     private loadCallback?: () => void;
 
-    protected addCallback?: (slot: Slot) => void;
+    protected addCallback?: (slot: S) => void;
     protected removeCallback?: (
-        slot: Slot,
+        slot: S,
         key: string,
         count: number,
         drop?: boolean | undefined
     ) => void;
     protected notifyCallback?: (message: string) => void;
 
-    public constructor(public type: Modules.ContainerType, private size: number) {
+    protected constructor(
+        public type: Modules.ContainerType,
+        private size: number,
+        createSlot: (i: number) => S = (i) => <S>new Slot(i)
+    ) {
         // Create `size` amount of slots with empty data.
-        for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
+        for (let i = 0; i < size; i++) this.slots.push(createSlot(i));
 
         this.emptySpaces = size;
     }
@@ -39,8 +47,8 @@ export default abstract class Container {
      * @param items List of container items to load.
      */
 
-    public load(items: ContainerItem[]): void {
-        _.each(items, (item: ContainerItem) => {
+    public load(items: CI[]): void {
+        _.each(items, (item: CI) => {
             // Create a new item instance so that the item's data is created.
             if (!item.key) return;
 
@@ -62,7 +70,7 @@ export default abstract class Container {
     public add(item: Item): boolean {
         // Return whether or not the adding was successful.
         let added = false,
-            slot: Slot | undefined;
+            slot: S | undefined;
 
         // Item is stackable and we already have it.
         if (item.stackable && this.canHold(item)) {
@@ -103,7 +111,7 @@ export default abstract class Container {
      * @param drop Conditional that determines if the item should spawn.
      */
 
-    public remove(index: number, count = 1, drop = false): SlotData | undefined {
+    public remove(index: number, count = 1, drop = false): SD | undefined {
         let slot = this.slots[index];
 
         if (!slot || !slot.key) return;
@@ -142,7 +150,7 @@ export default abstract class Container {
      * @returns The slot at the index specified.
      */
 
-    public get(index: number): Slot {
+    public get(index: number): S {
         return this.slots[index];
     }
 
@@ -151,7 +159,7 @@ export default abstract class Container {
      * @param slot The slot we are extracting the item from.
      */
 
-    public getItem(slot: Slot | SlotData | ContainerItem): Item {
+    public getItem(slot: S | SlotData | CI): Item {
         return new Item(slot.key, -1, -1, true, slot.count, slot.ability, slot.abilityLevel);
     }
 
@@ -173,7 +181,7 @@ export default abstract class Container {
      * @returns The slot containing the key we are trying to find.
      */
 
-    public find(item: Item): Slot | undefined {
+    public find(item: Item): S | undefined {
         return this.slots.find((slot) => slot.canHold(item));
     }
 
@@ -201,7 +209,7 @@ export default abstract class Container {
      * @returns An empty slot.
      */
 
-    private getEmptySlot(): Slot | undefined {
+    private getEmptySlot(): S | undefined {
         return this.slots.find((slot) => !slot.key);
     }
 
@@ -210,7 +218,7 @@ export default abstract class Container {
      * @param callback Slot currently being iterated.
      */
 
-    public forEachSlot(callback: (slot: Slot) => void): void {
+    public forEachSlot(callback: (slot: S) => void): void {
         _.each(this.slots, callback);
     }
 
@@ -219,10 +227,10 @@ export default abstract class Container {
      * @returns An array of serialized slot data.
      */
 
-    public serialize(): SerializedContainer {
-        let slots: SlotData[] = [];
+    public serialize(): SerializedContainer<SD> {
+        let slots: SD[] = [];
 
-        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize()));
+        _.each(this.slots, (slot: S) => slots.push(slot.serialize()));
 
         return { slots };
     }
@@ -239,7 +247,7 @@ export default abstract class Container {
      * Signal for when an item is added.
      */
 
-    public onAdd(callback: (slot: Slot) => void): void {
+    public onAdd(callback: (slot: S) => void): void {
         this.addCallback = callback;
     }
 
@@ -247,9 +255,7 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(
-        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
-    ): void {
+    public onRemove(callback: (slot: S, key: string, count: number, drop?: boolean) => void): void {
         this.removeCallback = callback;
     }
 

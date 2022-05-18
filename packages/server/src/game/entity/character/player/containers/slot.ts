@@ -2,7 +2,7 @@ import { SlotData } from '@kaetram/common/types/slot';
 
 import Item from '../../../objects/item';
 
-export default class Slot {
+export default class Slot<SD extends SlotData = SlotData> {
     public edible = false;
     public equippable = false;
 
@@ -119,10 +119,10 @@ export default class Slot {
      * @returns SlotData interface object.
      */
 
-    public serialize(): SlotData {
+    public serialize(): SD {
         let { index, key, count, ability, abilityLevel, edible, equippable } = this;
 
-        return {
+        return <SD>{
             index,
             key,
             count,
