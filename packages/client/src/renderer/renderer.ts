@@ -156,7 +156,6 @@ export default class Renderer {
     private realFPS!: number;
     public transitioning!: boolean;
     private transitionInterval!: number;
-    private tileset: unknown;
 
     public constructor(public game: Game) {
         // Grab the Canvas2D context from the HTML canvas.
@@ -1228,10 +1227,6 @@ export default class Renderer {
      * Rendering Functions
      */
 
-    private updateView(): void {
-        this.forEachContext((context) => this.setCameraView(context));
-    }
-
     private updateDrawingView(): void {
         this.forEachDrawingContext((context) => this.setCameraView(context));
     }
@@ -1265,6 +1260,10 @@ export default class Renderer {
 
     public adjustBrightness(level: number): void {
         if (level < 0 || level > 100) return;
+
+        this.forEachCanvas((canvas: HTMLCanvasElement) => {
+            console.log(canvas);
+        });
 
         $('#text-canvas').css('background', `rgba(0, 0, 0, ${0.5 - level / 200})`);
     }
@@ -1473,34 +1472,5 @@ export default class Renderer {
 
     public setInput(input: InputController): void {
         this.input = input;
-    }
-
-    /**
-     * Getters
-     */
-
-    public getTargetBounds(tx: number, ty: number): Bounds {
-        let sx = tx || this.input.selectedX,
-            sy = ty || this.input.selectedY,
-            x = (sx * this.tileSize - this.camera.x) * this.zoomFactor,
-            y = (sy * this.tileSize - this.camera.y) * this.zoomFactor,
-            width = this.tileSize * this.zoomFactor,
-            height = this.tileSize * this.zoomFactor,
-            bounds: Bounds = {
-                x,
-                y,
-                width,
-                height,
-                left: x,
-                right: x + width,
-                top: y,
-                bottom: y + height
-            };
-
-        return bounds;
-    }
-
-    public getTileset(): unknown {
-        return this.tileset;
     }
 }
