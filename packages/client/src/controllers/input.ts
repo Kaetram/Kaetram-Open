@@ -9,9 +9,11 @@ import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
+import type Camera from '../renderer/camera';
 import type App from '../app';
-import type Renderer from '../renderer/renderer';
 import type Map from '../map/map';
+
+import { isMobile } from '../utils/detect';
 
 interface TargetData {
     sprite: Sprite;
@@ -28,10 +30,11 @@ interface TargetData {
 export default class InputController {
     private app: App = this.game.app;
     private map: Map = this.game.map;
-    private renderer: Renderer = this.game.renderer;
+    private camera: Camera = this.game.camera;
     public player: Player = this.game.player;
 
     public selectedCellVisible = false;
+    public keyMovement = false;
     public targetVisible = true;
     public selectedX = -1;
     public selectedY = -1;
@@ -91,15 +94,15 @@ export default class InputController {
      */
 
     public loadCursors(): void {
-        this.cursors.hand = this.game.getSprite('hand');
-        this.cursors.sword = this.game.getSprite('sword');
-        this.cursors.loot = this.game.getSprite('loot');
-        this.cursors.target = this.game.getSprite('target');
-        this.cursors.arrow = this.game.getSprite('arrow');
-        this.cursors.talk = this.game.getSprite('talk');
-        this.cursors.spell = this.game.getSprite('spell');
-        this.cursors.bow = this.game.getSprite('bow');
-        this.cursors.axe = this.game.getSprite('axe_cursor');
+        this.cursors.hand = this.game.sprites.get('hand');
+        this.cursors.sword = this.game.sprites.get('sword');
+        this.cursors.loot = this.game.sprites.get('loot');
+        this.cursors.target = this.game.sprites.get('target');
+        this.cursors.arrow = this.game.sprites.get('arrow');
+        this.cursors.talk = this.game.sprites.get('talk');
+        this.cursors.spell = this.game.sprites.get('spell');
+        this.cursors.bow = this.game.sprites.get('bow');
+        this.cursors.axe = this.game.sprites.get('axe_cursor');
 
         log.debug('Loaded Cursors!');
     }
@@ -113,6 +116,7 @@ export default class InputController {
     private handleLeftClick(event: JQuery.ClickEvent): void {
         this.setCoords(event);
 
+        this.keyMovement = false;
         this.game.player.disableAction = false;
 
         // Admin command for teleporting to a location.
@@ -194,12 +198,14 @@ export default class InputController {
                 this.game.menu.hideAll();
                 return;
 
-            case 'Plus':
+            case '+':
+            case '=':
                 this.game.camera.zoom(0.1);
                 this.game.renderer.resize();
                 return;
 
-            case 'Minus':
+            case '-':
+            case '_':
                 this.game.camera.zoom(-0.1);
                 this.game.renderer.resize();
                 return;
@@ -254,6 +260,8 @@ export default class InputController {
         if (this.game.player.hasPath()) return;
 
         this.move(position);
+
+        this.keyMovement = true;
     }
 
     /**
@@ -277,7 +285,7 @@ export default class InputController {
         if (this.game.map.isOutOfBounds(position.x, position.y)) return;
 
         // If chat is open on mobile we automatically toggle it so it gets out of the way.
-        if (this.game.renderer.mobile && this.chatHandler.inputVisible()) this.chatHandler.toggle();
+        if (isMobile() && this.chatHandler.inputVisible()) this.chatHandler.toggle();
 
         // Hides all game menus (profile, inventory, warps, etc.)
         this.game.menu.hideAll();
@@ -323,7 +331,7 @@ export default class InputController {
      */
 
     public moveCursor(): void {
-        if (this.renderer.mobile) return;
+        if (isMobile()) return;
 
         let position = this.getCoords();
 
@@ -464,7 +472,7 @@ export default class InputController {
      */
 
     public getCoords(): Position {
-        let tileScale = this.game.renderer.tileSize * this.game.renderer.zoomFactor,
+        let tileScale = this.map.tileSize * this.camera.zoomFactor,
             offsetX = this.mouse.x % tileScale,
             offsetY = this.mouse.y % tileScale,
             x = (this.mouse.x - offsetX) / tileScale + this.game.camera.gridX,
@@ -482,7 +490,7 @@ export default class InputController {
      */
 
     public getTargetData(): TargetData | undefined {
-        let sprite = this.game.getSprite('target');
+        let sprite = this.game.sprites.get('target');
 
         if (!sprite) return;
 

@@ -74,6 +74,8 @@ export default class Map {
             if (event.data.data) this.data = event.data.data;
             if (event.data.grid) this.grid = event.data.grid;
 
+            if (!window.config.debug) this.loadRegionData();
+
             this.mapLoaded = true;
         });
 
@@ -204,8 +206,6 @@ export default class Map {
         if (data.regionData.length > 0) {
             this.data = data.regionData;
             this.preloadedData = true;
-
-            console.log('preloaded?');
         }
 
         this.grid = data.grid;
