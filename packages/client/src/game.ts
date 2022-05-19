@@ -1,8 +1,6 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { Modules, Packets } from '@kaetram/common/network';
-
 import App from './app';
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
@@ -10,15 +8,14 @@ import EntitiesController from './controllers/entities';
 import InfoController from './controllers/info';
 import InputController from './controllers/input';
 import MenuController from './controllers/menu';
+import SpritesController from './controllers/sprites';
 import Pointer from './controllers/pointer';
 import Zoning from './controllers/zoning';
 import Character from './entity/character/character';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
 import Entity from './entity/entity';
-import Sprite from './entity/sprite';
 import Map from './map/map';
-import Inventory from './menu/inventory';
 import Connection from './network/connection';
 import Socket from './network/socket';
 import Camera from './renderer/camera';
@@ -27,31 +24,35 @@ import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
+
 import { agent } from './utils/detect';
+import { Modules, Packets } from '@kaetram/common/network';
 
 import type { APIData } from '@kaetram/common/types/api';
 
 export default class Game {
     public player: Player = new Player('');
 
+    public zoning: Zoning = new Zoning();
+    public storage: Storage = new Storage();
+    public overlays: Overlay = new Overlay();
+
+    public sprites: SpritesController = new SpritesController();
+
     public map: Map = new Map(this);
     public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
     public renderer: Renderer = new Renderer(this);
+    public input: InputController = new InputController(this);
 
     public socket: Socket = new Socket(this);
-    public storage: Storage = new Storage();
-    public overlays: Overlay = new Overlay();
+    public pointer: Pointer = new Pointer(this);
+    public updater: Updater = new Updater(this);
     public pathfinder: Pathfinder = new Pathfinder();
     public info: InfoController = new InfoController();
     public audio: AudioController = new AudioController(this);
-
-    public input!: InputController;
-
-    public updater!: Updater;
-    public entities!: EntitiesController;
-    //public input!: InputController;
-    public zoning!: Zoning;
-    public menu!: MenuController;
+    public entities: EntitiesController = new EntitiesController(this);
+    public bubble: BubbleController = new BubbleController(this);
+    public menu: MenuController = new MenuController(this);
 
     public started = false;
     public ready = false;
@@ -60,23 +61,17 @@ export default class Game {
     public lastTime = Date.now();
 
     public pvp = false;
-    // population = -1;
-
-    // private connectionHandler!: Connection;
-    public pointer!: Pointer;
-    public bubble!: BubbleController;
-    public inventory!: Inventory;
 
     public world!: APIData;
 
     public constructor(public app: App) {
         this.map.onReady(this.handleMap.bind(this));
 
-        this.loadControllers();
-
         this.app.onLogin(this.connect.bind(this));
         this.app.onResize(this.resize.bind(this));
         this.app.onRespawn(this.respawn.bind(this));
+
+        this.loadControllers();
     }
 
     /**
@@ -150,18 +145,7 @@ export default class Game {
      */
 
     private handleMap(): void {
-        if (!window.config.debug) this.map.loadRegionData();
-
-        this.renderer.setMap(this.map);
-        this.renderer.loadCamera();
-
         this.app.sendStatus('Initializing updater');
-
-        this.setUpdater(new Updater(this));
-
-        this.entities.load();
-
-        this.renderer.setEntities(this.entities);
 
         this.app.ready();
     }
@@ -174,20 +158,6 @@ export default class Game {
 
         if (window.config.worldSwitch)
             $.get(`${window.config.hub}/all`, (servers) => this.loadWorlds(servers));
-
-        this.app.sendStatus('Initializing network socket');
-
-        this.setInput(new InputController(this));
-
-        this.app.sendStatus('Loading controllers');
-
-        this.setEntityController(new EntitiesController(this));
-
-        this.setBubble(new BubbleController(this));
-
-        this.setPointer(new Pointer(this));
-
-        this.setMenu(new MenuController(this));
 
         this.loadStorage();
     }
@@ -243,15 +213,16 @@ export default class Game {
     public postLoad(): void {
         this.renderer.loadStaticSprites();
 
-        this.camera.centreOn(this.player);
         this.entities.addEntity(this.player);
 
-        let defaultSprite = this.getSprite(this.player.getSpriteName());
+        let defaultSprite = this.sprites.get(this.player.getSpriteName());
         this.player.setSprite(defaultSprite);
 
         if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
 
         this.player.idle();
+
+        this.camera.centreOn(this.player);
 
         if (this.map)
             this.socket.send(Packets.Ready, {
@@ -262,8 +233,6 @@ export default class Game {
         new PlayerHandler(this, this.player);
 
         this.renderer.updateAnimatedTiles();
-
-        this.zoning = new Zoning();
 
         this.updater.setSprites(this.entities.sprites);
 
@@ -372,10 +341,6 @@ export default class Game {
         this.menu.resize();
     }
 
-    public getSprite(spriteName: string): Sprite {
-        return this.entities.getSprite(spriteName);
-    }
-
     /**
      * Determines an entity at a specific grid coordinate.
      * @param x The x grid coordinate we are checking.
@@ -395,36 +360,5 @@ export default class Game {
 
         // Returns entity if there is a key, otherwise just undefined.
         return entities[keys[0]];
-    }
-
-    private setUpdater(updater: Updater): void {
-        this.updater ||= updater;
-    }
-
-    private setEntityController(entities: EntitiesController): void {
-        this.entities ||= entities;
-    }
-
-    private setInput(input: InputController): void {
-        if (!this.input) {
-            this.input = input;
-            this.renderer.setInput(this.input);
-        }
-    }
-
-    private setInfo(info: InfoController): void {
-        this.info ||= info;
-    }
-
-    private setBubble(bubble: BubbleController): void {
-        this.bubble ||= bubble;
-    }
-
-    private setPointer(pointer: Pointer): void {
-        this.pointer ||= pointer;
-    }
-
-    private setMenu(menu: MenuController): void {
-        this.menu ||= menu;
     }
 }
