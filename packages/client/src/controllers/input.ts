@@ -298,6 +298,7 @@ export default class InputController {
             if (this.isTargetable(this.entity)) {
                 this.player.setTarget(this.entity);
                 this.player.follow(this.entity);
+                return;
             }
 
             // Request attack for target.

@@ -128,9 +128,11 @@ export default class Storage {
      * @param error The new error message in the storage.
      */
 
-    public setError(error: string): void {
+    public setError(error: string): boolean {
         this.data.errorMessage = error;
         this.save();
+
+        return true;
     }
 
     /**
