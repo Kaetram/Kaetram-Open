@@ -2,9 +2,11 @@ import $ from 'jquery';
 import _ from 'lodash';
 
 import install from './lib/pwa';
-import { isMobile } from './utils/detect';
 
 import Util from './utils/util';
+import Storage from './utils/storage';
+
+import { isMobile } from './utils/detect';
 
 type EmptyCallback = () => void;
 type KeyDownCallback = (e: JQuery.KeyDownEvent) => void;
@@ -15,6 +17,8 @@ type MouseMoveCallback = (e: JQuery.MouseMoveEvent) => void;
 
 export default class App {
     public config = window.config;
+
+    public storage: Storage = new Storage();
 
     public body = $('body');
 
@@ -112,6 +116,31 @@ export default class App {
     }
 
     /**
+     * Loads the local storage values for the username,
+     * password, and remember me checkmark. If there is an
+     * error in the storage, it will be displayed and immediately
+     * removed when the function to get is is called.
+     */
+
+    private loadLogin(): void {
+        // Grab and erase the error message.
+        let errorMessage = this.storage.getError();
+
+        // Display the error message if present.
+        if (errorMessage) this.sendError(errorMessage);
+
+        // No need to load anything if the remember me isn't toggled.
+        if (!this.storage.hasRemember()) return;
+
+        // Update the input fields with the stored values.
+        this.getUsernameField().val(this.storage.getUsername());
+        this.getPasswordField().val(this.storage.getPassword());
+
+        // Set the checkmark for remember me to true.
+        this.rememberMe.prop('checked', true);
+    }
+
+    /**
      * Handler for key down input event. When the menu is hidden,
      * that is, the game has started, we redirect all input to the
      * callback function.
@@ -149,6 +178,8 @@ export default class App {
         this.sendStatus();
 
         this.loginButton.prop('disabled', false);
+
+        this.loadLogin();
     }
 
     /**
@@ -170,6 +201,25 @@ export default class App {
 
         // Installs the PWA.
         install();
+    }
+
+    /**
+     * Checks if the remember me checkbox is toggled and
+     * saves the username and password to local storage.
+     */
+
+    private saveLogin(): void {
+        // Always save the state of the remember me button.
+        this.storage.setRemember(this.isRememberMe());
+
+        // Reset the credentials each successful login.
+        this.storage.setCredentials();
+
+        // Stop here if the checkmark isn't toggled.
+        if (!this.isRememberMe()) return;
+
+        // Save the username and password.
+        this.storage.setCredentials(this.getUsername(), this.getPassword());
     }
 
     /**
@@ -204,6 +254,8 @@ export default class App {
             this.footer.hide();
 
             this.menuHidden = true;
+
+            this.saveLogin();
         }, 500);
     }
 
@@ -443,6 +495,10 @@ export default class App {
 
     public isGuest(): boolean {
         return this.guest.prop('checked');
+    }
+
+    public isRememberMe(): boolean {
+        return this.rememberMe.prop('checked');
     }
 
     /**

@@ -61,6 +61,19 @@ export default class Console {
 
                     break;
 
+                case 'kick':
+                    username = blocks.join(' ');
+
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+
+                    player = this.world.getPlayerByName(username);
+
+                    if (!player) return log.info('An error has occurred.');
+
+                    player.connection.close();
+
+                    break;
+
                 case 'setadmin':
                 case 'setmod':
                     username = blocks.join(' ');

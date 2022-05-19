@@ -204,7 +204,6 @@
                                 aria-label="Username"
                                 maxlength="32"
                                 autocomplete="username"
-                                readonly
                                 autofocus
                             />
                             <input
@@ -216,7 +215,6 @@
                                 aria-label="Password"
                                 maxlength="64"
                                 autocomplete="current-password"
-                                readonly
                             />
 
                             <label id="remember-me" class="check">
@@ -412,27 +410,6 @@
                     ><span class="loader-dot">.</span>
                 </div>
 
-                <button
-                    id="worlds-switch"
-                    type="button"
-                    title="Click to change worlds"
-                    aria-label="Click to change worlds"
-                >
-                    <b>World&nbsp;<span id="current-world-index">...</span></b>
-                    |
-                    <small id="current-world-count">0</small>
-                    <br />
-                    <span id="current-world-id">...</span>
-
-                    <div id="worlds-popup">
-                        <table id="worlds-list" title="Join world">
-                            <tr>
-                                <th>Server ID</th>
-                                <th>Players</th>
-                            </tr>
-                        </table>
-                    </div>
-                </button>
             </section>
 
             <a

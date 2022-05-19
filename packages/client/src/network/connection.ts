@@ -56,37 +56,20 @@ export default class Connection {
     private time!: number;
 
     public constructor(private game: Game) {
-        let {
-            app,
-            audio,
-            messages,
-            storage,
-            socket,
-            input,
-            menu,
-            entities,
-            map,
-            overlays,
-            renderer,
-            bubble,
-            info,
-            pointer
-        } = game;
-
-        this.app = app;
-        this.audio = audio;
-        this.messages = socket.messages;
-        this.storage = storage;
-        this.socket = socket;
-        this.input = input;
-        this.menu = menu;
-        this.entities = entities;
-        this.map = map;
-        this.overlays = overlays;
-        this.renderer = renderer;
-        this.bubble = bubble;
-        this.info = info;
-        this.pointer = pointer;
+        this.app = this.game.app;
+        this.audio = this.game.audio;
+        this.messages = this.game.socket.messages;
+        this.storage = this.game.storage;
+        this.socket = this.game.socket;
+        this.input = this.game.input;
+        this.menu = this.game.menu;
+        this.entities = this.game.entities;
+        this.map = this.game.map;
+        this.overlays = this.game.overlays;
+        this.renderer = this.game.renderer;
+        this.bubble = this.game.bubble;
+        this.info = this.game.info;
+        this.pointer = this.game.pointer;
 
         this.load();
     }
@@ -314,7 +297,7 @@ export default class Connection {
                 entity.animate('death', 240, 1, () => {
                     doTeleport();
 
-                    entity.currentAnimation = null;
+                    entity.animation = null;
 
                     entity.setSprite(originalSprite);
                     entity.idle();
@@ -769,7 +752,7 @@ export default class Connection {
             this.entities.registerPosition(this.game.player);
             this.game.camera.centreOn(this.game.player);
 
-            this.game.player.currentAnimation = null;
+            this.game.player.animation = null;
             this.game.player.setSprite(this.game.sprites.get(this.game.player.getSpriteName()));
             this.game.player.idle();
 
