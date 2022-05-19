@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import _ from 'lodash';
 
 import App from './app';
@@ -31,12 +30,15 @@ import { Modules, Packets } from '@kaetram/common/network';
 import type { APIData } from '@kaetram/common/types/api';
 
 export default class Game {
+    public storage: Storage = this.app.storage;
+
     public player: Player = new Player('');
 
     public zoning: Zoning = new Zoning();
-    public storage: Storage = new Storage();
     public overlays: Overlay = new Overlay();
+    public pathfinder: Pathfinder = new Pathfinder();
 
+    public info: InfoController = new InfoController();
     public sprites: SpritesController = new SpritesController();
 
     public map: Map = new Map(this);
@@ -47,12 +49,12 @@ export default class Game {
     public socket: Socket = new Socket(this);
     public pointer: Pointer = new Pointer(this);
     public updater: Updater = new Updater(this);
-    public pathfinder: Pathfinder = new Pathfinder();
-    public info: InfoController = new InfoController();
     public audio: AudioController = new AudioController(this);
     public entities: EntitiesController = new EntitiesController(this);
     public bubble: BubbleController = new BubbleController(this);
     public menu: MenuController = new MenuController(this);
+
+    public connection: Connection = new Connection(this);
 
     public started = false;
     public ready = false;
@@ -65,13 +67,13 @@ export default class Game {
     public world!: APIData;
 
     public constructor(public app: App) {
+        this.app.sendStatus('Loading game');
+
         this.map.onReady(this.handleMap.bind(this));
 
-        this.app.onLogin(this.connect.bind(this));
+        this.app.onLogin(this.socket.connect.bind(this.socket));
         this.app.onResize(this.resize.bind(this));
         this.app.onRespawn(this.respawn.bind(this));
-
-        this.loadControllers();
     }
 
     /**
@@ -86,15 +88,6 @@ export default class Game {
 
         this.app.fadeMenu();
         this.tick();
-    }
-
-    /**
-     * Setting `started` to false will stop the game loop `tick()`.
-     */
-
-    private stop(): void {
-        this.started = false;
-        this.ready = false;
     }
 
     /**
@@ -115,31 +108,6 @@ export default class Game {
     }
 
     /**
-     * Sets all controllers back to their null state when we begin
-     * logging out of a game session. We try to start a new fresh
-     * session from the main menu without refreshing the page.
-     */
-
-    private unload(): void {
-        // TODO - Refactor after cleaning up game some more.
-        this.socket = null!;
-        this.renderer = null!;
-        this.updater = null!;
-        this.storage = null!;
-        this.entities = null!;
-        this.input = null!;
-        this.map = null!;
-        this.player = null!;
-        this.pathfinder = null!;
-        this.zoning = null!;
-        this.info = null!;
-        this.menu = null!;
-
-        this.audio.stop();
-        this.audio = null!;
-    }
-
-    /**
      * Callback handler for when the map has finished loading. We use the map
      * and assign it to the renderer.
      */
@@ -148,62 +116,6 @@ export default class Game {
         this.app.sendStatus('Initializing updater');
 
         this.app.ready();
-    }
-
-    /**
-     */
-
-    private loadControllers(): void {
-        this.app.sendStatus('Loading local storage');
-
-        if (window.config.worldSwitch)
-            $.get(`${window.config.hub}/all`, (servers) => this.loadWorlds(servers));
-
-        this.loadStorage();
-    }
-
-    private loadWorlds(servers: APIData[]): void {
-        let { storage } = this;
-
-        for (let [i, server] of servers.entries()) {
-            let row = $(document.createElement('tr'));
-
-            row.addClass('server-list');
-            row.append($(document.createElement('td')).text(server.serverId));
-            row.append(
-                $(document.createElement('td')).text(`${server.playerCount}/${server.maxPlayers}`)
-            );
-
-            $('#worlds-list').append(row);
-
-            let setServer = () => {
-                this.world = server;
-
-                storage.data.world = server.serverId;
-                storage.save();
-
-                $('.server-list').removeClass('active');
-                row.addClass('active');
-
-                $('#current-world-index').text(i);
-
-                $('#current-world-id').text(server.serverId);
-                $('#current-world-count').text(`${server.playerCount}/${server.maxPlayers}`);
-
-                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
-            };
-
-            row.on('click', setServer);
-
-            if (server.serverId === storage.data.world) setServer();
-        }
-    }
-
-    public connect(): void {
-        this.socket.connect();
-
-        // this.connectionHandler =
-        new Connection(this);
     }
 
     /**
@@ -242,22 +154,6 @@ export default class Game {
         }
     }
 
-    private loadStorage(): void {
-        let loginName = $('#login-name-input'),
-            loginPassword = $('#login-password-input');
-
-        loginName.prop('readonly', false);
-        loginPassword.prop('readonly', false);
-
-        if (!this.storage.hasRemember()) return;
-
-        if (this.storage.getUsername() !== '') loginName.val(this.storage.getUsername());
-
-        if (this.storage.getPassword() !== '') loginPassword.val(this.storage.getPassword());
-
-        $('#remember-me').prop('checked', true);
-    }
-
     /**
      * Determines a path from the character's current position to the
      * specified `x` and `y` grid coordinate parameters.
@@ -276,16 +172,15 @@ export default class Game {
         ignores: Character[] = [],
         isObject = false
     ): number[][] {
-        let { map, pathfinder } = this,
-            path: number[][] = [];
+        let path: number[][] = [];
 
-        if (!pathfinder || (map.isColliding(x, y) && !map.isObject(x, y))) return path;
+        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
 
-        if (ignores) _.each(ignores, (entity) => pathfinder.addIgnore(entity));
+        if (ignores) _.each(ignores, (entity) => this.pathfinder.addIgnore(entity));
 
-        path = pathfinder.find(map.grid, character.gridX, character.gridY, x, y);
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
 
-        if (ignores) pathfinder.clearIgnores(map.grid);
+        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
 
         if (isObject) path.pop(); // Remove the last path index
 
@@ -297,41 +192,28 @@ export default class Game {
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
-    public handleDisconnection(noError = false): void {
-        let { started, renderer, menu, app } = this;
+    public handleDisconnection(error = ''): void {
+        this.storage.setError(error);
 
-        if (!started) return;
-
-        this.stop();
-
-        renderer.stop();
-        menu.stop();
-
-        this.unload();
-
-        app.showMenu();
-
-        if (noError) {
-            app.sendError(null, 'You have been disconnected from the server');
-            app.statusMessage = null;
-        }
-
-        this.loadControllers();
-
-        app.toggleLogin(false);
-        app.updateLoader('');
+        location.reload();
     }
+
+    /**
+     * Plays the reviving sound effect and removes the death class.
+     * We send a packet to the server to signal for respawn.
+     */
 
     public respawn(): void {
-        let { audio, app, socket } = this;
+        this.audio.play(Modules.AudioTypes.SFX, 'revive');
+        this.app.body.removeClass('death');
 
-        console.log('yo???');
-
-        audio.play(Modules.AudioTypes.SFX, 'revive');
-        app.body.removeClass('death');
-
-        socket.send(Packets.Respawn, []);
+        this.socket.send(Packets.Respawn, []);
     }
+
+    /**
+     * Calls all the resize functions in the controllers
+     * that require resizing.
+     */
 
     public resize(): void {
         this.renderer.resize();
