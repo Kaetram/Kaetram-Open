@@ -444,12 +444,7 @@ export default class Connection {
             if (data.hitPoints) {
                 entity.setHitPoints(data.hitPoints);
 
-                if (
-                    this.game.player.target &&
-                    this.game.player.target.instance === entity.instance &&
-                    this.input.overlay.updateCallback
-                )
-                    this.input.overlay.updateCallback(entity.instance, data.hitPoints);
+                this.input.hud.updateCallback?.(entity.instance, data.hitPoints);
             }
 
             if (data.mana) entity.setMana(data.mana);

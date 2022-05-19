@@ -46,6 +46,15 @@ export default class EntitiesController {
         this.game.input.loadCursors();
     }
 
+    /**
+     * Creates a new entity based on the EntityData object we
+     * received from the server. The entity is created depending
+     * on the type specified. The code following is the base
+     * entity data each entity contains (name, coordinates,
+     * sprite key).
+     * @param info EntityData containing information about an entity.
+     */
+
     public create(info: EntityData): void {
         // Don't spawn if we receive our own player data somehow.
         if (this.isPlayer(info.instance)) return;
