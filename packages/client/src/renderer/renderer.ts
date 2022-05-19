@@ -113,7 +113,7 @@ export default class Renderer {
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
-    private time = new Date();
+    private time = Date.now();
     private fps = 0;
     private frameCount = 0;
     private renderedFrame = [0, 0];
@@ -268,7 +268,7 @@ export default class Renderer {
         this.stopRendering = true;
 
         this.forEachContext((context) => {
-            context.fillStyle = '#12100D';
+            context.fillStyle = 'rgba(18, 16, 13, 1)';
             context.fillRect(0, 0, context.canvas.width, context.canvas.height);
         });
     }
@@ -323,8 +323,6 @@ export default class Renderer {
 
         this.drawCursor();
 
-        this.calculateFPS();
-
         this.restore();
     }
 
@@ -352,7 +350,7 @@ export default class Renderer {
                 context = isHighTile ? this.foreContext : this.backContext;
 
             // Only do the lighting logic if there is an overlay.
-            if (this.game.overlays.getFog()) {
+            if (this.game.overlays.hasOverlay()) {
                 let isLightTile = this.map.isLightTile(tile);
 
                 context = isLightTile ? this.overlayContext : context;
@@ -411,45 +409,53 @@ export default class Renderer {
         this.entitiesContext.restore();
     }
 
+    /**
+     * Draws the debugging menu when the global variable
+     * `debugging` is set to true.
+     */
+
     private drawDebugging(): void {
         if (!this.debugging) return;
 
         this.drawFPS();
-
-        if (!this.mobile) {
-            this.drawPosition();
-            this.drawCollisions();
-        }
-
         this.drawPathing();
+
+        if (this.mobile) return;
+
+        // No need to debug this on mobile.
+        this.drawPosition();
+        this.drawCollisions();
     }
 
+    /**
+     * Overlays are images drawn on top of the game. They are generally
+     * used in conjunction with the lighting system to give a shadow
+     * effect or dark room effect. When overlays are present, the light
+     * system is enabled.
+     */
+
     private drawOverlays(): void {
-        let overlay = this.game.overlays.getFog();
+        // Overlay image cold not be found.
+        if (!this.game.overlays.hasOverlay()) return;
 
-        if (overlay) {
-            if (overlay !== 'empty') {
-                let img = new Image();
-                img.src = overlay;
-                this.overlayContext.fillStyle = this.overlayContext.createPattern(img, 'repeat')!;
-                this.overlayContext.fillRect(
-                    0,
-                    0,
-                    this.screenWidth * this.camera.zoomFactor,
-                    this.screenHeight * this.camera.zoomFactor
-                );
-                this.overlayContext.fill();
-            }
+        // Create a repeating pattern using the overlay image.
+        this.overlayContext.fillStyle = this.overlayContext.createPattern(
+            this.game.overlays.get(),
+            'repeat'
+        )!;
+        this.overlayContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.overlayContext.fill();
 
-            this.overlayContext.globalCompositeOperation = 'lighter';
+        this.overlayContext.globalCompositeOperation = 'lighter';
 
-            this.forEachLighting((lighting) => {
-                if (this.inRadius(lighting)) this.drawLighting(lighting);
-            });
+        // Draw each lighting
+        this.forEachLighting((lighting) => {
+            if (this.inRadius(lighting)) this.drawLighting(lighting);
+        });
 
-            this.overlayContext.globalCompositeOperation = 'source-over';
-            this.darkMask.render(this.overlayContext);
-        }
+        // Essentially makes the overlay be drawn on top of everything.
+        this.overlayContext.globalCompositeOperation = 'source-over';
+        this.darkMask.render(this.overlayContext);
     }
 
     /**
@@ -506,15 +512,46 @@ export default class Renderer {
         }
     }
 
+    /**
+     * Iterates through all the visible entities and
+     * draws them.
+     */
+
     private drawEntities(): void {
+        // Stop drawing entities when dead.
         if (this.game.player.dead) return;
 
         this.setCameraView(this.entitiesContext);
 
-        this.forEachVisibleEntity((entity) => {
-            if (!entity) return;
-
+        this.forEachVisibleEntity((entity: Entity) => {
             if (entity.spriteLoaded) this.drawEntity(entity);
+        });
+    }
+
+    /**
+     * Infos are drawn when a player is in combat and the hitsplat
+     * displays on top of it or the targeted entity. They are also
+     * used for healing, exp gain, and poison. These are floating
+     * pieces of text that slowly fade as time passes.
+     */
+
+    private drawInfos(): void {
+        if (this.game.info.isEmpty()) return;
+
+        this.game.info.forEachInfo((info: Splat) => {
+            this.textContext.save();
+            this.setCameraView(this.textContext);
+            this.textContext.globalAlpha = info.opacity;
+            this.drawText(
+                `${info.getText()}`,
+                Math.floor(info.x + 8),
+                Math.floor(info.y),
+                true,
+                info.fill,
+                info.stroke,
+                26
+            );
+            this.textContext.restore();
         });
     }
 
@@ -555,30 +592,116 @@ export default class Renderer {
         this.saveMouse();
     }
 
-    private drawInfos(): void {
-        if (this.game.info.isEmpty()) return;
+    /**
+     * Calculates the FPS and draws it on the top-left of the screen.
+     */
 
-        this.game.info.forEachInfo((info: Splat) => {
-            this.textContext.save();
-            this.setCameraView(this.textContext);
-            this.textContext.globalAlpha = info.opacity;
+    private drawFPS(): void {
+        this.calculateFPS();
+        this.drawText(`FPS: ${this.fps}`, 10, 31, false, 'white');
+    }
+
+    /**
+     * Calculates the number of frames that have accrued
+     * in one second. We compare the current epoch against
+     * the last recorded epoch and measure the amount of
+     * frames that pass within a 1 second difference.
+     */
+
+    private calculateFPS(): void {
+        let currentTime = Date.now(),
+            timeDiff = currentTime - this.time;
+
+        // Reset frame count every 1 second and store that as fps.
+        if (timeDiff >= 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.time = currentTime;
+        }
+
+        // Increment the frame count.
+        this.frameCount++;
+    }
+
+    /**
+     * Draws debugging inforamtion such as the current grid coordinate,
+     * as well as the index of that coordinate. If the player is hovering
+     * over an entity, it displays that entity's coordinates and indexes
+     * as well as their instance and attack range (if present).
+     */
+
+    private drawPosition(): void {
+        let { player, input } = this.game;
+
+        // Draw our current player's grid coordinates and tile index.
+        this.drawText(
+            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
+                player.gridX,
+                player.gridY
+            )}`,
+            10,
+            51,
+            false,
+            'white'
+        );
+
+        // Draw information about the entity we're hovering over.
+        if (input.hovering && input.entity) {
+            // Draw the entity's grid coordinates and tile index.
             this.drawText(
-                `${info.getText()}`,
-                Math.floor(info.x + 8),
-                Math.floor(info.y),
-                true,
-                info.fill,
-                info.stroke,
-                26
+                `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
+                10,
+                71,
+                false,
+                'white'
             );
-            this.textContext.restore();
+
+            // Draw the entity's attack range.
+            if (input.entity.attackRange)
+                this.drawText(`att range: ${input.entity.attackRange}`, 10, 91, false, 'white');
+        }
+    }
+
+    /**
+     * Draws a highlight around every tile cell that is colliding.
+     */
+
+    private drawCollisions(): void {
+        /**
+         * Iterate through each visible position within boundaries of the map
+         * and determine if the tile is within the map's collision grid.
+         */
+
+        this.camera.forEachVisiblePosition((x, y) => {
+            if (this.map.isOutOfBounds(x, y)) return;
+
+            // Only draw tiles in the collision grid that are marked as colliding.
+            if (this.map.grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
         });
     }
+
+    /**
+     * Draws the currently calculated path that the player will
+     * be taking. Highlights the upcoming tile cells in the path.
+     */
+
+    private drawPathing(): void {
+        if (!this.game.player.hasPath()) return;
+
+        _.each(this.game.player.path, (path) =>
+            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
+        );
+    }
+
+    /**+
+     *
+     * @param entity
+     */
 
     private drawEntity(entity: Entity): void {
         let {
             sprite,
-            currentAnimation: animation,
+            animation,
             renderingData: data,
             angled,
             angle,
@@ -673,14 +796,8 @@ export default class Renderer {
 
         this.drawHealth(entity as Character);
 
-        if (!this.game.overlays.getFog()) this.drawName(entity as Player & Item);
+        if (!this.game.overlays.hasOverlay()) this.drawName(entity as Player & Item);
     }
-
-    // /**
-    //  * Function used to draw special effects prior
-    //  * to rendering the entity.
-    //  */
-    // private drawEntityBack(entity: Entity): void {}
 
     /**
      * Function used to draw special effects after
@@ -694,7 +811,7 @@ export default class Renderer {
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();
 
-                    let animation = entity.currentAnimation!,
+                    let animation = entity.animation!,
                         weaponAnimationData = weapon.animationData[animation.name],
                         frame = animation.currentFrame,
                         index =
@@ -781,7 +898,7 @@ export default class Renderer {
 
         this.textContext.save();
         this.setCameraView(this.textContext);
-        this.textContext.strokeStyle = '#00000';
+        this.textContext.strokeStyle = 'rbga(0, 0, 0, 1)';
         this.textContext.lineWidth = 1;
         this.textContext.strokeRect(
             healthX,
@@ -789,7 +906,7 @@ export default class Renderer {
             barLength * this.camera.zoomFactor,
             healthHeight
         );
-        this.textContext.fillStyle = '#FD0000';
+        this.textContext.fillStyle = 'rgba(253, 0, 0, 1)';
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         this.textContext.restore();
     }
@@ -799,10 +916,10 @@ export default class Renderer {
 
         let colour = entity.wanted ? 'red' : 'white';
 
-        if (entity.rights > 1) colour = '#ba1414';
-        else if (entity.rights > 0) colour = '#a59a9a';
+        if (entity.rights > 1) colour = 'rgba(186,20,20, 1)';
+        else if (entity.rights > 0) colour = 'rgba(165, 154, 154, 1)';
 
-        if (entity.instance === this.game.player.instance) colour = '#fcda5c';
+        if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
         if (entity.nameColour) colour = entity.nameColour;
 
@@ -821,11 +938,11 @@ export default class Renderer {
                     this.drawLevels && !entity.isNPC() ? y - 8 : y,
                     true,
                     colour,
-                    '#000'
+                    'rbga(0, 0, 0, 1)'
                 );
 
             if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
-                this.drawText(`Level ${entity.level}`, x, y, true, colour, '#000');
+                this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
 
             if (entity.isItem()) {
                 if (entity.count > 1) this.drawText(entity.count.toString(), x, y, true, colour);
@@ -868,95 +985,6 @@ export default class Renderer {
         }
 
         lighting.render(this.overlayContext);
-    }
-
-    private calculateFPS(): void {
-        if (!this.debugging) return;
-
-        let currentTime = new Date(),
-            timeDiff = currentTime.getTime() - this.time.getTime();
-
-        if (timeDiff >= 1000) {
-            this.realFPS = this.frameCount;
-            this.frameCount = 0;
-            this.time = currentTime;
-            this.fps = this.realFPS;
-        }
-
-        this.frameCount++;
-    }
-
-    private drawFPS(): void {
-        this.drawText(`FPS: ${this.realFPS}`, 10, 31, false, 'white');
-    }
-
-    /**
-     * Draws debugging inforamtion such as the current grid coordinate,
-     * as well as the index of that coordinate. If the player is hovering
-     * over an entity, it displays that entity's coordinates and indexes
-     * as well as their instance and attack range (if present).
-     */
-
-    private drawPosition(): void {
-        let { player, input } = this.game;
-
-        // Draw our current player's grid coordinates and tile index.
-        this.drawText(
-            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
-                player.gridX,
-                player.gridY
-            )}`,
-            10,
-            51,
-            false,
-            'white'
-        );
-
-        // Draw information about the entity we're hovering over.
-        if (input.hovering && input.entity) {
-            // Draw the entity's grid coordinates and tile index.
-            this.drawText(
-                `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
-                10,
-                71,
-                false,
-                'white'
-            );
-
-            // Draw the entity's attack range.
-            if (input.entity.attackRange)
-                this.drawText(`att range: ${input.entity.attackRange}`, 10, 91, false, 'white');
-        }
-    }
-
-    /**
-     * Draws a highlight around every tile cell that is colliding.
-     */
-
-    private drawCollisions(): void {
-        /**
-         * Iterate through each visible position within boundaries of the map
-         * and determine if the tile is within the map's collision grid.
-         */
-
-        this.camera.forEachVisiblePosition((x, y) => {
-            if (this.map.isOutOfBounds(x, y)) return;
-
-            if (this.map.grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
-        });
-    }
-
-    /**
-     * Draws the currently calculated path that the player will
-     * be taking. Highlights the upcoming tile cells in the path.
-     */
-
-    private drawPathing(): void {
-        if (!this.game.player.hasPath()) return;
-
-        _.each(this.game.player.path, (path) =>
-            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
-        );
     }
 
     /**
@@ -1126,7 +1154,7 @@ export default class Renderer {
         // Decrease font size relative to zoom out.
         fontSize += this.camera.zoomFactor * 2;
 
-        context.strokeStyle = strokeColour || '#373737';
+        context.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
         context.lineWidth = strokeSize;
         context.font = `${fontSize}px AdvoCut`;
         context.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
