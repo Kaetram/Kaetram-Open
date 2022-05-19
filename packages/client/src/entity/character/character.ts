@@ -385,13 +385,7 @@ export default class Character extends Entity {
         if (this.healing) return this.healingAnimation;
     }
 
-    public getActiveEffect():
-        | 'criticaleffect'
-        | 'stuneffect'
-        | 'explosion-terror'
-        | 'explosion-fireball'
-        | 'explosion-heal'
-        | undefined {
+    public getActiveEffect(): string {
         if (this.critical) return 'criticaleffect';
 
         if (this.stunned) return 'stuneffect';
@@ -401,6 +395,8 @@ export default class Character extends Entity {
         if (this.explosion) return 'explosion-fireball';
 
         if (this.healing) return 'explosion-heal';
+
+        return '';
     }
 
     /**

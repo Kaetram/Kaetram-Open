@@ -46,7 +46,7 @@ export default class BubbleController {
 
     public setTo(instance: string, x: number, y: number): void {
         let bubble = this.bubbles[instance],
-            { zoomFactor } = this.game.renderer,
+            { zoomFactor } = this.game.camera,
             tileSize = this.game.renderer.tileSize * zoomFactor,
             width = parseInt(bubble.element.css('width')) + 24,
             offset = width / 2 - tileSize / 2,

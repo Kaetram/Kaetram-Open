@@ -14,6 +14,18 @@ export default class SpritesController {
 
     public constructor() {
         this.sparksAnimation.setSpeed(120);
+
+        this.load();
+    }
+
+    /**
+     * Grabs a sprite object based on the name string.
+     * @param name The string of the sprite we're attempting to grab.
+     * @returns A sprite object if found, otherwise undefined.
+     */
+
+    public get(name: string): Sprite {
+        return this.sprites[name];
     }
 
     /**

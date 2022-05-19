@@ -86,12 +86,10 @@ export default class Settings {
         });
 
         cameraCheck.on('input', () => {
-            let active = cameraCheck.prop('checked');
-
-            if (active) game.camera.center();
-            else game.camera.decenter();
-
-            this.setCamera(active);
+            // let active = cameraCheck.prop('checked');
+            // if (active) game.camera.center();
+            // else game.camera.decenter();
+            // this.setCamera(active);
         });
 
         debugCheck.on('input', () => {
