@@ -52,7 +52,6 @@ export default abstract class Entity {
     public stunned = false;
     public terror = false;
 
-    // public nonPathable = false;
     public hasCounter = false;
 
     public countdownTime = 0;
@@ -60,14 +59,6 @@ export default abstract class Entity {
     public fadingDuration = 1000;
 
     public orientation!: Modules.Orientation;
-
-    public renderingData = {
-        scale: -1,
-        angle: 0
-    } as EntityRenderingData;
-
-    // private dirty = false;
-    // private dirtyCallback?: () => void;
 
     public fadingTime!: number;
     private blinking!: number;
