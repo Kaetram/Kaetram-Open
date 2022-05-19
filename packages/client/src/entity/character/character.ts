@@ -8,29 +8,11 @@ import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
 export default class Character extends Entity {
-    public override nextGridX = -1;
-    public override nextGridY = -1;
-
-    // private prevGridX = -1;
-    // private prevGridY = -1;
-
-    public override orientation = Modules.Orientation.Down;
-
-    public override hitPoints = -1;
-    public maxHitPoints = -1;
-    public override mana = -1;
-    public override maxMana = -1;
-
     public healthBarVisible = false;
 
-    public override dead = false;
+    public maxHitPoints = -1;
     private following = false;
-    // private attacking = false;
     private interrupted = false;
-
-    public override critical = false;
-    public override frozen = false;
-    public override stunned = false;
     public explosion = false;
     public healing = false;
 
@@ -43,19 +25,31 @@ export default class Character extends Entity {
 
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 100;
+
+    public override nextGridX = -1;
+    public override nextGridY = -1;
     public override movementSpeed = -1;
-
     public override attackRange = 1;
+    public override critical = false;
+    public override frozen = false;
+    public override stunned = false;
+    public override dead = false;
 
-    private criticalAnimation!: Animation;
-    private terrorAnimation!: Animation;
-    private stunAnimation!: Animation;
-    private explosionAnimation!: Animation;
-    private healingAnimation!: Animation;
+    public override orientation = Modules.Orientation.Down;
+
+    public override hitPoints = -1;
+    public override mana = -1;
+    public override maxMana = -1;
 
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
+
+    private criticalAnimation: Animation = new Animation('atk_down', 10, 0, 48, 48);
+    private terrorAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private stunAnimation: Animation = new Animation('atk_down', 6, 0, 48, 48);
+    private explosionAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private healingAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
 
     private secondStepCallback?(): void;
     private beforeStepCallback?(): void;
@@ -74,62 +68,53 @@ export default class Character extends Entity {
     public constructor(instance: string, type: Modules.EntityType) {
         super(instance, type);
 
-        this.loadGlobals();
+        this.loadAnimations();
     }
 
-    private loadGlobals(): void {
-        // Critical Hit Animation
-        let critical = new Animation('atk_down', 10, 0, 48, 48);
-        critical.setSpeed(30);
+    /**
+     * Loads animations used for special effects.
+     */
 
-        critical.setCount(1, () => {
+    private loadAnimations(): void {
+        // Critical Hit Animation
+        this.criticalAnimation.setSpeed(30);
+        this.criticalAnimation.setCount(1, () => {
             this.critical = false;
 
-            critical.reset();
-            critical.count = 1;
+            this.criticalAnimation.reset();
+            this.criticalAnimation.count = 1;
         });
-        this.criticalAnimation = critical;
 
         // Terror Animation
-        let terror = new Animation('explosion', 8, 0, 64, 64);
-        terror.setSpeed(50);
-
-        terror.setCount(1, () => {
+        this.terrorAnimation.setSpeed(50);
+        this.terrorAnimation.setCount(1, () => {
             this.terror = false;
 
-            terror.reset();
-            terror.count = 1;
+            this.terrorAnimation.reset();
+            this.terrorAnimation.count = 1;
         });
-        this.terrorAnimation = terror;
 
         // Stunned Animation
-        let stun = new Animation('atk_down', 6, 0, 48, 48);
-        stun.setSpeed(30);
-        this.stunAnimation = stun;
+        this.stunAnimation.setSpeed(30);
 
         // Explosion Animation
-        let explosion = new Animation('explosion', 8, 0, 64, 64);
-        explosion.setSpeed(50);
-
-        explosion.setCount(1, () => {
+        this.explosionAnimation.setSpeed(50);
+        this.explosionAnimation.setCount(1, () => {
             this.explosion = false;
 
-            explosion.reset();
-            explosion.count = 1;
+            this.explosionAnimation.reset();
+            this.explosionAnimation.count = 1;
         });
-        this.explosionAnimation = explosion;
 
         // Healing Animation
-        let healing = new Animation('explosion', 8, 0, 48, 48);
-        healing.setSpeed(50);
+        this.healingAnimation.setSpeed(50);
 
-        healing.setCount(1, () => {
+        this.healingAnimation.setCount(1, () => {
             this.healing = false;
 
-            healing.reset();
-            healing.count = 1;
+            this.healingAnimation.reset();
+            this.healingAnimation.count = 1;
         });
-        this.healingAnimation = healing;
     }
 
     public animate(
@@ -138,21 +123,18 @@ export default class Character extends Entity {
         count?: number,
         onEndCount?: () => void
     ): void {
-        let o = ['atk', 'walk', 'idle'],
-            { orientation, currentAnimation } = this;
+        let o = ['atk', 'walk', 'idle'];
 
-        if (currentAnimation?.name === 'death') return;
+        if (this.animation?.name === 'death') return;
 
         this.spriteFlipX = false;
         this.spriteFlipY = false;
 
         if (o.includes(animation)) {
             animation += `_${
-                orientation === Modules.Orientation.Left
-                    ? 'right'
-                    : this.orientationToString(orientation)
+                this.orientation === Modules.Orientation.Left ? 'right' : this.orientationToString()
             }`;
-            this.spriteFlipX = orientation === Modules.Orientation.Left;
+            this.spriteFlipX = this.orientation === Modules.Orientation.Left;
         }
 
         this.setAnimation(animation, speed, count, onEndCount);
@@ -213,8 +195,14 @@ export default class Character extends Entity {
         this.performAction(orientation, Modules.Actions.Idle);
     }
 
-    private orientationToString(o: Modules.Orientation) {
-        switch (o) {
+    /**
+     * Converts the current orientation to a string that can
+     * be used in the animations.
+     * @returns String of the current orientation.
+     */
+
+    private orientationToString(): string {
+        switch (this.orientation) {
             case Modules.Orientation.Left:
                 return 'left';
 
@@ -239,6 +227,13 @@ export default class Character extends Entity {
 
         this.idle();
     }
+
+    /**
+     * Begins the movement of the entity to the given position.
+     * @param x The grid x position to move to.
+     * @param y The grid y position to move to.
+     * @param forced Forced movement overrides any other movement.
+     */
 
     public go(x: number, y: number, forced = false): void {
         if (this.frozen) return;
@@ -428,10 +423,6 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
-    // isMoving(): boolean {
-    //     return this.currentAnimation.name === 'walk' || this.x % 2 !== 0 || this.y % 2 !== 0;
-    // }
-
     public forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => callback(attacker));
     }
@@ -457,8 +448,6 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
-        if (!this.target) return;
-
         this.target = null;
     }
 
@@ -467,17 +456,10 @@ export default class Character extends Entity {
     }
 
     public moved(): void {
-        // this.loadDirty();
-
         this.moveCallback?.();
     }
 
     public setTarget(target: Entity): void {
-        if (!target) {
-            this.removeTarget();
-            return;
-        }
-
         this.target = target;
     }
 

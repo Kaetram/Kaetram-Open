@@ -33,7 +33,7 @@ export default class Updater {
 
             this.updateFading(entity);
 
-            entity.currentAnimation?.update(this.game.time);
+            entity.animation?.update(this.game.time);
 
             // Handle projectile instances separately.
             if (entity instanceof Projectile) {
