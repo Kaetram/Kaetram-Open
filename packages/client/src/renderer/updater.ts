@@ -5,11 +5,9 @@ import Entity from '../entity/entity';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 import SpritesController from '../controllers/sprites';
-import InputController from '../controllers/input';
 
 export default class Updater {
     private tileSize = this.game.map.tileSize;
-    private input: InputController = this.game.input;
 
     private sprites: SpritesController | null = null;
 
@@ -147,7 +145,7 @@ export default class Updater {
      */
 
     private updateKeyboard(): void {
-        let { player } = this.game,
+        let { player, input } = this.game,
             position = {
                 x: player.gridX,
                 y: player.gridY
@@ -164,7 +162,7 @@ export default class Updater {
         else if (player.moveRight) position.x++;
         else if (player.moveLeft) position.x--;
 
-        this.input.keyMove(position);
+        input.keyMove(position);
     }
 
     /**
@@ -173,9 +171,9 @@ export default class Updater {
      */
 
     private updateAnimations(): void {
-        let target = this.input.targetAnimation;
+        let target = this.game.input.targetAnimation;
 
-        if (target && this.input.selectedCellVisible) target.update(this.game.time);
+        if (target && this.game.input.selectedCellVisible) target.update(this.game.time);
 
         if (!this.sprites) return;
 
