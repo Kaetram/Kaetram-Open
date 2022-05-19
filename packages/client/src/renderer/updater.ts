@@ -5,18 +5,15 @@ import Entity from '../entity/entity';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 import SpritesController from '../controllers/sprites';
+import InputController from '../controllers/input';
 
 export default class Updater {
-    private input;
+    private tileSize = this.game.map.tileSize;
+    private input: InputController = this.game.input;
 
     private sprites: SpritesController | null = null;
 
-    private tileSize = -1;
-
-    public constructor(private game: Game) {
-        this.input = game.input;
-        this.tileSize = game.map.tileSize;
-    }
+    public constructor(private game: Game) {}
 
     public update(): void {
         this.updateEntities();

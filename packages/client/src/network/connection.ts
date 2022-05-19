@@ -203,7 +203,7 @@ export default class Connection {
 
             if (data.equipments) _.each(data.equipments, entity.equip.bind(entity));
 
-            entity.setSprite(this.game.getSprite(entity.getSpriteName()));
+            entity.setSprite(this.game.sprites.get(entity.getSpriteName()));
 
             this.menu.profile.update();
         });
@@ -292,7 +292,7 @@ export default class Connection {
 
                 if (isPlayer) {
                     this.game.player.clearHealthBar();
-                    this.renderer.camera.centreOn(entity);
+                    this.game.camera.centreOn(entity);
                     this.renderer.updateAnimatedTiles();
                 }
 
@@ -309,7 +309,7 @@ export default class Connection {
 
                 entity.teleporting = true;
 
-                entity.setSprite(this.game.getSprite('death'));
+                entity.setSprite(this.game.sprites.get('death'));
 
                 entity.animate('death', 240, 1, () => {
                     doTeleport();
@@ -343,7 +343,7 @@ export default class Connection {
                     return;
 
                 case Modules.EntityType.Chest:
-                    entity.setSprite(this.game.getSprite('death'));
+                    entity.setSprite(this.game.sprites.get('death'));
 
                     entity.setAnimation('death', 120, 1, () => {
                         this.entities.unregisterPosition(entity);
@@ -373,7 +373,7 @@ export default class Connection {
 
             entity.hitPoints = 0;
 
-            if (!entity.sprite.hasDeathAnimation) entity.setSprite(this.game.getSprite('death'));
+            if (!entity.sprite.hasDeathAnimation) entity.setSprite(this.game.sprites.get('death'));
 
             entity.animate('death', 120, 1, () => {
                 this.entities.unregisterPosition(entity);
@@ -767,10 +767,10 @@ export default class Connection {
 
             this.game.player.setGridPosition(x, y);
             this.entities.registerPosition(this.game.player);
-            this.renderer.camera.centreOn(this.game.player);
+            this.game.camera.centreOn(this.game.player);
 
             this.game.player.currentAnimation = null;
-            this.game.player.setSprite(this.game.getSprite(this.game.player.getSpriteName()));
+            this.game.player.setSprite(this.game.sprites.get(this.game.player.getSpriteName()));
             this.game.player.idle();
 
             this.entities.addEntity(this.game.player);
