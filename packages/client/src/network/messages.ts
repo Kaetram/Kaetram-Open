@@ -51,6 +51,7 @@ import type {
     WelcomeData
 } from '@kaetram/common/types/messages';
 import type App from '../app';
+import type Game from '../game';
 import type { AudioName } from '../controllers/audio';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import { EntityData } from '@kaetram/common/types/entity';
@@ -126,6 +127,7 @@ interface ProfessionCallback {
 
 export default class Messages {
     private messages;
+    private app: App = this.game.app;
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
@@ -176,7 +178,7 @@ export default class Messages {
      * Please respect the order of the Packets Enum and arrange functions
      * accordingly.
      */
-    public constructor(private app: App) {
+    public constructor(private game: Game) {
         let messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
         messages[Packets.Handshake] = () => this.handshakeCallback;
@@ -254,71 +256,55 @@ export default class Messages {
 
         switch (message) {
             case 'full':
-                this.app.sendError(null, 'The servers are currently full!');
+                this.app.sendError('The servers are currently full!');
                 break;
 
             case 'error':
-                this.app.sendError(null, 'The server has responded with an error!');
+                this.app.sendError('The server has responded with an error!');
                 break;
 
             case 'development':
-                this.app.sendError(null, 'The game is currently in development mode.');
+                this.app.sendError('The game is currently in development mode.');
                 break;
 
             case 'disallowed':
-                this.app.sendError(null, 'The server is currently not accepting connections!');
+                this.app.sendError('The server is currently not accepting connections!');
                 break;
 
             case 'maintenance':
-                this.app.sendError(null, 'Kaetram is currently under maintenance.');
+                this.app.sendError('Kaetram is currently under maintenance.');
                 break;
 
             case 'userexists':
-                this.app.sendError(null, 'The username you have chosen already exists.');
+                this.app.sendError('The username you have chosen already exists.');
                 break;
 
             case 'emailexists':
-                this.app.sendError(null, 'The email you have chosen is not available.');
+                this.app.sendError('The email you have chosen is not available.');
                 break;
 
             case 'invalidinput':
-                this.app.sendError(null, 'The input you have provided is invalid.');
+                this.app.sendError('The input you have provided is invalid.');
                 break;
 
             case 'loggedin':
-                this.app.sendError(null, 'The player is already logged in!');
+                this.app.sendError('The player is already logged in!');
                 break;
 
             case 'invalidlogin':
-                this.app.sendError(null, 'You have entered the wrong username or password.');
+                this.app.sendError('You have entered the wrong username or password.');
                 break;
 
             case 'toofast':
-                this.app.sendError(
-                    null,
-                    'You are trying to log in too fast from the same connection.'
-                );
-                break;
-
-            case 'malform':
-                this.app.game.handleDisconnection(true);
-                this.app.sendError(null, 'Client has experienced a malfunction.');
-
+                this.app.sendError('You are trying to log in too fast from the same connection.');
                 break;
 
             case 'timeout':
-                this.app.sendError(
-                    null,
-                    'You have been disconnected for being inactive for too long.'
-                );
-
+                this.app.sendError('You have been disconnected for being inactive for too long.');
                 break;
 
             default:
-                this.app.sendError(
-                    null,
-                    'An unknown error has occurred, please submit a bug report.'
-                );
+                this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
         }
     }

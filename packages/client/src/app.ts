@@ -148,7 +148,7 @@ export default class App {
      */
 
     public handleKeyDown(e: JQuery.KeyDownEvent): void {
-        if (this.menuHidden) return this.keyDownCallback?.(e);
+        if (this.isMenuHidden()) return this.keyDownCallback?.(e);
 
         if (e.key === 'Enter') this.login();
     }
@@ -392,6 +392,8 @@ export default class App {
      */
 
     public sendError(error: string, field?: JQuery<HTMLElement>): boolean {
+        if (this.isMenuHidden()) return this.storage.setError(error);
+
         // Clear existing errors.
         this.clearErrors();
 
@@ -497,6 +499,11 @@ export default class App {
         return this.guest.prop('checked');
     }
 
+    /**
+     * Checks if the remember me checkbox is checked.
+     * @returns Whether the remember me has the checked attribute.
+     */
+
     public isRememberMe(): boolean {
         return this.rememberMe.prop('checked');
     }
@@ -509,6 +516,15 @@ export default class App {
 
     public isRegistering(): boolean {
         return this.currentScroll === 'create-character';
+    }
+
+    /**
+     * Checks if the main menu is currently hidden (game has started).
+     * @returns Whether the menuHidden attribute is set to true.
+     */
+
+    public isMenuHidden(): boolean {
+        return this.menuHidden;
     }
 
     /**

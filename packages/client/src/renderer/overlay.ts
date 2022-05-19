@@ -48,7 +48,7 @@ export default class Overlay {
      * @param overlay The new overlay to be set.
      */
 
-    public update(overlay: string): void {
+    public update(overlay = ''): void {
         this.currentOverlay = overlay;
     }
 }

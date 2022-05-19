@@ -110,6 +110,7 @@ export default class Renderer {
     private camera: Camera = this.game.camera;
 
     public tileSize = this.game.map.tileSize;
+    private actualTileSize = this.tileSize * this.camera.zoomFactor;
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
@@ -147,7 +148,6 @@ export default class Renderer {
         color: 'rgba(0, 0, 0, 0.84)'
     });
 
-    private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
     private shadowSprite!: Sprite;
@@ -193,7 +193,8 @@ export default class Renderer {
      */
 
     private loadSizes(): void {
-        this.lightTileSize = this.tileSize * this.camera.zoomFactor;
+        // Actual tile size is the tile size times the zoom factor.
+        this.actualTileSize = this.tileSize * this.camera.zoomFactor;
 
         // Screen width in pixels is the amount of grid spaces times the tile size.
         this.screenWidth = this.camera.gridWidth * this.tileSize;
@@ -438,13 +439,15 @@ export default class Renderer {
         // Overlay image cold not be found.
         if (!this.game.overlays.hasOverlay()) return;
 
-        // Create a repeating pattern using the overlay image.
-        this.overlayContext.fillStyle = this.overlayContext.createPattern(
-            this.game.overlays.get(),
-            'repeat'
-        )!;
-        this.overlayContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.overlayContext.fill();
+        let overlay = this.game.overlays.get();
+
+        // Draw only if there is an overlay image.
+        if (overlay) {
+            // Create a repeating pattern using the overlay image.
+            this.overlayContext.fillStyle = this.overlayContext.createPattern(overlay, 'repeat')!;
+            this.overlayContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.overlayContext.fill();
+        }
 
         this.overlayContext.globalCompositeOperation = 'lighter';
 
@@ -524,7 +527,11 @@ export default class Renderer {
         this.setCameraView(this.entitiesContext);
 
         this.forEachVisibleEntity((entity: Entity) => {
-            if (entity.spriteLoaded) this.drawEntity(entity);
+            // Skip entities that aren't properly loaded or are invisible.
+            if (!entity.spriteLoaded || !entity.sprite || !entity.animation || !entity.isVisible())
+                return;
+
+            this.drawEntity(entity);
         });
     }
 
@@ -583,8 +590,8 @@ export default class Renderer {
                 this.tileSize,
                 mouse.x,
                 mouse.y,
-                this.tileSize * this.camera.zoomFactor,
-                this.tileSize * this.camera.zoomFactor
+                this.actualTileSize,
+                this.actualTileSize
             );
 
         this.cursorContext.restore();
@@ -693,73 +700,65 @@ export default class Renderer {
         );
     }
 
-    /**+
-     *
-     * @param entity
+    /**
+     * Renders an entity according to the grid position, and zoom factor.
+     * @param entity The entity we are drawing.
      */
 
     private drawEntity(entity: Entity): void {
-        let {
-            sprite,
-            animation,
-            renderingData: data,
-            angled,
-            angle,
-            shadowOffsetY,
-            fading,
-            fadingAlpha,
-            spriteFlipX,
-            spriteFlipY,
-            customScale,
-            x,
-            y
-        } = entity;
-
-        if (!sprite || !animation || !entity.isVisible()) return;
-
-        let frame = animation.currentFrame,
-            dx = x * this.camera.zoomFactor,
-            dy = y * this.camera.zoomFactor,
-            flipX = dx + this.tileSize * this.camera.zoomFactor,
-            flipY = dy + data.height;
+        let frame = entity.animation?.currentFrame,
+            dx = entity.x * this.camera.zoomFactor,
+            dy = entity.y * this.camera.zoomFactor,
+            flipX = dx + this.actualTileSize,
+            flipY = dy + entity.renderingData.height;
 
         this.entitiesContext.save();
 
-        if (data.sprite !== sprite) {
-            data.sprite = sprite;
+        if (entity.renderingData.sprite !== entity.sprite) {
+            entity.renderingData.sprite = entity.sprite;
 
-            data.width = sprite.width;
-            data.height = sprite.height;
-            data.ox = sprite.offsetX;
-            data.oy = sprite.offsetY;
+            entity.renderingData.width = entity.sprite.width;
+            entity.renderingData.height = entity.sprite.height;
 
-            if (angled && !entity.isProjectile()) data.angle = (angle * Math.PI) / 180;
+            entity.renderingData.ox = entity.sprite.offsetX;
+            entity.renderingData.oy = entity.sprite.offsetY;
+
+            if (entity.angled && !entity.isProjectile())
+                entity.renderingData.angle = (entity.angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
-                data.shadowWidth = this.shadowSprite.width;
-                data.shadowHeight = this.shadowSprite.height;
+                entity.renderingData.shadowWidth = this.shadowSprite.width;
+                entity.renderingData.shadowHeight = this.shadowSprite.height;
 
-                data.shadowOffsetY = shadowOffsetY;
+                entity.renderingData.shadowOffsetY = entity.shadowOffsetY;
             }
         }
 
-        if (fading) this.entitiesContext.globalAlpha = fadingAlpha;
+        // Update the entity fading onto the context.
+        if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
 
-        if (spriteFlipX) {
+        // Handle flipping since we use the same sprite for right/left.
+        if (entity.spriteFlipX) {
             this.entitiesContext.translate(flipX, dy);
             this.entitiesContext.scale(-1, 1);
-        } else if (spriteFlipY) {
+        } else if (entity.spriteFlipY) {
             this.entitiesContext.translate(dx, flipY);
             this.entitiesContext.scale(1, -1);
         } else this.entitiesContext.translate(dx, dy);
 
+        // Scale the entity to the current zoom factor.
         this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
-        if (customScale) this.entitiesContext.scale(customScale, customScale);
+        // Scale the entity again if it has a custom scaling associated with it.
+        if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
 
-        if (angled)
-            this.entitiesContext.rotate(entity.isProjectile() ? entity.getAngle() : data.angle);
+        // Rotate using the entity's angle.
+        if (entity.angled)
+            this.entitiesContext.rotate(
+                entity.isProjectile() ? entity.angle : entity.renderingData.angle
+            );
 
+        // Draw the entity shadowf
         if (entity.hasShadow()) {
             this.entitiesContext.globalCompositeOperation = 'source-over';
 
@@ -767,27 +766,27 @@ export default class Renderer {
                 this.shadowSprite.image,
                 0,
                 0,
-                data.shadowWidth,
-                data.shadowHeight,
+                entity.renderingData.shadowWidth,
+                entity.renderingData.shadowHeight,
                 0,
-                data.shadowOffsetY,
-                data.shadowWidth,
-                data.shadowHeight
+                entity.renderingData.shadowOffsetY,
+                entity.renderingData.shadowWidth,
+                entity.renderingData.shadowHeight
             );
         }
 
-        // this.drawEntityBack(entity);
+        // // this.drawEntityBack(entity);
 
         this.entitiesContext.drawImage(
-            sprite.image,
-            frame.x,
-            frame.y,
-            data.width,
-            data.height,
-            data.ox,
-            data.oy,
-            data.width,
-            data.height
+            entity.sprite.image,
+            frame!.x,
+            frame!.y,
+            entity.renderingData.width,
+            entity.renderingData.height,
+            entity.renderingData.ox,
+            entity.renderingData.oy,
+            entity.renderingData.width,
+            entity.renderingData.height
         );
 
         this.drawEntityFore(entity);
@@ -973,8 +972,10 @@ export default class Renderer {
 
     private drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
-            let lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize,
-                lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
+            let lightX =
+                    (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
+                lightY =
+                    (lighting.light.origY - this.camera.y / this.tileSize) * this.actualTileSize;
 
             lighting.light.position = new Vec2(lightX, lightY);
             lighting.compute(this.overlay.width, this.overlay.height);
@@ -1042,10 +1043,10 @@ export default class Renderer {
 
         if (!(cellId in this.cells) || flips.length > 0)
             this.cells[cellId] = {
-                dx: this.getX(cellId + 1, this.map.width) * this.tileSize * this.camera.zoomFactor,
-                dy: Math.floor(cellId / this.map.width) * this.tileSize * this.camera.zoomFactor,
-                width: this.tileSize * this.camera.zoomFactor,
-                height: this.tileSize * this.camera.zoomFactor,
+                dx: this.getX(cellId + 1, this.map.width) * this.actualTileSize,
+                dy: Math.floor(cellId / this.map.width) * this.actualTileSize,
+                width: this.actualTileSize,
+                height: this.actualTileSize,
                 flips
             };
 
@@ -1199,8 +1200,6 @@ export default class Renderer {
     }
 
     private drawCellRect(x: number, y: number, colour: string): void {
-        let multiplier = this.tileSize * this.camera.zoomFactor;
-
         this.entitiesContext.save();
         this.setCameraView(this.entitiesContext);
 
@@ -1209,17 +1208,13 @@ export default class Renderer {
         this.entitiesContext.translate(x + 2, y + 2);
 
         this.entitiesContext.strokeStyle = colour;
-        this.entitiesContext.strokeRect(0, 0, multiplier - 4, multiplier - 4);
+        this.entitiesContext.strokeRect(0, 0, this.actualTileSize - 4, this.actualTileSize - 4);
 
         this.entitiesContext.restore();
     }
 
     private drawCellHighlight(x: number, y: number, colour: string): void {
-        this.drawCellRect(
-            x * this.camera.zoomFactor * this.tileSize,
-            y * this.camera.zoomFactor * this.tileSize,
-            colour
-        );
+        this.drawCellRect(x * this.actualTileSize, y * this.actualTileSize, colour);
     }
 
     /**

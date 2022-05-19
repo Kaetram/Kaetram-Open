@@ -917,11 +917,13 @@ export default class Connection {
         });
 
         this.messages.onOverlay((opcode, info) => {
+            console.log(info);
+
             switch (opcode) {
                 case Opcodes.Overlay.Set: {
                     let { image, colour } = info as OverlaySetData;
 
-                    this.overlays.updateOverlay(image);
+                    this.overlays.update(image);
 
                     if (!this.renderer.transitioning) this.renderer.updateDarkMask(colour);
                     else this.queueColour = colour;
@@ -931,7 +933,7 @@ export default class Connection {
 
                 case Opcodes.Overlay.Remove:
                     this.renderer.removeAllLights();
-                    this.overlays.currentOverlay = null;
+                    this.overlays.update();
 
                     break;
 
