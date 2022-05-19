@@ -377,14 +377,21 @@ export default class Renderer {
      * Draws animated tiles. This function is called for each
      * animated tile that is currently visible and renders them
      * just a little bit outside the camera view.
+     *
+     * We are using the entities context to draw onto since the
+     * background and foreground contexts do not necessarily get
+     * refreshed every frame in order to save resources. The entities
+     * context however, gets refreshed every frame. This is not
+     * the cleanest way of doing it, but creating another canvas is
+     * not really worth it.
      */
 
     private drawAnimatedTiles(): void {
         // Skip if we disable tile animation.
         if (!this.animateTiles) return;
 
-        this.backContext.save();
-        this.setCameraView(this.backContext);
+        this.entitiesContext.save();
+        this.setCameraView(this.entitiesContext);
 
         this.forEachAnimatedTile((tile) => {
             /**
@@ -398,10 +405,10 @@ export default class Renderer {
             tile.animate(this.game.time);
 
             // Draw the tile with the current id and index.
-            this.drawTile(this.backContext, tile.id, tile.index);
+            this.drawTile(this.entitiesContext, tile.id, tile.index);
         });
 
-        this.backContext.restore();
+        this.entitiesContext.restore();
     }
 
     private drawDebugging(): void {
