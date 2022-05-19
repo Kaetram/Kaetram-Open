@@ -33,8 +33,9 @@ export default abstract class Entity {
     public spriteFlipX = false;
     public spriteFlipY = false;
 
+    public animation!: Animation | null;
+
     private animations!: Animations;
-    public currentAnimation!: Animation | null;
     protected idleSpeed = 450;
 
     public shadowOffsetY = 0;
@@ -141,23 +142,19 @@ export default abstract class Entity {
     }
 
     public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
-        let { spriteLoaded, animations } = this;
+        if (!this.spriteLoaded || this.animation?.name === name) return;
 
-        if (!spriteLoaded || this.currentAnimation?.name === name) return;
-
-        let anim = animations[name];
+        let anim = this.animations[name];
 
         if (!anim) return;
 
-        this.currentAnimation = anim;
+        this.animation = anim;
 
-        let { currentAnimation } = this;
+        if (name.startsWith('atk')) this.animation.reset();
 
-        if (name.startsWith('atk')) currentAnimation.reset();
+        this.animation.setSpeed(speed);
 
-        currentAnimation.setSpeed(speed);
-
-        currentAnimation.setCount(count, onEndCount || (() => this.idle()));
+        this.animation.setCount(count, onEndCount || (() => this.idle()));
     }
 
     private setPosition(x: number, y: number): void {
