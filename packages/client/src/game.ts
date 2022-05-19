@@ -192,8 +192,8 @@ export default class Game {
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
-    public handleDisconnection(error = ''): void {
-        this.storage.setError(error);
+    public handleDisconnection(): void {
+        if (!this.app.isMenuHidden()) return;
 
         location.reload();
     }
