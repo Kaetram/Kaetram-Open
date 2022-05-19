@@ -383,6 +383,16 @@ export default class InputController {
     }
 
     /**
+     * Saves the current mouse position into a position object
+     * to prevent the mouse from rendering if it doesn't move.
+     */
+
+    public saveMouse(): void {
+        this.lastMousePosition.x = this.mouse.x;
+        this.lastMousePosition.y = this.mouse.y;
+    }
+
+    /**
      * Sets the grid coordinate position of the
      * currently selected x and y coordinates.
      * @param x The grid x coordinate.
@@ -532,5 +542,19 @@ export default class InputController {
 
     private isAttackable(entity: Entity): boolean {
         return entity.isMob() || (entity.isPlayer() && entity.pvp && this.game.pvp);
+    }
+
+    /**
+     * Checks if the last mouse position equals to that of the
+     * current mouse position. If it is not, then the mouse must
+     * be rendered to update its position on the screen.
+     * @returns Whether the current mouse position is the same
+     * as the old mouse's position.
+     */
+
+    public isMouseRendered(): boolean {
+        return (
+            this.mouse.x === this.lastMousePosition.x && this.mouse.y === this.lastMousePosition.y
+        );
     }
 }

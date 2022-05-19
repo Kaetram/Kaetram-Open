@@ -969,41 +969,32 @@ export default class Connection {
         });
 
         this.messages.onCamera((opcode) => {
-            if (this.game.player.x === 0 || this.game.player.y === 0) {
-                this.socket.send(Packets.Camera);
-                return;
-            }
-
-            if (!this.camera.isCentered()) return;
-
-            this.renderer.camera.forceCentre(this.game.player);
-            this.renderer.forceRendering = true;
-
-            switch (opcode) {
-                case Opcodes.Camera.LockX:
-                    this.renderer.camera.lockX = true;
-                    break;
-
-                case Opcodes.Camera.LockY:
-                    this.renderer.camera.lockY = true;
-                    break;
-
-                case Opcodes.Camera.FreeFlow:
-                    this.renderer.removeNonRelativeLights();
-
-                    this.renderer.camera.lockX = false;
-                    this.renderer.camera.lockY = false;
-                    break;
-
-                case Opcodes.Camera.Player: {
-                    let middle = this.renderer.getMiddle();
-
-                    this.renderer.removeAllLights();
-                    this.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);
-
-                    break;
-                }
-            }
+            // if (this.game.player.x === 0 || this.game.player.y === 0) {
+            //     this.socket.send(Packets.Camera);
+            //     return;
+            // }
+            // if (!this.camera.isCentered()) return;
+            // this.renderer.camera.forceCentre(this.game.player);
+            // this.renderer.forceRendering = true;
+            // switch (opcode) {
+            //     case Opcodes.Camera.LockX:
+            //         this.renderer.camera.lockX = true;
+            //         break;
+            //     case Opcodes.Camera.LockY:
+            //         this.renderer.camera.lockY = true;
+            //         break;
+            //     case Opcodes.Camera.FreeFlow:
+            //         this.renderer.removeNonRelativeLights();
+            //         this.renderer.camera.lockX = false;
+            //         this.renderer.camera.lockY = false;
+            //         break;
+            //     case Opcodes.Camera.Player: {
+            //         let middle = this.renderer.getMiddle();
+            //         this.renderer.removeAllLights();
+            //         this.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);
+            //         break;
+            //     }
+            // }
         });
 
         this.messages.onBubble((info) => {

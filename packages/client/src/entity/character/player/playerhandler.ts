@@ -72,8 +72,6 @@ export default class PlayerHandler {
             [input.selectedX, input.selectedY] = path[i];
             input.selectedCellVisible = true;
 
-            log.debug(`Movement speed: ${player.movementSpeed}`);
-
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Started,
                 requestX: input.selectedX,
@@ -99,8 +97,6 @@ export default class PlayerHandler {
                 entity = game.getEntityAt(x, y);
 
             if (entity) ({ instance } = entity);
-
-            log.debug('Stopping pathing.');
 
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Stop,
