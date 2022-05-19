@@ -19,16 +19,6 @@ export default class SpritesController {
     }
 
     /**
-     * Grabs a sprite object based on the name string.
-     * @param name The string of the sprite we're attempting to grab.
-     * @returns A sprite object if found, otherwise undefined.
-     */
-
-    public get(name: string): Sprite {
-        return this.sprites[name];
-    }
-
-    /**
      * Iterates through all the sprites in the JSON file
      * and initializes sprites based on their key and data.
      */
@@ -43,5 +33,15 @@ export default class SpritesController {
         }
 
         log.debug('Finished loading sprite data...');
+    }
+
+    /**
+     * Grabs a sprite object based on the name string.
+     * @param name The string of the sprite we're attempting to grab.
+     * @returns A sprite object if found, otherwise undefined.
+     */
+
+    public get(name: string): Sprite {
+        return this.sprites[name];
     }
 }

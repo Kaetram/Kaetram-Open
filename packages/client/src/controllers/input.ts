@@ -3,7 +3,7 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import Animation from '../entity/animation';
 import log from '../lib/log';
 import Chat from './chat';
-import Overlay from './overlay';
+import Overlay from './hud';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -14,6 +14,7 @@ import type App from '../app';
 import type Map from '../map/map';
 
 import { isMobile } from '../utils/detect';
+import HUDController from './hud';
 
 interface TargetData {
     sprite: Sprite;
@@ -56,12 +57,11 @@ export default class InputController {
      */
     public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
     public chatHandler: Chat = new Chat(this.game);
-    public overlay!: Overlay;
+    public hud: HUDController = new HUDController(this);
+
     public entity: Entity | undefined;
 
     public constructor(private game: Game) {
-        this.load();
-
         this.app.onLeftClick(this.handleLeftClick.bind(this));
         this.app.onRightClick(this.handleRightClick.bind(this));
 
@@ -75,17 +75,8 @@ export default class InputController {
             this.setCoords(event);
             this.moveCursor();
         });
-    }
 
-    /**
-     * Sets the target animation speed and begins
-     * loading the overlay system.
-     */
-
-    private load(): void {
         this.targetAnimation.setSpeed(50);
-
-        this.overlay = new Overlay(this);
     }
 
     /**
@@ -339,7 +330,7 @@ export default class InputController {
         this.entity = this.game.getEntityAt(position.x, position.y);
 
         // Update the overlay with entity information.
-        this.overlay.update(this.entity);
+        this.hud.update(this.entity);
 
         if (!this.entity) {
             /**
