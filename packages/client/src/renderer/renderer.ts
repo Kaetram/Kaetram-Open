@@ -569,7 +569,7 @@ export default class Renderer {
      */
 
     private drawCursor(): void {
-        if (this.tablet || this.mobile || this.hasRenderedMouse()) return;
+        if (this.tablet || this.mobile || this.game.input.isMouseRendered()) return;
 
         let { cursor, mouse } = this.game.input;
 
@@ -596,7 +596,7 @@ export default class Renderer {
 
         this.cursorContext.restore();
 
-        this.saveMouse();
+        this.game.input.saveMouse();
     }
 
     /**
@@ -710,29 +710,11 @@ export default class Renderer {
             dx = entity.x * this.camera.zoomFactor,
             dy = entity.y * this.camera.zoomFactor,
             flipX = dx + this.actualTileSize,
-            flipY = dy + entity.renderingData.height;
+            flipY = dy + entity.sprite.height;
 
         this.entitiesContext.save();
 
-        if (entity.renderingData.sprite !== entity.sprite) {
-            entity.renderingData.sprite = entity.sprite;
-
-            entity.renderingData.width = entity.sprite.width;
-            entity.renderingData.height = entity.sprite.height;
-
-            entity.renderingData.ox = entity.sprite.offsetX;
-            entity.renderingData.oy = entity.sprite.offsetY;
-
-            if (entity.angled && !entity.isProjectile())
-                entity.renderingData.angle = (entity.angle * Math.PI) / 180;
-
-            if (entity.hasShadow()) {
-                entity.renderingData.shadowWidth = this.shadowSprite.width;
-                entity.renderingData.shadowHeight = this.shadowSprite.height;
-
-                entity.renderingData.shadowOffsetY = entity.shadowOffsetY;
-            }
-        }
+        if (entity.angled && !entity.isProjectile()) entity.angle *= Math.PI / 180;
 
         // Update the entity fading onto the context.
         if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
@@ -754,9 +736,7 @@ export default class Renderer {
 
         // Rotate using the entity's angle.
         if (entity.angled)
-            this.entitiesContext.rotate(
-                entity.isProjectile() ? entity.angle : entity.renderingData.angle
-            );
+            this.entitiesContext.rotate(entity.isProjectile() ? entity.getAngle() : entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
@@ -766,12 +746,12 @@ export default class Renderer {
                 this.shadowSprite.image,
                 0,
                 0,
-                entity.renderingData.shadowWidth,
-                entity.renderingData.shadowHeight,
+                this.shadowSprite.width,
+                this.shadowSprite.height,
                 0,
-                entity.renderingData.shadowOffsetY,
-                entity.renderingData.shadowWidth,
-                entity.renderingData.shadowHeight
+                entity.shadowOffsetY,
+                this.shadowSprite.width,
+                this.shadowSprite.height
             );
         }
 
@@ -781,12 +761,12 @@ export default class Renderer {
             entity.sprite.image,
             frame!.x,
             frame!.y,
-            entity.renderingData.width,
-            entity.renderingData.height,
-            entity.renderingData.ox,
-            entity.renderingData.oy,
-            entity.renderingData.width,
-            entity.renderingData.height
+            entity.sprite.width,
+            entity.sprite.height,
+            entity.sprite.offsetX,
+            entity.sprite.offsetY,
+            entity.sprite.width,
+            entity.sprite.height
         );
 
         this.drawEntityFore(entity);
@@ -799,90 +779,120 @@ export default class Renderer {
     }
 
     /**
-     * Function used to draw special effects after
-     * having rendererd the entity
+     * This function is responsible for drawing special effects
+     * on top of the entity (after rendering). It will primarily
+     * be used for the paper-doll effect of drawing weapon and
+     * armour sprites on top of the player characters.
      */
+
     private drawEntityFore(entity: Entity): void {
-        if (entity instanceof Character) {
-            if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
-                let weapon = this.game.sprites.get((entity as Player).getWeapon().key);
+        if (entity.isItem()) return this.drawSparks();
 
-                if (weapon) {
-                    if (!weapon.loaded) weapon.load();
+        if (!(entity instanceof Character)) return;
 
-                    let animation = entity.animation!,
-                        weaponAnimationData = weapon.animationData[animation.name],
-                        frame = animation.currentFrame,
-                        index =
-                            frame.index < weaponAnimationData.length
-                                ? frame.index
-                                : frame.index % weaponAnimationData.length,
-                        weaponX = weapon.width * index,
-                        weaponY = weapon.height * animation.row,
-                        weaponWidth = weapon.width,
-                        weaponHeight = weapon.height;
-
-                    this.entitiesContext.drawImage(
-                        weapon.image,
-                        weaponX,
-                        weaponY,
-                        weaponWidth,
-                        weaponHeight,
-                        weapon.offsetX,
-                        weapon.offsetY,
-                        weaponWidth,
-                        weaponHeight
-                    );
-                }
-            }
-
-            if (entity.hasEffect()) {
-                let sprite = this.game.sprites.get(entity.getActiveEffect());
-
-                if (sprite) {
-                    if (!sprite.loaded) sprite.load();
-
-                    let animation = entity.getEffectAnimation()!,
-                        { index } = animation.currentFrame,
-                        x = sprite.width * index,
-                        y = sprite.height * animation.row;
-
-                    this.entitiesContext.drawImage(
-                        sprite.image,
-                        x,
-                        y,
-                        sprite.width,
-                        sprite.height,
-                        sprite.offsetX,
-                        sprite.offsetY,
-                        sprite.width,
-                        sprite.height
-                    );
-
-                    animation.update(this.game.time);
-                }
-            }
-        }
-
-        if (entity instanceof Item) {
-            let { sparksAnimation } = this.game.entities.sprites,
-                sparksFrame = sparksAnimation.currentFrame,
-                sparksX = this.sparksSprite.width * sparksFrame.index,
-                sparksY = this.sparksSprite.height * sparksAnimation.row;
-
-            this.entitiesContext.drawImage(
-                this.sparksSprite.image,
-                sparksX,
-                sparksY,
-                this.sparksSprite.width,
-                this.sparksSprite.height,
-                0,
-                0,
-                this.sparksSprite.width,
-                this.sparksSprite.height
-            );
-        }
+        if (entity.isPlayer()) this.drawWeapon(entity as Player);
+        if (entity.hasEffect()) this.drawEffect(entity);
     }
+
+    /**
+     * Draws the weapon sprite on top of the player entity. We skip
+     * this function if there is no weapon, the player is dead, or
+     * they are teleporting.
+     * @param player The player we are drawing the weapon for.
+     */
+
+    private drawWeapon(player: Player): void {
+        if (!player.hasWeapon() || player.dead || player.teleporting) return;
+
+        let weapon = this.game.sprites.get(player.getWeapon().key);
+
+        if (!weapon) return;
+
+        if (!weapon.loaded) weapon.load();
+
+        let animation = player.animation!,
+            weaponAnimationData = weapon.animationData[animation.name],
+            frame = animation.currentFrame,
+            index =
+                frame.index < weaponAnimationData.length
+                    ? frame.index
+                    : frame.index % weaponAnimationData.length,
+            weaponX = weapon.width * index,
+            weaponY = weapon.height * animation.row,
+            weaponWidth = weapon.width,
+            weaponHeight = weapon.height;
+
+        this.entitiesContext.drawImage(
+            weapon.image,
+            weaponX,
+            weaponY,
+            weaponWidth,
+            weaponHeight,
+            weapon.offsetX,
+            weapon.offsetY,
+            weaponWidth,
+            weaponHeight
+        );
+    }
+
+    /**
+     * Draws a special effect on top of the character.
+     * @param character The character we are drawing the effect of.
+     */
+
+    private drawEffect(character: Character): void {
+        let sprite = this.game.sprites.get(character.getActiveEffect());
+
+        if (!sprite) return;
+
+        if (!sprite.loaded) sprite.load();
+
+        let animation = character.getEffectAnimation()!,
+            { index } = animation.currentFrame,
+            x = sprite.width * index,
+            y = sprite.height * animation.row;
+
+        this.entitiesContext.drawImage(
+            sprite.image,
+            x,
+            y,
+            sprite.width,
+            sprite.height,
+            sprite.offsetX,
+            sprite.offsetY,
+            sprite.width,
+            sprite.height
+        );
+
+        animation.update(this.game.time);
+    }
+
+    /**
+     * Draws the sprites sparks on top of items
+     * to give them the sparkle effect.
+     */
+
+    private drawSparks(): void {
+        let { sparksAnimation } = this.game.entities.sprites,
+            sparksFrame = sparksAnimation.currentFrame;
+
+        this.entitiesContext.drawImage(
+            this.sparksSprite.image,
+            this.sparksSprite.width * sparksFrame.index,
+            this.sparksSprite.height * sparksAnimation.row,
+            this.sparksSprite.width,
+            this.sparksSprite.height,
+            0,
+            0,
+            this.sparksSprite.width,
+            this.sparksSprite.height
+        );
+    }
+
+    /**
+     * Draws the health bar above the entity character provided.
+     * @param entity The character we are drawing the health bar for.
+     */
 
     private drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
@@ -909,6 +919,11 @@ export default class Renderer {
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         this.textContext.restore();
     }
+
+    /**
+     * Draws an itme name for a player or item entity.
+     * @param entity The entity we're drawing the name for.
+     */
 
     private drawName(entity: Player & Item): void {
         if (entity.hidden || !entity.drawNames() || (!this.drawNames && !this.drawLevels)) return;
@@ -1313,18 +1328,6 @@ export default class Renderer {
         );
     }
 
-    private hasRenderedMouse(): boolean {
-        return (
-            this.game.input.lastMousePosition.x === this.game.input.mouse.x &&
-            this.game.input.lastMousePosition.y === this.game.input.mouse.y
-        );
-    }
-
-    private saveMouse(): void {
-        this.game.input.lastMousePosition.x = this.game.input.mouse.x;
-        this.game.input.lastMousePosition.y = this.game.input.mouse.y;
-    }
-
     /**
      * Changes the brightness at a canvas style level for each
      * canvas available.
@@ -1525,12 +1528,6 @@ export default class Renderer {
     /**
      * Setters
      */
-
-    public setInput(input: InputController): void {
-        this.input = input;
-    }
-
-    /** The context `for` functions are used to cut down on code. **/
 
     /**
      * Iterates through all the available contexts and returns them.
