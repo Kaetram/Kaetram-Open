@@ -3,14 +3,14 @@ import _ from 'lodash';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import Pointer from '../renderer/pointers/pointer';
+import Arrow from '../renderer/pointers/arrow';
 
 import type Entity from '../entity/entity';
 import type Game from '../game';
 import type Camera from '../renderer/camera';
 
 export default class PointerController {
-    private pointers: { [id: string]: Pointer } = {};
+    private pointers: { [id: string]: Arrow } = {};
 
     private scale;
 
@@ -29,7 +29,7 @@ export default class PointerController {
 
         switch (type) {
             case Opcodes.Pointer.Button:
-                pointers[id] = new Pointer(id, $(`#${name}`), type);
+                pointers[id] = new Arrow(id, $(`#${name}`), type);
 
                 break;
 
@@ -40,7 +40,7 @@ export default class PointerController {
 
                 container.append(element);
 
-                pointers[id] = new Pointer(id, element, type);
+                pointers[id] = new Arrow(id, element, type);
 
                 break;
             }
@@ -85,12 +85,12 @@ export default class PointerController {
         this.pointers = {};
     }
 
-    private destroy(pointer: Pointer): void {
+    private destroy(pointer: Arrow): void {
         delete this.pointers[pointer.id];
         pointer.destroy();
     }
 
-    private set(pointer: Pointer, posX: number, posY: number): void {
+    private set(pointer: Arrow, posX: number, posY: number): void {
         this.updateCamera();
 
         let { camera, game, scale } = this;

@@ -9,6 +9,15 @@ import { Modules } from '@kaetram/common/network';
 export default class InfoController {
     private infos: { [info: string]: Splat } = {};
 
+    /**
+     * Creates a new info splat.
+     * @param type Type of hit we are displaying.
+     * @param amount Number amount we are displaying (e.g. 30 damage).
+     * @param x Absolute x position of the splat.
+     * @param y Absolute y position of the splat.
+     * @param isTarget Whether we are getting hit or we are hitting something.
+     */
+
     public create(
         type: Modules.Hits,
         amount: number,
