@@ -67,6 +67,8 @@ enum TileFlip {
     Diagonal
 }
 
+type ContextCallback = (context: CanvasRenderingContext2D) => void;
+
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
@@ -95,16 +97,16 @@ export default class Renderer {
         this.cursor
     ];
 
-    private allContexts: RenderingContext[];
-
-    private contexts: CanvasRenderingContext2D[];
-    private drawingContexts: RenderingContext[]; // For drawing the map.
+    private allContexts: CanvasRenderingContext2D[]; // All contexts available
+    private contexts: CanvasRenderingContext2D[]; // Contexts for drawing mouse, entities, text
+    private drawingContexts: CanvasRenderingContext2D[]; // For drawing the map.
 
     private lightings: RendererLighting[] = [];
 
     private entities!: EntitiesController;
     private input!: InputController;
 
+    private map: Map = this.game.map;
     private camera: Camera = this.game.camera;
 
     public tileSize = this.game.map.tileSize;
@@ -140,8 +142,6 @@ export default class Renderer {
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
 
-    public zoomFactor = 3;
-
     private darkMask: DarkMask = new DarkMask({
         lights: [],
         color: 'rgba(0, 0, 0, 0.84)'
@@ -150,7 +150,6 @@ export default class Renderer {
     private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
-    public map!: Map;
     private shadowSprite!: Sprite;
     private sparksSprite!: Sprite;
     private realFPS!: number;
@@ -182,6 +181,8 @@ export default class Renderer {
 
         // Dark mask is used for the lighting system.
         this.darkMask.compute(this.overlay.width, this.overlay.height);
+
+        this.loadSizes();
     }
 
     /**
@@ -192,15 +193,15 @@ export default class Renderer {
      */
 
     private loadSizes(): void {
-        if (!this.camera) return;
+        this.lightTileSize = this.tileSize * this.camera.zoomFactor;
 
-        this.lightTileSize = this.tileSize * this.zoomFactor;
-
+        // Screen width in pixels is the amount of grid spaces times the tile size.
         this.screenWidth = this.camera.gridWidth * this.tileSize;
         this.screenHeight = this.camera.gridHeight * this.tileSize;
 
-        this.canvasWidth = this.screenWidth * this.zoomFactor;
-        this.canvasHeight = this.screenHeight * this.zoomFactor;
+        // Canvas width is the screen width multiplied by the zoom factor.
+        this.canvasWidth = this.screenWidth * this.camera.zoomFactor;
+        this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
 
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
@@ -209,19 +210,20 @@ export default class Renderer {
         });
     }
 
-    public loadCamera(): void {
-        let { storage } = this.game;
+    /**
+     * Loads statically used sprites that are only necessary
+     * in the renderer. The shadow gets displayed under each
+     * entity, and the sparks are displayed around items.
+     */
 
-        this.loadSizes();
+    public loadStaticSprites(): void {
+        this.shadowSprite = this.game.sprites.get('shadow16')!;
 
-        if (!storage.data.new) return;
+        if (!this.shadowSprite.loaded) this.shadowSprite.load();
 
-        if (this.mEdge || Detect.useCenteredCamera()) {
-            this.camera.decenter();
+        this.sparksSprite = this.game.sprites.get('sparks')!;
 
-            storage.data.settings.centerCamera = false;
-            storage.save();
-        }
+        if (!this.sparksSprite.loaded) this.sparksSprite.load();
     }
 
     /**
@@ -235,24 +237,34 @@ export default class Renderer {
         // Clear cells to be redrawn.
         this.cells = {};
 
-        this.zoomFactor = this.camera.zoomFactor;
-
+        // Always check if we are on mobile on resizing.
         this.mobile = Detect.isMobile();
 
+        // Update camera grid width and height.
         this.camera.update();
 
+        // Recalculate canvas sizes.
         this.loadSizes();
 
+        // Re-calculate visible animated tiles.
+        this.updateAnimatedTiles();
+
+        // Cursor may get stuck on when resizing from desktop to mobile proportions.
         this.clearScreen(this.cursorContext);
 
+        // Dimensions may mess with centration, so we force it.
         this.camera.centreOn(this.game.player);
 
+        // Prevents blank screen flickers when resizing.
         this.forceRendering = true;
     }
 
+    /**
+     * Stops the rendering loop by setting the stopRendering flag to true.
+     * Clears all the contexts and fills them with a black background.
+     */
+
     public stop(): void {
-        this.camera = null!;
-        this.input = null!;
         this.stopRendering = true;
 
         this.forEachContext((context) => {
@@ -274,9 +286,16 @@ export default class Renderer {
         });
     }
 
+    /**
+     * The rendering loop that clears all the contexts, and begins
+     * a new rendering one. Clear, save, draw, and restore are used
+     * when working with Canvas2D.
+     */
+
     public render(): void {
         if (this.stopRendering) return;
 
+        // Clears and saves all the contexts
         this.clear();
         this.save();
 
@@ -294,7 +313,7 @@ export default class Renderer {
 
         this.drawOverlays();
 
-        this.drawTargetCell();
+        this.drawHoveringCell();
 
         this.drawSelectedCell();
 
@@ -310,19 +329,25 @@ export default class Renderer {
     }
 
     /**
-     * Context Drawing
+     * Background and foreground drawing function. Here we iterate
+     * through all the tile visibles (every tile in the camera's view)
+     * and draw them onto the foreground and background canvases depending
+     * on the tileId's property (we compare to see if the tile id is that
+     * of a high tile in the map).
      */
 
     private draw(): void {
-        // Canvas rendering.
+        // Skip rendering frame if it has already been drawn.
         if (this.hasRenderedFrame()) return;
 
         this.clearDrawing();
         this.saveDrawing();
 
+        // Sets the view according to the camera.
         this.updateDrawingView();
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile),
                 context = isHighTile ? this.foreContext : this.backContext;
 
@@ -333,16 +358,12 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            let flips: number[] = [];
+            let flips: number[] = this.getFlipped(tile);
 
-            if (this.isFlipped(tile)) {
-                if (tile.d) flips.push(TileFlip.Diagonal);
-                if (tile.v) flips.push(TileFlip.Vertical);
-                if (tile.h) flips.push(TileFlip.Horizontal);
+            // Extract the tileId from the animated region tile.
+            if (flips.length > 0) tile = tile.tileId;
 
-                tile = tile.tileId;
-            }
-
+            // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
                 this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, flips);
         });
@@ -352,21 +373,48 @@ export default class Renderer {
         this.saveFrame();
     }
 
+    /**
+     * Draws animated tiles. This function is called for each
+     * animated tile that is currently visible and renders them
+     * just a little bit outside the camera view.
+     */
+
     private drawAnimatedTiles(): void {
+        // Skip if we disable tile animation.
         if (!this.animateTiles) return;
 
-        this.entitiesContext.save();
-        this.setCameraView(this.entitiesContext);
+        this.backContext.save();
+        this.setCameraView(this.backContext);
 
         this.forEachAnimatedTile((tile) => {
+            /**
+             * Draw tiles only visible within the camera boundaries
+             * but with an offset of 3 tiles horizontally and 2 tiles
+             * vertically.
+             */
             if (!this.camera.isVisible(tile.x, tile.y, 3, 2)) return;
 
+            // Update the tile's to the current game time.
             tile.animate(this.game.time);
 
-            this.drawTile(this.entitiesContext, tile.id, tile.index);
+            // Draw the tile with the current id and index.
+            this.drawTile(this.backContext, tile.id, tile.index);
         });
 
-        this.entitiesContext.restore();
+        this.backContext.restore();
+    }
+
+    private drawDebugging(): void {
+        if (!this.debugging) return;
+
+        this.drawFPS();
+
+        if (!this.mobile) {
+            this.drawPosition();
+            this.drawCollisions();
+        }
+
+        this.drawPathing();
     }
 
     private drawOverlays(): void {
@@ -380,8 +428,8 @@ export default class Renderer {
                 this.overlayContext.fillRect(
                     0,
                     0,
-                    this.screenWidth * this.zoomFactor,
-                    this.screenHeight * this.zoomFactor
+                    this.screenWidth * this.camera.zoomFactor,
+                    this.screenHeight * this.camera.zoomFactor
                 );
                 this.overlayContext.fill();
             }
@@ -395,6 +443,109 @@ export default class Renderer {
             this.overlayContext.globalCompositeOperation = 'source-over';
             this.darkMask.render(this.overlayContext);
         }
+    }
+
+    /**
+     * Draws the currently highlighted tile cell that the mouse
+     * is hovering over. This is feedback to the player so they
+     * know what cell will be selected.
+     */
+
+    private drawHoveringCell(): void {
+        let { input } = this.game,
+            location = input.getCoords();
+
+        if (this.isSelectedCell(location.x, location.y)) return;
+
+        let isColliding = this.map.isColliding(location.x, location.y);
+
+        this.drawCellHighlight(
+            location.x,
+            location.y,
+            isColliding ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
+        );
+    }
+
+    /**
+     * Highlights a cell at the selected x and y grid
+     * coordinates. This is the green or red spinning
+     * target animation.
+     */
+
+    private drawSelectedCell(): void {
+        if (!this.game.input.selectedCellVisible || this.game.input.keyMovement) return;
+
+        // let posX = this.game.input.selectedX,
+        //     posY = this.game.input.selectedY,
+        let tD = this.game.input.getTargetData(); // target data
+
+        if (tD) {
+            this.entitiesContext.save();
+            this.setCameraView(this.entitiesContext);
+
+            this.entitiesContext.drawImage(
+                tD.sprite.image,
+                tD.x,
+                tD.y,
+                tD.width,
+                tD.height,
+                tD.dx,
+                tD.dy,
+                tD.dw,
+                tD.dh
+            );
+
+            this.entitiesContext.restore();
+        }
+    }
+
+    private drawEntities(): void {
+        if (this.game.player.dead) return;
+
+        this.setCameraView(this.entitiesContext);
+
+        this.forEachVisibleEntity((entity) => {
+            if (!entity) return;
+
+            if (entity.spriteLoaded) this.drawEntity(entity);
+        });
+    }
+
+    /**
+     * Draws the cursor at the coordinates extracted from the input
+     * controller. The mouse coordinates represent the absolute position
+     *  on the screen, not the position relative to the camera.
+     */
+
+    private drawCursor(): void {
+        if (this.tablet || this.mobile || this.hasRenderedMouse()) return;
+
+        let { cursor, mouse } = this.game.input;
+
+        if (!cursor || !mouse) return;
+
+        // Prepare the context for drawing.
+        this.clearScreen(this.cursorContext);
+        this.cursorContext.save();
+
+        // Load the mouse if it doesn't exist.
+        if (!cursor.loaded) cursor.load();
+        else
+            this.cursorContext.drawImage(
+                cursor.image,
+                0,
+                0,
+                this.tileSize,
+                this.tileSize,
+                mouse.x,
+                mouse.y,
+                this.tileSize * this.camera.zoomFactor,
+                this.tileSize * this.camera.zoomFactor
+            );
+
+        this.cursorContext.restore();
+
+        this.saveMouse();
     }
 
     private drawInfos(): void {
@@ -414,31 +565,6 @@ export default class Renderer {
                 26
             );
             this.textContext.restore();
-        });
-    }
-
-    private drawDebugging(): void {
-        if (!this.debugging) return;
-
-        this.drawFPS();
-
-        if (!this.mobile) {
-            this.drawPosition();
-            this.drawCollisions();
-        }
-
-        this.drawPathing();
-    }
-
-    private drawEntities(): void {
-        if (this.game.player.dead) return;
-
-        this.setCameraView(this.entitiesContext);
-
-        this.forEachVisibleEntity((entity) => {
-            if (!entity) return;
-
-            if (entity.spriteLoaded) this.drawEntity(entity);
         });
     }
 
@@ -462,9 +588,9 @@ export default class Renderer {
         if (!sprite || !animation || !entity.isVisible()) return;
 
         let frame = animation.currentFrame,
-            dx = x * this.zoomFactor,
-            dy = y * this.zoomFactor,
-            flipX = dx + this.tileSize * this.zoomFactor,
+            dx = x * this.camera.zoomFactor,
+            dy = y * this.camera.zoomFactor,
+            flipX = dx + this.tileSize * this.camera.zoomFactor,
             flipY = dy + data.height;
 
         this.entitiesContext.save();
@@ -497,7 +623,7 @@ export default class Renderer {
             this.entitiesContext.scale(1, -1);
         } else this.entitiesContext.translate(dx, dy);
 
-        this.entitiesContext.scale(this.zoomFactor, this.zoomFactor);
+        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
         if (customScale) this.entitiesContext.scale(customScale, customScale);
 
@@ -556,7 +682,7 @@ export default class Renderer {
     private drawEntityFore(entity: Entity): void {
         if (entity instanceof Character) {
             if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
-                let weapon = this.entities.getSprite((entity as Player).getWeapon().key);
+                let weapon = this.game.sprites.get((entity as Player).getWeapon().key);
 
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();
@@ -588,7 +714,7 @@ export default class Renderer {
             }
 
             if (entity.hasEffect()) {
-                let sprite = this.entities.getSprite(entity.getActiveEffect());
+                let sprite = this.game.sprites.get(entity.getActiveEffect());
 
                 if (sprite) {
                     if (!sprite.loaded) sprite.load();
@@ -616,7 +742,7 @@ export default class Renderer {
         }
 
         if (entity instanceof Item) {
-            let { sparksAnimation } = this.entities.sprites,
+            let { sparksAnimation } = this.game.entities.sprites,
                 sparksFrame = sparksAnimation.currentFrame,
                 sparksX = this.sparksSprite.width * sparksFrame.index,
                 sparksY = this.sparksSprite.height * sparksAnimation.row;
@@ -639,18 +765,23 @@ export default class Renderer {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
         let barLength = 16,
-            healthX = entity.x * this.zoomFactor - barLength / 2 + 8,
-            healthY = (entity.y - entity.sprite.height / 4) * this.zoomFactor,
+            healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
+            healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
             healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.zoomFactor
+                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor
             ),
-            healthHeight = 2 * this.zoomFactor;
+            healthHeight = 2 * this.camera.zoomFactor;
 
         this.textContext.save();
         this.setCameraView(this.textContext);
         this.textContext.strokeStyle = '#00000';
         this.textContext.lineWidth = 1;
-        this.textContext.strokeRect(healthX, healthY, barLength * this.zoomFactor, healthHeight);
+        this.textContext.strokeRect(
+            healthX,
+            healthY,
+            barLength * this.camera.zoomFactor,
+            healthHeight
+        );
         this.textContext.fillStyle = '#FD0000';
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         this.textContext.restore();
@@ -732,28 +863,6 @@ export default class Renderer {
         lighting.render(this.overlayContext);
     }
 
-    private drawCursor(): void {
-        let { input, cursorContext, tablet, mobile } = this;
-
-        if (tablet || mobile || this.hasRenderedMouse()) return;
-
-        let { cursor, mouse } = input;
-
-        this.clearScreen(cursorContext);
-        cursorContext.save();
-
-        if (cursor) {
-            if (!cursor.loaded) cursor.load();
-
-            if (cursor.loaded)
-                cursorContext.drawImage(cursor.image, 0, 0, 16, 16, mouse.x, mouse.y, 48, 48);
-        }
-
-        cursorContext.restore();
-
-        this.saveMouse();
-    }
-
     private calculateFPS(): void {
         if (!this.debugging) return;
 
@@ -774,9 +883,17 @@ export default class Renderer {
         this.drawText(`FPS: ${this.realFPS}`, 10, 31, false, 'white');
     }
 
-    private drawPosition(): void {
-        let { player } = this.game;
+    /**
+     * Draws debugging inforamtion such as the current grid coordinate,
+     * as well as the index of that coordinate. If the player is hovering
+     * over an entity, it displays that entity's coordinates and indexes
+     * as well as their instance and attack range (if present).
+     */
 
+    private drawPosition(): void {
+        let { player, input } = this.game;
+
+        // Draw our current player's grid coordinates and tile index.
         this.drawText(
             `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
                 player.gridX,
@@ -788,33 +905,44 @@ export default class Renderer {
             'white'
         );
 
-        if (this.input.hovering === Modules.Hovering.Mob) {
-            let { x, y } = this.input.getCoords()!;
-
-            if (!this.input.entity) return;
-
+        // Draw information about the entity we're hovering over.
+        if (input.hovering && input.entity) {
+            // Draw the entity's grid coordinates and tile index.
             this.drawText(
-                `x: ${x} y: ${y} instance: ${this.input.entity.instance}`,
+                `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
                 10,
                 71,
                 false,
                 'white'
             );
-            this.drawText(`att range: ${this.input.entity!.attackRange}`, 10, 91, false, 'white');
+
+            // Draw the entity's attack range.
+            if (input.entity.attackRange)
+                this.drawText(`att range: ${input.entity.attackRange}`, 10, 91, false, 'white');
         }
     }
 
-    private drawCollisions(): void {
-        let { width, height, grid } = this.map;
+    /**
+     * Draws a highlight around every tile cell that is colliding.
+     */
 
-        if (!grid) return;
+    private drawCollisions(): void {
+        /**
+         * Iterate through each visible position within boundaries of the map
+         * and determine if the tile is within the map's collision grid.
+         */
 
         this.camera.forEachVisiblePosition((x, y) => {
-            if (x < 0 || y < 0 || x > width - 1 || y > height - 1) return;
+            if (this.map.isOutOfBounds(x, y)) return;
 
-            if (grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
+            if (this.map.grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
         });
     }
+
+    /**
+     * Draws the currently calculated path that the player will
+     * be taking. Highlights the upcoming tile cells in the path.
+     */
 
     private drawPathing(): void {
         if (!this.game.player.hasPath()) return;
@@ -822,40 +950,6 @@ export default class Renderer {
         _.each(this.game.player.path, (path) =>
             this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
         );
-    }
-
-    private drawSelectedCell(): void {
-        if (
-            !this.input.selectedCellVisible ||
-            this.game.player.moveLeft ||
-            this.game.player.moveRight ||
-            this.game.player.moveUp ||
-            this.game.player.moveDown
-        )
-            return;
-
-        // let posX = this.input.selectedX,
-        //     posY = this.input.selectedY,
-        let tD = this.input.getTargetData(); // target data
-
-        if (tD) {
-            this.entitiesContext.save();
-            this.setCameraView(this.entitiesContext);
-
-            this.entitiesContext.drawImage(
-                tD.sprite.image,
-                tD.x,
-                tD.y,
-                tD.width,
-                tD.height,
-                tD.dx,
-                tD.dy,
-                tD.dw,
-                tD.dh
-            );
-
-            this.entitiesContext.restore();
-        }
     }
 
     /**
@@ -913,10 +1007,10 @@ export default class Renderer {
 
         if (!(cellId in this.cells) || flips.length > 0)
             this.cells[cellId] = {
-                dx: this.getX(cellId + 1, this.map.width) * this.tileSize * this.zoomFactor,
-                dy: Math.floor(cellId / this.map.width) * this.tileSize * this.zoomFactor,
-                width: this.tileSize * this.zoomFactor,
-                height: this.tileSize * this.zoomFactor,
+                dx: this.getX(cellId + 1, this.map.width) * this.tileSize * this.camera.zoomFactor,
+                dy: Math.floor(cellId / this.map.width) * this.tileSize * this.camera.zoomFactor,
+                width: this.tileSize * this.camera.zoomFactor,
+                height: this.tileSize * this.camera.zoomFactor,
                 flips
             };
 
@@ -1023,14 +1117,14 @@ export default class Renderer {
         if (centered) context.textAlign = 'center';
 
         // Decrease font size relative to zoom out.
-        fontSize += this.zoomFactor * 2;
+        fontSize += this.camera.zoomFactor * 2;
 
         context.strokeStyle = strokeColour || '#373737';
         context.lineWidth = strokeSize;
         context.font = `${fontSize}px AdvoCut`;
-        context.strokeText(text, x * this.zoomFactor, y * this.zoomFactor);
+        context.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
         context.fillStyle = colour || 'white';
-        context.fillText(text, x * this.zoomFactor, y * this.zoomFactor);
+        context.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
 
         context.restore();
     }
@@ -1070,12 +1164,12 @@ export default class Renderer {
     }
 
     private drawCellRect(x: number, y: number, colour: string): void {
-        let multiplier = this.tileSize * this.zoomFactor;
+        let multiplier = this.tileSize * this.camera.zoomFactor;
 
         this.entitiesContext.save();
         this.setCameraView(this.entitiesContext);
 
-        this.entitiesContext.lineWidth = 2 * this.zoomFactor;
+        this.entitiesContext.lineWidth = 2 * this.camera.zoomFactor;
 
         this.entitiesContext.translate(x + 2, y + 2);
 
@@ -1087,75 +1181,15 @@ export default class Renderer {
 
     private drawCellHighlight(x: number, y: number, colour: string): void {
         this.drawCellRect(
-            x * this.zoomFactor * this.tileSize,
-            y * this.zoomFactor * this.tileSize,
+            x * this.camera.zoomFactor * this.tileSize,
+            y * this.camera.zoomFactor * this.tileSize,
             colour
         );
-    }
-
-    private drawTargetCell(): void {
-        if (
-            this.mobile ||
-            this.tablet ||
-            !this.input.targetVisible ||
-            !this.input ||
-            !this.camera ||
-            !this.map ||
-            this.input.keyMovement
-        )
-            return;
-
-        let location = this.input.getCoords()!;
-
-        if (!(location.x === this.input.selectedX && location.y === this.input.selectedY)) {
-            let isColliding = this.map.isColliding(location.x, location.y);
-
-            this.drawCellHighlight(
-                location.x,
-                location.y,
-                isColliding ? 'rgba(230, 0, 0, 0.7)' : this.input.targetColour
-            );
-        }
     }
 
     /**
      * Primordial Rendering functions
      */
-
-    private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
-        this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
-        }, offset);
-    }
-
-    private forEachVisibleTile(
-        callback: (data: RegionTile, index: number) => void,
-        offset?: number
-    ): void {
-        if (!this.map || !this.map.mapLoaded) return;
-
-        this.forEachVisibleIndex((index) => {
-            let indexData = this.map.data[index];
-
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else if (this.map.data[index]) callback(this.map.data[index], index);
-        }, offset);
-    }
-
-    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        _.each(this.animatedTiles, callback);
-    }
-
-    private forEachVisibleEntity(callback: (entity: Entity) => void): void {
-        if (!this.entities || !this.camera) return;
-
-        let { grids } = this.entities;
-
-        this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                _.each(grids.renderingGrid[y][x], (entity: Entity) => callback(entity));
-        });
-    }
 
     private clear(): void {
         this.forEachContext((context) =>
@@ -1188,7 +1222,7 @@ export default class Renderer {
     private hasRenderedFrame(): boolean {
         if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
 
-        if (!this.camera || this.stopRendering || !this.input) return true;
+        if (this.stopRendering) return true;
 
         return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
     }
@@ -1234,7 +1268,10 @@ export default class Renderer {
     private setCameraView(context: CanvasRenderingContext2D): void {
         if (!this.camera || this.stopRendering) return;
 
-        context.translate(-this.camera.x * this.zoomFactor, -this.camera.y * this.zoomFactor);
+        context.translate(
+            -this.camera.x * this.camera.zoomFactor,
+            -this.camera.y * this.camera.zoomFactor
+        );
     }
 
     private clearScreen(context: CanvasRenderingContext2D): void {
@@ -1248,72 +1285,38 @@ export default class Renderer {
 
     private hasRenderedMouse(): boolean {
         return (
-            this.input.lastMousePosition.x === this.input.mouse.x &&
-            this.input.lastMousePosition.y === this.input.mouse.y
+            this.game.input.lastMousePosition.x === this.game.input.mouse.x &&
+            this.game.input.lastMousePosition.y === this.game.input.mouse.y
         );
     }
 
     private saveMouse(): void {
-        this.input.lastMousePosition.x = this.input.mouse.x;
-        this.input.lastMousePosition.y = this.input.mouse.y;
+        this.game.input.lastMousePosition.x = this.game.input.mouse.x;
+        this.game.input.lastMousePosition.y = this.game.input.mouse.y;
     }
+
+    /**
+     * Changes the brightness at a canvas style level for each
+     * canvas available.
+     * @param level The level of the brightness.
+     */
 
     public adjustBrightness(level: number): void {
         if (level < 0 || level > 100) return;
 
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
-            console.log(canvas);
+            canvas.style.background = `rgba(0,0,0,${0.25 - level / 200})`;
         });
-
-        $('#text-canvas').css('background', `rgba(0, 0, 0, ${0.5 - level / 200})`);
-    }
-
-    public loadStaticSprites(): void {
-        this.shadowSprite = this.entities.getSprite('shadow16')!;
-
-        if (!this.shadowSprite.loaded) this.shadowSprite.load();
-
-        this.sparksSprite = this.entities.getSprite('sparks')!;
-
-        if (!this.sparksSprite.loaded) this.sparksSprite.load();
-    }
-
-    hasDrawnTile(id: Tile): boolean {
-        return this.drawnTiles.includes(id);
     }
 
     /**
      * Miscellaneous functions
      */
 
-    private forAllContexts(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.allContexts, (context) => callback(context as CanvasRenderingContext2D));
-    }
-
-    private forEachContext(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.contexts, callback);
-    }
-
-    private forEachDrawingContext(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.drawingContexts, (context) => callback(context as CanvasRenderingContext2D));
-    }
-
-    private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        _.each(this.canvases, callback);
-    }
-
-    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        _.each(this.lightings, callback);
-    }
-
     private getX(index: number, width: number): number {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    public isPortableDevice(): boolean {
-        return this.mobile || this.tablet;
     }
 
     /**
@@ -1398,25 +1401,6 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    private getLightData(
-        x: number,
-        y: number,
-        distance: number,
-        diffuse: number,
-        color: string
-    ): Partial<Lamp> {
-        return {
-            position: new Vec2(x, y),
-            distance,
-            diffuse,
-            color,
-            radius: 0,
-            samples: 2,
-            roughness: 0,
-            angle: 0
-        };
-    }
-
     private hasLighting(lighting: RendererLighting): boolean {
         for (let index = 0; index < this.lightings.length; index++) {
             let { light } = this.lightings[index];
@@ -1430,6 +1414,20 @@ export default class Renderer {
         }
 
         return false;
+    }
+
+    /**
+     * Checks if the currently request coordinates are that of a cell
+     * that was already selected (has the animation onto it). We want
+     * to prevent drawing a target cell onto a cell that's being selected.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether the x and y coordinates are the same as the input
+     * selected x and y coordinates.
+     */
+
+    private isSelectedCell(x: number, y: number): boolean {
+        return this.game.input.selectedX === x && this.game.input.selectedY === y;
     }
 
     private inRadius(lighting: RendererLighting): boolean {
@@ -1455,22 +1453,158 @@ export default class Renderer {
     }
 
     /**
+     * Checks if a tile is a flipped tile and extracts
+     * all the flags based on the tile data. Returns an
+     * array containing all the flip flags.
+     * @param tile The region tile we are checking.
+     * @returns An array containing all flip flags in order.
+     */
+
+    public getFlipped(tile: RegionTile): number[] {
+        let flips: number[] = [];
+
+        // Return empty if tile doesn't contain flip flags.
+        if (!this.isFlipped(tile)) return flips;
+
+        if (tile.d) flips.push(TileFlip.Diagonal);
+        if (tile.v) flips.push(TileFlip.Vertical);
+        if (tile.h) flips.push(TileFlip.Horizontal);
+
+        return flips;
+    }
+
+    private getLightData(
+        x: number,
+        y: number,
+        distance: number,
+        diffuse: number,
+        color: string
+    ): Partial<Lamp> {
+        return {
+            position: new Vec2(x, y),
+            distance,
+            diffuse,
+            color,
+            radius: 0,
+            samples: 2,
+            roughness: 0,
+            angle: 0
+        };
+    }
+
+    /**
      * Setters
      */
 
-    public setTileset(tileset: unknown): void {
-        this.tileset = tileset;
-    }
-
-    public setMap(map: Map): void {
-        this.map = map;
-    }
-
-    public setEntities(entities: EntitiesController): void {
-        this.entities = entities;
-    }
-
     public setInput(input: InputController): void {
         this.input = input;
+    }
+
+    /** The context `for` functions are used to cut down on code. **/
+
+    /**
+     * Iterates through all the available contexts and returns them.
+     * @param callback THe context current being iterated.
+     */
+
+    private forAllContexts(callback: ContextCallback): void {
+        _.each(this.allContexts, callback);
+    }
+
+    /**
+     * Iterates through all of the contexts used for drawing mouse, entities, and text.
+     * @param callback The context being iterated.
+     */
+
+    private forEachContext(callback: ContextCallback): void {
+        _.each(this.contexts, callback);
+    }
+
+    /**
+     * Iterates through all the drawing contexts (backContext and foreContext);
+     * @param callback The context being iterated.
+     */
+
+    private forEachDrawingContext(callback: ContextCallback): void {
+        _.each(this.drawingContexts, callback);
+    }
+
+    /**
+     * Iterates through all of the canvases available. Generally used for
+     * updating dimensions.
+     * @param callback Canvas currently being iterated.
+     */
+
+    private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
+        _.each(this.canvases, callback);
+    }
+
+    /**
+     * Iterates through each light currently loaded.
+     * @param callback The light currently being iterated.
+     */
+
+    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
+        _.each(this.lightings, callback);
+    }
+
+    /**
+     * Iterates through each of the animated tiles.
+     * @param callback Returns the tile object for that animated tile.
+     */
+
+    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
+        _.each(this.animatedTiles, callback);
+    }
+
+    /**
+     * Iterates through all the indexes in the current camera view. The offset
+     * is used to look `offset` amount of tiles outside the camera view.
+     * @param callback The current index that is being parsed in the view.
+     * @param offset How much to look outside the boundaries of the map.
+     */
+
+    private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
+        this.camera.forEachVisiblePosition((x, y) => {
+            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
+        }, offset);
+    }
+
+    /**
+     * Iterates through all the indexes and extracts the tile data at that
+     * specified index by iterating through each tile array (if present) or
+     * returning the tile data from the map.
+     * @param callback Returns a region tile object containing rendering information
+     * such as tileId, x, y, and flip flags. The index is the positioning in the map.
+     * @param offset How much to look outside the visible camera proportions.
+     */
+
+    private forEachVisibleTile(
+        callback: (data: RegionTile, index: number) => void,
+        offset?: number
+    ): void {
+        if (!this.map || !this.map.mapLoaded) return;
+
+        this.forEachVisibleIndex((index) => {
+            let indexData = this.map.data[index];
+
+            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
+            else if (this.map.data[index]) callback(this.map.data[index], index);
+        }, offset);
+    }
+
+    /**
+     * Iterates through each visible entity in the map boundaries and that
+     * is present on the rendering grid.
+     * @param callback The entity object currently being iterated.
+     */
+
+    private forEachVisibleEntity(callback: (entity: Entity) => void): void {
+        let { grids } = this.game.entities;
+
+        this.camera.forEachVisiblePosition((x, y) => {
+            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
+                _.each(grids.renderingGrid[y][x], (entity: Entity) => callback(entity));
+        });
     }
 }

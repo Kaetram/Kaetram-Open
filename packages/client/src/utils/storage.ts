@@ -1,5 +1,3 @@
-import type App from '../app';
-
 import { Modules } from '@kaetram/common/network';
 import { CursorTiles } from '../map/map';
 

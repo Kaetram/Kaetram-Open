@@ -16,7 +16,6 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Entity from '../entity/entity';
-import type Sprite from '../entity/sprite';
 import type Character from '../entity/character/character';
 import type Weapon from '../entity/character/player/equipment/weapon';
 import type Equipment from '../entity/character/player/equipment/equipment';
@@ -37,35 +36,14 @@ export interface Movable {
 export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
-    private renderer;
-
-    public grids!: Grids;
-    public sprites!: SpritesController;
+    public grids: Grids = new Grids(this.game.map);
+    public sprites: SpritesController = this.game.sprites;
 
     public entities: EntitiesCollection = {};
     public decrepit: Entity[] = [];
 
     public constructor(private game: Game) {
-        this.renderer = game.renderer;
-    }
-
-    public load(): void {
-        let { game, sprites } = this;
-
-        game.app.sendStatus('Loading sprites');
-
-        if (!sprites) {
-            let sprites = new SpritesController();
-            sprites.load();
-
-            this.sprites = sprites;
-
-            game.input.loadCursors();
-        }
-
-        game.app.sendStatus('Loading grids');
-
-        this.grids ||= new Grids(game.map);
+        this.game.input.loadCursors();
     }
 
     public create(info: EntityData): void {
@@ -106,7 +84,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.getSprite(entity.isItem() ? `item-${info.key}` : info.key);
+        let sprite = this.game.sprites.get(entity.isItem() ? `item-${info.key}` : info.key);
 
         // Don't add entities that don't have a sprite.
         if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
@@ -209,7 +187,7 @@ export default class EntitiesController {
         projectile.setStart(attacker.x, attacker.y);
         projectile.setTarget(target);
 
-        projectile.setSprite(this.getSprite(projectile.name));
+        projectile.setSprite(this.game.sprites.get(projectile.name));
         projectile.setAnimation('travel', projectile.getSpeed());
 
         projectile.angled = true;
@@ -308,8 +286,7 @@ export default class EntitiesController {
         this.entities[entity.instance] = entity;
         this.registerPosition(entity);
 
-        if (!(entity instanceof Item && entity.dropped) && !this.renderer.isPortableDevice())
-            entity.fadeIn(this.game.time);
+        if (!(entity instanceof Item && entity.dropped)) entity.fadeIn(this.game.time);
     }
 
     /**
@@ -390,16 +367,6 @@ export default class EntitiesController {
             if (entity.isPlayer() && entity.instance !== exception.instance)
                 this.removeEntity(entity);
         });
-    }
-
-    /**
-     * Grabs a sprite object based on the name string.
-     * @param name The string of the sprite we're attempting to grab.
-     * @returns A sprite object if found, otherwise undefined.
-     */
-
-    public getSprite(name: string): Sprite {
-        return this.sprites.sprites[name];
     }
 
     /**
