@@ -1,14 +1,9 @@
-import { RegionTile } from './../../../common/types/region.d';
-import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
-import $ from 'jquery';
 import _ from 'lodash';
-
-import { Modules } from '@kaetram/common/network';
 
 import Tile from './tile';
 import Camera from './camera';
 import Item from '../entity/objects/item';
-import * as Detect from '../utils/detect';
+import { isMobile, isTablet, isEdge } from '../utils/detect';
 import Character from '../entity/character/character';
 
 import type EntitiesController from '../controllers/entities';
@@ -19,6 +14,11 @@ import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Splat from './infos/splat';
+
+import { RegionTile } from './../../../common/types/region';
+import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
+
+import { Modules } from '@kaetram/common/network';
 
 interface RendererTile {
     relativeTileId: number;
@@ -70,8 +70,6 @@ enum TileFlip {
 type ContextCallback = (context: CanvasRenderingContext2D) => void;
 
 export default class Renderer {
-    // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
-
     public background = document.querySelector<HTMLCanvasElement>('#background')!;
     private foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
     private overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
@@ -103,9 +101,6 @@ export default class Renderer {
 
     private lightings: RendererLighting[] = [];
 
-    private entities!: EntitiesController;
-    private input!: InputController;
-
     private map: Map = this.game.map;
     private camera: Camera = this.game.camera;
 
@@ -118,25 +113,18 @@ export default class Renderer {
     private fps = 0;
     private frameCount = 0;
     private renderedFrame = [0, 0];
-    // lastTarget = [0, 0];
 
     private animatedTiles: { [index: number]: Tile } = {};
-    private drawnTiles: Tile[] = [];
 
-    public autoCentre = false;
-    // drawTarget = false;
-    // selectedCellVisible = false;
     private stopRendering = false;
     private animateTiles = true;
     public debugging = false;
-    private brightness = 100;
+    public autoCentre = false;
     public drawNames = true;
     public drawLevels = true;
-    // animatedTilesDrawCalls = 0;
 
-    public mobile = Detect.isMobile();
-    private mEdge = Detect.isEdge();
-    private tablet = Detect.isTablet();
+    public mobile = isMobile();
+    private tablet = isTablet();
 
     public forceRendering = (this.mobile || this.tablet) && this.camera.isCentered();
 
@@ -152,9 +140,7 @@ export default class Renderer {
     public canvasWidth!: number;
     private shadowSprite!: Sprite;
     private sparksSprite!: Sprite;
-    private realFPS!: number;
     public transitioning!: boolean;
-    private transitionInterval!: number;
 
     public constructor(public game: Game) {
         // Grab the Canvas2D context from the HTML canvas.
@@ -239,7 +225,7 @@ export default class Renderer {
         this.cells = {};
 
         // Always check if we are on mobile on resizing.
-        this.mobile = Detect.isMobile();
+        this.mobile = isMobile();
 
         // Update camera grid width and height.
         this.camera.update();
@@ -1232,137 +1218,6 @@ export default class Renderer {
         this.drawCellRect(x * this.actualTileSize, y * this.actualTileSize, colour);
     }
 
-    /**
-     * Primordial Rendering functions
-     */
-
-    private clear(): void {
-        this.forEachContext((context) =>
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-        );
-    }
-
-    private clearDrawing(): void {
-        this.forEachDrawingContext((context) =>
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-        );
-    }
-
-    private save(): void {
-        this.forEachContext((context) => context.save());
-    }
-
-    private saveDrawing(): void {
-        this.forEachDrawingContext((context) => context.save());
-    }
-
-    private restore(): void {
-        this.forEachContext((context) => context.restore());
-    }
-
-    private restoreDrawing(): void {
-        this.forEachDrawingContext((context) => context.restore());
-    }
-
-    private hasRenderedFrame(): boolean {
-        if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
-
-        if (this.stopRendering) return true;
-
-        return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
-    }
-
-    private saveFrame(): void {
-        if (this.mobile && this.camera.isCentered()) return;
-
-        this.renderedFrame[0] = this.camera.x;
-        this.renderedFrame[1] = this.camera.y;
-
-        this.forceRendering = false;
-    }
-
-    public transition(duration: number, forward: boolean, callback: () => void): void {
-        let textCanvas = $('#text-canvas'),
-            hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
-        this.transitioning = true;
-
-        this.transitionInterval = window.setInterval(() => {
-            this.brightness += forward ? 6 : -6;
-
-            textCanvas.css('background', `rgba(0,0,0,${1 - this.brightness / 100})`);
-
-            if (hasThreshold()) {
-                clearInterval(this.transitionInterval);
-                this.transitionInterval = null!;
-
-                this.transitioning = false;
-
-                callback();
-            }
-        }, duration);
-    }
-
-    /**
-     * Rendering Functions
-     */
-
-    private updateDrawingView(): void {
-        this.forEachDrawingContext((context) => this.setCameraView(context));
-    }
-
-    private setCameraView(context: CanvasRenderingContext2D): void {
-        if (!this.camera || this.stopRendering) return;
-
-        context.translate(
-            -this.camera.x * this.camera.zoomFactor,
-            -this.camera.y * this.camera.zoomFactor
-        );
-    }
-
-    private clearScreen(context: CanvasRenderingContext2D): void {
-        context.clearRect(
-            0,
-            0,
-            this.entitiesContext.canvas.width,
-            this.entitiesContext.canvas.height
-        );
-    }
-
-    /**
-     * Changes the brightness at a canvas style level for each
-     * canvas available.
-     * @param level The level of the brightness.
-     */
-
-    public adjustBrightness(level: number): void {
-        if (level < 0 || level > 100) return;
-
-        this.forEachCanvas((canvas: HTMLCanvasElement) => {
-            canvas.style.background = `rgba(0,0,0,${0.25 - level / 200})`;
-        });
-    }
-
-    /**
-     * Miscellaneous functions
-     */
-
-    private getX(index: number, width: number): number {
-        if (index === 0) return 0;
-
-        return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    /**
-     * A flipped tile is any tile that contains a flip
-     * flag or transpose flag.
-     * @param tileInfo Tile data received from the server.
-     * @returns Whether or not the tile contains and flip flags.
-     */
-
-    private isFlipped(tileInfo: RegionTile): boolean {
-        return tileInfo.v || tileInfo.h || tileInfo.d;
-    }
-
     public updateDarkMask(color: string): void {
         this.darkMask.color = color;
         this.darkMask.compute(this.overlay.width, this.overlay.height);
@@ -1447,6 +1302,116 @@ export default class Renderer {
         }
 
         return false;
+    }
+
+    /**
+     * Primordial Rendering functions
+     */
+
+    private clear(): void {
+        this.forEachContext((context) =>
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+        );
+    }
+
+    private clearDrawing(): void {
+        this.forEachDrawingContext((context) =>
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+        );
+    }
+
+    private restore(): void {
+        this.forEachContext((context) => context.restore());
+    }
+
+    private restoreDrawing(): void {
+        this.forEachDrawingContext((context) => context.restore());
+    }
+
+    private hasRenderedFrame(): boolean {
+        if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
+
+        if (this.stopRendering) return true;
+
+        return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
+    }
+
+    private save(): void {
+        this.forEachContext((context) => context.save());
+    }
+
+    private saveDrawing(): void {
+        this.forEachDrawingContext((context) => context.save());
+    }
+
+    private saveFrame(): void {
+        if (this.mobile && this.camera.isCentered()) return;
+
+        this.renderedFrame[0] = this.camera.x;
+        this.renderedFrame[1] = this.camera.y;
+
+        this.forceRendering = false;
+    }
+
+    /**
+     * Rendering Functions
+     */
+
+    private updateDrawingView(): void {
+        this.forEachDrawingContext((context) => this.setCameraView(context));
+    }
+
+    private setCameraView(context: CanvasRenderingContext2D): void {
+        if (!this.camera || this.stopRendering) return;
+
+        context.translate(
+            -this.camera.x * this.camera.zoomFactor,
+            -this.camera.y * this.camera.zoomFactor
+        );
+    }
+
+    private clearScreen(context: CanvasRenderingContext2D): void {
+        context.clearRect(
+            0,
+            0,
+            this.entitiesContext.canvas.width,
+            this.entitiesContext.canvas.height
+        );
+    }
+
+    /**
+     * Changes the brightness at a canvas style level for each
+     * canvas available.
+     * @param level The level of the brightness.
+     */
+
+    public adjustBrightness(level: number): void {
+        if (level < 0 || level > 100) return;
+
+        this.forEachCanvas((canvas: HTMLCanvasElement) => {
+            canvas.style.background = `rgba(0,0,0,${0.25 - level / 200})`;
+        });
+    }
+
+    /**
+     * Miscellaneous functions
+     */
+
+    private getX(index: number, width: number): number {
+        if (index === 0) return 0;
+
+        return index % width === 0 ? width - 1 : (index % width) - 1;
+    }
+
+    /**
+     * A flipped tile is any tile that contains a flip
+     * flag or transpose flag.
+     * @param tileInfo Tile data received from the server.
+     * @returns Whether or not the tile contains and flip flags.
+     */
+
+    private isFlipped(tileInfo: RegionTile): boolean {
+        return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 
     /**
