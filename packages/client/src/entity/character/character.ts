@@ -246,6 +246,11 @@ export default class Character extends Entity {
         this.move(x, y, forced);
     }
 
+    private move(x: number, y: number, forced = false): void {
+        if (this.hasPath() && !forced) this.proceed(x, y);
+        else this.followPath(this.requestPathfinding(x, y));
+    }
+
     private proceed(x: number, y: number): void {
         this.newDestination = {
             x,
@@ -311,20 +316,29 @@ export default class Character extends Entity {
         }
     }
 
+    /**
+     * Determines which orientation the entity should be facing
+     * and animates the repsective walking animation.
+     */
+
     private updateMovement(): void {
         let { path, step } = this;
 
         if (!path) return;
 
+        // nextStepX < prevStepX -> walking to the left
         if (path[step][0] < path[step - 1][0])
             this.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
 
+        // nextStepX > prevStepX -> walking to the right
         if (path[step][0] > path[step - 1][0])
             this.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
 
+        // nextStepY < prevStepY -> walking to the top
         if (path[step][1] < path[step - 1][1])
             this.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
 
+        // nextStepY > prevStepY -> walking to the bottom
         if (path[step][1] > path[step - 1][1])
             this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
     }
@@ -345,11 +359,6 @@ export default class Character extends Entity {
         this.startPathingCallback?.(path);
 
         this.nextStep();
-    }
-
-    private move(x: number, y: number, forced = false): void {
-        if (this.hasPath() && !forced) this.proceed(x, y);
-        else this.followPath(this.requestPathfinding(x, y));
     }
 
     public stop(force = false): void {

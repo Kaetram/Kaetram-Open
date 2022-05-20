@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { Modules, Packets } from '@kaetram/common/network';
+import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
 
@@ -36,7 +36,7 @@ export default class ChatController {
      * @param colour Optional parameter for the colour of the message.
      */
 
-    public add(source: string, message: string, colour = ''): void {
+    public add(source: string, message: string, colour = '', notify = false): void {
         let element = this.createElement(source, message);
 
         element.css('color', colour || 'white');
@@ -48,6 +48,11 @@ export default class ChatController {
 
         // Start the timeout for hiding the chatbox.
         this.hideChatBox();
+
+        if (notify) {
+            this.clearTimeout();
+            this.hide();
+        }
     }
 
     /**
@@ -124,10 +129,9 @@ export default class ChatController {
      */
 
     private hideChatBox(): void {
-        this.fadingTimeout = window.setTimeout(
-            () => this.chatBox.fadeOut('slow'),
-            this.fadingDuration
-        );
+        this.fadingTimeout = window.setTimeout(() => {
+            if (!this.inputVisible()) this.chatBox.fadeOut('slow');
+        }, this.fadingDuration);
     }
 
     /**
@@ -156,10 +160,9 @@ export default class ChatController {
      */
 
     public clearTimeout(): void {
-        if (this.fadingTimeout) {
-            clearTimeout(this.fadingTimeout);
+        clearTimeout(this.fadingTimeout);
+        window.clearTimeout(this.fadingTimeout);
 
-            this.fadingTimeout = undefined;
-        }
+        this.fadingTimeout = undefined;
     }
 }
