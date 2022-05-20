@@ -10,7 +10,6 @@ export default class HUDController {
 
     private attackInfo = $('#attack-info');
 
-    // private image = this.attack-info.find('.image div');
     private name = this.attackInfo.find('.name');
     private details = this.attackInfo.find('.details');
     private health = this.attackInfo.find('.health');
@@ -77,6 +76,8 @@ export default class HUDController {
 
     private setHealth(hitPoints: number): void {
         if (!this.hasHealth()) return;
+
+        this.health.show();
 
         let { maxHitPoints } = this.hovering as Character;
 

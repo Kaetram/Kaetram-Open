@@ -6,14 +6,12 @@ import { SerializedStoreInfo } from './../../../common/types/stores.d';
 
 import { Opcodes, Packets } from '@kaetram/common/network';
 
-import Container from './container/container';
-
-import type { ShopSelectData } from '@kaetram/common/types/messages';
-import type MenuController from '../controllers/menu';
-import type Game from '../game';
-
 import Utils from '../utils/util';
 import Slot from './container/slot';
+import Container from './container/container';
+
+import type Game from '../game';
+import type MenuController from '../controllers/menu';
 
 export default class Shop {
     private body = $('#shop');
@@ -89,6 +87,9 @@ export default class Shop {
      */
 
     private select(item: Slot, index: number): void {
+        // Slot is empty, ignore.
+        if (!item.key) return;
+
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Select,
             storeKey: this.key,
@@ -97,6 +98,11 @@ export default class Shop {
         });
     }
 
+    /**
+     * Moves the item back, clears the sell slot
+     * and reloads the shops/inventory.
+     */
+
     private remove(): void {
         this.moveBack(this.selectedItem!.index!);
         this.clearSellSlot();
@@ -104,6 +110,11 @@ export default class Shop {
 
         this.selectedItem = undefined;
     }
+
+    /**
+     * Moves an item from the inventory to the sell slot.
+     * @param item The store item we are moving.
+     */
 
     public move(item: SerializedStoreItem): void {
         // Refresh everything.
@@ -132,6 +143,11 @@ export default class Shop {
         this.selectedItem = item;
     }
 
+    /**
+     * Puts the item back from the sell slot.
+     * @param index The index of the item in the inventory.
+     */
+
     public moveBack(index: number): void {
         if (!index) return;
 
@@ -143,6 +159,11 @@ export default class Shop {
 
         inventorySlot.find(`#inventory-item-count${index}`).text(this.sellSlotText.text());
     }
+
+    /**
+     * Clears the sell slot and the return slot that shows
+     * how many coins the player is getting back.
+     */
 
     public clearSellSlot(): void {
         this.sellSlot.css('background-image', '');
@@ -163,6 +184,15 @@ export default class Shop {
         this.getShopList().empty();
 
         this.load();
+    }
+
+    public open(store: SerializedStoreInfo): void {
+        this.key = store.key;
+        this.currency = store.currency;
+
+        this.body.fadeIn('slow');
+
+        this.update(store.items);
     }
 
     public update(items: SerializedStoreItem[]): void {
@@ -238,15 +268,6 @@ export default class Shop {
     private reset(): void {
         this.getShopList().empty();
         this.getInventoryList().empty();
-    }
-
-    public open(store: SerializedStoreInfo): void {
-        this.key = store.key;
-        this.currency = store.currency;
-
-        this.body.fadeIn('slow');
-
-        this.update(store.items);
     }
 
     public hide(): void {

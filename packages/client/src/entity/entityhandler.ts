@@ -25,7 +25,7 @@ export default class EntityHandler {
         entity.onBeforeStep(() => entities.unregisterPosition(entity));
 
         entity.onStep(() => {
-            entities.registerDuality(entity);
+            entities.registerPosition(entity);
 
             entity.forEachAttacker((attacker) => {
                 /**
@@ -60,13 +60,6 @@ export default class EntityHandler {
                 entity.getDistance(entity.target) <= entity.attackRange
             )
                 entity.stop(false);
-        });
-
-        entity.onStopPathing(() => {
-            entities.grids.addToRenderingGrid(entity);
-
-            entities.unregisterPosition(entity);
-            entities.registerPosition(entity);
         });
     }
 
