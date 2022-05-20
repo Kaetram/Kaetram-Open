@@ -1,5 +1,5 @@
 export default class Slot {
-    public key = 'null';
+    public key = '';
     public count = -1;
     public name = '';
 
@@ -12,7 +12,7 @@ export default class Slot {
     public constructor(public index: number) {}
 
     public load(
-        key = 'null',
+        key = '',
         count: number,
         ability = -1,
         abilityLevel = -1,
@@ -33,7 +33,7 @@ export default class Slot {
     }
 
     public empty(): void {
-        this.key = 'null';
+        this.key = '';
         this.count = -1;
         this.name = '';
         this.ability = -1;

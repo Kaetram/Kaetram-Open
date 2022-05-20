@@ -7,66 +7,29 @@ import { isSafari } from '../utils/detect';
 
 import type Game from '../game';
 
-type Music =
-    | 'beach'
-    | 'beach2'
-    | 'boss'
-    | 'cave'
-    | 'codingroom'
-    | 'desert'
-    | 'forest'
-    | 'lavaland'
-    | 'meadowofthepast'
-    | 'smalltown'
-    | 'spookyship'
-    | 'village';
-
-type Sounds =
-    | 'achievement'
-    | 'chat'
-    | 'chest'
-    | 'death'
-    | 'firefox'
-    | 'heal'
-    | 'hit1'
-    | 'hit2'
-    | 'hurt'
-    | 'kill1'
-    | 'kill2'
-    | 'loot'
-    | 'noloot'
-    | 'npc'
-    | 'npc-end'
-    | 'npctalk'
-    | 'revive'
-    | 'teleport';
-
-export type AudioName = Music | Sounds;
-
 interface AudioElement extends HTMLAudioElement {
-    name: AudioName;
+    name: string;
     fadingIn: number | null;
     fadingOut: number | null;
 
     cloneNode(deep?: boolean): AudioElement;
 }
 
-type Audibles = { [name in AudioName]?: AudioElement[] | null };
+type Audibles = { [key: string]: AudioElement[] | null };
 
 export default class AudioController {
     private audibles: Audibles = {};
     private readonly format = 'mp3';
 
     public song!: AudioElement | null;
+    public newSong = '';
 
-    private music: { [name in Music]?: boolean } = {};
-    private sounds: { [name in Sounds]?: boolean } = {};
-
-    public newSong!: AudioName;
+    private music: { [key: string]: boolean } = {};
+    private sounds: { [key: string]: boolean } = {};
 
     public constructor(private game: Game) {}
 
-    public parse(path: 'music' | 'sounds', name: AudioName, channels: number): void {
+    public parse(path: 'music' | 'sounds', name: string, channels: number): void {
         let { format, audibles, music, sounds } = this,
             fullPath = `/audio/${path}/${name}.${format}`,
             sound = document.createElement('audio') as AudioElement,
@@ -95,11 +58,11 @@ export default class AudioController {
 
         _.times(channels - 1, () => audibles[name]?.push(sound.cloneNode(true)));
 
-        if (name in music) music[name as Music] = true;
-        else if (name in sounds) sounds[name as Sounds] = true;
+        if (name in music) music[name] = true;
+        else if (name in sounds) sounds[name] = true;
     }
 
-    public play(type: Modules.AudioTypes, name: AudioName): void {
+    public play(type: Modules.AudioTypes, name: string): void {
         let { game, sounds } = this;
 
         if (!this.isEnabled() || game.player.dead) return;
@@ -126,7 +89,7 @@ export default class AudioController {
             }
 
             case Modules.AudioTypes.SFX: {
-                if (!sounds[name as Sounds]) this.parse('sounds', name, 4);
+                if (!sounds[name]) this.parse('sounds', name, 4);
 
                 let sound = this.get(name);
 
@@ -154,7 +117,7 @@ export default class AudioController {
             if (game.renderer.mobile) this.reset(this.song);
             else this.fadeSongOut();
 
-            if (song.name in music && !music[song.name as Music]) {
+            if (song.name in music && !music[song.name]) {
                 this.parse('music', song.name, 1);
 
                 let [music] = audibles[song.name]!;
@@ -242,7 +205,11 @@ export default class AudioController {
         });
     }
 
-    private get(name: AudioName): AudioElement | undefined {
+    private isEnabled(): boolean | undefined {
+        return this.game.storage.data.settings.soundEnabled;
+    }
+
+    private get(name: string): AudioElement | undefined {
         let { audibles } = this;
 
         if (!audibles[name]) return;
@@ -255,7 +222,7 @@ export default class AudioController {
         return audible;
     }
 
-    private getMusic(name: AudioName): { name: AudioName; sound: AudioElement | undefined } {
+    private getMusic(name: string): { name: string; sound: AudioElement | undefined } {
         return {
             name,
             sound: this.get(name)
@@ -272,9 +239,5 @@ export default class AudioController {
         let { storage } = this.game;
 
         return storage ? storage.data.settings.music / 100 : null;
-    }
-
-    private isEnabled(): boolean | undefined {
-        return this.game.storage.data.settings.soundEnabled;
     }
 }
