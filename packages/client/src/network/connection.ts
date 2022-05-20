@@ -555,7 +555,7 @@ export default class Connection {
                     break;
 
                 case Opcodes.Notification.Text:
-                    this.input.chatHandler.add('WORLD', info.message, info.colour);
+                    this.input.chatHandler.add('WORLD', info.message, info.colour, true);
 
                     break;
 
@@ -838,9 +838,6 @@ export default class Connection {
 
         this.messages.onStore((opcode, info) => {
             let { shop } = this.menu;
-
-            console.log(opcode);
-            console.log(info);
 
             switch (opcode) {
                 case Opcodes.Store.Open:

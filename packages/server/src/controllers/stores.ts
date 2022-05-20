@@ -224,6 +224,10 @@ export default class Stores {
         let store = this.stores[storeKey],
             item = player.inventory.getItem(player.inventory.get(index));
 
+        // No item key provided or is empty.
+        if (!item.key || !itemKey) return;
+
+        // Mismatch in item keys.
         if (item.key !== itemKey)
             return log.warning(`${player.username} ${StoreEn.SELL_INVALID_ITEM}`);
 

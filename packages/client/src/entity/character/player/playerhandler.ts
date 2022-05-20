@@ -86,7 +86,6 @@ export default class PlayerHandler {
         player.onStopPathing((x, y) => {
             if (!input) return;
 
-            entities.unregisterPosition(player);
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;
@@ -128,7 +127,7 @@ export default class PlayerHandler {
         player.onBeforeStep(() => entities.unregisterPosition(player));
 
         player.onStep(() => {
-            if (player.hasNextStep()) entities.registerDuality(player);
+            if (player.hasNextStep()) entities.registerPosition(player);
 
             if (!camera.isCentered() || camera.lockX || camera.lockY) this.checkBounds();
 

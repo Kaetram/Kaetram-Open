@@ -332,15 +332,6 @@ export default class EntitiesController {
     }
 
     /**
-     * Registers an entity on another rendering grid simultaneously.
-     * @param entity The entity we are registering.
-     */
-
-    public registerDuality(entity: Character): void {
-        this.grids.addToRenderingGrid(entity);
-    }
-
-    /**
      * Removes an entity from the renderin grid.
      * @param entity The entity we are removing.
      */
