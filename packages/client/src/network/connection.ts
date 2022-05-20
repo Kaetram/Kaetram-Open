@@ -37,6 +37,7 @@ import { AnimationPacket } from '@kaetram/common/types/messages/outgoing';
 export default class Connection {
     private app;
     private audio;
+    private camera = this.game.camera;
     private messages;
     private storage;
     private socket;
@@ -281,10 +282,6 @@ export default class Connection {
 
                 this.entities.registerPosition(entity);
                 entity.frozen = false;
-
-                /*this.renderer.transition(15, true, () => {
-
-                    });*/
             };
 
             if (info.withAnimation) {
@@ -694,7 +691,7 @@ export default class Connection {
                             this.bubble.setTo(data.id!, entity.x, entity.y);
 
                             if (this.renderer.mobile && this.renderer.autoCentre)
-                                this.renderer.camera.centreOn(this.game.player);
+                                this.camera.centreOn(this.game.player);
                         }
                     else {
                         this.bubble.create(data.id!, message!, this.time);
