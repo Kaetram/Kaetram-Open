@@ -12,7 +12,7 @@ import Projectile from '../entity/objects/projectile';
 
 import { EntityData } from '@kaetram/common/types/entity';
 import { PlayerData } from '@kaetram/common/types/player';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Entity from '../entity/entity';
