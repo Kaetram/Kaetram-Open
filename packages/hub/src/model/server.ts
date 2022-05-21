@@ -38,7 +38,7 @@ export default class Server {
 
     public serialize(): SerializedServer {
         return {
-            host: this.host,
+            host: this.remoteServerHost,
             port: this.port,
             maxPlayers: this.maxPlayers
         };
