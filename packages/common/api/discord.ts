@@ -8,8 +8,8 @@ export default class Discord {
 
     private messageCallback?: (source: string, text: string, colour: string) => void;
 
-    public constructor() {
-        if (!config.discordEnabled) return;
+    public constructor(skip = false) {
+        if (!config.discordEnabled || skip) return;
 
         this.client = new Client();
 
