@@ -21,7 +21,6 @@ import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
-import type Entity from './entity/entity';
 import Trees from './globals/trees';
 
 export interface PacketData {
@@ -34,27 +33,19 @@ export interface PacketData {
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map!: Map;
-    public api!: API;
-    public stores!: Stores;
-    public entities!: Entities;
-    public network!: Network;
-    public discord!: Discord;
-    public trees!: Trees;
+    public map: Map = new Map(this);
+    public api: API = new API(this);
+    public stores: Stores = new Stores(this);
+    public entities: Entities = new Entities(this);
+    public network: Network = new Network(this);
+    public trees: Trees = new Trees(this);
+    public discord: Discord = new Discord(config.hubEnabled);
 
     private maxPlayers = config.maxPlayers;
 
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
-        this.map = new Map(this);
-        this.api = new API(this);
-        this.trees = new Trees(this);
-        this.stores = new Stores(this);
-        this.discord = new Discord();
-        this.entities = new Entities(this);
-        this.network = new Network(this);
-
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));
