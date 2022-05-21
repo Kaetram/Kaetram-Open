@@ -1,12 +1,39 @@
 import { HitData } from '../info';
 import { EntityData } from '../entity';
+import { PlayerData } from '../player';
 import { SerializedStoreItem } from '../stores';
 
 import type { Modules, Opcodes } from '../../network';
+import { EquipmentData, SerializedEquipment } from '../equipment';
 
 /**
  * Packet interfaces of data being sent from the server to the client.
  */
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type HandshakeCallback = () => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type WelcomeCallback = (data: PlayerData) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface EquipmentPacket {
+    data?: SerializedEquipment | EquipmentData;
+    type?: Modules.Equipment; // Specified when equipping a specific item
+}
+
+export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type EntityListCallback = (entities: string[]) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type SyncCallback = (data: PlayerData) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 

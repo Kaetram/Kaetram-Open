@@ -18,7 +18,7 @@ import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
 import Camera from './renderer/camera';
-import Overlay from './renderer/overlay';
+import Overlays from './renderer/overlays';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
@@ -35,7 +35,7 @@ export default class Game {
     public player: Player = new Player('');
 
     public zoning: Zoning = new Zoning();
-    public overlays: Overlay = new Overlay();
+    public overlays: Overlays = new Overlays();
     public pathfinder: Pathfinder = new Pathfinder();
 
     public info: InfoController = new InfoController();
@@ -57,7 +57,6 @@ export default class Game {
     public connection: Connection = new Connection(this);
 
     public started = false;
-    public ready = false;
 
     public time = Date.now();
     public lastTime = Date.now();
@@ -97,8 +96,6 @@ export default class Game {
      */
 
     private tick(): void {
-        if (!this.ready) return;
-
         this.time = Date.now();
 
         this.renderer.render();

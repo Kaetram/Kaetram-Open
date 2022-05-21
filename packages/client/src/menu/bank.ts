@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import Container from './container/container';
 
