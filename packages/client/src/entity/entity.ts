@@ -71,8 +71,8 @@ export default abstract class Entity {
     public attackRange!: number;
     public mana!: number | number[];
     public maxMana!: number;
-    public experience!: number;
-    public level!: number;
+    public level = 0;
+    public experience = 0;
     public movementSpeed!: number;
     public frozen!: boolean;
     public teleporting!: boolean;

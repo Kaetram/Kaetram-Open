@@ -6,5 +6,12 @@ export interface PlayerData extends EntityData {
     pvp: boolean;
     orientation: number;
 
+    experience?: number;
+    nextExperience?: number;
+    prevExperience?: number;
+
+    mana?: number;
+    maxMana?: number;
+
     equipments: EquipmentData[];
 }

@@ -70,7 +70,7 @@ export default class Network {
 
         this.createPacketQueue(player);
 
-        this.send(player, new Handshake(player.instance));
+        this.send(player, new Handshake());
     }
 
     /**
