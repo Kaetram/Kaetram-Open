@@ -3,7 +3,6 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import Animation from '../entity/animation';
 import log from '../lib/log';
 import Chat from './chat';
-import Overlay from './hud';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';

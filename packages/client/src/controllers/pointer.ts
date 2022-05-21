@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 
 import Arrow from '../renderer/pointers/arrow';
 
@@ -12,15 +12,11 @@ import type Camera from '../renderer/camera';
 export default class PointerController {
     private pointers: { [id: string]: Arrow } = {};
 
-    private scale;
-
     private container = $('#bubbles');
 
     private camera?: Camera | null;
 
-    public constructor(private game: Game) {
-        this.scale = this.getScale();
-    }
+    public constructor(private game: Game) {}
 
     public create(id: string, type: Opcodes.Pointer, name?: string): void {
         let { pointers, container } = this;
@@ -209,7 +205,7 @@ export default class PointerController {
         });
     }
 
-    private get(id: string): Pointer | null {
+    private get(id: string): Arrow | null {
         let { pointers } = this;
 
         if (id in pointers) return pointers[id];
@@ -221,7 +217,7 @@ export default class PointerController {
         this.camera = this.game.camera;
     }
 
-    private getScale(): number {
-        return 3;
+    private getZoom(): number {
+        return this.game.camera.zoomFactor;
     }
 }
