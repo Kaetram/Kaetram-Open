@@ -3,11 +3,9 @@ import _ from 'lodash';
 import Tile from './tile';
 import Camera from './camera';
 import Item from '../entity/objects/item';
-import { isMobile, isTablet, isEdge } from '../utils/detect';
+import { isMobile, isTablet } from '../utils/detect';
 import Character from '../entity/character/character';
 
-import type EntitiesController from '../controllers/entities';
-import type InputController from '../controllers/input';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
