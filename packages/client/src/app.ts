@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'lodash';
 
 import install from './lib/pwa';
 
