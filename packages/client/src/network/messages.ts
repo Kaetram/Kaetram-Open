@@ -1,10 +1,15 @@
 import _ from 'lodash';
 
-import { Modules, Packets } from '@kaetram/common/network';
+import { Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
 
 import type {
+    HandshakeCallback,
+    WelcomeCallback,
+    EquipmentCallback,
+    EntityListCallback,
+    SyncCallback,
     SpawnCallback,
     MovementCallback,
     CombatCallback,
@@ -24,7 +29,6 @@ import type {
     EnchantData,
     ExperienceCombatData,
     ExperienceProfessionData,
-    HandshakeData,
     HealData,
     NotificationData,
     NPCBankData,
@@ -47,24 +51,11 @@ import type {
     QuestBatchData,
     QuestFinishData,
     QuestProgressData,
-    TeleportData,
-    WelcomeData
+    TeleportData
 } from '@kaetram/common/types/messages';
 import type App from '../app';
 import type Game from '../game';
-import type { AudioName } from '../controllers/audio';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import { EntityData } from '@kaetram/common/types/entity';
 
-type HandshakeCallback = (data: HandshakeData) => void;
-type WelcomeCallback = (playerData: WelcomeData) => void;
-interface EquipmentCallback {
-    (opcode: Opcodes.Equipment.Batch, info: SerializedEquipment): void;
-    (opcode: Opcodes.Equipment.Equip, info: EquipmentData): void;
-    (opcode: Opcodes.Equipment.Unequip, info: Modules.Equipment): void;
-}
-type EntityListCallback = (ids: string[]) => void;
-type SyncCallback = (data: EntityData) => void;
 type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
 interface ProjectileCallback {

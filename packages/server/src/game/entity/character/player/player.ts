@@ -138,8 +138,8 @@ export default class Player extends Character {
 
     private lastNotify!: number;
 
-    private nextExperience: number | undefined;
-    private prevExperience!: number;
+    private nextExperience = -1;
+    private prevExperience = -1;
 
     public profileDialogOpen?: boolean;
     public inventoryOpen?: boolean;
@@ -262,34 +262,12 @@ export default class Player extends Character {
      */
 
     public intro(): void {
-        if (this.ban > Date.now()) {
-            this.connection.sendUTF8('ban');
-            this.connection.close(`Player: ${this.username} is banned.`);
-        }
+        if (this.ban > Date.now()) return this.connection.reject('ban');
 
         if (this.hitPoints.getHitPoints() < 0)
             this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
-
-        let info = {
-            instance: this.instance,
-            username: Utils.formatName(this.username),
-            x: this.x,
-            y: this.y,
-            rights: this.rights,
-            hitPoints: this.hitPoints.serialize(),
-            mana: this.mana.serialize(),
-            experience: this.experience,
-            nextExperience: this.nextExperience,
-            prevExperience: this.prevExperience,
-            level: this.level,
-            lastLogin: this.lastLogin,
-            pvpKills: this.pvpKills,
-            pvpDeaths: this.pvpDeaths,
-            orientation: this.orientation,
-            movementSpeed: this.getMovementSpeed()
-        };
 
         /**
          * Send player data to client here
@@ -297,7 +275,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(info));
+        this.send(new Welcome(this.serialize(false, true)));
     }
 
     public destroy(): void {
@@ -971,7 +949,7 @@ export default class Player extends Character {
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment?: boolean): PlayerData {
+    public override serialize(withEquipment = false, isWelcome = false): PlayerData {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
@@ -986,6 +964,11 @@ export default class Player extends Character {
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+
+        if (isWelcome) {
+            data.prevExperience = this.prevExperience;
+            data.nextExperience = this.nextExperience;
+        }
 
         return data;
     }

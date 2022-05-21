@@ -109,6 +109,8 @@ export default class Renderer {
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
+    public canvasHeight = 0;
+    public canvasWidth = 0;
     private time = Date.now();
     private fps = 0;
     private frameCount = 0;
@@ -122,6 +124,7 @@ export default class Renderer {
     public autoCentre = false;
     public drawNames = true;
     public drawLevels = true;
+    public transitioning = false;
 
     public mobile = isMobile();
     private tablet = isTablet();
@@ -136,11 +139,8 @@ export default class Renderer {
         color: 'rgba(0, 0, 0, 0.84)'
     });
 
-    public canvasHeight!: number;
-    public canvasWidth!: number;
     private shadowSprite!: Sprite;
     private sparksSprite!: Sprite;
-    public transitioning!: boolean;
 
     public constructor(public game: Game) {
         // Grab the Canvas2D context from the HTML canvas.

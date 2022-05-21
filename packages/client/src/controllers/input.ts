@@ -1,4 +1,4 @@
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
