@@ -56,15 +56,12 @@ export default class Game {
 
     public connection: Connection = new Connection(this);
 
-    public started = false;
-    public ready = false;
-
     public time = Date.now();
     public lastTime = Date.now();
 
+    public started = false;
+    public ready = false;
     public pvp = false;
-
-    public world!: APIData;
 
     public constructor(public app: App) {
         this.app.sendStatus('Loading game');
