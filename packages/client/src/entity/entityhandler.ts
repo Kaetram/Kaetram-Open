@@ -1,4 +1,4 @@
-import { Opcodes, Packets } from '@kaetram/common/network';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import Character from './character/character';
 

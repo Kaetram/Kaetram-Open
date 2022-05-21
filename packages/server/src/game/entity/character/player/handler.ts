@@ -181,7 +181,9 @@ export default class Handler {
 
     private handleEquipment(): void {
         this.player.send(
-            new EquipmentPacket(Opcodes.Equipment.Batch, this.player.equipment.serialize())
+            new EquipmentPacket(Opcodes.Equipment.Batch, {
+                data: this.player.equipment.serialize()
+            })
         );
     }
 
@@ -191,7 +193,11 @@ export default class Handler {
      */
 
     private handleEquip(equipment: Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Equip, equipment));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Equip, {
+                data: equipment
+            })
+        );
     }
 
     /**
@@ -200,7 +206,7 @@ export default class Handler {
      */
 
     private handleUnequip(type: Modules.Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, type));
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
     }
 
     /**

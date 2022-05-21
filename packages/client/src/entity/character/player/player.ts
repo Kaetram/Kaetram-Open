@@ -1,4 +1,3 @@
-import { Equipment } from './../../../../../common/network/opcodes';
 import $ from 'jquery';
 
 import { Modules } from '@kaetram/common/network';
@@ -11,8 +10,9 @@ import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
 import type Game from '../../../game';
-import type { WelcomeData } from '@kaetram/common/types/messages';
+
 import { EquipmentData } from '@kaetram/common/types/equipment';
+import { PlayerData } from '@kaetram/common/types/player';
 
 export default class Player extends Character {
     public rights = 0;
@@ -66,16 +66,22 @@ export default class Player extends Character {
      * @param data Player data containing essentials.
      */
 
-    public load(data: WelcomeData): void {
+    public load(data: PlayerData): void {
         this.instance = data.instance;
-        this.name = data.username;
-        this.level = data.level;
+        this.name = data.name;
+        this.level = data.level!;
         this.orientation = data.orientation;
-        this.movementSpeed = data.movementSpeed;
+        this.movementSpeed = data.movementSpeed!;
 
         this.setGridPosition(data.x, data.y);
-        this.setPointsData(data.hitPoints, data.mana);
-        this.setExperience(data.experience, data.nextExperience!, data.prevExperience);
+
+        this.setHitPoints(data.hitPoints!);
+        this.setMaxHitPoints(data.maxHitPoints!);
+
+        this.setMana(data.mana!);
+        this.setMaxMana(data.maxMana!);
+
+        this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -167,14 +173,6 @@ export default class Player extends Character {
         this.prevExperience = prevExperience || 0;
 
         this.experienceCallback?.();
-    }
-
-    private setPointsData([hitPoints, maxHitPoints]: number[], [mana, maxMana]: number[]): void {
-        this.setMaxHitPoints(maxHitPoints);
-        this.setMaxMana(maxMana);
-
-        this.setHitPoints(hitPoints);
-        this.setMana(mana);
     }
 
     public onExperience(callback: () => void): void {

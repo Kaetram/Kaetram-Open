@@ -4,7 +4,7 @@ import $ from 'jquery';
 import { SerializedStoreItem } from '@kaetram/common/types/stores';
 import { SerializedStoreInfo } from './../../../common/types/stores.d';
 
-import { Opcodes, Packets } from '@kaetram/common/network';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import Utils from '../utils/util';
 import Slot from './container/slot';

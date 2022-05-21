@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import Page from '../page';
 
