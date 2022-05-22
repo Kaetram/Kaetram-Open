@@ -391,7 +391,7 @@ export default class Player extends Character {
     public teleport(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y,
                 withAnimation
