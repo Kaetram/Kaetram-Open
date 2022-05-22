@@ -12,6 +12,7 @@ import type {
     SyncCallback,
     SpawnCallback,
     MovementCallback,
+    TeleportCallback,
     CombatCallback,
     AnimationCallback,
     ChatCallback,
@@ -56,7 +57,6 @@ import type {
 import type App from '../app';
 import type Game from '../game';
 
-type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
 interface ProjectileCallback {
     (opcode: Opcodes.Projectile, data: ProjectileData): void;

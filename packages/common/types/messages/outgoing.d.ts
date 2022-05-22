@@ -55,6 +55,17 @@ export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) 
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface TeleportPacket {
+    instance: string; // Main entity involved in the teleportation.
+    x: number; // x coordinate of the teleportation.
+    y: number; // y coordinate of the teleportation.
+    withAnimation?: boolean;
+}
+
+export type TeleportCallback = (info: TeleportPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 export interface CombatPacket {
     instance: string; // The entity the combat packet revolves around.
     target: string; // Instance of the targeted entity.
