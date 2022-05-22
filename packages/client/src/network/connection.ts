@@ -16,12 +16,17 @@ import type EntitiesController from '../controllers/entities';
 import type BubbleController from '../controllers/bubble';
 import type MenuController from '../controllers/menu';
 import type Messages from './messages';
-import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
 import type Character from '../entity/character/character';
+import type Player from '../entity/character/player/player';
 
 import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
-import { EquipmentPacket, MovementPacket } from '@kaetram/common/types/messages/outgoing';
+import {
+    EquipmentPacket,
+    MovementPacket,
+    TeleportPacket
+} from '@kaetram/common/types/messages/outgoing';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
 export default class Connection {
@@ -238,6 +243,29 @@ export default class Connection {
                 entity.performAction(info.orientation!, Modules.Actions.Orientate);
                 break;
         }
+    }
+
+    /**
+     * Handler for the teleportation packet. Used when a player entity
+     * teleports to a new location.
+     * @param info Instance of the entity, x and y coordinates, and whether to animate.
+     */
+
+    private handleTeleport(info: TeleportPacket): void {
+        let player = this.entities.get<Player>(info.instance);
+
+        if (!player) return;
+
+        // If the player is the same as our main player.
+        let currentPlayer = player.instance === this.game.player.instance;
+
+        // Stop and freeze the player until teleprtation is complete.
+        player.stop(true);
+        player.frozen = true;
+
+        // Clears all bubbles when our main player teleports.
+        if (currentPlayer) this.bubble.clean();
+        else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
     }
 
     // private load(): void {
