@@ -4,7 +4,6 @@ import _ from 'lodash';
 import Page from '../page';
 
 import type { ProfessionsInfo } from '@kaetram/common/types/info';
-import type { ProfessionUpdateData } from '@kaetram/common/types/messages';
 
 export default class Professions extends Page {
     private professions = $('#professions-list');
@@ -35,7 +34,7 @@ export default class Professions extends Page {
         });
     }
 
-    public sync(info: ProfessionUpdateData): void {
+    public sync(info: any): void {
         if (!info) return;
 
         $(`#profession-name${info.id}`).find('p').text(`Level ${info.level} | ${info.percentage}%`);
