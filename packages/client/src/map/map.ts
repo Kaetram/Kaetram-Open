@@ -205,12 +205,12 @@ export default class Map {
 
         if (data.regionData.length > 0) {
             this.data = data.regionData;
+            this.grid = data.grid;
+            this.objects = data.objects;
+            this.cursorTiles = data.cursorTiles;
+
             this.preloadedData = true;
         }
-
-        this.grid = data.grid;
-        this.objects = data.objects;
-        this.cursorTiles = data.cursorTiles;
     }
 
     /**
