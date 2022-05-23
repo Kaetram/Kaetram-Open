@@ -12,6 +12,7 @@ import Container from './container/container';
 
 import type Game from '../game';
 import type MenuController from '../controllers/menu';
+import { StorePacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Shop {
     private body = $('#shop');
@@ -186,13 +187,13 @@ export default class Shop {
         this.load();
     }
 
-    public open(store: SerializedStoreInfo): void {
+    public open(store: StorePacket): void {
         this.key = store.key;
-        this.currency = store.currency;
+        this.currency = store.currency!;
 
         this.body.fadeIn('slow');
 
-        this.update(store.items);
+        this.update(store.items!);
     }
 
     public update(items: SerializedStoreItem[]): void {

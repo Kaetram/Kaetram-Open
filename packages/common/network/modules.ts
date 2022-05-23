@@ -128,6 +128,12 @@ export enum AudioTypes {
     SFX
 }
 
+export enum HealTypes {
+    Health,
+    Mana,
+    Stamina
+}
+
 export enum Trade {
     Request,
     Started,

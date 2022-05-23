@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import log from '../lib/log';
+
 import type App from '../app';
 import type Storage from '../utils/storage';
 import type Overlays from '../renderer/overlays';
@@ -15,19 +17,41 @@ import type AudioController from '../controllers/audio';
 import type EntitiesController from '../controllers/entities';
 import type BubbleController from '../controllers/bubble';
 import type MenuController from '../controllers/menu';
+import type SpritesController from '../controllers/sprites';
 import type Messages from './messages';
 import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
+import type NPC from '../entity/character/npc/npc';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 
+import { inflate } from 'pako';
+import { isMobile } from '../utils/detect';
 import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import {
+    AnimationPacket,
+    BubblePacket,
+    ChatPacket,
+    CombatPacket,
+    CommandPacket,
+    ContainerPacket,
+    EnchantPacket,
     EquipmentPacket,
+    ExperiencePacket,
+    HealPacket,
     MovementPacket,
+    NotificationPacket,
+    NPCPacket,
+    OverlayPacket,
+    PointerPacket,
+    PointsPacket,
+    QuestPacket,
+    RespawnPacket,
+    StorePacket,
     TeleportPacket
 } from '@kaetram/common/types/messages/outgoing';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
 export default class Connection {
     /**
@@ -50,6 +74,7 @@ export default class Connection {
     private entities: EntitiesController = this.game.entities;
     private bubble: BubbleController = this.game.bubble;
     private menu: MenuController = this.game.menu;
+    private sprites: SpritesController = this.game.sprites;
     private messages: Messages = this.socket.messages;
 
     /**
@@ -60,11 +85,39 @@ export default class Connection {
     public constructor(private game: Game) {
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
+        this.messages.onMap(this.handleMap.bind(this));
         this.messages.onEquipment(this.handleEquipment.bind(this));
         this.messages.onSpawn(this.entities.create.bind(this.entities));
         this.messages.onEntityList(this.handleEntityList.bind(this));
         this.messages.onSync(this.handleSync.bind(this));
         this.messages.onMovement(this.handleMovement.bind(this));
+        this.messages.onTeleport(this.handleTeleport.bind(this));
+        this.messages.onDespawn(this.handleDespawn.bind(this));
+        this.messages.onCombat(this.handleCombat.bind(this));
+        this.messages.onAnimation(this.handleAnimation.bind(this));
+        this.messages.onPoints(this.handlePoints.bind(this));
+        this.messages.onNetwork(this.handleNetwork.bind(this));
+        this.messages.onChat(this.handleChat.bind(this));
+        this.messages.onCommand(this.handleCommand.bind(this));
+        this.messages.onContainer(this.handleContainer.bind(this));
+        this.messages.onAbility(this.handleAbility.bind(this));
+        this.messages.onQuest(this.handleQuest.bind(this));
+        this.messages.onNotification(this.handleNotification.bind(this));
+        this.messages.onBlink(this.handleBlink.bind(this));
+        this.messages.onHeal(this.handleHeal.bind(this));
+        this.messages.onExperience(this.handleExperience.bind(this));
+        this.messages.onDeath(this.handleDeath.bind(this));
+        this.messages.onAudio(this.handleAudio.bind(this));
+        this.messages.onNPC(this.handleNPC.bind(this));
+        this.messages.onRespawn(this.handleRespawn.bind(this));
+        this.messages.onEnchant(this.handleEnchant.bind(this));
+        this.messages.onGuild(this.handleGuild.bind(this));
+        this.messages.onPointer(this.handlePointer.bind(this));
+        this.messages.onPVP(this.handlePVP.bind(this));
+        this.messages.onStore(this.handleStore.bind(this));
+        this.messages.onOverlay(this.handleOverlay.bind(this));
+        this.messages.onCamera(this.handleCamera.bind(this));
+        this.messages.onBubble(this.handleBubble.bind(this));
     }
 
     /**
@@ -116,6 +169,30 @@ export default class Connection {
         this.game.postLoad();
 
         this.menu.loadProfile();
+    }
+
+    /**
+     * Receives the compressed map data from the server. Due to the size of
+     * the map data, we must compress when sending and decompress on the client's
+     * end. We ensure that this map region is saved in the client to prevent
+     * relying on the client always pulling map data.
+     * @param info Compressed region data of the map.
+     */
+
+    private handleMap(info: string): void {
+        let bufferData = window
+                .atob(info)
+                // eslint-disable-next-line unicorn/prefer-spread
+                .split('')
+                // eslint-disable-next-line unicorn/prefer-code-point
+                .map((char) => char.charCodeAt(0)),
+            inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
+            region = JSON.parse(inflatedString);
+
+        this.map.loadRegions(region);
+
+        this.renderer.forceRendering = true;
+        this.renderer.updateAnimatedTiles();
     }
 
     /**
@@ -266,777 +343,669 @@ export default class Connection {
         // Clears all bubbles when our main player teleports.
         if (currentPlayer) this.bubble.clean();
         else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
+
+        // No animation, skip straight to teleporting.
+        if (!info.withAnimation) return this.game.teleport(player, info.x!, info.y!);
+
+        // Copy the player's sprite temporarily.
+        let playerSprite = player.sprite;
+
+        // Prevent rendering of the sword.
+        player.teleporting = true;
+
+        // Set the player's sprite to the death animation sprite.
+        player.setSprite(this.sprites.getDeath());
+
+        player.animateDeath(() => {
+            this.game.teleport(player, info.x!, info.y!);
+
+            // Restore the player's sprite.
+            player.setSprite(playerSprite);
+            player.idle();
+
+            player.teleporting = false;
+        }, 240);
     }
 
-    // private load(): void {
+    /**
+     * Handler for when we want to despawn an entity.
+     * @param instance Instance of the entity we are removing.
+     */
 
-    //     this.messages.onTeleport((info) => {
-    //         let entity = this.entities.get<Player>(info.id),
-    //             isPlayer = info.id === this.game.player.instance;
+    private handleDespawn(instance: string): void {
+        let entity = this.entities.get<Character>(instance);
 
-    //         if (!entity) return;
+        // Could not find the entity.
+        if (!entity) return;
 
-    //         entity.stop(true);
-    //         entity.frozen = true;
+        // Handle item despawn separately here.
+        if (entity.isItem()) return this.entities.removeItem(entity);
 
-    //         if (isPlayer) this.bubble.clean();
-    //         else this.bubble.clear(info.id);
+        // Handle chest and animations here.
+        if (entity.isChest()) return this.entities.removeChest(entity);
 
-    //         /**
-    //          * Teleporting an entity seems to cause a glitch with the
-    //          * hitbox. Make sure you keep an eye out for this.
-    //          */
+        // Despawn the entity.
+        entity.despawn();
 
-    //         let doTeleport = () => {
-    //             this.entities.unregisterPosition(entity);
-    //             entity.setGridPosition(info.x, info.y);
+        // Removes bubbles from the entity.
+        this.bubble.clear(entity.instance);
 
-    //             if (isPlayer) {
-    //                 this.game.player.clearHealthBar();
-    //                 this.game.camera.centreOn(entity);
-    //                 this.renderer.updateAnimatedTiles();
-    //             }
+        // CLears our client's target.
+        if (this.game.player.hasTarget(entity)) this.game.player.removeTarget();
 
-    //             this.entities.registerPosition(entity);
-    //             entity.frozen = false;
-    //         };
+        // Plays a random kill sound if the game client player is nearby.
+        if (this.game.player.getDistance(entity) <= 7) this.audio.playKill();
 
-    //         if (info.withAnimation) {
-    //             let originalSprite = entity.sprite;
+        // Certain entities will have a special death animation, otherwise we use default.
+        if (!entity.sprite.hasDeathAnimation) entity.setSprite(this.sprites.getDeath());
 
-    //             entity.teleporting = true;
+        // Animate the entity's death.
+        entity.animateDeath(() => this.entities.removeEntity(entity));
+    }
 
-    //             entity.setSprite(this.game.sprites.get('death'));
+    /**
+     * Combat packet handler. Primarily deals with displaying hit damages
+     * and creating infos on the screen.
+     * @param opcode Type of combat packet we're dealing with.
+     * @param info Contains attacker, target, and damage information.
+     */
 
-    //             entity.animate('death', 240, 1, () => {
-    //                 doTeleport();
+    private handleCombat(opcode: Opcodes.Combat, info: CombatPacket): void {
+        let attacker = this.entities.get<Character>(info.instance),
+            target = this.entities.get<Character>(info.target);
 
-    //                 entity.animation = null;
+        // Could not find the attacker or target.
+        if (!attacker || !target) return;
 
-    //                 entity.setSprite(originalSprite);
-    //                 entity.idle();
+        // TODO - Decide whether to simplify combat packet this much.
+        if (opcode !== Opcodes.Combat.Hit) return;
 
-    //                 entity.teleporting = false;
-    //             });
-    //         } else doTeleport();
+        // Check if our client's player is the target or the attacker.
+        let currentPlayerTarget = target.instance === this.game.player.instance,
+            currentPlayerAttacker = attacker.instance === this.game.player.instance;
 
-    //         // this.renderer.transition(15, false, () => {
-    //         //     if (this.queueColour) {
-    //         //         this.renderer.updateDarkMask(this.queueColour);
-    //         //         this.queueColour = null;
-    //         //     }
-    //         // });
-    //     });
+        // Set the terror effect onto the target.
+        if (info.hit.terror) target.terror = true;
 
-    //     this.messages.onDespawn((id) => {
-    //         let entity = this.entities.get<Character>(id);
+        // Perform the critical effect onto the target.
+        if (info.hit.type === Modules.Hits.Critical) target.critical = true;
 
-    //         if (!entity) return;
+        // Perform the attack animation if the damage type isn't from AOE or poison.
+        if (!info.hit.aoe && !info.hit.poison) {
+            attacker.lookAt(target);
+            attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+        }
 
-    //         switch (entity.type) {
-    //             case Modules.EntityType.Item:
-    //                 this.entities.removeItem(entity);
+        // If the game client player is the attacker, we play the hit sound effect.
+        if (currentPlayerAttacker && info.hit.damage > 0) this.audio.playHit();
 
-    //                 return;
+        // Play the hurt sound effect if the client player is the target.
+        if (currentPlayerTarget && info.hit.damage > 0) this.audio.playHurt();
 
-    //             case Modules.EntityType.Chest:
-    //                 entity.setSprite(this.game.sprites.get('death'));
+        // Create the hit info to be displayed above the entity.
+        this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
 
-    //                 entity.setAnimation('death', 120, 1, () => {
-    //                     this.entities.unregisterPosition(entity);
-    //                     delete this.entities.entities[entity.instance];
-    //                 });
+        // Flash the target character when a hit occurs.
+        if (target.hurtSprite) target.toggleHurt();
 
-    //                 return;
-    //         }
+        // Show the health bar for both entities.
+        attacker.triggerHealthBar();
+        target.triggerHealthBar();
+    }
 
-    //         entity.dead = true;
+    /**
+     * Animates a character based on the provided instance.
+     * @param info Contains instance and what animation to perform.
+     */
 
-    //         entity.stop();
+    private handleAnimation(info: AnimationPacket): void {
+        let character = this.entities.get<Character>(info.instance);
 
-    //         this.bubble.clear(entity.instance);
+        if (!character) return;
 
-    //         if (this.game.player.target && this.game.player.target.instance === entity.instance)
-    //             this.game.player.removeTarget();
+        character.performAction(character.orientation, info.action);
+    }
 
-    //         if (
-    //             entity.instance !== this.game.player.instance &&
-    //             this.game.player.getDistance(entity) < 5
-    //         )
-    //             this.audio.play(
-    //                 Modules.AudioTypes.SFX,
-    //                 `kill${Math.floor(Math.random() * 2 + 1) as 1 | 2}` as const
-    //             );
-
-    //         entity.hitPoints = 0;
-
-    //         if (!entity.sprite.hasDeathAnimation) entity.setSprite(this.game.sprites.get('death'));
-
-    //         entity.animate('death', 120, 1, () => {
-    //             this.entities.unregisterPosition(entity);
-    //             delete this.entities.entities[entity.instance];
-    //         });
-    //     });
-
-    //     this.messages.onCombat((opcode, info) => {
-    //         let attacker = this.entities.get<Character>(info.instance),
-    //             target = this.entities.get<Character>(info.target!);
-
-    //         if (!attacker || !target) return;
-
-    //         switch (opcode) {
-    //             case Opcodes.Combat.Hit: {
-    //                 let isPlayer = target.instance === this.game.player.instance;
-
-    //                 if (!info.hit.aoe && !info.hit.poison) {
-    //                     attacker.lookAt(target);
-    //                     attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-    //                 } else if (info.hit.terror) target.terror = true;
-
-    //                 switch (info.hit.type) {
-    //                     case Modules.Hits.Critical:
-    //                         target.critical = true;
-
-    //                         break;
-
-    //                     default:
-    //                         if (
-    //                             attacker.instance === this.game.player.instance &&
-    //                             info.hit.damage > 0
-    //                         )
-    //                             this.audio.play(
-    //                                 Modules.AudioTypes.SFX,
-    //                                 `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
-    //                             );
-
-    //                         break;
-    //                 }
-
-    //                 this.info.create(info.hit.type, info.hit.damage, target.x, target.y, isPlayer);
-
-    //                 if (target.hurtSprite) {
-    //                     target.sprite = target.hurtSprite;
-    //                     window.setTimeout(() => {
-    //                         target.sprite = target.normalSprite;
-    //                     }, 75);
-    //                 }
-
-    //                 attacker.triggerHealthBar();
-    //                 target.triggerHealthBar();
-
-    //                 if (isPlayer && info.hit.damage > 0)
-    //                     this.audio.play(Modules.AudioTypes.SFX, 'hurt');
-    //             }
-    //         }
-    //     });
-
-    //     this.messages.onAnimation((info: AnimationPacket) => {
-    //         let character = this.entities.get<Character>(info.instance);
-
-    //         if (!character) return;
-
-    //         character.performAction(character.orientation, info.action);
-    //     });
-
-    //     this.messages.onProjectile((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.Projectile.Create:
-    //                 this.entities.create(info as never);
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onPopulation((population) => {
-    //         this.population = population;
-    //     });
-
-    //     this.messages.onPoints((data) => {
-    //         let entity = this.entities.get<Player>(data.id);
-
-    //         if (!entity) return;
-
-    //         if (data.hitPoints) {
-    //             entity.setHitPoints(data.hitPoints);
-
-    //             this.input.hud.updateCallback?.(entity.instance, data.hitPoints);
-    //         }
-
-    //         if (data.mana) entity.setMana(data.mana);
-    //     });
-
-    //     this.messages.onNetwork(() => this.socket.send(Packets.Network, [Opcodes.Network.Pong]));
-
-    //     this.messages.onChat((info) => {
-    //         // Messages with source are static, we add them directly to the chatbox.
-    //         if (info.source)
-    //             return this.input.chatHandler.add(info.source, info.message, info.colour);
-
-    //         let entity = this.entities.get<Character>(info.instance!);
-
-    //         if (!entity) return;
-
-    //         // Add to the chatbox, if global, we prefix it to the entity's name.
-    //         this.input.chatHandler.add(
-    //             `${info.global ? '[Global]:' : ''} ${entity.name}`,
-    //             info.message,
-    //             info.colour
-    //         );
-
-    //         // Draw bubble and play audio.
-    //         if (info.withBubble) {
-    //             this.bubble.create(info.instance!, info.message);
-    //             this.bubble.setTo(info.instance!, entity.x, entity.y);
-
-    //             this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
-    //         }
-    //     });
-
-    //     this.messages.onCommand((info) => {
-    //         /**
-    //          * This is for random miscellaneous commands that require
-    //          * a specific action done by the client as opposed to
-    //          * packet-oriented ones.
-    //          */
-
-    //         log.info(info);
-
-    //         switch (info.command) {
-    //             case 'debug':
-    //                 this.renderer.debugging = !this.renderer.debugging;
-    //                 break;
-
-    //             case 'toggleheal':
-    //                 log.info('llll');
-    //                 this.game.player.healing = true;
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onContainer((opcode, info) => {
-    //         let containerType: Modules.ContainerType = info.type,
-    //             container =
-    //                 containerType === Modules.ContainerType.Inventory
-    //                     ? this.menu.inventory
-    //                     : this.menu.bank;
-
-    //         switch (opcode) {
-    //             case Opcodes.Container.Batch: {
-    //                 let { slots } = info as ContainerBatchData;
-    //                 container.load(slots);
-    //                 break;
-    //             }
-
-    //             case Opcodes.Container.Add: {
-    //                 let { slot } = info as ContainerAddData;
-    //                 container.add(slot);
-
-    //                 this.menu.bank.add(slot, containerType);
-    //                 break;
-    //             }
-
-    //             case Opcodes.Container.Drop: {
-    //                 let { slot } = info as ContainerRemoveData;
-    //                 container.remove(slot, containerType);
-
-    //                 this.menu.bank.remove(slot, containerType);
-    //                 break;
-    //             }
-    //         }
-    //     });
-
-    //     // this.messages.onAbility((opcode, info) => {});
-
-    //     this.messages.onQuest((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.Quest.Batch:
-    //                 return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
-
-    //             case Opcodes.Quest.Progress:
-    //                 return this.menu.getQuestPage().progress(info as QuestProgressData);
-    //         }
-    //     });
-
-    //     this.messages.onNotification((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.Notification.Ok:
-    //                 this.menu.displayNotify(info.message);
-
-    //                 break;
-
-    //             case Opcodes.Notification.YesNo:
-    //                 this.menu.displayConfirm(info.message);
-
-    //                 break;
-
-    //             case Opcodes.Notification.Text:
-    //                 this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-
-    //                 break;
-
-    //             case Opcodes.Notification.Popup:
-    //                 this.menu.showNotification(info.title!, info.message, info.colour!);
-
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onBlink((instance) => {
-    //         let item = this.entities.get<Item>(instance);
-
-    //         item?.blink(150);
-    //     });
-
-    //     this.messages.onHeal((info) => {
-    //         let entity = this.entities.get<Character>(info.id);
-
-    //         if (!entity) return;
-
-    //         /**
-    //          * Healing just triggers an info to display.
-    //          */
-
-    //         switch (info.type) {
-    //             case 'health':
-    //                 this.info.create(Modules.Hits.Heal, info.amount, entity.x, entity.y);
-
-    //                 this.game.player.healing = true;
-
-    //                 break;
-
-    //             case 'mana':
-    //                 this.info.create(Modules.Hits.Mana, info.amount, entity.x, entity.y);
-
-    //                 break;
-    //         }
-
-    //         entity.triggerHealthBar();
-    //     });
-
-    //     this.messages.onExperience((opcode, info) => {
-    //         let entity = this.entities.get(info.id);
-
-    //         switch (opcode) {
-    //             case Opcodes.Experience.Combat: {
-    //                 if (!entity || !entity.isPlayer()) return;
-
-    //                 let data = info as ExperienceCombatData;
-
-    //                 /**
-    //                  * We only receive level information about other entities.
-    //                  */
-    //                 if (entity.level !== data.level) {
-    //                     entity.level = data.level;
-    //                     this.info.create(Modules.Hits.LevelUp, 0, entity.x, entity.y);
-    //                 }
-
-    //                 /**
-    //                  * When we receive experience information about our own player
-    //                  * we update the experience bar and create an info.
-    //                  */
-
-    //                 if (entity.instance === this.game.player.instance) {
-    //                     if (info.id === this.game.player.instance)
-    //                         this.game.player.setExperience(
-    //                             data.experience,
-    //                             data.nextExperience!,
-    //                             data.prevExperience
-    //                         );
-
-    //                     this.info.create(Modules.Hits.Experience, info.amount, entity.x, entity.y);
-    //                 }
-
-    //                 this.menu.profile.update();
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Experience.Skill:
-    //                 if (!entity || !entity.isPlayer()) return;
-
-    //                 if (entity.instance === this.game.player.instance)
-    //                     this.info.create(Modules.Hits.Profession, info.amount, entity.x, entity.y);
-
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onDeath((id) => {
-    //         let entity = this.entities.get(id);
-
-    //         if (!entity || id !== this.game.player.instance) return;
-
-    //         this.audio.stop();
-
-    //         // this.audio.play(Modules.AudioTypes.SFX, 'death');
-
-    //         this.game.player.dead = true;
-    //         this.game.player.removeTarget();
-    //         this.game.player.orientation = Modules.Orientation.Down;
-
-    //         this.app.body.addClass('death');
-    //     });
-
-    //     this.messages.onAudio((newSong) => {
-    //         this.audio.newSong = newSong;
-
-    //         if (!this.audio.newSong || Detect.isMobile()) return;
-
-    //         this.audio.update();
-    //     });
-
-    //     this.messages.onNPC((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.NPC.Talk: {
-    //                 let data = info as NPCTalkData,
-    //                     entity = this.entities.get(data.id!),
-    //                     message = data.text,
-    //                     isNPC = !data.nonNPC;
-
-    //                 if (!entity) return;
-
-    //                 let sound!: 'npc' | 'npc-end';
-
-    //                 if (isNPC)
-    //                     if (!message) {
-    //                         sound = 'npc-end';
-    //                         this.bubble.clear(data.id!);
-    //                     } else {
-    //                         sound = 'npc';
-
-    //                         this.bubble.create(data.id!, message);
-
-    //                         this.bubble.setTo(data.id!, entity.x, entity.y);
-
-    //                         if (this.renderer.mobile && this.renderer.autoCentre)
-    //                             this.camera.centreOn(this.game.player);
-    //                     }
-    //                 else {
-    //                     this.bubble.create(data.id!, message!, this.time);
-    //                     this.bubble.setTo(data.id!, entity.x, entity.y);
-    //                 }
-
-    //                 this.audio.play(Modules.AudioTypes.SFX, sound);
-
-    //                 this.game.player.disableAction = true;
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.NPC.Bank: {
-    //                 let { slots } = info as NPCBankData;
-
-    //                 console.log(info);
-
-    //                 this.menu.bank.load(slots);
-
-    //                 this.menu.bank.display();
-    //                 break;
-    //             }
-
-    //             case Opcodes.NPC.Enchant:
-    //                 this.menu.enchant.display();
-    //                 break;
-
-    //             case Opcodes.NPC.Countdown: {
-    //                 let data = info as NPCCountdownData,
-    //                     cEntity = this.entities.get(data.id),
-    //                     { countdown } = data;
-
-    //                 cEntity?.setCountdown(countdown);
-
-    //                 break;
-    //             }
-    //         }
-    //     });
-
-    //     this.messages.onRespawn((info) => {
-    //         let { instance, x, y } = info;
-
-    //         if (instance !== this.game.player.instance) {
-    //             log.error('Player id mismatch.');
-    //             return;
-    //         }
-
-    //         this.game.player.setGridPosition(x, y);
-    //         this.entities.registerPosition(this.game.player);
-    //         this.game.camera.centreOn(this.game.player);
-
-    //         this.game.player.animation = null;
-    //         this.game.player.setSprite(this.game.sprites.get(this.game.player.getSpriteName()));
-    //         this.game.player.idle();
-
-    //         this.entities.addEntity(this.game.player);
-
-    //         this.game.player.dead = false;
-    //     });
-
-    //     this.messages.onEnchant((opcode, info) => {
-    //         let { type, index } = info;
-
-    //         switch (opcode) {
-    //             case Opcodes.Enchant.Select:
-    //                 this.menu.enchant.add(type, index);
-
-    //                 break;
-
-    //             case Opcodes.Enchant.Remove:
-    //                 this.menu.enchant.moveBack(type, index);
-
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onGuild((opcode) => {
-    //         switch (opcode) {
-    //             case Opcodes.Guild.Create:
-    //                 break;
-
-    //             case Opcodes.Guild.Join:
-    //                 break;
-    //         }
-    //     });
-
-    //     this.messages.onPointer((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.Pointer.Entity: {
-    //                 let entity = this.entities.get(info.instance!);
-
-    //                 if (!entity) return;
-
-    //                 this.pointer.create(entity.instance, opcode);
-    //                 this.pointer.setToEntity(entity);
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Pointer.Location: {
-    //                 let data = info as PointerLocationData;
-
-    //                 this.pointer.create(data.instance, opcode);
-    //                 this.pointer.setToPosition(data.instance, data.x * 16, data.y * 16);
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Pointer.Relative: {
-    //                 let data = info as PointerRelativeData;
-
-    //                 this.pointer.create(data.instance, opcode);
-    //                 this.pointer.setRelative(data.instance, data.x, data.y);
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Pointer.Remove:
-    //                 this.pointer.clean();
-    //                 break;
-
-    //             case Opcodes.Pointer.Button: {
-    //                 let data = info as PointerButtonData;
-
-    //                 this.pointer.create(data.instance, opcode, data.button);
-
-    //                 break;
-    //             }
-    //         }
-    //     });
-
-    //     this.messages.onPVP((id, pvp) => {
-    //         if (this.game.player.instance === id) this.game.pvp = pvp;
-    //         else {
-    //             let entity = this.entities.get(id);
-
-    //             if (entity) entity.pvp = pvp;
-    //         }
-    //     });
-
-    //     this.messages.onStore((opcode, info) => {
-    //         let { shop } = this.menu;
-
-    //         switch (opcode) {
-    //             case Opcodes.Store.Open:
-    //             case Opcodes.Store.Update:
-    //                 return shop.open(info as SerializedStoreInfo);
-
-    //             case Opcodes.Store.Select:
-    //                 return shop.move(info.item!);
-    //         }
-
-    //         // let { shop } = this.menu;
-
-    //         // switch (opcode) {
-    //         //     case Opcodes.Store.Open: {
-    //         //         let { shopData } = info as ShopOpenData;
-
-    //         //         shop.open(shopData.id);
-    //         //         shop.update(shopData);
-
-    //         //         break;
-    //         //     }
-
-    //         //     case Opcodes.Store.Buy:
-    //         //         break;
-
-    //         //     case Opcodes.Store.Sell:
-    //         //         break;
-
-    //         //     case Opcodes.Store.Select: {
-    //         //         let data = info as ShopSelectData;
-
-    //         //         if (shop.isShopOpen(data.id)) shop.move(data);
-
-    //         //         break;
-    //         //     }
-
-    //         //     case Opcodes.Store.Remove: {
-    //         //         let { id, index } = info as ShopRemoveData;
-
-    //         //         if (shop.isShopOpen(id)) shop.moveBack(index);
-
-    //         //         break;
-    //         //     }
-
-    //         //     case Opcodes.Store.Refresh: {
-    //         //         let data = info as ShopRefreshData;
-
-    //         //         if (shop.isShopOpen(data.id)) shop.update(data);
-
-    //         //         break;
-    //         //     }
-    //         // }
-    //     });
-
-    //     this.messages.onMap((opcode: Opcodes.Map, info: string) => {
-    //         let bufferData = window
-    //                 .atob(info)
-    //                 // eslint-disable-next-line unicorn/prefer-spread
-    //                 .split('')
-    //                 // eslint-disable-next-line unicorn/prefer-code-point
-    //                 .map((char) => char.charCodeAt(0)),
-    //             inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
-    //             reigon = JSON.parse(inflatedString);
-
-    //         switch (opcode) {
-    //             case Opcodes.Map.Render:
-    //                 this.map.loadRegions(reigon);
-
-    //                 break;
-    //         }
-
-    //         this.renderer.forceRendering = true;
-    //         this.renderer.updateAnimatedTiles();
-    //     });
-
-    //     this.messages.onOverlay((opcode, info) => {
-    //         console.log(info);
-
-    //         switch (opcode) {
-    //             case Opcodes.Overlay.Set: {
-    //                 let { image, colour } = info as OverlaySetData;
-
-    //                 this.overlays.update(image);
-
-    //                 if (!this.renderer.transitioning) this.renderer.updateDarkMask(colour);
-    //                 else this.queueColour = colour;
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Overlay.Remove:
-    //                 this.renderer.removeAllLights();
-    //                 this.overlays.update();
-
-    //                 break;
-
-    //             case Opcodes.Overlay.Lamp: {
-    //                 let { x, y, distance, diffuse, objects } = info as OverlayLampData;
-
-    //                 this.renderer.addLight(
-    //                     x,
-    //                     y,
-    //                     distance!,
-    //                     diffuse!,
-    //                     'rgba(0,0,0,0.4)',
-    //                     true,
-    //                     objects!
-    //                 );
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Overlay.RemoveLamps:
-    //                 this.renderer.removeAllLights();
-
-    //                 break;
-
-    //             case Opcodes.Overlay.Darkness: {
-    //                 let { colour } = info as OverlayDarknessData;
-
-    //                 this.renderer.updateDarkMask(colour);
-
-    //                 break;
-    //             }
-    //         }
-    //     });
-
-    //     this.messages.onCamera((opcode) => {
-    //         // if (this.game.player.x === 0 || this.game.player.y === 0) {
-    //         //     this.socket.send(Packets.Camera);
-    //         //     return;
-    //         // }
-    //         // if (!this.camera.isCentered()) return;
-    //         // this.renderer.camera.forceCentre(this.game.player);
-    //         // this.renderer.forceRendering = true;
-    //         // switch (opcode) {
-    //         //     case Opcodes.Camera.LockX:
-    //         //         this.renderer.camera.lockX = true;
-    //         //         break;
-    //         //     case Opcodes.Camera.LockY:
-    //         //         this.renderer.camera.lockY = true;
-    //         //         break;
-    //         //     case Opcodes.Camera.FreeFlow:
-    //         //         this.renderer.removeNonRelativeLights();
-    //         //         this.renderer.camera.lockX = false;
-    //         //         this.renderer.camera.lockY = false;
-    //         //         break;
-    //         //     case Opcodes.Camera.Player: {
-    //         //         let middle = this.renderer.getMiddle();
-    //         //         this.renderer.removeAllLights();
-    //         //         this.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);
-    //         //         break;
-    //         //     }
-    //         // }
-    //     });
-
-    //     this.messages.onBubble((info) => {
-    //         if (!info.text) {
-    //             this.bubble.clear(info.id);
-    //             return;
-    //         }
-
-    //         this.bubble.create(info.id, info.text, info.duration, info.info);
-
-    //         this.bubble.setTo(info.id, info.info.x, info.info);
-    //     });
-
-    //     this.messages.onProfession((opcode, info) => {
-    //         switch (opcode) {
-    //             case Opcodes.Profession.Batch: {
-    //                 let { data } = info as ProfessionBatchData;
-
-    //                 this.menu.getProfessionPage().loadProfessions(data);
-
-    //                 break;
-    //             }
-
-    //             case Opcodes.Profession.Update: {
-    //                 let data = info as ProfessionUpdateData;
-
-    //                 this.menu.getProfessionPage().sync(data);
-
-    //                 break;
-    //             }
-    //         }
-    //     });
-    // }
+    /**
+     * Handles the points packet. Used when a player is being hit
+     * or heals their hit points or mana.
+     * @param info Contains the player instance, hit points, and mana.
+     */
+
+    private handlePoints(info: PointsPacket): void {
+        let character = this.entities.get<Player>(info.instance);
+
+        if (!character) return;
+
+        if (info.mana) return character.setMana(info.mana);
+
+        if (!info.hitPoints) return;
+
+        character.setHitPoints(info.hitPoints);
+        this.input.hud.updateCallback?.(info.instance, info.hitPoints);
+    }
+
+    /**
+     * Handler for the network packet. These are debugging methods such
+     * as latency tests that may be implemented in the future.
+     */
+
+    private handleNetwork(): void {
+        // Send a resposne to the ping back.
+        this.socket.send(Packets.Network, [Opcodes.Network.Pong]);
+    }
+
+    /**
+     * Chat packets can either be static or instance based. Those that are static
+     * are generally used for global messaging system, whereas the instance-based
+     * ones are for nearby players where we want to display a bubble.
+     * @param info Info contains source, message, colour, and whether
+     * or not to display a bubble. Instance is optional but may be contained
+     * when a player sends a chat.
+     */
+
+    private handleChat(info: ChatPacket): void {
+        // Messages with source are static, we add them directly to the chatbox.
+        if (info.source) return this.input.chatHandler.add(info.source, info.message, info.colour);
+
+        let entity = this.entities.get<Character>(info.instance!);
+
+        if (!entity) return;
+
+        // Add to the chatbox, if global, we prefix it to the entity's name.
+        this.input.chatHandler.add(entity.name, info.message, info.colour);
+
+        // Draw bubble and play audio.
+        if (info.withBubble) {
+            this.bubble.create(info.instance!, info.message);
+            this.bubble.setTo(info.instance!, entity.x, entity.y);
+
+            this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
+        }
+    }
+
+    /**
+     * Hardcoded administrative commands built into the client. When a player
+     * types a special command, the server checks against the player's rights
+     * before sending this packet. These are merely debugging/graphical tests.
+     * @param info Packet contains the command string.
+     */
+
+    private handleCommand(info: CommandPacket): void {
+        switch (info.command) {
+            case 'debug':
+                this.renderer.debugging = !this.renderer.debugging;
+                return;
+
+            case 'toggleheal':
+                this.game.player.healing = true;
+                break;
+
+            case 'toggleterror':
+                this.game.player.terror = true;
+                break;
+        }
+    }
+
+    /**
+     * Receives container information (bank or inventory for now) and updates it.
+     * @param opcode What type of container action we are working with.
+     * @param info Contains array of serialized slots, a single slot, and type of container.
+     */
+
+    private handleContainer(opcode: Opcodes.Container, info: ContainerPacket): void {
+        let container =
+            info.type === Modules.ContainerType.Inventory ? this.menu.inventory : this.menu.bank;
+
+        switch (opcode) {
+            case Opcodes.Container.Batch: {
+                container.load(info.data!.slots);
+                break;
+            }
+
+            case Opcodes.Container.Add: {
+                container.add(info.slot!);
+
+                this.menu.bank.add(info.slot!, info.type);
+                break;
+            }
+
+            case Opcodes.Container.Drop: {
+                container.remove(info.slot!, info.type);
+
+                this.menu.bank.remove(info.slot!, info.type);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Unhandled function. This will be used when player
+     * special abilities are finally implemented.
+     */
+
+    private handleAbility(): void {
+        log.debug('Unhandled ability packet.');
+    }
+
+    /**
+     * Quest packets are sent when the player logs in and performs
+     * the initial loading in a batch. This contains every quest along with the
+     * key, name, description, and stage. This packet may also receive individual
+     * quest information that updates the stage. Since the quests are already loaded
+     * the individual quest data only contains key, stage, and max stage.
+     * @param opcode What type of quest action we are working with.
+     * @param info Contains quest batch data or individual quest data.
+     */
+
+    private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
+        switch (opcode) {
+            case Opcodes.Quest.Batch:
+                return this.menu.getQuestPage().loadQuests(info.data!.quests);
+
+            case Opcodes.Quest.Progress:
+                return this.menu.getQuestPage().progress(info);
+        }
+    }
+
+    /**
+     * Notifications are messages sent from the server that display only on the current
+     * player's end. These can either be popups, or chatbox information.
+     * @param opcode Tyhe type of the notification.
+     * @param info Contains message, title, and colour information.
+     */
+
+    private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
+        switch (opcode) {
+            case Opcodes.Notification.Ok:
+                this.menu.displayNotify(info.message);
+                break;
+
+            case Opcodes.Notification.YesNo:
+                this.menu.displayConfirm(info.message);
+                break;
+
+            case Opcodes.Notification.Text:
+                this.input.chatHandler.add('WORLD', info.message, info.colour, true);
+                break;
+
+            case Opcodes.Notification.Popup:
+                this.menu.showNotification(info.title!, info.message, info.colour!);
+                break;
+        }
+    }
+
+    /**
+     * Packet that signals to an item instance that it has to start blinking.
+     * The blinking is used to indicate that the item is about to despawn.
+     * @param instance Instance of the item we are trying to start blinking process.
+     */
+
+    private handleBlink(instance: string): void {
+        let item = this.entities.get<Item>(instance);
+
+        item?.blink();
+    }
+
+    /**
+     * The healing packet is called when the player heals their health
+     * or mana. It is used to update the HUD and also display the healing
+     * special effect.
+     * @param info Contains the instance, type of healing (mana or health), and amount.
+     */
+
+    private handleHeal(info: HealPacket): void {
+        let character = this.entities.get<Character>(info.instance!);
+
+        if (!character) return;
+
+        switch (info.type) {
+            case 'health':
+                this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
+
+                this.game.player.healing = true;
+
+                break;
+
+            case 'mana':
+                this.info.create(Modules.Hits.Mana, info.amount, character.x, character.y);
+                break;
+        }
+
+        character.triggerHealthBar();
+    }
+
+    /**
+     * Receives an experience packet from the server. This syncs up the client
+     * with the player's latest information and also displays an appropriate info
+     * depending on the type of experience (combat or skill).
+     * @param opcode The type of experience we are working with.
+     * @param info The amount of experience, level, previous/next experience required
+     * for levelling up. The experience values are used to display to the player how
+     * much experience they will require and calculate percentages.
+     */
+
+    private handleExperience(opcode: Opcodes.Experience, info: ExperiencePacket): void {
+        let player = this.entities.get<Player>(info.instance);
+
+        if (!player) return;
+
+        let isPlayer = player.instance === this.game.player.instance;
+
+        switch (opcode) {
+            case Opcodes.Experience.Combat: {
+                /**
+                 * We only receive level information about other entities.
+                 */
+                if (player.level !== info.level) {
+                    player.level = info.level!;
+                    this.info.create(Modules.Hits.LevelUp, 0, player.x, player.y);
+                }
+
+                /**
+                 * When we receive experience information about our own player
+                 * we update the experience bar and create an info.
+                 */
+
+                if (isPlayer) {
+                    this.game.player.setExperience(
+                        info.experience!,
+                        info.nextExperience!,
+                        info.prevExperience!
+                    );
+
+                    this.info.create(Modules.Hits.Experience, info.amount, player.x, player.y);
+                }
+
+                this.menu.profile.update();
+
+                break;
+            }
+
+            case Opcodes.Experience.Skill:
+                if (isPlayer)
+                    this.info.create(Modules.Hits.Profession, info.amount, player.x, player.y);
+
+                break;
+        }
+    }
+
+    /**
+     * Receives signal from the server to despawn the player and
+     * display the death scroll. This will get called for as long
+     * as the player doesn't press the respawn button, regardless
+     * of whether or not the player logs out and back in.
+     */
+
+    private handleDeath(): void {
+        this.audio.stop();
+
+        this.game.player.despawn();
+
+        this.app.body.addClass('death');
+    }
+
+    /**
+     * Receives the new song to update the audio controller with.
+     * @param newSong String of the new song.
+     */
+
+    private handleAudio(newSong: string): void {
+        if (isMobile()) return;
+
+        this.audio.newSong = newSong;
+
+        this.audio.update();
+    }
+
+    /**
+     * Receives NPC interaction information. In the most general case, this is about
+     * an NPC that is dispalying text bubbles to the player. Alternatively, this can
+     * be an NPC that shows an UI element (e.g. bank, shop, etc). This may be moved
+     * into a separate packet post-refactor.
+     * @param opcode They type of interaction we are working with.
+     * @param info Contains information about the NPC interaction.
+     */
+
+    private handleNPC(opcode: Opcodes.NPC, info: NPCPacket): void {
+        let npc, soundEffect;
+
+        switch (opcode) {
+            case Opcodes.NPC.Talk:
+                npc = this.entities.get<NPC>(info.instance!);
+
+                if (!npc) return;
+
+                // Which sound effect to play depending on if conversation is over or not.
+                soundEffect = info.text ? 'npc' : 'npc-end';
+
+                this.audio.play(Modules.AudioTypes.SFX, soundEffect);
+
+                this.game.player.disableAction = true;
+
+                // Clear npc's bubbles once conversation is over.
+                if (!info.text) return this.bubble.clear(npc.instance);
+
+                // Create the bubble containing the text.
+                this.bubble.create(npc.instance, info.text!);
+                this.bubble.setTo(npc.instance, npc.x, npc.y);
+
+                break;
+
+            case Opcodes.NPC.Bank:
+                this.menu.bank.load(info.bank!.slots);
+                this.menu.bank.display();
+                break;
+
+            case Opcodes.NPC.Enchant:
+                this.menu.enchant.display();
+                break;
+        }
+    }
+
+    /**
+     * Restarts the game and reinitializes the player character during
+     * the respawning process.
+     * @param info Contains the grid x and y coordinates we are transporting
+     * the player to following the respawn.
+     */
+
+    private handleRespawn(info: RespawnPacket): void {
+        this.game.player.setGridPosition(info.x, info.y);
+
+        this.entities.registerPosition(this.game.player);
+
+        this.camera.centreOn(this.game.player);
+
+        this.game.player.animation = null;
+        this.game.player.setSprite(this.game.sprites.get(this.game.player.getSpriteName()));
+        this.game.player.idle();
+
+        this.entities.addEntity(this.game.player);
+
+        this.game.player.dead = false;
+    }
+
+    /**
+     * Enchant packet used to update the user interface.
+     * @param opcode What type of action to perform on the user interface.
+     * @param info Contains index and type of item.
+     */
+
+    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
+        switch (opcode) {
+            case Opcodes.Enchant.Select:
+                this.menu.enchant.add(info.type!, info.index!);
+                break;
+
+            case Opcodes.Enchant.Remove:
+                this.menu.enchant.moveBack(info.type!, info.index);
+                break;
+        }
+    }
+
+    /**
+     * Unimplemented guild packet.
+     */
+
+    private handleGuild(opcode: Opcodes.Guild): void {
+        log.debug(`Guild Opcode: ${opcode}`);
+    }
+
+    /**
+     * Receives pointer information from the server. This can be a pointer at an
+     * entity location, or a static pointer. This function will be updated soon.
+     * @param opcode What type of pointer we are displaying.
+     * @param info Information such as location and instance of the pointer.
+     */
+
+    private handlePointer(opcode: Opcodes.Pointer, info: PointerPacket): void {
+        let entity;
+
+        switch (opcode) {
+            case Opcodes.Pointer.Entity:
+                entity = this.entities.get(info.instance!);
+
+                if (!entity) return;
+
+                this.pointer.create(entity.instance, opcode);
+                this.pointer.setToEntity(entity);
+
+                break;
+
+            case Opcodes.Pointer.Location:
+                this.pointer.create(info.instance, opcode);
+                this.pointer.setToPosition(info.instance, info.x! * 16, info.y! * 16);
+
+                break;
+
+            case Opcodes.Pointer.Relative:
+                this.pointer.create(info.instance, opcode);
+                this.pointer.setRelative(info.instance, info.x!, info.y!);
+                break;
+
+            case Opcodes.Pointer.Remove:
+                this.pointer.clean();
+                break;
+
+            case Opcodes.Pointer.Button:
+                this.pointer.create(info.instance!, opcode, info.button!);
+                break;
+        }
+    }
+
+    /**
+     * Updates the PVP status of an entity or our own player character.
+     * @param instance Used to identify which entity to update.
+     * @param state The state of the PVP.
+     */
+
+    private handlePVP(instance: string, state: boolean): void {
+        if (instance === this.game.player.instance) {
+            this.game.pvp = state;
+            return;
+        }
+
+        let entity = this.entities.get<Player>(instance);
+
+        if (entity) entity.pvp = state;
+    }
+
+    /**
+     * Opens a store with the data from the server. Stores can only be opened
+     * when there is data and the server validates that the player is next
+     * to the store to prevent cheating.
+     * @param opcode The type of action performed on the store.
+     * @param info Contains information such as store key and items to update.
+     */
+
+    private handleStore(opcode: Opcodes.Store, info: StorePacket): void {
+        switch (opcode) {
+            case Opcodes.Store.Open:
+            case Opcodes.Store.Update:
+                return this.menu.shop.open(info);
+
+            case Opcodes.Store.Select:
+                return this.menu.shop.move(info.item!);
+        }
+    }
+
+    /**
+     *
+     * @param opcode
+     * @param info
+     */
+
+    private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
+        console.log(info);
+
+        switch (opcode) {
+            case Opcodes.Overlay.Set: {
+                // let { image, colour } = info as OverlaySetData;
+
+                // this.overlays.update(image);
+
+                // if (!this.renderer.transitioning) this.renderer.updateDarkMask(colour);
+                // else this.queueColour = colour;
+
+                break;
+            }
+
+            case Opcodes.Overlay.Remove:
+                this.renderer.removeAllLights();
+                this.overlays.update();
+
+                break;
+
+            case Opcodes.Overlay.Lamp: {
+                // let { x, y, distance, diffuse, objects } = info as OverlayLampData;
+
+                // this.renderer.addLight(
+                //     x,
+                //     y,
+                //     distance!,
+                //     diffuse!,
+                //     'rgba(0,0,0,0.4)',
+                //     true,
+                //     objects!
+                // );
+
+                break;
+            }
+
+            case Opcodes.Overlay.RemoveLamps:
+                this.renderer.removeAllLights();
+
+                break;
+
+            case Opcodes.Overlay.Darkness: {
+                // let { colour } = info as OverlayDarknessData;
+
+                // this.renderer.updateDarkMask(colour);
+
+                break;
+            }
+        }
+    }
+
+    /**
+     * Handles camera packets such as locking the camera.
+     * @param opcode The type of action we are performing with the camera.
+     */
+
+    private handleCamera(opcode: Opcodes.Camera): void {
+        //
+    }
+
+    /**
+     *
+     * @param info
+     */
+
+    private handleBubble(info: BubblePacket): void {
+        if (!info.text) return this.bubble.clear(info.instance);
+
+        this.bubble.create(info.instance, info.text, info.duration);
+        this.bubble.setTo(info.instance, info.x!, info.y!);
+    }
 }
