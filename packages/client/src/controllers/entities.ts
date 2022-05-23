@@ -323,6 +323,21 @@ export default class EntitiesController {
     }
 
     /**
+     * Chests have a special remove method which requires them
+     * to undergo the death animation before being removed.
+     * @param chest Chest we are removing.
+     */
+
+    public removeChest(chest: Chest): void {
+        chest.setSprite(this.game.sprites.getDeath());
+        chest.animateDeath(() => {
+            this.grids.removeFromRenderingGrid(chest);
+
+            delete this.entities[chest.instance];
+        });
+    }
+
+    /**
      * Registers an entity's position on the renderin grid.
      * @param entity The entity we are adding to rendering grid.
      */

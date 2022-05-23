@@ -86,14 +86,14 @@ export default abstract class Entity {
     public fadingAlpha!: number;
     public lastUpdate = Date.now();
 
-    public constructor(public instance: string, public type: Modules.EntityType) {}
+    public constructor(public instance = '', public type: Modules.EntityType) {}
 
     public fadeIn(time: number): void {
         this.fading = true;
         this.fadingTime = time;
     }
 
-    public blink(speed: number): void {
+    public blink(speed = 150): void {
         this.blinking = window.setInterval(() => this.toggleVisibility(), speed);
     }
 
@@ -146,6 +146,18 @@ export default abstract class Entity {
         this.animation.setSpeed(speed);
 
         this.animation.setCount(count, onEndCount || (() => this.idle()));
+    }
+
+    /**
+     * Animates the character's death animation and
+     * creates a callback if needed.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.setAnimation('death', speed, count, callback);
     }
 
     private setPosition(x: number, y: number): void {

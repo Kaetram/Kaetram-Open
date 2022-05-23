@@ -25,7 +25,6 @@ import type Connection from '../../../../network/connection';
 import type NPC from '../../npc/npc';
 import type Area from '../../../map/areas/area';
 import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import type { ExperienceCombatData } from '@kaetram/common/types/messages';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -51,6 +50,7 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
+import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -316,9 +316,9 @@ export default class Player extends Character {
         }
 
         let data = {
-            id: this.instance,
+            instance: this.instance,
             level: this.level
-        } as ExperienceCombatData;
+        } as ExperiencePacket;
 
         /**
          * Sending two sets of data as other users do not need to
@@ -357,7 +357,7 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Heal({
-                id: this.instance,
+                instance: this.instance,
                 type,
                 amount
             })
@@ -373,7 +373,7 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Heal({
-                id: this.instance,
+                instance: this.instance,
                 type,
                 amount
             })
@@ -588,8 +588,7 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
-                forced,
-                teleport
+                forced
             }),
             true
         );
@@ -805,14 +804,16 @@ export default class Player extends Character {
 
         log.debug(`[${this.username}] ${message}`);
 
-        let name = Utils.formatName(this.username),
-            packet = new Chat({
-                instance: this.instance,
-                message,
-                withBubble,
-                global,
-                colour
-            });
+        let name = Utils.formatName(this.username);
+
+        if (global) return this.world.globalMessage(name, message, colour);
+
+        let packet = new Chat({
+            instance: this.instance,
+            message,
+            withBubble,
+            colour
+        });
 
         // Relay the message to the discord channel.
         if (config.discordEnabled) this.world.discord.sendMessage(name, message, undefined, true);
@@ -854,7 +855,7 @@ export default class Player extends Character {
      * @param colour Optional parameter indicating text colour.
      */
 
-    public notify(message: string, colour?: string): void {
+    public notify(message: string, colour = ''): void {
         if (!message) return;
 
         // Prevent notify spams
@@ -897,11 +898,11 @@ export default class Player extends Character {
      * being transported elsewhere.
      */
 
-    public stopMovement(force = false): void {
+    public stopMovement(forced = false): void {
         this.send(
             new Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
-                force
+                forced
             })
         );
     }

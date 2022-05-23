@@ -72,7 +72,7 @@ export default class NPC extends Entity {
         // Send the network packet of the current dialogue index.
         player.send(
             new NPCPacket(Opcodes.NPC.Talk, {
-                id: this.instance,
+                instance: this.instance,
                 text: message
             })
         );

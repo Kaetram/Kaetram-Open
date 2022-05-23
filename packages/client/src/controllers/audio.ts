@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
+
+import Util from '../utils/util';
 import { isSafari } from '../utils/detect';
 
 import type Game from '../game';
@@ -104,8 +106,29 @@ export default class AudioController {
         }
     }
 
+    /**
+     * Picks between the two possible hit sound effects
+     * and plays one of them randomly.
+     */
+
+    public playHit(): void {
+        this.play(Modules.AudioTypes.SFX, `hit${Util.randomInt(1, 2)}`);
+    }
+
+    /**
+     * Plays one of the kill sound effects randomly.
+     */
+
+    public playKill(): void {
+        this.play(Modules.AudioTypes.SFX, `kill${Util.randomInt(1, 2)}`);
+    }
+
+    public playHurt(): void {
+        this.play(Modules.AudioTypes.SFX, 'hurt');
+    }
+
     public update(): void {
-        if (!this.isEnabled()) return;
+        if (!this.isEnabled() || !this.newSong) return;
 
         let { newSong, game, music, audibles } = this;
 

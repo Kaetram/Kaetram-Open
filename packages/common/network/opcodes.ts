@@ -138,10 +138,6 @@ export enum TeamWar {
     Countdown
 }
 
-export enum Map {
-    Render
-}
-
 export enum Overlay {
     Set,
     Remove,
@@ -161,7 +157,7 @@ export enum Command {
     CtrlClick
 }
 
-export enum Profession {
+export enum Skill {
     Batch,
     Update
 }

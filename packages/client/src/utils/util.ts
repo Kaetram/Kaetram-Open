@@ -14,6 +14,17 @@ export default {
     },
 
     /**
+     * Generates a random integer number using Math library.
+     * @param min Minimum value (inclusive)
+     * @param max Maximum value (inclusive)
+     * @returns Random integer between min and max.
+     */
+
+    randomInt(min: number, max: number): number {
+        return min + Math.floor(Math.random() * (max - min + 1));
+    },
+
+    /**
      * Converts an item's key into an image URL for the client.
      * It defaults to `null` if parameter is not specified.
      * @param key The item's key.
