@@ -214,13 +214,11 @@ export default class Handler {
      */
 
     private handleInventory(): void {
-        let { slots } = this.player.inventory.serialize();
-
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                slots
+                data: this.player.inventory.serialize()
             })
         );
     }
@@ -276,9 +274,11 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        let { quests } = this.player.quests.serialize(true);
-
-        this.player.send(new Quest(Opcodes.Quest.Batch, quests));
+        this.player.send(
+            new Quest(Opcodes.Quest.Batch, {
+                data: this.player.quests.serialize(true)
+            })
+        );
     }
 
     /**

@@ -67,7 +67,7 @@ export default class Skills {
 
         this.player.send(
             new Experience(Opcodes.Experience.Skill, {
-                id: this.player.instance,
+                instance: this.player.instance,
                 amount: experience
             })
         );
