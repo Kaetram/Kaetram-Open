@@ -17,9 +17,6 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 import type Game from '../game';
 import type Entity from '../entity/entity';
 import type Character from '../entity/character/character';
-import type Weapon from '../entity/character/player/equipment/weapon';
-import type Equipment from '../entity/character/player/equipment/equipment';
-import type { ProjectileData } from '@kaetram/common/types/messages';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -32,8 +29,6 @@ export interface Movable {
     attackerId: string;
     hitType: number;
 }
-
-export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
     public grids: Grids = new Grids(this.game.map);

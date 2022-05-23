@@ -47,7 +47,7 @@ export default class PointerController {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Opcodes.Pointer.Relative: {
-                    let scale = this.getScale(),
+                    let scale = this.getZoom(),
                         offsetX = 0,
                         offsetY = 0;
 
@@ -89,17 +89,17 @@ export default class PointerController {
     private set(pointer: Arrow, posX: number, posY: number): void {
         this.updateCamera();
 
-        let { camera, game, scale } = this;
+        let { camera, game } = this;
 
         if (!camera) return;
 
         let { element } = pointer,
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = 48, // 16 * scale
-            x = (posX - camera.x) * scale,
+            x = (posX - camera.x) * this.getZoom(),
             width = parseInt(element.css('width') + 24),
             offset = width / 2 - tileSize / 2,
-            y = (posY - camera.y) * scale - tileSize,
+            y = (posY - camera.y) * this.getZoom() - tileSize,
             outX = x / canvasWidth,
             outY = y / canvasHeight;
 
@@ -172,7 +172,7 @@ export default class PointerController {
 
         if (!pointer) return;
 
-        let scale = this.getScale(),
+        let scale = this.getZoom(),
             offsetX = 0,
             offsetY = 0;
 
