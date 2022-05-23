@@ -138,7 +138,7 @@ export default abstract class Character extends Entity {
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Points({
-                id: this.instance,
+                instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints()
             })
         });

@@ -117,12 +117,7 @@ export default class Character extends Entity {
         });
     }
 
-    public animate(
-        animation: string,
-        speed: number,
-        count?: number,
-        onEndCount?: () => void
-    ): void {
+    public animate(animation: string, speed: number, count = 1, onEndCount?: () => void): void {
         let o = ['atk', 'walk', 'idle'];
 
         if (this.animation?.name === 'death') return;
@@ -138,6 +133,39 @@ export default class Character extends Entity {
         }
 
         this.setAnimation(animation, speed, count, onEndCount);
+    }
+
+    /**
+     * Animates the character's death animation and
+     * creates a callback if needed.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public override animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.animate('death', speed, count, callback);
+    }
+
+    /**
+     * Briefly changes the character's sprite with that of the
+     * hurt sprite (a white and red sprite when a character is hurt).
+     */
+
+    public toggleHurt(): void {
+        this.sprite = this.hurtSprite;
+
+        window.setTimeout(() => {
+            this.sprite = this.normalSprite;
+        }, 75);
+    }
+
+    public despawn(): void {
+        this.hitPoints = 0;
+        this.dead = true;
+        this.stop();
+
+        this.orientation = Modules.Orientation.Down;
     }
 
     public follow(entity: Entity): void {
@@ -472,8 +500,8 @@ export default class Character extends Entity {
         this.target = target;
     }
 
-    public hasTarget(): boolean {
-        return !!this.target;
+    public hasTarget(target?: Entity): boolean {
+        return target ? this.target === target : !!this.target;
     }
 
     public setObjectTarget(position: Position): void {
