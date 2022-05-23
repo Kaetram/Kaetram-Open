@@ -44,7 +44,7 @@ abstract class Entity {
     public movementCallback?: MovementCallback;
     public regionCallback?: RegionCallback;
 
-    protected constructor(public instance: string, public key = '', x: number, y: number) {
+    protected constructor(public instance = '', public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
 
         this.updatePosition(x, y);

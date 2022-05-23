@@ -9,7 +9,6 @@ export { default as Movement } from './movement';
 export { default as Teleport } from './teleport';
 export { default as Despawn } from './despawn';
 export { default as Combat } from './combat';
-export { default as Projectile } from './projectile';
 export { default as Points } from './points';
 export { default as Network } from './network';
 export { default as Chat } from './chat';

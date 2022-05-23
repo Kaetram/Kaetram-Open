@@ -2,119 +2,45 @@ import _ from 'lodash';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { Opcodes } from '@kaetram/common/network';
-
+import type App from '../app';
+import type Game from '../game';
 import type {
     HandshakeCallback,
     WelcomeCallback,
+    MapCallback,
     EquipmentCallback,
     EntityListCallback,
     SyncCallback,
     SpawnCallback,
     MovementCallback,
     TeleportCallback,
+    DespawnCallback,
     CombatCallback,
     AnimationCallback,
+    PointsCallback,
+    NetworkCallback,
     ChatCallback,
+    CommandCallback,
+    ContainerCallback,
+    AbilityCallback,
+    QuestCallback,
+    NotificationCallback,
+    BlinkCallback,
+    HealCallback,
+    ExperienceCallback,
+    DeathCallback,
+    AudioCallback,
+    NPCCallback,
     RespawnCallback,
-    StoreCallback
+    EnchantCallback,
+    GuildCallback,
+    PointerCallback,
+    PVPCallback,
+    StoreCallback,
+    OverlayCallback,
+    CameraCallback,
+    BubbleCallback
 } from '@kaetram/common/types/messages/outgoing';
-
-// TODO: Slowly remove all these.
-import type {
-    BubbleData,
-    CommandData,
-    ContainerAddData,
-    ContainerBatchData,
-    ContainerRemoveData,
-    EnchantData,
-    ExperienceCombatData,
-    ExperienceProfessionData,
-    HealData,
-    NotificationData,
-    NPCBankData,
-    NPCCountdownData,
-    NPCEnchantData,
-    NPCStoreData,
-    NPCTalkData,
-    OverlayDarknessData,
-    OverlayLampData,
-    OverlaySetData,
-    PointerButtonData,
-    PointerData,
-    PointerLocationData,
-    PointerRelativeData,
-    PointerRemoveData,
-    PointsData,
-    ProfessionBatchData,
-    ProfessionUpdateData,
-    ProjectileData,
-    QuestBatchData,
-    QuestFinishData,
-    QuestProgressData,
-    TeleportData
-} from '@kaetram/common/types/messages';
-import type App from '../app';
-import type Game from '../game';
-
-type DespawnCallback = (id: string) => void;
-interface ProjectileCallback {
-    (opcode: Opcodes.Projectile, data: ProjectileData): void;
-}
-type PopulationCallback = (population: number) => void;
-type PointsCallback = (data: PointsData) => void;
-type NetworkCallback = () => void;
-type CommandCallback = (data: CommandData) => void;
-interface ContainerCallback {
-    (opcode: Opcodes.Container.Batch, info: ContainerBatchData): void;
-    (opcode: Opcodes.Container.Add, info: ContainerAddData): void;
-    (opcode: Opcodes.Container.Drop, info: ContainerRemoveData): void;
-}
-type AbilityCallback = (data: unknown) => void;
-interface QuestCallback {
-    (opcode: Opcodes.Quest.Batch, info: QuestBatchData): void;
-    (opcode: Opcodes.Quest.Progress, info: QuestProgressData): void;
-    (opcode: Opcodes.Quest.Finish, info: QuestFinishData): void;
-}
-type NotificationCallback = (opcode: Opcodes.Notification, info: NotificationData) => void;
-type BlinkCallback = (instance: string) => void;
-type HealCallback = (data: HealData) => void;
-interface ExperienceCallback {
-    (Opcodes: Opcodes.Experience.Combat, data: ExperienceCombatData): void;
-    (Opcodes: Opcodes.Experience.Skill, data: ExperienceProfessionData): void;
-}
-type DeathCallback = (id: string) => void;
-type AudioCallback = (song: AudioName) => void;
-interface NPCCallback {
-    (opcode: Opcodes.NPC.Talk, data: NPCTalkData): void;
-    (opcode: Opcodes.NPC.Store, data: NPCStoreData): void;
-    (opcode: Opcodes.NPC.Bank, data: NPCBankData): void;
-    (opcode: Opcodes.NPC.Enchant, data: NPCEnchantData): void;
-    (opcode: Opcodes.NPC.Countdown, data: NPCCountdownData): void;
-}
-type EnchantCallback = (opcode: Opcodes.Enchant, data: EnchantData) => void;
-type GuildCallback = (opcode: Opcodes.Guild, data: unknown) => void;
-interface PointerCallback {
-    (opcode: Opcodes.Pointer, data: PointerData): void;
-    (opcode: Opcodes.Pointer.Location, data: PointerLocationData): void;
-    (opcode: Opcodes.Pointer.Relative, data: PointerRelativeData): void;
-    (opcode: Opcodes.Pointer.Remove, data: PointerRemoveData): void;
-    (opcode: Opcodes.Pointer.Button, data: PointerButtonData): void;
-}
-type PVPCallback = (id: string, pvp: boolean) => void;
-type MapCallback = (opcode: Opcodes.Map, data: string) => void;
-interface OverlayCallback {
-    (opcode: Opcodes.Overlay, data: undefined): void;
-    (opcode: Opcodes.Overlay.Set, data: OverlaySetData): void;
-    (opcode: Opcodes.Overlay.Lamp, data: OverlayLampData): void;
-    (opcode: Opcodes.Overlay.Darkness, data: OverlayDarknessData): void;
-}
-type CameraCallback = (opcode: Opcodes.Camera) => void;
-type BubbleCallback = (data: BubbleData) => void;
-interface ProfessionCallback {
-    (opcode: Opcodes.Profession.Batch, data: ProfessionBatchData): void;
-    (opcode: Opcodes.Profession.Update, data: ProfessionUpdateData): void;
-}
 
 export default class Messages {
     private messages;
@@ -122,6 +48,7 @@ export default class Messages {
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
+    private mapCallback?: MapCallback;
     private spawnCallback?: SpawnCallback;
     private equipmentCallback?: EquipmentCallback;
     private entityListCallback?: EntityListCallback;
@@ -131,8 +58,6 @@ export default class Messages {
     private despawnCallback?: DespawnCallback;
     private combatCallback?: CombatCallback;
     private animationCallback?: AnimationCallback;
-    private projectileCallback?: ProjectileCallback;
-    private populationCallback?: PopulationCallback;
     private pointsCallback?: PointsCallback;
     private networkCallback?: NetworkCallback;
     private chatCallback?: ChatCallback;
@@ -153,11 +78,9 @@ export default class Messages {
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
     private storeCallback?: StoreCallback;
-    private mapCallback?: MapCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
     private bubbleCallback?: BubbleCallback;
-    private professionCallback?: ProfessionCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -183,8 +106,6 @@ export default class Messages {
         messages[Packets.Despawn] = () => this.despawnCallback;
         messages[Packets.Combat] = () => this.combatCallback;
         messages[Packets.Animation] = () => this.animationCallback;
-        messages[Packets.Projectile] = () => this.projectileCallback;
-        messages[Packets.Population] = () => this.populationCallback;
         messages[Packets.Points] = () => this.pointsCallback;
         messages[Packets.Network] = () => this.networkCallback;
         messages[Packets.Chat] = () => this.chatCallback;
@@ -209,7 +130,6 @@ export default class Messages {
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
         messages[Packets.Bubble] = () => this.bubbleCallback;
-        messages[Packets.Profession] = () => this.professionCallback;
 
         this.messages = messages;
     }
@@ -348,14 +268,6 @@ export default class Messages {
         this.animationCallback = callback;
     }
 
-    public onProjectile(callback: ProjectileCallback): void {
-        this.projectileCallback = callback;
-    }
-
-    public onPopulation(callback: PopulationCallback): void {
-        this.populationCallback = callback;
-    }
-
     public onPoints(callback: PointsCallback): void {
         this.pointsCallback = callback;
     }
@@ -450,9 +362,5 @@ export default class Messages {
 
     public onBubble(callback: BubbleCallback): void {
         this.bubbleCallback = callback;
-    }
-
-    public onProfession(callback: ProfessionCallback): void {
-        this.professionCallback = callback;
     }
 }

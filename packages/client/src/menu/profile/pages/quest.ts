@@ -7,6 +7,7 @@ import { QuestData } from '@kaetram/common/types/quest';
 
 import type { AchievementData } from '@kaetram/common/types/info';
 import type { QuestFinishData, QuestProgressData } from '@kaetram/common/types/messages';
+import { QuestPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Quest extends Page {
     private quests = $('#quest-list');
@@ -98,14 +99,14 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    public progress(info: QuestProgressData): void {
+    public progress(info: QuestPacket): void {
         // TODO - upgrade to not use hardcoded values.
-        let name = this.findQuestName(info.key);
+        let name = this.findQuestName(info.key!);
 
         name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-        if (info.stage > 0) name.css('background', 'rgba(255, 255, 10, 0.4)');
-        if (info.stage >= info.stageCount) {
+        if (info.stage! > 0) name.css('background', 'rgba(255, 255, 10, 0.4)');
+        if (info.stage! >= info.stageCount!) {
             this.finishedQuests++;
             name.css('background', 'rgba(10, 255, 10, 0.3)');
         }

@@ -44,4 +44,13 @@ export default class SpritesController {
     public get(name: string): Sprite {
         return this.sprites[name];
     }
+
+    /**
+     * @returns The death sprite used for when an entity
+     * dies or sometimes when a player teleports.
+     */
+
+    public getDeath(): Sprite {
+        return this.get('death');
+    }
 }

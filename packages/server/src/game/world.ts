@@ -109,7 +109,7 @@ export default class World {
     public globalMessage(source: string, message: string, colour = ''): void {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
-                source,
+                source: `[Global]: ${source}`,
                 message,
                 colour
             })
