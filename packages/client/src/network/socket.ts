@@ -29,11 +29,7 @@ export default class Socket {
         // Skip if hub is disabled in the config.
         if (!this.config.hub) return callback();
 
-        // Connect to specified game world if the worldSwitch is active.
-        if (this.config.worldSwitch) return callback(this.game.world);
-
         // Attempt to get API data from the hub.
-
         try {
             $.get(`${this.config.hub}/server`, (response) => {
                 console.log(response);

@@ -6,7 +6,6 @@ import Page from '../page';
 import { QuestData } from '@kaetram/common/types/quest';
 
 import type { AchievementData } from '@kaetram/common/types/info';
-import type { QuestFinishData, QuestProgressData } from '@kaetram/common/types/messages';
 import { QuestPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Quest extends Page {

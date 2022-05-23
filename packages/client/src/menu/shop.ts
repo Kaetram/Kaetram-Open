@@ -2,7 +2,6 @@ import _ from 'lodash';
 import $ from 'jquery';
 
 import { SerializedStoreItem } from '@kaetram/common/types/stores';
-import { SerializedStoreInfo } from './../../../common/types/stores.d';
 
 import { Packets, Opcodes } from '@kaetram/common/network';
 
@@ -188,7 +187,7 @@ export default class Shop {
     }
 
     public open(store: StorePacket): void {
-        this.key = store.key;
+        this.key = store.key!;
         this.currency = store.currency!;
 
         this.body.fadeIn('slow');
