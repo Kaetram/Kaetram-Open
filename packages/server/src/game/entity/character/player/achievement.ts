@@ -47,15 +47,15 @@ export default class Achievement {
 
         this.update();
 
-        this.player.send(
-            new Quest(Opcodes.Quest.Progress, {
-                id: this.id,
-                name: this.name,
-                progress: this.progress,
-                count: this.data.count,
-                isQuest: false
-            })
-        );
+        // this.player.send(
+        //     new Quest(Opcodes.Quest.Progress, {
+        //         id: this.id,
+        //         name: this.name,
+        //         progress: this.progress,
+        //         count: this.data.count,
+        //         isQuest: false
+        //     })
+        // );
     }
 
     public converse(npc: NPC): void {
@@ -107,13 +107,13 @@ export default class Achievement {
         this.setProgress(9999);
         this.update();
 
-        this.player.send(
-            new Quest(Opcodes.Quest.Finish, {
-                id: this.id,
-                name: this.name,
-                isQuest: false
-            })
-        );
+        // this.player.send(
+        //     new Quest(Opcodes.Quest.Finish, {
+        //         id: this.id,
+        //         name: this.name,
+        //         isQuest: false
+        //     })
+        // );
 
         this.player.popup('Achievement Completed!', `You have completed ${this.name}!`, '#33cc33');
 
