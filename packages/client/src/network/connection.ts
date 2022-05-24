@@ -24,6 +24,7 @@ import type Item from '../entity/objects/item';
 import type NPC from '../entity/character/npc/npc';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
+import type Menu from '../menu/menu';
 
 import { inflate } from 'pako';
 import { isMobile } from '../utils/detect';
@@ -555,6 +556,11 @@ export default class Connection {
                 ? this.menu.getInventory()
                 : this.menu.getBank();
 
+        switch (opcode) {
+            case Opcodes.Container.Batch:
+                return container.batch(info.data!.slots);
+        }
+
         // switch (opcode) {
         //     case Opcodes.Container.Batch: {
         //         container.load(info.data!.slots);
@@ -568,7 +574,7 @@ export default class Connection {
         //         break;
         //     }
 
-        //     case Opcodes.Container.Drop: {
+        //     case Opcodes.Container.Remove: {
         //         container.remove(info.slot!, info.type);
 
         //         this.menu.bank.remove(info.slot!, info.type);
