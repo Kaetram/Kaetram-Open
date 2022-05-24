@@ -1,310 +1,314 @@
-import $ from 'jquery';
+import Menu from './menu';
 
-import { Modules, Packets, Opcodes } from '@kaetram/common/network';
+export default class Inventory extends Menu {}
 
-import * as Detect from '../utils/detect';
-import Container from './container/container';
+// import $ from 'jquery';
 
-import type Game from '../game';
-import type Slot from './container/slot';
-import MenuController from '../controllers/menu';
-import { SlotData } from '@kaetram/common/types/slot';
+// import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
-import Utils from '../utils/util';
+// import * as Detect from '../utils/detect';
+// import Container from './container/container';
 
-export default class Inventory {
-    private actions;
+// import type Game from '../game';
+// import type Slot from './container/slot';
+// import MenuController from '../controllers/menu';
+// import { SlotData } from '@kaetram/common/types/slot';
 
-    private body = $('#inventory');
-    private button = $('#inventory-button');
-    // private action = $('#action-container');
+// import Utils from '../utils/util';
 
-    public container: Container;
+// export default class Inventory {
+//     private actions;
 
-    private selectedSlot: JQuery | null = null;
-    private selectedItem: Slot | null = null;
+//     private body = $('#inventory');
+//     private button = $('#inventory-button');
+//     // private action = $('#action-container');
 
-    public constructor(
-        private game: Game,
-        private menu: MenuController,
-        public size: number,
-        data: SlotData[] = []
-    ) {
-        this.actions = this.menu.actions;
-        this.container = new Container(this.size);
+//     public container: Container;
 
-        this.load(data);
-    }
+//     private selectedSlot: JQuery | null = null;
+//     private selectedItem: Slot | null = null;
 
-    public load(data: SlotData[]): void {
-        let list = $('#inventory').find('ul');
+//     public constructor(
+//         private game: Game,
+//         private menu: MenuController,
+//         public size: number,
+//         data: SlotData[] = []
+//     ) {
+//         this.actions = this.menu.actions;
+//         this.container = new Container(this.size);
 
-        this.clear();
+//         this.load(data);
+//     }
 
-        for (let index = 0; index < this.size; index++) {
-            // Create an empty item slot.
-            let itemSlot = $(`<div id="slot${index}" class="item-slot"></div>`),
-                itemSlotCount = $(
-                    `<div id="item-count${index}" class="inventory-item-count"></div>`
-                ),
-                slotElement = $('<li></li>').append(itemSlot).append(itemSlotCount);
+//     public load(data: SlotData[]): void {
+//         let list = $('#inventory').find('ul');
 
-            itemSlot.dblclick((event) => this.clickDouble(event));
+//         this.clear();
 
-            itemSlot.on('click', (event) => this.click(event));
+//         for (let index = 0; index < this.size; index++) {
+//             // Create an empty item slot.
+//             let itemSlot = $(`<div id="slot${index}" class="item-slot"></div>`),
+//                 itemSlotCount = $(
+//                     `<div id="item-count${index}" class="inventory-item-count"></div>`
+//                 ),
+//                 slotElement = $('<li></li>').append(itemSlot).append(itemSlotCount);
 
-            list.append(slotElement);
-        }
+//             itemSlot.dblclick((event) => this.clickDouble(event));
 
-        this.button.on('click', () => this.open());
+//             itemSlot.on('click', (event) => this.click(event));
 
-        if (data.length === 0) return;
+//             list.append(slotElement);
+//         }
 
-        for (let slot of data) this.add(slot);
-    }
+//         this.button.on('click', () => this.open());
 
-    public add(info: SlotData): void {
-        let item = $(this.getList()[info.index]),
-            slot = this.container.slots[info.index];
+//         if (data.length === 0) return;
 
-        if (!item || !slot) return;
+//         for (let slot of data) this.add(slot);
+//     }
 
-        // Have the server forcefully load data into the slot.
-        slot.load(
-            info.key,
-            info.count,
-            info.ability,
-            info.abilityLevel,
-            info.edible,
-            info.equippable
-        );
+//     public add(info: SlotData): void {
+//         let item = $(this.getList()[info.index]),
+//             slot = this.container.slots[info.index];
 
-        let cssSlot = item.find(`#slot${info.index}`);
+//         if (!item || !slot) return;
 
-        cssSlot.css('background-image', Utils.getImageURL(slot.key));
+//         // Have the server forcefully load data into the slot.
+//         slot.load(
+//             info.key,
+//             info.count,
+//             info.ability,
+//             info.abilityLevel,
+//             info.edible,
+//             info.equippable
+//         );
 
-        cssSlot.css('background-size', '600%');
+//         let cssSlot = item.find(`#slot${info.index}`);
 
-        let { count, ability } = slot,
-            itemCount = count.toString();
+//         cssSlot.css('background-image', Utils.getImageURL(slot.key));
 
-        if (count > 999_999)
-            itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
-        else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
-        else if (count < 2) itemCount = '';
+//         cssSlot.css('background-size', '600%');
 
-        item.find(`#item-count${info.index}`).text(itemCount);
+//         let { count, ability } = slot,
+//             itemCount = count.toString();
 
-        if (ability! > -1) {
-            let eList = Object.keys(Modules.Enchantment), // enchantment list
-                enchantment = eList[ability!];
+//         if (count > 999_999)
+//             itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
+//         else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
+//         else if (count < 2) itemCount = '';
 
-            if (enchantment) item.find(`#item-count${info.index}`).text(enchantment);
-        }
-    }
+//         item.find(`#item-count${info.index}`).text(itemCount);
 
-    public open(): void {
-        this.menu.hideAll();
+//         if (ability! > -1) {
+//             let eList = Object.keys(Modules.Enchantment), // enchantment list
+//                 enchantment = eList[ability!];
 
-        if (this.isVisible()) this.hide();
-        else this.display();
+//             if (enchantment) item.find(`#item-count${info.index}`).text(enchantment);
+//         }
+//     }
 
-        this.game.socket.send(Packets.Click, ['inventory', this.button.hasClass('active')]);
-    }
+//     public open(): void {
+//         this.menu.hideAll();
 
-    private click(event: JQuery.ClickEvent): void {
-        let index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index],
-            item = $(this.getList()[index]);
+//         if (this.isVisible()) this.hide();
+//         else this.display();
 
-        this.clearSelection();
+//         this.game.socket.send(Packets.Click, ['inventory', this.button.hasClass('active')]);
+//     }
 
-        if (slot.key === null || slot.count === -1 || slot.key === 'null') return;
+//     private click(event: JQuery.ClickEvent): void {
+//         let index = event.currentTarget.id.slice(4),
+//             slot = this.container.slots[index],
+//             item = $(this.getList()[index]);
 
-        this.actions.loadDefaults('inventory');
+//         this.clearSelection();
 
-        if (slot.edible) this.actions.add($('<div id="eat" class="action-button">Eat</div>'));
-        else if (slot.equippable)
-            this.actions.add($('<div id="wield" class="action-button">Wield</div>'));
-        else if (slot.count > 999_999)
-            this.actions.add($('<div id="item-info" class="action-button">Info</div>'));
+//         if (slot.key === null || slot.count === -1 || slot.key === 'null') return;
 
-        if (!this.actions.isVisible()) this.actions.show();
+//         this.actions.loadDefaults('inventory');
 
-        let sSlot = item.find(`#slot${index}`);
+//         if (slot.edible) this.actions.add($('<div id="eat" class="action-button">Eat</div>'));
+//         else if (slot.equippable)
+//             this.actions.add($('<div id="wield" class="action-button">Wield</div>'));
+//         else if (slot.count > 999_999)
+//             this.actions.add($('<div id="item-info" class="action-button">Info</div>'));
 
-        sSlot.addClass('select');
+//         if (!this.actions.isVisible()) this.actions.show();
 
-        this.selectedSlot = sSlot;
-        this.selectedItem = slot;
+//         let sSlot = item.find(`#slot${index}`);
 
-        this.actions.hideDrop();
-    }
+//         sSlot.addClass('select');
 
-    private clickDouble(event: JQuery.DoubleClickEvent): void {
-        let index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index];
+//         this.selectedSlot = sSlot;
+//         this.selectedItem = slot;
 
-        if (!slot.edible && !slot.equippable) return;
+//         this.actions.hideDrop();
+//     }
 
-        let item = $(this.getList()[index]),
-            sSlot = item.find(`#slot${index}`);
+//     private clickDouble(event: JQuery.DoubleClickEvent): void {
+//         let index = event.currentTarget.id.slice(4),
+//             slot = this.container.slots[index];
 
-        this.clearSelection();
+//         if (!slot.edible && !slot.equippable) return;
 
-        this.selectedSlot = sSlot;
-        this.selectedItem = slot;
+//         let item = $(this.getList()[index]),
+//             sSlot = item.find(`#slot${index}`);
 
-        this.clickAction(slot.edible ? 'eat' : 'wield');
+//         this.clearSelection();
 
-        this.actions.hideDrop();
-    }
+//         this.selectedSlot = sSlot;
+//         this.selectedItem = slot;
 
-    public clickAction(event: string | JQuery.ClickEvent): void {
-        let action = (event as JQuery.ClickEvent).currentTarget?.id || event;
+//         this.clickAction(slot.edible ? 'eat' : 'wield');
 
-        if (!this.selectedSlot || !this.selectedItem) return;
+//         this.actions.hideDrop();
+//     }
 
-        switch (action) {
-            case 'eat':
-            case 'wield':
-                this.game.socket.send(Packets.Container, [
-                    Modules.ContainerType.Inventory,
-                    Opcodes.Container.Select,
-                    this.selectedItem.index
-                ]);
-                this.clearSelection();
+//     public clickAction(event: string | JQuery.ClickEvent): void {
+//         let action = (event as JQuery.ClickEvent).currentTarget?.id || event;
 
-                break;
+//         if (!this.selectedSlot || !this.selectedItem) return;
 
-            case 'drop':
-                if (this.selectedItem.count > 1) {
-                    if (Detect.isMobile()) this.hide(true);
+//         switch (action) {
+//             case 'eat':
+//             case 'wield':
+//                 this.game.socket.send(Packets.Container, [
+//                     Modules.ContainerType.Inventory,
+//                     Opcodes.Container.Select,
+//                     this.selectedItem.index
+//                 ]);
+//                 this.clearSelection();
 
-                    this.actions.displayDrop('inventory');
-                } else {
-                    this.game.socket.send(Packets.Container, [
-                        Modules.ContainerType.Inventory,
-                        Opcodes.Container.Drop,
-                        this.selectedItem.index
-                    ]);
-                    this.clearSelection();
-                }
+//                 break;
 
-                break;
+//             case 'drop':
+//                 if (this.selectedItem.count > 1) {
+//                     if (Detect.isMobile()) this.hide(true);
 
-            case 'drop-accept': {
-                let count = parseInt($('#drop-count').val() as string);
+//                     this.actions.displayDrop('inventory');
+//                 } else {
+//                     this.game.socket.send(Packets.Container, [
+//                         Modules.ContainerType.Inventory,
+//                         Opcodes.Container.Drop,
+//                         this.selectedItem.index
+//                     ]);
+//                     this.clearSelection();
+//                 }
 
-                if (isNaN(count) || count < 1) return;
+//                 break;
 
-                this.game.socket.send(Packets.Container, [
-                    Modules.ContainerType.Inventory,
-                    Opcodes.Container.Drop,
-                    this.selectedItem.index,
-                    count
-                ]);
-                this.actions.hideDrop();
-                this.clearSelection();
+//             case 'drop-accept': {
+//                 let count = parseInt($('#drop-count').val() as string);
 
-                break;
-            }
+//                 if (isNaN(count) || count < 1) return;
 
-            case 'drop-cancel':
-                this.actions.hideDrop();
-                this.clearSelection();
+//                 this.game.socket.send(Packets.Container, [
+//                     Modules.ContainerType.Inventory,
+//                     Opcodes.Container.Drop,
+//                     this.selectedItem.index,
+//                     count
+//                 ]);
+//                 this.actions.hideDrop();
+//                 this.clearSelection();
 
-                break;
+//                 break;
+//             }
 
-            case 'itemInfo': {
-                this.game.input.chatHandler.add(
-                    'WORLD',
-                    `You have ${this.selectedItem.count} coins.`
-                );
+//             case 'drop-cancel':
+//                 this.actions.hideDrop();
+//                 this.clearSelection();
 
-                break;
-            }
-        }
+//                 break;
 
-        this.actions.hide();
-    }
+//             case 'itemInfo': {
+//                 this.game.input.chatHandler.add(
+//                     'WORLD',
+//                     `You have ${this.selectedItem.count} coins.`
+//                 );
 
-    public remove(info: SlotData): void {
-        let { index, count } = info,
-            item = $(this.getList()[index]),
-            slot = this.container.slots[index];
+//                 break;
+//             }
+//         }
 
-        if (!item || !slot) return;
+//         this.actions.hide();
+//     }
 
-        slot.count = count;
-        let itemCount = slot.count.toString();
+//     public remove(info: SlotData): void {
+//         let { index, count } = info,
+//             item = $(this.getList()[index]),
+//             slot = this.container.slots[index];
 
-        if (slot.count === 1) itemCount = '';
+//         if (!item || !slot) return;
 
-        item.find(`#item-count${index}`).text(itemCount);
+//         slot.count = count;
+//         let itemCount = slot.count.toString();
 
-        if (slot.count < 1) {
-            item.find(`#slot${index}`).css('background-image', '');
-            item.find(`#item-count${index}`).text('');
-            slot.empty();
-        }
-    }
+//         if (slot.count === 1) itemCount = '';
 
-    public resize(): void {
-        let list = this.getList();
+//         item.find(`#item-count${index}`).text(itemCount);
 
-        for (let [i, element] of [...list].entries()) {
-            let item = $(element).find(`#slot${i}`),
-                slot = this.container.slots[i];
+//         if (slot.count < 1) {
+//             item.find(`#slot${index}`).css('background-image', '');
+//             item.find(`#item-count${index}`).text('');
+//             slot.empty();
+//         }
+//     }
 
-            if (!slot) continue;
+//     public resize(): void {
+//         let list = this.getList();
 
-            if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', Utils.getImageURL(slot.key));
-        }
-    }
+//         for (let [i, element] of [...list].entries()) {
+//             let item = $(element).find(`#slot${i}`),
+//                 slot = this.container.slots[i];
 
-    private clearSelection(): void {
-        if (!this.selectedSlot) return;
+//             if (!slot) continue;
 
-        this.selectedSlot.removeClass('select');
-        this.selectedSlot = null;
-        this.selectedItem = null;
-    }
+//             if (Detect.isMobile()) item.css('background-size', '600%');
+//             else item.css('background-image', Utils.getImageURL(slot.key));
+//         }
+//     }
 
-    private display(): void {
-        this.body.fadeIn('fast');
-        this.button.addClass('active');
-    }
+//     private clearSelection(): void {
+//         if (!this.selectedSlot) return;
 
-    public hide(keepSelection = false): void {
-        this.button.removeClass('active');
+//         this.selectedSlot.removeClass('select');
+//         this.selectedSlot = null;
+//         this.selectedItem = null;
+//     }
 
-        this.body.fadeOut('slow');
-        this.button.removeClass('active');
+//     private display(): void {
+//         this.body.fadeIn('fast');
+//         this.button.addClass('active');
+//     }
 
-        if (!keepSelection) this.clearSelection();
-    }
+//     public hide(keepSelection = false): void {
+//         this.button.removeClass('active');
 
-    public clear(): void {
-        $('#inventory').find('ul').empty();
+//         this.body.fadeOut('slow');
+//         this.button.removeClass('active');
 
-        this.button?.off('click');
-    }
+//         if (!keepSelection) this.clearSelection();
+//     }
 
-    // getScale(): number {
-    //     return this.game.renderer.getScale();
-    // }
+//     public clear(): void {
+//         $('#inventory').find('ul').empty();
 
-    public getSize(): number {
-        return this.container.size;
-    }
+//         this.button?.off('click');
+//     }
 
-    private getList(): JQuery {
-        return $('#inventory').find('ul').find('li');
-    }
+//     // getScale(): number {
+//     //     return this.game.renderer.getScale();
+//     // }
 
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
-    }
-}
+//     public getSize(): number {
+//         return this.container.size;
+//     }
+
+//     private getList(): JQuery {
+//         return $('#inventory').find('ul').find('li');
+//     }
+
+//     public isVisible(): boolean {
+//         return this.body.css('display') === 'block';
+//     }
+// }
