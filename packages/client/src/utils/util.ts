@@ -36,6 +36,30 @@ export default {
     },
 
     /**
+     * Converts an integer value into a compact string used
+     * when wanting to display large numbers of stackable items.
+     * For example, 15000 coins get displayed as 15K and
+     * 1200400 coins displayed as 1.2M
+     */
+
+    getCount(count: number): string {
+        // Convert count to string.
+        let string = count.toString();
+
+        // Converts numbers 1 million and above to short-hand format (e.g. 25M)
+        if (count > 999_999) return `${string.slice(0, Math.max(0, string.length - 6))}M`;
+
+        // Convert numbers above 10,000 into kilo format (e.g. 25K)
+        if (count > 9999) return `${string.slice(0, 2)}K`;
+
+        // Any number above 1 is displayed as a string.
+        if (count > 1) return string;
+
+        // Do not display counts of 1.
+        return '';
+    },
+
+    /**
      * Checks the email string against regular expression.
      * @param email Email string to verify.
      * @returns Whether or not the email string follows the proper Regex pattern.

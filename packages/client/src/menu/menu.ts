@@ -2,6 +2,16 @@ import log from '../lib/log';
 
 export default abstract class Menu {
     /**
+     * Called by subclasses when attempting to load batch
+     * serialized data from the server.
+     */
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public batch(_data: unknown): void {
+        log.debug(`Unimplemented menu batch() function.`);
+    }
+
+    /**
      * Called by subclasses when we want to display the interface.
      */
 

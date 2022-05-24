@@ -1,6 +1,132 @@
+import _ from 'lodash';
+
 import Menu from './menu';
 
-export default class Inventory extends Menu {}
+import log from '../lib/log';
+import Util from '../utils/util';
+
+import { Modules } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
+
+export default class Inventory extends Menu {
+    private body: HTMLElement = document.querySelector('#inventory')!;
+    private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
+
+    // Button that opens the invnetory.
+    private button: HTMLElement = document.querySelector('#inventory-button')!;
+
+    public constructor() {
+        super();
+
+        this.load();
+
+        this.button.addEventListener('click', () => this.toggle());
+    }
+
+    /**
+     * Creates an empty inventory of the size defined in the
+     * constants. This may get adapted in the future for potential
+     * dynamic inventory sizes, though it has yet to be decided.
+     */
+
+    public load(): void {
+        if (!this.list) return log.error(`Could not create the skeleton for the inventory.`);
+
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
+            let slot = this.createSlot(i);
+
+            this.list.append(slot);
+        }
+    }
+
+    /**
+     * Loads the batch data into the inventory from the server. Each
+     * slot is selected from the list element.
+     * @param slots Serialized slots received from the server. We take
+     * the index contained within these slots and attribute them
+     * to the index within our slot list.
+     */
+
+    public override batch(slots: SlotData[]): void {
+        _.each(slots, (slot: SlotData) => {
+            // Grab the UI element based on the slot's index.
+            let slotElement: HTMLElement = this.list.children[slot.index] as HTMLElement;
+
+            if (!slotElement) return log.error(`Could not find slot element at: ${slot.index}`);
+
+            let count = slotElement.querySelector('.inventory-item-count');
+
+            // Set the count onto the element.
+            if (count) count.textContent = Util.getCount(slot.count);
+
+            slotElement.style.backgroundImage = Util.getImageURL(slot.key);
+        });
+    }
+
+    /**
+     * Creates a slot element using the DOM. The slot is
+     * used when we want to add an item to the invnetory.
+     * @param index The index of the slot.
+     * @returns A list element containing an empty slot.
+     */
+
+    private createSlot(index: number): HTMLElement {
+        let slot = document.createElement('li'),
+            item = document.createElement('div'),
+            count = document.createElement('div');
+
+        // Assign the slot's index.
+        item.id = `slot${index}`;
+        item.classList.add('item-slot');
+
+        // Add the class element onto the count.
+        count.classList.add('inventory-item-count');
+
+        // Append the count onto the item slot.
+        item.append(count);
+
+        // Append the item onto the slot list element.
+        slot.append(item);
+
+        return slot;
+    }
+
+    /**
+     * Toggles the status of the inventory.
+     */
+
+    public toggle(): void {
+        if (this.isVisible()) this.hide();
+        else this.show();
+    }
+
+    /**
+     * Displays the bank interface.
+     */
+
+    public override show(): void {
+        this.body.style.display = 'block';
+        this.button.classList.add('active');
+    }
+
+    /**
+     * Sets the body's display style to `none` and
+     * clears all the items from the bank user interface.
+     */
+
+    public override hide(): void {
+        this.body.style.display = 'none';
+        this.button.classList.remove('active');
+    }
+
+    /**
+     * @returns Whether or not the body is visible.
+     */
+
+    private isVisible(): boolean {
+        return this.body.style.display === 'block';
+    }
+}
 
 // import $ from 'jquery';
 
@@ -189,7 +315,7 @@ export default class Inventory extends Menu {}
 //                 } else {
 //                     this.game.socket.send(Packets.Container, [
 //                         Modules.ContainerType.Inventory,
-//                         Opcodes.Container.Drop,
+//                         Opcodes.Container.Remove,
 //                         this.selectedItem.index
 //                     ]);
 //                     this.clearSelection();
@@ -204,7 +330,7 @@ export default class Inventory extends Menu {}
 
 //                 this.game.socket.send(Packets.Container, [
 //                     Modules.ContainerType.Inventory,
-//                     Opcodes.Container.Drop,
+//                     Opcodes.Container.Remove,
 //                     this.selectedItem.index,
 //                     count
 //                 ]);
