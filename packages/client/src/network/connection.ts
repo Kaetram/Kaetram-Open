@@ -161,14 +161,10 @@ export default class Connection {
      */
 
     private handleWelcome(data: PlayerData): void {
-        this.menu.loadHeader();
-
         this.game.player.load(data);
 
         this.game.start();
         this.game.postLoad();
-
-        this.menu.loadProfile();
     }
 
     /**
@@ -555,28 +551,30 @@ export default class Connection {
 
     private handleContainer(opcode: Opcodes.Container, info: ContainerPacket): void {
         let container =
-            info.type === Modules.ContainerType.Inventory ? this.menu.inventory : this.menu.bank;
+            info.type === Modules.ContainerType.Inventory
+                ? this.menu.getInventory()
+                : this.menu.getBank();
 
-        switch (opcode) {
-            case Opcodes.Container.Batch: {
-                container.load(info.data!.slots);
-                break;
-            }
+        // switch (opcode) {
+        //     case Opcodes.Container.Batch: {
+        //         container.load(info.data!.slots);
+        //         break;
+        //     }
 
-            case Opcodes.Container.Add: {
-                container.add(info.slot!);
+        //     case Opcodes.Container.Add: {
+        //         container.add(info.slot!);
 
-                this.menu.bank.add(info.slot!, info.type);
-                break;
-            }
+        //         this.menu.bank.add(info.slot!, info.type);
+        //         break;
+        //     }
 
-            case Opcodes.Container.Drop: {
-                container.remove(info.slot!, info.type);
+        //     case Opcodes.Container.Drop: {
+        //         container.remove(info.slot!, info.type);
 
-                this.menu.bank.remove(info.slot!, info.type);
-                break;
-            }
-        }
+        //         this.menu.bank.remove(info.slot!, info.type);
+        //         break;
+        //     }
+        // }
     }
 
     /**
