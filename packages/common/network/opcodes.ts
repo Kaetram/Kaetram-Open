@@ -54,7 +54,7 @@ export enum Network {
 export enum Container {
     Batch,
     Add,
-    Drop,
+    Remove,
     Select
 }
 
