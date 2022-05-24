@@ -13,6 +13,10 @@ export default class Bank extends Menu {
         this.close.addEventListener('click', () => this.hide());
     }
 
+    public load(): void {
+        //
+    }
+
     /**
      * Displays the bank interface.
      */
