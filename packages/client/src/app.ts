@@ -469,19 +469,6 @@ export default class App {
     }
 
     /**
-     * UI scaling determines which size of assets to use depending
-     * on the screen size. It also adjusts the CSS accordingly.
-     * @returns UI scale from 1 to 3.
-     */
-
-    public getUIScale(): number {
-        let width = window.innerWidth,
-            height = window.innerHeight;
-
-        return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
-    }
-
-    /**
      * Checks if any of the footer items (about and credits) are active.
      * @returns Whether or not parchment contains `about` or `credits`.
      */
