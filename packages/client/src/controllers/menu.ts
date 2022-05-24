@@ -7,10 +7,10 @@ import Bank from '../menu/bank';
 import Inventory from '../menu/inventory';
 
 export default class MenuController {
-    private bank: Bank = new Bank();
     private inventory: Inventory = new Inventory();
+    private bank: Bank = new Bank();
 
-    public menu: Menu[] = [this.bank, this.inventory];
+    public menu: Menu[] = [this.inventory, this.bank];
 
     public constructor(private game: Game) {}
 
@@ -24,19 +24,19 @@ export default class MenuController {
     }
 
     /**
-     * @returns The bank menu object.
-     */
-
-    public getBank(): Bank {
-        return this.bank;
-    }
-
-    /**
      * @returns The inventory menu object.
      */
 
     public getInventory(): Inventory {
         return this.inventory;
+    }
+
+    /**
+     * @returns The bank menu object.
+     */
+
+    public getBank(): Bank {
+        return this.bank;
     }
 
     /**

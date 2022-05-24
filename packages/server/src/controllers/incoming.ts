@@ -476,7 +476,7 @@ export default class Incoming {
         log.debug(`Received container packet: ${opcode} - ${type}.`);
 
         switch (opcode) {
-            case Opcodes.Container.Drop:
+            case Opcodes.Container.Remove:
                 index = packet.shift() as number;
                 count = packet.shift() as number;
 

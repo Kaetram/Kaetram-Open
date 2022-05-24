@@ -262,7 +262,7 @@ export default class Handler {
             );
 
         this.player.send(
-            new Container(Opcodes.Container.Drop, {
+            new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
                 slot: slot.serialize()
             })
@@ -303,7 +303,7 @@ export default class Handler {
 
     private handleBankRemove(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Drop, {
+            new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
                 slot: slot.serialize()
             })
