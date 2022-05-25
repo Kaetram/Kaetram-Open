@@ -6,13 +6,17 @@ import Menu from '../menu/menu';
 import Bank from '../menu/bank';
 import Inventory from '../menu/inventory';
 
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+
 export default class MenuController {
     private inventory: Inventory = new Inventory();
     private bank: Bank = new Bank();
 
     public menu: Menu[] = [this.inventory, this.bank];
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.inventory.onSelect(this.handleInventorySelect.bind(this));
+    }
 
     /**
      * Iterates through all menus and calls the hide function.
@@ -37,6 +41,19 @@ export default class MenuController {
 
     public getBank(): Bank {
         return this.bank;
+    }
+
+    /**
+     * Callback handler for when an item in the inventory is selected.
+     * @param index Index of the item selected.
+     */
+
+    private handleInventorySelect(index: number): void {
+        this.game.socket.send(Packets.Container, {
+            opcode: Opcodes.Container.Select,
+            type: Modules.ContainerType.Inventory,
+            index
+        });
     }
 
     /**

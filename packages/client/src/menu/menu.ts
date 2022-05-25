@@ -1,14 +1,33 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '../lib/log';
 
 export default abstract class Menu {
     /**
      * Called by subclasses when attempting to load batch
      * serialized data from the server.
+     * @param _data Can contain array of slots to load.
      */
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public batch(_data: unknown): void {
         log.debug(`Unimplemented menu batch() function.`);
+    }
+
+    /**
+     * Called by subclasses when attempting to add an element.
+     * @param _data Unknown data that may contain information about an item.
+     */
+
+    public add(_data: unknown): void {
+        log.debug(`Unimplemented menu add() function.`);
+    }
+
+    /**
+     * Called by subclasses when removing an item from slots.
+     * @param _data Unknown data that may contain information to remove an item.
+     */
+
+    public remove(_data: unknown): void {
+        log.debug(`Unimplemented menu remove() function.`);
     }
 
     /**
