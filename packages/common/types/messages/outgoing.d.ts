@@ -131,8 +131,8 @@ export type CommandCallback = (info: CommandPacket) => void;
 
 export interface ContainerPacket {
     type: Modules.ContainerType;
-    data?: SerializedContainer;
-    slot?: SlotData;
+    data?: SerializedContainer; // Batch data
+    slot?: SlotData; // Used for adding or removing an item to the container.
 }
 
 export type ContainerCallback = (opcode: Opcodes.Container, info: ContainerPacket) => void;
