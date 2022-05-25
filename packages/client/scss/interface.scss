@@ -71,6 +71,7 @@
 
 .item-slot {
     background-color: rgb(0 0 0 / 50%);
+    background-size: 600%;
 }
 
 .item-count,
@@ -1304,7 +1305,7 @@
         font-size: 18px;
         text-align: center;
         margin-left: 3px;
-        margin-top: -21px;
+        margin-top: 54px;
     }
 
     .action-button {
@@ -1499,7 +1500,7 @@
         font-size: 12px;
         text-align: center;
         margin-left: 2px;
-        margin-top: -14px;
+        margin-top: 36px;
     }
 
     #profile-dialog {
@@ -1746,6 +1747,6 @@
         font-size: 7px;
         text-align: center;
         margin-left: 1px;
-        margin-top: -7px;
+        margin-top: 18px;
     }
 }

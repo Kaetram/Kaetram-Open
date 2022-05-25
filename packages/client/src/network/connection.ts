@@ -217,7 +217,7 @@ export default class Connection {
                 break;
         }
 
-        this.menu.profile.update();
+        //this.menu.profile.update();
     }
 
     /**
@@ -265,7 +265,7 @@ export default class Connection {
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
 
-        this.menu.profile.update();
+        //this.menu.profile.update();
     }
 
     /**
@@ -559,6 +559,12 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.Container.Batch:
                 return container.batch(info.data!.slots);
+
+            case Opcodes.Container.Add:
+                return container.add(info.slot!);
+
+            case Opcodes.Container.Remove:
+                return container.remove(info.slot!);
         }
 
         // switch (opcode) {
@@ -603,13 +609,12 @@ export default class Connection {
      */
 
     private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
-        switch (opcode) {
-            case Opcodes.Quest.Batch:
-                return this.menu.getQuestPage().loadQuests(info.data!.quests);
-
-            case Opcodes.Quest.Progress:
-                return this.menu.getQuestPage().progress(info);
-        }
+        // switch (opcode) {
+        //     case Opcodes.Quest.Batch:
+        //         return this.menu.getQuestPage().loadQuests(info.data!.quests);
+        //     case Opcodes.Quest.Progress:
+        //         return this.menu.getQuestPage().progress(info);
+        // }
     }
 
     /**
@@ -620,23 +625,20 @@ export default class Connection {
      */
 
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
-        switch (opcode) {
-            case Opcodes.Notification.Ok:
-                this.menu.displayNotify(info.message);
-                break;
-
-            case Opcodes.Notification.YesNo:
-                this.menu.displayConfirm(info.message);
-                break;
-
-            case Opcodes.Notification.Text:
-                this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-                break;
-
-            case Opcodes.Notification.Popup:
-                this.menu.showNotification(info.title!, info.message, info.colour!);
-                break;
-        }
+        // switch (opcode) {
+        //     case Opcodes.Notification.Ok:
+        //         this.menu.displayNotify(info.message);
+        //         break;
+        //     case Opcodes.Notification.YesNo:
+        //         this.menu.displayConfirm(info.message);
+        //         break;
+        //     case Opcodes.Notification.Text:
+        //         this.input.chatHandler.add('WORLD', info.message, info.colour, true);
+        //         break;
+        //     case Opcodes.Notification.Popup:
+        //         this.menu.showNotification(info.title!, info.message, info.colour!);
+        //         break;
+        // }
     }
 
     /**
@@ -721,7 +723,7 @@ export default class Connection {
                     this.info.create(Modules.Hits.Experience, info.amount, player.x, player.y);
                 }
 
-                this.menu.profile.update();
+                //this.menu.profile.update();
 
                 break;
             }
@@ -797,12 +799,12 @@ export default class Connection {
                 break;
 
             case Opcodes.NPC.Bank:
-                this.menu.bank.load(info.bank!.slots);
-                this.menu.bank.display();
+                // this.menu.bank.load(info.bank!.slots);
+                // this.menu.bank.display();
                 break;
 
             case Opcodes.NPC.Enchant:
-                this.menu.enchant.display();
+                //this.menu.enchant.display();
                 break;
         }
     }
@@ -839,11 +841,11 @@ export default class Connection {
     private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select:
-                this.menu.enchant.add(info.type!, info.index!);
+                //this.menu.enchant.add(info.type!, info.index!);
                 break;
 
             case Opcodes.Enchant.Remove:
-                this.menu.enchant.moveBack(info.type!, info.index);
+                //this.menu.enchant.moveBack(info.type!, info.index);
                 break;
         }
     }
@@ -924,14 +926,13 @@ export default class Connection {
      */
 
     private handleStore(opcode: Opcodes.Store, info: StorePacket): void {
-        switch (opcode) {
-            case Opcodes.Store.Open:
-            case Opcodes.Store.Update:
-                return this.menu.shop.open(info);
-
-            case Opcodes.Store.Select:
-                return this.menu.shop.move(info.item!);
-        }
+        // switch (opcode) {
+        //     case Opcodes.Store.Open:
+        //     case Opcodes.Store.Update:
+        //         return this.menu.shop.open(info);
+        //     case Opcodes.Store.Select:
+        //         return this.menu.shop.move(info.item!);
+        // }
     }
 
     /**

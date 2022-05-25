@@ -134,7 +134,7 @@ export default class InputController {
 
         if (!entity) return;
 
-        this.game.menu.actions.show();
+        //this.game.menu.actions.show();
     }
 
     /**
@@ -173,19 +173,19 @@ export default class InputController {
                 return;
 
             case 'i':
-                this.game.menu.inventory.open();
+                this.game.menu.getInventory().toggle();
                 return;
 
             case 'm':
-                this.game.menu.warp.open();
+                //this.game.menu.warp.open();
                 return;
 
             case 'p':
-                this.game.menu.profile.open();
+                //this.game.menu.profile.open();
                 return;
 
             case 'Escape':
-                this.game.menu.hideAll();
+                this.game.menu.hide();
                 return;
 
             case '+':
@@ -278,7 +278,7 @@ export default class InputController {
         if (isMobile() && this.chatHandler.inputVisible()) this.chatHandler.toggle();
 
         // Hides all game menus (profile, inventory, warps, etc.)
-        this.game.menu.hideAll();
+        this.game.menu.hide();
 
         // Handle object interaction.
         if (this.game.map.isObject(position.x, position.y))
