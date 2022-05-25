@@ -423,39 +423,29 @@ export default class Player extends Character {
     }
 
     /**
-     * Handles the select event when clicking a container.
-     * @param container The container we are handling.
-     * @param index The index in the container we selected.
+     * Handler for when a container slot is selected at a specified index. Depending
+     * on the type, we act accordingly. If we click an inventory, we check if the item
+     * is equippable or consumable and remove it from the inventory. If we click a bank
+     * element, we must move it from the inventory to the bank or vice versa.
+     * @param type The type of container we are working with.
+     * @param index Index at which we are selecting the item.
      */
 
-    public handleContainerSelect(container: Container, index: number, slotType?: SlotType): void {
-        let slot: SlotData | undefined, item: Item;
+    public handleContainerSelect(type: Modules.ContainerType, index: number): void {
+        let item: Item;
 
-        log.debug(`Received container select: ${container.type} - ${index} - ${slotType}`);
-
-        // TODO - Cleanup and document, this is a preliminary prototype.
-        switch (container.type) {
+        switch (type) {
             case Modules.ContainerType.Inventory:
-                log.debug(`Selected item index: ${index}`);
+                item = this.inventory.getItem(this.inventory.get(index));
 
-                slot = container.remove(index);
+                if (!item || !item.isEquippable()) return;
 
-                if (!slot) return;
-
-                item = container.getItem(slot);
-
-                if (item.isEquippable()) this.equipment.equip(item);
+                this.inventory.remove(index);
+                this.equipment.equip(item);
 
                 break;
 
             case Modules.ContainerType.Bank:
-                if (!slotType) return;
-
-                // Move item from the bank to the inventory.
-                if (slotType === 'inventory') container.move(this.inventory, index);
-                // Move item from the inventory to the bank.
-                else if (slotType === 'bank') this.inventory.move(container, index);
-
                 break;
         }
     }

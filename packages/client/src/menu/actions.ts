@@ -1,168 +1,174 @@
-import $ from 'jquery';
+import Menu from './menu';
 
-import log from '../lib/log';
-
-import type MenuController from '../controllers/menu';
-
-interface ActionsData {
-    mouseX: number;
-    mouseY: number;
-    pvp: boolean;
+export default class Actions extends Menu {
+    private body: HTMLElement = document.querySelector('#action-container')!;
 }
 
-export default class Actions {
-    private body = $('#action-container');
+// import $ from 'jquery';
 
-    private drop = $('#drop-dialog');
-    private dropInput = $('#drop-count');
+// import log from '../lib/log';
 
-    private activeClass: string | null = null;
-    private miscButton: JQuery | null = null;
+// import type MenuController from '../controllers/menu';
 
-    private trade!: JQuery;
-    private follow!: JQuery;
+// interface ActionsData {
+//     mouseX: number;
+//     mouseY: number;
+//     pvp: boolean;
+// }
 
-    public constructor(private menu: MenuController) {
-        this.load();
-    }
+// export default class Actions {
+//     private body = $('#action-container');
 
-    private load(): void {
-        let dropAccept = $('#drop-accept'),
-            dropCancel = $('#drop-cancel');
+//     private drop = $('#drop-dialog');
+//     private dropInput = $('#drop-count');
 
-        dropAccept.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
-        });
+//     private activeClass: string | null = null;
+//     private miscButton: JQuery | null = null;
 
-        dropCancel.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
-        });
-    }
+//     private trade!: JQuery;
+//     private follow!: JQuery;
 
-    public loadDefaults(activeClass: string, data?: ActionsData): void {
-        this.reset();
-        this.activeClass = activeClass;
+//     public constructor(private menu: MenuController) {
+//         this.load();
+//     }
 
-        if (data)
-            this.body.css({
-                left: `${data.mouseX - this.body.width()! / 2}px`,
-                top: `${data.mouseY}${this.body.height()! / 2}px`
-            });
+//     private load(): void {
+//         let dropAccept = $('#drop-accept'),
+//             dropCancel = $('#drop-cancel');
 
-        switch (this.activeClass) {
-            case 'inventory': {
-                this.body.css({
-                    bottom: '10%',
-                    left: '10%'
-                });
+//         dropAccept.on('click', (event) => {
+//             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
+//         });
 
-                let dropButton = $('<div id="drop" class="action-button">Drop</div>');
+//         dropCancel.on('click', (event) => {
+//             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
+//         });
+//     }
 
-                this.add(dropButton);
+//     public loadDefaults(activeClass: string, data?: ActionsData): void {
+//         this.reset();
+//         this.activeClass = activeClass;
 
-                break;
-            }
+//         if (data)
+//             this.body.css({
+//                 left: `${data.mouseX - this.body.width()! / 2}px`,
+//                 top: `${data.mouseY}${this.body.height()! / 2}px`
+//             });
 
-            case 'player': {
-                this.add(this.getFollowButton());
+//         switch (this.activeClass) {
+//             case 'inventory': {
+//                 this.body.css({
+//                     bottom: '10%',
+//                     left: '10%'
+//                 });
 
-                if (data!.pvp) this.add(this.getAttackButton());
+//                 let dropButton = $('<div id="drop" class="action-button">Drop</div>');
 
-                break;
-            }
+//                 this.add(dropButton);
 
-            case 'mob': {
-                this.add(this.getFollowButton());
-                this.add(this.getAttackButton());
+//                 break;
+//             }
 
-                break;
-            }
+//             case 'player': {
+//                 this.add(this.getFollowButton());
 
-            case 'npc': {
-                this.add(this.getFollowButton());
-                this.add(this.getTalkButton());
+//                 if (data!.pvp) this.add(this.getAttackButton());
 
-                break;
-            }
+//                 break;
+//             }
 
-            case 'object': {
-                log.info('[loadDefaults] object.');
+//             case 'mob': {
+//                 this.add(this.getFollowButton());
+//                 this.add(this.getAttackButton());
 
-                break;
-            }
-        }
-    }
+//                 break;
+//             }
 
-    public add(button: JQuery, misc = false): void {
-        this.body.find('ul').prepend($('<li></li>').append(button));
+//             case 'npc': {
+//                 this.add(this.getFollowButton());
+//                 this.add(this.getTalkButton());
 
-        button.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
-        });
+//                 break;
+//             }
 
-        if (misc) this.miscButton = button;
-    }
+//             case 'object': {
+//                 log.info('[loadDefaults] object.');
 
-    public removeMisc(): void {
-        this.miscButton?.remove();
-        this.miscButton = null;
-    }
+//                 break;
+//             }
+//         }
+//     }
 
-    private reset(): void {
-        let buttons = this.getButtons();
+//     public add(button: JQuery, misc = false): void {
+//         this.body.find('ul').prepend($('<li></li>').append(button));
 
-        for (let i = 0; i < buttons.length; i++) $(buttons[i]).remove();
-    }
+//         button.on('click', (event) => {
+//             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
+//         });
 
-    public show(): void {
-        this.body.fadeIn('fast');
-    }
+//         if (misc) this.miscButton = button;
+//     }
 
-    public hide(): void {
-        this.body.fadeOut('slow');
-    }
+//     public removeMisc(): void {
+//         this.miscButton?.remove();
+//         this.miscButton = null;
+//     }
 
-    public clear(): void {
-        $('#drop-accept').off('click');
-        $('#drop-cancel').off('click');
+//     private reset(): void {
+//         let buttons = this.getButtons();
 
-        this.trade?.off('click');
-        this.follow?.off('click');
-    }
+//         for (let i = 0; i < buttons.length; i++) $(buttons[i]).remove();
+//     }
 
-    public displayDrop(activeClass: string): void {
-        this.activeClass = activeClass;
+//     public show(): void {
+//         this.body.fadeIn('fast');
+//     }
 
-        this.drop.fadeIn('fast');
+//     public hide(): void {
+//         this.body.fadeOut('slow');
+//     }
 
-        this.dropInput.focus();
-        this.dropInput.select();
-    }
+//     public clear(): void {
+//         $('#drop-accept').off('click');
+//         $('#drop-cancel').off('click');
 
-    public hideDrop(): void {
-        this.drop.fadeOut('slow');
+//         this.trade?.off('click');
+//         this.follow?.off('click');
+//     }
 
-        this.dropInput.blur();
-        this.dropInput.val('');
-    }
+//     public displayDrop(activeClass: string): void {
+//         this.activeClass = activeClass;
 
-    private getAttackButton(): JQuery {
-        return $('<div id="attack" class="action-button">Attack</div>');
-    }
+//         this.drop.fadeIn('fast');
 
-    private getFollowButton(): JQuery {
-        return $('<div id="follow" class="action-button">Follow</div>');
-    }
+//         this.dropInput.focus();
+//         this.dropInput.select();
+//     }
 
-    private getTalkButton(): JQuery {
-        return $('<div id="talk-button" class="action-button">Talk</div>');
-    }
+//     public hideDrop(): void {
+//         this.drop.fadeOut('slow');
 
-    private getButtons(): JQuery {
-        return this.body.find('ul').find('li');
-    }
+//         this.dropInput.blur();
+//         this.dropInput.val('');
+//     }
 
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
-    }
-}
+//     private getAttackButton(): JQuery {
+//         return $('<div id="attack" class="action-button">Attack</div>');
+//     }
+
+//     private getFollowButton(): JQuery {
+//         return $('<div id="follow" class="action-button">Follow</div>');
+//     }
+
+//     private getTalkButton(): JQuery {
+//         return $('<div id="talk-button" class="action-button">Talk</div>');
+//     }
+
+//     private getButtons(): JQuery {
+//         return this.body.find('ul').find('li');
+//     }
+
+//     public isVisible(): boolean {
+//         return this.body.css('display') === 'block';
+//     }
+// }

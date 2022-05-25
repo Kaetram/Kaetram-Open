@@ -2,16 +2,22 @@ import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
 import config from '@kaetram/common/config';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import Connection from '../network/connection';
+import World from '../game/world';
+import Entities from './entities';
+import MongoDB from '../database/mongodb/mongodb';
 import Creator from '../database/mongodb/creator';
-import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
+import { Spawn } from '../network/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+
 import type {
+    ContainerPacket,
     LoginPacket,
     MovementPacket,
     ProjectilePacket,
@@ -19,19 +25,13 @@ import type {
     StorePacket
 } from '@kaetram/common/types/messages/incoming';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { SlotType } from '@kaetram/common/types/slot';
 import type Character from '../game/entity/character/character';
-import type Mob from '../game/entity/character/mob/mob';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-import Connection from '../network/connection';
-import World from '../game/world';
-import Entities from './entities';
-import MongoDB from '../database/mongodb/mongodb';
 
 type PacketData = (string | number | boolean | string[])[];
 
@@ -465,34 +465,44 @@ export default class Incoming {
         }
     }
 
-    private handleContainer(packet: PacketData): void {
-        let type = packet.shift() as Modules.ContainerType,
-            opcode = packet.shift() as Opcodes.Container,
-            container =
-                type === Modules.ContainerType.Inventory ? this.player.inventory : this.player.bank,
-            index: number,
-            count = 1;
+    /**
+     * Handles data associated with containers. This can include removing
+     * or selecting items in the container. Depending on the type, we route
+     * to the appropriate action.
+     * @param packet Packet data containing type of container and opcode information.
+     */
 
-        log.debug(`Received container packet: ${opcode} - ${type}.`);
+    private handleContainer(packet: ContainerPacket): void {
+        let container =
+            packet.type === Modules.ContainerType.Inventory
+                ? this.player.inventory
+                : this.player.equipment;
 
-        switch (opcode) {
-            case Opcodes.Container.Remove:
-                index = packet.shift() as number;
-                count = packet.shift() as number;
+        log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
-                log.debug(`Removing slot index: ${index} - count: ${count}`);
-
-                container.remove(index, count, true);
-
-                break;
-
+        switch (packet.opcode) {
             case Opcodes.Container.Select:
-                return this.player.handleContainerSelect(
-                    container,
-                    packet.shift() as number, // index
-                    packet.shift() as SlotType // slot type if clicked in bank.
-                );
+                return this.player.handleContainerSelect(packet.type, packet.index!);
         }
+
+        // switch (opcode) {
+        //     case Opcodes.Container.Remove:
+        //         index = packet.shift() as number;
+        //         count = packet.shift() as number;
+
+        //         log.debug(`Removing slot index: ${index} - count: ${count}`);
+
+        //         container.remove(index, count, true);
+
+        //         break;
+
+        //     case Opcodes.Container.Select:
+        //         return this.player.handleContainerSelect(
+        //             container,
+        //             packet.shift() as number, // index
+        //             packet.shift() as SlotType // slot type if clicked in bank.
+        //         );
+        // }
 
         // let [opcode] = message,
         //     id!: number,
