@@ -36,6 +36,13 @@ export interface ProjectilePacket {
     target: string;
 }
 
+export interface ContainerPacket {
+    opcode: Opcodes.Container;
+    type: Modules.ContainerType;
+    index?: number;
+    count?: number;
+}
+
 export interface StorePacket {
     opcode: Opcodes.Store;
     storeKey: string; // The shop's key.
