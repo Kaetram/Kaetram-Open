@@ -9,6 +9,8 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { NPCData } from '@kaetram/common/types/npc';
+import { Actor, DialogueItem } from '@kaetram/common/types/quest';
+import Bubble from '../../../network/packets/bubble';
 
 type RawData = {
     [key: string]: NPCData;
@@ -19,7 +21,7 @@ export default class NPC extends Entity {
 
     private data: NPCData;
 
-    private text: string[] = [];
+    private text: DialogueItem[] = [];
 
     public role?: string;
     public store = '';
@@ -69,13 +71,40 @@ export default class NPC extends Entity {
         if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
+        let messageText, actor: Actor = 'npc';
+        if (typeof message === 'string') {
+            messageText = message;
+        } else {
+            messageText = message.text;
+            actor = 'player';
+        }
+
         // Send the network packet of the current dialogue index.
-        player.send(
-            new NPCPacket(Opcodes.NPC.Talk, {
-                instance: this.instance,
-                text: message
-            })
-        );
+        if (actor === 'npc') {
+            player.send(
+                new Bubble({
+                    instance: player.instance
+                })
+            );
+            player.send(
+                new NPCPacket(Opcodes.NPC.Talk, {
+                    instance: this.instance,
+                    text: messageText,
+                })
+            );
+        } else {
+            player.send(
+                new NPCPacket(Opcodes.NPC.Talk, {
+                    instance: this.instance
+                })
+            );
+            player.send(
+                new Bubble({
+                    instance: player.instance,
+                    text: messageText
+                })
+            );
+        }
     }
 
     /**
@@ -83,7 +112,7 @@ export default class NPC extends Entity {
      * @returns If the dialogue array length is greater than 0.
      */
 
-    public hasDialogue(text: string[]): boolean {
+    public hasDialogue(text: DialogueItem[]): boolean {
         return text.length > 0;
     }
 }
