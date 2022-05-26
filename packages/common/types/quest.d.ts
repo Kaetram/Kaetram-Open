@@ -1,6 +1,9 @@
 import type { PointerData } from './pointer';
 import type { PopupData } from './popup';
 
+export type Actor = 'player' | 'npc';
+export type DialogueItem = string | { actor: string; text: string };
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -18,7 +21,7 @@ export interface RawStage {
     itemCountRequirement?: number;
 
     /** Text for the NPC. */
-    text?: string[];
+    text?: DialogueItem[];
     completedText?: string[];
 
     /** Pointer information */
@@ -45,7 +48,7 @@ export interface StageData {
     mobCountRequirement: number; // how many mobs we need to kill to progress
     itemRequirement?: string;
     itemCountRequirement?: number; // how many of an item we need for progression
-    text?: string[];
+    text?: DialogueItem[];
     completedText?: string[];
     pointer?: PointerData;
     popup?: PopupData;
