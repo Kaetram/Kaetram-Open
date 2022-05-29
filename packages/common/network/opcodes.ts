@@ -55,7 +55,8 @@ export enum Container {
     Batch,
     Add,
     Remove,
-    Select
+    Select,
+    Swap
 }
 
 export enum Quest {

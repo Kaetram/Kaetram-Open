@@ -1,3 +1,5 @@
+import { Modules, Opcodes } from '@kaetram/common/network';
+
 export let isInt = (n: number): boolean => n % 1 === 0;
 
 export default {
@@ -57,6 +59,29 @@ export default {
 
         // Do not display counts of 1.
         return '';
+    },
+
+    /**
+     * Converts a menu action into a container opcode action.
+     * @param menuAction Menu action that we are converting.
+     */
+
+    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container {
+        switch (menuAction) {
+            case Modules.MenuActions.Use:
+            case Modules.MenuActions.Equip:
+            case Modules.MenuActions.Eat:
+                return Opcodes.Container.Select;
+
+            case Modules.MenuActions.Drop:
+                return Opcodes.Container.Remove;
+
+            case Modules.MenuActions.Move:
+                return Opcodes.Container.Move;
+
+            default:
+                return -1;
+        }
     },
 
     /**
