@@ -43,7 +43,8 @@ export enum MenuActions {
     Use = 'Use',
     Drop = 'Drop',
     Equip = 'Equip',
-    Eat = 'Eat'
+    Eat = 'Eat',
+    Move = 'Move'
 }
 
 export enum Hits {
