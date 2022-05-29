@@ -476,77 +476,22 @@ export default class Incoming {
         let container =
             packet.type === Modules.ContainerType.Inventory
                 ? this.player.inventory
-                : this.player.equipment;
+                : this.player.bank;
 
         log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select:
                 return this.player.handleContainerSelect(packet.type, packet.index!);
+
+            case Opcodes.Container.Remove:
+                container.remove(packet.index!, undefined, true);
+                return;
+
+            case Opcodes.Container.Swap:
+                container.swap(packet.index!, packet.tIndex!);
+                break;
         }
-
-        // switch (opcode) {
-        //     case Opcodes.Container.Remove:
-        //         index = packet.shift() as number;
-        //         count = packet.shift() as number;
-
-        //         log.debug(`Removing slot index: ${index} - count: ${count}`);
-
-        //         container.remove(index, count, true);
-
-        //         break;
-
-        //     case Opcodes.Container.Select:
-        //         return this.player.handleContainerSelect(
-        //             container,
-        //             packet.shift() as number, // index
-        //             packet.shift() as SlotType // slot type if clicked in bank.
-        //         );
-        // }
-
-        // let [opcode] = message,
-        //     id!: number,
-        //     ability!: number,
-        //     abilityLevel!: number;
-        // switch (opcode) {
-        //     case Opcodes.Inventory.Remove: {
-        //         let item = message[1] as Slot,
-        //             count!: number;
-        //         if (!item) return;
-        //         if (item.count > 1) count = message[2] as number;
-        //         let iSlot = this.player.inventory.slots[item.index];
-        //         if (iSlot.id < 1) return;
-        //         if (count > iSlot.count) ({ count } = iSlot);
-        //         ({ ability, abilityLevel } = iSlot);
-        //         if (this.player.inventory.remove(id, count || item.count, item.index))
-        //             this.entities.spawnItem(
-        //                 item.string,
-        //                 this.player.x,
-        //                 this.player.y,
-        //                 true,
-        //                 count,
-        //                 ability,
-        //                 abilityLevel
-        //             );
-        //         break;
-        //     }
-        //     case Opcodes.Inventory.Select: {
-        //         let index = message[1] as number,
-        //             slot = this.player.inventory.slots[index],
-        //             { string, count, equippable, edible } = slot;
-        //         if (!slot || slot.id < 1) return;
-        //         id = Items.stringToId(string)!;
-        //         if (equippable) {
-        //             if (!this.player.canEquip(string)) return;
-        //             this.player.inventory.remove(id, count, slot.index);
-        //             this.player.equipment.equip(id, count, ability, abilityLevel);
-        //         } else if (edible) {
-        //             this.player.inventory.remove(id, 1, slot.index);
-        //             this.player.eat(id);
-        //         }
-        //         break;
-        //     }
-        // }
     }
 
     private handleBank(packet: PacketData): void {
