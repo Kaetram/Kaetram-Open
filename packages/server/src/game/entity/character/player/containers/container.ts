@@ -137,6 +137,28 @@ export default abstract class Container {
     }
 
     /**
+     * Swaps an item from one slot to another slot.
+     * @param fromIndex Index of the slot we are swapping from.
+     * @param toIndex Index of the slot we are swapping with.
+     */
+
+    public swap(fromIndex: number, toIndex: number): void {
+        let fromSlot = this.get(fromIndex),
+            toSlot = this.get(toIndex),
+            fromItem = this.getItem(fromSlot),
+            toItem;
+
+        if (toSlot.isEmpty()) this.remove(fromIndex, fromItem.count);
+        else toItem = this.getItem(toSlot);
+
+        toSlot.update(fromItem);
+
+        if (toItem) fromSlot.update(toItem);
+
+        this.loadCallback?.();
+    }
+
+    /**
      * Returns the slot at a given index paramater.
      * @param index The index in the slots array.
      * @returns The slot at the index specified.
