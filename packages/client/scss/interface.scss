@@ -1298,6 +1298,10 @@
         }
     }
 
+    .item-slot-focused {
+        border: 3px solid #fcda5c !important;
+    }
+
     .item-count,
     .inventory-item-count {
         width: 48px;
@@ -1488,9 +1492,14 @@
             border: 2px solid #eee;
         }
 
-        &:active {
+        &:active,
+        &:focus {
             border: 2px solid #fcda5c;
         }
+    }
+
+    .item-slot-focused {
+        border: 2px solid #fcda5c !important;
     }
 
     .item-count,
