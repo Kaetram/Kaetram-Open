@@ -39,6 +39,13 @@ export enum Actions {
     Orientate
 }
 
+export enum MenuActions {
+    Use = 'Use',
+    Drop = 'Drop',
+    Equip = 'Equip',
+    Eat = 'Eat'
+}
+
 export enum Hits {
     Damage,
     Poison,
