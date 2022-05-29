@@ -6,9 +6,8 @@ import log from '../lib/log';
 import Util from '../utils/util';
 import Actions from './actions';
 
-import { Modules } from '@kaetram/common/network';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
-import { threadId } from 'worker_threads';
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
@@ -25,7 +24,7 @@ export default class Inventory extends Menu {
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
-    private selectCallback?: (index: number, action: Modules.MenuActions) => void;
+    private selectCallback?: (index: number, action: Opcodes.Container, tIndex?: number) => void;
 
     public constructor(private actions: Actions) {
         super();
@@ -56,10 +55,11 @@ export default class Inventory extends Menu {
     /**
      * Creates a select callback using the action parameter specified.
      * @param action Which type of action is being performed.
+     * @param tIndex A secondary index used when trying to swap items.
      */
 
     private handleAction(action: Modules.MenuActions): void {
-        this.selectCallback?.(this.selectedSlot, action);
+        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(action));
     }
 
     /**
@@ -142,6 +142,71 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Event handler for when a slot begins the dragging and dropping
+     * process. We udate the current index of the slot that is being
+     * selected for later use.
+     * @param index The index of the slot being dragged.
+     */
+
+    private dragStart(index: number): void {
+        if (this.isEmpty(this.getElement(index))) return;
+
+        this.selectedSlot = index;
+    }
+
+    /**
+     * The drop event within the drag and drop actions. The target represents
+     * the slot that the item is being dropped into.
+     * @param event Contains event data about the target.
+     */
+
+    private dragDrop(event: DragEvent, index: number): void {
+        let element = event.target as HTMLElement;
+
+        if (!element) return;
+
+        // Remove the selected slot class property.
+        element.classList.remove('item-slot-focused');
+
+        if (this.selectedSlot === -1) return;
+
+        // Create a callback used when we swap an item from `selectedSlot` to index.
+        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
+
+        console.log(this.selectedSlot);
+        console.log(index);
+
+        // Reset the selected slot after.
+        this.selectedSlot = -1;
+    }
+
+    /**
+     * Event handler for when a slot is being dragged over (but not dropped).
+     * We use this to give the user feedback on which slot they are hovering.
+     * @param event Contains event data and the slot element that is being hovered.
+     */
+
+    private dragOver(event: DragEvent): void {
+        // Check that a target exists firstly.
+        if (!event.target || !(event.target as HTMLElement).draggable) return;
+
+        event.preventDefault();
+
+        // Add the slot focused class property.
+        (event.target as HTMLElement).classList.add('item-slot-focused');
+    }
+
+    /**
+     * Event handler for when an item being dragged exits a valid slot area.
+     * @param event Contains the target slot that is exited.
+     */
+
+    private dragLeave(event: DragEvent): void {
+        // Remove the slot focused class.
+        (event.target as HTMLElement).classList.remove('item-slot-focused');
+    }
+
+    /**
      * Sets the slot's image and count at a specified index. If no key is provided
      * then we remove the slot's `backgroundImage` property and set the count to
      * an empty string.
@@ -179,7 +244,8 @@ export default class Inventory extends Menu {
             item = document.createElement('div'),
             count = document.createElement('div');
 
-        // Assign the class to the slot.
+        // Assign the class to the slot and make it draggable.
+        item.draggable = true;
         item.classList.add('item-slot');
 
         // Add the class element onto the count.
@@ -194,6 +260,10 @@ export default class Inventory extends Menu {
         // Add the click event listeners to the slot.
         slot.addEventListener('click', () => this.select(index));
         slot.addEventListener('dblclick', () => this.select(index, true));
+        slot.addEventListener('dragstart', () => this.dragStart(index));
+        slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, index));
+        slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
+        slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
 
         return slot;
     }
