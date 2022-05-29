@@ -40,6 +40,7 @@ export interface ContainerPacket {
     opcode: Opcodes.Container;
     type: Modules.ContainerType;
     index?: number;
+    tIndex?: number;
     count?: number;
 }
 
