@@ -4,24 +4,35 @@ import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
+import Actions from './actions';
 
 import { Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
+import { threadId } from 'worker_threads';
+
+interface SlotElement extends HTMLElement {
+    edible?: boolean;
+    equippable?: boolean;
+}
 
 export default class Inventory extends Menu {
-    private body: HTMLElement = document.querySelector('#inventory')!;
+    protected override body: HTMLElement = document.querySelector('#inventory')!;
     private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
 
     // Button that opens the invnetory.
     private button: HTMLElement = document.querySelector('#inventory-button')!;
 
-    private selectCallback?: (index: number) => void;
+    // Used for when we open the action menu interface.
+    private selectedSlot = -1;
 
-    public constructor() {
+    private selectCallback?: (index: number, action: Modules.MenuActions) => void;
+
+    public constructor(private actions: Actions) {
         super();
 
         this.load();
 
+        this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
         this.button.addEventListener('click', () => this.toggle());
     }
 
@@ -34,11 +45,21 @@ export default class Inventory extends Menu {
     public load(): void {
         if (!this.list) return log.error(`Could not create the skeleton for the inventory.`);
 
+        // Create slots based on the constants.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
             let slot = this.createSlot(i);
 
             this.list.append(slot);
         }
+    }
+
+    /**
+     * Creates a select callback using the action parameter specified.
+     * @param action Which type of action is being performed.
+     */
+
+    private handleAction(action: Modules.MenuActions): void {
+        this.selectCallback?.(this.selectedSlot, action);
     }
 
     /**
@@ -53,7 +74,7 @@ export default class Inventory extends Menu {
         _.each(slots, (slot: SlotData) => {
             if (!slot.key) return;
 
-            this.setSlot(slot.index, slot.key, slot.count);
+            this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
         });
     }
 
@@ -63,7 +84,7 @@ export default class Inventory extends Menu {
      */
 
     public override add(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count);
+        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
     }
 
     /**
@@ -73,7 +94,51 @@ export default class Inventory extends Menu {
      */
 
     public override remove(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count);
+        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+    }
+
+    /**
+     * Used for updating the currently selected slot while
+     * the action menu is open.
+     * @param index Index of the slot we are currently selected.
+     */
+
+    private select(index: number, doubleClick = false): void {
+        let element = this.getElement(index);
+
+        // If the slot is empty, we do not want to select it.
+        if (this.isEmpty(element)) return this.actions.hide();
+
+        // Update the currently selected slot.
+        this.selectedSlot = index;
+
+        /**
+         * When we double click, we only determine if the item is edible or
+         * equippable. If any of those properties are true, we skip having
+         * to display the action menu and send the packet.
+         */
+
+        if (doubleClick) {
+            if (element.edible) this.handleAction(Modules.MenuActions.Eat);
+            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+
+            return;
+        }
+
+        /**
+         * Here we create a list of all the actions pertaining to the slot
+         * based on the equippable and edible properties. This list can always
+         * be expanded as more item properties are added.
+         */
+
+        let actions: Modules.MenuActions[] = [Modules.MenuActions.Drop];
+
+        if (element.edible) actions.push(Modules.MenuActions.Eat);
+        if (element.equippable) actions.push(Modules.MenuActions.Equip);
+
+        let position = this.getPosition(element);
+
+        this.actions.show(actions, position.x, position.y);
     }
 
     /**
@@ -83,9 +148,11 @@ export default class Inventory extends Menu {
      * @param index Index at which we are updating the slot data.
      * @param key Optional parameter that is used to get the image for the slot.
      * @param count Integer value to assign to the slot.
+     * @param edible Boolean value that determines if the item in the slot is edible.
+     * @param equippable Boolean value that determines if the item in the slot is equippable.
      */
 
-    private setSlot(index: number, key = '', count = 1): void {
+    private setSlot(index: number, key = '', count = 1, edible = false, equippable = false): void {
         let slotElement = this.getElement(index);
 
         if (!slotElement) return log.error(`Could not find slot element at: ${index}`);
@@ -95,6 +162,10 @@ export default class Inventory extends Menu {
         if (countElement) countElement.textContent = Util.getCount(count);
 
         slotElement.style.backgroundImage = key ? Util.getImageURL(key) : '';
+
+        // Update the edible and equippable properties.
+        slotElement.edible = edible;
+        slotElement.equippable = equippable;
     }
 
     /**
@@ -120,7 +191,9 @@ export default class Inventory extends Menu {
         // Append the item onto the slot list element.
         slot.append(item);
 
-        slot.addEventListener('dblclick', () => this.selectCallback?.(index));
+        // Add the click event listeners to the slot.
+        slot.addEventListener('click', () => this.select(index));
+        slot.addEventListener('dblclick', () => this.select(index, true));
 
         return slot;
     }
@@ -139,7 +212,8 @@ export default class Inventory extends Menu {
      */
 
     public override show(): void {
-        this.body.style.display = 'block';
+        super.show();
+
         this.button.classList.add('active');
     }
 
@@ -149,8 +223,24 @@ export default class Inventory extends Menu {
      */
 
     public override hide(): void {
-        this.body.style.display = 'none';
+        super.hide();
+
+        // Reset the selected slot whenever the menu is hidden.
+        this.selectedSlot = -1;
+
+        this.actions.hide();
         this.button.classList.remove('active');
+    }
+
+    /**
+     * Checks whether the specified element is empty by verifying its
+     * background image property.
+     * @param element SlotElement that we are checking.
+     * @returns Whether or not the background image style is an empty string or not.
+     */
+
+    private isEmpty(element: SlotElement): boolean {
+        return element.style.backgroundImage === '';
     }
 
     /**
@@ -167,8 +257,24 @@ export default class Inventory extends Menu {
      * @returns An HTMLElement for the slot.
      */
 
-    private getElement(index: number): HTMLElement {
+    private getElement(index: number): SlotElement {
         return this.list.children[index].querySelector('div') as HTMLElement;
+    }
+
+    /**
+     * Retrieves the absolute position of an element
+     * relative to the screen.
+     * @param element The element we are extracting position of.
+     * @returns A position object containing the x and y coordinates.
+     */
+
+    private getPosition(element: HTMLElement): Position {
+        let boundingRect = element.getBoundingClientRect();
+
+        return {
+            x: boundingRect.left - boundingRect.width,
+            y: boundingRect.top - boundingRect.height * 2
+        };
     }
 
     /**
