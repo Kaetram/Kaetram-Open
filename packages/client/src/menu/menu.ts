@@ -2,6 +2,8 @@
 import log from '../lib/log';
 
 export default abstract class Menu {
+    protected body!: HTMLElement;
+
     /**
      * Called by subclasses when attempting to load batch
      * serialized data from the server.
@@ -32,10 +34,13 @@ export default abstract class Menu {
 
     /**
      * Called by subclasses when we want to display the interface.
+     * @param _var1 Unknown data that may be passed when opening the menu subclass.
+     * @param _var2 Unknown data that may be passed when opening the menu subclass.
+     * @param var3 Unknown data that may be passed when opening the menu subclass.
      */
 
-    public show(): void {
-        log.debug(`Unimplemented menu show() function.`);
+    public show(_var1?: unknown, _var2?: unknown, var3?: unknown): void {
+        this.body.style.display = 'block';
     }
 
     /**
@@ -43,7 +48,7 @@ export default abstract class Menu {
      */
 
     public hide(): void {
-        log.debug(`Unimplemented menu hide() function.`);
+        this.body.style.display = 'none';
     }
 
     /**
