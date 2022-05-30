@@ -52,9 +52,6 @@ export default class Actions extends Menu {
         element.append(action);
 
         this.list.append(element);
-
-        // Update the height of the body to that of the total amount of elements.
-        this.body.style.height = `${this.list.children.length * element.clientHeight}px`;
     }
 
     /**
