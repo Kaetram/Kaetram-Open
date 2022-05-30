@@ -15,7 +15,6 @@ interface SlotElement extends HTMLElement {
 }
 
 export default class Inventory extends Menu {
-    protected override body: HTMLElement = document.querySelector('#inventory')!;
     private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
 
     // Button that opens the invnetory.
@@ -27,7 +26,7 @@ export default class Inventory extends Menu {
     private selectCallback?: (index: number, action: Opcodes.Container, tIndex?: number) => void;
 
     public constructor(private actions: Actions) {
-        super();
+        super('#inventory');
 
         this.load();
 
@@ -45,21 +44,19 @@ export default class Inventory extends Menu {
         if (!this.list) return log.error(`Could not create the skeleton for the inventory.`);
 
         // Create slots based on the constants.
-        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
-            let slot = this.createSlot(i);
-
-            this.list.append(slot);
-        }
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+            this.list.append(this.createSlot(i));
     }
 
     /**
      * Creates a select callback using the action parameter specified.
      * @param action Which type of action is being performed.
-     * @param tIndex A secondary index used when trying to swap items.
      */
 
     private handleAction(action: Modules.MenuActions): void {
         this.selectCallback?.(this.selectedSlot, Util.getContainerAction(action));
+
+        this.actions.hide();
     }
 
     /**
@@ -131,10 +128,13 @@ export default class Inventory extends Menu {
          * be expanded as more item properties are added.
          */
 
-        let actions: Modules.MenuActions[] = [Modules.MenuActions.Drop];
+        let actions: Modules.MenuActions[] = [];
 
         if (element.edible) actions.push(Modules.MenuActions.Eat);
         if (element.equippable) actions.push(Modules.MenuActions.Equip);
+
+        // Push drop option as the last one.
+        actions.push(Modules.MenuActions.Drop);
 
         let position = this.getPosition(element);
 
@@ -172,9 +172,6 @@ export default class Inventory extends Menu {
 
         // Create a callback used when we swap an item from `selectedSlot` to index.
         this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
-
-        console.log(this.selectedSlot);
-        console.log(index);
 
         // Reset the selected slot after.
         this.selectedSlot = -1;
@@ -345,6 +342,16 @@ export default class Inventory extends Menu {
             x: boundingRect.left - boundingRect.width,
             y: boundingRect.top - boundingRect.height * 2
         };
+    }
+
+    /**
+     * Iterates through all the children of the inventory list
+     * and returns the index and the element.
+     * @param callback Contains the index and the slot HTML element.
+     */
+
+    public forEachSlot(callback: (index: number, slot: SlotElement) => void): void {
+        for (let i = 0; i < this.list.children.length; i++) callback(i, this.getElement(i));
     }
 
     /**

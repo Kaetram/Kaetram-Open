@@ -13,7 +13,7 @@ export default class MenuController {
     private actions: Actions = new Actions();
 
     private inventory: Inventory = new Inventory(this.actions);
-    private bank: Bank = new Bank();
+    private bank: Bank = new Bank(this.inventory);
 
     public menu: Menu[] = [this.inventory, this.bank];
 
