@@ -341,6 +341,8 @@ export default class Connection {
         if (currentPlayer) this.bubble.clean();
         else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
 
+        console.log(info);
+
         // No animation, skip straight to teleporting.
         if (!info.withAnimation) return this.game.teleport(player, info.x!, info.y!);
 
@@ -355,6 +357,9 @@ export default class Connection {
 
         player.animateDeath(() => {
             this.game.teleport(player, info.x!, info.y!);
+
+            // Reset the animation.
+            player.animation = null;
 
             // Restore the player's sprite.
             player.setSprite(playerSprite);
@@ -566,27 +571,6 @@ export default class Connection {
             case Opcodes.Container.Remove:
                 return container.remove(info.slot!);
         }
-
-        // switch (opcode) {
-        //     case Opcodes.Container.Batch: {
-        //         container.load(info.data!.slots);
-        //         break;
-        //     }
-
-        //     case Opcodes.Container.Add: {
-        //         container.add(info.slot!);
-
-        //         this.menu.bank.add(info.slot!, info.type);
-        //         break;
-        //     }
-
-        //     case Opcodes.Container.Remove: {
-        //         container.remove(info.slot!, info.type);
-
-        //         this.menu.bank.remove(info.slot!, info.type);
-        //         break;
-        //     }
-        // }
     }
 
     /**
@@ -799,9 +783,7 @@ export default class Connection {
                 break;
 
             case Opcodes.NPC.Bank:
-                // this.menu.bank.load(info.bank!.slots);
-                // this.menu.bank.display();
-                break;
+                return this.menu.getBank().show();
 
             case Opcodes.NPC.Enchant:
                 //this.menu.enchant.display();

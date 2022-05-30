@@ -1,8 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '../lib/log';
 
+import { Modules } from '@kaetram/common/network';
+
 export default abstract class Menu {
-    protected body!: HTMLElement;
+    protected body: HTMLElement = document.querySelector(this.containerName!)!;
+    protected close: HTMLElement = document.querySelector(this.closeButton!)!;
+
+    /**
+     * Initializes the menu container using the provided container name string.
+     * This one is used to load the body of the interface.
+     * @param containerName Optional string name passed to the constructor that is
+     * used to load the body of the interface using the querySelector. If this is not
+     * provided, it is then expected that the body is overrided and loaded in the subclass.
+     * @param closeButton Optional parameter passed when we want to load a close button
+     * into the interface and load its respective event listener. This is automatically
+     * linked to the hide() function.
+     */
+
+    public constructor(private containerName?: string, private closeButton?: string) {
+        if (this.close) this.close.addEventListener('click', () => this.hide());
+    }
 
     /**
      * Called by subclasses when attempting to load batch
@@ -49,43 +67,6 @@ export default abstract class Menu {
 
     public hide(): void {
         this.body.style.display = 'none';
-    }
-
-    /**
-     * Superclass implementation to be used throughout all the subclasses
-     * when wanting to create a slot element. This slot can be used in the
-     * bank or inventory, and throughout things such as bank, enchant, and
-     * store interfaces.
-     * @param name The name prefix of the element (i.e. 'bank').
-     * @param index Index of the slot we are creating (for identification).
-     */
-
-    protected createElement(name: string, index: number): HTMLElement {
-        let listElement = document.createElement('li'),
-            slot = document.createElement('div'),
-            image = document.createElement('div'),
-            count = document.createElement('div');
-
-        // Sets the class and id of the bank slot.
-        slot.id = `${name}-slot${index}`;
-        slot.classList.add('bank-slot');
-
-        // Sets the class and id of the image.
-        image.id = `${name}-image${index}`;
-        image.classList.add('bank-image');
-
-        // Sets the class and id of the count.
-        count.id = `${name}-count${index}`;
-        count.classList.add('item-count');
-
-        // Appends image and count onto the bank slot.
-        slot.append(image);
-        slot.append(count);
-
-        // Appends the bank slot onto the list element.
-        listElement.append(slot);
-
-        return listElement;
     }
 
     /**
