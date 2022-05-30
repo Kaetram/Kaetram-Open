@@ -11,6 +11,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { NPCData } from '@kaetram/common/types/npc';
 import { Actor, DialogueItem } from '@kaetram/common/types/quest';
 import Bubble from '../../../network/packets/bubble';
+import { BubblePacket } from '@kaetram/common/types/messages/outgoing';
 
 type RawData = {
     [key: string]: NPCData;
@@ -60,8 +61,14 @@ export default class NPC extends Entity {
             player.npcTalk = this.key;
         }
 
-        // Text to display at the current talking index.
-        let message = text[player.talkIndex];
+        /**
+         * Determines the text at a specified index. Extracts a raw string from
+         * the DialogueItem object.
+         */
+
+        let textIndex = text[player.talkIndex],
+            message = typeof textIndex === 'string' ? textIndex : textIndex.text,
+            actor = typeof textIndex === 'string' ? 'npc' : textIndex.actor;
 
         /**
          * Reset the talking index when we reach the end or
@@ -71,40 +78,24 @@ export default class NPC extends Entity {
         if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
-        let messageText, actor: Actor = 'npc';
-        if (typeof message === 'string') {
-            messageText = message;
-        } else {
-            messageText = message.text;
-            actor = 'player';
-        }
+        /**
+         * Builds the bubble and NPC talking opcodes based on the actor
+         * and message indices.
+         */
 
-        // Send the network packet of the current dialogue index.
-        if (actor === 'npc') {
-            player.send(
-                new Bubble({
-                    instance: player.instance
-                })
-            );
-            player.send(
-                new NPCPacket(Opcodes.NPC.Talk, {
-                    instance: this.instance,
-                    text: messageText,
-                })
-            );
-        } else {
-            player.send(
-                new NPCPacket(Opcodes.NPC.Talk, {
-                    instance: this.instance
-                })
-            );
-            player.send(
-                new Bubble({
-                    instance: player.instance,
-                    text: messageText
-                })
-            );
-        }
+        player.send(
+            new Bubble({
+                instance: player.instance,
+                text: actor === 'npc' ? '' : message
+            })
+        );
+
+        player.send(
+            new NPCPacket(Opcodes.NPC.Talk, {
+                instance: actor === 'npc' ? this.instance : player.instance,
+                text: message
+            })
+        );
     }
 
     /**
