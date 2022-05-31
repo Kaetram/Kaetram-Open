@@ -9,6 +9,8 @@ import Actions from './actions';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
 
+type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
+
 interface SlotElement extends HTMLElement {
     edible?: boolean;
     equippable?: boolean;
@@ -23,7 +25,7 @@ export default class Inventory extends Menu {
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
-    private selectCallback?: (index: number, action: Opcodes.Container, tIndex?: number) => void;
+    private selectCallback?: SelectCallback;
 
     public constructor(private actions: Actions) {
         super('#inventory');
@@ -311,14 +313,6 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * @returns Whether or not the body is visible.
-     */
-
-    private isVisible(): boolean {
-        return this.body.style.display === 'block';
-    }
-
-    /**
      * Grabs the `div` slot element within the `li` element.
      * @param index The index of the slot we are grabbing.
      * @returns An HTMLElement for the slot.
@@ -359,7 +353,7 @@ export default class Inventory extends Menu {
      * @param callback Contains the index of the slot selected.
      */
 
-    public onSelect(callback: (index: number) => void): void {
+    public onSelect(callback: SelectCallback): void {
         this.selectCallback = callback;
     }
 }

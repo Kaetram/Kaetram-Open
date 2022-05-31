@@ -1158,8 +1158,9 @@
 
         #bank-slot {
             width: 144px * $i;
-            height: 120px * $i;
-            left: 143px * $i;
+            height: 136px * $i;
+            left: 140px * $i;
+            overflow-y: scroll;
         }
 
         #bank-inventory-container,
@@ -1177,8 +1178,8 @@
         .bank-slot {
             width: 16px * $i;
             height: 15px * $i;
-            margin-bottom: 4px * $i;
-            margin-left: 1.5px * $i;
+            margin-bottom: 6px * $i;
+            margin-left: 2px * $i;
             background: url('/img/#{$i}/containers.png') -300px * $i -172px * $i;
         }
 
@@ -1231,6 +1232,13 @@
             height: 16px * $i;
         }
 
+        .item-count {
+            width: 16px * $i;
+            height: 7px * $i;
+            text-align: center;
+            margin-left: 1px * $i;
+        }
+
         #shop {
             width: 170px * $i;
             height: 168px * $i;
@@ -1278,6 +1286,10 @@
         border: 3px solid #373737;
     }
 
+    .item-count {
+        font-size: 14px;
+    }
+
     .item-slot {
         width: 48px;
         height: 48px;
@@ -1300,7 +1312,6 @@
         border: 3px solid #fcda5c !important;
     }
 
-    .item-count,
     .inventory-item-count {
         width: 48px;
         height: 21px;
@@ -1427,6 +1438,10 @@
 }
 
 @media (--md) {
+    .item-count {
+        font-size: 11px;
+    }
+
     #notification-text-title {
         font-size: 18px;
     }
@@ -1500,7 +1515,6 @@
         border: 2px solid #fcda5c !important;
     }
 
-    .item-count,
     .inventory-item-count {
         width: 32px;
         height: 14px;
@@ -1749,11 +1763,6 @@
     }
 
     .item-count {
-        width: 16px;
-        height: 7px;
-        font-size: 7px;
-        text-align: center;
-        margin-left: 1px;
-        margin-top: 18px;
+        font-size: 6px;
     }
 }

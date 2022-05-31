@@ -19,6 +19,7 @@ export default class MenuController {
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
+        this.bank.onSelect(this.handleBankSelect.bind(this));
     }
 
     /**
@@ -59,6 +60,21 @@ export default class MenuController {
             type: Modules.ContainerType.Inventory,
             index,
             tIndex
+        });
+    }
+
+    /**
+     * Callback handler for when an item in the bank is selected.
+     * @param type Indicates which container (inventory or bank) was selected.
+     * @param index The index within that container.
+     */
+
+    private handleBankSelect(type: Modules.ContainerType, index: number): void {
+        this.game.socket.send(Packets.Container, {
+            opcode: Opcodes.Container.Select,
+            type: Modules.ContainerType.Bank,
+            subType: type,
+            index
         });
     }
 
