@@ -9,9 +9,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { NPCData } from '@kaetram/common/types/npc';
-import { Actor, DialogueItem } from '@kaetram/common/types/quest';
-import Bubble from '../../../network/packets/bubble';
-import { BubblePacket } from '@kaetram/common/types/messages/outgoing';
 
 type RawData = {
     [key: string]: NPCData;
@@ -22,7 +19,7 @@ export default class NPC extends Entity {
 
     private data: NPCData;
 
-    private text: DialogueItem[] = [];
+    private text: string[] = [];
 
     public role?: string;
     public store = '';
@@ -61,14 +58,8 @@ export default class NPC extends Entity {
             player.npcTalk = this.key;
         }
 
-        /**
-         * Determines the text at a specified index. Extracts a raw string from
-         * the DialogueItem object.
-         */
-
-        let textIndex = text[player.talkIndex],
-            message = typeof textIndex === 'string' ? textIndex : textIndex.text,
-            actor = typeof textIndex === 'string' ? 'npc' : textIndex.actor;
+        // Text to display at the current talking index.
+        let message = text[player.talkIndex];
 
         /**
          * Reset the talking index when we reach the end or
@@ -78,21 +69,10 @@ export default class NPC extends Entity {
         if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
-        /**
-         * Builds the bubble and NPC talking opcodes based on the actor
-         * and message indices.
-         */
-
-        player.send(
-            new Bubble({
-                instance: player.instance,
-                text: actor === 'npc' ? '' : message
-            })
-        );
-
+        // Send the network packet of the current dialogue index.
         player.send(
             new NPCPacket(Opcodes.NPC.Talk, {
-                instance: actor === 'npc' ? this.instance : player.instance,
+                instance: this.instance,
                 text: message
             })
         );
@@ -103,7 +83,7 @@ export default class NPC extends Entity {
      * @returns If the dialogue array length is greater than 0.
      */
 
-    public hasDialogue(text: DialogueItem[]): boolean {
+    public hasDialogue(text: string[]): boolean {
         return text.length > 0;
     }
 }
