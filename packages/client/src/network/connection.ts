@@ -566,11 +566,16 @@ export default class Connection {
                 return container.batch(info.data!.slots);
 
             case Opcodes.Container.Add:
-                return container.add(info.slot!);
+                container.add(info.slot!);
+                break;
 
             case Opcodes.Container.Remove:
-                return container.remove(info.slot!);
+                container.remove(info.slot!);
+                break;
         }
+
+        // Update the bank container. Will not update if the UI is not open.
+        this.menu.getBank().synchronize();
     }
 
     /**
@@ -783,7 +788,7 @@ export default class Connection {
                 break;
 
             case Opcodes.NPC.Bank:
-                return this.menu.getBank().show();
+                return this.menu.getBank().show(info.slots!);
 
             case Opcodes.NPC.Enchant:
                 //this.menu.enchant.display();
