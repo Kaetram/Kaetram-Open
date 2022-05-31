@@ -206,7 +206,7 @@ export type AudioCallback = (newSong: string) => void;
 export interface NPCPacket {
     instance?: string; // Used when an NPC sends a text message.
     text?: string; // Message to display in a bubble.
-    bank?: SerializedContainer; // When opening a bank NPC.
+    slots?: SlotData[]; // When opening a bank NPC.
 }
 
 export type NPCCallback = (opcode: Opcodes.NPC, info: NPCPacket) => void;

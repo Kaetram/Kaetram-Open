@@ -70,6 +70,14 @@ export default abstract class Menu {
     }
 
     /**
+     * @returns Whether or not the body is visible.
+     */
+
+    public isVisible(): boolean {
+        return this.body.style.display === 'block';
+    }
+
+    /**
      * UI scaling determines which size of assets to use depending
      * on the screen size. It also adjusts the CSS accordingly.
      * @returns UI scale from 1 to 3.

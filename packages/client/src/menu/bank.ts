@@ -2,8 +2,11 @@ import Menu from './menu';
 import Inventory from './inventory';
 
 import log from '../lib/log';
+import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
+import _ from 'lodash';
 
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 
@@ -50,10 +53,28 @@ export default class Bank extends Menu {
     }
 
     /**
+     * Sets the slot in the bank list at a specified index. Updates the image
+     * and the count of the item.
+     * @param index The index of the slot we are setting.
+     * @param key The key of the image, defaults to a blank string to clear the slot image.
+     * @param count The amount of an item in the slot, defaults to 0 to clear the slot.
+     */
+
+    private setSlot(index: number, key = '', count = 0): void {
+        let image = this.getBankElement(index).querySelector('.bank-image') as HTMLElement,
+            countElement = this.getBankElement(index).querySelector('.item-count') as HTMLElement;
+
+        image.style.backgroundImage = Util.getImageURL(key);
+        countElement.textContent = Util.getCount(count);
+    }
+
+    /**
      * Synchronizes the slot data between the bank and the inventory.
      */
 
-    private synchronize(): void {
+    public synchronize(): void {
+        if (!this.isVisible()) return;
+
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getInventoryElement(index).querySelector('.bank-image') as HTMLElement,
                 count = this.getInventoryElement(index).querySelector('.item-count') as HTMLElement;
@@ -64,13 +85,32 @@ export default class Bank extends Menu {
     }
 
     /**
+     * Adds an item to the bank list by updating the slot data.
+     */
+
+    public override add(slot: SlotData): void {
+        this.setSlot(slot.index, slot.key, slot.count);
+    }
+
+    /**
+     * Updates the slot data of the bank list.
+     */
+
+    public override remove(slot: SlotData): void {
+        this.setSlot(slot.index, slot.key, slot.count);
+    }
+
+    /**
      * Displays the bank interface.
      */
 
-    public override show(): void {
+    public override show(slots: SlotData[]): void {
         super.show();
 
         this.synchronize();
+
+        // Set all slots to the new data.
+        _.each(slots, (slot: SlotData) => this.setSlot(slot.index, slot.key, slot.count));
     }
 
     /**
@@ -115,6 +155,16 @@ export default class Bank extends Menu {
         listElement.append(slot);
 
         return listElement;
+    }
+
+    /**
+     * Grabs the bank HTML element at a specified index.
+     * @param index The index of the bank slot.
+     * @returns An HTMLElement div within the list at the specified index.
+     */
+
+    private getBankElement(index: number): HTMLElement {
+        return this.bankList.children[index].querySelector('div') as HTMLElement;
     }
 
     /**
