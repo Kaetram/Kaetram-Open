@@ -6,7 +6,7 @@ import Player from '../player';
 
 import log from '@kaetram/common/util/log';
 
-import { DialogueItem, QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import Item from '../../../objects/item';
@@ -87,7 +87,7 @@ export default abstract class Quest {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
-        let dialogue = this.getQuestDialogue(npc);
+        let dialogue = this.getNPCDialogue(npc);
 
         /**
          * Ends the conversation. If the player has the required item in the inventory
@@ -277,7 +277,7 @@ export default abstract class Quest {
      * @returns An array of strings containing the dialogue.
      */
 
-    private getQuestDialogue(npc: NPC): DialogueItem[] {
+    private getNPCDialogue(npc: NPC): string[] {
         // Iterate backwards, last reference of the NPC is the text we grab.
         for (let i = this.stage; i > -1; i--) {
             // We do not count iterations of stages above stage we are currently on.
