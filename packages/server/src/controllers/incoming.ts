@@ -482,7 +482,11 @@ export default class Incoming {
 
         switch (packet.opcode) {
             case Opcodes.Container.Select:
-                return this.player.handleContainerSelect(packet.type, packet.index!);
+                return this.player.handleContainerSelect(
+                    packet.type,
+                    packet.index!,
+                    packet.subType!
+                );
 
             case Opcodes.Container.Remove:
                 container.remove(packet.index!, undefined, true);

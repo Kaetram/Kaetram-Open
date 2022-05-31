@@ -280,7 +280,7 @@ export const enum Constants {
     MAX_STACK = 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
-    BANK_SIZE = 52, // Maximum bank size
+    BANK_SIZE = 69, // Maximum bank size
     HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol

@@ -431,7 +431,11 @@ export default class Player extends Character {
      * @param index Index at which we are selecting the item.
      */
 
-    public handleContainerSelect(type: Modules.ContainerType, index: number): void {
+    public handleContainerSelect(
+        type: Modules.ContainerType,
+        index: number,
+        subType?: Modules.ContainerType
+    ): void {
         let item: Item;
 
         switch (type) {
@@ -446,6 +450,10 @@ export default class Player extends Character {
                 break;
 
             case Modules.ContainerType.Bank:
+                if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
+                else if (subType === Modules.ContainerType.Inventory)
+                    this.bank.move(this.inventory, index);
+
                 break;
         }
     }
