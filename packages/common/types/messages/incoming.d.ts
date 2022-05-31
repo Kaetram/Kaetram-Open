@@ -37,8 +37,9 @@ export interface ProjectilePacket {
 }
 
 export interface ContainerPacket {
-    opcode: Opcodes.Container;
-    type: Modules.ContainerType;
+    opcode: Opcodes.Container; // The action we're performing.
+    type: Modules.ContainerType; // Container the action is taking place in.
+    subType: Modules.ContainerType; // Used by the bank to determine container actions.
     index?: number;
     tIndex?: number;
     count?: number;
