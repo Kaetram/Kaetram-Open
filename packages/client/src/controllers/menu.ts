@@ -8,14 +8,16 @@ import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import Store from '../menu/store';
 
 export default class MenuController {
     private actions: Actions = new Actions();
 
     private inventory: Inventory = new Inventory(this.actions);
     private bank: Bank = new Bank(this.inventory);
+    private store: Store = new Store();
 
-    public menu: Menu[] = [this.inventory, this.bank];
+    public menu: Menu[] = [this.inventory, this.bank, this.store];
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -45,6 +47,14 @@ export default class MenuController {
 
     public getBank(): Bank {
         return this.bank;
+    }
+
+    /**
+     * @returns The store menu object.
+     */
+
+    public getStore(): Store {
+        return this.store;
     }
 
     /**
