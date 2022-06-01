@@ -913,6 +913,11 @@ export default class Connection {
      */
 
     private handleStore(opcode: Opcodes.Store, info: StorePacket): void {
+        switch (opcode) {
+            case Opcodes.Store.Open:
+                return this.menu.getStore().show(info);
+        }
+
         // switch (opcode) {
         //     case Opcodes.Store.Open:
         //     case Opcodes.Store.Update:
