@@ -307,7 +307,7 @@
     left: 6%;
 }
 
-#shop-inventory-slots {
+#store-inventory-slots {
     left: 14%;
 }
 
@@ -500,7 +500,7 @@
     position: absolute;
 }
 
-#shop {
+#store {
     position: absolute;
     display: none;
     top: 17%;
@@ -508,13 +508,13 @@
     cursor: default;
 }
 
-#shop-inventory-container {
+#store-inventory-container {
     position: absolute;
     top: 0;
     right: 100%;
 }
 
-#shop-container {
+#store-container {
     overflow-y: scroll;
     position: absolute;
     font-family: AdvoCut, sans-serif;
@@ -528,7 +528,7 @@
     }
 }
 
-.shop-item {
+.store-item {
     display: inline-flex;
     width: 98%;
     height: 5%;
@@ -536,7 +536,7 @@
     border-radius: 10px;
 }
 
-.shop-item-image {
+.store-item-image {
     width: 32px;
     height: 32px;
     border: 2px solid rgb(0 0 255 / 30%);
@@ -545,29 +545,29 @@
     background-size: 600%;
 }
 
-.shop-item-name,
-.shop-item-count,
-.shop-item-price,
-.shop-item-buy {
+.store-item-name,
+.store-item-count,
+.store-item-price,
+.store-item-buy {
     position: absolute;
     padding-top: 2%;
     font-size: 12px;
     float: left;
 }
 
-.shop-item-name {
+.store-item-name {
     left: 20%;
 }
 
-.shop-item-count {
+.store-item-count {
     left: 55%;
 }
 
-.shop-item-price {
+.store-item-price {
     left: 65%;
 }
 
-.shop-item-buy {
+.store-item-buy {
     position: relative;
     border: 2px solid rgb(0 255 0 / 30%);
     border-radius: 30%;
@@ -616,8 +616,8 @@
     text-align: right;
 }
 
-#shop-sell-slot-return-text,
-#shop-sell-slot-text,
+#store-sell-slot-return-text,
+#store-sell-slot-text,
 #shards-count {
     color: black;
 }
@@ -1239,36 +1239,36 @@
             margin-left: 1px * $i;
         }
 
-        #shop {
+        #store {
             width: 170px * $i;
             height: 168px * $i;
             background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
         }
 
-        #shop-inventory-container {
+        #store-inventory-container {
             width: 129px * $i;
             height: 155px * $i;
             background: url('/img/#{$i}/containers.png') 0 0;
         }
 
-        #shop-sell-slot,
-        #shop-sell-slot-return {
+        #store-sell-slot,
+        #store-sell-slot-return {
             position: absolute;
             width: 16px * $i;
             height: 16px * $i;
             top: 123px * $i;
         }
 
-        #shop-sell-slot {
+        #store-sell-slot {
             left: 14px * $i;
         }
 
-        #shop-sell-slot-return {
+        #store-sell-slot-return {
             left: 44px * $i;
         }
 
-        #shop-sell-slot-return-text,
-        #shop-sell-slot-text,
+        #store-sell-slot-return-text,
+        #store-sell-slot-text,
         #shards-count {
             margin-top: 19px * $i;
         }
@@ -1375,10 +1375,10 @@
         border-radius: 12px;
     }
 
-    .shop-item-name,
-    .shop-item-count,
-    .shop-item-price,
-    .shop-item-buy {
+    .store-item-name,
+    .store-item-count,
+    .store-item-price,
+    .store-item-buy {
         font-size: 16px;
     }
 
@@ -1725,36 +1725,36 @@
         left: 90%;
     }
 
-    #shop {
+    #store {
         top: 30%;
         left: 55%;
         transform: scale(1.5);
     }
 
-    #shop-container ul li {
+    #store-container ul li {
         padding-top: 1px;
         padding-bottom: 1px;
     }
 
-    .shop-item {
+    .store-item {
         width: 97%;
         border: 1.5px solid rgb(255 255 0 / 30%);
         border-radius: 7px;
     }
 
-    .shop-item-image {
+    .store-item-image {
         width: 16px;
         height: 16px;
         border: 1px solid rgb(0 0 255 / 30%);
     }
 
-    .shop-item-name,
-    .shop-item-count,
-    .shop-item-price {
+    .store-item-name,
+    .store-item-count,
+    .store-item-price {
         font-size: 7px;
     }
 
-    .shop-item-buy {
+    .store-item-buy {
         position: relative;
         float: left;
         border: 1px solid rgb(0 255 0 / 30%);
