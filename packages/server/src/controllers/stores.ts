@@ -161,15 +161,18 @@ export default class Stores {
      * sends the data to all the players accessing the store.
      * @param player The player that is purchasing the item.
      * @param storeKey The key of the store the item is being purchased from.
-     * @param itemKey The key of the item being purchased.
+     * @param index The index of the item we are purchasing.
      * @param count The amount of the item being purchased.
      */
 
-    public purchase(player: Player, storeKey: string, itemKey: string, count = 1): void {
+    public purchase(player: Player, storeKey: string, index: number, count = 1): void {
         if (!this.verifyStore(player, storeKey)) return;
 
+        // First and foremost check the user has enough space.
+        if (!player.inventory.hasSpace()) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+
         let store = this.stores[storeKey],
-            item = _.find(store.items, { key: itemKey });
+            item = store.items[index];
 
         // Check if item exists
         if (!item)
@@ -199,7 +202,7 @@ export default class Stores {
         // Remove item from store if it is out of stock and not original to the store.
         if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
             store.items = _.filter(store.items, (storeItem) => {
-                return storeItem.key !== itemKey;
+                return storeItem.key !== item.key;
             });
 
         player.inventory.remove(currency, item.price * count);
@@ -213,40 +216,47 @@ export default class Stores {
      * items they do not originally have in stock. In that case we add
      * the specific item to the stock.
      * @param player The player that is selling the item.
-     * @param storeKey The store the player is selling to.
-     * @param itemKey The item the player is selling.
+     * @param key The key of the store we are currently in.
+     * @param index The index of the item in the player's inventory.
      * @param count The amount of the item being sold.
      */
 
-    public sell(player: Player, storeKey: string, itemKey: string, count = 1, index: number): void {
-        if (!this.verifyStore(player, storeKey)) return;
+    public sell(player: Player, key: string, index: number, count = 1): void {
+        if (!this.verifyStore(player, key)) return;
 
-        let store = this.stores[storeKey],
-            item = player.inventory.getItem(player.inventory.get(index));
+        let slot = player.inventory.get(index);
 
-        // No item key provided or is empty.
-        if (!item.key || !itemKey) return;
+        // Ensure the item in the slot exists.
+        if (slot.isEmpty())
+            return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
-        // Mismatch in item keys.
-        if (item.key !== itemKey)
-            return log.warning(`${player.username} ${StoreEn.SELL_INVALID_ITEM}`);
+        let store = this.stores[key];
 
-        // Check if store already contains the item.
-        let storeItem = _.find(store.items, { key: itemKey }),
-            price = storeItem ? storeItem.price : item.price;
+        /**
+         * Although a lot of these checks are similar to `select()` they are necessary
+         * here just in case someone is messing with the client; which, in an open-source
+         * project, is to be expected and frankly, quite reasonable.
+         */
+
+        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Find the item in the store if it exists.
+        let item = player.inventory.getItem(slot),
+            storeItem = _.find(store.items, { key: slot.key }),
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2); // Use store price or item default.
 
         player.inventory.remove(index, count);
 
-        // Attempt to add currency type and amount to the player's inventory.
-        if (!player.inventory.add(this.getCurrency(store.currency, Math.ceil((price * count) / 2))))
-            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+        // Very weird if this somehow happened, I'd be curious to see how.
+        if (!player.inventory.add(this.getCurrency(store.currency, price)))
+            return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Increment item amount in the store otherwise add item to store.
         if (storeItem) storeItem.count += count;
         else store.items.push(item);
 
         // Sync up new store data to all players.
-        this.updatePlayers(storeKey);
+        this.updatePlayers(key);
     }
 
     /**
@@ -254,38 +264,42 @@ export default class Stores {
      * in the player's inventory and return the result back. If the item is in the store
      * then we refer to that price instead.
      * @param player The player we are selecting an item for sale of.
-     * @param storeKey The store that the action takes place in.
-     * @param itemKey The key of the item attempted to be sold.
+     * @param key The store that the action takes place in.
      * @param index The selected inventory slot index from the client (used for verification).
+     * @param count Optional parameter for how much of an item to select (to be implemented client side).
      */
 
-    public select(
-        player: Player,
-        storeKey: string,
-        itemKey: string,
-        count = 1,
-        index: number
-    ): void {
-        if (!this.verifyStore(player, storeKey) || isNaN(index)) return;
+    public select(player: Player, key: string, index: number, count = 1): void {
+        if (!this.verifyStore(player, key) || isNaN(index)) return;
 
-        let store = this.stores[storeKey],
-            item = _.find(store.items, { key: itemKey });
+        // Grab the inventory slot at the specified index.
+        let slot = player.inventory.get(index);
 
-        // Check if item exists
-        if (!item) item = player.inventory.getItem(player.inventory.get(index));
-
-        if (item.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
-
-        if (item.key !== itemKey)
+        // This shouldn't get called unless there is a bug or client was messed with.
+        if (slot.isEmpty())
             return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
+        let store = this.stores[key];
+
+        // Check that the player isn't trying to sell the currency to the store.
+        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Create an instance of an item and try to check if that item exists in the store.
+        let item = player.inventory.getItem(slot),
+            storeItem = _.find(store.items, { key: slot.key }),
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2); // Use store price or item default.
+
+        if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
+
+        // Create the select packet for the client to process and move the item into the slot.
         player.send(
             new StorePacket(Opcodes.Store.Select, {
+                key,
                 item: {
                     key: item.key,
                     name: item.name,
                     count,
-                    price: Math.ceil(item.price / 2),
+                    price,
                     index
                 }
             })

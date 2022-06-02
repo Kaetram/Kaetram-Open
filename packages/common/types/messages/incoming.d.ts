@@ -47,8 +47,7 @@ export interface ContainerPacket {
 
 export interface StorePacket {
     opcode: Opcodes.Store;
-    storeKey: string; // The shop's key.
-    itemKey: string; // Item key we are trying to buy/sell
+    key: string; // The shop's key.
+    index: number; // Index of the item we are working with.
     count?: number; // How many of the item we are trying to buy/sell
-    index?: number; // The index of the slot in the inventory.
 }

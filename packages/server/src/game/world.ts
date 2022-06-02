@@ -36,9 +36,9 @@ export default class World {
     public map: Map = new Map(this);
     public api: API = new API(this);
     public stores: Stores = new Stores(this);
+    public trees: Trees = new Trees(this);
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
-    public trees: Trees = new Trees(this);
     public discord: Discord = new Discord(config.hubEnabled);
 
     private maxPlayers = config.maxPlayers;

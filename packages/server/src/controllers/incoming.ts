@@ -615,89 +615,14 @@ export default class Incoming {
 
         switch (data.opcode) {
             case Opcodes.Store.Buy:
-                return this.world.stores.purchase(
-                    this.player,
-                    data.storeKey,
-                    data.itemKey,
-                    data.count
-                );
-
-            case Opcodes.Store.Select:
-                return this.world.stores.select(
-                    this.player,
-                    data.storeKey,
-                    data.itemKey,
-                    data.count,
-                    data.index!
-                );
+                return this.world.stores.purchase(this.player, data.key, data.index, data.count);
 
             case Opcodes.Store.Sell:
-                return this.world.stores.sell(
-                    this.player,
-                    data.storeKey,
-                    data.itemKey,
-                    data.count,
-                    data.index!
-                );
-        }
+                return this.world.stores.sell(this.player, data.key, data.index, data.count);
 
-        // let [opcode, npcId] = message;
-        // switch (opcode) {
-        //     case Opcodes.Shop.Buy: {
-        //         let buyId = message[2] as number,
-        //             amount = message[3] as number;
-        //         if (!buyId || !amount) {
-        //             this.player.notify('Incorrect purchase packets.');
-        //             return;
-        //         }
-        //         log.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
-        //         this.world.shops.buy(this.player, npcId, buyId, amount);
-        //         break;
-        //     }
-        //     case Opcodes.Shop.Sell:
-        //         if (!this.player.selectedShopItem) {
-        //             this.player.notify('No item has been selected.');
-        //             return;
-        //         }
-        //         this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
-        //         break;
-        //     case Opcodes.Shop.Select: {
-        //         let id = message[2] as string;
-        //         if (!id) {
-        //             this.player.notify('Incorrect purchase packets.');
-        //             return;
-        //         }
-        //         let slotId = parseInt(id),
-        //             /**
-        //              * Though all this could be done client-sided
-        //              * it's just safer to send it to the server to sanitize data.
-        //              * It also allows us to add cheat checks in the future
-        //              * or do some fancier stuff.
-        //              */
-        //             item = this.player.inventory.slots[slotId];
-        //         if (!item || item.id < 1) return;
-        //         if (this.player.selectedShopItem) this.world.shops.remove(this.player);
-        //         let currency = this.world.shops.getCurrency(npcId);
-        //         if (!currency) return;
-        //         this.player.send(
-        //             new Shop(Opcodes.Shop.Select, {
-        //                 id: npcId,
-        //                 slotId,
-        //                 currency: Items.idToString(currency),
-        //                 price: this.world.shops.getSellPrice(npcId, item.id)
-        //             })
-        //         );
-        //         this.player.selectedShopItem = {
-        //             id: npcId,
-        //             index: item.index
-        //         };
-        //         log.debug(`Received Select: ${npcId} ${slotId}`);
-        //         break;
-        //     }
-        //     case Opcodes.Shop.Remove:
-        //         this.world.shops.remove(this.player);
-        //         break;
-        // }
+            case Opcodes.Store.Select:
+                return this.world.stores.select(this.player, data.key, data.index, data.count);
+        }
     }
 
     private handleCamera(message: string[]): void {
