@@ -27,6 +27,48 @@ export default {
     },
 
     /**
+     * Creates a new slot element based using the bank-slot class. This creates
+     * an empty skeleton that we can then place items in. A callback event listener
+     * is also created alongside the slot. Whenever a slot is clicked, its type
+     * and index are parameters that are passed to the callback.
+     * @param type The type of slot we are creating (used for callback as well).
+     * @param index Index of the slot we are creating (for identification).
+     * @param callback Optional paramater that creates a callback when the element
+     * is clicked and passes the type of the slot and the respective index.
+     */
+
+    createSlot(
+        type: Modules.ContainerType,
+        index: number,
+        callback?: (type: Modules.ContainerType, index: number) => void
+    ): HTMLElement {
+        let listElement = document.createElement('li'),
+            slot = document.createElement('div'),
+            image = document.createElement('div'),
+            count = document.createElement('div');
+
+        // Sets the class of the bank slot.
+        slot.classList.add('bank-slot');
+
+        // Sets the class of the image.
+        image.classList.add('bank-image');
+
+        // Sets the class of the count.
+        count.classList.add('item-count');
+
+        // Appends image and count onto the bank slot.
+        slot.append(image);
+        slot.append(count);
+
+        if (callback) slot.addEventListener('click', () => callback(type, index));
+
+        // Appends the bank slot onto the list element.
+        listElement.append(slot);
+
+        return listElement;
+    },
+
+    /**
      * Converts an item's key into an image URL for the client.
      * It defaults to `null` if parameter is not specified.
      * @param key The item's key.

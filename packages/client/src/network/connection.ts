@@ -574,8 +574,8 @@ export default class Connection {
                 break;
         }
 
-        // Update the bank container. Will not update if the UI is not open.
-        this.menu.getBank().synchronize();
+        // Synchronizes all the open menus that have containers.
+        this.menu.synchronize();
     }
 
     /**
@@ -614,6 +614,11 @@ export default class Connection {
      */
 
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
+        switch (opcode) {
+            case Opcodes.Notification.Text:
+                return this.input.chatHandler.add('WORLD', info.message, info.colour, true);
+        }
+
         // switch (opcode) {
         //     case Opcodes.Notification.Ok:
         //         this.menu.displayNotify(info.message);
@@ -916,15 +921,13 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.Store.Open:
                 return this.menu.getStore().show(info);
-        }
 
-        // switch (opcode) {
-        //     case Opcodes.Store.Open:
-        //     case Opcodes.Store.Update:
-        //         return this.menu.shop.open(info);
-        //     case Opcodes.Store.Select:
-        //         return this.menu.shop.move(info.item!);
-        // }
+            case Opcodes.Store.Update:
+                return this.menu.getStore().update(info);
+
+            case Opcodes.Store.Select:
+                return this.menu.getStore().move(info);
+        }
     }
 
     /**
