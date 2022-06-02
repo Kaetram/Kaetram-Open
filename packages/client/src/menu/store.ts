@@ -1,12 +1,123 @@
 import Menu from './menu';
+import Inventory from './inventory';
 
+import Util from '../utils/util';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { StorePacket } from '@kaetram/common/types/messages/outgoing';
+import { SerializedStoreItem } from '@kaetram/common/types/stores';
+import log from '../lib/log';
+
+type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
 export default class Store extends Menu {
-    private key = '';
+    private key = ''; // Key of the current store
+    private currency = 'gold'; // Key of the currency used, defaults to gold.
 
-    public constructor() {
+    private selectedIndex = -1; // Index of currently selected item.
+    private selectedCount = -1; // Amount of currently selected item.
+
+    private confirmSell: HTMLElement = document.querySelector('#confirm-sell')!;
+
+    // Sell slot information
+    private sellSlot: HTMLElement = document.querySelector('#store-sell-slot')!;
+    private sellSlotText: HTMLElement = document.querySelector('#store-sell-slot-text')!;
+    private sellSlotReturn: HTMLElement = document.querySelector('#store-sell-slot-return')!;
+    private sellSlotReturnText: HTMLElement = document.querySelector(
+        '#store-sell-slot-return-text'
+    )!;
+
+    // Lists
+    private storeList: HTMLUListElement = document.querySelector('#store-container > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector(
+        '#store-inventory-slots > ul'
+    )!;
+
+    private selectCallback?: SelectCallback;
+
+    public constructor(private inventory: Inventory) {
         super('#store', '#close-store');
+
+        this.load();
+
+        this.sellSlot.addEventListener('click', this.synchronize.bind(this));
+        this.confirmSell.addEventListener('click', this.sell.bind(this));
+    }
+
+    /**
+     * Loads the empty inventory slots based on the size of the inventory.
+     * Creates an event listener for each slot that direts to `select()`.
+     */
+
+    private load(): void {
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+            this.inventoryList.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
+    }
+
+    /**
+     * Takes the store packet data and inserts it all into the store. Note that the store packet
+     * data changes depending on whether we're opening/updating or selecting an item in the store.
+     * In this case, the store packet contains data about the store rather than a selected item.
+     * @param info Contains the store's key, currency, and items (or specific item if selecting).
+     */
+
+    public update(info: StorePacket): void {
+        this.clear();
+
+        this.key = info.key!;
+        this.currency = info.currency!;
+
+        for (let i = 0; i < info.items!.length; i++)
+            this.storeList.append(this.createStoreItem(info.items![i], i));
+    }
+
+    /**
+     * Handles the initial action of clicking on an item in the inventory.
+     * @param _type Unused parameter identifying the container being clicked.
+     * @param index The index of the item we are selecting (in the inventory).
+     */
+
+    public select(_type: Modules.ContainerType, index: number): void {
+        this.selectCallback?.(Opcodes.Store.Select, this.key, index);
+    }
+
+    /**
+     * Creates the callback for the sell opcode and passes onto it the currently
+     * selected item index and the count.
+     */
+
+    private sell(): void {
+        this.selectCallback?.(Opcodes.Store.Sell, this.key, this.selectedIndex, this.selectedCount);
+    }
+
+    /**
+     * Sends a callback signal with the buy opcode.
+     * @param index The index of the item we are trying to purchase.
+     * @param count Optional paramater for the amount of an item we are trying to buy.
+     */
+
+    private buy(index: number, count = 1): void {
+        this.selectCallback?.(Opcodes.Store.Buy, this.key, index, count);
+    }
+
+    /**
+     * Synchronizes the slot data between the store and the inventory.
+     */
+
+    public override synchronize(): void {
+        if (!this.isVisible()) return;
+
+        this.clearSellSlot();
+
+        this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
+            let image = this.getElement(index).querySelector('.bank-image') as HTMLElement,
+                count = this.getElement(index).querySelector('.item-count') as HTMLElement;
+
+            image.style.backgroundImage = slot.style.backgroundImage;
+            count.textContent = slot.textContent;
+        });
     }
 
     /**
@@ -17,321 +128,133 @@ export default class Store extends Menu {
 
     public override show(info: StorePacket): void {
         super.show();
+
+        this.update(info);
+        this.synchronize();
     }
+
+    /**
+     * Clears the store so that new data can be inserted
+     * once again. Clears the key of the currently open store,
+     * defaults the currency, and empties the list of store items.
+     */
 
     private clear(): void {
-        //
+        this.key = '';
+        this.currency = 'gold';
+
+        this.storeList.innerHTML = '';
+    }
+
+    /**
+     * Clears the sell slots and selected item index. Removes all the image
+     * and text contents from the HTML elements and clears the index and count.
+     */
+
+    private clearSellSlot(): void {
+        this.selectedIndex = -1;
+        this.selectedCount = -1;
+
+        this.sellSlot.style.backgroundImage = '';
+        this.sellSlotText.textContent = '';
+        this.sellSlotReturn.style.backgroundImage = '';
+        this.sellSlotReturnText.textContent = '';
+    }
+
+    /**
+     * When the server sends a select packet, we use this function
+     * to move an item from the inventory to the select slot. We also
+     * add the currency and price to bottom slots.
+     * @param info Contains store packet data such as the index, key, price, etc.
+     *
+     * TODO - Add support for dynamic counts.
+     */
+
+    public move(info: StorePacket): void {
+        if (info.key !== this.key) return log.error(`Invalid store key provided for the select.`);
+
+        //Refreshes the inventory container prior to moving.
+        this.synchronize();
+
+        let image = this.getElement(info.item!.index!).querySelector('.bank-image') as HTMLElement,
+            count = this.getElement(info.item!.index!).querySelector('.item-count') as HTMLElement;
+
+        if (!image || !count) return log.error(`[Store] Could not find image and count elements.`);
+
+        // Updates the sell slot.
+        this.sellSlot.style.backgroundImage = image.style.backgroundImage;
+        this.sellSlot.textContent = count.textContent;
+        this.sellSlotReturn.style.backgroundImage = Util.getImageURL(this.currency);
+        this.sellSlotReturnText.textContent = info.item!.price!.toString() || '';
+
+        // Visually removes the item from the inventory.
+        image.style.backgroundImage = '';
+        count.textContent = '';
+
+        // Store the currently selected item index and count for when we sell.
+        this.selectedIndex = info.item!.index!;
+        this.selectedCount = info.item!.count!;
+    }
+
+    /**
+     * Creates a new store element item and returns it.
+     * @param item Contains data about the item (price, image, name, etc).
+     * @returns An HTML list element that can be appended to the list of store items.
+     */
+
+    private createStoreItem(item: SerializedStoreItem, index: number): HTMLElement {
+        let listElement = document.createElement('li'),
+            itemElement = document.createElement('div'),
+            image = document.createElement('div'),
+            name = document.createElement('div'),
+            count = document.createElement('div'),
+            price = document.createElement('div'),
+            buyButton = document.createElement('div');
+
+        // Add the class to the elements.
+        itemElement.classList.add('store-item');
+        image.classList.add('store-item-image');
+        name.classList.add('store-item-name');
+        count.classList.add('store-item-count');
+        price.classList.add('store-item-price');
+        buyButton.classList.add('store-item-buy');
+
+        // Set the text HTML values for the children elements.
+        count.textContent = item.count.toString();
+        name.textContent = item.name;
+        price.textContent = item.price.toString();
+        buyButton.textContent = 'Buy';
+
+        // Update the image of the element.
+        image.style.backgroundImage = Util.getImageURL(item.key);
+
+        buyButton.addEventListener('click', () => this.buy(index));
+
+        // Append all the elements together and nest them.
+        itemElement.append(image, name, count, price, buyButton);
+        listElement.append(itemElement);
+
+        return listElement;
+    }
+
+    /**
+     * Grabs the HTMLElement at a specified index within the
+     * inventory slot list.
+     * @param index The index of the element to grab.
+     * @returns The HTMLElement at the specified index.
+     */
+
+    private getElement(index: number): HTMLElement {
+        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+    }
+
+    /**
+     * Select callback for whenever a store action is performed. This includes
+     * buying, selling, or selecting an item.
+     * @param callback Passes data such as the type of action performed and index.
+     */
+
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 }
-
-// import _ from 'lodash';
-// import $ from 'jquery';
-
-// import { SerializedStoreItem } from '@kaetram/common/types/stores';
-
-// import { Packets, Opcodes } from '@kaetram/common/network';
-
-// import Utils from '../utils/util';
-// import Slot from './container/slot';
-// import Container from './container/container';
-
-// import type Game from '../game';
-// import type MenuController from '../controllers/menu';
-// import { StorePacket } from '@kaetram/common/types/messages/outgoing';
-
-// export default class Shop {
-//     private body = $('#shop');
-//     private shop = $('#shop-container');
-//     private inventory = $('#shop-inventory-slots');
-
-//     /**
-//      * Represents what the player currently has queued for sale
-//      * and `sellSlotReturn` shows the currency the player is receiving.
-//      * The reason for this is because shops are written such that
-//      * they can handle different currencies.
-//      */
-//     private sellSlot = $('#shop-sell-slot');
-//     private sellSlotText = $('#shop-sell-slot-text');
-//     private sellSlotReturn = $('#shop-sell-slot-return');
-//     private sellSlotReturnText = $('#shop-sell-slot-return-text');
-
-//     private confirmSell = $('#confirm-sell');
-
-//     private container: Container = new Container();
-
-//     // Identification/key of the currently opened store.
-//     private key = '';
-
-//     // Currency of the current store, defaults to gold.
-//     private currency = 'gold';
-
-//     // Temporary item selected for when user tries to sell.
-//     private selectedItem: SerializedStoreItem | undefined;
-
-//     private close: JQuery;
-
-//     public constructor(private game: Game, private menu: MenuController) {
-//         this.close = $('#close-shop');
-
-//         this.close.css('left', '97%');
-//         this.close.on('click', () => this.hide());
-
-//         this.sellSlot.on('click', () => this.remove());
-
-//         this.confirmSell.on('click', () => this.sell());
-//     }
-
-//     private buy(item: Slot, count = 1): void {
-//         this.game.socket.send(Packets.Store, {
-//             opcode: Opcodes.Store.Buy,
-//             storeKey: this.key,
-//             itemKey: item.key,
-//             count
-//         });
-//     }
-
-//     private sell(): void {
-//         if (!this.selectedItem) return;
-
-//         this.clearSellSlot();
-
-//         // The server will handle the selected item and verifications.
-//         this.game.socket.send(Packets.Store, {
-//             opcode: Opcodes.Store.Sell,
-//             storeKey: this.key,
-//             itemKey: this.selectedItem.key,
-//             count: this.selectedItem.count,
-//             index: this.selectedItem.index
-//         });
-//     }
-
-//     /**
-//      * Selects an item in order to get the price and check
-//      * if the item exists in the store already. The rest is
-//      * handled client-sided after the response is received.
-//      * @param item The slot we are checking.
-//      */
-
-//     private select(item: Slot, index: number): void {
-//         // Slot is empty, ignore.
-//         if (!item.key) return;
-
-//         this.game.socket.send(Packets.Store, {
-//             opcode: Opcodes.Store.Select,
-//             storeKey: this.key,
-//             itemKey: item.key,
-//             index
-//         });
-//     }
-
-//     /**
-//      * Moves the item back, clears the sell slot
-//      * and reloads the shops/inventory.
-//      */
-
-//     private remove(): void {
-//         this.moveBack(this.selectedItem!.index!);
-//         this.clearSellSlot();
-//         this.resize();
-
-//         this.selectedItem = undefined;
-//     }
-
-//     /**
-//      * Moves an item from the inventory to the sell slot.
-//      * @param item The store item we are moving.
-//      */
-
-//     public move(item: SerializedStoreItem): void {
-//         // Refresh everything.
-//         this.resize();
-
-//         let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${item.index}`),
-//             slotImage = inventorySlot.find(`#shopInventoryImage${item.index}`),
-//             slotCount = inventorySlot.find(`#shopInventoryCount${item.index}`);
-
-//         this.sellSlot.css({
-//             backgroundImage: slotImage.css('background-image'),
-//             backgroundSize: slotImage.css('background-size')
-//         });
-
-//         this.sellSlotReturn.css({
-//             backgroundImage: Utils.getImageURL(this.currency),
-//             backgroundSize: this.sellSlot.css('background-size')
-//         });
-
-//         this.sellSlotText.text(slotCount.text());
-//         this.sellSlotReturnText.text(item.price * item.count);
-
-//         slotImage.css('background-image', '');
-//         slotCount.text('');
-
-//         this.selectedItem = item;
-//     }
-
-//     /**
-//      * Puts the item back from the sell slot.
-//      * @param index The index of the item in the inventory.
-//      */
-
-//     public moveBack(index: number): void {
-//         if (!index) return;
-
-//         let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${index}`);
-
-//         inventorySlot
-//             .find(`#inventoryImage${index}`)
-//             .css('background-image', this.sellSlot.css('background-image'));
-
-//         inventorySlot.find(`#inventory-item-count${index}`).text(this.sellSlotText.text());
-//     }
-
-//     /**
-//      * Clears the sell slot and the return slot that shows
-//      * how many coins the player is getting back.
-//      */
-
-//     public clearSellSlot(): void {
-//         this.sellSlot.css('background-image', '');
-//         this.sellSlotText.text('');
-//         this.sellSlotReturn.css('background-image', '');
-//         this.sellSlotReturnText.text('');
-//     }
-
-//     /**
-//      * The shop file is already built to support full de-initialization of objects when
-//      * we receive an update about the stocks. So we just use that whenever we want to resize.
-//      * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
-//      * do a full refresh when they buy an item or someone else buys an item.
-//      */
-
-//     public resize(): void {
-//         this.getInventoryList().empty();
-//         this.getShopList().empty();
-
-//         this.load();
-//     }
-
-//     public open(store: StorePacket): void {
-//         this.key = store.key!;
-//         this.currency = store.currency!;
-
-//         this.body.fadeIn('slow');
-
-//         this.update(store.items!);
-//     }
-
-//     public update(items: SerializedStoreItem[]): void {
-//         this.container = new Container();
-
-//         this.reset();
-
-//         _.each(items, (item, index) =>
-//             this.container.add({
-//                 index,
-//                 key: item.key,
-//                 count: item.count,
-//                 name: item.name,
-//                 price: item.price
-//             })
-//         );
-
-//         this.load();
-//     }
-
-//     private load(): void {
-//         _.each(this.container.slots, (slot) => {
-//             let storeItem = $(`<div id="shopItem${slot.index}" class="shop-item"></div>`),
-//                 image = $(`<div id="shopItemImage${slot.index}" class="shop-item-image"></div>`),
-//                 count = $(`<div id="shopItemCount${slot.index}" class="shop-item-count"></div>`),
-//                 price = $(`<div id="shopItemPrice${slot.index}" class="shop-item-price"></div>`),
-//                 name = $(`<div id="shopItemName${slot.index}" class="shop-item-name"></div>`),
-//                 buy = $(`<div id="shopItemBuy${slot.index}" class="shop-item-buy"></div>`);
-
-//             image.css('background-image', Utils.getImageURL(slot.key));
-//             count.text(slot.count);
-//             price.text(`${slot.price} ${this.currency.slice(0, 1).toUpperCase()}`);
-//             name.text(slot.name);
-//             buy.html('Buy');
-
-//             buy.on('click', () => this.buy(slot));
-
-//             let listItem = $('<li></li>');
-
-//             storeItem.append(image, count, price, name, buy);
-
-//             listItem.append(storeItem);
-
-//             this.getShopList().append(listItem);
-//         });
-
-//         let inventoryContainer = this.menu.inventory.container;
-
-//         for (let j = 0; j < inventoryContainer.size; j++) {
-//             let item = inventoryContainer.slots[j],
-//                 slot = $(`<div id="shopInventorySlot${j}" class="bank-slot"></div>`),
-//                 count = $(`<div id="shopInventoryCount${j}" class="item-count"></div>`),
-//                 image = $(`<div id="shopInventoryImage${j}" class="bank-image"></div>`),
-//                 element = $('<li></li>').append(slot.append(image).append(count));
-
-//             slot.css({
-//                 marginRight: `${3 * this.getScale()}px`,
-//                 marginBottom: `${6 * this.getScale()}px`
-//             });
-
-//             count.css('margin-top', `${1 * this.getScale()}px`);
-
-//             if (item.key) image.css('background-image', Utils.getImageURL(item.key));
-
-//             if (item.count > 1) count.text(item.count);
-
-//             slot.on('click', () => this.select(item, j));
-
-//             this.getInventoryList().append(element);
-//         }
-//     }
-
-//     private reset(): void {
-//         this.getShopList().empty();
-//         this.getInventoryList().empty();
-//     }
-
-//     public hide(): void {
-//         this.key = '';
-
-//         this.sellSlot.css('background-image', '');
-//         this.sellSlotText.text('');
-//         this.sellSlotReturn.css('background-image', '');
-//         this.sellSlotReturnText.text('');
-
-//         this.body.fadeOut('fast');
-//     }
-
-//     public clear(): void {
-//         this.shop?.find('ul').empty();
-
-//         this.inventory?.find('ul').empty();
-
-//         this.close?.off('click');
-
-//         this.sellSlot?.off('click');
-
-//         this.confirmSell?.off('click');
-//     }
-
-//     private getScale(): number {
-//         return this.game.app.getUIScale();
-//     }
-
-//     public isVisible(): boolean {
-//         return this.body.css('display') === 'block';
-//     }
-
-//     private getShopList(): JQuery<HTMLUListElement> {
-//         return this.shop.find('ul');
-//     }
-
-//     private getInventoryList(): JQuery<HTMLUListElement> {
-//         return this.inventory.find('ul');
-//     }
-// }
