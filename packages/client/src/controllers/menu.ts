@@ -15,13 +15,14 @@ export default class MenuController {
 
     private inventory: Inventory = new Inventory(this.actions);
     private bank: Bank = new Bank(this.inventory);
-    private store: Store = new Store();
+    private store: Store = new Store(this.inventory);
 
     public menu: Menu[] = [this.inventory, this.bank, this.store];
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
+        this.store.onSelect(this.handleStoreSelect.bind(this));
     }
 
     /**
@@ -31,6 +32,14 @@ export default class MenuController {
      */
     public hide(): void {
         this.forEachMenu((menu: Menu) => menu.hide());
+    }
+
+    /**
+     * Synchronizes the contains and the UI for all menus.
+     */
+
+    public synchronize(): void {
+        this.forEachMenu((menu: Menu) => menu.synchronize());
     }
 
     /**
@@ -85,6 +94,24 @@ export default class MenuController {
             type: Modules.ContainerType.Bank,
             subType: type,
             index
+        });
+    }
+
+    /**
+     * Callback for when a store selection occurs. This is the packet format for when
+     * an item in the inventory is selected, when it is sold, or when we are attempting
+     * to purchase an item from the store.
+     * @param opcode The type of action we are performing.
+     * @param key The key of the store that we are in.
+     * @param index The index of the item (whether in the inventory or store).
+     */
+
+    private handleStoreSelect(opcode: Opcodes.Store, key: string, index: number, count = 1): void {
+        this.game.socket.send(Packets.Store, {
+            opcode,
+            key,
+            index,
+            count
         });
     }
 

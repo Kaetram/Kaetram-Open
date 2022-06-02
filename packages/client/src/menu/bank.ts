@@ -33,10 +33,14 @@ export default class Bank extends Menu {
         if (!this.inventoryList) return log.error('[Bank] Could not find the inventory slot list.');
 
         for (let i = 0; i < Modules.Constants.BANK_SIZE; i++)
-            this.bankList.append(this.createSlot(Modules.ContainerType.Bank, i));
+            this.bankList.append(
+                Util.createSlot(Modules.ContainerType.Bank, i, this.select.bind(this))
+            );
 
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
-            this.inventoryList.append(this.createSlot(Modules.ContainerType.Inventory, i));
+            this.inventoryList.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
     }
 
     /**
@@ -72,7 +76,7 @@ export default class Bank extends Menu {
      * Synchronizes the slot data between the bank and the inventory.
      */
 
-    public synchronize(): void {
+    public override synchronize(): void {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
@@ -119,42 +123,6 @@ export default class Bank extends Menu {
 
     public override hide(): void {
         super.hide();
-    }
-
-    /**
-     * Creates a new slot element based using the bank-slot class. This creates
-     * an empty skeleton that we can then place items in. A callback event listener
-     * is also created alongside the slot. Whenever a slot is clicked, its type
-     * and index are parameters that are passed to the callback.
-     * @param type The type of slot we are creating (used for callback as well).
-     * @param index Index of the slot we are creating (for identification).
-     */
-
-    private createSlot(type: Modules.ContainerType, index: number): HTMLElement {
-        let listElement = document.createElement('li'),
-            slot = document.createElement('div'),
-            image = document.createElement('div'),
-            count = document.createElement('div');
-
-        // Sets the class of the bank slot.
-        slot.classList.add('bank-slot');
-
-        // Sets the class of the image.
-        image.classList.add('bank-image');
-
-        // Sets the class of the count.
-        count.classList.add('item-count');
-
-        // Appends image and count onto the bank slot.
-        slot.append(image);
-        slot.append(count);
-
-        slot.addEventListener('click', () => this.select(type, index));
-
-        // Appends the bank slot onto the list element.
-        listElement.append(slot);
-
-        return listElement;
     }
 
     /**

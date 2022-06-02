@@ -33,6 +33,14 @@ export default abstract class Menu {
     }
 
     /**
+     * Used to synchronize data betwene the inventory and the UI.
+     */
+
+    public synchronize(): void {
+        //log.debug(`Unimplemented menu synchronize() function.`);
+    }
+
+    /**
      * Called by subclasses when attempting to add an element.
      * @param _data Unknown data that may contain information about an item.
      */
