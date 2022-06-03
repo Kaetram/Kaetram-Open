@@ -707,6 +707,8 @@ export default class Connection {
                  * we update the experience bar and create an info.
                  */
 
+                console.log(info);
+
                 if (isPlayer) {
                     this.game.player.setExperience(
                         info.experience!,
