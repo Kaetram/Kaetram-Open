@@ -6,9 +6,10 @@ import Menu from '../menu/menu';
 import Actions from '../menu/actions';
 import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
+import Store from '../menu/store';
+import Header from '../menu/header';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-import Store from '../menu/store';
 
 export default class MenuController {
     private actions: Actions = new Actions();
@@ -16,6 +17,8 @@ export default class MenuController {
     private inventory: Inventory = new Inventory(this.actions);
     private bank: Bank = new Bank(this.inventory);
     private store: Store = new Store(this.inventory);
+
+    private header: Header = new Header(this.game.player);
 
     public menu: Menu[] = [this.inventory, this.bank, this.store];
 
