@@ -18,14 +18,14 @@ export default class MenuController {
     private bank: Bank = new Bank(this.inventory);
     private store: Store = new Store(this.inventory);
 
-    private header: Header = new Header(this.game.player);
-
     public menu: Menu[] = [this.inventory, this.bank, this.store];
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));
+
+        new Header(this.game.player);
     }
 
     /**
