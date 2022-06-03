@@ -14,25 +14,18 @@ import type Game from '../../../game';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 
+type ExperienceCallback = (
+    experience: number,
+    prevExperience: number,
+    nextExperience: number
+) => void;
+
 export default class Player extends Character {
     public rights = 0;
     public wanted = false;
 
-    public override experience = -1;
-    public nextExperience = -1;
-    public prevExperience = -1;
-    public override level = -1;
-
     public pvpKills = -1;
     public pvpDeaths = -1;
-
-    public override hitPoints = -1;
-    public override maxHitPoints = -1;
-
-    public override mana = -1;
-    public override maxMana = -1;
-
-    public override pvp = false;
 
     public moveLeft = false;
     public moveRight = false;
@@ -42,7 +35,18 @@ export default class Player extends Character {
     public poison = false;
     public disableAction = false;
 
-    public moving!: boolean;
+    public moving = false;
+
+    public override experience = -1;
+    public override level = -1;
+
+    public override hitPoints = -1;
+    public override maxHitPoints = -1;
+
+    public override mana = -1;
+    public override maxMana = -1;
+
+    public override pvp = false;
 
     // Mapping of all equipments to their type.
     public equipments = {
@@ -53,7 +57,7 @@ export default class Player extends Character {
         [Modules.Equipment.Weapon]: new Weapon()
     };
 
-    private experienceCallback?: () => void;
+    private experienceCallback?: ExperienceCallback;
     private equipmentCallback?: () => void;
 
     public constructor(instance: string) {
@@ -75,8 +79,7 @@ export default class Player extends Character {
 
         this.setGridPosition(data.x, data.y);
 
-        this.setHitPoints(data.hitPoints!);
-        this.setMaxHitPoints(data.maxHitPoints!);
+        this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
         this.setMana(data.mana!);
         this.setMaxMana(data.maxMana!);
@@ -168,14 +171,16 @@ export default class Player extends Character {
     }
 
     public setExperience(experience: number, nextExperience: number, prevExperience: number): void {
-        this.experience = experience;
-        this.nextExperience = nextExperience;
-        this.prevExperience = prevExperience || 0;
+        if (!experience) return;
 
-        this.experienceCallback?.();
+        this.experience = experience;
+
+        if (!prevExperience || !nextExperience) return;
+
+        this.experienceCallback?.(experience, prevExperience, nextExperience);
     }
 
-    public onExperience(callback: () => void): void {
+    public onExperience(callback: ExperienceCallback): void {
         this.experienceCallback = callback;
     }
 

@@ -155,8 +155,7 @@ export default class EntitiesController {
     private createMob(info: EntityData): Mob {
         let mob = new Mob(info.instance);
 
-        mob.setHitPoints(info.hitPoints!);
-        mob.setMaxHitPoints(info.maxHitPoints!);
+        mob.setHitPoints(info.hitPoints!, info.maxHitPoints!);
 
         mob.attackRange = info.attackRange!;
         mob.level = info.level!;
@@ -251,8 +250,7 @@ export default class EntitiesController {
         player.orientation = info.orientation!;
         player.movementSpeed = info.movementSpeed!;
 
-        player.setHitPoints(info.hitPoints!);
-        player.setMaxHitPoints(info.maxHitPoints!);
+        player.setHitPoints(info.hitPoints!, info.maxHitPoints!);
 
         player.loadHandler(this.game);
 

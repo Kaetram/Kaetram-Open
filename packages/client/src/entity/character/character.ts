@@ -7,6 +7,8 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
+type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
+
 export default class Character extends Entity {
     public healthBarVisible = false;
 
@@ -58,8 +60,7 @@ export default class Character extends Entity {
     private startPathingCallback?(path: number[][]): void;
     private moveCallback?(): void;
     private requestPathCallback?(x: number, y: number): number[][] | null;
-    private hitPointsCallback?(hitPoints: number): void;
-    private maxHitPointsCallback?(maxHitPoints: number): void;
+    private hitPointsCallback?: HitPointsCallback;
 
     public forced!: boolean;
 
@@ -517,18 +518,18 @@ export default class Character extends Entity {
         this.followPosition(position.x, position.y);
     }
 
-    public setHitPoints(hitPoints: number): void {
+    public setHitPoints(hitPoints: number, maxHitPoints?: number): void {
+        let decrease = false;
+
         if (hitPoints < 0) hitPoints = 0;
+
+        if (hitPoints < this.hitPoints) decrease = true;
 
         this.hitPoints = hitPoints;
 
-        this.hitPointsCallback?.(this.hitPoints);
-    }
+        if (maxHitPoints) this.maxHitPoints = maxHitPoints;
 
-    public setMaxHitPoints(maxHitPoints: number): void {
-        this.maxHitPoints = maxHitPoints;
-
-        this.maxHitPointsCallback?.(this.maxHitPoints);
+        this.hitPointsCallback?.(this.hitPoints, maxHitPoints || this.maxHitPoints, decrease);
     }
 
     public setOrientation(orientation: Modules.Orientation): void {
@@ -563,11 +564,7 @@ export default class Character extends Entity {
         this.moveCallback = callback;
     }
 
-    public onHitPoints(callback: () => void): void {
+    public onHitPoints(callback: HitPointsCallback): void {
         this.hitPointsCallback = callback;
-    }
-
-    public onMaxHitPoints(callback: () => void): void {
-        this.maxHitPointsCallback = callback;
     }
 }
