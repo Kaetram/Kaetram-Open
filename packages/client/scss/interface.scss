@@ -1383,7 +1383,8 @@
         font-size: 16px;
     }
 
-    #health {
+    #health,
+    #health-bar {
         position: absolute;
         top: 4.5px;
         left: 30px;
@@ -1395,7 +1396,7 @@
         text-align: center;
     }
 
-    #health-bar {
+    #health-info {
         position: absolute;
         top: 0;
         left: 0;
@@ -1587,7 +1588,8 @@
         border-radius: 8px;
     }
 
-    #health {
+    #health,
+    #health-bar {
         position: absolute;
         top: 3px;
         left: 20px;
@@ -1599,7 +1601,7 @@
         text-align: center;
     }
 
-    #health-bar {
+    #health-info {
         position: absolute;
         top: 0;
         left: 0;

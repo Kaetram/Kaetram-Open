@@ -1,75 +1,69 @@
-import $ from 'jquery';
+import Player from '../entity/character/player/player';
 
-import type Game from '../game';
+/**
+ * The header is the GUI on top of the screen that displays
+ * the user's hitPoints, and exp bar. Every time there's
+ * an update to the game's player, it gets relayed here.
+ */
 
 export default class Header {
-    private player;
+    private health: HTMLElement = document.querySelector('#health')!; // The red element within the health bar.
+    private healthBar: HTMLElement = document.querySelector('#health-bar')!;
 
-    private health = $('#health');
-    private healthBar = $('#health-bar');
-    private healthBarText = $('#health-bar-text');
+    private text: HTMLElement = document.querySelector('#health-bar-text')!; // Numerical value of the health bar.
 
-    private exp = $('#exp');
-    private expBar = $('#exp-bar');
+    private experience: HTMLElement = document.querySelector('#exp')!; // The green element within the exp bar.
+    private experienceBar: HTMLElement = document.querySelector('#exp-bar')!; // Used for determining width of exp bar.
 
-    public constructor(private game: Game) {
-        this.player = game.player;
-
-        this.load();
+    public constructor(private player: Player) {
+        this.player.onHitPoints(this.handleHitPoints.bind(this));
+        this.player.onExperience(this.handleExperience.bind(this));
     }
 
-    private load(): void {
-        this.player.onHitPoints(() => this.calculateHealthBar());
+    /**
+     * Updates the health bar on the game screen.
+     * @param hitPoints Current hit points of the player.
+     * @param maxHitPoints Maximum attainable hit points (used to calcualte percentages).
+     */
 
-        this.player.onMaxHitPoints(() => this.calculateHealthBar());
+    private handleHitPoints(hitPoints: number, maxHitPoints: number, decrease?: boolean) {
+        let percentage = hitPoints / maxHitPoints;
 
-        this.player.onExperience(() => this.calculateExpBar());
+        if (decrease) this.flash('white');
+
+        this.health.style.width = `${Math.floor(
+            this.healthBar.getBoundingClientRect().width * percentage
+        ).toString()}px`;
+
+        this.text.textContent = `${hitPoints}/${maxHitPoints}`;
     }
 
-    private calculateHealthBar(): void {
-        let scale = this.getScale(),
-            width = this.healthBar.width()!,
-            // 11 is due to the offset of the #health in the #health-bar
-            diff = Math.floor(
-                width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
-            ),
-            prevWidth = this.health.width()!;
+    /**
+     * Updates the experience bar whenever the player acquires experience.
+     * @param experience The current experience amount.
+     * @param prevExperience Experience amount the current level starts at.
+     * @param nextExperience The experience amount necessary for next level.
+     */
 
-        if (this.player.poison) this.toggle('poison');
-        else this.toggle(diff - 1 > prevWidth ? 'green' : 'white');
+    private handleExperience(experience: number, prevExperience: number, nextExperience: number) {
+        let percentage = (experience - prevExperience) / (nextExperience - prevExperience);
 
-        if (diff > width) diff = width;
-
-        this.health.css('width', `${diff}px`);
-        this.healthBarText.text(`${this.player.hitPoints}/${this.player.maxHitPoints}`);
+        this.experience.style.width = `${Math.floor(
+            this.experienceBar.getBoundingClientRect().width * percentage
+        ).toString()}px`;
     }
 
-    private calculateExpBar(): void {
-        // let scale = this.getScale();
-        let width = this.expBar.width()!,
-            experience = this.player.experience - this.player.prevExperience,
-            nextExperience = this.player.nextExperience - this.player.prevExperience,
-            diff = Math.floor(width * (experience / nextExperience));
+    /**
+     * Temporarily adds a class to the health (to give the visual
+     * effect of it flashing) and creates a tiemout that removes
+     * it after 500 milliseconds.
+     */
 
-        this.exp.css('width', `${diff}px`);
-    }
+    private flash(style: string): void {
+        this.health.classList.add(style);
 
-    public resize(): void {
-        this.calculateHealthBar();
-        this.calculateExpBar();
-    }
+        console.log(this.health.classList);
 
-    private getScale(): number {
-        let scale = this.game.app.getUIScale();
-
-        if (scale < 2) scale = 2;
-
-        return scale;
-    }
-
-    private toggle(tClass: string): void {
-        this.health.addClass(tClass);
-
-        window.setTimeout(() => this.health.removeClass(tClass), 500);
+        window.setTimeout(() => this.health.classList.remove(style), 500);
     }
 }

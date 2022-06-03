@@ -945,10 +945,12 @@ export default class Player extends Character {
      * nearby regions. This contains all the data
      * about the player that other players should
      * be able to see.
+     * @param withEquipment Whether or not to include equipment batch data.
+     * @param withExperience Whether or not to incluide experience data.
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment = false, isWelcome = false): PlayerData {
+    public override serialize(withEquipment = false, withExperience = false): PlayerData {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
@@ -964,7 +966,8 @@ export default class Player extends Character {
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
 
-        if (isWelcome) {
+        if (withExperience) {
+            data.experience = this.experience;
             data.prevExperience = this.prevExperience;
             data.nextExperience = this.nextExperience;
         }
