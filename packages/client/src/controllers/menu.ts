@@ -8,6 +8,7 @@ import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
 import Store from '../menu/store';
 import Header from '../menu/header';
+import Profile from '../menu/profile/profile';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -17,15 +18,29 @@ export default class MenuController {
     private inventory: Inventory = new Inventory(this.actions);
     private bank: Bank = new Bank(this.inventory);
     private store: Store = new Store(this.inventory);
+    private profile: Profile = new Profile(this.game.player);
 
-    public menu: Menu[] = [this.inventory, this.bank, this.store];
+    public menu: Menu[] = [this.inventory, this.bank, this.store, this.profile];
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));
 
+        this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+
+        this.load();
+    }
+
+    /**
+     * Initializes the header and a callback that automatically
+     * hides all the other menus when a menu is shown.
+     */
+
+    private load(): void {
         new Header(this.game.player);
+
+        this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
 
     /**
@@ -67,6 +82,14 @@ export default class MenuController {
 
     public getStore(): Store {
         return this.store;
+    }
+
+    /**
+     * @returns The profile menu object.
+     */
+
+    public getProfile(): Profile {
+        return this.profile;
     }
 
     /**
@@ -115,6 +138,20 @@ export default class MenuController {
             key,
             index,
             count
+        });
+    }
+
+    /**
+     * Callback received from one of the profile pages when
+     * an equipment slot is clicked. We send a packet to the
+     * server requesting unequipping.
+     * @param type What slot is being unequipped.
+     */
+
+    private handleProfileUnequip(type: Modules.Equipment): void {
+        this.game.socket.send(Packets.Equipment, {
+            opcode: Opcodes.Equipment.Unequip,
+            type
         });
     }
 

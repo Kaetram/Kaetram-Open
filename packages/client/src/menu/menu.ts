@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '../lib/log';
 
-import { Modules } from '@kaetram/common/network';
-
 export default abstract class Menu {
     protected body: HTMLElement = document.querySelector(this.containerName!)!;
     protected close: HTMLElement = document.querySelector(this.closeButton!)!;
+
+    // Callback sent to the controller to close other menus.
+    private showCallback?: () => void;
 
     /**
      * Initializes the menu container using the provided container name string.
@@ -34,9 +35,10 @@ export default abstract class Menu {
 
     /**
      * Used to synchronize data betwene the inventory and the UI.
+     * @param _var1 Optional unknown data that may be passed along.
      */
 
-    public synchronize(): void {
+    public synchronize(_var1?: unknown): void {
         //log.debug(`Unimplemented menu synchronize() function.`);
     }
 
@@ -66,6 +68,8 @@ export default abstract class Menu {
      */
 
     public show(_var1?: unknown, _var2?: unknown, var3?: unknown): void {
+        this.showCallback?.();
+
         this.body.style.display = 'block';
     }
 
@@ -75,6 +79,17 @@ export default abstract class Menu {
 
     public hide(): void {
         this.body.style.display = 'none';
+    }
+
+    /**
+     * Toggles the visible of the main body element.
+     * If the UI is visible, it hides it, if it's
+     * not visible, then we display it.
+     */
+
+    public toggle(): void {
+        if (this.isVisible()) this.hide();
+        else this.show();
     }
 
     /**
@@ -96,5 +111,13 @@ export default abstract class Menu {
             height = window.innerHeight;
 
         return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
+    }
+
+    /**
+     * Creates a callback for when the interface is being shown.
+     */
+
+    public onShow(callback: () => void): void {
+        this.showCallback = callback;
     }
 }
