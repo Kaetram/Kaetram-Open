@@ -18,6 +18,7 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
     ContainerPacket,
+    EquipmentPacket,
     LoginPacket,
     MovementPacket,
     ProjectilePacket,
@@ -205,13 +206,11 @@ export default class Incoming {
         });
     }
 
-    private handleEquipment(packet: PacketData): void {
-        let opcode = packet.shift() as Opcodes.Equipment,
-            type = packet.shift() as Modules.Equipment;
-
-        switch (opcode) {
+    private handleEquipment(data: EquipmentPacket): void {
+        console.log(data);
+        switch (data.opcode) {
             case Opcodes.Equipment.Unequip:
-                return this.player.equipment.unequip(type);
+                return this.player.equipment.unequip(data.type);
         }
     }
 

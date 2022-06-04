@@ -416,7 +416,7 @@
 }
 
 #achievement-list,
-#professions-list {
+#skills-list {
     position: absolute;
     top: 6%;
     left: 8%;
@@ -867,7 +867,7 @@
             display: none;
         }
 
-        #professions-page {
+        #skills-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
             display: none;
         }
@@ -908,6 +908,15 @@
             width: 102px * $i;
             top: 123px * $i;
             text-align: right;
+        }
+
+        #weapon-slot,
+        #armour-slot,
+        #pendant-slot,
+        #ring-slot,
+        #boots-slot {
+            margin-top: -2px * $i;
+            background-size: 600%;
         }
 
         #weapon-slot {
@@ -986,21 +995,23 @@
 
         #previous {
             left: 0;
-            background-position: 0 -223px * $i;
+            background-position: 0 -240px * $i;
+            cursor: pointer;
 
-            &.enabled {
-                background-position: 0 -240px * $i;
-                cursor: pointer;
+            &.disabled {
+                background-position: 0 -223px * $i;
+                cursor: default;
             }
         }
 
         #next {
             left: 21px * $i;
-            background-position: -21px * $i -240px * $i;
+            background-position: -21px * $i -223px * $i;
+            cursor: pointer;
 
-            &.enabled {
-                background-position: -21px * $i -223px * $i;
-                cursor: pointer;
+            &.disabled {
+                background-position: -21px * $i -240px * $i;
+                cursor: default;
             }
         }
 
@@ -1207,7 +1218,7 @@
             height: 23px * $i;
         }
 
-        #professions-list {
+        #skills-list {
             width: 106px * $i;
             height: 179px * $i;
         }

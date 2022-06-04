@@ -11,6 +11,11 @@ export interface LoginPacket {
     email?: string;
 }
 
+export interface EquipmentPacket {
+    opcode: Opcodes.Equipment;
+    type: Modules.Equipment;
+}
+
 export interface ReadyPacket {
     hasMapData: string;
     userAgent: string;

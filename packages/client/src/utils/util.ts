@@ -70,12 +70,13 @@ export default {
 
     /**
      * Converts an item's key into an image URL for the client.
-     * It defaults to `null` if parameter is not specified.
-     * @param key The item's key.
+     * @param key The item's key, defaults to empty string.
      * @returns The CSS image URL format for the item's key.
      */
 
-    getImageURL(key = 'null'): string {
+    getImageURL(key = ''): string {
+        if (key === '') return '';
+
         return `url("/img/sprites/item-${key}.png")`;
     },
 
