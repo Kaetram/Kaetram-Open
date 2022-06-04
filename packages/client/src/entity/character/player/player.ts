@@ -57,8 +57,8 @@ export default class Player extends Character {
         [Modules.Equipment.Weapon]: new Weapon()
     };
 
+    private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
-    private equipmentCallback?: () => void;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -110,14 +110,19 @@ export default class Player extends Character {
         let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
 
         this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
-
-        this.equipmentCallback?.();
     }
 
     public unequip(type: Modules.Equipment): void {
         this.equipments[type].update();
+    }
 
-        this.equipmentCallback?.();
+    /**
+     * Signals to the callbacks that the player's data (experience, level, equipment)
+     * has undergone a change. This updates the UI essentially.
+     */
+
+    public sync(): void {
+        this.syncCallback?.();
     }
 
     public isRanged(): boolean {
@@ -175,6 +180,8 @@ export default class Player extends Character {
 
         this.experience = experience;
 
+        this.sync();
+
         if (!prevExperience || !nextExperience) return;
 
         this.experienceCallback?.(experience, prevExperience, nextExperience);
@@ -184,7 +191,12 @@ export default class Player extends Character {
         this.experienceCallback = callback;
     }
 
-    public onEquipment(callback: () => void): void {
-        this.equipmentCallback = callback;
+    /**
+     * Callback for whenever we want to synchronize
+     * the player's data to the UI.
+     */
+
+    public onSync(callback: () => void): void {
+        this.syncCallback = callback;
     }
 }
