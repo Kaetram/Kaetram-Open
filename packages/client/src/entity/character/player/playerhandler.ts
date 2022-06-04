@@ -1,5 +1,3 @@
-import log from '../../../lib/log';
-
 import type Map from '../../../map/map';
 import type Camera from '../../../renderer/camera';
 import type InputController from '../../../controllers/input';
@@ -157,9 +155,7 @@ export default class PlayerHandler {
             if (player.target) player.follow(player.target);
         });
 
-        player.onEquipment(() => {
-            if (game.menu && game.menu.profile) game.menu.profile.update();
-        });
+        player.onSync(() => game.menu.synchronize());
     }
 
     isAttackable(): boolean {

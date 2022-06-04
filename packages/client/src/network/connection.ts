@@ -217,7 +217,7 @@ export default class Connection {
                 break;
         }
 
-        //this.menu.profile.update();
+        this.game.player.sync();
     }
 
     /**
