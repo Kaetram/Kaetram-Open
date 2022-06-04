@@ -955,6 +955,7 @@ export default class Player extends Character {
 
         // Sprite key is the armour key.
         data.key = this.equipment.getArmour().key || 'clotharmor';
+        data.name = Utils.formatName(this.username);
         data.rights = this.rights;
         data.level = this.level;
         data.hitPoints = this.hitPoints.getHitPoints();

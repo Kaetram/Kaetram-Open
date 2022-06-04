@@ -62,8 +62,6 @@ export default class Header {
     private flash(style: string): void {
         this.health.classList.add(style);
 
-        console.log(this.health.classList);
-
         window.setTimeout(() => this.health.classList.remove(style), 500);
     }
 }

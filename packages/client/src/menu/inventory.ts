@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
 import Menu from './menu';
+import Actions from './actions';
 
 import log from '../lib/log';
 import Util from '../utils/util';
-import Actions from './actions';
 
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
@@ -265,15 +265,6 @@ export default class Inventory extends Menu {
         slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
 
         return slot;
-    }
-
-    /**
-     * Toggles the status of the inventory.
-     */
-
-    public toggle(): void {
-        if (this.isVisible()) this.hide();
-        else this.show();
     }
 
     /**
