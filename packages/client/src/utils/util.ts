@@ -120,7 +120,7 @@ export default {
                 return Opcodes.Container.Remove;
 
             case Modules.MenuActions.Move:
-                return Opcodes.Container.Move;
+                return Opcodes.Container.Swap;
 
             default:
                 return -1;
