@@ -9,6 +9,8 @@ import Bank from '../menu/bank';
 import Store from '../menu/store';
 import Header from '../menu/header';
 import Profile from '../menu/profile/profile';
+import Enchant from '../menu/enchant';
+import Warp from '../menu/warp';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -19,8 +21,17 @@ export default class MenuController {
     private bank: Bank = new Bank(this.inventory);
     private store: Store = new Store(this.inventory);
     private profile: Profile = new Profile(this.game.player);
+    private enchant: Enchant = new Enchant();
+    private warp: Warp = new Warp();
 
-    public menu: Menu[] = [this.inventory, this.bank, this.store, this.profile];
+    public menu: Menu[] = [
+        this.inventory,
+        this.bank,
+        this.store,
+        this.profile,
+        this.enchant,
+        this.warp
+    ];
 
     public constructor(private game: Game) {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));

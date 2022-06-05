@@ -23,9 +23,6 @@ export default class Profile extends Menu {
     // Current page we are on.
     private activePage = 0;
 
-    // Button that toggles the visibility of the profile dialog.
-    private button: HTMLElement = document.querySelector('#profile-button')!;
-
     // Navigation buttons for the profile.
     private previous: HTMLElement = document.querySelector('#previous')!;
     private next: HTMLElement = document.querySelector('#next')!;
@@ -33,12 +30,10 @@ export default class Profile extends Menu {
     private unequipCallback?: UnequipCallback;
 
     public constructor(private player: Player) {
-        super('#profile-dialog');
+        super('#profile-dialog', undefined, '#profile-button');
 
         // Used to initialize the navigation buttons.
         this.handleNavigation();
-
-        this.button.addEventListener('click', this.toggle.bind(this));
 
         // Navigation event listeners.
         this.previous.addEventListener('click', () => this.handleNavigation('previous'));
@@ -95,28 +90,6 @@ export default class Profile extends Menu {
 
     public override synchronize(): void {
         this.forEachPage((page: Menu) => page.synchronize(this.player));
-    }
-
-    /**
-     * Override for the show function. We use this
-     * to update the status of the profile button.
-     */
-
-    public override show(): void {
-        super.show();
-
-        this.button.classList.add('active');
-    }
-
-    /**
-     * Override for the hide function, used to update
-     * the status of the profile button.
-     */
-
-    public override hide(): void {
-        super.hide();
-
-        this.button.classList.remove('active');
     }
 
     /**
