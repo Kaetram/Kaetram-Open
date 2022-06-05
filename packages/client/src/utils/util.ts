@@ -41,7 +41,7 @@ export default {
         type: Modules.ContainerType,
         index: number,
         callback?: (type: Modules.ContainerType, index: number) => void
-    ): HTMLElement {
+    ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
             image = document.createElement('div'),

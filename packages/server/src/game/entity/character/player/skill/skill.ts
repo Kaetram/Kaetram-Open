@@ -37,6 +37,17 @@ export default abstract class Skill {
     }
 
     /**
+     * Gets the percentage of the skill's experience to the next level.
+     */
+
+    public getPercentage(): number {
+        let prevExperience = Formulas.prevExp(this.getLevel() - 1),
+            nextExperience = Formulas.nextExp(this.experience);
+
+        return (this.experience - prevExperience) / (nextExperience - prevExperience);
+    }
+
+    /**
      * Adds experience to the skill and creates a callback. The callback
      * contains the name of the skill, experience we are adding, the
      * current level after adding experience, and whether the
@@ -77,7 +88,10 @@ export default abstract class Skill {
             experience: this.experience
         };
 
-        if (includeLevel) data.level = this.getLevel();
+        if (includeLevel) {
+            data.level = this.getLevel();
+            data.percentage = this.getPercentage();
+        }
 
         return data;
     }

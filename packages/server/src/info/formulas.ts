@@ -151,7 +151,7 @@ export default {
         for (let i = Modules.Constants.MAX_LEVEL as number; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
 
-        return -1;
+        return 0;
     },
 
     expToLevel(experience: number): number {

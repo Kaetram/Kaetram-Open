@@ -43,7 +43,7 @@ enum Packets {
     Overlay,
     Camera,
     Bubble,
-    Profession,
+    Skill,
     BuildUp
 }
 

@@ -52,8 +52,6 @@ export default class Bank extends Menu {
 
     private select(type: Modules.ContainerType, index: number): void {
         this.selectCallback?.(type, index);
-
-        console.log(`Selected ${type} ${index}`);
     }
 
     /**
