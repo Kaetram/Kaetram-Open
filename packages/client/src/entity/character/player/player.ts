@@ -119,9 +119,7 @@ export default class Player extends Character {
      */
 
     public loadSkills(skills: SkillData[]): void {
-        _.each(skills, (skill: SkillData) =>
-            this.setSkill(skill.type, skill.experience, skill.level!, skill.percentage!)
-        );
+        _.each(skills, (skill: SkillData) => this.setSkill(skill));
     }
 
     /**
@@ -217,19 +215,11 @@ export default class Player extends Character {
 
     /**
      * Updates the experience of the skill.
-     * @param type Which skill we are updating.
-     * @param experience The new experience we are setting.
-     * @param level The new level we are setting.
-     * @param percentage Percentage amount of the skill to next leve.
+     * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
-    public setSkill(
-        type: Modules.Skills,
-        experience: number,
-        level: number,
-        percentage: number
-    ): void {
-        this.skills[type].update(experience, level, percentage);
+    public setSkill({ type, experience, level, percentage }: SkillData): void {
+        this.skills[type as Modules.Skills].update(experience, level!, percentage!);
     }
 
     /**
