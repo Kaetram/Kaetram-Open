@@ -19,21 +19,17 @@ interface SlotElement extends HTMLElement {
 export default class Inventory extends Menu {
     private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
 
-    // Button that opens the invnetory.
-    private button: HTMLElement = document.querySelector('#inventory-button')!;
-
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
     private selectCallback?: SelectCallback;
 
     public constructor(private actions: Actions) {
-        super('#inventory');
+        super('#inventory', undefined, '#inventory-button');
 
         this.load();
 
         this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
-        this.button.addEventListener('click', () => this.toggle());
     }
 
     /**
@@ -268,16 +264,6 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * Displays the bank interface.
-     */
-
-    public override show(): void {
-        super.show();
-
-        this.button.classList.add('active');
-    }
-
-    /**
      * Sets the body's display style to `none` and
      * clears all the items from the bank user interface.
      */
@@ -289,7 +275,6 @@ export default class Inventory extends Menu {
         this.selectedSlot = -1;
 
         this.actions.hide();
-        this.button.classList.remove('active');
     }
 
     /**
