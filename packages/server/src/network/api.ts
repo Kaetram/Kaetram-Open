@@ -37,7 +37,7 @@ export default class API {
 
     public constructor(private world: World) {
         // API must be initialized if the hub is enabled.
-        if (!config.apiEnabled || !config.hubEnabled) return;
+        if (!config.apiEnabled && !config.hubEnabled) return;
 
         let app = express();
 
@@ -80,23 +80,11 @@ export default class API {
 
         log.info(`[API] Server chat API not implemented.`);
 
-        // let text = Utils.parseMessage(request.body.text),
-        //     source = Utils.parseMessage(request.body.source),
-        //     { colour, username } = request.body;
+        let { source, text, colour } = request.body;
 
-        // if (username) {
-        //     let player = this.world.getPlayerByName(username);
+        this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
 
-        //     player?.chat(source, text, colour);
-
-        //     response.json({ status: 'success' });
-
-        //     return;
-        // }
-
-        // this.world.globalMessage(source, text, colour);
-
-        // response.json({ status: 'success' });
+        response.json({ status: 'success' });
     }
 
     private handlePlayers(request: express.Request, response: express.Response): void {
