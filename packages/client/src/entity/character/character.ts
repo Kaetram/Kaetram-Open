@@ -486,6 +486,8 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
+        if (this.target) this.target.targeted = false;
+
         this.target = null;
     }
 
@@ -499,6 +501,7 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
+        this.target.targeted = true;
     }
 
     public hasTarget(target?: Entity): boolean {
