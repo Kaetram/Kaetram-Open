@@ -4,6 +4,7 @@ import log from '../lib/log';
 export default abstract class Menu {
     protected body: HTMLElement = document.querySelector(this.containerName!)!;
     protected close: HTMLElement = document.querySelector(this.closeButton!)!;
+    protected button: HTMLElement = document.querySelector(this.toggleButton!)!;
 
     // Callback sent to the controller to close other menus.
     private showCallback?: () => void;
@@ -17,10 +18,18 @@ export default abstract class Menu {
      * @param closeButton Optional parameter passed when we want to load a close button
      * into the interface and load its respective event listener. This is automatically
      * linked to the hide() function.
+     * @param toggleButton Optional string parameter for the toggle button. These are buttons
+     * that are displayed in the bottom right corner of the screen and are used to open and
+     * close the user interface.
      */
 
-    public constructor(private containerName?: string, private closeButton?: string) {
-        if (this.close) this.close.addEventListener('click', () => this.hide());
+    public constructor(
+        private containerName?: string,
+        private closeButton?: string,
+        private toggleButton?: string
+    ) {
+        this.close?.addEventListener('click', () => this.hide());
+        this.button?.addEventListener('click', () => this.toggle());
     }
 
     /**
@@ -71,6 +80,7 @@ export default abstract class Menu {
         this.showCallback?.();
 
         this.body.style.display = 'block';
+        this.button?.classList.add('active');
     }
 
     /**
@@ -79,6 +89,8 @@ export default abstract class Menu {
 
     public hide(): void {
         this.body.style.display = 'none';
+
+        this.button?.classList.remove('active');
     }
 
     /**
