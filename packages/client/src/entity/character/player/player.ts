@@ -13,6 +13,9 @@ import type Game from '../../../game';
 
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
+import Skill from './skill';
+import { SkillData } from '@kaetram/common/types/skills';
+import _ from 'lodash';
 
 type ExperienceCallback = (
     experience: number,
@@ -57,6 +60,11 @@ export default class Player extends Character {
         [Modules.Equipment.Weapon]: new Weapon()
     };
 
+    public skills = {
+        [Modules.Skills.Lumberjacking]: new Skill(Modules.Skills.Lumberjacking),
+        [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
+    };
+
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
 
@@ -81,10 +89,12 @@ export default class Player extends Character {
 
         this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
-        this.setMana(data.mana!);
-        this.setMaxMana(data.maxMana!);
+        this.setMana(data.mana!, data.maxMana!);
 
-        this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
+        // Only used when loading the main player.
+        if (!data.experience) return;
+
+        this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -102,15 +112,35 @@ export default class Player extends Character {
         this.handler.load();
     }
 
-    public hasKeyboardMovement(): boolean {
-        return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+    /**
+     * Loads a batch of skills into the player's skill list.
+     * @param skills Contains skill type, experience, and level
+     * for each skill we are loading.
+     */
+
+    public loadSkills(skills: SkillData[]): void {
+        _.each(skills, (skill: SkillData) =>
+            this.setSkill(skill.type, skill.experience, skill.level!, skill.percentage!)
+        );
     }
+
+    /**
+     * Equips the item based on the equipment type.
+     * @param equipment Contains data about the equipment such as
+     * type, name, count, ability, etc.
+     */
 
     public equip(equipment: EquipmentData): void {
         let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
 
         this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
     }
+
+    /**
+     * Calls an empty update() function onto the equipment slot
+     * and resets it.
+     * @param type Which equipment slot we are resetting.
+     */
 
     public unequip(type: Modules.Equipment): void {
         this.equipments[type].update();
@@ -125,45 +155,87 @@ export default class Player extends Character {
         this.syncCallback?.();
     }
 
-    public isRanged(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].ranged;
-    }
-
-    public override hasWeapon(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].exists();
-    }
+    /**
+     * @returns The key of the currently equipped armour.
+     */
 
     public getSpriteName(): string {
         return this.equipments[Modules.Equipment.Armour].key;
     }
 
+    /**
+     * @returns The armour object of the player.
+     */
+
     public getArmour(): Armour {
         return this.equipments[Modules.Equipment.Armour] as Armour;
     }
+
+    /**
+     * @returns The boots object of the player.
+     */
 
     public getBoots(): Boots {
         return this.equipments[Modules.Equipment.Boots] as Boots;
     }
 
+    /**
+     * @returns The pendant object of the player.
+     */
+
     public getPendant(): Pendant {
         return this.equipments[Modules.Equipment.Pendant] as Pendant;
     }
+
+    /**
+     * @returns The ring object of the player.
+     */
 
     public getRing(): Ring {
         return this.equipments[Modules.Equipment.Ring] as Ring;
     }
 
+    /**
+     * @returns The weapon object of the player.
+     */
+
     public getWeapon(): Weapon {
         return this.equipments[Modules.Equipment.Weapon] as Weapon;
     }
 
-    public setMana(mana: number): void {
+    /**
+     * Updates the mana of the player.
+     * @param mana The current amount of mana.
+     * @param maxMana Optional parameter for the max mana.
+     */
+
+    public setMana(mana: number, maxMana?: number): void {
         this.mana = mana;
+
+        if (maxMana) this.maxMana = maxMana;
     }
 
-    public setMaxMana(maxMana: number): void {
-        this.maxMana = maxMana;
+    /**
+     * Updates the experience of the skill.
+     * @param type Which skill we are updating.
+     * @param experience The new experience we are setting.
+     * @param level The new level we are setting.
+     * @param percentage Percentage amount of the skill to next leve.
+     */
+
+    public setSkill(
+        type: Modules.Skills,
+        experience: number,
+        level: number,
+        percentage: number
+    ): void {
+        this.skills[type].update(experience, level, percentage);
     }
+
+    /**
+     * Updates the poison status of the player.
+     * @param poison Poison status to update with.
+     */
 
     public setPoison(poison: boolean): void {
         if (this.poison === poison) return;
@@ -175,9 +247,19 @@ export default class Player extends Character {
         else $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
     }
 
-    public setExperience(experience: number, nextExperience: number, prevExperience: number): void {
-        if (!experience) return;
+    /**
+     * Updates the player's current experience and creates a callback if the next
+     * experience and previous variables are provided.
+     * @param experience The current amount of experience the player has.
+     * @param nextExperience The next amount of experience required for level up.
+     * @param prevExperience Experience that the current level starts at.
+     */
 
+    public setExperience(
+        experience: number,
+        nextExperience?: number,
+        prevExperience?: number
+    ): void {
         this.experience = experience;
 
         this.sync();
@@ -186,6 +268,36 @@ export default class Player extends Character {
 
         this.experienceCallback?.(experience, prevExperience, nextExperience);
     }
+
+    /**
+     * @returns If the weapon the player currently wields is a ranged weapon.
+     */
+
+    public isRanged(): boolean {
+        return this.equipments[Modules.Equipment.Weapon].ranged;
+    }
+
+    /**
+     * @returns Whether or not the current weapon's key isn't an empty string.
+     */
+
+    public override hasWeapon(): boolean {
+        return this.equipments[Modules.Equipment.Weapon].exists();
+    }
+
+    /**
+     * @returns Checks whether any of the keyboard directional
+     * movement conditionals are true.
+     */
+
+    public hasKeyboardMovement(): boolean {
+        return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+    }
+
+    /**
+     * Callback for when the player's experience changes.
+     * @param callback Contains the experience, previous experience, and next experience.
+     */
 
     public onExperience(callback: ExperienceCallback): void {
         this.experienceCallback = callback;

@@ -1,5 +1,4 @@
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
@@ -9,20 +8,22 @@ import {
     Equipment as EquipmentPacket,
     NPC as NPCPacket,
     Death,
-    Despawn
+    Despawn,
+    Skill
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
-import Hit from '../combat/hit';
 import Slot from './containers/slot';
+import Equipment from './equipment/equipment';
+import Character from '../character';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import Equipment from './equipment/equipment';
-import Character from '../character';
+
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 export default class Handler {
     private world: World;
@@ -57,6 +58,7 @@ export default class Handler {
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
+        this.player.skills.onLoaded(this.handleSkills.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -126,6 +128,12 @@ export default class Handler {
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(new Despawn(this.player.instance), true);
     }
+
+    /**
+     * Callback handler for when the player is hit.
+     * @param damage The amount of damage dealt.
+     * @param attacker Who is attacking the player.
+     */
 
     private handleHit(damage: number, attacker?: Character): void {
         if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
@@ -279,6 +287,15 @@ export default class Handler {
                 data: this.player.quests.serialize(true)
             })
         );
+    }
+
+    /**
+     * Sends a packet to the server containing batch data
+     * for the skills.
+     */
+
+    private handleSkills(): void {
+        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
     }
 
     /**

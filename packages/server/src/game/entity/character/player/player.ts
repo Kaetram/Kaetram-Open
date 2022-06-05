@@ -784,7 +784,7 @@ export default class Player extends Character {
         this.attackRange = this.isRanged() ? 7 : 1;
 
         // Sync the player information to the surrounding regions.
-        this.sendToRegions(new Sync(this.serialize(true)));
+        this.sendToRegions(new Sync(this.serialize(true)), true);
     }
 
     /**
