@@ -27,8 +27,6 @@ import Storage from './utils/storage';
 import { agent } from './utils/detect';
 import { Modules, Packets } from '@kaetram/common/network';
 
-import type { APIData } from '@kaetram/common/types/api';
-
 export default class Game {
     public storage: Storage = this.app.storage;
 
