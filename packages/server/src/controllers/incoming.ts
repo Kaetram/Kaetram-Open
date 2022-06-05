@@ -301,8 +301,6 @@ export default class Incoming {
 
                 entity.setPosition(requestX!, requestY!);
 
-                //if ((entity as Character).hasTarget()) entity.combat.forceAttack();
-
                 break;
 
             case Opcodes.Movement.Orientate:
