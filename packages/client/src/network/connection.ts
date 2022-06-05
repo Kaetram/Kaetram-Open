@@ -24,12 +24,12 @@ import type Item from '../entity/objects/item';
 import type NPC from '../entity/character/npc/npc';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
-import type Menu from '../menu/menu';
 
 import { inflate } from 'pako';
 import { isMobile } from '../utils/detect';
 import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
+import { SerializedSkills } from '@kaetram/common/types/skills';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import {
     AnimationPacket,
@@ -51,7 +51,8 @@ import {
     QuestPacket,
     RespawnPacket,
     StorePacket,
-    TeleportPacket
+    TeleportPacket,
+    SkillPacket
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Connection {
@@ -119,6 +120,7 @@ export default class Connection {
         this.messages.onOverlay(this.handleOverlay.bind(this));
         this.messages.onCamera(this.handleCamera.bind(this));
         this.messages.onBubble(this.handleBubble.bind(this));
+        this.messages.onSkill(this.handleSkill.bind(this));
     }
 
     /**
@@ -264,8 +266,6 @@ export default class Connection {
         if (data.equipments) _.each(data.equipments, player.equip.bind(player));
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
-
-        //this.menu.profile.update();
     }
 
     /**
@@ -1009,5 +1009,20 @@ export default class Connection {
 
         this.bubble.create(info.instance, info.text, info.duration);
         this.bubble.setTo(info.instance, info.x!, info.y!);
+    }
+
+    /**
+     * Updates the skills page with the data from the server.
+     * @param info Contains the skill batch data or a specific skill data.
+     */
+
+    private handleSkill(opcode: Opcodes.Skill, info: SkillPacket): void {
+        switch (opcode) {
+            case Opcodes.Skill.Batch:
+                this.game.player.loadSkills((info as SerializedSkills).skills);
+                break;
+        }
+
+        this.game.menu.synchronize();
     }
 }
