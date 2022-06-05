@@ -6,7 +6,7 @@ import Lumberjacking from './skill/impl/lumberjacking';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import { Experience } from '@kaetram/server/src/network/packets';
+import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
 
 export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
@@ -58,6 +58,7 @@ export default class Skills {
 
     /**
      * Handles skill-based experience gain.
+     * @param type The skill that gained experience.
      * @param name The name of the skill.
      * @param experience The amount of experience the skill has.
      * @param level The amount of levels the skill has.
@@ -65,6 +66,7 @@ export default class Skills {
      */
 
     private handleExperience(
+        type: Modules.Skills,
         name: string,
         experience: number,
         level: number,
@@ -83,6 +85,8 @@ export default class Skills {
                 amount: experience
             })
         );
+
+        this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
     }
 
     /**

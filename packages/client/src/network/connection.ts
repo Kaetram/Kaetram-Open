@@ -29,7 +29,7 @@ import { inflate } from 'pako';
 import { isMobile } from '../utils/detect';
 import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
-import { SerializedSkills } from '@kaetram/common/types/skills';
+import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import {
     AnimationPacket,
@@ -1020,6 +1020,10 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.Skill.Batch:
                 this.game.player.loadSkills((info as SerializedSkills).skills);
+                break;
+
+            case Opcodes.Skill.Update:
+                this.game.player.setSkill(info as SkillData);
                 break;
         }
 
