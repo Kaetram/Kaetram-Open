@@ -6,6 +6,7 @@ import { Modules } from '@kaetram/common/network';
 import { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
+    type: Modules.Skills,
     name: string,
     experience: number,
     level: number,
@@ -44,7 +45,7 @@ export default abstract class Skill {
         let prevExperience = Formulas.prevExp(this.getLevel() - 1),
             nextExperience = Formulas.nextExp(this.experience);
 
-        return (this.experience - prevExperience) / (nextExperience - prevExperience);
+        return ((this.experience - prevExperience) / (nextExperience - prevExperience)) * 100;
     }
 
     /**
@@ -63,7 +64,13 @@ export default abstract class Skill {
         // Level after adding experience.
         let currentLevel = this.getLevel();
 
-        this.experienceCallback?.(this.name, experience, currentLevel, level !== currentLevel);
+        this.experienceCallback?.(
+            this.type,
+            this.name,
+            experience,
+            currentLevel,
+            level !== currentLevel
+        );
     }
 
     /**
