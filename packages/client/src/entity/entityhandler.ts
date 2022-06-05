@@ -27,39 +27,13 @@ export default class EntityHandler {
         entity.onStep(() => {
             entities.registerPosition(entity);
 
-            entity.forEachAttacker((attacker) => {
-                /**
-                 * This is the client-sided logic for representing PVP
-                 * fights. It basically adds another layer of movement
-                 * so the entity is always following the player.
-                 */
-
-                if (!entity.isPlayer()) return;
-
-                if (!attacker.isPlayer()) return;
-
-                if (!attacker.target) return;
-
-                if (attacker.target.instance !== entity.instance) return;
-
-                if (attacker.stunned) return;
-
-                attacker.follow(entity);
-            });
-
-            if (entity.isMob() && entity.hasTarget())
+            if (entity.isMob() && entity.targeted)
                 game.socket.send(Packets.Movement, {
                     opcode: Opcodes.Movement.Entity,
                     targetInstance: entity.instance,
                     requestX: entity.gridX,
                     requestY: entity.gridY
                 });
-            if (
-                entity.attackRange > 1 &&
-                entity.target &&
-                entity.getDistance(entity.target) <= entity.attackRange
-            )
-                entity.stop(false);
         });
     }
 

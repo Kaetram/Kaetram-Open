@@ -40,6 +40,7 @@ export default abstract class Entity {
 
     public shadowOffsetY = 0;
     public hidden = false;
+    public targeted = false;
 
     public spriteLoaded = false;
     private visible = true;
