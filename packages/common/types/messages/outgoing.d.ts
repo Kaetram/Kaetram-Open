@@ -1,10 +1,11 @@
-import { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 import { HitData } from '../info';
 import { EntityData } from '../entity';
 import { PlayerData } from '../player';
 import { SerializedQuest } from '../quest';
 import { SerializedStoreItem } from '../stores';
-import { EquipmentData, SerializedEquipment } from '../equipment';
+import { SerializedEquipment, EquipmentData } from '../equipment';
+import { SerializedSkills, SkillData } from '../skills';
+import { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 
 import type { Modules, Opcodes } from '../../network';
 
@@ -287,6 +288,6 @@ export type BubbleCallback = (info: BubblePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export interface SkillPacket {
-    key: string;
-}
+export type SkillPacket = SerializedSkills | SkillData;
+
+export type SkillCallback = (opcode: Opcodes.Skill, info: SkillPacket) => void;

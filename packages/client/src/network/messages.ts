@@ -39,7 +39,8 @@ import type {
     StoreCallback,
     OverlayCallback,
     CameraCallback,
-    BubbleCallback
+    BubbleCallback,
+    SkillCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
@@ -81,6 +82,7 @@ export default class Messages {
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
     private bubbleCallback?: BubbleCallback;
+    private skillCallback?: SkillCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -130,6 +132,7 @@ export default class Messages {
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
         messages[Packets.Bubble] = () => this.bubbleCallback;
+        messages[Packets.Skill] = () => this.skillCallback;
 
         this.messages = messages;
     }
@@ -362,5 +365,9 @@ export default class Messages {
 
     public onBubble(callback: BubbleCallback): void {
         this.bubbleCallback = callback;
+    }
+
+    public onSkill(callback: SkillCallback): void {
+        this.skillCallback = callback;
     }
 }
