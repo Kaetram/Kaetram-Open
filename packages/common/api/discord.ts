@@ -32,6 +32,8 @@ export default class Discord {
 
     private handleMessage(message: Message): void {
         if (message.channel.id !== config.discordChannelId) return;
+        if (this.client.user?.id === message.author.id) return; // Skip if it's the bot.
+        if (!message.content) return; // Picture sent or something.
 
         let source = `[Discord | ${message.author.username}]`,
             text = `@goldenrod@${message.content}`;
@@ -53,7 +55,7 @@ export default class Discord {
         serverName?: string,
         withArrow?: boolean
     ): void {
-        if (!source || !config.discordEnabled || config.debugging) return;
+        if (!source || !config.discordEnabled) return;
 
         this.sendRawMessage(
             `**[${serverName || config.name}]** ${source}${withArrow ? ' »' : ''} ${text}`

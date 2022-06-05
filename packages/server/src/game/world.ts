@@ -104,12 +104,13 @@ export default class World {
      * @param source Who is sending the message.
      * @param message The contents of the broadcast.
      * @param colour The message's colour.
+     * @param noPrefix Whether to skip the `[Global]:` prefix or not.
      */
 
-    public globalMessage(source: string, message: string, colour = ''): void {
+    public globalMessage(source: string, message: string, colour = '', noPrefix = false): void {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
-                source: `[Global]: ${source}`,
+                source: noPrefix ? source : `[Global]: ${source}`,
                 message,
                 colour
             })
