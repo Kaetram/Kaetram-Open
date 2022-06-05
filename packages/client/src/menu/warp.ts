@@ -35,7 +35,7 @@ export default class Wrap {
     }
 
     public open(): void {
-        this.game.menu.hideAll();
+        //this.game.menu.hideAll();
 
         this.toggle();
 
