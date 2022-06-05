@@ -238,7 +238,7 @@ export default class Inventory extends Menu {
      * @returns A list element containing an empty slot.
      */
 
-    private createSlot(index: number): HTMLElement {
+    private createSlot(index: number): HTMLLIElement {
         let slot = document.createElement('li'),
             item = document.createElement('div'),
             count = document.createElement('div');
