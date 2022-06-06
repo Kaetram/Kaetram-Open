@@ -244,15 +244,11 @@ export default class EntitiesController {
     private createPlayer(info: PlayerData): Player {
         let player = new Player(info.instance);
 
-        player.rights = info.rights!;
-        player.level = info.level!;
-        player.attackRange = info.attackRange!;
-        player.orientation = info.orientation!;
-        player.movementSpeed = info.movementSpeed!;
-
-        player.setHitPoints(info.hitPoints!, info.maxHitPoints!);
+        player.load(info);
 
         player.loadHandler(this.game);
+
+        player.setSprite(this.game.sprites.get(player.getSpriteName()));
 
         return player;
     }
@@ -298,7 +294,7 @@ export default class EntitiesController {
      */
 
     public removeEntity(entity: Entity): void {
-        this.grids.removeFromRenderingGrid(entity);
+        this.unregisterPosition(entity);
 
         delete this.entities[entity.instance];
     }
@@ -310,7 +306,7 @@ export default class EntitiesController {
      */
 
     public removeItem(item: Entity): void {
-        this.grids.removeFromRenderingGrid(item);
+        this.unregisterPosition(item);
 
         delete this.entities[item.instance];
     }
@@ -324,7 +320,7 @@ export default class EntitiesController {
     public removeChest(chest: Chest): void {
         chest.setSprite(this.game.sprites.getDeath());
         chest.animateDeath(() => {
-            this.grids.removeFromRenderingGrid(chest);
+            this.unregisterPosition(chest);
 
             delete this.entities[chest.instance];
         });
