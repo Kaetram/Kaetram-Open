@@ -22,7 +22,7 @@ export default class MenuController {
     private store: Store = new Store(this.inventory);
     private profile: Profile = new Profile(this.game.player);
     private enchant: Enchant = new Enchant();
-    private warp: Warp = new Warp();
+    private warp: Warp = new Warp(this.game.socket);
 
     public menu: Menu[] = [
         this.inventory,
