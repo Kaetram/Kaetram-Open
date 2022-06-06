@@ -84,6 +84,8 @@ export default class Bot {
             return;
         }
 
+        console.log(message);
+
         let [opcode, info] = message;
 
         switch (opcode) {

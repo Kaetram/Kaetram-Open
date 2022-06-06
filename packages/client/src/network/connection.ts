@@ -597,12 +597,15 @@ export default class Connection {
      */
 
     private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
-        // switch (opcode) {
-        //     case Opcodes.Quest.Batch:
-        //         return this.menu.getQuestPage().loadQuests(info.data!.quests);
-        //     case Opcodes.Quest.Progress:
-        //         return this.menu.getQuestPage().progress(info);
-        // }
+        switch (opcode) {
+            case Opcodes.Quest.Batch:
+                return this.game.player.loadQuests(info.quests!);
+
+            case Opcodes.Quest.Progress:
+                return this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
+        }
+
+        this.menu.synchronize();
     }
 
     /**
@@ -616,22 +619,10 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.Notification.Text:
                 return this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-        }
 
-        // switch (opcode) {
-        //     case Opcodes.Notification.Ok:
-        //         this.menu.displayNotify(info.message);
-        //         break;
-        //     case Opcodes.Notification.YesNo:
-        //         this.menu.displayConfirm(info.message);
-        //         break;
-        //     case Opcodes.Notification.Text:
-        //         this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-        //         break;
-        //     case Opcodes.Notification.Popup:
-        //         this.menu.showNotification(info.title!, info.message, info.colour!);
-        //         break;
-        // }
+            case Opcodes.Notification.Popup:
+                return this.menu.getNotification().show(info.title!, info.message, info.colour!);
+        }
     }
 
     /**

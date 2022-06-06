@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import Menu from '../menu';
 import State from './impl/state';
-import Quest from './impl/quest';
+import Quests from './impl/quests';
 import Skills from './impl/skills';
 
 import Player from '../../entity/character/player/player';
@@ -14,7 +14,7 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
     private state: State = new State();
-    private quest: Quest = new Quest();
+    private quest: Quests = new Quests();
     private skills: Skills = new Skills();
 
     // Initialize all pages here.

@@ -1,7 +1,7 @@
 import { HitData } from '../info';
 import { EntityData } from '../entity';
 import { PlayerData } from '../player';
-import { SerializedQuest } from '../quest';
+import { QuestData } from '../quest';
 import { SerializedStoreItem } from '../stores';
 import { SerializedEquipment, EquipmentData } from '../equipment';
 import { SerializedSkills, SkillData } from '../skills';
@@ -147,8 +147,8 @@ export type AbilityCallback = () => void;
 export interface QuestPacket {
     key?: string;
     stage?: number;
-    stageCount?: number;
-    data?: SerializedQuest; // Batch of quests
+    subStage?: number;
+    quests?: QuestData[]; // Batch of quests
 }
 
 export type QuestCallback = (opcode: Opcodes.Quest, info: QuestPacket) => void;
