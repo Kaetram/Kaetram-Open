@@ -50,6 +50,9 @@ export default class Quests extends Menu {
 
     /**
      * Grabs the colour of the quest based on the progress.
+     * Colour if the quest is finish is green, if it's started
+     * it's marked as yellow, and red as default if the quest
+     * has not been started.
      * @param quest Quest to grab the colour for.
      */
 
