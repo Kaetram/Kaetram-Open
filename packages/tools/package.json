@@ -1,6 +1,7 @@
 {
     "name": "@kaetram/tools",
     "scripts": {
+        "bot": "ts-node bot/bot",
         "helper": "ts-node map/parser/helper",
         "exportmap": "ts-node map/parser/exporter",
         "map": "yarn exportmap map/data/map.json"
