@@ -282,11 +282,7 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        this.player.send(
-            new Quest(Opcodes.Quest.Batch, {
-                data: this.player.quests.serialize(true)
-            })
-        );
+        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
     }
 
     /**
