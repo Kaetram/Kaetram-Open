@@ -82,19 +82,20 @@ export default class Player extends Character {
         this.instance = data.instance;
         this.name = data.name;
         this.level = data.level!;
-        this.orientation = data.orientation;
         this.movementSpeed = data.movementSpeed!;
 
+        this.setOrientation(data.orientation);
         this.setGridPosition(data.x, data.y);
 
         this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
         this.setMana(data.mana!, data.maxMana!);
 
-        // Only used when loading the main player.
-        if (!data.experience) return;
+        if (data.equipments) _.each(data.equipments, this.equip.bind(this));
 
-        this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
+        // Only used when loading the main player.
+        if (data.experience)
+            this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -130,6 +131,8 @@ export default class Player extends Character {
 
     public equip(equipment: EquipmentData): void {
         let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
+
+        if (!key) return this.unequip(type);
 
         this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
     }

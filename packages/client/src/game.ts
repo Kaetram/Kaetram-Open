@@ -69,6 +69,8 @@ export default class Game {
         this.app.onLogin(this.socket.connect.bind(this.socket));
         this.app.onResize(this.resize.bind(this));
         this.app.onRespawn(this.respawn.bind(this));
+
+        this.player.onSync(this.handlePlayerSync.bind(this));
     }
 
     /**
@@ -112,6 +114,34 @@ export default class Game {
     }
 
     /**
+     * This method is responsible for handling sudden
+     * disconnects of a player whilst in the game, not
+     * menu-based errors.
+     */
+    public handleDisconnection(): void {
+        if (!this.app.isMenuHidden()) return;
+
+        location.reload();
+    }
+
+    /**
+     * Handles synchronization for the player client-sided.
+     * This is called whenever the player undergoes a change
+     * in experience, level, equipment, etc. Note that this
+     * synchronization is different from the Sync packet
+     * that is received in `connection.ts.` That packet
+     * is synchronization of other player characters, this one
+     * involves our current client's player character.
+     */
+
+    private handlePlayerSync(): void {
+        this.menu.synchronize();
+
+        // Update sprite
+        this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
+    }
+
+    /**
      * Call this after the player has been welcomed
      * by the server and the client received the connection.
      */
@@ -120,8 +150,7 @@ export default class Game {
 
         this.entities.addEntity(this.player);
 
-        let defaultSprite = this.sprites.get(this.player.getSpriteName());
-        this.player.setSprite(defaultSprite);
+        this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
 
         if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
 
@@ -178,17 +207,6 @@ export default class Game {
         if (isObject) path.pop(); // Remove the last path index
 
         return path;
-    }
-
-    /**
-     * This method is responsible for handling sudden
-     * disconnects of a player whilst in the game, not
-     * menu-based errors.
-     */
-    public handleDisconnection(): void {
-        if (!this.app.isMenuHidden()) return;
-
-        location.reload();
     }
 
     /**
