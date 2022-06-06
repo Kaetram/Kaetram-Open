@@ -16,6 +16,8 @@ import { PlayerData } from '@kaetram/common/types/player';
 import Skill from './skill';
 import { SkillData } from '@kaetram/common/types/skills';
 import _ from 'lodash';
+import Quest from './quest';
+import { QuestData } from '@kaetram/common/types/quest';
 
 type ExperienceCallback = (
     experience: number,
@@ -64,6 +66,8 @@ export default class Player extends Character {
         [Modules.Skills.Lumberjacking]: new Skill(Modules.Skills.Lumberjacking),
         [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
     };
+
+    public quests: { [key: string]: Quest } = {};
 
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
@@ -121,6 +125,24 @@ export default class Player extends Character {
 
     public loadSkills(skills: SkillData[]): void {
         _.each(skills, (skill: SkillData) => this.setSkill(skill));
+    }
+
+    /**
+     * Loads batch of quest data from the server and inserts
+     * it into the list of quests stored for the player.
+     * @param quests An array of elements each containing quest info.
+     */
+
+    public loadQuests(quests: QuestData[]): void {
+        _.each(quests, (quest: QuestData) => {
+            this.quests[quest.key] = new Quest(
+                quest.name!,
+                quest.description!,
+                quest.stage,
+                quest.subStage,
+                quest.stageCount
+            );
+        });
     }
 
     /**
@@ -223,6 +245,18 @@ export default class Player extends Character {
 
     public setSkill({ type, experience, level, percentage }: SkillData): void {
         this.skills[type as Modules.Skills].update(experience, level!, percentage!);
+    }
+
+    /**
+     * Updates data of the quest based on the key provided with the new stage and
+     * substage information.
+     * @param key The key of the quest we are updating.
+     * @param stage The new stage of the quest.
+     * @param subStage The new substage of the quest.
+     */
+
+    public setQuest(key: string, stage: number, subStage: number): void {
+        this.quests[key].update(stage, subStage);
     }
 
     /**

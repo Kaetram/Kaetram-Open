@@ -32,7 +32,7 @@ export default class Header {
         if (decrease) this.flash('white');
 
         this.health.style.width = `${Math.floor(
-            this.healthBar.getBoundingClientRect().width * percentage
+            this.healthBar.offsetWidth * percentage
         ).toString()}px`;
 
         this.text.textContent = `${hitPoints}/${maxHitPoints}`;
@@ -49,7 +49,7 @@ export default class Header {
         let percentage = (experience - prevExperience) / (nextExperience - prevExperience);
 
         this.experience.style.width = `${Math.floor(
-            this.experienceBar.getBoundingClientRect().width * percentage
+            this.experienceBar.offsetWidth * percentage
         ).toString()}px`;
     }
 

@@ -28,8 +28,8 @@ export default abstract class Menu {
         private closeButton?: string,
         private toggleButton?: string
     ) {
-        this.close?.addEventListener('click', () => this.hide());
-        this.button?.addEventListener('click', () => this.toggle());
+        this.close?.addEventListener('click', this.hide.bind(this));
+        this.button?.addEventListener('click', this.toggle.bind(this));
     }
 
     /**
@@ -105,24 +105,23 @@ export default abstract class Menu {
     }
 
     /**
+     * Special call for when we are asking the menu
+     * interface to resize. For example, say a notification
+     * is displayed and the screen is resized, we may need
+     * to call this function to the notification object to
+     * update the `top` style position of the notification.
+     */
+
+    public resize(): void {
+        //log.debug(`Unimplemented menu resize() function.`);
+    }
+
+    /**
      * @returns Whether or not the body is visible.
      */
 
     public isVisible(): boolean {
         return this.body.style.display === 'block';
-    }
-
-    /**
-     * UI scaling determines which size of assets to use depending
-     * on the screen size. It also adjusts the CSS accordingly.
-     * @returns UI scale from 1 to 3.
-     */
-
-    public getUIScale(): number {
-        let width = window.innerWidth,
-            height = window.innerHeight;
-
-        return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
     }
 
     /**
