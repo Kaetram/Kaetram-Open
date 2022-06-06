@@ -263,8 +263,6 @@ export default class Connection {
 
         player.load(data);
 
-        if (data.equipments) _.each(data.equipments, player.equip.bind(player));
-
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
     }
 

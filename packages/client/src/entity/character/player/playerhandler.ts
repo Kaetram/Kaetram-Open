@@ -154,8 +154,6 @@ export default class PlayerHandler {
 
             if (player.target) player.follow(player.target);
         });
-
-        player.onSync(() => game.menu.synchronize());
     }
 
     isAttackable(): boolean {

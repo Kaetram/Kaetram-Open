@@ -53,6 +53,7 @@ export default class Equipment {
         this.power = 0;
         this.amplifier = 1;
         this.lumberjacking = -1;
+        this.name = '';
     }
 
     /**

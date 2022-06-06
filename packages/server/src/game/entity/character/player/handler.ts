@@ -206,6 +206,9 @@ export default class Handler {
                 data: equipment
             })
         );
+
+        // Sync to nearby players.
+        this.player.sync();
     }
 
     /**
@@ -215,6 +218,9 @@ export default class Handler {
 
     private handleUnequip(type: Modules.Equipment): void {
         this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
+
+        // Sync to nearby players.
+        this.player.sync();
     }
 
     /**
