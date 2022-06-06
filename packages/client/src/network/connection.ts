@@ -599,12 +599,15 @@ export default class Connection {
      */
 
     private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
-        // switch (opcode) {
-        //     case Opcodes.Quest.Batch:
-        //         return this.menu.getQuestPage().loadQuests(info.data!.quests);
-        //     case Opcodes.Quest.Progress:
-        //         return this.menu.getQuestPage().progress(info);
-        // }
+        switch (opcode) {
+            case Opcodes.Quest.Batch:
+                return this.game.player.loadQuests(info.quests!);
+
+            case Opcodes.Quest.Progress:
+                return this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
+        }
+
+        this.menu.synchronize();
     }
 
     /**
