@@ -50,6 +50,10 @@ export interface ContainerPacket {
     count?: number;
 }
 
+export interface WarpPacket {
+    id: number;
+}
+
 export interface StorePacket {
     opcode: Opcodes.Store;
     key: string; // The shop's key.

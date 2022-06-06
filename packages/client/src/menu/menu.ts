@@ -28,8 +28,8 @@ export default abstract class Menu {
         private closeButton?: string,
         private toggleButton?: string
     ) {
-        this.close?.addEventListener('click', () => this.hide());
-        this.button?.addEventListener('click', () => this.toggle());
+        this.close?.addEventListener('click', this.hide.bind(this));
+        this.button?.addEventListener('click', this.toggle.bind(this));
     }
 
     /**
