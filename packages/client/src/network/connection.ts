@@ -621,22 +621,10 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.Notification.Text:
                 return this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-        }
 
-        // switch (opcode) {
-        //     case Opcodes.Notification.Ok:
-        //         this.menu.displayNotify(info.message);
-        //         break;
-        //     case Opcodes.Notification.YesNo:
-        //         this.menu.displayConfirm(info.message);
-        //         break;
-        //     case Opcodes.Notification.Text:
-        //         this.input.chatHandler.add('WORLD', info.message, info.colour, true);
-        //         break;
-        //     case Opcodes.Notification.Popup:
-        //         this.menu.showNotification(info.title!, info.message, info.colour!);
-        //         break;
-        // }
+            case Opcodes.Notification.Popup:
+                return this.menu.getNotification().show(info.title!, info.message, info.colour!);
+        }
     }
 
     /**
