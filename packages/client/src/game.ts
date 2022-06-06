@@ -230,6 +230,8 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
+
+        this.menu.resize();
     }
 
     /**

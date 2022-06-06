@@ -23,7 +23,8 @@ import type {
     MovementPacket,
     ProjectilePacket,
     ReadyPacket,
-    StorePacket
+    StorePacket,
+    WarpPacket
 } from '@kaetram/common/types/messages/incoming';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type Character from '../game/entity/character/character';
@@ -601,11 +602,25 @@ export default class Incoming {
         }
     }
 
-    private handleWarp(message: [string]): void {
-        let id = parseInt(message[0]) - 1;
+    /**
+     * Receives a warp packet from the client containing the
+     * id of the warp selected. The server then verifies
+     * the request (whether the player can warp there or not
+     * and if the requirements are fulfilled) and sends a teleport
+     * packet later on.
+     * @param data Contains information about the warp (such as id).
+     */
 
-        this.player.warp?.warp(id);
+    private handleWarp(data: WarpPacket): void {
+        this.player.warp?.warp(data.id);
     }
+
+    /**
+     * Receives store interaction packets from the client. This contains
+     * the store key, the index of the item selected, and how much of the
+     * item we are purchasing/sellling/selecting.
+     * @param data Store packet data containing the store key, index, and amount.
+     */
 
     private handleStore(data: StorePacket): void {
         log.debug(`Received store packet: ${data.opcode}`);
