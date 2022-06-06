@@ -11,6 +11,7 @@ import Header from '../menu/header';
 import Profile from '../menu/profile/profile';
 import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
+import Notification from '../menu/notification';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -23,6 +24,7 @@ export default class MenuController {
     private profile: Profile = new Profile(this.game.player);
     private enchant: Enchant = new Enchant();
     private warp: Warp = new Warp(this.game.socket);
+    private notification: Notification = new Notification();
 
     public menu: Menu[] = [
         this.inventory,
@@ -30,7 +32,8 @@ export default class MenuController {
         this.store,
         this.profile,
         this.enchant,
-        this.warp
+        this.warp,
+        this.notification
     ];
 
     public constructor(private game: Game) {
@@ -57,8 +60,8 @@ export default class MenuController {
     /**
      * Iterates through all menus and calls the hide function.
      * This is used when we want to hide every user interface.
-     
      */
+
     public hide(): void {
         this.forEachMenu((menu: Menu) => menu.hide());
     }
@@ -69,6 +72,14 @@ export default class MenuController {
 
     public synchronize(): void {
         this.forEachMenu((menu: Menu) => menu.synchronize());
+    }
+
+    /**
+     * Calls every menu's resize function if it is initialized.
+     */
+
+    public resize(): void {
+        this.forEachMenu((menu: Menu) => menu.resize());
     }
 
     /**
@@ -101,6 +112,14 @@ export default class MenuController {
 
     public getProfile(): Profile {
         return this.profile;
+    }
+
+    /**
+     * @returns The notification menu object.
+     */
+
+    public getNotification(): Notification {
+        return this.notification;
     }
 
     /**
