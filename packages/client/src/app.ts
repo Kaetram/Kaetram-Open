@@ -532,7 +532,7 @@ export default class App {
      */
 
     public getUsername(): string {
-        return this.getUsernameField().value! as string;
+        return this.getUsernameField().value;
     }
 
     /**
@@ -553,7 +553,7 @@ export default class App {
      */
 
     public getPassword(): string {
-        return this.getPasswordField().value! as strixfng;
+        return this.getPasswordField().value;
     }
 
     /**
@@ -561,7 +561,7 @@ export default class App {
      */
 
     private getPasswordConfirmation(): string {
-        return this.passwordConfirmation.value! as string;
+        return this.passwordConfirmation.value;
     }
 
     /**
@@ -574,7 +574,7 @@ export default class App {
     public getEmail(): string {
         if (!this.isRegistering()) return '';
 
-        return this.emailField.value! as string;
+        return this.emailField.value;
     }
 
     /**
