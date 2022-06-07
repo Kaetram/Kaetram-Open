@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import install from './lib/pwa';
 
 import Util from './utils/util';
@@ -8,48 +6,47 @@ import Storage from './utils/storage';
 import { isMobile } from './utils/detect';
 
 type EmptyCallback = () => void;
-type KeyDownCallback = (e: JQuery.KeyDownEvent) => void;
-type KeyUpCallback = (e: JQuery.KeyUpEvent) => void;
-type LeftClickCallback = (e: JQuery.ClickEvent) => void;
-type RightClickCallback = (e: JQuery.ContextMenuEvent) => void;
-type MouseMoveCallback = (e: JQuery.MouseMoveEvent) => void;
+type KeyDownCallback = (e: KeyboardEvent) => void;
+type KeyUpCallback = (e: KeyboardEvent) => void;
+type LeftClickCallback = (e: MouseEvent) => void;
+type RightClickCallback = (e: PointerEvent) => void;
+type MouseMoveCallback = (e: MouseEvent) => void;
 
 export default class App {
     public config = window.config;
 
     public storage: Storage = new Storage();
 
-    public body = $('body');
+    public body: HTMLElement = document.querySelector('body')!;
 
-    private parchment = $('#parchment');
-    private window = $(window);
+    private parchment: HTMLElement = document.querySelector('#parchment')!;
 
-    public canvas = $('#canvas');
+    public canvas: HTMLElement = document.querySelector('#canvas')!;
 
-    private forms = $('#intro form');
+    private loginForm: HTMLElement = document.querySelector('#load-character form')!;
+    private registerForm: HTMLElement = document.querySelector('#create-character form')!;
 
-    private passwordConfirmation: JQuery<HTMLInputElement> = $(
+    private passwordConfirmation: HTMLInputElement = document.querySelector(
         '#register-password-confirmation-input'
-    );
-    private emailField: JQuery<HTMLElement> = $('#register-email-input');
+    )!;
+    private emailField: HTMLInputElement = document.querySelector('#register-email-input')!;
 
-    private loginButton = $('#login');
-    private registerButton = $('#new-account');
-    private helpButton = $('#help-button');
-    private cancelButton = $('#cancel-button');
+    private loginButton: HTMLButtonElement = document.querySelector('#login')!;
+    private registerButton: HTMLButtonElement = document.querySelector('#new-account')!;
+    private cancelButton: HTMLButtonElement = document.querySelector('#cancel-button')!;
 
-    private respawn = $('#respawn');
+    private respawn: HTMLButtonElement = document.querySelector('#respawn')!;
 
-    private rememberMe = $('#remember-me input');
-    private guest = $('#guest input');
+    private rememberMe: HTMLInputElement = document.querySelector('#remember-me input')!;
+    private guest: HTMLInputElement = document.querySelector('#guest input')!;
 
-    private about = $('#toggle-about');
-    private credits = $('#toggle-credits');
-    private discord = $('#toggle-discord');
+    private about: HTMLElement = document.querySelector('#toggle-about')!;
+    private credits: HTMLElement = document.querySelector('#toggle-credits')!;
+    private discord: HTMLElement = document.querySelector('#toggle-discord')!;
 
-    private loading = $('.loader');
-
-    private footer = $('footer');
+    private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
+    private loading: HTMLElement = document.querySelector('.loader')!;
+    private footer: HTMLElement = document.querySelector('footer')!;
 
     private currentScroll = 'load-character';
     private parchmentAnimating = false;
@@ -81,37 +78,38 @@ export default class App {
      */
 
     private load(): void {
-        this.forms.on('submit', (e: Event) => this.login(e));
+        this.loginForm.addEventListener('submit', this.login.bind(this));
+        this.registerForm.addEventListener('submit', this.login.bind(this));
 
-        this.registerButton.on('click', () => this.openScroll('create-character'));
-        this.cancelButton.on('click', () => this.openScroll('load-character'));
+        this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
+        this.cancelButton.addEventListener('click', () => this.openScroll('load-character'));
 
-        this.about.on('click', () => this.openScroll('about'));
-        this.credits.on('click', () => this.openScroll('credits'));
-        this.discord.on('click', () => window.open('https://discord.gg/MmbGAaw'));
+        this.about.addEventListener('click', () => this.openScroll('about'));
+        this.credits.addEventListener('click', () => this.openScroll('credits'));
+        this.discord.addEventListener('click', () => window.open('https://discord.gg/MmbGAaw'));
 
-        this.respawn.on('click', () => this.respawnCallback?.());
+        this.respawn.addEventListener('click', () => this.respawnCallback?.());
 
-        this.parchment.on('click', () => {
+        this.parchment.addEventListener('click', () => {
             if (this.hasFooterOpen()) this.openScroll('load-character');
         });
 
         // Document callbacks such as clicks and keystrokes.
-        $(document).on('keydown', (e: JQuery.KeyDownEvent) => e.key !== 'Enter'); // Prevent enter key from submitting forms.
-        $(document).on('keydown', this.handleKeyDown.bind(this));
-        $(document).on('keyup', (e: JQuery.KeyUpEvent) => this.keyUpCallback?.(e));
-        $(document).on('mousemove', (e: JQuery.MouseMoveEvent) => this.mouseMoveCallback?.(e));
+        document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
+        document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        document.addEventListener('keyup', (e: KeyboardEvent) => this.keyUpCallback?.(e));
+        document.addEventListener('mousemove', (e: MouseEvent) => this.mouseMoveCallback?.(e));
 
         // Canvas callbacks
-        this.canvas.on('click', (e: JQuery.ClickEvent) => this.leftClickCallback?.(e));
+        this.canvas.addEventListener('click', (e: MouseEvent) => this.leftClickCallback?.(e));
 
         // Window callbacks
-        this.window.on('resize', () => this.resizeCallback?.());
+        window.addEventListener('resize', () => this.resizeCallback?.());
 
         // Body callbacks
-        this.body.on('contextmenu', '#canvas', (e: JQuery.ContextMenuEvent) =>
-            this.handleRightClick(e)
-        );
+        document
+            .querySelector('#canvas')!
+            .addEventListener('contextmenu', this.handleRightClick.bind(this));
     }
 
     /**
@@ -132,11 +130,11 @@ export default class App {
         if (!this.storage.hasRemember()) return;
 
         // Update the input fields with the stored values.
-        this.getUsernameField().val(this.storage.getUsername());
-        this.getPasswordField().val(this.storage.getPassword());
+        this.getUsernameField().value = this.storage.getUsername();
+        this.getPasswordField().value = this.storage.getPassword();
 
         // Set the checkmark for remember me to true.
-        this.rememberMe.prop('checked', true);
+        this.rememberMe.checked = true;
     }
 
     /**
@@ -146,7 +144,7 @@ export default class App {
      * @param e Event containing key data.
      */
 
-    public handleKeyDown(e: JQuery.KeyDownEvent): void {
+    public handleKeyDown(e: KeyboardEvent): void {
         if (this.isMenuHidden()) return this.keyDownCallback?.(e);
 
         if (e.key === 'Enter') this.login();
@@ -159,8 +157,8 @@ export default class App {
      * @returns False to cancel default action.
      */
 
-    public handleRightClick(e: JQuery.ContextMenuEvent): boolean {
-        this.rightClickCallback?.(e);
+    public handleRightClick(e: Event): boolean {
+        this.rightClickCallback?.(e as PointerEvent);
 
         e.preventDefault();
 
@@ -176,7 +174,7 @@ export default class App {
     public ready(): void {
         this.sendStatus();
 
-        this.loginButton.prop('disabled', false);
+        this.loginButton.disabled = false;
 
         this.loadLogin();
     }
@@ -184,12 +182,9 @@ export default class App {
     /**
      * Attempts to log in by checking all the necessary fields and creating
      * a callback should all checks pass.
-     * @param e Optional event parameter (for when we receive a form submission).
      */
 
-    private login(e?: Event): void {
-        if (e) e.preventDefault();
-
+    private login(): void {
         if (this.loggingIn || this.statusMessage || !this.verifyForm()) return;
 
         this.clearErrors();
@@ -227,11 +222,11 @@ export default class App {
      */
 
     public showMenu(): void {
-        this.body.removeClass('game');
-        this.body.removeClass('started');
-        this.body.addClass('intro');
+        this.body.classList.remove('game');
+        this.body.classList.remove('started');
+        this.body.classList.add('intro');
 
-        this.footer.show();
+        this.footer.style.display = 'block';
 
         this.menuHidden = false;
     }
@@ -245,12 +240,11 @@ export default class App {
         this.updateLoader();
 
         window.setTimeout(() => {
-            this.body.addClass('game');
-            this.body.addClass('started');
+            this.body.classList.add('game');
+            this.body.classList.add('started');
+            this.body.classList.remove('intro');
 
-            this.body.removeClass('intro');
-
-            this.footer.hide();
+            this.footer.style.display = 'none';
 
             this.menuHidden = true;
 
@@ -286,7 +280,8 @@ export default class App {
             this.parchmentAnimating = true;
 
             // Toggle animation and remove the current scroll class from parchment.
-            this.parchment.toggleClass('animate').removeClass(this.currentScroll);
+            this.parchment.classList.toggle('animate');
+            this.parchment.classList.remove(this.currentScroll);
 
             // Set a timeout for the animation before displaying data.
             window.setTimeout(() => {
@@ -294,12 +289,16 @@ export default class App {
                 this.parchmentAnimating = false;
 
                 // Animate again and add the new destination scroll.
-                this.parchment.toggleClass('animate').addClass(destination);
+                this.parchment.classList.toggle('animate');
+                this.parchment.classList.add(destination);
 
                 // Focus on the first text field in the new scroll.
-                $(`#${destination} input`)[0]?.focus();
+                (document.querySelector(`#${destination} input`) as HTMLElement)?.focus();
             }, 1000);
-        } else this.parchment.removeClass(this.currentScroll).addClass(destination);
+        } else {
+            this.parchment.classList.remove(this.currentScroll);
+            this.parchment.classList.add(destination);
+        }
 
         // Update the current scroll we're on to the destination.
         this.currentScroll = destination;
@@ -359,12 +358,11 @@ export default class App {
 
         if (!message) return;
 
-        $('<span></span>', {
-            class: 'status blink',
-            text: message
-        }).appendTo('.validation-summary');
+        this.setValidation('status', message);
 
-        $('.status').append(this.getLoaderDots());
+        let status = document.querySelector('.status') as HTMLElement;
+
+        if (status) status.innerHTML = message + this.getLoaderDots();
     }
 
     /**
@@ -375,8 +373,7 @@ export default class App {
      */
 
     public updateLoader(message = ''): void {
-        if (message) this.loading.html(message + this.getLoaderDots());
-        else this.loading.html('');
+        this.loading.innerHTML = message ? message + this.getLoaderDots() : '';
     }
 
     /**
@@ -390,30 +387,31 @@ export default class App {
      * during the form validation as a return statement for cleanliness.
      */
 
-    public sendError(error: string, field?: JQuery<HTMLElement>): boolean {
+    public sendError(error: string, field?: HTMLElement): boolean {
         if (this.isMenuHidden()) return this.storage.setError(error);
 
         // Clear existing errors.
         this.clearErrors();
 
         // Appends an error component to the validation summary.
-        $('<span></span>', {
-            class: 'validation-error blink',
-            text: error
-        }).appendTo('.validation-summary');
+        this.setValidation('validation-error', error);
 
         // Stop here if no field is specified.
         if (!field) return false;
 
         // Circles a field with a red border.
-        field.addClass('field-error').trigger('select');
-        field.on('keypress', function (event) {
-            field.removeClass('field-error');
+        field.classList.add('field-error');
+        field.focus();
 
-            $('.validation-error').remove();
+        let keyEvent = () => {
+            // Clear the event listener.
+            field.removeEventListener('keypress', keyEvent, false);
 
-            $(this).off(event);
-        });
+            field.classList.remove('field-error');
+            document.querySelector('.validation-error')?.remove();
+        };
+
+        field.addEventListener('keypress', keyEvent);
 
         return false;
     }
@@ -425,14 +423,15 @@ export default class App {
      */
 
     public clearErrors(): void {
-        this.getUsernameField().removeClass('field-error');
-        this.getPasswordField().removeClass('field-error');
+        document.querySelector('.status')?.remove();
 
-        this.passwordConfirmation.removeClass('field-error');
-        this.emailField.removeClass('field-error');
+        this.clearValidation();
 
-        $('.validation-error').remove();
-        $('.status').remove();
+        this.getUsernameField().classList.remove('field-error');
+        this.getPasswordField().classList.remove('field-error');
+
+        this.passwordConfirmation.classList.remove('field-error');
+        this.emailField.classList.remove('field-error');
     }
 
     /**
@@ -448,11 +447,10 @@ export default class App {
 
         this.loggingIn = toggle;
 
-        if (toggle) this.loading.removeAttr('hidden');
-        else this.loading.attr('hidden', 'true');
+        this.loading.hidden = !toggle;
 
-        this.loginButton.prop('disabled', toggle);
-        this.registerButton.prop('disabled', toggle);
+        this.loginButton.disabled = toggle;
+        this.registerButton.disabled = toggle;
     }
 
     /**
@@ -461,11 +459,11 @@ export default class App {
      */
 
     private toggleTyping(state: boolean): void {
-        this.getUsernameField().prop('readonly', state);
-        this.getPasswordField().prop('readonly', state);
+        this.getUsernameField().readOnly = state;
+        this.getPasswordField().readOnly = state;
 
-        this.passwordConfirmation.prop('readonly', state);
-        this.emailField.prop('readonly', state);
+        this.passwordConfirmation.readOnly = state;
+        this.emailField.readOnly = state;
     }
 
     /**
@@ -474,7 +472,10 @@ export default class App {
      */
 
     private hasFooterOpen(): boolean {
-        return this.parchment.hasClass('about') || this.parchment.hasClass('credits');
+        return (
+            this.parchment.classList.contains('about') ||
+            this.parchment.classList.contains('credits')
+        );
     }
 
     /**
@@ -482,7 +483,7 @@ export default class App {
      */
 
     public isGuest(): boolean {
-        return this.guest.prop('checked');
+        return this.guest.checked;
     }
 
     /**
@@ -491,7 +492,7 @@ export default class App {
      */
 
     public isRememberMe(): boolean {
-        return this.rememberMe.prop('checked');
+        return this.rememberMe.checked;
     }
 
     /**
@@ -518,8 +519,10 @@ export default class App {
      * depending on the currently open scroll.
      */
 
-    private getUsernameField(): JQuery<HTMLInputElement> {
-        return $(this.isRegistering() ? '#register-name-input' : '#login-name-input');
+    private getUsernameField(): HTMLInputElement {
+        return document.querySelector(
+            this.isRegistering() ? '#register-name-input' : '#login-name-input'
+        ) as HTMLInputElement;
     }
 
     /**
@@ -529,7 +532,7 @@ export default class App {
      */
 
     public getUsername(): string {
-        return this.getUsernameField().val()! as string;
+        return this.getUsernameField().value! as string;
     }
 
     /**
@@ -537,8 +540,10 @@ export default class App {
      * depending on the currently open scroll.
      */
 
-    private getPasswordField(): JQuery<HTMLInputElement> {
-        return $(this.isRegistering() ? '#register-password-input' : '#login-password-input');
+    private getPasswordField(): HTMLInputElement {
+        return document.querySelector(
+            this.isRegistering() ? '#register-password-input' : '#login-password-input'
+        ) as HTMLInputElement;
     }
 
     /**
@@ -548,7 +553,7 @@ export default class App {
      */
 
     public getPassword(): string {
-        return this.getPasswordField().val()! as string;
+        return this.getPasswordField().value! as strixfng;
     }
 
     /**
@@ -556,7 +561,7 @@ export default class App {
      */
 
     private getPasswordConfirmation(): string {
-        return this.passwordConfirmation.val()! as string;
+        return this.passwordConfirmation.value! as string;
     }
 
     /**
@@ -569,7 +574,7 @@ export default class App {
     public getEmail(): string {
         if (!this.isRegistering()) return '';
 
-        return this.emailField.val()! as string;
+        return this.emailField.value! as string;
     }
 
     /**
@@ -581,6 +586,49 @@ export default class App {
 
     public getLoaderDots(): string {
         return '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>';
+    }
+
+    /**
+     * Iterates through all the validations and clears them.
+     */
+
+    private clearValidation(): void {
+        for (let validation of this.validation) validation.innerHTML = '';
+    }
+
+    /**
+     * Iterates through the validation summaries (on the login and register)
+     * page and sets their status messages to the provided parameters.
+     * @param type What type of validation we're setting the message for.
+     * @param message The message we are setting for the validation.
+     */
+
+    private setValidation(type: 'status' | 'validation-error', message = ''): void {
+        this.clearValidation();
+
+        // Create a validation message based on type and string message.
+        for (let validation of this.validation)
+            validation.append(this.createValidation(type, message));
+    }
+
+    /**
+     * Creates a new <span></span> DOM element with the provided type
+     * and message contents.
+     * @param type Validation type, status is blue, error is red.
+     * @param message What to display in the message.
+     */
+
+    private createValidation(type: 'status' | 'validation-error', message = ''): HTMLSpanElement {
+        let spanElement = document.createElement('span');
+
+        // Type of element we are creating (status is blue, error is red).
+        spanElement.classList.add(type);
+        spanElement.classList.add('blink');
+
+        // Add the message onto the span element.
+        spanElement.textContent = message;
+
+        return spanElement;
     }
 
     /**
