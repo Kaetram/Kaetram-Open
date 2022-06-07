@@ -1,5 +1,4 @@
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
@@ -9,20 +8,22 @@ import {
     Equipment as EquipmentPacket,
     NPC as NPCPacket,
     Death,
-    Despawn
+    Despawn,
+    Skill
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
-import Hit from '../combat/hit';
 import Slot from './containers/slot';
+import Equipment from './equipment/equipment';
+import Character from '../character';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import Equipment from './equipment/equipment';
-import Character from '../character';
+
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 export default class Handler {
     private world: World;
@@ -43,6 +44,9 @@ export default class Handler {
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
 
+        // Hit callback
+        this.player.onHit(this.handleHit.bind(this));
+
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
         this.player.onMovement(this.handleMovement.bind(this));
@@ -54,6 +58,7 @@ export default class Handler {
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
+        this.player.skills.onLoaded(this.handleSkills.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -103,6 +108,8 @@ export default class Handler {
         }
 
         this.world.entities.removePlayer(this.player);
+
+        this.world.cleanCombat(this.player);
     }
 
     /**
@@ -120,6 +127,16 @@ export default class Handler {
 
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(new Despawn(this.player.instance), true);
+    }
+
+    /**
+     * Callback handler for when the player is hit.
+     * @param damage The amount of damage dealt.
+     * @param attacker Who is attacking the player.
+     */
+
+    private handleHit(damage: number, attacker?: Character): void {
+        if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
     }
 
     /**
@@ -172,7 +189,9 @@ export default class Handler {
 
     private handleEquipment(): void {
         this.player.send(
-            new EquipmentPacket(Opcodes.Equipment.Batch, this.player.equipment.serialize())
+            new EquipmentPacket(Opcodes.Equipment.Batch, {
+                data: this.player.equipment.serialize()
+            })
         );
     }
 
@@ -182,7 +201,14 @@ export default class Handler {
      */
 
     private handleEquip(equipment: Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Equip, equipment));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Equip, {
+                data: equipment
+            })
+        );
+
+        // Sync to nearby players.
+        this.player.sync();
     }
 
     /**
@@ -191,7 +217,10 @@ export default class Handler {
      */
 
     private handleUnequip(type: Modules.Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, type));
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
+
+        // Sync to nearby players.
+        this.player.sync();
     }
 
     /**
@@ -199,13 +228,11 @@ export default class Handler {
      */
 
     private handleInventory(): void {
-        let { slots } = this.player.inventory.serialize();
-
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                slots
+                data: this.player.inventory.serialize()
             })
         );
     }
@@ -249,7 +276,7 @@ export default class Handler {
             );
 
         this.player.send(
-            new Container(Opcodes.Container.Drop, {
+            new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
                 slot: slot.serialize()
             })
@@ -261,9 +288,16 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        let { quests } = this.player.quests.serialize(true);
+        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
+    }
 
-        this.player.send(new Quest(Opcodes.Quest.Batch, quests));
+    /**
+     * Sends a packet to the server containing batch data
+     * for the skills.
+     */
+
+    private handleSkills(): void {
+        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
     }
 
     /**
@@ -288,7 +322,7 @@ export default class Handler {
 
     private handleBankRemove(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Drop, {
+            new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
                 slot: slot.serialize()
             })

@@ -1,12 +1,14 @@
-import Entity, { EntityData } from '../entity';
-
-import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
-
-import { ItemData } from '@kaetram/common/types/item';
+import Entity from '../entity';
 
 import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
+
+import Utils from '@kaetram/common/util/utils';
+
+import { Modules } from '@kaetram/common/network';
+
+import { ItemData } from '@kaetram/common/types/item';
+import { EntityData } from '@kaetram/common/types/entity';
 
 type RawData = {
     [key: string]: ItemData;

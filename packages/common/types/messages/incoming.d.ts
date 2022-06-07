@@ -11,6 +11,11 @@ export interface LoginPacket {
     email?: string;
 }
 
+export interface EquipmentPacket {
+    opcode: Opcodes.Equipment;
+    type: Modules.Equipment;
+}
+
 export interface ReadyPacket {
     hasMapData: string;
     userAgent: string;
@@ -36,10 +41,22 @@ export interface ProjectilePacket {
     target: string;
 }
 
+export interface ContainerPacket {
+    opcode: Opcodes.Container; // The action we're performing.
+    type: Modules.ContainerType; // Container the action is taking place in.
+    subType: Modules.ContainerType; // Used by the bank to determine container actions.
+    index?: number;
+    tIndex?: number;
+    count?: number;
+}
+
+export interface WarpPacket {
+    id: number;
+}
+
 export interface StorePacket {
     opcode: Opcodes.Store;
-    storeKey: string; // The shop's key.
-    itemKey: string; // Item key we are trying to buy/sell
+    key: string; // The shop's key.
+    index: number; // Index of the item we are working with.
     count?: number; // How many of the item we are trying to buy/sell
-    index?: number; // The index of the slot in the inventory.
 }

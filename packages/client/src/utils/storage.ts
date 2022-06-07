@@ -1,7 +1,5 @@
 import { Modules } from '@kaetram/common/network';
-
-import type App from '../app';
-import type { CursorsTiles } from '../map/map';
+import { CursorTiles } from '../map/map';
 
 interface PlayerData {
     username: string;
@@ -26,15 +24,16 @@ interface Settings {
 
 interface RegionMapData {
     regionData: number[];
-    collisions: number[];
-    objects: unknown[];
-    cursorTiles: CursorsTiles;
+    grid: number[][];
+    objects: number[];
+    cursorTiles: CursorTiles;
 }
 
 interface StorageData {
     new: boolean;
     world: number;
-    clientVersion: number;
+    clientVersion: string;
+    errorMessage: string;
     player: PlayerData;
     settings: Settings;
     map: RegionMapData;
@@ -44,26 +43,23 @@ let storage = window.localStorage,
     name = 'data';
 
 export default class Storage {
-    public data!: StorageData;
+    public data: StorageData = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
 
-    public constructor(private app: App) {
-        this.load();
+    public constructor() {
+        if (this.isNewVersion()) this.set(this.create());
     }
 
-    private load(): void {
-        this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
-
-        if (this.data.clientVersion !== parseFloat(this.app.config.version)) {
-            this.data = this.create();
-            this.save();
-        }
-    }
+    /**
+     * Creates a new empty template for the storage data.
+     * @returns A StorageData object containing default values.
+     */
 
     private create(): StorageData {
         return {
             new: true,
             world: window.config.serverId,
-            clientVersion: parseFloat(this.app.config.version),
+            clientVersion: window.config.version,
+            errorMessage: '',
 
             player: {
                 username: '',
@@ -88,85 +84,175 @@ export default class Storage {
 
             map: {
                 regionData: [],
-                collisions: [],
+                grid: [],
                 objects: [],
                 cursorTiles: {}
             }
         };
     }
 
+    /**
+     * Saves the data object in this class' instance
+     * to the local storage.
+     */
+
     public save(): void {
         if (this.data) storage.setItem(name, JSON.stringify(this.data));
     }
 
+    /**
+     * Clears the local storage and saves the empty
+     * default parameters.
+     */
+
     public clear(): void {
         storage.removeItem(name);
-        this.data = this.create();
-    }
 
-    public toggleRemember(toggle: boolean): void {
-        this.data.player.rememberMe = toggle;
+        this.set(this.create());
+
         this.save();
     }
+
+    /**
+     * Sets the data onto the local storage and saves it.
+     * @param data The StorageData object we are writing.
+     */
+
+    public set(data: StorageData): void {
+        this.data = data;
+        this.save();
+    }
+
+    /**
+     * Updates the error message in the storage.
+     * @param error The new error message in the storage.
+     */
+
+    public setError(error: string): boolean {
+        this.data.errorMessage = error;
+        this.save();
+
+        return true;
+    }
+
+    /**
+     * Updates the player data remember me value.
+     * @param rememberMe New value of the remember me toggle switch.
+     */
+
+    public setRemember(rememberMe: boolean): void {
+        this.data.player.rememberMe = rememberMe;
+        this.save();
+    }
+
+    /**
+     * Sets the username and password into the local storage and saves it.
+     * @param username The username string we are setting.
+     * @param password The password string we are updating.
+     */
+
+    public setCredentials(username = '', password = ''): void {
+        this.data.player.username = username;
+        this.data.player.password = password;
+
+        this.save();
+    }
+
+    /**
+     * Checks if the local storage verison of the client
+     * matches the window's config version.
+     * @returns True if client version is the same as config version.
+     */
+
+    private isNewVersion(): boolean {
+        return this.data.clientVersion !== window.config.version;
+    }
+
+    /**
+     * Updates the orientation in the local storage.
+     * @param orientation New orientation we are saving.
+     */
 
     public setOrientation(orientation: number): void {
-        let player = this.getPlayer();
-
-        player.orientation = orientation;
+        this.data.player.orientation = orientation;
 
         this.save();
     }
 
-    // setPlayer(option: keyof PlayerData, value: never): void {
-    //     let pData = this.getPlayer();
-
-    //     if (option in pData) pData[option] = value;
-
-    //     this.save();
-    // }
-
-    // setSettings(option: keyof Settings, value: never): void {
-    //     let sData = this.getSettings();
-
-    //     if (option in sData) sData[option] = value;
-
-    //     this.save();
-    // }
+    /**
+     * Sets the data loaded so far from the map into the storage.
+     * @param regionData The tile data for each index.
+     * @param grid The collision grid for the map.
+     * @param objects The object tileIds.
+     * @param cursorTiles The cursor tileIds.
+     */
 
     public setRegionData(
         regionData: number[],
-        collisionData: number[],
-        objects: unknown[],
-        cursorTiles: CursorsTiles
+        grid: number[][],
+        objects: number[],
+        cursorTiles: CursorTiles
     ): void {
         this.data.map.regionData = regionData;
-        this.data.map.collisions = collisionData;
+        this.data.map.grid = grid;
         this.data.map.objects = objects;
         this.data.map.cursorTiles = cursorTiles;
 
         this.save();
     }
 
-    public getPlayer(): PlayerData {
-        return this.data.player;
+    /**
+     * Grabs the error message from local storage
+     * and immediately clears it. Error messages only
+     * get displayed once if they're queued up.
+     * @returns The string of the error message.
+     */
+
+    public getError(): string {
+        let { errorMessage } = this.data;
+
+        this.data.errorMessage = '';
+        this.save();
+
+        return errorMessage;
     }
 
-    public getSettings(): Settings {
-        return this.data.settings;
+    /**
+     * @returns The username string stored in the local storage.
+     */
+
+    public getUsername(): string {
+        return this.data.player.username;
     }
 
-    public getRegionData(): number[] {
-        return this.data.map.regionData;
+    /**
+     * @returns The password string (raw text) in the local storage.
+     */
+
+    public getPassword(): string {
+        return this.data.player.password;
     }
 
-    public getCollisions(): number[] {
-        return this.data.map.collisions;
+    /**
+     * Whether or not the remember me toggle is on.
+     * @returns Boolean value of the remember me toggle.
+     */
+
+    public hasRemember(): boolean {
+        return this.data.player.rememberMe;
     }
 
-    public getObjects(): unknown[] {
-        return this.data.map.objects;
-    }
-    public getCursorTiles(): CursorsTiles {
-        return this.data.map.cursorTiles;
+    /**
+     * Grabs the local storage data of the map.
+     * @returns RegionMapData object containing all the data stored so far.
+     */
+
+    public getRegionData(): RegionMapData {
+        return {
+            regionData: this.data.map.regionData,
+            grid: this.data.map.grid,
+            objects: this.data.map.objects,
+            cursorTiles: this.data.map.cursorTiles
+        };
     }
 }

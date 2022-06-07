@@ -65,15 +65,7 @@ export default class Commands {
                 return;
 
             case 'global':
-                this.world.globalMessage(
-                    this.player.username,
-                    blocks.join(' '),
-                    'rgba(191, 191, 63, 1.0)',
-                    true,
-                    false
-                );
-
-                return;
+                return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
 
             case 'region':
                 log.info(this.player.region);
@@ -279,27 +271,6 @@ export default class Commands {
                 return;
             }
 
-            case 'region': {
-                let tileX = parseInt(blocks.shift()!),
-                    tileY = parseInt(blocks.shift()!),
-                    tileInfo = parseInt(blocks.shift()!);
-
-                if (!tileX || !tileY) return;
-
-                let index = this.world.map.coordToIndex(tileX - 1, tileY);
-
-                log.info(`Sending Tile: ${index}`);
-
-                this.player.send(
-                    new Map(Opcodes.Map.Modify, {
-                        index,
-                        data: tileInfo
-                    })
-                );
-
-                return;
-            }
-
             case 'getregion':
                 this.player.notify(`Current Region: ${this.player.region}`);
                 return;
@@ -356,7 +327,7 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.defaultMovementSpeed = movementSpeed;
+                this.player.movementSpeed = movementSpeed;
 
                 this.player.sync();
 

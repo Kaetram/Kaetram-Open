@@ -20,7 +20,7 @@ export default class Equipment {
         public ability = -1,
         public abilityLevel = -1,
         public power = 1,
-        public rangedWeapon = false,
+        public ranged = false, // Applies to weapons specifically
         public amplifier = 1,
         public lumberjacking = -1
     ) {}
@@ -53,6 +53,7 @@ export default class Equipment {
         this.power = 0;
         this.amplifier = 1;
         this.lumberjacking = -1;
+        this.name = '';
     }
 
     /**
@@ -92,7 +93,7 @@ export default class Equipment {
      */
 
     public serialize(): EquipmentData {
-        let { type, key, name, count, ability, abilityLevel, power } = this;
+        let { type, key, name, count, ability, abilityLevel, power, ranged } = this;
 
         return {
             type,
@@ -101,7 +102,8 @@ export default class Equipment {
             count,
             ability,
             abilityLevel,
-            power
+            power,
+            ranged
         };
     }
 

@@ -1,50 +1,12 @@
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
 import type Combat from './character/combat/combat';
-import type Mob from './character/mob/mob';
 import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
 
-/**
- * Entity data is referenced by the subclasses whenever
- * extra data needs to be included. Optional variables
- * listed below are used by the subclasses to include
- * additional information to transmit to the client.
- */
-
-export interface EntityData {
-    // Entity data
-    instance: string;
-    type: number;
-    key: string;
-    name: string;
-    x: number;
-    y: number;
-
-    // Character data
-    movementSpeed?: number;
-    hitPoints?: number;
-    maxHitPoints?: number;
-    attackRange?: number;
-    level?: number;
-    hiddenName?: boolean;
-
-    // Item data
-    count?: number;
-    ability?: number;
-    abilityLevel?: number;
-
-    // Projectile data
-    ownerInstance?: string;
-    targetInstance?: string;
-    damage?: number;
-    hitType?: Modules.Hits;
-
-    // Player data
-    // TODO
-}
+import { Modules } from '@kaetram/common/network';
+import { EntityData } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
@@ -82,7 +44,7 @@ abstract class Entity {
     public movementCallback?: MovementCallback;
     public regionCallback?: RegionCallback;
 
-    protected constructor(public instance: string, public key = '', x: number, y: number) {
+    protected constructor(public instance = '', public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
 
         this.updatePosition(x, y);
