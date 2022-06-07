@@ -313,7 +313,7 @@ export default class Regions {
      */
 
     public sendRegion(player: Player): void {
-        player.send(new MapPacket(Opcodes.Map.Render, this.getRegionData(player)));
+        player.send(new MapPacket(this.getRegionData(player)));
     }
 
     /**

@@ -1,34 +1,45 @@
+import Warp from './warp';
+import Skills from './skills';
+import Quests from './quests';
+import Hit from '../combat/hit';
+import Handler from './handler';
+import Mana from '../points/mana';
+import Map from '../../../map/map';
+import Character from '../character';
+import Equipments from './equipments';
+import Item from '../../objects/item';
+import Bank from './containers/impl/bank';
+import Regions from '../../../map/regions';
+import Tree from '../../../globals/impl/tree';
+import Abilities from './abilities/abilities';
+import Container from './containers/container';
+import Formulas from '../../../../info/formulas';
+import Inventory from './containers/impl/inventory';
+import Packet from '@kaetram/server/src/network/packet';
+import Incoming from '../../../../controllers/incoming';
+import Entities from '@kaetram/server/src/controllers/entities';
+
+import type World from '../../../world';
+import type MongoDB from '../../../../database/mongodb/mongodb';
+import type Connection from '../../../../network/connection';
+import type NPC from '../../npc/npc';
+import type Area from '../../../map/areas/area';
+import type { PlayerInfo } from './../../../../database/mongodb/creator';
+
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Incoming from '../../../../controllers/incoming';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
-import Hit from '../combat/hit';
-import Abilities from './abilities/abilities';
-import Bank from './containers/impl/bank';
-import Inventory from './containers/impl/inventory';
-import Handler from './handler';
-import Mana from '../points/mana';
-import Warp from './warp';
-
-import type { ExperienceCombatData } from '@kaetram/common/types/messages';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Area from '../../../map/areas/area';
-import type Connection from '../../../../network/connection';
-import type World from '../../../world';
-import type NPC from '../../npc/npc';
-import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import Map from '../../../map/map';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
+import { PlayerData } from '@kaetram/common/types/player';
+import { SlotData, SlotType } from '@kaetram/common/types/slot';
+import { PointerData } from '@kaetram/common/types/pointer';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 import {
     Audio,
-    Bubble,
     Camera,
     Chat,
-    Death,
     Experience,
     Heal,
     Movement,
@@ -39,20 +50,7 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
-import Packet from '@kaetram/server/src/network/packet';
-import Equipments from './equipments';
-import Quests from './quests';
-import Regions from '../../../map/regions';
-import Entities from '@kaetram/server/src/controllers/entities';
-import { EntityData } from '../../entity';
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import Container from './containers/container';
-import Item from '../../objects/item';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import Tree from '../../../globals/impl/tree';
-import Skills from './skills';
+import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -71,14 +69,6 @@ export interface ObjectData {
     };
 }
 
-interface PlayerData extends EntityData {
-    rights: number;
-    pvp: boolean;
-    orientation: number;
-
-    equipments: EquipmentData[];
-}
-
 export default class Player extends Character {
     public map: Map;
     private regions: Regions;
@@ -89,7 +79,7 @@ export default class Player extends Character {
     private handler: Handler;
 
     public quests: Quests;
-    public skills: Skills;
+    public skills: Skills = new Skills(this);
     public equipment: Equipments;
     public mana: Mana = new Mana(Modules.Defaults.MANA);
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
@@ -118,7 +108,6 @@ export default class Player extends Character {
 
     public talkIndex = 0;
     public cheatScore = 0;
-    public defaultMovementSpeed = 250; // For fallback.
 
     // TODO - REFACTOR THESE ------------
 
@@ -149,8 +138,8 @@ export default class Player extends Character {
 
     private lastNotify!: number;
 
-    private nextExperience: number | undefined;
-    private prevExperience!: number;
+    private nextExperience = -1;
+    private prevExperience = -1;
 
     public profileDialogOpen?: boolean;
     public inventoryOpen?: boolean;
@@ -183,7 +172,6 @@ export default class Player extends Character {
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
-        this.skills = new Skills(this);
         this.handler = new Handler(this);
         this.warp = new Warp(this);
 
@@ -274,34 +262,12 @@ export default class Player extends Character {
      */
 
     public intro(): void {
-        if (this.ban > Date.now()) {
-            this.connection.sendUTF8('ban');
-            this.connection.close(`Player: ${this.username} is banned.`);
-        }
+        if (this.ban > Date.now()) return this.connection.reject('ban');
 
         if (this.hitPoints.getHitPoints() < 0)
             this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
-
-        let info = {
-            instance: this.instance,
-            username: Utils.formatName(this.username),
-            x: this.x,
-            y: this.y,
-            rights: this.rights,
-            hitPoints: this.hitPoints.serialize(),
-            mana: this.mana.serialize(),
-            experience: this.experience,
-            nextExperience: this.nextExperience,
-            prevExperience: this.prevExperience,
-            level: this.level,
-            lastLogin: this.lastLogin,
-            pvpKills: this.pvpKills,
-            pvpDeaths: this.pvpDeaths,
-            orientation: this.orientation,
-            movementSpeed: this.getMovementSpeed()
-        };
 
         /**
          * Send player data to client here
@@ -309,7 +275,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(info));
+        this.send(new Welcome(this.serialize(false, true)));
     }
 
     public destroy(): void {
@@ -350,9 +316,9 @@ export default class Player extends Character {
         }
 
         let data = {
-            id: this.instance,
+            instance: this.instance,
             level: this.level
-        } as ExperienceCombatData;
+        } as ExperiencePacket;
 
         /**
          * Sending two sets of data as other users do not need to
@@ -391,7 +357,7 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Heal({
-                id: this.instance,
+                instance: this.instance,
                 type,
                 amount
             })
@@ -407,7 +373,7 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Heal({
-                id: this.instance,
+                instance: this.instance,
                 type,
                 amount
             })
@@ -425,7 +391,7 @@ export default class Player extends Character {
     public teleport(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y,
                 withAnimation
@@ -457,38 +423,36 @@ export default class Player extends Character {
     }
 
     /**
-     * Handles the select event when clicking a container.
-     * @param container The container we are handling.
-     * @param index The index in the container we selected.
+     * Handler for when a container slot is selected at a specified index. Depending
+     * on the type, we act accordingly. If we click an inventory, we check if the item
+     * is equippable or consumable and remove it from the inventory. If we click a bank
+     * element, we must move it from the inventory to the bank or vice versa.
+     * @param type The type of container we are working with.
+     * @param index Index at which we are selecting the item.
      */
 
-    public handleContainerSelect(container: Container, index: number, slotType?: SlotType): void {
-        let slot: SlotData | undefined, item: Item;
+    public handleContainerSelect(
+        type: Modules.ContainerType,
+        index: number,
+        subType?: Modules.ContainerType
+    ): void {
+        let item: Item;
 
-        log.debug(`Received container select: ${container.type} - ${index} - ${slotType}`);
-
-        // TODO - Cleanup and document, this is a preliminary prototype.
-        switch (container.type) {
+        switch (type) {
             case Modules.ContainerType.Inventory:
-                log.debug(`Selected item index: ${index}`);
+                item = this.inventory.getItem(this.inventory.get(index));
 
-                slot = container.remove(index);
+                if (!item || !item.isEquippable()) return;
 
-                if (!slot) return;
-
-                item = container.getItem(slot);
-
-                if (item.isEquippable()) this.equipment.equip(item);
+                this.inventory.remove(index);
+                this.equipment.equip(item);
 
                 break;
 
             case Modules.ContainerType.Bank:
-                if (!slotType) return;
-
-                // Move item from the bank to the inventory.
-                if (slotType === 'inventory') container.move(this.inventory, index);
-                // Move item from the inventory to the bank.
-                else if (slotType === 'bank') this.inventory.move(container, index);
+                if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
+                else if (subType === Modules.ContainerType.Inventory)
+                    this.bank.move(this.inventory, index);
 
                 break;
         }
@@ -523,7 +487,7 @@ export default class Player extends Character {
 
             this.send(
                 new Overlay(Opcodes.Overlay.Set, {
-                    image: overlay.fog || 'empty',
+                    image: overlay.fog || 'blank',
                     colour: `rgba(0,0,0,${overlay.darkness})`
                 })
             );
@@ -604,7 +568,7 @@ export default class Player extends Character {
 
         // this.movementSpeed = movementSpeed;
 
-        return this.defaultMovementSpeed;
+        return this.movementSpeed;
     }
 
     /**
@@ -622,8 +586,7 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
-                forced,
-                teleport
+                forced
             }),
             true
         );
@@ -765,7 +728,7 @@ export default class Player extends Character {
      */
 
     public override isRanged(): boolean {
-        return this.equipment.getWeapon().rangedWeapon;
+        return this.equipment.getWeapon().ranged;
     }
 
     /**
@@ -821,7 +784,44 @@ export default class Player extends Character {
         this.attackRange = this.isRanged() ? 7 : 1;
 
         // Sync the player information to the surrounding regions.
-        this.sendToRegions(new Sync(this.serialize(true)));
+        this.sendToRegions(new Sync(this.serialize(true)), true);
+    }
+
+    /**
+     * Sends a chat message with the specified text string. The message
+     * can be global or only sent to nearby regions.
+     * @param message The string data we are sending to the client.
+     * @param global Whether or not the message is relayed to all players in the world or just region.
+     * @param withBubble Whether or not to display a visual bubble with message in it.
+     * @param colour The colour of the message. Defaults client-sided if not specified.
+     */
+
+    public chat(message: string, global = false, withBubble = true, colour = ''): void {
+        if (this.isMuted()) return this.notify('You are currently muted.', 'crimson');
+        if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
+
+        log.debug(`[${this.username}] ${message}`);
+
+        let name = Utils.formatName(this.username);
+
+        if (global) return this.world.globalMessage(name, message, colour);
+
+        let packet = new Chat({
+            instance: this.instance,
+            message,
+            withBubble,
+            colour
+        });
+
+        // Relay the message to the discord channel.
+        if (config.discordEnabled) this.world.discord.sendMessage(name, message, undefined, true);
+
+        // API relays the message to the discord server from multiple worlds.
+        if (config.hubEnabled) this.world.api.sendChat(name, message, global);
+
+        // Send globally or to nearby regions.
+        if (global) this.sendBroadcast(packet);
+        else this.sendToRegions(packet);
     }
 
     /**
@@ -853,7 +853,7 @@ export default class Player extends Character {
      * @param colour Optional parameter indicating text colour.
      */
 
-    public notify(message: string, colour?: string): void {
+    public notify(message: string, colour = ''): void {
         if (!message) return;
 
         // Prevent notify spams
@@ -871,41 +871,23 @@ export default class Player extends Character {
         this.lastNotify = Date.now();
     }
 
-    public pointer(type: Opcodes.Pointer, info: PointerData): void {
+    /**
+     * Sends a pointer data packet to the player. Removes all
+     * existing pointers first to prevent multiple pointers.
+     * @param opcode The pointer opcode we are sending.
+     * @param info Information for the pointer such as position.
+     */
+
+    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
         // Remove all existing pointers first.
         this.send(new Pointer(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(type in Opcodes.Pointer)) return;
+        if (!(opcode in Opcodes.Pointer)) return;
 
         info.instance = this.instance;
 
-        this.send(new Pointer(type, info));
-    }
-
-    /**
-     * Sends a chat packet that can be used to
-     * show special messages to the player.
-     */
-
-    public chat(
-        source: string,
-        text: string,
-        colour?: string,
-        isGlobal = false,
-        withBubble = false
-    ): void {
-        if (!source || !text) return;
-
-        this.send(
-            new Chat({
-                name: source,
-                text,
-                colour,
-                isGlobal,
-                withBubble
-            })
-        );
+        this.send(new Pointer(opcode, info));
     }
 
     /**
@@ -913,11 +895,12 @@ export default class Player extends Character {
      * them in between tiles. Should only be used if they are
      * being transported elsewhere.
      */
-    public stopMovement(force = false): void {
+
+    public stopMovement(forced = false): void {
         this.send(
             new Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
-                force
+                forced
             })
         );
     }
@@ -962,12 +945,17 @@ export default class Player extends Character {
      * nearby regions. This contains all the data
      * about the player that other players should
      * be able to see.
+     * @param withEquipment Whether or not to include equipment batch data.
+     * @param withExperience Whether or not to incluide experience data.
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment?: boolean): PlayerData {
+    public override serialize(withEquipment = false, withExperience = false): PlayerData {
         let data = super.serialize() as PlayerData;
 
+        // Sprite key is the armour key.
+        data.key = this.equipment.getArmour().key || 'clotharmor';
+        data.name = Utils.formatName(this.username);
         data.rights = this.rights;
         data.level = this.level;
         data.hitPoints = this.hitPoints.getHitPoints();
@@ -978,6 +966,12 @@ export default class Player extends Character {
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+
+        if (withExperience) {
+            data.experience = this.experience;
+            data.prevExperience = this.prevExperience;
+            data.nextExperience = this.nextExperience;
+        }
 
         return data;
     }

@@ -26,10 +26,6 @@ export enum Orientation {
     Right
 }
 
-export enum Types {
-    Player
-}
-
 export enum InputType {
     Key,
     LeftClick,
@@ -43,6 +39,14 @@ export enum Actions {
     Orientate
 }
 
+export enum MenuActions {
+    Use = 'Use',
+    Drop = 'Drop',
+    Equip = 'Equip',
+    Eat = 'Eat',
+    Move = 'Move'
+}
+
 export enum Hits {
     Damage,
     Poison,
@@ -54,10 +58,6 @@ export enum Hits {
     Stun,
     Explosive,
     Profession
-}
-
-export enum Infos {
-    Countdown
 }
 
 export enum Projectiles {
@@ -125,12 +125,21 @@ export enum Keys {
     T = 84,
     I = 73,
     P = 80,
-    M = 77
+    M = 77,
+
+    Plus = 187,
+    Minus = 189
 }
 
 export enum AudioTypes {
     Music,
     SFX
+}
+
+export enum HealTypes {
+    Health,
+    Mana,
+    Stamina
 }
 
 export enum Trade {
@@ -211,52 +220,51 @@ export interface Colours {
 }
 
 export let DamageColours = {
-    received: {
+    // Received damage
+    [Hits.Damage]: {
         fill: 'rgb(255, 50, 50)',
-        stroke: 'rgb(255, 180, 180)'
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'white',
+            stroke: '#373737'
+        }
     },
 
-    receivedCritical: {
+    [Hits.Critical]: {
         fill: 'rgb(204, 0, 204)',
-        stroke: 'rgb(255, 180, 180)'
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'rgb(255, 153, 204)',
+            stroke: '#373737'
+        }
     },
 
-    inflicted: {
-        fill: 'white',
-        stroke: '#373737'
-    },
-
-    inflictedCritical: {
-        fill: 'rgb(255, 153, 204)',
-        stroke: '#373737'
-    },
-
-    healed: {
-        fill: 'rgb(80, 255, 80)',
-        stroke: 'rgb(50, 120, 50)'
-    },
-
-    mana: {
-        fill: 'rgb(73, 94, 228)',
-        stroke: 'rgb(56, 63, 133)'
-    },
-
-    health: {
-        fill: 'white',
-        stroke: '#373737'
-    },
-
-    exp: {
-        fill: 'rgb(80, 180, 255)',
-        stroke: 'rgb(15, 85, 138)'
-    },
-
-    poison: {
+    [Hits.Poison]: {
         fill: 'rgb(66, 183, 77)',
         stroke: 'rgb(50, 120 , 50)'
     },
 
-    profession: {
+    [Hits.Heal]: {
+        fill: 'rgb(80, 255, 80)',
+        stroke: 'rgb(50, 120, 50)'
+    },
+
+    [Hits.Mana]: {
+        fill: 'rgb(73, 94, 228)',
+        stroke: 'rgb(56, 63, 133)'
+    },
+
+    [Hits.Experience]: {
+        fill: 'rgb(80, 180, 255)',
+        stroke: 'rgb(15, 85, 138)'
+    },
+
+    [Hits.LevelUp]: {
+        fill: 'rgb(80, 180, 255)',
+        stroke: 'rgb(15, 85, 138)'
+    },
+
+    [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
     }
@@ -272,7 +280,7 @@ export const enum Constants {
     MAX_STACK = 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
-    BANK_SIZE = 52, // Maximum bank size
+    BANK_SIZE = 69, // Maximum bank size
     HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
@@ -297,7 +305,7 @@ export enum APIConstants {
 export enum Defaults {
     MANA = 50,
     HITPOINTS = 69, // nice.
-    MOVEMENT_SPEED = 250, // 250 pixels per frame?
+    MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000 // every 1 second
 }
 

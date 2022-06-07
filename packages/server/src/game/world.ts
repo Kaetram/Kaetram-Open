@@ -21,7 +21,6 @@ import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
-import type Entity from './entity/entity';
 import Trees from './globals/trees';
 
 export interface PacketData {
@@ -34,27 +33,19 @@ export interface PacketData {
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map!: Map;
-    public api!: API;
-    public stores!: Stores;
-    public entities!: Entities;
-    public network!: Network;
-    public discord!: Discord;
-    public trees!: Trees;
+    public map: Map = new Map(this);
+    public api: API = new API(this);
+    public stores: Stores = new Stores(this);
+    public trees: Trees = new Trees(this);
+    public entities: Entities = new Entities(this);
+    public network: Network = new Network(this);
+    public discord: Discord = new Discord(config.hubEnabled);
 
     private maxPlayers = config.maxPlayers;
 
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
-        this.map = new Map(this);
-        this.api = new API(this);
-        this.trees = new Trees(this);
-        this.stores = new Stores(this);
-        this.discord = new Discord();
-        this.entities = new Entities(this);
-        this.network = new Network(this);
-
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));
@@ -113,41 +104,30 @@ export default class World {
      * @param source Who is sending the message.
      * @param message The contents of the broadcast.
      * @param colour The message's colour.
-     * @param isGlobal Whether we display the chat as a global message.
-     * @param withBubble Whether to display a bubble above the player.
+     * @param noPrefix Whether to skip the `[Global]:` prefix or not.
      */
 
-    public globalMessage(
-        source: string,
-        message: string,
-        colour?: string,
-        isGlobal = false,
-        withBubble = false
-    ): void {
+    public globalMessage(source: string, message: string, colour = '', noPrefix = false): void {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
-                name: source,
-                text: message,
-                colour,
-                isGlobal,
-                withBubble
+                source: noPrefix ? source : `[Global]: ${source}`,
+                message,
+                colour
             })
         });
     }
 
     /**
-     * Iterates through all the entities and removes the `character`
-     * parameter from their attackers list. We call this function
-     * when the `character` logs out or dies.
-     * @param character The character we are removing from other entity's character.
+     * Iterates through all the characters in the world and checks whether
+     * the `cleanCharacter` is their target. If it is, we remove it.
+     * @param cleanCharacter The character that we are removing as target.
      */
 
-    public cleanCombat(character: Character): void {
-        this.entities.forEachEntity((entity: Entity) => {
-            if (entity.instance !== character.instance) return;
+    public cleanCombat(cleanCharacter: Character): void {
+        this.entities.forEachCharacter((character: Character) => {
+            if (!character.hasTarget()) return;
 
-            // if (entity instanceof Character && entity.combat.hasAttacker(character))
-            //     entity.combat.removeAttacker(character);
+            if (character.target?.instance === cleanCharacter.instance) character.clearTarget();
         });
     }
 

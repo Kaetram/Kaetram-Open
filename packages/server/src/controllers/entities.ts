@@ -246,6 +246,18 @@ export default class Entities {
     }
 
     /**
+     * Callback that iterates through all the entities and only
+     * selects those that are instances of Character.
+     * @param callback Returns a character type (mob or player for now).
+     */
+
+    public forEachCharacter(callback: (character: Character) => void): void {
+        this.forEachEntity((entity: Entity) => {
+            if (entity instanceof Character) callback(entity as Character);
+        });
+    }
+
+    /**
      * Iterates through each player in the players collection.
      * @param callback A player instance.
      */

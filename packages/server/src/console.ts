@@ -61,6 +61,21 @@ export default class Console {
 
                     break;
 
+                case 'kick':
+                case 'timeout':
+                    username = blocks.join(' ');
+
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+
+                    player = this.world.getPlayerByName(username);
+
+                    if (!player) return log.info('An error has occurred.');
+
+                    if (command === 'timeout') player.timeout();
+                    else player.connection.close();
+
+                    break;
+
                 case 'setadmin':
                 case 'setmod':
                     username = blocks.join(' ');
@@ -72,6 +87,8 @@ export default class Console {
                     if (!player) return log.info(`Player not found.`);
 
                     player.rights = command === 'setadmin' ? 2 : 1;
+
+                    player.sync();
 
                     log.info(
                         `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`

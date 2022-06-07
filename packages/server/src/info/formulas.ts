@@ -136,11 +136,13 @@ export default {
         return this.getDamage(attacker, target);
     },
 
-    nextExp(experience: number): number | undefined {
+    nextExp(experience: number): number {
         if (experience < 0) return -1;
 
         for (let i = 1; i < this.LevelExp.length; i++)
             if (experience < this.LevelExp[i]) return this.LevelExp[i];
+
+        return -1;
     },
 
     prevExp(experience: number): number {

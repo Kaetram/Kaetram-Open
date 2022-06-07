@@ -15,6 +15,6 @@ export default class Weapon extends Equipment {
         super.update(item);
 
         this.power = item.attackLevel;
-        this.rangedWeapon = item.isRangedWeapon();
+        this.ranged = item.isRangedWeapon();
     }
 }

@@ -1,4 +1,6 @@
-import Entity, { EntityData } from '../entity';
+import _ from 'lodash';
+
+import Entity from '../entity';
 import Combat from './combat/combat';
 
 import World from '../../world';
@@ -8,6 +10,7 @@ import HitPoints from './points/hitpoints';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Movement, Points } from '../../../network/packets';
 import { PacketType } from '@kaetram/common/network/modules';
+import { EntityData } from '@kaetram/common/types/entity';
 
 type StunCallback = (stun: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
@@ -95,8 +98,14 @@ export default abstract class Character extends Entity {
      */
 
     public heal(amount = 1): void {
-        if (this.dead || this.poison) return;
+        // Cannot heal if dead or poisoned.
+        if (this.isDead() || this.poison) return;
+
+        // Cannot heal if engaged in combat.
         if (this.combat.started) return;
+
+        // Cannot heal if character is being attacked.
+        if (this.getAttackerCount() > 0) return;
 
         this.hitPoints.increment(amount);
     }
@@ -129,7 +138,7 @@ export default abstract class Character extends Entity {
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Points({
-                id: this.instance,
+                instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints()
             })
         });
@@ -241,7 +250,7 @@ export default abstract class Character extends Entity {
      */
 
     public getAttackerCount(): number {
-        return Object.keys(this.attackers).length;
+        return _.size(this.attackers);
     }
 
     /**
@@ -318,6 +327,17 @@ export default abstract class Character extends Entity {
             region: this.region,
             packet,
             ignore: ignore ? this.instance : ''
+        });
+    }
+
+    /**
+     * Broadcasts a message to all the players in the world.
+     * @param packet The packet to send globally.
+     */
+
+    public sendBroadcast(packet: Packet): void {
+        this.world.push(PacketType.Broadcast, {
+            packet
         });
     }
 
