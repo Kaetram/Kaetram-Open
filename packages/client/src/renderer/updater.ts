@@ -1,122 +1,131 @@
 import { Modules } from '@kaetram/common/network';
 
+import Game from '../game';
+import Entity from '../entity/entity';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
-
-import type SpritesController from '../controllers/sprites';
-import type Entity from '../entity/entity';
-import type Game from '../game';
+import SpritesController from '../controllers/sprites';
 
 export default class Updater {
-    private input;
+    private tileSize = this.game.map.tileSize;
 
     private sprites: SpritesController | null = null;
 
-    private timeDifferential!: number;
-    private lastUpdate!: Date;
-
-    public constructor(private game: Game) {
-        this.input = game.input;
-    }
+    public constructor(private game: Game) {}
 
     public update(): void {
-        this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
-
         this.updateEntities();
-        this.input.updateCursor();
         this.updateKeyboard();
         this.updateAnimations();
         this.updateInfos();
         this.updateBubbles();
-
-        this.lastUpdate = new Date();
     }
 
+    /**
+     * Iterates through all the entities and updates their animation data.
+     * If an entity is moving, we process that movement and update the entity's position.
+     */
+
     private updateEntities(): void {
-        this.game.entities.forEachEntity((entity) => {
-            if (!entity) return;
+        this.game.entities.forEachEntity((entity: Entity) => {
+            // Nothing to render if no sprite is loaded.
+            if (!entity.spriteLoaded) return;
 
-            if (entity.spriteLoaded) {
-                this.updateFading(entity);
+            this.updateFading(entity);
 
-                let animation = entity.currentAnimation;
+            entity.animation?.update(this.game.time);
 
-                animation?.update(this.game.time);
+            // Handle projectile instances separately.
+            if (entity instanceof Projectile) {
+                let mDistance = entity.speed * entity.getTimeDiff(),
+                    dx = entity.target.x - entity.x, // delta x current position to target
+                    dy = entity.target.y - entity.y, // delta y current position to target
+                    tDistance = Math.sqrt(dx * dx + dy * dy), // pythagorean theorem uwu
+                    amount = mDistance / tDistance;
 
-                if (entity instanceof Character) {
-                    if (entity.movement?.inProgress) entity.movement.step(this.game.time);
+                // Always angle the projectile towards the target.
+                entity.updateAngle();
 
-                    if (entity.hasPath() && !entity.movement.inProgress)
-                        switch (entity.orientation) {
-                            case Modules.Orientation.Left:
-                            case Modules.Orientation.Right: {
-                                let isLeft = entity.orientation === Modules.Orientation.Left;
+                if (amount > 1) amount = 1;
 
-                                entity.movement.start(
-                                    this.game.time,
-                                    (x) => {
-                                        entity.x = x;
-                                        entity.moved();
-                                    },
-                                    () => {
-                                        entity.x = entity.movement.endValue;
-                                        entity.moved();
-                                        entity.nextStep();
-                                    },
-                                    entity.x + (isLeft ? -1 : 1),
-                                    entity.x + (isLeft ? -16 : 16),
-                                    entity.movementSpeed
-                                );
+                // Increment the projectile's position.
+                entity.x += dx * amount;
+                entity.y += dy * amount;
 
-                                break;
-                            }
+                if (tDistance < 5) entity.impact();
 
-                            case Modules.Orientation.Up:
-                            case Modules.Orientation.Down: {
-                                let isUp = entity.orientation === Modules.Orientation.Up;
+                entity.lastUpdate = this.game.time;
 
-                                entity.movement.start(
-                                    this.game.time,
-                                    (y) => {
-                                        entity.y = y;
-                                        entity.moved();
-                                    },
-                                    () => {
-                                        entity.y = entity.movement.endValue;
-                                        entity.moved();
-                                        entity.nextStep();
-                                    },
-                                    entity.y + (isUp ? -1 : 1),
-                                    entity.y + (isUp ? -16 : 16),
-                                    entity.movementSpeed
-                                );
-
-                                break;
-                            }
-                        }
-                } else if (entity instanceof Projectile) {
-                    let projectile = entity,
-                        mDistance = projectile.speed * this.timeDifferential,
-                        dx = projectile.target.x - entity.x,
-                        dy = projectile.target.y - entity.y,
-                        tDistance = Math.sqrt(dx * dx + dy * dy),
-                        amount = mDistance / tDistance;
-
-                    projectile.updateAngle();
-
-                    if (amount > 1) amount = 1;
-
-                    entity.x += dx * amount;
-                    entity.y += dy * amount;
-
-                    if (tDistance < 5) projectile.impact();
-                }
+                return;
             }
+
+            // Only characters receive pathing/movement updates.
+            if (!(entity instanceof Character)) return;
+
+            // If a movement transition is in progress, we just update that transition.
+            if (entity.movement.inProgress) return entity.movement.step(this.game.time);
+
+            // Do not update if no pathing is in progress.
+            if (!entity.hasPath()) return;
+
+            // Check if the type of movement is on the x or y axis.
+            let isHorizontal =
+                    entity.orientation === Modules.Orientation.Left ||
+                    entity.orientation === Modules.Orientation.Right,
+                isVertical =
+                    entity.orientation === Modules.Orientation.Up ||
+                    entity.orientation === Modules.Orientation.Down,
+                isLeft,
+                isUp;
+
+            // Determine the specific direction for the movement.
+            if (isHorizontal) isLeft = entity.orientation === Modules.Orientation.Left;
+            if (isVertical) isUp = entity.orientation === Modules.Orientation.Up;
+
+            /**
+             * Here we essentially start a transition update loop for an entity. Depending
+             * on the entity's movement speed, we increment the entity's x/y position by a
+             * single pixel. We proceed to do this for the length of the tile size. For example
+             * for a movement speed of 100, the entity will traverse a tile of size 16x16 pixels
+             * in 100 milliseconds.
+             */
+
+            entity.movement.start(
+                this.game.time,
+                isHorizontal ? entity.x + (isLeft ? -1 : 1) : entity.y + (isUp ? -1 : 1),
+                isHorizontal
+                    ? entity.x + (isLeft ? -this.tileSize : this.tileSize)
+                    : entity.y + (isUp ? -this.tileSize : this.tileSize),
+                entity.movementSpeed,
+                (value) => {
+                    if (isHorizontal) entity.x = value;
+                    if (isVertical) entity.y = value;
+
+                    // Callback for when an entity has moved.
+                    entity.moved();
+                },
+                () => {
+                    if (isHorizontal) entity.x = entity.movement.endValue;
+                    if (isVertical) entity.y = entity.movement.endValue;
+
+                    // Callback for an entity movement.
+                    entity.moved();
+                    entity.nextStep();
+                }
+            );
         });
     }
 
+    /**
+     * Fading occurs when an entity first spawns into
+     * the world. It essentially gradually increases the
+     * alpha of the entity until it is fully visible
+     * when it first spawns into the world.
+     * @param entity The entity we are fading in for.
+     */
+
     private updateFading(entity: Entity): void {
-        if (!entity || !entity.fading) return;
+        if (!entity.fading) return;
 
         let { time } = this.game,
             dt = time - entity.fadingTime;
@@ -127,27 +136,44 @@ export default class Updater {
         } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
+    /**
+     * Updater for key input. When we toggle an arrow key
+     * or WSAD key, we monitor the status of the move conditionals
+     * within the player character. Depending on which one is active,
+     * we change the player's current position and let the input
+     * controller handle the movement itself.
+     */
+
     private updateKeyboard(): void {
-        let { player } = this.game,
+        let { player, input } = this.game,
             position = {
                 x: player.gridX,
                 y: player.gridY
             };
 
-        if (player.frozen) return;
+        /**
+         * Disable input if the player is frozen or if we
+         * do not have any of the conditionals active.
+         */
+        if (player.frozen || !player.hasKeyboardMovement()) return;
 
         if (player.moveUp) position.y--;
         else if (player.moveDown) position.y++;
         else if (player.moveRight) position.x++;
         else if (player.moveLeft) position.x--;
 
-        if (player.hasKeyboardMovement()) this.input.keyMove(position);
+        input.keyMove(position);
     }
 
-    private updateAnimations(): void {
-        let target = this.input.targetAnimation;
+    /**
+     * Updates the target animation (spinning tile selected animation) and
+     * the sparks animation displayed around items.
+     */
 
-        if (target && this.input.selectedCellVisible) target.update(this.game.time);
+    private updateAnimations(): void {
+        let target = this.game.input.targetAnimation;
+
+        if (target && this.game.input.selectedCellVisible) target.update(this.game.time);
 
         if (!this.sprites) return;
 
@@ -156,15 +182,29 @@ export default class Updater {
         sparks?.update(this.game.time);
     }
 
+    /**
+     * Runs the info update with the current game time.
+     */
+
     private updateInfos(): void {
         this.game.info.update(this.game.time);
     }
+
+    /**
+     * Updates the bubbles displayed around entities
+     * and posts the current game time.
+     */
 
     private updateBubbles(): void {
         this.game.bubble?.update(this.game.time);
 
         this.game.pointer?.update();
     }
+
+    /**
+     * Sets the sprite controller so that the updater can use it.
+     * @param sprites The sprites controller object.
+     */
 
     public setSprites(sprites: SpritesController): void {
         this.sprites = sprites;

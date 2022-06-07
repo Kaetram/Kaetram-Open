@@ -1,75 +1,39 @@
-import $ from 'jquery';
+import _ from 'lodash';
+
+import Menu from './menu';
+import Socket from '../network/socket';
+
+import log from '../lib/log';
 
 import { Packets } from '@kaetram/common/network';
 
-import type Game from '../game';
+export default class Warp extends Menu {
+    private list: NodeListOf<HTMLElement> = document.querySelectorAll('.map-button')!;
 
-export default class Wrap {
-    private mapFrame = $('#map-frame');
-    private button = $('#warp-button');
-    private close = $('#close-map-frame');
+    public constructor(private socket: Socket) {
+        super('#map-frame', '#close-map-frame', '#warp-button');
 
-    private warpCount = 0;
-
-    public constructor(private game: Game) {
-        this.load();
+        _.each(this.list, (element: HTMLElement) =>
+            element.addEventListener('click', () => this.handleWarp(element))
+        );
     }
 
-    private load(): void {
-        this.button.on('click', () => this.open());
+    /**
+     * Handles the interaction when a warp element is clicked.
+     * Extracts the id of the warp button, and sends a packet
+     * to the server containing the id.
+     * @param element Which warp button is being clicked.
+     */
 
-        this.close.on('click', () => this.hide());
+    private handleWarp(element: HTMLElement): void {
+        let id = parseInt(element.id.replace('warp', ''));
 
-        for (let i = 1; i < 7; i++) {
-            let warp = this.mapFrame.find(`#warp${i}`);
+        if (isNaN(id)) return log.error('Invalid warp element clicked.');
 
-            if (warp)
-                warp.on('click', (event) => {
-                    this.hide();
+        this.socket.send(Packets.Warp, {
+            id
+        });
 
-                    this.game.socket.send(Packets.Warp, [event.currentTarget.id.slice(4)]);
-                });
-
-            this.warpCount++;
-        }
-    }
-
-    public open(): void {
-        this.game.menu.hideAll();
-
-        this.toggle();
-
-        this.game.socket.send(Packets.Click, ['warp', this.button.hasClass('active')]);
-    }
-
-    private toggle(): void {
-        /**
-         * Just so it fades out nicely.
-         */
-
-        if (this.isVisible()) this.hide();
-        else this.display();
-    }
-
-    public isVisible(): boolean {
-        return this.mapFrame.css('display') === 'block';
-    }
-
-    private display(): void {
-        this.mapFrame.fadeIn('slow');
-        this.button.addClass('active');
-    }
-
-    public hide(): void {
-        this.mapFrame.fadeOut('fast');
-        this.button.removeClass('active');
-    }
-
-    public clear(): void {
-        for (let i = 0; i < this.warpCount; i++) this.mapFrame.find(`#warp${i}`).off('click');
-
-        this.close?.off('click');
-
-        this.button?.off('click');
+        this.hide();
     }
 }

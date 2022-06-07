@@ -2,18 +2,15 @@ import { Modules } from '@kaetram/common/network';
 import Entity from '../entity';
 
 export default class Item extends Entity {
-    public override type = Modules.EntityType.Item;
-
     public dropped = false;
 
     public constructor(
-        id: string,
-        kind: string,
-        public count: number,
-        public ability: number,
-        public abilityLevel: number
+        instance: string,
+        public count: number = 1,
+        public ability: number = -1,
+        public abilityLevel: number = -1
     ) {
-        super(id, kind);
+        super(instance, Modules.EntityType.Item);
     }
 
     public override idle(): void {

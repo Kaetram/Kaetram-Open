@@ -6,7 +6,7 @@ import Formulas from '../../../../info/formulas';
 import Hit from './hit';
 
 import type Character from '../character';
-import { Movement, Combat as CombatPacket, Projectile } from '../../../../network/packets';
+import { Movement, Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
 export default class Combat {
     public started = false;
@@ -106,7 +106,7 @@ export default class Combat {
         this.character.sendToRegions(
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.character.instance,
-                target: this.character.target?.instance,
+                target: this.character.target!.instance,
                 hit: hit.serialize()
             })
         );
@@ -122,9 +122,8 @@ export default class Combat {
             hit
         );
 
-        this.character.sendToRegions(
-            new Projectile(Opcodes.Projectile.Create, projectile.serialize())
-        );
+        // Spawn the projectile in the game client.
+        this.character.sendToRegions(new Spawn(projectile));
     }
 
     /**

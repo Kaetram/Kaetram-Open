@@ -194,7 +194,7 @@
                             Kaetram
                             <span class="right-ornament"></span>
                         </h1>
-                        <form>
+                        <form onsubmit="return false">
                             <input
                                 type="text"
                                 id="login-name-input"
@@ -204,7 +204,6 @@
                                 aria-label="Username"
                                 maxlength="32"
                                 autocomplete="username"
-                                readonly
                                 autofocus
                             />
                             <input
@@ -216,7 +215,6 @@
                                 aria-label="Password"
                                 maxlength="64"
                                 autocomplete="current-password"
-                                readonly
                             />
 
                             <label id="remember-me" class="check">
@@ -253,7 +251,7 @@
                             New Character
                             <span class="right-ornament"></span>
                         </h1>
-                        <form>
+                        <form onsubmit="return false">
                             <input
                                 type="text"
                                 id="register-name-input"
@@ -412,27 +410,6 @@
                     ><span class="loader-dot">.</span>
                 </div>
 
-                <button
-                    id="worlds-switch"
-                    type="button"
-                    title="Click to change worlds"
-                    aria-label="Click to change worlds"
-                >
-                    <b>World&nbsp;<span id="current-world-index">...</span></b>
-                    |
-                    <small id="current-world-count">0</small>
-                    <br />
-                    <span id="current-world-id">...</span>
-
-                    <div id="worlds-popup">
-                        <table id="worlds-list" title="Join world">
-                            <tr>
-                                <th>Server ID</th>
-                                <th>Players</th>
-                            </tr>
-                        </table>
-                    </div>
-                </button>
             </section>
 
             <a
@@ -461,9 +438,6 @@
                         <li><div id="chat-button"></div></li>
                         <li><div id="settings-button"></div></li>
                     </ul>
-                </div>
-                <div id="action-container">
-                    <ul></ul>
                 </div>
                 <div id="drop-dialog">
                     <div id="drop-title">Input drop count.</div>
@@ -498,8 +472,8 @@
                         <div id="quest-count" class="stroke"></div>
                         <div id="quest-list"><ul></ul></div>
                     </div>
-                    <div id="professions-page" class="page">
-                        <div id="professions-list"><ul></ul></div>
+                    <div id="skills-page" class="page">
+                        <div id="skills-list"><ul></ul></div>
                     </div>
                     <div id="guild-page" class="page"></div>
                     <div id="navigator">
@@ -585,12 +559,12 @@
                     <div class="health"></div>
                 </div>
                 <div id="map-frame">
+                    <div id="warp0" class="map-button"></div>
                     <div id="warp1" class="map-button"></div>
                     <div id="warp2" class="map-button"></div>
                     <div id="warp3" class="map-button"></div>
                     <div id="warp4" class="map-button"></div>
                     <div id="warp5" class="map-button"></div>
-                    <div id="warp6" class="map-button"></div>
                     <div id="close-map-frame" class="close"></div>
                 </div>
                 <div id="inventory"><ul></ul></div>
@@ -623,19 +597,19 @@
                         <div id="shards-count" class="item-count"></div>
                     </div>
                 </div>
-                <div id="shop">
-                    <div id="close-shop" class="close"></div>
-                    <div id="shop-container"><ul></ul></div>
-                    <div id="shop-inventory-container">
-                        <div id="shop-inventory-slots" class="inventory-slots">
+                <div id="store">
+                    <div id="close-store" class="close"></div>
+                    <div id="store-container"><ul></ul></div>
+                    <div id="store-inventory-container">
+                        <div id="store-inventory-slots" class="inventory-slots">
                             <ul></ul>
                         </div>
 
-                        <div id="shop-sell-slot">
-                            <div id="shop-sell-slot-text" class="item-count"></div>
+                        <div id="store-sell-slot">
+                            <div id="store-sell-slot-text" class="item-count"></div>
                         </div>
-                        <div id="shop-sell-slot-return">
-                            <div id="shop-sell-slot-return-text" class="item-count"></div>
+                        <div id="store-sell-slot-return">
+                            <div id="store-sell-slot-return-text" class="item-count"></div>
                         </div>
 
                         <div id="confirm-sell" class="ok"></div>
@@ -659,9 +633,12 @@
                     </div>
                     <div id="message"></div>
                 </div>
+                <div id="action-container">
+                    <ul></ul>
+                </div>
                 <div id="chat">
                     <div id="talk">
-                        <form>
+                        <form onsubmit="return false">
                             <input
                                 title="Enter your message!"
                                 id="chat-input"
@@ -676,7 +653,8 @@
                 </div>
                 <div id="player-info">
                     <div id="health"></div>
-                    <div id="health-bar">
+                    <div id="health-bar"></div>
+                    <div id="health-info">
                         <div id="health-bar-text"></div>
                     </div>
                     <div id="exp"></div>

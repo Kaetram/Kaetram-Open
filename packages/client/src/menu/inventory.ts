@@ -1,310 +1,335 @@
-import $ from 'jquery';
+import _ from 'lodash';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import Menu from './menu';
+import Actions from './actions';
 
-import * as Detect from '../utils/detect';
-import Container from './container/container';
+import log from '../lib/log';
+import Util from '../utils/util';
 
-import type Game from '../game';
-import type Slot from './container/slot';
-import MenuController from '../controllers/menu';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
 
-import Utils from '../utils/util';
+type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
 
-export default class Inventory {
-    private actions;
+interface SlotElement extends HTMLElement {
+    edible?: boolean;
+    equippable?: boolean;
+}
 
-    private body = $('#inventory');
-    private button = $('#inventory-button');
-    // private action = $('#action-container');
+export default class Inventory extends Menu {
+    private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
 
-    public container: Container;
+    // Used for when we open the action menu interface.
+    private selectedSlot = -1;
 
-    private selectedSlot: JQuery | null = null;
-    private selectedItem: Slot | null = null;
+    private selectCallback?: SelectCallback;
 
-    public constructor(
-        private game: Game,
-        private menu: MenuController,
-        public size: number,
-        data: SlotData[]
-    ) {
-        this.actions = this.menu.actions;
-        this.container = new Container(this.size);
+    public constructor(private actions: Actions) {
+        super('#inventory', undefined, '#inventory-button');
 
-        this.load(data);
+        this.load();
+
+        this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
     }
 
-    public load(data: SlotData[]): void {
-        let list = $('#inventory').find('ul');
+    /**
+     * Creates an empty inventory of the size defined in the
+     * constants. This may get adapted in the future for potential
+     * dynamic inventory sizes, though it has yet to be decided.
+     */
 
-        this.clear();
+    public load(): void {
+        if (!this.list) return log.error(`Could not create the skeleton for the inventory.`);
 
-        for (let index = 0; index < this.size; index++) {
-            // Create an empty item slot.
-            let itemSlot = $(`<div id="slot${index}" class="item-slot"></div>`),
-                itemSlotCount = $(
-                    `<div id="item-count${index}" class="inventory-item-count"></div>`
-                ),
-                slotElement = $('<li></li>').append(itemSlot).append(itemSlotCount);
-
-            itemSlot.dblclick((event) => this.clickDouble(event));
-
-            itemSlot.on('click', (event) => this.click(event));
-
-            list.append(slotElement);
-        }
-
-        this.button.on('click', () => this.open());
-
-        if (data.length === 0) return;
-
-        for (let slot of data) this.add(slot);
+        // Create slots based on the constants.
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+            this.list.append(this.createSlot(i));
     }
 
-    public add(info: SlotData): void {
-        let item = $(this.getList()[info.index]),
-            slot = this.container.slots[info.index];
+    /**
+     * Creates a select callback using the action parameter specified.
+     * @param action Which type of action is being performed.
+     */
 
-        if (!item || !slot) return;
-
-        // Have the server forcefully load data into the slot.
-        slot.load(
-            info.key,
-            info.count,
-            info.ability,
-            info.abilityLevel,
-            info.edible,
-            info.equippable
-        );
-
-        let cssSlot = item.find(`#slot${info.index}`);
-
-        cssSlot.css('background-image', Utils.getImageURL(slot.key));
-
-        cssSlot.css('background-size', '600%');
-
-        let { count, ability } = slot,
-            itemCount = count.toString();
-
-        if (count > 999_999)
-            itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
-        else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
-        else if (count < 2) itemCount = '';
-
-        item.find(`#item-count${info.index}`).text(itemCount);
-
-        if (ability! > -1) {
-            let eList = Object.keys(Modules.Enchantment), // enchantment list
-                enchantment = eList[ability!];
-
-            if (enchantment) item.find(`#item-count${info.index}`).text(enchantment);
-        }
-    }
-
-    public open(): void {
-        this.menu.hideAll();
-
-        if (this.isVisible()) this.hide();
-        else this.display();
-
-        this.game.socket.send(Packets.Click, ['inventory', this.button.hasClass('active')]);
-    }
-
-    private click(event: JQuery.ClickEvent): void {
-        let index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index],
-            item = $(this.getList()[index]);
-
-        this.clearSelection();
-
-        if (slot.key === null || slot.count === -1 || slot.key === 'null') return;
-
-        this.actions.loadDefaults('inventory');
-
-        if (slot.edible) this.actions.add($('<div id="eat" class="action-button">Eat</div>'));
-        else if (slot.equippable)
-            this.actions.add($('<div id="wield" class="action-button">Wield</div>'));
-        else if (slot.count > 999_999)
-            this.actions.add($('<div id="item-info" class="action-button">Info</div>'));
-
-        if (!this.actions.isVisible()) this.actions.show();
-
-        let sSlot = item.find(`#slot${index}`);
-
-        sSlot.addClass('select');
-
-        this.selectedSlot = sSlot;
-        this.selectedItem = slot;
-
-        this.actions.hideDrop();
-    }
-
-    private clickDouble(event: JQuery.DoubleClickEvent): void {
-        let index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index];
-
-        if (!slot.edible && !slot.equippable) return;
-
-        let item = $(this.getList()[index]),
-            sSlot = item.find(`#slot${index}`);
-
-        this.clearSelection();
-
-        this.selectedSlot = sSlot;
-        this.selectedItem = slot;
-
-        this.clickAction(slot.edible ? 'eat' : 'wield');
-
-        this.actions.hideDrop();
-    }
-
-    public clickAction(event: string | JQuery.ClickEvent): void {
-        let action = (event as JQuery.ClickEvent).currentTarget?.id || event;
-
-        if (!this.selectedSlot || !this.selectedItem) return;
-
-        switch (action) {
-            case 'eat':
-            case 'wield':
-                this.game.socket.send(Packets.Container, [
-                    Modules.ContainerType.Inventory,
-                    Opcodes.Container.Select,
-                    this.selectedItem.index
-                ]);
-                this.clearSelection();
-
-                break;
-
-            case 'drop':
-                if (this.selectedItem.count > 1) {
-                    if (Detect.isMobile()) this.hide(true);
-
-                    this.actions.displayDrop('inventory');
-                } else {
-                    this.game.socket.send(Packets.Container, [
-                        Modules.ContainerType.Inventory,
-                        Opcodes.Container.Drop,
-                        this.selectedItem.index
-                    ]);
-                    this.clearSelection();
-                }
-
-                break;
-
-            case 'drop-accept': {
-                let count = parseInt($('#drop-count').val() as string);
-
-                if (isNaN(count) || count < 1) return;
-
-                this.game.socket.send(Packets.Container, [
-                    Modules.ContainerType.Inventory,
-                    Opcodes.Container.Drop,
-                    this.selectedItem.index,
-                    count
-                ]);
-                this.actions.hideDrop();
-                this.clearSelection();
-
-                break;
-            }
-
-            case 'drop-cancel':
-                this.actions.hideDrop();
-                this.clearSelection();
-
-                break;
-
-            case 'itemInfo': {
-                this.game.input.chatHandler.add(
-                    'WORLD',
-                    `You have ${this.selectedItem.count} coins.`
-                );
-
-                break;
-            }
-        }
+    private handleAction(action: Modules.MenuActions): void {
+        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(action));
 
         this.actions.hide();
     }
 
-    public remove(info: SlotData): void {
-        let { index, count } = info,
-            item = $(this.getList()[index]),
-            slot = this.container.slots[index];
+    /**
+     * Loads the batch data into the inventory from the server. Each
+     * slot is selected from the list element.
+     * @param slots Serialized slots received from the server. We take
+     * the index contained within these slots and attribute them
+     * to the index within our slot list.
+     */
 
-        if (!item || !slot) return;
+    public override batch(slots: SlotData[]): void {
+        _.each(slots, (slot: SlotData) => {
+            if (!slot.key) return;
 
-        slot.count = count;
-        let itemCount = slot.count.toString();
+            this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+        });
+    }
 
-        if (slot.count === 1) itemCount = '';
+    /**
+     * Uses the slot's index to add an item into our inventory UI.
+     * @param slot Contains data about the item we are adding.
+     */
 
-        item.find(`#item-count${index}`).text(itemCount);
+    public override add(slot: SlotData): void {
+        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+    }
 
-        if (slot.count < 1) {
-            item.find(`#slot${index}`).css('background-image', '');
-            item.find(`#item-count${index}`).text('');
-            slot.empty();
+    /**
+     * Removes an item from our inventory and resets the slot to
+     * its default state.
+     * @param slot Contains index of the slot we are removing.
+     */
+
+    public override remove(slot: SlotData): void {
+        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+    }
+
+    /**
+     * Used for updating the currently selected slot while
+     * the action menu is open.
+     * @param index Index of the slot we are currently selected.
+     */
+
+    private select(index: number, doubleClick = false): void {
+        let element = this.getElement(index);
+
+        // If the slot is empty, we do not want to select it.
+        if (this.isEmpty(element)) return this.actions.hide();
+
+        // Update the currently selected slot.
+        this.selectedSlot = index;
+
+        /**
+         * When we double click, we only determine if the item is edible or
+         * equippable. If any of those properties are true, we skip having
+         * to display the action menu and send the packet.
+         */
+
+        if (doubleClick) {
+            if (element.edible) this.handleAction(Modules.MenuActions.Eat);
+            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+
+            return;
         }
+
+        /**
+         * Here we create a list of all the actions pertaining to the slot
+         * based on the equippable and edible properties. This list can always
+         * be expanded as more item properties are added.
+         */
+
+        let actions: Modules.MenuActions[] = [];
+
+        if (element.edible) actions.push(Modules.MenuActions.Eat);
+        if (element.equippable) actions.push(Modules.MenuActions.Equip);
+
+        // Push drop option as the last one.
+        actions.push(Modules.MenuActions.Drop);
+
+        let position = this.getPosition(element);
+
+        this.actions.show(actions, position.x, position.y);
     }
 
-    public resize(): void {
-        let list = this.getList();
+    /**
+     * Event handler for when a slot begins the dragging and dropping
+     * process. We udate the current index of the slot that is being
+     * selected for later use.
+     * @param index The index of the slot being dragged.
+     */
 
-        for (let [i, element] of [...list].entries()) {
-            let item = $(element).find(`#slot${i}`),
-                slot = this.container.slots[i];
+    private dragStart(index: number): void {
+        if (this.isEmpty(this.getElement(index))) return;
 
-            if (!slot) continue;
-
-            if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', Utils.getImageURL(slot.key));
-        }
+        this.selectedSlot = index;
     }
 
-    private clearSelection(): void {
-        if (!this.selectedSlot) return;
+    /**
+     * The drop event within the drag and drop actions. The target represents
+     * the slot that the item is being dropped into.
+     * @param event Contains event data about the target.
+     */
 
-        this.selectedSlot.removeClass('select');
-        this.selectedSlot = null;
-        this.selectedItem = null;
+    private dragDrop(event: DragEvent, index: number): void {
+        let element = event.target as HTMLElement;
+
+        if (!element) return;
+
+        // Remove the selected slot class property.
+        element.classList.remove('item-slot-focused');
+
+        if (this.selectedSlot === -1) return;
+
+        // Create a callback used when we swap an item from `selectedSlot` to index.
+        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
+
+        // Reset the selected slot after.
+        this.selectedSlot = -1;
     }
 
-    private display(): void {
-        this.body.fadeIn('fast');
-        this.button.addClass('active');
+    /**
+     * Event handler for when a slot is being dragged over (but not dropped).
+     * We use this to give the user feedback on which slot they are hovering.
+     * @param event Contains event data and the slot element that is being hovered.
+     */
+
+    private dragOver(event: DragEvent): void {
+        // Check that a target exists firstly.
+        if (!event.target || !(event.target as HTMLElement).draggable) return;
+
+        event.preventDefault();
+
+        // Add the slot focused class property.
+        (event.target as HTMLElement).classList.add('item-slot-focused');
     }
 
-    public hide(keepSelection = false): void {
-        this.button.removeClass('active');
+    /**
+     * Event handler for when an item being dragged exits a valid slot area.
+     * @param event Contains the target slot that is exited.
+     */
 
-        this.body.fadeOut('slow');
-        this.button.removeClass('active');
-
-        if (!keepSelection) this.clearSelection();
+    private dragLeave(event: DragEvent): void {
+        // Remove the slot focused class.
+        (event.target as HTMLElement).classList.remove('item-slot-focused');
     }
 
-    public clear(): void {
-        $('#inventory').find('ul').empty();
+    /**
+     * Sets the slot's image and count at a specified index. If no key is provided
+     * then we remove the slot's `backgroundImage` property and set the count to
+     * an empty string.
+     * @param index Index at which we are updating the slot data.
+     * @param key Optional parameter that is used to get the image for the slot.
+     * @param count Integer value to assign to the slot.
+     * @param edible Boolean value that determines if the item in the slot is edible.
+     * @param equippable Boolean value that determines if the item in the slot is equippable.
+     */
 
-        this.button?.off('click');
+    private setSlot(index: number, key = '', count = 1, edible = false, equippable = false): void {
+        let slotElement = this.getElement(index);
+
+        if (!slotElement) return log.error(`Could not find slot element at: ${index}`);
+
+        let countElement = slotElement.querySelector('.inventory-item-count');
+
+        if (countElement) countElement.textContent = Util.getCount(count);
+
+        slotElement.style.backgroundImage = key ? Util.getImageURL(key) : '';
+
+        // Update the edible and equippable properties.
+        slotElement.edible = edible;
+        slotElement.equippable = equippable;
     }
 
-    // getScale(): number {
-    //     return this.game.renderer.getScale();
-    // }
+    /**
+     * Creates a slot element using the DOM. The slot is
+     * used when we want to add an item to the invnetory.
+     * @returns A list element containing an empty slot.
+     */
 
-    public getSize(): number {
-        return this.container.size;
+    private createSlot(index: number): HTMLLIElement {
+        let slot = document.createElement('li'),
+            item = document.createElement('div'),
+            count = document.createElement('div');
+
+        // Assign the class to the slot and make it draggable.
+        item.draggable = true;
+        item.classList.add('item-slot');
+
+        // Add the class element onto the count.
+        count.classList.add('inventory-item-count');
+
+        // Append the count onto the item slot.
+        item.append(count);
+
+        // Append the item onto the slot list element.
+        slot.append(item);
+
+        // Add the click event listeners to the slot.
+        slot.addEventListener('click', () => this.select(index));
+        slot.addEventListener('dblclick', () => this.select(index, true));
+        slot.addEventListener('dragstart', () => this.dragStart(index));
+        slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, index));
+        slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
+        slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
+
+        return slot;
     }
 
-    private getList(): JQuery {
-        return $('#inventory').find('ul').find('li');
+    /**
+     * Sets the body's display style to `none` and
+     * clears all the items from the bank user interface.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        // Reset the selected slot whenever the menu is hidden.
+        this.selectedSlot = -1;
+
+        this.actions.hide();
     }
 
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
+    /**
+     * Checks whether the specified element is empty by verifying its
+     * background image property.
+     * @param element SlotElement that we are checking.
+     * @returns Whether or not the background image style is an empty string or not.
+     */
+
+    private isEmpty(element: SlotElement): boolean {
+        return element.style.backgroundImage === '';
+    }
+
+    /**
+     * Grabs the `div` slot element within the `li` element.
+     * @param index The index of the slot we are grabbing.
+     * @returns An HTMLElement for the slot.
+     */
+
+    private getElement(index: number): SlotElement {
+        return this.list.children[index].querySelector('div') as HTMLElement;
+    }
+
+    /**
+     * Retrieves the absolute position of an element
+     * relative to the screen.
+     * @param element The element we are extracting position of.
+     * @returns A position object containing the x and y coordinates.
+     */
+
+    private getPosition(element: HTMLElement): Position {
+        let boundingRect = element.getBoundingClientRect();
+
+        return {
+            x: boundingRect.left - boundingRect.width,
+            y: boundingRect.top - boundingRect.height * 2
+        };
+    }
+
+    /**
+     * Iterates through all the children of the inventory list
+     * and returns the index and the element.
+     * @param callback Contains the index and the slot HTML element.
+     */
+
+    public forEachSlot(callback: (index: number, slot: SlotElement) => void): void {
+        for (let i = 0; i < this.list.children.length; i++) callback(i, this.getElement(i));
+    }
+
+    /**
+     * Callback for when an item slot element is selected.
+     * @param callback Contains the index of the slot selected.
+     */
+
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 }

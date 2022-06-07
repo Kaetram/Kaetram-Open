@@ -6,12 +6,14 @@ import Lumberjacking from './skill/impl/lumberjacking';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import { Experience } from '@kaetram/server/src/network/packets';
+import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
 
 export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
 
     private skills: Skill[] = [this.lumberjacking];
+
+    private loadCallback?: () => void;
 
     public constructor(private player: Player) {
         this.loadCallbacks();
@@ -30,6 +32,8 @@ export default class Skills {
 
             if (skill) skill.setExperience(skillData.experience);
         });
+
+        this.loadCallback?.();
     }
 
     /**
@@ -52,7 +56,17 @@ export default class Skills {
         this.forEachSkill((skill: Skill) => skill.stop());
     }
 
+    /**
+     * Handles skill-based experience gain.
+     * @param type The skill that gained experience.
+     * @param name The name of the skill.
+     * @param experience The amount of experience the skill has.
+     * @param level The amount of levels the skill has.
+     * @param newLevel Whether the player has gained a new level.
+     */
+
     private handleExperience(
+        type: Modules.Skills,
         name: string,
         experience: number,
         level: number,
@@ -67,10 +81,12 @@ export default class Skills {
 
         this.player.send(
             new Experience(Opcodes.Experience.Skill, {
-                id: this.player.instance,
+                instance: this.player.instance,
                 amount: experience
             })
         );
+
+        this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
     }
 
     /**
@@ -95,13 +111,14 @@ export default class Skills {
     /**
      * Iterates through all the skills and serializes their data.
      * The data is stored in an array so that it can be parsed.
+     * @param includeLevel Whether to include the level in the serialized data.
      * @returns Array containing data for each skill (at each index).
      */
 
-    public serialize(): SerializedSkills {
+    public serialize(includeLevel = false): SerializedSkills {
         let skills: SkillData[] = [];
 
-        this.forEachSkill((skill: Skill) => skills.push(skill.serialize()));
+        this.forEachSkill((skill: Skill) => skills.push(skill.serialize(includeLevel)));
 
         return {
             skills
@@ -115,5 +132,14 @@ export default class Skills {
 
     private forEachSkill(callback: (skill: Skill) => void): void {
         _.each(this.skills, callback);
+    }
+
+    /**
+     * Callback for when the skills are loaded from the database,
+     * a batch data of skills is sent to the client.
+     */
+
+    public onLoaded(callback: () => void): void {
+        this.loadCallback = callback;
     }
 }

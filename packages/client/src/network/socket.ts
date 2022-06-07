@@ -16,7 +16,7 @@ export default class Socket {
 
     public constructor(private game: Game) {
         this.config = game.app.config;
-        this.messages = new Messages(game.app);
+        this.messages = new Messages(game);
     }
 
     /**
@@ -29,11 +29,7 @@ export default class Socket {
         // Skip if hub is disabled in the config.
         if (!this.config.hub) return callback();
 
-        // Connect to specified game world if the worldSwitch is active.
-        if (this.config.worldSwitch) return callback(this.game.world);
-
         // Attempt to get API data from the hub.
-
         try {
             $.get(`${this.config.hub}/server`, (response) => {
                 console.log(response);
@@ -130,8 +126,7 @@ export default class Socket {
         this.game.app.toggleLogin(false);
 
         this.game.app.sendError(
-            null,
-            this.game.isDebug()
+            window.config.debug
                 ? `Couldn't connect to ${host}:${port}`
                 : 'Could not connect to the game server.'
         );

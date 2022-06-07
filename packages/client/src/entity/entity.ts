@@ -28,19 +28,19 @@ export default abstract class Entity {
 
     public name = '';
 
-    public type = -1;
-
     public sprite!: Sprite;
 
     public spriteFlipX = false;
     public spriteFlipY = false;
 
+    public animation!: Animation | null;
+
     private animations!: Animations;
-    public currentAnimation!: Animation | null;
     protected idleSpeed = 450;
 
     public shadowOffsetY = 0;
     public hidden = false;
+    public targeted = false;
 
     public spriteLoaded = false;
     private visible = true;
@@ -53,7 +53,6 @@ export default abstract class Entity {
     public stunned = false;
     public terror = false;
 
-    // public nonPathable = false;
     public hasCounter = false;
 
     public countdownTime = 0;
@@ -61,14 +60,6 @@ export default abstract class Entity {
     public fadingDuration = 1000;
 
     public orientation!: Modules.Orientation;
-
-    public renderingData = {
-        scale: -1,
-        angle: 0
-    } as EntityRenderingData;
-
-    // private dirty = false;
-    // private dirtyCallback?: () => void;
 
     public fadingTime!: number;
     private blinking!: number;
@@ -81,8 +72,8 @@ export default abstract class Entity {
     public attackRange!: number;
     public mana!: number | number[];
     public maxMana!: number;
-    public experience!: number;
-    public level!: number;
+    public level = 0;
+    public experience = 0;
     public movementSpeed!: number;
     public frozen!: boolean;
     public teleporting!: boolean;
@@ -94,28 +85,16 @@ export default abstract class Entity {
     public nextGridX!: number;
     public nextGridY!: number;
     public fadingAlpha!: number;
+    public lastUpdate = Date.now();
 
-    protected constructor(public id: string, public kind: string) {
-        // this.loadDirty();
-    }
-
-    // /**
-    //  * This is important for when the client is
-    //  * on a mobile screen. So the sprite has to be
-    //  * handled differently.
-    //  */
-    // protected loadDirty(): void {
-    //     this.dirty = true;
-
-    //     this.dirtyCallback?.();
-    // }
+    public constructor(public instance = '', public type: Modules.EntityType) {}
 
     public fadeIn(time: number): void {
         this.fading = true;
         this.fadingTime = time;
     }
 
-    public blink(speed: number): void {
+    public blink(speed = 150): void {
         this.blinking = window.setInterval(() => this.toggleVisibility(), speed);
     }
 
@@ -129,10 +108,6 @@ export default abstract class Entity {
 
     public idle(): void {
         //
-    }
-
-    public setName(name: string): void {
-        this.name = name;
     }
 
     public setSprite(sprite: Sprite | undefined): void {
@@ -159,23 +134,31 @@ export default abstract class Entity {
     }
 
     public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
-        let { spriteLoaded, animations } = this;
+        if (!this.spriteLoaded || this.animation?.name === name) return;
 
-        if (!spriteLoaded || this.currentAnimation?.name === name) return;
-
-        let anim = animations[name];
+        let anim = this.animations[name];
 
         if (!anim) return;
 
-        this.currentAnimation = anim;
+        this.animation = anim;
 
-        let { currentAnimation } = this;
+        if (name.startsWith('atk')) this.animation.reset();
 
-        if (name.startsWith('atk')) currentAnimation.reset();
+        this.animation.setSpeed(speed);
 
-        currentAnimation.setSpeed(speed);
+        this.animation.setCount(count, onEndCount || (() => this.idle()));
+    }
 
-        currentAnimation.setCount(count, onEndCount || (() => this.idle()));
+    /**
+     * Animates the character's death animation and
+     * creates a callback if needed.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.setAnimation('death', speed, count, callback);
     }
 
     private setPosition(x: number, y: number): void {
@@ -218,34 +201,11 @@ export default abstract class Entity {
         return x > y ? x : y;
     }
 
-    // getCoordDistance(toX: number, toY: number): number {
-    //     let x = Math.abs(this.gridX - toX);
-    //     let y = Math.abs(this.gridY - toY);
-
-    //     return x > y ? x : y;
-    // }
-
-    // inAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 2 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // inExtraAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 3 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // getSprite(): string {
-    //     return this.sprite.name;
-    // }
-
     public getAngle(): number {
+        return 0;
+    }
+
+    public getTimeDiff(): number {
         return 0;
     }
 
@@ -296,12 +256,4 @@ export default abstract class Entity {
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
     }
-
-    // onReady(callback: () => void): void {
-    //     this.readyCallback = callback;
-    // }
-
-    // onDirty(callback: () => void): void {
-    //     this.dirtyCallback = callback;
-    // }
 }

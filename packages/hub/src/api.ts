@@ -201,7 +201,6 @@ export default class API {
      * @param source Who is sending the message.
      * @param text The contents of the message.
      * @param colour The colour of the messsage.
-     * @param username Username of the player the message is sent to.
      */
 
     private sendChat(
@@ -209,17 +208,17 @@ export default class API {
         key: string,
         source: string,
         text: string,
-        colour: string,
-        username?: string
+        colour: string
     ): void {
         let url = Utils.getUrl(server.host, server.apiPort, 'chat'),
             data = {
                 accessToken: server.accessToken,
                 text,
                 source,
-                colour,
-                username
+                colour
             };
+
+        console.log(server);
 
         axios
             .post(url, data)
