@@ -3,6 +3,7 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 import Animation from '../entity/animation';
 import log from '../lib/log';
 import Chat from './chat';
+import HUDController from './hud';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -13,7 +14,6 @@ import type App from '../app';
 import type Map from '../map/map';
 
 import { isMobile } from '../utils/detect';
-import HUDController from './hud';
 
 interface TargetData {
     sprite: Sprite;
@@ -68,7 +68,7 @@ export default class InputController {
         this.app.onKeyUp(this.handleKeyUp.bind(this));
 
         //this.app.onKeyDown(this.handle.bind(this));
-        this.app.onMouseMove((event: JQuery.MouseMoveEvent) => {
+        this.app.onMouseMove((event: MouseEvent) => {
             if (!this.game.started) return;
 
             this.setCoords(event);
@@ -100,10 +100,10 @@ export default class InputController {
     /**
      * Handles the input coming from the left click of the mouse.
      * This is the equivalent to a tap on a mobile device.
-     * @param event JQuery event containing click data on the screen.
+     * @param event DOM event containing click data on the screen.
      */
 
-    private handleLeftClick(event: JQuery.ClickEvent): void {
+    private handleLeftClick(event: MouseEvent): void {
         this.setCoords(event);
 
         this.keyMovement = false;
@@ -123,10 +123,10 @@ export default class InputController {
      * A right click is called a ContextMenuEvent. Here we determine
      * the coordinates of the click, and use that to activate the
      * action menu at that location.
-     * @param event JQuery event containing click position information.
+     * @param event DOM event containing click position information.
      */
 
-    private handleRightClick(event: JQuery.ContextMenuEvent): void {
+    private handleRightClick(event: PointerEvent): void {
         this.setCoords(event);
 
         let position = this.getCoords(),
@@ -134,6 +134,7 @@ export default class InputController {
 
         if (!entity) return;
 
+        console.log(entity);
         //this.game.menu.actions.show();
     }
 
@@ -141,10 +142,10 @@ export default class InputController {
      * Input handler for when a key goes down. Note that this only
      * gets toggled in the event that the key is pressed down, and until
      * the key is released (key up event) and pressed again, it won't call.
-     * @param event The JQuery event containing key information.
+     * @param event The DOM event containing key information.
      */
 
-    private handleKeyDown(event: JQuery.KeyDownEvent): void {
+    private handleKeyDown(event: KeyboardEvent): void {
         if (this.chatHandler.inputVisible()) return this.chatHandler.keyDown(event.key);
 
         switch (event.key) {
@@ -205,10 +206,10 @@ export default class InputController {
     /**
      * Event handler for when the key is released. This function's
      * primary purpose is to stop movement when the key is released.
-     * @param event JQuery event data containing key information.
+     * @param event DOM event data containing key information.
      */
 
-    public handleKeyUp(event: JQuery.KeyUpEvent): void {
+    public handleKeyUp(event: KeyboardEvent): void {
         switch (event.key) {
             case 'w':
             case 'ArrowUp':
@@ -439,9 +440,7 @@ export default class InputController {
      * @param event The event object containing the mouse's position.
      */
 
-    public setCoords(
-        event: JQuery.MouseMoveEvent | JQuery.ClickEvent | JQuery.ContextMenuEvent
-    ): void {
+    public setCoords(event: MouseEvent | PointerEvent): void {
         let { width, height } = this.game.renderer.background;
 
         // Set the mouse position to the x and y coordinates within the event.
