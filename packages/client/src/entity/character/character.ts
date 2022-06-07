@@ -7,30 +7,14 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
+type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
+
 export default class Character extends Entity {
-    public override nextGridX = -1;
-    public override nextGridY = -1;
-
-    // private prevGridX = -1;
-    // private prevGridY = -1;
-
-    public override orientation = Modules.Orientation.Down;
-
-    public override hitPoints = -1;
-    public maxHitPoints = -1;
-    public override mana = -1;
-    public override maxMana = -1;
-
     public healthBarVisible = false;
 
-    public override dead = false;
+    public maxHitPoints = -1;
     private following = false;
-    // private attacking = false;
     private interrupted = false;
-
-    public override critical = false;
-    public override frozen = false;
-    public override stunned = false;
     public explosion = false;
     public healing = false;
 
@@ -43,19 +27,31 @@ export default class Character extends Entity {
 
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 100;
+
+    public override nextGridX = -1;
+    public override nextGridY = -1;
     public override movementSpeed = -1;
-
     public override attackRange = 1;
+    public override critical = false;
+    public override frozen = false;
+    public override stunned = false;
+    public override dead = false;
 
-    private criticalAnimation!: Animation;
-    private terrorAnimation!: Animation;
-    private stunAnimation!: Animation;
-    private explosionAnimation!: Animation;
-    private healingAnimation!: Animation;
+    public override orientation = Modules.Orientation.Down;
+
+    public override hitPoints = -1;
+    public override mana = -1;
+    public override maxMana = -1;
 
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
+
+    private criticalAnimation: Animation = new Animation('atk_down', 10, 0, 48, 48);
+    private terrorAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private stunAnimation: Animation = new Animation('atk_down', 6, 0, 48, 48);
+    private explosionAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private healingAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
 
     private secondStepCallback?(): void;
     private beforeStepCallback?(): void;
@@ -64,99 +60,113 @@ export default class Character extends Entity {
     private startPathingCallback?(path: number[][]): void;
     private moveCallback?(): void;
     private requestPathCallback?(x: number, y: number): number[][] | null;
-    private hitPointsCallback?(hitPoints: number): void;
-    private maxHitPointsCallback?(maxHitPoints: number): void;
+    private hitPointsCallback?: HitPointsCallback;
 
-    public instance!: string;
     public forced!: boolean;
 
     public handler = new EntityHandler(this);
 
-    public constructor(id: string, kind: string) {
-        super(id, kind);
+    public constructor(instance: string, type: Modules.EntityType) {
+        super(instance, type);
 
-        this.loadGlobals();
+        this.loadAnimations();
     }
 
-    private loadGlobals(): void {
-        // Critical Hit Animation
-        let critical = new Animation('atk_down', 10, 0, 48, 48);
-        critical.setSpeed(30);
+    /**
+     * Loads animations used for special effects.
+     */
 
-        critical.setCount(1, () => {
+    private loadAnimations(): void {
+        // Critical Hit Animation
+        this.criticalAnimation.setSpeed(30);
+        this.criticalAnimation.setCount(1, () => {
             this.critical = false;
 
-            critical.reset();
-            critical.count = 1;
+            this.criticalAnimation.reset();
+            this.criticalAnimation.count = 1;
         });
-        this.criticalAnimation = critical;
 
         // Terror Animation
-        let terror = new Animation('explosion', 8, 0, 64, 64);
-        terror.setSpeed(50);
-
-        terror.setCount(1, () => {
+        this.terrorAnimation.setSpeed(50);
+        this.terrorAnimation.setCount(1, () => {
             this.terror = false;
 
-            terror.reset();
-            terror.count = 1;
+            this.terrorAnimation.reset();
+            this.terrorAnimation.count = 1;
         });
-        this.terrorAnimation = terror;
 
         // Stunned Animation
-        let stun = new Animation('atk_down', 6, 0, 48, 48);
-        stun.setSpeed(30);
-        this.stunAnimation = stun;
+        this.stunAnimation.setSpeed(30);
 
         // Explosion Animation
-        let explosion = new Animation('explosion', 8, 0, 64, 64);
-        explosion.setSpeed(50);
-
-        explosion.setCount(1, () => {
+        this.explosionAnimation.setSpeed(50);
+        this.explosionAnimation.setCount(1, () => {
             this.explosion = false;
 
-            explosion.reset();
-            explosion.count = 1;
+            this.explosionAnimation.reset();
+            this.explosionAnimation.count = 1;
         });
-        this.explosionAnimation = explosion;
 
         // Healing Animation
-        let healing = new Animation('explosion', 8, 0, 48, 48);
-        healing.setSpeed(50);
+        this.healingAnimation.setSpeed(50);
 
-        healing.setCount(1, () => {
+        this.healingAnimation.setCount(1, () => {
             this.healing = false;
 
-            healing.reset();
-            healing.count = 1;
+            this.healingAnimation.reset();
+            this.healingAnimation.count = 1;
         });
-        this.healingAnimation = healing;
     }
 
-    public animate(
-        animation: string,
-        speed: number,
-        count?: number,
-        onEndCount?: () => void
-    ): void {
-        let o = ['atk', 'walk', 'idle'],
-            { orientation, currentAnimation } = this;
+    public animate(animation: string, speed: number, count = 1, onEndCount?: () => void): void {
+        let o = ['atk', 'walk', 'idle'];
 
-        if (currentAnimation?.name === 'death') return;
+        if (this.animation?.name === 'death') return;
 
         this.spriteFlipX = false;
         this.spriteFlipY = false;
 
         if (o.includes(animation)) {
             animation += `_${
-                orientation === Modules.Orientation.Left
-                    ? 'right'
-                    : this.orientationToString(orientation)
+                this.orientation === Modules.Orientation.Left ? 'right' : this.orientationToString()
             }`;
-            this.spriteFlipX = orientation === Modules.Orientation.Left;
+            this.spriteFlipX = this.orientation === Modules.Orientation.Left;
         }
 
         this.setAnimation(animation, speed, count, onEndCount);
+    }
+
+    /**
+     * Animates the character's death animation and
+     * creates a callback if needed.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public override animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.animate('death', speed, count, callback);
+    }
+
+    /**
+     * Briefly changes the character's sprite with that of the
+     * hurt sprite (a white and red sprite when a character is hurt).
+     */
+
+    public toggleHurt(): void {
+        this.sprite = this.hurtSprite;
+
+        window.setTimeout(() => {
+            this.sprite = this.normalSprite;
+        }, 75);
+    }
+
+    public despawn(): void {
+        this.hitPoints = 0;
+        this.dead = true;
+        this.stop();
+
+        this.orientation = Modules.Orientation.Down;
     }
 
     public follow(entity: Entity): void {
@@ -172,28 +182,11 @@ export default class Character extends Entity {
         this.move(x, y);
     }
 
-    // attack(attacker: Entity, character: Character): void {
-    //     this.attacking = true;
-
-    //     this.follow(character);
-    // }
-
-    // backOff(): void {
-    //     // this.attacking = false;
-    //     this.following = false;
-
-    //     this.removeTarget();
-    // }
-
     public addAttacker(character: Character): void {
         if (this.hasAttacker(character)) return;
 
         this.attackers[character.instance] = character;
     }
-
-    // removeAttacker(character: Character): void {
-    //     if (this.hasAttacker(character)) delete this.attackers[character.id];
-    // }
 
     private hasAttacker(character: Character): boolean {
         let { attackers } = this;
@@ -231,8 +224,14 @@ export default class Character extends Entity {
         this.performAction(orientation, Modules.Actions.Idle);
     }
 
-    private orientationToString(o: Modules.Orientation) {
-        switch (o) {
+    /**
+     * Converts the current orientation to a string that can
+     * be used in the animations.
+     * @returns String of the current orientation.
+     */
+
+    private orientationToString(): string {
+        switch (this.orientation) {
             case Modules.Orientation.Left:
                 return 'left';
 
@@ -258,6 +257,13 @@ export default class Character extends Entity {
         this.idle();
     }
 
+    /**
+     * Begins the movement of the entity to the given position.
+     * @param x The grid x position to move to.
+     * @param y The grid y position to move to.
+     * @param forced Forced movement overrides any other movement.
+     */
+
     public go(x: number, y: number, forced = false): void {
         if (this.frozen) return;
 
@@ -267,6 +273,11 @@ export default class Character extends Entity {
         }
 
         this.move(x, y, forced);
+    }
+
+    private move(x: number, y: number, forced = false): void {
+        if (this.hasPath() && !forced) this.proceed(x, y);
+        else this.followPath(this.requestPathfinding(x, y));
     }
 
     private proceed(x: number, y: number): void {
@@ -291,9 +302,6 @@ export default class Character extends Entity {
             path: number[][] | null;
 
         if (this.step % 2 === 0 && this.secondStepCallback) this.secondStepCallback();
-
-        // this.prevGridX = this.gridX;
-        // this.prevGridY = this.gridY;
 
         if (!this.hasPath()) return;
 
@@ -337,20 +345,29 @@ export default class Character extends Entity {
         }
     }
 
+    /**
+     * Determines which orientation the entity should be facing
+     * and animates the repsective walking animation.
+     */
+
     private updateMovement(): void {
         let { path, step } = this;
 
         if (!path) return;
 
+        // nextStepX < prevStepX -> walking to the left
         if (path[step][0] < path[step - 1][0])
             this.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
 
+        // nextStepX > prevStepX -> walking to the right
         if (path[step][0] > path[step - 1][0])
             this.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
 
+        // nextStepY < prevStepY -> walking to the top
         if (path[step][1] < path[step - 1][1])
             this.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
 
+        // nextStepY > prevStepY -> walking to the bottom
         if (path[step][1] > path[step - 1][1])
             this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
     }
@@ -371,18 +388,6 @@ export default class Character extends Entity {
         this.startPathingCallback?.(path);
 
         this.nextStep();
-    }
-
-    private move(x: number, y: number, forced = false): void {
-        // this.destination = {
-        //     gridX: x,
-        //     gridY: y
-        // };
-
-        // this.adjacentTiles = {};
-
-        if (this.hasPath() && !forced) this.proceed(x, y);
-        else this.followPath(this.requestPathfinding(x, y));
     }
 
     public stop(force = false): void {
@@ -413,13 +418,7 @@ export default class Character extends Entity {
         if (this.healing) return this.healingAnimation;
     }
 
-    public getActiveEffect():
-        | 'criticaleffect'
-        | 'stuneffect'
-        | 'explosion-terror'
-        | 'explosion-fireball'
-        | 'explosion-heal'
-        | undefined {
+    public getActiveEffect(): string {
         if (this.critical) return 'criticaleffect';
 
         if (this.stunned) return 'stuneffect';
@@ -429,6 +428,8 @@ export default class Character extends Entity {
         if (this.explosion) return 'explosion-fireball';
 
         if (this.healing) return 'explosion-heal';
+
+        return '';
     }
 
     /**
@@ -460,17 +461,9 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
-    // isMoving(): boolean {
-    //     return this.currentAnimation.name === 'walk' || this.x % 2 !== 0 || this.y % 2 !== 0;
-    // }
-
     public forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => callback(attacker));
     }
-
-    // isAttacked(): boolean {
-    //     return Object.keys(this.attackers).length > 0;
-    // }
 
     public override hasWeapon(): boolean {
         return false;
@@ -493,7 +486,7 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
-        if (!this.target) return;
+        if (this.target) this.target.targeted = false;
 
         this.target = null;
     }
@@ -503,49 +496,43 @@ export default class Character extends Entity {
     }
 
     public moved(): void {
-        // this.loadDirty();
-
         this.moveCallback?.();
     }
 
     public setTarget(target: Entity): void {
-        if (!target) {
-            this.removeTarget();
-            return;
-        }
-
         this.target = target;
+        this.target.targeted = true;
     }
 
-    public hasTarget(): boolean {
-        return !!this.target;
+    public hasTarget(target?: Entity): boolean {
+        return target ? this.target === target : !!this.target;
     }
 
-    public setObjectTarget(x: number, y: number): void {
+    public setObjectTarget(position: Position): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${x}-${y}`, 'object');
-        character.setGridPosition(x, y);
-        character.type = Modules.EntityType.Object;
+        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
+        character.setGridPosition(position.x, position.y);
 
         this.setTarget(character);
+        this.followPosition(position.x, position.y);
     }
 
-    public setHitPoints(hitPoints: number): void {
+    public setHitPoints(hitPoints: number, maxHitPoints?: number): void {
+        let decrease = false;
+
         if (hitPoints < 0) hitPoints = 0;
+
+        if (hitPoints < this.hitPoints) decrease = true;
 
         this.hitPoints = hitPoints;
 
-        this.hitPointsCallback?.(this.hitPoints);
-    }
+        if (maxHitPoints) this.maxHitPoints = maxHitPoints;
 
-    public setMaxHitPoints(maxHitPoints: number): void {
-        this.maxHitPoints = maxHitPoints;
-
-        this.maxHitPointsCallback?.(this.maxHitPoints);
+        this.hitPointsCallback?.(this.hitPoints, maxHitPoints || this.maxHitPoints, decrease);
     }
 
     public setOrientation(orientation: Modules.Orientation): void {
@@ -580,11 +567,7 @@ export default class Character extends Entity {
         this.moveCallback = callback;
     }
 
-    public onHitPoints(callback: () => void): void {
+    public onHitPoints(callback: HitPointsCallback): void {
         this.hitPointsCallback = callback;
-    }
-
-    public onMaxHitPoints(callback: () => void): void {
-        this.maxHitPointsCallback = callback;
     }
 }

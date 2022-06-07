@@ -9,23 +9,41 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
-import type { WelcomeData } from '@kaetram/common/types/messages';
 import type Game from '../../../game';
+
 import { EquipmentData } from '@kaetram/common/types/equipment';
+import { PlayerData } from '@kaetram/common/types/player';
+import Skill from './skill';
+import { SkillData } from '@kaetram/common/types/skills';
+import _ from 'lodash';
+import Quest from './quest';
+import { QuestData } from '@kaetram/common/types/quest';
+
+type ExperienceCallback = (
+    experience: number,
+    prevExperience: number,
+    nextExperience: number
+) => void;
 
 export default class Player extends Character {
-    public username = '';
-
     public rights = 0;
     public wanted = false;
 
-    public override experience = -1;
-    public nextExperience = -1;
-    public prevExperience = -1;
-    public override level = -1;
-
     public pvpKills = -1;
     public pvpDeaths = -1;
+
+    public moveLeft = false;
+    public moveRight = false;
+    public moveUp = false;
+    public moveDown = false;
+
+    public poison = false;
+    public disableAction = false;
+
+    public moving = false;
+
+    public override experience = -1;
+    public override level = -1;
 
     public override hitPoints = -1;
     public override maxHitPoints = -1;
@@ -35,66 +53,60 @@ export default class Player extends Character {
 
     public override pvp = false;
 
-    public moveLeft = false;
-    public moveRight = false;
-    public moveUp = false;
-    public moveDown = false;
+    // Mapping of all equipments to their type.
+    public equipments = {
+        [Modules.Equipment.Armour]: new Armour(),
+        [Modules.Equipment.Boots]: new Boots(),
+        [Modules.Equipment.Pendant]: new Pendant(),
+        [Modules.Equipment.Ring]: new Ring(),
+        [Modules.Equipment.Weapon]: new Weapon()
+    };
 
-    public disableAction = false;
+    public skills = {
+        [Modules.Skills.Lumberjacking]: new Skill(Modules.Skills.Lumberjacking),
+        [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
+    };
 
-    private lastLogin!: number | null;
+    public quests: { [key: string]: Quest } = {};
 
-    public armour: Armour = new Armour();
-    public pendant: Pendant = new Pendant();
-    public ring: Ring = new Ring();
-    public boots: Boots = new Boots();
-    public weapon: Weapon = new Weapon();
+    private syncCallback?: () => void;
+    private experienceCallback?: ExperienceCallback;
 
-    public poison = false;
-
-    private experienceCallback?(): void;
-    private updateArmourCallback?(string: string, power?: number): void;
-    private updateWeaponCallback?(string: string, power?: number): void;
-    private updateEquipmentCallback?(type: number, power?: number): void;
-
-    // private tempcBlinkTimeout!: number;
-    public moving!: boolean;
-
-    public constructor() {
-        super('-1', Modules.Types.Player.toString());
+    public constructor(instance: string) {
+        super(instance, Modules.EntityType.Player);
     }
 
-    public load({
-        instance,
-        username,
-        x,
-        y,
-        hitPoints,
-        mana,
-        experience,
-        nextExperience,
-        prevExperience,
-        level,
-        lastLogin,
-        orientation,
-        movementSpeed
-    }: WelcomeData): void {
-        this.setId(instance);
-        this.setName(username);
-        this.setGridPosition(x, y);
-        this.setPointsData(hitPoints, mana);
-        this.setExperience(experience, nextExperience!, prevExperience);
+    /**
+     * Loads the player based on the serialzied player
+     * data sent from the server.
+     * @param data Player data containing essentials.
+     */
 
-        this.level = level;
+    public load(data: PlayerData): void {
+        this.instance = data.instance;
+        this.name = data.name;
+        this.level = data.level!;
+        this.movementSpeed = data.movementSpeed!;
 
-        this.lastLogin = lastLogin;
+        this.setOrientation(data.orientation);
+        this.setGridPosition(data.x, data.y);
 
-        this.orientation = orientation;
+        this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
-        this.movementSpeed = movementSpeed;
+        this.setMana(data.mana!, data.maxMana!);
 
-        this.type = Modules.EntityType.Player;
+        if (data.equipments) _.each(data.equipments, this.equip.bind(this));
+
+        // Only used when loading the main player.
+        if (data.experience)
+            this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
     }
+
+    /**
+     * Loads the player handler and sets the game instance to
+     * the current player object.
+     * @param game The game instance object controlling the game.
+     */
 
     public loadHandler(game: Game): void {
         /**
@@ -105,38 +117,152 @@ export default class Player extends Character {
         this.handler.load();
     }
 
-    public hasKeyboardMovement(): boolean {
-        return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+    /**
+     * Loads a batch of skills into the player's skill list.
+     * @param skills Contains skill type, experience, and level
+     * for each skill we are loading.
+     */
+
+    public loadSkills(skills: SkillData[]): void {
+        _.each(skills, (skill: SkillData) => this.setSkill(skill));
     }
 
-    public setId(id: string): void {
-        this.id = id;
+    /**
+     * Loads batch of quest data from the server and inserts
+     * it into the list of quests stored for the player.
+     * @param quests An array of elements each containing quest info.
+     */
+
+    public loadQuests(quests: QuestData[]): void {
+        _.each(quests, (quest: QuestData) => {
+            this.quests[quest.key] = new Quest(
+                quest.name!,
+                quest.description!,
+                quest.stage,
+                quest.subStage,
+                quest.stageCount
+            );
+        });
     }
 
-    public isRanged(): boolean {
-        return this.weapon?.ranged || false;
+    /**
+     * Equips the item based on the equipment type.
+     * @param equipment Contains data about the equipment such as
+     * type, name, count, ability, etc.
+     */
+
+    public equip(equipment: EquipmentData): void {
+        let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
+
+        if (!key) return this.unequip(type);
+
+        this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
     }
 
-    public override hasWeapon(): boolean {
-        return this.weapon?.exists() || false;
+    /**
+     * Calls an empty update() function onto the equipment slot
+     * and resets it.
+     * @param type Which equipment slot we are resetting.
+     */
+
+    public unequip(type: Modules.Equipment): void {
+        this.equipments[type].update();
     }
 
-    public override setName(name: string): void {
-        this.username = name;
-        this.name = name;
+    /**
+     * Signals to the callbacks that the player's data (experience, level, equipment)
+     * has undergone a change. This updates the UI essentially.
+     */
+
+    public sync(): void {
+        this.syncCallback?.();
     }
+
+    /**
+     * @returns The key of the currently equipped armour.
+     */
 
     public getSpriteName(): string {
-        return this.armour ? this.armour.string : 'clotharmor';
+        return this.equipments[Modules.Equipment.Armour].key;
     }
 
-    public setMana(mana: number): void {
+    /**
+     * @returns The armour object of the player.
+     */
+
+    public getArmour(): Armour {
+        return this.equipments[Modules.Equipment.Armour] as Armour;
+    }
+
+    /**
+     * @returns The boots object of the player.
+     */
+
+    public getBoots(): Boots {
+        return this.equipments[Modules.Equipment.Boots] as Boots;
+    }
+
+    /**
+     * @returns The pendant object of the player.
+     */
+
+    public getPendant(): Pendant {
+        return this.equipments[Modules.Equipment.Pendant] as Pendant;
+    }
+
+    /**
+     * @returns The ring object of the player.
+     */
+
+    public getRing(): Ring {
+        return this.equipments[Modules.Equipment.Ring] as Ring;
+    }
+
+    /**
+     * @returns The weapon object of the player.
+     */
+
+    public getWeapon(): Weapon {
+        return this.equipments[Modules.Equipment.Weapon] as Weapon;
+    }
+
+    /**
+     * Updates the mana of the player.
+     * @param mana The current amount of mana.
+     * @param maxMana Optional parameter for the max mana.
+     */
+
+    public setMana(mana: number, maxMana?: number): void {
         this.mana = mana;
+
+        if (maxMana) this.maxMana = maxMana;
     }
 
-    public setMaxMana(maxMana: number): void {
-        this.maxMana = maxMana;
+    /**
+     * Updates the experience of the skill.
+     * @param arg0 Contains skill data such as type, experience, level, etc.
+     */
+
+    public setSkill({ type, experience, level, percentage }: SkillData): void {
+        this.skills[type as Modules.Skills].update(experience, level!, percentage!);
     }
+
+    /**
+     * Updates data of the quest based on the key provided with the new stage and
+     * substage information.
+     * @param key The key of the quest we are updating.
+     * @param stage The new stage of the quest.
+     * @param subStage The new substage of the quest.
+     */
+
+    public setQuest(key: string, stage: number, subStage: number): void {
+        this.quests[key].update(stage, subStage);
+    }
+
+    /**
+     * Updates the poison status of the player.
+     * @param poison Poison status to update with.
+     */
 
     public setPoison(poison: boolean): void {
         if (this.poison === poison) return;
@@ -148,103 +274,68 @@ export default class Player extends Character {
         else $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
     }
 
-    public setExperience(experience: number, nextExperience: number, prevExperience: number): void {
+    /**
+     * Updates the player's current experience and creates a callback if the next
+     * experience and previous variables are provided.
+     * @param experience The current amount of experience the player has.
+     * @param nextExperience The next amount of experience required for level up.
+     * @param prevExperience Experience that the current level starts at.
+     */
+
+    public setExperience(
+        experience: number,
+        nextExperience?: number,
+        prevExperience?: number
+    ): void {
         this.experience = experience;
-        this.nextExperience = nextExperience;
-        this.prevExperience = prevExperience || 0;
 
-        this.experienceCallback?.();
+        this.sync();
+
+        if (!prevExperience || !nextExperience) return;
+
+        this.experienceCallback?.(experience, prevExperience, nextExperience);
     }
 
-    private setPointsData([hitPoints, maxHitPoints]: number[], [mana, maxMana]: number[]): void {
-        this.setMaxHitPoints(maxHitPoints);
-        this.setMaxMana(maxMana);
+    /**
+     * @returns If the weapon the player currently wields is a ranged weapon.
+     */
 
-        this.setHitPoints(hitPoints);
-        this.setMana(mana);
+    public isRanged(): boolean {
+        return this.equipments[Modules.Equipment.Weapon].ranged;
     }
 
-    public setEquipment(equipment: EquipmentData): void {
-        let { type, name, key, count, ability, abilityLevel, power } = equipment;
+    /**
+     * @returns Whether or not the current weapon's key isn't an empty string.
+     */
 
-        switch (type) {
-            case Modules.Equipment.Armour:
-                this.armour.update(name, key, count, ability, abilityLevel, power);
-
-                this.updateArmourCallback?.(key, power);
-
-                break;
-
-            case Modules.Equipment.Weapon:
-                this.weapon.update(name, key, count, ability, abilityLevel, power);
-
-                this.weapon.ranged = key.includes('bow');
-
-                this.updateWeaponCallback?.(key, power);
-
-                break;
-
-            case Modules.Equipment.Pendant:
-                return this.pendant.update(name, key, count, ability, abilityLevel, power);
-
-            case Modules.Equipment.Ring:
-                return this.ring.update(name, key, count, ability, abilityLevel, power);
-
-            case Modules.Equipment.Boots:
-                return this.boots.update(name, key, count, ability, abilityLevel, power);
-        }
-
-        this.updateEquipmentCallback?.(type, power);
+    public override hasWeapon(): boolean {
+        return this.equipments[Modules.Equipment.Weapon].exists();
     }
 
-    public unequip(type: Modules.Equipment): void {
-        switch (type) {
-            case Modules.Equipment.Armour:
-                this.armour.update('Cloth Armour', 'clotharmor', 1, -1, -1);
+    /**
+     * @returns Checks whether any of the keyboard directional
+     * movement conditionals are true.
+     */
 
-                this.updateArmourCallback?.('clotharmor');
-                break;
-
-            case Modules.Equipment.Weapon:
-                this.weapon.update('', '', -1, -1, -1);
-
-                this.updateWeaponCallback?.('', 1);
-                break;
-
-            case Modules.Equipment.Pendant:
-                this.pendant.update('', '', -1, -1, -1);
-                break;
-
-            case Modules.Equipment.Ring:
-                this.ring.update('', '', -1, -1, -1);
-                break;
-
-            case Modules.Equipment.Boots:
-                this.boots.update('', '', -1, -1, -1);
-                break;
-        }
+    public hasKeyboardMovement(): boolean {
+        return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
     }
 
-    // tempBlink(): void {
-    //     this.blink(90);
+    /**
+     * Callback for when the player's experience changes.
+     * @param callback Contains the experience, previous experience, and next experience.
+     */
 
-    //     if (!this.tempBlinkTimeout)
-    //         this.tempBlinkTimeout = window.setTimeout(() => this.stopBlinking(), 500);
-    // }
-
-    public onUpdateArmour(callback: (armourName: string, power: number) => void): void {
-        this.updateArmourCallback = callback;
-    }
-
-    public onUpdateWeapon(callback: (string: string, power: number) => void): void {
-        this.updateWeaponCallback = callback;
-    }
-
-    public onUpdateEquipment(callback: (type: number, power: number) => void): void {
-        this.updateEquipmentCallback = callback;
-    }
-
-    public onExperience(callback: () => void): void {
+    public onExperience(callback: ExperienceCallback): void {
         this.experienceCallback = callback;
+    }
+
+    /**
+     * Callback for whenever we want to synchronize
+     * the player's data to the UI.
+     */
+
+    public onSync(callback: () => void): void {
+        this.syncCallback = callback;
     }
 }

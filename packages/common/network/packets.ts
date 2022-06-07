@@ -16,7 +16,6 @@ enum Packets {
     Combat,
     Animation,
     Projectile,
-    Population,
     Points,
     Network,
     Chat,
@@ -44,7 +43,7 @@ enum Packets {
     Overlay,
     Camera,
     Bubble,
-    Profession,
+    Skill,
     BuildUp
 }
 

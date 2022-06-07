@@ -6,6 +6,7 @@ import { Modules } from '@kaetram/common/network';
 import { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
+    type: Modules.Skills,
     name: string,
     experience: number,
     level: number,
@@ -37,6 +38,17 @@ export default abstract class Skill {
     }
 
     /**
+     * Gets the percentage of the skill's experience to the next level.
+     */
+
+    public getPercentage(): number {
+        let prevExperience = Formulas.prevExp(this.getLevel() - 1),
+            nextExperience = Formulas.nextExp(this.experience);
+
+        return ((this.experience - prevExperience) / (nextExperience - prevExperience)) * 100;
+    }
+
+    /**
      * Adds experience to the skill and creates a callback. The callback
      * contains the name of the skill, experience we are adding, the
      * current level after adding experience, and whether the
@@ -52,7 +64,13 @@ export default abstract class Skill {
         // Level after adding experience.
         let currentLevel = this.getLevel();
 
-        this.experienceCallback?.(this.name, experience, currentLevel, level !== currentLevel);
+        this.experienceCallback?.(
+            this.type,
+            this.name,
+            experience,
+            currentLevel,
+            level !== currentLevel
+        );
     }
 
     /**
@@ -77,7 +95,10 @@ export default abstract class Skill {
             experience: this.experience
         };
 
-        if (includeLevel) data.level = this.getLevel();
+        if (includeLevel) {
+            data.level = this.getLevel();
+            data.percentage = this.getPercentage();
+        }
 
         return data;
     }

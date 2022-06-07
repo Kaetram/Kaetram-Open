@@ -1,26 +1,33 @@
 /// <reference lib="webworker" />
 
-import type { MapData } from './map';
+/**
+ * WebWorker just works in the background to create
+ * an empty data grid and collision grid.
+ */
 
-let data: MapData;
+let width = 0,
+    height = 0,
+    data: number[] = [],
+    grid: number[][] = [];
 
 onmessage = (event) => {
-    ({ data } = event);
+    [width, height] = event.data;
 
-    loadCollisionGrid();
+    loadGrids();
 
-    postMessage(data);
+    postMessage({
+        data,
+        grid
+    });
 };
 
-function loadCollisionGrid() {
-    let { width, height } = data,
-        grid: number[][] = [];
-
+function loadGrids() {
     for (let y = 0; y < height; y++) {
         grid[y] = [];
 
-        for (let x = 0; x < width; x++) grid[y][x] = 0;
+        for (let x = 0; x < width; x++) {
+            data.push(0);
+            grid[y][x] = 0;
+        }
     }
-
-    data.grid = grid;
 }

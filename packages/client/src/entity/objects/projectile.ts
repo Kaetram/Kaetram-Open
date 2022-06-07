@@ -5,10 +5,8 @@ import { Modules } from '@kaetram/common/network';
 
 export default class Projectile extends Entity {
     public override type = Modules.EntityType.Projectile;
-    // public name = '';
 
     public speed = 150;
-    // public angle = 0;
 
     public override readonly fadingDuration = 100;
 
@@ -16,12 +14,8 @@ export default class Projectile extends Entity {
 
     private impactCallback?(): void;
 
-    public constructor(id: string, kind: string, public owner: Entity) {
-        super(id, kind);
-    }
-
-    public getId(): string {
-        return this.id;
+    public constructor(instance: string, public owner: Entity) {
+        super(instance, Modules.EntityType.Projectile);
     }
 
     public impact(): void {
@@ -44,9 +38,9 @@ export default class Projectile extends Entity {
         return 1;
     }
 
-    // public hasPath(): boolean {
-    //     return false;
-    // }
+    public override getTimeDiff(): number {
+        return (Date.now() - this.lastUpdate) / 1000;
+    }
 
     public updateAngle(): void {
         if (!this.target) return;

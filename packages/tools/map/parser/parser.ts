@@ -41,7 +41,6 @@ export default class ProcessMap {
 
             tilesets: {},
             animations: {},
-            depth: 1,
 
             plateau: {},
 
@@ -54,7 +53,6 @@ export default class ProcessMap {
 
         this.parseTilesets();
         this.parseLayers();
-        this.parseDepth();
     }
 
     /**
@@ -111,23 +109,6 @@ export default class ProcessMap {
                     break;
             }
         });
-    }
-
-    /**
-     * Map depth represents the tileIndex with most
-     * amount of layers
-     */
-
-    private parseDepth(): void {
-        let depth = 1;
-
-        _.each(this.map.data, (info) => {
-            if (!_.isArray(info)) return;
-
-            if (info.length > depth) depth = info.length;
-        });
-
-        this.map.depth = depth;
     }
 
     /**
@@ -244,6 +225,10 @@ export default class ProcessMap {
             else if (_.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
+            // Remove flip flags for the sake of calculating collisions.
+            if (this.isFlipped(value)) value = this.removeFlipFlags(value);
+
+            // Add collision indexes to the map.
             if (value in this.#collisionTiles) collisions.push(index);
         });
     }
@@ -426,6 +411,25 @@ export default class ProcessMap {
     }
 
     /**
+     * Tiles that undergo transformations have their tileId altered.
+     * We must temporarily remove that in order to calculate collision
+     * indexes.
+     * @param tileId The tileId with transformation flags applied.
+     * @returns The original tileId without transformation flags.
+     */
+
+    private removeFlipFlags(tileId: number): number {
+        return (
+            tileId &
+            ~(
+                Modules.MapFlags.DIAGONAL_FLAG |
+                Modules.MapFlags.VERTICAL_FLAG |
+                Modules.MapFlags.HORIZONTAL_FLAG
+            )
+        );
+    }
+
+    /**
      * This function allows us to decompress data from the Tiled editor
      * map file. Thus far, our parser only supports zlib, gzip, and CSV
      * in the JSON file-format. Further support is not entirely necessary
@@ -492,6 +496,16 @@ export default class ProcessMap {
 
     private isCollisionProperty(propertyName: string): boolean {
         return propertyName === 'c' || propertyName === 'o';
+    }
+
+    /**
+     * Checks if the tileId specified has undergone any translations.
+     * @param tileId The tileId we are checking.
+     * @returns Whether the tileId is greater than the lowest bitwise flag.
+     */
+
+    private isFlipped(tileId: number): boolean {
+        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
@@ -567,17 +581,16 @@ export default class ProcessMap {
      */
 
     public getClientMap(): string {
-        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.map;
+        let { width, height, tileSize, version, high, tilesets, animations } = this.map;
 
         return JSON.stringify({
             width,
             height,
-            depth,
+            tileSize,
             version,
             high,
             tilesets,
-            animations,
-            tileSize
+            animations
         });
     }
 }

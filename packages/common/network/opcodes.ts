@@ -54,8 +54,9 @@ export enum Network {
 export enum Container {
     Batch,
     Add,
-    Drop,
-    Select
+    Remove,
+    Select,
+    Swap
 }
 
 export enum Quest {
@@ -138,15 +139,6 @@ export enum TeamWar {
     Countdown
 }
 
-export enum Map {
-    Render,
-    Modify,
-    Collision,
-    Update,
-    Reset,
-    Tileset
-}
-
 export enum Overlay {
     Set,
     Remove,
@@ -166,7 +158,7 @@ export enum Command {
     CtrlClick
 }
 
-export enum Profession {
+export enum Skill {
     Batch,
     Update
 }

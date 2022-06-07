@@ -2,12 +2,11 @@ import { Modules } from '@kaetram/common/network';
 import Character from '../character';
 
 export default class Mob extends Character {
-    public override type = Modules.EntityType.Mob;
-
-    // public hitPoints = -1;
-    // public maxHitPoints = -1;
-
     public hiddenName = false;
+
+    public constructor(instance: string) {
+        super(instance, Modules.EntityType.Mob);
+    }
 
     public override hasShadow(): boolean {
         return !this.hiddenName;

@@ -2,33 +2,69 @@ import $ from 'jquery';
 
 import Timer from '../../utils/timer';
 
-import type { BubbleInfo } from '@kaetram/common/types/info';
-
 export default class Blob {
-    private timer;
-    public type!: string;
+    public element: JQuery<HTMLElement>;
+    public duration = 5000;
+
+    private timer: Timer;
+    public static = false;
 
     public constructor(
-        public id: string,
-        public element: JQuery,
+        public instance: string,
+        message: string,
         duration = 5000,
-        isObject = false,
-        public info?: BubbleInfo
+        public position?: Position
     ) {
         this.timer = new Timer(Date.now(), duration);
 
-        if (isObject) this.type = 'object';
+        this.element = this.createBlob(instance, message);
+
+        // Automatically static if we provied an absolute position.
+        this.static = !!this.position;
     }
+
+    /**
+     * Updates a blob with the new text and resets the timer.
+     * @param text The new string text we are displaying.
+     * @param time The current game time.
+     */
+
+    public update(text: string, time: number): void {
+        // Reset timer
+        this.timer.time = time;
+
+        $(this.element).find('p').html(text);
+    }
+
+    /**
+     * Has the timer reached the end of the bubble's duration?
+     * @param time The current game time from the updater.
+     * @returns Whether or not the timer has reached the end of the bubble's duration.
+     */
 
     public isOver(time: number): boolean {
         return this.timer.isOver(time);
     }
 
-    public reset(time: number): void {
-        this.timer.time = time;
-    }
+    /**
+     * Removes the JQuery element from the DOM.
+     */
 
     public destroy(): void {
         $(this.element).remove();
+    }
+
+    /**
+     * Creates a JQuery HTML element of the bubble with the specified
+     * id and message contents.
+     * @param instance Bubble's identifier, generally the entity's instance.
+     * @param message Message that we are displaying in the bubble.
+     * @returns A JQuery element that is appended to the container.
+     */
+
+    public createBlob(instance: string, message: string): JQuery<HTMLElement> {
+        return $(
+            `<div id="${instance}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
+        );
     }
 }

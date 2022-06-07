@@ -1,136 +1,55 @@
 import _ from 'lodash';
 
-import { Modules, Packets } from '@kaetram/common/network';
+import { Packets } from '@kaetram/common/network';
 
-import type { Opcodes } from '@kaetram/common/network';
-
+import type App from '../app';
+import type Game from '../game';
 import type {
+    HandshakeCallback,
+    WelcomeCallback,
+    MapCallback,
+    EquipmentCallback,
+    EntityListCallback,
+    SyncCallback,
+    SpawnCallback,
     MovementCallback,
+    TeleportCallback,
+    DespawnCallback,
     CombatCallback,
     AnimationCallback,
+    PointsCallback,
+    NetworkCallback,
+    ChatCallback,
+    CommandCallback,
+    ContainerCallback,
+    AbilityCallback,
+    QuestCallback,
+    NotificationCallback,
+    BlinkCallback,
+    HealCallback,
+    ExperienceCallback,
+    DeathCallback,
+    AudioCallback,
+    NPCCallback,
     RespawnCallback,
-    StoreCallback
+    EnchantCallback,
+    GuildCallback,
+    PointerCallback,
+    PVPCallback,
+    StoreCallback,
+    OverlayCallback,
+    CameraCallback,
+    BubbleCallback,
+    SkillCallback
 } from '@kaetram/common/types/messages/outgoing';
-
-// TODO: Slowly remove all these.
-import type {
-    BubbleData,
-    ChatData,
-    CommandData,
-    ContainerAddData,
-    ContainerBatchData,
-    ContainerRemoveData,
-    EnchantData,
-    ExperienceCombatData,
-    ExperienceProfessionData,
-    HandshakeData,
-    HealData,
-    NotificationData,
-    NPCBankData,
-    NPCCountdownData,
-    NPCEnchantData,
-    NPCStoreData,
-    NPCTalkData,
-    OverlayDarknessData,
-    OverlayLampData,
-    OverlaySetData,
-    PointerButtonData,
-    PointerData,
-    PointerLocationData,
-    PointerRelativeData,
-    PointerRemoveData,
-    PointsData,
-    ProfessionBatchData,
-    ProfessionUpdateData,
-    ProjectileData,
-    QuestBatchData,
-    QuestFinishData,
-    QuestProgressData,
-    SpawnData,
-    TeleportData,
-    WelcomeData
-} from '@kaetram/common/types/messages';
-import type App from '../app';
-import type { AudioName } from '../controllers/audio';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import { EntityData } from '../controllers/entities';
-
-type HandshakeCallback = (data: HandshakeData) => void;
-type WelcomeCallback = (playerData: WelcomeData) => void;
-type SpawnCallback = (entities: SpawnData) => void;
-interface EquipmentCallback {
-    (opcode: Opcodes.Equipment.Batch, info: SerializedEquipment): void;
-    (opcode: Opcodes.Equipment.Equip, info: EquipmentData): void;
-    (opcode: Opcodes.Equipment.Unequip, info: Modules.Equipment): void;
-}
-type EntityListCallback = (ids: string[]) => void;
-type SyncCallback = (data: EntityData) => void;
-type TeleportCallback = (data: TeleportData) => void;
-type DespawnCallback = (id: string) => void;
-interface ProjectileCallback {
-    (opcode: Opcodes.Projectile, data: ProjectileData): void;
-}
-type PopulationCallback = (population: number) => void;
-type PointsCallback = (data: PointsData) => void;
-type NetworkCallback = () => void;
-type ChatCallback = (data: ChatData) => void;
-type CommandCallback = (data: CommandData) => void;
-interface ContainerCallback {
-    (opcode: Opcodes.Container.Batch, info: ContainerBatchData): void;
-    (opcode: Opcodes.Container.Add, info: ContainerAddData): void;
-    (opcode: Opcodes.Container.Drop, info: ContainerRemoveData): void;
-}
-type AbilityCallback = (data: unknown) => void;
-interface QuestCallback {
-    (opcode: Opcodes.Quest.Batch, info: QuestBatchData): void;
-    (opcode: Opcodes.Quest.Progress, info: QuestProgressData): void;
-    (opcode: Opcodes.Quest.Finish, info: QuestFinishData): void;
-}
-type NotificationCallback = (opcode: Opcodes.Notification, info: NotificationData) => void;
-type BlinkCallback = (instance: string) => void;
-type HealCallback = (data: HealData) => void;
-interface ExperienceCallback {
-    (Opcodes: Opcodes.Experience.Combat, data: ExperienceCombatData): void;
-    (Opcodes: Opcodes.Experience.Skill, data: ExperienceProfessionData): void;
-}
-type DeathCallback = (id: string) => void;
-type AudioCallback = (song: AudioName) => void;
-interface NPCCallback {
-    (opcode: Opcodes.NPC.Talk, data: NPCTalkData): void;
-    (opcode: Opcodes.NPC.Store, data: NPCStoreData): void;
-    (opcode: Opcodes.NPC.Bank, data: NPCBankData): void;
-    (opcode: Opcodes.NPC.Enchant, data: NPCEnchantData): void;
-    (opcode: Opcodes.NPC.Countdown, data: NPCCountdownData): void;
-}
-type EnchantCallback = (opcode: Opcodes.Enchant, data: EnchantData) => void;
-type GuildCallback = (opcode: Opcodes.Guild, data: unknown) => void;
-interface PointerCallback {
-    (opcode: Opcodes.Pointer, data: PointerData): void;
-    (opcode: Opcodes.Pointer.Location, data: PointerLocationData): void;
-    (opcode: Opcodes.Pointer.Relative, data: PointerRelativeData): void;
-    (opcode: Opcodes.Pointer.Remove, data: PointerRemoveData): void;
-    (opcode: Opcodes.Pointer.Button, data: PointerButtonData): void;
-}
-type PVPCallback = (id: string, pvp: boolean) => void;
-type MapCallback = (opcode: Opcodes.Map, data: string) => void;
-interface OverlayCallback {
-    (opcode: Opcodes.Overlay, data: undefined): void;
-    (opcode: Opcodes.Overlay.Set, data: OverlaySetData): void;
-    (opcode: Opcodes.Overlay.Lamp, data: OverlayLampData): void;
-    (opcode: Opcodes.Overlay.Darkness, data: OverlayDarknessData): void;
-}
-type CameraCallback = (opcode: Opcodes.Camera) => void;
-type BubbleCallback = (data: BubbleData) => void;
-interface ProfessionCallback {
-    (opcode: Opcodes.Profession.Batch, data: ProfessionBatchData): void;
-    (opcode: Opcodes.Profession.Update, data: ProfessionUpdateData): void;
-}
 
 export default class Messages {
     private messages;
+    private app: App = this.game.app;
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
+    private mapCallback?: MapCallback;
     private spawnCallback?: SpawnCallback;
     private equipmentCallback?: EquipmentCallback;
     private entityListCallback?: EntityListCallback;
@@ -140,8 +59,6 @@ export default class Messages {
     private despawnCallback?: DespawnCallback;
     private combatCallback?: CombatCallback;
     private animationCallback?: AnimationCallback;
-    private projectileCallback?: ProjectileCallback;
-    private populationCallback?: PopulationCallback;
     private pointsCallback?: PointsCallback;
     private networkCallback?: NetworkCallback;
     private chatCallback?: ChatCallback;
@@ -162,11 +79,10 @@ export default class Messages {
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
     private storeCallback?: StoreCallback;
-    private mapCallback?: MapCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
     private bubbleCallback?: BubbleCallback;
-    private professionCallback?: ProfessionCallback;
+    private skillCallback?: SkillCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -178,7 +94,7 @@ export default class Messages {
      * Please respect the order of the Packets Enum and arrange functions
      * accordingly.
      */
-    public constructor(private app: App) {
+    public constructor(private game: Game) {
         let messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
         messages[Packets.Handshake] = () => this.handshakeCallback;
@@ -192,8 +108,6 @@ export default class Messages {
         messages[Packets.Despawn] = () => this.despawnCallback;
         messages[Packets.Combat] = () => this.combatCallback;
         messages[Packets.Animation] = () => this.animationCallback;
-        messages[Packets.Projectile] = () => this.projectileCallback;
-        messages[Packets.Population] = () => this.populationCallback;
         messages[Packets.Points] = () => this.pointsCallback;
         messages[Packets.Network] = () => this.networkCallback;
         messages[Packets.Chat] = () => this.chatCallback;
@@ -218,10 +132,15 @@ export default class Messages {
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
         messages[Packets.Bubble] = () => this.bubbleCallback;
-        messages[Packets.Profession] = () => this.professionCallback;
+        messages[Packets.Skill] = () => this.skillCallback;
 
         this.messages = messages;
     }
+
+    /**
+     * Parses through the data and calls the appropriate callback.
+     * @param data Packet data containing packet opcode and data.
+     */
 
     public handleData(data: [Packets, ...never[]]): void {
         let packet = data.shift()!,
@@ -230,86 +149,82 @@ export default class Messages {
         if (message && _.isFunction(message)) message.call(this, ...data);
     }
 
+    /**
+     * Packet data received in an array format calls `handleData`
+     * for each iteration of packet data.
+     * @param data Packet data array.
+     */
+
     public handleBulkData(data: never[]): void {
-        _.each(data, (message) => this.handleData(message));
+        _.each(data, this.handleData.bind(this));
     }
+
+    /**
+     * UTF8 messages handler. These are simple messages that are pure
+     * strings. These errors are displayed on the login page.
+     * @param message UTF8 message received from the server.
+     */
 
     public handleUTF8(message: string): void {
         this.app.toggleLogin(false);
 
         switch (message) {
             case 'full':
-                this.app.sendError(null, 'The servers are currently full!');
+                this.app.sendError('The servers are currently full!');
                 break;
 
             case 'error':
-                this.app.sendError(null, 'The server has responded with an error!');
+                this.app.sendError('The server has responded with an error!');
                 break;
 
             case 'development':
-                this.app.sendError(null, 'The game is currently in development mode.');
+                this.app.sendError('The game is currently in development mode.');
                 break;
 
             case 'disallowed':
-                this.app.sendError(null, 'The server is currently not accepting connections!');
+                this.app.sendError('The server is currently not accepting connections!');
                 break;
 
             case 'maintenance':
-                this.app.sendError(null, 'Kaetram is currently under maintenance.');
+                this.app.sendError('Kaetram is currently under maintenance.');
                 break;
 
             case 'userexists':
-                this.app.sendError(null, 'The username you have chosen already exists.');
+                this.app.sendError('The username you have chosen already exists.');
                 break;
 
             case 'emailexists':
-                this.app.sendError(null, 'The email you have chosen is not available.');
+                this.app.sendError('The email you have chosen is not available.');
                 break;
 
             case 'invalidinput':
-                this.app.sendError(null, 'The input you have provided is invalid.');
+                this.app.sendError('The input you have provided is invalid.');
                 break;
 
             case 'loggedin':
-                this.app.sendError(null, 'The player is already logged in!');
+                this.app.sendError('The player is already logged in!');
                 break;
 
             case 'invalidlogin':
-                this.app.sendError(null, 'You have entered the wrong username or password.');
+                this.app.sendError('You have entered the wrong username or password.');
                 break;
 
             case 'toofast':
-                this.app.sendError(
-                    null,
-                    'You are trying to log in too fast from the same connection.'
-                );
-                break;
-
-            case 'malform':
-                this.app.game.handleDisconnection(true);
-                this.app.sendError(null, 'Client has experienced a malfunction.');
-
+                this.app.sendError('You are trying to log in too fast from the same connection.');
                 break;
 
             case 'timeout':
-                this.app.sendError(
-                    null,
-                    'You have been disconnected for being inactive for too long.'
-                );
-
+                this.app.sendError('You have been disconnected for being inactive for too long.');
                 break;
 
             default:
-                this.app.sendError(
-                    null,
-                    'An unknown error has occurred, please submit a bug report.'
-                );
+                this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
         }
     }
 
     /**
-     * Universal Callbacks
+     * Packet callbacks.
      */
 
     public onHandshake(callback: HandshakeCallback): void {
@@ -354,14 +269,6 @@ export default class Messages {
 
     public onAnimation(callback: AnimationCallback): void {
         this.animationCallback = callback;
-    }
-
-    public onProjectile(callback: ProjectileCallback): void {
-        this.projectileCallback = callback;
-    }
-
-    public onPopulation(callback: PopulationCallback): void {
-        this.populationCallback = callback;
     }
 
     public onPoints(callback: PointsCallback): void {
@@ -460,7 +367,7 @@ export default class Messages {
         this.bubbleCallback = callback;
     }
 
-    public onProfession(callback: ProfessionCallback): void {
-        this.professionCallback = callback;
+    public onSkill(callback: SkillCallback): void {
+        this.skillCallback = callback;
     }
 }
