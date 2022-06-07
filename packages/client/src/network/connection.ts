@@ -734,7 +734,7 @@ export default class Connection {
 
         this.game.player.despawn();
 
-        this.app.body.addClass('death');
+        this.app.body.classList.add('death');
     }
 
     /**
