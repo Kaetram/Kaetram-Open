@@ -63,7 +63,7 @@ export default class PointerController {
     }
 
     private setSize(element: JQuery): void {
-        let pointer = '/img/sprites/pointer.png';
+        let pointer = '/img/pointer.png';
 
         element.css({
             top: '30px',
@@ -71,7 +71,7 @@ export default class PointerController {
             height: '64px',
             margin: 'inherit',
             marginTop: '-18px',
-            background: `url("${pointer}")`
+            background: `url("${pointer}") no-repeat`
         });
     }
 
