@@ -1,26 +1,22 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 
-import Pointer from '../renderer/pointers/pointer';
+import Arrow from '../renderer/pointers/arrow';
 
 import type Entity from '../entity/entity';
 import type Game from '../game';
 import type Camera from '../renderer/camera';
 
 export default class PointerController {
-    private pointers: { [id: string]: Pointer } = {};
-
-    private scale;
+    private pointers: { [id: string]: Arrow } = {};
 
     private container = $('#bubbles');
 
     private camera?: Camera | null;
 
-    public constructor(private game: Game) {
-        this.scale = this.getScale();
-    }
+    public constructor(private game: Game) {}
 
     public create(id: string, type: Opcodes.Pointer, name?: string): void {
         let { pointers, container } = this;
@@ -29,7 +25,7 @@ export default class PointerController {
 
         switch (type) {
             case Opcodes.Pointer.Button:
-                pointers[id] = new Pointer(id, $(`#${name}`), type);
+                pointers[id] = new Arrow(id, $(`#${name}`), type);
 
                 break;
 
@@ -40,7 +36,7 @@ export default class PointerController {
 
                 container.append(element);
 
-                pointers[id] = new Pointer(id, element, type);
+                pointers[id] = new Arrow(id, element, type);
 
                 break;
             }
@@ -51,7 +47,7 @@ export default class PointerController {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Opcodes.Pointer.Relative: {
-                    let scale = this.getScale(),
+                    let scale = this.getZoom(),
                         offsetX = 0,
                         offsetY = 0;
 
@@ -67,7 +63,7 @@ export default class PointerController {
     }
 
     private setSize(element: JQuery): void {
-        let pointer = '/img/sprites/pointer.png';
+        let pointer = '/img/pointer.png';
 
         element.css({
             top: '30px',
@@ -75,7 +71,7 @@ export default class PointerController {
             height: '64px',
             margin: 'inherit',
             marginTop: '-18px',
-            background: `url("${pointer}")`
+            background: `url("${pointer}") no-repeat`
         });
     }
 
@@ -85,25 +81,25 @@ export default class PointerController {
         this.pointers = {};
     }
 
-    private destroy(pointer: Pointer): void {
+    private destroy(pointer: Arrow): void {
         delete this.pointers[pointer.id];
         pointer.destroy();
     }
 
-    private set(pointer: Pointer, posX: number, posY: number): void {
+    private set(pointer: Arrow, posX: number, posY: number): void {
         this.updateCamera();
 
-        let { camera, game, scale } = this;
+        let { camera, game } = this;
 
         if (!camera) return;
 
         let { element } = pointer,
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = 48, // 16 * scale
-            x = (posX - camera.x) * scale,
+            x = (posX - camera.x) * this.getZoom(),
             width = parseInt(element.css('width') + 24),
             offset = width / 2 - tileSize / 2,
-            y = (posY - camera.y) * scale - tileSize,
+            y = (posY - camera.y) * this.getZoom() - tileSize,
             outX = x / canvasWidth,
             outY = y / canvasHeight;
 
@@ -154,7 +150,7 @@ export default class PointerController {
     }
 
     public setToEntity(entity: Entity): void {
-        let pointer = this.get(entity.id);
+        let pointer = this.get(entity.instance);
 
         if (!pointer) return;
 
@@ -176,7 +172,7 @@ export default class PointerController {
 
         if (!pointer) return;
 
-        let scale = this.getScale(),
+        let scale = this.getZoom(),
             offsetX = 0,
             offsetY = 0;
 
@@ -209,7 +205,7 @@ export default class PointerController {
         });
     }
 
-    private get(id: string): Pointer | null {
+    private get(id: string): Arrow | null {
         let { pointers } = this;
 
         if (id in pointers) return pointers[id];
@@ -218,10 +214,10 @@ export default class PointerController {
     }
 
     private updateCamera(): void {
-        this.camera = this.game.renderer.camera;
+        this.camera = this.game.camera;
     }
 
-    private getScale(): number {
-        return this.game.getScaleFactor();
+    private getZoom(): number {
+        return this.game.camera.zoomFactor;
     }
 }

@@ -114,3 +114,14 @@ export interface ProcessedMap {
     cursors: { [tileId: number]: string };
     trees: ProcessedTree[];
 }
+
+export interface ProcessedClientMap {
+    width: number;
+    height: number;
+    tileSize: number;
+    version: number;
+    high: number[];
+    tilesets: { [name: string]: number };
+    animations: { [tileId: number]: ProcessedAnimation[] };
+    grid?: number[][];
+}

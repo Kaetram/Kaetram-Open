@@ -1,89 +1,50 @@
 import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
 import type Map from '../map/map';
 
 import log from '../lib/log';
 
 export default class Grids {
+    // Grid used for rendering entities.
     public renderingGrid: { [id: string]: Entity }[][] = [];
-    public pathingGrid: number[][] = [];
-    public itemGrid: { [id: string]: Item }[][] = [];
 
     public constructor(private map: Map) {
         this.load();
     }
 
+    /**
+     * Loads a rendering grid based on the proportions of the map's
+     * width and height. The rendering grid saves the entities near
+     * the players. We use this grid in order to render them.
+     */
+
     private load(): void {
-        let { map, renderingGrid, pathingGrid, itemGrid } = this,
-            { height, width, grid } = map;
+        for (let i = 0; i < this.map.height; i++) {
+            this.renderingGrid[i] = [];
 
-        for (let i = 0; i < height; i++) {
-            renderingGrid[i] = [];
-            pathingGrid[i] = [];
-            itemGrid[i] = [];
-
-            for (let j = 0; j < width; j++) {
-                renderingGrid[i][j] = {};
-                pathingGrid[i][j] = grid[i][j];
-                itemGrid[i][j] = {};
-            }
+            for (let j = 0; j < this.map.width; j++) this.renderingGrid[i][j] = {};
         }
 
-        log.debug('Finished generating grids.');
+        log.debug('Finished generating the rendering grid.');
     }
 
-    public resetPathingGrid(): void {
-        this.pathingGrid = [];
-
-        let { pathingGrid, map } = this;
-
-        for (let i = 0; i < map.height; i++) {
-            pathingGrid[i] = [];
-
-            for (let j = 0; j < map.width; j++) pathingGrid[i][j] = map.grid[i][j];
-        }
-    }
+    /**
+     * Adds an entity to the rendering grid.
+     * @param entity The entity we are adding to the rendering grid.
+     */
 
     public addToRenderingGrid(entity: Entity): void {
-        let { id, gridX: x, gridY: y } = entity;
+        let { instance, gridX: x, gridY: y } = entity;
 
-        if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][id] = entity;
+        // Ensure the position is valid.
+        if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][instance] = entity;
     }
 
-    public addToPathingGrid(x: number, y: number): void {
-        this.pathingGrid[y][x] = 1;
-    }
+    /**
+     * Adds an entity to the grid.
+     * @param entity The entity parameter we are extracting instance, gridX, and gridY from.
+     */
 
-    public addToItemGrid(item: Item): void {
-        let { id, gridX: x, gridY: y } = item;
-
-        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][id] = item;
-    }
-
-    public removeFromRenderingGrid({ id, gridX, gridY }: Entity): void {
-        delete this.renderingGrid[gridY][gridX][id];
-    }
-
-    public removeFromPathingGrid(x: number, y: number): void {
-        this.pathingGrid[y][x] = 0;
-    }
-
-    // removeFromMapGrid(x: number, y: number): void {
-    //     this.map.grid[y][x] = 0;
-    // }
-
-    public removeFromItemGrid({ id, gridX, gridY }: Entity): void {
-        delete this.itemGrid[gridY][gridX][id];
-    }
-
-    public removeEntity(entity: Entity): void {
-        if (entity) {
-            let { gridX, gridY, nextGridX, nextGridY } = entity;
-
-            this.removeFromPathingGrid(gridX, gridY);
-            this.removeFromRenderingGrid(entity);
-
-            if (nextGridX > -1 && nextGridY > -1) this.removeFromPathingGrid(nextGridX, nextGridY);
-        }
+    public removeFromRenderingGrid({ instance, gridX, gridY }: Entity): void {
+        delete this.renderingGrid[gridY][gridX][instance];
     }
 }

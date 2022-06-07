@@ -80,6 +80,7 @@ export default class Handler {
         }
 
         this.world.entities.remove(this.mob);
+        this.world.cleanCombat(this.mob);
 
         this.mob.destroy();
     }

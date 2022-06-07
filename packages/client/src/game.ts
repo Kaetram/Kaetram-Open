@@ -1,7 +1,4 @@
-import $ from 'jquery';
 import _ from 'lodash';
-
-import { Modules, Packets } from '@kaetram/common/network';
 
 import App from './app';
 import AudioController from './controllers/audio';
@@ -10,336 +7,110 @@ import EntitiesController from './controllers/entities';
 import InfoController from './controllers/info';
 import InputController from './controllers/input';
 import MenuController from './controllers/menu';
+import SpritesController from './controllers/sprites';
 import Pointer from './controllers/pointer';
 import Zoning from './controllers/zoning';
 import Character from './entity/character/character';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
 import Entity from './entity/entity';
-import Sprite from './entity/sprite';
 import Map from './map/map';
-import Inventory from './menu/inventory';
 import Connection from './network/connection';
-import Messages from './network/messages';
 import Socket from './network/socket';
 import Camera from './renderer/camera';
-import Overlay from './renderer/overlay';
+import Overlays from './renderer/overlays';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import { agent, supportsWebGL } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
-import type { APIData } from '@kaetram/common/types/api';
+import { agent } from './utils/detect';
+import { Modules, Packets } from '@kaetram/common/network';
 
 export default class Game {
-    public id!: string;
+    public storage: Storage = this.app.storage;
 
-    public socket!: Socket;
-    public messages!: Messages;
-    public renderer!: Renderer;
-    private updater!: Updater;
-    public storage!: Storage;
-    public entities!: EntitiesController;
-    public input!: InputController;
-    public map!: Map;
-    private pathfinder!: Pathfinder;
-    public zoning!: Zoning;
-    public info!: InfoController;
-    public menu!: MenuController;
-    public audio!: AudioController;
-    public player!: Player;
+    public player: Player = new Player('');
 
-    private stopped = false;
-    public started = false;
-    public ready = false;
+    public zoning: Zoning = new Zoning();
+    public overlays: Overlays = new Overlays();
+    public pathfinder: Pathfinder = new Pathfinder();
+
+    public info: InfoController = new InfoController();
+    public sprites: SpritesController = new SpritesController();
+
+    public map: Map = new Map(this);
+    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+    public renderer: Renderer = new Renderer(this);
+    public input: InputController = new InputController(this);
+
+    public socket: Socket = new Socket(this);
+    public pointer: Pointer = new Pointer(this);
+    public updater: Updater = new Updater(this);
+    public audio: AudioController = new AudioController(this);
+    public entities: EntitiesController = new EntitiesController(this);
+    public bubble: BubbleController = new BubbleController(this);
+    public menu: MenuController = new MenuController(this);
+
+    public connection: Connection = new Connection(this);
 
     public time = Date.now();
     public lastTime = Date.now();
 
+    public started = false;
+    public ready = false;
     public pvp = false;
-    // population = -1;
-
-    public overlays!: Overlay;
-    // private connectionHandler!: Connection;
-    public pointer!: Pointer;
-    public bubble!: BubbleController;
-    public camera!: Camera;
-    public inventory!: Inventory;
-
-    public world!: APIData;
 
     public constructor(public app: App) {
-        this.loadRenderer();
-        this.loadControllers();
+        this.app.sendStatus('Loading game');
 
-        app.setGame(this);
+        this.map.onReady(this.handleMap.bind(this));
+
+        this.app.onLogin(this.socket.connect.bind(this.socket));
+        this.app.onResize(this.resize.bind(this));
+        this.app.onRespawn(this.respawn.bind(this));
+
+        this.player.onSync(this.handlePlayerSync.bind(this));
     }
+
+    /**
+     * Starts the game by fading the main menu out
+     * and beginning the game loop `tick()`.
+     */
 
     public start(): void {
         if (this.started) return;
 
+        this.started = true;
+
         this.app.fadeMenu();
         this.tick();
-
-        this.started = true;
-    }
-
-    private stop(): void {
-        this.stopped = false;
-        this.started = false;
-        this.ready = false;
-    }
-
-    private tick(): void {
-        if (this.ready) {
-            this.time = Date.now();
-
-            this.renderer.render();
-            this.updater.update();
-
-            if (!this.stopped) requestAnimationFrame(() => this.tick());
-        }
-    }
-
-    private unload(): void {
-        this.socket = null!;
-        this.messages = null!;
-        this.renderer = null!;
-        this.updater = null!;
-        this.storage = null!;
-        this.entities = null!;
-        this.input = null!;
-        this.map = null!;
-        this.player = null!;
-        this.pathfinder = null!;
-        this.zoning = null!;
-        this.info = null!;
-        this.menu = null!;
-
-        this.audio.stop();
-        this.audio = null!;
-    }
-
-    private loadRenderer(): void {
-        let background = document.querySelector<HTMLCanvasElement>('#background')!,
-            foreground = document.querySelector<HTMLCanvasElement>('#foreground')!,
-            overlay = document.querySelector<HTMLCanvasElement>('#overlay')!,
-            textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!,
-            entities = document.querySelector<HTMLCanvasElement>('#entities')!,
-            cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
-
-        this.app.sendStatus('Initializing render engine');
-
-        this.setRenderer(
-            new Renderer(background, entities, foreground, overlay, textCanvas, cursor, this)
-        );
-    }
-
-    private loadControllers(): void {
-        let { app } = this,
-            { config } = app;
-
-        app.sendStatus('Loading local storage');
-
-        this.setStorage(new Storage(app));
-
-        if (config.worldSwitch) $.get(`${config.hub}/all`, (servers) => this.loadWorlds(servers));
-
-        this.loadMap();
-
-        app.sendStatus('Initializing network socket');
-
-        this.setSocket(new Socket(this));
-        let { socket } = this;
-        this.setMessages(socket.messages);
-        this.setInput(new InputController(this));
-
-        app.sendStatus('Loading controllers');
-
-        this.setEntityController(new EntitiesController(this));
-
-        this.setInfo(new InfoController(this));
-
-        this.setBubble(new BubbleController(this));
-
-        this.setPointer(new Pointer(this));
-
-        this.setAudio(new AudioController(this));
-
-        this.setMenu(new MenuController(this));
-
-        this.loadStorage();
-    }
-
-    private loadWorlds(servers: APIData[]): void {
-        let { storage } = this;
-
-        for (let [i, server] of servers.entries()) {
-            let row = $(document.createElement('tr'));
-
-            row.addClass('server-list');
-            row.append($(document.createElement('td')).text(server.serverId));
-            row.append(
-                $(document.createElement('td')).text(`${server.playerCount}/${server.maxPlayers}`)
-            );
-
-            $('#worlds-list').append(row);
-
-            let setServer = () => {
-                this.world = server;
-
-                storage.data.world = server.serverId;
-                storage.save();
-
-                $('.server-list').removeClass('active');
-                row.addClass('active');
-
-                $('#current-world-index').text(i);
-
-                $('#current-world-id').text(server.serverId);
-                $('#current-world-count').text(`${server.playerCount}/${server.maxPlayers}`);
-
-                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
-            };
-
-            row.on('click', setServer);
-
-            if (server.serverId === storage.data.world) setServer();
-        }
-    }
-
-    public loadMap(): void {
-        this.map = new Map(this);
-        this.overlays = new Overlay();
-
-        let { map } = this;
-
-        map.onReady(() => {
-            let { map, app, renderer, entities } = this;
-
-            if (!map) return;
-
-            if (!this.isDebug()) map.loadRegionData();
-
-            app.sendStatus('Loading the pathfinder');
-
-            this.setPathfinder(new Pathfinder(map.width, map.height));
-
-            renderer.setMap(map);
-            renderer.loadCamera();
-
-            app.sendStatus('Loading updater');
-
-            this.setUpdater(new Updater(this));
-
-            entities.load();
-
-            renderer.setEntities(entities);
-
-            app.ready();
-        });
-    }
-
-    public connect(): void {
-        let { app, socket } = this;
-
-        app.cleanErrors();
-
-        socket.connect();
-
-        // this.connectionHandler =
-        new Connection(this);
     }
 
     /**
-     * Call this after the player has been welcomed
-     * by the server and the client received the connection.
+     * Tick is a recursive function that calls for as long as the
+     * game is running. We use `requestAnimationFrame` to get the
+     * browser to call us back at the next available opportunity.
      */
-    public postLoad(): void {
-        let { renderer, player, entities, updater, storage, socket, map } = this;
-        if (!(renderer && player && entities && updater)) return;
 
-        renderer.loadStaticSprites();
+    private tick(): void {
+        this.time = Date.now();
 
-        this.getCamera().setPlayer(player);
+        this.renderer.render();
+        this.updater.update();
 
-        entities.addEntity(player);
-
-        let defaultSprite = this.getSprite(player.getSpriteName());
-
-        player.setSprite(defaultSprite);
-
-        if (storage) player.setOrientation(storage.data.player.orientation);
-
-        player.idle();
-
-        if (map)
-            socket.send(Packets.Ready, {
-                hasMapData: map.preloadedData,
-                userAgent: agent
-            });
-
-        new PlayerHandler(this, player);
-
-        renderer.updateAnimatedTiles();
-
-        this.zoning = new Zoning();
-
-        updater.setSprites(entities.sprites);
-
-        renderer.verifyCentration();
-
-        if (storage.data.new) {
-            storage.data.new = false;
-            storage.save();
-        }
+        if (this.started) requestAnimationFrame(() => this.tick());
     }
 
-    private loadStorage(): void {
-        let loginName = $('#login-name-input'),
-            loginPassword = $('#login-password-input');
+    /**
+     * Callback handler for when the map has finished loading. We use the map
+     * and assign it to the renderer.
+     */
 
-        loginName.prop('readonly', false);
-        loginPassword.prop('readonly', false);
+    private handleMap(): void {
+        this.app.sendStatus('Initializing updater');
 
-        if (!this.hasRemember()) return;
-
-        if (this.getStorageUsername() !== '') loginName.val(this.getStorageUsername()!);
-
-        if (this.getStoragePassword() !== '') loginPassword.val(this.getStoragePassword()!);
-
-        $('#remember-me').prop('checked', true);
-    }
-
-    public findPath(
-        character: Character,
-        x: number,
-        y: number,
-        ignores: Character[],
-        isObject = false
-    ): number[][] {
-        let { entities, map, pathfinder } = this,
-            grid = entities.grids.pathingGrid,
-            path: number[][] = [];
-
-        if (map.isColliding(x, y) && !map.isObject(x, y)) return path;
-
-        if (!pathfinder) return path;
-
-        if (ignores) _.each(ignores, (entity) => pathfinder.ignoreEntity(entity));
-
-        path = pathfinder.find(grid, character, x, y, false);
-
-        if (ignores) pathfinder.clearIgnores();
-
-        if (isObject) path.pop(); // Remove the last path index
-
-        return path;
-    }
-
-    public handleInput(inputType: number, data: number): void {
-        this.input.handle(inputType, data);
+        this.app.ready();
     }
 
     /**
@@ -347,149 +118,167 @@ export default class Game {
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
-    public handleDisconnection(noError = false): void {
-        let { started, renderer, menu, app } = this;
+    public handleDisconnection(): void {
+        if (!this.app.isMenuHidden()) return;
 
-        if (!started) return;
-
-        this.stop();
-
-        renderer.stop();
-        menu.stop();
-
-        this.unload();
-
-        app.showMenu();
-
-        if (noError) {
-            app.sendError(null, 'You have been disconnected from the server');
-            app.statusMessage = null;
-        }
-
-        this.loadRenderer();
-        this.loadControllers();
-
-        app.toggleLogin(false);
-        app.updateLoader('');
+        location.reload();
     }
+
+    /**
+     * Handles synchronization for the player client-sided.
+     * This is called whenever the player undergoes a change
+     * in experience, level, equipment, etc. Note that this
+     * synchronization is different from the Sync packet
+     * that is received in `connection.ts.` That packet
+     * is synchronization of other player characters, this one
+     * involves our current client's player character.
+     */
+
+    private handlePlayerSync(): void {
+        this.menu.synchronize();
+
+        // Update sprite
+        this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
+    }
+
+    /**
+     * Call this after the player has been welcomed
+     * by the server and the client received the connection.
+     */
+    public postLoad(): void {
+        this.renderer.loadStaticSprites();
+
+        this.entities.addEntity(this.player);
+
+        this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
+
+        if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
+
+        this.player.idle();
+
+        this.camera.centreOn(this.player);
+
+        if (this.map)
+            this.socket.send(Packets.Ready, {
+                hasMapData: this.map.preloadedData,
+                userAgent: agent
+            });
+
+        new PlayerHandler(this, this.player);
+
+        this.renderer.updateAnimatedTiles();
+
+        this.updater.setSprites(this.entities.sprites);
+
+        if (this.storage.data.new) {
+            this.storage.data.new = false;
+            this.storage.save();
+        }
+    }
+
+    /**
+     * Determines a path from the character's current position to the
+     * specified `x` and `y` grid coordinate parameters.
+     * @param character The character we are finding the path for.
+     * @param x The destination x grid coordinate.
+     * @param y The destination y grid coordinate.
+     * @param ignores The list of character objects that we are ignoring.
+     * @param isObject Whether or not we are finding path to an object.
+     * @returns A 2D array of grid coordinates that represent the path.
+     */
+
+    public findPath(
+        character: Character,
+        x: number,
+        y: number,
+        ignores: Character[] = [],
+        isObject = false
+    ): number[][] {
+        let path: number[][] = [];
+
+        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+
+        if (ignores) _.each(ignores, (entity) => this.pathfinder.addIgnore(entity));
+
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
+
+        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
+
+        if (isObject) path.pop(); // Remove the last path index
+
+        return path;
+    }
+
+    /**
+     * Plays the reviving sound effect and removes the death class.
+     * We send a packet to the server to signal for respawn.
+     */
 
     public respawn(): void {
-        let { audio, app, socket, player } = this;
+        this.audio.play(Modules.AudioTypes.SFX, 'revive');
+        this.app.body.classList.remove('death');
 
-        audio.play(Modules.AudioTypes.SFX, 'revive');
-        app.body.removeClass('death');
-
-        socket.send(Packets.Respawn, []);
+        this.socket.send(Packets.Respawn, []);
     }
 
-    // tradeWith(player: Player): void {
-    //     if (!player || player.id === this.player.id) return;
-
-    //     this.socket.send(Packets.Trade, [Opcodes.Trade.Request, player.id]);
-    // }
+    /**
+     * Calls all the resize functions in the controllers
+     * that require resizing.
+     */
 
     public resize(): void {
         this.renderer.resize();
 
         this.pointer.resize();
+
+        this.menu.resize();
     }
 
-    public createPlayer(): void {
-        this.player = new Player();
-    }
+    /**
+     * Determines an entity at a specific grid coordinate.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns The first entity in the list that is at the grid coordinate.
+     */
 
-    public isDebug(): boolean {
-        return this.app.config.debug;
-    }
-
-    public getScaleFactor(): number {
-        return this.app.getScaleFactor();
-    }
-
-    public getCamera(): Camera {
-        return this.renderer.camera!;
-    }
-
-    public getSprite(spriteName: string): Sprite | undefined {
-        return this.entities.getSprite(spriteName);
-    }
-
-    public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
+    public getEntityAt(x: number, y: number): Entity | undefined {
         if (!this.entities) return;
 
-        let items = this.entities.grids.itemGrid[y][x];
+        let entities = this.entities.grids.renderingGrid[y][x],
+            keys = _.keys(entities),
+            index = keys.indexOf(this.player.instance);
 
-        if (_.size(items) > 0) return items[_.keys(items)[0]];
+        // Remove player instance from the keys of entities.
+        if (index !== -1) keys.splice(index, 1);
 
-        let entities = this.entities.grids.renderingGrid[y][x];
-
-        if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
+        // Returns entity if there is a key, otherwise just undefined.
+        return entities[keys[0]];
     }
 
-    private getStorageUsername(): string | undefined {
-        return this.storage.data.player.username;
-    }
+    /**
+     * Handles the teleportation for a player character.
+     * If this player is our game client's player, then
+     * we must clear some of the user interfaces and begin
+     * preparing the renderer for the new location.
+     * @param player The player character we are teleporting.
+     * @param gridX The x grid coordinate we are teleporting to.
+     * @param gridY The y grid coordinate we are teleporting to.
+     */
 
-    private getStoragePassword(): string | undefined {
-        return this.storage.data.player.password;
-    }
+    public teleport(player: Player, gridX: number, gridY: number): void {
+        this.entities.unregisterPosition(player);
 
-    public hasRemember(): boolean | undefined {
-        return this.storage.data.player.rememberMe;
-    }
+        player.setGridPosition(gridX, gridY);
 
-    public setRenderer(renderer: Renderer): void {
-        this.renderer ||= renderer;
-    }
+        this.entities.registerPosition(player);
 
-    private setStorage(storage: Storage): void {
-        this.storage ||= storage;
-    }
+        player.frozen = false;
 
-    private setSocket(socket: Socket): void {
-        this.socket ||= socket;
-    }
+        if (player.instance === this.player.instance) {
+            player.clearHealthBar();
 
-    private setMessages(messages: Messages): void {
-        this.messages ||= messages;
-    }
-
-    private setUpdater(updater: Updater): void {
-        this.updater ||= updater;
-    }
-
-    private setEntityController(entities: EntitiesController): void {
-        this.entities ||= entities;
-    }
-
-    private setInput(input: InputController): void {
-        if (!this.input) {
-            this.input = input;
-            this.renderer.setInput(this.input);
+            this.camera.centreOn(player);
+            this.renderer.updateAnimatedTiles();
         }
-    }
-
-    private setPathfinder(pathfinder: Pathfinder): void {
-        this.pathfinder ||= pathfinder;
-    }
-
-    private setInfo(info: InfoController): void {
-        this.info ||= info;
-    }
-
-    private setBubble(bubble: BubbleController): void {
-        this.bubble ||= bubble;
-    }
-
-    private setPointer(pointer: Pointer): void {
-        this.pointer ||= pointer;
-    }
-
-    private setMenu(menu: MenuController): void {
-        this.menu ||= menu;
-    }
-
-    private setAudio(audio: AudioController): void {
-        this.audio ||= audio;
     }
 }

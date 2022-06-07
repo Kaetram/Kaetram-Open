@@ -1,28 +1,23 @@
-import { Packets, Opcodes } from '@kaetram/common/network';
-
-import log from '../../../lib/log';
-
+import type Map from '../../../map/map';
+import type Camera from '../../../renderer/camera';
+import type InputController from '../../../controllers/input';
+import type EntitiesController from '../../../controllers/entities';
+import type Socket from '../../../network/socket';
+import type Renderer from '../../../renderer/renderer';
 import type Game from '../../../game';
 import type Player from './player';
 
+import { Packets, Opcodes } from '@kaetram/common/network';
+
 export default class PlayerHandler {
-    private map;
-    private camera;
-    private input;
-    private entities;
-    private socket;
-    private renderer;
+    private map: Map = this.game.map;
+    private camera: Camera = this.game.camera;
+    private input: InputController = this.game.input;
+    private entities: EntitiesController = this.game.entities;
+    private socket: Socket = this.game.socket;
+    private renderer: Renderer = this.game.renderer;
 
     public constructor(private game: Game, private player: Player) {
-        let { map, input, entities, socket, renderer } = game;
-
-        this.map = map;
-        this.camera = game.getCamera();
-        this.input = input;
-        this.entities = entities;
-        this.socket = socket;
-        this.renderer = renderer;
-
         this.load();
     }
 
@@ -42,7 +37,7 @@ export default class PlayerHandler {
 
             if (player.gridX === x && player.gridY === y) return [];
 
-            let ignores = [player];
+            let ignores = [];
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, {
@@ -75,8 +70,6 @@ export default class PlayerHandler {
             [input.selectedX, input.selectedY] = path[i];
             input.selectedCellVisible = true;
 
-            log.debug(`Movement speed: ${player.movementSpeed}`);
-
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Started,
                 requestX: input.selectedX,
@@ -91,30 +84,30 @@ export default class PlayerHandler {
         player.onStopPathing((x, y) => {
             if (!input) return;
 
-            entities.unregisterPosition(player);
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;
 
             camera.clip();
 
-            let id = null,
-                entity = game.getEntityAt(x, y, true);
+            let instance = '',
+                entity = game.getEntityAt(x, y);
 
-            if (entity) ({ id } = entity);
-
-            log.debug('Stopping pathing.');
+            if (entity) ({ instance } = entity);
 
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Stop,
                 playerX: x,
                 playerY: y,
-                targetInstance: id,
+                targetInstance: instance,
                 hasTarget: !!player.target,
                 orientation: player.orientation
             });
 
-            socket.send(Packets.Target, [this.getTargetType(), this.getTargetId()]);
+            socket.send(Packets.Target, [
+                this.getTargetType(),
+                player.target ? player.target.instance : ''
+            ]);
 
             if (player.target) {
                 player.lookAt(player.target);
@@ -132,9 +125,9 @@ export default class PlayerHandler {
         player.onBeforeStep(() => entities.unregisterPosition(player));
 
         player.onStep(() => {
-            if (player.hasNextStep()) entities.registerDuality(player);
+            if (player.hasNextStep()) entities.registerPosition(player);
 
-            if (!camera.centered || camera.lockX || camera.lockY) this.checkBounds();
+            if (!camera.isCentered() || camera.lockX || camera.lockY) this.checkBounds();
 
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
@@ -157,19 +150,9 @@ export default class PlayerHandler {
              * This is a callback representing the absolute exact position of the player.
              */
 
-            if (camera.centered) camera.centreOn(player);
+            if (camera.isCentered()) camera.centreOn(player);
 
             if (player.target) player.follow(player.target);
-        });
-
-        player.onUpdateArmour((armourName) => {
-            player.setSprite(game.getSprite(armourName));
-
-            if (game.menu && game.menu.profile) game.menu.profile.update();
-        });
-
-        player.onUpdateEquipment(() => {
-            if (game.menu && game.menu.profile) game.menu.profile.update();
         });
     }
 
@@ -211,7 +194,7 @@ export default class PlayerHandler {
     private getTargetId(): string | null {
         let { target } = this.player;
 
-        return target ? target.id : null;
+        return target ? target.instance : null;
     }
 
     private getTargetType(): Opcodes.Target {

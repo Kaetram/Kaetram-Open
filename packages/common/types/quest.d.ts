@@ -1,6 +1,8 @@
 import type { PointerData } from './pointer';
 import type { PopupData } from './popup';
 
+export type Actor = 'player' | 'npc';
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -18,7 +20,7 @@ export interface RawStage {
     itemCountRequirement?: number;
 
     /** Text for the NPC. */
-    text?: string[];
+    text?: DialogueItem[];
     completedText?: string[];
 
     /** Pointer information */
