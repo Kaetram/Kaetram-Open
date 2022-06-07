@@ -59,6 +59,9 @@ export default class Notification extends Menu {
      */
 
     public override resize(): void {
+        // Don't update unless visible.
+        if (!this.isVisible()) return;
+
         this.setPosition();
     }
 
