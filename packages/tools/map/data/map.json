@@ -958,7 +958,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1099,6 +1099,11 @@
                  "id":18,
                  "name":"",
                  "properties":[
+                        {
+                         "name":"achievement",
+                         "type":"string",
+                         "value":"ahiddenpath"
+                        }, 
                         {
                          "name":"destination",
                          "type":"object",
@@ -3097,7 +3102,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -3111,11 +3116,6 @@
                  "id":118,
                  "name":"",
                  "properties":[
-                        {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":3
-                        }, 
                         {
                          "name":"items",
                          "type":"string",
@@ -3280,11 +3280,6 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
                          "name":"items",
                          "type":"string",
                          "value":"bluesword:1:10,flask:3:90"
@@ -3339,11 +3334,6 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":7
-                        }, 
-                        {
                          "name":"items",
                          "type":"string",
                          "value":"shardt1:2:10,flask:3:90"
@@ -3370,11 +3360,6 @@
                  "id":65,
                  "name":"",
                  "properties":[
-                        {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":8
-                        }, 
                         {
                          "name":"items",
                          "type":"string",
@@ -3403,11 +3388,6 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":8
-                        }, 
-                        {
                          "name":"items",
                          "type":"string",
                          "value":"shardt2:1:10,bigflask:1:90"
@@ -3434,11 +3414,6 @@
                  "id":84,
                  "name":"",
                  "properties":[
-                        {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":4
-                        }, 
                         {
                          "name":"items",
                          "type":"string",
@@ -3494,11 +3469,6 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":13
-                        }, 
-                        {
                          "name":"items",
                          "type":"string",
                          "value":"icesword:1:10,flask:3:95"
@@ -3522,7 +3492,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -3814,71 +3784,6 @@
         }, 
         {
          "draworder":"topdown",
-         "id":52,
-         "name":"achievements",
-         "objects":[
-                {
-                 "height":48,
-                 "id":137,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":14
-                        }, 
-                        {
-                         "name":"x",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"y",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":4128,
-                 "y":5488
-                }, 
-                {
-                 "height":48,
-                 "id":138,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"achievement",
-                         "type":"int",
-                         "value":15
-                        }, 
-                        {
-                         "name":"x",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"y",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":9456,
-                 "y":2752
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":54,
          "name":"dynamic",
          "objects":[
@@ -3925,7 +3830,7 @@
  "nextobjectid":213,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.8.4",
+ "tiledversion":"1.7.0",
  "tileheight":16,
  "tilesets":[
         {
@@ -11222,8 +11127,7 @@
                          "type":"string",
                          "value":""
                         }]
-                },
-            
+                }, 
                 {
                  "id":2288,
                  "properties":[
@@ -31209,8 +31113,7 @@
                          "type":"string",
                          "value":""
                         }]
-                },
-            
+                }, 
                 {
                  "id":2456,
                  "properties":[
@@ -37042,6 +36945,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.8",
+ "version":"1.6",
  "width":704
 }
