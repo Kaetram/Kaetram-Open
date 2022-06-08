@@ -1,14 +1,13 @@
 import config from '@kaetram/common/config';
-import { Opcodes, Modules } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import Item from '../game/entity/objects/item';
 import Quest from '../game/entity/character/player/quest/quest';
 
-import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
-import { Command, Map, Pointer, Network, Notification } from '../network/packets';
+import { Command, Pointer, Network, Notification } from '../network/packets';
 
 export default class Commands {
     private world;
@@ -84,14 +83,6 @@ export default class Commands {
             case 'ping':
                 this.player.pingTime = Date.now();
                 this.player.send(new Network(Opcodes.Network.Ping));
-                break;
-
-            case 'resettutorial':
-                if (!config.debugging) return;
-
-                this.player.quests.getQuest('tutorial')!.setStage(0);
-
-                this.player.notify('Tutorial has been reset.');
                 break;
         }
     }
@@ -338,12 +329,16 @@ export default class Commands {
                 return this.player.send(new Command({ command: 'toggleheal' }));
 
             case 'popup':
-                this.player.send(
-                    new Notification(Opcodes.Notification.Popup, {
-                        title: 'New Quest Found!',
-                        message: 'New quest has been discovered!',
-                        colour: '#00000'
-                    })
+                this.player.popup(
+                    'New Quest Found!',
+                    '@blue@New @darkblue@quest @green@has@red@ been discovered!'
+                );
+
+                break;
+
+            case 'resetachievements':
+                this.player.achievements.forEachAchievement((achievement) =>
+                    achievement.setStage(0)
                 );
 
                 break;
@@ -401,7 +396,7 @@ export default class Commands {
                 if (!questKey)
                     return this.player.notify(`Malformed command, expected /finishquest questKey`);
 
-                quest = this.player.quests.getQuest(questKey);
+                quest = this.player.quests.get(questKey);
 
                 if (quest) quest.setStage(9999);
                 else this.player.notify(`Could not find quest with key: ${questKey}`);

@@ -57,6 +57,7 @@ export default class Creator {
             this.saveInventory(player);
             this.saveBank(player);
             this.saveQuests(player);
+            this.saveAchievements(player);
             this.saveSkills(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
@@ -119,6 +120,16 @@ export default class Creator {
         let collection = this.database.collection('player_quests');
 
         this.updateCollection(collection, player.username, player.quests.serialize());
+    }
+
+    /**
+     * Serializes the achievement data and stores it into the database.
+     */
+
+    private saveAchievements(player: Player): void {
+        let collection = this.database.collection('player_achievements');
+
+        this.updateCollection(collection, player.username, player.achievements.serialize());
     }
 
     /**

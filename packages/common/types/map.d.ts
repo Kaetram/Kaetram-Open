@@ -17,6 +17,9 @@ export interface ProcessedArea {
     x: number;
     y: number;
 
+    // Chest/door/area
+    achievement?: string;
+
     // Area
     width: number;
     height: number;
@@ -38,7 +41,6 @@ export interface ProcessedArea {
     items?: string;
     spawnX?: number;
     spawnY?: number;
-    achievement?: number;
 
     // Warp
     name?: string; //? also common
@@ -67,6 +69,7 @@ export interface ProcessedDoor {
     y: number;
     orientation: string;
     quest?: string;
+    achievement?: string;
     stage?: number;
 }
 

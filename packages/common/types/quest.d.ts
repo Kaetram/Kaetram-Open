@@ -59,10 +59,10 @@ export interface QuestData {
     key: string;
     stage: number;
     subStage: number;
-    stageCount: number;
 
     name?: string;
     description?: string;
+    stageCount?: number;
 }
 
 export interface SerializedQuest {

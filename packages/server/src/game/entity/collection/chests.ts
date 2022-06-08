@@ -11,7 +11,7 @@ export default class ChestCollection extends Collection<Chest> {
         x: number;
         y: number;
         isStatic?: boolean;
-        achievement?: number;
+        achievement?: string;
     }): Chest {
         return this.createChest(
             params.items,
@@ -27,7 +27,7 @@ export default class ChestCollection extends Collection<Chest> {
         x: number,
         y: number,
         isStatic = false,
-        achievement?: number
+        achievement?: string
     ): Chest {
         let chest = new Chest(x, y, achievement, items);
 
@@ -51,7 +51,7 @@ export default class ChestCollection extends Collection<Chest> {
                 count: item.count
             });
 
-            if (player && chest.achievement) player.finishAchievement(chest.achievement);
+            if (player && chest.achievement) player.achievements.get(chest.achievement).finish();
         });
         return chest;
     }
