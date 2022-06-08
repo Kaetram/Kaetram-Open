@@ -82,8 +82,9 @@ export default class Achievement {
         let dialogue = this.isStarted() ? this.dialogueStarted : this.dialogueHidden;
 
         // End of dialogue, check if the achievement requires an item.
-        if (dialogue.length === player.talkIndex && this.hasItemRequirement())
-            this.handleItemRequirement(player);
+        if (dialogue.length === player.talkIndex)
+            if (this.hasItemRequirement()) this.handleItemRequirement(player);
+            else this.progress();
 
         npc.talk(player, dialogue);
     }
