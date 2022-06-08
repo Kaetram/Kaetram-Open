@@ -13,6 +13,9 @@
             "They won't let me be."
         ],
 
+        "mob": ["rat", "icerat"],
+        "mobCount": 20,
+
         "rewardItem": "axe",
         "rewardExperience": 200
     },
