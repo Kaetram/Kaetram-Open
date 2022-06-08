@@ -1,3 +1,11 @@
+import _ from 'lodash';
+
+import Player from '../player';
+import Mob from '../../mob/mob';
+import NPC from '../../../npc/npc';
+
+import log from '@kaetram/common/util/log';
+
 import { PopupData } from '@kaetram/common/types/popup';
 import { RawAchievement, AchievementData } from '@kaetram/common/types/achievement';
 
@@ -8,23 +16,116 @@ import { RawAchievement, AchievementData } from '@kaetram/common/types/achieveme
  * A player is generally rewarded with an item or some experience.
  */
 
+type FinishCallback = (item?: string, itemCount?: number, experience?: number) => void;
 type ProgressCallback = (key: string, stage: number, name: string) => void;
 type PopupCallback = (popup: PopupData) => void;
+type TalkCallback = (npc: NPC, player: Player) => void;
+type KillCallback = (mob: Mob) => void;
 
 export default class Achievement {
     private name = '';
     private description = '';
     private stage = 0; // Current stage of the achievement.
     private stageCount = 0; // How long the achievement is.
+    private npc = '';
+    private dialogueHidden: string[] = []; // Before achievement is started.
+    private dialogueStarted: string[] = []; // After achievement is started.
+    private mob: string | string[] = '';
+    private item = ''; // Item required for completion
+    private itemCount = 1; // How much of the item for completion.
+    private rewardItem = '';
+    private rewardItemCount = 1;
+    private rewardExperience = 0;
 
+    private finishCallback?: FinishCallback;
     private progressCallback?: ProgressCallback;
     private popupCallback?: PopupCallback;
 
+    public talkCallback?: TalkCallback;
+    public killCallback?: KillCallback;
+
     public constructor(private key: string, rawData: RawAchievement) {
-        // Stage data is how many mobs we must kill or a single stage (e.g. discover door).
+        // Load all the data from the raw information.
         this.name = rawData.name;
         this.description = rawData.description || '';
+        this.npc = rawData.npc || '';
+        this.dialogueHidden = rawData.dialogueHidden || [];
+        this.dialogueStarted = rawData.dialogueStarted || [];
+        this.mob = rawData.mob || '';
+        // Stage count is how many mobs we must kill or a single stage (e.g. discover door).
         this.stageCount = rawData.mobCount! || 1;
+        this.item = rawData.item || '';
+        this.itemCount = rawData.itemCount || 1;
+        this.rewardItem = rawData.rewardItem || '';
+        this.rewardItemCount = rawData.rewardItemCount || 1;
+        this.rewardExperience = rawData.rewardExperience || 0;
+
+        // Callbacks for the achievement.
+        this.onTalk(this.handleTalk.bind(this));
+        this.onKill(this.handleKill.bind(this));
+    }
+
+    /**
+     * Handler for when a player interacts with an NPC. The dialogue
+     * is handled on a per-achievement basis.
+     * @param npc The NPC that we are interacting with.
+     * @param player The player that is interacting with the NPC, used
+     * to send packets.
+     */
+
+    private handleTalk(npc: NPC, player: Player): void {
+        log.debug(`[${this.name}] Player ${player.username} talked to ${npc.key}`);
+
+        // This theoretically shouldn't happen but it can't hurt to be careful.
+        if (npc.key !== this.npc) return;
+
+        let dialogue = this.isStarted() ? this.dialogueStarted : this.dialogueHidden;
+
+        // End of dialogue, check if the achievement requires an item.
+        if (dialogue.length === player.talkIndex && this.hasItemRequirement())
+            this.handleItemRequirement(player);
+
+        npc.talk(player, dialogue);
+    }
+
+    /**
+     * Handles when a mob associated with this achievement is killed.
+     * @param mob The mob that has been killed.
+     */
+
+    private handleKill(mob: Mob): void {
+        log.debug(`[${this.name}] Player killed ${mob.key}`);
+
+        if (mob.key !== this.mob) return;
+
+        // Increment by one for each mob that is killed.
+        this.progress();
+    }
+
+    /**
+     * Handles the removal of an item from the player's inventory
+     * for an achievement that requires the player to find an item.
+     * @param player The player we are checking the inventory of.
+     */
+
+    private handleItemRequirement(player: Player): void {
+        let index = player.inventory.getIndex(this.item, this.itemCount);
+
+        // No item found.
+        if (index === -1) return;
+
+        player.inventory.remove(index, this.itemCount);
+
+        // Progress after removing the item.
+        this.progress();
+    }
+
+    /**
+     * Advances the current stage by one increment.
+     */
+
+    public progress(): void {
+        this.setStage(this.stage + 1);
     }
 
     /**
@@ -59,8 +160,11 @@ export default class Achievement {
          * we first send the discover popup.
          */
 
-        if (this.stage === this.stageCount) this.popupCallback?.(this.getFinishPopup());
-        else if (this.stage === 1) this.popupCallback?.(this.getDiscoveredPopup());
+        if (this.stage === this.stageCount) {
+            // Achievement is finished!
+            this.popupCallback?.(this.getFinishPopup());
+            this.finishCallback?.(this.rewardItem, this.rewardItemCount, this.rewardExperience);
+        } else if (this.stage === 1) this.popupCallback?.(this.getDiscoveredPopup());
     }
 
     /**
@@ -82,6 +186,36 @@ export default class Achievement {
     }
 
     /**
+     * Checks whether or not the NPC is associated with this achievement.
+     * @param npc The NPC we are checking the key of.
+     * @returns Whether or not the NPC key matches the achievement's NPC key.
+     */
+
+    public hasNPC(npc: NPC): boolean {
+        return npc.key === this.npc;
+    }
+
+    /**
+     * Checks if the mob provided is within the requirements of the achievement.
+     * An achievement may have a singular mob target, or an array of mobs that
+     * can be killed to progress.
+     * @param mob The mob we are checking in the achievement.
+     * @returns Whether or not the mob exists in the achievement.
+     */
+
+    public hasMob(mob: Mob): boolean {
+        return _.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
+    }
+
+    /**
+     * @returns Whether or not the achievement has an item that is required.
+     */
+
+    private hasItemRequirement(): boolean {
+        return this.item !== '';
+    }
+
+    /**
      * The achievement's name is hidden until it is discovered, that is,
      * until the stage does not equal 0.
      * @returns Actual name of the achievement or ???????? if it is not discovered.
@@ -90,6 +224,11 @@ export default class Achievement {
     private getName(): string {
         return this.isStarted() ? this.name : '????????';
     }
+
+    /**
+     * Returns a popup for when the player has discovered the achievement.
+     * @returns Popup data for when the player has discovered the achievement.
+     */
 
     private getDiscoveredPopup(): PopupData {
         return {
@@ -136,6 +275,15 @@ export default class Achievement {
     }
 
     /**
+     * Callback for when the achievement is finished.
+     * @param callback Contains the reward information.
+     */
+
+    public onFinish(callback: FinishCallback): void {
+        this.finishCallback = callback;
+    }
+
+    /**
      * Progress callback containing information about the stage.
      * @param callback Contains key and stage of the achievement.
      */
@@ -151,5 +299,23 @@ export default class Achievement {
 
     public onPopup(callback: PopupCallback): void {
         this.popupCallback = callback;
+    }
+
+    /**
+     * Callback when an NPC that belongs to the achievement is talked to.
+     * @param callback Contains NPC and player object.
+     */
+
+    private onTalk(callback: TalkCallback): void {
+        this.talkCallback = callback;
+    }
+
+    /**
+     * Callback for when a player kills a mob that is associated with the achievement.
+     * @param callback Contains the mob that was just killed.
+     */
+
+    private onKill(callback: KillCallback): void {
+        this.killCallback = callback;
     }
 }

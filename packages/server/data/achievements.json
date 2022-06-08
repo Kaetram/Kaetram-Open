@@ -1,7 +1,20 @@
 {
     "ratinfestation": {
         "name": "Rat Infestation",
-        "description": "Bulk Bogan requested you kill some rats, help him out by slaying 20 of them!"
+        "description": "Bulk Bogan requested you kill some rats, help him out by slaying 20 of them!",
+        "npc": "villager",
+        "dialogueHidden": [
+            "Hello there fellow adventurer!", 
+            "Please...", "Please help me with these rats!", 
+            "If you slay 20 of them, I'll su-",
+            "Reward you with something special!"],
+        "dialogueStarted": [
+            "Please, those rats are really annoying!",
+            "They won't let me be."
+        ],
+
+        "rewardItem": "axe",
+        "rewardExperience": 200
     },
 
     "ahiddenpath": {
