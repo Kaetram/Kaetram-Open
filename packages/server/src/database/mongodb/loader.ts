@@ -6,6 +6,7 @@ import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/e
 import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
 import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
+import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 
 export default class Loader {
     public constructor(private database: Db) {}
@@ -97,6 +98,27 @@ export default class Loader {
             let [{ quests }] = info as SerializedQuest[];
 
             callback(quests);
+        });
+    }
+
+    /**
+     * Achievements are loaded pretty mucht the same way as quests. We parse through
+     * the data and return it into an array of type AchievementData. Each element
+     * contains information about the specific achievement.
+     * @param player Player we are grabbing the achievement data for.
+     * @param callback Contains an array of achievement objects.
+     */
+
+    public loadAchievements(
+        player: Player,
+        callback: (achievements: AchievementData[]) => void
+    ): void {
+        this.load(player.username, 'player_achievements', (info: unknown) => {
+            if (!info) return callback([]);
+
+            let [{ achievements }] = info as SerializedAchievement[];
+
+            callback(achievements);
         });
     }
 
