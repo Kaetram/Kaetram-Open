@@ -3,15 +3,16 @@ import _ from 'lodash';
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
 import Player from '../player';
+import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
+
+import Modules from '@kaetram/common/network/modules';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
-import Item from '../../../objects/item';
 import { PopupData } from '@kaetram/common/types/popup';
-import Modules from '@kaetram/common/network/modules';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;
@@ -158,18 +159,6 @@ export default abstract class Quest {
     }
 
     /**
-     * Advances the quest to the next stage.
-     */
-
-    private progress(subStage?: boolean): void {
-        log.debug(`${this.name} Quest progression.`);
-
-        // Progress substage only if the parameter is defined.
-        if (subStage) this.setStage(this.stage, this.subStage + 1);
-        else this.setStage(this.stage + 1);
-    }
-
-    /**
      * Checks the player's inventory and progresses if
      * he contains enough of the required item.
      * @param player The player we are checking inventory of.
@@ -187,6 +176,18 @@ export default abstract class Quest {
         player.inventory.remove(index, itemCountRequirement);
 
         this.progress();
+    }
+
+    /**
+     * Advances the quest to the next stage.
+     */
+
+    private progress(subStage?: boolean): void {
+        log.debug(`${this.name} Quest progression.`);
+
+        // Progress substage only if the parameter is defined.
+        if (subStage) this.setStage(this.stage, this.subStage + 1);
+        else this.setStage(this.stage + 1);
     }
 
     /**
