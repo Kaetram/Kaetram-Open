@@ -20,12 +20,12 @@ export default class MongoDB {
     public failCallback?: (error: Error) => void;
 
     public constructor(
-        private host: string,
-        private port: number,
-        private username: string,
-        private password: string,
+        host: string,
+        port: number,
+        username: string,
+        password: string,
         private databaseName: string,
-        private mongodbSrv: boolean
+        mongodbSrv: boolean
     ) {
         let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
             authInsert = !!username && !!password ? `${username}:${password}@` : '',
@@ -49,7 +49,11 @@ export default class MongoDB {
         });
 
         client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
-            if (error) return this.failCallback?.(error);
+            if (error) {
+                // Initializes an empty loader controller.
+                this.loader = new Loader();
+                return this.failCallback?.(error);
+            }
 
             this.database = _client!.db(this.databaseName);
 

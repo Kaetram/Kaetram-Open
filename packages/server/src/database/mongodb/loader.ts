@@ -9,7 +9,7 @@ import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 
 export default class Loader {
-    public constructor(private database: Db) {}
+    public constructor(private database?: Db) {}
 
     /**
      * Generalized function for loading data from the database. It will return a
@@ -21,6 +21,9 @@ export default class Loader {
      */
 
     public load(username: string, collection: string, callback: (data?: never) => void): void {
+        // Used for when we're working without a database to return empty data.
+        if (!this.database) return callback();
+
         let cursor = this.database.collection(collection).find({ username });
 
         cursor.toArray().then((info) => {
