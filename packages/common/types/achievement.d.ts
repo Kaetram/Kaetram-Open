@@ -7,6 +7,8 @@ export interface RawAchievement {
     description?: string;
 
     npc?: string; // NPC handing out the achievement.
+    dialogueHidden?: string[]; // Dialogue to display before the achievement is discovered.
+    dialogueStarted?: string[]; // Dialogue when the achievement has been started.
 
     mob?: string | string[]; // If the achievement requires a mob (or mobs) to be killed.
     mobCount?: number; // How many of the mobs to be killed.
