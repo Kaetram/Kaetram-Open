@@ -64,7 +64,7 @@ export default class Game {
     public constructor(public app: App) {
         this.app.sendStatus('Loading game');
 
-        this.map.onReady(this.handleMap.bind(this));
+        this.map.onReady(() => this.app.ready());
 
         this.app.onLogin(this.socket.connect.bind(this.socket));
         this.app.onResize(this.resize.bind(this));
@@ -103,21 +103,11 @@ export default class Game {
     }
 
     /**
-     * Callback handler for when the map has finished loading. We use the map
-     * and assign it to the renderer.
-     */
-
-    private handleMap(): void {
-        this.app.sendStatus('Initializing updater');
-
-        this.app.ready();
-    }
-
-    /**
      * This method is responsible for handling sudden
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
+
     public handleDisconnection(): void {
         if (!this.app.isMenuHidden()) return;
 
