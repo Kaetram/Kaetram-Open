@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import NPC from '../../npc/npc';
+import Mob from '../mob/mob';
 import Player from './player';
 
 import Achievement from './achievement/achievement';
@@ -15,6 +17,7 @@ import {
     SerializedAchievement
 } from '@kaetram/common/types/achievement';
 import { Opcodes } from '@kaetram/common/network';
+import Item from '../../objects/item';
 
 export default class Achievements {
     private achievements: { [key: string]: Achievement } = {};
@@ -28,6 +31,7 @@ export default class Achievements {
 
             this.achievements[key] = achievement;
 
+            achievement.onFinish(this.handleFinish.bind(this));
             achievement.onProgress(this.handleProgress.bind(this));
             achievement.onPopup(this.handlePopup.bind(this));
         });
@@ -49,6 +53,33 @@ export default class Achievements {
         });
 
         this.loadCallback?.();
+    }
+
+    /**
+     * Handles the reward of an achievement when it is finished.
+     * @param itemKey The key of the item we are rewarding.
+     * @param itemCount Amount of an item we are rewarding.
+     * @param experience How much experience we are rewarding to the player.
+     */
+
+    private handleFinish(itemKey?: string, itemCount?: number, experience?: number): void {
+        // Handles an item reward.
+        if (itemKey) {
+            let item = new Item(itemKey, -1, -1, true, itemCount);
+
+            // Check if we can add to the inventory, then the bank, and if both fail just drop the item.
+            if (!this.player.inventory.add(item) && !this.player.bank.add(item))
+                this.player.world.entities.spawnItem(
+                    itemKey,
+                    this.player.x,
+                    this.player.y,
+                    true,
+                    itemCount
+                );
+        }
+
+        // Add experience if it exists.
+        if (experience) this.player.addExperience(experience);
     }
 
     /**
@@ -86,6 +117,28 @@ export default class Achievements {
 
     public get(key: string): Achievement {
         return this.achievements[key];
+    }
+
+    /**
+     * Checks an entity (that can be a mob or NPC) to see if any of the
+     * achievements contain information about it. Achievements must not
+     * be completed to return a valid object, otherwise an undefined is returned.
+     * @param entity The entity we are checking, either a mob or an NPC.
+     * @returns An achievement object if found, otherwise undefiend.
+     */
+
+    public getAchievementFromEntity(entity: NPC | Mob): Achievement | undefined {
+        let achievement;
+
+        this.forEachAchievement((a: Achievement) => {
+            if (a.isFinished()) return;
+            if (entity.isNPC() && !a.hasNPC(entity as NPC)) return;
+            if (entity.isMob() && !a.hasMob(entity as Mob)) return;
+
+            achievement = a;
+        });
+
+        return achievement;
     }
 
     /**

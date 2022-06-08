@@ -153,8 +153,6 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        console.log(door);
-
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
@@ -358,10 +356,17 @@ export default class Handler {
                 `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
             );
 
+        // Checks if the NPC has an active quest associated with it.
         let quest = this.player.quests.getQuestFromNPC(npc);
 
         if (quest) return quest.talkCallback?.(npc, this.player);
 
+        // Checks if the NPC has an active achievement associated with it.
+        let achievement = this.player.achievements.getAchievementFromEntity(npc);
+
+        if (achievement) return achievement.talkCallback?.(npc, this.player);
+
+        // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
@@ -384,11 +389,18 @@ export default class Handler {
     private handleKill(character: Character): void {
         log.debug(`Received kill callback for: ${character.instance}.`);
 
+        // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        // Checks if the mob has a active quest associated with it.
         let quest = this.player.quests.getQuestFromMob(character as Mob);
 
         if (quest) quest.killCallback?.(character as Mob);
+
+        // Checks if the mob has an active achievement associated with it.
+        let achievement = this.player.achievements.getAchievementFromEntity(character as Mob);
+
+        if (achievement) achievement.killCallback?.(character as Mob);
     }
 
     /**
