@@ -155,7 +155,14 @@ export type QuestCallback = (opcode: Opcodes.Quest, info: QuestPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type AchievementCallback = () => void;
+export interface AchievementPacket {
+    key?: string;
+    name?: string;
+    stage?: number;
+    achievements?: AchievementData[];
+}
+
+export type AchievementCallback = (opcode: Opcodes.Achievement, info: AchievementPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 

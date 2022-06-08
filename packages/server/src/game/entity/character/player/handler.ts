@@ -5,6 +5,7 @@ import Utils from '@kaetram/common/util/utils';
 import {
     Container,
     Quest,
+    Achievement,
     Equipment as EquipmentPacket,
     NPC as NPCPacket,
     Death,
@@ -58,6 +59,7 @@ export default class Handler {
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
+        this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
 
         // Inventory callbacks
@@ -146,10 +148,15 @@ export default class Handler {
 
     private handleDoor(door: ProcessedDoor): void {
         if (door.quest) {
-            let quest = this.player.quests.getQuest(door.quest);
+            let quest = this.player.quests.get(door.quest);
 
             return quest.doorCallback?.(door, this.player);
         }
+
+        console.log(door);
+
+        // If the door has an achievement associated with it, it gets completed here.
+        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
         this.player.teleport(door.x, door.y);
 
@@ -284,11 +291,21 @@ export default class Handler {
     }
 
     /**
-     * Send a packet to the client to load quests.
+     * Sends a packet to the client containing batch data for the quests.
      */
 
     private handleQuests(): void {
         this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
+    }
+
+    /**
+     * Sends a packet to the client containing batch data for the achievements.
+     */
+
+    private handleAchievements(): void {
+        this.player.send(
+            new Achievement(Opcodes.Achievement.Batch, this.player.achievements.serialize(true))
+        );
     }
 
     /**
@@ -443,18 +460,6 @@ export default class Handler {
 
                 case 'camera':
                     return this.player.updateCamera(info);
-
-                case 'achievements':
-                    if (!info || !info.achievement) return;
-
-                    if (!this.player.achievementsLoaded) return;
-
-                    this.player.finishAchievement(info.achievement);
-
-                    break;
-
-                case 'door':
-                    break;
             }
         });
     }
