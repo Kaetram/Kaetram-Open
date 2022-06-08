@@ -9,10 +9,10 @@ import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
 import Bank from './containers/impl/bank';
+import Achievements from './achievements';
 import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
 import Abilities from './abilities/abilities';
-import Container from './containers/container';
 import Formulas from '../../../../info/formulas';
 import Inventory from './containers/impl/inventory';
 import Packet from '@kaetram/server/src/network/packet';
@@ -79,6 +79,7 @@ export default class Player extends Character {
     private handler: Handler;
 
     public quests: Quests;
+    public achievements: Achievements;
     public skills: Skills = new Skills(this);
     public equipment: Equipments;
     public mana: Mana = new Mana(Modules.Defaults.MANA);
@@ -172,6 +173,7 @@ export default class Player extends Character {
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
         this.handler = new Handler(this);
         this.warp = new Warp(this);
 
@@ -240,11 +242,22 @@ export default class Player extends Character {
     }
 
     /**
-     * Loads the quest data from the bank.
+     * Loads the quest data from the database.
      */
 
     public loadQuests(): void {
         this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    }
+
+    /**
+     * Loads the achievement data from the database.
+     */
+
+    public loadAchievements(): void {
+        this.database.loader?.loadAchievements(
+            this,
+            this.achievements.load.bind(this.achievements)
+        );
     }
 
     /**
@@ -832,7 +845,7 @@ export default class Player extends Character {
      * @param colour The colour of the popup's text.
      */
 
-    public popup(title: string, message: string, colour: string): void {
+    public popup(title: string, message: string, colour = '#00000'): void {
         if (!title) return;
 
         title = Utils.parseMessage(title);
@@ -913,31 +926,6 @@ export default class Player extends Character {
 
     public hasAggressionTimer(): boolean {
         return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
-    }
-
-    public finishedQuest(id: number): boolean {
-        return false;
-        // let quest = this.quests?.getQuest(id);
-
-        // return quest?.isFinished() || false;
-    }
-
-    public finishedAchievement(id: number): boolean {
-        return false;
-        // if (!this.quests) return false;
-
-        // let achievement = this.quests.getAchievement(id);
-
-        // if (!achievement) return true;
-
-        // return achievement.isFinished();
-    }
-
-    public finishAchievement(id: number): void {
-        // if (!this.quests) return;
-        // let achievement = this.quests.getAchievement(id);
-        // if (!achievement || achievement.isFinished()) return;
-        // achievement.finish();
     }
 
     /**

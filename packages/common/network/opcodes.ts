@@ -67,8 +67,7 @@ export enum Quest {
 
 export enum Achievement {
     Batch,
-    Progress,
-    Finish
+    Progress
 }
 
 export enum Notification {
