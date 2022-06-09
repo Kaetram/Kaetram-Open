@@ -97,8 +97,8 @@ export default class Player extends Character {
         if (data.equipments) _.each(data.equipments, this.equip.bind(this));
 
         // Only used when loading the main player.
-        if (data.experience)
-            this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
+        if (!isNaN(data.experience!))
+            this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -317,9 +317,9 @@ export default class Player extends Character {
 
         this.sync();
 
-        if (!prevExperience || !nextExperience) return;
+        if (isNaN(prevExperience!) || !nextExperience) return;
 
-        this.experienceCallback?.(experience, prevExperience, nextExperience);
+        this.experienceCallback?.(experience, prevExperience!, nextExperience);
     }
 
     /**
