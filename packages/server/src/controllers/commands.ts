@@ -1,4 +1,3 @@
-import config from '@kaetram/common/config';
 import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Character from '../game/entity/character/character';
