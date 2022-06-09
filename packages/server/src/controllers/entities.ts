@@ -109,7 +109,7 @@ export default class Entities {
         x: number,
         y: number,
         isStatic = false,
-        achievement?: number
+        achievement?: string
     ): Chest {
         return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement });
     }

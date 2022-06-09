@@ -96,8 +96,7 @@ export default defineConfig(({ command }) => {
             legacy(),
             createHtmlPlugin({
                 minify: isProduction && { processScripts: ['application/ld+json'] }
-            }),
-            compress({ brotli })
+            })
         ],
         build: {
             sourcemap: false,

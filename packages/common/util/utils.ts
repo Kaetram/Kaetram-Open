@@ -228,10 +228,11 @@ export default {
      * @param host The hostname of the server.
      * @param port The port of the server.
      * @param path The server API we want to send a request to.
+     * @param ssl Whether or not SSL is enabled.
      * @returns A string containing the server's URL.
      */
 
-    getUrl(host: string, port: number, path: string): string {
-        return config.ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
+    getUrl(host: string, port: number, path: string, ssl = false): string {
+        return config.ssl && !ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
     }
 };
