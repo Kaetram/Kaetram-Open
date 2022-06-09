@@ -39,10 +39,10 @@ export default class Handler {
     private handleMovement(): void {
         if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
 
-        // /**
-        //  * We check if the user's target is outside the roaming area and
-        //  * pick a new one if that is the case.
-        //  */
+        /**
+         * We check if the user's target is outside the roaming area and
+         * pick a new one if that is the case.
+         */
 
         if (this.mob.outsideRoaming(this.mob.target))
             if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
