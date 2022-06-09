@@ -220,9 +220,10 @@ export default class API {
 
         console.log(server);
 
-        axios
-            .post(url, data)
-            .catch(() => log.error(`Could not send chat to ${config.name} ${key}`));
+        axios.post(url, data).catch((error) => {
+            log.error(`Could not send chat to ${config.name} ${key}`);
+            log.error(error);
+        });
     }
 
     /**
