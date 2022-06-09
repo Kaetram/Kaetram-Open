@@ -146,7 +146,7 @@ export default {
     },
 
     prevExp(experience: number): number {
-        if (experience < 0) return -1;
+        if (experience < 0) return 0;
 
         for (let i = Modules.Constants.MAX_LEVEL as number; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
