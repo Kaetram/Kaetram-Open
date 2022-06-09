@@ -847,9 +847,7 @@ export default class Player extends Character {
             colour
         });
 
-        // Send globally or to nearby regions.
-        if (global) this.sendBroadcast(packet);
-        else this.sendToRegions(packet);
+        this.sendToRegions(packet);
     }
 
     /**
