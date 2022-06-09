@@ -836,7 +836,7 @@ export default class Player extends Character {
         if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
 
         // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(source, message, global);
+        if (config.hubEnabled) this.world.api.sendChat(source, message);
 
         if (global) return this.world.globalMessage(name, message, colour);
 
