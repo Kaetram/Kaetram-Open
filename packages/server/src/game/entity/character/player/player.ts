@@ -228,7 +228,7 @@ export default class Player extends Character {
      * Loads the equipment data from the database.
      */
 
-    public async loadEquipment(): Promise<void> {
+    public loadEquipment(): void {
         this.database.loader?.loadEquipment(this, this.equipment.load.bind(this.equipment));
     }
 
@@ -236,7 +236,7 @@ export default class Player extends Character {
      * Loads the inventory data from the database.
      */
 
-    public async loadInventory(): Promise<void> {
+    public loadInventory(): void {
         this.database.loader?.loadInventory(this, this.inventory.load.bind(this.inventory));
     }
 
@@ -244,7 +244,7 @@ export default class Player extends Character {
      * Loads the bank data from the database.
      */
 
-    public async loadBank(): Promise<void> {
+    public loadBank(): void {
         this.database.loader?.loadBank(this, this.bank.load.bind(this.bank));
     }
 
@@ -252,7 +252,7 @@ export default class Player extends Character {
      * Loads the quest data from the database.
      */
 
-    public async loadQuests(): Promise<void> {
+    public loadQuests(): void {
         this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
     }
 
@@ -260,7 +260,7 @@ export default class Player extends Character {
      * Loads the achievement data from the database.
      */
 
-    public async loadAchievements(): Promise<void> {
+    public loadAchievements(): void {
         this.database.loader?.loadAchievements(
             this,
             this.achievements.load.bind(this.achievements)
@@ -271,7 +271,7 @@ export default class Player extends Character {
      * Loads the skill data from the database.
      */
 
-    public async loadSkills(): Promise<void> {
+    public loadSkills(): void {
         this.database.loader?.loadSkills(this, this.skills.load.bind(this.skills));
     }
 
