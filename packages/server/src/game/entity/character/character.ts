@@ -73,7 +73,9 @@ export default abstract class Character extends Entity {
 
         this.combat = new Combat(this);
 
-        this.onStunned(this.stun.bind(this));
+        this.onStunned(this.handleStun.bind(this));
+        this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
+
         this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
     }
 
@@ -83,12 +85,29 @@ export default abstract class Character extends Entity {
      * @param state The current stun state for the character.
      */
 
-    private stun(state: boolean): void {
+    private handleStun(state: boolean): void {
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Movement(Opcodes.Movement.Stunned, {
                 instance: this.instance,
                 state
+            })
+        });
+    }
+
+    /**
+     * Handles a change in the hit points and relays
+     * that information to the nearby regions.
+     */
+
+    private handleHitPoints(): void {
+        // Sync the change in hitpoints to nearby entities.
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.region,
+            packet: new Points({
+                instance: this.instance,
+                hitPoints: this.hitPoints.getHitPoints(),
+                maxHitPoints: this.hitPoints.getMaxHitPoints()
             })
         });
     }
@@ -134,15 +153,6 @@ export default abstract class Character extends Entity {
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
-
-        // Sync the change in hitpoints to nearby entities.
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Points({
-                instance: this.instance,
-                hitPoints: this.hitPoints.getHitPoints()
-            })
-        });
 
         // Call the death callback if the character reaches 0 hitpoints.
         if (this.isDead()) return this.deathCallback?.(attacker);
