@@ -146,7 +146,7 @@ export default {
     },
 
     prevExp(experience: number): number {
-        if (experience < 0) return -1;
+        if (experience < 0) return 0;
 
         for (let i = Modules.Constants.MAX_LEVEL as number; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
@@ -163,7 +163,7 @@ export default {
     },
 
     getMaxHitPoints(level: number): number {
-        return 100 + level * 30;
+        return 39 + level * 30;
     },
 
     getMaxMana(level: number): number {

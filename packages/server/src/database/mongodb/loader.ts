@@ -1,25 +1,32 @@
 import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
 
 import type { Db } from 'mongodb';
+
 import type Player from '../../game/entity/character/player/player';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
 import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
+import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 
 export default class Loader {
-    public constructor(private database: Db) {}
+    public constructor(private database?: Db) {}
 
     /**
      * Generalized function for loading data from the database. It will return a
      * data type that is later parsed by the caller. We use this since most serialized
      * information in Kaetram is stored in a similar fashion, thus cleaning up the code.
+     * Empty arrays are passed when we cannot find data (or the server is in offline mdoe).
      * @param username The username we are searching for in the collection.
      * @param collection The name of the collection.
      * @param callback Raw data from the database or nothing if a problem occurs.
      */
 
     public load(username: string, collection: string, callback: (data?: never) => void): void {
+        // Used for when we're working without a database to return empty data.
+        if (!this.database || config.skipDatabase) return callback();
+
         let cursor = this.database.collection(collection).find({ username });
 
         cursor.toArray().then((info) => {
@@ -41,8 +48,10 @@ export default class Loader {
 
     public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
         this.load(player.username, 'player_equipment', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ equipments }] = info as SerializedEquipment[];
 
@@ -58,8 +67,10 @@ export default class Loader {
 
     public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_inventory', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ slots }] = info as SerializedContainer[];
 
@@ -75,7 +86,10 @@ export default class Loader {
 
     public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_bank', (info: unknown) => {
-            if (!info) return log.warning(`[player_bank] No bank found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_bank] No bank found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ slots }] = info as SerializedContainer[];
 
@@ -85,7 +99,6 @@ export default class Loader {
 
     /**
      * Loads the quest data from the database and returns it into a QuestData array object.
-     * Quest is one of the few objects where we must send empty data if we can't find any.
      * @param player The player we are extracting the quest data from.
      * @param callback The quest data in an array format of type QuestData.
      */
@@ -101,6 +114,27 @@ export default class Loader {
     }
 
     /**
+     * Achievements are loaded pretty mucht the same way as quests. We parse through
+     * the data and return it into an array of type AchievementData. Each element
+     * contains information about the specific achievement.
+     * @param player Player we are grabbing the achievement data for.
+     * @param callback Contains an array of achievement objects.
+     */
+
+    public loadAchievements(
+        player: Player,
+        callback: (achievements: AchievementData[]) => void
+    ): void {
+        this.load(player.username, 'player_achievements', (info: unknown) => {
+            if (!info) return callback([]);
+
+            let [{ achievements }] = info as SerializedAchievement[];
+
+            callback(achievements);
+        });
+    }
+
+    /**
      * Loads the skill data from the database and returns it into a SkillData array object.
      * @param player The player we are extracting the skill data from.
      * @param callback The skill data in an array format of type SkillData.
@@ -108,8 +142,10 @@ export default class Loader {
 
     public loadSkills(player: Player, callback: (skills: SkillData[]) => void): void {
         this.load(player.username, 'player_skills', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_skills] No skills found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_skills] No skills found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ skills }] = info as SerializedSkills[];
 

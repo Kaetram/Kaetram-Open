@@ -1,8 +1,12 @@
+import { AchievementData } from './../../../../../common/types/achievement.d';
 import $ from 'jquery';
+import _ from 'lodash';
 
 import { Modules } from '@kaetram/common/network';
 
 import Character from '../character';
+import Task from './task';
+import Skill from './skill';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
@@ -13,10 +17,7 @@ import type Game from '../../../game';
 
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
-import Skill from './skill';
 import { SkillData } from '@kaetram/common/types/skills';
-import _ from 'lodash';
-import Quest from './quest';
 import { QuestData } from '@kaetram/common/types/quest';
 
 type ExperienceCallback = (
@@ -42,9 +43,6 @@ export default class Player extends Character {
 
     public moving = false;
 
-    public override experience = -1;
-    public override level = -1;
-
     public override hitPoints = -1;
     public override maxHitPoints = -1;
 
@@ -67,7 +65,8 @@ export default class Player extends Character {
         [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
     };
 
-    public quests: { [key: string]: Quest } = {};
+    public quests: { [key: string]: Task } = {};
+    public achievements: { [key: string]: Task } = {};
 
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
@@ -98,8 +97,8 @@ export default class Player extends Character {
         if (data.equipments) _.each(data.equipments, this.equip.bind(this));
 
         // Only used when loading the main player.
-        if (data.experience)
-            this.setExperience(data.experience, data.nextExperience!, data.prevExperience!);
+        if (!isNaN(data.experience!))
+            this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -135,12 +134,29 @@ export default class Player extends Character {
 
     public loadQuests(quests: QuestData[]): void {
         _.each(quests, (quest: QuestData) => {
-            this.quests[quest.key] = new Quest(
+            this.quests[quest.key] = new Task(
                 quest.name!,
                 quest.description!,
                 quest.stage,
-                quest.subStage,
-                quest.stageCount
+                quest.stageCount!,
+                quest.subStage
+            );
+        });
+    }
+
+    /**
+     * Parses through the array data containing achievement information
+     * and creates an object for each key as well as inserting preliminary data.
+     * @param achievements Array containing information about each achievement.
+     */
+
+    public loadAchievements(achievements: AchievementData[]): void {
+        _.each(achievements, (achievement: AchievementData) => {
+            this.achievements[achievement.key] = new Task(
+                achievement.name!,
+                achievement.description!,
+                achievement.stage,
+                achievement.stageCount!
             );
         });
     }
@@ -256,7 +272,17 @@ export default class Player extends Character {
      */
 
     public setQuest(key: string, stage: number, subStage: number): void {
-        this.quests[key].update(stage, subStage);
+        this.quests[key]?.update(stage, subStage);
+    }
+
+    /**
+     * Updates data about an achievement using the provided key.
+     * @param key The key of the achievement we are updating.
+     * @param stage The new stage of the achievement.
+     */
+
+    public setAchievement(key: string, stage: number, name: string): void {
+        this.achievements[key]?.update(stage, undefined, name);
     }
 
     /**
@@ -291,9 +317,9 @@ export default class Player extends Character {
 
         this.sync();
 
-        if (!prevExperience || !nextExperience) return;
+        if (isNaN(prevExperience!) || !nextExperience) return;
 
-        this.experienceCallback?.(experience, prevExperience, nextExperience);
+        this.experienceCallback?.(experience, prevExperience!, nextExperience);
     }
 
     /**

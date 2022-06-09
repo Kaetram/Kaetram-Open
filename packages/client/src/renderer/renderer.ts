@@ -452,6 +452,8 @@ export default class Renderer {
      */
 
     private drawHoveringCell(): void {
+        if (this.mobile) return;
+
         let { input } = this.game,
             location = input.getCoords();
 
