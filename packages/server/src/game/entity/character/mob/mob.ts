@@ -213,12 +213,8 @@ export default class Mob extends Character {
 
     public outsideRoaming(entity?: Entity): boolean {
         return (
-            Utils.getDistance(
-                (entity && entity.x) || this.x,
-                (entity && entity.y) || this.y,
-                this.spawnX,
-                this.spawnY
-            ) > this.roamDistance
+            Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
+            this.roamDistance
         );
     }
 
