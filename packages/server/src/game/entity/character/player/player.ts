@@ -77,10 +77,11 @@ export default class Player extends Character {
 
     private handler: Handler;
 
-    public quests: Quests;
-    public achievements: Achievements;
+    public warp: Warp = new Warp(this);
+    public quests: Quests = new Quests(this);
+    public achievements: Achievements = new Achievements(this);
     public skills: Skills = new Skills(this);
-    public equipment: Equipments;
+    public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
@@ -114,7 +115,6 @@ export default class Player extends Character {
     public webSocketClient;
 
     public abilities;
-    public warp;
 
     public team?: string; // TODO
     public userAgent!: string;
@@ -170,11 +170,7 @@ export default class Player extends Character {
         this.entities = world.entities;
 
         this.incoming = new Incoming(this);
-        this.equipment = new Equipments(this);
-        this.quests = new Quests(this);
-        this.achievements = new Achievements(this);
         this.handler = new Handler(this);
-        this.warp = new Warp(this);
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
