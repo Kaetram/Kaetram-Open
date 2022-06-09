@@ -829,7 +829,14 @@ export default class Player extends Character {
 
         log.debug(`[${this.username}] ${message}`);
 
-        let name = Utils.formatName(this.username);
+        let name = Utils.formatName(this.username),
+            source = `${global ? '[Global]' : ''} ${name}`;
+
+        // Relay the message to the discord channel.
+        if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
+
+        // API relays the message to the discord server from multiple worlds.
+        if (config.hubEnabled) this.world.api.sendChat(source, message, global);
 
         if (global) return this.world.globalMessage(name, message, colour);
 
@@ -839,12 +846,6 @@ export default class Player extends Character {
             withBubble,
             colour
         });
-
-        // Relay the message to the discord channel.
-        if (config.discordEnabled) this.world.discord.sendMessage(name, message, undefined, true);
-
-        // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(name, message, global);
 
         // Send globally or to nearby regions.
         if (global) this.sendBroadcast(packet);
