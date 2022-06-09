@@ -17,6 +17,7 @@ export default class Loader {
      * Generalized function for loading data from the database. It will return a
      * data type that is later parsed by the caller. We use this since most serialized
      * information in Kaetram is stored in a similar fashion, thus cleaning up the code.
+     * Empty arrays are passed when we cannot find data (or the server is in offline mdoe).
      * @param username The username we are searching for in the collection.
      * @param collection The name of the collection.
      * @param callback Raw data from the database or nothing if a problem occurs.
@@ -47,8 +48,10 @@ export default class Loader {
 
     public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
         this.load(player.username, 'player_equipment', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ equipments }] = info as SerializedEquipment[];
 
@@ -64,8 +67,10 @@ export default class Loader {
 
     public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_inventory', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ slots }] = info as SerializedContainer[];
 
@@ -81,7 +86,10 @@ export default class Loader {
 
     public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_bank', (info: unknown) => {
-            if (!info) return log.warning(`[player_bank] No bank found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_bank] No bank found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ slots }] = info as SerializedContainer[];
 
@@ -91,7 +99,6 @@ export default class Loader {
 
     /**
      * Loads the quest data from the database and returns it into a QuestData array object.
-     * Quest is one of the few objects where we must send empty data if we can't find any.
      * @param player The player we are extracting the quest data from.
      * @param callback The quest data in an array format of type QuestData.
      */
@@ -135,8 +142,10 @@ export default class Loader {
 
     public loadSkills(player: Player, callback: (skills: SkillData[]) => void): void {
         this.load(player.username, 'player_skills', (info: unknown) => {
-            if (!info)
-                return log.warning(`[player_skills] No skills found for ${player.username}.`);
+            if (!info) {
+                log.warning(`[player_skills] No skills found for ${player.username}.`);
+                return callback([]);
+            }
 
             let [{ skills }] = info as SerializedSkills[];
 
