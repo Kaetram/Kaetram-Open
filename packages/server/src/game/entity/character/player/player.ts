@@ -184,11 +184,23 @@ export default class Player extends Character {
     }
 
     /**
-     * Inserts the `data` into the player object.
+     * Begins the loading process by first inserting the database
+     * information into the player object. The loading process works
+     * as follows, a request to load the equipment data is made,
+     * once that is completed, the callback in the player handler
+     * begins loading the inventory, then the bank and quests, then
+     * achievements, then skills, and finally the `intro` packet
+     * is sent to the client. This is because we want to load the aforementioned
+     * objects prior to entering the region since it may affect dynamic data,
+     * entity information, and other stuff. The region system must have the player
+     * fully loaded from the database prior to calculating region data.
      * @param data PlayerInfo object containing all data.
      */
 
     public load(data: PlayerInfo): void {
+        // Store coords for when we're done loading.
+        this.x = data.x;
+        this.y = data.y;
         this.name = data.username;
         this.rights = data.rights;
         this.experience = data.experience;
@@ -199,15 +211,6 @@ export default class Player extends Character {
         this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
-
-        this.loadEquipment();
-        this.loadInventory();
-        this.loadBank();
-        this.loadQuests();
-        this.loadAchievements();
-        this.loadSkills();
-
-        this.setPosition(data.x, data.y);
 
         this.warp.setLastWarp(data.lastWarp);
 
@@ -221,7 +224,10 @@ export default class Player extends Character {
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
         this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
-        this.intro();
+        // Being the loading process.
+        this.loadEquipment();
+
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> intro
     }
 
     /**
@@ -292,6 +298,8 @@ export default class Player extends Character {
         /**
          * Send player data to client here
          */
+
+        this.setPosition(this.x, this.y); // Set coords we loaded in `load`
 
         this.entities.addPlayer(this);
 
