@@ -32,6 +32,27 @@ export enum InputType {
     RightClick
 }
 
+export enum EntityType {
+    Player,
+    NPC,
+    Item,
+    Mob,
+    Chest,
+    Projectile,
+    Object
+}
+
+/**
+ * Enumeration of special states that an entity could be. For example,
+ * an entity could be a quest-based entity and it has special name colour.
+ */
+
+export enum SpecialEntityTypes {
+    Achievement,
+    Quest,
+    Area
+}
+
 export enum Actions {
     Idle,
     Attack,
@@ -270,6 +291,12 @@ export let DamageColours = {
     }
 };
 
+export let NameColours = {
+    [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
+    [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
+    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)'
+};
+
 export enum NPCRole {
     Banker,
     Enchanter,
@@ -325,16 +352,6 @@ export enum MapFlags {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00
-}
-
-export enum EntityType {
-    Player,
-    NPC,
-    Item,
-    Mob,
-    Chest,
-    Projectile,
-    Object
 }
 
 // States that a tree can be in. We can obviously add more

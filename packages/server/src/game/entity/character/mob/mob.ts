@@ -29,8 +29,8 @@ export default class Mob extends Character {
     // Mob data
     private data: MobData;
 
-    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
+    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     private defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.

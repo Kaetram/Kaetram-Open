@@ -1,6 +1,8 @@
 import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
 
 import type { Db } from 'mongodb';
+
 import type Player from '../../game/entity/character/player/player';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
@@ -22,7 +24,7 @@ export default class Loader {
 
     public load(username: string, collection: string, callback: (data?: never) => void): void {
         // Used for when we're working without a database to return empty data.
-        if (!this.database) return callback();
+        if (!this.database || config.skipDatabase) return callback();
 
         let cursor = this.database.collection(collection).find({ username });
 
