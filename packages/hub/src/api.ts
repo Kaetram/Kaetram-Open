@@ -210,15 +210,13 @@ export default class API {
         text: string,
         colour: string
     ): void {
-        let url = Utils.getUrl(server.host, server.apiPort, 'chat'),
+        let url = Utils.getUrl(server.host, server.apiPort, 'chat', true),
             data = {
                 accessToken: server.accessToken,
                 text,
                 source,
                 colour
             };
-
-        console.log(server);
 
         axios.post(url, data).catch((error) => {
             log.error(`Could not send chat to ${config.name} ${key}`);
