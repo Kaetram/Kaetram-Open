@@ -21,7 +21,7 @@ export default class Area {
 
     // Properties it can hold
     public quest!: string;
-    public achievement!: number;
+    public achievement!: string;
     public cameraType!: string;
     public song!: string;
 
@@ -90,7 +90,7 @@ export default class Area {
      */
 
     public fulfillsRequirement(player: Player): boolean {
-        if (this.quest) return player.quests!.getQuest(this.quest)?.isFinished();
+        if (this.quest) return player.quests!.get(this.quest)?.isFinished();
 
         // if (this.achievement && this.quest)
         //     return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);

@@ -127,7 +127,7 @@ export default class API {
         }
     }
 
-    public async sendChat(source: string, text: string, withArrow = false): Promise<void> {
+    public async sendChat(source: string, text: string, withArrow = true): Promise<void> {
         if (!config.hubEnabled) return;
 
         let url = Utils.getUrl(config.hubHost, config.hubPort, 'chat'),
