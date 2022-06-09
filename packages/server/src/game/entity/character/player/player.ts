@@ -333,6 +333,11 @@ export default class Player extends Character {
         this.nextExperience = Formulas.nextExp(this.experience);
         this.prevExperience = Formulas.prevExp(this.experience);
 
+        let data = {
+            instance: this.instance,
+            level: this.level
+        } as ExperiencePacket;
+
         if (oldLevel !== this.level) {
             this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
             this.healHitPoints(this.hitPoints.maxPoints);
@@ -341,11 +346,6 @@ export default class Player extends Character {
 
             this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
         }
-
-        let data = {
-            instance: this.instance,
-            level: this.level
-        } as ExperiencePacket;
 
         /**
          * Sending two sets of data as other users do not need to
