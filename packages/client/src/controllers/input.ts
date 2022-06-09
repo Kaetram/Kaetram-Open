@@ -298,11 +298,7 @@ export default class InputController {
             if (this.isTargetable(this.entity)) {
                 this.player.setTarget(this.entity);
                 this.player.follow(this.entity);
-                return;
-            }
 
-            // Request attack for target.
-            if (this.isAttackable(this.entity)) {
                 this.game.socket.send(Packets.Target, [
                     Opcodes.Target.Attack,
                     this.entity.instance
