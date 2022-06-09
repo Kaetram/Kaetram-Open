@@ -1655,6 +1655,13 @@
 }
 
 @media (--sm) {
+    #notification {
+        width: 432px;
+        height: 68px;
+        background: url('/img/2/spritesheet.png') no-repeat;
+        margin-left: -216px;
+    }
+
     #notify,
     #confirm {
         width: 166px;
