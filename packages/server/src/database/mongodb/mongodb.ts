@@ -96,6 +96,11 @@ export default class MongoDB {
         });
     }
 
+    /**
+     * Creates a new user and adds it to the database.
+     * @param player Basic information about the player such as username, password, and email.
+     */
+
     public register(player: Player): void {
         if (!this.hasDatabase()) return;
 
