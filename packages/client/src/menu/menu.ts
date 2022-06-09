@@ -85,9 +85,10 @@ export default abstract class Menu {
 
     /**
      * Called by subclasses when we want to hide the interface.
+     * @param _ignore Used when we want to skip the hide() function from the controller.
      */
 
-    public hide(): void {
+    public hide(_ignore = false): void {
         this.body.style.display = 'none';
 
         this.button?.classList.remove('active');
