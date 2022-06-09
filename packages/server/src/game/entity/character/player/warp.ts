@@ -13,7 +13,7 @@ export default class Warp {
     private warpTimeout = 30_000; // 30 seconds between using the warps.
 
     public constructor(private player: Player) {
-        this.warps = this.player.map.warps;
+        this.warps = this.player.world.map.warps;
     }
 
     /**
