@@ -200,6 +200,13 @@ export default class Player extends Character {
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
 
+        this.loadEquipment();
+        this.loadInventory();
+        this.loadBank();
+        this.loadQuests();
+        this.loadAchievements();
+        this.loadSkills();
+
         this.setPosition(data.x, data.y);
 
         this.warp.setLastWarp(data.lastWarp);
@@ -221,7 +228,7 @@ export default class Player extends Character {
      * Loads the equipment data from the database.
      */
 
-    public loadEquipment(): void {
+    public async loadEquipment(): Promise<void> {
         this.database.loader?.loadEquipment(this, this.equipment.load.bind(this.equipment));
     }
 
@@ -229,7 +236,7 @@ export default class Player extends Character {
      * Loads the inventory data from the database.
      */
 
-    public loadInventory(): void {
+    public async loadInventory(): Promise<void> {
         this.database.loader?.loadInventory(this, this.inventory.load.bind(this.inventory));
     }
 
@@ -237,7 +244,7 @@ export default class Player extends Character {
      * Loads the bank data from the database.
      */
 
-    public loadBank(): void {
+    public async loadBank(): Promise<void> {
         this.database.loader?.loadBank(this, this.bank.load.bind(this.bank));
     }
 
@@ -245,7 +252,7 @@ export default class Player extends Character {
      * Loads the quest data from the database.
      */
 
-    public loadQuests(): void {
+    public async loadQuests(): Promise<void> {
         this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
     }
 
@@ -253,7 +260,7 @@ export default class Player extends Character {
      * Loads the achievement data from the database.
      */
 
-    public loadAchievements(): void {
+    public async loadAchievements(): Promise<void> {
         this.database.loader?.loadAchievements(
             this,
             this.achievements.load.bind(this.achievements)
@@ -264,7 +271,7 @@ export default class Player extends Character {
      * Loads the skill data from the database.
      */
 
-    public loadSkills(): void {
+    public async loadSkills(): Promise<void> {
         this.database.loader?.loadSkills(this, this.skills.load.bind(this.skills));
     }
 
