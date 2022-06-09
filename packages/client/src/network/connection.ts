@@ -392,7 +392,7 @@ export default class Connection {
         // Removes bubbles from the entity.
         this.bubble.clear(entity.instance);
 
-        // CLears our client's target.
+        // Clears our client's target.
         if (this.game.player.hasTarget(entity)) this.game.player.removeTarget();
 
         // Plays a random kill sound if the game client player is nearby.
