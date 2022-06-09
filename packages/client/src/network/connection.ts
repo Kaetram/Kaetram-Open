@@ -392,7 +392,7 @@ export default class Connection {
         // Removes bubbles from the entity.
         this.bubble.clear(entity.instance);
 
-        // CLears our client's target.
+        // Clears our client's target.
         if (this.game.player.hasTarget(entity)) this.game.player.removeTarget();
 
         // Plays a random kill sound if the game client player is nearby.
@@ -479,12 +479,12 @@ export default class Connection {
 
         if (!character) return;
 
-        if (info.mana) return character.setMana(info.mana);
+        if (info.mana) character.setMana(info.mana, info.maxMana);
 
-        if (!info.hitPoints) return;
-
-        character.setHitPoints(info.hitPoints);
-        this.input.hud.updateCallback?.(info.instance, info.hitPoints);
+        if (info.hitPoints) {
+            character.setHitPoints(info.hitPoints, info.maxHitPoints);
+            this.input.hud.updateCallback?.(info.instance, info.hitPoints);
+        }
     }
 
     /**
@@ -681,7 +681,6 @@ export default class Connection {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
                 this.game.player.healing = true;
-
                 break;
 
             case 'mana':

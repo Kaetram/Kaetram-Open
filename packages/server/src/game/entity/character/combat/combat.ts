@@ -19,16 +19,20 @@ export default class Combat {
     public constructor(private character: Character) {}
 
     /**
-     * Starts the attack loop.
+     * Starts the attack loop. Prevent duplicate loops from being started.
      */
 
     public start(): void {
+        if (this.started) return;
+
         this.started = true;
 
         /**
          * Start the loop at a third the attack rate with a 15 millisecond offset. This is
          * so we can condense the entire combat loop into one interval.
          */
+
+        if (this.loop) return;
 
         this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 3 + 15);
     }
