@@ -99,7 +99,9 @@ export type AnimationCallback = (info: AnimationPacket) => void;
 export interface PointsPacket {
     instance: string;
     hitPoints?: number;
+    maxHitPoints?: number;
     mana?: number;
+    maxMana?: number;
 }
 
 export type PointsCallback = (info: PointsPacket) => void;

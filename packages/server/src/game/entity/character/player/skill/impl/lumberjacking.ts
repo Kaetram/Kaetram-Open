@@ -50,10 +50,10 @@ export default class Lumberjacking extends Skill {
         if (!player.inventory.hasSpace()) return player.notify(LumberjackingEn.INVENTORY_FULL);
 
         /**
-         * Do not start another loop if one is already
-         * ongoing. Essentially ignore the action request.
+         * Stop the current loop when we are beginning to cut a tree. This will
+         * continually reset the loop if the player keeps spamming the tree.
          */
-        if (this.loop) return;
+        if (this.loop) this.stop();
 
         this.loop = setInterval(() => {
             // Stops loop if we detect that the tree was cut globally (perhaps by someone else).

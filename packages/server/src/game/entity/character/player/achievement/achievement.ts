@@ -97,10 +97,10 @@ export default class Achievement {
     private handleKill(mob: Mob): void {
         log.debug(`[${this.name}] Player killed ${mob.key}`);
 
-        if (mob.key !== this.mob) return;
-
         // Increment by one for each mob that is killed.
         this.progress();
+
+        log.debug(`Stage: ${this.stage}`);
     }
 
     /**
