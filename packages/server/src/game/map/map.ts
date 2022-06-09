@@ -4,7 +4,6 @@ import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../../data/map/world.json';
-import Objects from '../../info/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
@@ -107,7 +106,7 @@ export default class Map {
         let doorsClone = _.cloneDeep(map.areas.doors);
 
         // Iterate through the doors in the map.
-        _.each(map.areas.doors, (door) => {
+        _.each(map.areas.doors, (door: ProcessedArea) => {
             // Skip if the door does not have a destination.
             if (!door.destination) return;
 
@@ -125,6 +124,7 @@ export default class Map {
                 y: destination.y,
                 orientation: destination.orientation || 'd',
                 quest: door.quest || '',
+                achievement: door.achievement || '',
                 stage: door.stage || 0
             };
         });

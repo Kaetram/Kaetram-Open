@@ -31,6 +31,7 @@ import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
+import type Mob from '../game/entity/character/mob/mob';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
@@ -153,12 +154,6 @@ export default class Incoming {
     private handleReady(data: ReadyPacket): void {
         let { hasMapData, userAgent } = data;
 
-        this.player.loadEquipment();
-        this.player.loadInventory();
-        this.player.loadBank();
-        this.player.loadQuests();
-        this.player.loadSkills();
-
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
@@ -186,22 +181,25 @@ export default class Incoming {
 
             /* We handle player-specific entity statuses here. */
 
-            // Entity is an area-based mob
-            // if (entity.area) entity.specialState = 'area';
+            // Special name colours for NPCs.
+            if (entity.isNPC()) {
+                if (this.player.quests.getQuestFromNPC(entity as NPC))
+                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
 
-            // if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
+                if (this.player.achievements.getAchievementFromEntity(entity as NPC))
+                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
+            }
 
-            // if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
+            // Special name colours for mobs.
+            if (entity.isMob()) {
+                if (this.player.quests.getQuestFromMob(entity as Mob))
+                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
 
-            // if (entity.miniboss) {
-            //     entity.specialState = 'miniboss';
-            //     entity.customScale = 1.25;
-            // }
+                let achievement = this.player.achievements.getAchievementFromEntity(entity as Mob);
 
-            // if (entity.boss) entity.specialState = 'boss';
-
-            // if (this.player.quests.isAchievementNPC(entity))
-            //    entity.specialState = 'achievementNpc';
+                if (achievement && achievement.isStarted())
+                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
+            }
 
             this.player.send(new Spawn(entity));
         });

@@ -5,6 +5,7 @@ import Utils from '@kaetram/common/util/utils';
 import {
     Container,
     Quest,
+    Achievement,
     Equipment as EquipmentPacket,
     NPC as NPCPacket,
     Death,
@@ -58,6 +59,7 @@ export default class Handler {
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
+        this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
 
         // Inventory callbacks
@@ -146,10 +148,13 @@ export default class Handler {
 
     private handleDoor(door: ProcessedDoor): void {
         if (door.quest) {
-            let quest = this.player.quests.getQuest(door.quest);
+            let quest = this.player.quests.get(door.quest);
 
             return quest.doorCallback?.(door, this.player);
         }
+
+        // If the door has an achievement associated with it, it gets completed here.
+        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
         this.player.teleport(door.x, door.y);
 
@@ -193,6 +198,8 @@ export default class Handler {
                 data: this.player.equipment.serialize()
             })
         );
+
+        this.player.loadInventory();
     }
 
     /**
@@ -225,9 +232,11 @@ export default class Handler {
 
     /**
      * Callback for when the inventory is loaded. Relay message to the client.
+     * @param skip Used whenever we want to only send a batch and not continue
+     * loading the remaining controllers, such as in the case that a refresh is needed.
      */
 
-    private handleInventory(): void {
+    private handleInventory(skip?: boolean): void {
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
@@ -235,6 +244,11 @@ export default class Handler {
                 data: this.player.inventory.serialize()
             })
         );
+
+        if (skip) return;
+
+        this.player.loadBank();
+        this.player.loadQuests();
     }
 
     /**
@@ -284,11 +298,25 @@ export default class Handler {
     }
 
     /**
-     * Send a packet to the client to load quests.
+     * Sends a packet to the client containing batch data for the quests.
      */
 
     private handleQuests(): void {
         this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
+
+        this.player.loadAchievements();
+    }
+
+    /**
+     * Sends a packet to the client containing batch data for the achievements.
+     */
+
+    private handleAchievements(): void {
+        this.player.send(
+            new Achievement(Opcodes.Achievement.Batch, this.player.achievements.serialize(true))
+        );
+
+        this.player.loadSkills();
     }
 
     /**
@@ -298,6 +326,8 @@ export default class Handler {
 
     private handleSkills(): void {
         this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
+
+        this.player.intro();
     }
 
     /**
@@ -341,10 +371,17 @@ export default class Handler {
                 `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
             );
 
+        // Checks if the NPC has an active quest associated with it.
         let quest = this.player.quests.getQuestFromNPC(npc);
 
         if (quest) return quest.talkCallback?.(npc, this.player);
 
+        // Checks if the NPC has an active achievement associated with it.
+        let achievement = this.player.achievements.getAchievementFromEntity(npc);
+
+        if (achievement) return achievement.talkCallback?.(npc, this.player);
+
+        // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
@@ -367,11 +404,18 @@ export default class Handler {
     private handleKill(character: Character): void {
         log.debug(`Received kill callback for: ${character.instance}.`);
 
+        // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        // Checks if the mob has a active quest associated with it.
         let quest = this.player.quests.getQuestFromMob(character as Mob);
 
         if (quest) quest.killCallback?.(character as Mob);
+
+        // Checks if the mob has an active achievement associated with it.
+        let achievement = this.player.achievements.getAchievementFromEntity(character as Mob);
+
+        if (achievement) achievement.killCallback?.(character as Mob);
     }
 
     /**
@@ -443,18 +487,6 @@ export default class Handler {
 
                 case 'camera':
                     return this.player.updateCamera(info);
-
-                case 'achievements':
-                    if (!info || !info.achievement) return;
-
-                    if (!this.player.achievementsLoaded) return;
-
-                    this.player.finishAchievement(info.achievement);
-
-                    break;
-
-                case 'door':
-                    break;
             }
         });
     }

@@ -8,15 +8,14 @@ import QuestIndex from './quest/impl';
 import { Quest as QuestPacket } from '../../../../network/packets';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { PopupData } from '@kaetram/common/types/popup';
+import { PointerData } from '@kaetram/common/types/pointer';
 import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
 
 // Raw quest data
-import quests from '../../../../../data/quests.json';
 import NPC from '../../npc/npc';
 import Mob from '../mob/mob';
-import { PointerData } from '@kaetram/common/types/pointer';
-
-import { PopupData } from '@kaetram/common/types/popup';
+import quests from '../../../../../data/quests.json';
 
 /**
  * Initialize all the quests on a player instance basis. The previous
@@ -41,9 +40,9 @@ export default class Quests {
 
             this.quests[key] = quest;
 
-            quest.onProgress(this.handleQuestProgress.bind(this));
-            quest.onPointer(this.handleQuestPointer.bind(this));
-            quest.onPopup(this.handleQuestPopup.bind(this));
+            quest.onProgress(this.handleProgress.bind(this));
+            quest.onPointer(this.handlePointer.bind(this));
+            quest.onPopup(this.handlePopup.bind(this));
         });
     }
 
@@ -55,17 +54,14 @@ export default class Quests {
 
     public load(questInfo: QuestData[]): void {
         _.each(questInfo, (info: QuestData) => {
-            let quest = this.quests[info.key];
+            let quest = this.get(info.key);
 
-            // Skip if no quest found with the given key.
-            if (!quest) return;
-
-            // Set quest stage data without making a progress callback.
-            quest.setStage(info.stage, info.subStage, false);
+            // Set quest stage data without making a progress callback if it exists.
+            if (quest) quest.setStage(info.stage, info.subStage, false);
         });
 
         // Trigger `loaded()` when we have no database information.
-        if (questInfo.length === 0) _.each(this.quests, (quest) => quest.loaded());
+        if (questInfo.length === 0) this.forEachQuest((quest: Quest) => quest.loaded());
 
         this.loadCallback?.();
     }
@@ -76,7 +72,7 @@ export default class Quests {
      * @param stage The stage we are progressing to.
      */
 
-    private handleQuestProgress(key: string, stage: number, subStage: number): void {
+    private handleProgress(key: string, stage: number, subStage: number): void {
         this.player.send(
             new QuestPacket(Opcodes.Quest.Progress, {
                 key,
@@ -90,21 +86,22 @@ export default class Quests {
      * The callback handler for when a quest requests pointer information
      * to be sent to the client. Generally happens upon loading the Tutorial
      * quest.
-     * @param pointerData Pointer information from the current stage.
+     * @param pointer Pointer information from the current stage.
      */
 
-    private handleQuestPointer(pointerData: PointerData): void {
-        this.player.pointer(pointerData.type, pointerData);
+    private handlePointer(pointer: PointerData): void {
+        this.player.pointer(pointer.type, pointer);
     }
 
     /**
      * Callback handler for when the quest requests to display a popup.
-     * @param popupData Popup information such as title, text, colour.
+     * @param popup Popup information such as title, text, colour.
      */
 
-    private handleQuestPopup(popupData: PopupData): void {
-        this.player.popup(popupData.title, popupData.text, popupData.colour);
+    private handlePopup(popup: PopupData): void {
+        this.player.popup(popup.title, popup.text, popup.colour);
     }
+
     /**
      * Grabs a quest with the key specified. Will return
      * undefined if the key is invalid.
@@ -112,7 +109,7 @@ export default class Quests {
      * @returns Quest pertaining to the `key` parameter.
      */
 
-    public getQuest(key: string): Quest {
+    public get(key: string): Quest {
         return this.quests[key];
     }
 
@@ -193,7 +190,7 @@ export default class Quests {
     public serialize(batch = false): SerializedQuest {
         let quests: QuestData[] = [];
 
-        _.each(this.quests, (quest: Quest) => quests.push(quest.serialize(batch)));
+        this.forEachQuest((quest: Quest) => quests.push(quest.serialize(batch)));
 
         return {
             quests

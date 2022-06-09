@@ -3,15 +3,24 @@ import _ from 'lodash';
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
 import Player from '../player';
+import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
+
+import Modules from '@kaetram/common/network/modules';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
-import Item from '../../../objects/item';
 import { PopupData } from '@kaetram/common/types/popup';
-import Modules from '@kaetram/common/network/modules';
+
+type ProgressCallback = (key: string, stage: number, subStage: number) => void;
+type PointerCallback = (pointer: PointerData) => void;
+type PopupCallback = (popup: PopupData) => void;
+
+type TalkCallback = (npc: NPC, player: Player) => void;
+type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
+type KillCallback = (mob: Mob) => void;
 
 export default abstract class Quest {
     /**
@@ -31,13 +40,13 @@ export default abstract class Quest {
     // Store all NPCs involved in the quest.
     private npcs: string[] = [];
 
-    public talkCallback?: (npc: NPC, player: Player) => void;
-    public doorCallback?: (quest: ProcessedDoor, player: Player) => void;
-    public killCallback?: (mob: Mob) => void;
+    private progressCallback?: ProgressCallback;
+    private pointerCallback?: PointerCallback;
+    private popupCallback?: PopupCallback;
 
-    private progressCallback?: (key: string, stage: number, stageCount: number) => void;
-    private pointerCallback?: (pointerData: PointerData) => void;
-    private popupCallback?: (popupData: PopupData) => void;
+    public talkCallback?: TalkCallback;
+    public doorCallback?: DoorCallback;
+    public killCallback?: KillCallback;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -150,18 +159,6 @@ export default abstract class Quest {
     }
 
     /**
-     * Advances the quest to the next stage.
-     */
-
-    private progress(subStage?: boolean): void {
-        log.debug(`${this.name} Quest progression.`);
-
-        // Progress substage only if the parameter is defined.
-        if (subStage) this.setStage(this.stage, this.subStage + 1);
-        else this.setStage(this.stage + 1);
-    }
-
-    /**
      * Checks the player's inventory and progresses if
      * he contains enough of the required item.
      * @param player The player we are checking inventory of.
@@ -179,6 +176,18 @@ export default abstract class Quest {
         player.inventory.remove(index, itemCountRequirement);
 
         this.progress();
+    }
+
+    /**
+     * Advances the quest to the next stage.
+     */
+
+    private progress(subStage?: boolean): void {
+        log.debug(`${this.name} Quest progression.`);
+
+        // Progress substage only if the parameter is defined.
+        if (subStage) this.setStage(this.stage, this.subStage + 1);
+        else this.setStage(this.stage + 1);
     }
 
     /**
@@ -341,13 +350,13 @@ export default abstract class Quest {
         let data: QuestData = {
             key: this.key,
             stage: this.stage,
-            subStage: this.subStage,
-            stageCount: this.stageCount
+            subStage: this.subStage
         };
 
         if (batch) {
             data.name = this.name;
             data.description = this.description;
+            data.stageCount = this.stageCount;
         }
 
         return data;
@@ -358,7 +367,7 @@ export default abstract class Quest {
      * @param callback The quest's key and progress count;
      */
 
-    public onProgress(callback: (key: string, stage: number, subStage: number) => void): void {
+    public onProgress(callback: ProgressCallback): void {
         this.progressCallback = callback;
     }
 
@@ -367,7 +376,7 @@ export default abstract class Quest {
      * @param callback Pointer data to be displayed.
      */
 
-    public onPointer(callback: (pointerData: PointerData) => void): void {
+    public onPointer(callback: PointerCallback): void {
         this.pointerCallback = callback;
     }
 
@@ -376,7 +385,7 @@ export default abstract class Quest {
      * @param callback Popup data that will be displayed to the player.
      */
 
-    public onPopup(callback: (popupData: PopupData) => void): void {
+    public onPopup(callback: PopupCallback): void {
         this.popupCallback = callback;
     }
 
@@ -385,7 +394,7 @@ export default abstract class Quest {
      * @param callback The NPC the interaction happens with.
      */
 
-    public onTalk(callback: (npc: NPC, player: Player) => void): void {
+    public onTalk(callback: TalkCallback): void {
         this.talkCallback = callback;
     }
 
@@ -394,7 +403,7 @@ export default abstract class Quest {
      * @param callback Callback containing starting location and destination of the door.
      */
 
-    public onDoor(callback: (quest: ProcessedDoor, player: Player) => void): void {
+    public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
 
@@ -403,7 +412,7 @@ export default abstract class Quest {
      * @param callback The mob that is being killed.
      */
 
-    public onKill(callback: (mob: Mob) => void): void {
+    public onKill(callback: KillCallback): void {
         this.killCallback = callback;
     }
 }

@@ -33,14 +33,14 @@ export default class Notification extends Menu {
         this.title.style.color = colour;
 
         // Sets the title and description.
-        this.title.textContent = title;
-        this.description.textContent = message;
+        this.title.innerHTML = title;
+        this.description.innerHTML = message;
 
         // Clear the timeout if it exists.
         clearTimeout(this.timeout!);
 
         // Starts a timeout.
-        this.timeout = window.setTimeout(() => this.hide(), 5000);
+        this.timeout = window.setTimeout(() => this.hide(), 7000);
     }
 
     /**

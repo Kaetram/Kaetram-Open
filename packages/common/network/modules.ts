@@ -32,6 +32,27 @@ export enum InputType {
     RightClick
 }
 
+export enum EntityType {
+    Player,
+    NPC,
+    Item,
+    Mob,
+    Chest,
+    Projectile,
+    Object
+}
+
+/**
+ * Enumeration of special states that an entity could be. For example,
+ * an entity could be a quest-based entity and it has special name colour.
+ */
+
+export enum SpecialEntityTypes {
+    Achievement,
+    Quest,
+    Area
+}
+
 export enum Actions {
     Idle,
     Attack,
@@ -270,6 +291,12 @@ export let DamageColours = {
     }
 };
 
+export let NameColours = {
+    [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
+    [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
+    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)'
+};
+
 export enum NPCRole {
     Banker,
     Enchanter,
@@ -281,7 +308,6 @@ export const enum Constants {
     MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
     BANK_SIZE = 69, // Maximum bank size
-    HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 10_000, // healing every 10 seconds
@@ -303,8 +329,6 @@ export enum APIConstants {
 
 // Defaults that apply to all types of entities
 export enum Defaults {
-    MANA = 50,
-    HITPOINTS = 69, // nice.
     MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000 // every 1 second
 }
@@ -325,16 +349,6 @@ export enum MapFlags {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00
-}
-
-export enum EntityType {
-    Player,
-    NPC,
-    Item,
-    Mob,
-    Chest,
-    Projectile,
-    Object
 }
 
 // States that a tree can be in. We can obviously add more
