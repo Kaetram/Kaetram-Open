@@ -9,10 +9,10 @@ import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
 import Bank from './containers/impl/bank';
+import Achievements from './achievements';
 import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
 import Abilities from './abilities/abilities';
-import Container from './containers/container';
 import Formulas from '../../../../info/formulas';
 import Inventory from './containers/impl/inventory';
 import Packet from '@kaetram/server/src/network/packet';
@@ -33,7 +33,6 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import {
@@ -79,9 +78,10 @@ export default class Player extends Character {
     private handler: Handler;
 
     public quests: Quests;
+    public achievements: Achievements;
     public skills: Skills = new Skills(this);
     public equipment: Equipments;
-    public mana: Mana = new Mana(Modules.Defaults.MANA);
+    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
@@ -172,6 +172,7 @@ export default class Player extends Character {
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
         this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
         this.handler = new Handler(this);
         this.warp = new Warp(this);
 
@@ -182,11 +183,23 @@ export default class Player extends Character {
     }
 
     /**
-     * Inserts the `data` into the player object.
+     * Begins the loading process by first inserting the database
+     * information into the player object. The loading process works
+     * as follows, a request to load the equipment data is made,
+     * once that is completed, the callback in the player handler
+     * begins loading the inventory, then the bank and quests, then
+     * achievements, then skills, and finally the `intro` packet
+     * is sent to the client. This is because we want to load the aforementioned
+     * objects prior to entering the region since it may affect dynamic data,
+     * entity information, and other stuff. The region system must have the player
+     * fully loaded from the database prior to calculating region data.
      * @param data PlayerInfo object containing all data.
      */
 
     public load(data: PlayerInfo): void {
+        // Store coords for when we're done loading.
+        this.x = data.x;
+        this.y = data.y;
         this.name = data.username;
         this.rights = data.rights;
         this.experience = data.experience;
@@ -197,8 +210,6 @@ export default class Player extends Character {
         this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
-
-        this.setPosition(data.x, data.y);
 
         this.warp.setLastWarp(data.lastWarp);
 
@@ -212,7 +223,10 @@ export default class Player extends Character {
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
         this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
-        this.intro();
+        // Being the loading process.
+        this.loadEquipment();
+
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> intro
     }
 
     /**
@@ -240,11 +254,22 @@ export default class Player extends Character {
     }
 
     /**
-     * Loads the quest data from the bank.
+     * Loads the quest data from the database.
      */
 
     public loadQuests(): void {
         this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    }
+
+    /**
+     * Loads the achievement data from the database.
+     */
+
+    public loadAchievements(): void {
+        this.database.loader?.loadAchievements(
+            this,
+            this.achievements.load.bind(this.achievements)
+        );
     }
 
     /**
@@ -272,6 +297,8 @@ export default class Player extends Character {
         /**
          * Send player data to client here
          */
+
+        this.setPosition(this.x, this.y); // Set coords we loaded in `load`
 
         this.entities.addPlayer(this);
 
@@ -802,7 +829,14 @@ export default class Player extends Character {
 
         log.debug(`[${this.username}] ${message}`);
 
-        let name = Utils.formatName(this.username);
+        let name = Utils.formatName(this.username),
+            source = `${global ? '[Global]' : ''} ${name}`;
+
+        // Relay the message to the discord channel.
+        if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
+
+        // API relays the message to the discord server from multiple worlds.
+        if (config.hubEnabled) this.world.api.sendChat(source, message);
 
         if (global) return this.world.globalMessage(name, message, colour);
 
@@ -813,15 +847,7 @@ export default class Player extends Character {
             colour
         });
 
-        // Relay the message to the discord channel.
-        if (config.discordEnabled) this.world.discord.sendMessage(name, message, undefined, true);
-
-        // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(name, message, global);
-
-        // Send globally or to nearby regions.
-        if (global) this.sendBroadcast(packet);
-        else this.sendToRegions(packet);
+        this.sendToRegions(packet);
     }
 
     /**
@@ -832,7 +858,7 @@ export default class Player extends Character {
      * @param colour The colour of the popup's text.
      */
 
-    public popup(title: string, message: string, colour: string): void {
+    public popup(title: string, message: string, colour = '#00000'): void {
         if (!title) return;
 
         title = Utils.parseMessage(title);
@@ -913,31 +939,6 @@ export default class Player extends Character {
 
     public hasAggressionTimer(): boolean {
         return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
-    }
-
-    public finishedQuest(id: number): boolean {
-        return false;
-        // let quest = this.quests?.getQuest(id);
-
-        // return quest?.isFinished() || false;
-    }
-
-    public finishedAchievement(id: number): boolean {
-        return false;
-        // if (!this.quests) return false;
-
-        // let achievement = this.quests.getAchievement(id);
-
-        // if (!achievement) return true;
-
-        // return achievement.isFinished();
-    }
-
-    public finishAchievement(id: number): void {
-        // if (!this.quests) return;
-        // let achievement = this.quests.getAchievement(id);
-        // if (!achievement || achievement.isFinished()) return;
-        // achievement.finish();
     }
 
     /**

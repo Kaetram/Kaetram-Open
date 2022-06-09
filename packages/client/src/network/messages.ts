@@ -24,6 +24,7 @@ import type {
     ContainerCallback,
     AbilityCallback,
     QuestCallback,
+    AchievementCallback,
     NotificationCallback,
     BlinkCallback,
     HealCallback,
@@ -66,6 +67,7 @@ export default class Messages {
     private containerCallback?: ContainerCallback;
     private abilityCallback?: AbilityCallback;
     private questCallback?: QuestCallback;
+    private achievementCallback?: AchievementCallback;
     private notificationCallback?: NotificationCallback;
     private blinkCallback?: BlinkCallback;
     private healCallback?: HealCallback;
@@ -115,6 +117,7 @@ export default class Messages {
         messages[Packets.Container] = () => this.containerCallback;
         messages[Packets.Ability] = () => this.abilityCallback;
         messages[Packets.Quest] = () => this.questCallback;
+        messages[Packets.Achievement] = () => this.achievementCallback;
         messages[Packets.Notification] = () => this.notificationCallback;
         messages[Packets.Blink] = () => this.blinkCallback;
         messages[Packets.Heal] = () => this.healCallback;
@@ -297,6 +300,10 @@ export default class Messages {
 
     public onQuest(callback: QuestCallback): void {
         this.questCallback = callback;
+    }
+
+    public onAchievement(callback: AchievementCallback): void {
+        this.achievementCallback = callback;
     }
 
     public onNotification(callback: NotificationCallback): void {

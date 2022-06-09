@@ -14,6 +14,10 @@ export interface EntityData {
     x: number;
     y: number;
 
+    // Optional paramaeters
+    colour?: string; // Name colour
+    scale?: number; // Custom scale for the entity
+
     // Character data
     movementSpeed?: number;
     hitPoints?: number;

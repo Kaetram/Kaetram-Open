@@ -21,7 +21,7 @@ export default class Chest extends Entity {
     public constructor(
         x: number,
         y: number,
-        public achievement?: number,
+        public achievement?: string,
         private items: string[] = []
     ) {
         super(Utils.createInstance(Modules.EntityType.Chest), 'chest', x, y);

@@ -1,3 +1,4 @@
+import { AchievementPacket } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash';
 
 import log from '../lib/log';
@@ -104,6 +105,7 @@ export default class Connection {
         this.messages.onContainer(this.handleContainer.bind(this));
         this.messages.onAbility(this.handleAbility.bind(this));
         this.messages.onQuest(this.handleQuest.bind(this));
+        this.messages.onAchievement(this.handleAchievement.bind(this));
         this.messages.onNotification(this.handleNotification.bind(this));
         this.messages.onBlink(this.handleBlink.bind(this));
         this.messages.onHeal(this.handleHeal.bind(this));
@@ -599,10 +601,35 @@ export default class Connection {
     private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
         switch (opcode) {
             case Opcodes.Quest.Batch:
-                return this.game.player.loadQuests(info.quests!);
+                this.game.player.loadQuests(info.quests!);
+                break;
 
             case Opcodes.Quest.Progress:
-                return this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
+                this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
+                break;
+        }
+
+        this.menu.synchronize();
+    }
+
+    /**
+     * Packet received from the server containing information about the achievements. When
+     * we receive batch data, we relay that to the client. When we receive individual data,
+     * we only update the achievement associated with the provided key. After either of the
+     * aforementioned occurs, we synchronize the menu.
+     * @param opcode What type of action we're taking.
+     * @param info Contains individual achievement data or batch data.
+     */
+
+    private handleAchievement(opcode: Opcodes.Achievement, info: AchievementPacket): void {
+        switch (opcode) {
+            case Opcodes.Achievement.Batch:
+                this.game.player.loadAchievements(info.achievements!);
+                break;
+
+            case Opcodes.Achievement.Progress:
+                this.game.player.setAchievement(info.key!, info.stage!, info.name!);
+                break;
         }
 
         this.menu.synchronize();
