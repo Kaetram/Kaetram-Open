@@ -33,7 +33,6 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import {
@@ -82,7 +81,7 @@ export default class Player extends Character {
     public achievements: Achievements;
     public skills: Skills = new Skills(this);
     public equipment: Equipments;
-    public mana: Mana = new Mana(Modules.Defaults.MANA);
+    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 

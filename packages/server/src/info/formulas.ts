@@ -163,7 +163,7 @@ export default {
     },
 
     getMaxHitPoints(level: number): number {
-        return 100 + level * 30;
+        return 39 + level * 30;
     },
 
     getMaxMana(level: number): number {
