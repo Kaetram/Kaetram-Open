@@ -70,15 +70,16 @@ export default abstract class Entity {
     private readyCallback?(): void;
 
     public attackRange!: number;
-    public mana!: number | number[];
-    public maxMana!: number;
-    public level = 0;
+    public hitPoints = 0;
+    public maxHitPoints = 0;
+    public mana = 0;
+    public maxMana = 0;
+    public level = 1;
     public experience = 0;
     public movementSpeed!: number;
     public frozen!: boolean;
     public teleporting!: boolean;
     public dead!: boolean;
-    public hitPoints!: number | number[];
     public pvp!: boolean;
     public nameColour!: string;
     public customScale!: number;

@@ -6,9 +6,10 @@ import Combat from './combat/combat';
 import World from '../../world';
 import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
+import Formulas from '../../../info/formulas';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
 import { Movement, Points } from '../../../network/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
 
@@ -19,13 +20,13 @@ type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
 export default abstract class Character extends Entity {
     public level = 1;
+    public attackRange = 1;
+
+    public hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
     public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
-    public attackRange = 1;
     public attackRate = Modules.Defaults.ATTACK_RATE;
     public healingRate = Modules.Constants.HEAL_RATE;
-
-    public hitPoints = new HitPoints(Modules.Defaults.HITPOINTS);
 
     /* States */
     public poison = '';
