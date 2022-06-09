@@ -308,7 +308,6 @@ export const enum Constants {
     MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
     BANK_SIZE = 69, // Maximum bank size
-    HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 10_000, // healing every 10 seconds
@@ -330,8 +329,6 @@ export enum APIConstants {
 
 // Defaults that apply to all types of entities
 export enum Defaults {
-    MANA = 50,
-    HITPOINTS = 69, // nice.
     MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000 // every 1 second
 }

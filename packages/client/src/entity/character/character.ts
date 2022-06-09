@@ -12,7 +12,6 @@ type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: bo
 export default class Character extends Entity {
     public healthBarVisible = false;
 
-    public maxHitPoints = -1;
     private following = false;
     private interrupted = false;
     public explosion = false;
@@ -38,10 +37,6 @@ export default class Character extends Entity {
     public override dead = false;
 
     public override orientation = Modules.Orientation.Down;
-
-    public override hitPoints = -1;
-    public override mana = -1;
-    public override maxMana = -1;
 
     private newDestination!: Position | null;
     private step!: number;
