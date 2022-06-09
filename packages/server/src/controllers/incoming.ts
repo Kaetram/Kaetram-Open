@@ -191,15 +191,15 @@ export default class Incoming {
             }
 
             // Special name colours for mobs.
-            if (entity.isMob()) {
-                if (this.player.quests.getQuestFromMob(entity as Mob))
-                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
+            // if (entity.isMob()) {
+            //     if (this.player.quests.getQuestFromMob(entity as Mob))
+            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
 
-                let achievement = this.player.achievements.getAchievementFromEntity(entity as Mob);
+            //     let achievement = this.player.achievements.getAchievementFromEntity(entity as Mob);
 
-                if (achievement && achievement.isStarted())
-                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            }
+            //     if (achievement && achievement.isStarted())
+            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
+            // }
 
             this.player.send(new Spawn(entity));
         });
@@ -240,18 +240,12 @@ export default class Incoming {
 
                 if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
-                if (
-                    playerX !== this.player.x ||
-                    playerY !== this.player.y ||
-                    this.player.stunned ||
-                    !this.preventNoClip(requestX!, requestY!)
-                )
+                if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
                     return;
 
-                if (!targetInstance) {
-                    this.player.skills.stop();
-                    this.player.combat.stop();
-                }
+                // Reset combat and skills every time there is movement.
+                this.player.skills.stop();
+                this.player.combat.stop();
 
                 this.player.moving = true;
 
@@ -296,7 +290,7 @@ export default class Incoming {
             case Opcodes.Movement.Entity:
                 entity = this.entities.get(targetInstance!) as Character;
 
-                if (!entity || (entity.x === requestX && entity.y === requestY)) return;
+                if (!entity) return;
 
                 entity.setPosition(requestX!, requestY!);
 
@@ -363,6 +357,8 @@ export default class Incoming {
 
             case Opcodes.Target.Object: {
                 this.player.cheatScore = 0;
+
+                console.log(`object target instance: ${instance}`);
 
                 let coords = instance.split('-'),
                     index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
