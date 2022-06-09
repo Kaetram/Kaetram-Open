@@ -95,6 +95,8 @@ export default class EntitiesController {
 
         // The name the player sees for an entity.
         entity.name = info.name;
+        entity.customScale = info.scale!;
+        entity.nameColour = info.colour!;
 
         // Server-sided x and y coordinates are the `gridX` and `gridY` client coordinates.
         entity.setGridPosition(info.x, info.y);
