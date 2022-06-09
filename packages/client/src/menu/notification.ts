@@ -20,7 +20,7 @@ export default class Notification extends Menu {
     public override show(title: string, message: string, colour: string): void {
         // If a notification is already visible we hide it and display new one.
         if (this.isVisible()) {
-            this.hide();
+            this.hide(false);
             window.setTimeout(() => this.show(title, message, colour), 700);
             return;
         }
@@ -40,7 +40,7 @@ export default class Notification extends Menu {
         clearTimeout(this.timeout!);
 
         // Starts a timeout.
-        this.timeout = window.setTimeout(() => this.hide(), 7000);
+        this.timeout = window.setTimeout(() => this.hide(false), 7000);
     }
 
     /**
@@ -48,7 +48,9 @@ export default class Notification extends Menu {
      * screen area and remove its active element.
      */
 
-    public override hide(): void {
+    public override hide(ignore = true): void {
+        if (ignore) return;
+
         // Hides the notification.
         this.body.classList.remove('active');
         this.body.style.top = '100%';
