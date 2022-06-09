@@ -38,11 +38,11 @@ abstract class Entity {
 
     public oldRegions: number[] = [];
 
-    public specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
-    public customScale!: number;
+    public colour = ''; // name colour displayed for the entity
+    public scale = 0; // scale of the entity (default if not specified)
 
-    public movementCallback?: MovementCallback;
-    public regionCallback?: RegionCallback;
+    public movementCallback?: MovementCallback | undefined;
+    public regionCallback?: RegionCallback | undefined;
 
     protected constructor(public instance = '', public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
@@ -198,7 +198,7 @@ abstract class Entity {
      */
 
     public serialize(): EntityData {
-        let { instance, type, key, name, x, y } = this;
+        let { instance, type, key, name, x, y, colour, scale } = this;
 
         return {
             instance,
@@ -206,7 +206,9 @@ abstract class Entity {
             name,
             key,
             x,
-            y
+            y,
+            colour,
+            scale
         };
     }
 
