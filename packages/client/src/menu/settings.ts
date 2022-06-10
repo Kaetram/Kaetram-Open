@@ -3,15 +3,14 @@ import Game from '../game';
 
 export default class Settings extends Menu {
     private volumeSlider: HTMLInputElement = document.querySelector('#volume')!;
-    private sfxSlider: HTMLInputElement = document.querySelector('#sfc')!;
+    private sfxSlider: HTMLInputElement = document.querySelector('#sfx')!;
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;
 
-    private soundCheckbox: HTMLInputElement = document.querySelector('#sound-check > .checkbox')!;
-    private cameraCheckbox: HTMLInputElement = document.querySelector('#camera-check > .checkbox')!;
-    private debugCheckbox: HTMLInputElement = document.querySelector('#debug-check > .checkbox')!;
-    private centreCheckbox: HTMLInputElement = document.querySelector('#centre-check > .checkbox')!;
-    private nameCheckbox: HTMLInputElement = document.querySelector('#name-check > .checkbox')!;
-    private levelCheckbox: HTMLInputElement = document.querySelector('#level-check > .checkbox')!;
+    private soundCheckbox: HTMLInputElement = document.querySelector('#sound-check > input')!;
+    private cameraCheckbox: HTMLInputElement = document.querySelector('#camera-check > input')!;
+    private debugCheckbox: HTMLInputElement = document.querySelector('#debug-check > input')!;
+    private nameCheckbox: HTMLInputElement = document.querySelector('#name-check > input')!;
+    private levelCheckbox: HTMLInputElement = document.querySelector('#level-check > input')!;
 
     public constructor(private game: Game) {
         super('#settings-page', undefined, '#settings-button');
@@ -19,6 +18,48 @@ export default class Settings extends Menu {
         this.volumeSlider.addEventListener('input', this.handleVolume.bind(this));
         this.sfxSlider.addEventListener('input', this.handleSFX.bind(this));
         this.brightnessSlider.addEventListener('input', this.handleBrightness.bind(this));
+
+        this.soundCheckbox.addEventListener('change', this.handleSound.bind(this));
+        this.cameraCheckbox.addEventListener('change', this.handleCamera.bind(this));
+        this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
+        this.nameCheckbox.addEventListener('change', this.handleName.bind(this));
+        this.levelCheckbox.addEventListener('change', this.handleLevel.bind(this));
+
+        this.load();
+    }
+
+    /**
+     * Loads all the information about the sliders and checkboxes from the local storage.
+     * We call all the handler functions here to ensure that the associated functions are
+     * called without having them import the settings page and create a spaghetti code situation.
+     * The settings page lives independently of the game and calls functions as needed.
+     */
+
+    private load(): void {
+        let settings = this.game.storage.getSettings();
+
+        this.volumeSlider.value = settings.music.toString();
+        this.sfxSlider.value = settings.sfx.toString();
+        this.brightnessSlider.value = settings.brightness.toString();
+
+        this.soundCheckbox.checked = settings.soundEnabled;
+        this.cameraCheckbox.checked = settings.centerCamera;
+        this.debugCheckbox.checked = settings.debug;
+        this.nameCheckbox.checked = settings.showNames;
+        this.levelCheckbox.checked = settings.showLevels;
+
+        // Update brightness value.
+        this.handleBrightness();
+
+        // Update debugging
+        this.handleDebug();
+
+        // Update camera once loaded.
+        this.handleCamera();
+
+        // Update the renderer for names and levels
+        this.handleName();
+        this.handleLevel();
     }
 
     /**
@@ -45,5 +86,54 @@ export default class Settings extends Menu {
     private handleBrightness(): void {
         this.game.storage.setBrightness(this.brightnessSlider.valueAsNumber);
         this.game.renderer.setBrightness(this.brightnessSlider.valueAsNumber);
+    }
+
+    /**
+     * Handler for when the sound checkbox is toggled.
+     */
+
+    private handleSound(): void {
+        this.game.storage.setSoundEnabled(this.soundCheckbox.checked);
+    }
+
+    /**
+     * Handler for when the camera checkbox is toggled.
+     */
+
+    private handleCamera(): void {
+        this.game.storage.setCenterCamera(this.cameraCheckbox.checked);
+
+        if (this.cameraCheckbox.checked) {
+            // Force camera to recenter on the player.
+            this.game.camera.center();
+            this.game.camera.centreOn(this.game.player);
+        } else this.game.camera.decenter(); // Remove the camera from the player.
+    }
+
+    /**
+     * Handler for when the debug checkbox is toggled.
+     */
+
+    private handleDebug(): void {
+        this.game.storage.setDebug(this.debugCheckbox.checked);
+        this.game.renderer.debugging = this.debugCheckbox.checked;
+    }
+
+    /**
+     * Handler for when the name checkbox is toggled.
+     */
+
+    private handleName(): void {
+        this.game.storage.setShowNames(this.nameCheckbox.checked);
+        this.game.renderer.drawNames = this.nameCheckbox.checked;
+    }
+
+    /**
+     * Handler for when the level checkbox is toggled.
+     */
+
+    private handleLevel(): void {
+        this.game.storage.setShowLevels(this.levelCheckbox.checked);
+        this.game.renderer.drawLevels = this.levelCheckbox.checked;
     }
 }
