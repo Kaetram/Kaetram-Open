@@ -772,6 +772,23 @@ export default class Player extends Character {
         });
     }
 
+    /**
+     * A player's old region is the one they just left from. We grab the first
+     * region in the array and send a surrounding region request based on that.
+     * @param packet Packet we are sending to the player.
+     */
+
+    public sendToOldRegions(packet: Packet): void {
+        let [oldRegion] = this.oldRegions;
+
+        if (!oldRegion) return;
+
+        this.world.push(PacketType.Regions, {
+            region: oldRegion,
+            packet
+        });
+    }
+
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
 
