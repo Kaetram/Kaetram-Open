@@ -54,6 +54,9 @@ export default class EntitiesController {
         // Don't spawn if we receive our own player data somehow.
         if (this.isPlayer(info.instance)) return;
 
+        console.log(info);
+        console.log(info.instance in this.entities);
+
         // Entity already exists, don't respawn.
         if (info.instance in this.entities) return;
 
@@ -355,12 +358,7 @@ export default class EntitiesController {
     public clean(): void {
         if (this.decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => {
-            // Don't remove the main player.
-            if (this.isPlayer(entity.instance)) return;
-
-            this.removeEntity(entity);
-        });
+        _.each(this.decrepit, (entity: Entity) => this.removeEntity(entity));
     }
 
     /**

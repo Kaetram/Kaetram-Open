@@ -185,7 +185,11 @@ export default class Handler {
     private handleRegion(region: number): void {
         log.debug(`Player ${this.player.username} entered region: ${region}.`);
 
+        console.log(this.player.oldRegions);
+
         this.map.regions.sendEntities(this.player);
+
+        this.player.sendToOldRegions(new Despawn(this.player.instance));
     }
 
     /**
