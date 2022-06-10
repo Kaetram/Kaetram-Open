@@ -16,7 +16,6 @@ interface Settings {
     soundEnabled: boolean;
     centerCamera: boolean;
     debug: boolean;
-    autoCentre: boolean;
     showNames: boolean;
     showLevels: boolean;
 }
@@ -75,7 +74,6 @@ export default class Storage {
                 soundEnabled: true,
                 centerCamera: true,
                 debug: false,
-                autoCentre: false,
                 showNames: true,
                 showLevels: true
             },
@@ -190,6 +188,61 @@ export default class Storage {
     }
 
     /**
+     * Updates the local storage value for soundEnabled.
+     * @param soundEnabled New value to update variable to.
+     */
+
+    public setSoundEnabled(soundEnabled: boolean): void {
+        this.data.settings.soundEnabled = soundEnabled;
+
+        this.save();
+    }
+
+    /**
+     * Sets the value of the centre camera in the local storage.
+     * @param centerCamera New value to update in the local storage.
+     */
+
+    public setCenterCamera(centerCamera: boolean): void {
+        this.data.settings.centerCamera = centerCamera;
+
+        this.save();
+    }
+
+    /**
+     * Updates the debug value in the local storage.
+     * @param debug New value of the debug.
+     */
+
+    public setDebug(debug: boolean): void {
+        this.data.settings.debug = debug;
+
+        this.save();
+    }
+
+    /**
+     * Updates whether or not to show names in the local storage.
+     * @param showNames New value to write to the local storage.
+     */
+
+    public setShowNames(showNames: boolean): void {
+        this.data.settings.showNames = showNames;
+
+        this.save();
+    }
+
+    /**
+     * Updates whether or not to display levels.
+     * @param showLevels New value we are updating in the local storage.
+     */
+
+    public setShowLevels(showLevels: boolean): void {
+        this.data.settings.showLevels = showLevels;
+
+        this.save();
+    }
+
+    /**
      * Checks if the local storage verison of the client
      * matches the window's config version.
      * @returns True if client version is the same as config version.
@@ -285,5 +338,21 @@ export default class Storage {
             objects: this.data.map.objects,
             cursorTiles: this.data.map.cursorTiles
         };
+    }
+
+    /**
+     * @returns The settings values stored.
+     */
+
+    public getSettings(): Settings {
+        return this.data.settings;
+    }
+
+    /**
+     * @returns The debug value stored in the local storage.
+     */
+
+    public getDebug(): boolean {
+        return this.data.settings.debug;
     }
 }
