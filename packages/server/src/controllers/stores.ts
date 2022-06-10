@@ -240,14 +240,17 @@ export default class Stores {
 
         if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
 
+        // Temporary fix until we have a more suitable UI.
+        ({ count } = slot);
+
         // Find the item in the store if it exists.
         let item = player.inventory.getItem(slot),
             storeItem = _.find(store.items, { key: slot.key }),
-            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2); // Use store price or item default.
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         player.inventory.remove(index, count);
 
-        // Very weird if this somehow happened, I'd be curious to see how.
+        // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
         if (!player.inventory.add(this.getCurrency(store.currency, price)))
             return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
@@ -284,10 +287,13 @@ export default class Stores {
         // Check that the player isn't trying to sell the currency to the store.
         if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
 
+        // Temporary fix until we have a more suitable UI.
+        ({ count } = slot);
+
         // Create an instance of an item and try to check if that item exists in the store.
         let item = player.inventory.getItem(slot),
             storeItem = _.find(store.items, { key: slot.key }),
-            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2); // Use store price or item default.
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
 
