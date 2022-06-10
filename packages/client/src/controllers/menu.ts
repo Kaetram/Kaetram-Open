@@ -12,6 +12,7 @@ import Profile from '../menu/profile/profile';
 import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
+import Settings from '../menu/settings';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -25,6 +26,7 @@ export default class MenuController {
     private enchant: Enchant = new Enchant();
     private warp: Warp = new Warp(this.game.socket);
     private notification: Notification = new Notification();
+    private settings: Settings = new Settings(this.game);
 
     public menu: Menu[] = [
         this.inventory,
@@ -33,7 +35,8 @@ export default class MenuController {
         this.profile,
         this.enchant,
         this.warp,
-        this.notification
+        this.notification,
+        this.settings
     ];
 
     public constructor(private game: Game) {
