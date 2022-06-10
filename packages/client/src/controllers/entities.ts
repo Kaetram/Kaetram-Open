@@ -54,9 +54,6 @@ export default class EntitiesController {
         // Don't spawn if we receive our own player data somehow.
         if (this.isPlayer(info.instance)) return;
 
-        console.log(info);
-        console.log(info.instance in this.entities);
-
         // Entity already exists, don't respawn.
         if (info.instance in this.entities) return;
 
