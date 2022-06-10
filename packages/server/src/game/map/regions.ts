@@ -142,10 +142,9 @@ export default class Regions {
 
             this.joining(entity, region);
 
-            let oldRegions = this.remove(entity),
-                newRegions = this.enter(entity, region);
+            entity.oldRegions = this.remove(entity);
 
-            if (oldRegions.length > 0) entity.oldRegions = _.difference(oldRegions, newRegions);
+            this.enter(entity, region);
         }
 
         return isNewRegion;
