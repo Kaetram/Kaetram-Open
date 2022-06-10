@@ -341,8 +341,6 @@ export default class Connection {
         if (currentPlayer) this.bubble.clean();
         else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
 
-        console.log(info);
-
         // No animation, skip straight to teleporting.
         if (!info.withAnimation) return this.game.teleport(player, info.x!, info.y!);
 
