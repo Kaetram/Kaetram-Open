@@ -1385,7 +1385,7 @@ export default class Renderer {
      * @param level The level of the brightness.
      */
 
-    public adjustBrightness(level: number): void {
+    public setBrightness(level: number): void {
         if (level < 0 || level > 100) return;
 
         this.forEachCanvas((canvas: HTMLCanvasElement) => {

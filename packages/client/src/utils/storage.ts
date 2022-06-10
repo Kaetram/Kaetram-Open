@@ -10,14 +10,13 @@ interface PlayerData {
 }
 
 interface Settings {
-    autoCentre: boolean;
     music: number;
     sfx: number;
     brightness: number;
     soundEnabled: boolean;
-    FPSCap: boolean;
     centerCamera: boolean;
     debug: boolean;
+    autoCentre: boolean;
     showNames: boolean;
     showLevels: boolean;
 }
@@ -70,14 +69,13 @@ export default class Storage {
             },
 
             settings: {
-                autoCentre: false,
                 music: 100,
                 sfx: 100,
                 brightness: 100,
                 soundEnabled: true,
-                FPSCap: true,
                 centerCamera: true,
                 debug: false,
+                autoCentre: false,
                 showNames: true,
                 showLevels: true
             },
@@ -154,6 +152,39 @@ export default class Storage {
     public setCredentials(username = '', password = ''): void {
         this.data.player.username = username;
         this.data.player.password = password;
+
+        this.save();
+    }
+
+    /**
+     * Updates the music volume and stores it into the local storage.
+     * @param volume The new volume we are setting the music to.
+     */
+
+    public setVolume(volume = 100): void {
+        this.data.settings.music = volume;
+
+        this.save();
+    }
+
+    /**
+     * Updates the SFX and stores it into the local storage.
+     * @param volume New volume we are setting the SFX to.
+     */
+
+    public setSFX(volume = 100): void {
+        this.data.settings.sfx = volume;
+
+        this.save();
+    }
+
+    /**
+     * Sets the brightness value in the storage.
+     * @param brightness New brightness or default to 100 if not specified.
+     */
+
+    public setBrightness(brightness = 100): void {
+        this.data.settings.brightness = brightness;
 
         this.save();
     }
