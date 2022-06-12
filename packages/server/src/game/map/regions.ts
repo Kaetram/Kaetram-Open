@@ -473,20 +473,9 @@ export default class Regions {
 
         tree.forEachTile((data: Tile, index: number) => {
             // Perhaps we can optimize further by storing this directly in the tree?
-            let coord = this.map.indexToCoord(index),
-                tile: RegionTileData = {
-                    x: coord.x,
-                    y: coord.y,
-                    data
-                },
-                cursor = this.map.getCursor(data);
+            let coord = this.map.indexToCoord(index);
 
-            // Check for collision of the tile.
-            if (this.map.isCollisionIndex(index)) tile.c = true;
-            if (this.map.isObject(data)) tile.o = true;
-            if (cursor) tile.cur = cursor;
-
-            tileData.push(tile);
+            tileData.push(this.buildTile(coord.x, coord.y, index, data));
         });
 
         return tileData;
@@ -498,25 +487,37 @@ export default class Regions {
      * will be happening.
      * @param x The x position of the tile in the grid space.
      * @param y The y position of the tile in the grid space.
+     * @param index Optional parameter if we want to skip calculating the index ourselves.
+     * @param data Optional tile data parameter used to skip grabbing the tile data if we already have it.
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number): RegionTileData {
+    private buildTile(x: number, y: number, index?: number, data?: Tile): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
+        /**
+         * Calculate the tile data if it's not specified as a parameter and
+         * attempt to grab the cursor based on the
+         */
+
         let tile: RegionTileData = {
-            x,
-            y,
-            data: this.map.getTileData(index)
-        };
+                x,
+                y,
+                data: data || this.map.getTileData(index)
+            },
+            cursor = this.map.getCursor(tile.data);
 
         /**
          * A tile is colliding if it exists in our array of collisions (See
          * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
          * (i.e. the tile is blank) it is automatically colliding.
+         * We check if a tile is an object by verifying the data extracted.
+         * If we find a cursor we set the `cursor` property to the cursor.
          */
         if (this.map.isCollisionIndex(index)) tile.c = true;
+        if (this.map.isObject(tile.data)) tile.o = true;
+        if (cursor) tile.cur = cursor;
 
         return tile;
     }
