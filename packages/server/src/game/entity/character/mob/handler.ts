@@ -79,6 +79,8 @@ export default class Handler {
             attacker.killCallback?.(this.mob);
         }
 
+        this.mob.area?.removeEntity(this.mob, attacker);
+
         this.world.entities.remove(this.mob);
         this.world.cleanCombat(this.mob);
 
