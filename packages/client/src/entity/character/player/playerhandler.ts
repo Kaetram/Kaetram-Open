@@ -119,6 +119,8 @@ export default class PlayerHandler {
 
             game.storage.setOrientation(player.orientation);
 
+            if (!player.hasKeyboardMovement()) game.renderer.resetAnimatedTiles();
+
             player.moving = false;
         });
 
