@@ -465,10 +465,17 @@ export default class Player extends Character {
             case Modules.ContainerType.Inventory:
                 item = this.inventory.getItem(this.inventory.get(index));
 
-                if (!item || !item.isEquippable()) return;
+                if (!item) return;
 
-                this.inventory.remove(index);
-                this.equipment.equip(item);
+                if (item.edible) {
+                    item.plugin?.onUse(this);
+                    this.inventory.remove(index, 1);
+                }
+
+                if (item.isEquippable()) {
+                    this.inventory.remove(index);
+                    this.equipment.equip(item);
+                }
 
                 break;
 
