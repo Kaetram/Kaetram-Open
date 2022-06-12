@@ -133,7 +133,7 @@ export default class Achievements {
         this.forEachAchievement((a: Achievement) => {
             if (a.isFinished()) return;
             if (entity.isNPC() && !a.hasNPC(entity as NPC)) return;
-            if (entity.isMob() && !a.hasMob(entity as Mob)) return;
+            if (entity.isMob() && (!a.hasMob(entity as Mob) || !a.isStarted())) return;
 
             achievement = a;
         });
