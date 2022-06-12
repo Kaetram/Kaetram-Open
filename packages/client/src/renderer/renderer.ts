@@ -1201,6 +1201,16 @@ export default class Renderer {
         }, 2);
     }
 
+    /**
+     * Temporary solution for synchronizing animated tiles.
+     */
+
+    public resetAnimatedTiles(): void {
+        _.each(this.animatedTiles, (tile: Tile) => {
+            tile.animationIndex = 0;
+        });
+    }
+
     private drawCellRect(x: number, y: number, colour: string): void {
         this.entitiesContext.save();
         this.setCameraView(this.entitiesContext);
