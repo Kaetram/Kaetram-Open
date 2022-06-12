@@ -31,7 +31,7 @@ export default class Warp {
         if (!this.isCooldown())
             return this.player.notify(`You must wait another ${this.getDuration()} to warp.`);
 
-        let warp = this.getWarp(id);
+        let warp = this.getWarp(id - 1);
 
         if (!warp) return log.error(`Could not find warp with id ${id}.`);
 
