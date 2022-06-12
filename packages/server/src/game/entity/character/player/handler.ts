@@ -10,13 +10,15 @@ import {
     NPC as NPCPacket,
     Death,
     Despawn,
-    Skill
+    Skill,
+    Overlay
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
 import Slot from './containers/slot';
 import Equipment from './equipment/equipment';
 import Character from '../character';
+import Light from '../../../globals/impl/light';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
@@ -185,8 +187,11 @@ export default class Handler {
     private handleRegion(region: number): void {
         log.debug(`Player ${this.player.username} entered region: ${region}.`);
 
+        this.handleLights(region);
+
         this.map.regions.sendEntities(this.player);
 
+        // Signal to the region we just left from to despawn us.
         this.player.sendToOldRegions(new Despawn(this.player.instance));
     }
 
@@ -460,6 +465,29 @@ export default class Handler {
         if (this.isTickInterval(3)) this.parsePoison();
 
         this.updateTicks++;
+    }
+
+    /**
+     * Synchronizes the lights within the region with the player.
+     * @param regionId Identifier of the region we just entered.
+     */
+
+    private handleLights(regionId: number): void {
+        let region = this.map.regions.get(regionId);
+
+        if (!region) return;
+
+        region.forEachLight((light: Light) => {
+            if (this.player.hasLoadedLight(light.id)) return;
+
+            this.player.send(
+                new Overlay(Opcodes.Overlay.Lamp, {
+                    light: light.serialize()
+                })
+            );
+
+            this.player.lightsLoaded.push(light.id);
+        });
     }
 
     /**
