@@ -155,6 +155,10 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
+        // Do not pass through doors that require an achievement which hasn't been completed.
+        if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
+            return;
+
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
@@ -173,8 +177,6 @@ export default class Handler {
         this.map.regions.handle(this.player);
 
         this.detectAreas(x, y);
-
-        this.detectClipping(x, y);
 
         this.player.storeOpen = '';
     }
@@ -557,14 +559,6 @@ export default class Handler {
         //         if (aggro) mob.combat.begin(this.player);
         //     }
         // });
-    }
-
-    private detectClipping(x: number, y: number): void {
-        let isColliding = this.map.isColliding(x, y);
-
-        if (!isColliding) return;
-
-        this.player.incoming.handleNoClip(x, y);
     }
 
     private parsePoison(): void {

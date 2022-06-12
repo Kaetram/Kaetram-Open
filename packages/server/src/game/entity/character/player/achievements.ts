@@ -80,6 +80,9 @@ export default class Achievements {
 
         // Add experience if it exists.
         if (experience) this.player.addExperience(experience);
+
+        // Update dynamic tiles.
+        this.player.updateRegion();
     }
 
     /**
