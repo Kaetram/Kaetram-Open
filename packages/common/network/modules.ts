@@ -310,7 +310,7 @@ export const enum Constants {
     BANK_SIZE = 69, // Maximum bank size
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
-    HEAL_RATE = 10_000, // healing every 10 seconds
+    HEAL_RATE = 5000, // healing every 10 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial
