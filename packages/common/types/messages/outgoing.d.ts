@@ -2,6 +2,7 @@ import { HitData } from '../info';
 import { EntityData } from '../entity';
 import { PlayerData } from '../player';
 import { QuestData } from '../quest';
+import { SerializedLight } from '../light';
 import { SerializedStoreItem } from '../stores';
 import { SerializedEquipment, EquipmentData } from '../equipment';
 import { SerializedSkills, SkillData } from '../skills';
@@ -275,6 +276,7 @@ export type StoreCallback = (opcode: Opcodes.Store, info: StorePacket) => void;
 export interface OverlayPacket {
     image?: string;
     colour?: string;
+    light?: SerializedLight;
 }
 
 export type OverlayCallback = (opcode: Opcodes.Overlay, info: OverlayPacket) => void;

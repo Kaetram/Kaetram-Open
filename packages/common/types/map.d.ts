@@ -32,6 +32,7 @@ export interface ProcessedArea {
     stage?: number;
 
     // Light
+    colour?: string;
     distance?: number;
     diffuse?: number;
     objects?: Position[];
