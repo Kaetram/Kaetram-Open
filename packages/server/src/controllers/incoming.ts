@@ -234,8 +234,6 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Movement.Started:
-                this.preventNoClip(requestX!, requestY!);
-
                 this.player.movementStart = Date.now();
 
                 if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
@@ -252,7 +250,7 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Step:
-                if (this.player.stunned || !this.preventNoClip(playerX!, playerY!)) return;
+                if (this.player.stunned) return;
 
                 this.player.setPosition(playerX!, playerY!);
 
@@ -647,36 +645,5 @@ export default class Incoming {
         if (attacker.isMob() || target.isMob()) return true;
 
         return attacker.isPlayer() && target.isPlayer() && attacker.pvp && target.pvp;
-    }
-
-    private preventNoClip(x: number, y: number): boolean {
-        let isMapColliding = this.world.map.isColliding(x, y);
-
-        //if (this.world.map.getPositionObject(x, y)) return true;
-
-        if (isMapColliding) {
-            this.handleNoClip(x, y);
-            return false;
-        }
-
-        return true;
-    }
-
-    public handleNoClip(x: number, y: number): void {
-        this.player.stopMovement(true);
-        this.player.notify(
-            'We have detected no-clipping in your client. Please submit a bug report.'
-        );
-
-        x = this.player.oldX < 0 ? this.player.x : this.player.oldX;
-        y = this.player.oldY < 0 ? this.player.y : this.player.oldY;
-
-        if (this.world.map.isColliding(x, y)) {
-            let spawn = this.player.getSpawn();
-
-            ({ x, y } = spawn);
-        }
-
-        this.player.teleport(x, y, true);
     }
 }
