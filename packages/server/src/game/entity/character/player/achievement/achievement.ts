@@ -134,6 +134,8 @@ export default class Achievement {
      */
 
     public finish(): void {
+        if (this.isFinished()) return;
+
         this.setStage(this.stageCount);
     }
 
@@ -145,8 +147,6 @@ export default class Achievement {
      */
 
     public setStage(stage: number, loading = false): void {
-        if (this.isFinished()) return;
-
         // Is the new stage different from current stage?
         let isProgress = this.stage !== stage;
 
