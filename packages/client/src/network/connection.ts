@@ -64,7 +64,6 @@ export default class Connection {
      */
 
     private app: App = this.game.app;
-    private storage: Storage = this.app.storage;
     private overlays: Overlays = this.game.overlays;
     private info: InfoController = this.game.info;
     private map: Map = this.game.map;
@@ -953,54 +952,22 @@ export default class Connection {
      */
 
     private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
+        console.log(`Overlay Opcode: ${opcode}`);
         console.log(info);
 
         switch (opcode) {
-            case Opcodes.Overlay.Set: {
-                // let { image, colour } = info as OverlaySetData;
-
-                // this.overlays.update(image);
-
-                // if (!this.renderer.transitioning) this.renderer.updateDarkMask(colour);
-                // else this.queueColour = colour;
-
+            case Opcodes.Overlay.Set:
+                this.overlays.update(info.image);
+                this.renderer.updateDarkMask(info.colour);
                 break;
-            }
 
             case Opcodes.Overlay.Remove:
                 this.renderer.removeAllLights();
                 this.overlays.update();
-
                 break;
 
-            case Opcodes.Overlay.Lamp: {
-                // let { x, y, distance, diffuse, objects } = info as OverlayLampData;
-
-                // this.renderer.addLight(
-                //     x,
-                //     y,
-                //     distance!,
-                //     diffuse!,
-                //     'rgba(0,0,0,0.4)',
-                //     true,
-                //     objects!
-                // );
-
-                break;
-            }
-
-            case Opcodes.Overlay.RemoveLamps:
-                this.renderer.removeAllLights();
-
-                break;
-
-            case Opcodes.Overlay.Darkness: {
-                // let { colour } = info as OverlayDarknessData;
-
-                // this.renderer.updateDarkMask(colour);
-
-                break;
-            }
+            case Opcodes.Overlay.Lamp:
+                return this.renderer.addLight(info.light!);
         }
     }
 
