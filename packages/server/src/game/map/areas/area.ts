@@ -8,7 +8,7 @@ type Position = { x: number; y: number };
 export default class Area {
     public polygon!: Position[];
 
-    private entities: Mob[] = [];
+    private entities: string[] = []; // Stores instances of mobs in the area.
     public chest: Chest | null = null;
     public items: string[] = [];
 
@@ -58,10 +58,9 @@ export default class Area {
      */
 
     public addEntity(mob: Mob): void {
-        if (!this.entities.includes(mob)) return;
+        if (this.entities.includes(mob.instance)) return;
 
-        this.entities.push(mob);
-        mob.area = this;
+        this.entities.push(mob.instance);
 
         // Grab a spawn delay from an mob to create an offset for the chest.
         if (!this.spawnDelay) this.spawnDelay = mob.respawnDelay;
@@ -76,7 +75,7 @@ export default class Area {
      */
 
     public removeEntity(mob: Mob): void {
-        let index = this.entities.indexOf(mob);
+        let index = this.entities.indexOf(mob.instance);
 
         if (index > -1) this.entities.splice(index, 1);
 
