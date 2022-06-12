@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 import { Modules } from '@kaetram/common/network';
-import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../../data/map/world.json';
 import AreasIndex from './areas';
@@ -20,6 +19,7 @@ import type { RegionTile } from '@kaetram/common/types/region';
 
 import type World from '../world';
 import type Areas from './areas/areas';
+import type Player from '../entity/character/player/player';
 
 let map = mapData as ProcessedMap;
 
@@ -187,11 +187,37 @@ export default class Map {
      * the array of collision indexes and verifies that the tile is not null.
      * @param x Grid x coordinate we are checking.
      * @param y Grid y coordinate we are checking.
+     * @param player Optional parameter used to check the dynamic tile collision.
      * @returns True if the position is a collision.
      */
 
-    public isColliding(x: number, y: number): boolean {
+    public isColliding(x: number, y: number, player?: Player): boolean {
         if (this.isOutOfBounds(x, y)) return true;
+
+        /**
+         * This is the cleanest way I could've done dynamic collision detection.
+         * It checks whether the player exists, region has valid dynamic areas,
+         * and if we can find the mapped tile. If any of those fail, the if statement
+         * nest will exit and check collisions against the static map.
+         */
+
+        // Verify dynamic tile collision if player is provided as a parameter.
+        if (player) {
+            let region = this.regions.get(this.regions.getRegion(x, y));
+
+            // Skip if there are no dynamic areas in the region.
+            if (region.hasDynamicAreas()) {
+                let dynamicArea = region.getDynamicArea(x, y);
+
+                // Skip if no dynamic area is found or it doesn't fulfill requirements.
+                if (dynamicArea && dynamicArea.fulfillsRequirement(player)) {
+                    let mappedTile = dynamicArea.getMappedTile(x, y);
+
+                    // Check collision if we can find a mapping tile.
+                    if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
+                }
+            }
+        }
 
         let index = this.coordToIndex(x, y);
 

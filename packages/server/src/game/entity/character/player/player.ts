@@ -421,7 +421,7 @@ export default class Player extends Character {
             })
         );
 
-        this.setPosition(x, y, false, true);
+        this.setPosition(x, y, false);
         this.world.cleanCombat(this);
     }
 
@@ -609,12 +609,33 @@ export default class Player extends Character {
      * Setters
      */
 
-    public override setPosition(x: number, y: number, forced = false, teleport = false): void {
+    /**
+     * Override for the superclass `setPosition` function. Since the player must always be
+     * synced up to nearby players, this function sends a packet to the nearby region about
+     * every movement. It also checks gainst no-clipping and player positionining. In the event
+     * no clip is detected, we teleport the player to their old valid position. If the player
+     * is out of boudns (generally happens when a new character is created and x/y values are
+     * -1) we teleport them to their respective spawn point.
+     * @param x The new grid x coordinate we are moving to.
+     * @param y The new grd y coordinate we are moving to.
+     * @param forced Forced parameters ignores current actions and forces the player to move.
+     */
+
+    public override setPosition(x: number, y: number, forced = false): void {
         if (this.dead) return;
 
+        // Check against noclipping by verifying the collision w/ dnyamic tiles.
+        if (this.map.isColliding(x, y, this)) {
+            this.notify(`Noclip detected in your movement, please submit a bug report.`);
+            this.teleport(this.oldX, this.oldY);
+            return;
+        }
+
+        // Teleport the player to the spawn point if the position is invalid.
         if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
         else super.setPosition(x, y);
 
+        // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
                 instance: this.instance,
@@ -629,9 +650,7 @@ export default class Player extends Character {
     public setOrientation(orientation: number): void {
         this.orientation = orientation;
 
-        if (this.orientationCallback)
-            // Will be necessary in the future.
-            this.orientationCallback;
+        if (this.orientationCallback) this.orientationCallback();
     }
 
     /**
