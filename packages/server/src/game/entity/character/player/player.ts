@@ -49,7 +49,7 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
-import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
+import { ExperiencePacket, OverlayPacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -500,21 +500,32 @@ export default class Player extends Character {
         //this.sendToAdjacentRegions(this.region, new PVP(this.instance, this.pvp));
     }
 
+    /**
+     * Detects a change in the overlay area. If the player steps in an overlay
+     * area, we send the information to the client. If the player exits the area,
+     * we remove the overlay.
+     * @param overlay An area containing overlay data or an undefined object.
+     */
+
     public updateOverlay(overlay: Area | undefined): void {
+        // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
+        // Store for comparison.
         this.overlayArea = overlay;
 
-        if (overlay && overlay.id) {
-            this.lightsLoaded = [];
+        // No overlay object or invalid object, remove the overlay.
+        if (!overlay || !overlay.id) return this.send(new Overlay(Opcodes.Overlay.Remove));
 
-            this.send(
-                new Overlay(Opcodes.Overlay.Set, {
-                    image: overlay.fog || 'blank',
-                    colour: `rgba(0,0,0,${overlay.darkness})`
-                })
-            );
-        } else this.send(new Overlay(Opcodes.Overlay.Remove));
+        // New overlay is being loaded, remove lights.
+        this.lightsLoaded = [];
+
+        this.send(
+            new Overlay(Opcodes.Overlay.Set, {
+                image: overlay.fog || 'blank',
+                colour: `rgba(0, 0, 0, ${overlay.darkness})`
+            })
+        );
     }
 
     public updateCamera(camera: Area | undefined): void {
