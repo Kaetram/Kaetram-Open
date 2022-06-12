@@ -189,9 +189,9 @@ export default class Mob extends Character {
         // In case chests area does not exist in the map.
         if (!chestAreas) return;
 
-        let area = chestAreas.inArea(this.x, this.y);
+        this.area = chestAreas.inArea(this.x, this.y)!;
 
-        area?.addEntity(this);
+        this.area?.addEntity(this);
     }
 
     /**
