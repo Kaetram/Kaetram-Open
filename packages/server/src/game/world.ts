@@ -2,26 +2,27 @@ import _ from 'lodash';
 
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
+import Trees from './globals/trees';
+import Lights from './globals/lights';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Grids from './map/grids';
 import Map from './map/map';
 import API from '../network/api';
+import Packet from '../network/packet';
 import Network from '../network/network';
 import Character from './entity/character/character';
 
+import { Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Chat } from '../network/packets';
-import Packet from '../network/packet';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
-import Trees from './globals/trees';
 
 export interface PacketData {
     packet: Packet;
@@ -37,6 +38,7 @@ export default class World {
     public api: API = new API(this);
     public stores: Stores = new Stores(this);
     public trees: Trees = new Trees(this);
+    public lights: Lights = new Lights(this.map);
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public discord: Discord = new Discord(config.hubEnabled);

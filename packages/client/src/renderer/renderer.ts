@@ -17,6 +17,7 @@ import { RegionTile } from './../../../common/types/region';
 import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 
 import { Modules } from '@kaetram/common/network';
+import { SerializedLight } from '@kaetram/common/types/light';
 
 interface RendererTile {
     relativeTileId: number;
@@ -423,12 +424,12 @@ export default class Renderer {
         // Overlay image cold not be found.
         if (!this.game.overlays.hasOverlay()) return;
 
-        let overlay = this.game.overlays.get();
+        let image = this.game.overlays.get();
 
         // Draw only if there is an overlay image.
-        if (overlay) {
+        if (image) {
             // Create a repeating pattern using the overlay image.
-            this.overlayContext.fillStyle = this.overlayContext.createPattern(overlay, 'repeat')!;
+            this.overlayContext.fillStyle = this.overlayContext.createPattern(image, 'repeat')!;
             this.overlayContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.overlayContext.fill();
         }
@@ -1218,40 +1219,28 @@ export default class Renderer {
         this.drawCellRect(x * this.actualTileSize, y * this.actualTileSize, colour);
     }
 
-    public updateDarkMask(color: string): void {
+    /**
+     * Calculates the dark mask effect for the overlay.
+     * @param color What colour we want the overlay to have, generally this is
+     * a black rgb(0,0,0) with an alpha to give the effect of darkness.
+     */
+
+    public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
         this.darkMask.color = color;
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    private parseObjects(objects: Position[]): RectangleObject[] {
-        let parsedObjects: RectangleObject[] = [];
+    /**
+     * Adds a new light to the rendering screen.
+     * @param info Contains information about the light we are adding.
+     */
 
-        if (!objects) return parsedObjects;
-
-        for (let object of objects)
-            parsedObjects.push(
-                new RectangleObject({
-                    topLeft: new Vec2(object.x, object.y),
-                    bottomRight: new Vec2(object.x + this.tileSize, object.y + this.tileSize)
-                })
-            );
-
-        return parsedObjects;
-    }
-
-    public addLight(
-        x: number,
-        y: number,
-        distance: number,
-        diffuse: number,
-        color: string,
-        relative: boolean,
-        objects?: Position[]
-    ): void {
-        let light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp,
+    public addLight(info: SerializedLight): void {
+        let light = new Lamp(
+                this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
+            ) as RendererLamp,
             lighting = new Lighting({
-                light,
-                objects: this.parseObjects(objects!)
+                light
                 // diffuse: light.diffuse
             }) as RendererLighting;
 
@@ -1262,7 +1251,7 @@ export default class Renderer {
 
         if (this.hasLighting(lighting)) return;
 
-        if (relative) lighting.relative = relative;
+        lighting.relative = true;
 
         this.lightings.push(lighting);
         this.darkMask.lights.push(light);
