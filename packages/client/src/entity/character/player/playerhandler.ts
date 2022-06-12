@@ -152,7 +152,7 @@ export default class PlayerHandler {
 
             if (camera.isCentered()) camera.centreOn(player);
 
-            if (player.target) player.follow(player.target);
+            //if (player.target) player.follow(player.target);
         });
     }
 

@@ -4,6 +4,7 @@ import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Area from './areas/area';
 import Tree from '../globals/impl/tree';
+import Light from '../globals/impl/light';
 
 export default class Region {
     private entities: { [instance: string]: Entity } = {};
@@ -11,6 +12,7 @@ export default class Region {
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
     private trees: Tree[] = [];
+    private lights: Light[] = [];
 
     public constructor(
         public x: number,
@@ -111,6 +113,15 @@ export default class Region {
     }
 
     /**
+     * Adds a light object to the region.
+     * @param light The light object we are adding.
+     */
+
+    public addLight(light: Light): void {
+        this.lights.push(light);
+    }
+
+    /**
      * Grab a list of entity instances and remove the `reject` from the list.
      * @param reject Entity that we are ignoring (typically a player).
      * @returns A list of entity instances.
@@ -196,6 +207,15 @@ export default class Region {
 
     public forEachTree(callback: (tree: Tree) => void): void {
         _.each(this.trees, callback);
+    }
+
+    /**
+     * Iterates through all the lights in the regions and returns each light.
+     * @param callback Contains the light that is being iterated.
+     */
+
+    public forEachLight(callback: (light: Light) => void): void {
+        _.each(this.lights, callback);
     }
 
     /**
