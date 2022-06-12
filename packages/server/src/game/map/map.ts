@@ -38,40 +38,25 @@ export default class Map {
     private collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
-    public lights!: ProcessedArea[];
-    public plateau!: { [index: number]: number };
-    public objects!: number[];
-    public cursors!: { [tileId: number]: string };
+    public plateau: { [index: number]: number } = map.plateau;
+    public objects: number[] = map.objects;
+    public cursors: { [tileId: number]: string } = map.cursors;
     public doors!: { [index: number]: ProcessedDoor };
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedTree[] = map.trees || [];
+    public lights: ProcessedArea[] = map.areas.lights || [];
 
     // Static chest areas, named as singular to prevent confusion with `chests` area.
     public chest: ProcessedArea[] = map.areas.chest || [];
 
-    private areas!: { [name: string]: Areas };
-
-    private checksum!: string;
+    private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
-        this.load();
+        this.loadAreas();
+        this.loadDoors();
 
         this.regions = new Regions(this);
         this.grids = new Grids(this);
-    }
-
-    load(): void {
-        this.lights = map.areas.lights;
-        this.plateau = map.plateau;
-        this.objects = map.objects;
-        this.cursors = map.cursors;
-
-        this.checksum = Utils.getChecksum(JSON.stringify(map));
-
-        this.areas = {};
-
-        this.loadAreas();
-        this.loadDoors();
     }
 
     /**
