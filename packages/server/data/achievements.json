@@ -24,7 +24,8 @@
         "name": "A Hidden Path"
     },
 
-    "gatesofhell": {
-        "name": "Gates of Hell"
+    "hiddenreward": {
+        "name": "Hidden Reward",
+        "description": "Kill some secret spooky skeletons somewhere."
     }
 }

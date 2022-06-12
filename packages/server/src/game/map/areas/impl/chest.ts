@@ -4,6 +4,8 @@ import World from '../../../world';
 import Area from '../area';
 import Areas from '../areas';
 
+import type Character from '../../../entity/character/character';
+import type Player from '../../../entity/character/player/player';
 import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Chest extends Areas {
@@ -19,8 +21,11 @@ export default class Chest extends Areas {
 
             if (rawData.achievement) chestArea.achievement = rawData.achievement;
 
-            chestArea.onEmpty(() => {
+            chestArea.onEmpty((attacker?: Character) => {
                 this.spawnChest(chestArea);
+
+                if (chestArea.achievement)
+                    (attacker as Player).achievements?.get(chestArea.achievement)?.finish();
             });
 
             chestArea.onSpawn(() => {
