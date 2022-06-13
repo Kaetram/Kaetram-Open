@@ -163,6 +163,12 @@ export enum HealTypes {
     Stamina
 }
 
+export enum PoisonTypes {
+    Venom, // When a mob hits you
+    Plague, // When entering a poisoned area.
+    Persistent // Poison that doesn't wear off until it's cured.
+}
+
 export enum Trade {
     Request,
     Started,

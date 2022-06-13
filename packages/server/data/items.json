@@ -1148,8 +1148,18 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 5,
-    "plugin": "healthFlask",
+    "plugin": "healthflask",
     "healAmount": 100
+  },
+
+  "cure": {
+    "type": "object",
+    "name": "Antidote",
+    "storeCount": 10,
+    "price": 150,
+    "stackable": false,
+    "edible": true,
+    "plugin": "poisoncure"
   },
 
   "manaflask": {
@@ -1160,7 +1170,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 5,
-    "plugin": "healthFlask",
+    "plugin": "healthflask",
     "manaAmount": 35
   },
 
@@ -1172,7 +1182,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 3,
-    "plugin": "healthFlask",
+    "plugin": "healthflask",
     "healAmount": 200
   },
 
@@ -1184,7 +1194,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 2,
-    "plugin": "healthFlask",
+    "plugin": "healthflask",
     "healAmount": 500
   },
 
