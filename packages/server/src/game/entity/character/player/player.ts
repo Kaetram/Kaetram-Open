@@ -631,16 +631,16 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number, forced = false): void {
         if (this.dead) return;
 
+        // Teleport the player to the spawn point if the position is invalid.
+        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
+        else super.setPosition(x, y);
+
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
-        if (this.map.isColliding(x, y, this)) {
+        if (this.map.isColliding(x, y, this) && this.oldX !== -1 && this.oldY !== -1) {
             this.notify(`Noclip detected in your movement, please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
             return;
         }
-
-        // Teleport the player to the spawn point if the position is invalid.
-        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
-        else super.setPosition(x, y);
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
