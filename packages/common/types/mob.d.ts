@@ -17,5 +17,5 @@ export interface MobData {
     poisonous?: boolean;
     hiddenName?: boolean;
     projectileName?: string;
-    combatPlugin?: string;
+    plugin?: string;
 }
