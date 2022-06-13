@@ -1,6 +1,5 @@
 import Entity from '../entity';
 
-import PluginIndex, { Plugin } from '@kaetram/server/data/plugins';
 import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
 
@@ -9,6 +8,7 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import { ItemData } from '@kaetram/common/types/item';
 import { EntityData } from '@kaetram/common/types/entity';
+import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
 
 type RawData = {
     [key: string]: ItemData;
@@ -99,7 +99,7 @@ export default class Item extends Entity {
             return;
         }
 
-        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex]();
+        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this.data);
     }
 
     /**

@@ -9,8 +9,11 @@ import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
+import PluginIndex from '../../../../../data/plugins/mobs';
 import rawData from '../../../../../data/mobs.json';
 import log from '@kaetram/common/util/log';
+
+import DefaultPlugin from '../../../../../data/plugins/mobs/default';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { MobData } from '@kaetram/common/types/mob';
@@ -37,8 +40,8 @@ export default class Mob extends Character {
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public aggressive = false;
     public roaming = false;
-    private poisonous = false;
-    private combatPlugin = '';
+    public poisonous = false;
+    private plugin?: DefaultPlugin;
 
     // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
@@ -54,9 +57,9 @@ export default class Mob extends Character {
 
     public area!: Area;
 
-    private respawnCallback?(): void;
+    private respawnCallback?: () => void;
     public forceTalkCallback?: (message: string) => void;
-    public roamingCallback?(): void;
+    public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
@@ -92,13 +95,29 @@ export default class Mob extends Character {
 
         // TODO - After refactoring projectile system
         this.projectileName = this.data.projectileName || this.projectileName;
-        this.combatPlugin = this.data.combatPlugin!;
 
         // Initialize a mob handler to `handle` our callbacks.
-        new MobHandler(this);
+        if (this.data.plugin) this.loadPlugin();
+        else new MobHandler(this);
 
         // The roaming interval
         setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
+    }
+
+    /**
+     * Attempts to locate and load a plugin from the plugin index.
+     */
+
+    private loadPlugin(): void {
+        if (!(this.data.plugin! in PluginIndex)) {
+            log.error(`[Mob] Could not find plugin ${this.data.plugin}.`);
+
+            // Initialize a mob handler since we couldn't find a plugin.
+            new MobHandler(this);
+            return;
+        }
+
+        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
     }
 
     /**
