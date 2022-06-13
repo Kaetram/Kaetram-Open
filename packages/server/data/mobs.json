@@ -150,7 +150,8 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "poisonous": true
   },
 
   "spectre": {
