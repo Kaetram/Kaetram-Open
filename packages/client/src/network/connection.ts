@@ -131,7 +131,7 @@ export default class Connection {
      */
 
     private handleHandshake(): void {
-        this.app.updateLoader('Connecting to server...');
+        this.app.updateLoader('Connecting to server');
 
         // Guest login doesn't require any credentials, send the packet right away.
         if (this.app.isGuest())
