@@ -1,5 +1,5 @@
 import { HitData } from '../info';
-import { EntityData } from '../entity';
+import { EntityData, EntityUpdate } from '../entity';
 import { PlayerData } from '../player';
 import { QuestData } from '../quest';
 import { SerializedLight } from '../light';
@@ -302,3 +302,7 @@ export type BubbleCallback = (info: BubblePacket) => void;
 export type SkillPacket = SerializedSkills | SkillData;
 
 export type SkillCallback = (opcode: Opcodes.Skill, info: SkillPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export type UpdateCallback = (info: EntityUpdate[]) => void;

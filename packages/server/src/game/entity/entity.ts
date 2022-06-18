@@ -6,7 +6,7 @@ import type NPC from './npc/npc';
 import type Item from './objects/item';
 
 import { Modules } from '@kaetram/common/network';
-import { EntityData } from '@kaetram/common/types/entity';
+import { EntityData, EntityUpdate } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
@@ -109,6 +109,31 @@ abstract class Entity {
     }
 
     /**
+     * Grabs the entity data and returns it in a packet format.
+     * @returns Entity update object containing update data.
+     */
+
+    public getUpdateData(): EntityUpdate {
+        return {
+            instance: this.instance,
+            colour: this.colour,
+            scale: this.scale
+        };
+    }
+
+    /**
+     * An entity contains update data if any of the special properties
+     * are set. If an entity has a differnet colour, its nametag will display
+     * differently (the colour specified), a different scale indicates how
+     * big the entity will be compared to the default.
+     * @returns Whether the entity has the colour or scale properties set.
+     */
+
+    public hasUpdateData(): boolean {
+        return !!this.colour || !!this.scale;
+    }
+
+    /**
      * Checks the distance between the current entity object and another
      * specified entity. The distance paramter specifies how far the other
      * entity can be for us to return true.
@@ -198,7 +223,7 @@ abstract class Entity {
      */
 
     public serialize(): EntityData {
-        let { instance, type, key, name, x, y, colour, scale } = this;
+        let { instance, type, key, name, x, y } = this;
 
         return {
             instance,
@@ -206,9 +231,7 @@ abstract class Entity {
             name,
             key,
             x,
-            y,
-            colour,
-            scale
+            y
         };
     }
 

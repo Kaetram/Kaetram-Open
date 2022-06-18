@@ -55,6 +55,7 @@ import {
     TeleportPacket,
     SkillPacket
 } from '@kaetram/common/types/messages/outgoing';
+import { EntityUpdate } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -122,6 +123,7 @@ export default class Connection {
         this.messages.onCamera(this.handleCamera.bind(this));
         this.messages.onBubble(this.handleBubble.bind(this));
         this.messages.onSkill(this.handleSkill.bind(this));
+        this.messages.onUpdate(this.handleUpdate.bind(this));
     }
 
     /**
@@ -1009,5 +1011,22 @@ export default class Connection {
         }
 
         this.game.menu.synchronize();
+    }
+
+    /**
+     * Contains an array of entities that we are updating the appearance
+     * data of. This includes name colour, scale, and perhaps other things.
+     * @param info Array containing the instance and appearance data.
+     */
+
+    private handleUpdate(info: EntityUpdate[]): void {
+        _.each(info, (update: EntityUpdate) => {
+            let entity = this.entities.get(update.instance);
+
+            if (!entity) return;
+
+            if (update.colour) entity.nameColour = update.colour;
+            if (update.scale) entity.customScale = update.scale;
+        });
     }
 }
