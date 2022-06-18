@@ -7,7 +7,7 @@ import Region from './region';
 import Map from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
 import { List, Spawn, Map as MapPacket } from '../../network/packets';

@@ -207,8 +207,6 @@ export default class Handler {
                 data: this.player.equipment.serialize()
             })
         );
-
-        this.player.loadInventory();
     }
 
     /**
@@ -241,11 +239,9 @@ export default class Handler {
 
     /**
      * Callback for when the inventory is loaded. Relay message to the client.
-     * @param skip Used whenever we want to only send a batch and not continue
-     * loading the remaining controllers, such as in the case that a refresh is needed.
      */
 
-    private handleInventory(skip?: boolean): void {
+    private handleInventory(): void {
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
@@ -253,11 +249,6 @@ export default class Handler {
                 data: this.player.inventory.serialize()
             })
         );
-
-        if (skip) return;
-
-        this.player.loadBank();
-        this.player.loadQuests();
     }
 
     /**
@@ -312,8 +303,6 @@ export default class Handler {
 
     private handleQuests(): void {
         this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
-
-        this.player.loadAchievements();
     }
 
     /**
@@ -324,8 +313,6 @@ export default class Handler {
         this.player.send(
             new Achievement(Opcodes.Achievement.Batch, this.player.achievements.serialize(true))
         );
-
-        this.player.loadSkills();
     }
 
     /**
@@ -335,8 +322,6 @@ export default class Handler {
 
     private handleSkills(): void {
         this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
-
-        this.player.intro();
     }
 
     /**
