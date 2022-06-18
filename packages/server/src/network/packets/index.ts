@@ -31,3 +31,4 @@ export { default as Overlay } from './overlay';
 export { default as Camera } from './camera';
 export { default as Bubble } from './bubble';
 export { default as Skill } from './skill';
+export { default as Update } from './update';
