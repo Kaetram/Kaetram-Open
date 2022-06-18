@@ -182,15 +182,15 @@ export default class Incoming {
             /* We handle player-specific entity statuses here. */
 
             // Special name colours for NPCs.
-            if (entity.isNPC()) {
-                if (this.player.quests.getQuestFromNPC(entity as NPC))
-                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
+            // if (entity.isNPC()) {
+            //     if (this.player.quests.getQuestFromNPC(entity as NPC))
+            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
 
-                if (this.player.achievements.getAchievementFromEntity(entity as NPC))
-                    entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            }
+            //     if (this.player.achievements.getAchievementFromEntity(entity as NPC))
+            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
+            // }
 
-            // Special name colours for mobs.
+            // // Special name colours for mobs.
             // if (entity.isMob()) {
             //     if (this.player.quests.getQuestFromMob(entity as Mob))
             //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];

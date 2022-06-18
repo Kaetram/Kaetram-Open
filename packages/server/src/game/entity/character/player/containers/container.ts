@@ -16,7 +16,7 @@ export default abstract class Container {
 
     private emptySpaces = 0;
 
-    private loadCallback?: (skip?: boolean) => void;
+    private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
     protected removeCallback?: (
@@ -155,7 +155,7 @@ export default abstract class Container {
 
         if (toItem) fromSlot.update(toItem);
 
-        this.loadCallback?.(true);
+        this.loadCallback?.();
     }
 
     /**

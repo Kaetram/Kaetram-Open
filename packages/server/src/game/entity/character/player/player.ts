@@ -221,6 +221,12 @@ export default class Player extends Character {
 
         // Being the loading process.
         this.loadEquipment();
+        this.loadInventory();
+        this.loadBank();
+        this.loadQuests();
+        this.loadAchievements();
+        this.loadSkills();
+        this.intro();
 
         // equipment -> inventory/bank -> quests -> achievements -> skills -> intro
     }
