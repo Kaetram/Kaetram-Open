@@ -7,13 +7,15 @@ import Region from './region';
 import Map from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
-import { Modules } from '@kaetram/common/network';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
-import { List, Spawn, Map as MapPacket } from '../../network/packets';
+import Tree from '../globals/impl/tree';
+
+import { Modules } from '@kaetram/common/network';
+import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
 import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 import { Tile } from '@kaetram/common/types/map';
-import Tree from '../globals/impl/tree';
+import { EntityUpdate } from '@kaetram/common/types/entity';
 
 /**
  * Class responsible for chunking up the map.
@@ -306,6 +308,23 @@ export default class Regions {
     }
 
     /**
+     * Checks the entities in the region and sends the update data to the client.
+     * Since each player instance may display certain entity update data differently,
+     * this is handled on an instance basis. An example is that player 1 completed an
+     * achievement that changes the entity's nametag colour, but player 2 does did not.
+     * @param player The player we are checking the entities about.
+     */
+
+    private sendEntityUpdate(player: Player): void {
+        let entityUpdate: EntityUpdate[] = this.getEntityUpdateData(player);
+
+        // Don't send empty data.
+        if (entityUpdate.length === 0) return;
+
+        player.send(new Update(entityUpdate));
+    }
+
+    /**
      * Takes a player as a parameter and uses its position to determine the
      * region data to send to the client.
      * @param player The player character that we are sending the region to.
@@ -479,6 +498,29 @@ export default class Regions {
         });
 
         return tileData;
+    }
+
+    /**
+     * Iterates through the surrounding regions and updates all the entities
+     * with their custom data (if any).
+     * @param player Player we are using to update the entity instances of.
+     * @returns An array containing entity update data for each entity.
+     */
+
+    private getEntityUpdateData(player: Player): EntityUpdate[] {
+        let entityData: EntityUpdate[] = [];
+
+        this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
+            let region = this.get(surroundingRegion);
+
+            region.forEachEntity((entity: Entity) => {
+                if (!entity.hasUpdateData()) return;
+
+                entityData.push(entity.getUpdateData());
+            });
+        });
+
+        return entityData;
     }
 
     /**

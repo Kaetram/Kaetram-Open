@@ -44,7 +44,8 @@ enum Packets {
     Camera,
     Bubble,
     Skill,
-    BuildUp
+    BuildUp,
+    Update
 }
 
 export default Packets;
