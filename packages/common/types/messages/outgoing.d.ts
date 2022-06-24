@@ -1,5 +1,5 @@
 import { HitData } from '../info';
-import { EntityData, EntityUpdate } from '../entity';
+import { EntityData, EntityDisplayInfo } from '../entity';
 import { PlayerData } from '../player';
 import { QuestData } from '../quest';
 import { SerializedLight } from '../light';
@@ -305,4 +305,4 @@ export type SkillCallback = (opcode: Opcodes.Skill, info: SkillPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type UpdateCallback = (info: EntityUpdate[]) => void;
+export type UpdateCallback = (info: EntityDisplayInfo[]) => void;
