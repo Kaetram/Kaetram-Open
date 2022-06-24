@@ -9,13 +9,17 @@ import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
+import PluginIndex from '../../../../../data/plugins/mobs';
 import rawData from '../../../../../data/mobs.json';
 import log from '@kaetram/common/util/log';
+
+import DefaultPlugin from '../../../../../data/plugins/mobs/default';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { MobData } from '@kaetram/common/types/mob';
 import { Movement } from '@kaetram/server/src/network/packets';
-import { EntityData } from '@kaetram/common/types/entity';
+import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 type RawData = {
     [key: string]: MobData;
@@ -37,15 +41,14 @@ export default class Mob extends Character {
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public aggressive = false;
     public roaming = false;
-    private poisonous = false;
-    private combatPlugin = '';
+    public poisonous = false;
+    private plugin?: DefaultPlugin;
 
     // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
     public boss = false;
     public respawnable = true;
-    public hiddenName = false;
     public miniboss = false;
 
     public achievementId!: number;
@@ -54,9 +57,9 @@ export default class Mob extends Character {
 
     public area!: Area;
 
-    private respawnCallback?(): void;
+    private respawnCallback?: () => void;
     public forceTalkCallback?: (message: string) => void;
-    public roamingCallback?(): void;
+    public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
@@ -88,17 +91,35 @@ export default class Mob extends Character {
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.poisonous = this.data.poisonous!;
-        this.hiddenName = this.data.hiddenName!;
 
         // TODO - After refactoring projectile system
         this.projectileName = this.data.projectileName || this.projectileName;
-        this.combatPlugin = this.data.combatPlugin!;
+
+        // Handle hiding the entity's name.
+        if (this.data.hiddenName) this.name = '';
 
         // Initialize a mob handler to `handle` our callbacks.
-        new MobHandler(this);
+        if (this.data.plugin) this.loadPlugin();
+        else new MobHandler(this);
 
         // The roaming interval
         setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
+    }
+
+    /**
+     * Attempts to locate and load a plugin from the plugin index.
+     */
+
+    private loadPlugin(): void {
+        if (!(this.data.plugin! in PluginIndex)) {
+            log.error(`[Mob] Could not find plugin ${this.data.plugin}.`);
+
+            // Initialize a mob handler since we couldn't find a plugin.
+            new MobHandler(this);
+            return;
+        }
+
+        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
     }
 
     /**
@@ -116,8 +137,6 @@ export default class Mob extends Character {
         this.respawn();
 
         this.setPosition(this.spawnX, this.spawnY);
-
-        this.area?.removeEntity(this);
     }
 
     /**
@@ -189,9 +208,9 @@ export default class Mob extends Character {
         // In case chests area does not exist in the map.
         if (!chestAreas) return;
 
-        let area = chestAreas.inArea(this.x, this.y);
+        this.area = chestAreas.inArea(this.x, this.y)!;
 
-        area?.addEntity(this);
+        this.area?.addEntity(this);
     }
 
     /**
@@ -216,6 +235,62 @@ export default class Mob extends Character {
             Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
             this.roamDistance
         );
+    }
+
+    /**
+     * Grabs the name colour based on the mob's data. If a player is provided,
+     * we check if the mob is an active quest/achievement entity.
+     * @param player Optional parameter to check if the mob is an active quest/achievement entity.
+     * @returns The string value of the name colour, an empty string indicates a problem.
+     */
+
+    private getNameColour(player?: Player): string {
+        if (this.area) return Modules.NameColours[SpecialEntityTypes.Area];
+        if (this.boss) return Modules.NameColours[SpecialEntityTypes.Boss];
+        if (this.miniboss) return Modules.NameColours[SpecialEntityTypes.Miniboss];
+
+        if (player) {
+            if (player.quests.getQuestFromMob(this))
+                return Modules.NameColours[SpecialEntityTypes.Quest];
+            if (player?.achievements.getAchievementFromEntity(this))
+                return Modules.NameColours[SpecialEntityTypes.Achievement];
+        }
+
+        return '';
+    }
+
+    /**
+     * Grabs the display info for the mob depending on its properties.
+     * @param player Optional player parameter used to grab info
+     * depending on the mob's state in the player's quest progression.
+     * @returns The display info for the mob.
+     */
+
+    public override getDisplayInfo(player?: Player): EntityDisplayInfo {
+        return {
+            instance: this.instance,
+            colour: this.getNameColour(player)
+        };
+    }
+
+    /**
+     * A mob contains special data if it is a mini-boss/boss, is part of an area,
+     * or is part of a player's active quest.
+     * @param player Optional paramater used to check mob's information against player's
+     * quests and achievement information.
+     * @returns Conditional on if the mob contains special data.
+     */
+
+    public override hasDisplayInfo(player?: Player): boolean {
+        if (this.area || this.boss || this.miniboss) return true;
+
+        // Check if player is provided and the mob's information against their quests/achievements.
+        if (player) {
+            if (player.quests.getQuestFromMob(this)) return true;
+            if (player.achievements.getAchievementFromEntity(this)) return true;
+        }
+
+        return false;
     }
 
     /**
@@ -253,7 +328,6 @@ export default class Mob extends Character {
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
         data.level = this.level;
-        data.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.
 
         return data;
     }

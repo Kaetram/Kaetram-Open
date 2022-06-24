@@ -50,7 +50,9 @@ export enum EntityType {
 export enum SpecialEntityTypes {
     Achievement,
     Quest,
-    Area
+    Area,
+    Boss,
+    Miniboss
 }
 
 export enum Actions {
@@ -161,6 +163,12 @@ export enum HealTypes {
     Health,
     Mana,
     Stamina
+}
+
+export enum PoisonTypes {
+    Venom, // When a mob hits you
+    Plague, // When entering a poisoned area.
+    Persistent // Poison that doesn't wear off until it's cured.
 }
 
 export enum Trade {
@@ -294,7 +302,9 @@ export let DamageColours = {
 export let NameColours = {
     [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
-    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)'
+    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)',
+    [SpecialEntityTypes.Boss]: 'rgb(102, 0, 51)',
+    [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
 export enum NPCRole {
@@ -310,7 +320,7 @@ export const enum Constants {
     BANK_SIZE = 69, // Maximum bank size
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
-    HEAL_RATE = 10_000, // healing every 10 seconds
+    HEAL_RATE = 5000, // healing every 10 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial

@@ -55,6 +55,7 @@ import {
     TeleportPacket,
     SkillPacket
 } from '@kaetram/common/types/messages/outgoing';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -122,6 +123,7 @@ export default class Connection {
         this.messages.onCamera(this.handleCamera.bind(this));
         this.messages.onBubble(this.handleBubble.bind(this));
         this.messages.onSkill(this.handleSkill.bind(this));
+        this.messages.onUpdate(this.handleUpdate.bind(this));
     }
 
     /**
@@ -131,7 +133,7 @@ export default class Connection {
      */
 
     private handleHandshake(): void {
-        this.app.updateLoader('Connecting to server...');
+        this.app.updateLoader('Connecting to server');
 
         // Guest login doesn't require any credentials, send the packet right away.
         if (this.app.isGuest())
@@ -1009,5 +1011,24 @@ export default class Connection {
         }
 
         this.game.menu.synchronize();
+    }
+
+    /**
+     * Contains an array of entities that we are updating the appearance
+     * data of. This includes name colour, scale, and perhaps other things.
+     * @param info Array containing the instance and appearance data.
+     */
+
+    private handleUpdate(info: EntityDisplayInfo[]): void {
+        this.entities.cleanDisplayInfo();
+
+        _.each(info, (update: EntityDisplayInfo) => {
+            let entity = this.entities.get(update.instance);
+
+            if (!entity) return;
+
+            if (update.colour) entity.nameColour = update.colour;
+            if (update.scale) entity.customScale = update.scale;
+        });
     }
 }
