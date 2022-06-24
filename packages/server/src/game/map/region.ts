@@ -201,6 +201,15 @@ export default class Region {
     }
 
     /**
+     * Iterates through all the entities in the region and returns it.
+     * @param callback Entity that is currently being iterated.
+     */
+
+    public forEachEntity(callback: (entity: Entity) => void): void {
+        _.each(this.entities, callback);
+    }
+
+    /**
      * Iterates through all the trees and returns each tree.
      * @param callback Tree that is being iterated.
      */

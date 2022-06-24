@@ -3,12 +3,14 @@ import Entity from '../entity';
 import type Player from '../character/player/player';
 
 import rawData from '../../../../data/npcs.json';
-import { NPC as NPCPacket } from '../../../network/packets';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+
+import { NPC as NPCPacket } from '../../../network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { NPCData } from '@kaetram/common/types/npc';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type RawData = {
     [key: string]: NPCData;
@@ -85,5 +87,52 @@ export default class NPC extends Entity {
 
     public hasDialogue(text: string[]): boolean {
         return text.length > 0;
+    }
+
+    /**
+     * Uses the player parameter to check if the NPC is currently present
+     * in any of the player's active quests.
+     * @param player Player we are checking achievement/quest status of.
+     * @returns The RGB string of the NPC's name.
+     */
+
+    private getNameColour(player?: Player): string {
+        if (player) {
+            if (player.quests.getQuestFromNPC(this))
+                return Modules.NameColours[SpecialEntityTypes.Quest];
+            if (player?.achievements.getAchievementFromEntity(this))
+                return Modules.NameColours[SpecialEntityTypes.Achievement];
+        }
+
+        return '';
+    }
+
+    /**
+     * Grabs the display info for the NPC.
+     * @param player Optional paramater to grab the display based on the player.
+     * @returns An object containing display info data.
+     */
+
+    public override getDisplayInfo(player?: Player): EntityDisplayInfo {
+        return {
+            instance: this.instance,
+            colour: this.getNameColour(player)
+        };
+    }
+
+    /**
+     * Checks whether or not the NPC is part of an active player's
+     * achievement or quest if the parameter is specified.
+     * @param player Optional parameter to check if the NPC is part of an active quest or achievement.
+     * @returns Whether or not any display info data is present.
+     */
+
+    public override hasDisplayInfo(player?: Player): boolean {
+        if (player) {
+            if (player.quests.getQuestFromNPC(this)) return true;
+            if (player.achievements.getAchievementFromEntity(this)) return true;
+        }
+
+        return false;
     }
 }
