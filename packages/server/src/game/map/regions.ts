@@ -15,7 +15,7 @@ import { Modules } from '@kaetram/common/network';
 import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
 import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 import { Tile } from '@kaetram/common/types/map';
-import { EntityUpdate } from '@kaetram/common/types/entity';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 /**
  * Class responsible for chunking up the map.
@@ -315,13 +315,13 @@ export default class Regions {
      * @param player The player we are checking the entities about.
      */
 
-    private sendEntityUpdate(player: Player): void {
-        let entityUpdate: EntityUpdate[] = this.getEntityUpdateData(player);
+    public sendDisplayInfo(player: Player): void {
+        let displayInfos: EntityDisplayInfo[] = this.getDisplayInfo(player);
 
         // Don't send empty data.
-        if (entityUpdate.length === 0) return;
+        if (displayInfos.length === 0) return;
 
-        player.send(new Update(entityUpdate));
+        player.send(new Update(displayInfos));
     }
 
     /**
@@ -507,16 +507,16 @@ export default class Regions {
      * @returns An array containing entity update data for each entity.
      */
 
-    private getEntityUpdateData(player: Player): EntityUpdate[] {
-        let entityData: EntityUpdate[] = [];
+    private getDisplayInfo(player: Player): EntityDisplayInfo[] {
+        let entityData: EntityDisplayInfo[] = [];
 
         this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
             let region = this.get(surroundingRegion);
 
             region.forEachEntity((entity: Entity) => {
-                if (!entity.hasUpdateData()) return;
+                if (!entity.hasDisplayInfo(player)) return;
 
-                entityData.push(entity.getUpdateData());
+                entityData.push(entity.getDisplayInfo(player));
             });
         });
 

@@ -6,7 +6,7 @@ import type NPC from './npc/npc';
 import type Item from './objects/item';
 
 import { Modules } from '@kaetram/common/network';
-import { EntityData, EntityUpdate } from '@kaetram/common/types/entity';
+import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
@@ -109,28 +109,32 @@ abstract class Entity {
     }
 
     /**
-     * Grabs the entity data and returns it in a packet format.
-     * @returns Entity update object containing update data.
+     * Superclass implementation for grabbing the display info. We provide the
+     * player with the bare minimum in case this function gets called without
+     * the entity actually containing alternate display info.
+     * @param _var1 Optional parameter used in the subclasses.
+     * @returns A EntityDisplayInfo object containing the instance of the entity.
      */
 
-    public getUpdateData(): EntityUpdate {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getDisplayInfo(_var1?: unknown): EntityDisplayInfo {
         return {
-            instance: this.instance,
-            colour: this.colour,
-            scale: this.scale
+            instance: this.instance
         };
     }
 
     /**
-     * An entity contains update data if any of the special properties
-     * are set. If an entity has a differnet colour, its nametag will display
-     * differently (the colour specified), a different scale indicates how
-     * big the entity will be compared to the default.
-     * @returns Whether the entity has the colour or scale properties set.
+     * A superclass implementation for whether or not an entity
+     * contains update data. For example, a mob may be contain
+     * this data if it is part of an area or is a quest-based mob.
+     * Display info refers to slight alterations to an entity's appearance.
+     * This can be a different colour for their name, or a different scale.
+     * @param _var1 Optional paramater used by the subclasses.
      */
 
-    public hasUpdateData(): boolean {
-        return !!this.colour || !!this.scale;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public hasDisplayInfo(_var1: unknown): boolean {
+        return false;
     }
 
     /**

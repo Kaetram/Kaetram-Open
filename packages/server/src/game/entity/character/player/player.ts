@@ -413,8 +413,20 @@ export default class Player extends Character {
         log.warning('player.eat() reimplement.');
     }
 
-    public updateRegion(force = false): void {
+    /**
+     * Updates the region that the player is currently in.
+     */
+
+    public updateRegion(): void {
         this.regions.sendRegion(this);
+    }
+
+    /**
+     * Synchronizes the display info of the entities.
+     */
+
+    public updateEntities(): void {
+        this.regions.sendDisplayInfo(this);
     }
 
     public teleport(x: number, y: number, withAnimation = false): void {
