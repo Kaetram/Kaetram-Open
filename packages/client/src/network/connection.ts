@@ -55,7 +55,7 @@ import {
     TeleportPacket,
     SkillPacket
 } from '@kaetram/common/types/messages/outgoing';
-import { EntityUpdate } from '@kaetram/common/types/entity';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -1019,8 +1019,10 @@ export default class Connection {
      * @param info Array containing the instance and appearance data.
      */
 
-    private handleUpdate(info: EntityUpdate[]): void {
-        _.each(info, (update: EntityUpdate) => {
+    private handleUpdate(info: EntityDisplayInfo[]): void {
+        this.entities.cleanDisplayInfo();
+
+        _.each(info, (update: EntityDisplayInfo) => {
             let entity = this.entities.get(update.instance);
 
             if (!entity) return;

@@ -50,7 +50,9 @@ export enum EntityType {
 export enum SpecialEntityTypes {
     Achievement,
     Quest,
-    Area
+    Area,
+    Boss,
+    Miniboss
 }
 
 export enum Actions {
@@ -300,7 +302,9 @@ export let DamageColours = {
 export let NameColours = {
     [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
-    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)'
+    [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)',
+    [SpecialEntityTypes.Boss]: 'rgb(102, 0, 51)',
+    [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
 export enum NPCRole {
