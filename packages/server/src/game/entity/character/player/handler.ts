@@ -155,6 +155,10 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
+        // Do not pass through doors that require an achievement which hasn't been completed.
+        if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
+            return;
+
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
@@ -174,8 +178,6 @@ export default class Handler {
 
         this.detectAreas(x, y);
 
-        this.detectClipping(x, y);
-
         this.player.storeOpen = '';
     }
 
@@ -190,6 +192,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.map.regions.sendEntities(this.player);
+        this.map.regions.sendDisplayInfo(this.player);
 
         // Signal to the region we just left from to despawn us.
         this.player.sendToOldRegions(new Despawn(this.player.instance));
@@ -205,8 +208,6 @@ export default class Handler {
                 data: this.player.equipment.serialize()
             })
         );
-
-        this.player.loadInventory();
     }
 
     /**
@@ -239,11 +240,9 @@ export default class Handler {
 
     /**
      * Callback for when the inventory is loaded. Relay message to the client.
-     * @param skip Used whenever we want to only send a batch and not continue
-     * loading the remaining controllers, such as in the case that a refresh is needed.
      */
 
-    private handleInventory(skip?: boolean): void {
+    private handleInventory(): void {
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
@@ -251,11 +250,6 @@ export default class Handler {
                 data: this.player.inventory.serialize()
             })
         );
-
-        if (skip) return;
-
-        this.player.loadBank();
-        this.player.loadQuests();
     }
 
     /**
@@ -310,8 +304,6 @@ export default class Handler {
 
     private handleQuests(): void {
         this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
-
-        this.player.loadAchievements();
     }
 
     /**
@@ -322,8 +314,6 @@ export default class Handler {
         this.player.send(
             new Achievement(Opcodes.Achievement.Batch, this.player.achievements.serialize(true))
         );
-
-        this.player.loadSkills();
     }
 
     /**
@@ -333,8 +323,6 @@ export default class Handler {
 
     private handleSkills(): void {
         this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
-
-        this.player.intro();
     }
 
     /**
@@ -557,14 +545,6 @@ export default class Handler {
         //         if (aggro) mob.combat.begin(this.player);
         //     }
         // });
-    }
-
-    private detectClipping(x: number, y: number): void {
-        let isColliding = this.map.isColliding(x, y);
-
-        if (!isColliding) return;
-
-        this.player.incoming.handleNoClip(x, y);
     }
 
     private parsePoison(): void {

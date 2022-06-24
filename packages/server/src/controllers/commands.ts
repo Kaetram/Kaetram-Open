@@ -4,8 +4,10 @@ import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import Item from '../game/entity/objects/item';
 import Quest from '../game/entity/character/player/quest/quest';
+import Achievement from '../game/entity/character/player/achievement/achievement';
 
 import type Player from '../game/entity/character/player/player';
+
 import { Command, Pointer, Network, Notification } from '../network/packets';
 
 export default class Commands {
@@ -139,7 +141,9 @@ export default class Commands {
             entity: Character,
             targetEntity: Character,
             questKey: string,
-            quest: Quest;
+            quest: Quest,
+            achievementKey: string,
+            achievement: Achievement;
 
         switch (command) {
             case 'spawn': {
@@ -340,6 +344,8 @@ export default class Commands {
                     achievement.setStage(0)
                 );
 
+                this.player.updateRegion();
+
                 break;
 
             case 'movenpc':
@@ -399,6 +405,21 @@ export default class Commands {
 
                 if (quest) quest.setStage(9999);
                 else this.player.notify(`Could not find quest with key: ${questKey}`);
+
+                break;
+
+            case 'finishachievement':
+                achievementKey = blocks.shift()!;
+
+                if (!achievementKey)
+                    return this.player.notify(
+                        `Malformed command, expected /finishachievement achievementKey`
+                    );
+
+                achievement = this.player.achievements.get(achievementKey);
+
+                if (achievement) achievement.finish();
+                else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
 
                 break;
         }

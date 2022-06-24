@@ -95,8 +95,6 @@ export default class EntitiesController {
 
         // The name the player sees for an entity.
         entity.name = info.name;
-        entity.customScale = info.scale!;
-        entity.nameColour = info.colour!;
 
         // Server-sided x and y coordinates are the `gridX` and `gridY` client coordinates.
         entity.setGridPosition(info.x, info.y);
@@ -356,6 +354,20 @@ export default class EntitiesController {
         if (this.decrepit.length === 0) return;
 
         _.each(this.decrepit, (entity: Entity) => this.removeEntity(entity));
+    }
+
+    /**
+     * Temporary solution (that will probably become permanent because
+     * I have a tendency of forgetting sorry) which removes the name
+     * colour and scaling effect from all entities prior to receiving
+     * new data.
+     */
+
+    public cleanDisplayInfo(): void {
+        _.each(this.entities, (entity: Entity) => {
+            entity.nameColour = '';
+            entity.customScale = 0;
+        });
     }
 
     /**

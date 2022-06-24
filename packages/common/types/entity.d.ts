@@ -40,3 +40,15 @@ export interface EntityData {
     // Player data
     // TODO
 }
+
+/**
+ * Contains cosmetic/appearance data about an entity. These
+ * are non-essential packets sent when we want an entity
+ * to stand out for some reason (i.e. miniboss has a different scale).
+ */
+
+export interface EntityDisplayInfo {
+    instance: string;
+    colour?: string;
+    scale?: number;
+}

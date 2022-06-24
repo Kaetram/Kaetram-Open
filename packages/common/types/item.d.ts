@@ -23,4 +23,7 @@ export interface ItemData {
     bootsLevel?: number;
     movementSpeed?: number;
     lumberjacking?: number;
+    healAmount?: number;
+    healPercent?: number;
+    manaAmount?: number;
 }

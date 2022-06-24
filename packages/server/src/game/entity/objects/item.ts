@@ -6,9 +6,9 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
-
 import { ItemData } from '@kaetram/common/types/item';
 import { EntityData } from '@kaetram/common/types/entity';
+import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
 
 type RawData = {
     [key: string]: ItemData;
@@ -22,7 +22,7 @@ export default class Item extends Entity {
     public stackable = false;
     public edible = false;
     public maxStackSize: number = Modules.Constants.MAX_STACK;
-    public plugin = '';
+    public plugin: Plugin | undefined;
     public price = 1;
     public storeCount = -1;
     public requirement = -1;
@@ -74,7 +74,6 @@ export default class Item extends Entity {
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
         this.maxStackSize = this.data.maxStackSize || this.maxStackSize;
-        this.plugin = this.data.plugin || this.plugin;
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
         this.requirement = this.data.requirement || this.requirement;
@@ -85,6 +84,22 @@ export default class Item extends Entity {
         this.bootsLevel = this.data.bootsLevel || this.bootsLevel;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+
+        if (this.data.plugin) this.loadPlugin();
+    }
+
+    /**
+     * Initializes the plugin for an item. Checks if the item plugin key provided
+     * in the configuration file exists as an actual plugin.
+     */
+
+    private loadPlugin(): void {
+        if (!(this.data.plugin! in PluginIndex)) {
+            log.error(`[Item] Could not find plugin ${this.data.plugin}.`);
+            return;
+        }
+
+        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this.data);
     }
 
     /**
