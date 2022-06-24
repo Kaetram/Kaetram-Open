@@ -6,7 +6,7 @@ import type NPC from './npc/npc';
 import type Item from './objects/item';
 
 import { Modules } from '@kaetram/common/network';
-import { EntityData } from '@kaetram/common/types/entity';
+import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
@@ -109,6 +109,35 @@ abstract class Entity {
     }
 
     /**
+     * Superclass implementation for grabbing the display info. We provide the
+     * player with the bare minimum in case this function gets called without
+     * the entity actually containing alternate display info.
+     * @param _var1 Optional parameter used in the subclasses.
+     * @returns A EntityDisplayInfo object containing the instance of the entity.
+     */
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getDisplayInfo(_var1?: unknown): EntityDisplayInfo {
+        return {
+            instance: this.instance
+        };
+    }
+
+    /**
+     * A superclass implementation for whether or not an entity
+     * contains update data. For example, a mob may be contain
+     * this data if it is part of an area or is a quest-based mob.
+     * Display info refers to slight alterations to an entity's appearance.
+     * This can be a different colour for their name, or a different scale.
+     * @param _var1 Optional paramater used by the subclasses.
+     */
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public hasDisplayInfo(_var1: unknown): boolean {
+        return false;
+    }
+
+    /**
      * Checks the distance between the current entity object and another
      * specified entity. The distance paramter specifies how far the other
      * entity can be for us to return true.
@@ -198,7 +227,7 @@ abstract class Entity {
      */
 
     public serialize(): EntityData {
-        let { instance, type, key, name, x, y, colour, scale } = this;
+        let { instance, type, key, name, x, y } = this;
 
         return {
             instance,
@@ -206,9 +235,7 @@ abstract class Entity {
             name,
             key,
             x,
-            y,
-            colour,
-            scale
+            y
         };
     }
 

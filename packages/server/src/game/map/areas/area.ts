@@ -1,4 +1,4 @@
-import log from '@kaetram/common/util/log';
+import type Character from '../../entity/character/character';
 import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
@@ -8,7 +8,7 @@ type Position = { x: number; y: number };
 export default class Area {
     public polygon!: Position[];
 
-    private entities: Mob[] = [];
+    private entities: string[] = []; // Stores instances of mobs in the area.
     public chest: Chest | null = null;
     public items: string[] = [];
 
@@ -41,8 +41,8 @@ export default class Area {
     public spawnDelay = 0;
     public lastSpawn!: number;
 
-    private spawnCallback?(): void;
-    private emptyCallback?(): void;
+    private spawnCallback?: () => void;
+    private emptyCallback?: (attacker?: Character) => void;
 
     public constructor(
         public id: number,
@@ -58,10 +58,9 @@ export default class Area {
      */
 
     public addEntity(mob: Mob): void {
-        if (!this.entities.includes(mob)) return;
+        if (this.entities.includes(mob.instance)) return;
 
-        this.entities.push(mob);
-        mob.area = this;
+        this.entities.push(mob.instance);
 
         // Grab a spawn delay from an mob to create an offset for the chest.
         if (!this.spawnDelay) this.spawnDelay = mob.respawnDelay;
@@ -75,12 +74,12 @@ export default class Area {
      * @param mob The mob we are removoing.
      */
 
-    public removeEntity(mob: Mob): void {
-        let index = this.entities.indexOf(mob);
+    public removeEntity(mob: Mob, attacker?: Character): void {
+        let index = this.entities.indexOf(mob.instance);
 
         if (index > -1) this.entities.splice(index, 1);
 
-        if (this.entities.length === 0) this.emptyCallback?.();
+        if (this.entities.length === 0) this.emptyCallback?.(attacker!);
     }
 
     /**
@@ -91,12 +90,7 @@ export default class Area {
 
     public fulfillsRequirement(player: Player): boolean {
         if (this.quest) return player.quests!.get(this.quest)?.isFinished();
-
-        // if (this.achievement && this.quest)
-        //     return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);
-
-        // if (this.achievement) return player.finishedAchievement(this.achievement);
-        // if (this.quest) return player.finishedQuest(this.quest);
+        if (this.achievement) return player.achievements!.get(this.achievement)?.isFinished();
 
         return false;
     }

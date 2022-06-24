@@ -71,6 +71,7 @@ export interface ProcessedDoor {
     orientation: string;
     quest?: string;
     achievement?: string;
+    reqAchievement?: string; // Achievement requirement to pass through.
     stage?: number;
 }
 
