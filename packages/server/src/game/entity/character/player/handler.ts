@@ -192,6 +192,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.map.regions.sendEntities(this.player);
+        this.map.regions.sendDisplayInfo(this.player);
 
         // Signal to the region we just left from to despawn us.
         this.player.sendToOldRegions(new Despawn(this.player.instance));
