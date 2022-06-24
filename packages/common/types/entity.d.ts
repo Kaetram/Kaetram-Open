@@ -47,7 +47,7 @@ export interface EntityData {
  * to stand out for some reason (i.e. miniboss has a different scale).
  */
 
-export interface EntityUpdate {
+export interface EntityDisplayInfo {
     instance: string;
     colour?: string;
     scale?: number;

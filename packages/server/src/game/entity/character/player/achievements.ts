@@ -101,6 +101,10 @@ export default class Achievements {
                 name
             })
         );
+
+        console.log(`${this.player.username} key: ${key} stage: ${stage}`);
+
+        this.player.updateEntities();
     }
 
     /**

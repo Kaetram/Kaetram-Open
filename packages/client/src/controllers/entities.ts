@@ -357,6 +357,20 @@ export default class EntitiesController {
     }
 
     /**
+     * Temporary solution (that will probably become permanent because
+     * I have a tendency of forgetting sorry) which removes the name
+     * colour and scaling effect from all entities prior to receiving
+     * new data.
+     */
+
+    public cleanDisplayInfo(): void {
+        _.each(this.entities, (entity: Entity) => {
+            entity.nameColour = '';
+            entity.customScale = 0;
+        });
+    }
+
+    /**
      * Clears all player entities from our list.
      * @param exception A player type entity that we are excluding from the clear.
      */

@@ -154,6 +154,8 @@ export default class Incoming {
     private handleReady(data: ReadyPacket): void {
         let { hasMapData, userAgent } = data;
 
+        this.player.updateEntities();
+
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
