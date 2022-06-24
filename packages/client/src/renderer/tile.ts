@@ -4,7 +4,7 @@ export default class Tile {
     public x = -1;
     public y = -1;
 
-    private animationIndex = 0;
+    public animationIndex = 0;
     private lastTime = 0;
 
     public constructor(

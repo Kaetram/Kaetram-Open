@@ -80,6 +80,11 @@ export default class Quests {
                 subStage
             })
         );
+
+        // Update region when quest is completed.
+        if (this.get(key).isFinished()) this.player.updateRegion();
+
+        this.player.updateEntities();
     }
 
     /**

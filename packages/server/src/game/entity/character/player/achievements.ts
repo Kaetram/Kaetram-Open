@@ -80,6 +80,9 @@ export default class Achievements {
 
         // Add experience if it exists.
         if (experience) this.player.addExperience(experience);
+
+        // Update dynamic tiles.
+        this.player.updateRegion();
     }
 
     /**
@@ -98,6 +101,10 @@ export default class Achievements {
                 name
             })
         );
+
+        console.log(`${this.player.username} key: ${key} stage: ${stage}`);
+
+        this.player.updateEntities();
     }
 
     /**
@@ -133,7 +140,7 @@ export default class Achievements {
         this.forEachAchievement((a: Achievement) => {
             if (a.isFinished()) return;
             if (entity.isNPC() && !a.hasNPC(entity as NPC)) return;
-            if (entity.isMob() && !a.hasMob(entity as Mob)) return;
+            if (entity.isMob() && (!a.hasMob(entity as Mob) || !a.isStarted())) return;
 
             achievement = a;
         });
