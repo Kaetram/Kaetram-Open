@@ -5142,6 +5142,11 @@
                  "id":1445,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -5151,6 +5156,11 @@
                  "id":1446,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -5159,6 +5169,11 @@
                 {
                  "id":1447,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -5340,6 +5355,11 @@
                  "id":1509,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -5349,6 +5369,11 @@
                  "id":1510,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -5357,6 +5382,11 @@
                 {
                  "id":1511,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -5427,6 +5457,15 @@
                         }]
                 }, 
                 {
+                 "id":1573,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }]
+                }, 
+                {
                  "id":1574,
                  "properties":[
                         {
@@ -5438,6 +5477,25 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
+                        }]
+                }, 
+                {
+                 "id":1575,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
                         }]
                 }, 
                 {
@@ -5555,6 +5613,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak2"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak2"
                         }]
                 }, 
                 {
@@ -6319,6 +6387,11 @@
                  "id":1937,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -6327,6 +6400,11 @@
                 {
                  "id":1938,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -6517,6 +6595,11 @@
                  "id":2000,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -6525,6 +6608,11 @@
                 {
                  "id":2001,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -6535,6 +6623,11 @@
                  "id":2002,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -6543,6 +6636,11 @@
                 {
                  "id":2003,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -6747,6 +6845,11 @@
                  "id":2064,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -6755,6 +6858,11 @@
                 {
                  "id":2065,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -6765,6 +6873,11 @@
                  "id":2066,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -6773,6 +6886,11 @@
                 {
                  "id":2067,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -6962,6 +7080,15 @@
                         }]
                 }, 
                 {
+                 "id":2128,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }]
+                }, 
+                {
                  "id":2129,
                  "properties":[
                         {
@@ -6973,6 +7100,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -6987,6 +7124,25 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
+                        }]
+                }, 
+                {
+                 "id":2131,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7038,6 +7194,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak2"
                         }]
                 }, 
                 {
@@ -7047,6 +7208,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak4"
                         }]
                 }, 
                 {
@@ -7056,6 +7222,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7065,6 +7236,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7149,6 +7325,24 @@
                         }]
                 }, 
                 {
+                 "id":2174,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }]
+                }, 
+                {
+                 "id":2175,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"icepalm"
+                        }]
+                }, 
+                {
                  "id":2181,
                  "properties":[
                         {
@@ -7223,6 +7417,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7237,6 +7441,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7270,6 +7484,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak2"
                         }]
                 }, 
                 {
@@ -7279,6 +7498,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak4"
                         }]
                 }, 
                 {
@@ -7288,6 +7512,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7297,6 +7526,11 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"oak3"
                         }]
                 }, 
                 {
@@ -7387,6 +7621,24 @@
                          "name":"cutstump",
                          "type":"string",
                          "value":"iceoak"
+                        }]
+                }, 
+                {
+                 "id":2238,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }]
+                }, 
+                {
+                 "id":2239,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"icepalm"
                         }]
                 }, 
                 {
@@ -7548,6 +7800,15 @@
                          "name":"v",
                          "type":"string",
                          "value":""
+                        }]
+                }, 
+                {
+                 "id":2300,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"iceoak3"
                         }]
                 }, 
                 {
@@ -7745,6 +8006,15 @@
                          "name":"v",
                          "type":"string",
                          "value":""
+                        }]
+                }, 
+                {
+                 "id":2364,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"iceoak3"
                         }]
                 }, 
                 {
@@ -8292,6 +8562,11 @@
                  "id":2510,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -8558,6 +8833,11 @@
                  "id":2573,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -8567,6 +8847,11 @@
                  "id":2574,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -8575,6 +8860,11 @@
                 {
                  "id":2575,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -8839,6 +9129,11 @@
                  "id":2637,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -8848,6 +9143,11 @@
                  "id":2638,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -8856,6 +9156,11 @@
                 {
                  "id":2639,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -9094,6 +9399,15 @@
                         }]
                 }, 
                 {
+                 "id":2701,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }]
+                }, 
+                {
                  "id":2702,
                  "properties":[
                         {
@@ -9105,6 +9419,25 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
+                        }]
+                }, 
+                {
+                 "id":2703,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
                         }]
                 }, 
                 {
@@ -9356,6 +9689,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"oak4"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"oak4"
                         }]
                 }, 
                 {
@@ -9886,6 +10229,11 @@
                  "id":2978,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -10084,6 +10432,11 @@
                  "id":3041,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -10093,6 +10446,11 @@
                  "id":3042,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -10101,6 +10459,11 @@
                 {
                  "id":3043,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -10309,6 +10672,11 @@
                  "id":3105,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -10318,6 +10686,11 @@
                  "id":3106,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -10326,6 +10699,11 @@
                 {
                  "id":3107,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -10504,6 +10882,15 @@
                         }]
                 }, 
                 {
+                 "id":3169,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }]
+                }, 
+                {
                  "id":3170,
                  "properties":[
                         {
@@ -10515,6 +10902,25 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
+                         "name":"treestump",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }]
+                }, 
+                {
+                 "id":3171,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
                         }]
                 }, 
                 {
@@ -10729,6 +11135,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak2"
+                        }, 
+                        {
+                         "name":"treestump",
+                         "type":"string",
+                         "value":"iceoak2"
                         }]
                 }, 
                 {
@@ -16208,6 +16624,11 @@
                  "id":1809,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -16216,6 +16637,11 @@
                 {
                  "id":1810,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -16226,6 +16652,11 @@
                  "id":1811,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -16234,6 +16665,11 @@
                 {
                  "id":1873,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -16244,6 +16680,11 @@
                  "id":1874,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -16253,9 +16694,23 @@
                  "id":1875,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
+                        }]
+                }, 
+                {
+                 "id":1937,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
                         }]
                 }, 
                 {
@@ -16270,6 +16725,25 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }]
+                }, 
+                {
+                 "id":1939,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
                         }]
                 }, 
                 {
@@ -16486,6 +16960,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"iceoak3"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"iceoak3"
                         }]
                 }, 
                 {
@@ -17206,6 +17690,11 @@
                  "id":2304,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -17214,6 +17703,11 @@
                 {
                  "id":2305,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -17224,6 +17718,11 @@
                  "id":2306,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -17232,6 +17731,11 @@
                 {
                  "id":2368,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -17242,6 +17746,11 @@
                  "id":2369,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -17250,6 +17759,11 @@
                 {
                  "id":2370,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -17287,6 +17801,11 @@
                  "id":2432,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -17295,6 +17814,11 @@
                 {
                  "id":2433,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -17305,9 +17829,32 @@
                  "id":2434,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
+                        }]
+                }, 
+                {
+                 "id":2435,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }]
+                }, 
+                {
+                 "id":2436,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
                         }]
                 }, 
                 {
@@ -17341,6 +17888,11 @@
                  "id":2496,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -17358,6 +17910,43 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }]
+                }, 
+                {
+                 "id":2498,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }]
+                }, 
+                {
+                 "id":2499,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
+                        }]
+                }, 
+                {
+                 "id":2500,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
                         }]
                 }, 
                 {
@@ -17399,6 +17988,16 @@
                          "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"icepalm"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"icepalm"
                         }]
                 }, 
                 {
