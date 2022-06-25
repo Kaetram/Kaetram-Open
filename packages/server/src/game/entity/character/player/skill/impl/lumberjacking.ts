@@ -47,6 +47,17 @@ export default class Lumberjacking extends Skill {
         if (treeInfo.levelRequirement > this.getLevel())
             return player.notify(LumberjackingEn.INVALID_LEVEL);
 
+        // Unable to cut the tree if the player hasn't completed the required achievement.
+        if (
+            treeInfo.reqAchievement &&
+            !player.achievements.get(treeInfo.reqAchievement)?.isFinished()
+        )
+            return player.notify(LumberjackingEn.UNABLE_TO_CUT);
+
+        // Unable to cut the tree if the player hasn't completed the required quest.
+        if (treeInfo.reqQuest && !player.quests.get(treeInfo.reqQuest)?.isFinished())
+            return player.notify(LumberjackingEn.UNABLE_TO_CUT);
+
         if (!player.inventory.hasSpace()) return player.notify(LumberjackingEn.INVENTORY_FULL);
 
         /**
@@ -71,6 +82,9 @@ export default class Lumberjacking extends Skill {
 
                 // Add experience to our skill.
                 this.addExperience(treeInfo.experience);
+
+                // If tree has an achievement, attempt to award it if it hasn't been awarded yet.
+                if (treeInfo.achievement) player.achievements.get(treeInfo.achievement)?.finish();
 
                 // Cut the tree from the region.
                 tree.cut();
