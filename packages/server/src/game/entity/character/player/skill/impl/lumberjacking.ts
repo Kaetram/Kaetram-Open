@@ -86,6 +86,9 @@ export default class Lumberjacking extends Skill {
                 // If tree has an achievement, attempt to award it if it hasn't been awarded yet.
                 if (treeInfo.achievement) player.achievements.get(treeInfo.achievement)?.finish();
 
+                // If a tree has a quest, we check if the quest can make a callback.
+                if (treeInfo.quest) player.quests.get(treeInfo.quest)?.treeCallback?.(tree.type);
+
                 // Cut the tree from the region.
                 tree.cut();
             }
