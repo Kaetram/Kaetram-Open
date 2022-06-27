@@ -21,6 +21,7 @@ type PopupCallback = (popup: PopupData) => void;
 type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
+type TreeCallback = (type: string) => void;
 
 export default abstract class Quest {
     /**
@@ -47,6 +48,7 @@ export default abstract class Quest {
     public talkCallback?: TalkCallback;
     public doorCallback?: DoorCallback;
     public killCallback?: KillCallback;
+    public treeCallback?: TreeCallback;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -63,6 +65,7 @@ export default abstract class Quest {
         this.onTalk(this.handleTalk.bind(this));
         this.onDoor(this.handleDoor.bind(this));
         this.onKill(this.handleKill.bind(this));
+        this.onTree(this.handleTree.bind(this));
     }
 
     /**
@@ -156,6 +159,32 @@ export default abstract class Quest {
 
         // Progress to the next stage after we reach the `mobCountRequirement`.
         if (this.subStage >= this.stageData.mobCountRequirement) this.progress();
+    }
+
+    /**
+     * Callback for when a tree has been cut. This only gets called if the quest
+     * has not yet been completed.
+     * @param type The type of tree we are cutting.
+     */
+
+    private handleTree(type: string): void {
+        // Stop if the quest has already been completed.
+        if (this.isFinished()) return;
+
+        // Stage data does not require a tree to be cut.
+        if (!this.stageData.tree) return;
+
+        // Don't progress if we are not cutting the tree specified.
+        if (this.stageData.tree !== type) return;
+
+        // Progress the quest if no tree count is specified but a tree stage is present.
+        if (!this.stageData.treeCount) return this.progress();
+
+        // Progress substage.
+        this.progress(true);
+
+        // Progress to next stage if we fulfill the tree count requirement.
+        if (this.subStage >= this.stageData.treeCount) this.progress();
     }
 
     /**
@@ -414,5 +443,14 @@ export default abstract class Quest {
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
+    }
+
+    /**
+     * Callbakc for when a tree has been cut down.
+     * @param callback Contains the tree type that was cut.
+     */
+
+    public onTree(callback: TreeCallback): void {
+        this.treeCallback = callback;
     }
 }

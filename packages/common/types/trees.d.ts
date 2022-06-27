@@ -6,6 +6,7 @@ export interface TreeInfo {
     reqAchievement?: string; // Achievement required to cut the tree
     reqQuest?: string; // Quest required to cut the tree
     achievement?: string; // Achievement to be awarded when cutting the tree (for first time).
+    quest?: string; // Quest progress to be checked when cutting the tree.
 }
 
 export type TreeData = { [key: string]: TreeInfo };
