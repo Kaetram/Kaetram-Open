@@ -1,0 +1,36 @@
+@use '../../abstracts/media';
+
+#ability-shortcut {
+    position: absolute;
+    left: 38%;
+}
+
+#ability-shortcut ul {
+    overflow: hidden;
+
+    width: 128%;
+    margin-left: 7%;
+    padding: 0;
+
+    list-style-type: none;
+
+    li {
+        float: left;
+
+        margin-top: 1%;
+        margin-right: 4%;
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #ability-shortcut {
+            top: 240px * $i;
+
+            width: 122px * $i;
+            height: 20px * $i;
+
+            background-image: url('/img/#{$i}/skillslots.png');
+        }
+    }
+}
