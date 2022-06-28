@@ -7,15 +7,15 @@
         "task": "talk",
         "npc": "coder",
         "text": [
-          "Hello there, I am the programmer of this world.",
-          "You'll first need to complete this tutorial",
-          "before you can proceed.", "Do not worry, I coded it to be pretty short.",
-          "Off you go!"],
+          "Hello there bud, I am the programmer of this world.",
+          "Like most MMORPGs, this is a tutorial. You must complete it unfortunately.",
+          "Do not worry, I coded it to be pretty short.",
+          "Go through those doors over there to proceed."],
         "completedText": ["Why don't you just walk through that door over there eh?"],
         "pointer": {
           "type": 0,
-          "x": 372,
-          "y": 38
+          "x": 239,
+          "y": 8
         }
       },
 
@@ -23,8 +23,8 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 373,
-          "y": 45
+          "x": 236,
+          "y": 10
         }
       },
 
@@ -38,42 +38,113 @@
           "A lot of stuff actually...",
           "And when you're not killing stuff...",
           "You'll still be killing stuff!",
-          "So for now, go kill 5 of them rats."
+          "But regardless, I won't ask you to kill stuff just yet.",
+          "Take this axe and cut down 3 trees for me."
         ],
-        "completedText": ["What are you waiting for?", "Kill some of them rats."],
-        "itemKey": "sword1",
+        "completedText": ["What are you waiting for?", "Go cut me some trees."],
+        "itemKey": "axe",
         "popup": {
           "title": "Item acquired!",
-          "text": "You've just received a sword! Equip it using your inventory!",
+          "text": "You've just received a axe! Equip it using your inventory!",
           "colour": "#33cc33"
         },
         "pointer": {
           "type": 0,
-          "x": 333,
-          "y": 27
+          "x": 235,
+          "y": 39
         }
       },
 
       "3": {
-        "task": "kill",
-        "mob": ["rat"],
-        "mobCountRequirement": 5
+        "task": "tree",
+        "tree": "tutorialsnowoak",
+        "treeCount": 2
       },
 
       "4": {
-        "task": "door",
+        "task": "talk",
+        "npc": "guard",
+        "text": [
+          "Thank you soldier, meet me in the cave below!"
+        ],
+        "completedText": [
+          "I'm not sure what you're waiting for...",
+          "head on over to the cave below!"],
         "pointer": {
           "type": 0,
-          "x": 323,
-          "y": 23
+          "x": 235,
+          "y": 39
         }
       },
 
       "5": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 239,
+          "y": 49
+        }
+      },
+
+      "6": {
+        "task": "talk",
+        "npc": "guard",
+        "text": [
+          "Soldier! We have a crab infestation!", 
+          "How did crabs make their way into a",
+          "volcanic cave under a snowy field?",
+          "You're not here to ask questions soldier!",
+          "Use the axe I just gave you to cut down 5 crabs!"],
+        "completedText": ["No more chit chatter, go slice me some crabs!"],
+        "pointer": {
+          "type": 0,
+          "x": 207,
+          "y": 13
+        }
+      },
+
+      "7": {
+        "task": "kill",
+        "mob": ["crab"],
+        "mobCountRequirement": 4
+      },
+
+      "8": {
+        "task": "talk",
+        "npc": "guard",
+        "text": [
+          "Phew, that was a close one. Those crabs can sure do some damage.",
+          "Head on over through that portal for the next part of your training!"],
+        "completedText": [
+          "Well don't just sit there, go through the portal!"
+        ],
+        "pointer": {
+          "type": 0,
+          "x": 207,
+          "y": 13
+        }
+      },
+
+      "9": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 205,
+          "y": 11
+        }
+      },
+
+      "10": {
         "task": "talk",
         "npc": "sorcerer",
-        "text": ["Sup there young one!", "I am a spooky mage in this cave!", "Here, take this bow and kill 4 of those rats!"],
-        "completedText": ["Well then, hurry up and kill those rats.", "Then you can get out of here!"],
+        "text": [
+          "Sup there young one, how's it hangin'?",
+          "Welcome to my little pocket dimensions I call home!",
+          "Over there is my small rat farm!",
+          "I'm actually going to need you to uhm...",
+          "filter out the population.",
+          "Take this bow and shoot 5 of them for me!"],
+        "completedText": ["Don't be afraid young one, they'll grow back very quickly!"],
         "itemKey": "woodenbow",
         "popup": {
           "title": "Item acquired!",
@@ -82,23 +153,38 @@
         },
         "pointer": {
           "type": 0,
-          "x": 414,
-          "y": 21
+          "x": 187,
+          "y": 34
         }
       },
 
-      "6": {
+      "11": {
         "task": "kill",
         "mob": ["rat"],
         "mobCountRequirement": 4
       },
 
-      "7": {
+      "12": {
+        "task": "npc",
+        "npc": "sorcerer",
+        "text": [
+          "Thank you so much young one!",
+          "Rat population tends to get out of control quickly if left unchecked.",
+          "Regardless, you are now free to exit through the portal over there!"],
+        "completedText": ["Thank you again adventurer! You're free to exit anytime!"],
+        "pointer": {
+          "type": 0,
+          "x": 187,
+          "y": 34
+        }
+      },
+
+      "13": {
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 406,
-          "y": 19
+          "x": 180,
+          "y": 34
         }
       }
     }

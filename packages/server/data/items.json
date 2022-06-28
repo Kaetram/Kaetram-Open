@@ -10,7 +10,8 @@
     "type": "weapon",
     "attack": 3,
     "name": "Axe",
-    "lumberjacking": 1
+    "lumberjacking": 1,
+    "requirement": 1
   },
 
   "morningstar": {
