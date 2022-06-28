@@ -62,7 +62,7 @@ export default class Lumberjacking extends Skill {
 
         /**
          * Stop the current loop when we are beginning to cut a tree. This will
-         * continually reset the loop if the player keeps spamming the tree.
+         * continually reset the loop if the player keeps spam clicking the tree.
          */
         if (this.loop) this.stop();
 
