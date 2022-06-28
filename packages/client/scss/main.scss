@@ -1,5 +1,3 @@
-@use 'animations';
-@use 'game';
-@use 'intro';
-@use 'vars';
-@use 'interface';
+@use 'base/base';
+@use 'app/app';
+@use 'game/game';

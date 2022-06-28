@@ -1,0 +1,72 @@
+@use '../../abstracts/media';
+
+#attack-info {
+    position: absolute;
+    left: 40%;
+
+    display: none;
+
+    background-color: rgb(0 0 0 / 50%);
+
+    .name,
+    .health {
+        position: absolute;
+
+        font-family: AdvoCut, sans-serif;
+        color: white;
+        text-align: center;
+    }
+
+    .name {
+        overflow: hidden;
+
+        width: 100%;
+    }
+
+    .details {
+        overflow: hidden;
+
+        width: 100%;
+
+        font-family: AdvoCut, sans-serif;
+        color: white;
+        text-align: center;
+    }
+
+    .health {
+        left: 5%;
+
+        overflow: hidden;
+
+        width: 90%;
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #attack-info {
+            top: 0;
+
+            width: 100px * $i;
+            height: 25px * $i;
+
+            border: 2px * $i solid #373737;
+            border-bottom-right-radius: 8px * $i;
+            border-bottom-left-radius: 8px * $i;
+
+            .details {
+                margin-top: 9px * $i;
+            }
+
+            .health {
+                height: 6px * $i;
+
+                background-color: red;
+                border: 1px * $i solid #373737;
+                border-radius: 2px * $i;
+
+                transition: 0.5s width ease;
+            }
+        }
+    }
+}
