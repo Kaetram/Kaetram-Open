@@ -1,0 +1,90 @@
+#worlds-switch {
+    cursor: pointer;
+
+    position: fixed;
+    z-index: 2;
+    bottom: 5px;
+    left: 5px;
+
+    display: none;
+
+    padding: 0.5em 1em;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 1em;
+    color: white;
+
+    background-color: #d83a39;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+#current-world-count {
+    font-size: 0.75em;
+}
+
+#current-world-id {
+    font-size: 0.75em;
+    text-align: justify;
+
+    opacity: 0.8;
+}
+
+#worlds-popup {
+    cursor: default;
+
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+
+    display: none;
+
+    margin-left: -80px;
+    padding: 12px;
+
+    color: #fff;
+    text-align: justify;
+
+    background-color: #555;
+    border-radius: 6px;
+
+    &::after {
+        content: '';
+
+        position: absolute;
+        top: 100%;
+        left: 33%;
+
+        margin-left: -25px;
+
+        border-color: #555 transparent transparent;
+        border-style: solid;
+        border-width: 5px;
+    }
+
+    > table {
+        th {
+            border-bottom: 2px solid #eee;
+        }
+
+        td {
+            padding: 12px 24px 10px 16px;
+
+            border-left: 2px solid #fff;
+        }
+    }
+}
+
+.server-list {
+    cursor: pointer;
+
+    &:hover {
+        background-color: #333a;
+    }
+
+    &.active {
+        color: #fcda5c;
+
+        background-color: #333;
+    }
+}
