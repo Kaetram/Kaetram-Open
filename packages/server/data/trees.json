@@ -27,6 +27,21 @@
         "item": "logs"
     },
 
+    "snowoak": {
+        "levelRequirement": 20,
+        "experience": 75,
+        "difficulty": 90,
+        "item": "logs"
+    },
+
+    "tutorialsnowoak": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 5,
+        "item": "logs",
+        "quest": "tutorial"
+    },
+
     "palm": {
         "levelRequirement": 5,
         "experience": 15,
