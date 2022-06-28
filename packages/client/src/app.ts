@@ -65,7 +65,7 @@ export default class App {
     public respawnCallback?: EmptyCallback;
 
     public constructor() {
-        this.sendStatus(`Initializing the game client...`);
+        this.sendStatus('Initializing the game client');
 
         this.load();
     }
@@ -222,11 +222,7 @@ export default class App {
      */
 
     public showMenu(): void {
-        this.body.classList.remove('game');
-        this.body.classList.remove('started');
-        this.body.classList.add('intro');
-
-        this.footer.style.display = 'block';
+        this.body.className = 'intro';
 
         this.menuHidden = false;
     }
@@ -239,17 +235,11 @@ export default class App {
     public fadeMenu(): void {
         this.updateLoader();
 
-        window.setTimeout(() => {
-            this.body.classList.add('game');
-            this.body.classList.add('started');
-            this.body.classList.remove('intro');
+        this.body.className = 'game';
 
-            this.footer.style.display = 'none';
+        this.menuHidden = true;
 
-            this.menuHidden = true;
-
-            this.saveLogin();
-        }, 500);
+        this.saveLogin();
     }
 
     /**
