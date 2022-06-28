@@ -149,6 +149,9 @@ export default class Handler {
      */
 
     private handleDoor(door: ProcessedDoor): void {
+        // Reset talking index when passing through any door.
+        this.player.talkIndex = 0;
+
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
 

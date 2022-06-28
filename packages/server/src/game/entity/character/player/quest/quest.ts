@@ -135,7 +135,7 @@ export default abstract class Quest {
 
         if (this.stage < door.stage!) return player.notify('You cannot pass through this door.');
 
-        player.teleport(door.x, door.y, true);
+        player.teleport(door.x, door.y);
 
         this.progress();
     }
@@ -299,7 +299,9 @@ export default abstract class Quest {
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
             itemKey: stage.itemKey! || '',
-            itemCount: stage.itemCount! || 0
+            itemCount: stage.itemCount! || 0,
+            tree: stage.tree! || '',
+            treeCount: stage.treeCount! || 0
         };
     }
 
@@ -347,18 +349,20 @@ export default abstract class Quest {
      */
 
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
+        let isProgress = this.stage !== stage;
+
         // Send popup before setting the new stage.
         if (this.stageData.popup) this.popupCallback?.(this.stageData.popup);
 
         // Clear pointer preemptively if the current stage data contains it.
         if (this.stageData.pointer) this.pointerCallback?.(Modules.EmptyPointer);
 
-        // Progression to a new stage.
-        if (this.stage !== stage && progressCallback)
-            this.progressCallback?.(this.key, stage, this.stageCount);
-
         this.stage = stage;
         this.subStage = subStage;
+
+        // Progression to a new stage.
+        if (isProgress && progressCallback)
+            this.progressCallback?.(this.key, stage, this.stageCount);
 
         if (this.isFinished()) return;
 

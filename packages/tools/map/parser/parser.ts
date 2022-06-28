@@ -363,6 +363,7 @@ export default class ProcessMap {
                 break;
 
             case 'cutstump':
+            case 'stumpcut':
                 this.#trees[value].cutStump.push(tileId);
                 break;
         }
