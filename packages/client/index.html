@@ -82,7 +82,7 @@
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="192" />
         <meta property="og:image:height" content="192" />
-        <meta property="og:image:alt" content="Kaetram Logo" />
+        <meta property="og:image:alt" content="Kaetram Icon" />
 
         <!-- Google -->
         <meta itemprop="name" content="Kaetram" />
@@ -105,7 +105,7 @@
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
 
-        <!-- Windows  -->
+        <!-- Windows -->
         <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
         <meta name="msapplication-tooltip" content="Kaetram" />
         <meta name="msapplication-tap-highlight" content="no" />
@@ -114,20 +114,20 @@
         <meta name="msapplication-TileImage" content="/img/icons/mstile-144x144.png" />
         <meta name="msapplication-config" content="browserconfig.xml" />
 
-        <!-- UC Mobile Browser  -->
+        <!-- UC Mobile Browser -->
         <meta name="full-screen" content="yes" />
         <meta name="browsermode" content="application" />
 
-        <!-- Disable night mode for this page  -->
+        <!-- Disable night mode for this page -->
         <meta name="nightmode" content="enable/disable" />
 
         <!-- Layout mode -->
         <meta name="layoutmode" content="fitscreen/standard" />
 
-        <!-- Show image even in text only mode  -->
+        <!-- Show image even in text only mode -->
         <meta name="imagemode" content="force" />
 
-        <!-- Orientation  -->
+        <!-- Orientation -->
         <meta name="screen-orientation" content="any" />
 
         <!-- JSON-LD -->
@@ -181,12 +181,15 @@
     </head>
     <body class="intro">
         <noscript>
-            <div class="alert">You must enable JavaScript to play Kaetram.</div>
+            <div id="alert">You must enable JavaScript to play Kaetram.</div>
         </noscript>
+
         <div id="intro">
             <!-- <h1 id="logo"></h1> -->
+
             <section id="parchment" class="load-character">
                 <div class="parchment-left"></div>
+
                 <div class="parchment-middle">
                     <article id="load-character">
                         <h1>
@@ -194,6 +197,7 @@
                             Kaetram
                             <span class="right-ornament"></span>
                         </h1>
+
                         <form onsubmit="return false">
                             <input
                                 type="text"
@@ -245,12 +249,14 @@
                             <div class="validation-summary"></div>
                         </form>
                     </article>
+
                     <article id="create-character">
                         <h1>
                             <span class="left-ornament"></span>
                             New Character
                             <span class="right-ornament"></span>
                         </h1>
+
                         <form onsubmit="return false">
                             <input
                                 type="text"
@@ -306,12 +312,14 @@
                             <div class="validation-summary"></div>
                         </form>
                     </article>
+
                     <article id="credits">
                         <h1>
                             <span class="left-ornament"></span>
                             <span class="title">Credits</span>
                             <span class="right-ornament"></span>
                         </h1>
+
                         <p id="c-description">
                             <br />
                             Special thanks to
@@ -376,40 +384,45 @@
                                 >Aaron Krogh</a
                             >
                         </p>
+
                         <div class="close-about">
                             <span>-- Click anywhere to close --</span>
                         </div>
                     </article>
+
                     <article id="about">
                         <h1>
                             <span class="left-ornament"></span>
                             <span class="title"> About </span>
                             <span class="right-ornament"></span>
                         </h1>
+
                         <p id="a-description">
                             Kaetram is a 2D open-source experiment. The game is still very early in
                             development, so please be wary of that. If you would like to check out
                             the source code, visit our
-                            <a href="https://github.com/Veradictus/Kaetram-Open"
-                                >GitHub Repository</a
-                            >.
+                            <a href="https://github.com/Kaetram/Kaetram-Open">GitHub Repository</a>.
                         </p>
+
                         <div class="close-about">
                             <span>-- Click anywhere to close --</span>
                         </div>
                     </article>
+
                     <article id="git">Structure this later</article>
+
                     <article id="death">
                         <p>You have died...</p>
                         <button id="respawn" title="Respawn" aria-label="Respawn"></button>
                     </article>
-                </div>
-                <div class="parchment-right"></div>
-                <div class="loader" hidden>
-                    Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span
-                    ><span class="loader-dot">.</span>
+
+                    <div class="loader" hidden>
+                        Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span
+                        ><span class="loader-dot">.</span>
+                    </div>
                 </div>
 
+                <div class="parchment-right"></div>
             </section>
 
             <a
@@ -419,8 +432,23 @@
             >
                 Become a Patron!
             </a>
+
+            <footer>
+                <div id="about-link" class="clickable">
+                    <span id="toggle-about">About</span>
+                </div>
+                <span>&ndash;</span>
+                <div id="credits-link" class="clickable">
+                    <span id="toggle-credits">Credits</span>
+                </div>
+                <span>&ndash;</span>
+                <div id="discord-link" class="clickable">
+                    <span id="toggle-discord">Discord</span>
+                </div>
+            </footer>
         </div>
-        <div id="container">
+
+        <div id="game-container">
             <div id="border">
                 <div id="canvas">
                     <canvas id="background"></canvas>
@@ -430,6 +458,7 @@
                     <canvas id="overlay"></canvas>
                     <canvas id="text-canvas"></canvas>
                 </div>
+
                 <div id="buttons">
                     <ul>
                         <li><div id="inventory-button"></div></li>
@@ -439,6 +468,7 @@
                         <li><div id="settings-button"></div></li>
                     </ul>
                 </div>
+
                 <div id="drop-dialog">
                     <div id="drop-title">Input drop count.</div>
                     <div align="center">
@@ -453,6 +483,7 @@
                         <span id="drop-cancel">&nbsp;Cancel&nbsp;</span>
                     </div>
                 </div>
+
                 <div id="profile-dialog">
                     <div id="state-page" class="page">
                         <div id="profile-name" class="profile-info"></div>
@@ -466,21 +497,26 @@
                         <div id="ring-slot" class="profile-slot"></div>
                         <div id="boots-slot" class="profile-slot"></div>
                     </div>
+
                     <div id="quest-page" class="page">
                         <div id="achievement-count" class="stroke"></div>
                         <div id="achievement-list"><ul></ul></div>
                         <div id="quest-count" class="stroke"></div>
                         <div id="quest-list"><ul></ul></div>
                     </div>
+
                     <div id="skills-page" class="page">
                         <div id="skills-list"><ul></ul></div>
                     </div>
+
                     <div id="guild-page" class="page"></div>
+
                     <div id="navigator">
                         <div id="previous"></div>
                         <div id="next"></div>
                     </div>
                 </div>
+
                 <div id="settings-page" class="page">
                     <div id="sliders">
                         <input
@@ -514,6 +550,7 @@
                             aria-labelledby="brightnessText"
                         />
                     </div>
+
                     <div id="texts">
                         <p id="volume-text">Volume</p>
                         <p id="sfx-text">SFX</p>
@@ -524,7 +561,9 @@
                         <p id="name-check-text">Names</p>
                         <p id="level-check-text">Levels</p>
                     </div>
+
                     <div id="info"></div>
+
                     <div id="check-marks">
                         <label id="sound-check" class="check">
                             <input type="checkbox" aria-labelledby="soundCheckText" />
@@ -548,11 +587,13 @@
                         </label>
                     </div>
                 </div>
+
                 <div id="attack-info">
                     <div class="name"></div>
                     <div class="details"></div>
                     <div class="health"></div>
                 </div>
+
                 <div id="map-frame">
                     <div id="warp0" class="map-button"></div>
                     <div id="warp1" class="map-button"></div>
@@ -562,7 +603,9 @@
                     <div id="warp5" class="map-button"></div>
                     <div id="close-map-frame" class="close"></div>
                 </div>
+
                 <div id="inventory"><ul></ul></div>
+
                 <div id="bank">
                     <div id="close-bank" class="close"></div>
                     <div id="bank-container">
@@ -574,11 +617,13 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="trade">
                     <div id="close-trade" class="close"></div>
                     <div id="trade-player-container"></div>
                     <div id="trade-o-player-container"></div>
                 </div>
+
                 <div id="enchant">
                     <div id="close-enchant" class="close"></div>
                     <div id="confirm-enchant" class="ok"></div>
@@ -592,6 +637,7 @@
                         <div id="shards-count" class="item-count"></div>
                     </div>
                 </div>
+
                 <div id="store">
                     <div id="close-store" class="close"></div>
                     <div id="store-container"><ul></ul></div>
@@ -610,11 +656,14 @@
                         <div id="confirm-sell" class="ok"></div>
                     </div>
                 </div>
+
                 <div id="bubbles"></div>
+
                 <div id="notification">
                     <div id="notification-text-title"></div>
                     <div id="notification-text-description"></div>
                 </div>
+
                 <div id="notifications">
                     <div id="notify-fade" class="fade"></div>
                     <div id="notify">
@@ -628,9 +677,11 @@
                     </div>
                     <div id="message"></div>
                 </div>
+
                 <div id="action-container">
                     <ul></ul>
                 </div>
+
                 <div id="chat">
                     <div id="talk">
                         <form onsubmit="return false">
@@ -646,6 +697,7 @@
                     </div>
                     <div id="chat-log"></div>
                 </div>
+
                 <div id="player-info">
                     <div id="health"></div>
                     <div id="health-bar"></div>
@@ -657,18 +709,5 @@
                 </div>
             </div>
         </div>
-        <footer>
-            <div id="about-link" class="clickable">
-                <span id="toggle-about">About</span>
-            </div>
-            <span>&ndash;</span>
-            <div id="credits-link" class="clickable">
-                <span id="toggle-credits">Credits</span>
-            </div>
-            <span>&ndash;</span>
-            <div id="discord-link" class="clickable">
-                <span id="toggle-discord">Discord</span>
-            </div>
-        </footer>
     </body>
 </html>

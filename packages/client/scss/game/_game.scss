@@ -1,8 +1,26 @@
+@use 'impl/abilities';
+@use 'impl/action';
+@use 'impl/attack';
+@use 'impl/bank';
+@use 'impl/bubbles';
+@use 'impl/buttons';
+@use 'impl/chat';
+@use 'impl/container';
+@use 'impl/dialog';
+@use 'impl/drop';
+@use 'impl/enchant';
+@use 'impl/inventory';
+@use 'impl/map';
+@use 'impl/notifications';
+@use 'impl/player';
+@use 'impl/profile';
+@use 'impl/settings';
+@use 'impl/store';
+@use 'impl/trade';
+
 body.game {
     background: #000;
-}
 
-.game {
     #load-character,
     #create-character,
     #error {
@@ -11,36 +29,42 @@ body.game {
 
     #parchment {
         z-index: 0;
+
         transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
-        top: 50%;
     }
 
     #credits,
     #death,
     #about,
     #git {
-        opacity: 0;
-        transition: 0s opacity linear 0s;
         z-index: 1000;
+
+        opacity: 0;
+
+        transition: 0s opacity linear 0s;
     }
 
     .parchment-left {
-        transition: 0.5s left ease-in-out;
         left: 41%;
+
+        transition: 0.5s left ease-in-out;
     }
 
     .parchment-right {
-        transition: 0.5s right ease-in-out;
         right: 41%;
+
+        transition: 0.5s right ease-in-out;
     }
 
     &.credits #credits,
     &.death #death,
     &.about #about,
     &.git #git {
-        opacity: 1;
-        transition: 0.5s opacity linear 0.5s;
         z-index: 1000;
+
+        opacity: 1;
+
+        transition: 0.5s opacity linear 0.5s;
     }
 
     &.credits,
@@ -48,9 +72,11 @@ body.game {
     &.about,
     &.git {
         #parchment {
-            opacity: 1;
-            transition: 0.5s opacity linear 0s;
             z-index: 1000;
+
+            opacity: 1;
+
+            transition: 0.5s opacity linear 0s;
         }
 
         .parchment-left {
@@ -63,18 +89,26 @@ body.game {
     }
 
     .parchment-middle {
-        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
         width: 0;
         margin-left: 0;
+
+        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out,
+            0.5s background-position ease-in-out;
     }
 
-    #container {
+    #game-container {
         opacity: 1;
+    }
+
+    footer {
+        display: none;
+
+        color: #8a8a8a;
     }
 }
 
 @media (--lg) {
-    .game {
+    body.game {
         .parchment-middle {
             background-position: -633px -882px;
         }
@@ -86,7 +120,8 @@ body.game {
             .parchment-middle {
                 width: 1038px;
                 margin-left: -519px;
-                background-position: -114px -882px;
+
+                background-position-x: -114px;
             }
         }
     }
