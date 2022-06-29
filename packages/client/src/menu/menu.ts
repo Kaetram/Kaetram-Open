@@ -2,7 +2,7 @@
 import log from '../lib/log';
 
 export default abstract class Menu {
-    protected body: HTMLElement = document.querySelector(this.containerName!)!;
+    protected container: HTMLElement = document.querySelector(this.containerName!)!;
     protected close: HTMLElement = document.querySelector(this.closeButton!)!;
     protected button: HTMLElement = document.querySelector(this.toggleButton!)!;
 
@@ -79,7 +79,7 @@ export default abstract class Menu {
     public show(_var1?: unknown, _var2?: unknown, _var3?: unknown): void {
         this.showCallback?.();
 
-        this.body.style.display = 'block';
+        this.container.style.display = 'block';
         this.button?.classList.add('active');
     }
 
@@ -88,7 +88,7 @@ export default abstract class Menu {
      */
 
     public hide(): void {
-        this.body.style.display = 'none';
+        this.container.style.display = 'none';
 
         this.button?.classList.remove('active');
     }
@@ -121,7 +121,7 @@ export default abstract class Menu {
      */
 
     public isVisible(): boolean {
-        return this.body.style.display === 'block';
+        return this.container.style.display === 'block';
     }
 
     /**
