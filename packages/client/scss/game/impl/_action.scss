@@ -1,0 +1,60 @@
+@use '../../abstracts/media';
+
+#action-container {
+    position: absolute;
+
+    display: none;
+
+    background-color: rgb(0 0 0 / 10%);
+
+    // cursor: hand;
+}
+
+.action-button {
+    cursor: pointer;
+
+    width: 128px;
+    height: 32px;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 20px;
+    line-height: normal;
+    color: #c6c0a3;
+    text-align: center;
+    vertical-align: middle;
+
+    background-color: rgb(0 0 0 / 30%);
+    border: 1px solid #707070;
+
+    &:hover {
+        cursor: pointer;
+
+        color: #fff;
+
+        background-color: rgb(0 0 0 / 40%);
+    }
+
+    &:active {
+        cursor: pointer;
+
+        color: #fcda5c;
+
+        background-color: rgb(0 0 0 / 50%);
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        .action-button {
+            border-width: 1px * $i;
+            border-radius: 3px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    .action-button {
+        width: 192px;
+        height: 48px;
+    }
+}
