@@ -30,10 +30,10 @@ export default class Equipment {
      * @param item Item instance used to update the slot with.
      */
 
-    public update(item: Item): void {
+    public update(item: Item, count = 1): void {
         this.key = item.key;
         this.name = item.name;
-        this.count = item.count;
+        this.count = count;
         this.ability = item.ability;
         this.abilityLevel = item.abilityLevel;
         this.lumberjacking = item.lumberjacking;
