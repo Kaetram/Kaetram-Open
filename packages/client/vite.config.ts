@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 
-import config, { Config } from '../common/config';
+import config, { type Config } from '../common/config';
 
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
@@ -57,7 +57,6 @@ function loadEnv(isProduction: boolean): ExposedConfig {
 
 export default defineConfig(({ command }) => {
     let isProduction = command === 'build',
-        brotli = false,
         env = loadEnv(isProduction);
 
     return {
@@ -96,11 +95,14 @@ export default defineConfig(({ command }) => {
             legacy(),
             createHtmlPlugin({
                 minify: isProduction && { processScripts: ['application/ld+json'] }
+            }),
+            compress({
+                brotli: false,
+                pngquant: false
             })
         ],
         build: {
             sourcemap: false,
-            brotliSize: brotli,
             chunkSizeWarningLimit: 4e3
         },
         server: { port: 9000 },

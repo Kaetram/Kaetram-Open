@@ -106,7 +106,7 @@ export default class Socket {
 
         log.info('Connection established...');
 
-        this.game.app.updateLoader('Preparing Handshake');
+        this.game.app.updateLoader('Preparing handshake');
 
         this.connection.emit('client', {
             gVer: this.config.version,
