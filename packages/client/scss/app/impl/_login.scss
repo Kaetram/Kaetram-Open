@@ -1,0 +1,213 @@
+@use '../../abstracts/media';
+
+#login,
+#new-account {
+    top: 120%;
+}
+
+#continue,
+#cancel-button,
+#play {
+    top: 92.5%;
+}
+
+#login {
+    left: 15%;
+}
+
+#cancel-button {
+    left: 10%;
+}
+
+#new-account {
+    left: 60%;
+}
+
+#play {
+    left: 65%;
+}
+
+#remember-me {
+    left: 20%;
+}
+
+#guest {
+    left: 64%;
+}
+
+#guest-text {
+    top: 5%;
+    left: 110%;
+}
+
+input[type='range'] {
+    width: 100%;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(1, #4d4d4d),
+        color-stop(1, #c5c5c5)
+    );
+
+    appearance: none;
+
+    &::-webkit-slider-thumb {
+        background-color: #707070;
+        border: 1px solid #000;
+
+        appearance: none !important;
+
+        &:active {
+            background-color: #fcda5c;
+        }
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        $button-width: 96px * $i;
+        $button-height: 27px * $i;
+
+        #remember-me-text,
+        #guest-text {
+            height: 8px * $i;
+            padding-left: 5px * $i;
+
+            font-size: 8px * $i;
+        }
+
+        #login {
+            background-position-x: -$button-width;
+        }
+
+        #new-account {
+            background-position-x: -$button-width * 2;
+        }
+
+        #cancel-button {
+            background-position-x: -$button-width * 3;
+        }
+
+        #continue {
+            background-position-x: -$button-width * 4;
+        }
+
+        #play,
+        #login,
+        #new-account,
+        #cancel-button,
+        #continue {
+            cursor: pointer;
+
+            position: absolute;
+
+            width: $button-width;
+            height: $button-height;
+
+            background-color: transparent;
+            background-image: url('/img/#{$i}/buttons.png');
+            border: none;
+
+            &:hover,
+            &:focus {
+                background-position-y: -$button-height;
+            }
+
+            &:active {
+                background-position-y: -$button-height * 2;
+            }
+
+            &:disabled {
+                cursor: wait;
+
+                background-position-y: -$button-height * 3;
+            }
+        }
+
+        .validation-error,
+        .status {
+            font-size: 8px * $i;
+        }
+
+        .validation-summary {
+            width: 128px * $i;
+        }
+
+        // Other
+
+        input[type='range'] {
+            height: 3px * $i;
+
+            border-radius: 3px * $i;
+
+            &::-webkit-slider-thumb {
+                width: 5px * $i;
+                height: 8px * $i;
+
+                border-radius: 2px * $i;
+            }
+        }
+
+        .stroke {
+            text-shadow: 1px * $i 1px * $i 0 #373737, 1px * $i -1px * $i 0 #373737,
+                0 1px * $i 0 #373737, 1px * $i 0 0 #373737, -1px * $i 1px * $i 0 #373737,
+                -1px * $i -1px * $i 0 #373737, 0 -1px * $i 0 #373737, 0 1px * $i 0 #373737,
+                -1px * $i 0 0 #373737;
+        }
+    }
+}
+
+@media (--lg) {
+    .validation-error,
+    .status {
+        font-size: 24px;
+    }
+
+    .stroke {
+        text-shadow: 2px 2px 0 #373737, 2px -2px 0 #373737, 0 2px 0 #373737, 2px 0 0 #373737,
+            -2px 2px 0 #373737, -2px -2px 0 #373737, 0 -2px 0 #373737, 0 2px 0 #373737,
+            -2px 0 0 #373737;
+    }
+
+    #remember-me-text,
+    #guest-text {
+        width: 168px;
+    }
+
+    .validation-summary {
+        width: 366px;
+    }
+}
+
+@media (--md) {
+    #remember-me-text,
+    #guest-text {
+        width: 112px;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+        height: 15px;
+    }
+}
+
+@media (--sm) {
+    #remember-me-text,
+    #guest-text {
+        width: 70px;
+    }
+
+    #yes {
+        left: 0;
+    }
+
+    #no {
+        left: 40%;
+    }
+
+    #about h1,
+    #credits h1 {
+        font-size: 16px;
+    }
+}
