@@ -2,20 +2,30 @@ Feature: Login
 
     Rule: You need to enter correct account details
 
-        Example: Nothing entered in login form
-            Given I go to the login page
-            When I click on the login button
+        Background:
+            Given I am testing the login features
+
+        @positive @smoke
+        Example: The one where I enter the correct account details
+            Given I fill in the "username" field with "fvantom"
+            And I fill in the "password" field with "test"
+            When I click on the "login button"
+            Then I am logged in successfully
+
+        @negative
+        Example: The one where I enter nothing in the login form
+            When I click on the "login button"
             Then I see the login error "Please enter a username."
 
-        Example: Only username entered
-            Given I go to the login page
-            And I fill in the "username" field with "test"
-            When I click on the login button
+        @negative
+        Example: The one where I only enter the username
+            Given I fill in the "username" field with "test"
+            When I click on the "login button"
             Then I see the login error "Please enter a password."
 
-        Example: Incorrect account details
-            Given I go to the login page
-            And I fill in the "username" field with "test"
-            And I fill in the "password" field with "test"
-            When I click on the login button
+        @negative
+        Example: The one where I enter incorrect account details
+            Given I fill in the "username" field with "test"
+            And I fill in the "password" field with "wrongpassword"
+            When I click on the "login button"
             Then I see the login error "You have entered the wrong username or password."
