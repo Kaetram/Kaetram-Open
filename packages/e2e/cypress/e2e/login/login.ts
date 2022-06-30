@@ -1,23 +1,18 @@
-import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
+import LoginContext from './login.context';
+import { activateWorldContext } from '../worldutils';
 
-When(/^I click on the login button$/, function () {
-    cy.get('#login').click();
+Given('I am testing the login features', function () {
+    activateWorldContext(this, new LoginContext());
 });
 
-Then(/^I see the login error "([^"]*)"$/, function (errorText: string) {
+Then('I see the login error {string}', function (errorText: string) {
     cy.get('#load-character span.validation-error').should('have.text', errorText);
 });
 
-Given(
-    /^I fill in the "([^"]*)" field with "([^"]*)"$/,
-    function (fieldName: string, value: string) {
-        // TODO add this to test context mapping
-        let nameToTargeting = new Map<string, string>([
-                ['username', '#login-name-input'],
-                ['password', '#login-password-input']
-            ]),
-            targeting = nameToTargeting.get(fieldName);
-        expect(targeting).to.exist;
-        cy.get(targeting!).type(value);
-    }
-);
+Then('I am logged in successfully', function () {
+    cy.get('#health-info').should('be.visible');
+    // TODO @Keros, if you remove this line,
+    //  you can crash the server because you log off too soon after logging in.
+    cy.wait(3000);
+});
