@@ -25,7 +25,8 @@ export default class MongoDB {
         username: string,
         password: string,
         private databaseName: string,
-        mongodbSrv: boolean
+        mongodbSrv: boolean,
+        private ssl = true
     ) {
         let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
             authInsert = !!username && !!password ? `${username}:${password}@` : '',
@@ -45,7 +46,8 @@ export default class MongoDB {
         let client = new MongoClient(this.connectionUrl, {
             connectTimeoutMS: 5000,
             serverSelectionTimeoutMS: 5000,
-            wtimeoutMS: 10
+            wtimeoutMS: 10,
+            ssl: this.ssl
         });
 
         client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
