@@ -1,0 +1,39 @@
+{
+    "name": "@kaetram/e2e",
+    "private": true,
+    "version": "0.0.1",
+    "scripts": {
+        "testprefix": "start-server-and-test 'yarn run --silent build:start:all' 'http://localhost:9000|http://0.0.0.0:9001|http://localhost:9002'",
+        "test:run": "yarn run testprefix cy:run",
+        "test:open": "yarn run testprefix cy:open",
+        "build:start:all": "yarn run build:all && yarn run start:all",
+        "build:all": "yarn run build:server && yarn run build:client",
+        "start:all": "concurrently --kill-others 'yarn run start:server' 'yarn run start:client1' 'yarn run start:client2'",
+        "build:client": "yarn workspace @kaetram/client run build",
+        "start:client1": "yarn workspace @kaetram/client run start",
+        "start:client2": "yarn workspace @kaetram/client run start2",
+        "build:server": "yarn workspace @kaetram/server run build",
+        "start:server": "yarn workspace @kaetram/server run start",
+        "cy:run": "npx cypress run --browser chrome",
+        "cy:open": "npx cypress open --browser chrome"
+    },
+    "dependencies": {
+        "@kaetram/common": "workspace:*"
+    },
+    "devDependencies": {
+        "@badeball/cypress-cucumber-preprocessor": "latest",
+        "@cypress/browserify-preprocessor": "latest",
+        "concurrently": "^7.2.2",
+        "cypress": "latest",
+        "start-server-and-test": "^1.14.0",
+        "typescript": "latest"
+    },
+    "cypress-cucumber-preprocessor": {
+        "stepDefinitions": [
+            "[filepath]/**/*.{ts}",
+            "[filepath]/../*.{ts}",
+            "cypress/e2e/extensions/*/common/**/*.{ts}",
+            "cypress/e2e/common/**/*.{ts}"
+        ]
+    }
+}
