@@ -3,37 +3,39 @@
     "private": true,
     "version": "0.0.1",
     "scripts": {
-        "testprefix": "start-server-and-test 'yarn run --silent build:start:all' 'http://localhost:9000|http://0.0.0.0:9001|http://localhost:9002'",
+        "testprefix": "echo 'Make sure the configured mongo is accessible!!' && start-server-and-test 'yarn run --silent build:start:all' 'http://0.0.0.0:3000/api/v1/health|http://localhost:9000|http://0.0.0.0:9001'",
         "test:run": "yarn run testprefix cy:run",
         "test:open": "yarn run testprefix cy:open",
         "build:start:all": "yarn run build:all && yarn run start:all",
         "build:all": "yarn run build:server && yarn run build:client",
-        "start:all": "concurrently --kill-others 'yarn run start:server' 'yarn run start:client1' 'yarn run start:client2'",
-        "build:client": "yarn workspace @kaetram/client run build",
-        "start:client1": "yarn workspace @kaetram/client run start",
-        "start:client2": "yarn workspace @kaetram/client run start2",
-        "build:server": "yarn workspace @kaetram/server run build",
-        "start:server": "yarn workspace @kaetram/server run start",
+        "start:all": "concurrently --kill-others 'yarn run start:server' 'yarn run start:client' 'yarn run start:mongoserver'",
+        "start:mongoserver": "npx ts-node ./database/server.ts",
+        "build:client": "NODE_ENV=locale2e yarn workspace @kaetram/client run build --mode locale2e",
+        "start:client": "NODE_ENV=locale2e yarn workspace @kaetram/client run start",
+        "build:server": "NODE_ENV=locale2e yarn workspace @kaetram/server run build",
+        "start:server": "NODE_ENV=locale2e yarn workspace @kaetram/server run start",
         "cy:run": "npx cypress run --browser chrome",
-        "cy:open": "npx cypress open --browser chrome"
-    },
-    "dependencies": {
-        "@kaetram/common": "workspace:*"
+        "cy:open": "npx cypress open --browser chrome",
+        "mongo:restart": "npx docker compose down && npx docker compose up -d"
     },
     "devDependencies": {
         "@badeball/cypress-cucumber-preprocessor": "latest",
-        "@cypress/browserify-preprocessor": "latest",
+        "@bahmutov/cypress-esbuild-preprocessor": "latest",
         "concurrently": "^7.2.2",
         "cypress": "latest",
+        "express-mongo-rest": "^0.1.3",
         "start-server-and-test": "^1.14.0",
-        "typescript": "latest"
+        "ts-loader": "8.1.0",
+        "ts-node": "^10.8.2",
+        "typescript": "latest",
+        "typescript-object-builder": "^0.3.0"
     },
     "cypress-cucumber-preprocessor": {
         "stepDefinitions": [
-            "[filepath]/**/*.{ts}",
-            "[filepath]/../*.{ts}",
-            "cypress/e2e/extensions/*/common/**/*.{ts}",
-            "cypress/e2e/common/**/*.{ts}"
+            "[filepath]/**/*.{js,ts}",
+            "[filepath]/../*.{js,ts}",
+            "cypress/e2e/extensions/*/common/**/*.{js,ts}",
+            "cypress/e2e/common/**/*.{js,ts}"
         ]
     }
 }

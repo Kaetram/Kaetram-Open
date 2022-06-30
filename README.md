@@ -125,6 +125,26 @@ Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your n
 
 _Keep in mind_, you have to rebuild the client and restart the server every time you change your configuration.
 
+## End to end testing
+
+To run the end to end tests you can simply go to the `packages/e2e` folder and run the yarn command
+
+The tests will make use of the `.env.locale2e` configuration file
+```console
+yarn run mongo:restart
+yarn run test:run
+```
+Alternatively, if you want to have the test environment open interactively so you can select the test you want to run
+in the UI, you can use the command
+```console
+yarn run mongo:restart
+yarn run test:open
+```
+Lastly, if you want to run a single test during development you can start the client and server manually and directly run
+```console
+yarn run cy:open
+```
+
 ## Features
 
 ### Regions
