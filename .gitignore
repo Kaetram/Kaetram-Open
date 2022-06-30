@@ -380,3 +380,7 @@ $RECYCLE.BIN/
 .pnp.*
 
 # https://www.toptal.com/developers/gitignore/api/git,node,yarn,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
+
+# cypress related things
+/packages/e2e/cypress/videos/
+/packages/e2e/cypress/screenshots/
