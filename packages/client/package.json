@@ -3,7 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc --noEmit && vite build",
-        "start": "sirv dist -p 9000 --no-logs"
+        "start": "sirv dist -p 9000 --no-logs",
+        "start2": "sirv dist -p 9002 --no-logs"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
