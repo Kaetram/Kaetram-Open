@@ -471,8 +471,8 @@ export default class InputController {
         let tileScale = this.map.tileSize * this.camera.zoomFactor,
             offsetX = this.mouse.x % tileScale,
             offsetY = this.mouse.y % tileScale,
-            x = (this.mouse.x - offsetX) / tileScale + this.game.camera.gridX,
-            y = (this.mouse.y - offsetY) / tileScale + this.game.camera.gridY;
+            x = Math.round((this.mouse.x - offsetX) / tileScale) + this.game.camera.gridX,
+            y = Math.round((this.mouse.y - offsetY) / tileScale) + this.game.camera.gridY;
 
         return { x, y };
     }

@@ -649,16 +649,25 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number, forced = false): void {
         if (this.dead) return;
 
-        // Teleport the player to the spawn point if the position is invalid.
-        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
-        else super.setPosition(x, y);
-
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
-        if (this.map.isColliding(x, y, this) && this.oldX !== -1 && this.oldY !== -1) {
+        if (this.map.isColliding(x, y, this)) {
+            /**
+             * If the old coordinate values are invalid or they may cause a loop
+             * in the `teleport` function, we instead send the player to the spawn point.
+             */
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            )
+                return this.sendToSpawn();
+
             this.notify(`Noclip detected in your movement, please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
             return;
         }
+
+        // Sets the player's new position.
+        super.setPosition(x, y);
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
@@ -711,6 +720,8 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
+        console.log(`tutorialFinished: ${this.quests.isTutorialFinished()}`);
+
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
@@ -847,7 +858,7 @@ export default class Player extends Character {
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
 
-        this.setPosition(spawnPoint.x, spawnPoint.y);
+        this.teleport(spawnPoint.x, spawnPoint.y, true);
     }
 
     public sendMessage(playerName: string, message: string): void {
