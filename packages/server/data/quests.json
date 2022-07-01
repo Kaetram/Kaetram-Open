@@ -14,8 +14,8 @@
         "completedText": ["Why don't you just walk through that door over there eh?"],
         "pointer": {
           "type": 0,
-          "x": 488,
-          "y": 21
+          "x": 574,
+          "y": 12
         }
       },
 
@@ -23,8 +23,8 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 485,
-          "y": 22
+          "x": 571,
+          "y": 13
         }
       },
 
@@ -50,8 +50,8 @@
         },
         "pointer": {
           "type": 0,
-          "x": 484,
-          "y": 52
+          "x": 570,
+          "y": 43
         }
       },
 
@@ -72,8 +72,8 @@
           "head on over to the cave below!"],
         "pointer": {
           "type": 0,
-          "x": 484,
-          "y": 52
+          "x": 570,
+          "y": 43
         }
       },
 
@@ -81,8 +81,8 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 488,
-          "y": 61
+          "x": 574,
+          "y": 52
         }
       },
 
@@ -98,8 +98,8 @@
         "completedText": ["No more chit chatter, go slice me some crabs!"],
         "pointer": {
           "type": 0,
-          "x": 456,
-          "y": 26
+          "x": 542,
+          "y": 17
         }
       },
 
@@ -120,8 +120,8 @@
         ],
         "pointer": {
           "type": 0,
-          "x": 456,
-          "y": 26
+          "x": 542,
+          "y": 17
         }
       },
 
@@ -129,8 +129,8 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 454,
-          "y": 23
+          "x": 540,
+          "y": 14
         }
       },
 
@@ -153,8 +153,8 @@
         },
         "pointer": {
           "type": 0,
-          "x": 436,
-          "y": 47
+          "x": 522,
+          "y": 38
         }
       },
 
@@ -174,8 +174,8 @@
         "completedText": ["Thank you again adventurer! You're free to exit anytime!"],
         "pointer": {
           "type": 0,
-          "x": 436,
-          "y": 47
+          "x": 522,
+          "y": 38
         }
       },
 
@@ -183,8 +183,8 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 429,
-          "y": 46
+          "x": 515,
+          "y": 37
         }
       }
     }
