@@ -16,7 +16,7 @@
         "start:server": "NODE_ENV=locale2e yarn workspace @kaetram/server run start",
         "cy:run": "npx cypress run --browser chrome",
         "cy:open": "npx cypress open --browser chrome",
-        "mongo:restart": "npx docker compose down && npx docker compose up -d"
+        "mongo:restart": "docker compose down && docker compose up -d"
     },
     "devDependencies": {
         "@badeball/cypress-cucumber-preprocessor": "latest",
