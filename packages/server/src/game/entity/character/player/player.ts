@@ -69,13 +69,11 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map: Map;
-    private regions: Regions;
-    private entities: Entities;
+    public map: Map = this.world.map;
+    private regions: Regions = this.world.map.regions;
+    private entities: Entities = this.world.entities;
 
-    public incoming: Incoming;
-
-    private handler: Handler;
+    public incoming: Incoming = new Incoming(this);
 
     public warp: Warp = new Warp(this);
     public quests: Quests = new Quests(this);
@@ -85,6 +83,8 @@ export default class Player extends Character {
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
+
+    private handler: Handler = new Handler(this);
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -164,13 +164,6 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
-
-        this.map = world.map;
-        this.regions = world.map.regions;
-        this.entities = world.entities;
-
-        this.incoming = new Incoming(this);
-        this.handler = new Handler(this);
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
