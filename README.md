@@ -127,6 +127,10 @@ _Keep in mind_, you have to rebuild the client and restart the server every time
 
 ## End to end testing
 
+As a prerequisite to run the E2E tests you need a mongodb server. You can either change the settings (`.env.locale2e`) to point to
+an existing one or use our docker compose file. To install docker compose you can take a look at
+https://docs.docker.com/compose/install/
+
 To run the end to end tests you can simply go to the `packages/e2e` folder and run the yarn command
 
 The tests will make use of the `.env.locale2e` configuration file
