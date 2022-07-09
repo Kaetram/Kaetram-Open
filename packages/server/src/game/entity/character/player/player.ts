@@ -112,9 +112,9 @@ export default class Player extends Character {
 
     // TODO - REFACTOR THESE ------------
 
-    public webSocketClient;
+    public webSocketClient = this.connection.type === 'WebSocket';
 
-    public abilities;
+    public abilities: Abilities = new Abilities(this);
 
     public team?: string; // TODO
     public userAgent!: string;
@@ -164,11 +164,6 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
-
-        // TODO - Refactor
-        this.abilities = new Abilities(this);
-
-        this.webSocketClient = connection.type === 'WebSocket';
     }
 
     /**
