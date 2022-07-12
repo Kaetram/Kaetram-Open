@@ -24,7 +24,7 @@
         "pointer": {
           "type": 0,
           "x": 571,
-          "y": 13
+          "y": 14
         }
       },
 
@@ -82,7 +82,7 @@
         "pointer": {
           "type": 0,
           "x": 574,
-          "y": 52
+          "y": 53
         }
       },
 
@@ -130,7 +130,7 @@
         "pointer": {
           "type": 0,
           "x": 540,
-          "y": 14
+          "y": 15
         }
       },
 
@@ -161,7 +161,7 @@
       "11": {
         "task": "kill",
         "mob": ["rat"],
-        "mobCountRequirement": 4
+        "mobCountRequirement": 5
       },
 
       "12": {
@@ -184,7 +184,7 @@
         "pointer": {
           "type": 0,
           "x": 515,
-          "y": 37
+          "y": 38
         }
       }
     }
