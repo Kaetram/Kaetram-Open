@@ -21,4 +21,6 @@ export default abstract class WorldContext {
     }
 
     abstract injectDefaultData(): void;
+
+    abstract before(): void;
 }
