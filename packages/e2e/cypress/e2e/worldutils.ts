@@ -14,4 +14,5 @@ export function activateWorldContext<WC extends WorldContext = WorldContext>(
     world.worldContext = context;
     cy.visit('/');
     context.injectDefaultData();
+    context.before();
 }

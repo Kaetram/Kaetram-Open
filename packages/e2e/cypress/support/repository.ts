@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
 
 import { PlayerInfo } from '../entities/playerinfo';
+import { PlayerInventory } from '../entities/playerinventory';
 
-type CollectionName = 'player_info' | 'player_equipment';
+type CollectionName = 'player_info' | 'player_inventory';
 
 /**
  * Sample usage:
@@ -40,12 +41,25 @@ Cypress.Commands.add('getPlayerInfo', (username: string) => {
         });
 });
 
+/**
+ * Sample usage:
+ *  cy.createPlayerInventory(playerInventory);
+ */
+Cypress.Commands.add('createPlayerInventory', (playerInventory: PlayerInventory) => {
+    return cy
+        .request('POST', `http://localhost:3000/api/v1/player_inventory`, playerInventory)
+        .then(() => {
+            return true;
+        });
+});
+
 declare global {
     namespace Cypress {
         interface Chainable {
             resetCollection(collection: CollectionName): Chainable<boolean>;
             createPlayerInfo(playerInfo: PlayerInfo): Chainable<boolean>;
             getPlayerInfo(username: string): Chainable<PlayerInfo>;
+            createPlayerInventory(playerInventory: PlayerInventory): Chainable<boolean>;
         }
     }
 }
