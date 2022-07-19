@@ -10,7 +10,7 @@ jobs:
 
         steps:
             - name: Start MongoDB
-              uses: supercharge/mongodb-github-action@1
+              uses: supercharge/mongodb-github-action@1.7.0
 
             - name: Cypress run
               uses: cypress-io/github-action@v4
