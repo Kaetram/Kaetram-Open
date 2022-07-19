@@ -10,9 +10,9 @@ jobs:
 
         steps:
             - name: Start MongoDB
-                uses: supercharge/mongodb-github-action@1
+              uses: supercharge/mongodb-github-action@1
 
             - name: Cypress run
-                uses: cypress-io/github-action@v4
-                with:
-                    command: yarn workspace @kaetram/e2e test:run
+              uses: cypress-io/github-action@v4
+              with:
+                  command: yarn workspace @kaetram/e2e test:run
