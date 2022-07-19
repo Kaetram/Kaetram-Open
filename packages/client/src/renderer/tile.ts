@@ -1,9 +1,6 @@
 import { ProcessedAnimation } from '@kaetram/common/types/map';
 
 export default class Tile {
-    public x = -1;
-    public y = -1;
-
     public animationIndex = 0;
     private lastTime = 0;
 
@@ -31,15 +28,5 @@ export default class Tile {
                 this.animationIndex = 0;
             else this.animationIndex++;
         }
-    }
-
-    /**
-     * Sets the tile's x and y position in the grid.
-     * @param position Position object containing the x and y position.
-     */
-
-    public setPosition(position: Position): void {
-        this.x = position.x;
-        this.y = position.y;
     }
 }
