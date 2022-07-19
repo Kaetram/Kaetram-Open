@@ -9,6 +9,9 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Checkout on ${{ runner.os }}
+              uses: actions/checkout@v3
+
             - name: Start MongoDB
               uses: supercharge/mongodb-github-action@1.7.0
 
