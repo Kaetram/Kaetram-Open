@@ -341,15 +341,16 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            // Skip animated tiles unless we disable animations, then just draw the tile once.
-            if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
-                this.drawTile(context, tile - 1, index, flips);
-
-            // Advance the timing of the animated tile based on the game time and draw it.
-            // Only draw animated tiles if we are animating them.
+            /**
+             * Draws the animated tiles first so they display behind potential
+             * high tiles. We check if the current index contains an animated tile
+             * and if we are currently animating tiles before proceeding.
+             */
             if (index in this.animatedTiles && this.animateTiles) {
+                // Advance the timing of the animated tiles with the current epoch.
                 this.animatedTiles[index].animate(this.game.time);
 
+                // Prevent double draws when drawing flipped animated tiles.
                 if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
 
                 this.drawTile(
@@ -359,6 +360,10 @@ export default class Renderer {
                     flips
                 );
             }
+
+            // Skip animated tiles unless we disable animations, then just draw the tile once.
+            if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
+                this.drawTile(context, tile - 1, index, flips);
         });
 
         this.restoreDrawing();
