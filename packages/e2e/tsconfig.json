@@ -1,14 +1,8 @@
 {
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "baseUrl": "./",
-        "target": "es6",
-        "lib": ["es6", "dom"],
-        "types": ["cypress", "node"],
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "preserveSymlinks": true,
-        "resolveJsonModule": true
+        "module": "commonjs",
+        "types": ["@types/node", "@kaetram/common", "cypress"]
     },
-    "exclude": ["dist", "node_modules", "cypress"],
-    "include": ["**/*.ts"]
+    "include": ["types/index.d.ts"]
 }
