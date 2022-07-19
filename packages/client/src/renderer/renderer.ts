@@ -1060,8 +1060,8 @@ export default class Renderer {
             let tempX = dx;
 
             // Iterate through every type of flip in our array.
-            for (let index of flips)
-                switch (index) {
+            for (let index = 0; index < flips.length; index++)
+                switch (flips[index]) {
                     case TileFlip.Horizontal:
                         // Flip the context2d horizontally
                         dx = -dx - cell.width;
@@ -1083,8 +1083,17 @@ export default class Renderer {
 
                         (dx = dy), (dy = -tempX);
 
-                        // Flip horizontall to arrange tiles after transposing.
-                        flips.push(TileFlip.Horizontal);
+                        /**
+                         * Explanation: After we perform a diagonal permutation (that is, we rotate the tile
+                         * 90 degrees to the right, the horizontal and vertical flags become inverted). That is,
+                         * performing a horizontal flip after rotating performs a vertical flip when observed
+                         * in the rendering context. The following ensures that a horizontal flip is performed only
+                         * when the next available flip is horizontal (essentially performing two horizontals in a row.)
+                         */
+
+                        if (flips[index + 1] === TileFlip.Horizontal)
+                            flips.push(TileFlip.Horizontal);
+                        else flips.push(TileFlip.Vertical);
 
                         break;
                 }
@@ -1426,8 +1435,8 @@ export default class Renderer {
         // Return empty if tile doesn't contain flip flags.
         if (!this.isFlipped(tile)) return flips;
 
-        if (tile.d) flips.push(TileFlip.Diagonal);
         if (tile.v) flips.push(TileFlip.Vertical);
+        if (tile.d) flips.push(TileFlip.Diagonal);
         if (tile.h) flips.push(TileFlip.Horizontal);
 
         return flips;
