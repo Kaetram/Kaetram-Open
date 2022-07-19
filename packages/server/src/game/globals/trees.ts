@@ -98,7 +98,7 @@ export default class Trees {
         if (intersection.length === 0) return false;
 
         // Add the entire tile data onto the tree.
-        tree.data[index] = this.map.data[index];
+        tree.data[index] = this.map.parseTileData(this.map.data[index]);
 
         // Remove all tiles from the map data.
         this.map.data[index] = -1;
