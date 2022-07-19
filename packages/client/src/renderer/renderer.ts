@@ -350,6 +350,8 @@ export default class Renderer {
             if (index in this.animatedTiles && this.animateTiles) {
                 this.animatedTiles[index].animate(this.game.time);
 
+                if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
+
                 this.drawTile(
                     context,
                     this.animatedTiles[index].id,
@@ -974,7 +976,7 @@ export default class Renderer {
     private drawTile(
         context: CanvasRenderingContext2D,
         tileId: number,
-        cellId: number,
+        index: number,
         flips: number[] = []
     ): void {
         if (tileId < 0) return;
@@ -1010,15 +1012,15 @@ export default class Renderer {
          * but it is a necessary optimization.
          */
 
-        if (!(cellId in this.cells) || flips.length > 0)
-            this.cells[cellId] = {
-                dx: this.getX(cellId + 1, this.map.width) * this.actualTileSize,
-                dy: Math.floor(cellId / this.map.width) * this.actualTileSize,
+        if (!(index in this.cells) || flips.length > 0)
+            this.cells[index] = {
+                dx: this.getX(index + 1, this.map.width) * this.actualTileSize,
+                dy: Math.floor(index / this.map.width) * this.actualTileSize,
                 width: this.actualTileSize,
                 height: this.actualTileSize
             };
 
-        this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId], flips);
+        this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
     }
 
     /**
@@ -1039,8 +1041,6 @@ export default class Renderer {
         let dx = 0,
             dy = 0,
             isFlipped = flips.length > 0;
-
-        if (!context) return;
 
         /**
          * A tile rotation or flip is a combination of horizontal
@@ -1154,7 +1154,9 @@ export default class Renderer {
         if (!this.animateTiles) return;
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            if (this.isFlipped(tile)) tile = tile.tileId;
+            let isFlipped = this.isFlipped(tile);
+
+            if (isFlipped) tile = tile.tileId;
 
             /**
              * We don't want to reinitialize animated tiles that already exist
@@ -1169,7 +1171,12 @@ export default class Renderer {
              */
 
             if (!(index in this.animatedTiles))
-                this.animatedTiles[index] = new Tile(tile, index, this.map.getTileAnimation(tile));
+                this.animatedTiles[index] = new Tile(
+                    tile,
+                    index,
+                    this.map.getTileAnimation(tile),
+                    isFlipped
+                );
         }, 2);
     }
 
