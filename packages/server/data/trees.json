@@ -75,5 +75,12 @@
         "experience": 55,
         "difficulty": 65,
         "item": "logs"
+    },
+
+    "pine": {
+        "levelRequirement": 20,
+        "experience": 75,
+        "difficulty": 80,
+        "item": "logs"
     }
 }
