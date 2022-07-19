@@ -292,8 +292,6 @@ export default class Renderer {
 
         this.draw();
 
-        this.drawAnimatedTiles();
-
         this.drawDebugging();
 
         this.drawOverlays();
@@ -320,9 +318,6 @@ export default class Renderer {
      */
 
     private draw(): void {
-        // Skip rendering frame if it has already been drawn.
-        if (this.hasRenderedFrame()) return;
-
         this.clearDrawing();
         this.saveDrawing();
 
@@ -330,6 +325,11 @@ export default class Renderer {
         this.updateDrawingView();
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            let flips: number[] = this.getFlipped(tile);
+
+            // Extract the tileId from the animated region tile.
+            if (flips.length > 0) tile = tile.tileId;
+
             // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile),
                 context = isHighTile ? this.foreContext : this.backContext;
@@ -341,57 +341,25 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            let flips: number[] = this.getFlipped(tile);
-
-            // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = tile.tileId;
-
             // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, flips);
+                this.drawTile(context, tile - 1, index, flips);
+
+            // Advance the timing of the animated tile based on the game time and draw it.
+            // Only draw animated tiles if we are animating them.
+            if (index in this.animatedTiles && this.animateTiles) {
+                this.animatedTiles[index].animate(this.game.time);
+
+                this.drawTile(
+                    context,
+                    this.animatedTiles[index].id,
+                    this.animatedTiles[index].index,
+                    flips
+                );
+            }
         });
 
         this.restoreDrawing();
-
-        this.saveFrame();
-    }
-
-    /**
-     * Draws animated tiles. This function is called for each
-     * animated tile that is currently visible and renders them
-     * just a little bit outside the camera view.
-     *
-     * We are using the entities context to draw onto since the
-     * background and foreground contexts do not necessarily get
-     * refreshed every frame in order to save resources. The entities
-     * context however, gets refreshed every frame. This is not
-     * the cleanest way of doing it, but creating another canvas is
-     * not really worth it.
-     */
-
-    private drawAnimatedTiles(): void {
-        // Skip if we disable tile animation.
-        if (!this.animateTiles) return;
-
-        this.entitiesContext.save();
-        this.setCameraView(this.entitiesContext);
-
-        this.forEachAnimatedTile((tile) => {
-            /**
-             * Draw tiles only visible within the camera boundaries
-             * but with an offset of 3 tiles horizontally and 2 tiles
-             * vertically.
-             */
-            if (!this.camera.isVisible(tile.x, tile.y, 4, 2)) return;
-
-            // Update the tile's to the current game time.
-            tile.animate(this.game.time);
-
-            // Draw the tile with the current id and index.
-            this.drawTile(this.entitiesContext, tile.id, tile.index);
-        });
-
-        this.entitiesContext.restore();
     }
 
     /**
@@ -1176,27 +1144,23 @@ export default class Renderer {
     public updateAnimatedTiles(): void {
         if (!this.animateTiles) return;
 
-        this.forEachVisibleTile((id, index) => {
+        this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            if (this.isFlipped(tile)) tile = tile.tileId;
+
             /**
              * We don't want to reinitialize animated tiles that already exist
              * and are within the visible camera proportions. This way we can parse
              * it every time the tile moves slightly.
              */
 
-            if (!this.map.isAnimatedTile(id)) return;
+            if (!this.map.isAnimatedTile(tile)) return;
 
             /**
              * Push the pre-existing tiles.
              */
 
-            if (!(index in this.animatedTiles)) {
-                let tile = new Tile(id, index, this.map.getTileAnimation(id)),
-                    position = this.map.indexToCoord(tile.index);
-
-                tile.setPosition(position);
-
-                this.animatedTiles[index] = tile;
-            }
+            if (!(index in this.animatedTiles))
+                this.animatedTiles[index] = new Tile(tile, index, this.map.getTileAnimation(tile));
         }, 2);
     }
 
