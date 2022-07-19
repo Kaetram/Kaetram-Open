@@ -18,7 +18,8 @@
         "lint:style": "stylelint packages/**/*.scss --ignore-path .gitignore",
         "lint:fix": "yarn lint:js --fix && yarn lint:style --fix",
         "lint": "yarn lint:js && yarn lint:style",
-        "test": "yarn packages test",
+        "test": "yarn test:e2e",
+        "test:e2e": "yarn workspace @kaetram/e2e cy:run",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
     },
