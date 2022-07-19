@@ -17,6 +17,8 @@ export default class InventoryContext extends LoggedInContext {
     }
 
     injectDefaultData(): void {
+        super.injectDefaultData();
+
         cy.resetCollection('player_inventory');
 
         let playerInventory = ObjectBuilder.basedOn<PlayerInventory>(defaultPlayerInventory)
