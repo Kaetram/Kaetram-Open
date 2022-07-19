@@ -7,7 +7,8 @@ export default class Tile {
     public constructor(
         public id: number, // The tileId
         public index: number, // Index position of the tile.
-        public animationInfo: ProcessedAnimation[]
+        public animationInfo: ProcessedAnimation[],
+        public isFlipped = false
     ) {}
 
     /**
