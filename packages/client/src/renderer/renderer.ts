@@ -341,8 +341,6 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            console.log(tile);
-
             let flips: number[] = this.getFlipped(tile);
 
             // Extract the tileId from the animated region tile.
@@ -384,7 +382,7 @@ export default class Renderer {
              * but with an offset of 3 tiles horizontally and 2 tiles
              * vertically.
              */
-            if (!this.camera.isVisible(tile.x, tile.y, 3, 2)) return;
+            if (!this.camera.isVisible(tile.x, tile.y, 4, 2)) return;
 
             // Update the tile's to the current game time.
             tile.animate(this.game.time);
