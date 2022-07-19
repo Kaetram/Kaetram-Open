@@ -381,4 +381,4 @@ $RECYCLE.BIN/
 
 # https://www.toptal.com/developers/gitignore/api/git,node,yarn,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
 
-./tools/map/data/map.png
+tools/map/data/map.png
