@@ -328,8 +328,18 @@ export default class Map {
     public getTileData(index: number): RegionTile {
         let data = this.data[index];
 
-        if (!data) return [];
+        return data ? this.parseTileData(data) : [];
+    }
 
+    /**
+     * Parses through the specified data at a given index and extracts
+     * the flipped tiles from it. Returns a formatted RegionTile ready for
+     * the client.
+     * @param data Raw data contained at an index.
+     * @returns A RegionTile object containing index tile data information.
+     */
+
+    public parseTileData(data: number | number[]): RegionTile {
         let isArray = Array.isArray(data),
             parsedData: RegionTile = isArray ? [] : 0;
 
