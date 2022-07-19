@@ -1201,10 +1201,10 @@ export default class Renderer {
 
         this.entitiesContext.lineWidth = 2 * this.camera.zoomFactor;
 
-        this.entitiesContext.translate(x + 2, y + 2);
+        this.entitiesContext.translate(x + 4, y + 2);
 
         this.entitiesContext.strokeStyle = colour;
-        this.entitiesContext.strokeRect(0, 0, this.actualTileSize - 4, this.actualTileSize - 4);
+        this.entitiesContext.strokeRect(0, 0, this.actualTileSize - 8, this.actualTileSize - 8);
 
         this.entitiesContext.restore();
     }
