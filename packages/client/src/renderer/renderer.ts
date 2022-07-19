@@ -32,7 +32,6 @@ interface RendererCell {
     dy: number;
     width: number;
     height: number;
-    flips: number[];
 }
 
 interface Bounds {
@@ -341,6 +340,8 @@ export default class Renderer {
 
                 context = isLightTile ? this.overlayContext : context;
             }
+
+            console.log(tile);
 
             let flips: number[] = this.getFlipped(tile);
 
@@ -1048,11 +1049,10 @@ export default class Renderer {
                 dx: this.getX(cellId + 1, this.map.width) * this.actualTileSize,
                 dy: Math.floor(cellId / this.map.width) * this.actualTileSize,
                 width: this.actualTileSize,
-                height: this.actualTileSize,
-                flips
+                height: this.actualTileSize
             };
 
-        this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId]);
+        this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId], flips);
     }
 
     /**
@@ -1067,11 +1067,12 @@ export default class Renderer {
         context: CanvasRenderingContext2D,
         image: CanvasImageSource,
         tile: RendererTile,
-        cell: RendererCell
+        cell: RendererCell,
+        flips: number[] = []
     ): void {
         let dx = 0,
             dy = 0,
-            isFlipped = cell.flips.length > 0;
+            isFlipped = flips.length > 0;
 
         if (!context) return;
 
@@ -1093,7 +1094,7 @@ export default class Renderer {
             let tempX = dx;
 
             // Iterate through every type of flip in our array.
-            for (let index of cell.flips)
+            for (let index of flips)
                 switch (index) {
                     case TileFlip.Horizontal:
                         // Flip the context2d horizontally
@@ -1117,7 +1118,7 @@ export default class Renderer {
                         (dx = dy), (dy = -tempX);
 
                         // Flip horizontall to arrange tiles after transposing.
-                        cell.flips.push(TileFlip.Horizontal);
+                        flips.push(TileFlip.Horizontal);
 
                         break;
                 }
