@@ -37,6 +37,7 @@ import type {
     GuildCallback,
     PointerCallback,
     PVPCallback,
+    PoisonCallback,
     StoreCallback,
     OverlayCallback,
     CameraCallback,
@@ -81,6 +82,7 @@ export default class Messages {
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
+    private poisonCallback?: PoisonCallback;
     private storeCallback?: StoreCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
@@ -132,6 +134,7 @@ export default class Messages {
         messages[Packets.Guild] = () => this.guildCallback;
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
+        messages[Packets.Poison] = () => this.poisonCallback;
         messages[Packets.Store] = () => this.storeCallback;
         messages[Packets.Map] = () => this.mapCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
@@ -355,6 +358,10 @@ export default class Messages {
 
     public onPVP(callback: PVPCallback): void {
         this.pvpCallback = callback;
+    }
+
+    public onPoison(callback: PoisonCallback): voi {
+        this.poisonCallback = callback;
     }
 
     public onStore(callback: StoreCallback): void {

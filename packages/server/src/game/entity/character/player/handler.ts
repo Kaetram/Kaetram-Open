@@ -3,7 +3,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import {
-    Combat,
     Container,
     Quest,
     Achievement,
@@ -12,7 +11,8 @@ import {
     Death,
     Despawn,
     Skill,
-    Overlay
+    Overlay,
+    Poison as PoisonPacket
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -428,10 +428,12 @@ export default class Handler {
      * Callback for when the player's poison status updates.
      */
 
-    private handlePoison(poison: Poison): void {
+    private handlePoison(type = -1): void {
         // Notify the player when the poison status changes.
-        if (poison) this.player.notify('You have been poisoned.');
+        if (type !== -1) this.player.notify('You have been poisoned.');
         else this.player.notify('The poison has worn off.');
+
+        this.player.send(new PoisonPacket(type));
 
         log.debug(`Player ${this.player.instance} updated poison status.`);
     }
@@ -456,7 +458,7 @@ export default class Handler {
      */
 
     private handleUpdate(): void {
-        if (this.isTickInterval(2)) this.detectAggro();
+        if (this.isTickInterval(4)) this.detectAggro();
 
         this.updateTicks++;
     }
