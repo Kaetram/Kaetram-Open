@@ -10,6 +10,11 @@ import { Modules } from '@kaetram/common/network';
 
 import type { Collection } from 'mongodb';
 
+export interface PoisonInfo {
+    type: number; // Type of poison.
+    start: number; // When the poison started.
+}
+
 export interface PlayerInfo {
     username: string;
     password: string;
@@ -19,7 +24,7 @@ export interface PlayerInfo {
     userAgent: string;
     experience: number;
     rights: number;
-    poison: string;
+    poison: PoisonInfo;
     hitPoints: number;
     mana: number;
     pvpKills: number;
@@ -229,7 +234,10 @@ export default class Creator {
             userAgent: player.userAgent,
             experience: player.experience,
             rights: player.rights,
-            poison: player.poison,
+            poison: {
+                type: player.poison ? player.poison.type : -1,
+                start: player.poison ? player.poison.start : -1
+            },
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
             pvpKills: player.pvpKills,

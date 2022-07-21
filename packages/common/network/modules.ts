@@ -307,6 +307,27 @@ export let NameColours = {
     [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
+export let PoisonInfo = {
+    [PoisonTypes.Venom]: {
+        name: 'Venom',
+        damage: 2,
+        duration: 30,
+        rate: 2 // every second
+    },
+    [PoisonTypes.Plague]: {
+        name: 'Plague',
+        damage: 5,
+        duration: 60,
+        rate: 1
+    },
+    [PoisonTypes.Persistent]: {
+        name: 'Persistent',
+        damage: 2,
+        duration: -1,
+        rate: 1
+    }
+};
+
 export enum NPCRole {
     Banker,
     Enchanter,

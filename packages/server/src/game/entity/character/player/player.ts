@@ -194,14 +194,14 @@ export default class Player extends Character {
         this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
+        this.userAgent = data.userAgent;
 
+        this.setPoison(data.poison.type, data.poison.start);
         this.warp.setLastWarp(data.lastWarp);
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
         this.prevExperience = Formulas.prevExp(this.experience);
-
-        this.userAgent = data.userAgent;
 
         // TODO - Do not calculate max points on every login, just store it instead.
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
