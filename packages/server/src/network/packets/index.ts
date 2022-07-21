@@ -26,6 +26,7 @@ export { default as Audio } from './audio';
 export { default as NPC } from './npc';
 export { default as Enchant } from './enchant';
 export { default as Pointer } from './pointer';
+export { default as Poison } from './poison';
 export { default as Store } from './store';
 export { default as Overlay } from './overlay';
 export { default as Camera } from './camera';
