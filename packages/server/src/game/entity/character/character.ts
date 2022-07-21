@@ -7,15 +7,17 @@ import World from '../../world';
 import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
 import Formulas from '../../../info/formulas';
+import Poison from './poison';
 
-import { Movement, Points } from '../../../network/packets';
+import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
+import Hit from './combat/hit';
 
 type StunCallback = (stun: boolean) => void;
+type PoisonCallback = (poison: Poison) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
-type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
 export default abstract class Character extends Entity {
@@ -29,7 +31,7 @@ export default abstract class Character extends Entity {
     public healingRate = Modules.Constants.HEAL_RATE;
 
     /* States */
-    public poison = '';
+    public poison?: Poison | undefined;
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
@@ -52,14 +54,15 @@ export default abstract class Character extends Entity {
     public lastMovement!: number;
     public lastAttacker?: Character | undefined;
 
-    public stunTimeout?: NodeJS.Timeout;
-    private healingInterval?: NodeJS.Timeout;
+    public stunTimeout?: NodeJS.Timeout | undefined;
+    private healingInterval?: NodeJS.Timeout | undefined;
+    private poisonInterval?: NodeJS.Timeout | undefined;
 
-    private stunCallback?: StunCallback;
-    private poisonCallback?: PoisonCallback;
+    private stunCallback?: StunCallback | undefined;
+    private poisonCallback?: PoisonCallback | undefined;
 
-    public hitCallback?: HitCallback;
-    public subAoECallback?: SubAoECallback;
+    public hitCallback?: HitCallback | undefined;
+    public subAoECallback?: SubAoECallback | undefined;
     public deathCallback?(attacker?: Character): void;
 
     protected constructor(
@@ -110,6 +113,34 @@ export default abstract class Character extends Entity {
                 maxHitPoints: this.hitPoints.getMaxHitPoints()
             })
         });
+    }
+
+    /**
+     * Function when we want to apply damage to the character.
+     * We check if the poison status has expired first, if it has
+     * not, then we apply the poison damage.
+     */
+
+    private handlePoison(): void {
+        if (!this.poison) return;
+
+        // Remove the poison if it has expired.
+        if (this.poison.expired()) return this.setPoison();
+
+        // Create a hit object for poison damage and serialize it.
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, false, true).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(this.poison.damage);
     }
 
     /**
@@ -237,14 +268,22 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Sets the poison status and makes a callback.
-     * @param poison The new poison status we are setting.
+     * Sets the poison status and makes a callback. If
+     * no type is specified, we remove the poison.
+     * @param type The type of poison we are adding.
+     * @param start Optional paramater for setting when poision starts (for loading from database).
      */
 
-    public setPoison(poison: string): void {
-        this.poison = poison;
+    public setPoison(type = -1, start?: number): void {
+        let remove = type === -1;
 
-        this.poisonCallback?.(poison);
+        // Set or remove the poison status.
+        this.poison = remove ? undefined : new Poison(type, start);
+
+        if (remove) {
+            clearInterval(this.poisonInterval!);
+            this.poisonInterval = undefined;
+        } else this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
     }
 
     /**
@@ -397,15 +436,6 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Callback for when the character is being hit.
-     * @param callback Contains the damage and an optional parameter for attacker.
-     */
-
-    public onHit(callback: HitCallback): void {
-        this.hitCallback = callback;
-    }
-
-    /**
      * Callback for when the stun status changes.
      * @param callback Contains the boolean value of the stun status.
      */
@@ -415,12 +445,21 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Callback for when the poison status changes.
-     * @param callback Contains the boolean value of the poison status.
+     * Callback for when the status of the poison changes.
+     * @param callback Contains information about the poison.
      */
 
     public onPoison(callback: PoisonCallback): void {
         this.poisonCallback = callback;
+    }
+
+    /**
+     * Callback for when the character is being hit.
+     * @param callback Contains the damage and an optional parameter for attacker.
+     */
+
+    public onHit(callback: HitCallback): void {
+        this.hitCallback = callback;
     }
 
     /**
