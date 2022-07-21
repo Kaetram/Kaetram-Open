@@ -136,6 +136,7 @@ export default class Mob extends Character {
 
         this.respawn();
 
+        this.setPoison();
         this.setPosition(this.spawnX, this.spawnY);
     }
 

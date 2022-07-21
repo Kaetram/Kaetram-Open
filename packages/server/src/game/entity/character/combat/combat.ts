@@ -119,6 +119,13 @@ export default class Combat {
         this.character.target?.hit(hit.getDamage(), this.character);
     }
 
+    /**
+     * A ranged attack creates a projectile and relays that information to
+     * the nearby regions. The projectile collision is what handles
+     * the damage
+     * @param hit Information about the projectile.
+     */
+
     private sendRangedAttack(hit: Hit): void {
         let projectile = this.character.world.entities.spawnProjectile(
             this.character,
