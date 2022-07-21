@@ -26,6 +26,8 @@ type ExperienceCallback = (
     nextExperience: number
 ) => void;
 
+type PoisonCallback = (status: boolean) => void;
+
 export default class Player extends Character {
     public rights = 0;
     public wanted = false;
@@ -70,6 +72,7 @@ export default class Player extends Character {
 
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
+    private poisonCallback?: PoisonCallback;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -291,13 +294,9 @@ export default class Player extends Character {
      */
 
     public setPoison(poison: boolean): void {
-        if (this.poison === poison) return;
-
         this.poison = poison;
 
-        if (this.poison)
-            $('#health').css('background', '-webkit-linear-gradient(right, #079231, #012b0c)');
-        else $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
+        this.poisonCallback?.(poison);
     }
 
     /**
@@ -354,6 +353,15 @@ export default class Player extends Character {
 
     public onExperience(callback: ExperienceCallback): void {
         this.experienceCallback = callback;
+    }
+
+    /**
+     * Callback for when the poison status undergoes a change.
+     * @param callback Contains information about the current poison status.
+     */
+
+    public onPoison(callback: PoisonCallback): void {
+        this.poisonCallback = callback;
     }
 
     /**

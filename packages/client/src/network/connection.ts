@@ -118,6 +118,7 @@ export default class Connection {
         this.messages.onGuild(this.handleGuild.bind(this));
         this.messages.onPointer(this.handlePointer.bind(this));
         this.messages.onPVP(this.handlePVP.bind(this));
+        this.messages.onPoison(this.handlePoison.bind(this));
         this.messages.onStore(this.handleStore.bind(this));
         this.messages.onOverlay(this.handleOverlay.bind(this));
         this.messages.onCamera(this.handleCamera.bind(this));
@@ -924,6 +925,16 @@ export default class Connection {
         let entity = this.entities.get<Player>(instance);
 
         if (entity) entity.pvp = state;
+    }
+
+    /**
+     * Updates the visual poison status of the player (changes the colour of the health bar).
+     * @param type Type of poison we are applying, if -1 then we remove poison status.
+     */
+
+    private handlePoison(type: number): void {
+        console.log('poison packet dude');
+        this.game.player.setPoison(type !== -1);
     }
 
     /**
