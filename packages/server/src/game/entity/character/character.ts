@@ -16,7 +16,7 @@ import { EntityData } from '@kaetram/common/types/entity';
 import Hit from './combat/hit';
 
 type StunCallback = (stun: boolean) => void;
-type PoisonCallback = (poison: Poison) => void;
+type PoisonCallback = (type: number) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
@@ -284,6 +284,8 @@ export default abstract class Character extends Entity {
             clearInterval(this.poisonInterval!);
             this.poisonInterval = undefined;
         } else this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
+
+        this.poisonCallback?.(type);
     }
 
     /**
