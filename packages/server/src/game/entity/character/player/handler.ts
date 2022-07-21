@@ -3,6 +3,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import {
+    Combat,
     Container,
     Quest,
     Achievement,
@@ -28,6 +29,8 @@ import type Player from './player';
 
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import Poison from '../poison';
+import Hit from '../combat/hit';
 
 export default class Handler {
     private world: World;
@@ -124,6 +127,9 @@ export default class Handler {
     private handleDeath(): void {
         this.player.dead = true;
 
+        // Remove the poison status.
+        this.player.setPoison();
+
         this.player.skills.stop();
         this.player.combat.stop();
 
@@ -141,7 +147,7 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
+        if (attacker && !this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
     }
 
     /**
@@ -422,12 +428,9 @@ export default class Handler {
      * Callback for when the player's poison status updates.
      */
 
-    // TODO - Set poison type.
-    private handlePoison(info: any): void {
-        this.player.sync();
-
+    private handlePoison(poison: Poison): void {
         // Notify the player when the poison status changes.
-        if (info) this.player.notify('You have been poisoned.');
+        if (poison) this.player.notify('You have been poisoned.');
         else this.player.notify('The poison has worn off.');
 
         log.debug(`Player ${this.player.instance} updated poison status.`);
@@ -453,9 +456,7 @@ export default class Handler {
      */
 
     private handleUpdate(): void {
-        this.detectAggro();
-
-        if (this.isTickInterval(3)) this.parsePoison();
+        if (this.isTickInterval(2)) this.detectAggro();
 
         this.updateTicks++;
     }
@@ -553,26 +554,5 @@ export default class Handler {
     private clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
-    }
-
-    private parsePoison(): void {
-        if (!this.player.poison) return;
-
-        let info = this.player.poison.split(':'),
-            date = parseInt(info[0]),
-            time = parseInt(info[1]),
-            damage = parseInt(info[2]),
-            timeDiff = Date.now() - date;
-
-        if (timeDiff > time) {
-            this.player.setPoison('');
-            return;
-        }
-
-        // let hit = new Hit(Modules.Hits.Poison, damage);
-
-        // hit.poison = true;
-
-        // this.player.combat.hit(this.player, this.player, hit.getData());
     }
 }
