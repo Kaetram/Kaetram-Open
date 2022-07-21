@@ -9,6 +9,8 @@ import Achievement from '../game/entity/character/player/achievement/achievement
 import type Player from '../game/entity/character/player/player';
 
 import { Command, Pointer, Network, Notification } from '../network/packets';
+import Region from '../game/map/region';
+import Entity from '../game/entity/entity';
 
 export default class Commands {
     private world;
@@ -143,7 +145,8 @@ export default class Commands {
             questKey: string,
             quest: Quest,
             achievementKey: string,
-            achievement: Achievement;
+            achievement: Achievement,
+            region: Region;
 
         switch (command) {
             case 'spawn': {
@@ -420,6 +423,58 @@ export default class Commands {
 
                 if (achievement) achievement.finish();
                 else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
+
+                break;
+
+            case 'poison':
+                instance = blocks.shift()!;
+
+                if (instance) {
+                    log.debug('Poisoning entity...');
+
+                    entity = this.entities.get(instance) as Character;
+
+                    if (!entity)
+                        return this.player.notify(
+                            `Could not find entity with instance: ${instance}`
+                        );
+
+                    if (!entity.isMob() && !entity.isPlayer())
+                        this.player.notify('That entity cannot be poisoned.');
+
+                    if (entity.poison) {
+                        entity.setPoison();
+                        this.player.notify('Entity has been cured of poison.');
+                    } else {
+                        entity.setPoison(0);
+                        this.player.notify('Entity has been poisoned.');
+                    }
+                } else {
+                    log.debug('Poisoning player.');
+
+                    if (this.player.poison) {
+                        this.player.setPoison();
+                        this.player.notify('Your poison has been cured!');
+                    } else {
+                        this.player.setPoison(0); // 0 === Modules.PoisonType.Venom
+                        this.player.notify('You have been poisoned!');
+                    }
+                }
+
+                break;
+
+            case 'poisonarea':
+                region = this.world.map.regions.get(this.player.region);
+
+                if (!region) this.player.notify('Bro something went badly wrong wtf.');
+
+                this.player.notify(`All entities in the region will be nuked with poison.`);
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!entity.isMob() && !entity.isPlayer()) return;
+
+                    (entity as Character).setPoison(0);
+                });
 
                 break;
         }
