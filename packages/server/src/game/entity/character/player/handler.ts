@@ -19,6 +19,7 @@ import Slot from './containers/slot';
 import Equipment from './equipment/equipment';
 import Character from '../character';
 import Light from '../../../globals/impl/light';
+import Entity from '../../entity';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
@@ -179,6 +180,7 @@ export default class Handler {
     private handleMovement(x: number, y: number): void {
         this.map.regions.handle(this.player);
 
+        this.detectAggro();
         this.detectAreas(x, y);
 
         this.player.storeOpen = '';
@@ -513,6 +515,24 @@ export default class Handler {
     }
 
     /**
+     * Whenever a player's position updates, we check if the nearby entities
+     * can aggro the player. See `canAggro` in `Mob` for conditions under
+     * which a player will be aggroed by a free-roaming mob.
+     */
+
+    private detectAggro(): void {
+        let region = this.map.regions.get(this.player.region);
+
+        region.forEachEntity((entity: Entity) => {
+            // Ignore non-mob entities.
+            if (!entity.isMob()) return;
+
+            // Check if the mob can aggro the player and initiate the combat.
+            if ((entity as Mob).canAggro(this.player)) (entity as Mob).combat.attack(this.player);
+        });
+    }
+
+    /**
      * Takes a `interval` value and modulos it against the current updateTicks.
      * This is to separate an event into a larger interval instead of starting
      * multiple `setInterval` functions. For example, an `interval` of 4 means
@@ -533,21 +553,6 @@ export default class Handler {
     private clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
-    }
-
-    // TODO - REFACTOR
-
-    private detectAggro(): void {
-        // TODO - Redo
-        // let region = this.world.region.regions[this.player.region!];
-        // if (!region) return;
-        // _.each(region.entities, (character) => {
-        //     if (character && character.isMob() && this.canEntitySee(character)) {
-        //         let mob = character as Mob,
-        //             aggro = mob.canAggro(this.player);
-        //         if (aggro) mob.combat.begin(this.player);
-        //     }
-        // });
     }
 
     private parsePoison(): void {

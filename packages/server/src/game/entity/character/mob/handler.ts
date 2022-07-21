@@ -37,6 +37,7 @@ export default class Handler {
      */
 
     private handleMovement(): void {
+        // Mob is randomly roaming and exits the roaming area.
         if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
 
         /**
