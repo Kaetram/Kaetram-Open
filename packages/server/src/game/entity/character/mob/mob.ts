@@ -42,6 +42,7 @@ export default class Mob extends Character {
     public aggressive = false;
     public roaming = false;
     public poisonous = false;
+    private hiddenName = false;
     private plugin?: DefaultPlugin;
 
     // TODO - Specify this in the mob data
@@ -91,19 +92,21 @@ export default class Mob extends Character {
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.poisonous = this.data.poisonous!;
+        this.hiddenName = this.data.hiddenName!;
 
         // TODO - After refactoring projectile system
         this.projectileName = this.data.projectileName || this.projectileName;
 
         // Handle hiding the entity's name.
-        if (this.data.hiddenName) this.name = '';
+        if (this.hiddenName) this.name = '';
 
         // Initialize a mob handler to `handle` our callbacks.
         if (this.data.plugin) this.loadPlugin();
         else new MobHandler(this);
 
-        // The roaming interval
-        setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
+        // The roaming interval if the mob is a roaming entity.
+        if (this.data.roaming)
+            setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
     }
 
     /**
@@ -228,13 +231,14 @@ export default class Mob extends Character {
      * Checks if the distance between the mob's current position and the spawn
      * point is greater than the roam distance.
      * @param entity Optional parameter to check against the entity.
+     * @param distance Optional parameter to specify custom distance (used for combat).
      * @returns Whether or not the mob should return to the spawn.
      */
 
-    public outsideRoaming(entity?: Entity): boolean {
+    public outsideRoaming(entity?: Entity, distance = this.roamDistance): boolean {
         return (
             Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
-            this.roamDistance
+            distance
         );
     }
 
@@ -328,7 +332,9 @@ export default class Mob extends Character {
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
-        data.level = this.level;
+
+        // Level is hidden as well so that it doesn't display.
+        if (!this.hiddenName) data.level = this.level;
 
         return data;
     }
