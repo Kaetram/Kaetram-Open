@@ -4,7 +4,9 @@ import { Modules } from '@kaetram/common/network';
 import type Player from '../entity/character/player/player';
 
 const MAXIMUM_ZOOM = 6,
-    MINIMUM_ZOOM = 2.6;
+    MINIMUM_ZOOM = 2.6,
+    MAX_GRID_WIDTH = 52,
+    MAX_GRID_HEIGHT = 28;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
@@ -62,6 +64,8 @@ export default class Camera {
         this.gridWidth = Math.ceil(borderWidth / this.tileSize / this.zoomFactor);
         this.gridHeight = Math.ceil(borderHeight / this.tileSize / this.zoomFactor);
 
+        this.clamp();
+
         /**
          * The border x and y are the boundaries of how far the map can go. The maximum
          * camera position is from x = 0 and y = 0 (left/top edge of the map), to the maximum possible
@@ -71,6 +75,16 @@ export default class Camera {
 
         this.borderX = (this.width - this.gridWidth) * this.tileSize;
         this.borderY = (this.height - this.gridHeight) * this.tileSize;
+    }
+
+    /**
+     * Prevents the max grid width and height from exceeding the maximum proportions.
+     * This is used to prevent the camera from rendering too many tiles.
+     */
+
+    private clamp(): void {
+        if (this.gridWidth > MAX_GRID_WIDTH) this.gridWidth = MAX_GRID_WIDTH;
+        if (this.gridHeight > MAX_GRID_HEIGHT) this.gridHeight = MAX_GRID_HEIGHT;
     }
 
     /**
