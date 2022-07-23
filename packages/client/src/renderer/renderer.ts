@@ -887,7 +887,13 @@ export default class Renderer {
      */
 
     private drawName(entity: Player & Item): void {
-        if (entity.hidden || !entity.drawNames() || (!this.drawNames && !this.drawLevels)) return;
+        if (
+            entity.hidden ||
+            !entity.level ||
+            !entity.drawNames() ||
+            (!this.drawNames && !this.drawLevels)
+        )
+            return;
 
         let colour = entity.wanted ? 'red' : 'white';
 
