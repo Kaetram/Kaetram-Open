@@ -277,6 +277,9 @@ export default abstract class Character extends Entity {
     public setPoison(type = -1, start?: number): void {
         let remove = type === -1;
 
+        // No need to remove a non-existant status.
+        if (remove && !this.poison) return;
+
         // Set or remove the poison status.
         this.poison = remove ? undefined : new Poison(type, start);
 
