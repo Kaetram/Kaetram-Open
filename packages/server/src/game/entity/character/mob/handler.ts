@@ -45,7 +45,8 @@ export default class Handler {
          * pick a new one if that is the case.
          */
 
-        if (this.mob.outsideRoaming(this.mob.target))
+        // We double the roaming distance for the sake of combat.
+        if (this.mob.outsideRoaming(this.mob.target, this.mob.roamDistance * 2))
             if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
             else this.mob.sendToSpawn();
     }
