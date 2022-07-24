@@ -344,7 +344,7 @@ export const enum Constants {
     HEAL_RATE = 5000, // healing every 10 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
-    SPAWN_POINT = '26,25', // Default starting point outside the tutorial
+    SPAWN_POINT = '56,46', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
     TREE_REGROW = 30_000,
