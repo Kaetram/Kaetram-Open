@@ -11,6 +11,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1400,
     "movementSpeed": 500,
     "respawnDelay": 10000
@@ -28,6 +29,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 20000
@@ -45,6 +47,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 300,
     "respawnDelay": 20000
@@ -62,6 +65,7 @@
     "aggroRange": 3,
     "attackRange": 4,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "projectileName": "projectile-fireball",
@@ -80,6 +84,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1400,
     "movementSpeed": 300,
     "respawnDelay": 55000
@@ -97,6 +102,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 65000
@@ -114,6 +120,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1250,
     "movementSpeed": 300,
     "respawnDelay": 45000
@@ -131,6 +138,7 @@
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 60000
@@ -148,6 +156,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 350,
     "respawnDelay": 35000,
@@ -166,6 +175,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 35000
@@ -183,6 +193,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 35000
@@ -200,6 +211,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 65000
@@ -217,6 +229,7 @@
     "aggroRange": 6,
     "attackRange": 4,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 2000,
     "movementSpeed": 750,
     "projectileName": "projectile-fireball",
@@ -235,6 +248,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1000,
     "movementSpeed": 600,
     "respawnDelay": 35000
@@ -252,6 +266,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -270,6 +285,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -287,6 +303,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 400,
     "respawnDelay": 65000
@@ -304,6 +321,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 400,
     "respawnDelay": 65000
@@ -321,6 +339,7 @@
     "aggroRange": 4,
     "attackRange": 5,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "projectileName": "projectile-fireball",
@@ -339,6 +358,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -356,6 +376,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -373,6 +394,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -390,6 +412,7 @@
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": false,
     "attackRate": 1300,
     "movementSpeed": 400,
     "respawnDelay": 35000,
@@ -408,6 +431,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -425,6 +449,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -442,6 +467,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -459,6 +485,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -476,6 +503,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -493,6 +521,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -510,6 +539,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -527,6 +557,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -544,6 +575,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -561,6 +593,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -578,6 +611,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -595,6 +629,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -612,6 +647,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -629,6 +665,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -646,6 +683,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -663,6 +701,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -680,6 +719,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -697,6 +737,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 750,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -714,6 +755,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -731,6 +773,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -748,6 +791,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -765,6 +809,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -782,6 +827,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -799,6 +845,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -816,6 +863,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -833,6 +881,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -850,6 +899,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -867,6 +917,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -884,6 +935,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -901,6 +953,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -918,6 +971,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -935,6 +989,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000,
@@ -953,6 +1008,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -970,6 +1026,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -987,6 +1044,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1004,6 +1062,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1021,6 +1080,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1038,6 +1098,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1055,6 +1116,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1072,6 +1134,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1090,6 +1153,7 @@
     "attackRange": 1,
     "aggressive": true,
     "poisonous": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1107,6 +1171,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1124,6 +1189,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1141,6 +1207,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1158,6 +1225,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1175,6 +1243,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1192,6 +1261,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1209,6 +1279,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1226,6 +1297,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 400,
     "respawnDelay": 65000
@@ -1243,6 +1315,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1260,6 +1333,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1277,6 +1351,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1294,6 +1369,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1311,6 +1387,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1328,6 +1405,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1345,6 +1423,7 @@
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1362,6 +1441,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1379,6 +1459,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1396,6 +1477,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1413,6 +1495,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1430,6 +1513,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1447,6 +1531,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1464,6 +1549,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1481,6 +1567,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1498,6 +1585,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1515,6 +1603,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1532,6 +1621,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1549,6 +1639,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1566,6 +1657,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1583,6 +1675,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1600,6 +1693,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1617,6 +1711,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1634,6 +1729,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1651,6 +1747,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1668,6 +1765,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1685,6 +1783,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1702,6 +1801,7 @@
     "aggroRange": 3,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 50000
@@ -1719,6 +1819,7 @@
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 600,
     "respawnDelay": 75000
@@ -1737,6 +1838,7 @@
     "aggroRange": 3,
     "attackRange": 6,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 500,
     "respawnDelay": 95000
@@ -1754,6 +1856,7 @@
     "aggroRange": 6,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1750,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1771,6 +1874,7 @@
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1787,6 +1891,7 @@
     "aggroRange": 8,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 800,
     "respawnDelay": -1
@@ -1804,6 +1909,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1821,6 +1927,7 @@
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 800,
     "respawnDelay": 95000
@@ -1838,6 +1945,7 @@
     "aggroRange": 2,
     "attackRange": 2,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 800,
     "respawnDelay": 95000
@@ -1855,6 +1963,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1872,6 +1981,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1890,6 +2000,7 @@
     "attackRange": 7,
     "aggressive": false,
     "projectileName": "projectile-iceball",
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 115000
@@ -1907,6 +2018,7 @@
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 600,
     "respawnDelay": 95000
@@ -1924,6 +2036,7 @@
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
@@ -1942,6 +2055,7 @@
     "aggroRange": 4,
     "attackRange": 2,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1800,
     "movementSpeed": 500,
     "respawnDelay": 95000
@@ -1960,6 +2074,7 @@
     "attackRange": 4,
     "aggressive": true,
     "projectileName": "projectile-terror",
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 1200,
     "respawnDelay": 95000
@@ -1977,6 +2092,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -1994,6 +2110,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 1000,
     "respawnDelay": 65000
@@ -2010,6 +2127,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 500,
     "respawnDelay": 10000
@@ -2027,6 +2145,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 20000
@@ -2044,6 +2163,7 @@
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 300,
     "respawnDelay": 20000
