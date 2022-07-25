@@ -1,6 +1,7 @@
 {
   "king": {
-    "name": "King"
+    "name": "King",
+    "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
   },
 
   "villagegirl": {
