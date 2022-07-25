@@ -117,17 +117,15 @@ export default class Renderer {
     private animatedTiles: { [index: number]: Tile } = {};
 
     private stopRendering = false;
-    private animateTiles = true;
+    public animateTiles = true;
     public debugging = false;
-    public autoCentre = false;
     public drawNames = true;
     public drawLevels = true;
-    public transitioning = false;
 
     public mobile = isMobile();
     private tablet = isTablet();
 
-    public forceRendering = (this.mobile || this.tablet) && this.camera.isCentered();
+    public forceRendering = false;
 
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
@@ -318,6 +316,8 @@ export default class Renderer {
      */
 
     private draw(): void {
+        if (this.hasRenderedFrame()) return;
+
         this.clearDrawing();
         this.saveDrawing();
 
@@ -366,6 +366,7 @@ export default class Renderer {
                 this.drawTile(context, tile - 1, index, flips);
         });
 
+        this.saveFrame();
         this.restoreDrawing();
     }
 
@@ -1317,8 +1318,14 @@ export default class Renderer {
         this.forEachDrawingContext((context) => context.restore());
     }
 
+    /**
+     * Checks whether or not the current frame has already been rendererd in order
+     * to prevent drawing when there is no movement during low power mode.
+     * @returns Whether or not the current frame has been rendered.
+     */
+
     private hasRenderedFrame(): boolean {
-        if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
+        if (this.forceRendering || !this.isLowPowerMode()) return false;
 
         if (this.stopRendering) return true;
 
@@ -1333,8 +1340,13 @@ export default class Renderer {
         this.forEachDrawingContext((context) => context.save());
     }
 
+    /**
+     * Saves the currently rendered frame in order to prevent unnecessary redraws
+     * during low power mode.
+     */
+
     private saveFrame(): void {
-        if (this.mobile && this.camera.isCentered()) return;
+        if (!this.isLowPowerMode()) return;
 
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
@@ -1415,6 +1427,16 @@ export default class Renderer {
 
     private isSelectedCell(x: number, y: number): boolean {
         return this.game.input.selectedX === x && this.game.input.selectedY === y;
+    }
+
+    /**
+     * Low power mode is activated when both the camera centration and
+     * animated tiles are turned off. This is for devices that cannot
+     * sustain the constant re-drawing of the frame every second.
+     */
+
+    private isLowPowerMode(): boolean {
+        return !this.camera.isCentered() && !this.animateTiles;
     }
 
     private inRadius(lighting: RendererLighting): boolean {
