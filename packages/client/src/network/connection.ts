@@ -194,7 +194,6 @@ export default class Connection {
 
         this.map.loadRegions(region);
 
-        this.renderer.forceRendering = true;
         this.renderer.updateAnimatedTiles();
     }
 
