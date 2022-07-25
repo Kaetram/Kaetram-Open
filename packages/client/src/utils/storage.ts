@@ -14,7 +14,7 @@ interface Settings {
     sfx: number;
     brightness: number;
     soundEnabled: boolean;
-    centerCamera: boolean;
+    lowPowerMode: boolean;
     debug: boolean;
     showNames: boolean;
     showLevels: boolean;
@@ -72,7 +72,7 @@ export default class Storage {
                 sfx: 100,
                 brightness: 100,
                 soundEnabled: true,
-                centerCamera: true,
+                lowPowerMode: false,
                 debug: false,
                 showNames: true,
                 showLevels: true
@@ -199,12 +199,12 @@ export default class Storage {
     }
 
     /**
-     * Sets the value of the centre camera in the local storage.
-     * @param centerCamera New value to update in the local storage.
+     * Sets the value of the low power mode in the local storage.
+     * @param lowPowerMode New value to update in the local storage.
      */
 
-    public setCenterCamera(centerCamera: boolean): void {
-        this.data.settings.centerCamera = centerCamera;
+    public setLowPowerMode(lowPowerMode: boolean): void {
+        this.data.settings.lowPowerMode = lowPowerMode;
 
         this.save();
     }
