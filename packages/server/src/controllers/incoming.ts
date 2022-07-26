@@ -13,7 +13,7 @@ import Creator from '../database/mongodb/creator';
 import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
-import { Spawn } from '../network/packets';
+import { Spawn, Update } from '../network/packets';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
@@ -182,28 +182,11 @@ export default class Incoming {
             if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
-
-            // Special name colours for NPCs.
-            // if (entity.isNPC()) {
-            //     if (this.player.quests.getQuestFromNPC(entity as NPC))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
-
-            //     if (this.player.achievements.getAchievementFromEntity(entity as NPC))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            // }
-
-            // // Special name colours for mobs.
-            // if (entity.isMob()) {
-            //     if (this.player.quests.getQuestFromMob(entity as Mob))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
-
-            //     let achievement = this.player.achievements.getAchievementFromEntity(entity as Mob);
-
-            //     if (achievement && achievement.isStarted())
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            // }
-
             this.player.send(new Spawn(entity));
+
+            // Send display info when we spawn an entity.
+            if (entity.hasDisplayInfo(this.player))
+                this.player.send(new Update([entity.getDisplayInfo(this.player)]));
         });
     }
 

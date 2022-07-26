@@ -27,5 +27,10 @@
     "hiddenreward": {
         "name": "Hidden Reward",
         "description": "Kill some secret spooky skeletons somewhere."
+    },
+
+    "ancientwizard": {
+        "name": "Ancient Wizard",
+        "description": "Defeat the ancient wizard in Mudwich!"
     }
 }
