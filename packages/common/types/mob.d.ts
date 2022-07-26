@@ -19,4 +19,6 @@ export interface MobData {
     projectileName?: string;
     roaming?: boolean;
     plugin?: string;
+    achievement?: string;
+    miniboss?: boolean;
 }
