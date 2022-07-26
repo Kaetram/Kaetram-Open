@@ -307,6 +307,10 @@ export let NameColours = {
     [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
+export let EntityScale = {
+    [SpecialEntityTypes.Miniboss]: 1.2
+};
+
 export let PoisonInfo = {
     [PoisonTypes.Venom]: {
         name: 'Venom',

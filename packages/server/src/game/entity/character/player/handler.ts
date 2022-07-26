@@ -203,7 +203,6 @@ export default class Handler {
         this.handleLights(region);
 
         this.map.regions.sendEntities(this.player);
-        this.map.regions.sendDisplayInfo(this.player);
 
         // Signal to the region we just left from to despawn us.
         this.player.sendToOldRegions(new Despawn(this.player.instance));
@@ -412,6 +411,15 @@ export default class Handler {
 
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
+
+        /**
+         * Special mobs (such as minibosses and bosses) have achievements
+         * associated with them. Upon killing them, we complete the achievement.
+         */
+
+        let mobAchievement = (character as Mob).achievement;
+
+        if (mobAchievement) this.player.achievements.get(mobAchievement).finish();
 
         // Checks if the mob has a active quest associated with it.
         let quest = this.player.quests.getQuestFromMob(character as Mob);
