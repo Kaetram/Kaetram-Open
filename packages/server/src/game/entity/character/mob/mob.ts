@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import Utils from '@kaetram/common/util/utils';
 
 import Entity from '../../entity';
@@ -11,6 +13,7 @@ import type Player from '../player/player';
 
 import PluginIndex from '../../../../../data/plugins/mobs';
 import rawData from '../../../../../data/mobs.json';
+import Spawns from '../../../../../data/spawns.json';
 import log from '@kaetram/common/util/log';
 
 import DefaultPlugin from '../../../../../data/plugins/mobs/default';
@@ -51,8 +54,8 @@ export default class Mob extends Character {
     public boss = false;
     public respawnable = true;
     public miniboss = false;
-
-    public achievementId!: number;
+    // An achievement that is completed upon defeating the mob.
+    public achievement = '';
 
     // private handler!: MobHandler;
 
@@ -107,6 +110,8 @@ export default class Mob extends Character {
         // The roaming interval if the mob is a roaming entity.
         if (this.data.roaming)
             setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
+
+        this.loadSpawns();
     }
 
     /**
@@ -123,6 +128,33 @@ export default class Mob extends Character {
         }
 
         this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
+    }
+
+    /**
+     * Spawns are special entities at specific locations throughout the world
+     * with differing properties. For example, we can spawn 50 goblins using the
+     * TIled map editor, and we use the `spawns.json` to specify that a goblin
+     * at a specific location be marked as a miniboss, not roaming, or any other
+     * property we'd like to modify on a per instance basis.
+     *
+     * The key in the `spawns.json` represents the x and y coordinates separated
+     * by a dash. We check the mob's spawn location against the key, if there is
+     * a match, then we apply the properties onto the current mob.
+     */
+
+    private loadSpawns(): void {
+        // Coordinates of the mob's spawn location as a key.
+        let key = `${this.spawnX}-${this.spawnY}`;
+
+        // Check the coordinate key against the `spawns.json` dictionary JSON file.
+        if (!(key in Spawns)) return;
+
+        let data = (Spawns as { [key: string]: MobData })[key];
+
+        this.name = data.name;
+
+        if (data.miniboss) this.miniboss = data.miniboss;
+        if (data.achievement) this.achievement = data.achievement;
     }
 
     /**
@@ -272,10 +304,15 @@ export default class Mob extends Character {
      */
 
     public override getDisplayInfo(player?: Player): EntityDisplayInfo {
-        return {
+        let displayInfo: EntityDisplayInfo = {
             instance: this.instance,
             colour: this.getNameColour(player)
         };
+
+        // Only minibosses have a special scale, we send the scale only if the mob is a miniboss.
+        if (this.miniboss) displayInfo.scale = Modules.EntityScale[SpecialEntityTypes.Miniboss];
+
+        return displayInfo;
     }
 
     /**
