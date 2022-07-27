@@ -365,16 +365,20 @@ export default class Mob extends Character {
     /**
      * Takes mob file and serializes it by adding extra
      * variables into the EntityData interface.
+     * @param player Optional parameter used to include displayInfo into the packet.
      * @returns Entity data with mob elements inserted.
      */
 
-    public override serialize(): EntityData {
+    public override serialize(player?: Player): EntityData {
         let data = super.serialize();
 
         // TODO - Update this once we get around fixing up the client.
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
+
+        // Include the display info in the packet if the player parameter is specified.
+        if (player) data.displayInfo = this.getDisplayInfo(player);
 
         // Level is hidden as well so that it doesn't display.
         if (!this.hiddenName) data.level = this.level;
