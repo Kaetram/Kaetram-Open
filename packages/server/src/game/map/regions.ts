@@ -283,6 +283,9 @@ export default class Regions {
                 packet: new Spawn(entity)
             });
         });
+
+        // Synchronize entity display info to all players in the region when an entity joins/respawns.
+        this.regions[region].forEachPlayer((player: Player) => this.sendDisplayInfo(player));
     }
 
     /**

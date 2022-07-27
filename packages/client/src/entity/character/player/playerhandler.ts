@@ -139,6 +139,7 @@ export default class PlayerHandler {
 
             if (!this.isAttackable()) return;
 
+            //TODO - De-hardcode this
             if (player.target)
                 if (player.isRanged()) {
                     if (player.getDistance(player.target) < 7) player.stop(true);
