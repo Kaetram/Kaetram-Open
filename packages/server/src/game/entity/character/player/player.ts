@@ -49,7 +49,7 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
-import { ExperiencePacket, OverlayPacket } from '@kaetram/common/types/messages/outgoing';
+import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -855,10 +855,8 @@ export default class Player extends Character {
             return;
         }
 
-        if (!this.world.isOnline(playerName)) {
-            this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
-            return;
-        }
+        if (!this.world.isOnline(playerName))
+            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
 
         let otherPlayer = this.world.getPlayerByName(playerName),
             oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
