@@ -30,8 +30,8 @@ type RawData = {
 
 export default class Mob extends Character {
     // TODO - Make private after moving callbacks into the mob file.
-    public spawnX: number;
-    public spawnY: number;
+    public spawnX: number = this.x;
+    public spawnY: number = this.y;
 
     // Mob data
     private data: MobData;
@@ -45,8 +45,9 @@ export default class Mob extends Character {
     public aggressive = false;
     public roaming = false;
     public poisonous = false;
+    public plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
     private hiddenName = false;
-    private plugin?: DefaultPlugin;
+    private handler?: MobHandler | DefaultPlugin;
 
     // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
@@ -67,9 +68,6 @@ export default class Mob extends Character {
 
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
-
-        this.spawnX = x;
-        this.spawnY = y;
 
         this.data = (rawData as RawData)[key];
 
@@ -105,7 +103,7 @@ export default class Mob extends Character {
 
         // Initialize a mob handler to `handle` our callbacks.
         if (this.data.plugin) this.loadPlugin();
-        else new MobHandler(this);
+        else this.handler = new MobHandler(this);
 
         // The roaming interval if the mob is a roaming entity.
         if (this.data.roaming)
@@ -116,24 +114,25 @@ export default class Mob extends Character {
 
     /**
      * Attempts to locate and load a plugin from the plugin index.
+     * @param pluginName Optional parameter for loading a plugin specified by name.
      */
 
-    private loadPlugin(): void {
-        if (!(this.data.plugin! in PluginIndex)) {
+    private loadPlugin(pluginName?: string): void {
+        if (!((this.data.plugin! || pluginName!) in PluginIndex)) {
             log.error(`[Mob] Could not find plugin ${this.data.plugin}.`);
 
             // Initialize a mob handler since we couldn't find a plugin.
-            new MobHandler(this);
+            this.handler = new MobHandler(this);
             return;
         }
 
-        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
+        this.handler = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
     }
 
     /**
      * Spawns are special entities at specific locations throughout the world
      * with differing properties. For example, we can spawn 50 goblins using the
-     * TIled map editor, and we use the `spawns.json` to specify that a goblin
+     * Tiled map editor, and we use the `spawns.json` to specify that a goblin
      * at a specific location be marked as a miniboss, not roaming, or any other
      * property we'd like to modify on a per instance basis.
      *
@@ -155,6 +154,7 @@ export default class Mob extends Character {
 
         if (data.miniboss) this.miniboss = data.miniboss;
         if (data.achievement) this.achievement = data.achievement;
+        if (data.plugin) this.loadPlugin(data.plugin);
     }
 
     /**
