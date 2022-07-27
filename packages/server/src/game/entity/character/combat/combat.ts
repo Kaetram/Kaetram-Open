@@ -89,7 +89,9 @@ export default class Combat {
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
 
-        if (this.character.isNearTarget() && this.canAttack()) {
+        if (this.character.isNearTarget()) {
+            if (!this.canAttack()) return;
+
             let hit = this.createHit();
 
             this.sendAttack(hit);
@@ -144,6 +146,7 @@ export default class Combat {
      */
 
     private sendFollow(): void {
+        console.log(`Character ${this.character.name} is following ${this.character.target!.name}`);
         this.character.sendToRegions(
             new Movement(Opcodes.Movement.Follow, {
                 instance: this.character.instance,
