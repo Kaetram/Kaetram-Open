@@ -205,21 +205,20 @@ export default class Mob extends Character {
      * Primitive function for drop generation. Will be rewritten.
      */
 
-    public getDrop(): { key: string; count: number } | null {
-        if (!this.drops) return null;
+    public getDrops(): { key: string; count: number }[] {
+        if (!this.drops) return [];
 
-        let random = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY),
-            dropObjects = Object.keys(this.drops),
-            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
+        let drops: { key: string; count: number }[] = [];
 
-        if (random > this.drops[item]) return null;
+        _.each(this.drops, (chance: number, key: string) => {
+            if (Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) > chance) return;
 
-        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
+            let count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
 
-        return {
-            key: item,
-            count
-        };
+            drops.push({ key, count });
+        });
+
+        return drops;
     }
 
     /**
