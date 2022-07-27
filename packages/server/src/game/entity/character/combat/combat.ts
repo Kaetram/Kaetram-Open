@@ -146,7 +146,6 @@ export default class Combat {
      */
 
     private sendFollow(): void {
-        console.log(`Character ${this.character.name} is following ${this.character.target!.name}`);
         this.character.sendToRegions(
             new Movement(Opcodes.Movement.Follow, {
                 instance: this.character.instance,
