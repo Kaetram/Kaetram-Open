@@ -56,7 +56,7 @@
   "wizard": {
     "name": "Wizard",
     "id": 3,
-    "drops": {"axe": 10, "morningstar": 10, "woodenbow": 5, "sword2": 50},
+    "drops": {"gold": 250, "axe": 100, "morningstar": 50, "woodenbow": 50, "sword2": 200},
     "hitPoints": 100,
     "defenseLevel": 4,
     "attackLevel": 3,

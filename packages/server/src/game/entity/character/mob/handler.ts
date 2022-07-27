@@ -5,6 +5,7 @@ import Map from '../../../map/map';
 import World from '../../../world';
 import Character from '../character';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -64,9 +65,12 @@ export default class Handler {
         if (attacker) attacker.combat.stop();
 
         // Spawn item drops.
-        let drop = this.mob.getDrop();
+        let drops = this.mob.getDrops();
 
-        if (drop) this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count);
+        if (drops.length > 0)
+            _.each(drops, (drop) =>
+                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
+            );
 
         if (attacker?.isPlayer()) {
             attacker.addExperience(this.mob.experience);
