@@ -12,18 +12,10 @@ import log from '@kaetram/common/util/log';
  */
 
 export default class Handler {
-    private world: World;
-    private map: Map;
-
-    private plateauLevel: number;
+    private world: World = this.mob.world;
+    private map: Map = this.world.map;
 
     public constructor(private mob: Mob) {
-        this.world = this.mob.world;
-        this.map = this.world.map;
-
-        // Store the original plateau level.
-        this.plateauLevel = this.map.getPlateauLevel(this.mob.spawnX, this.mob.spawnY);
-
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
         this.mob.onDeath(this.handleDeath.bind(this));
@@ -114,7 +106,7 @@ export default class Handler {
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
-        let { x, y, spawnX, spawnY, roamDistance, combat } = this.mob,
+        let { x, y, spawnX, spawnY, roamDistance, plateauLevel, combat } = this.mob,
             newX = spawnX + Utils.randomInt(-roamDistance, roamDistance),
             newY = spawnY + Utils.randomInt(-roamDistance, roamDistance),
             distance = Utils.getDistance(spawnX, spawnY, newX, newY);
@@ -137,7 +129,7 @@ export default class Handler {
          * on their own plateau level they are bound to that cave.
          */
 
-        if (this.plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
+        if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
         // Check if the new position is a collision.
         if (this.map.isColliding(newX, newY)) return;
