@@ -190,6 +190,7 @@ export default class Handler {
         this.detectAreas(x, y);
 
         this.player.storeOpen = '';
+        this.player.plateauLevel = this.map.getPlateauLevel(x, y);
     }
 
     /**
