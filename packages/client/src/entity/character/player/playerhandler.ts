@@ -127,34 +127,35 @@ export default class PlayerHandler {
         player.onBeforeStep(() => entities.unregisterPosition(player));
 
         player.onStep(() => {
+            // Update the position if there is any pathing left.
             if (player.hasNextStep()) entities.registerPosition(player);
 
+            // Check the zoning bounds - reachign the bounds moves the screen according to which border.
             if (!camera.isCentered() || camera.lockX || camera.lockY) this.checkBounds();
 
+            // Send a step movement packet to the server.
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
                 playerX: player.gridX,
                 playerY: player.gridY
             });
 
-            if (!this.isAttackable()) return;
+            // Input update for moving attackable entities (mobs and players).
+            if (!this.isAttackable() || !player.target) return;
 
-            if (player.target)
-                if (player.isRanged()) {
-                    if (player.getDistance(player.target) < 7) player.stop(true);
-                } else input.setPosition(player.target.gridX, player.target.gridY);
+            // Update the input graphic with the target's latest position.
+            input.setPosition(player.target.gridX, player.target.gridY);
+
+            // Stop movement if ranged and start shooting.
+            if (player.isRanged() && player.getDistance(player.target) < 7) player.stop(true);
         });
 
+        // Refresh animated tiles every second step.
         player.onSecondStep(() => renderer.updateAnimatedTiles());
 
+        // Centre the camera on the player every pixel the player moves
         player.onMove(() => {
-            /**
-             * This is a callback representing the absolute exact position of the player.
-             */
-
             if (camera.isCentered()) camera.centreOn(player);
-
-            //if (player.target) player.follow(player.target);
         });
     }
 

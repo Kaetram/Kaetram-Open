@@ -4,6 +4,7 @@ import Animation from '../entity/animation';
 import log from '../lib/log';
 import Chat from './chat';
 import HUDController from './hud';
+import Character from '../entity/character/character';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -298,6 +299,9 @@ export default class InputController {
             if (this.isTargetable(this.entity)) {
                 this.player.setTarget(this.entity);
                 this.player.follow(this.entity);
+
+                if (this.isAttackable(this.entity))
+                    (this.entity as Character).addAttacker(this.player);
 
                 this.game.socket.send(Packets.Target, [
                     Opcodes.Target.Attack,
