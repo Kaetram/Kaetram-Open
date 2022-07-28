@@ -1610,28 +1610,26 @@
   "logs": {
     "type": "object",
     "name": "Logs",
-    "stackable": true,
-    "maxStackSize": 1,
     "price": 20
   },
 
   "rustedaxe": {
     "type": "weapon",
-    "attack": 4,
+    "attack": 5,
     "name": "Rusted Axe",
     "lumberjacking": 2
   },
 
   "fireaxe": {
     "type": "weapon",
-    "attack": 5,
+    "attack": 6,
     "name": "Fire Axe",
     "lumberjacking": 3
   },
 
   "poisonaxe": {
     "type": "weapon",
-    "attack": 6,
+    "attack": 7,
     "name": "Poison Axe",
     "lumberjacking": 4
   },

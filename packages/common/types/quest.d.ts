@@ -22,6 +22,7 @@ export interface RawStage {
     /** Text for the NPC. */
     text?: DialogueItem[];
     completedText?: string[];
+    hasItemText?: string[]; // Text for if the player has a required item/count in the inventory.
 
     /** Pointer information */
     pointer?: PointerData;
