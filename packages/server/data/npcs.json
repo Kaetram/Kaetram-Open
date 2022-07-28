@@ -10,9 +10,8 @@
   },
 
   "villager": {
-    "name": "Bulk Bogan",
-    "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
-          "nearby future regarding further adventures."]
+    "name": "Forester",
+    "text": ["Good day to you!"]
   },
 
   "beachnpc": {
