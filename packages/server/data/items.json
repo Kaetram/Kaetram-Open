@@ -1612,7 +1612,7 @@
     "name": "Logs",
     "stackable": true,
     "maxStackSize": 1,
-    "price": 10
+    "price": 20
   },
 
   "rustedaxe": {
