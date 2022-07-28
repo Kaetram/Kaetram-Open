@@ -52,7 +52,6 @@ export default class Mob extends Character {
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
-    public plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
     private handler?: MobHandler | DefaultPlugin;
 
@@ -107,6 +106,8 @@ export default class Mob extends Character {
 
         // TODO - After refactoring projectile system
         this.projectileName = data.projectileName || this.projectileName;
+
+        this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
         // Handle hiding the entity's name.
         if (this.hiddenName) this.name = '';
