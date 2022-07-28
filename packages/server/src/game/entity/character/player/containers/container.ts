@@ -53,6 +53,14 @@ export default abstract class Container {
     }
 
     /**
+     * Removes all the items from the container.
+     */
+
+    public empty(): void {
+        this.forEachSlot((slot: Slot) => this.remove(slot.index, slot.count));
+    }
+
+    /**
      * Takes an item object and updates it into the slot if it exists,
      * otherwise it adds it to an empty slot.
      * @param item Item object in the world.
@@ -222,7 +230,7 @@ export default abstract class Container {
     }
 
     /**
-     * Checks the inventory if it contains an item and a count.
+     * Checks the container if it contains an item and a count.
      * @param key The key of the item we're trying to find.
      * @param count Default one but can be specified to check if `x` amount of an item is contained in the slot.
      * @returns The slot index of the item we're trying to find otherwise -1.
@@ -262,8 +270,8 @@ export default abstract class Container {
     }
 
     /**
-     * Checks if the inventory contains an item (and a count). If it's not stackable,
-     * we must count the amount of items in the inventory.
+     * Checks if the container contains an item (and a count). If it's not stackable,
+     * we must count the amount of items in the container.
      * @param key The key of the item we are looking fsor.
      * @param count Optional amount of items we are looking for.
      */
