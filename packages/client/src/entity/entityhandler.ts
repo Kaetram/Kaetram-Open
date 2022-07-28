@@ -43,6 +43,9 @@ export default class EntityHandler {
                     requestX: entity.gridX,
                     requestY: entity.gridY
                 });
+
+            if (entity.hasTarget() && entity.getDistance(entity.target!) <= entity.attackRange)
+                entity.stop(true);
         });
     }
 

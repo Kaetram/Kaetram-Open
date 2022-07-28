@@ -182,11 +182,9 @@ export default class Incoming {
             if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
-            this.player.send(new Spawn(entity));
-
-            // Send display info when we spawn an entity.
-            if (entity.hasDisplayInfo(this.player))
-                this.player.send(new Update([entity.getDisplayInfo(this.player)]));
+            this.player.send(
+                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+            );
         });
     }
 
