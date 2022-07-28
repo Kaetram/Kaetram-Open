@@ -38,6 +38,7 @@ export default class Character extends Entity {
 
     public override orientation = Modules.Orientation.Down;
 
+    public destination!: Position | null;
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
@@ -314,6 +315,8 @@ export default class Character extends Entity {
     private move(x: number, y: number, forced = false): void {
         if (this.hasPath() && !forced) this.proceed(x, y);
         else this.followPath(this.requestPathfinding(x, y));
+
+        this.destination = { x, y };
     }
 
     /**
@@ -441,6 +444,7 @@ export default class Character extends Entity {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
             this.path = null;
+            this.destination = null;
             this.newDestination = null;
             this.movement = new Transition();
             this.performAction(this.orientation, Modules.Actions.Idle);

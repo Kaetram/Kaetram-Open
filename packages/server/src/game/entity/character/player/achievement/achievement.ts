@@ -163,7 +163,7 @@ export default class Achievement {
          * we first send the discover popup.
          */
 
-        if (this.stage === this.stageCount) {
+        if (this.stage >= this.stageCount) {
             // Achievement is finished!
             this.popupCallback?.(this.getFinishPopup());
             this.finishCallback?.(this.rewardItem, this.rewardItemCount, this.rewardExperience);
