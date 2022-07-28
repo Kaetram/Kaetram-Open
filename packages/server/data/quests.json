@@ -188,5 +188,44 @@
         }
       }
     }
+  },
+
+  "foresting": {
+    "name": "Foresting",
+    "description": "Help ",
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "villager",
+        "text": [
+          "Greetings dear adventurer!",
+          "Please, you must help me.",
+          "I simply cannot take it much longer, I've been",
+          "cutting trees for the past few days.",
+          "I'm rather exhausted, would you be so kind as",
+          "to bring me 10 logs?"
+        ],
+        "completedText": [
+          "Please adventurer, bring me 10 logs.",
+          "That's all I ask from you!"
+        ]
+      },
+
+      "1": {
+        "task": "talk",
+        "npc": "villager",
+        "hasItemText": [
+          "Oh my, dear adventurer",
+          "These logs seem to have too many imperfections in them",
+          "Would you be so kind as to bring me another 10?"
+        ],
+        "itemRequirement": "logs",
+        "itemCountRequirement": 10
+      },
+
+      "2": {
+
+      }
+    }
   }
 }
