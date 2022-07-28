@@ -99,7 +99,7 @@ export default abstract class Quest {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
-        let dialogue = this.getNPCDialogue(npc);
+        let dialogue = this.getNPCDialogue(npc, player);
 
         /**
          * Ends the conversation. If the player has the required item in the inventory
@@ -107,18 +107,13 @@ export default abstract class Quest {
          * it must be given before the conversation ends and quest progresses.
          */
         if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
-            if (!this.hasItemRequirement())
-                if (this.hasItemToGive()) {
-                    if (
-                        this.givePlayerItem(
-                            player,
-                            this.stageData.itemKey!,
-                            this.stageData.itemCount!
-                        )
-                    )
-                        this.progress();
-                } else this.progress();
-            else this.handleItemRequirement(player, this.stageData);
+            if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
+            else if (
+                this.hasItemToGive() &&
+                this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!)
+            )
+                this.progress();
+            else this.progress();
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
@@ -195,14 +190,17 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemCountRequirement } = stageData,
-            index = player.inventory.getIndex(itemRequirement, itemCountRequirement);
+        let { itemRequirement, itemCountRequirement } = stageData;
 
-        // Cannot find the item in the inventory (or with correct count).
-        if (index === -1) return;
+        // Skip if the player does not have the required item and count in the inventory.
+        if (!player.inventory.hasItem(itemRequirement!, itemCountRequirement)) return;
 
-        // Remove `countRequirement` amount of an item at the index.
-        player.inventory.remove(index, itemCountRequirement);
+        // Remove the item and count from the invnetory.
+        player.inventory.removeItem(itemRequirement!, itemCountRequirement);
+
+        // If the stage contains item rewards, we give it to the player.
+        if (this.hasItemToGive())
+            this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
 
         this.progress();
     }
@@ -294,7 +292,7 @@ export default abstract class Quest {
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
             itemRequirement: stage.itemRequirement! || '',
-            itemCountRequirement: stage.itemCountRequirement! || 0,
+            itemCountRequirement: stage.itemCountRequirement! || 1,
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
@@ -317,7 +315,7 @@ export default abstract class Quest {
      * @returns An array of strings containing the dialogue.
      */
 
-    private getNPCDialogue(npc: NPC): string[] {
+    private getNPCDialogue(npc: NPC, player: Player): string[] {
         // Iterate backwards, last reference of the NPC is the text we grab.
         for (let i = this.stage; i > -1; i--) {
             // We do not count iterations of stages above stage we are currently on.
@@ -327,6 +325,16 @@ export default abstract class Quest {
 
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;
+
+            // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
+            if (stage.itemRequirement! && this.stage === i) {
+                // Verify that the player has the required items and return the dialogue for it.
+                if (player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!))
+                    return stage.hasItemText!;
+
+                // Skip to next stage iteration.
+                continue;
+            }
 
             /**
              * If the stage we are currently on is not the same as the most
