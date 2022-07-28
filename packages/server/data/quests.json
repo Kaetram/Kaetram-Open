@@ -45,7 +45,7 @@
         "itemKey": "axe",
         "popup": {
           "title": "Item acquired!",
-          "text": "You've just received a axe! Equip it using your inventory!",
+          "text": "You've just received an axe! Equip it using your inventory!",
           "colour": "#33cc33"
         },
         "pointer": {

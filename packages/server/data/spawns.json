@@ -1,3 +1,13 @@
 {
- "163-339": { "name": "Ancient Wizard", "roaming": true, "miniboss": true, "achievement": "ancientwizard" }
+ "163-339": { 
+    "name": "Ancient Wizard",
+    "roaming": true,
+    "miniboss": true,
+    "hitPoints": 250,
+    "level": 10,
+    "attackLevel": 7,
+    "defenseLevel": 5,
+    "projectileName": "projectile-fireball2",
+    "achievement": "ancientwizard"
+  }
 }
