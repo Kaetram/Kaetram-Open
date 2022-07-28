@@ -23,6 +23,7 @@ type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 export default abstract class Character extends Entity {
     public level = 1;
     public attackRange = 1;
+    public plateauLevel = 0;
 
     public hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
@@ -350,7 +351,15 @@ export default abstract class Character extends Entity {
      */
 
     public isNearTarget(): boolean {
-        if (this.isRanged()) return this.getDistance(this.target!) <= this.attackRange;
+        /**
+         * A target can only be attacked through range if it's on the same plateau level or
+         * a lower one. This prevents players from sniping mobs on higher levels.
+         */
+        if (this.isRanged())
+            return (
+                this.getDistance(this.target!) <= this.attackRange &&
+                this.plateauLevel >= this.target!.plateauLevel
+            );
 
         return this.isAdjacent(this.target!);
     }
