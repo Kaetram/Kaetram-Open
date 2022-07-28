@@ -180,6 +180,9 @@ export default class Commands {
                 return;
             }
 
+            case 'empty':
+                return this.player.inventory.empty();
+
             case 'maxhealth':
                 this.player.notify(`Max health is ${this.player.hitPoints.getMaxHitPoints()}`);
 

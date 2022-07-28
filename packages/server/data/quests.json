@@ -219,12 +219,26 @@
           "These logs seem to have too many imperfections in them",
           "Would you be so kind as to bring me another 10?"
         ],
+        "completedText": ["Please adventurer, I beg of you, just 10 more logs."],
         "itemRequirement": "logs",
         "itemCountRequirement": 10
       },
 
       "2": {
-
+        "task": "talk",
+        "npc": "villager",
+        "hasItemText": [
+          "Ah yes, you see, these logs are suitable for my needs.",
+          "Thank you so much dear adventurer. Please take this reward!"
+        ],
+        "itemRequirement": "logs",
+        "itemCountRequirement": 10,
+        "itemKey": "rustedaxe",
+        "popup": {
+          "title": "Quest completed!",
+          "text": "@green@You have just finished @crimson@Foresting@green@ quest. You have received a @crimson@Rusted Axe@green@!",
+          "colour": "#33cc33"
+        }
       }
     }
   }
