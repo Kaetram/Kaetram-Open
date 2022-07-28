@@ -18611,6 +18611,20 @@
     "offsetAngle": 180
   },
   {
+    "id": "projectile-fireball2",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "travel": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -24,
+    "offsetY": -24,
+    "offsetAngle": 180
+  },
+  {
     "id": "projectile-iceball",
     "width": 48,
     "height": 48,

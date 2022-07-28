@@ -157,10 +157,17 @@ export default class EntitiesController {
 
         mob.setHitPoints(info.hitPoints!, info.maxHitPoints!);
 
+        // Apply the mob-specific properties
         mob.attackRange = info.attackRange!;
         mob.level = info.level!;
         mob.hiddenName = info.hiddenName!;
         mob.movementSpeed = info.movementSpeed!;
+
+        // Set the display info properties directly onto the mob.
+        if (info.displayInfo) {
+            if (info.displayInfo.colour) mob.nameColour = info.displayInfo.colour;
+            if (info.displayInfo.scale) mob.customScale = info.displayInfo.scale;
+        }
 
         return mob;
     }

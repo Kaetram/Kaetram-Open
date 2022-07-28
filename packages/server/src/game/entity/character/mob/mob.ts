@@ -33,8 +33,17 @@ export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
-    // Mob data
-    private data: MobData;
+    // An achievement that is completed upon defeating the mob.
+    public achievement = '';
+    public area!: Area;
+
+    public boss = false;
+    public respawnable = true;
+    public miniboss = false;
+    public roaming = false;
+    public poisonous = false;
+    public aggressive = false;
+    private hiddenName = false;
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
@@ -42,25 +51,10 @@ export default class Mob extends Character {
     private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
-    public aggressive = false;
-    public roaming = false;
-    public poisonous = false;
-    public plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
-    private hiddenName = false;
-    private handler?: MobHandler | DefaultPlugin;
-
-    // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
+    public plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
-    public boss = false;
-    public respawnable = true;
-    public miniboss = false;
-    // An achievement that is completed upon defeating the mob.
-    public achievement = '';
-
-    // private handler!: MobHandler;
-
-    public area!: Area;
+    private handler?: MobHandler | DefaultPlugin;
 
     private respawnCallback?: () => void;
     public forceTalkCallback?: (message: string) => void;
@@ -69,47 +63,57 @@ export default class Mob extends Character {
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
 
-        this.data = (rawData as RawData)[key];
+        let data = (rawData as RawData)[key];
 
-        if (!this.data) {
+        if (!data) {
             log.error(`[Mob] Could not find data for ${key}.`);
             return;
         }
 
-        this.experience = this.data.experience || this.experience;
+        this.loadData(data);
+        this.loadPlugin(data.plugin!);
+        this.loadSpawns();
 
-        // TODO - Use points system for entities as well.
-        if (this.data.hitPoints) this.hitPoints.updateHitPoints([this.data.hitPoints]);
+        if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
+    }
 
-        this.name = this.data.name!;
-        this.drops = this.data.drops || this.drops;
-        this.level = this.data.level || this.level;
-        this.attackLevel = this.data.attackLevel || this.attackLevel;
-        this.defenseLevel = this.data.defenseLevel || this.defenseLevel;
-        this.attackRange = this.data.attackRange || this.attackRange;
-        this.aggroRange = this.data.aggroRange || this.aggroRange;
-        this.aggressive = this.data.aggressive!;
-        this.attackRate = this.data.attackRate || this.attackRate;
-        this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
-        this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
-        this.poisonous = this.data.poisonous!;
-        this.hiddenName = this.data.hiddenName!;
+    /**
+     * Loads mob data based on the specified data object. We use this
+     * function since this can be called once when the mob initializes and
+     * when we want to load instance-based custom data.
+     * @param data Contains information about the mob.
+     */
+
+    private loadData(data: MobData): void {
+        this.experience = data.experience || this.experience;
+
+        if (data.hitPoints) this.hitPoints.updateHitPoints([data.hitPoints]);
+
+        this.name = data.name!;
+        this.drops = data.drops || this.drops;
+        this.level = data.level || this.level;
+        this.attackLevel = data.attackLevel || this.attackLevel;
+        this.defenseLevel = data.defenseLevel || this.defenseLevel;
+        this.attackRange = data.attackRange || this.attackRange;
+        this.aggroRange = data.aggroRange || this.aggroRange;
+        this.aggressive = data.aggressive!;
+        this.attackRate = data.attackRate || this.attackRate;
+        this.respawnDelay = data.respawnDelay || this.respawnDelay;
+        this.movementSpeed = data.movementSpeed || this.movementSpeed;
+        this.miniboss = data.miniboss || this.miniboss;
+        this.poisonous = data.poisonous!;
+        this.hiddenName = data.hiddenName!;
+        this.achievement = data.achievement || this.achievement;
 
         // TODO - After refactoring projectile system
-        this.projectileName = this.data.projectileName || this.projectileName;
+        this.projectileName = data.projectileName || this.projectileName;
 
         // Handle hiding the entity's name.
         if (this.hiddenName) this.name = '';
 
-        // Initialize a mob handler to `handle` our callbacks.
-        if (this.data.plugin) this.loadPlugin();
-        else this.handler = new MobHandler(this);
-
         // The roaming interval if the mob is a roaming entity.
-        if (this.data.roaming)
-            setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
-
-        this.loadSpawns();
+        if (data.roaming)
+            setInterval(() => this.roamingCallback?.(), Modules.MobDefaults.ROAM_FREQUENCY);
     }
 
     /**
@@ -118,15 +122,13 @@ export default class Mob extends Character {
      */
 
     private loadPlugin(pluginName?: string): void {
-        if (!((this.data.plugin! || pluginName!) in PluginIndex)) {
-            log.error(`[Mob] Could not find plugin ${this.data.plugin}.`);
-
+        if (!pluginName || !(pluginName! in PluginIndex)) {
             // Initialize a mob handler since we couldn't find a plugin.
             this.handler = new MobHandler(this);
             return;
         }
 
-        this.handler = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
+        this.handler = new PluginIndex[pluginName as keyof typeof PluginIndex](this);
     }
 
     /**
@@ -150,10 +152,14 @@ export default class Mob extends Character {
 
         let data = (Spawns as { [key: string]: MobData })[key];
 
-        this.name = data.name;
+        /**
+         * Here we attempt to load all the data from the `spawns.json` file.
+         * If a property doesn't exist, then we just use the default value.
+         */
 
-        if (data.miniboss) this.miniboss = data.miniboss;
-        if (data.achievement) this.achievement = data.achievement;
+        this.loadData(data);
+
+        // Custom plugin can be specified on a per-instance bassis.
         if (data.plugin) this.loadPlugin(data.plugin);
     }
 
@@ -199,21 +205,20 @@ export default class Mob extends Character {
      * Primitive function for drop generation. Will be rewritten.
      */
 
-    public getDrop(): { key: string; count: number } | null {
-        if (!this.drops) return null;
+    public getDrops(): { key: string; count: number }[] {
+        if (!this.drops) return [];
 
-        let random = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY),
-            dropObjects = Object.keys(this.drops),
-            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
+        let drops: { key: string; count: number }[] = [];
 
-        if (random > this.drops[item]) return null;
+        _.each(this.drops, (chance: number, key: string) => {
+            if (Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) > chance) return;
 
-        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
+            let count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
 
-        return {
-            key: item,
-            count
-        };
+            drops.push({ key, count });
+        });
+
+        return drops;
     }
 
     /**
@@ -359,16 +364,20 @@ export default class Mob extends Character {
     /**
      * Takes mob file and serializes it by adding extra
      * variables into the EntityData interface.
+     * @param player Optional parameter used to include displayInfo into the packet.
      * @returns Entity data with mob elements inserted.
      */
 
-    public override serialize(): EntityData {
+    public override serialize(player?: Player): EntityData {
         let data = super.serialize();
 
         // TODO - Update this once we get around fixing up the client.
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
+
+        // Include the display info in the packet if the player parameter is specified.
+        if (player) data.displayInfo = this.getDisplayInfo(player);
 
         // Level is hidden as well so that it doesn't display.
         if (!this.hiddenName) data.level = this.level;
