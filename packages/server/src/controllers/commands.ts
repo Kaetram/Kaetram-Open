@@ -146,7 +146,8 @@ export default class Commands {
             quest: Quest,
             achievementKey: string,
             achievement: Achievement,
-            region: Region;
+            region: Region,
+            item: Item;
 
         switch (command) {
             case 'spawn': {
@@ -157,9 +158,24 @@ export default class Commands {
 
                 if (!key || !count) return;
 
-                this.player.inventory.add(
-                    new Item(key, -1, -1, true, count, ability, abilityLevel)
-                );
+                item = new Item(key, -1, -1, true, 1, ability, abilityLevel);
+
+                if (item.stackable) {
+                    item.count = count;
+
+                    this.player.inventory.add(item);
+                } else for (let i = 0; i < count; i++) this.player.inventory.add(item);
+
+                return;
+            }
+
+            case 'remove': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!);
+
+                if (!key || !count) return;
+
+                this.player.inventory.removeItem(key, count);
 
                 return;
             }
