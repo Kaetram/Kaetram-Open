@@ -27,6 +27,15 @@ export default class EntityHandler {
         entity.onStep(() => {
             entities.registerPosition(entity);
 
+            entity.forEachAttacker((attacker: Character) => {
+                if (!attacker.target) return;
+
+                if (attacker.target.instance !== entity.instance)
+                    return entity.removeAttacker(attacker);
+
+                attacker.follow(entity);
+            });
+
             if (entity.isMob() && (entity.targeted || entity.hasTarget()))
                 game.socket.send(Packets.Movement, {
                     opcode: Opcodes.Movement.Entity,
