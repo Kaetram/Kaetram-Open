@@ -932,7 +932,6 @@ export default class Connection {
      */
 
     private handlePoison(type: number): void {
-        console.log('poison packet dude');
         this.game.player.setPoison(type !== -1);
     }
 
