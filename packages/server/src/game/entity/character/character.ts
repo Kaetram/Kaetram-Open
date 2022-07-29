@@ -145,6 +145,18 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Handles the logic for when an attacker is trying to poison
+     * the current character instance.
+     */
+
+    private handlePoisonDamage(attacker: Character): void {
+        let isPoisoned = Formulas.getPoisonChance(this.level) < attacker.getPoisonChance();
+
+        // Use venom as default for now.
+        if (isPoisoned) this.setPoison(Modules.PoisonTypes.Venom);
+    }
+
+    /**
      * Increments the hitpoints by the amount specified or 1 by default.
      * @param amount Healing amount, defaults to 1 if not specified.
      */
@@ -191,6 +203,8 @@ export default abstract class Character extends Entity {
 
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        if (attacker?.isPoisonous()) this.handlePoisonDamage(attacker);
     }
 
     /**
@@ -450,6 +464,10 @@ export default abstract class Character extends Entity {
     public getArmourLevel(): number {
         return 1;
     }
+
+    /**
+     * @returns Default probability for poison to be inflicted.
+     */
 
     public getPoisonChance(): number {
         return Modules.Defaults.POISON_CHANCE;
