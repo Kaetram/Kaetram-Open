@@ -162,11 +162,34 @@ export default {
         return Modules.Constants.MAX_LEVEL;
     },
 
+    /**
+     * Formula usd to calcualte maximum hitpoints.
+     * @param level The level used to calculate the maximum hitpoints.
+     * @returns The maximum hitpoints number value.
+     */
+
     getMaxHitPoints(level: number): number {
         return 39 + level * 30;
     },
 
+    /**
+     * Obtains the max mana given a level specified.
+     * @param level The level we are using to calculate max mana.
+     * @returns The max mana number value.
+     */
+
     getMaxMana(level: number): number {
         return 10 + level * 8;
+    },
+
+    /**
+     * For now, the poison probability is calculated on a per-level basis.
+     * In the future, we will be implementing status effects and poison resistance.
+     * @param level The level of the player.
+     */
+
+    getPoisonChance(level: number): number {
+        // Chance is per 100, and each level decreases the chance by level * 3 percent.
+        return Utils.randomInt(0, 100 + level * 3);
     }
 };

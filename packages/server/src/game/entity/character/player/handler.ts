@@ -29,8 +29,7 @@ import type Player from './player';
 
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import Poison from '../poison';
-import Hit from '../combat/hit';
+import Formulas from '@kaetram/server/src/info/formulas';
 
 export default class Handler {
     private world: World;
@@ -147,7 +146,16 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (attacker && !this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
+        if (!attacker) return;
+
+        if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
+
+        if (attacker.isPoisonous()) {
+            let isPoisoned =
+                Formulas.getPoisonChance(this.player.level) < attacker.getPoisonChance();
+
+            if (isPoisoned) this.player.setPoison(Modules.PoisonTypes.Venom);
+        }
     }
 
     /**

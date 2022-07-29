@@ -189,7 +189,6 @@ export default class Incoming {
     }
 
     private handleEquipment(data: EquipmentPacket): void {
-        console.log(data);
         switch (data.opcode) {
             case Opcodes.Equipment.Unequip:
                 return this.player.equipment.unequip(data.type);
