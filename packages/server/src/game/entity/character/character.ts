@@ -364,6 +364,17 @@ export default abstract class Character extends Entity {
         return this.isAdjacent(this.target!);
     }
 
+    /**
+     * Superclass implementation for poisonous damage. Mobs have this
+     * enabled if they're poisonous, players have this enabled if
+     * they carry a weapon that's imbued with poison.
+     * @returns Defaults to false.
+     */
+
+    public isPoisonous(): boolean {
+        return false;
+    }
+
     // Packet sending functions
 
     /**
@@ -438,6 +449,10 @@ export default abstract class Character extends Entity {
 
     public getArmourLevel(): number {
         return 1;
+    }
+
+    public getPoisonChance(): number {
+        return Modules.Defaults.POISON_CHANCE;
     }
 
     /**
