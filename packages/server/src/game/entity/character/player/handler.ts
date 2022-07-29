@@ -29,7 +29,6 @@ import type Player from './player';
 
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import Formulas from '@kaetram/server/src/info/formulas';
 
 export default class Handler {
     private world: World;
@@ -149,13 +148,6 @@ export default class Handler {
         if (!attacker) return;
 
         if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
-
-        if (attacker.isPoisonous()) {
-            let isPoisoned =
-                Formulas.getPoisonChance(this.player.level) < attacker.getPoisonChance();
-
-            if (isPoisoned) this.player.setPoison(Modules.PoisonTypes.Venom);
-        }
     }
 
     /**

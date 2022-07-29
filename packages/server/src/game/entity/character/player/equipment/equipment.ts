@@ -22,7 +22,8 @@ export default class Equipment {
         public power = 1,
         public ranged = false, // Applies to weapons specifically
         public amplifier = 1,
-        public lumberjacking = -1
+        public lumberjacking = -1,
+        public poisonous = false
     ) {}
 
     /**
@@ -53,6 +54,7 @@ export default class Equipment {
         this.power = 0;
         this.amplifier = 1;
         this.lumberjacking = -1;
+        this.poisonous = false;
         this.name = '';
     }
 
@@ -93,7 +95,7 @@ export default class Equipment {
      */
 
     public serialize(): EquipmentData {
-        let { type, key, name, count, ability, abilityLevel, power, ranged } = this;
+        let { type, key, name, count, ability, abilityLevel, power, ranged, poisonous } = this;
 
         return {
             type,
@@ -103,7 +105,8 @@ export default class Equipment {
             ability,
             abilityLevel,
             power,
-            ranged
+            ranged,
+            poisonous
         };
     }
 

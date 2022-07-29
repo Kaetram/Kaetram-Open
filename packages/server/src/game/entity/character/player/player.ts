@@ -814,6 +814,17 @@ export default class Player extends Character {
     }
 
     /**
+     * Players obtain their poisoning abilities from their weapon. Certain
+     * weapons may be imbued with a poison effect. This checks if that status
+     * is active.
+     * @returns Whether or not the weapon is poisonous.
+     */
+
+    public override isPoisonous(): boolean {
+        return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
      * Miscellaneous
      */
 
