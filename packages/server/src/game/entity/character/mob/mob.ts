@@ -352,6 +352,15 @@ export default class Mob extends Character {
     }
 
     /**
+     * Activates the poisonous status effect on the mob.
+     * @returns If the mob data contains a poisonous status.
+     */
+
+    public override isPoisonous(): boolean {
+        return this.poisonous;
+    }
+
+    /**
      * Some entities are static (only spawned once during an event)
      * Meanwhile, other entities act as an illusion to another entity,
      * so the respawning script is handled elsewhere.
