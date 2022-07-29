@@ -123,7 +123,7 @@ export default class Player extends Character {
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
     public lastRegionChange = Date.now();
 
-    private currentSong: string | null = null;
+    private currentSong = '';
 
     public regionsLoaded: number[] = [];
     public treesLoaded: { [instance: string]: Modules.TreeState } = {};
@@ -563,12 +563,19 @@ export default class Player extends Character {
         else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }
 
+    /**
+     * Receives information about the current music area the player is in.
+     * @param info The music area information, could be undefined.
+     */
+
     public updateMusic(info?: Area): void {
-        if (!info || info.song === this.currentSong) return;
+        let song = info?.song || '';
 
-        this.currentSong = info.song;
+        if (song === this.currentSong) return;
 
-        this.send(new Audio(info.song));
+        this.currentSong = song;
+
+        this.send(new Audio(song));
     }
 
     public revertPoints(): void {

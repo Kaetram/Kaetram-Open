@@ -9,7 +9,7 @@ export default class Music extends Areas {
         super(data, world);
 
         super.load(this.data, (musicArea: Area, rawData) => {
-            musicArea.song = rawData.songName!;
+            musicArea.song = rawData.song!;
         });
 
         super.message('music');
