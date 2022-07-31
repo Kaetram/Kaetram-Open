@@ -39,9 +39,6 @@ export default abstract class Character extends Entity {
     // List of entities attacking this character.
     public attackers: Character[] = []; // Used by combat to determine which character to target.
 
-    public weaponLevel!: number;
-    public armourLevel!: number;
-
     public stunned = false;
     public moving = false;
     public pvp = false;

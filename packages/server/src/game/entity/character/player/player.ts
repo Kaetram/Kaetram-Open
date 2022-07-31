@@ -1058,32 +1058,86 @@ export default class Player extends Character {
         return data;
     }
 
+    /**
+     * Override for obtaining the weapon power level.
+     * @returns The player's currently equipped weapon's power level.
+     */
+
+    public override getWeaponLevel(): number {
+        return this.equipment.getWeapon().power;
+    }
+
+    /**
+     * Override for obtaining the armour power level.
+     * @returns The player's currently equipped armour's power level.
+     */
+
+    public override getArmourLevel(): number {
+        return this.equipment.getArmour().power;
+    }
+
+    /**
+     * Callback for when the orientation has been changed.
+     */
+
     public onOrientation(callback: () => void): void {
         this.orientationCallback = callback;
     }
+
+    /**
+     * Callback for when the current character kills another character.
+     * @param callback Contains the character object that was killed.
+     */
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
     }
 
+    /**
+     * Callback for when the player talks to an NPC.
+     * @param callback Contains the NPC object the player is talking to.
+     */
+
     public onTalkToNPC(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
+    /**
+     * Callback for when the player has entered through a door.
+     * @param callback Contains information about the door player is entering through.
+     */
+
     public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
+
+    /**
+     * Callback for when the player has clicked the profile UI button.
+     */
+
     public onProfile(callback: InterfaceCallback): void {
         this.profileToggleCallback = callback;
     }
+
+    /**
+     * Callback for when the player has clicked the inventory button.
+     */
 
     public onInventory(callback: InterfaceCallback): void {
         this.inventoryToggleCallback = callback;
     }
 
+    /**
+     * Callback for when the warp button in the UI has been clicked.
+     */
+
     public onWarp(callback: InterfaceCallback): void {
         this.warpToggleCallback = callback;
     }
+
+    /**
+     * Callback for when the cheat score has increased.
+     */
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
