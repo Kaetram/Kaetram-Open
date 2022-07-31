@@ -52,5 +52,15 @@
         "mobCount": 10,
 
         "rewardExperience": 1000
+    },
+
+    "warriorcrab": {
+        "name": "Warrior Crab",
+        "description": "Kill the Hermit Crab Warrior hidden somewhere on the beach."
+    },
+
+    "sandtreasure": {
+        "name": "Sand Treasure",
+        "description": "Find the treasure hidden somewhere on the beach."
     }
 }

@@ -9,5 +9,24 @@
     "defenseLevel": 5,
     "projectileName": "projectile-fireball2",
     "achievement": "ancientwizard"
+  },
+
+  "224-359": {
+    "name": "Hermit Crab Warrior",
+    "drops": {
+      "flask": 200,
+      "gold": 750,
+      "spear": 75,
+      "platearmor": 100
+    },
+    "roaming": true,
+    "miniboss": true,
+    "hitPoints": 300,
+    "level": 30,
+    "aggroRange": 3,
+    "aggressive": true,
+    "attackLevel": 10,
+    "defenseLevel": 15,
+    "achievement": "warriorcrab"
   }
 }
