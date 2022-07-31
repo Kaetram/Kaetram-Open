@@ -103,8 +103,6 @@ export default class Mob extends Character {
         this.poisonous = data.poisonous!;
         this.hiddenName = data.hiddenName!;
         this.achievement = data.achievement || this.achievement;
-
-        // TODO - After refactoring projectile system
         this.projectileName = data.projectileName || this.projectileName;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
@@ -393,6 +391,24 @@ export default class Mob extends Character {
         if (!this.hiddenName) data.level = this.level;
 
         return data;
+    }
+
+    /**
+     * Override to obtain the mob's weapon level.
+     * @returns The mob's weapon power level.
+     */
+
+    public override getWeaponLevel(): number {
+        return this.attackLevel;
+    }
+
+    /**
+     * Override to obtain the current mob's armour level.
+     * @returns The mob's armour level.
+     */
+
+    public override getArmourLevel(): number {
+        return this.defenseLevel;
     }
 
     /**
