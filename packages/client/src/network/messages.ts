@@ -360,7 +360,7 @@ export default class Messages {
         this.pvpCallback = callback;
     }
 
-    public onPoison(callback: PoisonCallback): voi {
+    public onPoison(callback: PoisonCallback): void {
         this.poisonCallback = callback;
     }
 
