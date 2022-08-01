@@ -16,7 +16,11 @@
 
   "beachnpc": {
     "name": "Bubba",
-    "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
+    "text": [
+      "Well, thanks for the help.",
+      "Not really doing much but thanks regardless.",
+      "Though I did hear some cave crumbling nearby as you killed those crabs...",
+      "I think it'd be best to check it out if you can."]
   },
 
   "agent": {

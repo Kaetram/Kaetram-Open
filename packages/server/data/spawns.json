@@ -28,5 +28,22 @@
     "attackLevel": 10,
     "defenseLevel": 15,
     "achievement": "warriorcrab"
+  },
+
+  "317-359": {
+    "name": "Water Guardian",
+    "drops": {
+      "redguardarmor": 75,
+      "redguardarcherarmor": 75,
+      "ring1": 100,
+      "scimitar": 100,
+      "watermelonbow": 100
+    },
+    "miniboss": true,
+    "level": 40,
+    "hitPoints": 350,
+    "attackLevel": 15,
+    "defenseLevel": 25,
+    "achievement": "waterguardian"
   }
 }
