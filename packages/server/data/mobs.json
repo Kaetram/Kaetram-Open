@@ -1252,10 +1252,10 @@
   "redguard": {
     "name": "Bandit",
     "id": 68,
-    "drops": {"redguardarmor": 300, "redguardarcherarmor": 325, "ring1": 25, "scimitar": 150, "watermelonbow": 200},
+    "drops": {"redguardarmor": 25, "redguardarcherarmor": 25, "ring1": 50, "scimitar": 50, "watermelonbow": 50},
     "hitPoints": 135,
-    "defenseLevel": 1,
-    "attackLevel": 1,
+    "defenseLevel": 15,
+    "attackLevel": 10,
     "experience": 55,
     "level": 18,
     "aggroRange": 1,
