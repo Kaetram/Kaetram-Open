@@ -39,7 +39,7 @@ export interface Config {
     mongodbPassword: string;
     mongodbDatabase: string;
     mongodbSrv: boolean;
-    mongodbSsl: boolean;
+    mongodbTls: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;
@@ -57,16 +57,16 @@ export interface Config {
     fsDebugging: boolean;
 }
 
-let suffix =
-    !!process.env.NODE_ENV && process.env.NODE_ENV.length > 0 ? `.${process.env.NODE_ENV}` : '';
-console.log(`Loading config .env${suffix}`);
-let envConfig = dotenvParseVariables(
-        dotenv.load({
-            path: `../../.env${suffix}`,
-            defaults: '../../.env.defaults',
-            includeProcessEnv: true
-        })
-    ),
+let env = dotenv.load({
+        path: `../../.env`,
+        defaults: '../../.env.defaults',
+        includeProcessEnv: true
+    }),
+    { NODE_ENV } = env;
+
+if (NODE_ENV) Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+
+let envConfig = dotenvParseVariables(env),
     config = {} as Config;
 
 for (let key of Object.keys(envConfig)) {
