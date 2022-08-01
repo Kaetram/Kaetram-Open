@@ -234,8 +234,6 @@ export default class Mob extends Character {
 
         if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
 
-        if (!player.hasAggressionTimer()) return false;
-
         return this.isNear(player, this.aggroRange);
     }
 
