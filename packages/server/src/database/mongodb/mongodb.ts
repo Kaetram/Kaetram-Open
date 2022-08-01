@@ -25,12 +25,12 @@ export default class MongoDB {
         username: string,
         password: string,
         private databaseName: string,
-        mongodbSrv: boolean,
-        private ssl = true
+        private tls: boolean,
+        srv: boolean
     ) {
-        let srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
-            authInsert = !!username && !!password ? `${username}:${password}@` : '',
-            portInsert = !!port && port > 0 ? `:${port}` : '';
+        let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
+            authInsert = username && password ? `${username}:${password}@` : '',
+            portInsert = port > 0 ? `:${port}` : '';
         this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
 
         // Attempt to connect to MongoDB.
@@ -47,7 +47,7 @@ export default class MongoDB {
             connectTimeoutMS: 5000,
             serverSelectionTimeoutMS: 5000,
             wtimeoutMS: 10,
-            ssl: this.ssl
+            tls: this.tls
         });
 
         client.connect((error: Error | undefined, _client: MongoClient | undefined) => {

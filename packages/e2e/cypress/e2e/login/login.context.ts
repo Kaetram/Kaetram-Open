@@ -20,4 +20,8 @@ export default class LoginContext extends WorldContext {
 
         cy.createPlayerInfo(playerInfo);
     }
+
+    before() {
+        // Nothing needs to happen here
+    }
 }
