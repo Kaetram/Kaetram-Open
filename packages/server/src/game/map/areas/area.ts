@@ -89,8 +89,8 @@ export default class Area {
      */
 
     public fulfillsRequirement(player: Player): boolean {
-        if (this.quest) return player.quests!.get(this.quest)?.isFinished();
-        if (this.achievement) return player.achievements!.get(this.achievement)?.isFinished();
+        if (this.quest) return player.quests.get(this.quest)?.isFinished();
+        if (this.achievement) return player.achievements.get(this.achievement)?.isFinished();
 
         return false;
     }

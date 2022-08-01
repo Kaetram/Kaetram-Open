@@ -445,6 +445,11 @@ export default class Commands {
 
                 break;
 
+            case 'finishachievements':
+                return this.player.achievements.forEachAchievement((achievement) =>
+                    achievement.finish()
+                );
+
             case 'poison':
                 instance = blocks.shift()!;
 

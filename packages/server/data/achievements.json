@@ -62,5 +62,10 @@
     "sandtreasure": {
         "name": "Sand Treasure",
         "description": "Find the treasure hidden somewhere on the beach."
+    },
+
+    "waterguardian": {
+        "name": "Water Guardian",
+        "description": "Defeat the Water Guardian!"
     }
 }
