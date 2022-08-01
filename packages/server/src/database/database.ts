@@ -20,8 +20,8 @@ export default class Database {
                     config.mongodbUser,
                     config.mongodbPassword,
                     config.mongodbDatabase,
-                    config.mongodbSrv,
-                    config.mongodbSsl
+                    config.mongodbTls,
+                    config.mongodbSrv
                 );
                 break;
 
