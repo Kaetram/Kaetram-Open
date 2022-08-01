@@ -295,6 +295,10 @@ export default class Player extends Character {
         this.send(new Welcome(this.serialize(false, true)));
     }
 
+    /**
+     * Destroys all the isntances in the player to aid the garbage collector.
+     */
+
     public destroy(): void {
         this.combat.stop();
         this.skills.stop();
@@ -314,6 +318,11 @@ export default class Player extends Character {
         this.connection = null!;
     }
 
+    /**
+     * Adds experience to the player and handles level ups/popups/packets/etc.
+     * @param exp The amount of experience we are adding to the player.
+     */
+
     public addExperience(exp: number): void {
         this.experience += exp;
 
@@ -328,6 +337,7 @@ export default class Player extends Character {
             level: this.level
         } as ExperiencePacket;
 
+        // Update hit points and send a popup to the player when a level up occurs.
         if (oldLevel !== this.level) {
             this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
             this.healHitPoints(this.hitPoints.maxPoints);
@@ -783,6 +793,10 @@ export default class Player extends Character {
         return this.lightsLoaded.includes(light);
     }
 
+    /**
+     * Disconnects the player and sends the UTF8 error message to the client.
+     */
+
     public timeout(): void {
         if (!this.connection) return;
 
@@ -790,12 +804,15 @@ export default class Player extends Character {
         this.connection.close('Player timed out.');
     }
 
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     */
+
     public refreshTimeout(): void {
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
-        this.disconnectTimeout = setTimeout(() => {
-            this.timeout();
-        }, this.timeoutDuration);
+        this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
     }
 
     public isMuted(): boolean {
@@ -1012,14 +1029,14 @@ export default class Player extends Character {
         );
     }
 
+    /**
+     * Saves the player data to the database.
+     */
+
     public save(): void {
         if (config.skipDatabase || this.isGuest || !this.ready) return;
 
         this.database.creator?.save(this);
-    }
-
-    public hasAggressionTimer(): boolean {
-        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
     }
 
     /**
