@@ -43,7 +43,7 @@
 }
 
 #sound-check,
-#camera-check,
+#low-power-check,
 #debug-check,
 #centre-check,
 #name-check,
@@ -90,7 +90,7 @@
             top: 3px * $i;
         }
 
-        #camera-check {
+        #low-power-check {
             top: 23px * $i;
         }
 
