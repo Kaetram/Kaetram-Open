@@ -1,0 +1,65 @@
+@use '../../abstracts/media';
+
+#enchant {
+    cursor: default;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: none;
+}
+
+#enchant-inventory-slots {
+    left: 13%;
+}
+
+#enchant-selected-item,
+#enchant-shards {
+    position: absolute;
+    top: 80%;
+
+    background-size: 600%;
+}
+
+#enchant-selected-item {
+    left: 11%;
+}
+
+#enchant-shards {
+    left: 34%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #enchant {
+            transform: scale(1.6);
+
+            width: 129px * $i;
+            height: 155px * $i;
+            margin-top: -77px * $i;
+            margin-left: -64px * $i;
+
+            background: url('/img/#{$i}/containers.png') 0 0;
+        }
+
+        #enchant-selected-item,
+        #enchant-shards {
+            width: 16px * $i;
+            height: 15px * $i;
+        }
+
+        #enchant-container {
+            background-image: url('/img/#{$i}/containers.png');
+        }
+
+        .inventory-slots {
+            width: 96px * $i;
+            height: 80px * $i;
+        }
+    }
+
+    #shards-count {
+        width: 16px * $i;
+    }
+}
