@@ -9,7 +9,7 @@
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
 [![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
 [![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
-[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)][discord]
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&style=flat)][discord]
 [![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
 
 Kaetram is an open-source game engine created to aid those interested in entering the game
@@ -50,23 +50,23 @@ its predecessor, a couple being:
 ### Prerequisites
 
 You must first [install Node.js](https://nodejs.org/en/download) to run the project, and
-_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data
-on the server.
+_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data on
+the server.
 
 #### NOTE: Node.js
 
 > You need to use a Node.js version greater than or equal to `14.19.0`, following the
-> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most
-> stable experience when developing/experimenting with Kaetram. Older versions would not work
-> with our current dependencies and package manager.
+> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most stable
+> experience when developing/experimenting with Kaetram. Older versions would not work with our
+> current dependencies and package manager.
 
 #### NOTE: MongoDB
 
 > MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
 > install it and run an online environment with all the features enabled. To do this, see
-> [Configuration](#configuration), and set `OFFLINE_MODE=false`.
-> _If you do choose to install MongoDB, a user is not necessary, but you can enable authentication
-> with the `MONGODB_AUTH` setting._
+> [Configuration](#configuration), and set `SKIP_DATABASE=false`. _If you do choose to install
+> MongoDB, a user is not necessary, but you can enable authentication with the `MONGODB_AUTH`
+> setting._
 
 #### Yarn
 
@@ -117,13 +117,38 @@ Add `--host` at the end to make the game visible on your network.
 
 ### Configuration
 
-_Optionally_, if you would want some additional configuration, There will see a file named
+Optionally, if you want some additional configuration, There is a file named
 [`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
 file, or by setting environmental variables.
 
-Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
+Copy and rename [`.env.defaults`](.env.defaults) to `.env`, and modify the contents to fit your
+needs.
 
-_Keep in mind_, you have to rebuild the client and restart the server every time you change your configuration.
+_Keep in mind_, you have to rebuild the client and restart the server every time you change your
+configuration.
+
+## Testing
+
+### End to End
+
+As a [prerequisite](#prerequisites) to run the E2E tests, you need a MongoDB server running as well.
+
+[Configuration](#configuration) for test-only environments can be configured on
+[`.env.e2e`](`.env.e2e`). All it's values will fallback to `.env`, then to
+[`.env.defaults`](.env.defaults), if present.
+
+To run test on your console, use
+
+```console
+yarn test:run
+```
+
+Alternatively, if you want to have the test environment open interactively, so you can select the
+test you want to run in a UI, use
+
+```console
+yarn test:open
+```
 
 ## Features
 
@@ -231,8 +256,8 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 
 ## License & Commission
 
-For all inquiries about purchasing a different license or commission work, please contact
-**@Keros** on [Discord][discord].
+For all inquiries about purchasing a different license or commission work, please contact **@Keros**
+on [Discord][discord].
 
 This project is distributed under the
 **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See

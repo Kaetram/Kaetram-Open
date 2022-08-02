@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Menu from './menu';
 
 export default class Actions extends Menu {
-    protected override body: HTMLElement = document.querySelector('#action-container')!;
+    protected override container: HTMLElement = document.querySelector('#action-container')!;
 
     // Contains the list of actions.
     private list: HTMLUListElement = document.querySelector('#action-container > ul')!;
@@ -28,8 +28,8 @@ export default class Actions extends Menu {
         _.each(actions, (action: Modules.MenuActions) => this.add(action));
 
         // Set the position of the action menu.
-        this.body.style.left = `${x}px`;
-        this.body.style.top = `${y}px`;
+        this.container.style.left = `${Math.max(Math.min(x, window.innerWidth - 128), 128)}px`;
+        this.container.style.top = `${Math.max(Math.min(y, window.innerHeight - 32), 32)}px`;
 
         super.show();
     }

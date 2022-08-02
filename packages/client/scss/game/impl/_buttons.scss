@@ -1,0 +1,100 @@
+#buttons {
+    cursor: default;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    background-color: rgb(0 0 0 / 0%);
+
+    ul {
+        float: right;
+        overflow: hidden;
+
+        margin: 0;
+        padding: 0;
+
+        list-style-type: none;
+
+        li {
+            float: left;
+        }
+    }
+}
+
+#chat-button,
+#inventory-button,
+#profile-button,
+#settings-button,
+#warp-button {
+    position: relative;
+
+    width: 42px;
+    height: 45px;
+
+    background: url('/img/3/main.png') no-repeat;
+    background-position-y: -942px;
+}
+
+#chat-button {
+    background-position: -588px -987px;
+
+    &:hover {
+        background-position-x: -630px;
+    }
+
+    &.active {
+        background-position-x: -672px;
+    }
+}
+
+#inventory-button {
+    background-position-x: -588px;
+
+    &:hover {
+        background-position-x: -630px;
+    }
+
+    &.active {
+        background-position-x: -672px;
+    }
+}
+
+#profile-button {
+    background-position-x: -714px;
+
+    &:hover {
+        background-position-x: -756px;
+    }
+
+    &.active {
+        background-position-x: -798px;
+    }
+}
+
+#settings-button {
+    background-position-x: -1218px;
+
+    &:hover {
+        background-position-x: -1260px;
+    }
+
+    &.active {
+        background-position-x: -1302px;
+    }
+}
+
+#warp-button {
+    background-position-x: -966px;
+
+    &:hover {
+        background-position-x: -1008px;
+    }
+
+    &.active {
+        background-position-x: -1050px;
+    }
+}

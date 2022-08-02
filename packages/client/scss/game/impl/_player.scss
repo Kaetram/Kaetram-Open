@@ -1,0 +1,178 @@
+#player-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#health-bar-text {
+    font-family: AdvoCut, sans-serif;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#health,
+#health-info {
+    cursor: default;
+}
+
+#health {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to right, #f00, #ef5a5a);
+
+    transition: 0.5s width ease;
+}
+
+#exp {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to left, #4f4, #080);
+
+    transition: 0.5s width ease;
+}
+
+#health.white {
+    animation: flash 0.5s linear 1;
+}
+
+#health.green {
+    animation: flash-green 0.5s linear 1;
+}
+
+#health.poison {
+    animation: flash-poison 0.5s linear 1;
+}
+
+@media (--lg) {
+    #health,
+    #health-bar {
+        position: absolute;
+        top: 4.5px;
+        left: 30px;
+
+        width: 230px;
+        height: 26px;
+        margin: 0;
+        padding: 0;
+
+        text-align: center;
+
+        border: 0;
+    }
+
+    #health-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 264px;
+        height: 39px;
+        margin: 0;
+        padding: 0;
+
+        color: white;
+        text-align: center;
+
+        background-image: url('/img/3/main.png');
+        background-position: 0 -834px;
+        border: 0;
+    }
+
+    #exp {
+        position: absolute;
+        top: 30px;
+        left: 36px;
+
+        width: 228px;
+        height: 15px;
+        margin: 0;
+        padding: 0;
+
+        border: 0;
+    }
+
+    #exp-bar {
+        position: absolute;
+        top: 30px;
+        left: 36px;
+
+        width: 228px;
+        height: 15px;
+
+        color: rgb(255 255 255 / 100%);
+
+        background-image: url('/img/3/main.png');
+        background-position: 0 -873px;
+    }
+
+    #health-bar-text {
+        margin: 10px 0 0 30px;
+
+        font-size: 18px;
+    }
+}
+
+@media (--md) {
+    #health,
+    #health-bar {
+        position: absolute;
+        top: 3px;
+        left: 20px;
+
+        width: 154px;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+
+        text-align: center;
+
+        border: 0;
+    }
+
+    #health-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 176px;
+        height: 26px;
+        margin: 0;
+        padding: 0;
+
+        color: white;
+        text-align: center;
+
+        background-image: url('/img/2/main.png');
+        background-position: 0 -556px;
+        border: 0;
+    }
+
+    #health-bar-text {
+        margin: 5px 0 0 20px;
+    }
+
+    #exp {
+        position: absolute;
+        top: 20px;
+        left: 24px;
+
+        width: 152px;
+        height: 9px;
+        margin: 0;
+        padding: 0;
+
+        border: 0;
+    }
+
+    #exp-bar {
+        position: absolute;
+        top: 20px;
+        left: 24px;
+
+        width: 152px;
+        height: 9px;
+
+        color: rgb(255 255 255 / 100%);
+
+        background-image: url('/img/2/main.png');
+        background-position: 0 -582px;
+    }
+}
