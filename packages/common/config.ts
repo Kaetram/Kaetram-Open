@@ -39,6 +39,7 @@ export interface Config {
     mongodbPassword: string;
     mongodbDatabase: string;
     mongodbSrv: boolean;
+    mongodbTls: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;
@@ -56,13 +57,16 @@ export interface Config {
     fsDebugging: boolean;
 }
 
-let envConfig = dotenvParseVariables(
-        dotenv.load({
-            path: '../../.env',
-            defaults: '../../.env.defaults',
-            includeProcessEnv: true
-        })
-    ),
+let env = dotenv.load({
+        path: `../../.env`,
+        defaults: '../../.env.defaults',
+        includeProcessEnv: true
+    }),
+    { NODE_ENV } = env;
+
+if (NODE_ENV) Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+
+let envConfig = dotenvParseVariables(env),
     config = {} as Config;
 
 for (let key of Object.keys(envConfig)) {

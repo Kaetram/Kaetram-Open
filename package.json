@@ -9,7 +9,7 @@
     "license": "MPL-2.0",
     "scripts": {
         "postinstall": "husky install",
-        "packages": "yarn workspaces foreach --no-private -j 3 -piv run",
+        "packages": "FORCE_COLOR=true yarn workspaces foreach --no-private -j 3 -piv run",
         "dev": "yarn packages dev",
         "hub": "yarn packages hub",
         "start": "yarn packages start",
@@ -18,7 +18,8 @@
         "lint:style": "stylelint packages/**/*.scss --ignore-path .gitignore",
         "lint:fix": "yarn lint:js --fix && yarn lint:style --fix",
         "lint": "yarn lint:js && yarn lint:style",
-        "test": "yarn packages test",
+        "test:run": "yarn packages test:run",
+        "test:open": "yarn packages test:open",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
     },

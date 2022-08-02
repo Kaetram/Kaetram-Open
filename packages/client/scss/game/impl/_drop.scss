@@ -1,0 +1,51 @@
+#drop-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: none;
+
+    margin-right: -28px;
+    margin-left: -100px;
+    padding: 5px;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 16px;
+    color: #e3e3e3;
+
+    background-color: rgb(45 45 45 / 80%);
+    border-radius: 6px;
+}
+
+#drop-count {
+    font-family: AdvoCut, sans-serif;
+}
+
+#drop-dialog.active {
+    display: block;
+}
+
+#drop-title {
+    margin-bottom: 10px;
+
+    text-align: center;
+}
+
+#drop-accept,
+#drop-cancel {
+    cursor: pointer;
+
+    font-size: 18px;
+
+    background-color: rgb(120 120 120 / 30%);
+
+    &:hover {
+        background-color: rgb(120 120 120 / 40%);
+    }
+
+    &:active {
+        color: #fcda5c;
+
+        background-color: rgb(120 120 120 / 40%);
+    }
+}
