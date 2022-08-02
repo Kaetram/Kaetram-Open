@@ -277,14 +277,6 @@ export default class Incoming {
 
                 break;
 
-            case Opcodes.Movement.Orientate:
-                log.debug(`Unhandled Movement.Orientate: ${this.player.username}.`);
-                // this.player.sendToRegions(
-                //     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
-                // );
-
-                break;
-
             case Opcodes.Movement.Freeze:
                 this.player.frozen = !!frozen;
                 break;

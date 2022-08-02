@@ -162,6 +162,7 @@ export default class EntitiesController {
         mob.level = info.level!;
         mob.hiddenName = info.hiddenName!;
         mob.movementSpeed = info.movementSpeed!;
+        mob.orientation = info.orientation!;
 
         // Set the display info properties directly onto the mob.
         if (info.displayInfo) {

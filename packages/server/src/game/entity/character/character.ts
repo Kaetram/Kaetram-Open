@@ -18,7 +18,7 @@ import Hit from './combat/hit';
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
-type SubAoECallback = (radius: number, hasTerror: boolean) => void;
+type DeathCallback = (attacker?: Character) => void;
 
 export default abstract class Character extends Entity {
     public level = 1;
@@ -30,6 +30,7 @@ export default abstract class Character extends Entity {
     public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate = Modules.Defaults.ATTACK_RATE;
     public healingRate = Modules.Constants.HEAL_RATE;
+    public orientation = Modules.Orientation.Down;
 
     /* States */
     public poison?: Poison | undefined;
@@ -56,12 +57,11 @@ export default abstract class Character extends Entity {
     private healingInterval?: NodeJS.Timeout | undefined;
     private poisonInterval?: NodeJS.Timeout | undefined;
 
-    private stunCallback?: StunCallback | undefined;
-    private poisonCallback?: PoisonCallback | undefined;
+    private stunCallback?: StunCallback;
+    private poisonCallback?: PoisonCallback;
 
-    public hitCallback?: HitCallback | undefined;
-    public subAoECallback?: SubAoECallback | undefined;
-    public deathCallback?(attacker?: Character): void;
+    public hitCallback?: HitCallback;
+    public deathCallback?: DeathCallback;
 
     protected constructor(
         instance: string,
@@ -304,6 +304,15 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Updates the current orientation of the character.
+     * @param orientation New orientation value for the character.
+     */
+
+    public setOrientation(orientation: Modules.Orientation): void {
+        this.orientation = orientation;
+    }
+
+    /**
      * Returns the type of projectile the character is using.
      * @returns A projectile integer from the enum of Projectiles.
      */
@@ -438,6 +447,7 @@ export default abstract class Character extends Entity {
         let data = super.serialize();
 
         data.movementSpeed = this.movementSpeed;
+        data.orientation = this.orientation;
 
         return data;
     }
