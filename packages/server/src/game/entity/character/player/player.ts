@@ -653,7 +653,7 @@ export default class Player extends Character {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
-        if (this.map.isColliding(x, y, this)) {
+        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
@@ -708,6 +708,22 @@ export default class Player extends Character {
 
     public canBeStunned(): boolean {
         return true;
+    }
+
+    /**
+     * @returns If the player rights are greater than 0.
+     */
+
+    public isMod(): boolean {
+        return this.rights > 0;
+    }
+
+    /**
+     * @returns If the player rights are greater than 1.
+     */
+
+    public isAdmin(): boolean {
+        return this.rights > 1;
     }
 
     /**
