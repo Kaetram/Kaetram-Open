@@ -1,0 +1,38 @@
+#trade {
+    position: absolute;
+    top: 10%;
+    left: 20%;
+
+    display: none;
+}
+
+#trade-player-container,
+#trade-o-player-container {
+    position: relative;
+    top: 24%;
+
+    float: left;
+}
+
+#trade-player-container {
+    left: 5%;
+}
+
+#trade-o-player-container {
+    left: 12.5%;
+}
+
+@media (--md) {
+    #trade {
+        width: 500px;
+        height: 339px;
+
+        background: url('/img/2/trade.png') 0 0;
+    }
+
+    #trade-player-container,
+    #trade-o-player-container {
+        width: 206px;
+        height: 186px;
+    }
+}

@@ -1,0 +1,76 @@
+@use '../../abstracts/media';
+
+#bank {
+    cursor: default;
+
+    position: absolute;
+    top: 20%;
+    left: 25%;
+
+    display: none;
+}
+
+#bank-container {
+    float: right;
+}
+
+#bank-slot {
+    position: absolute;
+    top: 9%;
+}
+
+.bank-slot {
+    float: left;
+}
+
+.bank-image {
+    width: 100%;
+    height: 100%;
+
+    background-size: 600%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #bank {
+            width: 300px * $i;
+            height: 167px * $i;
+        }
+
+        #bank-container,
+        #bank-inventory-container {
+            background-image: url('/img/#{$i}/bank.png');
+        }
+
+        #bank-container {
+            width: 171px * $i;
+            height: 167px * $i;
+
+            background-position: -132px * $i 0;
+        }
+
+        #bank-slot {
+            left: 140px * $i;
+
+            overflow-y: scroll;
+
+            width: 144px * $i;
+            height: 136px * $i;
+        }
+
+        .bank-slot {
+            width: 16px * $i;
+            height: 15px * $i;
+            margin-bottom: 6px * $i;
+            margin-left: 2px * $i;
+
+            background: url('/img/#{$i}/containers.png') -300px * $i -172px * $i;
+        }
+    }
+}
+
+@media (--sm) {
+    #bank {
+        transform: scale(1.5);
+    }
+}

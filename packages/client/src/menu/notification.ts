@@ -26,7 +26,7 @@ export default class Notification extends Menu {
         }
 
         // Displays the notification.
-        this.body.classList.add('active');
+        this.container.classList.add('active');
         this.setPosition();
 
         // Updates the title's colour.
@@ -52,8 +52,8 @@ export default class Notification extends Menu {
         if (ignore) return;
 
         // Hides the notification.
-        this.body.classList.remove('active');
-        this.body.style.top = '100%';
+        this.container.classList.remove('active');
+        this.container.style.top = '100%';
     }
 
     /**
@@ -76,7 +76,7 @@ export default class Notification extends Menu {
      */
 
     public override isVisible(): boolean {
-        return this.body.classList.contains('active');
+        return this.container.classList.contains('active');
     }
 
     /**
@@ -88,7 +88,7 @@ export default class Notification extends Menu {
      */
 
     private getPosition(): number {
-        return window.innerHeight - this.body.offsetHeight;
+        return window.innerHeight - this.container.offsetHeight;
     }
 
     /**
@@ -96,6 +96,6 @@ export default class Notification extends Menu {
      */
 
     private setPosition(): void {
-        this.body.style.top = `${this.getPosition()}px`;
+        this.container.style.top = `${this.getPosition()}px`;
     }
 }

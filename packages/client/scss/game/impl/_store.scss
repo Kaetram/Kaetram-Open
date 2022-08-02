@@ -1,0 +1,201 @@
+@use '../../abstracts/media';
+
+#store {
+    cursor: default;
+
+    position: absolute;
+    top: 17%;
+    left: 50%;
+
+    display: none;
+}
+
+#store-inventory-container {
+    position: absolute;
+    top: 0;
+    right: 100%;
+}
+
+#store-container {
+    position: absolute;
+    top: 8%;
+    left: 8%;
+
+    overflow-y: scroll;
+
+    width: 85%;
+    height: 80%;
+
+    font-family: AdvoCut, sans-serif;
+
+    ul li {
+        padding-bottom: 5px;
+    }
+}
+
+#store-inventory-slots {
+    left: 14%;
+}
+
+#store-sell-slot-return-text,
+#store-sell-slot-text,
+#shards-count {
+    color: black;
+}
+
+#confirm-enchant,
+#confirm-sell {
+    top: 80%;
+    left: 70%;
+}
+
+.store-item {
+    display: inline-flex;
+
+    width: 98%;
+    height: 5%;
+
+    border: 3px solid rgb(255 255 0 / 30%);
+    border-radius: 10px;
+}
+
+.store-item-image {
+    transform: scale(0.9);
+
+    width: 32px;
+    height: 32px;
+
+    background-size: 600%;
+    border: 2px solid rgb(0 0 255 / 30%);
+    border-radius: 100%;
+}
+
+.store-item-name,
+.store-item-count,
+.store-item-price,
+.store-item-buy {
+    position: absolute;
+
+    float: left;
+
+    padding-top: 2%;
+
+    font-size: 12px;
+}
+
+.store-item-name {
+    left: 20%;
+}
+
+.store-item-count {
+    left: 55%;
+}
+
+.store-item-price {
+    left: 65%;
+}
+
+.store-item-buy {
+    position: relative;
+    left: 75%;
+
+    border: 2px solid rgb(0 255 0 / 30%);
+    border-radius: 30%;
+
+    &:hover {
+        cursor: pointer;
+
+        color: white;
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #store {
+            width: 170px * $i;
+            height: 168px * $i;
+
+            background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
+        }
+
+        #store-inventory-container {
+            width: 129px * $i;
+            height: 155px * $i;
+
+            background: url('/img/#{$i}/containers.png') 0 0;
+        }
+
+        #store-sell-slot,
+        #store-sell-slot-return {
+            position: absolute;
+            top: 123px * $i;
+
+            width: 16px * $i;
+            height: 16px * $i;
+
+            background-size: 600%;
+        }
+
+        #store-sell-slot {
+            left: 14px * $i;
+        }
+
+        #store-sell-slot-return {
+            left: 44px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    .store-item-name,
+    .store-item-count,
+    .store-item-price,
+    .store-item-buy {
+        font-size: 16px;
+    }
+}
+
+@media (--sm) {
+    #store {
+        top: 30%;
+        left: 55%;
+        transform: scale(1.5);
+    }
+
+    #store-container ul li {
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+
+    .store-item {
+        width: 97%;
+
+        border: 1.5px solid rgb(255 255 0 / 30%);
+        border-radius: 7px;
+    }
+
+    .store-item-image {
+        width: 16px;
+        height: 16px;
+
+        border: 1px solid rgb(0 0 255 / 30%);
+    }
+
+    .store-item-name,
+    .store-item-count,
+    .store-item-price {
+        font-size: 7px;
+    }
+
+    .store-item-buy {
+        position: relative;
+
+        float: left;
+
+        padding-top: 2%;
+
+        font-size: 6px;
+
+        border: 1px solid rgb(0 255 0 / 30%);
+    }
+}
