@@ -104,7 +104,6 @@ export default class Player extends Character {
     public lastLogin = 0;
     public pvpKills = 0;
     public pvpDeaths = 0;
-    public orientation = Modules.Orientation.Down;
     public mapVersion = -1;
 
     public talkIndex = 0;
@@ -160,7 +159,6 @@ export default class Player extends Character {
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
-    private orientationCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
@@ -686,12 +684,6 @@ export default class Player extends Character {
         );
     }
 
-    public setOrientation(orientation: number): void {
-        this.orientation = orientation;
-
-        if (this.orientationCallback) this.orientationCallback();
-    }
-
     /**
      * Override the `setRegion` in Entity by adding a callback.
      * @param region The new region we are setting.
@@ -1091,14 +1083,6 @@ export default class Player extends Character {
 
     public override getArmourLevel(): number {
         return this.equipment.getArmour().power;
-    }
-
-    /**
-     * Callback for when the orientation has been changed.
-     */
-
-    public onOrientation(callback: () => void): void {
-        this.orientationCallback = callback;
     }
 
     /**

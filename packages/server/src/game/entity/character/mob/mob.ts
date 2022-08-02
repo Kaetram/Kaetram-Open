@@ -190,6 +190,8 @@ export default class Mob extends Character {
     public move(x: number, y: number): void {
         this.setPosition(x, y);
 
+        this.calculateOrientation();
+
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Movement(Opcodes.Movement.Move, {
@@ -218,6 +220,21 @@ export default class Mob extends Character {
         });
 
         return drops;
+    }
+
+    /**
+     * This function roughly calculates the orientation based on the old
+     * coordinates and the new coordinates. They do not matter much since
+     * orientation is only sent when an entity is created. This gives the
+     * effect to players entering new regions or just logging in that the
+     * entities aren't just standing still and all facing the same direction.
+     */
+
+    private calculateOrientation(): void {
+        if (this.oldX < this.x) this.setOrientation(Modules.Orientation.Right);
+        else if (this.oldX > this.x) this.setOrientation(Modules.Orientation.Left);
+        else if (this.oldY < this.y) this.setOrientation(Modules.Orientation.Down);
+        else if (this.oldY > this.y) this.setOrientation(Modules.Orientation.Up);
     }
 
     /**

@@ -4,6 +4,8 @@
  * to stand out for some reason (i.e. miniboss has a different scale).
  */
 
+import { Modules } from '../network';
+
 export interface EntityDisplayInfo {
     instance: string;
     colour?: string;
@@ -37,6 +39,7 @@ export interface EntityData {
     attackRange?: number;
     level?: number;
     hiddenName?: boolean;
+    orientation?: Modules.Orientation;
 
     // Item data
     count?: number;
