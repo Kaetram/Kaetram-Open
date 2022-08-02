@@ -190,7 +190,7 @@ export default abstract class Character extends Entity {
 
     public hit(damage: number, attacker?: Character): void {
         // Stop hitting if entity is dead.
-        if (this.isDead()) return;
+        if (this.isDead() || this.invincible) return;
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
