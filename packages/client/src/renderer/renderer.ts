@@ -14,7 +14,7 @@ import type Map from '../map/map';
 import type Splat from './infos/splat';
 
 import { RegionTile } from './../../../common/types/region';
-import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
+import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 
 import { Modules } from '@kaetram/common/network';
 import { SerializedLight } from '@kaetram/common/types/light';
@@ -317,6 +317,8 @@ export default class Renderer {
 
     private draw(): void {
         if (this.hasRenderedFrame()) return;
+
+        console.log('draw bitch');
 
         this.clearDrawing();
         this.saveDrawing();
