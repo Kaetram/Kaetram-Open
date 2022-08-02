@@ -194,6 +194,10 @@ export default class Connection {
 
         this.map.loadRegions(region);
 
+        // Used if the client uses low-power mode, forces redrawing of trees.
+        this.renderer.forceRendering = true;
+
+        // Update the animated tiles when we receive new map data.
         this.renderer.updateAnimatedTiles();
     }
 
