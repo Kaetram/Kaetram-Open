@@ -63,7 +63,7 @@ export default class Warp {
      */
 
     private isCooldown(): boolean {
-        return this.getDifference() > this.warpTimeout || this.player.rights > 1;
+        return this.getDifference() > this.warpTimeout || this.player.isAdmin();
     }
 
     /**
@@ -74,7 +74,7 @@ export default class Warp {
      */
 
     private hasRequirement(level: number): boolean {
-        return this.player.level >= level || this.player.rights > 1;
+        return this.player.level >= level || this.player.isAdmin();
     }
 
     /**
