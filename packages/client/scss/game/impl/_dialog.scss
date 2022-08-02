@@ -1,0 +1,169 @@
+@use '../../abstracts/media';
+
+#profile-dialog,
+#settings-page {
+    cursor: default;
+    user-select: none;
+
+    position: absolute;
+    right: 0;
+    bottom: 45px;
+
+    display: none;
+}
+
+#bank-inventory-container,
+#enchant-container {
+    float: left;
+}
+
+.inventory-slots {
+    position: absolute;
+    top: 13%;
+    left: 6%;
+}
+
+.item-count,
+.inventory-item-count {
+    font-family: AdvoCut, sans-serif;
+    color: rgb(255 255 255 / 100%);
+}
+
+.close {
+    position: absolute;
+    top: -3%;
+    left: 92%;
+}
+
+.ok {
+    position: absolute;
+}
+
+.skill-slots {
+    position: relative;
+
+    float: left;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #bank-inventory-container,
+        #enchant-container {
+            width: 129px * $i;
+            height: 127px * $i;
+
+            background-position: 0 0;
+        }
+
+        .item-count {
+            width: 16px * $i;
+            height: 7px * $i;
+            margin-left: 1px * $i;
+
+            text-align: center;
+        }
+
+        #store-sell-slot-return-text,
+        #store-sell-slot-text,
+        #shards-count {
+            margin-top: 19px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    .item-count {
+        font-size: 14px;
+    }
+
+    .close {
+        width: 48px;
+        height: 48px;
+
+        background: url('/img/3/containers.png') -96px -498px;
+
+        &.active {
+            background-position-x: -144px;
+        }
+
+        &:hover {
+            background-position-x: -192px;
+        }
+    }
+
+    .ok {
+        width: 42px;
+        height: 42px;
+
+        background: url('/img/3/containers.png') -1143px -183px;
+
+        &:hover {
+            background-position-x: -1143px;
+        }
+    }
+}
+
+@media (--md) {
+    .item-count {
+        font-size: 11px;
+    }
+
+    .ok {
+        width: 28px;
+        height: 28px;
+
+        background-position: -762px -122px;
+    }
+
+    .ok,
+    .done {
+        width: 27px;
+        height: 14px;
+
+        background: url('/img/2/containers.png') -642px -108px;
+
+        &:hover {
+            background-position: -642px -108px;
+        }
+    }
+
+    .close {
+        width: 32px;
+        height: 32px;
+
+        background: url('/img/2/containers.png') -64px -332px;
+
+        &.active {
+            background-position-x: -96px;
+        }
+
+        &:hover {
+            background-position-x: -128px;
+        }
+    }
+
+    .ok:hover {
+        background-position: -762px -94px;
+    }
+}
+
+@media (--sm) {
+    .ok,
+    .done {
+        top: 55%;
+        left: 85%;
+
+        width: 14px;
+        height: 14px;
+
+        background: url('/img/1/containers.png') -387px -79px;
+
+        &:hover {
+            background-position-y: -65px;
+        }
+    }
+
+    .item-count {
+        font-size: 6px;
+    }
+}

@@ -1,0 +1,377 @@
+@use '../../abstracts/media';
+
+#quest-list {
+    position: absolute;
+    top: 50%;
+    left: 8%;
+
+    overflow: auto;
+}
+
+#achievement-list,
+#skills-list {
+    position: absolute;
+    top: 6%;
+    left: 8%;
+
+    overflow: auto;
+}
+
+.quest-item,
+.profession-item {
+    width: 100%;
+    height: 10%;
+
+    font-family: AdvoCut, sans-serif;
+}
+
+.quest-name,
+.profession-name {
+    z-index: 1;
+
+    float: left;
+
+    width: 98%;
+    margin-top: 3px;
+
+    font-size: 22px;
+    color: white;
+    text-align: center;
+
+    background-color: rgb(51 153 255 / 40%);
+    border: 2px solid #373737;
+}
+
+#achievement-count,
+#quest-count {
+    position: absolute;
+    right: 3%;
+
+    float: right;
+
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#achievement-count {
+    top: 1%;
+}
+
+#quest-count {
+    top: 45.5%;
+}
+
+#armour-slot-info {
+    text-align: right;
+}
+
+.profile-info {
+    position: absolute;
+    left: 24px;
+
+    width: 92px;
+    height: 12px;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 6px;
+    font-weight: bold;
+    line-height: 12px;
+    text-align: center;
+    text-shadow: 1px 1px #808080;
+}
+
+.profile-item-info {
+    pointer-events: none;
+
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#navigator {
+    position: absolute;
+    top: 89%;
+    left: 37%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #state-page {
+            display: block;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
+        }
+
+        #skill-page {
+            display: none;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -124px * $i 0;
+        }
+
+        #settings-page {
+            display: none;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i 0;
+        }
+
+        #quest-page {
+            display: none;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -372px * $i 0;
+        }
+
+        #guild-page {
+            display: none;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -496px * $i 0;
+        }
+
+        #skills-page {
+            display: none;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+        }
+
+        #profile-dialog,
+        .page {
+            position: absolute;
+
+            width: 124px * $i;
+            height: 217px * $i;
+        }
+
+        .profile-slot {
+            position: absolute;
+
+            width: 16px * $i;
+            height: 15px * $i;
+
+            background-position: 0 0;
+        }
+
+        .profile-info {
+            position: absolute;
+            left: 24px * $i;
+
+            width: 92px * $i;
+            height: 12px * $i;
+
+            font-family: AdvoCut, sans-serif;
+            font-size: 6px * $i;
+            font-weight: bold;
+            line-height: 12px * $i;
+            text-align: center;
+            text-shadow: 1px 1px #808080;
+        }
+
+        #weapon-slot-info {
+            top: 123px * $i;
+            left: 22px * $i;
+        }
+
+        #armour-slot-info {
+            top: 123px * $i;
+
+            width: 102px * $i;
+
+            text-align: right;
+        }
+
+        #weapon-slot,
+        #armour-slot,
+        #pendant-slot,
+        #ring-slot,
+        #boots-slot {
+            margin-top: -2px * $i;
+
+            background-size: 600%;
+        }
+
+        #weapon-slot {
+            top: 120px * $i;
+            left: 4px * $i;
+        }
+
+        #armour-slot {
+            top: 119px * $i;
+            left: 104px * $i;
+        }
+
+        #pendant-slot {
+            top: 78px * $i;
+            left: 54px * $i;
+        }
+
+        #ring-slot {
+            top: 172px * $i;
+            left: 27px * $i;
+        }
+
+        #boots-slot {
+            top: 173px * $i;
+            left: 82px * $i;
+        }
+
+        #profile-name {
+            top: 8px * $i;
+        }
+
+        #profile-level {
+            top: 29px * $i;
+        }
+
+        #profile-experience {
+            top: 50px * $i;
+        }
+
+        #navigator {
+            width: 42px * $i;
+            height: 17px * $i;
+        }
+
+        #previous,
+        #next {
+            position: absolute;
+            top: 0;
+            left: initial;
+
+            width: 21px * $i;
+            height: 17px * $i;
+
+            background-image: url('/img/#{$i}/characterdialogsheet.png');
+        }
+
+        #previous {
+            cursor: pointer;
+
+            left: 0;
+
+            background-position: 0 -240px * $i;
+
+            &.disabled {
+                cursor: default;
+
+                background-position: 0 -223px * $i;
+            }
+        }
+
+        #next {
+            cursor: pointer;
+
+            left: 21px * $i;
+
+            background-position: -21px * $i -223px * $i;
+
+            &.disabled {
+                cursor: default;
+
+                background-position: -21px * $i -240px * $i;
+            }
+        }
+
+        #skills-list {
+            width: 106px * $i;
+            height: 179px * $i;
+        }
+
+        #achievement-count,
+        #quest-count {
+            width: 30px * $i;
+            height: 8px * $i;
+
+            font-size: 8px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    #profile-dialog {
+        right: 34px;
+        bottom: 45px;
+    }
+
+    .profile-item-info {
+        font-size: 24px;
+    }
+
+    #quest-list,
+    #achievement-list {
+        width: 318px;
+        height: 246px;
+    }
+
+    .skill-slots {
+        width: 48px;
+        height: 48px;
+    }
+
+    .quest-name,
+    .profession-name {
+        border-radius: 12px;
+    }
+}
+
+@media (--md) {
+    #profile-dialog {
+        right: 70px;
+        bottom: 45px;
+    }
+
+    .profile-item-info {
+        font-size: 18px;
+    }
+
+    #quest-list,
+    #achievement-list {
+        width: 212px;
+        height: 164px;
+    }
+
+    .skill-slots {
+        width: 32px;
+        height: 32px;
+
+        background-image: url('/img/2/skillicons.png');
+    }
+
+    .quest-name,
+    .profession-name {
+        font-size: 20px;
+
+        border-radius: 8px;
+    }
+}
+
+@media (--sm) {
+    #profile-dialog {
+        right: 122px;
+        bottom: 99px;
+        transform: scale(1.5);
+    }
+
+    .profile-item-info {
+        font-size: 8px;
+    }
+
+    #quest-list,
+    #achievement-list {
+        width: 104px;
+        height: 82px;
+    }
+
+    .skill-slots {
+        width: 16px;
+        height: 16px;
+    }
+
+    .quest-name,
+    .profession-name {
+        font-size: 10px;
+
+        border: 1px solid #373737;
+        border-radius: 4px;
+    }
+}
