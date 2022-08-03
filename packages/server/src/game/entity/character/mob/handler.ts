@@ -5,7 +5,7 @@ import Map from '../../../map/map';
 import World from '../../../world';
 import Character from '../character';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -13,10 +13,13 @@ import _ from 'lodash';
  */
 
 export default class Handler {
-    private world: World = this.mob.world;
-    private map: Map = this.world.map;
+    private world: World;
+    private map: Map;
 
     public constructor(private mob: Mob) {
+        this.world = this.mob.world;
+        this.map = this.world.map;
+
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
         this.mob.onDeath(this.handleDeath.bind(this));

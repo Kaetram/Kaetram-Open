@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Tile from './tile';
 import Camera from './camera';
@@ -99,11 +99,11 @@ export default class Renderer {
 
     private lightings: RendererLighting[] = [];
 
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
+    private map: Map;
+    private camera: Camera;
 
-    public tileSize = this.game.map.tileSize;
-    private actualTileSize = this.tileSize * this.camera.zoomFactor;
+    public tileSize: number;
+    private actualTileSize: number;
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
@@ -139,6 +139,12 @@ export default class Renderer {
     private sparksSprite!: Sprite;
 
     public constructor(public game: Game) {
+        this.map = game.map;
+        this.camera = game.camera;
+
+        this.tileSize = game.map.tileSize;
+        this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+
         // Grab the Canvas2D context from the HTML canvas.
         this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
         this.backContext = this.background.getContext('2d')!; // Background
