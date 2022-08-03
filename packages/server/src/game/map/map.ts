@@ -24,14 +24,15 @@ import type Player from '../entity/character/player/player';
 let map = mapData as ProcessedMap;
 
 export default class Map {
-    public regions: Regions;
-    public grids: Grids;
-
     // Map versioning and information
     public version = map.version;
     public width = map.width;
     public height = map.height;
     public tileSize = map.tileSize;
+
+    // Map handlers
+    public regions: Regions;
+    public grids: Grids = new Grids(this.width, this.height);
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
@@ -56,7 +57,6 @@ export default class Map {
         this.loadDoors();
 
         this.regions = new Regions(this);
-        this.grids = new Grids(this);
     }
 
     /**

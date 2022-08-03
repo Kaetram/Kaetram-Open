@@ -41,7 +41,7 @@ export default class AllCollection {
 
         this.regions.handle(entity);
 
-        this.grids.addToEntityGrid(entity, entity.x, entity.y);
+        this.grids.addToEntityGrid(entity);
     }
 
     /**
@@ -57,7 +57,7 @@ export default class AllCollection {
         });
 
         // Remove the entity from the entity grid
-        this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
+        this.grids.removeFromEntityGrid(entity);
 
         // Remove the entity from the region it is in.
         this.regions.remove(entity);
