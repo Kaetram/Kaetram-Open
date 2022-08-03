@@ -4,6 +4,7 @@ import Quests from './quests';
 import Hit from '../combat/hit';
 import Handler from './handler';
 import Mana from '../points/mana';
+import Entity from '../../entity';
 import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
@@ -827,6 +828,18 @@ export default class Player extends Character {
         let time = Date.now();
 
         return this.mute - time > 0;
+    }
+
+    /**
+     * An override for the adjacent function. Players need a bit more space
+     * when targeting an enemy without range. If not, following an entity becomes
+     * rather annoying.
+     * @param entity The entity we are calculating distance to.
+     * @returns If the entity distance is less than calculated distance.
+     */
+
+    public override isAdjacent(entity: Entity): boolean {
+        return this.getDistance(entity) < (this.hasTarget() ? 4 : 2);
     }
 
     /**
