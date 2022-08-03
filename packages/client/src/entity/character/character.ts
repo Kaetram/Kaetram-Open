@@ -211,6 +211,14 @@ export default class Character extends Entity {
     }
 
     /**
+     * @returns Whether or not the character has any attackers.
+     */
+
+    public hasAttackers(): boolean {
+        return Object.keys(this.attackers).length > 0;
+    }
+
+    /**
      * Performs an action and updates the orientation of the character.
      * @param orientation New orientation we are setting.
      * @param action The type of action we are performing.
@@ -537,8 +545,6 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
-        if (this.target) this.target.targeted = false;
-
         this.target = null;
     }
 
@@ -552,7 +558,6 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
-        this.target.targeted = true;
     }
 
     public hasTarget(target?: Entity): boolean {
