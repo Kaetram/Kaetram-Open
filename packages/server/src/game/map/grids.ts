@@ -1,83 +1,115 @@
-import _ from 'lodash';
-
 import type Entity from '../entity/entity';
-import type Map from './map';
 
+/**
+ * Grids are used to keep track of the entities in the world and their positions. They are most used
+ * when performing AOE attacks but may be used for some debugging purposes. We create a grid the size
+ * of the map's width and height, and we store entity positions in there.
+ */
 export default class Grids {
     private entityGrid: { [instance: string]: Entity }[][] = [];
 
-    public constructor(private map: Map) {
-        this.load();
-    }
-    private load(): void {
-        for (let i = 0; i < this.map.height; i++) {
-            this.entityGrid[i] = [];
+    public constructor(private width: number, private height: number) {
+        /**
+         * Create the two-dimensional grids.
+         */
 
-            for (let j = 0; j < this.map.width; j++) this.entityGrid[i][j] = {};
+        for (let y = 0; y < this.height; y++) {
+            this.entityGrid[y] = [];
+
+            for (let x = 0; x < this.width; x++) this.entityGrid[y][x] = {};
         }
     }
 
-    public updateEntityPosition(entity: Entity): void {
-        if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
+    /**
+     * Updates an entity's position in the grid. Removes its old location from the
+     * grid and adds it to the new location.
+     * @param entity The entity we are updating.
+     */
+
+    public updateEntity(entity: Entity) {
+        if (entity.x === entity.oldX && entity.y === entity.oldY) return;
 
         this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
-        this.addToEntityGrid(entity, entity.x, entity.y);
+        this.addToEntityGrid(entity);
     }
 
-    public addToEntityGrid(entity: Entity, x: number, y: number): void {
-        if (
-            entity &&
-            x > 0 &&
-            y > 0 &&
-            x < this.map.width &&
-            x < this.map.height &&
-            this.entityGrid[y][x]
-        )
-            this.entityGrid[y][x][entity.instance] = entity;
+    /**
+     * Adds an entity to the entity grid. We use the entity's instance, x,
+     * and y coordinates to store it in the grid.
+     * @param entity The entity we are adding to the grid.
+     */
+
+    public addToEntityGrid(entity: Entity): void {
+        this.entityGrid[entity.y][entity.x][entity.instance] = entity;
     }
 
-    public removeFromEntityGrid(entity: Entity, x: number, y: number): void {
-        if (
-            entity &&
-            x > 0 &&
-            y > 0 &&
-            x < this.map.width &&
-            y < this.map.height &&
-            this.entityGrid[y][x] &&
-            entity.instance in this.entityGrid[y][x]
-        )
-            delete this.entityGrid[y][x][entity.instance];
-    }
+    /**
+     * Removes an entity from the entity grid.
+     * @param entity The entity we are removing from the grid.
+     * @param x The x coordinate of the entity or a specified coordinate.
+     * @param y The y coordinate of the entity or a specified coordinate.
+     */
 
-    public getSurroundingEntities(
-        entity: Entity,
-        radius: number,
-        include = false
-    ): Entity[] | void {
-        let entities: Entity[] = [];
-
-        if (!this.checkBounds(entity.x, entity.y, radius)) return;
-
-        for (let i = -radius; i < radius + 1; i++)
-            for (let j = -radius; j < radius + 1; j++) {
-                let pos = this.entityGrid[entity.y + i][entity.x + j];
-
-                if (_.size(pos) > 0)
-                    _.each(pos, (pEntity: Entity) => {
-                        if (!include && pEntity.instance !== entity.instance)
-                            entities.push(pEntity);
-                    });
-            }
-
-        return entities;
-    }
-
-    private checkBounds(x: number, y: number, radius: number): boolean {
-        return (
-            x + radius < this.map.width &&
-            x - radius > 0 &&
-            y + radius < this.map.height &&
-            y - radius > 0
-        );
+    public removeFromEntityGrid(entity: Entity, x = entity.x, y = entity.y): void {
+        delete this.entityGrid[y][x][entity.instance];
     }
 }
+
+// import _ from 'lodash';
+
+// import type Entity from '../entity/entity';
+// import type Map from './map';
+
+// export default class Grids {
+//     private entityGrid: { [instance: string]: Entity }[][] = [];
+
+//     public constructor(private map: Map) {
+//         this.load();
+//     }
+//     private load(): void {
+//         for (let i = 0; i < this.map.height; i++) {
+//             this.entityGrid[i] = [];
+
+//             for (let j = 0; j < this.map.width; j++) this.entityGrid[i][j] = {};
+//         }
+//     }
+
+//     public updateEntityPosition(entity: Entity): void {
+//         if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
+
+//         this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
+//         this.addToEntityGrid(entity, entity.x, entity.y);
+//     }
+
+//     public getSurroundingEntities(
+//         entity: Entity,
+//         radius: number,
+//         include = false
+//     ): Entity[] | void {
+//         let entities: Entity[] = [];
+
+//         if (!this.checkBounds(entity.x, entity.y, radius)) return;
+
+//         for (let i = -radius; i < radius + 1; i++)
+//             for (let j = -radius; j < radius + 1; j++) {
+//                 let pos = this.entityGrid[entity.y + i][entity.x + j];
+
+//                 if (_.size(pos) > 0)
+//                     _.each(pos, (pEntity: Entity) => {
+//                         if (!include && pEntity.instance !== entity.instance)
+//                             entities.push(pEntity);
+//                     });
+//             }
+
+//         return entities;
+//     }
+
+//     private checkBounds(x: number, y: number, radius: number): boolean {
+//         return (
+//             x + radius < this.map.width &&
+//             x - radius > 0 &&
+//             y + radius < this.map.height &&
+//             y - radius > 0
+//         );
+//     }
+// }
