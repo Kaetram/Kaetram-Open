@@ -230,6 +230,20 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Override of the superclass `setPosition`. Since characters are the only
+     * instances capable of movement, we need to update their position in the grids.
+     * @param x The new x grid position.
+     * @param y The new y grid position.
+     */
+
+    public override setPosition(x: number, y: number): void {
+        super.setPosition(x, y);
+
+        // Updates the character's position in the grid.
+        this.world.map.grids.updateEntity(this);
+    }
+
+    /**
      * Sets the new target.
      * @param target Character object that we are targeting.
      */
