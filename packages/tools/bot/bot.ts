@@ -1,6 +1,6 @@
-#!/usr/bin/env -S yarn ts-node-script
+#!/usr/bin/env -S yarn tsx
 
-import { each, isArray } from 'lodash';
+import { each, isArray } from 'lodash-es';
 import { io } from 'socket.io-client';
 
 import config from '@kaetram/common/config';

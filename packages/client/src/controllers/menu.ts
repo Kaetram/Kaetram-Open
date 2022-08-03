@@ -19,27 +19,38 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 export default class MenuController {
     private actions: Actions = new Actions();
 
-    private inventory: Inventory = new Inventory(this.actions);
-    private bank: Bank = new Bank(this.inventory);
-    private store: Store = new Store(this.inventory);
-    private profile: Profile = new Profile(this.game.player);
-    private enchant: Enchant = new Enchant();
-    private warp: Warp = new Warp(this.game.socket);
-    private notification: Notification = new Notification();
-    private settings: Settings = new Settings(this.game);
+    private inventory: Inventory;
+    private bank: Bank;
+    private store: Store;
+    private profile: Profile;
+    private enchant: Enchant;
+    private warp: Warp;
+    private notification: Notification;
+    private settings: Settings;
 
-    public menu: Menu[] = [
-        this.inventory,
-        this.bank,
-        this.store,
-        this.profile,
-        this.enchant,
-        this.warp,
-        this.notification,
-        this.settings
-    ];
+    public menu: Menu[];
 
     public constructor(private game: Game) {
+        this.inventory = new Inventory(this.actions);
+        this.bank = new Bank(this.inventory);
+        this.store = new Store(this.inventory);
+        this.profile = new Profile(game.player);
+        this.enchant = new Enchant();
+        this.warp = new Warp(game.socket);
+        this.notification = new Notification();
+        this.settings = new Settings(game);
+
+        this.menu = [
+            this.inventory,
+            this.bank,
+            this.store,
+            this.profile,
+            this.enchant,
+            this.warp,
+            this.notification,
+            this.settings
+        ];
+
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));

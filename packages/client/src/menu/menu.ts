@@ -2,9 +2,9 @@
 import log from '../lib/log';
 
 export default abstract class Menu {
-    protected container: HTMLElement = document.querySelector(this.containerName!)!;
-    protected close: HTMLElement = document.querySelector(this.closeButton!)!;
-    protected button: HTMLElement = document.querySelector(this.toggleButton!)!;
+    protected container: HTMLElement;
+    protected close: HTMLElement;
+    protected button: HTMLElement;
 
     // Callback sent to the controller to close other menus.
     private showCallback?: () => void;
@@ -28,6 +28,10 @@ export default abstract class Menu {
         private closeButton?: string,
         private toggleButton?: string
     ) {
+        this.container = document.querySelector(this.containerName!)!;
+        this.close = document.querySelector(this.closeButton!)!;
+        this.button = document.querySelector(this.toggleButton!)!;
+
         this.close?.addEventListener('click', this.hide.bind(this));
         this.button?.addEventListener('click', this.toggle.bind(this));
     }

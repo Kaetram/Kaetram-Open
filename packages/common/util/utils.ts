@@ -2,7 +2,7 @@
  * Useful utility functions that are used all throughout the server and client.
  */
 
-import _ from 'lodash';
+import _ from 'lodash-es';
 import crypto from 'crypto';
 import zlib from 'zlib';
 
