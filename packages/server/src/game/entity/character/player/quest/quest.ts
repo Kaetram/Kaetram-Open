@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';

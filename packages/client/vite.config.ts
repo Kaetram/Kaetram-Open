@@ -5,7 +5,6 @@ import config, { type Config } from '../common/config';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
 import { createHtmlPlugin } from 'vite-plugin-html';
-import compress from 'vite-plugin-compress';
 
 import { name, description } from '../../package.json';
 
@@ -96,10 +95,6 @@ export default defineConfig(({ command, mode }) => {
             legacy(),
             createHtmlPlugin({
                 minify: isProduction && { processScripts: ['application/ld+json'] }
-            }),
-            compress({
-                brotli: false,
-                pngquant: false
             })
         ],
         build: {

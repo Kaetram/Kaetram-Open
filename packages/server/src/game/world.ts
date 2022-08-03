@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
