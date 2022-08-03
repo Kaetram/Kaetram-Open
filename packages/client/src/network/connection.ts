@@ -317,10 +317,6 @@ export default class Connection {
 
                 entity.stunned = !!info.state;
                 break;
-
-            case Opcodes.Movement.Orientate:
-                entity.performAction(info.orientation!, Modules.Actions.Orientate);
-                break;
         }
     }
 
