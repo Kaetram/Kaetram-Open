@@ -8,6 +8,7 @@ export interface Config {
     name: string;
     host: string;
     ssl: boolean;
+    threads: number;
 
     socketioPort: number;
     websocketPort: number;
