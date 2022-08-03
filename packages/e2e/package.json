@@ -1,5 +1,6 @@
 {
     "name": "@kaetram/e2e",
+    "type": "module",
     "scripts": {
         "test": "NODE_ENV=e2e server-test 'yarn workspace kaetram dev' 'http-get://localhost:9000|9001' 'yarn tsx database/server' '3000/api/v1/health'",
         "test:run": "yarn test 'yarn cypress run'",
