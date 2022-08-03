@@ -7,7 +7,7 @@ export default class Pool {
 
     public constructor(threads: number) {
         for (let i = 0; i < threads; i++) {
-            let worker = new Worker('./src/workers/worker.js');
+            let worker = new Worker(new URL('worker.ts', import.meta.url));
 
             this.workers[worker.threadId] = worker;
 
