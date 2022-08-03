@@ -23,6 +23,7 @@ import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
+import Pool from '../workers/pool';
 
 export interface PacketData {
     packet: Packet;
@@ -42,6 +43,7 @@ export default class World {
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public discord: Discord = new Discord(config.hubEnabled);
+    public workerPool: Pool = new Pool(config.threads);
 
     private maxPlayers = config.maxPlayers;
 
