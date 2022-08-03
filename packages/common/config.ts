@@ -1,6 +1,6 @@
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 
 import type { DatabaseTypes } from './types/database';
 

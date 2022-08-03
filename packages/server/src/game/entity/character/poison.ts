@@ -1,10 +1,10 @@
 import { Modules } from '@kaetram/common/network';
 
 export default class Poison {
-    public name = Modules.PoisonInfo[this.type].name;
-    public damage = Modules.PoisonInfo[this.type].damage;
-    public duration = Modules.PoisonInfo[this.type].duration * 1000; // Convert to milliseconds
-    public rate = Modules.PoisonInfo[this.type].rate * 1000; // Convert to milliseconds
+    public name;
+    public damage;
+    public duration;
+    public rate;
 
     /**
      * Initializes an object of poison that can be stored in a character.
@@ -12,7 +12,12 @@ export default class Poison {
      * @param start Epoch time of when the poison started.
      */
 
-    public constructor(public type: Modules.PoisonTypes, public start = Date.now()) {}
+    public constructor(public type: Modules.PoisonTypes, public start = Date.now()) {
+        this.name = Modules.PoisonInfo[this.type].name;
+        this.damage = Modules.PoisonInfo[this.type].damage;
+        this.duration = Modules.PoisonInfo[this.type].duration * 1000; // Convert to milliseconds
+        this.rate = Modules.PoisonInfo[this.type].rate * 1000; // Convert to milliseconds
+    }
 
     /**
      * Checks if the poison status has expired. A poison with the duration of
