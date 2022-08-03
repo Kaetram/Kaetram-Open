@@ -20,7 +20,6 @@
         "lint": "yarn lint:js && yarn lint:style",
         "test:run": "yarn packages test:run",
         "test:open": "yarn packages test:open",
-        "helper": "yarn packages helper",
         "map": "yarn packages map"
     },
     "lint-staged": {
