@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx ./src/main.ts",
-        "dev": "tsx watch ./src/main.ts",
+        "dev": "tsx watch --clear-screen=false ./src/main.ts",
         "build": "tsc --noEmit"
     },
     "dependencies": {
