@@ -1,6 +1,6 @@
 import { AchievementData } from './../../../../../common/types/achievement.d';
 import $ from 'jquery';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 

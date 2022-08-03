@@ -112,7 +112,7 @@ export default class Player extends Character {
 
     // TODO - REFACTOR THESE ------------
 
-    public webSocketClient = this.connection.type === 'WebSocket';
+    public webSocketClient: boolean;
 
     public abilities: Abilities = new Abilities(this);
 
@@ -163,6 +163,8 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
+
+        this.webSocketClient = this.connection.type === 'WebSocket';
     }
 
     /**

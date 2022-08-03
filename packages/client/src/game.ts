@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import App from './app';
 import AudioController from './controllers/audio';
@@ -28,7 +28,7 @@ import { agent } from './utils/detect';
 import { Modules, Packets } from '@kaetram/common/network';
 
 export default class Game {
-    public storage: Storage = this.app.storage;
+    public storage: Storage;
 
     public player: Player = new Player('');
 
@@ -62,13 +62,15 @@ export default class Game {
     public pvp = false;
 
     public constructor(public app: App) {
-        this.app.sendStatus('Loading game');
+        this.storage = app.storage;
 
-        this.map.onReady(() => this.app.ready());
+        app.sendStatus('Loading game');
 
-        this.app.onLogin(this.socket.connect.bind(this.socket));
-        this.app.onResize(this.resize.bind(this));
-        this.app.onRespawn(this.respawn.bind(this));
+        this.map.onReady(() => app.ready());
+
+        app.onLogin(this.socket.connect.bind(this.socket));
+        app.onResize(this.resize.bind(this));
+        app.onRespawn(this.respawn.bind(this));
 
         this.player.onSync(this.handlePlayerSync.bind(this));
     }
