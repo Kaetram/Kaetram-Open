@@ -8,7 +8,6 @@ export interface Config {
     name: string;
     host: string;
     ssl: boolean;
-    threads: number;
 
     socketioPort: number;
     websocketPort: number;
@@ -58,12 +57,8 @@ export interface Config {
     fsDebugging: boolean;
 }
 
-let env = dotenv.load({
-        path: `../../.env`,
-        defaults: '../../.env.defaults',
-        includeProcessEnv: true
-    }),
-    { NODE_ENV } = env;
+let { NODE_ENV } = process.env,
+    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
 
 if (NODE_ENV) Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
 
