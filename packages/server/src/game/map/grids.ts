@@ -13,10 +13,10 @@ export default class Grids {
          * Create the two-dimensional grids.
          */
 
-        for (let y = 0; y < this.height; y++) {
+        for (let y = -1; y < this.height; y++) {
             this.entityGrid[y] = [];
 
-            for (let x = 0; x < this.width; x++) this.entityGrid[y][x] = {};
+            for (let x = -1; x < this.width; x++) this.entityGrid[y][x] = {};
         }
     }
 
