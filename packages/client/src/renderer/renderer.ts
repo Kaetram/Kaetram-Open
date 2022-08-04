@@ -324,8 +324,6 @@ export default class Renderer {
     private draw(): void {
         if (this.hasRenderedFrame()) return;
 
-        console.log('draw bitch');
-
         this.clearDrawing();
         this.saveDrawing();
 

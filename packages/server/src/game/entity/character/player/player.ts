@@ -74,18 +74,19 @@ export default class Player extends Character {
     private regions: Regions = this.world.map.regions;
     private entities: Entities = this.world.entities;
 
-    public incoming: Incoming = new Incoming(this);
+    public incoming: Incoming;
 
-    public warp: Warp = new Warp(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
+    public warp: Warp;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    private handler: Handler = new Handler(this);
+    private handler: Handler;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -114,7 +115,7 @@ export default class Player extends Character {
 
     public webSocketClient: boolean;
 
-    public abilities: Abilities = new Abilities(this);
+    public abilities: Abilities;
 
     public team?: string; // TODO
     public userAgent!: string;
@@ -163,6 +164,18 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
+
+        this.warp = new Warp(this);
+        this.incoming = new Incoming(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+
+        this.handler = new Handler(this);
+
+        this.abilities = new Abilities(this);
 
         this.webSocketClient = this.connection.type === 'WebSocket';
     }
