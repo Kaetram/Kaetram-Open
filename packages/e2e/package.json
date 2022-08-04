@@ -7,16 +7,16 @@
         "test:open": "yarn test 'yarn cypress open'"
     },
     "devDependencies": {
-        "@badeball/cypress-cucumber-preprocessor": "latest",
-        "@bahmutov/cypress-esbuild-preprocessor": "latest",
+        "@badeball/cypress-cucumber-preprocessor": "^12.0.0",
+        "@bahmutov/cypress-esbuild-preprocessor": "^2.1.3",
         "@kaetram/common": "workspace:*",
-        "@types/node": "^17.0.23",
-        "concurrently": "^7.2.2",
-        "cypress": "latest",
+        "@types/node": "^18.6.3",
+        "concurrently": "^7.3.0",
+        "cypress": "^10.4.0",
         "express-mongo-rest": "^0.1.3",
         "start-server-and-test": "^1.14.0",
-        "tsx": "^3.7.1",
-        "typescript": "^4.6.3",
+        "tsx": "^3.8.0",
+        "typescript": "^4.7.4",
         "typescript-object-builder": "^0.3.0"
     },
     "cypress-cucumber-preprocessor": {
