@@ -60,10 +60,12 @@ export default class Character extends Entity {
 
     public forced!: boolean;
 
-    public handler = new EntityHandler(this);
+    public handler: EntityHandler;
 
     public constructor(instance: string, type: Modules.EntityType) {
         super(instance, type);
+
+        this.handler = new EntityHandler(this);
 
         this.loadAnimations();
     }

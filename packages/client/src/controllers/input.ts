@@ -57,7 +57,7 @@ export default class InputController {
      */
     public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
     public chatHandler: Chat;
-    public hud: HUDController = new HUDController(this);
+    public hud: HUDController;
 
     public entity: Entity | undefined;
 
@@ -68,6 +68,7 @@ export default class InputController {
         this.player = game.player;
 
         this.chatHandler = new Chat(game);
+        this.hud = new HUDController(this);
 
         this.app.onLeftClick(this.handleLeftClick.bind(this));
         this.app.onRightClick(this.handleRightClick.bind(this));
