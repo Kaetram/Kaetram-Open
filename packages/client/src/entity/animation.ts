@@ -37,17 +37,11 @@ export default class Animation {
         this.lastTime = time;
 
         if (this.frame.index >= this.length - 1) {
-            this.reset();
-
             if (this.count > 0) this.count--;
 
-            if (this.count === 0) {
-                this.endCallback?.();
+            if (this.count === 0) this.endCallback?.();
 
-                return;
-            }
-
-            return;
+            return this.reset();
         }
 
         this.frame.index++;
