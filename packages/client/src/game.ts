@@ -39,20 +39,20 @@ export default class Game {
     public info: InfoController = new InfoController();
     public sprites: SpritesController = new SpritesController();
 
-    public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
-    public renderer: Renderer = new Renderer(this);
-    public input: InputController = new InputController(this);
+    public map: Map;
+    public camera: Camera;
+    public renderer: Renderer;
+    public input: InputController;
 
-    public socket: Socket = new Socket(this);
-    public pointer: Pointer = new Pointer(this);
-    public updater: Updater = new Updater(this);
-    public audio: AudioController = new AudioController(this);
-    public entities: EntitiesController = new EntitiesController(this);
-    public bubble: BubbleController = new BubbleController(this);
-    public menu: MenuController = new MenuController(this);
+    public socket: Socket;
+    public pointer: Pointer;
+    public updater: Updater;
+    public audio: AudioController;
+    public entities: EntitiesController;
+    public bubble: BubbleController;
+    public menu: MenuController;
 
-    public connection: Connection = new Connection(this);
+    public connection: Connection;
 
     public time = Date.now();
     public lastTime = Date.now();
@@ -63,6 +63,19 @@ export default class Game {
 
     public constructor(public app: App) {
         this.storage = app.storage;
+
+        this.map = new Map(this);
+        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+        this.renderer = new Renderer(this);
+        this.input = new InputController(this);
+        this.socket = new Socket(this);
+        this.pointer = new Pointer(this);
+        this.updater = new Updater(this);
+        this.audio = new AudioController(this);
+        this.entities = new EntitiesController(this);
+        this.bubble = new BubbleController(this);
+        this.menu = new MenuController(this);
+        this.connection = new Connection(this);
 
         app.sendStatus('Loading game');
 

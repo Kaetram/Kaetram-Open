@@ -25,7 +25,7 @@ export default abstract class Character extends Entity {
     public attackRange = 1;
     public plateauLevel = 0;
 
-    public hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
+    public hitPoints: HitPoints;
 
     public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate = Modules.Defaults.ATTACK_RATE;
@@ -73,6 +73,8 @@ export default abstract class Character extends Entity {
         super(instance, key, x, y);
 
         this.combat = new Combat(this);
+
+        this.hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
         this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
