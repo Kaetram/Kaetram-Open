@@ -54,9 +54,8 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     });
 }
 
-export default defineConfig(({ command, mode }) => {
-    console.log(`Loading vite defineConfig with [${command}, ${mode}]`);
-    let isProduction = command === 'build',
+export default defineConfig(({ mode }) => {
+    let isProduction = mode === 'production',
         env = loadEnv(isProduction);
 
     return {
@@ -98,14 +97,10 @@ export default defineConfig(({ command, mode }) => {
             })
         ],
         build: {
-            sourcemap: false,
+            sourcemap: true,
             chunkSizeWarningLimit: 4e3
         },
         server: { port: 9000 },
-        define: {
-            'window.config': env,
-            'process.env': {},
-            'import.meta.env': {}
-        }
+        define: { 'window.config': env }
     };
 });
