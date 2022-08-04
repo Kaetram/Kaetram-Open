@@ -494,7 +494,7 @@ export default class InputController {
 
         if (!sprite) return;
 
-        let frame = this.targetAnimation.currentFrame,
+        let { frame } = this.targetAnimation,
             { tileSize } = this.game.map,
             { zoomFactor } = this.game.camera;
 
