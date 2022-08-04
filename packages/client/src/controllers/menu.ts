@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Game from '../game';
 import Menu from '../menu/menu';
