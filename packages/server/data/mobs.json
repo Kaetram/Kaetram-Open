@@ -13,7 +13,7 @@
     "aggressive": false,
     "roaming": true,
     "attackRate": 1400,
-    "movementSpeed": 500,
+    "movementSpeed": 450,
     "respawnDelay": 10000
   },
 

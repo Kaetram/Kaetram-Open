@@ -314,7 +314,17 @@ export default class Connection {
             case Opcodes.Movement.Follow:
                 target = this.entities.get<Character>(info.target!);
 
-                if (target) entity.follow(target);
+                if (target) {
+                    // Prevent following a target after we've clicked off of it.
+                    if (
+                        entity.instance === this.game.player.instance &&
+                        !this.game.player.hasTarget() &&
+                        !info.forced
+                    )
+                        return;
+
+                    entity.follow(target);
+                }
 
                 break;
 
