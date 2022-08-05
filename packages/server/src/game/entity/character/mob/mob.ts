@@ -56,7 +56,7 @@ export default class Mob extends Character {
     private handler?: MobHandler | DefaultPlugin;
 
     private respawnCallback?: () => void;
-    public forceTalkCallback?: (message: string) => void;
+    public talkCallback?: (message: string) => void;
     public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
@@ -99,6 +99,7 @@ export default class Mob extends Character {
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
+        this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
         this.poisonous = data.poisonous!;
         this.hiddenName = data.hiddenName!;
@@ -435,12 +436,12 @@ export default class Mob extends Character {
     }
 
     /**
-     * A callback for when the mob is forced to display a speech bubble.
+     * A callback for when the mob is will display a chat bubble.
      * @param callback The message in a string format of what the mob says.
      */
 
-    public onForceTalk(callback: (message: string) => void): void {
-        this.forceTalkCallback = callback;
+    public onTalk(callback: (message: string) => void): void {
+        this.talkCallback = callback;
     }
 
     /**
