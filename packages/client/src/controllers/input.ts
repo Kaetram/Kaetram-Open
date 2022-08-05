@@ -4,6 +4,7 @@ import Animation from '../entity/animation';
 import log from '../lib/log';
 import Chat from './chat';
 import HUDController from './hud';
+import Character from '../entity/character/character';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -28,10 +29,10 @@ interface TargetData {
 }
 
 export default class InputController {
-    private app: App = this.game.app;
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
-    public player: Player = this.game.player;
+    private app: App;
+    private map: Map;
+    private camera: Camera;
+    public player: Player;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -55,12 +56,20 @@ export default class InputController {
      * cell spinner sprite (only on desktop)
      */
     public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
-    public chatHandler: Chat = new Chat(this.game);
-    public hud: HUDController = new HUDController(this);
+    public chatHandler: Chat;
+    public hud: HUDController;
 
     public entity: Entity | undefined;
 
     public constructor(private game: Game) {
+        this.app = game.app;
+        this.map = game.map;
+        this.camera = game.camera;
+        this.player = game.player;
+
+        this.chatHandler = new Chat(game);
+        this.hud = new HUDController(this);
+
         this.app.onLeftClick(this.handleLeftClick.bind(this));
         this.app.onRightClick(this.handleRightClick.bind(this));
 
@@ -299,6 +308,9 @@ export default class InputController {
                 this.player.setTarget(this.entity);
                 this.player.follow(this.entity);
 
+                if (this.isAttackable(this.entity))
+                    (this.entity as Character).addAttacker(this.player);
+
                 this.game.socket.send(Packets.Target, [
                     Opcodes.Target.Attack,
                     this.entity.instance
@@ -471,8 +483,8 @@ export default class InputController {
         let tileScale = this.map.tileSize * this.camera.zoomFactor,
             offsetX = this.mouse.x % tileScale,
             offsetY = this.mouse.y % tileScale,
-            x = (this.mouse.x - offsetX) / tileScale + this.game.camera.gridX,
-            y = (this.mouse.y - offsetY) / tileScale + this.game.camera.gridY;
+            x = Math.round((this.mouse.x - offsetX) / tileScale) + this.game.camera.gridX,
+            y = Math.round((this.mouse.y - offsetY) / tileScale) + this.game.camera.gridY;
 
         return { x, y };
     }

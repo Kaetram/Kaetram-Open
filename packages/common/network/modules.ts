@@ -307,6 +307,31 @@ export let NameColours = {
     [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
+export let EntityScale = {
+    [SpecialEntityTypes.Miniboss]: 1.2
+};
+
+export let PoisonInfo = {
+    [PoisonTypes.Venom]: {
+        name: 'Venom',
+        damage: 2,
+        duration: 30,
+        rate: 2 // every second
+    },
+    [PoisonTypes.Plague]: {
+        name: 'Plague',
+        damage: 5,
+        duration: 60,
+        rate: 1
+    },
+    [PoisonTypes.Persistent]: {
+        name: 'Persistent',
+        damage: 2,
+        duration: -1,
+        rate: 1
+    }
+};
+
 export enum NPCRole {
     Banker,
     Enchanter,
@@ -323,9 +348,9 @@ export const enum Constants {
     HEAL_RATE = 5000, // healing every 10 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
-    SPAWN_POINT = '325,86', // Default starting point outside the tutorial
+    SPAWN_POINT = '56,46', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '375,40', // 'x,y' values
+    TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
     TREE_REGROW = 30_000,
     SKILL_LOOP = 1000 // How often we check the loop of a skill
 }
@@ -340,7 +365,8 @@ export enum APIConstants {
 // Defaults that apply to all types of entities
 export enum Defaults {
     MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
-    ATTACK_RATE = 1000 // every 1 second
+    ATTACK_RATE = 1000, // every 1 second
+    POISON_CHANCE = 10 // 10% chance to poison a character
 }
 
 // Defaults that apply specifically to mobs
@@ -349,7 +375,7 @@ export enum MobDefaults {
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
-    ROAM_FREQUENCY = 7000, // Roam interval every 7 seconds
+    ROAM_FREQUENCY = 17_000, // Roam interval every 17 seconds
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }

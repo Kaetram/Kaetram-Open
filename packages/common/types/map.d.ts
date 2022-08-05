@@ -51,7 +51,7 @@ export interface ProcessedArea {
     type?: string;
 
     // Music
-    songName?: string;
+    song?: string;
 
     // Overlay
     darkness?: number;

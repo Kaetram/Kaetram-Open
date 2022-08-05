@@ -37,6 +37,7 @@ enum Packets {
     Guild,
     Pointer,
     PVP,
+    Poison,
     Click,
     Warp,
     Store,
@@ -44,7 +45,6 @@ enum Packets {
     Camera,
     Bubble,
     Skill,
-    BuildUp,
     Update
 }
 

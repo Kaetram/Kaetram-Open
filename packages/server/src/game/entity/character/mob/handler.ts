@@ -5,6 +5,7 @@ import Map from '../../../map/map';
 import World from '../../../world';
 import Character from '../character';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -15,14 +16,9 @@ export default class Handler {
     private world: World;
     private map: Map;
 
-    private plateauLevel: number;
-
     public constructor(private mob: Mob) {
         this.world = this.mob.world;
         this.map = this.world.map;
-
-        // Store the original plateau level.
-        this.plateauLevel = this.map.getPlateauLevel(this.mob.spawnX, this.mob.spawnY);
 
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
@@ -37,6 +33,7 @@ export default class Handler {
      */
 
     private handleMovement(): void {
+        // Mob is randomly roaming and exits the roaming area.
         if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
 
         /**
@@ -44,7 +41,8 @@ export default class Handler {
          * pick a new one if that is the case.
          */
 
-        if (this.mob.outsideRoaming(this.mob.target))
+        // We double the roaming distance for the sake of combat.
+        if (this.mob.outsideRoaming(this.mob.target, this.mob.roamDistance * 2))
             if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
             else this.mob.sendToSpawn();
     }
@@ -70,9 +68,12 @@ export default class Handler {
         if (attacker) attacker.combat.stop();
 
         // Spawn item drops.
-        let drop = this.mob.getDrop();
+        let drops = this.mob.getDrops();
 
-        if (drop) this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count);
+        if (drops.length > 0)
+            _.each(drops, (drop) =>
+                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
+            );
 
         if (attacker?.isPlayer()) {
             attacker.addExperience(this.mob.experience);
@@ -112,7 +113,7 @@ export default class Handler {
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
-        let { x, y, spawnX, spawnY, roamDistance, combat } = this.mob,
+        let { x, y, spawnX, spawnY, roamDistance, plateauLevel, combat } = this.mob,
             newX = spawnX + Utils.randomInt(-roamDistance, roamDistance),
             newY = spawnY + Utils.randomInt(-roamDistance, roamDistance),
             distance = Utils.getDistance(spawnX, spawnY, newX, newY);
@@ -135,7 +136,7 @@ export default class Handler {
          * on their own plateau level they are bound to that cave.
          */
 
-        if (this.plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
+        if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
         // Check if the new position is a collision.
         if (this.map.isColliding(newX, newY)) return;

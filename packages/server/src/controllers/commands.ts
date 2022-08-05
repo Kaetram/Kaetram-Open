@@ -9,6 +9,8 @@ import Achievement from '../game/entity/character/player/achievement/achievement
 import type Player from '../game/entity/character/player/player';
 
 import { Command, Pointer, Network, Notification } from '../network/packets';
+import Region from '../game/map/region';
+import Entity from '../game/entity/entity';
 
 export default class Commands {
     private world;
@@ -30,9 +32,9 @@ export default class Commands {
 
         this.handlePlayerCommands(command, blocks);
 
-        if (this.player.rights > 0) this.handleModeratorCommands(command, blocks);
+        if (this.player.isMod()) this.handleModeratorCommands(command, blocks);
 
-        if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
+        if (this.player.isAdmin()) this.handleAdminCommands(command, blocks);
     }
 
     private handlePlayerCommands(command: string, blocks: string[]): void {
@@ -41,7 +43,7 @@ export default class Commands {
                 let population = this.world.getPopulation(),
                     singular = population === 1;
 
-                if (this.player.rights > 1)
+                if (this.player.isAdmin())
                     this,
                         this.entities.forEachPlayer((player: Player) => {
                             this.player.notify(player.username);
@@ -66,10 +68,6 @@ export default class Commands {
 
             case 'global':
                 return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
-
-            case 'region':
-                log.info(this.player.region);
-                return;
 
             case 'pm':
             case 'msg': {
@@ -143,7 +141,9 @@ export default class Commands {
             questKey: string,
             quest: Quest,
             achievementKey: string,
-            achievement: Achievement;
+            achievement: Achievement,
+            region: Region,
+            item: Item;
 
         switch (command) {
             case 'spawn': {
@@ -154,25 +154,30 @@ export default class Commands {
 
                 if (!key || !count) return;
 
-                this.player.inventory.add(
-                    new Item(key, -1, -1, true, count, ability, abilityLevel)
-                );
+                item = new Item(key, -1, -1, true, 1, ability, abilityLevel);
+
+                if (item.stackable) {
+                    item.count = count;
+
+                    this.player.inventory.add(item);
+                } else for (let i = 0; i < count; i++) this.player.inventory.add(item);
 
                 return;
             }
 
-            case 'maxhealth':
-                this.player.notify(`Max health is ${this.player.hitPoints.getMaxHitPoints()}`);
+            case 'remove': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!);
+
+                if (!key || !count) return;
+
+                this.player.inventory.removeItem(key, count);
 
                 return;
+            }
 
-            case 'ipban':
-                return;
-
-            case 'ghost':
-                //this.player.equip('ghost', 1, -1, -1);
-
-                return;
+            case 'empty':
+                return this.player.inventory.empty();
 
             case 'notify':
                 this.player.notify('Hello!!!');
@@ -212,13 +217,37 @@ export default class Commands {
 
                 return;
 
-            case 'mob': {
-                // let npcId = parseInt(blocks.shift()!);
+            case 'mob':
+                target = blocks.shift()!;
 
-                // this.entities.spawnMob(npcId, this.player.x, this.player.y);
+                if (!target) return this.player.notify('No mob specified.');
+
+                this.entities.spawnMob(target, this.player.x, this.player.y);
 
                 return;
-            }
+
+            case 'allattack':
+                region = this.world.map.regions.get(this.player.region);
+                target = blocks.shift()!;
+
+                if (!target)
+                    return this.player.notify(
+                        `Invalid command. Usage: /allattack [target_instance]`
+                    );
+
+                if (!region) return this.player.notify('Bro what.');
+
+                targetEntity = this.entities.get(target) as Character;
+
+                if (!targetEntity) return;
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!entity.isMob() || entity.instance === target) return;
+
+                    entity.combat.attack(targetEntity);
+                });
+
+                break;
 
             case 'pointer':
                 if (blocks.length > 1) {
@@ -255,16 +284,6 @@ export default class Commands {
 
                 return;
 
-            case 'addexp': {
-                let exp = parseInt(blocks.shift()!);
-
-                if (!exp) return;
-
-                this.player.addExperience(exp);
-
-                return;
-            }
-
             case 'getregion':
                 this.player.notify(`Current Region: ${this.player.region}`);
                 return;
@@ -274,6 +293,7 @@ export default class Commands {
 
                 return;
 
+            case 'addexp':
             case 'addexperience':
                 this.player.addExperience(parseInt(blocks.shift()!));
                 return;
@@ -387,11 +407,17 @@ export default class Commands {
                 username = blocks.shift()!;
 
                 if (!username)
-                    return this.player.notify(`Malformed command, expected /kill username`);
+                    return this.player.notify(
+                        `Malformed command, expected /kill username/instance`
+                    );
 
                 player = this.world.getPlayerByName(username);
 
                 if (player) player.hit(player.hitPoints.getHitPoints());
+
+                targetEntity = this.entities.get(username) as Character;
+
+                if (targetEntity) targetEntity.hit(targetEntity.hitPoints.getHitPoints());
 
                 break;
 
@@ -420,6 +446,78 @@ export default class Commands {
 
                 if (achievement) achievement.finish();
                 else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
+
+                break;
+
+            case 'finishachievements':
+                return this.player.achievements.forEachAchievement((achievement) =>
+                    achievement.finish()
+                );
+
+            case 'poison':
+                instance = blocks.shift()!;
+
+                if (instance) {
+                    log.debug('Poisoning entity...');
+
+                    entity = this.entities.get(instance) as Character;
+
+                    if (!entity)
+                        return this.player.notify(
+                            `Could not find entity with instance: ${instance}`
+                        );
+
+                    if (!entity.isMob() && !entity.isPlayer())
+                        this.player.notify('That entity cannot be poisoned.');
+
+                    if (entity.poison) {
+                        entity.setPoison();
+                        this.player.notify('Entity has been cured of poison.');
+                    } else {
+                        entity.setPoison(0);
+                        this.player.notify('Entity has been poisoned.');
+                    }
+                } else {
+                    log.debug('Poisoning player.');
+
+                    if (this.player.poison) {
+                        this.player.setPoison();
+                        this.player.notify('Your poison has been cured!');
+                    } else {
+                        this.player.setPoison(0); // 0 === Modules.PoisonType.Venom
+                        this.player.notify('You have been poisoned!');
+                    }
+                }
+
+                break;
+
+            case 'poisonarea':
+                region = this.world.map.regions.get(this.player.region);
+
+                if (!region) this.player.notify('Bro something went badly wrong wtf.');
+
+                this.player.notify(`All entities in the region will be nuked with poison.`);
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!entity.isMob() && !entity.isPlayer()) return;
+
+                    (entity as Character).setPoison(0);
+                });
+
+                break;
+
+            case 'roam':
+                region = this.world.map.regions.get(this.player.region);
+
+                if (!region) this.player.notify('Bro something went badly wrong wtf.');
+
+                this.player.notify(`All mobs in the region will now roam!`);
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!entity.isMob()) return;
+
+                    (entity as Mob).roamingCallback?.();
+                });
 
                 break;
         }

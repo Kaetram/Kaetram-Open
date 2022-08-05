@@ -4,5 +4,83 @@
         "experience": 10,
         "difficulty": 10,
         "item": "logs"
+    },
+
+    "oak2": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "oak3": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "oak4": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "snowoak": {
+        "levelRequirement": 20,
+        "experience": 75,
+        "difficulty": 90,
+        "item": "logs"
+    },
+
+    "tutorialsnowoak": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 5,
+        "item": "logs",
+        "quest": "tutorial"
+    },
+
+    "palm": {
+        "levelRequirement": 5,
+        "experience": 15,
+        "difficulty": 25,
+        "item": "logs"
+    },
+
+    "iceoak": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "logs"
+    },
+
+    "iceoak2": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "logs"
+    },
+
+    "iceoak3": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "logs"
+    },
+
+    "icepalm": {
+        "levelRequirement": 15,
+        "experience": 55,
+        "difficulty": 65,
+        "item": "logs"
+    },
+
+    "pine": {
+        "levelRequirement": 20,
+        "experience": 75,
+        "difficulty": 80,
+        "item": "logs"
     }
 }

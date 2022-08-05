@@ -1,5 +1,5 @@
 import { Modules } from '@kaetram/common/network';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import Menu from './menu';
 
 export default class Actions extends Menu {

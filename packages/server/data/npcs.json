@@ -1,6 +1,7 @@
 {
   "king": {
-    "name": "King"
+    "name": "King",
+    "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
   },
 
   "villagegirl": {
@@ -9,14 +10,17 @@
   },
 
   "villager": {
-    "name": "Bulk Bogan",
-    "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
-          "nearby future regarding further adventures."]
+    "name": "Forester",
+    "text": ["Good day to you!"]
   },
 
   "beachnpc": {
     "name": "Bubba",
-    "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
+    "text": [
+      "Well, thanks for the help.",
+      "Not really doing much but thanks regardless.",
+      "Though I did hear some cave crumbling nearby as you killed those crabs...",
+      "I think it'd be best to check it out if you can."]
   },
 
   "agent": {

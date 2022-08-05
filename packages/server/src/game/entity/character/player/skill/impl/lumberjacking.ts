@@ -1,17 +1,17 @@
 import Skill from '../skill';
 
 import Player from '../../player';
-import Tree from '@kaetram/server/src/game/globals/impl/tree';
+import Tree from '../../../../../globals/impl/tree';
+import { Animation } from '../../../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import LumberjackingEn from '@kaetram/common/text/lumberjacking-en';
 import { Modules } from '@kaetram/common/network';
 import { TreeData, TreeInfo } from '@kaetram/common/types/trees';
-import LumberjackingEn from '@kaetram/common/text/lumberjacking-en';
 
 import Trees from '../../../../../../../data/trees.json';
 import Item from '../../../../objects/item';
-import { Animation } from '@kaetram/server/src/network/packets';
 
 export default class Lumberjacking extends Skill {
     private treeData: TreeData = Trees;
@@ -47,11 +47,22 @@ export default class Lumberjacking extends Skill {
         if (treeInfo.levelRequirement > this.getLevel())
             return player.notify(LumberjackingEn.INVALID_LEVEL);
 
+        // Unable to cut the tree if the player hasn't completed the required achievement.
+        if (
+            treeInfo.reqAchievement &&
+            !player.achievements.get(treeInfo.reqAchievement)?.isFinished()
+        )
+            return player.notify(LumberjackingEn.UNABLE_TO_CUT);
+
+        // Unable to cut the tree if the player hasn't completed the required quest.
+        if (treeInfo.reqQuest && !player.quests.get(treeInfo.reqQuest)?.isFinished())
+            return player.notify(LumberjackingEn.UNABLE_TO_CUT);
+
         if (!player.inventory.hasSpace()) return player.notify(LumberjackingEn.INVENTORY_FULL);
 
         /**
          * Stop the current loop when we are beginning to cut a tree. This will
-         * continually reset the loop if the player keeps spamming the tree.
+         * continually reset the loop if the player keeps spam clicking the tree.
          */
         if (this.loop) this.stop();
 
@@ -71,6 +82,12 @@ export default class Lumberjacking extends Skill {
 
                 // Add experience to our skill.
                 this.addExperience(treeInfo.experience);
+
+                // If tree has an achievement, attempt to award it if it hasn't been awarded yet.
+                if (treeInfo.achievement) player.achievements.get(treeInfo.achievement)?.finish();
+
+                // If a tree has a quest, we check if the quest can make a callback.
+                if (treeInfo.quest) player.quests.get(treeInfo.quest)?.treeCallback?.(tree.type);
 
                 // Cut the tree from the region.
                 tree.cut();

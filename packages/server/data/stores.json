@@ -2,6 +2,11 @@
   "startshop": {
     "items": [
       {
+        "key": "flask",
+        "count": 20,
+        "price": 50
+      },
+      {
         "key": "axe",
         "count": 10,
         "price": 100

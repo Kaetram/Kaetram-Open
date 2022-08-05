@@ -16,7 +16,6 @@ export enum Movement {
     Step,
     Stop,
     Move,
-    Orientate,
     Follow,
     Entity,
     Freeze,

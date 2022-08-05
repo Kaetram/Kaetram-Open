@@ -22,6 +22,7 @@ export interface RawStage {
     /** Text for the NPC. */
     text?: DialogueItem[];
     completedText?: string[];
+    hasItemText?: string[]; // Text for if the player has a required item/count in the inventory.
 
     /** Pointer information */
     pointer?: PointerData;
@@ -32,6 +33,10 @@ export interface RawStage {
     /** If the stage grants the player an item. */
     itemKey?: string;
     itemCount?: number;
+
+    /** If a tree must be cut. */
+    tree?: string;
+    treeCount?: number; // Amount of tress to be cut.
 }
 
 export interface RawQuest {
@@ -53,6 +58,8 @@ export interface StageData {
     popup?: PopupData;
     itemKey?: string;
     itemCount?: number;
+    tree?: string;
+    treeCount?: number;
 }
 
 export interface QuestData {
@@ -69,4 +76,4 @@ export interface SerializedQuest {
     quests: QuestData[];
 }
 
-export type TaskType = 'talk' | 'kill' | 'pickup';
+export type TaskType = 'talk' | 'kill' | 'pickup' | 'tree';
