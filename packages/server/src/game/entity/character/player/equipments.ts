@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';

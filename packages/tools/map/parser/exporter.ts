@@ -1,4 +1,4 @@
-#!/usr/bin/env -S yarn ts-node-script
+#!/usr/bin/env -S yarn tsx
 
 import fs from 'fs';
 import path from 'path';
@@ -7,7 +7,7 @@ import log from '@kaetram/common/util/log';
 
 import Parser from './parser';
 
-let resolve = (dir: string): string => path.resolve(__dirname, dir),
+let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),
     serverDestination = '../../../server/data/map/world.json',
     clientDestination = '../../../client/data/maps/map.json';

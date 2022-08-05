@@ -4,6 +4,7 @@ import Quests from './quests';
 import Hit from '../combat/hit';
 import Handler from './handler';
 import Mana from '../points/mana';
+import Entity from '../../entity';
 import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
@@ -49,7 +50,7 @@ import {
     Welcome,
     Pointer
 } from '@kaetram/server/src/network/packets';
-import { ExperiencePacket, OverlayPacket } from '@kaetram/common/types/messages/outgoing';
+import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
@@ -69,22 +70,23 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map: Map;
-    private regions: Regions;
-    private entities: Entities;
+    public map: Map = this.world.map;
+    private regions: Regions = this.world.map.regions;
+    private entities: Entities = this.world.entities;
 
     public incoming: Incoming;
 
-    private handler: Handler;
+    public warp: Warp;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
 
-    public warp: Warp = new Warp(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
+
+    private handler: Handler;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -104,7 +106,6 @@ export default class Player extends Character {
     public lastLogin = 0;
     public pvpKills = 0;
     public pvpDeaths = 0;
-    public orientation = Modules.Orientation.Down;
     public mapVersion = -1;
 
     public talkIndex = 0;
@@ -112,9 +113,9 @@ export default class Player extends Character {
 
     // TODO - REFACTOR THESE ------------
 
-    public webSocketClient;
+    public webSocketClient: boolean;
 
-    public abilities;
+    public abilities: Abilities;
 
     public team?: string; // TODO
     public userAgent!: string;
@@ -123,7 +124,7 @@ export default class Player extends Character {
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
     public lastRegionChange = Date.now();
 
-    private currentSong: string | null = null;
+    private currentSong = '';
 
     public regionsLoaded: number[] = [];
     public treesLoaded: { [instance: string]: Modules.TreeState } = {};
@@ -160,22 +161,23 @@ export default class Player extends Character {
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
-    private orientationCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
 
-        this.map = world.map;
-        this.regions = world.map.regions;
-        this.entities = world.entities;
-
+        this.warp = new Warp(this);
         this.incoming = new Incoming(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+
         this.handler = new Handler(this);
 
-        // TODO - Refactor
         this.abilities = new Abilities(this);
 
-        this.webSocketClient = connection.type === 'WebSocket';
+        this.webSocketClient = this.connection.type === 'WebSocket';
     }
 
     /**
@@ -206,14 +208,14 @@ export default class Player extends Character {
         this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
+        this.userAgent = data.userAgent;
 
+        this.setPoison(data.poison.type, data.poison.start);
         this.warp.setLastWarp(data.lastWarp);
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
         this.prevExperience = Formulas.prevExp(this.experience);
-
-        this.userAgent = data.userAgent;
 
         // TODO - Do not calculate max points on every login, just store it instead.
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
@@ -307,6 +309,10 @@ export default class Player extends Character {
         this.send(new Welcome(this.serialize(false, true)));
     }
 
+    /**
+     * Destroys all the isntances in the player to aid the garbage collector.
+     */
+
     public destroy(): void {
         this.combat.stop();
         this.skills.stop();
@@ -326,6 +332,11 @@ export default class Player extends Character {
         this.connection = null!;
     }
 
+    /**
+     * Adds experience to the player and handles level ups/popups/packets/etc.
+     * @param exp The amount of experience we are adding to the player.
+     */
+
     public addExperience(exp: number): void {
         this.experience += exp;
 
@@ -340,6 +351,7 @@ export default class Player extends Character {
             level: this.level
         } as ExperiencePacket;
 
+        // Update hit points and send a popup to the player when a level up occurs.
         if (oldLevel !== this.level) {
             this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
             this.healHitPoints(this.hitPoints.maxPoints);
@@ -575,12 +587,19 @@ export default class Player extends Character {
         else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }
 
+    /**
+     * Receives information about the current music area the player is in.
+     * @param info The music area information, could be undefined.
+     */
+
     public updateMusic(info?: Area): void {
-        if (!info || info.song === this.currentSong) return;
+        let song = info?.song || '';
 
-        this.currentSong = info.song;
+        if (song === this.currentSong) return;
 
-        this.send(new Audio(info.song));
+        this.currentSong = song;
+
+        this.send(new Audio(song));
     }
 
     public revertPoints(): void {
@@ -649,16 +668,25 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number, forced = false): void {
         if (this.dead) return;
 
-        // Teleport the player to the spawn point if the position is invalid.
-        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
-        else super.setPosition(x, y);
-
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
-        if (this.map.isColliding(x, y, this) && this.oldX !== -1 && this.oldY !== -1) {
+        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
+            /**
+             * If the old coordinate values are invalid or they may cause a loop
+             * in the `teleport` function, we instead send the player to the spawn point.
+             */
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            )
+                return this.sendToSpawn();
+
             this.notify(`Noclip detected in your movement, please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
             return;
         }
+
+        // Sets the player's new position.
+        super.setPosition(x, y);
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
@@ -670,12 +698,6 @@ export default class Player extends Character {
             }),
             true
         );
-    }
-
-    public setOrientation(orientation: number): void {
-        this.orientation = orientation;
-
-        if (this.orientationCallback) this.orientationCallback();
     }
 
     /**
@@ -702,6 +724,22 @@ export default class Player extends Character {
 
     public canBeStunned(): boolean {
         return true;
+    }
+
+    /**
+     * @returns If the player rights are greater than 0.
+     */
+
+    public isMod(): boolean {
+        return this.rights > 0;
+    }
+
+    /**
+     * @returns If the player rights are greater than 1.
+     */
+
+    public isAdmin(): boolean {
+        return this.rights > 1;
     }
 
     /**
@@ -779,6 +817,10 @@ export default class Player extends Character {
         return this.lightsLoaded.includes(light);
     }
 
+    /**
+     * Disconnects the player and sends the UTF8 error message to the client.
+     */
+
     public timeout(): void {
         if (!this.connection) return;
 
@@ -786,12 +828,15 @@ export default class Player extends Character {
         this.connection.close('Player timed out.');
     }
 
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     */
+
     public refreshTimeout(): void {
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
-        this.disconnectTimeout = setTimeout(() => {
-            this.timeout();
-        }, this.timeoutDuration);
+        this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
     }
 
     public isMuted(): boolean {
@@ -801,12 +846,35 @@ export default class Player extends Character {
     }
 
     /**
+     * An override for the adjacent function. Players need a bit more space
+     * when targeting an enemy without range. If not, following an entity becomes
+     * rather annoying.
+     * @param entity The entity we are calculating distance to.
+     * @returns If the entity distance is less than calculated distance.
+     */
+
+    public override isAdjacent(entity: Entity): boolean {
+        return this.getDistance(entity) < (this.hasTarget() ? 4 : 2);
+    }
+
+    /**
      * Checks if the weapon the player is currently wielding is a ranged weapon.
      * @returns If the weapon slot is a ranged weapon.
      */
 
     public override isRanged(): boolean {
         return this.equipment.getWeapon().ranged;
+    }
+
+    /**
+     * Players obtain their poisoning abilities from their weapon. Certain
+     * weapons may be imbued with a poison effect. This checks if that status
+     * is active.
+     * @returns Whether or not the weapon is poisonous.
+     */
+
+    public override isPoisonous(): boolean {
+        return this.equipment.getWeapon().poisonous;
     }
 
     /**
@@ -847,7 +915,7 @@ export default class Player extends Character {
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
 
-        this.setPosition(spawnPoint.x, spawnPoint.y);
+        this.teleport(spawnPoint.x, spawnPoint.y, true);
     }
 
     public sendMessage(playerName: string, message: string): void {
@@ -856,10 +924,8 @@ export default class Player extends Character {
             return;
         }
 
-        if (!this.world.isOnline(playerName)) {
-            this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
-            return;
-        }
+        if (!this.world.isOnline(playerName))
+            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
 
         let otherPlayer = this.world.getPlayerByName(playerName),
             oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
@@ -999,14 +1065,14 @@ export default class Player extends Character {
         );
     }
 
+    /**
+     * Saves the player data to the database.
+     */
+
     public save(): void {
         if (config.skipDatabase || this.isGuest || !this.ready) return;
 
         this.database.creator?.save(this);
-    }
-
-    public hasAggressionTimer(): boolean {
-        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
     }
 
     /**
@@ -1045,32 +1111,78 @@ export default class Player extends Character {
         return data;
     }
 
-    public onOrientation(callback: () => void): void {
-        this.orientationCallback = callback;
+    /**
+     * Override for obtaining the weapon power level.
+     * @returns The player's currently equipped weapon's power level.
+     */
+
+    public override getWeaponLevel(): number {
+        return this.equipment.getWeapon().power;
     }
+
+    /**
+     * Override for obtaining the armour power level.
+     * @returns The player's currently equipped armour's power level.
+     */
+
+    public override getArmourLevel(): number {
+        return this.equipment.getArmour().power;
+    }
+
+    /**
+     * Callback for when the current character kills another character.
+     * @param callback Contains the character object that was killed.
+     */
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
     }
 
+    /**
+     * Callback for when the player talks to an NPC.
+     * @param callback Contains the NPC object the player is talking to.
+     */
+
     public onTalkToNPC(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
+    /**
+     * Callback for when the player has entered through a door.
+     * @param callback Contains information about the door player is entering through.
+     */
+
     public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
+
+    /**
+     * Callback for when the player has clicked the profile UI button.
+     */
+
     public onProfile(callback: InterfaceCallback): void {
         this.profileToggleCallback = callback;
     }
+
+    /**
+     * Callback for when the player has clicked the inventory button.
+     */
 
     public onInventory(callback: InterfaceCallback): void {
         this.inventoryToggleCallback = callback;
     }
 
+    /**
+     * Callback for when the warp button in the UI has been clicked.
+     */
+
     public onWarp(callback: InterfaceCallback): void {
         this.warpToggleCallback = callback;
     }
+
+    /**
+     * Callback for when the cheat score has increased.
+     */
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;

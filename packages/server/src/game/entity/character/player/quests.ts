@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Player from './player';
 import Quest from './quest/quest';
@@ -70,6 +70,7 @@ export default class Quests {
      * The callback function for when a quest advances in stages.
      * @param key The quest's key.
      * @param stage The stage we are progressing to.
+     * @param subStage The sub stage we are progressing to.
      */
 
     private handleProgress(key: string, stage: number, subStage: number): void {

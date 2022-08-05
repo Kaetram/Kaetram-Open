@@ -31,14 +31,18 @@ export default class Discord {
      */
 
     private handleMessage(message: Message): void {
-        if (message.channel.id !== config.discordChannelId) return;
-        if (this.client.user?.id === message.author.id) return; // Skip if it's the bot.
-        if (!message.content) return; // Picture sent or something.
+        try {
+            if (message.channel.id !== config.discordChannelId) return;
+            if (this.client.user?.id === message.author.id) return; // Skip if it's the bot.
+            if (!message.content) return; // Picture sent or something.
 
-        let source = `[Discord | ${message.author.username}]`,
-            text = `@goldenrod@${message.content}`;
+            let source = `[Discord | ${message.author.username}]`,
+                text = `@goldenrod@${message.content}`;
 
-        this.messageCallback?.(source, text, 'tomato');
+            this.messageCallback?.(source, text, 'tomato');
+        } catch {
+            log.error(`An error has occurred while handling a message from the Discord server.`);
+        }
     }
 
     /**
@@ -70,9 +74,13 @@ export default class Discord {
     public sendRawMessage(message: string): void {
         if (!this.client) return;
 
-        let channel = this.client.channels.cache.get(config.discordChannelId) as TextChannel;
+        try {
+            let channel = this.client.channels.cache.get(config.discordChannelId) as TextChannel;
 
-        if (channel) channel.send(message);
+            if (channel) channel.send(message);
+        } catch {
+            log.error('An error has occurred while sending a message to the Discord server.');
+        }
     }
 
     /**

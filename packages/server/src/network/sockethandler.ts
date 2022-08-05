@@ -4,8 +4,8 @@ import WS from './sockets/ws';
 import type Connection from './connection';
 
 export default class SocketHandler {
-    private socketIO = new SocketIO(this);
-    private ws = new WS(this);
+    private socketIO: SocketIO;
+    private ws: WS;
 
     public addressTimes: { [address: string]: number } = {}; // Keeping track of address connection times.
     public connections: { [id: string]: Connection } = {};
@@ -13,6 +13,9 @@ export default class SocketHandler {
     private connectionCallback?: (connection: Connection) => void;
 
     public constructor() {
+        this.socketIO = new SocketIO(this);
+        this.ws = new WS(this);
+
         this.socketIO.onAdd(this.add.bind(this));
         this.ws.onAdd(this.add.bind(this));
     }

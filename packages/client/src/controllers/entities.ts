@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 import Mob from '../entity/character/mob/mob';
@@ -31,14 +31,17 @@ export interface Movable {
 }
 
 export default class EntitiesController {
-    public grids: Grids = new Grids(this.game.map);
-    public sprites: SpritesController = this.game.sprites;
+    public grids: Grids;
+    public sprites: SpritesController;
 
     public entities: EntitiesCollection = {};
     public decrepit: Entity[] = [];
 
     public constructor(private game: Game) {
-        this.game.input.loadCursors();
+        this.grids = new Grids(game.map);
+        this.sprites = game.sprites;
+
+        game.input.loadCursors();
     }
 
     /**
@@ -157,10 +160,18 @@ export default class EntitiesController {
 
         mob.setHitPoints(info.hitPoints!, info.maxHitPoints!);
 
+        // Apply the mob-specific properties
         mob.attackRange = info.attackRange!;
         mob.level = info.level!;
         mob.hiddenName = info.hiddenName!;
         mob.movementSpeed = info.movementSpeed!;
+        mob.orientation = info.orientation!;
+
+        // Set the display info properties directly onto the mob.
+        if (info.displayInfo) {
+            if (info.displayInfo.colour) mob.nameColour = info.displayInfo.colour;
+            if (info.displayInfo.scale) mob.customScale = info.displayInfo.scale;
+        }
 
         return mob;
     }

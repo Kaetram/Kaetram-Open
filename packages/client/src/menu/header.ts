@@ -18,6 +18,7 @@ export default class Header {
     public constructor(private player: Player) {
         this.player.onHitPoints(this.handleHitPoints.bind(this));
         this.player.onExperience(this.handleExperience.bind(this));
+        this.player.onPoison(this.handlePoison.bind(this));
     }
 
     /**
@@ -51,6 +52,17 @@ export default class Header {
         this.experience.style.width = `${Math.floor(
             this.experienceBar.offsetWidth * percentage
         ).toString()}px`;
+    }
+
+    /**
+     * Updates the poison status by changing the colour of the health bar.
+     * @param status The current status of the player's poison.
+     */
+
+    public handlePoison(status: boolean): void {
+        this.health.style.background = status
+            ? '-webkit-linear-gradient(right, #19B047, #046E20)'
+            : '-webkit-linear-gradient(right, #ff0000, #ef5a5a)';
     }
 
     /**

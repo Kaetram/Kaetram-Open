@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 
 import config from '@kaetram/common/config';
@@ -13,7 +13,7 @@ import Creator from '../database/mongodb/creator';
 import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
-import { Spawn } from '../network/packets';
+import { Spawn, Update } from '../network/packets';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
@@ -154,6 +154,7 @@ export default class Incoming {
     private handleReady(data: ReadyPacket): void {
         let { hasMapData, userAgent } = data;
 
+        this.player.updateRegion();
         this.player.updateEntities();
 
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
@@ -182,33 +183,13 @@ export default class Incoming {
             if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
-
-            // Special name colours for NPCs.
-            // if (entity.isNPC()) {
-            //     if (this.player.quests.getQuestFromNPC(entity as NPC))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
-
-            //     if (this.player.achievements.getAchievementFromEntity(entity as NPC))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            // }
-
-            // // Special name colours for mobs.
-            // if (entity.isMob()) {
-            //     if (this.player.quests.getQuestFromMob(entity as Mob))
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Quest];
-
-            //     let achievement = this.player.achievements.getAchievementFromEntity(entity as Mob);
-
-            //     if (achievement && achievement.isStarted())
-            //         entity.colour = Modules.NameColours[Modules.SpecialEntityTypes.Achievement];
-            // }
-
-            this.player.send(new Spawn(entity));
+            this.player.send(
+                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+            );
         });
     }
 
     private handleEquipment(data: EquipmentPacket): void {
-        console.log(data);
         switch (data.opcode) {
             case Opcodes.Equipment.Unequip:
                 return this.player.equipment.unequip(data.type);
@@ -293,14 +274,6 @@ export default class Incoming {
                 if (!entity) return;
 
                 entity.setPosition(requestX!, requestY!);
-
-                break;
-
-            case Opcodes.Movement.Orientate:
-                log.debug(`Unhandled Movement.Orientate: ${this.player.username}.`);
-                // this.player.sendToRegions(
-                //     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
-                // );
 
                 break;
 

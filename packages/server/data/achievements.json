@@ -27,5 +27,45 @@
     "hiddenreward": {
         "name": "Hidden Reward",
         "description": "Kill some secret spooky skeletons somewhere."
+    },
+
+    "ancientwizard": {
+        "name": "Ancient Wizard",
+        "description": "Defeat the ancient wizard in Mudwich!"
+    },
+
+    "crabproblem": {
+        "name": "Crab Problem",
+        "description": "The beach is infested with crabs! Help Bubba by killing 10 crabs.",
+        "npc": "beachnpc",
+        "dialogueHidden": [
+            "Wassup man!",
+            "Listen, could you lend me a hand?",
+            "I see you're pretty good with the killing stuff.",
+            "Mind killing 10 crabs for me?"
+        ],
+        "dialogueStarted": [
+            "C'mon man, please kill me 10 crabs."
+        ],
+
+        "mob": ["crab", "hermitcrab"],
+        "mobCount": 10,
+
+        "rewardExperience": 1000
+    },
+
+    "warriorcrab": {
+        "name": "Warrior Crab",
+        "description": "Kill the Hermit Crab Warrior hidden somewhere on the beach."
+    },
+
+    "sandtreasure": {
+        "name": "Sand Treasure",
+        "description": "Find the treasure hidden somewhere on the beach."
+    },
+
+    "waterguardian": {
+        "name": "Water Guardian",
+        "description": "Defeat the Water Guardian!"
     }
 }

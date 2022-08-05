@@ -11,10 +11,12 @@ export default class Main {
     private discord: Discord = new Discord();
     private servers: Servers = new Servers();
 
-    private api: API = new API(this.servers, this.discord);
+    private api: API;
 
     public constructor() {
         log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
+
+        this.api = new API(this.servers, this.discord);
 
         this.discord.onMessage(this.api.broadcastChat.bind(this.api));
 

@@ -1,8 +1,7 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "types": ["@types/node", "@kaetram/common", "cypress"]
+        "types": ["@types/node", "@kaetram/common"]
     },
     "include": ["types/index.d.ts"]
 }

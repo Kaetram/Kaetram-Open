@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { json, urlencoded } from 'body-parser';
 import express, { Router, Request, Response } from 'express';
 
 import log from '@kaetram/common/util/log';
@@ -17,8 +16,8 @@ export default class API {
     public constructor(private servers: Servers, private discord: Discord) {
         let app = express();
 
-        app.use(urlencoded({ extended: true }));
-        app.use(json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
 
         let router = Router();
 

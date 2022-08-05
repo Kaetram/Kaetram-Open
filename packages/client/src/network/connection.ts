@@ -1,5 +1,5 @@
 import { AchievementPacket } from './../../../common/types/messages/outgoing.d';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 
@@ -64,21 +64,21 @@ export default class Connection {
      * to access them.
      */
 
-    private app: App = this.game.app;
-    private overlays: Overlays = this.game.overlays;
-    private info: InfoController = this.game.info;
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
-    private renderer: Renderer = this.game.renderer;
-    private input: InputController = this.game.input;
-    private socket: Socket = this.game.socket;
-    private pointer: PointerController = this.game.pointer;
-    private audio: AudioController = this.game.audio;
-    private entities: EntitiesController = this.game.entities;
-    private bubble: BubbleController = this.game.bubble;
-    private menu: MenuController = this.game.menu;
-    private sprites: SpritesController = this.game.sprites;
-    private messages: Messages = this.socket.messages;
+    private app: App;
+    private overlays: Overlays;
+    private info: InfoController;
+    private map: Map;
+    private camera: Camera;
+    private renderer: Renderer;
+    private input: InputController;
+    private socket: Socket;
+    private pointer: PointerController;
+    private audio: AudioController;
+    private entities: EntitiesController;
+    private bubble: BubbleController;
+    private menu: MenuController;
+    private sprites: SpritesController;
+    private messages: Messages;
 
     /**
      * Connection controller keeps track of all the incoming packets
@@ -86,6 +86,22 @@ export default class Connection {
      */
 
     public constructor(private game: Game) {
+        this.app = game.app;
+        this.overlays = game.overlays;
+        this.info = game.info;
+        this.map = game.map;
+        this.camera = game.camera;
+        this.renderer = game.renderer;
+        this.input = game.input;
+        this.socket = game.socket;
+        this.pointer = game.pointer;
+        this.audio = game.audio;
+        this.entities = game.entities;
+        this.bubble = game.bubble;
+        this.menu = game.menu;
+        this.sprites = game.sprites;
+        this.messages = this.socket.messages;
+
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
         this.messages.onMap(this.handleMap.bind(this));
@@ -118,6 +134,7 @@ export default class Connection {
         this.messages.onGuild(this.handleGuild.bind(this));
         this.messages.onPointer(this.handlePointer.bind(this));
         this.messages.onPVP(this.handlePVP.bind(this));
+        this.messages.onPoison(this.handlePoison.bind(this));
         this.messages.onStore(this.handleStore.bind(this));
         this.messages.onOverlay(this.handleOverlay.bind(this));
         this.messages.onCamera(this.handleCamera.bind(this));
@@ -193,7 +210,10 @@ export default class Connection {
 
         this.map.loadRegions(region);
 
+        // Used if the client uses low-power mode, forces redrawing of trees.
         this.renderer.forceRendering = true;
+
+        // Update the animated tiles when we receive new map data.
         this.renderer.updateAnimatedTiles();
     }
 
@@ -312,10 +332,6 @@ export default class Connection {
                 if (info.state) entity.stop(false);
 
                 entity.stunned = !!info.state;
-                break;
-
-            case Opcodes.Movement.Orientate:
-                entity.performAction(info.orientation!, Modules.Actions.Orientate);
                 break;
         }
     }
@@ -924,6 +940,15 @@ export default class Connection {
         let entity = this.entities.get<Player>(instance);
 
         if (entity) entity.pvp = state;
+    }
+
+    /**
+     * Updates the visual poison status of the player (changes the colour of the health bar).
+     * @param type Type of poison we are applying, if -1 then we remove poison status.
+     */
+
+    private handlePoison(type: number): void {
+        this.game.player.setPoison(type !== -1);
     }
 
     /**

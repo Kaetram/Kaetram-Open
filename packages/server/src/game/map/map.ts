@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -24,14 +24,15 @@ import type Player from '../entity/character/player/player';
 let map = mapData as ProcessedMap;
 
 export default class Map {
-    public regions: Regions;
-    public grids: Grids;
-
     // Map versioning and information
     public version = map.version;
     public width = map.width;
     public height = map.height;
     public tileSize = map.tileSize;
+
+    // Map handlers
+    public regions: Regions;
+    public grids: Grids = new Grids(this.width, this.height);
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
@@ -56,7 +57,6 @@ export default class Map {
         this.loadDoors();
 
         this.regions = new Regions(this);
-        this.grids = new Grids(this);
     }
 
     /**
@@ -328,8 +328,18 @@ export default class Map {
     public getTileData(index: number): RegionTile {
         let data = this.data[index];
 
-        if (!data) return [];
+        return data ? this.parseTileData(data) : [];
+    }
 
+    /**
+     * Parses through the specified data at a given index and extracts
+     * the flipped tiles from it. Returns a formatted RegionTile ready for
+     * the client.
+     * @param data Raw data contained at an index.
+     * @returns A RegionTile object containing index tile data information.
+     */
+
+    public parseTileData(data: number | number[]): RegionTile {
         let isArray = Array.isArray(data),
             parsedData: RegionTile = isArray ? [] : 0;
 
