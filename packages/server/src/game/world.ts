@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
@@ -34,13 +34,14 @@ export interface PacketData {
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map: Map = new Map(this);
-    public api: API = new API(this);
-    public stores: Stores = new Stores(this);
-    public trees: Trees = new Trees(this);
-    public lights: Lights = new Lights(this.map);
-    public entities: Entities = new Entities(this);
-    public network: Network = new Network(this);
+    public map: Map;
+    public api: API;
+    public stores: Stores;
+    public trees: Trees;
+    public lights: Lights;
+    public entities: Entities;
+    public network: Network;
+
     public discord: Discord = new Discord(config.hubEnabled);
 
     private maxPlayers = config.maxPlayers;
@@ -48,6 +49,14 @@ export default class World {
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+        this.map = new Map(this);
+        this.api = new API(this);
+        this.stores = new Stores(this);
+        this.trees = new Trees(this);
+        this.lights = new Lights(this.map);
+        this.entities = new Entities(this);
+        this.network = new Network(this);
+
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));

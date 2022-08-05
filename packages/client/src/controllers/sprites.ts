@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 import Sprite from '../entity/sprite';
