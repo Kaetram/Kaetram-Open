@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
@@ -21,6 +21,7 @@ type PopupCallback = (popup: PopupData) => void;
 type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
+type TreeCallback = (type: string) => void;
 
 export default abstract class Quest {
     /**
@@ -47,6 +48,7 @@ export default abstract class Quest {
     public talkCallback?: TalkCallback;
     public doorCallback?: DoorCallback;
     public killCallback?: KillCallback;
+    public treeCallback?: TreeCallback;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -63,6 +65,7 @@ export default abstract class Quest {
         this.onTalk(this.handleTalk.bind(this));
         this.onDoor(this.handleDoor.bind(this));
         this.onKill(this.handleKill.bind(this));
+        this.onTree(this.handleTree.bind(this));
     }
 
     /**
@@ -96,7 +99,7 @@ export default abstract class Quest {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
-        let dialogue = this.getNPCDialogue(npc);
+        let dialogue = this.getNPCDialogue(npc, player);
 
         /**
          * Ends the conversation. If the player has the required item in the inventory
@@ -104,18 +107,13 @@ export default abstract class Quest {
          * it must be given before the conversation ends and quest progresses.
          */
         if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
-            if (!this.hasItemRequirement())
-                if (this.hasItemToGive()) {
-                    if (
-                        this.givePlayerItem(
-                            player,
-                            this.stageData.itemKey!,
-                            this.stageData.itemCount!
-                        )
-                    )
-                        this.progress();
-                } else this.progress();
-            else this.handleItemRequirement(player, this.stageData);
+            if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
+            else if (
+                this.hasItemToGive() &&
+                this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!)
+            )
+                this.progress();
+            else this.progress();
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
@@ -132,7 +130,7 @@ export default abstract class Quest {
 
         if (this.stage < door.stage!) return player.notify('You cannot pass through this door.');
 
-        player.teleport(door.x, door.y, true);
+        player.teleport(door.x, door.y);
 
         this.progress();
     }
@@ -159,6 +157,32 @@ export default abstract class Quest {
     }
 
     /**
+     * Callback for when a tree has been cut. This only gets called if the quest
+     * has not yet been completed.
+     * @param type The type of tree we are cutting.
+     */
+
+    private handleTree(type: string): void {
+        // Stop if the quest has already been completed.
+        if (this.isFinished()) return;
+
+        // Stage data does not require a tree to be cut.
+        if (!this.stageData.tree) return;
+
+        // Don't progress if we are not cutting the tree specified.
+        if (this.stageData.tree !== type) return;
+
+        // Progress the quest if no tree count is specified but a tree stage is present.
+        if (!this.stageData.treeCount) return this.progress();
+
+        // Progress substage.
+        this.progress(true);
+
+        // Progress to next stage if we fulfill the tree count requirement.
+        if (this.subStage >= this.stageData.treeCount) this.progress();
+    }
+
+    /**
      * Checks the player's inventory and progresses if
      * he contains enough of the required item.
      * @param player The player we are checking inventory of.
@@ -166,14 +190,17 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemCountRequirement } = stageData,
-            index = player.inventory.getIndex(itemRequirement, itemCountRequirement);
+        let { itemRequirement, itemCountRequirement } = stageData;
 
-        // Cannot find the item in the inventory (or with correct count).
-        if (index === -1) return;
+        // Skip if the player does not have the required item and count in the inventory.
+        if (!player.inventory.hasItem(itemRequirement!, itemCountRequirement)) return;
 
-        // Remove `countRequirement` amount of an item at the index.
-        player.inventory.remove(index, itemCountRequirement);
+        // Remove the item and count from the invnetory.
+        player.inventory.removeItem(itemRequirement!, itemCountRequirement);
+
+        // If the stage contains item rewards, we give it to the player.
+        if (this.hasItemToGive())
+            this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
 
         this.progress();
     }
@@ -265,12 +292,14 @@ export default abstract class Quest {
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
             itemRequirement: stage.itemRequirement! || '',
-            itemCountRequirement: stage.itemCountRequirement! || 0,
+            itemCountRequirement: stage.itemCountRequirement! || 1,
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
             itemKey: stage.itemKey! || '',
-            itemCount: stage.itemCount! || 0
+            itemCount: stage.itemCount! || 0,
+            tree: stage.tree! || '',
+            treeCount: stage.treeCount! || 0
         };
     }
 
@@ -286,7 +315,7 @@ export default abstract class Quest {
      * @returns An array of strings containing the dialogue.
      */
 
-    private getNPCDialogue(npc: NPC): string[] {
+    private getNPCDialogue(npc: NPC, player: Player): string[] {
         // Iterate backwards, last reference of the NPC is the text we grab.
         for (let i = this.stage; i > -1; i--) {
             // We do not count iterations of stages above stage we are currently on.
@@ -296,6 +325,16 @@ export default abstract class Quest {
 
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;
+
+            // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
+            if (stage.itemRequirement! && this.stage === i) {
+                // Verify that the player has the required items and return the dialogue for it.
+                if (player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!))
+                    return stage.hasItemText!;
+
+                // Skip to next stage iteration.
+                continue;
+            }
 
             /**
              * If the stage we are currently on is not the same as the most
@@ -318,18 +357,20 @@ export default abstract class Quest {
      */
 
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
+        let isProgress = this.stage !== stage;
+
         // Send popup before setting the new stage.
         if (this.stageData.popup) this.popupCallback?.(this.stageData.popup);
 
         // Clear pointer preemptively if the current stage data contains it.
         if (this.stageData.pointer) this.pointerCallback?.(Modules.EmptyPointer);
 
-        // Progression to a new stage.
-        if (this.stage !== stage && progressCallback)
-            this.progressCallback?.(this.key, stage, this.stageCount);
-
         this.stage = stage;
         this.subStage = subStage;
+
+        // Progression to a new stage.
+        if (isProgress && progressCallback)
+            this.progressCallback?.(this.key, stage, this.stageCount);
 
         if (this.isFinished()) return;
 
@@ -414,5 +455,14 @@ export default abstract class Quest {
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
+    }
+
+    /**
+     * Callbakc for when a tree has been cut down.
+     * @param callback Contains the tree type that was cut.
+     */
+
+    public onTree(callback: TreeCallback): void {
+        this.treeCallback = callback;
     }
 }

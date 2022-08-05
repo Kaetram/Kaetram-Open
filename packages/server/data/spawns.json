@@ -1,9 +1,49 @@
-[
- { "string": "golem", "x": 203, "y": 77, "roaming": true, "miniboss": true, "achievementId": 5 },
- { "string": "deathknight", "x": 441, "y": 153, "roaming": true, "miniboss": true, "achievementId": 9 },
- { "string": "pinkelf", "x": 10, "y": 295, "roaming": true, "miniboss": true, "achievementId": 10 },
- { "string": "iceknight", "x": 17, "y": 217, "roaming": true, "miniboss": true, "achievementId": 11 },
- { "string": "hermitcrab", "x": 459, "y": 220, "roaming": true, "miniboss": true, "achievementId": 12 },
+{
+ "163-339": { 
+    "name": "Ancient Wizard",
+    "roaming": true,
+    "miniboss": true,
+    "hitPoints": 250,
+    "level": 10,
+    "attackLevel": 7,
+    "defenseLevel": 5,
+    "projectileName": "projectile-fireball2",
+    "achievement": "ancientwizard"
+  },
 
- { "string": "skeletonking", "x": 526, "y": 275, "roaming": true, "boss": true }
-]
+  "224-359": {
+    "name": "Hermit Crab Warrior",
+    "drops": {
+      "flask": 200,
+      "gold": 750,
+      "spear": 75,
+      "platearmor": 100
+    },
+    "roaming": true,
+    "miniboss": true,
+    "hitPoints": 300,
+    "level": 30,
+    "aggroRange": 3,
+    "aggressive": true,
+    "attackLevel": 10,
+    "defenseLevel": 15,
+    "achievement": "warriorcrab"
+  },
+
+  "317-359": {
+    "name": "Water Guardian",
+    "drops": {
+      "redguardarmor": 75,
+      "redguardarcherarmor": 75,
+      "ring1": 100,
+      "scimitar": 100,
+      "watermelonbow": 100
+    },
+    "miniboss": true,
+    "level": 40,
+    "hitPoints": 350,
+    "attackLevel": 15,
+    "defenseLevel": 25,
+    "achievement": "waterguardian"
+  }
+}

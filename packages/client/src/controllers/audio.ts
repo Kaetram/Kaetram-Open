@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -65,7 +65,7 @@ export default class AudioController {
     }
 
     public play(type: Modules.AudioTypes, name: string): void {
-        let { game, sounds } = this;
+        let { game, sounds, music } = this;
 
         if (!this.isEnabled() || game.player.dead) return;
 
@@ -74,6 +74,8 @@ export default class AudioController {
         switch (type) {
             case Modules.AudioTypes.Music: {
                 this.fadeOut(this.song, () => this.reset(this.song));
+
+                if (!music[name]) this.parse('music', name, 1);
 
                 let song = this.get(name);
 
@@ -128,7 +130,7 @@ export default class AudioController {
     }
 
     public update(): void {
-        if (!this.isEnabled() || !this.newSong) return;
+        if (!this.isEnabled() || !this.newSong) return this.stop();
 
         let { newSong, game, music, audibles } = this;
 
@@ -228,7 +230,7 @@ export default class AudioController {
         });
     }
 
-    private isEnabled(): boolean | undefined {
+    private isEnabled(): boolean {
         return this.game.storage.data.settings.soundEnabled;
     }
 

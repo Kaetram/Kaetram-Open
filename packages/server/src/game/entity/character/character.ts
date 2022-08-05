@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Entity from '../entity';
 import Combat from './combat/combat';
@@ -7,37 +7,38 @@ import World from '../../world';
 import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
 import Formulas from '../../../info/formulas';
+import Poison from './poison';
 
-import { Movement, Points } from '../../../network/packets';
+import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
+import Hit from './combat/hit';
 
 type StunCallback = (stun: boolean) => void;
+type PoisonCallback = (type: number) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
-type PoisonCallback = (poison: string) => void;
-type SubAoECallback = (radius: number, hasTerror: boolean) => void;
+type DeathCallback = (attacker?: Character) => void;
 
 export default abstract class Character extends Entity {
     public level = 1;
     public attackRange = 1;
+    public plateauLevel = 0;
 
-    public hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
+    public hitPoints: HitPoints;
 
     public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate = Modules.Defaults.ATTACK_RATE;
     public healingRate = Modules.Constants.HEAL_RATE;
+    public orientation = Modules.Orientation.Down;
 
     /* States */
-    public poison = '';
+    public poison?: Poison | undefined;
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
     // List of entities attacking this character.
     public attackers: Character[] = []; // Used by combat to determine which character to target.
-
-    public weaponLevel!: number;
-    public armourLevel!: number;
 
     public stunned = false;
     public moving = false;
@@ -52,15 +53,15 @@ export default abstract class Character extends Entity {
     public lastMovement!: number;
     public lastAttacker?: Character | undefined;
 
-    public stunTimeout?: NodeJS.Timeout;
-    private healingInterval?: NodeJS.Timeout;
+    public stunTimeout?: NodeJS.Timeout | undefined;
+    private healingInterval?: NodeJS.Timeout | undefined;
+    private poisonInterval?: NodeJS.Timeout | undefined;
 
     private stunCallback?: StunCallback;
     private poisonCallback?: PoisonCallback;
 
     public hitCallback?: HitCallback;
-    public subAoECallback?: SubAoECallback;
-    public deathCallback?(attacker?: Character): void;
+    public deathCallback?: DeathCallback;
 
     protected constructor(
         instance: string,
@@ -72,6 +73,8 @@ export default abstract class Character extends Entity {
         super(instance, key, x, y);
 
         this.combat = new Combat(this);
+
+        this.hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
         this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
@@ -113,6 +116,46 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Function when we want to apply damage to the character.
+     * We check if the poison status has expired first, if it has
+     * not, then we apply the poison damage.
+     */
+
+    private handlePoison(): void {
+        if (!this.poison) return;
+
+        // Remove the poison if it has expired.
+        if (this.poison.expired()) return this.setPoison();
+
+        // Create a hit object for poison damage and serialize it.
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, false, true).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(this.poison.damage);
+    }
+
+    /**
+     * Handles the logic for when an attacker is trying to poison
+     * the current character instance.
+     */
+
+    private handlePoisonDamage(attacker: Character): void {
+        let isPoisoned = Formulas.getPoisonChance(this.level) < attacker.getPoisonChance();
+
+        // Use venom as default for now.
+        if (isPoisoned) this.setPoison(Modules.PoisonTypes.Venom);
+    }
+
+    /**
      * Increments the hitpoints by the amount specified or 1 by default.
      * @param amount Healing amount, defaults to 1 if not specified.
      */
@@ -149,7 +192,7 @@ export default abstract class Character extends Entity {
 
     public hit(damage: number, attacker?: Character): void {
         // Stop hitting if entity is dead.
-        if (this.isDead()) return;
+        if (this.isDead() || this.invincible) return;
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
@@ -159,6 +202,8 @@ export default abstract class Character extends Entity {
 
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        if (attacker?.isPoisonous()) this.handlePoisonDamage(attacker);
     }
 
     /**
@@ -184,6 +229,20 @@ export default abstract class Character extends Entity {
 
     public removeAttacker(attacker: Character): void {
         this.attackers = this.attackers.filter((a: Character) => a.instance !== attacker.instance);
+    }
+
+    /**
+     * Override of the superclass `setPosition`. Since characters are the only
+     * instances capable of movement, we need to update their position in the grids.
+     * @param x The new x grid position.
+     * @param y The new y grid position.
+     */
+
+    public override setPosition(x: number, y: number): void {
+        super.setPosition(x, y);
+
+        // Updates the character's position in the grid.
+        this.world.map.grids.updateEntity(this);
     }
 
     /**
@@ -237,14 +296,36 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Sets the poison status and makes a callback.
-     * @param poison The new poison status we are setting.
+     * Sets the poison status and makes a callback. If
+     * no type is specified, we remove the poison.
+     * @param type The type of poison we are adding.
+     * @param start Optional paramater for setting when poision starts (for loading from database).
      */
 
-    public setPoison(poison: string): void {
-        this.poison = poison;
+    public setPoison(type = -1, start?: number): void {
+        let remove = type === -1;
 
-        this.poisonCallback?.(poison);
+        // No need to remove a non-existant status.
+        if (remove && !this.poison) return;
+
+        // Set or remove the poison status.
+        this.poison = remove ? undefined : new Poison(type, start);
+
+        if (remove) {
+            clearInterval(this.poisonInterval!);
+            this.poisonInterval = undefined;
+        } else this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
+
+        this.poisonCallback?.(type);
+    }
+
+    /**
+     * Updates the current orientation of the character.
+     * @param orientation New orientation value for the character.
+     */
+
+    public setOrientation(orientation: Modules.Orientation): void {
+        this.orientation = orientation;
     }
 
     /**
@@ -306,9 +387,28 @@ export default abstract class Character extends Entity {
      */
 
     public isNearTarget(): boolean {
-        if (this.isRanged()) return this.getDistance(this.target!) <= this.attackRange;
+        /**
+         * A target can only be attacked through range if it's on the same plateau level or
+         * a lower one. This prevents players from sniping mobs on higher levels.
+         */
+        if (this.isRanged())
+            return (
+                this.getDistance(this.target!) <= this.attackRange &&
+                this.plateauLevel >= this.target!.plateauLevel
+            );
 
         return this.isAdjacent(this.target!);
+    }
+
+    /**
+     * Superclass implementation for poisonous damage. Mobs have this
+     * enabled if they're poisonous, players have this enabled if
+     * they carry a weapon that's imbued with poison.
+     * @returns Defaults to false.
+     */
+
+    public isPoisonous(): boolean {
+        return false;
     }
 
     // Packet sending functions
@@ -363,6 +463,7 @@ export default abstract class Character extends Entity {
         let data = super.serialize();
 
         data.movementSpeed = this.movementSpeed;
+        data.orientation = this.orientation;
 
         return data;
     }
@@ -388,21 +489,20 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * @returns Default probability for poison to be inflicted.
+     */
+
+    public getPoisonChance(): number {
+        return Modules.Defaults.POISON_CHANCE;
+    }
+
+    /**
      * Unimplemented special attack function for the superclass.
      * @returns Always false if not implemented.
      */
 
     public hasSpecialAttack(): boolean {
         return false;
-    }
-
-    /**
-     * Callback for when the character is being hit.
-     * @param callback Contains the damage and an optional parameter for attacker.
-     */
-
-    public onHit(callback: HitCallback): void {
-        this.hitCallback = callback;
     }
 
     /**
@@ -415,12 +515,21 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Callback for when the poison status changes.
-     * @param callback Contains the boolean value of the poison status.
+     * Callback for when the status of the poison changes.
+     * @param callback Contains information about the poison.
      */
 
     public onPoison(callback: PoisonCallback): void {
         this.poisonCallback = callback;
+    }
+
+    /**
+     * Callback for when the character is being hit.
+     * @param callback Contains the damage and an optional parameter for attacker.
+     */
+
+    public onHit(callback: HitCallback): void {
+        this.hitCallback = callback;
     }
 
     /**

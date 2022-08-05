@@ -1,6 +1,6 @@
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 
 import type { DatabaseTypes } from './types/database';
 
@@ -57,12 +57,8 @@ export interface Config {
     fsDebugging: boolean;
 }
 
-let env = dotenv.load({
-        path: `../../.env`,
-        defaults: '../../.env.defaults',
-        includeProcessEnv: true
-    }),
-    { NODE_ENV } = env;
+let { NODE_ENV } = process.env,
+    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
 
 if (NODE_ENV) Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
 

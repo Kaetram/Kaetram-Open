@@ -1,4 +1,18 @@
 /**
+ * Contains cosmetic/appearance data about an entity. These
+ * are non-essential packets sent when we want an entity
+ * to stand out for some reason (i.e. miniboss has a different scale).
+ */
+
+import { Modules } from '../network';
+
+export interface EntityDisplayInfo {
+    instance: string;
+    colour?: string;
+    scale?: number;
+}
+
+/**
  * Entity data is referenced by the subclasses whenever
  * extra data needs to be included. Optional variables
  * listed below are used by the subclasses to include
@@ -25,6 +39,7 @@ export interface EntityData {
     attackRange?: number;
     level?: number;
     hiddenName?: boolean;
+    orientation?: Modules.Orientation;
 
     // Item data
     count?: number;
@@ -37,18 +52,8 @@ export interface EntityData {
     damage?: number;
     hitType?: Modules.Hits;
 
+    displayInfo?: EntityDisplayInfo;
+
     // Player data
     // TODO
-}
-
-/**
- * Contains cosmetic/appearance data about an entity. These
- * are non-essential packets sent when we want an entity
- * to stand out for some reason (i.e. miniboss has a different scale).
- */
-
-export interface EntityDisplayInfo {
-    instance: string;
-    colour?: string;
-    scale?: number;
 }
