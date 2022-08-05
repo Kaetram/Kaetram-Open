@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Character from '../entity/character/character';
 import AStar from '../lib/astar';

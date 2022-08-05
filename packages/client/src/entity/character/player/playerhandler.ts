@@ -10,14 +10,21 @@ import type Player from './player';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
 export default class PlayerHandler {
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
-    private input: InputController = this.game.input;
-    private entities: EntitiesController = this.game.entities;
-    private socket: Socket = this.game.socket;
-    private renderer: Renderer = this.game.renderer;
+    private map: Map;
+    private camera: Camera;
+    private input: InputController;
+    private entities: EntitiesController;
+    private socket: Socket;
+    private renderer: Renderer;
 
     public constructor(private game: Game, private player: Player) {
+        this.map = game.map;
+        this.camera = game.camera;
+        this.input = game.input;
+        this.entities = game.entities;
+        this.socket = game.socket;
+        this.renderer = game.renderer;
+
         this.load();
     }
 

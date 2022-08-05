@@ -7,7 +7,7 @@ import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
 import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
 import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 import Entity from '../entity';
 
