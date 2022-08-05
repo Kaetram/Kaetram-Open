@@ -3,7 +3,7 @@ import Map from '@kaetram/server/src/game/map/map';
 import Regions from '@kaetram/server/src/game/map/regions';
 import Grids from '@kaetram/server/src/game/map/grids';
 import Entity from '../entity';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 import World from '@kaetram/server/src/game/world';
 

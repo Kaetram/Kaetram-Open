@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import NPC from '../../npc/npc';
 import Mob from '../mob/mob';
@@ -101,8 +101,6 @@ export default class Achievements {
                 name
             })
         );
-
-        console.log(`${this.player.username} key: ${key} stage: ${stage}`);
 
         this.player.updateEntities();
     }

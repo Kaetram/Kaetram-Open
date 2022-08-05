@@ -13,17 +13,17 @@ interface Colours {
 export default class Splat {
     public opacity = 1;
 
-    private text = `${this.value}`;
-    private prefix = '';
-    private suffix = '';
-    private lastTime = 0;
-    private speed = 100;
-    private updateY = this.isHeal() ? 2 : 1;
-    private duration = this.isHeal() ? 400 : 1000;
-    private colour = (Modules.DamageColours as Colours)[this.type];
+    private text: string;
+    private prefix: string;
+    private suffix: string;
+    private lastTime: number;
+    private speed: number;
+    private updateY: number;
+    private duration: number;
+    private colour: Colour;
 
-    public fill = this.colour.fill;
-    public stroke = this.colour.stroke;
+    public fill: string;
+    public stroke: string;
 
     private destroyCallback?: (id: string) => void;
 
@@ -35,6 +35,18 @@ export default class Splat {
         public y: number,
         isTarget = false
     ) {
+        this.text = `${value}`;
+        this.prefix = '';
+        this.suffix = '';
+        this.lastTime = 0;
+        this.speed = 100;
+        this.updateY = this.isHeal() ? 2 : 1;
+        this.duration = this.isHeal() ? 400 : 1000;
+        this.colour = (Modules.DamageColours as Colours)[type];
+
+        this.fill = this.colour.fill;
+        this.stroke = this.colour.stroke;
+
         if (isTarget && this.hasInflicted()) {
             this.fill = this.colour.inflicted!.fill;
             this.stroke = this.colour.inflicted!.stroke;
