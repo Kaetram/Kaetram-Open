@@ -520,6 +520,21 @@ export default class Commands {
                 });
 
                 break;
+
+            case 'talk':
+                instance = blocks.shift()!;
+
+                if (!instance)
+                    return this.player.notify(`Malformed command, expected /talk instance`);
+
+                targetEntity = this.entities.get(instance) as Character;
+
+                if (!targetEntity)
+                    return this.player.notify(`Could not find entity with instance: ${instance}`);
+
+                (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
+
+                break;
         }
     }
 }
