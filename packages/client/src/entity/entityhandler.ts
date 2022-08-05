@@ -36,17 +36,13 @@ export default class EntityHandler {
                 attacker.follow(entity);
             });
 
-            if (entity.isMob() && (entity.hasAttackers() || entity.hasTarget()))
-                game.socket.send(Packets.Movement, {
-                    opcode: Opcodes.Movement.Entity,
-                    targetInstance: entity.instance,
-                    requestX: entity.gridX,
-                    requestY: entity.gridY
-                });
+            this.sendMovement();
 
             if (entity.hasTarget() && entity.getDistance(entity.target!) <= entity.attackRange)
                 entity.stop(true);
         });
+
+        entity.onStopPathing(() => this.sendMovement());
     }
 
     public setGame(game: Game): void {
@@ -57,5 +53,21 @@ export default class EntityHandler {
 
     private setEntities(entities: EntitiesController): void {
         this.entities ||= entities;
+    }
+
+    /**
+     * Sends a movement update to the server.
+     */
+
+    private sendMovement(): void {
+        let { entity, game } = this;
+
+        if (entity.isMob() && (entity.hasAttackers() || entity.hasTarget()))
+            game.socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Entity,
+                targetInstance: entity.instance,
+                requestX: entity.gridX,
+                requestY: entity.gridY
+            });
     }
 }
