@@ -226,7 +226,7 @@ export default class Incoming {
 
                 // Reset combat and skills every time there is movement.
                 this.player.skills.stop();
-                this.player.combat.stop();
+                if (!targetInstance) this.player.combat.stop();
 
                 this.player.moving = true;
 
