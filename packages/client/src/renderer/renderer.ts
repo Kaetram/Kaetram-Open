@@ -674,7 +674,7 @@ export default class Renderer {
      */
 
     private drawEntity(entity: Entity): void {
-        let frame = entity.animation?.currentFrame,
+        let frame = entity.animation?.frame,
             dx = entity.x * this.camera.zoomFactor,
             dy = entity.y * this.camera.zoomFactor,
             flipX = dx + this.actualTileSize,
@@ -780,13 +780,13 @@ export default class Renderer {
 
         let animation = player.animation!,
             weaponAnimationData = weapon.animationData[animation.name],
-            frame = animation.currentFrame,
+            { frame, row } = animation,
             index =
                 frame.index < weaponAnimationData.length
                     ? frame.index
                     : frame.index % weaponAnimationData.length,
             weaponX = weapon.width * index,
-            weaponY = weapon.height * animation.row,
+            weaponY = weapon.height * row,
             weaponWidth = weapon.width,
             weaponHeight = weapon.height;
 
@@ -816,7 +816,7 @@ export default class Renderer {
         if (!sprite.loaded) sprite.load();
 
         let animation = character.getEffectAnimation()!,
-            { index } = animation.currentFrame,
+            { index } = animation.frame,
             x = sprite.width * index,
             y = sprite.height * animation.row;
 
@@ -842,7 +842,7 @@ export default class Renderer {
 
     private drawSparks(): void {
         let { sparksAnimation } = this.game.entities.sprites,
-            sparksFrame = sparksAnimation.currentFrame;
+            sparksFrame = sparksAnimation.frame;
 
         this.entitiesContext.drawImage(
             this.sparksSprite.image,
