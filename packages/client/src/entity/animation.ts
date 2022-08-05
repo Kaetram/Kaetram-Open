@@ -4,17 +4,14 @@ interface Frame {
     y: number;
 }
 
-/**
- * Ripped from BrowserQuest's client.
- */
 export default class Animation {
-    public currentFrame!: Frame;
-    public count!: number;
+    public frame: Frame = { index: 0, x: 0, y: 0 };
+    public count = 1;
 
-    private lastTime!: number;
-    private speed!: number;
+    private lastTime = Date.now();
+    private speed = 100;
 
-    private endCountCallback?(): void;
+    private endCallback?: () => void;
 
     public constructor(
         public name: string,
@@ -26,65 +23,82 @@ export default class Animation {
         this.reset();
     }
 
-    private tick(): void {
-        let { currentFrame, length, count, width, height, row } = this,
-            i = currentFrame.index;
+    /**
+     * Updates the animation frame.
+     * @param time The current game time.
+     */
 
-        i = i < length - 1 ? i + 1 : 0;
+    public update(time: number): void {
+        // If we've just reset the attack animation, we start animation at current game tick.
+        //if (!this.lastTime && this.name.includes('atk')) this.lastTime = time;
 
-        if (count > 0 && i === 0) {
-            this.count -= 1;
+        if (!this.canAnimate()) return;
 
-            let { count } = this;
+        this.lastTime = time;
 
-            if (count === 0) {
-                currentFrame.index = 0;
-                this.endCountCallback?.();
-                return;
-            }
+        if (this.frame.index >= this.length - 1) {
+            if (this.count > 0) this.count--;
+
+            if (this.count === 0) this.endCallback?.();
+
+            return this.reset();
         }
 
-        currentFrame.x = width * i;
-        currentFrame.y = height * row;
+        this.frame.index++;
 
-        currentFrame.index = i;
+        this.frame.x = this.frame.index * this.width;
+        this.frame.y = this.row * this.height;
     }
 
-    public update(time: number): boolean {
-        let { lastTime, name } = this;
+    /**
+     * Updates the amount of times we play the animation and sets the
+     * callback handler if provided.
+     * @param count The amount of times we are playing the animation.
+     * @param onEnd The function to call once animation is completed.
+     */
 
-        if (lastTime === 0 && name.slice(0, 3) === 'atk') this.lastTime = time;
-
-        if (this.readyToAnimate(time)) {
-            this.lastTime = time;
-            this.tick();
-
-            return true;
-        }
-        return false;
-    }
-
-    public setCount(count: number, onEndCount: () => void): void {
+    public setCount(count: number, onEnd: () => void): void {
         this.count = count;
-        this.endCountCallback = onEndCount;
+
+        this.endCallback = onEnd;
     }
 
-    public setSpeed(speed: number): void {
+    /**
+     * Updates the speed of the animation.
+     * @param speed The new speed of the animation.
+     */
+
+    public setSpeed(speed: number) {
         this.speed = speed;
     }
+
+    /**
+     * Updates the row of animations.
+     * @param row The new number of rows.
+     */
 
     public setRow(row: number): void {
         this.row = row;
     }
 
-    private readyToAnimate(time: number): boolean {
-        return time - this.lastTime > this.speed;
+    /**
+     * If we should progress to the next animation frame.
+     * @returns Whether the last update time relative to now
+     * is greater than the animation speed.
+     */
+
+    private canAnimate(): boolean {
+        return Date.now() - this.lastTime > this.speed;
     }
 
-    public reset(): void {
-        this.lastTime = 0;
+    /**
+     * Resets the animation to the first frame.
+     */
 
-        this.currentFrame = {
+    public reset(): void {
+        this.lastTime = Date.now();
+
+        this.frame = {
             index: 0,
             x: 0,
             y: this.row * this.height
