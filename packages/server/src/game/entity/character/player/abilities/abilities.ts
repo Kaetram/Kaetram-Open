@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import type Player from '../player';
 import type Ability from './impl/ability';
