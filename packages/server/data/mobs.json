@@ -1812,8 +1812,8 @@
     "id": 100,
     "drops": {"sidesword": 300, "bigflask": 100, "goldensword": 500, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
-    "defenseLevel": 50,
-    "attackLevel": 23,
+    "defenseLevel": 75,
+    "attackLevel": 3,
     "experience": 650,
     "level": 35,
     "aggroRange": 5,
@@ -1821,7 +1821,7 @@
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,
-    "movementSpeed": 600,
+    "movementSpeed": 400,
     "respawnDelay": 75000
   },
 
