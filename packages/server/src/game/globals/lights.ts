@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Map from '../map/map';
 import Light from './impl/light';

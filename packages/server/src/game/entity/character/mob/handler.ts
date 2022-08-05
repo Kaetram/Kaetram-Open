@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import type Mob from './mob';
 
@@ -6,7 +6,6 @@ import Map from '../../../map/map';
 import World from '../../../world';
 import Character from '../character';
 
-import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Bubble } from '@kaetram/server/src/network/packets';
@@ -17,10 +16,13 @@ import { Bubble } from '@kaetram/server/src/network/packets';
  */
 
 export default class Handler {
-    private world: World = this.mob.world;
-    private map: Map = this.world.map;
+    private world: World;
+    private map: Map;
 
     public constructor(private mob: Mob) {
+        this.world = this.mob.world;
+        this.map = this.world.map;
+
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
         this.mob.onDeath(this.handleDeath.bind(this));

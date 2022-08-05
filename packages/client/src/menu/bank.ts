@@ -6,7 +6,7 @@ import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 import { SlotData } from '@kaetram/common/types/slot';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 

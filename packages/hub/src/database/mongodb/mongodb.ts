@@ -7,8 +7,8 @@ import Creator from './creator';
 import Loader from './loader';
 
 export default class MongoDB {
-    public loader = new Loader(this);
-    public creator = new Creator(this);
+    public loader: Loader;
+    public creator: Creator;
 
     private url: string;
     private connection!: Db;
@@ -20,6 +20,9 @@ export default class MongoDB {
         password: string,
         private databaseName: string
     ) {
+        this.loader = new Loader(this);
+        this.creator = new Creator(this);
+
         let { mongodbSrv } = config,
             srvInsert = mongodbSrv ? 'mongodb+srv' : 'mongodb',
             authInsert = !!username && !!password ? `${username}:${password}@` : '',
