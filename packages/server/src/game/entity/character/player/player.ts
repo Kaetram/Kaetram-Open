@@ -846,18 +846,6 @@ export default class Player extends Character {
     }
 
     /**
-     * An override for the adjacent function. Players need a bit more space
-     * when targeting an enemy without range. If not, following an entity becomes
-     * rather annoying.
-     * @param entity The entity we are calculating distance to.
-     * @returns If the entity distance is less than calculated distance.
-     */
-
-    public override isAdjacent(entity: Entity): boolean {
-        return this.getDistance(entity) < (this.hasTarget() ? 4 : 2);
-    }
-
-    /**
      * Checks if the weapon the player is currently wielding is a ranged weapon.
      * @returns If the weapon slot is a ranged weapon.
      */

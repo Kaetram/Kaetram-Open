@@ -84,7 +84,7 @@ export default class PlayerHandler {
                 playerX: player.gridX,
                 playerY: player.gridY,
                 movementSpeed: player.movementSpeed,
-                targetInstance: this.getTargetId()
+                targetInstance: player.target?.instance
             });
         });
 
@@ -199,12 +199,6 @@ export default class PlayerHandler {
 
             zoning.reset();
         }
-    }
-
-    private getTargetId(): string | null {
-        let { target } = this.player;
-
-        return target ? target.instance : null;
     }
 
     private getTargetType(): Opcodes.Target {
