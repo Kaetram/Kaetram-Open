@@ -45,5 +45,10 @@
     "attackLevel": 15,
     "defenseLevel": 25,
     "achievement": "waterguardian"
+  },
+
+  "243-68": {
+    "name": "Ogre Lord",
+    "boss": true
   }
 }

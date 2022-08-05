@@ -1015,8 +1015,12 @@ export default class Connection {
     private handleBubble(info: BubblePacket): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
+        let entity = this.entities.get(info.instance);
+
+        if (!entity) return;
+
         this.bubble.create(info.instance, info.text, info.duration);
-        this.bubble.setTo(info.instance, info.x!, info.y!);
+        this.bubble.setTo(info.instance, entity.x, entity.y);
     }
 
     /**

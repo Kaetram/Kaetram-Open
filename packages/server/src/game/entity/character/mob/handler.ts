@@ -1,11 +1,14 @@
+import _ from 'lodash-es';
+
 import type Mob from './mob';
 
-import Utils from '@kaetram/common/util/utils';
 import Map from '../../../map/map';
 import World from '../../../world';
 import Character from '../character';
-import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
+
+import Utils from '@kaetram/common/util/utils';
+
+import { Bubble } from '@kaetram/server/src/network/packets';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -25,7 +28,7 @@ export default class Handler {
         this.mob.onDeath(this.handleDeath.bind(this));
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
-        this.mob.onForceTalk(this.handleForceTalk.bind(this));
+        this.mob.onTalk(this.handleTalk.bind(this));
     }
 
     /**
@@ -149,10 +152,15 @@ export default class Handler {
 
     /**
      * Forces a mob to display a text bubble above them.
-     * @param message The message we are sending to the region.
+     * @param text The message we are sending to the region.
      */
 
-    private handleForceTalk(message: string): void {
-        log.debug('this is a force talk action happening lolll');
+    private handleTalk(text: string): void {
+        this.mob.sendToRegions(
+            new Bubble({
+                instance: this.mob.instance,
+                text
+            })
+        );
     }
 }
