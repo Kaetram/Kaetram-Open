@@ -1,4 +1,3 @@
-import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
@@ -8,10 +7,12 @@ import Achievement from '../game/entity/character/player/achievement/achievement
 
 import type Player from '../game/entity/character/player/player';
 
-import { Command, Pointer, Network, Notification } from '../network/packets';
 import Region from '../game/map/region';
 import Entity from '../game/entity/entity';
+import Utils from '@kaetram/common/util/utils';
 
+import { Opcodes } from '@kaetram/common/network';
+import { Command, Pointer, Network, Notification } from '../network/packets';
 export default class Commands {
     private world;
     private entities;
@@ -533,6 +534,19 @@ export default class Commands {
                     return this.player.notify(`Could not find entity with instance: ${instance}`);
 
                 (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
+
+                break;
+
+            case 'distance':
+                x = parseInt(blocks.shift()!);
+                y = parseInt(blocks.shift()!);
+
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /distance x y`);
+
+                this.player.notify(
+                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`
+                );
 
                 break;
         }
