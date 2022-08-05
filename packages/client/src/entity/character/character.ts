@@ -309,7 +309,7 @@ export default class Character extends Entity {
 
         if (this.following) {
             this.following = false;
-            this.target = null;
+            this.removeTarget();
         }
 
         this.move(x, y, forced);
