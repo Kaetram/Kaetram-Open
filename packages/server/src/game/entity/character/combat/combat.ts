@@ -34,7 +34,7 @@ export default class Combat {
 
         if (this.loop) return;
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 3 + 15);
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2);
     }
 
     /**

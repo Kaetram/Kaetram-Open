@@ -402,6 +402,8 @@ export default class Commands {
 
                 entity.combat.attack(targetEntity);
 
+                this.player.notify(`${entity.name} is attacking ${targetEntity.name}`);
+
                 break;
 
             case 'kill':
