@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Opcodes } from '@kaetram/common/network';
 

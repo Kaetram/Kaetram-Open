@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Game from '../game';
 import Blob from '../renderer/bubbles/blob';

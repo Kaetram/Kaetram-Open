@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 
 import { ProcessedTree, Tile } from '@kaetram/common/types/map';
@@ -39,7 +39,7 @@ export default class Tree {
     public load(treeInfo: ProcessedTree): void {
         // Iterate through all the tile and its indexes in the tree.
         _.each(this.data, (tile: Tile, key: string) => {
-            // Whacky conversion because of lodash.
+            // Whacky conversion because of lodash-es.
             let index = parseInt(key);
 
             tile = [tile].flat();
