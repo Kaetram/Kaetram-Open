@@ -25,7 +25,7 @@ export default class Character extends Entity {
     public movement = new Transition();
 
     private readonly attackAnimationSpeed = 50;
-    private readonly walkAnimationSpeed = 100;
+    private readonly walkAnimationSpeed = 120;
 
     public override nextGridX = -1;
     public override nextGridY = -1;
