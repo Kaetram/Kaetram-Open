@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -37,6 +37,7 @@ import type {
     GuildCallback,
     PointerCallback,
     PVPCallback,
+    PoisonCallback,
     StoreCallback,
     OverlayCallback,
     CameraCallback,
@@ -47,7 +48,7 @@ import type {
 
 export default class Messages {
     private messages;
-    private app: App = this.game.app;
+    private app: App;
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
@@ -81,6 +82,7 @@ export default class Messages {
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
+    private poisonCallback?: PoisonCallback;
     private storeCallback?: StoreCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
@@ -99,6 +101,8 @@ export default class Messages {
      * accordingly.
      */
     public constructor(private game: Game) {
+        this.app = game.app;
+
         let messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
         messages[Packets.Handshake] = () => this.handshakeCallback;
@@ -132,6 +136,7 @@ export default class Messages {
         messages[Packets.Guild] = () => this.guildCallback;
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
+        messages[Packets.Poison] = () => this.poisonCallback;
         messages[Packets.Store] = () => this.storeCallback;
         messages[Packets.Map] = () => this.mapCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
@@ -355,6 +360,10 @@ export default class Messages {
 
     public onPVP(callback: PVPCallback): void {
         this.pvpCallback = callback;
+    }
+
+    public onPoison(callback: PoisonCallback): void {
+        this.poisonCallback = callback;
     }
 
     public onStore(callback: StoreCallback): void {

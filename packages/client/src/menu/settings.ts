@@ -7,7 +7,9 @@ export default class Settings extends Menu {
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;
 
     private soundCheckbox: HTMLInputElement = document.querySelector('#sound-check > input')!;
-    private cameraCheckbox: HTMLInputElement = document.querySelector('#camera-check > input')!;
+    private lowPowerCheckbox: HTMLInputElement = document.querySelector(
+        '#low-power-check > input'
+    )!;
     private debugCheckbox: HTMLInputElement = document.querySelector('#debug-check > input')!;
     private nameCheckbox: HTMLInputElement = document.querySelector('#name-check > input')!;
     private levelCheckbox: HTMLInputElement = document.querySelector('#level-check > input')!;
@@ -20,7 +22,7 @@ export default class Settings extends Menu {
         this.brightnessSlider.addEventListener('input', this.handleBrightness.bind(this));
 
         this.soundCheckbox.addEventListener('change', this.handleSound.bind(this));
-        this.cameraCheckbox.addEventListener('change', this.handleCamera.bind(this));
+        this.lowPowerCheckbox.addEventListener('change', this.handleLowPower.bind(this));
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
         this.nameCheckbox.addEventListener('change', this.handleName.bind(this));
         this.levelCheckbox.addEventListener('change', this.handleLevel.bind(this));
@@ -43,7 +45,7 @@ export default class Settings extends Menu {
         this.brightnessSlider.value = settings.brightness.toString();
 
         this.soundCheckbox.checked = settings.soundEnabled;
-        this.cameraCheckbox.checked = settings.centerCamera;
+        this.lowPowerCheckbox.checked = settings.lowPowerMode;
         this.debugCheckbox.checked = settings.debug;
         this.nameCheckbox.checked = settings.showNames;
         this.levelCheckbox.checked = settings.showLevels;
@@ -55,7 +57,7 @@ export default class Settings extends Menu {
         this.handleDebug();
 
         // Update camera once loaded.
-        this.handleCamera();
+        this.handleLowPower();
 
         // Update the renderer for names and levels
         this.handleName();
@@ -97,16 +99,19 @@ export default class Settings extends Menu {
     }
 
     /**
-     * Handler for when the camera checkbox is toggled.
+     * Handler for when the low power checkbox is toggled.
      */
 
-    private handleCamera(): void {
-        this.game.storage.setCenterCamera(this.cameraCheckbox.checked);
+    private handleLowPower(): void {
+        this.game.storage.setLowPowerMode(this.lowPowerCheckbox.checked);
 
-        if (this.cameraCheckbox.checked) {
+        this.game.renderer.animateTiles = !this.lowPowerCheckbox.checked;
+
+        if (!this.lowPowerCheckbox.checked) {
             // Force camera to recenter on the player.
             this.game.camera.center();
             this.game.camera.centreOn(this.game.player);
+            this.game.renderer.updateAnimatedTiles();
         } else this.game.camera.decenter(); // Remove the camera from the player.
     }
 

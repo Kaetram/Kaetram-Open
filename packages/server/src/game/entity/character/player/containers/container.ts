@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 import { ContainerItem } from '@kaetram/common/types/item';
@@ -50,6 +50,14 @@ export default abstract class Container {
         });
 
         this.loadCallback?.();
+    }
+
+    /**
+     * Removes all the items from the container.
+     */
+
+    public empty(): void {
+        this.forEachSlot((slot: Slot) => this.remove(slot.index, slot.count));
     }
 
     /**
@@ -122,6 +130,50 @@ export default abstract class Container {
     }
 
     /**
+     * Remove an item based on its key and count. First we check if we can find
+     * a stackable key and count at an index, otherwise we go through each slot and
+     * remove `count` amount. For example, if we have 5 swords, and we want to remove
+     * 4, we first check if we can find a slot with a sword and count of 4, since a sword
+     * is  not stackable, we jump to the next condition, we iterate each slot, remove the item
+     * in each slot and increment the amount of slots we've removd until we've removed `count` amount.
+     * @param key The key of the item we are removing.
+     * @param count The amount of the item we are removing.
+     */
+
+    public removeItem(key: string, count = 1): void {
+        let index = this.getIndex(key, count);
+
+        if (index !== -1) this.remove(index, count);
+        else {
+            let removed = 0;
+
+            // Iterate through each slot and exhaust the count we are removing.
+            this.forEachSlot((slot: Slot) => {
+                // Skip slots if key doesn't match or we've exhausted the removal.
+                if (slot.key !== key || removed >= count) return;
+
+                /**
+                 * We iterate through each slot and remove maximum amount possible. We keep track of
+                 * every item we remove such that we remove counts rather than entire slots. Say slot 1
+                 * contains 5 flasks, and slot 2 contains 4 flasks. We want to remove 6 flasks (so we
+                 * would be left with 1 flask in slot 2). We iterate through slot 1, remove 5 flasks.
+                 * We increment the removed amount by 5, and ensure that from slot 2 we only remove
+                 * the difference between the original `count` and the removed amount.
+                 */
+
+                // Remove the maximum amount possible.
+                let removeCount = count - removed > slot.count ? slot.count : count - removed;
+
+                // Increment the removed amount.
+                removed += removeCount;
+
+                // Remove from the slot.
+                this.remove(slot.index, removeCount);
+            });
+        }
+    }
+
+    /**
      * Moves an item from the `container` parameter into the current
      * container instance.
      * @param container Container instance we are removing data from.
@@ -178,7 +230,7 @@ export default abstract class Container {
     }
 
     /**
-     * Checks the inventory if it contains an item and a count.
+     * Checks the container if it contains an item and a count.
      * @param key The key of the item we're trying to find.
      * @param count Default one but can be specified to check if `x` amount of an item is contained in the slot.
      * @returns The slot index of the item we're trying to find otherwise -1.
@@ -215,6 +267,35 @@ export default abstract class Container {
 
     public hasSpace(): boolean {
         return this.emptySpaces > 0;
+    }
+
+    /**
+     * Checks if the container contains an item (and a count). If it's not stackable,
+     * we must count the amount of items in the container.
+     * @param key The key of the item we are looking fsor.
+     * @param count Optional amount of items we are looking for.
+     */
+
+    public hasItem(key: string, count = 1): boolean {
+        let contains = false;
+
+        // Check to see if the item is a stackable kind first.
+        if (this.getIndex(key, count) !== -1) contains = true;
+        else {
+            // Search through the slots to see if we can find `count` amount of occurrences.
+            let found = 0;
+
+            this.forEachSlot((slot: Slot) => {
+                if (slot.key !== key) return;
+
+                found += slot.count;
+            });
+
+            // We found `count` or more occurrences of an item.
+            if (found >= count) contains = true;
+        }
+
+        return contains;
     }
 
     /**

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
@@ -89,7 +89,9 @@ export default class Combat {
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
 
-        if (this.character.isNearTarget() && this.canAttack()) {
+        if (this.character.isNearTarget()) {
+            if (!this.canAttack()) return;
+
             let hit = this.createHit();
 
             this.sendAttack(hit);
@@ -118,6 +120,13 @@ export default class Combat {
         // Handle combat damage here since melee is instant.
         this.character.target?.hit(hit.getDamage(), this.character);
     }
+
+    /**
+     * A ranged attack creates a projectile and relays that information to
+     * the nearby regions. The projectile collision is what handles
+     * the damage
+     * @param hit Information about the projectile.
+     */
 
     private sendRangedAttack(hit: Hit): void {
         let projectile = this.character.world.entities.spawnProjectile(

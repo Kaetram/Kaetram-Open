@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
@@ -363,6 +363,7 @@ export default class ProcessMap {
                 break;
 
             case 'cutstump':
+            case 'stumpcut':
                 this.#trees[value].cutStump.push(tileId);
                 break;
         }

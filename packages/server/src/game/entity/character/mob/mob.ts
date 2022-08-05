@@ -1,3 +1,5 @@
+import _ from 'lodash-es';
+
 import Utils from '@kaetram/common/util/utils';
 
 import Entity from '../../entity';
@@ -11,6 +13,7 @@ import type Player from '../player/player';
 
 import PluginIndex from '../../../../../data/plugins/mobs';
 import rawData from '../../../../../data/mobs.json';
+import Spawns from '../../../../../data/spawns.json';
 import log from '@kaetram/common/util/log';
 
 import DefaultPlugin from '../../../../../data/plugins/mobs/default';
@@ -27,11 +30,20 @@ type RawData = {
 
 export default class Mob extends Character {
     // TODO - Make private after moving callbacks into the mob file.
-    public spawnX: number;
-    public spawnY: number;
+    public spawnX: number = this.x;
+    public spawnY: number = this.y;
 
-    // Mob data
-    private data: MobData;
+    // An achievement that is completed upon defeating the mob.
+    public achievement = '';
+    public area!: Area;
+
+    public boss = false;
+    public respawnable = true;
+    public miniboss = false;
+    public roaming = false;
+    public poisonous = false;
+    public aggressive = false;
+    private hiddenName = false;
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
@@ -39,23 +51,9 @@ export default class Mob extends Character {
     private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
-    public aggressive = false;
-    public roaming = false;
-    public poisonous = false;
-    private plugin?: DefaultPlugin;
-
-    // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
-    public boss = false;
-    public respawnable = true;
-    public miniboss = false;
-
-    public achievementId!: number;
-
-    // private handler!: MobHandler;
-
-    public area!: Area;
+    private handler?: MobHandler | DefaultPlugin;
 
     private respawnCallback?: () => void;
     public forceTalkCallback?: (message: string) => void;
@@ -64,62 +62,104 @@ export default class Mob extends Character {
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
 
-        this.spawnX = x;
-        this.spawnY = y;
+        let data = (rawData as RawData)[key];
 
-        this.data = (rawData as RawData)[key];
-
-        if (!this.data) {
+        if (!data) {
             log.error(`[Mob] Could not find data for ${key}.`);
             return;
         }
 
-        this.experience = this.data.experience || this.experience;
+        this.loadData(data);
+        this.loadPlugin(data.plugin!);
+        this.loadSpawns();
 
-        // TODO - Use points system for entities as well.
-        if (this.data.hitPoints) this.hitPoints.updateHitPoints([this.data.hitPoints]);
+        if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
+    }
 
-        this.name = this.data.name!;
-        this.drops = this.data.drops || this.drops;
-        this.level = this.data.level || this.level;
-        this.attackLevel = this.data.attackLevel || this.attackLevel;
-        this.defenseLevel = this.data.defenseLevel || this.defenseLevel;
-        this.attackRange = this.data.attackRange || this.attackRange;
-        this.aggroRange = this.data.aggroRange || this.aggroRange;
-        this.aggressive = this.data.aggressive!;
-        this.attackRate = this.data.attackRate || this.attackRate;
-        this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
-        this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
-        this.poisonous = this.data.poisonous!;
+    /**
+     * Loads mob data based on the specified data object. We use this
+     * function since this can be called once when the mob initializes and
+     * when we want to load instance-based custom data.
+     * @param data Contains information about the mob.
+     */
 
-        // TODO - After refactoring projectile system
-        this.projectileName = this.data.projectileName || this.projectileName;
+    private loadData(data: MobData): void {
+        this.experience = data.experience || this.experience;
+
+        if (data.hitPoints) this.hitPoints.updateHitPoints([data.hitPoints]);
+
+        this.name = data.name!;
+        this.drops = data.drops || this.drops;
+        this.level = data.level || this.level;
+        this.attackLevel = data.attackLevel || this.attackLevel;
+        this.defenseLevel = data.defenseLevel || this.defenseLevel;
+        this.attackRange = data.attackRange || this.attackRange;
+        this.aggroRange = data.aggroRange || this.aggroRange;
+        this.aggressive = data.aggressive!;
+        this.attackRate = data.attackRate || this.attackRate;
+        this.respawnDelay = data.respawnDelay || this.respawnDelay;
+        this.movementSpeed = data.movementSpeed || this.movementSpeed;
+        this.miniboss = data.miniboss || this.miniboss;
+        this.poisonous = data.poisonous!;
+        this.hiddenName = data.hiddenName!;
+        this.achievement = data.achievement || this.achievement;
+        this.projectileName = data.projectileName || this.projectileName;
+
+        this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
         // Handle hiding the entity's name.
-        if (this.data.hiddenName) this.name = '';
+        if (this.hiddenName) this.name = '';
 
-        // Initialize a mob handler to `handle` our callbacks.
-        if (this.data.plugin) this.loadPlugin();
-        else new MobHandler(this);
-
-        // The roaming interval
-        setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
+        // The roaming interval if the mob is a roaming entity.
+        if (data.roaming)
+            setInterval(() => this.roamingCallback?.(), Modules.MobDefaults.ROAM_FREQUENCY);
     }
 
     /**
      * Attempts to locate and load a plugin from the plugin index.
+     * @param pluginName Optional parameter for loading a plugin specified by name.
      */
 
-    private loadPlugin(): void {
-        if (!(this.data.plugin! in PluginIndex)) {
-            log.error(`[Mob] Could not find plugin ${this.data.plugin}.`);
-
+    private loadPlugin(pluginName?: string): void {
+        if (!pluginName || !(pluginName! in PluginIndex)) {
             // Initialize a mob handler since we couldn't find a plugin.
-            new MobHandler(this);
+            this.handler = new MobHandler(this);
             return;
         }
 
-        this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this);
+        this.handler = new PluginIndex[pluginName as keyof typeof PluginIndex](this);
+    }
+
+    /**
+     * Spawns are special entities at specific locations throughout the world
+     * with differing properties. For example, we can spawn 50 goblins using the
+     * Tiled map editor, and we use the `spawns.json` to specify that a goblin
+     * at a specific location be marked as a miniboss, not roaming, or any other
+     * property we'd like to modify on a per instance basis.
+     *
+     * The key in the `spawns.json` represents the x and y coordinates separated
+     * by a dash. We check the mob's spawn location against the key, if there is
+     * a match, then we apply the properties onto the current mob.
+     */
+
+    private loadSpawns(): void {
+        // Coordinates of the mob's spawn location as a key.
+        let key = `${this.spawnX}-${this.spawnY}`;
+
+        // Check the coordinate key against the `spawns.json` dictionary JSON file.
+        if (!(key in Spawns)) return;
+
+        let data = (Spawns as { [key: string]: MobData })[key];
+
+        /**
+         * Here we attempt to load all the data from the `spawns.json` file.
+         * If a property doesn't exist, then we just use the default value.
+         */
+
+        this.loadData(data);
+
+        // Custom plugin can be specified on a per-instance bassis.
+        if (data.plugin) this.loadPlugin(data.plugin);
     }
 
     /**
@@ -136,6 +176,7 @@ export default class Mob extends Character {
 
         this.respawn();
 
+        this.setPoison();
         this.setPosition(this.spawnX, this.spawnY);
     }
 
@@ -148,6 +189,8 @@ export default class Mob extends Character {
 
     public move(x: number, y: number): void {
         this.setPosition(x, y);
+
+        this.calculateOrientation();
 
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
@@ -163,21 +206,35 @@ export default class Mob extends Character {
      * Primitive function for drop generation. Will be rewritten.
      */
 
-    public getDrop(): { key: string; count: number } | null {
-        if (!this.drops) return null;
+    public getDrops(): { key: string; count: number }[] {
+        if (!this.drops) return [];
 
-        let random = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY),
-            dropObjects = Object.keys(this.drops),
-            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
+        let drops: { key: string; count: number }[] = [];
 
-        if (random > this.drops[item]) return null;
+        _.each(this.drops, (chance: number, key: string) => {
+            if (Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) > chance) return;
 
-        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
+            let count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
 
-        return {
-            key: item,
-            count
-        };
+            drops.push({ key, count });
+        });
+
+        return drops;
+    }
+
+    /**
+     * This function roughly calculates the orientation based on the old
+     * coordinates and the new coordinates. They do not matter much since
+     * orientation is only sent when an entity is created. This gives the
+     * effect to players entering new regions or just logging in that the
+     * entities aren't just standing still and all facing the same direction.
+     */
+
+    private calculateOrientation(): void {
+        if (this.oldX < this.x) this.setOrientation(Modules.Orientation.Right);
+        else if (this.oldX > this.x) this.setOrientation(Modules.Orientation.Left);
+        else if (this.oldY < this.y) this.setOrientation(Modules.Orientation.Down);
+        else if (this.oldY > this.y) this.setOrientation(Modules.Orientation.Up);
     }
 
     /**
@@ -193,8 +250,6 @@ export default class Mob extends Character {
         if (!this.aggressive || this.target) return false;
 
         if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
-
-        if (!player.hasAggressionTimer()) return false;
 
         return this.isNear(player, this.aggroRange);
     }
@@ -227,13 +282,14 @@ export default class Mob extends Character {
      * Checks if the distance between the mob's current position and the spawn
      * point is greater than the roam distance.
      * @param entity Optional parameter to check against the entity.
+     * @param distance Optional parameter to specify custom distance (used for combat).
      * @returns Whether or not the mob should return to the spawn.
      */
 
-    public outsideRoaming(entity?: Entity): boolean {
+    public outsideRoaming(entity?: Entity, distance = this.roamDistance): boolean {
         return (
             Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
-            this.roamDistance
+            distance
         );
     }
 
@@ -267,10 +323,15 @@ export default class Mob extends Character {
      */
 
     public override getDisplayInfo(player?: Player): EntityDisplayInfo {
-        return {
+        let displayInfo: EntityDisplayInfo = {
             instance: this.instance,
             colour: this.getNameColour(player)
         };
+
+        // Only minibosses have a special scale, we send the scale only if the mob is a miniboss.
+        if (this.miniboss) displayInfo.scale = Modules.EntityScale[SpecialEntityTypes.Miniboss];
+
+        return displayInfo;
     }
 
     /**
@@ -304,6 +365,15 @@ export default class Mob extends Character {
     }
 
     /**
+     * Activates the poisonous status effect on the mob.
+     * @returns If the mob data contains a poisonous status.
+     */
+
+    public override isPoisonous(): boolean {
+        return this.poisonous;
+    }
+
+    /**
      * Some entities are static (only spawned once during an event)
      * Meanwhile, other entities act as an illusion to another entity,
      * so the respawning script is handled elsewhere.
@@ -317,19 +387,43 @@ export default class Mob extends Character {
     /**
      * Takes mob file and serializes it by adding extra
      * variables into the EntityData interface.
+     * @param player Optional parameter used to include displayInfo into the packet.
      * @returns Entity data with mob elements inserted.
      */
 
-    public override serialize(): EntityData {
+    public override serialize(player?: Player): EntityData {
         let data = super.serialize();
 
         // TODO - Update this once we get around fixing up the client.
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
-        data.level = this.level;
+
+        // Include the display info in the packet if the player parameter is specified.
+        if (player) data.displayInfo = this.getDisplayInfo(player);
+
+        // Level is hidden as well so that it doesn't display.
+        if (!this.hiddenName) data.level = this.level;
 
         return data;
+    }
+
+    /**
+     * Override to obtain the mob's weapon level.
+     * @returns The mob's weapon power level.
+     */
+
+    public override getWeaponLevel(): number {
+        return this.attackLevel;
+    }
+
+    /**
+     * Override to obtain the current mob's armour level.
+     * @returns The mob's armour level.
+     */
+
+    public override getArmourLevel(): number {
+        return this.defenseLevel;
     }
 
     /**

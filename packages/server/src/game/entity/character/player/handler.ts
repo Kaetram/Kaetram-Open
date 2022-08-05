@@ -11,7 +11,8 @@ import {
     Death,
     Despawn,
     Skill,
-    Overlay
+    Overlay,
+    Poison as PoisonPacket
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -19,6 +20,7 @@ import Slot from './containers/slot';
 import Equipment from './equipment/equipment';
 import Character from '../character';
 import Light from '../../../globals/impl/light';
+import Entity from '../../entity';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
@@ -123,6 +125,9 @@ export default class Handler {
     private handleDeath(): void {
         this.player.dead = true;
 
+        // Remove the poison status.
+        this.player.setPoison();
+
         this.player.skills.stop();
         this.player.combat.stop();
 
@@ -140,6 +145,8 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
+        if (!attacker) return;
+
         if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
     }
 
@@ -149,6 +156,9 @@ export default class Handler {
      */
 
     private handleDoor(door: ProcessedDoor): void {
+        // Reset talking index when passing through any door.
+        this.player.talkIndex = 0;
+
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
 
@@ -176,9 +186,11 @@ export default class Handler {
     private handleMovement(x: number, y: number): void {
         this.map.regions.handle(this.player);
 
+        this.detectAggro();
         this.detectAreas(x, y);
 
         this.player.storeOpen = '';
+        this.player.plateauLevel = this.map.getPlateauLevel(x, y);
     }
 
     /**
@@ -192,7 +204,6 @@ export default class Handler {
         this.handleLights(region);
 
         this.map.regions.sendEntities(this.player);
-        this.map.regions.sendDisplayInfo(this.player);
 
         // Signal to the region we just left from to despawn us.
         this.player.sendToOldRegions(new Despawn(this.player.instance));
@@ -402,6 +413,15 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        /**
+         * Special mobs (such as minibosses and bosses) have achievements
+         * associated with them. Upon killing them, we complete the achievement.
+         */
+
+        let mobAchievement = (character as Mob).achievement;
+
+        if (mobAchievement) this.player.achievements.get(mobAchievement).finish();
+
         // Checks if the mob has a active quest associated with it.
         let quest = this.player.quests.getQuestFromMob(character as Mob);
 
@@ -417,13 +437,12 @@ export default class Handler {
      * Callback for when the player's poison status updates.
      */
 
-    // TODO - Set poison type.
-    private handlePoison(info: any): void {
-        this.player.sync();
-
+    private handlePoison(type = -1): void {
         // Notify the player when the poison status changes.
-        if (info) this.player.notify('You have been poisoned.');
+        if (type !== -1) this.player.notify('You have been poisoned.');
         else this.player.notify('The poison has worn off.');
+
+        this.player.send(new PoisonPacket(type));
 
         log.debug(`Player ${this.player.instance} updated poison status.`);
     }
@@ -448,9 +467,7 @@ export default class Handler {
      */
 
     private handleUpdate(): void {
-        this.detectAggro();
-
-        if (this.isTickInterval(3)) this.parsePoison();
+        if (this.isTickInterval(4)) this.detectAggro();
 
         this.updateTicks++;
     }
@@ -510,6 +527,24 @@ export default class Handler {
     }
 
     /**
+     * Whenever a player's position updates, we check if the nearby entities
+     * can aggro the player. See `canAggro` in `Mob` for conditions under
+     * which a player will be aggroed by a free-roaming mob.
+     */
+
+    private detectAggro(): void {
+        let region = this.map.regions.get(this.player.region);
+
+        region.forEachEntity((entity: Entity) => {
+            // Ignore non-mob entities.
+            if (!entity.isMob()) return;
+
+            // Check if the mob can aggro the player and initiate the combat.
+            if ((entity as Mob).canAggro(this.player)) (entity as Mob).combat.attack(this.player);
+        });
+    }
+
+    /**
      * Takes a `interval` value and modulos it against the current updateTicks.
      * This is to separate an event into a larger interval instead of starting
      * multiple `setInterval` functions. For example, an `interval` of 4 means
@@ -530,41 +565,5 @@ export default class Handler {
     private clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
-    }
-
-    // TODO - REFACTOR
-
-    private detectAggro(): void {
-        // TODO - Redo
-        // let region = this.world.region.regions[this.player.region!];
-        // if (!region) return;
-        // _.each(region.entities, (character) => {
-        //     if (character && character.isMob() && this.canEntitySee(character)) {
-        //         let mob = character as Mob,
-        //             aggro = mob.canAggro(this.player);
-        //         if (aggro) mob.combat.begin(this.player);
-        //     }
-        // });
-    }
-
-    private parsePoison(): void {
-        if (!this.player.poison) return;
-
-        let info = this.player.poison.split(':'),
-            date = parseInt(info[0]),
-            time = parseInt(info[1]),
-            damage = parseInt(info[2]),
-            timeDiff = Date.now() - date;
-
-        if (timeDiff > time) {
-            this.player.setPoison('');
-            return;
-        }
-
-        // let hit = new Hit(Modules.Hits.Poison, damage);
-
-        // hit.poison = true;
-
-        // this.player.combat.hit(this.player, this.player, hit.getData());
     }
 }

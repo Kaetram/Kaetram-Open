@@ -17,5 +17,8 @@ export interface MobData {
     poisonous?: boolean;
     hiddenName?: boolean;
     projectileName?: string;
+    roaming?: boolean;
     plugin?: string;
+    achievement?: string;
+    miniboss?: boolean;
 }

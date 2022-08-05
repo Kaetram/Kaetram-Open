@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Tile from './tile';
 import Camera from './camera';
@@ -14,7 +14,7 @@ import type Map from '../map/map';
 import type Splat from './infos/splat';
 
 import { RegionTile } from './../../../common/types/region';
-import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
+import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 
 import { Modules } from '@kaetram/common/network';
 import { SerializedLight } from '@kaetram/common/types/light';
@@ -32,7 +32,6 @@ interface RendererCell {
     dy: number;
     width: number;
     height: number;
-    flips: number[];
 }
 
 interface Bounds {
@@ -100,11 +99,11 @@ export default class Renderer {
 
     private lightings: RendererLighting[] = [];
 
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
+    private map: Map;
+    private camera: Camera;
 
-    public tileSize = this.game.map.tileSize;
-    private actualTileSize = this.tileSize * this.camera.zoomFactor;
+    public tileSize: number;
+    private actualTileSize: number;
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
@@ -118,17 +117,15 @@ export default class Renderer {
     private animatedTiles: { [index: number]: Tile } = {};
 
     private stopRendering = false;
-    private animateTiles = true;
+    public animateTiles = true;
     public debugging = false;
-    public autoCentre = false;
     public drawNames = true;
     public drawLevels = true;
-    public transitioning = false;
 
     public mobile = isMobile();
     private tablet = isTablet();
 
-    public forceRendering = (this.mobile || this.tablet) && this.camera.isCentered();
+    public forceRendering = false;
 
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
@@ -142,6 +139,12 @@ export default class Renderer {
     private sparksSprite!: Sprite;
 
     public constructor(public game: Game) {
+        this.map = game.map;
+        this.camera = game.camera;
+
+        this.tileSize = game.map.tileSize;
+        this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+
         // Grab the Canvas2D context from the HTML canvas.
         this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
         this.backContext = this.background.getContext('2d')!; // Background
@@ -293,8 +296,6 @@ export default class Renderer {
 
         this.draw();
 
-        this.drawAnimatedTiles();
-
         this.drawDebugging();
 
         this.drawOverlays();
@@ -321,7 +322,6 @@ export default class Renderer {
      */
 
     private draw(): void {
-        // Skip rendering frame if it has already been drawn.
         if (this.hasRenderedFrame()) return;
 
         this.clearDrawing();
@@ -331,6 +331,11 @@ export default class Renderer {
         this.updateDrawingView();
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            let flips: number[] = this.getFlipped(tile);
+
+            // Extract the tileId from the animated region tile.
+            if (flips.length > 0) tile = tile.tileId;
+
             // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile),
                 context = isHighTile ? this.foreContext : this.backContext;
@@ -342,57 +347,33 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            let flips: number[] = this.getFlipped(tile);
+            /**
+             * Draws the animated tiles first so they display behind potential
+             * high tiles. We check if the current index contains an animated tile
+             * and if we are currently animating tiles before proceeding.
+             */
+            if (index in this.animatedTiles && this.animateTiles) {
+                // Advance the timing of the animated tiles with the current epoch.
+                this.animatedTiles[index].animate(this.game.time);
 
-            // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = tile.tileId;
+                // Prevent double draws when drawing flipped animated tiles.
+                if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
+
+                this.drawTile(
+                    context,
+                    this.animatedTiles[index].id,
+                    this.animatedTiles[index].index,
+                    flips
+                );
+            }
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, tile - 1, index, flips);
+                this.drawTile(context, tile - 1, index, flips);
         });
-
-        this.restoreDrawing();
 
         this.saveFrame();
-    }
-
-    /**
-     * Draws animated tiles. This function is called for each
-     * animated tile that is currently visible and renders them
-     * just a little bit outside the camera view.
-     *
-     * We are using the entities context to draw onto since the
-     * background and foreground contexts do not necessarily get
-     * refreshed every frame in order to save resources. The entities
-     * context however, gets refreshed every frame. This is not
-     * the cleanest way of doing it, but creating another canvas is
-     * not really worth it.
-     */
-
-    private drawAnimatedTiles(): void {
-        // Skip if we disable tile animation.
-        if (!this.animateTiles) return;
-
-        this.entitiesContext.save();
-        this.setCameraView(this.entitiesContext);
-
-        this.forEachAnimatedTile((tile) => {
-            /**
-             * Draw tiles only visible within the camera boundaries
-             * but with an offset of 3 tiles horizontally and 2 tiles
-             * vertically.
-             */
-            if (!this.camera.isVisible(tile.x, tile.y, 3, 2)) return;
-
-            // Update the tile's to the current game time.
-            tile.animate(this.game.time);
-
-            // Draw the tile with the current id and index.
-            this.drawTile(this.entitiesContext, tile.id, tile.index);
-        });
-
-        this.entitiesContext.restore();
+        this.restoreDrawing();
     }
 
     /**
@@ -913,7 +894,13 @@ export default class Renderer {
      */
 
     private drawName(entity: Player & Item): void {
-        if (entity.hidden || !entity.drawNames() || (!this.drawNames && !this.drawLevels)) return;
+        if (
+            entity.hidden ||
+            !entity.level ||
+            !entity.drawNames() ||
+            (!this.drawNames && !this.drawLevels)
+        )
+            return;
 
         let colour = entity.wanted ? 'red' : 'white';
 
@@ -1007,7 +994,7 @@ export default class Renderer {
     private drawTile(
         context: CanvasRenderingContext2D,
         tileId: number,
-        cellId: number,
+        index: number,
         flips: number[] = []
     ): void {
         if (tileId < 0) return;
@@ -1043,16 +1030,15 @@ export default class Renderer {
          * but it is a necessary optimization.
          */
 
-        if (!(cellId in this.cells) || flips.length > 0)
-            this.cells[cellId] = {
-                dx: this.getX(cellId + 1, this.map.width) * this.actualTileSize,
-                dy: Math.floor(cellId / this.map.width) * this.actualTileSize,
+        if (!(index in this.cells) || flips.length > 0)
+            this.cells[index] = {
+                dx: this.getX(index + 1, this.map.width) * this.actualTileSize,
+                dy: Math.floor(index / this.map.width) * this.actualTileSize,
                 width: this.actualTileSize,
-                height: this.actualTileSize,
-                flips
+                height: this.actualTileSize
             };
 
-        this.drawImage(context, tileset, this.tiles[tileId], this.cells[cellId]);
+        this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
     }
 
     /**
@@ -1067,13 +1053,12 @@ export default class Renderer {
         context: CanvasRenderingContext2D,
         image: CanvasImageSource,
         tile: RendererTile,
-        cell: RendererCell
+        cell: RendererCell,
+        flips: number[] = []
     ): void {
         let dx = 0,
             dy = 0,
-            isFlipped = cell.flips.length > 0;
-
-        if (!context) return;
+            isFlipped = flips.length > 0;
 
         /**
          * A tile rotation or flip is a combination of horizontal
@@ -1093,8 +1078,8 @@ export default class Renderer {
             let tempX = dx;
 
             // Iterate through every type of flip in our array.
-            for (let index of cell.flips)
-                switch (index) {
+            for (let index = 0; index < flips.length; index++)
+                switch (flips[index]) {
                     case TileFlip.Horizontal:
                         // Flip the context2d horizontally
                         dx = -dx - cell.width;
@@ -1116,8 +1101,17 @@ export default class Renderer {
 
                         (dx = dy), (dy = -tempX);
 
-                        // Flip horizontall to arrange tiles after transposing.
-                        cell.flips.push(TileFlip.Horizontal);
+                        /**
+                         * Explanation: After we perform a diagonal permutation (that is, we rotate the tile
+                         * 90 degrees to the right, the horizontal and vertical flags become inverted). That is,
+                         * performing a horizontal flip after rotating performs a vertical flip when observed
+                         * in the rendering context. The following ensures that a horizontal flip is performed only
+                         * when the next available flip is horizontal (essentially performing two horizontals in a row.)
+                         */
+
+                        if (flips[index + 1] === TileFlip.Horizontal)
+                            flips.push(TileFlip.Horizontal);
+                        else flips.push(TileFlip.Vertical);
 
                         break;
                 }
@@ -1177,27 +1171,30 @@ export default class Renderer {
     public updateAnimatedTiles(): void {
         if (!this.animateTiles) return;
 
-        this.forEachVisibleTile((id, index) => {
+        this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            let isFlipped = this.isFlipped(tile);
+
+            if (isFlipped) tile = tile.tileId;
+
             /**
              * We don't want to reinitialize animated tiles that already exist
              * and are within the visible camera proportions. This way we can parse
              * it every time the tile moves slightly.
              */
 
-            if (!this.map.isAnimatedTile(id)) return;
+            if (!this.map.isAnimatedTile(tile)) return;
 
             /**
              * Push the pre-existing tiles.
              */
 
-            if (!(index in this.animatedTiles)) {
-                let tile = new Tile(id, index, this.map.getTileAnimation(id)),
-                    position = this.map.indexToCoord(tile.index);
-
-                tile.setPosition(position);
-
-                this.animatedTiles[index] = tile;
-            }
+            if (!(index in this.animatedTiles))
+                this.animatedTiles[index] = new Tile(
+                    tile,
+                    index,
+                    this.map.getTileAnimation(tile),
+                    isFlipped
+                );
         }, 2);
     }
 
@@ -1217,10 +1214,10 @@ export default class Renderer {
 
         this.entitiesContext.lineWidth = 2 * this.camera.zoomFactor;
 
-        this.entitiesContext.translate(x + 2, y + 2);
+        this.entitiesContext.translate(x + 4, y + 2);
 
         this.entitiesContext.strokeStyle = colour;
-        this.entitiesContext.strokeRect(0, 0, this.actualTileSize - 4, this.actualTileSize - 4);
+        this.entitiesContext.strokeRect(0, 0, this.actualTileSize - 8, this.actualTileSize - 8);
 
         this.entitiesContext.restore();
     }
@@ -1327,8 +1324,14 @@ export default class Renderer {
         this.forEachDrawingContext((context) => context.restore());
     }
 
+    /**
+     * Checks whether or not the current frame has already been rendererd in order
+     * to prevent drawing when there is no movement during low power mode.
+     * @returns Whether or not the current frame has been rendered.
+     */
+
     private hasRenderedFrame(): boolean {
-        if (this.forceRendering || (this.mobile && this.camera.isCentered())) return false;
+        if (this.forceRendering || !this.isLowPowerMode()) return false;
 
         if (this.stopRendering) return true;
 
@@ -1343,8 +1346,13 @@ export default class Renderer {
         this.forEachDrawingContext((context) => context.save());
     }
 
+    /**
+     * Saves the currently rendered frame in order to prevent unnecessary redraws
+     * during low power mode.
+     */
+
     private saveFrame(): void {
-        if (this.mobile && this.camera.isCentered()) return;
+        if (!this.isLowPowerMode()) return;
 
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
@@ -1427,6 +1435,16 @@ export default class Renderer {
         return this.game.input.selectedX === x && this.game.input.selectedY === y;
     }
 
+    /**
+     * Low power mode is activated when both the camera centration and
+     * animated tiles are turned off. This is for devices that cannot
+     * sustain the constant re-drawing of the frame every second.
+     */
+
+    private isLowPowerMode(): boolean {
+        return !this.camera.isCentered() && !this.animateTiles;
+    }
+
     private inRadius(lighting: RendererLighting): boolean {
         let position = {
             x: lighting.light.origX,
@@ -1463,8 +1481,8 @@ export default class Renderer {
         // Return empty if tile doesn't contain flip flags.
         if (!this.isFlipped(tile)) return flips;
 
-        if (tile.d) flips.push(TileFlip.Diagonal);
         if (tile.v) flips.push(TileFlip.Vertical);
+        if (tile.d) flips.push(TileFlip.Diagonal);
         if (tile.h) flips.push(TileFlip.Horizontal);
 
         return flips;

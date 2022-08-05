@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -38,6 +38,7 @@ export default class Character extends Entity {
 
     public override orientation = Modules.Orientation.Down;
 
+    public destination!: Position | null;
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
@@ -59,10 +60,12 @@ export default class Character extends Entity {
 
     public forced!: boolean;
 
-    public handler = new EntityHandler(this);
+    public handler: EntityHandler;
 
     public constructor(instance: string, type: Modules.EntityType) {
         super(instance, type);
+
+        this.handler = new EntityHandler(this);
 
         this.loadAnimations();
     }
@@ -164,12 +167,26 @@ export default class Character extends Entity {
         this.orientation = Modules.Orientation.Down;
     }
 
-    public follow(entity: Entity): void {
+    /**
+     * Begins the following process. The character will perpetually
+     * follow a moving target until it reaches its position.
+     * @param entity The entity we are trying to follow.
+     * @param forced Whether or not we start a new path or update current one.
+     */
+
+    public follow(entity: Entity, forced = false): void {
         this.following = true;
 
         this.setTarget(entity);
-        this.move(entity.gridX, entity.gridY);
+        this.move(entity.gridX, entity.gridY, forced);
     }
+
+    /**
+     * Not technically a following action, but it is used since
+     * it removes the last step from the path.
+     * @param x The x grid coordinate of the position we are moving towards.
+     * @param y The y grid coordinate of the position we are moving towards.
+     */
 
     public followPosition(x: number, y: number): void {
         this.following = true;
@@ -177,19 +194,37 @@ export default class Character extends Entity {
         this.move(x, y);
     }
 
-    public addAttacker(character: Character): void {
-        if (this.hasAttacker(character)) return;
+    /**
+     * Adds an attacker to the dictionary of attackers.
+     * @param character Character we are adding to the dictionary.
+     */
 
+    public addAttacker(character: Character): void {
         this.attackers[character.instance] = character;
     }
 
-    private hasAttacker(character: Character): boolean {
-        let { attackers } = this;
+    /**
+     * Removes a character from the list of attackers.
+     * @param character The character we are trying to remove.
+     */
 
-        if (!attackers[0]) return false;
-
-        return character.instance in attackers;
+    public removeAttacker(character: Character): void {
+        delete this.attackers[character.instance];
     }
+
+    /**
+     * @returns Whether or not the character has any attackers.
+     */
+
+    public hasAttackers(): boolean {
+        return Object.keys(this.attackers).length > 0;
+    }
+
+    /**
+     * Performs an action and updates the orientation of the character.
+     * @param orientation New orientation we are setting.
+     * @param action The type of action we are performing.
+     */
 
     public performAction(orientation: Modules.Orientation, action: Modules.Actions): void {
         this.setOrientation(orientation);
@@ -212,6 +247,11 @@ export default class Character extends Entity {
                 break;
         }
     }
+
+    /**
+     * Return an entity to the base idle state.
+     * @param o Optional parameter if we want to update the orientation.
+     */
 
     public override idle(o?: Modules.Orientation): void {
         let orientation = o || this.orientation;
@@ -241,13 +281,18 @@ export default class Character extends Entity {
         }
     }
 
-    public lookAt(character: Entity): void {
+    /**
+     * Used for setting the orientation of a character relative to another entity.
+     * @param entity The entity relative to the character.
+     */
+
+    public lookAt(entity: Entity): void {
         let { gridX, gridY } = this;
 
-        if (character.gridX > gridX) this.setOrientation(Modules.Orientation.Right);
-        else if (character.gridX < gridX) this.setOrientation(Modules.Orientation.Left);
-        else if (character.gridY > gridY) this.setOrientation(Modules.Orientation.Down);
-        else if (character.gridY < gridY) this.setOrientation(Modules.Orientation.Up);
+        if (entity.gridX > gridX) this.setOrientation(Modules.Orientation.Right);
+        else if (entity.gridX < gridX) this.setOrientation(Modules.Orientation.Left);
+        else if (entity.gridY > gridY) this.setOrientation(Modules.Orientation.Down);
+        else if (entity.gridY < gridY) this.setOrientation(Modules.Orientation.Up);
 
         this.idle();
     }
@@ -270,10 +315,25 @@ export default class Character extends Entity {
         this.move(x, y, forced);
     }
 
+    /**
+     * Updates the movement of the entity or starts a new path if needed.
+     * @param x The new grid x coordinate we are trying to move the character to.
+     * @param y The new grid y coordinate we are trying to move the character to.
+     * @param forced Whether or not to update the current pathing or request a new one.
+     */
+
     private move(x: number, y: number, forced = false): void {
         if (this.hasPath() && !forced) this.proceed(x, y);
         else this.followPath(this.requestPathfinding(x, y));
+
+        this.destination = { x, y };
     }
+
+    /**
+     * Soft update to the character's pathing destination.
+     * @param x The new grid x coordinate we are trying to move the character to.
+     * @param y The new grid y coordinate we are trying to move the character to.
+     */
 
     private proceed(x: number, y: number): void {
         this.newDestination = {
@@ -290,18 +350,23 @@ export default class Character extends Entity {
      * the movement speed is constantly updated to avoid
      * hacks previously present in BQ.
      */
+
     public nextStep(): void {
         let stop = false,
             x: number,
             y: number,
             path: number[][] | null;
 
+        // Make a callback every two steps the character takes.
         if (this.step % 2 === 0 && this.secondStepCallback) this.secondStepCallback();
 
+        // Stop if there is no path present.
         if (!this.hasPath()) return;
 
+        // Callback prior to taking a step.
         this.beforeStepCallback?.();
 
+        // Set the new position onto the grid.
         this.updateGridPosition();
 
         if (!this.interrupted && this.path) {
@@ -389,6 +454,7 @@ export default class Character extends Entity {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
             this.path = null;
+            this.destination = null;
             this.newDestination = null;
             this.movement = new Transition();
             this.performAction(this.orientation, Modules.Actions.Idle);
@@ -481,8 +547,6 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
-        if (this.target) this.target.targeted = false;
-
         this.target = null;
     }
 
@@ -496,7 +560,6 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
-        this.target.targeted = true;
     }
 
     public hasTarget(target?: Entity): boolean {
@@ -516,51 +579,101 @@ export default class Character extends Entity {
         this.followPosition(position.x, position.y);
     }
 
+    /**
+     * Sets the hitpoints values onto the character.
+     * @param hitPoints The new hitpoints value we are setting.
+     * @param maxHitPoints Optional parameter if we wish to update the max hitpoints.
+     */
+
     public setHitPoints(hitPoints: number, maxHitPoints?: number): void {
         let decrease = false;
 
+        // Clamp the hitpoints to 0.
         if (hitPoints < 0) hitPoints = 0;
 
+        // Use the decrease value for the callback (used for certain UI special effects).
         if (hitPoints < this.hitPoints) decrease = true;
 
         this.hitPoints = hitPoints;
 
+        // Update the max hitPoints if it is specified.
         if (maxHitPoints) this.maxHitPoints = maxHitPoints;
 
+        // Callback contains the new maxHitPoints if specified, otherwise we use the current one.
         this.hitPointsCallback?.(this.hitPoints, maxHitPoints || this.maxHitPoints, decrease);
     }
+
+    /**
+     * Updates the current orientation of the character.
+     */
 
     public setOrientation(orientation: Modules.Orientation): void {
         this.orientation = orientation;
     }
 
+    /**
+     * Initial action where we request a new position for the character to move to.
+     * @param callback Contains the x and y grid coordinates of the position requested.
+     */
+
     public onRequestPath(callback: (x: number, y: number) => number[][] | null): void {
         this.requestPathCallback = callback;
     }
+
+    /**
+     * Starts the pathing process for the character.
+     * @param callback Contains the path to follow.
+     */
 
     public onStartPathing(callback: (path: number[][]) => void): void {
         this.startPathingCallback = callback;
     }
 
+    /**
+     * Callback for when the pathfinding stops.
+     * @param callback The grid x and y coordinates the player stopped pathing at.
+     */
+
     public onStopPathing(callback: (gridX: number, gridY: number) => void): void {
         this.stopPathingCallback = callback;
     }
+
+    /**
+     * Callback done just before the character begins movement to another grid position.
+     */
 
     public onBeforeStep(callback: () => void): void {
         this.beforeStepCallback = callback;
     }
 
+    /**
+     * Callback for when the character moves from one grid position to another.
+     */
+
     public onStep(callback: () => void): void {
         this.stepCallback = callback;
     }
+
+    /**
+     * Callback for every two grid positions the character moves across.
+     */
 
     public onSecondStep(callback: () => void): void {
         this.secondStepCallback = callback;
     }
 
+    /**
+     * Callback for when a character moves one absolute unit (pixel).
+     */
+
     public onMove(callback: () => void): void {
         this.moveCallback = callback;
     }
+
+    /**
+     * Callback for when hitpoints undergo a change.
+     * @param callback Contains the new hitpoints and the max hitpoints.
+     */
 
     public onHitPoints(callback: HitPointsCallback): void {
         this.hitPointsCallback = callback;
