@@ -77,8 +77,6 @@ export default class Incoming {
                         return this.handleMovement(message);
                     case Packets.Target:
                         return this.handleTarget(message);
-                    case Packets.Combat:
-                        return this.handleCombat(message);
                     case Packets.Projectile:
                         return this.handleProjectile(message);
                     case Packets.Network:

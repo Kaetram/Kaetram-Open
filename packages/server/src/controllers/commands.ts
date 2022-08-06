@@ -325,7 +325,7 @@ export default class Commands {
 
             case 'togglepvp':
                 this.entities.forEachPlayer((player: Player) => {
-                    player.updatePVP(true, true);
+                    player.updatePVP(true);
                 });
 
                 break;
