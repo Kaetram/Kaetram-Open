@@ -95,14 +95,10 @@ export default class Incoming {
                         return this.handleTrade(message);
                     case Packets.Enchant:
                         return this.handleEnchant(message);
-                    case Packets.Click:
-                        return this.handleClick(message);
                     case Packets.Warp:
                         return this.handleWarp(message);
                     case Packets.Store:
                         return this.handleStore(message);
-                    case Packets.Camera:
-                        return this.handleCamera(message);
                 }
             } catch (error) {
                 log.error(error);
@@ -219,7 +215,7 @@ export default class Incoming {
             case Opcodes.Movement.Started:
                 this.player.movementStart = Date.now();
 
-                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
+                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore();
 
                 if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
                     return;
@@ -245,8 +241,10 @@ export default class Incoming {
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
 
-                    this.player.incrementCheatScore(1);
+                    this.player.incrementCheatScore();
                 }
+
+                this.player.setOrientation(orientation!);
 
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
@@ -254,17 +252,14 @@ export default class Incoming {
                     door = this.world.map.getDoor(playerX!, playerY!);
 
                     this.player.doorCallback?.(door);
-                } else {
-                    this.player.setPosition(playerX!, playerY!);
-                    this.player.setOrientation(orientation!);
-                }
+                } else this.player.setPosition(playerX!, playerY!);
 
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
                 diff = this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
+                if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
 
                 break;
 
@@ -344,32 +339,6 @@ export default class Incoming {
                 break;
             }
         }
-    }
-
-    private handleCombat(message: [Opcodes.Combat, string, string]): void {
-        // let [opcode] = message;
-        // switch (opcode) {
-        //     case Opcodes.Combat.Initiate: {
-        //         let attacker = this.entities.get(message[1]) as Character,
-        //             target = this.entities.get(message[2]) as Character;
-        //         if (
-        //             !target ||
-        //             target.dead ||
-        //             !attacker ||
-        //             attacker.dead ||
-        //             !this.canAttack(attacker, target)
-        //         )
-        //             return;
-        //         attacker.setTarget(target);
-        //         if (!attacker.combat.started) attacker.combat.forceAttack();
-        //         else {
-        //             attacker.combat.start();
-        //             attacker.combat.attack(target);
-        //         }
-        //         target.combat?.addAttacker(attacker);
-        //         break;
-        //     }
-        // }
     }
 
     private handleProjectile(message: ProjectilePacket): void {
@@ -463,37 +432,6 @@ export default class Incoming {
         }
     }
 
-    private handleBank(packet: PacketData): void {
-        // let [opcode, type, index] = message;
-        // switch (opcode) {
-        //     case Opcodes.Bank.Select: {
-        //         let isBank = type === 'bank';
-        //         if (isBank) {
-        //             let bank-slot = this.player.bank.getInfo(index);
-        //             if (bank-slot.id < 1) return;
-        //             // Infinite stacks move all at once, otherwise move one by one.
-        //             let moveAmount = Items.maxStackSize(bank-slot.id) === -1 ? bank-slot.count : 1;
-        //             bank-slot.count = moveAmount;
-        //             if (this.player.inventory.add(bank-slot))
-        //                 this.player.bank.remove(bank-slot.id, moveAmount, index);
-        //         } else {
-        //             let inventorySlot = this.player.inventory.slots[index];
-        //             if (inventorySlot.id < 1) return;
-        //             if (
-        //                 this.player.bank.add(
-        //                     inventorySlot.id,
-        //                     inventorySlot.count,
-        //                     inventorySlot.ability,
-        //                     inventorySlot.abilityLevel
-        //                 )
-        //             )
-        //                 this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
-        //         }
-        //         break;
-        //     }
-        // }
-    }
-
     private handleRespawn(): void {
         if (!this.player.dead) return log.warning(`Invalid respawn request.`);
 
@@ -506,7 +444,10 @@ export default class Incoming {
 
         this.player.send(new Respawn(this.player));
 
-        this.player.revertPoints();
+        this.player.hitPoints.reset();
+        this.player.mana.reset();
+
+        this.player.sync();
     }
 
     private handleTrade(message: [Opcodes.Trade, string]): void {
@@ -548,27 +489,6 @@ export default class Incoming {
         // }
     }
 
-    private handleClick(message: [string, boolean]): void {
-        let [type, state] = message;
-
-        switch (type) {
-            case 'profile':
-                this.player.toggleProfile(state);
-
-                break;
-
-            case 'inventory':
-                this.player.toggleInventory(state);
-
-                break;
-
-            case 'warp':
-                this.player.toggleWarp(state);
-
-                break;
-        }
-    }
-
     /**
      * Receives a warp packet from the client containing the
      * id of the warp selected. The server then verifies
@@ -602,14 +522,6 @@ export default class Incoming {
             case Opcodes.Store.Select:
                 return this.world.stores.select(this.player, data.key, data.index, data.count);
         }
-    }
-
-    private handleCamera(message: string[]): void {
-        log.info(`${this.player.x} ${this.player.y}`);
-
-        this.player.cameraArea = undefined;
-        // TODO - Make this a server-side thing.
-        // this.player.handler.detectCamera(this.player.x, this.player.y);
     }
 
     /**

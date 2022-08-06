@@ -32,7 +32,6 @@ export default class Socket {
         // Attempt to get API data from the hub.
         try {
             $.get(`${this.config.hub}/server`, (response) => {
-                console.log(response);
                 callback(response.status === 'error' ? undefined : response);
             });
         } catch {

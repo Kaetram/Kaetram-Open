@@ -89,6 +89,7 @@ export default class Player extends Character {
         this.name = data.name;
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
+        this.orientation = data.orientation!;
 
         this.setOrientation(data.orientation);
         this.setGridPosition(data.x, data.y);
