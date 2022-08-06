@@ -278,6 +278,7 @@ export default class Game {
         this.entities.registerPosition(player);
 
         player.frozen = false;
+        player.teleporting = false;
 
         if (player.instance === this.player.instance) {
             player.clearHealthBar();

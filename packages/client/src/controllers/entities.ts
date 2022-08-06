@@ -257,8 +257,6 @@ export default class EntitiesController {
 
         player.load(info);
 
-        player.loadHandler(this.game);
-
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
 
         return player;
@@ -305,6 +303,8 @@ export default class EntitiesController {
      */
 
     public removeEntity(entity: Entity): void {
+        console.log('removing entity');
+        console.log(entity);
         this.unregisterPosition(entity);
 
         delete this.entities[entity.instance];
@@ -351,8 +351,8 @@ export default class EntitiesController {
      * @param entity The entity we are removing.
      */
 
-    public unregisterPosition(entity: Entity): void {
-        this.grids.removeFromRenderingGrid(entity);
+    public unregisterPosition(entity: Entity, gridX?: number, gridY?: number): void {
+        this.grids.removeFromRenderingGrid(entity, gridX, gridY);
     }
 
     /**

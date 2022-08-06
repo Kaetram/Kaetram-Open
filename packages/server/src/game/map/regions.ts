@@ -165,9 +165,6 @@ export default class Regions {
 
         log.debug(`Entity: ${entity.instance} entering region: ${region}.`);
 
-        //TODO
-        //if (!(entity as Player).finishedMapHandshake) return;
-
         this.sendRegion(entity as Player);
     }
 
@@ -276,16 +273,11 @@ export default class Regions {
      */
 
     public sendJoining(region: number): void {
-        this.regions[region].forEachJoining((entity: Entity) => {
-            this.world.push(Modules.PacketType.Regions, {
-                region,
-                ignore: entity.isPlayer() ? entity.instance : '',
-                packet: new Spawn(entity)
-            });
+        // Synchronizes the display info for each entity and updates the list of entities.
+        this.regions[region].forEachPlayer((player: Player) => {
+            this.sendDisplayInfo(player);
+            this.sendEntities(player);
         });
-
-        // Synchronize entity display info to all players in the region when an entity joins/respawns.
-        this.regions[region].forEachPlayer((player: Player) => this.sendDisplayInfo(player));
     }
 
     /**
