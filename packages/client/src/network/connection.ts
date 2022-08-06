@@ -282,7 +282,7 @@ export default class Connection {
         let player = this.entities.get<Player>(data.instance);
 
         // Invalid instance, player not found/not spawned.
-        if (!player) return;
+        if (!player || player.teleporting) return;
 
         player.load(data);
 
@@ -389,9 +389,7 @@ export default class Connection {
             // Restore the player's sprite.
             player.setSprite(playerSprite);
             player.idle();
-
-            player.teleporting = false;
-        }, 240);
+        }, 1000);
     }
 
     /**
@@ -428,6 +426,8 @@ export default class Connection {
 
         // Animate the entity's death.
         entity.animateDeath(() => this.entities.removeEntity(entity));
+
+        console.log(entity);
     }
 
     /**
