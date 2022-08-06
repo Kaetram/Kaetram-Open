@@ -303,8 +303,6 @@ export default class EntitiesController {
      */
 
     public removeEntity(entity: Entity): void {
-        console.log('removing entity');
-        console.log(entity);
         this.unregisterPosition(entity);
 
         delete this.entities[entity.instance];
@@ -351,8 +349,8 @@ export default class EntitiesController {
      * @param entity The entity we are removing.
      */
 
-    public unregisterPosition(entity: Entity, gridX?: number, gridY?: number): void {
-        this.grids.removeFromRenderingGrid(entity, gridX, gridY);
+    public unregisterPosition(entity: Entity): void {
+        this.grids.removeFromRenderingGrid(entity);
     }
 
     /**
