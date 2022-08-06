@@ -23,26 +23,6 @@ export default class WS extends WebSocket {
 
         this.server = new WebSocketServer({ port: this.port });
         this.server.on('connection', this.handleConnection.bind(this));
-
-        // this.server.on('connection', (socket: ws, request: http.ServerResponse) => {
-        //     // let mappedAddress = request.socket?.remoteAddress!,
-        //     //     [, remoteAddress] = mappedAddress.split('::ffff:');
-
-        //     // socket.conn = { remoteAddress };
-
-        //     // log.info(`Received connection from: ${socket.conn.remoteAddress}.`);
-
-        //     // // TODO - Handle client version....
-
-        //     // let connection = new Connection(
-        //     //     Utils.createInstance(Modules.EntityType.Player),
-        //     //     this.type,
-        //     //     socket as AnySocket,
-        //     //     this.socketHandler
-        //     // );
-
-        //     // this.addCallback?.(connection);
-        // });
     }
 
     /**

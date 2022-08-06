@@ -230,8 +230,8 @@
     "attackRange": 4,
     "aggressive": true,
     "roaming": true,
-    "attackRate": 2000,
-    "movementSpeed": 750,
+    "attackRate": 1200,
+    "movementSpeed": 550,
     "projectileName": "projectile-fireball",
     "respawnDelay": 35000
   },

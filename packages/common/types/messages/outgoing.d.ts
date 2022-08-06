@@ -185,7 +185,7 @@ export type BlinkCallback = (instance: string) => void;
 
 export interface HealPacket {
     instance: string;
-    type: Modules.HealType;
+    type: Modules.HealTypes;
     amount: number;
 }
 
@@ -258,7 +258,12 @@ export type PointerCallback = (opcode: Opcodes.Pointer, info: PointerPacket) => 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type PVPCallback = (instance: string, state: boolean) => void;
+export interface PVPPacket {
+    instance: string;
+    state: boolean;
+}
+
+export type PVPCallback = (info: PVPPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
