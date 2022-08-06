@@ -512,7 +512,29 @@
          "draworder":"topdown",
          "id":49,
          "name":"warps",
-         "objects":[],
+         "objects":[
+                {
+                 "class":"",
+                 "height":64,
+                 "id":285,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"level",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"mudwich"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":1472,
+                 "y":976
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1118,7 +1140,7 @@
                  "value":256
                 }],
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1412,7 +1434,7 @@
          "y":0
         }],
  "nextlayerid":72,
- "nextobjectid":285,
+ "nextobjectid":287,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",
