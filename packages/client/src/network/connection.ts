@@ -1,4 +1,4 @@
-import { AchievementPacket } from './../../../common/types/messages/outgoing.d';
+import { AchievementPacket, PVPPacket } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import log from '../lib/log';
@@ -389,7 +389,7 @@ export default class Connection {
             // Restore the player's sprite.
             player.setSprite(playerSprite);
             player.idle();
-        }, 1000);
+        }, 160);
     }
 
     /**
@@ -426,8 +426,6 @@ export default class Connection {
 
         // Animate the entity's death.
         entity.animateDeath(() => this.entities.removeEntity(entity));
-
-        console.log(entity);
     }
 
     /**
@@ -444,7 +442,6 @@ export default class Connection {
         // Could not find the attacker or target.
         if (!attacker || !target) return;
 
-        // TODO - Decide whether to simplify combat packet this much.
         if (opcode !== Opcodes.Combat.Hit) return;
 
         // Check if our client's player is the target or the attacker.
@@ -702,7 +699,7 @@ export default class Connection {
         if (!character) return;
 
         switch (info.type) {
-            case 'health':
+            case 'hitpoints':
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
                 this.game.player.healing = true;
@@ -747,8 +744,6 @@ export default class Connection {
                  * When we receive experience information about our own player
                  * we update the experience bar and create an info.
                  */
-
-                console.log(info);
 
                 if (isPlayer) {
                     this.game.player.setExperience(
@@ -941,15 +936,15 @@ export default class Connection {
      * @param state The state of the PVP.
      */
 
-    private handlePVP(instance: string, state: boolean): void {
-        if (instance === this.game.player.instance) {
-            this.game.pvp = state;
+    private handlePVP(info: PVPPacket): void {
+        if (info.instance === this.game.player.instance) {
+            this.game.pvp = info.state;
             return;
         }
 
-        let entity = this.entities.get<Player>(instance);
+        let entity = this.entities.get<Player>(info.instance);
 
-        if (entity) entity.pvp = state;
+        if (entity) entity.pvp = info.state;
     }
 
     /**
@@ -989,9 +984,6 @@ export default class Connection {
      */
 
     private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
-        console.log(`Overlay Opcode: ${opcode}`);
-        console.log(info);
-
         switch (opcode) {
             case Opcodes.Overlay.Set:
                 this.overlays.update(info.image);

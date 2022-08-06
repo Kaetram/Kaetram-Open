@@ -381,8 +381,6 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                console.log(entity.isMob());
-
                 if (entity.isMob()) (entity as Mob).move(x, y);
 
                 break;

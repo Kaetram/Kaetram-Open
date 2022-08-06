@@ -29,7 +29,6 @@ type RawData = {
 };
 
 export default class Mob extends Character {
-    // TODO - Make private after moving callbacks into the mob file.
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
@@ -188,7 +187,7 @@ export default class Mob extends Character {
      * @param y The new y position of the mob.
      */
 
-    public move(x: number, y: number): void {
+    public override move(x: number, y: number): void {
         this.setPosition(x, y);
 
         this.calculateOrientation();
@@ -395,7 +394,6 @@ export default class Mob extends Character {
     public override serialize(player?: Player): EntityData {
         let data = super.serialize();
 
-        // TODO - Update this once we get around fixing up the client.
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;

@@ -53,7 +53,4 @@ export interface EntityData {
     hitType?: Modules.Hits;
 
     displayInfo?: EntityDisplayInfo;
-
-    // Player data
-    // TODO
 }
