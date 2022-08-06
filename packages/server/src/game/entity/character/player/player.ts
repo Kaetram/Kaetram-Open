@@ -340,6 +340,10 @@ export default class Player extends Character {
     public addExperience(exp: number): void {
         this.experience += exp;
 
+        // Prevent a null or excessive negative value from breaking the experience system.
+        if (this.experience < 0) this.experience = 0;
+        if (!this.experience) this.experience = 0;
+
         let oldLevel = this.level;
 
         this.level = Formulas.expToLevel(this.experience);
@@ -358,7 +362,19 @@ export default class Player extends Character {
 
             this.updateRegion();
 
-            this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
+            // Let the player know if they've unlocked a new warp.
+            if (this.warp.unlockedWarp(this.level))
+                this.popup(
+                    'Level Up!',
+                    `You have unlocked a new warp! You are now level ${this.level}!`,
+                    '#ff6600'
+                );
+            else
+                this.popup(
+                    'Level Up!',
+                    `Congratulations, you are now level ${this.level}!`,
+                    '#ff6600'
+                );
         }
 
         /**
@@ -451,7 +467,7 @@ export default class Player extends Character {
             })
         );
 
-        this.setPosition(x, y, false);
+        this.setPosition(x, y, false, true);
         this.world.cleanCombat(this);
     }
 
@@ -663,9 +679,10 @@ export default class Player extends Character {
      * @param x The new grid x coordinate we are moving to.
      * @param y The new grd y coordinate we are moving to.
      * @param forced Forced parameters ignores current actions and forces the player to move.
+     * @param teleport Optioanl parameter to skip sending a movement packet if the player is teleporting.
      */
 
-    public override setPosition(x: number, y: number, forced = false): void {
+    public override setPosition(x: number, y: number, forced = false, teleport = false): void {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
