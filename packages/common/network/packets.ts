@@ -38,7 +38,6 @@ enum Packets {
     Pointer,
     PVP,
     Poison,
-    Click,
     Warp,
     Store,
     Overlay,

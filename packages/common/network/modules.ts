@@ -42,6 +42,8 @@ export enum EntityType {
     Object
 }
 
+export type HealTypes = 'passive' | 'hitpoints' | 'mana';
+
 /**
  * Enumeration of special states that an entity could be. For example,
  * an entity could be a quest-based entity and it has special name colour.
@@ -157,12 +159,6 @@ export enum Keys {
 export enum AudioTypes {
     Music,
     SFX
-}
-
-export enum HealTypes {
-    Health,
-    Mana,
-    Stamina
 }
 
 export enum PoisonTypes {

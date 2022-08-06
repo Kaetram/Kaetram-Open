@@ -166,14 +166,12 @@ export default class Store extends Menu {
      * to move an item from the inventory to the select slot. We also
      * add the currency and price to bottom slots.
      * @param info Contains store packet data such as the index, key, price, etc.
-     *
-     * TODO - Add support for dynamic counts.
      */
 
     public move(info: StorePacket): void {
         if (info.key !== this.key) return log.error(`Invalid store key provided for the select.`);
 
-        //Refreshes the inventory container prior to moving.
+        //Refreshes the inventory container prior to moving.s
         this.synchronize();
 
         let image = this.getElement(info.item!.index!).querySelector('.bank-image') as HTMLElement,
