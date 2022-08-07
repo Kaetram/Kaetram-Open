@@ -40,7 +40,13 @@
   },
 
   "guard": {
-    "name": "Guard"
+    "name": "Guard",
+    "text": ["We're seriously busy at the moment."]
+  },
+
+  "guard2": {
+    "name": "Royal Guard",
+    "text": ["Any form of defiance will be met with death."]
   },
 
   "scientist": {
