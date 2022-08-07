@@ -2,7 +2,7 @@
   "rat": {
     "name": "Rat",
     "id": 128,
-    "drops": {"flask": 10},
+    "drops": {"flask": 100},
     "hitPoints": 30,
     "defenseLevel": 2,
     "attackLevel": 1,
@@ -20,7 +20,7 @@
   "bat": {
     "name": "Batterfly",
     "id": 1,
-    "drops": {"flask": 50},
+    "drops": {"flask": 120},
     "hitPoints": 45,
     "defenseLevel": 2,
     "attackLevel": 2,
@@ -1822,7 +1822,8 @@
     "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "respawnDelay": 75000
+    "respawnDelay": 125000,
+    "plugin": "ogrelord"
   },
 
   "windguardian": {
