@@ -181,6 +181,17 @@ export default class Mob extends Character {
     }
 
     /**
+     * Permanently removes an entity from the world.
+     */
+
+    public despawn(): void {
+        this.dead = true;
+        this.combat.stop();
+
+        this.world.entities.removeMob(this);
+    }
+
+    /**
      * Moves the mob and broadcasts the action
      * to all the adjacent regions.
      * @param x The new x position of the mob.
