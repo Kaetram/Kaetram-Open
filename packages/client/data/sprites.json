@@ -6720,6 +6720,19 @@
     "offsetY": -8
   },
   {
+    "id": "guard2",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
     "id": "royalguard",
     "width": 25,
     "height": 24,
