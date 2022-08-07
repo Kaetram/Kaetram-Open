@@ -16,10 +16,10 @@ import { Bubble } from '@kaetram/server/src/network/packets';
  */
 
 export default class Handler {
-    private world: World;
-    private map: Map;
+    protected world: World;
+    protected map: Map;
 
-    public constructor(private mob: Mob) {
+    public constructor(protected mob: Mob) {
         this.world = this.mob.world;
         this.map = this.world.map;
 
@@ -35,7 +35,7 @@ export default class Handler {
      * Callback handler for every time the mob's position is changed.
      */
 
-    private handleMovement(): void {
+    protected handleMovement(): void {
         // Mob is randomly roaming and exits the roaming area.
         if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
 
@@ -54,7 +54,7 @@ export default class Handler {
      * Callback for whenever a mob gets hit.
      */
 
-    private handleHit(damage: number, attacker?: Character): void {
+    protected handleHit(damage: number, attacker?: Character): void {
         if (this.mob.dead || !attacker) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
@@ -66,7 +66,7 @@ export default class Handler {
      * Callback for when a death occurs and who the last attacker was.
      */
 
-    private handleDeath(attacker?: Character): void {
+    protected handleDeath(attacker?: Character): void {
         // Stops the attacker's combat if the character is dead.
         if (attacker) attacker.combat.stop();
 
@@ -95,7 +95,7 @@ export default class Handler {
      * Callback handler for when the mob respawn is triggered.
      */
 
-    private handleRespawn(): void {
+    protected handleRespawn(): void {
         this.mob.dead = false;
         this.mob.hitPoints.reset();
 
@@ -112,7 +112,7 @@ export default class Handler {
      * mobs do not walk outside a predefined boundary of theirs.
      */
 
-    private handleRoaming(): void {
+    protected handleRoaming(): void {
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
@@ -155,7 +155,7 @@ export default class Handler {
      * @param text The message we are sending to the region.
      */
 
-    private handleTalk(text: string): void {
+    protected handleTalk(text: string): void {
         this.mob.sendToRegions(
             new Bubble({
                 instance: this.mob.instance,
