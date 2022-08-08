@@ -163,17 +163,16 @@ export default class Game {
 
         this.camera.centreOn(this.player);
 
-        if (this.map)
-            this.socket.send(Packets.Ready, {
-                hasMapData: this.map.preloadedData,
-                userAgent: agent
-            });
-
         new PlayerHandler(this, this.player);
 
         this.renderer.updateAnimatedTiles();
 
         this.updater.setSprites(this.entities.sprites);
+
+        this.socket.send(Packets.Ready, {
+            hasMapData: this.map.preloadedData,
+            userAgent: agent
+        });
 
         if (this.storage.data.new) {
             this.storage.data.new = false;
