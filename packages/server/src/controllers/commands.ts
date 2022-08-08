@@ -549,6 +549,22 @@ export default class Commands {
                 );
 
                 break;
+
+            case 'nuke':
+                region = this.world.map.regions.get(this.player.region);
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!(entity instanceof Character)) return;
+                    if (entity.instance === this.player.instance) return;
+
+                    (entity as Character).deathCallback?.();
+                });
+
+                this.player.notify(
+                    'Congratulations, you killed everyone, are you happy with yourself?'
+                );
+
+                break;
         }
     }
 }

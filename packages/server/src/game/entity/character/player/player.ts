@@ -626,7 +626,7 @@ export default class Player extends Character {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
-        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
+        if (this.map.isColliding(x, y, this)) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
@@ -728,7 +728,7 @@ export default class Player extends Character {
      */
 
     public isAdmin(): boolean {
-        return this.rights > 1;
+        return this.rights > 1 || config.skipDatabase;
     }
 
     public loadRegion(region: number): void {
