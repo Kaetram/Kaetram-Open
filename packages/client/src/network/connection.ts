@@ -776,11 +776,17 @@ export default class Connection {
      */
 
     private handleDeath(): void {
-        this.audio.stop();
+        // Set the player's sprite to the death animation sprite.
+        this.game.player.setSprite(this.sprites.getDeath());
 
-        this.game.player.despawn();
+        // Perform the death animation.
+        this.game.player.animateDeath(() => {
+            this.audio.stop();
 
-        this.app.body.classList.add('death');
+            this.game.player.despawn();
+
+            this.app.body.classList.add('death');
+        });
     }
 
     /**
