@@ -67,5 +67,11 @@
     "waterguardian": {
         "name": "Water Guardian",
         "description": "Defeat the Water Guardian!"
+    },
+
+    "ogreguardian": {
+        "name": "Ogre Guardian",
+        "description": "Defeat the Ogre Guardian!",
+        "rewardExperience": 600
     }
 }
