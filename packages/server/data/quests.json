@@ -106,7 +106,7 @@
       "7": {
         "task": "kill",
         "mob": ["crab"],
-        "mobCountRequirement": 4
+        "mobCountRequirement": 5
       },
 
       "8": {
