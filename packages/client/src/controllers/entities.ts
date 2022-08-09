@@ -8,6 +8,7 @@ import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
+import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 
 import { EntityData } from '@kaetram/common/types/entity';
@@ -16,7 +17,6 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Entity from '../entity/entity';
-import type Character from '../entity/character/character';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -111,11 +111,8 @@ export default class EntitiesController {
 
         this.addEntity(entity);
 
-        // Add handler to character subclasses.
-        if ((entity as Character).handler) {
-            (entity as Character).handler.setGame(this.game);
-            (entity as Character).handler.load();
-        }
+        // Start the entity handler.
+        if (entity instanceof Character) entity.handler.load(this.game);
     }
 
     /**
