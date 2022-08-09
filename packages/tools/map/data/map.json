@@ -312,7 +312,7 @@
         }, 
         {
          "compression":"zlib",
-         "data":"eJzt3UuOXVcVBmDbMQ5CiEcLoSQonczHjMVpJ4iYgTCOjMCIRxeElNCiwySQZZVcLt+69zz2Y621v69ju2H5nFu3bv1ej32ePAEAAAAAAAAAAAAAAAAAAAAAAAAAonn2cvYV3PaLBNcIwBj\/9DMB4APPfS4ChPCvhJ\/HL15e\/j2sTr4CoJprWU8mZBX6zQCsaE\/WkwVrenrh65phVpCYvvbeAUgnQ8b7PME1RiHH1aZHDcAeGXIefdzV+y7V\/d6SKQAAmEUWBQBYW4Q8eGZnxL4JAAAAkMGnahjQ3c+DfJ\/Z5wUA4BOZEG76qe8TIJjec3QR5vRgpF96zwOQ1GPnBTpHMJ7HMrbsDQDIbgAA9JC17nT2urPe91Zm\/QAAAADyuN8LnlW3ql4v26PSa6FOuI09ETL43PsU2CDSjGGlTHVG9WeN\/Kr4\/QFAS7fyUaQsx1rOnjW95+9nOtdazRCAGSLU1KrXsx6z6n0DAP2crfdFyIa006uvql+7zU+8TgAEozcMAJBPxHrdiGuKeN+0pcYYx999LQBSuFbbk53oRWYDgPxkRa8BY5gVBKCHTPN+rTOXvVtoT18Y4lCrAEbKdPYeQGUyIEA\/W89w1tMFRpMBIRbfk2NlrUt6PghwhJ8xwBEzd3c\/87mVgnk\/mOc3G7\/\/5EDe8j7gTtZ62H2vCtxDVbIhzOdnPi15PwFADn5mryvTOS+wsuz7IWp+EJMMCDBG9iwHAHv1PF\/Z2c3tRHg+W4U5RAD2+dRn\/yl6u7Wp2QMAW8iEAADQx6z6XNS6uV4uAMSlr8gREeYFAYDL9IABAIDs1B8BANqTsQCAFpzZt425zHbkWABgZVmzUNbrBgAAAOhNH5HonBUIANDeqIw1u08rSwJAHr3rlOqgAABtyVc1qJ8BAAAAcJQaIVGpe7LF899f\/zPAbLIWAADwkLoXAEAcargAwCiRntE76lpWylozzuh7tdDrCwAAAABsYz4RAIgoUr8cAACO6D0j+MnLy78HAGpSL2NFf\/O+BwAesdIu8kNqgQAAbcw482UmeyMAAHGp+QHAOObwAAAAAGBtK+8iZGb+DQAAAADo6ZUaJABQlB45AMAYz+QuAAAAANCfBAAoyFnOAACsRp0znt7nEJ55rrEzEgG47x9+LlDYmcwEANTWsp6mNtdPlTqWXApAK2p5AAAAAAAAAGPp087j7JhxZs5BRpsT7DHvF+0eAVYm2wEAsIf8CADAQ7cyogwJALDfmQwlf\/EYZwMCANFkya72OMaRWfezmwHAfVnyFf31yrDyGgAAAADso9+8nmzP6M12vQDZ6OECAJCJ\/MoZUeYLfx3kOgCi+N+Ez8UZ\/yYAANy5VuNS\/6KX2XOCs\/\/9GZ6+vP5ngFnUxmC8KH1KAABye9E5V8qtvGWfF+A8Pd\/bvEZkpecLAFCbvAfwjhlDgHecDQPQXtWsqf9JK1tm+HrPERLL177ewJO6GQoAgPh6ZlE5l4xW2sF9ttC9AgCsSuYDyEMtDdowewcAAADAaH9WkwIAAACAU5zxd53XZyxziAAA7W3JWD1zWOaMl\/naAQBaG5GN5C8giu98HvHEWTQAAACs4Qv\/\/6WzS7W27we973r9O+qHQEaRe7GRrw1Yw6h8moEeKcSySk5a5T57U+cji4y1NXkR5nLmC\/IirKtHdpydR2VL9pCD4D2Z8DI1QQCIIWNWyXjNAACMISsCwDH6uzzmbL669vdlNwAqOrvnbE8aANY2e2cEAADgjh4y2eg\/n\/dHryFQmD4s5CbrkYE8zapa5iyZjdVVyDwV7gHI4\/UjnzlHZvCctdxepWxX6V6qqtjblquo5kvvaQAo7amf9bA8e7EAcJzaGavQkwXgEr3x3GRZqpFZqaLVPF3FubxZfnvwtdyblWSr2CJkJzuwMJ6MyapkSQAAAAAAgJjsAwPUdOvcF+fCAL3MzJeyLQAAUNmtvQx7GwBspY4GAACwDnVDAAAA4CFnI8Ma1AahDc\/yAAAAIIpv\/B8VgEHURddwdtfYrjJso28LsKaMM3oZrxmykQ0BaEV2G0ufFgBYjbyZi7wKAMBRf5AlAWAoOxi5qcMBQD1H85l+am5qYgAAAAAAAEAkEWYL9cEBYDzPAgFmsBsDVCdjMYPaWkx2RwAAyOJb2RWAwdRRx4owHwgAAAAAb6kNqtedVXEf4eysoX4vANy2Z+diT16zywEAAFRXsSYLwD56vADAW1\/IBDfJTVyip8xozj4EtpDtAACA7NTdAIDI9I6BaLbuhdgfgTr0hAEAAAAAGKHyMzcq3xsAMenzwmX2R6AfM4NQg\/0FeE9NDwCACNQ0AQAAAKguUg0s0rWMkOG5ZBmuEWA15gyJaLUcBwAAAADZXavpvVbvG0Y\/FgCAI+RIAMjN+Xo5OfMXgGq+fPnhrwAAANCa3jawmq8CfO6p9wFcJ6MC0Frr8\/duzRc67w8AOMu51muxvwIAcJvMBAAAAAAAADVF2PuFXuyXAADsZ14QYC0\/+twHAABgAr1cAIC59IVpyXMtqOQ\/3s8A3cigwAjyHMBa9J3p6RvvLwAWpY5HBlmyml4616hlAj289tlSjjwBa5MZAQDq+kHWAwgpSx8SWI+zo4FLzPoBEVStc8lfwAit9mNn79n+22cmAAAADRzdn7B3AQDAWVX73kB7ZvYA2MMcIg\/9yXtiOfIjALCXzEhrs\/dN2M750wDtyFREoDYIxzgHcl1m+LhErgOAMXrs6FbNd\/aZga3UBz+kFwoAAAAAcJ06KsA55g15SM8WAPKS7WjNuStABVV3NKihUn6rdC8AxCLPAQDQm8xJZVvrdup7kJudCnjHs2\/JRP4CgHicm8wdWY3Z7PiSUc9npql\/5qL3CkAE3974eXQ0u5zJPFmeMZvlOu\/LeM3Epec8xmr1t9XudzVqeQDb6MWep\/YKrO5WzQ8AWlLTAyLQBwXIqXeWlFUBIB5zhwAAMezJZWYaz1Ongg+13C2xpwIwjtpeLDImwBxmFYGIZEMyU98DeKflGSn6u3GtkNtWuMeIZKq61KJq8zyR3Eb0TqP1Z7dkVlkUIJc9eVM2JSv5BAByU0ODdqLVG4Gx9JQBWJ25NrKT5wAAAAAAiMSOCbRl9wUAID87GwAA7bU8qxmgGnsmAAC5vJbfAAAAAAAAruoxM2jXAwCAKOzIAABZ7K2prVyDW\/neAQCqkOkAAAAAIK4tz3QzmwcAkIPeLAAA0ak1AgAAAAAAAAAAAAAArW05P4Vj7C8DAAAAAAAAAADA7VnF6LOM0a8PAAAAANjG7i8AAAAAAAAw0g96lAAAAABAYz3rji32LuxuAAC8tyUbyU8AAByVdUbRWc8AAAAAEEvWWiMAAP3IiAAAAAAAAAAAAAAAAAAAVGJ\/FuZ74\/sQAAAASMbz1mC8F77vAChAf5rqZDYAAACANn5UZwEAAIJosQNsjxgAYF3mCgEAAAAAAAAAAAAAAAAAoB37uwAAAAAAAABz6dsCABU9l3EAAMo4ku3kwb7uP9dXfREAYI5LOUw2AwAq2VPjUw\/M4Y2vEwAAAEB5R2t1anwf93v1fwEAAADIRp0PACA\/mQ4AANoxBwgAsK6jWVCGBABYlywIAIx2Zl7QrCEAAIznWR8AAAAAAACQx9Y5O\/N4+ezt3doXAYD1RMt40a5nFDN3AEBEPbPZqrkPAIA61PQAgKjU3gAAGEHuBAAAAIA1qAUCAJH9V1YBAApplW3+MjkjyWgAAAAAAHFEnwF8Gvz6AAAAgJrMucF4R2uBaogAEI88DQBUNXs\/lzVFn\/E7Q20PANpQj1tD5VwIALAKme5jaoQAADU8luvkPQAAYKu\/+v8DwFW39lnMEQIAcIQcCQAA+9kNYWW\/8\/4HJmlRx6paC3M2IgAQVeacUjU7AgBkJ6cBADDLliwqrwJZmAMEAADgiMwzgQAAfGxGf1OmrOFnvo4AsCwzcgAAAAAAAABko9cNAAAAAAAAcNue3qo+bD\/OdQGAdVTLVHvOGax271vIeQDAUStmJwAA1rK1tigbAwArk4UAAPqTueLytdnvhdcMAAAAoIlL822Z6lWZrpXr1PwAAAAA8lOvm8MZgAAAAABUtef5INdUq12uXhM0bwgA21TLQAAAwFwR6nJvAlzDar7ymgOc1qrn2cKWa9lbV1SHrCNC3gMAAACgPjXFWHrVBdUbAQBykuMAAAAA6C3Sng2XqRMCwH4yDiPIaQCQh70JAABgJLVDAIC1yYMAQEv63QAA58hTAAAxyGUAAAAAAAAAAAAAjOYcGAAAAAAAAAAAAAAAAAAAAAAAAOCW\/wMwr\/2D",
+         "data":"eJzt3UuOXVcVBmDbMQ5CiEcLIRKUTuZTjCVpJ4iYgTAORmDEowtCSmjRYRKoZFkul2\/dex77sdba39ex3bB8zq1bt36vxz7PngEAAAAAAAAAAAAAAAAAAAAAAAAA0by4m30Ft\/0swTUCMMY\/\/UwA+MBLn4sAIfwr4efxq7vLv4fVyVcAVHMt68mErEK\/GYAV7cl6smBNzy98XTPMChLT1947AOlkyHifJbjGKOS42vSoAdgjQ86jj3f1vkt1v3syBQAAs8iiAABri5AHz+yM2DcBAAAAMvhUDQO6+2mQ7zP7vAAAfCITwk0\/9n0CBNN7ji7CnB6M9HPveQCSeuq8QOcIxvNUxpa9AQDZDQCAHrLWnc5ed9b73sqsHwAAAEAeD3vBs+pW1etle1R6LdQJt7EnQgafeZ8CG0SaMayUqc6o\/qyRXxS\/PwBo6VY+ipTlWMvZs6b3\/P1M51qrGQIwQ4SaWvV61lNWvW8AoJ+z9b4I2ZB2evVV9Wu3+ZHXCYBg9IYBAPKJWK8bcU0R75u21Bjj+LuvBUAK12p7shO9yGwAkJ+s6DVgDLOCAPSQad6vdeaydwvt6QtDHGoVwEiZzt4DqEwGBOhn6xnOerrAaDIgxOJ7cqysdUnPBwGO8DMGOGLm7u5vfG6lYN4P5vnVxu8\/OZB73ge8k7Ue9tBXBe6hKtkQ5vMzn5a8nwAgBz+z15XpnBdYWfb9EDU\/iEkGBBgje5YDgL16nq\/s7OZ2IjyfrcIcIgD7fOqz\/xS93drU7AGALWRCAADoY1Z9LmrdXC8XAOLSV+SICPOCAMBlesAAAEB26o8AAO3JWABAC87s28ZcZjtyLACwsqxZKOt1AwAAAPSmj0h0zgoEAGhvVMaa3aeVJQEgj951SnVQAIC25Ksa1M8AAAAAOEqNkKjUPdni5e+u\/xlgNlkLAAB4TN0LACAONVwAYJRIz+gddS0rZa0ZZ\/R9tdDrCwAAAABsYz4RAIgoUr8cAACO6D0j+Mnd5d8DADWpl7Giv3nfAwBPWGkX+TG1QACANmac+TKTvREAgLjU\/ABgHHN4AAAAALC2lXcRMjP\/BgAAAAAAALCfHjkAwBgv5C4AAAAA0J8EACjIWc4AAKxGnTOe3ucQnnmusTMSAXjoH34uUNiZzAQA1NaynqY210+VOpZcCkArankAAAAAAAAAY+nTzuPsmHFmzkFGmxPsMe8X7R4BVibbAQCwh\/wIAMBjtzKiDAkAsN+ZDCV\/8RRnAwIA0WTJrvY4xpFZ97ObAcBDWfIV\/fXKsPIaAAAAAOyj37yebM\/ozXa9ANno4QIAkIn8yhlR5gt\/GeQ6AKL434TPxRn\/JgAAvHOtxqX+RS+z5wRn\/\/szPL+7\/meAWdTGYLwofUoAAHJ71TlXyq3cs88LcJ6e721eI7LS8wUAqE3eA3jLjCHAW86GAWivatbU\/6SVLTN8vecIieVrX2\/gWd0MBQBAfD2zqJxLRivt4L5Y6F4BAFYl8wHkoZYGbZi9AwAAAGC0P6lJAQAAAMApzvi7zuszljlEAID2tmSsnjksc8bLfO0AAK2NyEbyFxDFdz6PeOYsGgAAANbwuf\/\/0tmlWtufB73vev076odARpF7sZGvDVjDqHyagR4pxLJKTlrlPntT5yOLjLU1eRHmcuYL8iKsq0d2nJ1HZUv2kIPgPZnwMjVBAIghY1bJeM0AAIwhKwLAMfq7POVsvrr292U3ACo6u+dsTxoA1jZ7ZwQAAOAdPWSy0X8+7w9eQ6AwfVjITdYjA3maVbXMWTIbq6uQeSrcA5DH6yc+c47M4Dlrub1K2a7SvVRVsbctV1HNF97TAFDacz\/rYXn2YgHgOLUzVqEnC8AleuO5ybJUI7NSRat5uopzebP8+uBruTcryVaxRchOdmBhPBmTVcmSAAAAAAAAMdkHBqjp1rkvzoUBepmZL2VbAACgslt7GfY2ANhKHQ0AAGAd6oYAAADAY85GhjWoDUIbnuUBAABAFN\/4PyoAg6iLruHsrrFdZdhG3xZgTRln9DJeM2QjGwLQiuw2lj4tALAaeTMXeRUAgKN+L0sCwFB2MHJThwOAeo7mM\/3U3NTEAAAAAAAAgEgizBbqgwPAeJ4FAsxgNwaoTsZiBrW1mOyOAACQxbeyKwCDqaOOFWE+EAAAAADuqQ2q151VcR\/h7Kyhfi8A3LZn52JPXrPLAQAAVFexJgvAPnq8AMC9z2WCm+QmLtFTZjRnHwJbyHYAAEB26m4AQGR6x0A0W\/dC7I9AHXrCAAAAAACMUPmZG5XvDYCY9HnhMvsj0I+ZQajB\/gK8p6YHAEAEapoAAAAAVBepBhbpWkbI8FyyDNcIsBpzhkS0Wo4DAAAAgOyu1fReq\/cNox8LAMARciQA5OZ8vZyc+QtANV\/cffgrAAAAtKa3DazmywCfe+p9ANfJqAC01vr8vVvzhc77AwDOcq71WuyvAADcJjMBAAAAAABATRH2fqEX+yUAAPuZFwRYyw8+9wEAAJhALxcAYC59YVryXAsq+Y\/3M0A3MigwgjwHsBZ9Z3r6xvsLgEWp45FBlqyml841aplAD699tpQjT8DaZEYAgLq+l\/UAQsrShwTW4+xo4BKzfkAEVetc8hcwQqv92Nl7tv\/2mQkAAEADR\/cn7F0AAHBW1b430J6ZPQD2MIfIY3\/0nliO\/AgA7CUz0trsfRO2c\/40QDsyFRGoDcIxzoFclxk+LpHrAGCMHju6VfOdfWZgK\/XBD+mFAgAAAABcp44KcI55Qx7TswWAvGQ7WnPuClBB1R0NaqiU3yrdCwCxyHMAAPQmc1LZ1rqd+h7kZqcC3vLsWzKRvwAgHucm846sxmx2fMmo5zPT1D9z0XsFIIJvb\/w8OppdzmSeLM+YzXKdD2W8ZuLScx5jtfrbave7GrU8gG30Ys9TewVWd6vmBwAtqekBEeiDAuTUO0vKqgAQj7lDAIAY9uQyM43nqVPBh1rulthTARhHbS8WGRNgDrOKQESyIZmp7wG81fKMFP3duFbIbSvcY0QyVV1qUbV5nkhuI3qn0fqzWzKrLAqQy568KZuSlXwCALmpoUE70eqNwFh6ygCszlwb2clzAAAAAABEYscE2rL7AgCQn50NAID2Wp7VDFCNPRMAgFxey28AAAAAAABX9ZgZtOsBAEAUdmQAgCz21tRWrsGtfO8AAFXIdAAAAAAQ15ZnupnNAwDIQW8WAIDo1BoBAAAAAAAAAAAAAIDWtpyfwjH2lwEAAAAAAAAAAOD2rGL0Wcbo1wcAAAAAbGP3FwAAAAAAABjpez1KAAAAAKCxnnXHFnsXdjcAAN7bko3kJwAAjso6o+isZwAAAACIJWutEQCAfmREAAAAAAAAAAAAAAAAAAAqsT8L873xfQgAAAAk43lrMN4r33cAFKA\/TXUyGwAAAEAbP6izAAAAQbTYAbZHDACwLnOFAAAAAAAAAAAAAAAAAADQjv1dAAAAAAAAgLn0bQGAil7KOAAAZRzJdvJgXw+f66u+CAAwx6UcJpsBAJXsqfGpB+bwxtcJAAAAoLyjtTo1vo\/7vfq\/AAAAAGSjzgcAkJ9MBwAA7ZgDBABY19EsKEMCAKxLFgQARjszL2jWEAAAxvOsDwAAAAAAAMhj65ydebx89vZu7YsAwHqiZbxo1zOKmTsAIKKe2WzV3AcAQB1qegBAVGpvAACMIHcCAAAAwBrUAgGAyP4rqwAAhbTKNn+ZnJFkNAAAAACAOKLPAD4Pfn0AAABATebcYLyjtUA1RACIR54GAKqavZ\/LmqLP+J2htgcAbajHraFyLgQAWIVM9zE1QgCAGp7KdfIeAACw1V\/9\/wHgqlv7LOYIAQA4Qo4EAID97Iawst96\/wOTtKhjVa2FORsRAIgqc06pmh0BALKT0wAAmGVLFpVXgSzMAQIAAHBE5plAAAA+NqO\/KVPW8BNfRwBYlhk5AAAAAAAAALLR6wYAAAAAAAC4bU9vVR+2H+e6AMA6qmWqPecMVrv3LeQ8AOCoFbMTAABr2VpblI0BgJXJQgAA\/clccfna7PfKawYAAADQxKX5tkz1qkzXynVqfgAAAAD5qdfN4QxAAAAAAKra83yQa6rVLlevCZo3BIBtqmUgAABgrgh1uTcBrmE1X3rNAU5r1fNsYcu17K0rqkPWESHvAQAAAFCfmmIsveqC6o0AADnJcQAAAAD0FmnPhsvUCQFgPxmHEeQ0AMjD3gQAADCS2iEAwNrkQQCgJf1uAIBz5CkAgBjkMgAAAAAAAAAAAABGcw4MAAAAAAAAAAAAAAAAAAAAAAAAcMv\/AaTM\/MA=",
          "encoding":"base64",
          "height":384,
          "id":30,
@@ -344,6 +344,7 @@
          "name":"music",
          "objects":[
                 {
+                 "class":"",
                  "height":0,
                  "id":265,
                  "name":"",
@@ -479,13 +480,13 @@
                          "value":"beach"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":1440,
                  "y":1920
                 }, 
                 {
+                 "class":"",
                  "height":144,
                  "id":266,
                  "name":"",
@@ -496,7 +497,6 @@
                          "value":"codingroom"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":192,
                  "x":6400,
@@ -514,6 +514,7 @@
          "name":"warps",
          "objects":[
                 {
+                 "class":"",
                  "height":64,
                  "id":285,
                  "name":"",
@@ -529,7 +530,6 @@
                          "value":"mudwich"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":64,
                  "x":1472,
@@ -547,28 +547,29 @@
          "name":"doors",
          "objects":[
                 {
+                 "class":"",
                  "height":16,
                  "id":223,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6448,
                  "y":416
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":241,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":9072,
                  "y":640
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":242,
                  "name":"",
@@ -589,24 +590,24 @@
                          "value":1
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":9136,
                  "y":208
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":243,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":8688,
                  "y":64
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":244,
                  "name":"",
@@ -627,13 +628,13 @@
                          "value":5
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":9184,
                  "y":832
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":245,
                  "name":"",
@@ -654,13 +655,13 @@
                          "value":9
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":8640,
                  "y":224
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":246,
                  "name":"",
@@ -671,13 +672,13 @@
                          "value":0
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":8288,
                  "y":576
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":247,
                  "name":"",
@@ -698,13 +699,13 @@
                          "value":13
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":8240,
                  "y":592
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":251,
                  "name":"",
@@ -715,13 +716,13 @@
                          "value":252
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":5776,
                  "y":512
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":252,
                  "name":"",
@@ -732,13 +733,13 @@
                          "value":251
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":2704,
                  "y":3456
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":253,
                  "name":"",
@@ -749,13 +750,13 @@
                          "value":254
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6496,
                  "y":496
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":254,
                  "name":"",
@@ -766,13 +767,13 @@
                          "value":253
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":1408,
                  "y":320
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":255,
                  "name":"",
@@ -788,13 +789,13 @@
                          "value":258
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":1232,
                  "y":32
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":256,
                  "name":"",
@@ -805,13 +806,13 @@
                          "value":257
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":256,
                  "y":1392
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":257,
                  "name":"",
@@ -822,13 +823,13 @@
                          "value":256
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":2368,
                  "y":5792
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":258,
                  "name":"",
@@ -839,13 +840,13 @@
                          "value":255
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":2848,
                  "y":4864
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":259,
                  "name":"",
@@ -856,13 +857,13 @@
                          "value":260
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3264,
                  "y":4816
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":260,
                  "name":"",
@@ -873,13 +874,13 @@
                          "value":259
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3216,
                  "y":4880
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":261,
                  "name":"",
@@ -895,13 +896,13 @@
                          "value":262
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":272,
                  "y":144
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":262,
                  "name":"",
@@ -917,13 +918,13 @@
                          "value":261
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":2640,
                  "y":4864
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":267,
                  "name":"",
@@ -934,13 +935,13 @@
                          "value":270
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":7696,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":268,
                  "name":"",
@@ -951,13 +952,13 @@
                          "value":269
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":7152,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":269,
                  "name":"",
@@ -968,13 +969,13 @@
                          "value":268
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":1360,
                  "y":976
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":270,
                  "name":"",
@@ -985,13 +986,13 @@
                          "value":267
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":1648,
                  "y":848
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":271,
                  "name":"",
@@ -1002,13 +1003,13 @@
                          "value":272
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":448,
                  "y":1728
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":272,
                  "name":"",
@@ -1019,13 +1020,13 @@
                          "value":271
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3008,
                  "y":5920
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":276,
                  "name":"",
@@ -1036,13 +1037,13 @@
                          "value":277
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":1152,
                  "y":2032
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":277,
                  "name":"",
@@ -1058,13 +1059,13 @@
                          "value":276
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":4128,
                  "y":4688
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":278,
                  "name":"",
@@ -1075,13 +1076,13 @@
                          "value":279
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":976,
                  "y":2176
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":279,
                  "name":"",
@@ -1092,13 +1093,13 @@
                          "value":278
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3904,
                  "y":5040
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":283,
                  "name":"",
@@ -1109,13 +1110,13 @@
                          "value":284
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6080,
                  "y":1824
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":284,
                  "name":"",
@@ -1126,13 +1127,13 @@
                          "value":283
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6256,
                  "y":3344
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":287,
                  "name":"",
@@ -1143,13 +1144,13 @@
                          "value":288
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":5840,
                  "y":5088
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":288,
                  "name":"",
@@ -1160,13 +1161,13 @@
                          "value":287
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3088,
                  "y":624
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":289,
                  "name":"",
@@ -1177,13 +1178,13 @@
                          "value":290
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3056,
                  "y":1312
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":290,
                  "name":"",
@@ -1194,13 +1195,13 @@
                          "value":289
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":5920,
                  "y":5728
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":291,
                  "name":"",
@@ -1211,13 +1212,13 @@
                          "value":293
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":5728,
                  "y":1040
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":292,
                  "name":"",
@@ -1228,13 +1229,13 @@
                          "value":294
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6416,
                  "y":1056
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":293,
                  "name":"",
@@ -1245,13 +1246,13 @@
                          "value":291
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":2592,
                  "y":2608
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":294,
                  "name":"",
@@ -1262,13 +1263,13 @@
                          "value":292
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3792,
                  "y":2176
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":297,
                  "name":"",
@@ -1279,13 +1280,13 @@
                          "value":298
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6128,
                  "y":5376
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":298,
                  "name":"",
@@ -1296,13 +1297,13 @@
                          "value":297
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6208,
                  "y":5344
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":299,
                  "name":"",
@@ -1313,13 +1314,13 @@
                          "value":300
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6272,
                  "y":5328
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":300,
                  "name":"",
@@ -1330,13 +1331,13 @@
                          "value":299
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6384,
                  "y":5344
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":302,
                  "name":"",
@@ -1352,13 +1353,13 @@
                          "value":"ogreguardian"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6384,
                  "y":5232
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":303,
                  "name":"",
@@ -1369,7 +1370,6 @@
                          "value":302
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":4736,
@@ -1393,6 +1393,7 @@
          "name":"chest",
          "objects":[
                 {
+                 "class":"",
                  "height":16,
                  "id":273,
                  "name":"",
@@ -1408,7 +1409,6 @@
                          "value":"leatherarmor,morningstar,leatherarcherarmor,plasticbow"
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":3392,
@@ -1426,6 +1426,7 @@
          "name":"chests",
          "objects":[
                 {
+                 "class":"",
                  "height":48,
                  "id":248,
                  "name":"",
@@ -1451,13 +1452,13 @@
                          "value":10
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":80,
                  "x":224,
                  "y":192
                 }, 
                 {
+                 "class":"",
                  "height":32,
                  "id":249,
                  "name":"",
@@ -1478,13 +1479,13 @@
                          "value":106
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":64,
                  "x":1456,
                  "y":1728
                 }, 
                 {
+                 "class":"",
                  "height":80,
                  "id":250,
                  "name":"",
@@ -1505,13 +1506,13 @@
                          "value":69
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":112,
                  "x":2912,
                  "y":1072
                 }, 
                 {
+                 "class":"",
                  "height":48,
                  "id":282,
                  "name":"",
@@ -1532,7 +1533,6 @@
                          "value":182
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":80,
                  "x":3824,
@@ -1605,6 +1605,7 @@
          "name":"dynamic",
          "objects":[
                 {
+                 "class":"",
                  "height":32,
                  "id":274,
                  "name":"",
@@ -1620,35 +1621,35 @@
                          "value":275
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":1136,
                  "y":2032
                 }, 
                 {
+                 "class":"",
                  "height":32,
                  "id":275,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":48,
                  "x":10192,
                  "y":6112
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":280,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":10176,
                  "y":6128
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":281,
                  "name":"",
@@ -1664,13 +1665,13 @@
                          "value":280
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":5056,
                  "y":5824
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":295,
                  "name":"",
@@ -1686,18 +1687,17 @@
                          "value":296
                         }],
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":6384,
                  "y":5232
                 }, 
                 {
+                 "class":"",
                  "height":16,
                  "id":296,
                  "name":"",
                  "rotation":0,
-                 "type":"",
                  "visible":true,
                  "width":16,
                  "x":10160,
@@ -1713,7 +1713,7 @@
  "nextobjectid":304,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.0",
+ "tiledversion":"1.9.0",
  "tileheight":16,
  "tilesets":[
         {
@@ -8369,7 +8369,8 @@
                          "type":"string",
                          "value":"palm"
                         }]
-                }, 
+                },
+            
                 {
                  "id":2020,
                  "properties":[
@@ -14737,7 +14738,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":3905,
                  "properties":[
@@ -29692,7 +29694,8 @@
                 }, 
                 {
                  "id":639
-                }, 
+                },
+            
                 {
                  "id":640
                 }, 
@@ -32739,7 +32742,8 @@
                 }, 
                 {
                  "id":1279
-                }, 
+                },
+            
                 {
                  "id":1280,
                  "properties":[
@@ -35715,7 +35719,8 @@
                 }, 
                 {
                  "id":1919
-                }, 
+                },
+            
                 {
                  "id":1920,
                  "properties":[
@@ -39056,7 +39061,8 @@
                 }, 
                 {
                  "id":2559
-                }, 
+                },
+            
                 {
                  "id":2560,
                  "properties":[
@@ -42326,7 +42332,8 @@
                 }, 
                 {
                  "id":3199
-                }, 
+                },
+            
                 {
                  "id":3200
                 }, 
@@ -44282,7 +44289,8 @@
                 }, 
                 {
                  "id":3839
-                }, 
+                },
+            
                 {
                  "id":3840
                 }, 
@@ -48589,6 +48597,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.6",
+ "version":"1.9",
  "width":640
 }
