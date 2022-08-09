@@ -221,8 +221,9 @@ export default class Handler {
      * @param regions Contains the array of regions the player has recently left.
      */
 
-    private handleRecentRegions(recentRegions: number[]): void {
-        log.debug(`Sending despawn to recent regions: [${recentRegions.join(', ')}].`);
+    private handleRecentRegions(regions: number[]): void {
+        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+
         this.player.sendToRecentRegions(new Despawn(this.player.instance));
     }
 
