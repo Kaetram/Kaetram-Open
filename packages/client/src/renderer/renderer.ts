@@ -34,17 +34,6 @@ interface RendererCell {
     height: number;
 }
 
-interface Bounds {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-}
-
 interface RendererLight {
     origX: number;
     origY: number;

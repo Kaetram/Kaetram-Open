@@ -13,7 +13,7 @@ import Creator from '../database/mongodb/creator';
 import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
-import { Spawn, Update } from '../network/packets';
+import { Spawn } from '../network/packets';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
@@ -172,9 +172,16 @@ export default class Incoming {
         this.player.ready = true;
     }
 
+    /**
+     * Packet contains list of entity instances that the client is requesting to spawn. The client compares
+     * all the entities in the region to the entities it has spawned and the difference is sent here. The difference
+     * represents the entities that the client doesn't have spawned.
+     * @param message Contains a list of entity instances
+     */
+
     private handleWho(message: string[]): void {
-        _.each(message, (id: string) => {
-            let entity = this.entities.get(id);
+        _.each(message, (instance: string) => {
+            let entity = this.entities.get(instance);
 
             if (!entity || entity.dead) return;
 

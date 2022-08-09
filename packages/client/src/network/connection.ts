@@ -80,6 +80,8 @@ export default class Connection {
     private sprites: SpritesController;
     private messages: Messages;
 
+    private lastEntityListRequest = Date.now();
+
     /**
      * Connection controller keeps track of all the incoming packets
      * and reroutes them to their specific function for organization purposes.
@@ -282,7 +284,9 @@ export default class Connection {
         let player = this.entities.get<Player>(data.instance);
 
         // Invalid instance, player not found/not spawned.
-        if (!player || player.teleporting) return;
+        if (!player || player.teleporting || player.dead || !player.ready) return;
+
+        console.log('syncing...');
 
         player.load(data);
 
@@ -301,8 +305,20 @@ export default class Connection {
         let entity = this.entities.get<Character>(info.instance),
             target: Entity;
 
-        // Couldn't find and entity with the specified instance.
-        if (!entity) return;
+        /**
+         * We are receiving movement for an entity that doesn't exist,
+         * we need to request an entity list update to the server.
+         */
+        if (!entity) {
+            // Ensures packets are not spammed to the server.
+            if (!this.canRequestEntityList()) return;
+
+            // Update the last entity list request time.
+            this.lastEntityListRequest = Date.now();
+
+            // Request an entity list update from the server.
+            return this.socket.send(Packets.List);
+        }
 
         switch (opcode) {
             case Opcodes.Movement.Move:
@@ -408,6 +424,9 @@ export default class Connection {
 
         // Handle chest and animations here.
         if (entity.isChest()) return this.entities.removeChest(entity);
+
+        // Handle npc despawn here.
+        if (entity.isNPC()) return this.entities.removeNPC(entity);
 
         // Despawn the entity.
         entity.despawn();
@@ -788,7 +807,7 @@ export default class Connection {
             this.game.player.despawn();
 
             this.app.body.classList.add('death');
-        });
+        }, 200);
     }
 
     /**
@@ -1070,5 +1089,14 @@ export default class Connection {
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;
         });
+    }
+
+    /**
+     * Compares the epoch between the last entity list update request and current
+     * time. This is in order to prevent spams to the server and timeout.
+     */
+
+    private canRequestEntityList(): boolean {
+        return Date.now() - this.lastEntityListRequest > 2000; // every 2 seconds
     }
 }
