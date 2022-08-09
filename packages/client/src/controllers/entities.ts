@@ -373,7 +373,12 @@ export default class EntitiesController {
     public clean(): void {
         if (this.decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => this.removeEntity(entity));
+        _.each(this.decrepit, (entity: Entity) => {
+            // Prevent cleaning an entity that may have been removed from a differnet packet.
+            if (!entity) return;
+
+            this.removeEntity(entity);
+        });
     }
 
     /**
