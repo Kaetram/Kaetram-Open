@@ -55,6 +55,8 @@ import {
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
 type DoorCallback = (door: ProcessedDoor) => void;
+type RegionCallback = (region: number) => void;
+type RecentRegionsCallback = (regions: number[]) => void;
 export interface PlayerRegions {
     regions: string;
     gameVersion: string;
@@ -85,7 +87,7 @@ export default class Player extends Character {
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public abilities: Abilities = new Abilities(this);
 
-    private handler: Handler = new Handler(this);
+    public handler: Handler = new Handler(this);
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -145,6 +147,8 @@ export default class Player extends Character {
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
+    public regionCallback?: RegionCallback;
+    public recentRegionsCallback?: RecentRegionsCallback;
 
     private cheatScoreCallback?: () => void;
 
@@ -415,6 +419,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Synchronizes the player's client entity list and server entities in a region.
+     */
+
+    public updateEntityList(): void {
+        this.regions.sendEntities(this);
+    }
+
+    /**
      * Performs a teleport to a specified destination. We send a teleport packet
      * then proceed to update the player's position server-sided.
      * @param x The new x grid coordinate.
@@ -664,7 +676,19 @@ export default class Player extends Character {
 
     public override setRegion(region: number): void {
         super.setRegion(region);
+
         if (region !== -1) this.regionCallback?.(region);
+    }
+
+    /**
+     * Override for the recent region function with an added callback.
+     * @param regions The regions the player just left from.
+     */
+
+    public override setRecentRegions(regions: number[]): void {
+        super.setRecentRegions(regions);
+
+        if (regions.length > 0) this.recentRegionsCallback?.(regions);
     }
 
     /**
@@ -834,13 +858,9 @@ export default class Player extends Character {
      * @param packet Packet we are sending to the player.
      */
 
-    public sendToOldRegions(packet: Packet): void {
-        let [oldRegion] = this.oldRegions;
-
-        if (!oldRegion) return;
-
-        this.world.push(PacketType.Regions, {
-            region: oldRegion,
+    public sendToRecentRegions(packet: Packet): void {
+        this.world.push(PacketType.RegionList, {
+            list: this.recentRegions,
             packet
         });
     }
@@ -1105,5 +1125,24 @@ export default class Player extends Character {
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
+    }
+
+    /**
+     * Callback whenever the entity's region changes.
+     * @param callback Contains the new region the entity is in.
+     */
+
+    public onRegion(callback: RegionCallback): void {
+        this.regionCallback = callback;
+    }
+
+    /**
+     * Callback for when the regions the player just left from
+     * are updated.
+     * @param callback Contains the regions the player just left from.
+     */
+
+    public onRecentRegions(callback: RecentRegionsCallback): void {
+        this.recentRegionsCallback = callback;
     }
 }

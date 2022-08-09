@@ -290,6 +290,8 @@ export default class EntitiesController {
         this.entities[entity.instance] = entity;
         this.registerPosition(entity);
 
+        console.log(`Added entity: ${entity.instance}`);
+
         if (!(entity instanceof Item && entity.dropped)) entity.fadeIn(this.game.time);
     }
 
@@ -301,6 +303,8 @@ export default class EntitiesController {
 
     public removeEntity(entity: Entity): void {
         this.unregisterPosition(entity);
+
+        console.trace(`Removing entity: ${entity.instance}`);
 
         delete this.entities[entity.instance];
     }
@@ -329,6 +333,20 @@ export default class EntitiesController {
             this.unregisterPosition(chest);
 
             delete this.entities[chest.instance];
+        });
+    }
+
+    /**
+     * Removes an NPC from the game and plays the death animation.
+     * @param npc The NPC we are removing.
+     */
+
+    public removeNPC(npc: NPC): void {
+        npc.setSprite(this.game.sprites.getDeath());
+        npc.animateDeath(() => {
+            this.unregisterPosition(npc);
+
+            delete this.entities[npc.instance];
         });
     }
 
