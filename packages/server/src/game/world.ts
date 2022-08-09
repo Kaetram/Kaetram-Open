@@ -29,6 +29,7 @@ export interface PacketData {
     player?: Player;
     ignore?: string;
     region?: number;
+    list?: number[];
 }
 
 type ConnectionCallback = (connection: Connection) => void;
@@ -104,6 +105,13 @@ export default class World {
             case PacketType.Regions:
                 return this.network.sendToSurroundingRegions(
                     data.region as number,
+                    data.packet,
+                    data.ignore
+                );
+
+            case PacketType.RegionList:
+                return this.network.sendToRegionList(
+                    data.list as number[],
                     data.packet,
                     data.ignore
                 );

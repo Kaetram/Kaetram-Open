@@ -58,7 +58,8 @@
   },
 
   "lavanpc": {
-    "name": "Dying Man"
+    "name": "Dying Soldier",
+    "text": ["Please adventurer, beware of what lays ahead."]
   },
 
   "boxingman": {

@@ -42,7 +42,6 @@ export default class Regions {
 
     public constructor(private map: Map) {
         this.world = map.world;
-
         // Division size must be evenly divisble by the map's width and height.
         this.divisionSize = Modules.Constants.MAP_DIVISION_SIZE;
 
@@ -144,9 +143,11 @@ export default class Regions {
 
             this.joining(entity, region);
 
-            entity.oldRegions = this.remove(entity);
+            let oldRegions = this.remove(entity),
+                newRegions = this.enter(entity, region);
 
-            this.enter(entity, region);
+            // Update the recently left regions to the entity.
+            entity.setRecentRegions(_.difference(oldRegions, newRegions));
         }
 
         return isNewRegion;
@@ -273,11 +274,16 @@ export default class Regions {
      */
 
     public sendJoining(region: number): void {
-        // Synchronizes the display info for each entity and updates the list of entities.
-        this.regions[region].forEachPlayer((player: Player) => {
-            this.sendDisplayInfo(player);
-            this.sendEntities(player);
+        this.regions[region].forEachJoining((entity: Entity) => {
+            this.world.push(Modules.PacketType.Regions, {
+                region,
+                ignore: entity.isPlayer() ? entity.instance : '',
+                packet: new Spawn(entity)
+            });
         });
+
+        // Synchronizes the display info for each entity and updates the list of entities.
+        this.regions[region].forEachPlayer((player: Player) => this.sendDisplayInfo(player));
     }
 
     /**

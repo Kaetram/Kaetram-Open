@@ -66,6 +66,8 @@ export default abstract class Entity {
     public normalSprite!: Sprite;
     public hurtSprite!: Sprite;
 
+    public ready = false;
+
     private readyCallback?(): void;
 
     public attackRange!: number;
