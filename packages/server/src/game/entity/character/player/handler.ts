@@ -91,8 +91,14 @@ export default class Handler {
 
         // Cheat-score callback
         this.player.onCheatScore(this.handleCheatScore.bind(this));
+    }
 
-        // Update interval callback
+    /**
+     * Called after receiving the ready backet. Signals to the handler that we should
+     * start loading our update interval timer.
+     */
+
+    public startUpdateInterval(): void {
         this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
     }
 
@@ -185,6 +191,9 @@ export default class Handler {
 
     private handleMovement(x: number, y: number): void {
         this.map.regions.handle(this.player);
+
+        // Prevent out of bounds (placeholder coordinates) from being processed.
+        if (this.map.isOutOfBounds(x, y)) return;
 
         this.detectAggro();
         this.detectAreas(x, y);
