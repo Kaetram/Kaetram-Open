@@ -11,7 +11,8 @@ export enum PacketType {
     Broadcast,
     Player,
     Region,
-    Regions
+    Regions,
+    RegionList
 }
 
 export enum ContainerType {
