@@ -151,6 +151,8 @@ export default class Incoming {
         this.player.updateRegion();
         this.player.updateEntities();
 
+        this.player.handler.startUpdateInterval();
+
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
