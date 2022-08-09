@@ -776,6 +776,8 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        this.game.player.teleporting = true;
+
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
 
@@ -866,6 +868,7 @@ export default class Connection {
         this.entities.addEntity(this.game.player);
 
         this.game.player.dead = false;
+        this.game.player.teleporting = false;
     }
 
     /**
