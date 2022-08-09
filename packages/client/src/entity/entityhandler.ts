@@ -46,6 +46,8 @@ export default class EntityHandler {
         });
 
         this.entity.onStopPathing(() => this.sendMovement());
+
+        this.entity.ready = true;
     }
 
     public setGame(game: Game): void {

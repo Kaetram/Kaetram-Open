@@ -58,6 +58,7 @@ export default class Handler {
 
         // Region callback
         this.player.onRegion(this.handleRegion.bind(this));
+        this.player.onRecentRegions(this.handleRecentRegions.bind(this));
 
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
@@ -212,10 +213,17 @@ export default class Handler {
 
         this.handleLights(region);
 
-        this.map.regions.sendEntities(this.player);
+        this.player.updateEntityList();
+    }
 
-        // Signal to the region we just left from to despawn us.
-        this.player.sendToOldRegions(new Despawn(this.player.instance));
+    /**
+     * Sends a despawn packet to the regions the player has recently left.
+     * @param regions Contains the array of regions the player has recently left.
+     */
+
+    private handleRecentRegions(recentRegions: number[]): void {
+        log.debug(`Sending despawn to recent regions: [${recentRegions.join(', ')}].`);
+        this.player.sendToRecentRegions(new Despawn(this.player.instance));
     }
 
     /**
