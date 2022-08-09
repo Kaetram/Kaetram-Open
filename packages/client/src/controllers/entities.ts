@@ -290,8 +290,6 @@ export default class EntitiesController {
         this.entities[entity.instance] = entity;
         this.registerPosition(entity);
 
-        console.log(`Added entity: ${entity.instance}`);
-
         if (!(entity instanceof Item && entity.dropped)) entity.fadeIn(this.game.time);
     }
 
@@ -303,8 +301,6 @@ export default class EntitiesController {
 
     public removeEntity(entity: Entity): void {
         this.unregisterPosition(entity);
-
-        console.trace(`Removing entity: ${entity.instance}`);
 
         delete this.entities[entity.instance];
     }

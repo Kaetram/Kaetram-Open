@@ -286,8 +286,6 @@ export default class Connection {
         // Invalid instance, player not found/not spawned.
         if (!player || player.teleporting || player.dead || !player.ready) return;
 
-        console.log('syncing...');
-
         player.load(data);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
