@@ -38,7 +38,7 @@ export default class Projectile extends Entity {
         return 1;
     }
 
-    public override getTimeDiff(): number {
+    public getTimeDiff(): number {
         return (Date.now() - this.lastUpdate) / 1000;
     }
 

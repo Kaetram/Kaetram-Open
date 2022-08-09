@@ -11,38 +11,41 @@ export default class EntityHandler {
 
     public constructor(private entity: Character) {}
 
-    public load(): void {
-        let { entity, game, entities } = this;
+    public load(game: Game): void {
+        this.setGame(game);
 
-        if ((!entity || !game) && !(entity instanceof Character)) return;
+        if ((!this.entity || !game) && !(this.entity instanceof Character)) return;
 
-        entity.onRequestPath((x, y) => {
-            if (entity.gridX === x && entity.gridY === y) return [];
+        this.entity.onRequestPath((x, y) => {
+            if (this.entity.gridX === x && this.entity.gridY === y) return [];
 
-            return game.findPath(entity, x, y);
+            return game.findPath(this.entity, x, y);
         });
 
-        entity.onBeforeStep(() => entities.unregisterPosition(entity));
+        this.entity.onBeforeStep(() => this.entities.unregisterPosition(this.entity));
 
-        entity.onStep(() => {
-            entities.registerPosition(entity);
+        this.entity.onStep(() => {
+            this.entities.registerPosition(this.entity);
 
-            entity.forEachAttacker((attacker: Character) => {
+            this.entity.forEachAttacker((attacker: Character) => {
                 if (!attacker.target) return;
 
-                if (attacker.target.instance !== entity.instance)
-                    return entity.removeAttacker(attacker);
+                if (attacker.target.instance !== this.entity.instance)
+                    return this.entity.removeAttacker(attacker);
 
-                attacker.follow(entity);
+                attacker.follow(this.entity);
             });
 
             this.sendMovement();
 
-            if (entity.hasTarget() && entity.getDistance(entity.target!) <= entity.attackRange)
-                entity.stop(true);
+            if (
+                this.entity.hasTarget() &&
+                this.entity.getDistance(this.entity.target!) <= this.entity.attackRange
+            )
+                this.entity.stop(true);
         });
 
-        entity.onStopPathing(() => this.sendMovement());
+        this.entity.onStopPathing(() => this.sendMovement());
     }
 
     public setGame(game: Game): void {

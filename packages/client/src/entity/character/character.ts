@@ -60,12 +60,10 @@ export default class Character extends Entity {
 
     public forced!: boolean;
 
-    public handler: EntityHandler;
+    public handler: EntityHandler = new EntityHandler(this);
 
     public constructor(instance: string, type: Modules.EntityType) {
         super(instance, type);
-
-        this.handler = new EntityHandler(this);
 
         this.loadAnimations();
     }
@@ -116,34 +114,38 @@ export default class Character extends Entity {
         });
     }
 
-    public animate(animation: string, speed: number, count = 1, onEndCount?: () => void): void {
+    /**
+     * An override of the superclass function with added functionality and cases
+     * for characters. Since characters have a orientation, we must handle the
+     * 'directionality' of the animation sprite.
+     * @param name The name of the animation to play.
+     * @param speed The speed at which the animation takes to play (in ms).
+     * @param count The amount of times the animation should play.
+     * @param onEndCount A function to be called upon animation completion.
+     */
+
+    public override setAnimation(
+        name: string,
+        speed = 120,
+        count = 1,
+        onEndCount?: () => void
+    ): void {
         let o = ['atk', 'walk', 'idle'];
 
+        // Do not perform another animation while the death one is playing.
         if (this.animation?.name === 'death') return;
 
         this.spriteFlipX = false;
         this.spriteFlipY = false;
 
-        if (o.includes(animation)) {
-            animation += `_${
+        if (o.includes(name)) {
+            name += `_${
                 this.orientation === Modules.Orientation.Left ? 'right' : this.orientationToString()
             }`;
             this.spriteFlipX = this.orientation === Modules.Orientation.Left;
         }
 
-        this.setAnimation(animation, speed, count, onEndCount);
-    }
-
-    /**
-     * Animates the character's death animation and
-     * creates a callback if needed.
-     * @param callback Optional parameter for when the animation finishes.
-     * @param speed Optional parameter for the animation speed.
-     * @param count How many times to repeat the animation.
-     */
-
-    public override animateDeath(callback?: () => void, speed = 120, count = 1): void {
-        this.animate('death', speed, count, callback);
+        super.setAnimation(name, speed, count, onEndCount);
     }
 
     /**
@@ -158,6 +160,10 @@ export default class Character extends Entity {
             this.sprite = this.normalSprite;
         }, 75);
     }
+
+    /**
+     * Declares the entity dead and stops all pathing.
+     */
 
     public despawn(): void {
         this.hitPoints = 0;
@@ -231,19 +237,19 @@ export default class Character extends Entity {
 
         switch (action) {
             case Modules.Actions.Idle:
-                this.animate('idle', this.idleSpeed);
+                this.setAnimation('idle', this.idleSpeed);
                 break;
 
             case Modules.Actions.Orientate:
-                this.animate('idle', this.idleSpeed);
+                this.setAnimation('idle', this.idleSpeed);
                 break;
 
             case Modules.Actions.Attack:
-                this.animate('atk', this.attackAnimationSpeed, 1);
+                this.setAnimation('atk', this.attackAnimationSpeed, 1);
                 break;
 
             case Modules.Actions.Walk:
-                this.animate('walk', this.walkAnimationSpeed);
+                this.setAnimation('walk', this.walkAnimationSpeed);
                 break;
         }
     }
@@ -526,15 +532,11 @@ export default class Character extends Entity {
         _.each(this.attackers, (attacker) => callback(attacker));
     }
 
-    public override hasWeapon(): boolean {
-        return false;
-    }
-
     public override hasShadow(): boolean {
         return true;
     }
 
-    public override hasPath(): boolean {
+    public hasPath(): boolean {
         return this.path !== null;
     }
 

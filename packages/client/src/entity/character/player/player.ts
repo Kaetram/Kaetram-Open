@@ -106,21 +106,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Loads the player handler and sets the game instance to
-     * the current player object.
-     * @param game The game instance object controlling the game.
-     */
-
-    public loadHandler(game: Game): void {
-        /**
-         * This is for other player characters
-         */
-
-        this.handler.setGame(game);
-        this.handler.load();
-    }
-
-    /**
      * Loads a batch of skills into the player's skill list.
      * @param skills Contains skill type, experience, and level
      * for each skill we are loading.
@@ -334,7 +319,7 @@ export default class Player extends Character {
      * @returns Whether or not the current weapon's key isn't an empty string.
      */
 
-    public override hasWeapon(): boolean {
+    public hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
     }
 
