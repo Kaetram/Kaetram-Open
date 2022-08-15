@@ -16,6 +16,8 @@ import Projectile from '../game/entity/objects/projectile';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 
+import { ProcessedArea } from '@kaetram/common/types/map';
+
 export default class Entities {
     private map: Map;
 
@@ -45,8 +47,15 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chest, (info) => {
-            this.spawnChest(info.items?.split(',') || [], info.x, info.y, true, info.achievement);
+        _.each(this.map.chest, (info: ProcessedArea) => {
+            this.spawnChest(
+                info.items?.split(',') || [],
+                info.x,
+                info.y,
+                true,
+                info.achievement,
+                info.mimic
+            );
         });
 
         log.info(`Spawned ${this.collections.chests.length} static chests!`);
@@ -109,9 +118,10 @@ export default class Entities {
         x: number,
         y: number,
         isStatic = false,
-        achievement?: string
+        achievement?: string,
+        mimic = false
     ): Chest {
-        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement });
+        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement, mimic });
     }
 
     /**
