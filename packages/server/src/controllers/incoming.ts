@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 
 import config from '@kaetram/common/config';
@@ -274,14 +274,6 @@ export default class Incoming {
                 if (!entity) return;
 
                 entity.setPosition(requestX!, requestY!);
-
-                break;
-
-            case Opcodes.Movement.Orientate:
-                log.debug(`Unhandled Movement.Orientate: ${this.player.username}.`);
-                // this.player.sendToRegions(
-                //     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
-                // );
 
                 break;
 
