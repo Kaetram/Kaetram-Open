@@ -108,10 +108,17 @@ export default class MongoDB {
 
     public deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
         let collection = this.database.collection(collectionName);
-        collection.drop().then((success) => {
-            callback(
-                !success ? new Error(`Could not drop collection [${collectionName}]`) : undefined
-            );
-        });
+        collection
+            .drop()
+            .then((success) => {
+                callback(
+                    !success
+                        ? new Error(`Could not drop collection [${collectionName}]`)
+                        : undefined
+                );
+            })
+            .catch(function () {
+                callback(new Error(`Could not drop collection [${collectionName}]`));
+            });
     }
 }
