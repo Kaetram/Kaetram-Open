@@ -805,7 +805,7 @@ export default class Connection {
             this.game.player.despawn();
 
             this.app.body.classList.add('death');
-        }, 200);
+        });
     }
 
     /**
@@ -957,20 +957,13 @@ export default class Connection {
     }
 
     /**
-     * Updates the PVP status of an entity or our own player character.
-     * @param instance Used to identify which entity to update.
-     * @param state The state of the PVP.
+     * Updates the pvp flag for our client. The actual PVP attacking is handled
+     * server-sided. This just allows the client to target another player.
+     * @param info Contains the instance and pvp status of an entity.
      */
 
     private handlePVP(info: PVPPacket): void {
-        if (info.instance === this.game.player.instance) {
-            this.game.pvp = info.state;
-            return;
-        }
-
-        let entity = this.entities.get<Player>(info.instance);
-
-        if (entity) entity.pvp = info.state;
+        this.game.pvp = info.state;
     }
 
     /**

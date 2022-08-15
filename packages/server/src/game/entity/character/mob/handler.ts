@@ -84,6 +84,8 @@ export default class Handler {
             attacker.killCallback?.(this.mob);
         }
 
+        this.mob.combat.stop();
+
         // Remove entity from chest area.
         this.mob.area?.removeEntity(this.mob, attacker);
 

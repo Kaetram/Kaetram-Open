@@ -129,16 +129,19 @@ export default class Handler {
      * Callback for when the player dies.
      */
 
-    private handleDeath(): void {
+    private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+
+        if (attacker) {
+            attacker.clearTarget();
+            attacker.removeAttacker(this.player);
+        }
 
         // Remove the poison status.
         this.player.setPoison();
 
         this.player.skills.stop();
         this.player.combat.stop();
-
-        this.world.cleanCombat(this.player);
 
         // Send death packet only to the player.
         this.player.send(new Death(this.player.instance));
