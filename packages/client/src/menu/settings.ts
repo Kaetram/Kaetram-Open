@@ -2,30 +2,38 @@ import Menu from './menu';
 import Game from '../game';
 
 export default class Settings extends Menu {
-    private volumeSlider: HTMLInputElement = document.querySelector('#volume')!;
-    private sfxSlider: HTMLInputElement = document.querySelector('#sfx')!;
+    private musicSlider: HTMLInputElement = document.querySelector('#music')!;
+    private soundSlider: HTMLInputElement = document.querySelector('#sound')!;
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;
 
-    private soundCheckbox: HTMLInputElement = document.querySelector('#sound-check > input')!;
-    private lowPowerCheckbox: HTMLInputElement = document.querySelector(
-        '#low-power-check > input'
+    private audioEnabledCheckbox: HTMLInputElement = document.querySelector(
+        '#audio-enabled-checkbox > input'
     )!;
-    private debugCheckbox: HTMLInputElement = document.querySelector('#debug-check > input')!;
-    private nameCheckbox: HTMLInputElement = document.querySelector('#name-check > input')!;
-    private levelCheckbox: HTMLInputElement = document.querySelector('#level-check > input')!;
+    private lowPowerCheckbox: HTMLInputElement = document.querySelector(
+        '#low-power-checkbox > input'
+    )!;
+    private debugCheckbox: HTMLInputElement = document.querySelector(
+        '#debug-mode-checkbox > input'
+    )!;
+    private showNamesCheckbox: HTMLInputElement = document.querySelector(
+        '#show-names-checkbox > input'
+    )!;
+    private showLevelsCheckbox: HTMLInputElement = document.querySelector(
+        '#show-levels-checkbox > input'
+    )!;
 
     public constructor(private game: Game) {
         super('#settings-page', undefined, '#settings-button');
 
-        this.volumeSlider.addEventListener('input', this.handleVolume.bind(this));
-        this.sfxSlider.addEventListener('input', this.handleSFX.bind(this));
+        this.musicSlider.addEventListener('input', this.handleMusic.bind(this));
+        this.soundSlider.addEventListener('input', this.handleSoundVolume.bind(this));
         this.brightnessSlider.addEventListener('input', this.handleBrightness.bind(this));
 
-        this.soundCheckbox.addEventListener('change', this.handleSound.bind(this));
+        this.audioEnabledCheckbox.addEventListener('change', this.handleAudioEnabled.bind(this));
         this.lowPowerCheckbox.addEventListener('change', this.handleLowPower.bind(this));
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
-        this.nameCheckbox.addEventListener('change', this.handleName.bind(this));
-        this.levelCheckbox.addEventListener('change', this.handleLevel.bind(this));
+        this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
+        this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
 
         this.load();
     }
@@ -40,15 +48,15 @@ export default class Settings extends Menu {
     private load(): void {
         let settings = this.game.storage.getSettings();
 
-        this.volumeSlider.value = settings.music.toString();
-        this.sfxSlider.value = settings.sfx.toString();
+        this.musicSlider.value = settings.musicVolume.toString();
+        this.soundSlider.value = settings.soundVolume.toString();
         this.brightnessSlider.value = settings.brightness.toString();
 
-        this.soundCheckbox.checked = settings.soundEnabled;
+        this.audioEnabledCheckbox.checked = settings.audioEnabled;
         this.lowPowerCheckbox.checked = settings.lowPowerMode;
-        this.debugCheckbox.checked = settings.debug;
-        this.nameCheckbox.checked = settings.showNames;
-        this.levelCheckbox.checked = settings.showLevels;
+        this.debugCheckbox.checked = settings.debugMode;
+        this.showNamesCheckbox.checked = settings.showNames;
+        this.showLevelsCheckbox.checked = settings.showLevels;
 
         // Update brightness value.
         this.handleBrightness();
@@ -65,19 +73,20 @@ export default class Settings extends Menu {
     }
 
     /**
-     * Handler for when the volume input slider changes, sets the value into the local storage.
+     * Handler for when the music input slider changes, sets the value into the local storage.
      */
 
-    private handleVolume(): void {
-        this.game.storage.setVolume(this.volumeSlider.valueAsNumber);
+    private handleMusic(): void {
+        this.game.storage.setMusicVolume(this.musicSlider.valueAsNumber);
+        this.game.audio.updateVolume();
     }
 
     /**
-     * Handler for when the SFX slider changes, updates the value in the local storage.
+     * Handler for when the Sound slider changes, updates the value in the local storage.
      */
 
-    private handleSFX(): void {
-        this.game.storage.setSFX(this.sfxSlider.valueAsNumber);
+    private handleSoundVolume(): void {
+        this.game.storage.setSoundVolume(this.soundSlider.valueAsNumber);
     }
 
     /**
@@ -94,8 +103,9 @@ export default class Settings extends Menu {
      * Handler for when the sound checkbox is toggled.
      */
 
-    private handleSound(): void {
-        this.game.storage.setSoundEnabled(this.soundCheckbox.checked);
+    private handleAudioEnabled(): void {
+        this.game.storage.setAudioEnabled(this.audioEnabledCheckbox.checked);
+        this.game.audio.updateVolume();
     }
 
     /**
@@ -129,8 +139,8 @@ export default class Settings extends Menu {
      */
 
     private handleName(): void {
-        this.game.storage.setShowNames(this.nameCheckbox.checked);
-        this.game.renderer.drawNames = this.nameCheckbox.checked;
+        this.game.storage.setShowNames(this.showNamesCheckbox.checked);
+        this.game.renderer.drawNames = this.showNamesCheckbox.checked;
     }
 
     /**
@@ -138,7 +148,7 @@ export default class Settings extends Menu {
      */
 
     private handleLevel(): void {
-        this.game.storage.setShowLevels(this.levelCheckbox.checked);
-        this.game.renderer.drawLevels = this.levelCheckbox.checked;
+        this.game.storage.setShowLevels(this.showLevelsCheckbox.checked);
+        this.game.renderer.drawLevels = this.showLevelsCheckbox.checked;
     }
 }
