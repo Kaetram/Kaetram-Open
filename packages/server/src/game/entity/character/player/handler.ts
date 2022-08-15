@@ -138,6 +138,8 @@ export default class Handler {
         this.player.skills.stop();
         this.player.combat.stop();
 
+        this.world.cleanCombat(this.player);
+
         // Send death packet only to the player.
         this.player.send(new Death(this.player.instance));
 
