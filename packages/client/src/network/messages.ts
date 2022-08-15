@@ -30,7 +30,7 @@ import type {
     HealCallback,
     ExperienceCallback,
     DeathCallback,
-    AudioCallback,
+    MusicCallback,
     NPCCallback,
     RespawnCallback,
     EnchantCallback,
@@ -75,7 +75,7 @@ export default class Messages {
     private healCallback?: HealCallback;
     private experienceCallback?: ExperienceCallback;
     private deathCallback?: DeathCallback;
-    private audioCallback?: AudioCallback;
+    private musicCallback?: MusicCallback;
     private npcCallback?: NPCCallback;
     private respawnCallback?: RespawnCallback;
     private enchantCallback?: EnchantCallback;
@@ -127,7 +127,7 @@ export default class Messages {
         messages[Packets.Heal] = () => this.healCallback;
         messages[Packets.Experience] = () => this.experienceCallback;
         messages[Packets.Death] = () => this.deathCallback;
-        messages[Packets.Audio] = () => this.audioCallback;
+        messages[Packets.Music] = () => this.musicCallback;
         messages[Packets.NPC] = () => this.npcCallback;
         messages[Packets.Respawn] = () => this.respawnCallback;
         messages[Packets.Enchant] = () => this.enchantCallback;
@@ -332,8 +332,8 @@ export default class Messages {
         this.deathCallback = callback;
     }
 
-    public onAudio(callback: AudioCallback): void {
-        this.audioCallback = callback;
+    public onMusic(callback: MusicCallback): void {
+        this.musicCallback = callback;
     }
 
     public onNPC(callback: NPCCallback): void {
