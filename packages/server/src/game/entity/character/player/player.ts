@@ -37,7 +37,7 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import {
-    Audio,
+    Music,
     Camera,
     Chat,
     Experience,
@@ -124,7 +124,7 @@ export default class Player extends Character {
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
     public lastRegionChange = Date.now();
 
-    private currentSong = '';
+    private currentSong: string | undefined;
 
     public regionsLoaded: number[] = [];
     public treesLoaded: { [instance: string]: Modules.TreeState } = {};
@@ -593,13 +593,13 @@ export default class Player extends Character {
      */
 
     public updateMusic(info?: Area): void {
-        let song = info?.song || '';
+        let song = info?.song;
 
         if (song === this.currentSong) return;
 
         this.currentSong = song;
 
-        this.send(new Audio(song));
+        this.send(new Music(song));
     }
 
     public revertPoints(): void {
@@ -658,7 +658,7 @@ export default class Player extends Character {
      * synced up to nearby players, this function sends a packet to the nearby region about
      * every movement. It also checks gainst no-clipping and player positionining. In the event
      * no clip is detected, we teleport the player to their old valid position. If the player
-     * is out of boudns (generally happens when a new character is created and x/y values are
+     * is out of bounds (generally happens when a new character is created and x/y values are
      * -1) we teleport them to their respective spawn point.
      * @param x The new grid x coordinate we are moving to.
      * @param y The new grd y coordinate we are moving to.
@@ -668,7 +668,7 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number, forced = false): void {
         if (this.dead) return;
 
-        // Check against noclipping by verifying the collision w/ dnyamic tiles.
+        // Check against noclipping by verifying the collision w/ dynamic tiles.
         if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
