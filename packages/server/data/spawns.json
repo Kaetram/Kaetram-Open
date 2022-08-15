@@ -40,10 +40,10 @@
       "watermelonbow": 100
     },
     "miniboss": true,
-    "level": 40,
+    "level": 36,
     "hitPoints": 350,
-    "attackLevel": 15,
-    "defenseLevel": 25,
+    "attackLevel": 8,
+    "defenseLevel": 18,
     "achievement": "waterguardian"
   },
 
@@ -61,5 +61,10 @@
     "experience": 120,
     "respawnDelay": 180000,
     "achievement": "ogreguardian"
+  },
+
+  "295-361": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems"
   }
 }

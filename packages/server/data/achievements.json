@@ -73,5 +73,11 @@
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
         "rewardExperience": 600
+    },
+
+    "notwhatitseems": {
+        "name": "Not What It Seems",
+        "description": "Discover a mimic.",
+        "rewardExperience": 1000
     }
 }
