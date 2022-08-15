@@ -36,18 +36,18 @@
     float: right;
 }
 
-#volume,
-#sfx,
+#music,
+#sound,
 #brightness {
     position: absolute;
 }
 
-#sound-check,
-#low-power-check,
-#debug-check,
-#centre-check,
-#name-check,
-#level-check {
+#audio-enabled-checkbox,
+#low-power-checkbox,
+#debug-mode-checkbox,
+#centre-checkbox,
+#show-names-checkbox,
+#show-levels-checkbox {
     left: 50%;
 }
 
@@ -58,11 +58,11 @@
             height: 30px * $i;
         }
 
-        #volume {
+        #music {
             top: 1px * $i;
         }
 
-        #sfx {
+        #sound {
             top: 20px * $i;
         }
 
@@ -86,23 +86,23 @@
             }
         }
 
-        #sound-check {
+        #audio-enabled-checkbox {
             top: 3px * $i;
         }
 
-        #low-power-check {
+        #low-power-checkbox {
             top: 23px * $i;
         }
 
-        #debug-check {
+        #debug-mode-checkbox {
             top: 44px * $i;
         }
 
-        #name-check {
+        #show-names-checkbox {
             top: 62px * $i;
         }
 
-        #level-check {
+        #show-levels-checkbox {
             top: 82px * $i;
         }
     }
