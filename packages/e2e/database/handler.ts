@@ -3,6 +3,7 @@
  * organize callbacks and events instead of clumping them all.
  */
 import MongoDB from '@kaetram/e2e/database/mongodb';
+import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { AnyError } from 'mongodb';
 
@@ -12,10 +13,11 @@ export default class Handler {
     public constructor() {
         let { NODE_ENV } = process.env;
         if (NODE_ENV !== 'e2e' || !config.mongodbDatabase.includes('e2e')) {
-            console.error(
+            log.error(
                 `Something is wrong with your configuration, your NODE_ENV is not set to 'e2e' or your database name does not include 'e2e'.
         This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`
             );
+
             throw new Error(
                 `Wrong input to run mongo test REST server. [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
             );

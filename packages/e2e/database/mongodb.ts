@@ -50,7 +50,7 @@ export default class MongoDB {
 
             this._isReady = true;
 
-            console.log('Successfully connected to the MongoDB server.');
+            log.notice('Successfully connected to the MongoDB server.');
         });
     }
 
