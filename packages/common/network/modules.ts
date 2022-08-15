@@ -154,11 +154,6 @@ export enum Keys {
     Minus = 189
 }
 
-export enum AudioTypes {
-    Music,
-    SFX
-}
-
 export enum HealTypes {
     Health,
     Mana,
