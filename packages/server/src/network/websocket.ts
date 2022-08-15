@@ -1,5 +1,5 @@
 import http from 'http';
-import ws, { Server as WSServer } from 'ws';
+import ws from 'ws';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -14,7 +14,7 @@ export type SocketType = 'WebSocket' | 'SocketIO';
 export default abstract class WebSocket {
     private version = config.gver;
 
-    public server!: Server | WSServer; // The SocketIO server
+    public server!: Server | ws.Server; // The SocketIO server
     public httpServer!: http.Server;
 
     public addCallback?: (connection: Connection) => void;

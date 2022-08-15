@@ -298,7 +298,7 @@ export let NameColours = {
     [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
     [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)',
-    [SpecialEntityTypes.Boss]: 'rgb(102, 0, 51)',
+    [SpecialEntityTypes.Boss]: 'rgb(150, 0, 51)',
     [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -25,7 +25,7 @@ export default class Character extends Entity {
     public movement = new Transition();
 
     private readonly attackAnimationSpeed = 50;
-    private readonly walkAnimationSpeed = 100;
+    private readonly walkAnimationSpeed = 120;
 
     public override nextGridX = -1;
     public override nextGridY = -1;
@@ -60,10 +60,12 @@ export default class Character extends Entity {
 
     public forced!: boolean;
 
-    public handler = new EntityHandler(this);
+    public handler: EntityHandler;
 
     public constructor(instance: string, type: Modules.EntityType) {
         super(instance, type);
+
+        this.handler = new EntityHandler(this);
 
         this.loadAnimations();
     }
@@ -208,6 +210,14 @@ export default class Character extends Entity {
 
     public removeAttacker(character: Character): void {
         delete this.attackers[character.instance];
+    }
+
+    /**
+     * @returns Whether or not the character has any attackers.
+     */
+
+    public hasAttackers(): boolean {
+        return Object.keys(this.attackers).length > 0;
     }
 
     /**
@@ -537,8 +547,6 @@ export default class Character extends Entity {
     }
 
     public removeTarget(): void {
-        if (this.target) this.target.targeted = false;
-
         this.target = null;
     }
 
@@ -552,7 +560,6 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
-        this.target.targeted = true;
     }
 
     public hasTarget(target?: Entity): boolean {

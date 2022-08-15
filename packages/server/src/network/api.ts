@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { json, urlencoded } from 'body-parser';
 import express from 'express';
 
 import config from '@kaetram/common/config';
@@ -41,8 +40,8 @@ export default class API {
 
         let app = express();
 
-        app.use(urlencoded({ extended: true }));
-        app.use(json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
 
         let router = express.Router();
 

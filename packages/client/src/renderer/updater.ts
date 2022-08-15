@@ -7,11 +7,13 @@ import Projectile from '../entity/objects/projectile';
 import SpritesController from '../controllers/sprites';
 
 export default class Updater {
-    private tileSize = this.game.map.tileSize;
+    private tileSize: number;
 
     private sprites: SpritesController | null = null;
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.tileSize = game.map.tileSize;
+    }
 
     public update(): void {
         this.updateEntities();

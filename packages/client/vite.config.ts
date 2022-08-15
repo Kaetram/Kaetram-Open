@@ -5,7 +5,6 @@ import config, { type Config } from '../common/config';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
 import { createHtmlPlugin } from 'vite-plugin-html';
-import compress from 'vite-plugin-compress';
 
 import { name, description } from '../../package.json';
 
@@ -55,9 +54,8 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     });
 }
 
-export default defineConfig(({ command, mode }) => {
-    console.log(`Loading vite defineConfig with [${command}, ${mode}]`);
-    let isProduction = command === 'build',
+export default defineConfig(({ mode }) => {
+    let isProduction = mode === 'production',
         env = loadEnv(isProduction);
 
     return {
@@ -96,21 +94,13 @@ export default defineConfig(({ command, mode }) => {
             legacy(),
             createHtmlPlugin({
                 minify: isProduction && { processScripts: ['application/ld+json'] }
-            }),
-            compress({
-                brotli: false,
-                pngquant: false
             })
         ],
         build: {
-            sourcemap: false,
+            sourcemap: true,
             chunkSizeWarningLimit: 4e3
         },
         server: { port: 9000 },
-        define: {
-            'window.config': env,
-            'process.env': {},
-            'import.meta.env': {}
-        }
+        define: { 'window.config': env }
     };
 });
