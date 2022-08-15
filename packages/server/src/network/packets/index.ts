@@ -22,7 +22,7 @@ export { default as Blink } from './blink';
 export { default as Heal } from './heal';
 export { default as Experience } from './experience';
 export { default as Death } from './death';
-export { default as Audio } from './audio';
+export { default as Music } from './music';
 export { default as NPC } from './npc';
 export { default as Enchant } from './enchant';
 export { default as Pointer } from './pointer';
