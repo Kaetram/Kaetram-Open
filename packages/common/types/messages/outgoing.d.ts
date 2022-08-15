@@ -295,8 +295,6 @@ export interface BubblePacket {
     instance: string;
     text: string;
     duration?: number;
-    x?: number;
-    y?: number;
 }
 
 export type BubbleCallback = (info: BubblePacket) => void;

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Utils from '@kaetram/common/util/utils';
 
@@ -56,7 +56,7 @@ export default class Mob extends Character {
     private handler?: MobHandler | DefaultPlugin;
 
     private respawnCallback?: () => void;
-    public forceTalkCallback?: (message: string) => void;
+    public talkCallback?: (message: string) => void;
     public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
@@ -99,6 +99,7 @@ export default class Mob extends Character {
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
+        this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
         this.poisonous = data.poisonous!;
         this.hiddenName = data.hiddenName!;
@@ -190,6 +191,8 @@ export default class Mob extends Character {
     public move(x: number, y: number): void {
         this.setPosition(x, y);
 
+        this.calculateOrientation();
+
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Movement(Opcodes.Movement.Move, {
@@ -218,6 +221,21 @@ export default class Mob extends Character {
         });
 
         return drops;
+    }
+
+    /**
+     * This function roughly calculates the orientation based on the old
+     * coordinates and the new coordinates. They do not matter much since
+     * orientation is only sent when an entity is created. This gives the
+     * effect to players entering new regions or just logging in that the
+     * entities aren't just standing still and all facing the same direction.
+     */
+
+    private calculateOrientation(): void {
+        if (this.oldX < this.x) this.setOrientation(Modules.Orientation.Right);
+        else if (this.oldX > this.x) this.setOrientation(Modules.Orientation.Left);
+        else if (this.oldY < this.y) this.setOrientation(Modules.Orientation.Down);
+        else if (this.oldY > this.y) this.setOrientation(Modules.Orientation.Up);
     }
 
     /**
@@ -418,12 +436,12 @@ export default class Mob extends Character {
     }
 
     /**
-     * A callback for when the mob is forced to display a speech bubble.
+     * A callback for when the mob is will display a chat bubble.
      * @param callback The message in a string format of what the mob says.
      */
 
-    public onForceTalk(callback: (message: string) => void): void {
-        this.forceTalkCallback = callback;
+    public onTalk(callback: (message: string) => void): void {
+        this.talkCallback = callback;
     }
 
     /**

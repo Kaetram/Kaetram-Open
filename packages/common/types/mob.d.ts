@@ -20,5 +20,6 @@ export interface MobData {
     roaming?: boolean;
     plugin?: string;
     achievement?: string;
+    boss?: boolean;
     miniboss?: boolean;
 }

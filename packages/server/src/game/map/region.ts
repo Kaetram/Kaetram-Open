@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';

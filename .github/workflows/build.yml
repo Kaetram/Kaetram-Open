@@ -20,11 +20,15 @@ jobs:
         steps:
             - name: Checkout on ${{ runner.os }}
               uses: actions/checkout@v3
+
             - name: Use Node.js v${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
+                  cache: 'yarn'
+
             - name: Install Dependencies
               run: yarn install
+
             - name: Build Packages
               run: yarn build
