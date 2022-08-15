@@ -1,111 +1,268 @@
-import _ from 'lodash-es';
-
 import { Modules } from '@kaetram/common/network';
 
-import log from '../lib/log';
-
 import Util from '../utils/util';
-import { isSafari } from '../utils/detect';
 
 import type Game from '../game';
-
-interface AudioElement extends HTMLAudioElement {
-    name: string;
-    fadingIn: number | null;
-    fadingOut: number | null;
-
-    cloneNode(deep?: boolean): AudioElement;
-}
-
-type Audibles = { [key: string]: AudioElement[] | null };
+import type Entity from '../entity/entity';
 
 export default class AudioController {
-    private audibles: Audibles = {};
-    private readonly format = 'mp3';
+    /** Duration for background music to fade in and out. */
+    private readonly musicCrossfadeDuration = 3; // Crossfade for 3 seconds.
 
-    public song!: AudioElement | null;
-    public newSong = '';
+    /** Minimum gain for background music. */
+    private readonly musicMinGain = 0.01;
+    /** Maximum gain for background music. */
+    private readonly musicMaxGain = 0.5;
 
-    private music: { [key: string]: boolean } = {};
-    private sounds: { [key: string]: boolean } = {};
+    /** Save audio buffers. */
+    private buffers: { [url: string]: Promise<AudioBuffer> } = {};
+
+    /** The main audio context. */
+    private context!: AudioContext;
+
+    /** Gain node used to fade in/out the background music */
+    private musicGainNode!: GainNode;
+    /** Make sure there's only one gain node for music. */
+    private isMusicConnected = false;
 
     public constructor(private game: Game) {}
 
-    public parse(path: 'music' | 'sounds', name: string, channels: number): void {
-        let { format, audibles, music, sounds } = this,
-            fullPath = `/audio/${path}/${name}.${format}`,
-            sound = document.createElement('audio') as AudioElement,
-            event = (): void => sound.removeEventListener('canplaythrough', event, false);
+    /**
+     * Plays a new sound.
+     * @param sound - The sound to play.
+     * @param target - The target to play the sound from.
+     * If not specified, the sound will be played nonspatially.
+     */
 
-        sound.addEventListener('canplaythrough', event, false);
+    public async playSound(sound: string, target?: Entity) {
+        if (!this.isAudioEnabled()) return;
 
-        sound.addEventListener(
-            'error',
-            () => {
-                log.error(`The audible: ${name} could not be loaded - unsupported extension?`);
+        let source = await this.bufferSource(`/audio/sounds/${sound}.mp3`),
+            soundVolume = this.getSoundVolume(),
+            node = source.connect(new GainNode(this.context, { gain: soundVolume }));
 
-                audibles[name] = null;
-            },
-            false
-        );
+        if (target && !this.getSettings().lowPowerMode) {
+            let { tileSize } = this.game.map;
 
-        sound.preload = 'auto';
-        sound.setAttribute('autobuffer', 'true');
-        sound.src = fullPath;
-        sound.name = name;
+            // Create and connect a panner node for spatial sounds
+            node = node.connect(
+                new PannerNode(this.context, {
+                    positionX: target.x,
+                    positionY: target.y,
+                    distanceModel: 'linear',
+                    refDistance: tileSize,
+                    maxDistance: tileSize * 10 // Maximum of 10 tiles.
+                })
+            );
+        }
 
-        sound.load();
+        node.connect(this.context.destination);
 
-        audibles[name] = [sound];
+        let { gain } = this.musicGainNode;
 
-        _.times(channels - 1, () => audibles[name]?.push(sound.cloneNode(true)));
+        // Make sure the music stays dampened with multiple concurrent sounds.
+        gain.cancelScheduledValues(this.context.currentTime);
 
-        if (name in music) music[name] = true;
-        else if (name in sounds) sounds[name] = true;
+        // Dampen the music by the sound volume.
+        this.rampGain(gain, gain.value - (soundVolume * this.musicMaxGain) / 2);
+
+        source.addEventListener('ended', () => {
+            this.rampGain(gain, this.getMusicVolume(), 0.5);
+        });
+
+        source.start();
     }
 
-    public play(type: Modules.AudioTypes, name: string): void {
-        let { game, sounds, music } = this;
+    /**
+     * Plays background music, replacing any currently playing music.
+     * @param music - The music to play. If not specified, it will stop the current music.
+     */
 
-        if (!this.isEnabled() || game.player.dead) return;
+    public async playMusic(music?: string) {
+        if (!music) return this.stopMusic();
 
-        if (isSafari()) return; // ?
+        let source = await this.bufferSource(`/audio/music/${music}.mp3`);
+        source.loop = true;
 
-        switch (type) {
-            case Modules.AudioTypes.Music: {
-                this.fadeOut(this.song, () => this.reset(this.song));
+        this.stopMusic();
+        source.connect(this.musicGainNode);
 
-                if (!music[name]) this.parse('music', name, 1);
+        if (this.isAudioEnabled()) this.musicGainNode.connect(this.context.destination);
 
-                let song = this.get(name);
+        this.rampGain(this.musicGainNode.gain, this.getMusicVolume(), this.musicCrossfadeDuration);
+        source.start();
+    }
 
-                if (!song) return;
+    /**
+     * Loads and saves the buffer of an audio source.
+     * @param url - The url of the audio to buffer.
+     * @returns The audio buffer source node.
+     */
 
-                song.volume = 0;
+    private async bufferSource(url: string) {
+        this.updateVolume();
 
-                song.play();
+        this.buffers[url] ??= this.loadAudio(url);
 
-                this.fadeIn(song);
+        return new AudioBufferSourceNode(this.context, {
+            buffer: await this.buffers[url]
+        });
+    }
 
-                this.song = song;
+    /**
+     * Loads and decodes an audio source into a buffer.
+     * @param url - The url of the audio to load.
+     * @returns The decoded audio source.
+     */
 
-                break;
+    private async loadAudio(url: string) {
+        let audio = await fetch(url),
+            arrayBuffer = await audio.arrayBuffer(),
+            audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+
+        return audioBuffer;
+    }
+
+    /**
+     * Updates the volume of the music.
+     * This is also where the audio context is initialized.
+     */
+
+    public updateVolume() {
+        // Lazily create the audio.
+        if (!this.context) {
+            this.context = new AudioContext();
+            this.initMusicNode();
+        }
+
+        let musicVolume = this.getMusicVolume();
+
+        if (musicVolume <= 0 || !this.isAudioEnabled()) {
+            if (this.isMusicConnected) {
+                this.musicGainNode.disconnect(this.context.destination);
+                this.isMusicConnected = false;
             }
+        } else {
+            let { gain } = this.musicGainNode;
 
-            case Modules.AudioTypes.SFX: {
-                if (!sounds[name]) this.parse('sounds', name, 4);
+            gain.cancelScheduledValues(this.context.currentTime);
 
-                let sound = this.get(name);
+            if (this.isMusicConnected) this.rampGain(gain, musicVolume);
+            else {
+                this.musicGainNode.connect(this.context.destination);
+                this.isMusicConnected = true;
 
-                if (!sound) return;
-
-                sound.volume = this.getSFXVolume()!;
-
-                sound.play();
-
-                break;
+                this.rampGain(gain, this.musicMinGain);
+                this.rampGain(gain, musicVolume, this.musicCrossfadeDuration);
             }
         }
+    }
+
+    /**
+     * Updates the current audio context listener with the position and orientation of the player.
+     */
+
+    public updatePlayerListener() {
+        if (!this.context || !this.isAudioEnabled() || this.getSettings().lowPowerMode) return;
+
+        let { player } = this.game,
+            { positionX, positionY, forwardX, forwardY } = this.context.listener;
+
+        positionX.value = player.x;
+        positionY.value = player.y;
+
+        switch (player.orientation) {
+            case Modules.Orientation.Up:
+                forwardX.value = 0;
+                forwardY.value = 1;
+                break;
+
+            case Modules.Orientation.Down:
+                forwardX.value = 0;
+                forwardY.value = -1;
+                break;
+
+            case Modules.Orientation.Left:
+                forwardX.value = -1;
+                forwardY.value = 0;
+                break;
+
+            case Modules.Orientation.Right:
+                forwardX.value = 1;
+                forwardY.value = 0;
+                break;
+        }
+    }
+
+    /**
+     * Stops any currently playing music, and initializes a new one.
+     * @param gainNode - The gain node to stop playing from.
+     */
+
+    public stopMusic(gainNode = this.musicGainNode) {
+        this.initMusicNode();
+
+        let { gain } = gainNode;
+
+        gain.cancelScheduledValues(this.context.currentTime);
+        this.rampGain(gain, this.musicMinGain, this.musicCrossfadeDuration);
+
+        setTimeout(() => gainNode.disconnect(), this.musicCrossfadeDuration * 1000);
+    }
+
+    /**
+     * (Re)initialize a new music node.
+     */
+
+    private initMusicNode() {
+        this.musicGainNode = new GainNode(this.context, { gain: this.musicMinGain });
+    }
+
+    /**
+     * Transitions the audio gain following a linear ramp.
+     * @param gain - The audio parameter to ramp.
+     * @param volume - The volume to ramp to. If less or equal to zero, the volume won't change.
+     * @param duration - The duration to ramp by. If not specified, the ramp will be instant.
+     */
+
+    private rampGain(gain: AudioParam, volume: number, duration = 0) {
+        if (volume > 0) gain.linearRampToValueAtTime(volume, this.context.currentTime + duration);
+    }
+
+    /**
+     * Gets the sound volume from the settings.
+     * @returns The sound volume.
+     */
+
+    private getSoundVolume(): number {
+        return this.getSettings().soundVolume / 100;
+    }
+
+    /**
+     * Gets the music volume from the settings.
+     * @returns The music volume.
+     */
+
+    private getMusicVolume(): number {
+        return (this.getSettings().musicVolume / 100) * this.musicMaxGain * 2;
+    }
+
+    /**
+     * Gets whether or not the audio is enabled.
+     * @returns `true` if the audio is enabled.
+     */
+
+    private isAudioEnabled() {
+        return this.getSettings().audioEnabled;
+    }
+
+    /**
+     * Gets the settings object from the game storage.
+     * @returns The settings object.
+     */
+
+    private getSettings() {
+        return this.game.storage.data.settings;
     }
 
     /**
@@ -113,156 +270,15 @@ export default class AudioController {
      * and plays one of them randomly.
      */
 
-    public playHit(): void {
-        this.play(Modules.AudioTypes.SFX, `hit${Util.randomInt(1, 2)}`);
+    public playHitSound(target: Entity): void {
+        this.playSound(`hit${Util.randomInt(1, 2)}`, target);
     }
 
     /**
      * Plays one of the kill sound effects randomly.
      */
 
-    public playKill(): void {
-        this.play(Modules.AudioTypes.SFX, `kill${Util.randomInt(1, 2)}`);
-    }
-
-    public playHurt(): void {
-        this.play(Modules.AudioTypes.SFX, 'hurt');
-    }
-
-    public update(): void {
-        if (!this.isEnabled() || !this.newSong) return this.stop();
-
-        let { newSong, game, music, audibles } = this;
-
-        if (!newSong || newSong === this.song?.name) return;
-
-        let song = this.getMusic(newSong);
-
-        if (song) {
-            if (game.renderer.mobile) this.reset(this.song);
-            else this.fadeSongOut();
-
-            if (song.name in music && !music[song.name]) {
-                this.parse('music', song.name, 1);
-
-                let [music] = audibles[song.name]!;
-
-                music.loop = true;
-                music.addEventListener('ended', () => music.play(), false);
-            }
-
-            this.play(Modules.AudioTypes.Music, song.name);
-        } else if (game.renderer.mobile) this.reset(this.song);
-        else this.fadeSongOut();
-    }
-
-    private fadeIn(song: AudioElement): void {
-        if (!song || song.fadingIn) return;
-
-        this.clearFadeOut(song);
-
-        song.fadingIn = window.setInterval(() => {
-            song.volume += 0.02;
-
-            let musicVolume = this.getMusicVolume()!;
-
-            if (song.volume >= musicVolume - 0.02) {
-                song.volume = musicVolume;
-
-                this.clearFadeIn(song);
-            }
-        }, 100);
-    }
-
-    private fadeOut(song: AudioElement | null, callback?: (song: AudioElement) => void): void {
-        if (!song || song.fadingOut) return;
-
-        this.clearFadeIn(song);
-
-        song.fadingOut = window.setInterval(() => {
-            song.volume -= 0.08;
-
-            if (song.volume <= 0.08) {
-                song.volume = 0;
-
-                callback?.(song);
-
-                clearInterval(song.fadingOut!);
-            }
-        }, 100);
-    }
-
-    private fadeSongOut(): void {
-        if (!this.song) return;
-
-        this.fadeOut(this.song, (song) => this.reset(song));
-
-        this.song = null;
-    }
-
-    private clearFadeIn(song: AudioElement): void {
-        if (song.fadingIn) {
-            clearInterval(song.fadingIn);
-            song.fadingIn = null;
-        }
-    }
-
-    private clearFadeOut(song: AudioElement): void {
-        if (song.fadingOut) {
-            clearInterval(song.fadingOut);
-            song.fadingOut = null;
-        }
-    }
-
-    public reset(song: AudioElement | null): void {
-        if (!song || !(song.readyState > 0)) return;
-
-        song.pause();
-        song.currentTime = 0;
-    }
-
-    public stop(): void {
-        if (!this.song) return;
-
-        this.fadeOut(this.song, () => {
-            this.reset(this.song);
-            this.song = null;
-        });
-    }
-
-    private isEnabled(): boolean {
-        return this.game.storage.data.settings.soundEnabled;
-    }
-
-    private get(name: string): AudioElement | undefined {
-        let { audibles } = this;
-
-        if (!audibles[name]) return;
-
-        let audible = _.find(audibles[name], ({ ended, paused }) => ended || paused);
-
-        if (audible?.ended) audible.currentTime = 0;
-        else audible = audibles[name]?.[0];
-
-        return audible;
-    }
-
-    private getMusic(name: string): { name: string; sound: AudioElement | undefined } {
-        return {
-            name,
-            sound: this.get(name)
-        };
-    }
-
-    private getSFXVolume(): number | null {
-        let { storage } = this.game;
-
-        return storage ? storage.data.settings.sfx / 100 : null;
-    }
-
-    private getMusicVolume(): number | null {
-        let { storage } = this.game;
-
-        return storage ? storage.data.settings.music / 100 : null;
+    public playKillSound(target: Entity): void {
+        this.playSound(`kill${Util.randomInt(1, 2)}`, target);
     }
 }

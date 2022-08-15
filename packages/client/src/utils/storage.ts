@@ -1,5 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 import { CursorTiles } from '../map/map';
+import { isMobile } from './detect';
 
 interface PlayerData {
     username: string;
@@ -10,12 +11,12 @@ interface PlayerData {
 }
 
 interface Settings {
-    music: number;
-    sfx: number;
+    musicVolume: number;
+    soundVolume: number;
     brightness: number;
-    soundEnabled: boolean;
+    audioEnabled: boolean;
     lowPowerMode: boolean;
-    debug: boolean;
+    debugMode: boolean;
     showNames: boolean;
     showLevels: boolean;
 }
@@ -68,12 +69,12 @@ export default class Storage {
             },
 
             settings: {
-                music: 100,
-                sfx: 100,
+                musicVolume: 100,
+                soundVolume: 100,
                 brightness: 100,
-                soundEnabled: true,
+                audioEnabled: !isMobile(),
                 lowPowerMode: false,
-                debug: false,
+                debugMode: false,
                 showNames: true,
                 showLevels: true
             },
@@ -155,23 +156,23 @@ export default class Storage {
     }
 
     /**
-     * Updates the music volume and stores it into the local storage.
-     * @param volume The new volume we are setting the music to.
+     * Updates the music music and stores it into the local storage.
+     * @param volume The new music we are setting the music to.
      */
 
-    public setVolume(volume = 100): void {
-        this.data.settings.music = volume;
+    public setMusicVolume(volume = 100): void {
+        this.data.settings.musicVolume = volume;
 
         this.save();
     }
 
     /**
-     * Updates the SFX and stores it into the local storage.
-     * @param volume New volume we are setting the SFX to.
+     * Updates the Sound and stores it into the local storage.
+     * @param volume New music we are setting the Sound to.
      */
 
-    public setSFX(volume = 100): void {
-        this.data.settings.sfx = volume;
+    public setSoundVolume(volume = 100): void {
+        this.data.settings.soundVolume = volume;
 
         this.save();
     }
@@ -188,12 +189,12 @@ export default class Storage {
     }
 
     /**
-     * Updates the local storage value for soundEnabled.
-     * @param soundEnabled New value to update variable to.
+     * Updates the local storage value for audioEnabled.
+     * @param enabled New value to update variable to.
      */
 
-    public setSoundEnabled(soundEnabled: boolean): void {
-        this.data.settings.soundEnabled = soundEnabled;
+    public setAudioEnabled(enabled: boolean): void {
+        this.data.settings.audioEnabled = enabled;
 
         this.save();
     }
@@ -215,7 +216,7 @@ export default class Storage {
      */
 
     public setDebug(debug: boolean): void {
-        this.data.settings.debug = debug;
+        this.data.settings.debugMode = debug;
 
         this.save();
     }
@@ -243,7 +244,7 @@ export default class Storage {
     }
 
     /**
-     * Checks if the local storage verison of the client
+     * Checks if the local storage version of the client
      * matches the window's config version.
      * @returns True if client version is the same as config version.
      */
@@ -353,6 +354,6 @@ export default class Storage {
      */
 
     public getDebug(): boolean {
-        return this.data.settings.debug;
+        return this.data.settings.debugMode;
     }
 }
