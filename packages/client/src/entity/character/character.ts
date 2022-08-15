@@ -149,11 +149,24 @@ export default class Character extends Entity {
     }
 
     /**
+     * Override for the superclass function so that the character's `setAnimation` is called.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public override animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.setAnimation('death', speed, count, callback);
+    }
+
+    /**
      * Briefly changes the character's sprite with that of the
      * hurt sprite (a white and red sprite when a character is hurt).
      */
 
     public toggleHurt(): void {
+        if (this.dead || this.teleporting) return;
+
         this.sprite = this.hurtSprite;
 
         window.setTimeout(() => {
