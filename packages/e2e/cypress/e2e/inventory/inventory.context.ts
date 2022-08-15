@@ -16,7 +16,7 @@ export default class InventoryContext extends LoggedInContext {
         this.registerLookup('drop command', '#action-container div.action-button:first-child');
     }
 
-    injectDefaultData(): void {
+    override injectDefaultData(): void {
         super.injectDefaultData();
 
         cy.resetCollection('player_inventory');
