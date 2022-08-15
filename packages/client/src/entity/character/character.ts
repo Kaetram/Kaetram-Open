@@ -127,7 +127,7 @@ export default class Character extends Entity {
     public override setAnimation(
         name: string,
         speed = 120,
-        count = 1,
+        count = 0,
         onEndCount?: () => void
     ): void {
         let o = ['atk', 'walk', 'idle'];
@@ -155,7 +155,7 @@ export default class Character extends Entity {
      * @param count How many times to repeat the animation.
      */
 
-    public override animateDeath(callback?: () => void, speed = 120, count = 1): void {
+    public override animateDeath(callback?: () => void, speed = 120, count = 0): void {
         this.setAnimation('death', speed, count, callback);
     }
 

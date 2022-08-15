@@ -140,6 +140,7 @@ export default class Sprite {
 
             this.hurtSprite = {
                 image: canvas,
+                name: 'hurt',
                 loaded: true,
                 offsetX: this.offsetX,
                 offsetY: this.offsetY,

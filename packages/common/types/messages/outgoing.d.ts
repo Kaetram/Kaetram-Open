@@ -259,7 +259,6 @@ export type PointerCallback = (opcode: Opcodes.Pointer, info: PointerPacket) => 
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface PVPPacket {
-    instance: string;
     state: boolean;
 }
 
