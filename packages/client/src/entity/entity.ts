@@ -175,7 +175,7 @@ export default abstract class Entity {
      * @param onEndCount A function to be called upon animation completion.
      */
 
-    public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
+    public setAnimation(name: string, speed: number, count = 1, onEndCount?: () => void): void {
         if (!this.spriteLoaded || this.animation?.name === name) return;
 
         let anim = this.animations[name];
