@@ -6,6 +6,7 @@ import Entity from '../../entity';
 import World from '../../../world';
 import MobHandler from './handler';
 import Character from '../character';
+import Chest from '../../objects/chest';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
@@ -35,6 +36,7 @@ export default class Mob extends Character {
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
     public area!: Area;
+    public chest!: Chest; // Used for mimics since they belong to a chest
 
     public boss = false;
     public respawnable = true;
@@ -87,21 +89,21 @@ export default class Mob extends Character {
 
         if (data.hitPoints) this.hitPoints.updateHitPoints([data.hitPoints]);
 
-        this.name = data.name!;
+        this.name = data.name || this.name;
         this.drops = data.drops || this.drops;
         this.level = data.level || this.level;
         this.attackLevel = data.attackLevel || this.attackLevel;
         this.defenseLevel = data.defenseLevel || this.defenseLevel;
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
-        this.aggressive = data.aggressive!;
+        this.aggressive = data.aggressive || this.aggressive;
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
         this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
-        this.poisonous = data.poisonous!;
-        this.hiddenName = data.hiddenName!;
+        this.poisonous = data.poisonous || this.poisonous;
+        this.hiddenName = data.hiddenName || this.hiddenName;
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
 
