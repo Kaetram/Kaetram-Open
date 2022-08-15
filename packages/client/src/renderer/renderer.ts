@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Tile from './tile';
 import Camera from './camera';
@@ -99,11 +99,11 @@ export default class Renderer {
 
     private lightings: RendererLighting[] = [];
 
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
+    private map: Map;
+    private camera: Camera;
 
-    public tileSize = this.game.map.tileSize;
-    private actualTileSize = this.tileSize * this.camera.zoomFactor;
+    public tileSize: number;
+    private actualTileSize: number;
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
@@ -139,6 +139,12 @@ export default class Renderer {
     private sparksSprite!: Sprite;
 
     public constructor(public game: Game) {
+        this.map = game.map;
+        this.camera = game.camera;
+
+        this.tileSize = game.map.tileSize;
+        this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+
         // Grab the Canvas2D context from the HTML canvas.
         this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
         this.backContext = this.background.getContext('2d')!; // Background
@@ -317,8 +323,6 @@ export default class Renderer {
 
     private draw(): void {
         if (this.hasRenderedFrame()) return;
-
-        console.log('draw bitch');
 
         this.clearDrawing();
         this.saveDrawing();
@@ -670,7 +674,7 @@ export default class Renderer {
      */
 
     private drawEntity(entity: Entity): void {
-        let frame = entity.animation?.currentFrame,
+        let frame = entity.animation?.frame,
             dx = entity.x * this.camera.zoomFactor,
             dy = entity.y * this.camera.zoomFactor,
             flipX = dx + this.actualTileSize,
@@ -776,13 +780,13 @@ export default class Renderer {
 
         let animation = player.animation!,
             weaponAnimationData = weapon.animationData[animation.name],
-            frame = animation.currentFrame,
+            { frame, row } = animation,
             index =
                 frame.index < weaponAnimationData.length
                     ? frame.index
                     : frame.index % weaponAnimationData.length,
             weaponX = weapon.width * index,
-            weaponY = weapon.height * animation.row,
+            weaponY = weapon.height * row,
             weaponWidth = weapon.width,
             weaponHeight = weapon.height;
 
@@ -812,7 +816,7 @@ export default class Renderer {
         if (!sprite.loaded) sprite.load();
 
         let animation = character.getEffectAnimation()!,
-            { index } = animation.currentFrame,
+            { index } = animation.frame,
             x = sprite.width * index,
             y = sprite.height * animation.row;
 
@@ -838,7 +842,7 @@ export default class Renderer {
 
     private drawSparks(): void {
         let { sparksAnimation } = this.game.entities.sprites,
-            sparksFrame = sparksAnimation.currentFrame;
+            sparksFrame = sparksAnimation.frame;
 
         this.entitiesContext.drawImage(
             this.sparksSprite.image,

@@ -31,7 +31,7 @@
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,
-    "movementSpeed": 350,
+    "movementSpeed": 420,
     "respawnDelay": 20000
   },
 
@@ -49,7 +49,7 @@
     "aggressive": false,
     "roaming": true,
     "attackRate": 1200,
-    "movementSpeed": 300,
+    "movementSpeed": 420,
     "respawnDelay": 20000
   },
 
@@ -1053,7 +1053,7 @@
   "orc": {
     "name": "Orc",
     "id": 57,
-    "drops": {"redsword": 300, "violetbow": 300, "redarcherarmor": 400},
+    "drops": {"redsword": 200, "violetbow": 100, "redarcherarmor": 120, "spear": 30},
     "hitPoints": 75,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -1397,12 +1397,12 @@
     "name": "Slime",
     "id": 76,
     "drops": {"gold": 50},
-    "hitPoints": 3055,
-    "defenseLevel": 5,
-    "attackLevel": 5,
+    "hitPoints": 420,
+    "defenseLevel": 30,
+    "attackLevel": 10,
     "experience": 360,
-    "level": 88,
-    "aggroRange": 1,
+    "level": 26,
+    "aggroRange": 3,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
@@ -1812,8 +1812,8 @@
     "id": 100,
     "drops": {"sidesword": 300, "bigflask": 100, "goldensword": 500, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
-    "defenseLevel": 50,
-    "attackLevel": 23,
+    "defenseLevel": 75,
+    "attackLevel": 3,
     "experience": 650,
     "level": 35,
     "aggroRange": 5,
@@ -1821,7 +1821,7 @@
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,
-    "movementSpeed": 600,
+    "movementSpeed": 400,
     "respawnDelay": 75000
   },
 

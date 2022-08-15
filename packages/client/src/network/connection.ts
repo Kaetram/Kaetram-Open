@@ -1,5 +1,5 @@
 import { AchievementPacket } from './../../../common/types/messages/outgoing.d';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 
@@ -64,21 +64,21 @@ export default class Connection {
      * to access them.
      */
 
-    private app: App = this.game.app;
-    private overlays: Overlays = this.game.overlays;
-    private info: InfoController = this.game.info;
-    private map: Map = this.game.map;
-    private camera: Camera = this.game.camera;
-    private renderer: Renderer = this.game.renderer;
-    private input: InputController = this.game.input;
-    private socket: Socket = this.game.socket;
-    private pointer: PointerController = this.game.pointer;
-    private audio: AudioController = this.game.audio;
-    private entities: EntitiesController = this.game.entities;
-    private bubble: BubbleController = this.game.bubble;
-    private menu: MenuController = this.game.menu;
-    private sprites: SpritesController = this.game.sprites;
-    private messages: Messages = this.socket.messages;
+    private app: App;
+    private overlays: Overlays;
+    private info: InfoController;
+    private map: Map;
+    private camera: Camera;
+    private renderer: Renderer;
+    private input: InputController;
+    private socket: Socket;
+    private pointer: PointerController;
+    private audio: AudioController;
+    private entities: EntitiesController;
+    private bubble: BubbleController;
+    private menu: MenuController;
+    private sprites: SpritesController;
+    private messages: Messages;
 
     /**
      * Connection controller keeps track of all the incoming packets
@@ -86,6 +86,22 @@ export default class Connection {
      */
 
     public constructor(private game: Game) {
+        this.app = game.app;
+        this.overlays = game.overlays;
+        this.info = game.info;
+        this.map = game.map;
+        this.camera = game.camera;
+        this.renderer = game.renderer;
+        this.input = game.input;
+        this.socket = game.socket;
+        this.pointer = game.pointer;
+        this.audio = game.audio;
+        this.entities = game.entities;
+        this.bubble = game.bubble;
+        this.menu = game.menu;
+        this.sprites = game.sprites;
+        this.messages = this.socket.messages;
+
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
         this.messages.onMap(this.handleMap.bind(this));
@@ -316,10 +332,6 @@ export default class Connection {
                 if (info.state) entity.stop(false);
 
                 entity.stunned = !!info.state;
-                break;
-
-            case Opcodes.Movement.Orientate:
-                entity.performAction(info.orientation!, Modules.Actions.Orientate);
                 break;
         }
     }
@@ -999,8 +1011,12 @@ export default class Connection {
     private handleBubble(info: BubblePacket): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
+        let entity = this.entities.get(info.instance);
+
+        if (!entity) return;
+
         this.bubble.create(info.instance, info.text, info.duration);
-        this.bubble.setTo(info.instance, info.x!, info.y!);
+        this.bubble.setTo(info.instance, entity.x, entity.y);
     }
 
     /**

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -48,7 +48,7 @@ import type {
 
 export default class Messages {
     private messages;
-    private app: App = this.game.app;
+    private app: App;
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
@@ -101,6 +101,8 @@ export default class Messages {
      * accordingly.
      */
     public constructor(private game: Game) {
+        this.app = game.app;
+
         let messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
         messages[Packets.Handshake] = () => this.handshakeCallback;
