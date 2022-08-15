@@ -205,7 +205,7 @@ export default class Game {
      */
 
     public respawn(): void {
-        this.audio.play(Modules.AudioTypes.SFX, 'revive');
+        this.audio.playSound('revive');
         this.app.body.classList.remove('death');
 
         this.socket.send(Packets.Respawn, []);
