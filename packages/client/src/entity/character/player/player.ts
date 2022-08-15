@@ -51,8 +51,6 @@ export default class Player extends Character {
     public override mana = -1;
     public override maxMana = -1;
 
-    public override pvp = false;
-
     // Mapping of all equipments to their type.
     public equipments = {
         [Modules.Equipment.Armour]: new Armour(),

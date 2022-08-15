@@ -520,9 +520,8 @@ export default class Player extends Character {
 
         this.pvp = pvp;
 
-        this.sendToRegions(
+        this.send(
             new PVP({
-                instance: this.instance,
                 state: this.pvp
             })
         );

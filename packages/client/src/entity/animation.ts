@@ -39,7 +39,7 @@ export default class Animation {
         if (this.frame.index >= this.length - 1) {
             if (this.count > 0) this.count--;
 
-            if (this.count === 0) this.endCallback?.();
+            if (this.count <= 0) this.endCallback?.();
 
             return this.reset();
         }

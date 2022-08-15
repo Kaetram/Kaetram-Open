@@ -382,7 +382,7 @@ export default class InputController {
                 break;
 
             case Modules.EntityType.Player:
-                if (this.entity.pvp && this.game.pvp) {
+                if (this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
                     this.hovering = Modules.Hovering.Player;
                 }
@@ -547,7 +547,7 @@ export default class InputController {
      */
 
     private isAttackable(entity: Entity): boolean {
-        return entity.isMob() || (entity.isPlayer() && entity.pvp && this.game.pvp);
+        return entity.isMob() || (entity.isPlayer() && this.game.pvp);
     }
 
     /**
