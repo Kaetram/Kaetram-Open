@@ -7,7 +7,7 @@ import Entity from '../entity';
 import log from '@kaetram/common/util/log';
 import { Despawn } from '@kaetram/server/src/network/packets';
 import Character from '@kaetram/server/src/game/entity/character/character';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 
 /**
@@ -41,7 +41,7 @@ export default class AllCollection {
 
         this.regions.handle(entity);
 
-        this.grids.addToEntityGrid(entity, entity.x, entity.y);
+        this.grids.addToEntityGrid(entity);
     }
 
     /**
@@ -57,7 +57,7 @@ export default class AllCollection {
         });
 
         // Remove the entity from the entity grid
-        this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
+        this.grids.removeFromEntityGrid(entity);
 
         // Remove the entity from the region it is in.
         this.regions.remove(entity);

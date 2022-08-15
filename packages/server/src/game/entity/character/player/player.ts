@@ -4,6 +4,7 @@ import Quests from './quests';
 import Hit from '../combat/hit';
 import Handler from './handler';
 import Mana from '../points/mana';
+import Entity from '../../entity';
 import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
@@ -73,18 +74,19 @@ export default class Player extends Character {
     private regions: Regions = this.world.map.regions;
     private entities: Entities = this.world.entities;
 
-    public incoming: Incoming = new Incoming(this);
+    public incoming: Incoming;
 
-    public warp: Warp = new Warp(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
+    public warp: Warp;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    private handler: Handler = new Handler(this);
+    private handler: Handler;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -104,7 +106,6 @@ export default class Player extends Character {
     public lastLogin = 0;
     public pvpKills = 0;
     public pvpDeaths = 0;
-    public orientation = Modules.Orientation.Down;
     public mapVersion = -1;
 
     public talkIndex = 0;
@@ -112,9 +113,9 @@ export default class Player extends Character {
 
     // TODO - REFACTOR THESE ------------
 
-    public webSocketClient = this.connection.type === 'WebSocket';
+    public webSocketClient: boolean;
 
-    public abilities: Abilities = new Abilities(this);
+    public abilities: Abilities;
 
     public team?: string; // TODO
     public userAgent!: string;
@@ -160,10 +161,23 @@ export default class Player extends Character {
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
-    private orientationCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
+
+        this.warp = new Warp(this);
+        this.incoming = new Incoming(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+
+        this.handler = new Handler(this);
+
+        this.abilities = new Abilities(this);
+
+        this.webSocketClient = this.connection.type === 'WebSocket';
     }
 
     /**
@@ -655,7 +669,7 @@ export default class Player extends Character {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dynamic tiles.
-        if (this.map.isColliding(x, y, this)) {
+        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
@@ -686,12 +700,6 @@ export default class Player extends Character {
         );
     }
 
-    public setOrientation(orientation: number): void {
-        this.orientation = orientation;
-
-        if (this.orientationCallback) this.orientationCallback();
-    }
-
     /**
      * Override the `setRegion` in Entity by adding a callback.
      * @param region The new region we are setting.
@@ -716,6 +724,22 @@ export default class Player extends Character {
 
     public canBeStunned(): boolean {
         return true;
+    }
+
+    /**
+     * @returns If the player rights are greater than 0.
+     */
+
+    public isMod(): boolean {
+        return this.rights > 0;
+    }
+
+    /**
+     * @returns If the player rights are greater than 1.
+     */
+
+    public isAdmin(): boolean {
+        return this.rights > 1;
     }
 
     /**
@@ -819,6 +843,18 @@ export default class Player extends Character {
         let time = Date.now();
 
         return this.mute - time > 0;
+    }
+
+    /**
+     * An override for the adjacent function. Players need a bit more space
+     * when targeting an enemy without range. If not, following an entity becomes
+     * rather annoying.
+     * @param entity The entity we are calculating distance to.
+     * @returns If the entity distance is less than calculated distance.
+     */
+
+    public override isAdjacent(entity: Entity): boolean {
+        return this.getDistance(entity) < (this.hasTarget() ? 4 : 2);
     }
 
     /**
@@ -1091,14 +1127,6 @@ export default class Player extends Character {
 
     public override getArmourLevel(): number {
         return this.equipment.getArmour().power;
-    }
-
-    /**
-     * Callback for when the orientation has been changed.
-     */
-
-    public onOrientation(callback: () => void): void {
-        this.orientationCallback = callback;
     }
 
     /**

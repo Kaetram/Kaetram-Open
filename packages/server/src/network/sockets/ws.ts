@@ -1,4 +1,4 @@
-import ws, { Server as WSServer } from 'ws';
+import { WebSocketServer } from 'ws';
 
 import http from 'http';
 
@@ -21,7 +21,7 @@ export default class WS extends WebSocket {
     public constructor(socketHandler: SocketHandler) {
         super(config.host, config.websocketPort, 'WebSocket', socketHandler);
 
-        this.server = new WSServer({ port: this.port });
+        this.server = new WebSocketServer({ port: this.port });
         this.server.on('connection', this.handleConnection.bind(this));
 
         // this.server.on('connection', (socket: ws, request: http.ServerResponse) => {

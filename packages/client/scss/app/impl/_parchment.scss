@@ -157,6 +157,20 @@
     }
 }
 
+.credits #credits,
+.about #about,
+.git #git,
+.death #death,
+.error #error,
+.create-character #create-character,
+.load-character #load-character {
+    pointer-events: auto;
+
+    opacity: 1;
+
+    transition: 0.5s opacity linear;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         #parchment h1,

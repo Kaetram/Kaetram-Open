@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 import Entity from '../entity';
 import Combat from './combat/combat';
@@ -18,18 +18,19 @@ import Hit from './combat/hit';
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
-type SubAoECallback = (radius: number, hasTerror: boolean) => void;
+type DeathCallback = (attacker?: Character) => void;
 
 export default abstract class Character extends Entity {
     public level = 1;
     public attackRange = 1;
     public plateauLevel = 0;
 
-    public hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
+    public hitPoints: HitPoints;
 
     public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate = Modules.Defaults.ATTACK_RATE;
     public healingRate = Modules.Constants.HEAL_RATE;
+    public orientation = Modules.Orientation.Down;
 
     /* States */
     public poison?: Poison | undefined;
@@ -56,12 +57,11 @@ export default abstract class Character extends Entity {
     private healingInterval?: NodeJS.Timeout | undefined;
     private poisonInterval?: NodeJS.Timeout | undefined;
 
-    private stunCallback?: StunCallback | undefined;
-    private poisonCallback?: PoisonCallback | undefined;
+    private stunCallback?: StunCallback;
+    private poisonCallback?: PoisonCallback;
 
-    public hitCallback?: HitCallback | undefined;
-    public subAoECallback?: SubAoECallback | undefined;
-    public deathCallback?(attacker?: Character): void;
+    public hitCallback?: HitCallback;
+    public deathCallback?: DeathCallback;
 
     protected constructor(
         instance: string,
@@ -73,6 +73,8 @@ export default abstract class Character extends Entity {
         super(instance, key, x, y);
 
         this.combat = new Combat(this);
+
+        this.hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
         this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
@@ -190,7 +192,7 @@ export default abstract class Character extends Entity {
 
     public hit(damage: number, attacker?: Character): void {
         // Stop hitting if entity is dead.
-        if (this.isDead()) return;
+        if (this.isDead() || this.invincible) return;
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
@@ -227,6 +229,20 @@ export default abstract class Character extends Entity {
 
     public removeAttacker(attacker: Character): void {
         this.attackers = this.attackers.filter((a: Character) => a.instance !== attacker.instance);
+    }
+
+    /**
+     * Override of the superclass `setPosition`. Since characters are the only
+     * instances capable of movement, we need to update their position in the grids.
+     * @param x The new x grid position.
+     * @param y The new y grid position.
+     */
+
+    public override setPosition(x: number, y: number): void {
+        super.setPosition(x, y);
+
+        // Updates the character's position in the grid.
+        this.world.map.grids.updateEntity(this);
     }
 
     /**
@@ -301,6 +317,15 @@ export default abstract class Character extends Entity {
         } else this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
 
         this.poisonCallback?.(type);
+    }
+
+    /**
+     * Updates the current orientation of the character.
+     * @param orientation New orientation value for the character.
+     */
+
+    public setOrientation(orientation: Modules.Orientation): void {
+        this.orientation = orientation;
     }
 
     /**
@@ -438,6 +463,7 @@ export default abstract class Character extends Entity {
         let data = super.serialize();
 
         data.movementSpeed = this.movementSpeed;
+        data.orientation = this.orientation;
 
         return data;
     }

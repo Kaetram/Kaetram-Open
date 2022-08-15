@@ -1,10 +1,12 @@
 import { Modules } from '@kaetram/common/network';
 
 export default class Skill {
-    public name = Modules.Skills[this.type];
+    public name: string;
     public percentage = 0;
 
-    public constructor(public type: Modules.Skills, public experience = 0, public level = 1) {}
+    public constructor(public type: Modules.Skills, public experience = 0, public level = 1) {
+        this.name = Modules.Skills[type];
+    }
 
     /**
      * Updates the current skill's experience and level.
