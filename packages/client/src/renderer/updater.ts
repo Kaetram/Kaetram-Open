@@ -19,6 +19,7 @@ export default class Updater {
         this.updateAnimations();
         this.updateInfos();
         this.updateBubbles();
+        this.updateSounds();
     }
 
     /**
@@ -199,6 +200,10 @@ export default class Updater {
         this.game.bubble?.update(this.game.time);
 
         this.game.pointer?.update();
+    }
+
+    private updateSounds() {
+        this.game.audio.updatePlayerListener();
     }
 
     /**
