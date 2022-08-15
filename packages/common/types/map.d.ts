@@ -19,6 +19,7 @@ export interface ProcessedArea {
 
     // Chest/door/area
     achievement?: string;
+    mimic?: boolean;
 
     // Area
     width: number;

@@ -78,13 +78,19 @@ export default class Handler {
                 this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
             );
 
+        // Add exo to the attacker if it's a player.
         if (attacker?.isPlayer()) {
             attacker.addExperience(this.mob.experience);
             attacker.killCallback?.(this.mob);
         }
 
+        // Remove entity from chest area.
         this.mob.area?.removeEntity(this.mob, attacker);
 
+        // Respawn the chest associated with the mob.
+        this.mob.chest?.respawn();
+
+        // Despawn entity from the world.
         this.world.entities.remove(this.mob);
         this.world.cleanCombat(this.mob);
 
