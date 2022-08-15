@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0"
+        />
 
         <!-- Meta -->
         <meta name="application-name" content="Kaetram" />
@@ -520,24 +523,24 @@
                 <div id="settings-page" class="page">
                     <div id="sliders">
                         <input
-                            title="Volume"
-                            id="volume"
+                            title="Music Volume"
+                            id="music"
                             class="input"
                             type="range"
                             min="0"
                             max="100"
                             value="100"
-                            aria-labelledby="volumeText"
+                            aria-labelledby="music-volume-text"
                         />
                         <input
-                            title="SFX"
-                            id="sfx"
+                            title="Sound Volume"
+                            id="sound"
                             class="input"
                             type="range"
                             min="0"
                             max="100"
                             value="100"
-                            aria-labelledby="sfxText"
+                            aria-labelledby="sound-volume-text"
                         />
                         <input
                             title="Brightness"
@@ -552,38 +555,38 @@
                     </div>
 
                     <div id="texts">
-                        <p id="volume-text">Volume</p>
-                        <p id="sfx-text">SFX</p>
+                        <p id="music-volume-text">Music Volume</p>
+                        <p id="sound-volume-text">Sound Volume</p>
                         <p id="brightness-text">Brightness</p>
-                        <p id="sound-check-text">Sound</p>
-                        <p id="low-power-check-text">Low Power Mode</p>
-                        <p id="debug-check-text">Debugging</p>
-                        <p id="name-check-text">Names</p>
-                        <p id="level-check-text">Levels</p>
+                        <p id="audio-enabled-checkbox-text">Audio Enabled</p>
+                        <p id="low-power-checkbox-text">Low Power Mode</p>
+                        <p id="debug-mode-checkbox-text">Debug Mode</p>
+                        <p id="show-names-checkbox-text">Show Names</p>
+                        <p id="show-levels-checkbox-text">Show Levels</p>
                     </div>
 
                     <div id="info"></div>
 
                     <div id="check-marks">
-                        <label id="sound-check" class="check">
-                            <input type="checkbox" aria-labelledby="soundCheckText" />
+                        <label id="audio-enabled-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
                             <span class="checkmark"></span>
                         </label>
-                        <label id="low-power-check" class="check">
-                            <input type="checkbox" aria-labelledby="cameraCheckText" />
-                            <span class="checkmark" />
+                        <label id="low-power-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
+                            <span class="checkmark"></span>
                         </label>
-                        <label id="debug-check" class="check">
-                            <input type="checkbox" aria-labelledby="debugCheckText" />
-                            <span class="checkmark" />
+                        <label id="debug-mode-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
+                            <span class="checkmark"></span>
                         </label>
-                        <label id="name-check" class="check">
-                            <input type="checkbox" aria-labelledby="nameCheckText" />
-                            <span class="checkmark" />
+                        <label id="show-names-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
+                            <span class="checkmark"></span>
                         </label>
-                        <label id="level-check" class="check">
-                            <input type="checkbox" aria-labelledby="levelCheckText" />
-                            <span class="checkmark" />
+                        <label id="show-levels-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
+                            <span class="checkmark"></span>
                         </label>
                     </div>
                 </div>
