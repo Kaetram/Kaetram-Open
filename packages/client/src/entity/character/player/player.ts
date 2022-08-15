@@ -82,9 +82,10 @@ export default class Player extends Character {
      * Loads the player based on the serialzied player
      * data sent from the server.
      * @param data Player data containing essentials.
+     * @param sync Whether to sync the player.
      */
 
-    public load(data: PlayerData): void {
+    public load(data: PlayerData, sync = false): void {
         this.instance = data.instance;
         this.name = data.name;
         this.level = data.level!;
@@ -92,7 +93,8 @@ export default class Player extends Character {
         this.orientation = data.orientation!;
 
         this.setOrientation(data.orientation);
-        this.setGridPosition(data.x, data.y);
+
+        if (!sync) this.setGridPosition(data.x, data.y);
 
         this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
