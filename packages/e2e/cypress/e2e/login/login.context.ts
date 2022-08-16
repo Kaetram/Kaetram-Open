@@ -1,7 +1,4 @@
 import WorldContext from '../world.context';
-import { ObjectBuilder } from 'typescript-object-builder';
-import { PlayerInfo } from '../../entities/playerinfo';
-import defaultPlayerInfo from '../../fixtures/playerinfo.default.json';
 
 export default class LoginContext extends WorldContext {
     constructor() {
@@ -12,13 +9,7 @@ export default class LoginContext extends WorldContext {
     }
 
     injectDefaultData(): void {
-        cy.resetCollection('player_info');
-
-        let playerInfo = ObjectBuilder.basedOn<PlayerInfo>(defaultPlayerInfo)
-            .with('username', 'fvantom')
-            .build();
-
-        cy.createPlayerInfo(playerInfo);
+        super.injectDefaultPlayers();
     }
 
     before() {
