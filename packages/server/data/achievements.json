@@ -79,5 +79,10 @@
         "name": "Not What It Seems",
         "description": "Discover a mimic.",
         "rewardExperience": 1000
+    },
+
+    "ogresgateway": {
+        "name": "Ogre's Gateway",
+        "description": "Discover the secret portal after defeating ogres."
     }
 }
