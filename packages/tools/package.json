@@ -2,8 +2,8 @@
     "name": "@kaetram/tools",
     "type": "module",
     "scripts": {
-        "bot": "tsx bot/bot",
-        "exportmap": "tsx map/parser/exporter",
+        "bot": "tsx --preserve-symlinks bot/bot",
+        "exportmap": "tsx --preserve-symlinks map/parser/exporter",
         "map": "yarn exportmap map/data/map.json"
     },
     "dependencies": {
