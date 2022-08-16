@@ -28,6 +28,14 @@ export default class AudioController {
     public constructor(private game: Game) {}
 
     /**
+     * Initialize the audio context on a user event.
+     */
+
+    public load() {
+        this.context = new AudioContext();
+    }
+
+    /**
      * Plays a new sound.
      * @param sound - The sound to play.
      * @param target - The target to play the sound from.
@@ -129,8 +137,7 @@ export default class AudioController {
      */
 
     public updateVolume() {
-        // Lazily create the audio.
-        if (!this.context) this.initMusicNode();
+        if (!this.musicGainNode) this.initMusicNode();
 
         let musicVolume = this.getMusicVolume();
 
@@ -193,18 +200,23 @@ export default class AudioController {
 
     /**
      * Stops any currently playing music, and initializes a new one.
-     * @param gainNode - The gain node to stop playing from.
      */
 
-    public stopMusic(gainNode?: GainNode) {
+    public stopMusic() {
+        let gainNode = this.musicGainNode;
+
+        // Replace the current music node.
         this.initMusicNode();
-        let activeGainNode = gainNode || this.musicGainNode,
-            { gain } = activeGainNode;
+
+        // Return if there's no music to stop.
+        if (!gainNode) return;
+
+        let { gain } = gainNode;
 
         gain.cancelScheduledValues(this.context.currentTime);
         this.rampGain(gain, this.musicMinGain, this.musicCrossfadeDuration);
 
-        setTimeout(() => activeGainNode.disconnect(), this.musicCrossfadeDuration * 1000);
+        setTimeout(() => gainNode.disconnect(), this.musicCrossfadeDuration * 1000);
     }
 
     /**
@@ -212,7 +224,6 @@ export default class AudioController {
      */
 
     private initMusicNode() {
-        if (!this.context) this.context = new AudioContext();
         this.musicGainNode = new GainNode(this.context, { gain: this.musicMinGain });
     }
 
