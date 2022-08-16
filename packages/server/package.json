@@ -3,6 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
+        "start:dist": "tsx --preserve-symlinks build && node ./dist/index.js",
         "dev": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
         "build": "tsc --noEmit"
     },
@@ -30,6 +31,8 @@
         "@types/node": "^18.6.3",
         "@types/sanitizer": "^0.0.28",
         "@types/ws": "^8.5.3",
+        "esbuild": "^0.15.3",
+        "esbuild-node-tsc": "^2.0.1",
         "tsx": "^3.8.0",
         "typescript": "^4.7.4"
     }
