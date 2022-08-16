@@ -1,6 +1,6 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import Handler from '@kaetram/e2e/database/handler';
+import log from '@kaetram/common/util/log';
 
 interface MongoRestParams {
     collectionName: string;
@@ -10,8 +10,8 @@ interface MongoRestParams {
 let handler = new Handler(),
     app = express();
 
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(express.json());
 
 let router = express.Router();
 
@@ -34,7 +34,7 @@ router.get<MongoRestParams>('/:collectionName/username/:username', (req, res) =>
 router.delete<MongoRestParams>('/:collectionName', (req, res) => {
     let { collectionName } = req.params;
     handler.deleteCollection(collectionName, (error) => {
-        if (error) console.log(`Collection cannot be dropped [${collectionName}]`);
+        if (error) log.error(`Collection cannot be dropped [${collectionName}]`);
 
         res.end();
     });
@@ -43,5 +43,5 @@ router.delete<MongoRestParams>('/:collectionName', (req, res) => {
 app.use('/api/v1', router);
 
 let server = app.listen(3000, () => {
-    console.log('Listening on Port', server.address());
+    log.notice('Listening on Port', server.address());
 });
