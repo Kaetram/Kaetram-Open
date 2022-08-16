@@ -110,6 +110,7 @@ export default class Map {
                 orientation: destination.orientation || 'd',
                 quest: door.quest || '',
                 achievement: door.achievement || '',
+                reqAchievement: door.reqAchievement || '',
                 stage: door.stage || 0
             };
         });
