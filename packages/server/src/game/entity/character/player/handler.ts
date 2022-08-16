@@ -314,7 +314,7 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests.serialize(true)));
+        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests?.serialize(true)));
     }
 
     /**
@@ -323,7 +323,7 @@ export default class Handler {
 
     private handleAchievements(): void {
         this.player.send(
-            new Achievement(Opcodes.Achievement.Batch, this.player.achievements.serialize(true))
+            new Achievement(Opcodes.Achievement.Batch, this.player.achievements?.serialize(true))
         );
     }
 
@@ -333,7 +333,7 @@ export default class Handler {
      */
 
     private handleSkills(): void {
-        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills.serialize(true)));
+        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
     }
 
     /**
