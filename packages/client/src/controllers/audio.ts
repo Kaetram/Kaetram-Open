@@ -28,6 +28,14 @@ export default class AudioController {
     public constructor(private game: Game) {}
 
     /**
+     * Initialize the audio context on a user event.
+     */
+
+    public load() {
+        this.context = new AudioContext();
+    }
+
+    /**
      * Plays a new sound.
      * @param sound - The sound to play.
      * @param target - The target to play the sound from.
@@ -129,11 +137,7 @@ export default class AudioController {
      */
 
     public updateVolume() {
-        // Lazily create the audio.
-        if (!this.context) {
-            this.context = new AudioContext();
-            this.initMusicNode();
-        }
+        if (!this.musicGainNode) this.initMusicNode();
 
         let musicVolume = this.getMusicVolume();
 
@@ -196,11 +200,16 @@ export default class AudioController {
 
     /**
      * Stops any currently playing music, and initializes a new one.
-     * @param gainNode - The gain node to stop playing from.
      */
 
-    public stopMusic(gainNode = this.musicGainNode) {
+    public stopMusic() {
+        let gainNode = this.musicGainNode;
+
+        // Replace the current music node.
         this.initMusicNode();
+
+        // Return if there's no music to stop.
+        if (!gainNode) return;
 
         let { gain } = gainNode;
 
