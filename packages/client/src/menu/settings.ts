@@ -48,9 +48,9 @@ export default class Settings extends Menu {
     private load(): void {
         let settings = this.game.storage.getSettings();
 
-        this.musicSlider.value = settings.musicVolume.toString();
-        this.soundSlider.value = settings.soundVolume.toString();
-        this.brightnessSlider.value = settings.brightness.toString();
+        this.musicSlider.value = settings.musicVolume?.toString();
+        this.soundSlider.value = settings.soundVolume?.toString();
+        this.brightnessSlider.value = settings.brightness?.toString();
 
         this.audioEnabledCheckbox.checked = settings.audioEnabled;
         this.lowPowerCheckbox.checked = settings.lowPowerMode;
