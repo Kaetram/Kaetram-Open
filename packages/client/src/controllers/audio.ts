@@ -130,10 +130,7 @@ export default class AudioController {
 
     public updateVolume() {
         // Lazily create the audio.
-        if (!this.context) {
-            this.context = new AudioContext();
-            this.initMusicNode();
-        }
+        if (!this.context) this.initMusicNode();
 
         let musicVolume = this.getMusicVolume();
 
@@ -199,15 +196,15 @@ export default class AudioController {
      * @param gainNode - The gain node to stop playing from.
      */
 
-    public stopMusic(gainNode = this.musicGainNode) {
+    public stopMusic(gainNode?: GainNode) {
         this.initMusicNode();
-
-        let { gain } = gainNode;
+        let activeGainNode = gainNode || this.musicGainNode,
+            { gain } = activeGainNode;
 
         gain.cancelScheduledValues(this.context.currentTime);
         this.rampGain(gain, this.musicMinGain, this.musicCrossfadeDuration);
 
-        setTimeout(() => gainNode.disconnect(), this.musicCrossfadeDuration * 1000);
+        setTimeout(() => activeGainNode.disconnect(), this.musicCrossfadeDuration * 1000);
     }
 
     /**
@@ -215,6 +212,7 @@ export default class AudioController {
      */
 
     private initMusicNode() {
+        if (!this.context) this.context = new AudioContext();
         this.musicGainNode = new GainNode(this.context, { gain: this.musicMinGain });
     }
 
