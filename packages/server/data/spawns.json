@@ -66,5 +66,9 @@
   "295-361": {
     "name": "Mimic",
     "achievement": "notwhatitseems"
+  },
+
+  "168-31": {
+    "miniboss": true
   }
 }
