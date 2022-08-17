@@ -120,7 +120,7 @@
   },
 
   "sponge": {
-    "name": "Picklebob"
+    "name": "Sponge"
   },
 
   "fairynpc": {
@@ -161,7 +161,8 @@
   },
 
   "snowshepherdboy": {
-    "name": "Some Boy"
+    "name": "Sherpa",
+    "description": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
   },
 
   "angelnpc": {
