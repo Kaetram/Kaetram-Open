@@ -8,7 +8,6 @@ build({
     bundle: true,
     minify: true,
     platform: 'node',
-    target: 'node17',
     format: 'esm',
     sourcemap: true,
     plugins: [
