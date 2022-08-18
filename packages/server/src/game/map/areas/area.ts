@@ -15,19 +15,15 @@ export default class Area {
     public hasRespawned = true;
 
     // Overlay properties
-    public darkness!: number;
-    public type!: string;
-    public fog!: string;
+    public darkness = 0;
+    public type = '';
+    public fog = '';
 
     // Properties it can hold
-    public quest!: string;
-    public achievement!: string;
-    public cameraType!: string;
-    public song!: string;
-
-    // Door coordinates
-    public tx!: number;
-    public ty!: number;
+    public quest = '';
+    public achievement = '';
+    public cameraType = '';
+    public song = '';
 
     // Chest coordinates
     public cx!: number;
@@ -36,6 +32,10 @@ export default class Area {
     // Dynamic areas
     public mappedArea!: Area | undefined;
     public mapping!: number;
+
+    // Minigame
+    public minigame = '';
+    public mObjectType = '';
 
     public maxEntities = 0;
     public spawnDelay = 0;
@@ -171,9 +171,27 @@ export default class Area {
         return false;
     }
 
+    /**
+     * Iterates through each tile within the area.
+     * @param callback The x and y coordinate currently iterating through.
+     */
+
+    public forEachTile(callback: (x: number, y: number) => void): void {
+        for (let i = this.y; i < this.y + this.height; i++)
+            for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+    }
+
+    /**
+     * Callback for when the area has been emptied of mobs.
+     */
+
     public onEmpty(callback: () => void): void {
         this.emptyCallback = callback;
     }
+
+    /**
+     * Callback for when a mob has spawned within the area.
+     */
 
     public onSpawn(callback: () => void): void {
         this.spawnCallback = callback;
