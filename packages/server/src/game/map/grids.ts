@@ -53,4 +53,15 @@ export default class Grids {
     public removeFromEntityGrid(entity: Entity, x = entity.x, y = entity.y): void {
         delete this.entityGrid[y][x][entity.instance];
     }
+
+    /**
+     * Iterates through each entity at a specified coordinate and returns it.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     * @param callback The entity currently being iterated at the specified coordinate.
+     */
+
+    public forEachEntityAt(x: number, y: number, callback: (entity: Entity) => void): void {
+        for (let instance in this.entityGrid[y][x]) callback(this.entityGrid[y][x][instance]);
+    }
 }

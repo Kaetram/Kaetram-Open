@@ -530,23 +530,26 @@ export default class Handler {
      */
 
     private detectAreas(x: number, y: number): void {
-        this.map.forEachAreas((areas: Areas, name: string) => {
-            let info = areas.inArea(x, y);
+        this.map.forEachAreas(
+            (areas: Areas, name: string) => {
+                let info = areas.inArea(x, y);
 
-            switch (name) {
-                case 'pvp':
-                    return this.player.updatePVP(!!info);
+                switch (name) {
+                    case 'pvp':
+                        return this.player.updatePVP(!!info);
 
-                case 'music':
-                    return this.player.updateMusic(info);
+                    case 'music':
+                        return this.player.updateMusic(info);
 
-                case 'overlay':
-                    return this.player.updateOverlay(info);
+                    case 'overlay':
+                        return this.player.updateOverlay(info);
 
-                case 'camera':
-                    return this.player.updateCamera(info);
-            }
-        });
+                    case 'camera':
+                        return this.player.updateCamera(info);
+                }
+            },
+            ['pvp', 'music', 'overlay', 'camera']
+        );
     }
 
     /**
