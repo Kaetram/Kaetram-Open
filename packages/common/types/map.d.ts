@@ -62,6 +62,10 @@ export interface ProcessedArea {
     // Dynamic
     quest?: string;
     mapping?: number;
+
+    // Minigame
+    minigame?: string;
+    mObjectType?: string; // specifies what the object does in the minigame (used by minigame classes).
 }
 
 export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
