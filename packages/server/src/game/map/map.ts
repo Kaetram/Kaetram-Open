@@ -261,6 +261,15 @@ export default class Map {
     }
 
     /**
+     * Grabs the minigame areas in the map.
+     * @returns The minigame areas parsed upon loading.
+     */
+
+    public getMinigameAreas(): Areas {
+        return this.areas.minigame;
+    }
+
+    /**
      * Converts the coordinate x and y into a tileIndex
      * and returns a door at the index. Defaults to undefined
      * if no door is found.
@@ -391,10 +400,14 @@ export default class Map {
      * Specifically used in the player's handler, it is used to check
      * various activities within the areas.
      * @param callback Returns an areas group (i.e. chest areas) and the key of the group.
+     * @param list Optional paramaeter used for iterating through specified areas. Prevents iterating
+     * through unnecessary areas.
      */
 
-    public forEachAreas(callback: (areas: Areas, key: string) => void): void {
+    public forEachAreas(callback: (areas: Areas, key: string) => void, list: string[] = []): void {
         _.each(this.areas, (a: Areas, name: string) => {
+            if (list.length > 0 && !list.includes(name)) return;
+
             callback(a, name);
         });
     }
