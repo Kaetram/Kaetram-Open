@@ -44,7 +44,8 @@ enum Packets {
     Camera,
     Bubble,
     Skill,
-    Update
+    Update,
+    Minigame
 }
 
 export default Packets;
