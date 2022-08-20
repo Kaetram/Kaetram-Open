@@ -312,3 +312,11 @@ export type SkillCallback = (opcode: Opcodes.Skill, info: SkillPacket) => void;
 ////////////////////////////////////////////////////////////////////////////////
 
 export type UpdateCallback = (info: EntityDisplayInfo[]) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface MinigamePacket {
+    action: number;
+}
+
+export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;

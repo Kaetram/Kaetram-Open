@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Area from '../map/areas/area';
+import Player from '../entity/character/player/player';
 
 export default class Minigame {
     public constructor(public key: string) {}
@@ -12,5 +15,42 @@ export default class Minigame {
 
     public loadArea(area: Area): void {
         //
+    }
+
+    /**
+     * Handler for when a player disconnects from the game while in a minigame.
+     * @param player The player undergoing the disconnection.
+     */
+
+    public disconnect(player: Player): void {
+        //
+    }
+
+    /**
+     * Superclass function for when a player kills another player.
+     * @param player The player who has killed the other player.
+     */
+
+    public kill(player: Player): void {
+        //
+    }
+
+    /**
+     * Superclass implementation for finding a position within the lobby.
+     * @returns A default position in the world.
+     */
+
+    public getLobbyPosition(): Position {
+        return { x: 50, y: 23 };
+    }
+
+    /**
+     * Superclass implementation for respawn during a minigame.
+     * @params _var1 Optional parameter for the spawn point.
+     * @returns Default position in the world.
+     */
+
+    public getRespawnPoint(_var1?: unknown): Position {
+        return { x: 50, y: 23 };
     }
 }
