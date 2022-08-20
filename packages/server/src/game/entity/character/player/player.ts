@@ -15,6 +15,7 @@ import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
 import Abilities from './abilities/abilities';
 import Formulas from '../../../../info/formulas';
+import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
 import Packet from '@kaetram/server/src/network/packet';
 import Incoming from '../../../../controllers/incoming';
@@ -137,6 +138,10 @@ export default class Player extends Character {
     // NPC talking
     public npcTalk = '';
     public talkIndex = 0;
+
+    // Minigame status of the player.
+    public minigame = -1; // Opcodes.Minigame
+    public team: Opcodes.TeamWar = -1;
 
     // Currently open store of the player.
     public storeOpen = '';
@@ -704,6 +709,8 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
+        if (this.inMinigame()) return this.getMinigame()?.getRespawnPoint(this.team);
+
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
@@ -739,19 +746,11 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns If the player rights are greater than 0.
+     * @returns Finds and returns a minigame based on the player's minigame.
      */
 
-    public isMod(): boolean {
-        return this.rights > 0;
-    }
-
-    /**
-     * @returns If the player rights are greater than 1.
-     */
-
-    public isAdmin(): boolean {
-        return this.rights > 1 || config.skipDatabase;
+    public getMinigame(): Minigame {
+        return this.world.minigames.get(this.minigame);
     }
 
     public loadRegion(region: number): void {
@@ -807,10 +806,37 @@ export default class Player extends Character {
         this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
     }
 
-    public isMuted(): boolean {
-        let time = Date.now();
+    /**
+     * @returns Checks if the date-time of the mute is greater than current epoch. If it is
+     * the player is muted.
+     */
 
-        return this.mute - time > 0;
+    public isMuted(): boolean {
+        return this.mute - Date.now() > 0;
+    }
+
+    /**
+     * Checks if the player is currently in  a minigame.
+     */
+
+    public inMinigame(): boolean {
+        return this.minigame !== -1;
+    }
+
+    /**
+     * @returns If the player rights are greater than 0.
+     */
+
+    public isMod(): boolean {
+        return this.rights > 0;
+    }
+
+    /**
+     * @returns If the player rights are greater than 1.
+     */
+
+    public isAdmin(): boolean {
+        return this.rights > 1 || config.skipDatabase;
     }
 
     /**

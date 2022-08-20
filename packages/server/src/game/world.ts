@@ -28,6 +28,7 @@ import Minigames from './minigames/minigames';
 export interface PacketData {
     packet: Packet;
     player?: Player;
+    players?: Player[];
     ignore?: string;
     region?: number;
     list?: number[];
@@ -92,6 +93,9 @@ export default class World {
 
             case PacketType.Player:
                 return this.network.send(data.player as Player, data.packet);
+
+            case PacketType.Players:
+                return this.network.sendToPlayers(data.players as Player[], data.packet);
 
             case PacketType.Region:
                 return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
