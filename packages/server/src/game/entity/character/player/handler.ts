@@ -120,6 +120,8 @@ export default class Handler {
                 this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
         }
 
+        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
+
         this.world.entities.removePlayer(this.player);
 
         this.world.cleanCombat(this.player);
@@ -135,6 +137,8 @@ export default class Handler {
         if (attacker) {
             attacker.clearTarget();
             attacker.removeAttacker(this.player);
+
+            if (attacker.isPlayer()) this.player.pvpDeaths++;
         }
 
         // Remove the poison status.
@@ -432,6 +436,14 @@ export default class Handler {
 
     private handleKill(character: Character): void {
         log.debug(`Received kill callback for: ${character.instance}.`);
+
+        // Have the minigame handle the kill if present.
+        if (character.isPlayer()) {
+            if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
+
+            // Incremebt the pvp kill count.
+            this.player.pvpKills++;
+        }
 
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;

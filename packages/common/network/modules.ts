@@ -10,6 +10,7 @@ export default {
 export enum PacketType {
     Broadcast,
     Player,
+    Players,
     Region,
     Regions,
     RegionList
