@@ -7,6 +7,7 @@ import Areas from '../map/areas/areas';
 import Index from './impl/index';
 
 import log from '@kaetram/common/util/log';
+import { Opcodes } from '@kaetram/common/network';
 
 /**
  * Controller for minigames, used to connect the game world to the minigames
@@ -48,5 +49,18 @@ export default class Minigames {
 
             this.minigames[area.minigame].loadArea(area);
         });
+    }
+
+    /**
+     * Finds and returns a minigame based on the opcode.
+     * @param opcode The opcode of the minigame we're looking for.
+     * @returns The minigame object if found, otherwise undefined.
+     */
+
+    public get(opcode: Opcodes.Minigame): Minigame {
+        switch (opcode) {
+            case Opcodes.Minigame.TeamWar:
+                return this.minigames.teamwar;
+        }
     }
 }

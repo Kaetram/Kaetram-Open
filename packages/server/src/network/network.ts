@@ -121,6 +121,16 @@ export default class Network {
     }
 
     /**
+     * Iterates through a list of players and sends a packet to each.
+     * @param players A list containing player objects.
+     * @param packet The packet we are sending to the list of players.
+     */
+
+    public sendToPlayers(players: Player[], packet: Packet): void {
+        _.each(players, (player: Player) => this.send(player, packet));
+    }
+
+    /**
      * Finds a region based on the `regionId` and sends a packet to each
      * player in that region.
      * @param regionId The region id we are grabbing the players from.
