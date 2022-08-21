@@ -23,6 +23,7 @@ import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
+import Minigame from './renderer/minigame';
 
 import { agent } from './utils/detect';
 import { Modules, Packets } from '@kaetram/common/network';
@@ -38,6 +39,8 @@ export default class Game {
 
     public info: InfoController = new InfoController();
     public sprites: SpritesController = new SpritesController();
+
+    public minigame: Minigame = new Minigame();
 
     public map: Map;
     public camera: Camera;

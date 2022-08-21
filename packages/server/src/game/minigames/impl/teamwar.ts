@@ -132,6 +132,8 @@ export default class TeamWar extends Minigame {
         }
 
         this.countdown--;
+
+        this.sendPacket(this.playersLobby, Opcodes.TeamWar.Lobby, this.countdown);
     }
 
     /**
@@ -179,6 +181,8 @@ export default class TeamWar extends Minigame {
 
     private addPlayer(player: Player): void {
         this.playersLobby.push(player);
+
+        this.sendPacket([player], Opcodes.TeamWar.Lobby);
     }
 
     /**
@@ -188,6 +192,8 @@ export default class TeamWar extends Minigame {
 
     private removePlayer(player: Player): void {
         this.playersLobby.splice(this.playersLobby.indexOf(player), 1);
+
+        this.sendPacket([player], Opcodes.TeamWar.Exit);
     }
 
     /**
@@ -196,11 +202,12 @@ export default class TeamWar extends Minigame {
      * @param opcode The opcode we are sending to the group.
      */
 
-    private sendPacket(players: Player[], opcode: Opcodes.TeamWar): void {
+    private sendPacket(players: Player[], opcode: Opcodes.TeamWar, countdown = 0): void {
         this.world.push(Modules.PacketType.Players, {
             players,
             packet: new MinigamePacket(Opcodes.Minigame.TeamWar, {
-                action: opcode
+                action: opcode,
+                countdown
             })
         });
     }
