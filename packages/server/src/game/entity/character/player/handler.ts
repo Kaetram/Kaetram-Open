@@ -122,6 +122,8 @@ export default class Handler {
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
+        this.player.minigameArea?.exitCallback?.(this.player);
+
         this.world.entities.removePlayer(this.player);
 
         this.world.cleanCombat(this.player);
@@ -550,17 +552,20 @@ export default class Handler {
                     case 'pvp':
                         return this.player.updatePVP(!!info);
 
-                    case 'music':
-                        return this.player.updateMusic(info);
-
                     case 'overlay':
                         return this.player.updateOverlay(info);
 
                     case 'camera':
                         return this.player.updateCamera(info);
+
+                    case 'music':
+                        return this.player.updateMusic(info);
+
+                    case 'minigame':
+                        return this.player.updateMinigame(info);
                 }
             },
-            ['pvp', 'music', 'overlay', 'camera']
+            ['pvp', 'music', 'overlay', 'camera', 'minigame']
         );
     }
 

@@ -3,8 +3,7 @@ import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
 
-type Position = { x: number; y: number };
-
+type AreaCallback = (player: Player) => void;
 export default class Area {
     public polygon!: Position[];
 
@@ -13,6 +12,7 @@ export default class Area {
     public items: string[] = [];
 
     public hasRespawned = true;
+    public ignore = false; // If the area is omitted from player walk callbacks.
 
     // Overlay properties
     public darkness = 0;
@@ -40,6 +40,9 @@ export default class Area {
     public maxEntities = 0;
     public spawnDelay = 0;
     public lastSpawn!: number;
+
+    public enterCallback?: AreaCallback;
+    public exitCallback?: AreaCallback;
 
     private spawnCallback?: () => void;
     private emptyCallback?: (attacker?: Character) => void;
@@ -136,6 +139,8 @@ export default class Area {
      */
 
     public contains(x: number, y: number): boolean {
+        if (this.ignore) return false; // Skip ignorable areas.
+
         return this.polygon ? this.inPolygon(x, y) : this.inRectangularArea(x, y);
     }
 
@@ -179,6 +184,24 @@ export default class Area {
     public forEachTile(callback: (x: number, y: number) => void): void {
         for (let i = this.y; i < this.y + this.height; i++)
             for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+    }
+
+    /**
+     * Callback for when a player enters an area.
+     * @param callback Contains the player object that is entering the area.
+     */
+
+    public onEnter(callback: AreaCallback): void {
+        this.enterCallback = callback;
+    }
+
+    /**
+     * Callback for when a player exits an area.
+     * @param callback The player that is exiting the area.
+     */
+
+    public onExit(callback: AreaCallback): void {
+        this.exitCallback = callback;
     }
 
     /**
