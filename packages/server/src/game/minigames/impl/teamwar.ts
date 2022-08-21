@@ -5,7 +5,6 @@ import World from '../../world';
 import Area from '../../map/areas/area';
 import Player from '../../entity/character/player/player';
 import Grids from '../../map/grids';
-import Entity from '../../entity/entity';
 
 import Utils from '@kaetram/common/util/utils';
 
@@ -24,6 +23,7 @@ export default class TeamWar extends Minigame {
     private blueSpawn: Area = new Area(0, 0, 0, 0, 0); // Spawn area for blue team.
 
     private players: Player[] = []; // Players currently in the game.
+    private playersLobby: Player[] = []; // Players currently in the lobby.
 
     private redTeamPoints = 0;
     private blueTeamPoints = 0;
@@ -47,6 +47,10 @@ export default class TeamWar extends Minigame {
         switch (area.mObjectType) {
             case 'lobby':
                 this.lobby = area;
+
+                // Lobby area enter and exit callbacks.
+                this.lobby.onEnter((player: Player) => this.addPlayer(player));
+                this.lobby.onExit((player: Player) => this.removePlayer(player));
                 return;
 
             case 'redteamspawn':
@@ -136,7 +140,7 @@ export default class TeamWar extends Minigame {
      */
 
     private start(): void {
-        let redTeam = _.shuffle(this.getPlayersInLobby());
+        let redTeam = _.shuffle(this.playersLobby);
 
         // Not enough players, we're not starting the game.
         if (redTeam.length < 3) return;
@@ -169,6 +173,24 @@ export default class TeamWar extends Minigame {
     }
 
     /**
+     * Adds a player to the lobby.
+     * @param player The player we are adding to the lobby.
+     */
+
+    private addPlayer(player: Player): void {
+        this.playersLobby.push(player);
+    }
+
+    /**
+     * Removes a player from the lobby array.
+     * @param player The player we are removing from the lobby.
+     */
+
+    private removePlayer(player: Player): void {
+        this.playersLobby.splice(this.playersLobby.indexOf(player), 1);
+    }
+
+    /**
      * Used to simplify the packet sending to a group of players.
      * @param players The group of players we are sending the packet to.
      * @param opcode The opcode we are sending to the group.
@@ -181,30 +203,5 @@ export default class TeamWar extends Minigame {
                 action: opcode
             })
         });
-    }
-
-    /**
-     * Looks through all the tiles in the lobby area object and iterates through
-     * all the entities at that current coordinate. If the entity is a player,
-     * we add it to our list of entities and return it after exhausting all tiles.
-     * @returns An array of players in the lobby.
-     */
-
-    private getPlayersInLobby(): Player[] {
-        let players: Player[] = [];
-
-        // Look through each tile in the lobby area object.
-        this.lobby.forEachTile((x: number, y: number) => {
-            // Look for every entity in the current x and y within the area.
-            this.grids.forEachEntityAt(x, y, (entity: Entity) => {
-                // Skip non-player entities.
-                if (!entity.isPlayer()) return;
-
-                // Append the player to the array.
-                players.push(entity as Player);
-            });
-        });
-
-        return players;
     }
 }
