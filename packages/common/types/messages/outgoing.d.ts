@@ -317,6 +317,7 @@ export type UpdateCallback = (info: EntityDisplayInfo[]) => void;
 
 export interface MinigamePacket {
     action: number;
+    countdown?: number;
 }
 
 export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;
