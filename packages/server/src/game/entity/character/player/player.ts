@@ -130,6 +130,8 @@ export default class Player extends Character {
 
     private currentSong = '';
 
+    public minigameArea: Area | undefined = undefined;
+
     // Region data
     public regionsLoaded: number[] = [];
     public treesLoaded: { [instance: string]: Modules.TreeState } = {};
@@ -600,6 +602,28 @@ export default class Player extends Character {
         this.currentSong = song;
 
         this.send(new Audio(song));
+    }
+
+    /**
+     * Updates the current minigame area the player is in. It also creates a callback
+     * to the area itself when the player enters (or exits).
+     * @param info The area the player is entering, or undefined if they are exiting.
+     */
+
+    public updateMinigame(info?: Area): void {
+        if (info === this.minigameArea) return;
+
+        let entering = info !== undefined && this.minigameArea === undefined;
+
+        if (entering) {
+            info?.enterCallback?.(this);
+            this.notify('Welcome to the TeamWar lobby!');
+        } else {
+            this.minigameArea?.exitCallback?.(this);
+            this.notify('You have left the TeamWar lobby!');
+        }
+
+        this.minigameArea = info;
     }
 
     /**
