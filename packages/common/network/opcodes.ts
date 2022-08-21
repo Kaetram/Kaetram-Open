@@ -131,7 +131,9 @@ export enum Store {
 export enum TeamWar {
     Red,
     Blue,
-    End
+    End,
+    Lobby,
+    Exit
 }
 
 export enum Overlay {

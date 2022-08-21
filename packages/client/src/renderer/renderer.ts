@@ -299,6 +299,8 @@ export default class Renderer {
 
         this.drawCursor();
 
+        this.drawMinigameGUI();
+
         this.restore();
     }
 
@@ -945,6 +947,24 @@ export default class Renderer {
         }
 
         this.textContext.restore();
+    }
+
+    private drawMinigameGUI(): void {
+        if (!this.game.minigame.exists()) return;
+
+        switch (this.game.minigame.status) {
+            case 'lobby':
+                return this.drawText(
+                    `Game starts in ${this.game.minigame.countdown} seconds`,
+                    this.textCanvas.width / 6,
+                    30,
+                    true,
+                    'white'
+                );
+
+            case 'ingame':
+                break;
+        }
     }
 
     private drawLighting(lighting: RendererLighting): void {

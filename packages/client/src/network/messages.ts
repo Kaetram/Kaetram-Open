@@ -1,3 +1,4 @@
+import { MinigameCallback } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import { Packets } from '@kaetram/common/network';
@@ -89,6 +90,7 @@ export default class Messages {
     private bubbleCallback?: BubbleCallback;
     private skillCallback?: SkillCallback;
     private updateCallback?: UpdateCallback;
+    private minigameCallback?: MinigameCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -144,6 +146,7 @@ export default class Messages {
         messages[Packets.Bubble] = () => this.bubbleCallback;
         messages[Packets.Skill] = () => this.skillCallback;
         messages[Packets.Update] = () => this.updateCallback;
+        messages[Packets.Minigame] = () => this.minigameCallback;
 
         this.messages = messages;
     }
@@ -392,5 +395,9 @@ export default class Messages {
 
     public onUpdate(callback: UpdateCallback): void {
         this.updateCallback = callback;
+    }
+
+    public onMinigame(callback: MinigameCallback): void {
+        this.minigameCallback = callback;
     }
 }
