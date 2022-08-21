@@ -53,7 +53,8 @@ import {
     RespawnPacket,
     StorePacket,
     TeleportPacket,
-    SkillPacket
+    SkillPacket,
+    MinigamePacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -143,6 +144,7 @@ export default class Connection {
         this.messages.onBubble(this.handleBubble.bind(this));
         this.messages.onSkill(this.handleSkill.bind(this));
         this.messages.onUpdate(this.handleUpdate.bind(this));
+        this.messages.onMinigame(this.handleMinigame.bind(this));
     }
 
     /**
@@ -1080,6 +1082,40 @@ export default class Connection {
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;
         });
+    }
+
+    /**
+     * Minigame packets contain information about the kind of visuals to display
+     * onto the screen. For example, the TeamWar minigame requires the countdown
+     * to be displayed in the top of the screen during the lobby sequence, and
+     * in the actual game to display the score for both teams. We use this packet
+     * to signal to the game client what to display and when.
+     * @param info Contains information about the minigame status.
+     */
+
+    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacket): void {
+        let { minigame } = this.game;
+
+        minigame.type = opcode;
+
+        switch (info.action) {
+            // Game starting packet.
+            case Opcodes.TeamWar.Blue:
+            case Opcodes.TeamWar.Red:
+                return minigame.setStatus('ingame');
+
+            // Entering lobby packets
+            case Opcodes.TeamWar.End:
+            case Opcodes.TeamWar.Lobby:
+                if (info.countdown) minigame.countdown = info.countdown;
+
+                return minigame.setStatus('lobby');
+
+            // Exiting the entire minigame
+            case Opcodes.TeamWar.Exit:
+                minigame.type = -1;
+                return minigame.setStatus('exit');
+        }
     }
 
     /**
