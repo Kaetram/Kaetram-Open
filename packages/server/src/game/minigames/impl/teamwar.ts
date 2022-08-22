@@ -10,13 +10,15 @@ import Utils from '@kaetram/common/util/utils';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import { Minigame as MinigamePacket } from '../../../network/packets';
+import { Team } from '@kaetram/common/types/minigame.d';
+
+import { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
+
+import { Minigame as Packet } from '../../../network/packets';
 
 export default class TeamWar extends Minigame {
-    private grids: Grids;
-
     private started = false;
-    private countdown = 180;
+    private countdown: number = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
     private lobby: Area = new Area(0, 0, 0, 0, 0); // Empty area.
     private redSpawn: Area = new Area(0, 0, 0, 0, 0); // Spawn area for red team.
@@ -25,13 +27,11 @@ export default class TeamWar extends Minigame {
     private players: Player[] = []; // Players currently in the game.
     private playersLobby: Player[] = []; // Players currently in the lobby.
 
-    private redTeamPoints = 0;
-    private blueTeamPoints = 0;
+    private redTeamKills = 0;
+    private blueTeamKills = 0;
 
     public constructor(private world: World) {
         super('teamwar');
-
-        this.grids = this.world.map.grids;
 
         // Begin the tick interval for the minigame.
         setInterval(this.tick.bind(this), 1000);
@@ -73,11 +73,16 @@ export default class TeamWar extends Minigame {
     public override disconnect(player: Player): void {
         let lobbyPosition = this.getLobbyPosition();
 
+        console.log(`Player ${player.username} disconnected from the game.`);
+
         // Push the player outside the game area.
-        player.setPosition(lobbyPosition.x, lobbyPosition.y);
+        player.setPosition(lobbyPosition.x, lobbyPosition.y, false, true);
 
         // Remove the player from the game they're in.
         this.players.splice(this.players.indexOf(player), 1);
+
+        // Stop when there's only one player left.
+        if (this.players.length < 2) this.stop();
     }
 
     /**
@@ -87,8 +92,8 @@ export default class TeamWar extends Minigame {
      */
 
     public override kill(player: Player): void {
-        if (player.team === Opcodes.TeamWar.Blue) this.blueTeamPoints++;
-        else if (player.team === Opcodes.TeamWar.Red) this.redTeamPoints++;
+        if (player.team === Team.Blue) this.blueTeamKills++;
+        else if (player.team === Team.Red) this.redTeamKills++;
     }
 
     /**
@@ -109,8 +114,10 @@ export default class TeamWar extends Minigame {
      * @returns Returns a respawn point within the minigame area depending on the team.
      */
 
-    public override getRespawnPoint(team: Opcodes.TeamWar): Position {
-        let area = team === Opcodes.TeamWar.Red ? this.redSpawn : this.blueSpawn;
+    public override getRespawnPoint(team: Team): Position {
+        if (!this.started) return this.getLobbyPosition();
+
+        let area = team === Team.Red ? this.redSpawn : this.blueSpawn;
 
         return {
             x: Utils.randomInt(area.x, area.x + area.width),
@@ -124,16 +131,56 @@ export default class TeamWar extends Minigame {
 
     private tick(): void {
         if (this.countdown <= 0) {
-            this.countdown = 180;
+            this.countdown = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
             // Attempt to start if not started, otherwise end the game.
             if (!this.started) this.start();
             else this.stop();
+
+            return;
         }
 
         this.countdown--;
 
-        this.sendPacket(this.playersLobby, Opcodes.TeamWar.Lobby, this.countdown);
+        // Send the score packet to the players in-game.
+        if (this.players.length > 0)
+            this.sendPacket(this.players, {
+                action: Opcodes.TeamWar.Score,
+                countdown: this.countdown,
+                redTeamKills: this.redTeamKills,
+                blueTeamKills: this.blueTeamKills
+            });
+
+        // Send the countdown packet to the players in the lobby.
+        if (this.playersLobby.length > 0)
+            this.sendPacket(this.playersLobby, {
+                action: Opcodes.TeamWar.Lobby,
+                countdown: this.countdown,
+                started: this.started
+            });
+
+        this.syncPlayers();
+    }
+
+    /**
+     * Synchronizes the players forcefully due to potentially large amounts
+     * of teleports and despawning that may wrongfully occur. This is a temporary
+     * fix.
+     * @param player The player we are requesting sync for.
+     */
+
+    private sync(player: Player): void {
+        player.updateEntityList();
+        player.updateEntities();
+    }
+
+    /**
+     * Goes through all the players and synchronizes the list of entities.
+     */
+
+    private syncPlayers(): void {
+        _.each(this.players, this.sync.bind(this));
+        _.each(this.playersLobby, (player: Player) => player.updateEntityList());
     }
 
     /**
@@ -145,17 +192,27 @@ export default class TeamWar extends Minigame {
         let redTeam = _.shuffle(this.playersLobby);
 
         // Not enough players, we're not starting the game.
-        if (redTeam.length < 3) return;
+        if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) return;
+
+        this.started = true;
 
         let blueTeam = redTeam.splice(0, redTeam.length / 2);
 
-        this.sendPacket(redTeam, Opcodes.TeamWar.Red);
-        this.sendPacket(blueTeam, Opcodes.TeamWar.Blue);
+        // Assign each player in each team their respective team.
+        _.each(redTeam, (player: Player) => (player.team = Team.Red));
+        _.each(blueTeam, (player: Player) => (player.team = Team.Blue));
 
         // Concatenate all the players into one array for later.
         this.players = [...redTeam, ...blueTeam];
 
-        this.started = true;
+        // Teleport every player to the lobby.
+        _.each(this.players, (player: Player) => {
+            player.minigame = Opcodes.Minigame.TeamWar;
+
+            let position = this.getRespawnPoint(player.team);
+
+            player.teleport(position.x, position.y, false);
+        });
     }
 
     /**
@@ -163,15 +220,26 @@ export default class TeamWar extends Minigame {
      */
 
     private stop(): void {
-        this.sendPacket(this.players, Opcodes.TeamWar.End);
-
         this.started = false;
+
+        this.sendPacket(this.players, {
+            action: Opcodes.TeamWar.End
+        });
+
+        // Teleport all the players back to the lobby.
+        _.each(this.players, (player: Player) => {
+            player.minigame = -1;
+
+            let position = this.getLobbyPosition();
+
+            player.teleport(position.x, position.y, false);
+        });
 
         // Clear all the team dictionaries and in-game player arrays.
         this.players = [];
 
-        this.redTeamPoints = 0;
-        this.blueTeamPoints = 0;
+        this.redTeamKills = 0;
+        this.blueTeamKills = 0;
     }
 
     /**
@@ -182,7 +250,9 @@ export default class TeamWar extends Minigame {
     private addPlayer(player: Player): void {
         this.playersLobby.push(player);
 
-        this.sendPacket([player], Opcodes.TeamWar.Lobby);
+        this.sendPacket([player], {
+            action: Opcodes.TeamWar.Lobby
+        });
     }
 
     /**
@@ -193,22 +263,21 @@ export default class TeamWar extends Minigame {
     private removePlayer(player: Player): void {
         this.playersLobby.splice(this.playersLobby.indexOf(player), 1);
 
-        this.sendPacket([player], Opcodes.TeamWar.Exit);
+        this.sendPacket([player], {
+            action: Opcodes.TeamWar.Exit
+        });
     }
 
     /**
      * Used to simplify the packet sending to a group of players.
      * @param players The group of players we are sending the packet to.
-     * @param opcode The opcode we are sending to the group.
+     * @param info Contains the minigame packet data.
      */
 
-    private sendPacket(players: Player[], opcode: Opcodes.TeamWar, countdown = 0): void {
+    private sendPacket(players: Player[], info: MinigamePacket): void {
         this.world.push(Modules.PacketType.Players, {
             players,
-            packet: new MinigamePacket(Opcodes.Minigame.TeamWar, {
-                action: opcode,
-                countdown
-            })
+            packet: new Packet(Opcodes.Minigame.TeamWar, info)
         });
     }
 }

@@ -69,6 +69,8 @@ export default class Incoming {
                         return this.handleLogin(message);
                     case Packets.Ready:
                         return this.handleReady(message);
+                    case Packets.List:
+                        return this.handleList();
                     case Packets.Who:
                         return this.handleWho(message);
                     case Packets.Equipment:
@@ -170,6 +172,14 @@ export default class Incoming {
         if (this.player.isDead()) this.player.deathCallback?.();
 
         this.player.ready = true;
+    }
+
+    /**
+     * Handles a request for enttity list synchronizations packet.
+     */
+
+    private handleList(): void {
+        this.player.updateEntityList();
     }
 
     /**
@@ -538,6 +548,12 @@ export default class Incoming {
     private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.isMob() || target.isMob()) return true;
 
-        return attacker.isPlayer() && target.isPlayer() && attacker.pvp && target.pvp;
+        return (
+            attacker.isPlayer() &&
+            target.isPlayer() &&
+            attacker.pvp &&
+            target.pvp &&
+            attacker.team !== target.team
+        );
     }
 }

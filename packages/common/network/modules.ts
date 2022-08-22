@@ -353,6 +353,11 @@ export const enum Constants {
     SKILL_LOOP = 1000 // How often we check the loop of a skill
 }
 
+export enum MinigameConstants {
+    TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby
+    TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
+}
+
 export enum APIConstants {
     UNHANDLED_HTTP_METHOD,
     NOT_FOUND_ERROR,
