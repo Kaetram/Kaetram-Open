@@ -29,6 +29,7 @@ export default abstract class Areas {
 
             // Add polygon if present.
             if (a.polygon) area.polygon = a.polygon;
+            if (a.ignore) area.ignore = a.ignore;
 
             // Add to our list of areas.
             this.areas.push(area);

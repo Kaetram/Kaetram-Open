@@ -129,8 +129,7 @@ export enum Store {
 }
 
 export enum TeamWar {
-    Red,
-    Blue,
+    Score,
     End,
     Lobby,
     Exit

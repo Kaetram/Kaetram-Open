@@ -90,6 +90,8 @@ export default class Player extends Character {
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
 
+        if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
+
         this.setOrientation(data.orientation);
 
         if (!sync) this.setGridPosition(data.x, data.y);
