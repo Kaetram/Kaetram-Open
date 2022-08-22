@@ -1,4 +1,5 @@
 import Entity from '../entity';
+import Player from '../character/player/player';
 
 import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
@@ -170,6 +171,37 @@ export default class Item extends Entity {
     }
 
     /**
+     * Checks whether or not the player can equip the current item.
+     * @param player The player we are checking the level of and sending notifications to.
+     * @returns Whether or not the player can equip the item.
+     */
+
+    public canEquip(player: Player): boolean {
+        let requirement = this.getRequirement();
+
+        if (player.level < requirement) {
+            player.notify(`You need to be level ${requirement} to equip this.`);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Grabs the weapon requirement level for the current item object.
+     * @returns The weapon requirement level in a number format.
+     */
+
+    public getRequirement(): number {
+        if (this.requirement !== -1) this.requirement;
+
+        if (this.isWeapon()) return Math.floor(this.attackLevel * 1.5);
+        if (this.isArmour()) return Math.floor(this.defenseLevel * 1.5);
+
+        return 0;
+    }
+
+    /**
      * Checks if the item is equippable by comparing the type
      * against all the equippable items. Will probably be
      * rewritten for compactness in the future.
@@ -195,6 +227,22 @@ export default class Item extends Entity {
 
     public isRangedWeapon(): boolean {
         return this.itemType === 'weaponarcher';
+    }
+
+    /**
+     * @returns Whether or not the item type is a weapon or archer weapon.
+     */
+
+    private isWeapon(): boolean {
+        return this.itemType === 'weapon' || this.itemType === 'weaponarcher';
+    }
+
+    /**
+     * @returns Whether or not the item type is that of a armour or archer armour.
+     */
+
+    private isArmour(): boolean {
+        return this.itemType === 'armour' || this.itemType === 'armourarcher';
     }
 
     /**

@@ -373,6 +373,8 @@ export default class Connection {
 
         if (!player) return;
 
+        this.input.selectedCellVisible = false;
+
         // If the player is the same as our main player.
         let currentPlayer = player.instance === this.game.player.instance;
 

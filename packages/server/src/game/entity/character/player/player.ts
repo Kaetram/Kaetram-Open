@@ -526,7 +526,7 @@ export default class Player extends Character {
                     this.inventory.remove(index, 1);
                 }
 
-                if (item.isEquippable()) {
+                if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
                     this.equipment.equip(item);
                 }
