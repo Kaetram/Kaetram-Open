@@ -159,6 +159,9 @@ export default class Handler {
 
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(new Despawn(this.player.instance), true);
+
+        // Respawn player immediately when they're in a minigame.
+        if (this.player.inMinigame()) this.player.respawn();
     }
 
     /**

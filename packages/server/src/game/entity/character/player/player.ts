@@ -52,7 +52,9 @@ import {
     Teleport,
     Welcome,
     Pointer,
-    PVP
+    PVP,
+    Spawn,
+    Respawn
 } from '@kaetram/server/src/network/packets';
 
 type KillCallback = (character: Character) => void;
@@ -317,6 +319,30 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the player respawning in the world.
+     */
+
+    public respawn(): void {
+        // Cannot respawn if the player is not marked as dead.
+        if (!this.dead) return log.warning(`Invalid respawn request.`);
+
+        let spawn = this.getSpawn();
+
+        this.dead = false;
+        this.setPosition(spawn.x, spawn.y);
+
+        // Signal to other players that the player is spawning.
+        this.sendToRegions(new Spawn(this), true);
+
+        this.send(new Respawn(this));
+
+        this.hitPoints.reset();
+        this.mana.reset();
+
+        this.sync();
+    }
+
+    /**
      * Adds experience to the player and handles level ups/popups/packets/etc.
      * @param exp The amount of experience we are adding to the player.
      */
@@ -446,6 +472,9 @@ export default class Player extends Character {
     public teleport(x: number, y: number, withAnimation = false): void {
         if (this.dead) return;
 
+        this.setPosition(x, y, false);
+        this.world.cleanCombat(this);
+
         this.sendToRegions(
             new Teleport({
                 instance: this.instance,
@@ -454,9 +483,6 @@ export default class Player extends Character {
                 withAnimation
             })
         );
-
-        this.setPosition(x, y, false);
-        this.world.cleanCombat(this);
     }
 
     /**
