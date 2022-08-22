@@ -24,6 +24,7 @@ export { default as Experience } from './experience';
 export { default as Death } from './death';
 export { default as Audio } from './audio';
 export { default as NPC } from './npc';
+export { default as Respawn } from './respawn';
 export { default as Enchant } from './enchant';
 export { default as Pointer } from './pointer';
 export { default as PVP } from './pvp';

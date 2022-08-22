@@ -103,8 +103,8 @@ export default class TeamWar extends Minigame {
 
     public override getLobbyPosition(): Position {
         return {
-            x: Utils.randomInt(this.lobby.x, this.lobby.x + this.lobby.width),
-            y: Utils.randomInt(this.lobby.y, this.lobby.y + this.lobby.height)
+            x: Utils.randomInt(this.lobby.x + 2, this.lobby.x + this.lobby.width - 3),
+            y: Utils.randomInt(this.lobby.y + 2, this.lobby.y + this.lobby.height - 3)
         };
     }
 
@@ -120,8 +120,8 @@ export default class TeamWar extends Minigame {
         let area = team === Team.Red ? this.redSpawn : this.blueSpawn;
 
         return {
-            x: Utils.randomInt(area.x, area.x + area.width),
-            y: Utils.randomInt(area.y, area.y + area.height)
+            x: Utils.randomInt(area.x + 1, area.x + area.width - 1),
+            y: Utils.randomInt(area.y + 1, area.y + area.height - 1)
         };
     }
 
