@@ -241,8 +241,6 @@ export default class Handler {
         log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(new Despawn(this.player.instance));
-
-        this.player.updateEntityList();
     }
 
     /**
