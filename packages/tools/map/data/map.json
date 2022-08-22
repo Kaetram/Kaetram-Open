@@ -515,7 +515,7 @@
          "objects":[
                 {
                  "class":"",
-                 "height":240,
+                 "height":224,
                  "id":311,
                  "name":"",
                  "properties":[
@@ -591,7 +591,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1735,7 +1735,18 @@
          "draworder":"topdown",
          "id":24,
          "name":"pvp",
-         "objects":[],
+         "objects":[
+                {
+                 "class":"",
+                 "height":672,
+                 "id":316,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":864,
+                 "x":7056,
+                 "y":4928
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1974,7 +1985,7 @@
          "y":0
         }],
  "nextlayerid":75,
- "nextobjectid":316,
+ "nextobjectid":317,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",
