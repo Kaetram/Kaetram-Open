@@ -26,6 +26,7 @@ export interface ProcessedArea {
     width: number;
     height: number;
     polygon?: Position[] | undefined;
+    ignore?: boolean; // Whether or not to skip movement checking for area.
 
     // Door
     destination?: number;

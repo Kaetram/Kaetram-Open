@@ -795,6 +795,8 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        this.game.minigame.reset();
+
         this.game.player.teleporting = true;
 
         // Set the player's sprite to the death animation sprite.
@@ -802,6 +804,8 @@ export default class Connection {
 
         // Perform the death animation.
         this.game.player.animateDeath(() => {
+            this.game.entities.unregisterPosition(this.game.player);
+
             this.audio.stop();
 
             this.game.player.despawn();
@@ -875,8 +879,6 @@ export default class Connection {
 
     private handleRespawn(info: RespawnPacket): void {
         this.game.player.setGridPosition(info.x, info.y);
-
-        this.entities.registerPosition(this.game.player);
 
         this.camera.centreOn(this.game.player);
 
@@ -1094,27 +1096,30 @@ export default class Connection {
      */
 
     private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacket): void {
-        let { minigame } = this.game;
+        let { minigame, player } = this.game;
 
         minigame.type = opcode;
+        minigame.started = !!info.started;
+
+        if (info.countdown) minigame.countdown = info.countdown;
 
         switch (info.action) {
             // Game starting packet.
-            case Opcodes.TeamWar.Blue:
-            case Opcodes.TeamWar.Red:
+            case Opcodes.TeamWar.Score:
+                if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
+                    minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
+
                 return minigame.setStatus('ingame');
 
             // Entering lobby packets
             case Opcodes.TeamWar.End:
             case Opcodes.TeamWar.Lobby:
-                if (info.countdown) minigame.countdown = info.countdown;
-
+                player.nameColour = '';
                 return minigame.setStatus('lobby');
 
             // Exiting the entire minigame
             case Opcodes.TeamWar.Exit:
-                minigame.type = -1;
-                return minigame.setStatus('exit');
+                return minigame.reset();
         }
     }
 
