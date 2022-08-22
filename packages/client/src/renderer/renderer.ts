@@ -954,16 +954,43 @@ export default class Renderer {
 
         switch (this.game.minigame.status) {
             case 'lobby':
-                return this.drawText(
-                    `Game starts in ${this.game.minigame.countdown} seconds`,
+                this.drawText(
+                    this.game.minigame.started
+                        ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
+                        : `Game starts in ${this.game.minigame.countdown} seconds`,
                     this.textCanvas.width / 6,
                     30,
                     true,
                     'white'
                 );
+                return;
 
             case 'ingame':
-                break;
+                this.drawText(
+                    `Red: ${this.game.minigame.redTeamScore}`,
+                    this.textCanvas.width / 6 - 20,
+                    30,
+                    true,
+                    'red'
+                );
+
+                this.drawText(
+                    `Blue: ${this.game.minigame.blueTeamScore}`,
+                    this.textCanvas.width / 6 + 20,
+                    30,
+                    true,
+                    'blue'
+                );
+
+                this.drawText(
+                    `Time left: ${this.game.minigame.countdown} seconds`,
+                    this.textCanvas.width / 6,
+                    50,
+                    true,
+                    'white'
+                );
+
+                return;
         }
     }
 

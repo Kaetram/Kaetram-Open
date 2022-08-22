@@ -37,6 +37,8 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import { Team } from '@kaetram/common/types/minigame.d';
 import {
     Audio,
     Camera,
@@ -143,7 +145,7 @@ export default class Player extends Character {
 
     // Minigame status of the player.
     public minigame = -1; // Opcodes.Minigame
-    public team: Opcodes.TeamWar = -1;
+    public team: Team = -1;
 
     // Currently open store of the player.
     public storeOpen = '';
@@ -442,6 +444,8 @@ export default class Player extends Character {
      */
 
     public teleport(x: number, y: number, withAnimation = false): void {
+        if (this.dead) return;
+
         this.sendToRegions(
             new Teleport({
                 instance: this.instance,
@@ -618,10 +622,7 @@ export default class Player extends Character {
         if (entering) {
             info?.enterCallback?.(this);
             this.notify('Welcome to the TeamWar lobby!');
-        } else {
-            this.minigameArea?.exitCallback?.(this);
-            this.notify('You have left the TeamWar lobby!');
-        }
+        } else this.minigameArea?.exitCallback?.(this);
 
         this.minigameArea = info;
     }
@@ -660,9 +661,10 @@ export default class Player extends Character {
      * @param x The new grid x coordinate we are moving to.
      * @param y The new grd y coordinate we are moving to.
      * @param forced Forced parameters ignores current actions and forces the player to move.
+     * @param skip Whether or not to skip sending a packet to nearby regions.
      */
 
-    public override setPosition(x: number, y: number, forced = false): void {
+    public override setPosition(x: number, y: number, forced = false, skip = false): void {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dnyamic tiles.
@@ -684,6 +686,8 @@ export default class Player extends Character {
 
         // Sets the player's new position.
         super.setPosition(x, y);
+
+        if (skip) return;
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
@@ -717,6 +721,29 @@ export default class Player extends Character {
         super.setRecentRegions(regions);
 
         if (regions.length > 0) this.recentRegionsCallback?.(regions);
+    }
+
+    /**
+     * Override for the superclass display info. Uses the player's team
+     * to determine what colour to draw the username.
+     * @returns Display info containing the name colour.
+     */
+
+    public override getDisplayInfo(): EntityDisplayInfo {
+        return {
+            instance: this.instance,
+            colour: this.team === Team.Red ? 'red' : 'blue'
+        };
+    }
+
+    /**
+     * Override for the superclass `hasDisplayInfo()`. Relies on whether
+     * or not the player is in a minigame currently.
+     * @returns Whether or not the player is in a minigame.
+     */
+
+    public override hasDisplayInfo(): boolean {
+        return this.inMinigame();
     }
 
     /**
@@ -1110,6 +1137,8 @@ export default class Player extends Character {
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
         data.movementSpeed = this.getMovementSpeed();
+
+        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
