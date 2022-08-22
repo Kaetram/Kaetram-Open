@@ -10,7 +10,6 @@ import World from '../game/world';
 import Entities from './entities';
 import MongoDB from '../database/mongodb/mongodb';
 import Creator from '../database/mongodb/creator';
-import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
 import { Spawn } from '../network/packets';
@@ -31,12 +30,9 @@ import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
-import type Mob from '../game/entity/character/mob/mob';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-
-type PacketData = (string | number | boolean | string[])[];
 
 export default class Incoming {
     private world: World;
@@ -90,7 +86,7 @@ export default class Incoming {
                     case Packets.Container:
                         return this.handleContainer(message);
                     case Packets.Respawn:
-                        return this.handleRespawn();
+                        return this.player.respawn();
                     case Packets.Trade:
                         return this.handleTrade(message);
                     case Packets.Enchant:
@@ -447,24 +443,6 @@ export default class Incoming {
                 container.swap(packet.index!, packet.tIndex!);
                 break;
         }
-    }
-
-    private handleRespawn(): void {
-        if (!this.player.dead) return log.warning(`Invalid respawn request.`);
-
-        let spawn = this.player.getSpawn();
-
-        this.player.dead = false;
-        this.player.setPosition(spawn.x, spawn.y);
-
-        this.player.sendToRegions(new Spawn(this.player), true);
-
-        this.player.send(new Respawn(this.player));
-
-        this.player.hitPoints.reset();
-        this.player.mana.reset();
-
-        this.player.sync();
     }
 
     private handleTrade(message: [Opcodes.Trade, string]): void {
