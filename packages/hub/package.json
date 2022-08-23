@@ -2,8 +2,8 @@
     "name": "@kaetram/hub",
     "type": "module",
     "scripts": {
-        "start": "tsx ./src/main.ts",
-        "hub": "nodemon -e ts,json",
+        "start": "tsx --preserve-symlinks ./src/main.ts",
+        "hub": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
         "build": "tsc --noEmit"
     },
     "dependencies": {
