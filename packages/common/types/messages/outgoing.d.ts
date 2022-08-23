@@ -63,6 +63,15 @@ export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) 
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface DespawnPacket {
+    instance: string; // The entity we are despawning.
+    regions?: number[]; // Region checker for when an entity despawns.
+}
+
+export type DespawnCallback = (info: DespawnPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 export interface TeleportPacket {
     instance: string; // Main entity involved in the teleportation.
     x: number; // x coordinate of the teleportation.

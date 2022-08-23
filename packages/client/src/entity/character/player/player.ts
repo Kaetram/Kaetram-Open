@@ -13,8 +13,6 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
-import type Game from '../../../game';
-
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
