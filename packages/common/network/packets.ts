@@ -29,7 +29,7 @@ enum Packets {
     Heal,
     Experience,
     Death,
-    Audio,
+    Music,
     NPC,
     Respawn,
     Trade,

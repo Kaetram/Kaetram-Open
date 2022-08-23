@@ -57,10 +57,16 @@ export interface Config {
     fsDebugging: boolean;
 }
 
+console.debug(`Loading env values from [.env] with fallback to [.env.defaults]`);
+
 let { NODE_ENV } = process.env,
     env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
 
-if (NODE_ENV) Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+if (NODE_ENV) {
+    console.debug(`Loading additional env values from [.env.${NODE_ENV}]`);
+
+    Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+}
 
 let envConfig = dotenvParseVariables(env),
     config = {} as Config;
@@ -72,5 +78,16 @@ for (let key of Object.keys(envConfig)) {
 }
 
 config.hubHost = config.hubHost || config.host;
+
+if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
+    console.error(
+        `Something is wrong with your configuration, your NODE_ENV is set to 'e2e' and your database name does not include 'e2e'.
+        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`
+    );
+
+    throw new Error(
+        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
+    );
+}
 
 export default config;
