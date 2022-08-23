@@ -11,7 +11,8 @@ Then('I see the login error {string}', function (errorText: string) {
 });
 
 Then('I am logged in successfully', function () {
-    cy.get('#health-info').should('be.visible');
+    cy.wait(1000);
+    cy.get('#health-info', { timeout: 60_000 }).should('be.visible');
     // TODO @Keros, if you remove this line,
     //  you can crash the server because you log off too soon after logging in.
     cy.wait(3000);
