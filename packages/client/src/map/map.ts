@@ -91,10 +91,12 @@ export default class Map {
      */
 
     public loadRegions(regionData: RegionData): void {
-        _.each(regionData, (data: RegionTileData[]) => this.loadRegion(data));
+        _.each(regionData, (data: RegionTileData[], region) =>
+            this.loadRegion(data, parseInt(region))
+        );
 
         // Save data after we finish parsing it.
-        this.saveRegionData();
+        this.saveMapData();
     }
 
     /**
@@ -104,7 +106,7 @@ export default class Map {
      * @param data Array of RegionTileData containing the data to load.
      */
 
-    public loadRegion(data: RegionTileData[]): void {
+    public loadRegion(data: RegionTileData[], region: number): void {
         // For loop is faster than _.each in this case.
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
@@ -131,6 +133,9 @@ export default class Map {
             // If the tile doesn't have an object but the index is in our objects array, we remove it.
             if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
         }
+
+        // Store the region we just saved into our local storage.
+        this.game.storage.setRegionData(data, region);
     }
 
     /**
@@ -201,24 +206,31 @@ export default class Map {
      */
 
     public loadRegionData(): void {
-        let data = this.game.storage.getRegionData();
+        let data = this.game.storage.getRegionData(),
+            keys = Object.keys(data.regionData);
 
-        if (data.regionData.length > 0) {
-            this.data = data.regionData;
-            this.grid = data.grid;
+        if (keys.length > 0) {
+            try {
+                this.loadRegions(data.regionData);
+            } catch {
+                this.game.storage.clear();
+            }
+
             this.objects = data.objects;
             this.cursorTiles = data.cursorTiles;
 
             this.preloadedData = true;
+
+            log.info(`Preloaded map data with ${keys.length} regions.`);
         }
     }
 
     /**
-     * Saves the current map's data, grid, objects, and cursors to the local storage.
+     * Saves and stores information about objects and cursor tiles into the local storage.
      */
 
-    private saveRegionData(): void {
-        this.game.storage.setRegionData(this.data, this.grid, this.objects, this.cursorTiles);
+    private saveMapData(): void {
+        this.game.storage.setMapData(this.objects, this.cursorTiles);
     }
 
     /**
