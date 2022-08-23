@@ -130,7 +130,7 @@ export default class Connection {
         this.messages.onHeal(this.handleHeal.bind(this));
         this.messages.onExperience(this.handleExperience.bind(this));
         this.messages.onDeath(this.handleDeath.bind(this));
-        this.messages.onAudio(this.handleAudio.bind(this));
+        this.messages.onMusic(this.handleMusic.bind(this));
         this.messages.onNPC(this.handleNPC.bind(this));
         this.messages.onRespawn(this.handleRespawn.bind(this));
         this.messages.onEnchant(this.handleEnchant.bind(this));
@@ -439,8 +439,8 @@ export default class Connection {
         // Clears our client's target.
         if (this.game.player.hasTarget(entity)) this.game.player.removeTarget();
 
-        // Plays a random kill sound if the game client player is nearby.
-        if (this.game.player.getDistance(entity) <= 7) this.audio.playKill();
+        // Plays a random kill sound.
+        this.audio.playKillSound(entity);
 
         // Certain entities will have a special death animation, otherwise we use default.
         if (!entity.sprite.hasDeathAnimation) entity.setSprite(this.sprites.getDeath());
@@ -482,10 +482,10 @@ export default class Connection {
         }
 
         // If the game client player is the attacker, we play the hit sound effect.
-        if (currentPlayerAttacker && info.hit.damage > 0) this.audio.playHit();
+        if (currentPlayerAttacker && info.hit.damage > 0) this.audio.playHitSound(target);
 
         // Play the hurt sound effect if the client player is the target.
-        if (currentPlayerTarget && info.hit.damage > 0) this.audio.playHurt();
+        if (currentPlayerTarget && info.hit.damage > 0) this.audio.playSound('hurt');
 
         // Create the hit info to be displayed above the entity.
         this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
@@ -566,7 +566,7 @@ export default class Connection {
             this.bubble.create(info.instance!, info.message);
             this.bubble.setTo(info.instance!, entity.x, entity.y);
 
-            this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
+            this.audio.playSound('npctalk', entity);
         }
     }
 
@@ -803,6 +803,8 @@ export default class Connection {
 
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
+      
+        this.audio.stopMusic();
 
         // Perform the death animation.
         this.game.player.animateDeath(() => {
@@ -821,12 +823,8 @@ export default class Connection {
      * @param newSong String of the new song.
      */
 
-    private handleAudio(newSong: string): void {
-        if (isMobile()) return;
-
-        this.audio.newSong = newSong;
-
-        this.audio.update();
+    private handleMusic(newSong?: string): void {
+        this.audio.playMusic(newSong);
     }
 
     /**
@@ -850,7 +848,7 @@ export default class Connection {
                 // Which sound effect to play depending on if conversation is over or not.
                 soundEffect = info.text ? 'npc' : 'npc-end';
 
-                this.audio.play(Modules.AudioTypes.SFX, soundEffect);
+                this.audio.playSound(soundEffect, npc);
 
                 this.game.player.disableAction = true;
 
