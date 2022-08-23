@@ -39,6 +39,7 @@ import {
     CombatPacket,
     CommandPacket,
     ContainerPacket,
+    DespawnPacket,
     EnchantPacket,
     EquipmentPacket,
     ExperiencePacket,
@@ -210,9 +211,9 @@ export default class Connection {
                 // eslint-disable-next-line unicorn/prefer-code-point
                 .map((char) => char.charCodeAt(0)),
             inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
-            region = JSON.parse(inflatedString);
+            regions = JSON.parse(inflatedString);
 
-        this.map.loadRegions(region);
+        this.map.loadRegions(regions);
 
         // Used if the client uses low-power mode, forces redrawing of trees.
         this.renderer.forceRendering = true;
@@ -415,11 +416,14 @@ export default class Connection {
      * @param instance Instance of the entity we are removing.
      */
 
-    private handleDespawn(instance: string): void {
-        let entity = this.entities.get<Character>(instance);
+    private handleDespawn(info: DespawnPacket): void {
+        let entity = this.entities.get<Character>(info.instance);
 
         // Could not find the entity.
         if (!entity) return;
+
+        // If a list of regions is provided, we check the entity is in one of those regions.
+        if (info.regions && !info.regions.includes(entity.region)) return;
 
         // Handle item despawn separately here.
         if (entity.isItem()) return this.entities.removeItem(entity);

@@ -1,4 +1,5 @@
 import { Modules } from '@kaetram/common/network';
+import Utils from '../utils/util';
 
 import type Animation from './animation';
 import type Sprite from './sprite';
@@ -27,6 +28,8 @@ export default abstract class Entity {
     public gridY = 0;
 
     public name = '';
+
+    public region = -1;
 
     public sprite!: Sprite;
 
@@ -214,6 +217,7 @@ export default abstract class Entity {
     public setGridPosition(gridX: number, gridY: number): void {
         this.gridX = gridX;
         this.gridY = gridY;
+        this.region = Utils.getRegion(gridX, gridY);
 
         this.setPosition(gridX * 16, gridY * 16);
     }

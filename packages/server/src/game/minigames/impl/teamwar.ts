@@ -4,7 +4,6 @@ import Minigame from '../minigame';
 import World from '../../world';
 import Area from '../../map/areas/area';
 import Player from '../../entity/character/player/player';
-import Grids from '../../map/grids';
 
 import Utils from '@kaetram/common/util/utils';
 
