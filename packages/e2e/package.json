@@ -2,7 +2,7 @@
     "name": "@kaetram/e2e",
     "type": "module",
     "scripts": {
-        "test": "NODE_ENV=e2e server-test 'yarn workspace kaetram dev' 'http-get://localhost:9000|9001' 'yarn tsx database/server' '3000/api/v1/health'",
+        "test": "NODE_ENV=e2e server-test 'yarn workspace kaetram dev' 'http-get://127.0.0.1:9000|http://127.0.0.1:9001' 'NODE_ENV=e2e yarn tsx database/server' '3000/api/v1/health'",
         "test:run": "yarn test 'yarn cypress run'",
         "test:open": "yarn test 'yarn cypress open'"
     },
@@ -14,7 +14,6 @@
         "concurrently": "^7.3.0",
         "cypress": "^10.4.0",
         "esbuild": "^0.14.53",
-        "express-mongo-rest": "^0.1.3",
         "start-server-and-test": "^1.14.0",
         "tsx": "^3.8.0",
         "typescript": "^4.7.4",
@@ -22,8 +21,8 @@
     },
     "cypress-cucumber-preprocessor": {
         "stepDefinitions": [
-            "[filepath]/**/*.{js,ts}",
-            "[filepath]/../*.{js,ts}",
+            "cypress/e2e/[filepath]/**/*.{js,ts}",
+            "cypress/e2e/[filepath]/../*.{js,ts}",
             "cypress/e2e/extensions/*/common/**/*.{js,ts}",
             "cypress/e2e/common/**/*.{js,ts}"
         ]
