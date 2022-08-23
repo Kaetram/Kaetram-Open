@@ -158,7 +158,12 @@ export default class Handler {
         this.player.send(new Death(this.player.instance));
 
         // Send despawn packet to all the nearby entities except the player.
-        this.player.sendToRegions(new Despawn(this.player.instance), true);
+        this.player.sendToRegions(
+            new Despawn({
+                instance: this.player.instance
+            }),
+            true
+        );
 
         // Respawn player immediately when they're in a minigame.
         if (this.player.inMinigame()) this.player.respawn();
@@ -243,7 +248,12 @@ export default class Handler {
     private handleRecentRegions(regions: number[]): void {
         log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
-        this.player.sendToRecentRegions(new Despawn(this.player.instance));
+        this.player.sendToRecentRegions(
+            new Despawn({
+                instance: this.player.instance,
+                regions
+            })
+        );
     }
 
     /**

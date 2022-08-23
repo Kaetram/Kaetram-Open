@@ -191,8 +191,7 @@ export default class Regions {
      */
 
     private joining(entity: Entity, region: number): void {
-        if (!entity) return;
-        if (region === -1) return;
+        if (!entity || region === -1) return;
 
         this.regions[region].addJoining(entity);
 
@@ -247,7 +246,7 @@ export default class Regions {
 
         if (entity.isPlayer()) region.removePlayer(entity as Player);
 
-        oldRegions = this.sendDespawns(entity);
+        oldRegions = this.getOldRegions(entity);
 
         entity.setRegion(-1);
 
@@ -292,7 +291,7 @@ export default class Regions {
      * @param entity The entity that we are despawning.
      */
 
-    private sendDespawns(entity: Entity): number[] {
+    private getOldRegions(entity: Entity): number[] {
         let oldRegions: number[] = [];
 
         this.forEachSurroundingRegion(entity.region, (surroundingRegion: number) => {
@@ -355,19 +354,17 @@ export default class Regions {
     }
 
     /**
-     * Iterates through the regions and determines which region index (in the array)
-     * belongs to the gridX and gridY specified.
+     * Calculates the region number the player is currently in.
      * @param x The player's x position in the grid (floor(x / tileSize))
      * @param y The player's y position in the grid (floor(y / tileSize))
-     * @returns The region id the coordinates are in.
+     * @returns The region number the coordinates are in.
      */
 
     public getRegion(x: number, y: number): number {
-        let region = _.findIndex(this.regions, (region: Region) => {
-            return region.inRegion(x, y);
-        });
+        let regionX = Math.floor(x / this.divisionSize),
+            regionY = Math.floor(y / this.divisionSize);
 
-        return region;
+        return regionX + regionY * this.sideLength;
     }
 
     /**
