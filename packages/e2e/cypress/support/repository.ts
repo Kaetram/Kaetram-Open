@@ -20,9 +20,15 @@ Cypress.Commands.add('resetCollection', (collection: CollectionName) => {
  *  cy.createPlayerInfo(playerInfo);
  */
 Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
-    return cy.request('POST', `http://localhost:3000/api/v1/player_info`, playerInfo).then(() => {
-        return true;
-    });
+    return cy
+        .request(
+            'POST',
+            `http://localhost:3000/api/v1/player_info/username/${playerInfo.username}`,
+            playerInfo
+        )
+        .then(() => {
+            return true;
+        });
 });
 
 /**
@@ -33,7 +39,7 @@ Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
  */
 Cypress.Commands.add('getPlayerInfo', (username: string) => {
     return cy
-        .request(`http://localhost:3000/api/v1/player_info?username=${username}`)
+        .request(`http://localhost:3000/api/v1/player_info/username/${username}`)
         .then((res) => {
             // redirect status code is 302
             expect(res.body).to.exist;
@@ -47,7 +53,11 @@ Cypress.Commands.add('getPlayerInfo', (username: string) => {
  */
 Cypress.Commands.add('createPlayerInventory', (playerInventory: PlayerInventory) => {
     return cy
-        .request('POST', `http://localhost:3000/api/v1/player_inventory`, playerInventory)
+        .request(
+            'POST',
+            `http://localhost:3000/api/v1/player_inventory/username/${playerInventory.username}`,
+            playerInventory
+        )
         .then(() => {
             return true;
         });
