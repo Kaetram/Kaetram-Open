@@ -1,4 +1,6 @@
+import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import Utils from '../utils/util';
 
 import log from '../lib/log';
 import mapData from '../../data/maps/map.json';
@@ -64,6 +66,8 @@ export default class Map {
 
     private load(): void {
         log.debug('Parsing map with Web Workers...');
+
+        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
 
         let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });
 
