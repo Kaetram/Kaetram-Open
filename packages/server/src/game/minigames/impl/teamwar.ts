@@ -157,29 +157,6 @@ export default class TeamWar extends Minigame {
                 countdown: this.countdown,
                 started: this.started
             });
-
-        this.syncPlayers();
-    }
-
-    /**
-     * Synchronizes the players forcefully due to potentially large amounts
-     * of teleports and despawning that may wrongfully occur. This is a temporary
-     * fix.
-     * @param player The player we are requesting sync for.
-     */
-
-    private sync(player: Player): void {
-        player.updateEntityList();
-        player.updateEntities();
-    }
-
-    /**
-     * Goes through all the players and synchronizes the list of entities.
-     */
-
-    private syncPlayers(): void {
-        _.each(this.players, this.sync.bind(this));
-        _.each(this.playersLobby, (player: Player) => player.updateEntityList());
     }
 
     /**
