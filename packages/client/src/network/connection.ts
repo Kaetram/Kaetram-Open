@@ -807,14 +807,12 @@ export default class Connection {
 
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
-      
+
         this.audio.stopMusic();
 
         // Perform the death animation.
         this.game.player.animateDeath(() => {
             this.game.entities.unregisterPosition(this.game.player);
-
-            this.audio.stop();
 
             this.game.player.despawn();
 
