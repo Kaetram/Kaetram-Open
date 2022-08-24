@@ -163,12 +163,6 @@ export enum AudioTypes {
     SFX
 }
 
-export enum HealTypes {
-    Health,
-    Mana,
-    Stamina
-}
-
 export enum PoisonTypes {
     Venom, // When a mob hits you
     Plague, // When entering a poisoned area.
