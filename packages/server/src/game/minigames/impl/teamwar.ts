@@ -187,7 +187,7 @@ export default class TeamWar extends Minigame {
 
             let position = this.getRespawnPoint(player.team);
 
-            player.teleport(position.x, position.y, false);
+            player.teleport(position.x, position.y, false, true);
         });
     }
 
@@ -208,7 +208,7 @@ export default class TeamWar extends Minigame {
 
             let position = this.getLobbyPosition();
 
-            player.teleport(position.x, position.y, false);
+            player.teleport(position.x, position.y, false, true);
         });
 
         // Clear all the team dictionaries and in-game player arrays.

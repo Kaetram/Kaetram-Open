@@ -148,15 +148,6 @@ export default class Handler {
             }
         }
 
-        // Remove the poison status.
-        this.player.setPoison();
-
-        this.player.skills.stop();
-        this.player.combat.stop();
-
-        // Send death packet only to the player.
-        this.player.send(new Death(this.player.instance));
-
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(
             new Despawn({
@@ -165,8 +156,14 @@ export default class Handler {
             true
         );
 
-        // Respawn player immediately when they're in a minigame.
-        if (this.player.inMinigame()) this.player.respawn();
+        // Remove the poison status.
+        this.player.setPoison();
+
+        this.player.skills.stop();
+        this.player.combat.stop();
+
+        // Send death packet only to the player.
+        this.player.send(new Death(this.player.instance));
     }
 
     /**

@@ -413,7 +413,7 @@ export default class Connection {
 
     /**
      * Handler for when we want to despawn an entity.
-     * @param instance Instance of the entity we are removing.
+     * @param info Contains despawn packet information such as instance and list of regions to ignore.
      */
 
     private handleDespawn(info: DespawnPacket): void {
@@ -421,6 +421,12 @@ export default class Connection {
 
         // Could not find the entity.
         if (!entity) return;
+
+        console.log(
+            `Handling despawn for: ${entity.instance}, regions: [${info.regions?.join(
+                ','
+            )}], eRegion: ${entity.region}`
+        );
 
         // If a list of regions is provided, we check the entity is in one of those regions.
         if (info.regions && !info.regions.includes(entity.region)) return;
