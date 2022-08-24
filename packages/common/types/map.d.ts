@@ -48,7 +48,7 @@ export interface ProcessedArea {
 
     // Warp
     name?: string; //? also common
-    level?: number;
+    level?: number; // also used for doors
 
     // Camera
     type?: string;
@@ -76,10 +76,11 @@ export interface ProcessedDoor {
     x: number;
     y: number;
     orientation: string;
-    quest?: string;
-    achievement?: string;
-    reqAchievement?: string; // Achievement requirement to pass through.
-    stage?: number;
+    quest: string;
+    achievement: string;
+    reqAchievement: string; // Achievement requirement to pass through.
+    stage: number;
+    level: number;
 }
 
 export interface ProcessedTree {
