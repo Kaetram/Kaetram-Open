@@ -42,7 +42,7 @@ export default class Map {
     public plateau: { [index: number]: number } = map.plateau;
     public objects: number[] = map.objects;
     public cursors: { [tileId: number]: string } = map.cursors;
-    public doors!: { [index: number]: ProcessedDoor };
+    public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedTree[] = map.trees || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
@@ -85,8 +85,6 @@ export default class Map {
      */
 
     private loadDoors(): void {
-        this.doors = {};
-
         // Duplicate doors using `_.cloneDeep`
         let doorsClone = _.cloneDeep(map.areas.doors);
 
@@ -111,7 +109,8 @@ export default class Map {
                 quest: door.quest || '',
                 achievement: door.achievement || '',
                 reqAchievement: door.reqAchievement || '',
-                stage: door.stage || 0
+                stage: door.stage || 0,
+                level: door.level || 0
             };
         });
     }
