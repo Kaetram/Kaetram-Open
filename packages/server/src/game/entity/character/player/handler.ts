@@ -193,6 +193,9 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
+        if (this.player.level < door.level)
+            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+
         // Do not pass through doors that require an achievement which hasn't been completed.
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
             return;
