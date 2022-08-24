@@ -469,9 +469,27 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public teleport(x: number, y: number, withAnimation = false): void {
+    public teleport(x: number, y: number, withAnimation = false, before = false): void {
         if (this.dead) return;
 
+        if (before) this.sendTeleportPacket(x, y, withAnimation);
+
+        this.setPosition(x, y, false);
+        this.world.cleanCombat(this);
+
+        if (before) return;
+
+        this.sendTeleportPacket(x, y, withAnimation);
+    }
+
+    /**
+     * Sends the teleport packet to the nearby regions.
+     * @param x The new x grid coordinate.
+     * @param y The new y grid coordinate.
+     * @param withAnimation Whether or not to animate the teleportation.
+     */
+
+    private sendTeleportPacket(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
                 instance: this.instance,
@@ -480,9 +498,6 @@ export default class Player extends Character {
                 withAnimation
             })
         );
-
-        this.setPosition(x, y, false);
-        this.world.cleanCombat(this);
     }
 
     /**
