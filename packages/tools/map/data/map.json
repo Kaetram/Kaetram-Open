@@ -1533,6 +1533,11 @@
                          "name":"destination",
                          "type":"object",
                          "value":314
+                        }, 
+                        {
+                         "name":"level",
+                         "type":"int",
+                         "value":15
                         }],
                  "rotation":0,
                  "visible":true,
