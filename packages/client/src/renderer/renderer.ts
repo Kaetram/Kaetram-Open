@@ -855,7 +855,7 @@ export default class Renderer {
     private drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
-        let barLength = 16,
+        let barLength = this.tileSize,
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
             healthWidth = Math.round(
@@ -1289,7 +1289,7 @@ export default class Renderer {
         light.origX = light.position.x;
         light.origY = light.position.y;
 
-        light.diff = Math.round(light.distance / 16);
+        light.diff = Math.round(light.distance / this.tileSize);
 
         if (this.hasLighting(lighting)) return;
 
