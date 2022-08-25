@@ -219,7 +219,7 @@ export default abstract class Entity {
         this.gridY = gridY;
         this.region = Utils.getRegion(gridX, gridY);
 
-        this.setPosition(gridX * 16, gridY * 16);
+        this.setPosition(gridX * Utils.tileSize, gridY * Utils.tileSize);
     }
 
     /**

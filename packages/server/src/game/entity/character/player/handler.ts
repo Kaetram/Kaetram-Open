@@ -187,12 +187,14 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
+        // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
 
             return quest.doorCallback?.(door, this.player);
         }
 
+        // Prevent the player from entering if the player's level is too low.
         if (this.player.level < door.level)
             return this.player.notify(`You need to be level ${door.level} to enter this door.`);
 
