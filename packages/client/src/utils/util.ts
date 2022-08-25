@@ -3,7 +3,9 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 export let isInt = (n: number): boolean => n % 1 === 0;
 
 export default {
+    tileSize: -1,
     sideLength: -1,
+
     /**
      * Creates a unique ID for a given time.
      * @param time The time in milliseconds.

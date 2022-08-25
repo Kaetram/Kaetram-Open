@@ -26,10 +26,13 @@ import Storage from './utils/storage';
 import Minigame from './renderer/minigame';
 
 import { agent } from './utils/detect';
-import { Modules, Packets } from '@kaetram/common/network';
+import { Packets } from '@kaetram/common/network';
 
 export default class Game {
     public storage: Storage;
+
+    public map: Map = new Map(this);
+    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
 
     public player: Player = new Player('');
 
@@ -42,8 +45,6 @@ export default class Game {
 
     public minigame: Minigame = new Minigame();
 
-    public map: Map;
-    public camera: Camera;
     public renderer: Renderer;
     public input: InputController;
 
@@ -67,8 +68,6 @@ export default class Game {
     public constructor(public app: App) {
         this.storage = app.storage;
 
-        this.map = new Map(this);
-        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
         this.renderer = new Renderer(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
