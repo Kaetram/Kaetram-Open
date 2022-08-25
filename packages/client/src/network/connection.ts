@@ -422,12 +422,6 @@ export default class Connection {
         // Could not find the entity.
         if (!entity) return;
 
-        console.log(
-            `Handling despawn for: ${entity.instance}, regions: [${info.regions?.join(
-                ','
-            )}], eRegion: ${entity.region}`
-        );
-
         // If a list of regions is provided, we check the entity is in one of those regions.
         if (info.regions && !info.regions.includes(entity.region)) return;
 
@@ -949,7 +943,11 @@ export default class Connection {
 
             case Opcodes.Pointer.Location:
                 this.pointer.create(info.instance, opcode);
-                this.pointer.setToPosition(info.instance, info.x! * 16, info.y! * 16);
+                this.pointer.setToPosition(
+                    info.instance,
+                    info.x! * this.map.tileSize,
+                    info.y! * this.map.tileSize
+                );
 
                 break;
 

@@ -10,13 +10,15 @@ import type Game from '../game';
 import type Camera from '../renderer/camera';
 
 export default class PointerController {
+    private camera: Camera;
+
     private pointers: { [id: string]: Arrow } = {};
 
     private container = $('#bubbles');
 
-    private camera?: Camera | null;
-
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.camera = this.game.camera;
+    }
 
     public create(id: string, type: Opcodes.Pointer, name?: string): void {
         let { pointers, container } = this;
@@ -87,15 +89,13 @@ export default class PointerController {
     }
 
     private set(pointer: Arrow, posX: number, posY: number): void {
-        this.updateCamera();
-
         let { camera, game } = this;
 
         if (!camera) return;
 
         let { element } = pointer,
             { canvasWidth, canvasHeight } = game.renderer,
-            tileSize = 48, // 16 * scale
+            tileSize = game.map.tileSize * this.getZoom(), // 16 * scale
             x = (posX - camera.x) * this.getZoom(),
             width = parseInt(element.css('width') + 24),
             offset = width / 2 - tileSize / 2,
@@ -211,10 +211,6 @@ export default class PointerController {
         if (id in pointers) return pointers[id];
 
         return null;
-    }
-
-    private updateCamera(): void {
-        this.camera = this.game.camera;
     }
 
     private getZoom(): number {

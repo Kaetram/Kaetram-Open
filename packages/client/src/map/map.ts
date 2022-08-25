@@ -67,6 +67,8 @@ export default class Map {
     private load(): void {
         log.debug('Parsing map with Web Workers...');
 
+        // Store tile size globally into the utils.
+        Utils.tileSize = this.tileSize;
         Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
 
         let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });

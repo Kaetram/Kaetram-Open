@@ -38,7 +38,7 @@ export default class Camera {
     public lockX = false;
     public lockY = false;
 
-    public constructor(private width: number, private height: number, private tileSize = 16) {
+    public constructor(private width: number, private height: number, private tileSize: number) {
         this.update();
     }
 
