@@ -361,10 +361,11 @@ export default class Regions {
      */
 
     public getRegion(x: number, y: number): number {
-        let regionX = Math.floor(x / this.divisionSize),
-            regionY = Math.floor(y / this.divisionSize);
+        let region = _.findIndex(this.regions, (region: Region) => {
+            return region.inRegion(x, y);
+        });
 
-        return regionX + regionY * this.sideLength;
+        return region;
     }
 
     /**
