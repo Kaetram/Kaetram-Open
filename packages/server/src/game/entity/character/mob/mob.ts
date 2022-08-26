@@ -360,8 +360,8 @@ export default class Mob extends Character {
 
         // Check if player is provided and the mob's information against their quests/achievements.
         if (player) {
-            if (player.quests.getQuestFromMob(this)) return true;
-            if (player.achievements.getAchievementFromEntity(this)) return true;
+            if (player.quests?.getQuestFromMob(this)) return true;
+            if (player.achievements?.getAchievementFromEntity(this)) return true;
         }
 
         return false;
