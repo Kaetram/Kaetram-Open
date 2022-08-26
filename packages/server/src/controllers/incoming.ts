@@ -339,8 +339,6 @@ export default class Incoming {
             case Opcodes.Target.Object: {
                 this.player.cheatScore = 0;
 
-                console.log(`object target instance: ${instance}`);
-
                 let coords = instance.split('-'),
                     index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
                     tree = this.world.trees.findTree(index);

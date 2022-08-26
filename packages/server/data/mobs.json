@@ -836,19 +836,20 @@
   "icegolem": {
     "name": "Ice Golem",
     "id": 45,
-    "drops": {"bluesword": 450, "crystalarmor": 20, "crystalarcherarmor": 20, "gold": 500},
+    "drops": {"bluesword": 200, "crystalarmor": 20, "crystalarcherarmor": 20, "gold": 500},
     "hitPoints": 700,
     "defenseLevel": 9,
     "attackLevel": 5,
     "experience": 90,
     "level": 46,
-    "aggroRange": 4,
-    "attackRange": 1,
+    "aggroRange": 5,
+    "attackRange": 5,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "projectileName": "projectile-iceball"
   },
 
   "iceknight": {
@@ -1635,8 +1636,8 @@
     "defenseLevel": 7,
     "attackLevel": 10,
     "experience": 750,
-    "level": 63,
-    "aggroRange": 1,
+    "level": 42,
+    "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
