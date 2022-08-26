@@ -67,6 +67,9 @@ export interface ProcessedArea {
     // Minigame
     minigame?: string;
     mObjectType?: string; // specifies what the object does in the minigame (used by minigame classes).
+
+    // Signs
+    text?: string;
 }
 
 export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
