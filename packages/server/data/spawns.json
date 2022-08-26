@@ -71,5 +71,19 @@
   "168-31": {
     "name": "Old Ogre",
     "miniboss": true
+  },
+
+  "259-151": {
+    "name": "Ice Guardian",
+    "miniboss": true,
+    "defenseLevel": 15,
+    "level": 35
+  },
+
+  "260-156": {
+    "name": "Ice Guardian",
+    "miniboss": true,
+    "defenseLevel": 15,
+    "level": 35
   }
 }
