@@ -1039,19 +1039,41 @@ export default class Connection {
     }
 
     /**
-     *
-     * @param info
+     * Contains a bubble packet to display. Bubble packets may be used for
+     * a specific entity (given the opcode) or may be assigned to a position
+     * to mock an entity. The latter is generally done when the player
+     * interacts with objects.
+     * @param opcode The type of bubble we are displaying (entity or position).
+     * @param info Contains information such as the text and position of the bubble.
      */
 
-    private handleBubble(info: BubblePacket): void {
+    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacket): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
         let entity = this.entities.get(info.instance);
+        // Check validity of the entity only when the bubble is attached to an entity.
+        if (opcode === Opcodes.Bubble.Entity && !entity) return;
 
-        if (!entity) return;
+        /**
+         * This works as following: we create a position object if there is no entity found
+         * and we are setting the bubble to a static position. We pass this parameter when
+         * we create a blob so that we can mark it as static. We then determine whether
+         * to use the position object below given that it exists or not (see the ternary below).
+         */
+        let position = entity
+            ? undefined
+            : {
+                  x: info.x! * this.map.tileSize,
+                  y: info.y! * this.map.tileSize
+              };
 
-        this.bubble.create(info.instance, info.text, info.duration);
-        this.bubble.setTo(info.instance, entity.x, entity.y);
+        // Create the bubble and assign its position.
+        this.bubble.create(info.instance, info.text, info.duration, position);
+        this.bubble.setTo(
+            info.instance,
+            position ? position.x : entity.x,
+            position ? position.y : entity.y
+        );
     }
 
     /**

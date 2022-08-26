@@ -162,3 +162,8 @@ export enum Skill {
 export enum Minigame {
     TeamWar
 }
+
+export enum Bubble {
+    Entity,
+    Position
+}

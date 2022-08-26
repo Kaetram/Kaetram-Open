@@ -16,7 +16,7 @@ export default class Signs {
 
             if (!sign.text) return log.warning(`Sign at ${coordinate} has no text.`);
 
-            this.signs[coordinate] = new Sign(sign.text.split(','));
+            this.signs[coordinate] = new Sign(sign.x, sign.y, sign.text.split(','));
         });
 
         log.info(`Loaded ${this.map.signs.length} sign${this.map.signs.length > 1 ? 's' : ''}.`);
