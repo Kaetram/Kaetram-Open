@@ -24,6 +24,7 @@ import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
 import Minigames from './minigames/minigames';
+import Globals from './globals/globals';
 
 export interface PacketData {
     packet: Packet;
@@ -40,8 +41,7 @@ export default class World {
     public map: Map = new Map(this);
     public api: API = new API(this);
     public stores: Stores = new Stores(this);
-    public trees: Trees = new Trees(this);
-    public lights: Lights = new Lights(this.map);
+    public globals: Globals = new Globals(this);
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public minigames: Minigames = new Minigames(this);

@@ -46,6 +46,7 @@ export default class Map {
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedTree[] = map.trees || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
+    public signs: ProcessedArea[] = map.areas.signs || [];
 
     // Static chest areas, named as singular to prevent confusion with `chests` area.
     public chest: ProcessedArea[] = map.areas.chest || [];
