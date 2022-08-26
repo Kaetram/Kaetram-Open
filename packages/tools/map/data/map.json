@@ -340,6 +340,34 @@
         }, 
         {
          "draworder":"topdown",
+         "id":75,
+         "name":"signs",
+         "objects":[
+                {
+                 "class":"",
+                 "height":16,
+                 "id":320,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"text",
+                         "type":"string",
+                         "value":"In memory of,Azaria"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":240,
+                 "y":240
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":15,
          "name":"music",
          "objects":[
@@ -1764,7 +1792,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -2054,8 +2082,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":75,
- "nextobjectid":320,
+ "nextlayerid":76,
+ "nextobjectid":321,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",
