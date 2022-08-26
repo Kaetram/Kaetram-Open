@@ -336,19 +336,8 @@ export default class Incoming {
 
                 break;
 
-            case Opcodes.Target.Object: {
-                this.player.cheatScore = 0;
-
-                let coords = instance.split('-'),
-                    index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-                    tree = this.world.trees.findTree(index);
-
-                if (!tree) return log.warning(`Couldn't find tree at ${index}.`);
-
-                this.player.skills.getLumberjacking().cut(this.player, tree);
-
-                break;
-            }
+            case Opcodes.Target.Object:
+                return this.player.handleObjectInteraction(instance);
         }
     }
 

@@ -558,6 +558,32 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the interaction with a global object. This can be a tree,
+     * a sign, etc.
+     * @param instance The string identifier of the object. Generally
+     * represents a coordinate that we use to find the object.
+     */
+
+    public handleObjectInteraction(instance: string): void {
+        this.cheatScore = 0;
+
+        // Attempt to first find a sign with the given instance.
+        let sign = this.world.globals.getSigns().get(instance);
+
+        if (sign) return this.notify(`yay a sign, I'll handle this later.`);
+
+        // If no sign was found, we attempt to find a tree.
+        let coords = instance.split('-'),
+            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            tree = this.world.globals.getTrees().findTree(index);
+
+        // No tree found, we stop here.
+        if (!tree) return log.debug(`No tree found at ${instance}.`);
+
+        this.skills.getLumberjacking().cut(this, tree);
+    }
+
+    /**
      * Updates the PVP status of the player and syncs it up with the
      * other players in the region.
      * @param pvp The PVP status we are detecting.
