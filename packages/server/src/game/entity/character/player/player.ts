@@ -580,6 +580,7 @@ export default class Player extends Character {
         // No tree found, we stop here.
         if (!tree) return log.debug(`No tree found at ${instance}.`);
 
+        // Start the cutting process.
         this.skills.getLumberjacking().cut(this, tree);
     }
 
