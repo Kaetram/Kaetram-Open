@@ -565,6 +565,12 @@ export default class Commands {
                 );
 
                 break;
+
+            case 'noclip':
+                this.player.noclip = !this.player.noclip;
+
+                this.player.notify(`Noclip: ${this.player.noclip}`);
+                break;
         }
     }
 }

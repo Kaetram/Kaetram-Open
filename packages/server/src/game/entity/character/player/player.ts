@@ -97,6 +97,7 @@ export default class Player extends Character {
     public ready = false; // indicates if login processed finished
     public isGuest = false;
     public canTalk = true;
+    public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
 
@@ -570,7 +571,7 @@ export default class Player extends Character {
         // Attempt to first find a sign with the given instance.
         let sign = this.world.globals.getSigns().get(instance);
 
-        if (sign) return this.notify(`yay a sign, I'll handle this later.`);
+        if (sign) return sign.talk(this);
 
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
@@ -736,7 +737,7 @@ export default class Player extends Character {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dynamic tiles.
-        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
+        if (this.map.isColliding(x, y, this) && !this.noclip) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
@@ -923,6 +924,17 @@ export default class Player extends Character {
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
+    }
+
+    /**
+     * Resets the NPC instance and talking index. If a parameter is specified
+     * then we set that NPC's instance as the one we are talking to.
+     * @param instance Optional parameter to set the NPC instance to.
+     */
+
+    public resetTalk(instance?: string): void {
+        this.talkIndex = 0;
+        this.npcTalk = instance || '';
     }
 
     /**
