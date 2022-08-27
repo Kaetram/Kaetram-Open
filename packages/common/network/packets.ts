@@ -38,14 +38,14 @@ enum Packets {
     Pointer,
     PVP,
     Poison,
-    Click,
     Warp,
     Store,
     Overlay,
     Camera,
     Bubble,
     Skill,
-    Update
+    Update,
+    Minigame
 }
 
 export default Packets;

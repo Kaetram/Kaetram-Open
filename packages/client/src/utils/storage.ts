@@ -1,4 +1,7 @@
+import _ from 'lodash';
+
 import { Modules } from '@kaetram/common/network';
+import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 import { CursorTiles } from '../map/map';
 import { isMobile } from './detect';
 
@@ -22,8 +25,7 @@ interface Settings {
 }
 
 interface RegionMapData {
-    regionData: number[];
-    grid: number[][];
+    regionData: RegionData;
     objects: number[];
     cursorTiles: CursorTiles;
 }
@@ -80,8 +82,7 @@ export default class Storage {
             },
 
             map: {
-                regionData: [],
-                grid: [],
+                regionData: {},
                 objects: [],
                 cursorTiles: {}
             }
@@ -265,23 +266,28 @@ export default class Storage {
     }
 
     /**
-     * Sets the data loaded so far from the map into the storage.
-     * @param regionData The tile data for each index.
-     * @param grid The collision grid for the map.
+     * Saves map data such as objects and cursor tiles into local storage.
      * @param objects The object tileIds.
      * @param cursorTiles The cursor tileIds.
      */
 
-    public setRegionData(
-        regionData: number[],
-        grid: number[][],
-        objects: number[],
-        cursorTiles: CursorTiles
-    ): void {
-        this.data.map.regionData = regionData;
-        this.data.map.grid = grid;
+    public setMapData(objects: number[], cursorTiles: CursorTiles): void {
         this.data.map.objects = objects;
         this.data.map.cursorTiles = cursorTiles;
+
+        this.save();
+    }
+
+    /**
+     * Appends a region and its respective data into the regionData object
+     * of the local storage. This object is later used when the client loads up
+     * in order to save time when loading up the region.
+     * @param data Contains an array of information about each tile in the region.
+     * @param region The region id we are saving.
+     */
+
+    public setRegionData(data: RegionTileData[], region: number): void {
+        this.data.map.regionData[region] = data;
 
         this.save();
     }
@@ -335,7 +341,6 @@ export default class Storage {
     public getRegionData(): RegionMapData {
         return {
             regionData: this.data.map.regionData,
-            grid: this.data.map.grid,
             objects: this.data.map.objects,
             cursorTiles: this.data.map.cursorTiles
         };

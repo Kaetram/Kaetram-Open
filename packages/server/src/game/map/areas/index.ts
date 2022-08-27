@@ -4,6 +4,7 @@ import music from './impl/music';
 import overlay from './impl/overlay';
 import pvp from './impl/pvp';
 import dynamic from './impl/dynamic';
+import minigame from './impl/minigame';
 
 export default {
     camera,
@@ -11,5 +12,6 @@ export default {
     music,
     overlay,
     pvp,
-    dynamic
+    dynamic,
+    minigame
 };

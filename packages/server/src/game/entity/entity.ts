@@ -9,7 +9,6 @@ import { Modules } from '@kaetram/common/network';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
-type RegionCallback = (region: number) => void;
 
 /**
  * An abstract class for every entity in the game. The `instance`
@@ -30,19 +29,16 @@ abstract class Entity {
     public combat!: Combat;
 
     public dead = false;
-    public recentRegions: string[] = [];
 
     public username!: string;
     public instanced = false;
     public region = -1;
-
-    public oldRegions: number[] = [];
-
     public colour = ''; // name colour displayed for the entity
     public scale = 0; // scale of the entity (default if not specified)
 
-    public movementCallback?: MovementCallback | undefined;
-    public regionCallback?: RegionCallback | undefined;
+    public recentRegions: number[] = []; // regions the entity just left
+
+    public movementCallback?: MovementCallback;
 
     protected constructor(public instance = '', public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
@@ -92,6 +88,15 @@ abstract class Entity {
 
     public setRegion(region: number): void {
         this.region = region;
+    }
+
+    /**
+     * Replaces the array indicating recently left regions with a new array.
+     * @param regions The new array of recent regions the entity left from.
+     */
+
+    public setRecentRegions(regions: number[]): void {
+        this.recentRegions = regions;
     }
 
     /**
@@ -245,14 +250,6 @@ abstract class Entity {
 
     public onMovement(callback: MovementCallback): void {
         this.movementCallback = callback;
-    }
-
-    /**
-     * Callback whenever the entity's region changes.
-     */
-
-    public onRegion(callback: RegionCallback): void {
-        this.regionCallback = callback;
     }
 }
 

@@ -51,6 +51,7 @@ export default class Equipment {
         this.count = 1;
         this.ability = -1;
         this.abilityLevel = -1;
+        this.ranged = false;
         this.power = 0;
         this.amplifier = 1;
         this.lumberjacking = -1;

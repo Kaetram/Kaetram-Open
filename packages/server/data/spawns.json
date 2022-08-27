@@ -40,15 +40,50 @@
       "watermelonbow": 100
     },
     "miniboss": true,
-    "level": 40,
+    "level": 36,
     "hitPoints": 350,
-    "attackLevel": 15,
-    "defenseLevel": 25,
+    "attackLevel": 8,
+    "defenseLevel": 18,
     "achievement": "waterguardian"
   },
 
   "243-68": {
     "name": "Ogre Lord",
     "boss": true
+  },
+
+  "400-329": {
+    "name": "Ogre Guardian",
+    "miniboss": true,
+    "level": 32,
+    "hitPoints": 650,
+    "defenseLevel": 8,
+    "experience": 120,
+    "respawnDelay": 180000,
+    "achievement": "ogreguardian"
+  },
+
+  "295-361": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems"
+  },
+
+  "168-31": {
+    "name": "Old Ogre",
+    "miniboss": true
+  },
+
+  "259-151": {
+    "name": "Ice Guardian",
+    "miniboss": true,
+    "defenseLevel": 15,
+    "level": 35
+  },
+
+  "260-156": {
+    "name": "Ice Guardian",
+    "miniboss": true,
+    "defenseLevel": 15,
+    "level": 35
   }
 }

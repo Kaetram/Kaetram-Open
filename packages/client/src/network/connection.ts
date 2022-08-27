@@ -1,4 +1,4 @@
-import { AchievementPacket } from './../../../common/types/messages/outgoing.d';
+import { AchievementPacket, PVPPacket } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import log from '../lib/log';
@@ -39,6 +39,7 @@ import {
     CombatPacket,
     CommandPacket,
     ContainerPacket,
+    DespawnPacket,
     EnchantPacket,
     EquipmentPacket,
     ExperiencePacket,
@@ -53,7 +54,8 @@ import {
     RespawnPacket,
     StorePacket,
     TeleportPacket,
-    SkillPacket
+    SkillPacket,
+    MinigamePacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -79,6 +81,8 @@ export default class Connection {
     private menu: MenuController;
     private sprites: SpritesController;
     private messages: Messages;
+
+    private lastEntityListRequest = Date.now();
 
     /**
      * Connection controller keeps track of all the incoming packets
@@ -141,6 +145,7 @@ export default class Connection {
         this.messages.onBubble(this.handleBubble.bind(this));
         this.messages.onSkill(this.handleSkill.bind(this));
         this.messages.onUpdate(this.handleUpdate.bind(this));
+        this.messages.onMinigame(this.handleMinigame.bind(this));
     }
 
     /**
@@ -206,9 +211,9 @@ export default class Connection {
                 // eslint-disable-next-line unicorn/prefer-code-point
                 .map((char) => char.charCodeAt(0)),
             inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
-            region = JSON.parse(inflatedString);
+            regions = JSON.parse(inflatedString);
 
-        this.map.loadRegions(region);
+        this.map.loadRegions(regions);
 
         // Used if the client uses low-power mode, forces redrawing of trees.
         this.renderer.forceRendering = true;
@@ -282,9 +287,9 @@ export default class Connection {
         let player = this.entities.get<Player>(data.instance);
 
         // Invalid instance, player not found/not spawned.
-        if (!player) return;
+        if (!player || player.teleporting || player.dead || !player.ready) return;
 
-        player.load(data);
+        player.load(data, true);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
     }
@@ -301,8 +306,20 @@ export default class Connection {
         let entity = this.entities.get<Character>(info.instance),
             target: Entity;
 
-        // Couldn't find and entity with the specified instance.
-        if (!entity) return;
+        /**
+         * We are receiving movement for an entity that doesn't exist,
+         * we need to request an entity list update to the server.
+         */
+        if (!entity) {
+            // Ensures packets are not spammed to the server.
+            if (!this.canRequestEntityList()) return;
+
+            // Update the last entity list request time.
+            this.lastEntityListRequest = Date.now();
+
+            // Request an entity list update from the server.
+            return this.socket.send(Packets.List);
+        }
 
         switch (opcode) {
             case Opcodes.Movement.Move:
@@ -314,7 +331,17 @@ export default class Connection {
             case Opcodes.Movement.Follow:
                 target = this.entities.get<Character>(info.target!);
 
-                if (target) entity.follow(target);
+                if (target) {
+                    // Prevent following a target after we've clicked off of it.
+                    if (
+                        entity.instance === this.game.player.instance &&
+                        !this.game.player.hasTarget() &&
+                        !info.forced
+                    )
+                        return;
+
+                    entity.follow(target);
+                }
 
                 break;
 
@@ -346,6 +373,8 @@ export default class Connection {
         let player = this.entities.get<Player>(info.instance);
 
         if (!player) return;
+
+        this.input.selectedCellVisible = false;
 
         // If the player is the same as our main player.
         let currentPlayer = player.instance === this.game.player.instance;
@@ -379,27 +408,31 @@ export default class Connection {
             // Restore the player's sprite.
             player.setSprite(playerSprite);
             player.idle();
-
-            player.teleporting = false;
-        }, 240);
+        }, 160);
     }
 
     /**
      * Handler for when we want to despawn an entity.
-     * @param instance Instance of the entity we are removing.
+     * @param info Contains despawn packet information such as instance and list of regions to ignore.
      */
 
-    private handleDespawn(instance: string): void {
-        let entity = this.entities.get<Character>(instance);
+    private handleDespawn(info: DespawnPacket): void {
+        let entity = this.entities.get<Character>(info.instance);
 
         // Could not find the entity.
         if (!entity) return;
+
+        // If a list of regions is provided, we check the entity is in one of those regions.
+        if (info.regions && !info.regions.includes(entity.region)) return;
 
         // Handle item despawn separately here.
         if (entity.isItem()) return this.entities.removeItem(entity);
 
         // Handle chest and animations here.
         if (entity.isChest()) return this.entities.removeChest(entity);
+
+        // Handle npc despawn here.
+        if (entity.isNPC()) return this.entities.removeNPC(entity);
 
         // Despawn the entity.
         entity.despawn();
@@ -434,7 +467,6 @@ export default class Connection {
         // Could not find the attacker or target.
         if (!attacker || !target) return;
 
-        // TODO - Decide whether to simplify combat packet this much.
         if (opcode !== Opcodes.Combat.Hit) return;
 
         // Check if our client's player is the target or the attacker.
@@ -692,7 +724,7 @@ export default class Connection {
         if (!character) return;
 
         switch (info.type) {
-            case 'health':
+            case 'hitpoints':
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
                 this.game.player.healing = true;
@@ -738,8 +770,6 @@ export default class Connection {
                  * we update the experience bar and create an info.
                  */
 
-                console.log(info);
-
                 if (isPlayer) {
                     this.game.player.setExperience(
                         info.experience!,
@@ -771,11 +801,23 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        this.game.minigame.reset();
+
+        this.game.player.teleporting = true;
+
+        // Set the player's sprite to the death animation sprite.
+        this.game.player.setSprite(this.sprites.getDeath());
+
         this.audio.stopMusic();
 
-        this.game.player.despawn();
+        // Perform the death animation.
+        this.game.player.animateDeath(() => {
+            this.game.entities.unregisterPosition(this.game.player);
 
-        this.app.body.classList.add('death');
+            this.game.player.despawn();
+
+            this.app.body.classList.add('death');
+        });
     }
 
     /**
@@ -840,8 +882,6 @@ export default class Connection {
     private handleRespawn(info: RespawnPacket): void {
         this.game.player.setGridPosition(info.x, info.y);
 
-        this.entities.registerPosition(this.game.player);
-
         this.camera.centreOn(this.game.player);
 
         this.game.player.animation = null;
@@ -851,6 +891,7 @@ export default class Connection {
         this.entities.addEntity(this.game.player);
 
         this.game.player.dead = false;
+        this.game.player.teleporting = false;
     }
 
     /**
@@ -902,7 +943,11 @@ export default class Connection {
 
             case Opcodes.Pointer.Location:
                 this.pointer.create(info.instance, opcode);
-                this.pointer.setToPosition(info.instance, info.x! * 16, info.y! * 16);
+                this.pointer.setToPosition(
+                    info.instance,
+                    info.x! * this.map.tileSize,
+                    info.y! * this.map.tileSize
+                );
 
                 break;
 
@@ -922,20 +967,13 @@ export default class Connection {
     }
 
     /**
-     * Updates the PVP status of an entity or our own player character.
-     * @param instance Used to identify which entity to update.
-     * @param state The state of the PVP.
+     * Updates the pvp flag for our client. The actual PVP attacking is handled
+     * server-sided. This just allows the client to target another player.
+     * @param info Contains the instance and pvp status of an entity.
      */
 
-    private handlePVP(instance: string, state: boolean): void {
-        if (instance === this.game.player.instance) {
-            this.game.pvp = state;
-            return;
-        }
-
-        let entity = this.entities.get<Player>(instance);
-
-        if (entity) entity.pvp = state;
+    private handlePVP(info: PVPPacket): void {
+        this.game.pvp = info.state;
     }
 
     /**
@@ -975,9 +1013,6 @@ export default class Connection {
      */
 
     private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
-        console.log(`Overlay Opcode: ${opcode}`);
-        console.log(info);
-
         switch (opcode) {
             case Opcodes.Overlay.Set:
                 this.overlays.update(info.image);
@@ -1004,19 +1039,41 @@ export default class Connection {
     }
 
     /**
-     *
-     * @param info
+     * Contains a bubble packet to display. Bubble packets may be used for
+     * a specific entity (given the opcode) or may be assigned to a position
+     * to mock an entity. The latter is generally done when the player
+     * interacts with objects.
+     * @param opcode The type of bubble we are displaying (entity or position).
+     * @param info Contains information such as the text and position of the bubble.
      */
 
-    private handleBubble(info: BubblePacket): void {
+    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacket): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
         let entity = this.entities.get(info.instance);
+        // Check validity of the entity only when the bubble is attached to an entity.
+        if (opcode === Opcodes.Bubble.Entity && !entity) return;
 
-        if (!entity) return;
+        /**
+         * This works as following: we create a position object if there is no entity found
+         * and we are setting the bubble to a static position. We pass this parameter when
+         * we create a blob so that we can mark it as static. We then determine whether
+         * to use the position object below given that it exists or not (see the ternary below).
+         */
+        let position = entity
+            ? undefined
+            : {
+                  x: info.x! * this.map.tileSize,
+                  y: info.y! * this.map.tileSize
+              };
 
-        this.bubble.create(info.instance, info.text, info.duration);
-        this.bubble.setTo(info.instance, entity.x, entity.y);
+        // Create the bubble and assign its position.
+        this.bubble.create(info.instance, info.text, info.duration, position);
+        this.bubble.setTo(
+            info.instance,
+            position ? position.x : entity.x,
+            position ? position.y : entity.y
+        );
     }
 
     /**
@@ -1055,5 +1112,51 @@ export default class Connection {
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;
         });
+    }
+
+    /**
+     * Minigame packets contain information about the kind of visuals to display
+     * onto the screen. For example, the TeamWar minigame requires the countdown
+     * to be displayed in the top of the screen during the lobby sequence, and
+     * in the actual game to display the score for both teams. We use this packet
+     * to signal to the game client what to display and when.
+     * @param info Contains information about the minigame status.
+     */
+
+    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacket): void {
+        let { minigame, player } = this.game;
+
+        minigame.type = opcode;
+        minigame.started = !!info.started;
+
+        if (info.countdown) minigame.countdown = info.countdown;
+
+        switch (info.action) {
+            // Game starting packet.
+            case Opcodes.TeamWar.Score:
+                if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
+                    minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
+
+                return minigame.setStatus('ingame');
+
+            // Entering lobby packets
+            case Opcodes.TeamWar.End:
+            case Opcodes.TeamWar.Lobby:
+                player.nameColour = '';
+                return minigame.setStatus('lobby');
+
+            // Exiting the entire minigame
+            case Opcodes.TeamWar.Exit:
+                return minigame.reset();
+        }
+    }
+
+    /**
+     * Compares the epoch between the last entity list update request and current
+     * time. This is in order to prevent spams to the server and timeout.
+     */
+
+    private canRequestEntityList(): boolean {
+        return Date.now() - this.lastEntityListRequest > 2000; // every 2 seconds
     }
 }

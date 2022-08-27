@@ -63,6 +63,15 @@ export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) 
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface DespawnPacket {
+    instance: string; // The entity we are despawning.
+    regions?: number[]; // Region checker for when an entity despawns.
+}
+
+export type DespawnCallback = (info: DespawnPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 export interface TeleportPacket {
     instance: string; // Main entity involved in the teleportation.
     x: number; // x coordinate of the teleportation.
@@ -185,7 +194,7 @@ export type BlinkCallback = (instance: string) => void;
 
 export interface HealPacket {
     instance: string;
-    type: Modules.HealType;
+    type: Modules.HealTypes;
     amount: number;
 }
 
@@ -258,7 +267,11 @@ export type PointerCallback = (opcode: Opcodes.Pointer, info: PointerPacket) => 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type PVPCallback = (instance: string, state: boolean) => void;
+export interface PVPPacket {
+    state: boolean;
+}
+
+export type PVPCallback = (info: PVPPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -295,9 +308,11 @@ export interface BubblePacket {
     instance: string;
     text: string;
     duration?: number;
+    x?: number;
+    y?: number;
 }
 
-export type BubbleCallback = (info: BubblePacket) => void;
+export type BubbleCallback = (opcode: Opcodes.Bubble, info: BubblePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -308,3 +323,15 @@ export type SkillCallback = (opcode: Opcodes.Skill, info: SkillPacket) => void;
 ////////////////////////////////////////////////////////////////////////////////
 
 export type UpdateCallback = (info: EntityDisplayInfo[]) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface MinigamePacket {
+    action: number;
+    countdown?: number;
+    redTeamKills?: number;
+    blueTeamKills?: number;
+    started?: boolean;
+}
+
+export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;

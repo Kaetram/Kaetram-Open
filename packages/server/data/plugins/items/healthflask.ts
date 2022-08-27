@@ -16,9 +16,9 @@ export default class HealthFlask implements Plugin {
 
     public onUse(player: Player): void {
         if (this.healPercent)
-            return player.healHitPoints(player.hitPoints.getMaxHitPoints() * this.healPercent);
+            return player.heal(player.hitPoints.getMaxHitPoints() * this.healPercent, 'hitpoints');
 
-        if (this.healAmount) player.healHitPoints(this.healAmount);
-        if (this.manaAmount) player.healManaPoints(this.manaAmount);
+        if (this.healAmount) player.heal(this.healAmount, 'hitpoints');
+        if (this.manaAmount) player.heal(this.manaAmount, 'hitpoints');
     }
 }

@@ -67,5 +67,27 @@
     "waterguardian": {
         "name": "Water Guardian",
         "description": "Defeat the Water Guardian!"
+    },
+
+    "ogreguardian": {
+        "name": "Ogre Guardian",
+        "description": "Defeat the Ogre Guardian!",
+        "rewardExperience": 600
+    },
+
+    "notwhatitseems": {
+        "name": "Not What It Seems",
+        "description": "Discover a mimic.",
+        "rewardExperience": 1000
+    },
+
+    "ogresgateway": {
+        "name": "Ogre's Gateway",
+        "description": "Discover the secret portal after defeating ogres."
+    },
+
+    "frozentundra": {
+        "name": "Frozen Tundra",
+        "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
     }
 }

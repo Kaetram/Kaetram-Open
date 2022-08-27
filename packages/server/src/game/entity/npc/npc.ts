@@ -55,10 +55,7 @@ export default class NPC extends Entity {
         if (!(player && this.hasDialogue(text))) return;
 
         // Reset the talking index if we talk to a new NPC.
-        if (player.npcTalk !== this.key) {
-            player.talkIndex = 0;
-            player.npcTalk = this.key;
-        }
+        if (player.npcTalk !== this.key) player.resetTalk(this.key);
 
         // Text to display at the current talking index.
         let message = text[player.talkIndex];

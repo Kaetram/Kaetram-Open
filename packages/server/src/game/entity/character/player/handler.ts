@@ -58,6 +58,7 @@ export default class Handler {
 
         // Region callback
         this.player.onRegion(this.handleRegion.bind(this));
+        this.player.onRecentRegions(this.handleRecentRegions.bind(this));
 
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
@@ -91,8 +92,14 @@ export default class Handler {
 
         // Cheat-score callback
         this.player.onCheatScore(this.handleCheatScore.bind(this));
+    }
 
-        // Update interval callback
+    /**
+     * Called after receiving the ready backet. Signals to the handler that we should
+     * start loading our update interval timer.
+     */
+
+    public startUpdateInterval(): void {
         this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
     }
 
@@ -113,6 +120,10 @@ export default class Handler {
                 this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
         }
 
+        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
+
+        this.player.minigameArea?.exitCallback?.(this.player);
+
         this.world.entities.removePlayer(this.player);
 
         this.world.cleanCombat(this.player);
@@ -122,8 +133,28 @@ export default class Handler {
      * Callback for when the player dies.
      */
 
-    private handleDeath(): void {
+    private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+
+        if (attacker) {
+            attacker.clearTarget();
+            attacker.removeAttacker(this.player);
+
+            if (attacker.isPlayer()) {
+                this.player.pvpDeaths++;
+
+                // Signal to attacker they just killed a player.
+                attacker.killCallback?.(this.player);
+            }
+        }
+
+        // Send despawn packet to all the nearby entities except the player.
+        this.player.sendToRegions(
+            new Despawn({
+                instance: this.player.instance
+            }),
+            true
+        );
 
         // Remove the poison status.
         this.player.setPoison();
@@ -133,9 +164,6 @@ export default class Handler {
 
         // Send death packet only to the player.
         this.player.send(new Death(this.player.instance));
-
-        // Send despawn packet to all the nearby entities except the player.
-        this.player.sendToRegions(new Despawn(this.player.instance), true);
     }
 
     /**
@@ -159,11 +187,16 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
+        // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
 
             return quest.doorCallback?.(door, this.player);
         }
+
+        // Prevent the player from entering if the player's level is too low.
+        if (this.player.level < door.level)
+            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
 
         // Do not pass through doors that require an achievement which hasn't been completed.
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
@@ -186,6 +219,9 @@ export default class Handler {
     private handleMovement(x: number, y: number): void {
         this.map.regions.handle(this.player);
 
+        // Prevent out of bounds (placeholder coordinates) from being processed.
+        if (this.map.isOutOfBounds(x, y)) return;
+
         this.detectAggro();
         this.detectAreas(x, y);
 
@@ -203,10 +239,23 @@ export default class Handler {
 
         this.handleLights(region);
 
-        this.map.regions.sendEntities(this.player);
+        this.player.updateEntityList();
+    }
 
-        // Signal to the region we just left from to despawn us.
-        this.player.sendToOldRegions(new Despawn(this.player.instance));
+    /**
+     * Sends a despawn packet to the regions the player has recently left.
+     * @param regions Contains the array of regions the player has recently left.
+     */
+
+    private handleRecentRegions(regions: number[]): void {
+        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+
+        this.player.sendToRecentRegions(
+            new Despawn({
+                instance: this.player.instance,
+                regions
+            })
+        );
     }
 
     /**
@@ -410,6 +459,14 @@ export default class Handler {
     private handleKill(character: Character): void {
         log.debug(`Received kill callback for: ${character.instance}.`);
 
+        // Have the minigame handle the kill if present.
+        if (character.isPlayer()) {
+            if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
+
+            // Incremebt the pvp kill count.
+            this.player.pvpKills++;
+        }
+
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
@@ -507,23 +564,29 @@ export default class Handler {
      */
 
     private detectAreas(x: number, y: number): void {
-        this.map.forEachAreas((areas: Areas, name: string) => {
-            let info = areas.inArea(x, y);
+        this.map.forEachAreas(
+            (areas: Areas, name: string) => {
+                let info = areas.inArea(x, y);
 
-            switch (name) {
-                case 'pvp':
-                    return this.player.updatePVP(!!info);
+                switch (name) {
+                    case 'pvp':
+                        return this.player.updatePVP(!!info);
 
-                case 'music':
-                    return this.player.updateMusic(info);
+                    case 'overlay':
+                        return this.player.updateOverlay(info);
 
-                case 'overlay':
-                    return this.player.updateOverlay(info);
+                    case 'camera':
+                        return this.player.updateCamera(info);
 
-                case 'camera':
-                    return this.player.updateCamera(info);
-            }
-        });
+                    case 'music':
+                        return this.player.updateMusic(info);
+
+                    case 'minigame':
+                        return this.player.updateMinigame(info);
+                }
+            },
+            ['pvp', 'music', 'overlay', 'camera', 'minigame']
+        );
     }
 
     /**
