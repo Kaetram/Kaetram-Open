@@ -13,8 +13,6 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
-import type Game from '../../../game';
-
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
@@ -51,8 +49,6 @@ export default class Player extends Character {
     public override mana = -1;
     public override maxMana = -1;
 
-    public override pvp = false;
-
     // Mapping of all equipments to their type.
     public equipments = {
         [Modules.Equipment.Armour]: new Armour(),
@@ -82,16 +78,21 @@ export default class Player extends Character {
      * Loads the player based on the serialzied player
      * data sent from the server.
      * @param data Player data containing essentials.
+     * @param sync Whether to sync the player.
      */
 
-    public load(data: PlayerData): void {
+    public load(data: PlayerData, sync = false): void {
         this.instance = data.instance;
         this.name = data.name;
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
+        this.orientation = data.orientation!;
+
+        if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
         this.setOrientation(data.orientation);
-        this.setGridPosition(data.x, data.y);
+
+        if (!sync) this.setGridPosition(data.x, data.y);
 
         this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
 
@@ -102,21 +103,6 @@ export default class Player extends Character {
         // Only used when loading the main player.
         if (!isNaN(data.experience!))
             this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
-    }
-
-    /**
-     * Loads the player handler and sets the game instance to
-     * the current player object.
-     * @param game The game instance object controlling the game.
-     */
-
-    public loadHandler(game: Game): void {
-        /**
-         * This is for other player characters
-         */
-
-        this.handler.setGame(game);
-        this.handler.load();
     }
 
     /**
@@ -333,7 +319,7 @@ export default class Player extends Character {
      * @returns Whether or not the current weapon's key isn't an empty string.
      */
 
-    public override hasWeapon(): boolean {
+    public hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
     }
 

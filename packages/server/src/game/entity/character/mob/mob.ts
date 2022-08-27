@@ -6,6 +6,7 @@ import Entity from '../../entity';
 import World from '../../../world';
 import MobHandler from './handler';
 import Character from '../character';
+import Chest from '../../objects/chest';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
@@ -29,13 +30,13 @@ type RawData = {
 };
 
 export default class Mob extends Character {
-    // TODO - Make private after moving callbacks into the mob file.
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
     public area!: Area;
+    public chest!: Chest; // Used for mimics since they belong to a chest
 
     public boss = false;
     public respawnable = true;
@@ -88,21 +89,21 @@ export default class Mob extends Character {
 
         if (data.hitPoints) this.hitPoints.updateHitPoints([data.hitPoints]);
 
-        this.name = data.name!;
+        this.name = data.name || this.name;
         this.drops = data.drops || this.drops;
         this.level = data.level || this.level;
         this.attackLevel = data.attackLevel || this.attackLevel;
         this.defenseLevel = data.defenseLevel || this.defenseLevel;
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
-        this.aggressive = data.aggressive!;
+        this.aggressive = data.aggressive || this.aggressive;
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
         this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
-        this.poisonous = data.poisonous!;
-        this.hiddenName = data.hiddenName!;
+        this.poisonous = data.poisonous || this.poisonous;
+        this.hiddenName = data.hiddenName || this.hiddenName;
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
 
@@ -182,13 +183,24 @@ export default class Mob extends Character {
     }
 
     /**
+     * Permanently removes an entity from the world.
+     */
+
+    public despawn(): void {
+        this.dead = true;
+        this.combat.stop();
+
+        this.world.entities.removeMob(this);
+    }
+
+    /**
      * Moves the mob and broadcasts the action
      * to all the adjacent regions.
      * @param x The new x position of the mob.
      * @param y The new y position of the mob.
      */
 
-    public move(x: number, y: number): void {
+    public override move(x: number, y: number): void {
         this.setPosition(x, y);
 
         this.calculateOrientation();
@@ -348,8 +360,8 @@ export default class Mob extends Character {
 
         // Check if player is provided and the mob's information against their quests/achievements.
         if (player) {
-            if (player.quests.getQuestFromMob(this)) return true;
-            if (player.achievements.getAchievementFromEntity(this)) return true;
+            if (player.quests?.getQuestFromMob(this)) return true;
+            if (player.achievements?.getAchievementFromEntity(this)) return true;
         }
 
         return false;
@@ -395,7 +407,6 @@ export default class Mob extends Character {
     public override serialize(player?: Player): EntityData {
         let data = super.serialize();
 
-        // TODO - Update this once we get around fixing up the client.
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;

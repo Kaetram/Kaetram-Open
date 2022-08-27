@@ -1,7 +1,9 @@
-import spriteData from '../../data/sprites.json';
 import log from '../lib/log';
-import Animation from './animation';
 
+import spriteData from '../../data/sprites.json';
+
+import Animation from './animation';
+import Utils from '../utils/util';
 interface AnimationData {
     [name: string]: {
         length: number;
@@ -77,16 +79,11 @@ export default class Sprite {
         this.filepath = path;
         this.animationData = sprite.animations;
 
-        /**
-         * Sprite art is 16x16, so we default the
-         * size to 16x16 if no width/height is specified.
-         */
+        this.width = sprite.width ?? Utils.tileSize;
+        this.height = sprite.height ?? Utils.tileSize;
 
-        this.width = sprite.width ?? 16;
-        this.height = sprite.height ?? 16;
-
-        this.offsetX = sprite.offsetX ?? -16;
-        this.offsetY = sprite.offsetY ?? -16;
+        this.offsetX = sprite.offsetX ?? -Utils.tileSize;
+        this.offsetY = sprite.offsetY ?? -Utils.tileSize;
         // this.offsetAngle = sprite.offsetAngle ?? 0;
 
         this.idleSpeed = sprite.idleSpeed ?? 450;
@@ -140,6 +137,7 @@ export default class Sprite {
 
             this.hurtSprite = {
                 image: canvas,
+                name: 'hurt',
                 loaded: true,
                 offsetX: this.offsetX,
                 offsetY: this.offsetY,

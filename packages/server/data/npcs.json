@@ -40,7 +40,13 @@
   },
 
   "guard": {
-    "name": "Guard"
+    "name": "Guard",
+    "text": ["We're seriously busy at the moment."]
+  },
+
+  "guard2": {
+    "name": "Royal Guard",
+    "text": ["Any form of defiance will be met with death."]
   },
 
   "scientist": {
@@ -52,7 +58,8 @@
   },
 
   "lavanpc": {
-    "name": "Dying Man"
+    "name": "Dying Soldier",
+    "text": ["Please adventurer, beware of what lays ahead."]
   },
 
   "boxingman": {
@@ -113,7 +120,7 @@
   },
 
   "sponge": {
-    "name": "Picklebob"
+    "name": "Sponge"
   },
 
   "fairynpc": {
@@ -154,7 +161,8 @@
   },
 
   "snowshepherdboy": {
-    "name": "Some Boy"
+    "name": "Sherpa",
+    "description": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
   },
 
   "angelnpc": {

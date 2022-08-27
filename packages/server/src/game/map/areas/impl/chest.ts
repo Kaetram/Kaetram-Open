@@ -24,7 +24,7 @@ export default class Chest extends Areas {
             chestArea.onEmpty((attacker?: Character) => {
                 this.spawnChest(chestArea);
 
-                if (chestArea.achievement)
+                if (attacker && chestArea.achievement)
                     (attacker as Player).achievements?.get(chestArea.achievement)?.finish();
             });
 

@@ -1,4 +1,3 @@
-import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
@@ -8,10 +7,12 @@ import Achievement from '../game/entity/character/player/achievement/achievement
 
 import type Player from '../game/entity/character/player/player';
 
-import { Command, Pointer, Network, Notification } from '../network/packets';
 import Region from '../game/map/region';
 import Entity from '../game/entity/entity';
+import Utils from '@kaetram/common/util/utils';
 
+import { Opcodes } from '@kaetram/common/network';
+import { Command, Pointer, Network, Notification } from '../network/packets';
 export default class Commands {
     private world;
     private entities;
@@ -324,7 +325,7 @@ export default class Commands {
 
             case 'togglepvp':
                 this.entities.forEachPlayer((player: Player) => {
-                    player.updatePVP(true, true);
+                    player.updatePVP(true);
                 });
 
                 break;
@@ -380,8 +381,6 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                console.log(entity.isMob());
-
                 if (entity.isMob()) (entity as Mob).move(x, y);
 
                 break;
@@ -400,6 +399,8 @@ export default class Commands {
                     return this.player.notify(`Could not find entity instances specified.`);
 
                 entity.combat.attack(targetEntity);
+
+                this.player.notify(`${entity.name} is attacking ${targetEntity.name}`);
 
                 break;
 
@@ -534,6 +535,41 @@ export default class Commands {
 
                 (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
 
+                break;
+
+            case 'distance':
+                x = parseInt(blocks.shift()!);
+                y = parseInt(blocks.shift()!);
+
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /distance x y`);
+
+                this.player.notify(
+                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`
+                );
+
+                break;
+
+            case 'nuke':
+                region = this.world.map.regions.get(this.player.region);
+
+                region.forEachEntity((entity: Entity) => {
+                    if (!(entity instanceof Character)) return;
+                    if (entity.instance === this.player.instance) return;
+
+                    (entity as Character).deathCallback?.();
+                });
+
+                this.player.notify(
+                    'Congratulations, you killed everyone, are you happy with yourself?'
+                );
+
+                break;
+
+            case 'noclip':
+                this.player.noclip = !this.player.noclip;
+
+                this.player.notify(`Noclip: ${this.player.noclip}`);
                 break;
         }
     }

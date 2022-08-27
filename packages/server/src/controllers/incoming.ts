@@ -10,10 +10,9 @@ import World from '../game/world';
 import Entities from './entities';
 import MongoDB from '../database/mongodb/mongodb';
 import Creator from '../database/mongodb/creator';
-import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
-import { Spawn, Update } from '../network/packets';
+import { Spawn } from '../network/packets';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
@@ -31,12 +30,9 @@ import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
-import type Mob from '../game/entity/character/mob/mob';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-
-type PacketData = (string | number | boolean | string[])[];
 
 export default class Incoming {
     private world: World;
@@ -69,6 +65,8 @@ export default class Incoming {
                         return this.handleLogin(message);
                     case Packets.Ready:
                         return this.handleReady(message);
+                    case Packets.List:
+                        return this.player.updateEntityList();
                     case Packets.Who:
                         return this.handleWho(message);
                     case Packets.Equipment:
@@ -77,8 +75,6 @@ export default class Incoming {
                         return this.handleMovement(message);
                     case Packets.Target:
                         return this.handleTarget(message);
-                    case Packets.Combat:
-                        return this.handleCombat(message);
                     case Packets.Projectile:
                         return this.handleProjectile(message);
                     case Packets.Network:
@@ -90,19 +86,15 @@ export default class Incoming {
                     case Packets.Container:
                         return this.handleContainer(message);
                     case Packets.Respawn:
-                        return this.handleRespawn();
+                        return this.player.respawn();
                     case Packets.Trade:
                         return this.handleTrade(message);
                     case Packets.Enchant:
                         return this.handleEnchant(message);
-                    case Packets.Click:
-                        return this.handleClick(message);
                     case Packets.Warp:
                         return this.handleWarp(message);
                     case Packets.Store:
                         return this.handleStore(message);
-                    case Packets.Camera:
-                        return this.handleCamera(message);
                 }
             } catch (error) {
                 log.error(error);
@@ -157,6 +149,8 @@ export default class Incoming {
         this.player.updateRegion();
         this.player.updateEntities();
 
+        this.player.handler.startUpdateInterval();
+
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
@@ -176,9 +170,16 @@ export default class Incoming {
         this.player.ready = true;
     }
 
+    /**
+     * Packet contains list of entity instances that the client is requesting to spawn. The client compares
+     * all the entities in the region to the entities it has spawned and the difference is sent here. The difference
+     * represents the entities that the client doesn't have spawned.
+     * @param message Contains a list of entity instances
+     */
+
     private handleWho(message: string[]): void {
-        _.each(message, (id: string) => {
-            let entity = this.entities.get(id);
+        _.each(message, (instance: string) => {
+            let entity = this.entities.get(instance);
 
             if (!entity || entity.dead) return;
 
@@ -188,6 +189,11 @@ export default class Incoming {
             );
         });
     }
+
+    /**
+     * Handles equipment packet. Generally involved in unequipping.
+     * @param data Contains information about which slot to unequip.
+     */
 
     private handleEquipment(data: EquipmentPacket): void {
         switch (data.opcode) {
@@ -219,14 +225,14 @@ export default class Incoming {
             case Opcodes.Movement.Started:
                 this.player.movementStart = Date.now();
 
-                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
+                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore();
 
                 if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
                     return;
 
                 // Reset combat and skills every time there is movement.
                 this.player.skills.stop();
-                this.player.combat.stop();
+                if (!targetInstance) this.player.combat.stop();
 
                 this.player.moving = true;
 
@@ -242,11 +248,15 @@ export default class Incoming {
             case Opcodes.Movement.Stop:
                 entity = this.entities.get(targetInstance!);
 
+                log.debug(`playerX: ${playerX}, playerY: ${playerY}`);
+
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
 
-                    this.player.incrementCheatScore(1);
+                    this.player.incrementCheatScore();
                 }
+
+                this.player.setOrientation(orientation!);
 
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
@@ -254,17 +264,14 @@ export default class Incoming {
                     door = this.world.map.getDoor(playerX!, playerY!);
 
                     this.player.doorCallback?.(door);
-                } else {
-                    this.player.setPosition(playerX!, playerY!);
-                    this.player.setOrientation(orientation!);
-                }
+                } else this.player.setPosition(playerX!, playerY!);
 
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
                 diff = this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
+                if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
 
                 break;
 
@@ -328,48 +335,9 @@ export default class Incoming {
 
                 break;
 
-            case Opcodes.Target.Object: {
-                this.player.cheatScore = 0;
-
-                console.log(`object target instance: ${instance}`);
-
-                let coords = instance.split('-'),
-                    index = this.world.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-                    tree = this.world.trees.findTree(index);
-
-                if (!tree) return log.warning(`Couldn't find tree at ${index}.`);
-
-                this.player.skills.getLumberjacking().cut(this.player, tree);
-
-                break;
-            }
+            case Opcodes.Target.Object:
+                return this.player.handleObjectInteraction(instance);
         }
-    }
-
-    private handleCombat(message: [Opcodes.Combat, string, string]): void {
-        // let [opcode] = message;
-        // switch (opcode) {
-        //     case Opcodes.Combat.Initiate: {
-        //         let attacker = this.entities.get(message[1]) as Character,
-        //             target = this.entities.get(message[2]) as Character;
-        //         if (
-        //             !target ||
-        //             target.dead ||
-        //             !attacker ||
-        //             attacker.dead ||
-        //             !this.canAttack(attacker, target)
-        //         )
-        //             return;
-        //         attacker.setTarget(target);
-        //         if (!attacker.combat.started) attacker.combat.forceAttack();
-        //         else {
-        //             attacker.combat.start();
-        //             attacker.combat.attack(target);
-        //         }
-        //         target.combat?.addAttacker(attacker);
-        //         break;
-        //     }
-        // }
     }
 
     private handleProjectile(message: ProjectilePacket): void {
@@ -463,52 +431,6 @@ export default class Incoming {
         }
     }
 
-    private handleBank(packet: PacketData): void {
-        // let [opcode, type, index] = message;
-        // switch (opcode) {
-        //     case Opcodes.Bank.Select: {
-        //         let isBank = type === 'bank';
-        //         if (isBank) {
-        //             let bank-slot = this.player.bank.getInfo(index);
-        //             if (bank-slot.id < 1) return;
-        //             // Infinite stacks move all at once, otherwise move one by one.
-        //             let moveAmount = Items.maxStackSize(bank-slot.id) === -1 ? bank-slot.count : 1;
-        //             bank-slot.count = moveAmount;
-        //             if (this.player.inventory.add(bank-slot))
-        //                 this.player.bank.remove(bank-slot.id, moveAmount, index);
-        //         } else {
-        //             let inventorySlot = this.player.inventory.slots[index];
-        //             if (inventorySlot.id < 1) return;
-        //             if (
-        //                 this.player.bank.add(
-        //                     inventorySlot.id,
-        //                     inventorySlot.count,
-        //                     inventorySlot.ability,
-        //                     inventorySlot.abilityLevel
-        //                 )
-        //             )
-        //                 this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
-        //         }
-        //         break;
-        //     }
-        // }
-    }
-
-    private handleRespawn(): void {
-        if (!this.player.dead) return log.warning(`Invalid respawn request.`);
-
-        let spawn = this.player.getSpawn();
-
-        this.player.dead = false;
-        this.player.setPosition(spawn.x, spawn.y);
-
-        this.player.sendToRegions(new Spawn(this.player), true);
-
-        this.player.send(new Respawn(this.player));
-
-        this.player.revertPoints();
-    }
-
     private handleTrade(message: [Opcodes.Trade, string]): void {
         let [opcode] = message,
             oPlayer = this.entities.get(message[1]);
@@ -548,27 +470,6 @@ export default class Incoming {
         // }
     }
 
-    private handleClick(message: [string, boolean]): void {
-        let [type, state] = message;
-
-        switch (type) {
-            case 'profile':
-                this.player.toggleProfile(state);
-
-                break;
-
-            case 'inventory':
-                this.player.toggleInventory(state);
-
-                break;
-
-            case 'warp':
-                this.player.toggleWarp(state);
-
-                break;
-        }
-    }
-
     /**
      * Receives a warp packet from the client containing the
      * id of the warp selected. The server then verifies
@@ -604,14 +505,6 @@ export default class Incoming {
         }
     }
 
-    private handleCamera(message: string[]): void {
-        log.info(`${this.player.x} ${this.player.y}`);
-
-        this.player.cameraArea = undefined;
-        // TODO - Make this a server-side thing.
-        // this.player.handler.detectCamera(this.player.x, this.player.y);
-    }
-
     /**
      * Used to prevent client-sided manipulation. The client will send the packet to start combat
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
@@ -619,6 +512,12 @@ export default class Incoming {
     private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.isMob() || target.isMob()) return true;
 
-        return attacker.isPlayer() && target.isPlayer() && attacker.pvp && target.pvp;
+        return (
+            attacker.isPlayer() &&
+            target.isPlayer() &&
+            attacker.pvp &&
+            target.pvp &&
+            attacker.team !== target.team
+        );
     }
 }

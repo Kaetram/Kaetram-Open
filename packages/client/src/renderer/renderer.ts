@@ -34,17 +34,6 @@ interface RendererCell {
     height: number;
 }
 
-interface Bounds {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-}
-
 interface RendererLight {
     origX: number;
     origY: number;
@@ -309,6 +298,8 @@ export default class Renderer {
         this.drawInfos();
 
         this.drawCursor();
+
+        this.drawMinigameGUI();
 
         this.restore();
     }
@@ -703,8 +694,7 @@ export default class Renderer {
         if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angled)
-            this.entitiesContext.rotate(entity.isProjectile() ? entity.getAngle() : entity.angle);
+        if (entity.angled) this.entitiesContext.rotate(entity.getAngle());
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
@@ -865,7 +855,7 @@ export default class Renderer {
     private drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
-        let barLength = 16,
+        let barLength = this.tileSize,
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
             healthWidth = Math.round(
@@ -957,6 +947,51 @@ export default class Renderer {
         }
 
         this.textContext.restore();
+    }
+
+    private drawMinigameGUI(): void {
+        if (!this.game.minigame.exists()) return;
+
+        switch (this.game.minigame.status) {
+            case 'lobby':
+                this.drawText(
+                    this.game.minigame.started
+                        ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
+                        : `Game starts in ${this.game.minigame.countdown} seconds`,
+                    this.textCanvas.width / 6,
+                    30,
+                    true,
+                    'white'
+                );
+                return;
+
+            case 'ingame':
+                this.drawText(
+                    `Red: ${this.game.minigame.redTeamScore}`,
+                    this.textCanvas.width / 6 - 20,
+                    30,
+                    true,
+                    'red'
+                );
+
+                this.drawText(
+                    `Blue: ${this.game.minigame.blueTeamScore}`,
+                    this.textCanvas.width / 6 + 20,
+                    30,
+                    true,
+                    'blue'
+                );
+
+                this.drawText(
+                    `Time left: ${this.game.minigame.countdown} seconds`,
+                    this.textCanvas.width / 6,
+                    50,
+                    true,
+                    'white'
+                );
+
+                return;
+        }
     }
 
     private drawLighting(lighting: RendererLighting): void {
@@ -1254,7 +1289,7 @@ export default class Renderer {
         light.origX = light.position.x;
         light.origY = light.position.y;
 
-        light.diff = Math.round(light.distance / 16);
+        light.diff = Math.round(light.distance / this.tileSize);
 
         if (this.hasLighting(lighting)) return;
 

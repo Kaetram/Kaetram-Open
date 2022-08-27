@@ -3,6 +3,7 @@ import _ from 'lodash-es';
 import log from '../lib/log';
 import Sprite from '../entity/sprite';
 import Animation from '../entity/animation';
+import Utils from '../utils/util';
 
 import spriteData from '../../data/sprites.json';
 
@@ -33,6 +34,17 @@ export default class SpritesController {
         }
 
         log.debug('Finished loading sprite data...');
+
+        this.preloadSprites();
+    }
+
+    /**
+     * Hardcoded function that preloads necessary sprites off the bat.
+     * Things like the death animation has to be loaded as soon as possible.
+     */
+
+    public preloadSprites(): void {
+        this.get('death').load();
     }
 
     /**

@@ -16,12 +16,13 @@ export default class Chest extends Entity {
     private respawnDuration = 25_000;
 
     private openCallback?: OpenCallback;
-    private respawnCallback?(): void;
+    private respawnCallback?: () => void;
 
     public constructor(
         x: number,
         y: number,
         public achievement?: string,
+        public mimic = false,
         private items: string[] = []
     ) {
         super(Utils.createInstance(Modules.EntityType.Chest), 'chest', x, y);
