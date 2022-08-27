@@ -40,11 +40,8 @@ export default class PlayerHandler {
              * a colliding tile and will interfere with combat.
              */
 
-            let isObject = map.isObject(x, y);
-
-            if (player.gridX === x && player.gridY === y) return [];
-
-            let ignores = [];
+            let isObject = map.isObject(x, y),
+                ignores = [];
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, {
@@ -68,8 +65,6 @@ export default class PlayerHandler {
         });
 
         player.onStartPathing((path) => {
-            if (!input) return;
-
             let i = path.length - 1;
 
             player.moving = true;
@@ -89,8 +84,6 @@ export default class PlayerHandler {
         });
 
         player.onStopPathing((x, y) => {
-            if (!input) return;
-
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;

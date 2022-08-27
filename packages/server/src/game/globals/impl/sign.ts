@@ -17,8 +17,6 @@ export default class Sign {
      */
 
     public talk(player: Player): void {
-        console.log(this.text);
-
         // No text provided for the object.
         if (this.text.length === 0) return;
 
