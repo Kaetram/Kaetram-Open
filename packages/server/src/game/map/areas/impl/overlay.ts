@@ -15,6 +15,6 @@ export default class Overlay extends Areas {
             if (rawData.fog) overlayArea.fog = rawData.fog;
         });
 
-        super.message('camera');
+        super.message('overlay');
     }
 }

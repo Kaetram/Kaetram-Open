@@ -129,12 +129,10 @@ export enum Store {
 }
 
 export enum TeamWar {
-    Enter,
-    Team,
-    Red,
-    Blue,
-    Leave,
-    Countdown
+    Score,
+    End,
+    Lobby,
+    Exit
 }
 
 export enum Overlay {
@@ -159,4 +157,13 @@ export enum Command {
 export enum Skill {
     Batch,
     Update
+}
+
+export enum Minigame {
+    TeamWar
+}
+
+export enum Bubble {
+    Entity,
+    Position
 }

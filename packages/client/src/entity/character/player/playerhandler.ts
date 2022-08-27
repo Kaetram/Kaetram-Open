@@ -40,11 +40,8 @@ export default class PlayerHandler {
              * a colliding tile and will interfere with combat.
              */
 
-            let isObject = map.isObject(x, y);
-
-            if (player.gridX === x && player.gridY === y) return [];
-
-            let ignores = [];
+            let isObject = map.isObject(x, y),
+                ignores = [];
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, {
@@ -68,8 +65,6 @@ export default class PlayerHandler {
         });
 
         player.onStartPathing((path) => {
-            if (!input) return;
-
             let i = path.length - 1;
 
             player.moving = true;
@@ -84,13 +79,11 @@ export default class PlayerHandler {
                 playerX: player.gridX,
                 playerY: player.gridY,
                 movementSpeed: player.movementSpeed,
-                targetInstance: this.getTargetId()
+                targetInstance: player.target?.instance
             });
         });
 
         player.onStopPathing((x, y) => {
-            if (!input) return;
-
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;
@@ -169,7 +162,7 @@ export default class PlayerHandler {
     isAttackable(): boolean {
         let { target } = this.player;
 
-        return target ? target.isMob() || (target.isPlayer() && target.pvp) : false;
+        return target ? target.isMob() || (target.isPlayer() && this.game.pvp) : false;
     }
 
     checkBounds(): void {
@@ -199,12 +192,6 @@ export default class PlayerHandler {
 
             zoning.reset();
         }
-    }
-
-    private getTargetId(): string | null {
-        let { target } = this.player;
-
-        return target ? target.instance : null;
     }
 
     private getTargetType(): Opcodes.Target {

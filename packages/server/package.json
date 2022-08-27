@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
+        "dev": "nodemon -e ts,json",
         "build": "tsc --noEmit"
     },
     "dependencies": {
@@ -19,6 +19,7 @@
         "sanitizer": "^0.1.3",
         "socket.io": "^4.5.1",
         "tslib": "^2.4.0",
+        "tsx": "^3.8.0",
         "ws": "^8.8.1"
     },
     "devDependencies": {
@@ -30,7 +31,7 @@
         "@types/node": "^18.6.3",
         "@types/sanitizer": "^0.0.28",
         "@types/ws": "^8.5.3",
-        "tsx": "^3.8.0",
+        "nodemon": "^2.0.19",
         "typescript": "^4.7.4"
     }
 }

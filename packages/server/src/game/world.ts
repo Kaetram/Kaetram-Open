@@ -23,24 +23,28 @@ import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
+import Minigames from './minigames/minigames';
+import Globals from './globals/globals';
 
 export interface PacketData {
     packet: Packet;
     player?: Player;
+    players?: Player[];
     ignore?: string;
     region?: number;
+    list?: number[];
 }
 
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map: Map;
-    public api: API;
-    public stores: Stores;
-    public trees: Trees;
-    public lights: Lights;
-    public entities: Entities;
-    public network: Network;
+    public map: Map = new Map(this);
+    public api: API = new API(this);
+    public stores: Stores = new Stores(this);
+    public globals: Globals = new Globals(this);
+    public entities: Entities = new Entities(this);
+    public network: Network = new Network(this);
+    public minigames: Minigames = new Minigames(this);
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -49,14 +53,6 @@ export default class World {
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
-        this.map = new Map(this);
-        this.api = new API(this);
-        this.stores = new Stores(this);
-        this.trees = new Trees(this);
-        this.lights = new Lights(this.map);
-        this.entities = new Entities(this);
-        this.network = new Network(this);
-
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));
@@ -98,12 +94,22 @@ export default class World {
             case PacketType.Player:
                 return this.network.send(data.player as Player, data.packet);
 
+            case PacketType.Players:
+                return this.network.sendToPlayers(data.players as Player[], data.packet);
+
             case PacketType.Region:
                 return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
 
             case PacketType.Regions:
                 return this.network.sendToSurroundingRegions(
                     data.region as number,
+                    data.packet,
+                    data.ignore
+                );
+
+            case PacketType.RegionList:
+                return this.network.sendToRegionList(
+                    data.list as number[],
                     data.packet,
                     data.ignore
                 );

@@ -10,8 +10,10 @@ export default {
 export enum PacketType {
     Broadcast,
     Player,
+    Players,
     Region,
-    Regions
+    Regions,
+    RegionList
 }
 
 export enum ContainerType {
@@ -41,6 +43,8 @@ export enum EntityType {
     Projectile,
     Object
 }
+
+export type HealTypes = 'passive' | 'hitpoints' | 'mana';
 
 /**
  * Enumeration of special states that an entity could be. For example,
@@ -154,10 +158,9 @@ export enum Keys {
     Minus = 189
 }
 
-export enum HealTypes {
-    Health,
-    Mana,
-    Stamina
+export enum AudioTypes {
+    Music,
+    SFX
 }
 
 export enum PoisonTypes {
@@ -348,6 +351,11 @@ export const enum Constants {
     TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
     TREE_REGROW = 30_000,
     SKILL_LOOP = 1000 // How often we check the loop of a skill
+}
+
+export enum MinigameConstants {
+    TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby
+    TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
 }
 
 export enum APIConstants {

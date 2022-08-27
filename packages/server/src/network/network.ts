@@ -121,10 +121,21 @@ export default class Network {
     }
 
     /**
+     * Iterates through a list of players and sends a packet to each.
+     * @param players A list containing player objects.
+     * @param packet The packet we are sending to the list of players.
+     */
+
+    public sendToPlayers(players: Player[], packet: Packet): void {
+        _.each(players, (player: Player) => this.send(player, packet));
+    }
+
+    /**
      * Finds a region based on the `regionId` and sends a packet to each
      * player in that region.
      * @param regionId The region id we are grabbing the players from.
      * @param packet The packet we are sending to each player.
+     * @param ignore Optional parameter to ignore an entity instance when sending a packet.
      */
 
     public sendToRegion(regionId: number, packet: Packet, ignore?: string): void {
@@ -142,11 +153,25 @@ export default class Network {
      * `regionId` we send a packet to each player in each region.
      * @param regionId The region to look for surrounding regions around.
      * @param packet The packet we are sending to each player in each region.
+     * @param ignore Optional parameter to ignore an entity instance when sending a packet.
      */
 
     public sendToSurroundingRegions(regionId: number, packet: Packet, ignore?: string): void {
         this.regions.forEachSurroundingRegion(regionId, (surroundingRegion: number) => {
             this.sendToRegion(surroundingRegion, packet, ignore);
+        });
+    }
+
+    /**
+     * Sends a packet to a list of regions specified. Generally used to send to old regions.
+     * @param list The list of regions we are sending the packet to.
+     * @param packet The packet we are sending to each player in each region.
+     * @param ignore Optional parameter to ignore an entity instance when sending a packet.
+     */
+
+    public sendToRegionList(list: number[], packet: Packet, ignore?: string): void {
+        _.each(list, (region: number) => {
+            this.sendToRegion(region, packet, ignore);
         });
     }
 

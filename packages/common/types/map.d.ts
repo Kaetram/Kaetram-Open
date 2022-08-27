@@ -19,11 +19,14 @@ export interface ProcessedArea {
 
     // Chest/door/area
     achievement?: string;
+    reqAchievement?: string;
+    mimic?: boolean;
 
     // Area
     width: number;
     height: number;
     polygon?: Position[] | undefined;
+    ignore?: boolean; // Whether or not to skip movement checking for area.
 
     // Door
     destination?: number;
@@ -45,7 +48,7 @@ export interface ProcessedArea {
 
     // Warp
     name?: string; //? also common
-    level?: number;
+    level?: number; // also used for doors
 
     // Camera
     type?: string;
@@ -60,6 +63,13 @@ export interface ProcessedArea {
     // Dynamic
     quest?: string;
     mapping?: number;
+
+    // Minigame
+    minigame?: string;
+    mObjectType?: string; // specifies what the object does in the minigame (used by minigame classes).
+
+    // Signs
+    text?: string;
 }
 
 export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
@@ -69,10 +79,11 @@ export interface ProcessedDoor {
     x: number;
     y: number;
     orientation: string;
-    quest?: string;
-    achievement?: string;
-    reqAchievement?: string; // Achievement requirement to pass through.
-    stage?: number;
+    quest: string;
+    achievement: string;
+    reqAchievement: string; // Achievement requirement to pass through.
+    stage: number;
+    level: number;
 }
 
 export interface ProcessedTree {

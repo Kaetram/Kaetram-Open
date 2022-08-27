@@ -1,4 +1,5 @@
 import Entity from '../entity';
+import Utils from '../../utils/util';
 
 import type Character from '../character/character';
 import { Modules } from '@kaetram/common/network';
@@ -23,7 +24,7 @@ export default class Projectile extends Entity {
     }
 
     public setStart(x: number, y: number): void {
-        this.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
+        this.setGridPosition(Math.floor(x / Utils.tileSize), Math.floor(y / Utils.tileSize));
     }
 
     public setTarget(target: Character): void {
@@ -38,7 +39,7 @@ export default class Projectile extends Entity {
         return 1;
     }
 
-    public override getTimeDiff(): number {
+    public getTimeDiff(): number {
         return (Date.now() - this.lastUpdate) / 1000;
     }
 

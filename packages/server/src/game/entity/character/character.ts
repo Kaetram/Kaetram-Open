@@ -174,6 +174,28 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Superclass empty method.
+     * @param x New x position.
+     * @param y New y position.
+     */
+
+    public move(x: number, y: number): void {
+        this.setPosition(x, y);
+    }
+
+    /**
+     * When a character is on the same tile as another character and they are in a combat,
+     * we use this function to move them near the other character.
+     */
+
+    public findAdjacentTile(): void {
+        if (!this.world.map.isColliding(this.x + 1, this.y)) this.move(this.x + 1, this.y);
+        else if (!this.world.map.isColliding(this.x - 1, this.y)) this.move(this.x - 1, this.y);
+        else if (!this.world.map.isColliding(this.x, this.y + 1)) this.move(this.x, this.y + 1);
+        else if (!this.world.map.isColliding(this.x, this.y - 1)) this.move(this.x, this.y - 1);
+    }
+
+    /**
      * Cleans the healing interval to clear the memory.
      */
 
@@ -409,6 +431,15 @@ export default abstract class Character extends Entity {
 
     public isPoisonous(): boolean {
         return false;
+    }
+
+    /**
+     * Checks if the character's target is on the same tile as the character.
+     * @returns If the distance between the character and the target is 0.
+     */
+
+    public isOnSameTile(): boolean {
+        return this.getDistance(this.target!) === 0;
     }
 
     // Packet sending functions

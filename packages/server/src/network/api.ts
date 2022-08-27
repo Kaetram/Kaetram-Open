@@ -145,8 +145,6 @@ export default class API {
             let { data } = response;
 
             if (data.status === 'error') log.error(data);
-
-            // TODO - Do something with this?
         }
     }
 

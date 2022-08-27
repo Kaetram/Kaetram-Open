@@ -39,10 +39,21 @@ export default class Warp {
             return this.player.notify(`You must be at least level ${warp.level} to warp here!`);
 
         // Perform warping.
-        this.player.teleport(warp.x, warp.y, true);
-        this.player.notify(`You have been warped to ${Utils.formatName(warp.name)}!`);
-
+        this.teleport(warp);
         this.setLastWarp();
+    }
+
+    /**
+     * Finds a random position within the warp area and teleports there.
+     * @param warp The warp area we are trying to warp to.
+     */
+
+    private teleport(warp: ProcessedArea): void {
+        let x = Utils.randomInt(warp.x, warp.x + warp.width),
+            y = Utils.randomInt(warp.y, warp.y + warp.height);
+
+        this.player.teleport(x, y, true);
+        this.player.notify(`You have been warped to ${Utils.formatName(warp.name)}!`);
     }
 
     /**
@@ -53,6 +64,16 @@ export default class Warp {
 
     public setLastWarp(lastWarp: number = Date.now()): void {
         this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
+    }
+
+    /**
+     * Iterates through all of the warps and checks if the player has unlocked
+     * a new warp upon levelling up.
+     * @param level The new level the player has reached.
+     */
+
+    public unlockedWarp(level: number): boolean {
+        return this.warps.some((warp) => warp.level === level);
     }
 
     /**
@@ -73,7 +94,7 @@ export default class Warp {
      * @returns Whether or not the player meets the requirement.
      */
 
-    private hasRequirement(level: number): boolean {
+    private hasRequirement(level = 1): boolean {
         return this.player.level >= level || this.player.isAdmin();
     }
 

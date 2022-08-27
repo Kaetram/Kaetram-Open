@@ -8,6 +8,7 @@ import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
+import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 
 import { EntityData } from '@kaetram/common/types/entity';
@@ -16,7 +17,6 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Entity from '../entity/entity';
-import type Character from '../entity/character/character';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -111,11 +111,8 @@ export default class EntitiesController {
 
         this.addEntity(entity);
 
-        // Add handler to character subclasses.
-        if ((entity as Character).handler) {
-            (entity as Character).handler.setGame(this.game);
-            (entity as Character).handler.load();
-        }
+        // Start the entity handler.
+        if (entity instanceof Character) entity.handler.load(this.game);
     }
 
     /**
@@ -257,8 +254,6 @@ export default class EntitiesController {
 
         player.load(info);
 
-        player.loadHandler(this.game);
-
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
 
         return player;
@@ -338,6 +333,20 @@ export default class EntitiesController {
     }
 
     /**
+     * Removes an NPC from the game and plays the death animation.
+     * @param npc The NPC we are removing.
+     */
+
+    public removeNPC(npc: NPC): void {
+        npc.setSprite(this.game.sprites.getDeath());
+        npc.animateDeath(() => {
+            this.unregisterPosition(npc);
+
+            delete this.entities[npc.instance];
+        });
+    }
+
+    /**
      * Registers an entity's position on the renderin grid.
      * @param entity The entity we are adding to rendering grid.
      */
@@ -364,7 +373,12 @@ export default class EntitiesController {
     public clean(): void {
         if (this.decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => this.removeEntity(entity));
+        _.each(this.decrepit, (entity: Entity) => {
+            // Prevent cleaning an entity that may have been removed from a differnet packet.
+            if (!entity) return;
+
+            this.removeEntity(entity);
+        });
     }
 
     /**

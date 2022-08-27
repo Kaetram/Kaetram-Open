@@ -3,6 +3,9 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 export let isInt = (n: number): boolean => n % 1 === 0;
 
 export default {
+    tileSize: -1,
+    sideLength: -1,
+
     /**
      * Creates a unique ID for a given time.
      * @param time The time in milliseconds.
@@ -137,5 +140,19 @@ export default {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
             email
         );
+    },
+
+    /**
+     * Calculates the region based on provided coordinates.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @returns The region number.
+     */
+
+    getRegion(x: number, y: number): number {
+        let regX = Math.floor(x / Modules.Constants.MAP_DIVISION_SIZE),
+            regY = Math.floor(y / Modules.Constants.MAP_DIVISION_SIZE);
+
+        return regX + regY * this.sideLength;
     }
 };
