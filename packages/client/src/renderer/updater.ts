@@ -16,6 +16,9 @@ export default class Updater {
     }
 
     public update(): void {
+        // Stop updating
+        if (this.game.player.dead) return;
+
         this.updateEntities();
         this.updateKeyboard();
         this.updateAnimations();

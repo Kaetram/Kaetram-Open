@@ -34,7 +34,7 @@ export default class Combat {
 
         if (this.loop) return;
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 3 + 15);
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2);
     }
 
     /**
@@ -89,6 +89,8 @@ export default class Combat {
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
 
+        this.checkTargetPosition();
+
         if (this.character.isNearTarget()) {
             if (!this.canAttack()) return;
 
@@ -98,6 +100,16 @@ export default class Combat {
 
             this.lastAttack = Date.now();
         } else this.sendFollow();
+    }
+
+    /**
+     * Ensures that the target is adjacent to the player and not on top.
+     */
+
+    private checkTargetPosition(): void {
+        if (!this.character.isOnSameTile()) return;
+
+        this.character.target!.findAdjacentTile();
     }
 
     /**

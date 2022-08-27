@@ -12,13 +12,15 @@ export default class ChestCollection extends Collection<Chest> {
         y: number;
         isStatic?: boolean;
         achievement?: string;
+        mimic?: boolean;
     }): Chest {
         return this.createChest(
             params.items,
             params.x,
             params.y,
             params.isStatic,
-            params.achievement
+            params.achievement,
+            params.mimic
         );
     }
 
@@ -27,9 +29,10 @@ export default class ChestCollection extends Collection<Chest> {
         x: number,
         y: number,
         isStatic = false,
-        achievement?: string
+        achievement?: string,
+        mimic = false
     ): Chest {
-        let chest = new Chest(x, y, achievement, items);
+        let chest = new Chest(x, y, achievement, mimic, items);
 
         if (isStatic) {
             chest.static = isStatic;
@@ -38,6 +41,22 @@ export default class ChestCollection extends Collection<Chest> {
 
         chest.onOpen((player?: Player) => {
             this.remove(chest);
+
+            // We use the player's world instance to spawn mimic mob.
+            if (player && mimic) {
+                let mimic = this.collections.mobs.spawn({
+                    world: player.world,
+                    key: 'mimic',
+                    x: chest.x,
+                    y: chest.y
+                });
+
+                // Mimic's death respawns the chest. We also ensure mimic doesn't respawn.
+                if (mimic) {
+                    mimic.respawnable = false;
+                    mimic.chest = chest;
+                }
+            }
 
             let item = chest.getItem();
 
@@ -56,9 +75,10 @@ export default class ChestCollection extends Collection<Chest> {
         return chest;
     }
 
-    public override shouldRemove(entity: Chest) {
-        if (entity.static) {
-            entity.respawn();
+    public override shouldRemove(chest: Chest) {
+        if (chest.static) {
+            if (!chest.mimic) chest.respawn();
+
             return false;
         }
         return true;
