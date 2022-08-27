@@ -55,10 +55,12 @@ export default class State extends Menu {
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(player.getWeapon().key);
+        this.weaponInfo.textContent = `+${player.getWeapon().power}`;
         // Cloth armour shouldn't be displayed in the UI.
         this.armour.style.backgroundImage = Util.getImageURL(
             player.getArmour().key === 'clotharmor' ? '' : player.getArmour().key
         );
+        this.armourInfo.textContent = `+${player.getArmour().power}`;
         this.pendant.style.backgroundImage = Util.getImageURL(player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(player.getBoots().key);
