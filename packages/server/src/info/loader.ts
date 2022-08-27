@@ -1,51 +1,16 @@
 import _ from 'lodash-es';
 
-import log from '@kaetram/common/util/log';
+import Formulas from './formulas';
 
-import abilityData from '../data/abilities.json';
-import objectData from '../data/objects.json';
-
-import Abilities from './info/abilities';
-import Formulas from './info/formulas';
-import Objects from './info/objects';
-
-import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
 
 export default class Loader {
     /**
-     * This class is responsible for pasing through all of our JSONs and extracting
-     * information about each respective file. Take for example the mobs.json file.
-     * We extract each indiviudal mob and store it into a dictionary based on its ID.
-     * We manipulate and access the mob using its ID.
+     * Responsible for loading hard-coded values into the global classes.
      */
 
     public constructor() {
-        this.loadAbilityData();
         this.loadLevels();
-        this.loadObjects();
-    }
-
-    private loadAbilityData(): void {
-        let skillCounter = 0;
-
-        _.each(abilityData, (value, key) => {
-            key = key.toLowerCase();
-
-            Abilities.Data[key] = {
-                key,
-                id: value.id,
-                type: value.type,
-                mana: value.mana || 0,
-                cooldown: value.cooldown || null
-            };
-
-            Abilities.Ids[value.id] = Abilities.Data[key];
-
-            skillCounter++;
-        });
-
-        log.info(`Finished loading ${skillCounter} skills.`);
     }
 
     /**
@@ -73,6 +38,11 @@ export default class Loader {
 
     **/
 
+    /**
+     * Loads the levels into the Formulas global class. The formula has been taken from RuneScape
+     * experience formula. https://runescape.fandom.com/wiki/Experience
+     */
+
     private loadLevels(): void {
         Formulas.LevelExp[0] = 0;
 
@@ -80,25 +50,5 @@ export default class Loader {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
-    }
-
-    private loadObjects(): void {
-        let objectCounter = 0;
-
-        _.each(objectData, (value, key) => {
-            let { x, y, type, messages, cursor } = value as ObjectsData;
-
-            Objects.Data[key] = {
-                x,
-                y,
-                type,
-                messages,
-                cursor
-            };
-
-            objectCounter++;
-        });
-
-        log.info(`Finished loading ${objectCounter} global objects.`);
     }
 }
