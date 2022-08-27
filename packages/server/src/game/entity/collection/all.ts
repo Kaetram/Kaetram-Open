@@ -53,7 +53,9 @@ export default class AllCollection {
     public remove(entity: Entity): void {
         this.world.push(Modules.PacketType.Regions, {
             region: entity.region,
-            packet: new Despawn(entity.instance)
+            packet: new Despawn({
+                instance: entity.instance
+            })
         });
 
         // Remove the entity from the entity grid

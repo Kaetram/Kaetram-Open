@@ -1,5 +1,5 @@
-import snek from './snek';
+import ogrelord from './ogrelord';
 
 export default {
-    snek
+    ogrelord
 };

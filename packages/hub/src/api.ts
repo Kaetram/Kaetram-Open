@@ -123,7 +123,6 @@ export default class API {
      */
 
     private handleChat(request: Request, response: Response): void {
-        // TODO - Return proper error codes.
         if (!this.verifyRequest(request)) {
             response.json({ status: 'error' });
             return;
@@ -155,7 +154,6 @@ export default class API {
      */
 
     private handlePrivateMessage(request: Request, response: Response): void {
-        // TODO - Return proper error codes.
         if (!this.verifyRequest(request)) {
             response.json({ status: 'error' });
             return;
@@ -176,7 +174,6 @@ export default class API {
 
         source = `[From ${source}]`;
 
-        // TODO - Don't hardcode text-colour, have it in `Modules.`
         this.sendChat(server, source, text, 'aquamarine', target);
     }
 

@@ -1,8 +1,9 @@
 import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
+import { DespawnPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Despawn extends Packet {
-    public constructor(instance: string) {
-        super(Packets.Despawn, undefined, instance);
+    public constructor(info: DespawnPacket) {
+        super(Packets.Despawn, undefined, info);
     }
 }

@@ -4,7 +4,7 @@ import log from '@kaetram/common/util/log';
 import Database from './database/database';
 import World from './game/world';
 import SocketHandler from './network/sockethandler';
-import Loader from './loader';
+import Loader from './info/loader';
 import Console from './console';
 
 import type Connection from './network/connection';

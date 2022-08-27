@@ -19,7 +19,7 @@ export default class Dynamic extends Areas {
 
         this.link();
 
-        log.info(`Loaded ${this.areas.length / 2} dynamic areas.`);
+        log.info(`Loaded ${Math.ceil(this.areas.length / 2)} dynamic areas.`);
     }
 
     /**

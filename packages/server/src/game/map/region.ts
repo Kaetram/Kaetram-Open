@@ -196,8 +196,7 @@ export default class Region {
 
     public forEachDynamicTile(callback: (x: number, y: number, area: Area) => void): void {
         for (let area of this.dynamicAreas)
-            for (let i = area.y; i < area.y + area.height; i++)
-                for (let j = area.x; j < area.x + area.width; j++) callback(j, i, area);
+            area.forEachTile((x: number, y: number) => callback(x, y, area));
     }
 
     /**

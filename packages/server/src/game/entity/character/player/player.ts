@@ -3,8 +3,8 @@ import Skills from './skills';
 import Quests from './quests';
 import Hit from '../combat/hit';
 import Handler from './handler';
+import NPC from '../../npc/npc';
 import Mana from '../points/mana';
-import Entity from '../../entity';
 import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
@@ -15,6 +15,7 @@ import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
 import Abilities from './abilities/abilities';
 import Formulas from '../../../../info/formulas';
+import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
 import Packet from '@kaetram/server/src/network/packet';
 import Incoming from '../../../../controllers/incoming';
@@ -23,7 +24,6 @@ import Entities from '@kaetram/server/src/controllers/entities';
 import type World from '../../../world';
 import type MongoDB from '../../../../database/mongodb/mongodb';
 import type Connection from '../../../../network/connection';
-import type NPC from '../../npc/npc';
 import type Area from '../../../map/areas/area';
 import type { PlayerInfo } from './../../../../database/mongodb/creator';
 
@@ -36,6 +36,9 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
+import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import { Team } from '@kaetram/common/types/minigame.d';
 import {
     Music,
     Camera,
@@ -48,15 +51,17 @@ import {
     Sync,
     Teleport,
     Welcome,
-    Pointer
+    Pointer,
+    PVP,
+    Spawn,
+    Respawn
 } from '@kaetram/server/src/network/packets';
-import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 
 type KillCallback = (character: Character) => void;
-type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
 type DoorCallback = (door: ProcessedDoor) => void;
-
+type RegionCallback = (region: number) => void;
+type RecentRegionsCallback = (regions: number[]) => void;
 export interface PlayerRegions {
     regions: string;
     gameVersion: string;
@@ -74,110 +79,93 @@ export default class Player extends Character {
     private regions: Regions = this.world.map.regions;
     private entities: Entities = this.world.entities;
 
-    public incoming: Incoming;
-
-    public warp: Warp;
-    public quests: Quests;
-    public achievements: Achievements;
-    public skills: Skills;
-    public equipment: Equipments;
-    public mana: Mana;
+    public incoming: Incoming = new Incoming(this);
 
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    private handler: Handler;
+    public warp: Warp = new Warp(this);
+    public quests: Quests = new Quests(this);
+    public achievements: Achievements = new Achievements(this);
+    public skills: Skills = new Skills(this);
+    public equipment: Equipments = new Equipments(this);
+    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
+    public abilities: Abilities = new Abilities(this);
+
+    public handler: Handler = new Handler(this);
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
     public canTalk = true;
+    public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
 
-    private permanentPVP = false;
-
+    // Player info
     public password = '';
     public email = '';
+    public userAgent = '';
 
     public rights = 0;
+
+    // Experience
     public experience = 0;
+    private nextExperience = -1;
+    private prevExperience = -1;
+
+    // Ban and mute values
     public ban = 0; // epoch timestamp
     public mute = 0;
+
+    // Player statistics
     public lastLogin = 0;
     public pvpKills = 0;
     public pvpDeaths = 0;
+
+    // Player miscellaneous data
     public mapVersion = -1;
-
-    public talkIndex = 0;
     public cheatScore = 0;
+    public movementStart = 0;
+    public pingTime = 0;
 
-    // TODO - REFACTOR THESE ------------
-
-    public webSocketClient: boolean;
-
-    public abilities: Abilities;
-
-    public team?: string; // TODO
-    public userAgent!: string;
+    private lastNotify = 0;
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
-    public lastRegionChange = Date.now();
 
     private currentSong: string | undefined;
 
+    public minigameArea: Area | undefined = undefined;
+
+    // Region data
     public regionsLoaded: number[] = [];
     public treesLoaded: { [instance: string]: Modules.TreeState } = {};
     public lightsLoaded: number[] = [];
 
+    // NPC talking
     public npcTalk = '';
+    public talkIndex = 0;
+
+    // Minigame status of the player.
+    public minigame = -1; // Opcodes.Minigame
+    public team: Team = -1;
+
     // Currently open store of the player.
     public storeOpen = '';
 
-    public movementStart!: number;
-    public pingTime!: number;
-
-    private lastNotify!: number;
-
-    private nextExperience = -1;
-    private prevExperience = -1;
-
-    public profileDialogOpen?: boolean;
-    public inventoryOpen?: boolean;
-    public warpOpen?: boolean;
-
-    public cameraArea: Area | undefined;
+    private cameraArea: Area | undefined;
     private overlayArea: Area | undefined;
-
-    public selectedShopItem!: { id: number; index: number } | null;
-
-    //--------------------------------------
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
+    public regionCallback?: RegionCallback;
+    public recentRegionsCallback?: RecentRegionsCallback;
 
     private cheatScoreCallback?: () => void;
-    private profileToggleCallback?: InterfaceCallback;
-    private inventoryToggleCallback?: InterfaceCallback;
-    private warpToggleCallback?: InterfaceCallback;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
-
-        this.warp = new Warp(this);
-        this.incoming = new Incoming(this);
-        this.quests = new Quests(this);
-        this.achievements = new Achievements(this);
-        this.skills = new Skills(this);
-        this.equipment = new Equipments(this);
-        this.mana = new Mana(Formulas.getMaxMana(this.level));
-
-        this.handler = new Handler(this);
-
-        this.abilities = new Abilities(this);
-
-        this.webSocketClient = this.connection.type === 'WebSocket';
     }
 
     /**
@@ -217,7 +205,6 @@ export default class Player extends Character {
         this.nextExperience = Formulas.nextExp(this.experience);
         this.prevExperience = Formulas.prevExp(this.experience);
 
-        // TODO - Do not calculate max points on every login, just store it instead.
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
         this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
@@ -333,12 +320,40 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the player respawning in the world.
+     */
+
+    public respawn(): void {
+        // Cannot respawn if the player is not marked as dead.
+        if (!this.dead) return log.warning(`Invalid respawn request.`);
+
+        let spawn = this.getSpawn();
+
+        this.dead = false;
+        this.setPosition(spawn.x, spawn.y);
+
+        // Signal to other players that the player is spawning.
+        this.sendToRegions(new Spawn(this), true);
+
+        this.send(new Respawn(this));
+
+        this.hitPoints.reset();
+        this.mana.reset();
+
+        this.sync();
+    }
+
+    /**
      * Adds experience to the player and handles level ups/popups/packets/etc.
      * @param exp The amount of experience we are adding to the player.
      */
 
     public addExperience(exp: number): void {
         this.experience += exp;
+
+        // Prevent a null or excessive negative value from breaking the experience system.
+        if (this.experience < 0) this.experience = 0;
+        if (!this.experience) this.experience = 0;
 
         let oldLevel = this.level;
 
@@ -354,11 +369,23 @@ export default class Player extends Character {
         // Update hit points and send a popup to the player when a level up occurs.
         if (oldLevel !== this.level) {
             this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.healHitPoints(this.hitPoints.maxPoints);
+            this.heal(this.hitPoints.maxPoints, 'hitpoints');
 
             this.updateRegion();
 
-            this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
+            // Let the player know if they've unlocked a new warp.
+            if (this.warp.unlockedWarp(this.level))
+                this.popup(
+                    'Level Up!',
+                    `You have unlocked a new warp! You are now level ${this.level}!`,
+                    '#ff6600'
+                );
+            else
+                this.popup(
+                    'Level Up!',
+                    `Congratulations, you are now level ${this.level}!`,
+                    '#ff6600'
+                );
         }
 
         /**
@@ -379,50 +406,36 @@ export default class Player extends Character {
     }
 
     /**
-     * Passed from the superclass...
+     * Override of the heal superclass function. Heals by a specified amount, and givne the
+     * type, we will heal only the hitpoints or the mana with a special effect associated. If no
+     * type is specified, then it proceeds to heal both hitpoints and mana.
+     * @param amount The amount we are healing by.
+     * @param type The type of heal we are performing ('passive' | 'hitpoints' | 'mana');
      */
-    public override heal(amount: number): void {
-        super.heal(amount);
 
-        this.mana.increment(amount);
+    public override heal(amount: number, type: Modules.HealTypes = 'passive'): void {
+        switch (type) {
+            case 'passive':
+                super.heal(amount);
+                this.mana.increment(amount);
+                break;
 
-        this.sync();
-    }
+            case 'hitpoints':
+            case 'mana':
+                if (type === 'hitpoints') this.hitPoints.increment(amount);
+                else if (type === 'mana') this.mana.increment(amount);
 
-    public healHitPoints(amount: number): void {
-        let type = 'health' as const;
-
-        this.hitPoints.increment(amount);
-
-        this.sync();
-
-        this.sendToRegions(
-            new Heal({
-                instance: this.instance,
-                type,
-                amount
-            })
-        );
-    }
-
-    public healManaPoints(amount: number): void {
-        let type = 'mana' as const;
-
-        this.mana.increment(amount);
+                this.sendToRegions(
+                    new Heal({
+                        instance: this.instance,
+                        type,
+                        amount
+                    })
+                );
+                break;
+        }
 
         this.sync();
-
-        this.sendToRegions(
-            new Heal({
-                instance: this.instance,
-                type,
-                amount
-            })
-        );
-    }
-
-    public eat(id: number): void {
-        log.warning('player.eat() reimplement.');
     }
 
     /**
@@ -441,7 +454,43 @@ export default class Player extends Character {
         this.regions.sendDisplayInfo(this);
     }
 
-    public teleport(x: number, y: number, withAnimation = false): void {
+    /**
+     * Synchronizes the player's client entity list and server entities in a region.
+     */
+
+    public updateEntityList(): void {
+        this.regions.sendEntities(this);
+    }
+
+    /**
+     * Performs a teleport to a specified destination. We send a teleport packet
+     * then proceed to update the player's position server-sided.
+     * @param x The new x grid coordinate.
+     * @param y The new y grid coordinate.
+     * @param withAnimation Whether or not to display a special effect when teleporting.
+     */
+
+    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+        if (this.dead) return;
+
+        if (before) this.sendTeleportPacket(x, y, withAnimation);
+
+        this.setPosition(x, y, false);
+        this.world.cleanCombat(this);
+
+        if (before) return;
+
+        this.sendTeleportPacket(x, y, withAnimation);
+    }
+
+    /**
+     * Sends the teleport packet to the nearby regions.
+     * @param x The new x grid coordinate.
+     * @param y The new y grid coordinate.
+     * @param withAnimation Whether or not to animate the teleportation.
+     */
+
+    private sendTeleportPacket(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
                 instance: this.instance,
@@ -450,29 +499,20 @@ export default class Player extends Character {
                 withAnimation
             })
         );
-
-        this.setPosition(x, y, false);
-        this.world.cleanCombat(this);
     }
 
-    public incrementCheatScore(amount: number): void {
+    /**
+     * Increases the amount of times the cheat detection system
+     * noticed something fishy.
+     * @param amount The amount we are increasing the cheat score by.
+     */
+
+    public incrementCheatScore(amount = 1): void {
         if (this.combat.started) return;
 
         this.cheatScore += amount;
 
         this.cheatScoreCallback?.();
-    }
-
-    /**
-     * We route all object clicks through the player instance
-     * in order to organize data more neatly.
-     */
-    public handleObject(id: string): void {
-        //
-    }
-
-    public handleBankOpen(): void {
-        //
     }
 
     /**
@@ -502,7 +542,7 @@ export default class Player extends Character {
                     this.inventory.remove(index, 1);
                 }
 
-                if (item.isEquippable()) {
+                if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
                     this.equipment.equip(item);
                 }
@@ -518,23 +558,53 @@ export default class Player extends Character {
         }
     }
 
-    public updatePVP(pvp: boolean, permanent = false): void {
-        /**
-         * No need to update if the state is the same
-         */
+    /**
+     * Handles the interaction with a global object. This can be a tree,
+     * a sign, etc.
+     * @param instance The string identifier of the object. Generally
+     * represents a coordinate that we use to find the object.
+     */
 
-        if (!this.region) return;
+    public handleObjectInteraction(instance: string): void {
+        this.cheatScore = 0;
 
-        if (this.pvp === pvp || this.permanentPVP) return;
+        // Attempt to first find a sign with the given instance.
+        let sign = this.world.globals.getSigns().get(instance);
+
+        if (sign) return sign.talk(this);
+
+        // If no sign was found, we attempt to find a tree.
+        let coords = instance.split('-'),
+            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            tree = this.world.globals.getTrees().findTree(index);
+
+        // No tree found, we stop here.
+        if (!tree) return log.debug(`No tree found at ${instance}.`);
+
+        // Start the cutting process.
+        this.skills.getLumberjacking().cut(this, tree);
+    }
+
+    /**
+     * Updates the PVP status of the player and syncs it up with the
+     * other players in the region.
+     * @param pvp The PVP status we are detecting.
+     */
+
+    public updatePVP(pvp: boolean): void {
+        // Skip if pvp state is the same or it's permanent
+        if (this.pvp === pvp) return;
 
         if (this.pvp && !pvp) this.notify('You are no longer in a PvP zone!');
         else this.notify('You have entered a PvP zone!');
 
         this.pvp = pvp;
-        this.permanentPVP = permanent;
 
-        // TODO - Redo the packet
-        //this.sendToAdjacentRegions(this.region, new PVP(this.instance, this.pvp));
+        this.send(
+            new PVP({
+                state: this.pvp
+            })
+        );
     }
 
     /**
@@ -564,6 +634,11 @@ export default class Player extends Character {
             })
         );
     }
+
+    /**
+     * Detects a camera region and sends a packet to the client.
+     * @param camera Camera area containing camera data or an undefined object.
+     */
 
     public updateCamera(camera: Area | undefined): void {
         if (this.cameraArea === camera) return;
@@ -602,38 +677,30 @@ export default class Player extends Character {
         this.send(new Music(song));
     }
 
-    public revertPoints(): void {
-        this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
-        this.mana.setMana(this.mana.getMaxMana());
+    /**
+     * Updates the current minigame area the player is in. It also creates a callback
+     * to the area itself when the player enters (or exits).
+     * @param info The area the player is entering, or undefined if they are exiting.
+     */
 
-        this.sync();
+    public updateMinigame(info?: Area): void {
+        if (info === this.minigameArea) return;
+
+        let entering = info !== undefined && this.minigameArea === undefined;
+
+        if (entering) {
+            info?.enterCallback?.(this);
+            this.notify('Welcome to the TeamWar lobby!');
+        } else this.minigameArea?.exitCallback?.(this);
+
+        this.minigameArea = info;
     }
 
-    public toggleProfile(state: boolean): void {
-        this.profileDialogOpen = state;
-
-        this.profileToggleCallback?.(state);
-    }
-
-    public toggleInventory(state: boolean): void {
-        this.inventoryOpen = state;
-
-        this.inventoryToggleCallback?.(state);
-    }
-
-    public toggleWarp(state: boolean): void {
-        this.warpOpen = state;
-
-        this.warpToggleCallback?.(state);
-    }
-
-    public getMana(): number {
-        return this.mana.getMana();
-    }
-
-    public getMaxMana(): number {
-        return this.mana.getMaxMana();
-    }
+    /**
+     * Dynamically set movement speed depending on player's equipment, level,
+     * abilities, and some other factors that will be added in the future.
+     * @returns The movement speed of the player.
+     */
 
     private getMovementSpeed(): number {
         // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
@@ -663,13 +730,14 @@ export default class Player extends Character {
      * @param x The new grid x coordinate we are moving to.
      * @param y The new grd y coordinate we are moving to.
      * @param forced Forced parameters ignores current actions and forces the player to move.
+     * @param skip Whether or not to skip sending a packet to nearby regions.
      */
 
-    public override setPosition(x: number, y: number, forced = false): void {
+    public override setPosition(x: number, y: number, forced = false, skip = false): void {
         if (this.dead) return;
 
         // Check against noclipping by verifying the collision w/ dynamic tiles.
-        if (this.map.isColliding(x, y, this) && !this.isAdmin()) {
+        if (this.map.isColliding(x, y, this) && !this.noclip) {
             /**
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
@@ -687,6 +755,8 @@ export default class Player extends Character {
 
         // Sets the player's new position.
         super.setPosition(x, y);
+
+        if (skip) return;
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
@@ -707,40 +777,47 @@ export default class Player extends Character {
 
     public override setRegion(region: number): void {
         super.setRegion(region);
+
         if (region !== -1) this.regionCallback?.(region);
+    }
+
+    /**
+     * Override for the recent region function with an added callback.
+     * @param regions The regions the player just left from.
+     */
+
+    public override setRecentRegions(regions: number[]): void {
+        super.setRecentRegions(regions);
+
+        if (regions.length > 0) this.recentRegionsCallback?.(regions);
+    }
+
+    /**
+     * Override for the superclass display info. Uses the player's team
+     * to determine what colour to draw the username.
+     * @returns Display info containing the name colour.
+     */
+
+    public override getDisplayInfo(): EntityDisplayInfo {
+        return {
+            instance: this.instance,
+            colour: this.team === Team.Red ? 'red' : 'blue'
+        };
+    }
+
+    /**
+     * Override for the superclass `hasDisplayInfo()`. Relies on whether
+     * or not the player is in a minigame currently.
+     * @returns Whether or not the player is in a minigame.
+     */
+
+    public override hasDisplayInfo(): boolean {
+        return this.inMinigame();
     }
 
     /**
      * Getters
      */
-
-    public hasMaxMana(): boolean {
-        return this.mana.getMana() >= this.mana.getMaxMana();
-    }
-
-    public override hasSpecialAttack(): boolean {
-        return false;
-    }
-
-    public canBeStunned(): boolean {
-        return true;
-    }
-
-    /**
-     * @returns If the player rights are greater than 0.
-     */
-
-    public isMod(): boolean {
-        return this.rights > 0;
-    }
-
-    /**
-     * @returns If the player rights are greater than 1.
-     */
-
-    public isAdmin(): boolean {
-        return this.rights > 1;
-    }
 
     /**
      * Grabs the spawn point on the player depending on whether or not he
@@ -751,6 +828,8 @@ export default class Player extends Character {
     public getSpawn(): Position {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
+
+        if (this.inMinigame()) return this.getMinigame()?.getRespawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -784,6 +863,14 @@ export default class Player extends Character {
             case Modules.Enchantment.Explosive:
                 return new Hit(Modules.Hits.Explosive, defaultDamage);
         }
+    }
+
+    /**
+     * @returns Finds and returns a minigame based on the player's minigame.
+     */
+
+    public getMinigame(): Minigame {
+        return this.world.minigames.get(this.minigame);
     }
 
     public loadRegion(region: number): void {
@@ -839,22 +926,48 @@ export default class Player extends Character {
         this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
     }
 
-    public isMuted(): boolean {
-        let time = Date.now();
+    /**
+     * Resets the NPC instance and talking index. If a parameter is specified
+     * then we set that NPC's instance as the one we are talking to.
+     * @param instance Optional parameter to set the NPC instance to.
+     */
 
-        return this.mute - time > 0;
+    public resetTalk(instance?: string): void {
+        this.talkIndex = 0;
+        this.npcTalk = instance || '';
     }
 
     /**
-     * An override for the adjacent function. Players need a bit more space
-     * when targeting an enemy without range. If not, following an entity becomes
-     * rather annoying.
-     * @param entity The entity we are calculating distance to.
-     * @returns If the entity distance is less than calculated distance.
+     * @returns Checks if the date-time of the mute is greater than current epoch. If it is
+     * the player is muted.
      */
 
-    public override isAdjacent(entity: Entity): boolean {
-        return this.getDistance(entity) < (this.hasTarget() ? 4 : 2);
+    public isMuted(): boolean {
+        return this.mute - Date.now() > 0;
+    }
+
+    /**
+     * Checks if the player is currently in  a minigame.
+     */
+
+    public inMinigame(): boolean {
+        return this.minigame !== -1;
+    }
+
+    /**
+     * @returns If the player rights are greater than 0.
+     */
+
+    public isMod(): boolean {
+        return this.rights > 0;
+    }
+
+    /**
+     * @returns If the player rights are greater than 1.
+     */
+
+    public isAdmin(): boolean {
+        return this.rights > 1 || config.skipDatabase;
     }
 
     /**
@@ -901,22 +1014,29 @@ export default class Player extends Character {
      * @param packet Packet we are sending to the player.
      */
 
-    public sendToOldRegions(packet: Packet): void {
-        let [oldRegion] = this.oldRegions;
-
-        if (!oldRegion) return;
-
-        this.world.push(PacketType.Regions, {
-            region: oldRegion,
+    public sendToRecentRegions(packet: Packet): void {
+        this.world.push(PacketType.RegionList, {
+            list: this.recentRegions,
             packet
         });
     }
+
+    /**
+     * Teleports the player back to their spawn point.
+     */
 
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
 
         this.teleport(spawnPoint.x, spawnPoint.y, true);
     }
+
+    /**
+     * Sends a private message to another player. If the hub is enabled, we use the API
+     * to send a message to a player.
+     * @param playerName The username of the player we are sending the message to.
+     * @param message The string contents of the message.
+     */
 
     public sendMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
@@ -1096,8 +1216,9 @@ export default class Player extends Character {
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
-        data.orientation = this.orientation;
         data.movementSpeed = this.getMovementSpeed();
+
+        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
@@ -1157,34 +1278,29 @@ export default class Player extends Character {
     }
 
     /**
-     * Callback for when the player has clicked the profile UI button.
-     */
-
-    public onProfile(callback: InterfaceCallback): void {
-        this.profileToggleCallback = callback;
-    }
-
-    /**
-     * Callback for when the player has clicked the inventory button.
-     */
-
-    public onInventory(callback: InterfaceCallback): void {
-        this.inventoryToggleCallback = callback;
-    }
-
-    /**
-     * Callback for when the warp button in the UI has been clicked.
-     */
-
-    public onWarp(callback: InterfaceCallback): void {
-        this.warpToggleCallback = callback;
-    }
-
-    /**
      * Callback for when the cheat score has increased.
      */
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
+    }
+
+    /**
+     * Callback whenever the entity's region changes.
+     * @param callback Contains the new region the entity is in.
+     */
+
+    public onRegion(callback: RegionCallback): void {
+        this.regionCallback = callback;
+    }
+
+    /**
+     * Callback for when the regions the player just left from
+     * are updated.
+     * @param callback Contains the regions the player just left from.
+     */
+
+    public onRecentRegions(callback: RecentRegionsCallback): void {
+        this.recentRegionsCallback = callback;
     }
 }
