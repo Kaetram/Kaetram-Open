@@ -248,8 +248,6 @@ export default class Incoming {
             case Opcodes.Movement.Stop:
                 entity = this.entities.get(targetInstance!);
 
-                log.debug(`playerX: ${playerX}, playerY: ${playerY}`);
-
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
 

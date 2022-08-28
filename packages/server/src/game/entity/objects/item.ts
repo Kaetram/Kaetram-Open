@@ -24,18 +24,26 @@ export default class Item extends Entity {
     public edible = false;
     public maxStackSize: number = Modules.Constants.MAX_STACK;
     public plugin: Plugin | undefined;
+
+    // Store variables
     public price = 1;
     public storeCount = -1;
+
+    // Equipment variables
     public requirement = -1;
     public attackLevel = 1;
     public defenseLevel = 1;
     public pendantLevel = 0;
     public ringLevel = 0;
     public bootsLevel = 0;
+
+    // Miscellaneous variables
     public movementSpeed = -1;
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
+
+    public exists = true;
 
     private respawnTime = 30_000;
     private despawnDuration = 7000;
@@ -63,11 +71,12 @@ export default class Item extends Entity {
 
         if (!this.data) {
             log.error(`[Item] Could not find data for ${key}.`);
+            this.exists = false;
             return;
         }
 
-        // Count cannot be less than 1 if the key is not null.
-        if (!!key && this.count < 1) this.count = 1;
+        // Count cannot be less than 1
+        if (this.count < 1) this.count = 1;
 
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
