@@ -153,9 +153,13 @@ export default class Commands {
                     ability = parseInt(blocks.shift()!),
                     abilityLevel = parseInt(blocks.shift()!);
 
-                if (!key || !count) return;
+                if (!key) return;
+
+                if (!count) count = 1;
 
                 item = new Item(key, -1, -1, true, 1, ability, abilityLevel);
+
+                if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 
                 if (item.stackable) {
                     item.count = count;
