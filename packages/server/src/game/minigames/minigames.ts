@@ -43,6 +43,9 @@ export default class Minigames {
      */
 
     private linkAreas(): void {
+        // No areas to link, stop here.
+        if (!this.areas) return;
+
         this.areas.forEachArea((area: Area) => {
             // No minigame found for the area.
             if (!(area.minigame in this.minigames)) return;
