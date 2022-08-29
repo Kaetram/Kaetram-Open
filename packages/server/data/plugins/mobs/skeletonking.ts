@@ -5,10 +5,16 @@ import Default from './default';
 import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import Character from '@kaetram/server/src/game/entity/character/character';
 
+import Utils from '@kaetram/common/util/utils';
+
 const MAX_MINIONS = 10;
 
 export default class SkeletonKing extends Default {
-    private minions: Mob[] = [];
+    // Two positions where the minions will spawn.
+    private positions: Position[] = [
+        { x: 240, y: 65 },
+        { x: 248, y: 65 }
+    ];
 
     public constructor(mob: Mob) {
         super(mob);
@@ -26,11 +32,15 @@ export default class SkeletonKing extends Default {
         super.handleDeath(attacker);
 
         // Clear all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        _.each(super.minions, (minion: Mob) => minion.deathCallback?.());
     }
 
-    private spawn(): void {
+    private spawnMob(): void {
         // Maximum number of minions has been reached.
-        if (this.minions.length >= MAX_MINIONS) return;
+        if (super.minions.length >= MAX_MINIONS) return;
+
+        let position = this.positions[Utils.randomInt(0, this.positions.length - 1)];
+
+        super.spawn('skeleton', position.x, position.y);
     }
 }
