@@ -46,9 +46,9 @@ export default class Item extends Entity {
 
     public exists = true;
 
-    private respawnTime = 30_000;
-    private despawnDuration = 7000;
-    private blinkDelay = 20_000;
+    private respawnTime = Modules.ItemDefaults.RESPAWN_DELAY;
+    private despawnDuration = Modules.ItemDefaults.DESPAWN_DURATION;
+    private blinkDelay = Modules.ItemDefaults.BLINK_DELAY;
 
     private blinkTimeout: NodeJS.Timeout | null = null;
     private despawnTimeout: NodeJS.Timeout | null = null;
