@@ -57,7 +57,7 @@ export default class OgreLord extends Default {
         super.handleDeath(attacker);
 
         // Removes all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        _.each(super.minions, (minion: Mob) => minion.deathCallback?.());
 
         // Clear all boss properties.
         this.firstWaveMinions = false;
@@ -69,8 +69,8 @@ export default class OgreLord extends Default {
      */
 
     private handleMinions(): void {
-        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawn(0);
-        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawn(1);
+        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawnMinion(0);
+        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawnMinion(1);
     }
 
     /**
@@ -79,23 +79,12 @@ export default class OgreLord extends Default {
      * @param wave The wave of minions to spawn.
      */
 
-    private spawn(wave: number): void {
+    private spawnMinion(wave: number): void {
         let key = this.minionKeys[wave];
 
         // Iterate through the positions and spawn a mob at each one.
         _.each(this.positions, (position: Position) => {
-            let minion = this.world.entities.spawnMob(key, position.x, position.y);
-
-            // Prevent minion from respawning after death.
-            minion.respawnable = false;
-
-            // Remove minion from the list when it dies.
-            minion.onDeathImpl(() => {
-                this.minions.splice(this.minions.indexOf(minion), 1);
-            });
-
-            // Add the minion to the list of minions.
-            this.minions.push(minion);
+            let minion = super.spawn(key, position.x, position.y);
 
             // Skip if no attackers but somehow the boss got hit.
             if (this.mob.attackers.length === 0) return;
