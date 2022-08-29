@@ -35,6 +35,13 @@ export default class OgreLord extends Default {
         setInterval(() => this.randomDialogue(), 15_000);
     }
 
+    /**
+     * Override for the hit callback. When the Ogre Lord falls beneath
+     * 50% and 25% health, he will spawn minions.
+     * @param damage Damage being dealt to the mob.
+     * @param attacker (Optional) The attacker who is dealing the damage.
+     */
+
     protected override handleHit(damage: number, attacker?: Character): void {
         super.handleHit(damage, attacker);
 
@@ -49,8 +56,10 @@ export default class OgreLord extends Default {
     protected override handleDeath(attacker?: Character): void {
         super.handleDeath(attacker);
 
-        this.despawn();
+        // Removes all the minions from the list.
+        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
 
+        // Clear all boss properties.
         this.firstWaveMinions = false;
         this.secondWaveMinions = false;
     }
@@ -80,6 +89,11 @@ export default class OgreLord extends Default {
             // Prevent minion from respawning after death.
             minion.respawnable = false;
 
+            // Remove minion from the list when it dies.
+            minion.onDeathImpl(() => {
+                this.minions.splice(this.minions.indexOf(minion), 1);
+            });
+
             // Add the minion to the list of minions.
             this.minions.push(minion);
 
@@ -99,14 +113,6 @@ export default class OgreLord extends Default {
 
         // Spawn minions text message.
         this.mob.talkCallback?.('My minions will surely help defeat you!');
-    }
-
-    /**
-     * Removes all the minions from the world.
-     */
-
-    private despawn(): void {
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
     }
 
     /**
