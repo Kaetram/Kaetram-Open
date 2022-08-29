@@ -372,6 +372,12 @@ export enum Defaults {
     POISON_CHANCE = 10 // 10% chance to poison a character
 }
 
+export enum ItemDefaults {
+    RESPAWN_DELAY = 30_000, // 30 seconds
+    DESPAWN_DURATION = 17_000, // 17 seconds of blinking before despawning
+    BLINK_DELAY = 40_000 // 40 seconds until item starts blinking.
+}
+
 // Defaults that apply specifically to mobs
 export enum MobDefaults {
     EXPERIENCE = 1, // Default 1 exp granted if not specified
