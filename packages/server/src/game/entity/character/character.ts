@@ -62,6 +62,7 @@ export default abstract class Character extends Entity {
 
     public hitCallback?: HitCallback;
     public deathCallback?: DeathCallback;
+    public deathICallback?: DeathCallback;
 
     protected constructor(
         instance: string,
@@ -568,7 +569,18 @@ export default abstract class Character extends Entity {
      * @param callback Contains the attacker that killed the character if not undefined.
      */
 
-    public onDeath(callback: (attacker?: Character) => void): void {
+    public onDeath(callback: DeathCallback): void {
         this.deathCallback = callback;
+    }
+
+    /**
+     * A secondary callback for when the character dies. Generally used for instances
+     * where we cannot write a plugin for the mob itself, and we only want to manipulate
+     * the effects of the death without impeding the actual death callback.
+     * @param callback Contains an optional parameter for the attacker.
+     */
+
+    public onDeathImpl(callback: DeathCallback): void {
+        this.deathICallback = callback;
     }
 }
