@@ -36,6 +36,7 @@ export default class Item extends Entity {
     public pendantLevel = 0;
     public ringLevel = 0;
     public bootsLevel = 0;
+    public attackRate: number = Modules.Defaults.ATTACK_RATE;
 
     // Miscellaneous variables
     public movementSpeed = -1;
@@ -92,6 +93,7 @@ export default class Item extends Entity {
         this.pendantLevel = this.data.pendantLevel || this.pendantLevel;
         this.ringLevel = this.data.ringLevel || this.ringLevel;
         this.bootsLevel = this.data.bootsLevel || this.bootsLevel;
+        this.attackRate = this.data.attackRate || this.attackRate;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
 

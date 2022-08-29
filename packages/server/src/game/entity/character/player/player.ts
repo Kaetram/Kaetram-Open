@@ -1251,6 +1251,18 @@ export default class Player extends Character {
     }
 
     /**
+     * An override function for the player's attack rate since it
+     * is dependent on their weapon at the moment. We may be doing
+     * calculations from special equipments/effects in the future.
+     * @returns The attack rate in milliseconds. See Modules.Defaults
+     * for the default attack speed value.
+     */
+
+    public override getAttackRate(): number {
+        return this.equipment.getWeapon().attackRate;
+    }
+
+    /**
      * Callback for when the current character kills another character.
      * @param callback Contains the character object that was killed.
      */
