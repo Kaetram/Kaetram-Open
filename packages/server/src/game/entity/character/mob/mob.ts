@@ -57,6 +57,7 @@ export default class Mob extends Character {
     private handler?: MobHandler | DefaultPlugin;
 
     private respawnCallback?: () => void;
+
     public talkCallback?: (message: string) => void;
     public roamingCallback?: () => void;
 
