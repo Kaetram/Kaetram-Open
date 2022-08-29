@@ -13,7 +13,6 @@ export default class OgreLord extends Default {
         'No, do not touch my onions!'
     ];
 
-    private minions: Mob[] = [];
     private positions: Position[] = [
         { x: 240, y: 65 },
         { x: 248, y: 65 },
