@@ -66,7 +66,7 @@ export default class Incoming {
                     case Packets.Ready:
                         return this.handleReady(message);
                     case Packets.List:
-                        return this.handleList();
+                        return this.player.updateEntityList();
                     case Packets.Who:
                         return this.handleWho(message);
                     case Packets.Equipment:
@@ -171,14 +171,6 @@ export default class Incoming {
     }
 
     /**
-     * Handles a request for enttity list synchronizations packet.
-     */
-
-    private handleList(): void {
-        this.player.updateEntityList();
-    }
-
-    /**
      * Packet contains list of entity instances that the client is requesting to spawn. The client compares
      * all the entities in the region to the entities it has spawned and the difference is sent here. The difference
      * represents the entities that the client doesn't have spawned.
@@ -197,6 +189,11 @@ export default class Incoming {
             );
         });
     }
+
+    /**
+     * Handles equipment packet. Generally involved in unequipping.
+     * @param data Contains information about which slot to unequip.
+     */
 
     private handleEquipment(data: EquipmentPacket): void {
         switch (data.opcode) {
@@ -250,6 +247,8 @@ export default class Incoming {
 
             case Opcodes.Movement.Stop:
                 entity = this.entities.get(targetInstance!);
+
+                log.debug(`playerX: ${playerX}, playerY: ${playerY}`);
 
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
