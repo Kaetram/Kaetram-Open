@@ -15,7 +15,13 @@ jobs:
             - name: Start MongoDB
               uses: supercharge/mongodb-github-action@1.7.0
 
-            - name: Cypress run
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: 'yarn'
+
+            - name: Run Cypress
               uses: cypress-io/github-action@v4
               with:
                   command: yarn workspace @kaetram/e2e test:run
