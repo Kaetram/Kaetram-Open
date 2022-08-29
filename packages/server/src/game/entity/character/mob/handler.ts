@@ -92,6 +92,9 @@ export default class Handler {
         // Respawn the chest associated with the mob.
         this.mob.chest?.respawn();
 
+        // Call the secondary death callback.
+        this.mob.deathICallback?.(attacker);
+
         // Despawn entity from the world.
         this.world.entities.remove(this.mob);
         this.world.cleanCombat(this.mob);
