@@ -1,8 +1,6 @@
 import _ from 'lodash-es';
 
 import log from '@kaetram/common/util/log';
-import { Modules } from '@kaetram/common/network';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
 import Player from './player';
 
@@ -14,6 +12,8 @@ import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
 import Item from '../../objects/item';
 
+import { Modules } from '@kaetram/common/network';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 export default class Equipments {
     private armour: Armour = new Armour();
     private boots: Boots = new Boots();
@@ -181,7 +181,7 @@ export default class Equipments {
      */
 
     public getWeapon(): Weapon {
-        return this.getEquipment(Modules.Equipment.Weapon);
+        return this.getEquipment(Modules.Equipment.Weapon) as Weapon;
     }
 
     /**
