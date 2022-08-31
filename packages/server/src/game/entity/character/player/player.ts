@@ -9,6 +9,7 @@ import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
+import Statistics from './statistics';
 import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
@@ -91,6 +92,7 @@ export default class Player extends Character {
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public abilities: Abilities = new Abilities(this);
+    public statistics: Statistics = new Statistics();
 
     public handler: Handler = new Handler(this);
 
@@ -116,11 +118,6 @@ export default class Player extends Character {
     // Ban and mute values
     public ban = 0; // epoch timestamp
     public mute = 0;
-
-    // Player statistics
-    public lastLogin = 0;
-    public pvpKills = 0;
-    public pvpDeaths = 0;
 
     // Player miscellaneous data
     public mapVersion = -1;
@@ -191,9 +188,6 @@ export default class Player extends Character {
         this.experience = data.experience;
         this.ban = data.ban;
         this.mute = data.mute;
-        this.lastLogin = data.lastLogin;
-        this.pvpKills = data.pvpKills;
-        this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
@@ -215,9 +209,10 @@ export default class Player extends Character {
         this.loadQuests();
         this.loadAchievements();
         this.loadSkills();
+        this.loadStatistics();
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> intro
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> intro
     }
 
     /**
@@ -269,6 +264,14 @@ export default class Player extends Character {
 
     public loadSkills(): void {
         this.database.loader?.loadSkills(this, this.skills.load.bind(this.skills));
+    }
+
+    /**
+     * Loads the statistics data from the database.
+     */
+
+    public loadStatistics(): void {
+        this.database.loader?.loadStatistics(this, this.statistics.load.bind(this.statistics));
     }
 
     /**

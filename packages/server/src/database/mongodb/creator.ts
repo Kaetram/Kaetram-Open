@@ -27,12 +27,9 @@ export interface PlayerInfo {
     poison: PoisonInfo;
     hitPoints: number;
     mana: number;
-    pvpKills: number;
-    pvpDeaths: number;
     orientation: Modules.Orientation;
     ban: number;
     mute: number;
-    lastLogin: number;
     lastWarp: number;
     mapVersion: number;
 }
@@ -64,6 +61,7 @@ export default class Creator {
             this.saveQuests(player);
             this.saveAchievements(player);
             this.saveSkills(player);
+            this.saveStatistics(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             log.error(error);
@@ -145,6 +143,16 @@ export default class Creator {
         let collection = this.database.collection('player_skills');
 
         this.updateCollection(collection, player.username, player.skills.serialize());
+    }
+
+    /**
+     * Serializes the player's statistics and stores it into the database.
+     */
+
+    private saveStatistics(player: Player): void {
+        let collection = this.database.collection('player_statistics');
+
+        this.updateCollection(collection, player.username, player.statistics.serialize());
     }
 
     /**
@@ -240,12 +248,9 @@ export default class Creator {
             },
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
-            pvpKills: player.pvpKills,
-            pvpDeaths: player.pvpDeaths,
             orientation: player.orientation,
             ban: player.ban,
             mute: player.mute,
-            lastLogin: player.lastLogin,
             lastWarp: player.warp.lastWarp,
             mapVersion: player.mapVersion
         };

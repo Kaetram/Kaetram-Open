@@ -141,7 +141,7 @@ export default class Handler {
             attacker.removeAttacker(this.player);
 
             if (attacker.isPlayer()) {
-                this.player.pvpDeaths++;
+                this.player.statistics.pvpDeaths++;
 
                 // Signal to attacker they just killed a player.
                 attacker.killCallback?.(this.player);
@@ -464,7 +464,7 @@ export default class Handler {
             if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
 
             // Incremebt the pvp kill count.
-            this.player.pvpKills++;
+            this.player.statistics.pvpKills++;
         }
 
         // Skip if the kill is not a mob entity.
