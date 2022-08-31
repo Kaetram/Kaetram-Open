@@ -125,6 +125,8 @@ export default class MongoDB {
 
                 log.debug(`No player data found for ${player.username}, creating user.`);
 
+                player.statistics.creationTime = Date.now();
+
                 player.load(Creator.serializePlayer(player));
             });
         });
