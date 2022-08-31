@@ -7,6 +7,7 @@ import Areas from '../map/areas/areas';
 import Index from './impl/index';
 
 import log from '@kaetram/common/util/log';
+
 import { Opcodes } from '@kaetram/common/network';
 
 /**

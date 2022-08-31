@@ -192,9 +192,9 @@ export default class API {
             y: player.y,
             experience: player.experience,
             level: player.level,
-            pvpKills: player.pvpKills,
+            pvpKills: player.statistics.pvpKills,
             orientation: player.orientation,
-            lastLogin: player.lastLogin,
+            lastLogin: player.statistics.lastLogin,
             mapVersion: player.mapVersion
         };
     }
