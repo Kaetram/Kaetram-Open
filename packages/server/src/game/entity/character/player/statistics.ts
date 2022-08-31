@@ -46,10 +46,6 @@ export default class Statistics {
                       (this.averageTimePlayed * (this.loginCount - 1) + timePlayed) /
                           this.loginCount
                   );
-
-        console.log(
-            `timePlayed: ${timePlayed}, averageTimePlayed: ${this.averageTimePlayed}, loginCount: ${this.loginCount}`
-        );
     }
 
     /**
@@ -60,6 +56,7 @@ export default class Statistics {
     public serialize(): StatisticsData {
         // Serializing also gets treated as a logging out event, so we calculate stuff here.
         this.lastLogin = Date.now();
+        this.totalSecondsPlayed += Date.now() - this.loginTime; // add time played to total time played.
         this.calculateAverageTimePlayed();
 
         return {
