@@ -1793,19 +1793,22 @@
   "skeletonking": {
     "name": "Skeleton King",
     "id": 99,
-    "drops": {"goldensword": 400, "bigflask": 100, "goldenbow": 400, "pearlpendant": 50, "pearlring": 50},
-    "hitPoints": 2650,
-    "defenseLevel": 15,
-    "attackLevel": 16,
+    "drops": {"goldensword": 200, "bigflask": 150, "goldenbow": 200, "pearlpendant": 50, "pearlring": 50},
+    "hitPoints": 1850,
+    "defenseLevel": 20,
+    "attackLevel": 7,
     "experience": 150,
-    "level": 23,
-    "aggroRange": 3,
+    "level": 32,
+    "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 50000
+    "movementSpeed": 420,
+    "respawnDelay": 50000,
+    "plugin": "skeletonking",
+    "boss": true,
+    "roamDistance": 16
   },
 
   "ogrelord": {
@@ -1824,7 +1827,8 @@
     "attackRate": 1100,
     "movementSpeed": 400,
     "respawnDelay": 125000,
-    "plugin": "ogrelord"
+    "plugin": "ogrelord",
+    "boss": true
   },
 
   "windguardian": {
