@@ -47,11 +47,6 @@
     "achievement": "waterguardian"
   },
 
-  "243-68": {
-    "name": "Ogre Lord",
-    "boss": true
-  },
-
   "400-329": {
     "name": "Ogre Guardian",
     "miniboss": true,
