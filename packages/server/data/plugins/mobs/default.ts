@@ -1,5 +1,8 @@
 import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import Character from '@kaetram/server/src/game/entity/character/character';
 import Handler from '@kaetram/server/src/game/entity/character/mob/handler';
+
+import Utils from '@kaetram/common/util/utils';
 
 /**
  * Default handler plugin for the mob. When a mob has a plugin associated
@@ -39,5 +42,20 @@ export default class Default extends Handler {
         this.minions.push(minion);
 
         return minion;
+    }
+
+    /**
+     * Grabs a target from the mob's attackers list.
+     * @returns A character object if a target was found, otherwise undefined.
+     */
+
+    protected getTarget(): Character | undefined {
+        // Skip if no attackers but somehow the boss got hit.
+        if (this.mob.attackers.length === 0) return;
+
+        // Find an attacker out of the list of attackers.
+        let target = this.mob.attackers[Utils.randomInt(0, this.mob.attackers.length - 1)];
+
+        return target;
     }
 }
