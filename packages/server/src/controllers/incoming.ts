@@ -479,7 +479,7 @@ export default class Incoming {
      */
 
     private handleWarp(data: WarpPacket): void {
-        this.player.warp?.warp(data.id);
+        this.world.warps.warp(this.player, data.id);
     }
 
     /**
