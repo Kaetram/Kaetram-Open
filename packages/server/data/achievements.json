@@ -81,6 +81,11 @@
         "rewardExperience": 1000
     },
 
+    "vulture": {
+        "name": "Vulture",
+        "description": "Defeat a vulture!"
+    },
+
     "ogresgateway": {
         "name": "Ogre's Gateway",
         "description": "Discover the secret portal after defeating ogres."

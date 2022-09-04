@@ -1199,11 +1199,6 @@
     "healAmount": 500
   },
 
-  "chest": {
-    "type": "object",
-    "name": "Chest"
-  },
-
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
