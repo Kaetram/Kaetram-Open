@@ -182,7 +182,7 @@ export default class Incoming {
         _.each(message, (instance: string) => {
             let entity = this.entities.get(instance);
 
-            if (!entity || entity.dead || !entity.isVisible()) return;
+            if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
             this.player.send(
