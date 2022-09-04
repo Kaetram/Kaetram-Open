@@ -27,7 +27,6 @@ import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 
 import { inflate } from 'pako';
-import { isMobile } from '../utils/detect';
 import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
