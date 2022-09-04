@@ -80,5 +80,10 @@
     "miniboss": true,
     "defenseLevel": 15,
     "level": 35
+  },
+
+  "202-39": {
+    "name": "Vulture",
+    "achievement": "vulture"
   }
 }
