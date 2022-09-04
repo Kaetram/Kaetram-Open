@@ -4,10 +4,9 @@ import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 import log from '@kaetram/common/util/log';
 
-import Trees from './globals/trees';
-import Lights from './globals/lights';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
+import Warps from '../controllers/warps';
 import Grids from './map/grids';
 import Map from './map/map';
 import API from '../network/api';
@@ -41,6 +40,7 @@ export default class World {
     public map: Map = new Map(this);
     public api: API = new API(this);
     public stores: Stores = new Stores(this);
+    public warps: Warps = new Warps(this);
     public globals: Globals = new Globals(this);
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
