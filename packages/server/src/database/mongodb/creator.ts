@@ -251,7 +251,7 @@ export default class Creator {
             orientation: player.orientation,
             ban: player.ban,
             mute: player.mute,
-            lastWarp: player.warp.lastWarp,
+            lastWarp: player.lastWarp,
             mapVersion: player.mapVersion
         };
     }
