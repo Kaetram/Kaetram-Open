@@ -123,14 +123,15 @@ export default class Quests {
      * Checks all the quests at their current stage if the requirement
      * is to interact with the given NPC and return the quest.
      * @param npc The NPC we are checking the quest stage against.
+     * @param includeComplete Whether to include completed quests in the search.
      * @returns The quest currently requiring interaction with the NPC.
      */
 
-    public getQuestFromNPC(npc: NPC): Quest | undefined {
+    public getQuestFromNPC(npc: NPC, includeComplete = false): Quest | undefined {
         let quest;
 
         this.forEachQuest((q: Quest) => {
-            if (q.isFinished()) return;
+            if (q.isFinished() && !includeComplete) return;
             if (!q.hasNPC(npc.key)) return;
 
             quest = q;

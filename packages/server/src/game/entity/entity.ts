@@ -31,10 +31,10 @@ abstract class Entity {
     public dead = false;
 
     public username!: string;
-    public instanced = false;
     public region = -1;
     public colour = ''; // name colour displayed for the entity
     public scale = 0; // scale of the entity (default if not specified)
+    public visible = true; // used to hide an entity from being sent to the client.
 
     public recentRegions: number[] = []; // regions the entity just left
 
@@ -176,6 +176,28 @@ abstract class Entity {
 
     public isNonDiagonal(entity: Entity): boolean {
         return this.isAdjacent(entity) && !(entity.x !== this.x && entity.y !== this.y);
+    }
+
+    /**
+     * Returns whether or not the entity is visible. An entity may be hidden when
+     * an admin wants to not be shown to other players, or when a player finishes
+     * a quest and we may want to hide an NPC.
+     * @param player Optional parameter used to check if the player has finished
+     * a quest associated with the entity.
+     * @returns Whether or not the entity is visible.
+     */
+
+    public isVisible(player?: Player): boolean {
+        // Return visibility status if no player provided or entity is not an NPC.
+        if (!player || !this.isNPC()) return this.visible;
+
+        let quest = player.quests.getQuestFromNPC(this as NPC, true);
+
+        // No quest found, return the visibility status of the entity.
+        if (!quest) return this.visible;
+
+        // Check if quest is completed and check if NPC is hidden.
+        return !(quest.isFinished() && quest.isHiddenNPC(this.key));
     }
 
     /**

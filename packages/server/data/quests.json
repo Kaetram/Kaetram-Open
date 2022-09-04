@@ -192,7 +192,7 @@
 
   "foresting": {
     "name": "Foresting",
-    "description": "Help ",
+    "description": "Help the forester with foresting stuff.",
     "stages": {
       "0": {
         "task": "talk",
@@ -239,6 +239,29 @@
           "text": "@green@You have just finished @crimson@Foresting@green@ quest. You have received a @crimson@Rusted Axe@green@!",
           "colour": "#33cc33"
         }
+      }
+    }
+  },
+
+  "desertquest": {
+    "name": "Desert Quest",
+    "description": "Help the dying adventurer send a letter to his wife.",
+    "hideNPCs": ["lavanpc"],
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "lavanpc",
+        "text": [
+          "Please dear adventurer, beware of what lies ahead.",
+          "I am no longer able to carry on forth.",
+          "Would you please be so kind as to aid me?",
+          "I must tell my wife I will no longer be coming home.",
+          "Could you deliver this book for me?"
+        ],
+        "completedText": [
+          "Please adventurer, bring the book to my wife."
+        ],
+        "itemKey": "book"
       }
     }
   }
