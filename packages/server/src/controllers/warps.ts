@@ -22,7 +22,8 @@ export default class Warp {
 
     /**
      * Warps based on the id specified. Checks if the player has the
-     * requirements (proper level, cooldown passed) and if the warp exists.
+     * requirements (proper level, achievement, quests, cooldown passed) and if the warp exists.
+     * @param player The player to warp.
      * @param id The id of the warp we are trying to warp to.
      */
 
