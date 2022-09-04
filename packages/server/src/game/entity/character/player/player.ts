@@ -1,4 +1,3 @@
-import Warp from './warp';
 import Skills from './skills';
 import Quests from './quests';
 import Hit from '../combat/hit';
@@ -85,7 +84,6 @@ export default class Player extends Character {
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    public warp: Warp = new Warp(this);
     public quests: Quests = new Quests(this);
     public achievements: Achievements = new Achievements(this);
     public skills: Skills = new Skills(this);
@@ -114,6 +112,9 @@ export default class Player extends Character {
     public experience = 0;
     private nextExperience = -1;
     private prevExperience = -1;
+
+    // Warps
+    public lastWarp = 0;
 
     // Ban and mute values
     public ban = 0; // epoch timestamp
@@ -193,7 +194,7 @@ export default class Player extends Character {
         this.userAgent = data.userAgent;
 
         this.setPoison(data.poison.type, data.poison.start);
-        this.warp.setLastWarp(data.lastWarp);
+        this.setLastWarp(data.lastWarp);
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
@@ -317,7 +318,6 @@ export default class Player extends Character {
         this.skills = null!;
         this.quests = null!;
         this.bank = null!;
-        this.warp = null!;
 
         this.connection = null!;
     }
@@ -377,7 +377,7 @@ export default class Player extends Character {
             this.updateRegion();
 
             // Let the player know if they've unlocked a new warp.
-            if (this.warp.unlockedWarp(this.level))
+            if (this.world.warps.unlockedWarp(this.level))
                 this.popup(
                     'Level Up!',
                     `You have unlocked a new warp! You are now level ${this.level}!`,
@@ -793,6 +793,16 @@ export default class Player extends Character {
         super.setRecentRegions(regions);
 
         if (regions.length > 0) this.recentRegionsCallback?.(regions);
+    }
+
+    /**
+     * Updates the lastWarp time variable. Primarily used to reload
+     * the last warped time after logging out and back in.
+     * @param lastWarp The date in milliseconds of the last warp. Defaults to now.
+     */
+
+    public setLastWarp(lastWarp: number = Date.now()): void {
+        this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
     }
 
     /**
