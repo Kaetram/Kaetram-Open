@@ -310,7 +310,7 @@
     "name": "Emerald Pendant"
   },
 
-  "preenpendant": {
+  "greenpendant": {
     "type": "pendant",
     "pendantLevel": 10,
     "name": "Jade Pendant"
@@ -326,6 +326,18 @@
     "type": "pendant",
     "pendantLevel": 25,
     "name": "Diamond Pendant"
+  },
+
+  "goldring": {
+    "type": "ring",
+    "ringLevel": 1,
+    "name": "Gold Ring"
+  },
+  
+  "silverring": {
+    "type": "ring",
+    "ringLevel": 1,
+    "name": "Silver Ring"
   },
 
   "ring1": {
