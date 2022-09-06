@@ -60,7 +60,17 @@
 
   "295-361": {
     "name": "Mimic",
-    "achievement": "notwhatitseems"
+    "achievement": "notwhatitseems",
+    "drops": {"gold": 700, "bigflask": 300, "spear": 100, "sproutring": 100, "pendant1": 100}
+  },
+
+  "228-156": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 1500,
+    "level": 40,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "bigflask": 400, "pearlring": 75, "pearlpendant": 75, "whitearmor": 125}
   },
 
   "168-31": {
