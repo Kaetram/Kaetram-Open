@@ -75,6 +75,16 @@
         "rewardExperience": 600
     },
 
+    "pathofdeath": {
+        "name": "Path of Death",
+        "description": "Defeat the ogre defending the ogre lord." 
+    },
+
+    "treadcarefully": {
+        "name": "Tread Carefully",
+        "description": "I literally said to tread carefully."
+    },
+
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "Defeat the Ogre Lord!",
