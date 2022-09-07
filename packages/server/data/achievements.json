@@ -75,6 +75,18 @@
         "rewardExperience": 600
     },
 
+    "ogrelord": {
+        "name": "Ogre Lord",
+        "description": "Defeat the Ogre Lord!",
+        "rewardExperience": 1000
+    },
+
+    "skeletonking": {
+        "name": "Skeleton King",
+        "description": "Defeat the Skeleton King!",
+        "rewardExperience": 2000
+    },
+
     "notwhatitseems": {
         "name": "Not What It Seems",
         "description": "Discover a mimic.",
