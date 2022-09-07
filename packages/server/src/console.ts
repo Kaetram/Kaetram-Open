@@ -115,6 +115,11 @@ export default class Console {
                     );
 
                     break;
+
+                case 'resetpositions':
+                    log.info(`Resetting all player positions.`);
+
+                    return this.database.resetPositions();
             }
         });
     }
