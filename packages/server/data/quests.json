@@ -144,7 +144,7 @@
           "I'm actually going to need you to uhm...",
           "filter out the population.",
           "Take this bow and shoot 5 of them for me!"],
-        "completedText": ["Don't be afraid young one, they'll grow back very quickly!"],
+        "completedText": ["Don't be afraid young one, they'll grow back very quickly!", "Kill 5 rats for me please!"],
         "itemKey": "woodenbow",
         "popup": {
           "title": "Item acquired!",
