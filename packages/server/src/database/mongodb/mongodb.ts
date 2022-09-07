@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import bcryptjs from 'bcryptjs';
 import { Db, MongoClient } from 'mongodb';
 
@@ -5,8 +6,11 @@ import log from '@kaetram/common/util/log';
 
 import Creator, { PlayerInfo } from './creator';
 import Loader from './loader';
+import Quests from '../../../data/quests.json';
 
 import type Player from '../../game/entity/character/player/player';
+
+import { Modules } from '@kaetram/common/network';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -130,6 +134,69 @@ export default class MongoDB {
                 player.load(Creator.serializePlayer(player));
             });
         });
+    }
+
+    /**
+     * Iterates through all the players in the database and (depending on their
+     * tutorial quest progress) resets their positions to the defaults.
+     */
+
+    public resetPositions(): void {
+        if (!this.hasDatabase()) return;
+
+        let infoCollection = this.database.collection('player_info'),
+            questsCollection = this.database.collection('player_quests'),
+            tutorialQuest = Quests.tutorial;
+
+        if (!tutorialQuest) return log.warning('No tutorial quest found.');
+
+        // Extract the number of stages from the tutorial quest.
+        let tutorialLength = Object.keys(tutorialQuest.stages).length;
+
+        infoCollection
+            .find({})
+            .toArray()
+            .then((playerInfo) => {
+                _.each(playerInfo, (info) => {
+                    questsCollection.findOne({ username: info.username }).then((questInfo) => {
+                        if (!questInfo || info.username !== questInfo.username) return;
+
+                        /**
+                         * We check the player's tutorial progress and determine whether
+                         * to use the default spawn position or the tutorial spawn position.
+                         */
+
+                        let { quests } = questInfo,
+                            tutorial = _.find(quests, { key: 'tutorial' }),
+                            inTutorial = !tutorial || tutorial.stage < tutorialLength,
+                            location = (
+                                inTutorial
+                                    ? Modules.Constants.TUTORIAL_SPAWN_POINT
+                                    : Modules.Constants.SPAWN_POINT
+                            ).split(','),
+                            position = {
+                                x: parseFloat(location[0]),
+                                y: parseFloat(location[1])
+                            };
+
+                        // Update the position parameters.
+                        info.x = position.x;
+                        info.y = position.y;
+
+                        // Insert the new position into the player's database entry.
+                        infoCollection.updateOne(
+                            { username: info.username },
+                            {
+                                $set: {
+                                    x: position.x,
+                                    y: position.y
+                                }
+                            },
+                            { upsert: true }
+                        );
+                    });
+                });
+            });
     }
 
     /**
