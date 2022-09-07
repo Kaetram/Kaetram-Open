@@ -1805,10 +1805,11 @@
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 420,
-    "respawnDelay": 50000,
+    "respawnDelay": 100000,
     "plugin": "skeletonking",
     "boss": true,
-    "roamDistance": 16
+    "roamDistance": 16,
+    "achievement": "skeletonking"
   },
 
   "ogrelord": {
@@ -1827,8 +1828,10 @@
     "attackRate": 1100,
     "movementSpeed": 400,
     "respawnDelay": 125000,
+    "roamingDistance": 16,
     "plugin": "ogrelord",
-    "boss": true
+    "boss": true,
+    "achievement": "ogrelord"
   },
 
   "windguardian": {
