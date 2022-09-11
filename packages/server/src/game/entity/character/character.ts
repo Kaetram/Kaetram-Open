@@ -333,6 +333,16 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * A character is considered in combat when they have a target or are
+     * being targeted by some attackers.
+     * @returns Whether or not the character is in a combat.
+     */
+
+    public inCombat(): boolean {
+        return this.combat.started /*|| this.attackers.length > 0*/ || this.hasTarget();
+    }
+
+    /**
      * @returns If the `attackRange` is greater than 1.
      */
 
