@@ -34,6 +34,8 @@ export default class Warp {
         if (!player.quests.isTutorialFinished())
             return player.notify(`You must finish the tutorial before warping.`);
 
+        if (player.inCombat()) return player.notify(`You cannot warp while in combat.`);
+
         // Prevent teleporting too often.
         if (!this.isCooldown(player))
             return player.notify(`You must wait another ${this.getDuration(player)} to warp.`);
