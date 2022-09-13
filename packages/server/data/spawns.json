@@ -47,11 +47,6 @@
     "achievement": "waterguardian"
   },
 
-  "243-68": {
-    "name": "Ogre Lord",
-    "boss": true
-  },
-
   "400-329": {
     "name": "Ogre Guardian",
     "miniboss": true,
@@ -65,7 +60,23 @@
 
   "295-361": {
     "name": "Mimic",
-    "achievement": "notwhatitseems"
+    "achievement": "notwhatitseems",
+    "drops": {"gold": 700, "bigflask": 300, "spear": 100, "sproutring": 100, "pendant1": 100, "goldring": 6}
+  },
+
+  "629-283": {
+    "name": "Mimic",
+    "achievement": "treadcarefully",
+    "drops": {"gold": 300, "bigflask": 500, "spear": 100, "sproutring": 100, "pendant1": 100}
+  },
+
+  "228-156": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 1500,
+    "level": 30,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "bigflask": 400, "silverring": 10, "scimitar": 75, "pendant1": 125}
   },
 
   "168-31": {
@@ -85,5 +96,18 @@
     "miniboss": true,
     "defenseLevel": 15,
     "level": 35
+  },
+
+  "202-39": {
+    "name": "Vulture",
+    "achievement": "vulture"
+  },
+
+  "238-48": {
+    "name": "Iron Ogre",
+    "miniboss": true,
+    "level": 25,
+    "attackLevel": 8,
+    "achievement": "pathofdeath"
   }
 }

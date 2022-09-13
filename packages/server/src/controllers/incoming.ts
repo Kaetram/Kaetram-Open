@@ -148,6 +148,7 @@ export default class Incoming {
 
         this.player.updateRegion();
         this.player.updateEntities();
+        this.player.updateEntityList();
 
         this.player.handler.startUpdateInterval();
 
@@ -247,8 +248,6 @@ export default class Incoming {
 
             case Opcodes.Movement.Stop:
                 entity = this.entities.get(targetInstance!);
-
-                log.debug(`playerX: ${playerX}, playerY: ${playerY}`);
 
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
@@ -480,7 +479,7 @@ export default class Incoming {
      */
 
     private handleWarp(data: WarpPacket): void {
-        this.player.warp?.warp(data.id);
+        this.world.warps.warp(this.player, data.id);
     }
 
     /**
