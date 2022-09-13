@@ -21,6 +21,7 @@ export interface ItemData {
     pendantLevel?: number;
     ringLevel?: number;
     bootsLevel?: number;
+    attackRate?: number;
     movementSpeed?: number;
     lumberjacking?: number;
     healAmount?: number;

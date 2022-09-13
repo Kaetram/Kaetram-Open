@@ -123,17 +123,24 @@ export default class Region {
 
     /**
      * Grab a list of entity instances and remove the `reject` from the list.
+     * @param player Player object used to check dynamic visibility of the entities.
      * @param reject Entity that we are ignoring (typically a player).
      * @returns A list of entity instances.
      */
 
-    public getEntities(reject?: Entity): string[] {
-        let entities = _.keys(this.entities);
+    public getEntities(player: Player, reject?: Entity): string[] {
+        let entities: string[] = [];
 
-        if (reject)
-            entities = _.reject(entities, (instance: string) => {
-                return instance === reject.instance;
-            });
+        _.each(this.entities, (entity: Entity, instance: string) => {
+            // Ignore if a reject is present.
+            if (reject && reject.instance === instance) return;
+
+            // Check if the entity is visible to the player.
+            if (!entity.isVisible(player)) return;
+
+            // Append our instance to the list.
+            entities.push(instance);
+        });
 
         return entities;
     }

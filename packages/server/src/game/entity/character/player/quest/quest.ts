@@ -31,6 +31,7 @@ export default abstract class Quest {
 
     private name = '';
     private description = '';
+    private hideNPCs: string[] = []; // NPCs to hide after quest.
     private stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     protected stageCount = 0; // How long the quest is.
@@ -53,6 +54,7 @@ export default abstract class Quest {
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
         this.description = rawData.description;
+        this.hideNPCs = rawData.hideNPCs || [];
         this.stageCount = _.size(rawData.stages);
 
         this.stages = rawData.stages;
@@ -274,6 +276,17 @@ export default abstract class Quest {
 
     public isFinished(): boolean {
         return this.stage >= this.stageCount;
+    }
+
+    /**
+     * Checks whether the key of the NPC is contained within the array of
+     * NPCs to hide after the quest is completed.
+     * @param key The key of the NPC we are checking.
+     * @returns Boolean value if the NPC is visibile or not.
+     */
+
+    public isHiddenNPC(key: string): boolean {
+        return this.hideNPCs.includes(key);
     }
 
     /**

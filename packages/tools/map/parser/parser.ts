@@ -320,8 +320,8 @@ export default class ProcessMap {
         this.map.areas[areaName].push({
             id,
             name,
-            x: x / this.map.tileSize,
-            y: y / this.map.tileSize,
+            x: Math.round(x / this.map.tileSize),
+            y: Math.round(y / this.map.tileSize),
             width: width / this.map.tileSize,
             height: height / this.map.tileSize,
             polygon: this.extractPolygon(object)

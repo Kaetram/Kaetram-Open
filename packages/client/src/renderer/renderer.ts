@@ -91,8 +91,8 @@ export default class Renderer {
     private map: Map;
     private camera: Camera;
 
-    public tileSize: number;
-    private actualTileSize: number;
+    public tileSize = 16; // Default fallback for tileSize
+    private actualTileSize = 48; // Default zoom of 3x * tileSize
     private fontSize = 10;
     private screenWidth = 0;
     private screenHeight = 0;
