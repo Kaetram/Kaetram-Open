@@ -497,6 +497,37 @@ export default class Player extends Character {
     }
 
     /**
+     * Verifies that the movement is valid and not no-clipping through collisions.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @returns Whether or not the location is colliding.
+     */
+
+    private verifyCollision(x: number, y: number): boolean {
+        let isColliding = this.map.isColliding(x, y, this) && !this.noclip;
+
+        if (isColliding) {
+            /**
+             * If the old coordinate values are invalid or they may cause a loop
+             * in the `teleport` function, we instead send the player to the spawn point.
+             */
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            ) {
+                this.sendToSpawn();
+                return true;
+            }
+
+            // Send player to the last valid position.
+            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
+            this.teleport(this.oldX, this.oldY);
+        }
+
+        return isColliding;
+    }
+
+    /**
      * Handler for when a container slot is selected at a specified index. Depending
      * on the type, we act accordingly. If we click an inventory, we check if the item
      * is equippable or consumable and remove it from the inventory. If we click a bank
@@ -712,24 +743,7 @@ export default class Player extends Character {
      */
 
     public override setPosition(x: number, y: number, forced = false, skip = false): void {
-        if (this.dead) return;
-
-        // Check against noclipping by verifying the collision w/ dynamic tiles.
-        if (this.map.isColliding(x, y, this) && !this.noclip) {
-            /**
-             * If the old coordinate values are invalid or they may cause a loop
-             * in the `teleport` function, we instead send the player to the spawn point.
-             */
-            if (
-                (this.oldX === -1 && this.oldY === -1) ||
-                (this.oldX === this.x && this.oldY === this.y)
-            )
-                return this.sendToSpawn();
-
-            this.notify(`Noclip detected in your movement, please submit a bug report.`);
-            this.teleport(this.oldX, this.oldY);
-            return;
-        }
+        if (this.dead || !this.verifyCollision(x, y)) return;
 
         // Sets the player's new position.
         super.setPosition(x, y);
