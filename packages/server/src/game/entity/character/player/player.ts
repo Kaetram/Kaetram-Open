@@ -518,10 +518,7 @@ export default class Player extends Character {
 
                 if (!item) return;
 
-                if (item.edible) {
-                    item.plugin?.onUse(this);
-                    this.inventory.remove(index, 1);
-                }
+                if (item.edible && item.plugin?.onUse(this)) this.inventory.remove(index, 1);
 
                 if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
