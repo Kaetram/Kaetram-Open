@@ -14,7 +14,5 @@ export default class PlayerCollection extends Collection<Player> {
         if (entity.ready) entity.save();
 
         this.world.network.deletePacketQueue(entity);
-        // Unsure about this since garbage collector should handle it.
-        entity.destroy();
     }
 }

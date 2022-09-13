@@ -301,28 +301,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Destroys all the isntances in the player to aid the garbage collector.
-     */
-
-    public destroy(): void {
-        this.combat.stop();
-        this.skills.stop();
-
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
-
-        this.disconnectTimeout = null;
-
-        this.handler = null!;
-        this.inventory = null!;
-        this.abilities = null!;
-        this.skills = null!;
-        this.quests = null!;
-        this.bank = null!;
-
-        this.connection = null!;
-    }
-
-    /**
      * Handles the player respawning in the world.
      */
 
