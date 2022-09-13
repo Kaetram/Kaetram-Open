@@ -9,6 +9,7 @@ import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
 import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
+import { StatisticsData } from '@kaetram/common/types/statistics';
 
 export default class Loader {
     public constructor(private database?: Db) {}
@@ -150,6 +151,25 @@ export default class Loader {
             let [{ skills }] = info as SerializedSkills[];
 
             callback(skills);
+        });
+    }
+
+    /**
+     * Loads the statistics data from the database and returns it into a StatisticsData object.
+     * @param player The player we are loading the statistics data for.
+     * @param callback Contains the statistics data from the database.
+     */
+
+    public loadStatistics(player: Player, callback: (statistics: StatisticsData) => void): void {
+        this.load(player.username, 'player_statistics', (info: unknown) => {
+            if (!info)
+                return log.warning(
+                    `[player_statistics] No statistics found for ${player.username}.`
+                );
+
+            let [statistics] = info as StatisticsData[];
+
+            callback(statistics);
         });
     }
 }

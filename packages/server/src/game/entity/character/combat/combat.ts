@@ -34,7 +34,7 @@ export default class Combat {
 
         if (this.loop) return;
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2);
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
     }
 
     /**
@@ -187,6 +187,6 @@ export default class Combat {
      */
 
     private canAttack(): boolean {
-        return Date.now() - this.lastAttack >= this.character.attackRate;
+        return Date.now() - this.lastAttack >= this.character.getAttackRate();
     }
 }

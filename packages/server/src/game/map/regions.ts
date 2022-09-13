@@ -261,7 +261,7 @@ export default class Regions {
     public sendEntities(player: Player): void {
         if (player.region === -1) return;
 
-        let entities: string[] = this.regions[player.region].getEntities(player as Entity);
+        let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
         player.send(new List(entities));
     }
