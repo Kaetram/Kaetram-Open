@@ -46,7 +46,7 @@ export default class App {
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
-    private footer: HTMLElement = document.querySelector('footer')!;
+    private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
     private currentScroll = 'load-character';
     private parchmentAnimating = false;
@@ -93,6 +93,8 @@ export default class App {
         this.parchment.addEventListener('click', () => {
             if (this.hasFooterOpen()) this.openScroll('load-character');
         });
+
+        this.gameVersion.textContent = `v${this.config.version}`;
 
         // Document callbacks such as clicks and keystrokes.
         document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');

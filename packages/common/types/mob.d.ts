@@ -22,4 +22,5 @@ export interface MobData {
     achievement?: string;
     boss?: boolean;
     miniboss?: boolean;
+    roamDistance?: number;
 }

@@ -13,7 +13,6 @@ export default class OgreLord extends Default {
         'No, do not touch my onions!'
     ];
 
-    private minions: Mob[] = [];
     private positions: Position[] = [
         { x: 240, y: 65 },
         { x: 248, y: 65 },
@@ -69,8 +68,8 @@ export default class OgreLord extends Default {
      */
 
     private handleMinions(): void {
-        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawn(0);
-        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawn(1);
+        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawnMinion(0);
+        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawnMinion(1);
     }
 
     /**
@@ -79,32 +78,16 @@ export default class OgreLord extends Default {
      * @param wave The wave of minions to spawn.
      */
 
-    private spawn(wave: number): void {
+    private spawnMinion(wave: number): void {
         let key = this.minionKeys[wave];
 
         // Iterate through the positions and spawn a mob at each one.
         _.each(this.positions, (position: Position) => {
-            let minion = this.world.entities.spawnMob(key, position.x, position.y);
-
-            // Prevent minion from respawning after death.
-            minion.respawnable = false;
-
-            // Remove minion from the list when it dies.
-            minion.onDeathImpl(() => {
-                this.minions.splice(this.minions.indexOf(minion), 1);
-            });
-
-            // Add the minion to the list of minions.
-            this.minions.push(minion);
-
-            // Skip if no attackers but somehow the boss got hit.
-            if (this.mob.attackers.length === 0) return;
-
-            // Find an attacker out of the list of attackers.
-            let target = this.mob.attackers[Utils.randomInt(0, this.mob.attackers.length - 1)];
+            let minion = super.spawn(key, position.x, position.y),
+                target = super.getTarget();
 
             // Have the minions attack one of the boss' attackers.
-            minion.combat.attack(target);
+            if (target) minion.combat.attack(target);
         });
 
         // Prevent the boss from spawning more minions afterwards.

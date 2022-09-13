@@ -255,6 +255,151 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Returns the type of projectile the character is using.
+     * @returns A projectile integer from the enum of Projectiles.
+     */
+
+    public getProjectile(): Modules.Projectiles {
+        return this.projectile;
+    }
+
+    /**
+     * @returns Returns the number of attackers currently targeting this character.
+     */
+
+    public getAttackerCount(): number {
+        return _.size(this.attackers);
+    }
+
+    /**
+     * @returns The attack rate (speed) of the character when in combat.
+     */
+
+    public getAttackRate(): number {
+        return this.attackRate;
+    }
+
+    /**
+     * Unimplmented weapon level function for the superclass.
+     * @returns Default weapon level of 1.
+     */
+
+    public getWeaponLevel(): number {
+        return 1;
+    }
+
+    /**
+     * Unimplmented armour level function for the superclass.
+     * @returns Default armour level of 1.
+     */
+
+    public getArmourLevel(): number {
+        return 1;
+    }
+
+    /**
+     * @returns Default probability for poison to be inflicted.
+     */
+
+    public getPoisonChance(): number {
+        return Modules.Defaults.POISON_CHANCE;
+    }
+
+    /**
+     * Unimplemented special attack function for the superclass.
+     * @returns Always false if not implemented.
+     */
+
+    public hasSpecialAttack(): boolean {
+        return false;
+    }
+
+    /**
+     * @returns Checks if the `target` is not null.
+     */
+
+    public hasTarget(): boolean {
+        return !!this.target;
+    }
+
+    /**
+     * Checks if an attacker exists within our list of attackers.
+     * @param attacker The attacker we are checking the existence of.
+     * @returns Boolean value of whether the attacker exists or not.
+     */
+
+    public hasAttacker(attacker: Character): boolean {
+        return this.attackers.some((a: Character) => a.instance === attacker.instance);
+    }
+
+    /**
+     * A character is considered in combat when they have a target or are
+     * being targeted by some attackers.
+     * @returns Whether or not the character is in a combat.
+     */
+
+    public inCombat(): boolean {
+        return this.combat.started /*|| this.attackers.length > 0*/ || this.hasTarget();
+    }
+
+    /**
+     * @returns If the `attackRange` is greater than 1.
+     */
+
+    public isRanged(): boolean {
+        return this.attackRange > 1;
+    }
+
+    /**
+     * Checks if an entity is dead by verifying
+     * hitPoints are above 0 or if the variable `dead` is set.
+     * @returns Boolean on whether the character is dead or not.
+     */
+
+    public isDead(): boolean {
+        return this.hitPoints.isEmpty() || this.dead;
+    }
+
+    /**
+     * Checks if the character is within its own attack range next to its target.
+     * @returns Boolean on whether the target character is in range or not.
+     */
+
+    public isNearTarget(): boolean {
+        /**
+         * A target can only be attacked through range if it's on the same plateau level or
+         * a lower one. This prevents players from sniping mobs on higher levels.
+         */
+        if (this.isRanged())
+            return (
+                this.getDistance(this.target!) <= this.attackRange &&
+                this.plateauLevel >= this.target!.plateauLevel
+            );
+
+        return this.isAdjacent(this.target!);
+    }
+
+    /**
+     * Superclass implementation for poisonous damage. Mobs have this
+     * enabled if they're poisonous, players have this enabled if
+     * they carry a weapon that's imbued with poison.
+     * @returns Defaults to false.
+     */
+
+    public isPoisonous(): boolean {
+        return false;
+    }
+
+    /**
+     * Checks if the character's target is on the same tile as the character.
+     * @returns If the distance between the character and the target is 0.
+     */
+
+    public isOnSameTile(): boolean {
+        return this.getDistance(this.target!) === 0;
+    }
+
+    /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
      * @param x The new x grid position.
@@ -351,98 +496,6 @@ export default abstract class Character extends Entity {
         this.orientation = orientation;
     }
 
-    /**
-     * Returns the type of projectile the character is using.
-     * @returns A projectile integer from the enum of Projectiles.
-     */
-
-    public getProjectile(): Modules.Projectiles {
-        return this.projectile;
-    }
-
-    /**
-     * @returns Returns the number of attackers currently targeting this character.
-     */
-
-    public getAttackerCount(): number {
-        return _.size(this.attackers);
-    }
-
-    /**
-     * @returns Checks if the `target` is not null.
-     */
-
-    public hasTarget(): boolean {
-        return !!this.target;
-    }
-
-    /**
-     * Checks if an attacker exists within our list of attackers.
-     * @param attacker The attacker we are checking the existence of.
-     * @returns Boolean value of whether the attacker exists or not.
-     */
-
-    public hasAttacker(attacker: Character): boolean {
-        return this.attackers.some((a: Character) => a.instance === attacker.instance);
-    }
-
-    /**
-     * @returns If the `attackRange` is greater than 1.
-     */
-
-    public isRanged(): boolean {
-        return this.attackRange > 1;
-    }
-
-    /**
-     * Checks if an entity is dead by verifying
-     * hitPoints are above 0 or if the variable `dead` is set.
-     * @returns Boolean on whether the character is dead or not.
-     */
-
-    public isDead(): boolean {
-        return this.hitPoints.isEmpty() || this.dead;
-    }
-
-    /**
-     * Checks if the character is within its own attack range next to its target.
-     * @returns Boolean on whether the target character is in range or not.
-     */
-
-    public isNearTarget(): boolean {
-        /**
-         * A target can only be attacked through range if it's on the same plateau level or
-         * a lower one. This prevents players from sniping mobs on higher levels.
-         */
-        if (this.isRanged())
-            return (
-                this.getDistance(this.target!) <= this.attackRange &&
-                this.plateauLevel >= this.target!.plateauLevel
-            );
-
-        return this.isAdjacent(this.target!);
-    }
-
-    /**
-     * Superclass implementation for poisonous damage. Mobs have this
-     * enabled if they're poisonous, players have this enabled if
-     * they carry a weapon that's imbued with poison.
-     * @returns Defaults to false.
-     */
-
-    public isPoisonous(): boolean {
-        return false;
-    }
-
-    /**
-     * Checks if the character's target is on the same tile as the character.
-     * @returns If the distance between the character and the target is 0.
-     */
-
-    public isOnSameTile(): boolean {
-        return this.getDistance(this.target!) === 0;
-    }
-
     // Packet sending functions
 
     /**
@@ -498,43 +551,6 @@ export default abstract class Character extends Entity {
         data.orientation = this.orientation;
 
         return data;
-    }
-
-    // Superclass functions that require per-subclass implementation.
-
-    /**
-     * Unimplmented weapon level function for the superclass.
-     * @returns Default weapon level of 1.
-     */
-
-    public getWeaponLevel(): number {
-        return 1;
-    }
-
-    /**
-     * Unimplmented armour level function for the superclass.
-     * @returns Default armour level of 1.
-     */
-
-    public getArmourLevel(): number {
-        return 1;
-    }
-
-    /**
-     * @returns Default probability for poison to be inflicted.
-     */
-
-    public getPoisonChance(): number {
-        return Modules.Defaults.POISON_CHANCE;
-    }
-
-    /**
-     * Unimplemented special attack function for the superclass.
-     * @returns Always false if not implemented.
-     */
-
-    public hasSpecialAttack(): boolean {
-        return false;
     }
 
     /**
