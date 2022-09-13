@@ -14,11 +14,20 @@ export default class HealthFlask implements Plugin {
         this.healPercent = (data.healPercent || 0) / 100;
     }
 
-    public onUse(player: Player): void {
-        if (this.healPercent)
-            return player.heal(player.hitPoints.getMaxHitPoints() * this.healPercent, 'hitpoints');
+    public onUse(player: Player): boolean {
+        if (player.hitPoints.isFull()) {
+            player.notify(`You are already at full health.`);
+            return false;
+        }
+
+        if (this.healPercent) {
+            player.heal(player.hitPoints.getMaxHitPoints() * this.healPercent, 'hitpoints');
+            return true;
+        }
 
         if (this.healAmount) player.heal(this.healAmount, 'hitpoints');
         if (this.manaAmount) player.heal(this.manaAmount, 'hitpoints');
+
+        return true;
     }
 }
