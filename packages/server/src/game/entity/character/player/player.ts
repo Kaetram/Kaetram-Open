@@ -1,4 +1,3 @@
-import Warp from './warp';
 import Skills from './skills';
 import Quests from './quests';
 import Hit from '../combat/hit';
@@ -9,6 +8,7 @@ import Map from '../../../map/map';
 import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
+import Statistics from './statistics';
 import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
@@ -84,13 +84,13 @@ export default class Player extends Character {
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    public warp: Warp = new Warp(this);
     public quests: Quests = new Quests(this);
     public achievements: Achievements = new Achievements(this);
     public skills: Skills = new Skills(this);
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public abilities: Abilities = new Abilities(this);
+    public statistics: Statistics = new Statistics();
 
     public handler: Handler = new Handler(this);
 
@@ -113,14 +113,12 @@ export default class Player extends Character {
     private nextExperience = -1;
     private prevExperience = -1;
 
+    // Warps
+    public lastWarp = 0;
+
     // Ban and mute values
     public ban = 0; // epoch timestamp
     public mute = 0;
-
-    // Player statistics
-    public lastLogin = 0;
-    public pvpKills = 0;
-    public pvpDeaths = 0;
 
     // Player miscellaneous data
     public mapVersion = -1;
@@ -191,15 +189,12 @@ export default class Player extends Character {
         this.experience = data.experience;
         this.ban = data.ban;
         this.mute = data.mute;
-        this.lastLogin = data.lastLogin;
-        this.pvpKills = data.pvpKills;
-        this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
 
         this.setPoison(data.poison.type, data.poison.start);
-        this.warp.setLastWarp(data.lastWarp);
+        this.setLastWarp(data.lastWarp);
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
@@ -215,9 +210,10 @@ export default class Player extends Character {
         this.loadQuests();
         this.loadAchievements();
         this.loadSkills();
+        this.loadStatistics();
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> intro
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> intro
     }
 
     /**
@@ -272,6 +268,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Loads the statistics data from the database.
+     */
+
+    public loadStatistics(): void {
+        this.database.loader?.loadStatistics(this, this.statistics.load.bind(this.statistics));
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
@@ -314,7 +318,6 @@ export default class Player extends Character {
         this.skills = null!;
         this.quests = null!;
         this.bank = null!;
-        this.warp = null!;
 
         this.connection = null!;
     }
@@ -374,7 +377,7 @@ export default class Player extends Character {
             this.updateRegion();
 
             // Let the player know if they've unlocked a new warp.
-            if (this.warp.unlockedWarp(this.level))
+            if (this.world.warps.unlockedWarp(this.level))
                 this.popup(
                     'Level Up!',
                     `You have unlocked a new warp! You are now level ${this.level}!`,
@@ -790,6 +793,16 @@ export default class Player extends Character {
         super.setRecentRegions(regions);
 
         if (regions.length > 0) this.recentRegionsCallback?.(regions);
+    }
+
+    /**
+     * Updates the lastWarp time variable. Primarily used to reload
+     * the last warped time after logging out and back in.
+     * @param lastWarp The date in milliseconds of the last warp. Defaults to now.
+     */
+
+    public setLastWarp(lastWarp: number = Date.now()): void {
+        this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
     }
 
     /**
@@ -1248,6 +1261,18 @@ export default class Player extends Character {
 
     public override getArmourLevel(): number {
         return this.equipment.getArmour().power;
+    }
+
+    /**
+     * An override function for the player's attack rate since it
+     * is dependent on their weapon at the moment. We may be doing
+     * calculations from special equipments/effects in the future.
+     * @returns The attack rate in milliseconds. See Modules.Defaults
+     * for the default attack speed value.
+     */
+
+    public override getAttackRate(): number {
+        return this.equipment.getWeapon().attackRate;
     }
 
     /**

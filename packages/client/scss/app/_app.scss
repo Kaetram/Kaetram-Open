@@ -26,3 +26,15 @@
     height: 35px !important;
     padding: 1em;
 }
+
+.version {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    padding: 2em;
+    
+    font-family: AdvoCut, sans-serif, arial;
+    font-size: 20px;
+    color: #eee;
+}
