@@ -204,7 +204,7 @@ export default class Item extends Entity {
      */
 
     public getRequirement(): number {
-        if (this.requirement !== -1) this.requirement;
+        if (this.requirement !== -1) return this.requirement;
 
         if (this.isWeapon()) return Math.floor(this.attackLevel * 1.5);
         if (this.isArmour()) return Math.floor(this.defenseLevel * 1.5);
