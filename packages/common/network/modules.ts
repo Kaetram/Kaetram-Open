@@ -207,11 +207,7 @@ export enum Languages {
 
 export enum Warps {
     Mudwich,
-    Southorn,
-    Lakesworld,
-    Aynor,
-    Crullfeld,
-    Patsow
+    Undersea
 }
 
 export enum Skills {
