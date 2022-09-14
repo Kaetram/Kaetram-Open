@@ -44,17 +44,16 @@ export default class Commands {
                 let population = this.world.getPopulation(),
                     singular = population === 1;
 
-                if (this.player.isAdmin())
-                    this,
-                        this.entities.forEachPlayer((player: Player) => {
-                            this.player.notify(player.username);
-                        });
-
                 this.player.notify(
                     `There ${singular ? 'is' : 'are'} currently ${population} ${
                         singular ? 'person' : 'people'
                     } online.`
                 );
+
+                if (this.player.isAdmin())
+                    this.entities.forEachPlayer((player: Player) => {
+                        this.player.notify(player.username);
+                    });
 
                 return;
             }
