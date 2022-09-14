@@ -12,7 +12,7 @@ export default class Warp {
     private warps: ProcessedArea[] = [];
 
     public lastWarp = 0; // The last time we warped to.
-    private warpTimeout = 30_000; // 30 seconds between using the warps.
+    private warpTimeout = 300_000; // 30 seconds between using the warps.
 
     public constructor(private world: World) {
         this.warps = this.world.map.warps;
@@ -40,7 +40,7 @@ export default class Warp {
         if (!this.isCooldown(player))
             return player.notify(`You must wait another ${this.getDuration(player)} to warp.`);
 
-        let warp = this.getWarp(id - 1);
+        let warp = this.getWarp(id);
 
         // No warp found.
         if (!warp) return log.warning(`Could not find warp with id ${id}.`);
@@ -84,7 +84,7 @@ export default class Warp {
      */
 
     private isCooldown(player: Player): boolean {
-        return this.getDifference(player) > this.warpTimeout || player.isAdmin();
+        return this.getDifference(player) > this.warpTimeout;
     }
 
     /**
