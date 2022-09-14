@@ -110,12 +110,10 @@ export default abstract class Quest {
          */
         if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
             if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
-            else if (
-                this.hasItemToGive() &&
-                this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!)
-            )
-                this.progress();
-            else this.progress();
+            else if (this.hasItemToGive()) {
+                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!))
+                    this.progress();
+            } else this.progress();
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
