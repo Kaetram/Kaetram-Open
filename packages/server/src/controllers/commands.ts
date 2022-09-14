@@ -575,6 +575,21 @@ export default class Commands {
 
                 this.player.notify(`Noclip: ${this.player.noclip}`);
                 break;
+
+            case 'kick':
+                username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kick username`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.connection.close();
+
+                break;
         }
     }
 }
