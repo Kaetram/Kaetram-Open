@@ -743,7 +743,7 @@ export default class Player extends Character {
      */
 
     public override setPosition(x: number, y: number, forced = false, skip = false): void {
-        if (this.dead || !this.verifyCollision(x, y)) return;
+        if (this.dead || this.verifyCollision(x, y)) return;
 
         // Sets the player's new position.
         super.setPosition(x, y);
