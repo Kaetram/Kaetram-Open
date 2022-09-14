@@ -86,6 +86,7 @@ export default class Quests {
         if (this.get(key).isFinished()) this.player.updateRegion();
 
         this.player.updateEntities();
+        this.player.save();
     }
 
     /**

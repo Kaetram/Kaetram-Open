@@ -83,6 +83,7 @@ export default class Achievements {
 
         // Update dynamic tiles.
         this.player.updateRegion();
+        this.player.save();
     }
 
     /**
@@ -103,6 +104,7 @@ export default class Achievements {
         );
 
         this.player.updateEntities();
+        this.player.save();
     }
 
     /**
