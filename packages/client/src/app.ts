@@ -227,6 +227,7 @@ export default class App {
         this.body.className = 'intro';
 
         this.menuHidden = false;
+        this.gameVersion.hidden = false;
     }
 
     /**
@@ -240,6 +241,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
+        this.gameVersion.hidden = true;
 
         this.saveLogin();
     }
