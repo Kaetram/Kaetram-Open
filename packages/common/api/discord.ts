@@ -1,4 +1,4 @@
-import { Client, Message, TextChannel } from 'discord.js';
+import { Client, Message, IntentsBitField, TextChannel } from 'discord.js';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -11,7 +11,13 @@ export default class Discord {
     public constructor(skip = false) {
         if (!config.discordEnabled || skip) return;
 
-        this.client = new Client();
+        this.client = new Client({
+            intents: [
+                IntentsBitField.Flags.Guilds,
+                IntentsBitField.Flags.GuildMessages,
+                IntentsBitField.Flags.MessageContent
+            ]
+        });
 
         // Discord is successfully connected.
         this.client.on('ready', () => {
@@ -19,7 +25,7 @@ export default class Discord {
         });
 
         // Receive any message acitivty from the Discord server.
-        this.client.on('message', this.handleMessage.bind(this));
+        this.client.on('messageCreate', this.handleMessage.bind(this));
 
         // Connect to the Discord server.
         this.client.login(config.discordBotToken);
