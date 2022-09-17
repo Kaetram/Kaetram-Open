@@ -13,6 +13,10 @@ import API from '../network/api';
 import Packet from '../network/packet';
 import Network from '../network/network';
 import Character from './entity/character/character';
+import Minigames from './minigames/minigames';
+import Globals from './globals/globals';
+
+import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -22,8 +26,6 @@ import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
-import Minigames from './minigames/minigames';
-import Globals from './globals/globals';
 
 export interface PacketData {
     packet: Packet;
@@ -128,7 +130,7 @@ export default class World {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message,
+                message: Utils.parseMessage(message),
                 colour
             })
         });
