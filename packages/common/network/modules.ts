@@ -384,7 +384,7 @@ export enum MobDefaults {
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
-    ROAM_FREQUENCY = 17_000, // Roam interval every 17 seconds
+    ROAM_FREQUENCY = 10_000, // Roam interval every 10 seconds
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }
