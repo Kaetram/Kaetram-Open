@@ -123,7 +123,8 @@ export default class Handler {
      * mobs do not walk outside a predefined boundary of theirs.
      */
 
-    protected handleRoaming(): void {
+    protected handleRoaming(retries = 0): void {
+        if (retries < 0) return;
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
@@ -136,10 +137,16 @@ export default class Handler {
         if (combat.started) return;
 
         // Prevent mobs from going outside of their roaming radius.
-        if (distance < roamDistance) return;
+        if (distance < roamDistance) {
+            this.handleRoaming(--retries);
+            return;
+        }
 
         // No need to move if the new position is the same as the current.
-        if (newX === x && newY === y) return;
+        if (newX === x && newY === y) {
+            this.handleRoaming(--retries);
+            return;
+        }
 
         /**
          * A plateau defines an imaginary z-axis in a 2D space. A mob is essentially
@@ -153,10 +160,16 @@ export default class Handler {
         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
         // Check if the new position is a collision.
-        if (this.map.isColliding(newX, newY)) return;
+        if (this.map.isColliding(newX, newY)) {
+            this.handleRoaming(--retries);
+            return;
+        }
 
         // Don't have mobs block a door.
-        if (this.map.isDoor(newX, newY)) return;
+        if (this.map.isDoor(newX, newY)) {
+            this.handleRoaming(--retries);
+            return;
+        }
 
         this.mob.move(newX, newY);
     }
