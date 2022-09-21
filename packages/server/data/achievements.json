@@ -116,5 +116,10 @@
     "frozentundra": {
         "name": "Frozen Tundra",
         "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
+    },
+
+    "underwatertreasure": {
+        "name": "Underwater Treasure",
+        "description": "Find the treasure hidden underwater."
     }
 }
