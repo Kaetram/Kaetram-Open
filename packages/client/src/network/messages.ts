@@ -231,6 +231,10 @@ export default class Messages {
                 this.app.sendError('You have been disconnected for being inactive for too long.');
                 break;
 
+            case 'updated':
+                this.app.sendError('The game has been updated. Please clear your browser cache.');
+                break;
+
             default:
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
