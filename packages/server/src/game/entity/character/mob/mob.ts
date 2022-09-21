@@ -117,8 +117,11 @@ export default class Mob extends Character {
         // The roaming interval if the mob is a roaming entity.
         if (data.roaming)
             setTimeout(() => {
-                this.roamingCallback?.(5);
-                setInterval(() => this.roamingCallback?.(5), Modules.MobDefaults.ROAM_FREQUENCY);
+                this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
+                setInterval(
+                    () => this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES),
+                    Modules.MobDefaults.ROAM_FREQUENCY
+                );
             }, Utils.randomInt(0, Modules.MobDefaults.ROAM_FREQUENCY - 1));
     }
 
