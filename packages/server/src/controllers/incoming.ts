@@ -268,9 +268,11 @@ export default class Incoming {
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
-                diff = this.player.lastMovement - this.player.movementStart;
+                if (!(this.player.oldX === playerX && this.player.oldY === playerY)) {
+                    diff = this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
+                    if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
+                }
 
                 break;
 
