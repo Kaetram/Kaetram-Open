@@ -59,7 +59,7 @@ export default class Mob extends Character {
     private respawnCallback?: () => void;
 
     public talkCallback?: (message: string) => void;
-    public roamingCallback?: (retries: number) => void;
+    public roamingCallback?: (retries?: number) => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
