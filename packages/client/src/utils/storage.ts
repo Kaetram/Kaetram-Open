@@ -22,6 +22,7 @@ interface Settings {
     debugMode: boolean;
     showNames: boolean;
     showLevels: boolean;
+    disableCaching: boolean;
 }
 
 interface RegionMapData {
@@ -78,7 +79,8 @@ export default class Storage {
                 lowPowerMode: false,
                 debugMode: false,
                 showNames: true,
-                showLevels: true
+                showLevels: true,
+                disableCaching: false
             },
 
             map: {
@@ -245,6 +247,17 @@ export default class Storage {
     }
 
     /**
+     * Disables or enables region caching. Primarily for debugging.
+     * @param disableCaching The value of the disable caching toggle switch.
+     */
+
+    public setDisableCaching(disableCaching: boolean): void {
+        this.data.settings.disableCaching = disableCaching;
+
+        this.save();
+    }
+
+    /**
      * Checks if the local storage version of the client
      * matches the window's config version.
      * @returns True if client version is the same as config version.
@@ -287,6 +300,9 @@ export default class Storage {
      */
 
     public setRegionData(data: RegionTileData[], region: number): void {
+        // Prevent overwriting for cached information.
+        if (region in this.data.map.regionData) return;
+
         this.data.map.regionData[region] = data;
 
         this.save();
@@ -340,7 +356,7 @@ export default class Storage {
 
     public getRegionData(): RegionMapData {
         return {
-            regionData: this.data.map.regionData,
+            regionData: this.data.settings.disableCaching ? {} : this.data.map.regionData,
             objects: this.data.map.objects,
             cursorTiles: this.data.map.cursorTiles
         };

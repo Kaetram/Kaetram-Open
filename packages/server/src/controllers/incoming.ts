@@ -144,31 +144,22 @@ export default class Incoming {
     }
 
     private handleReady(data: ReadyPacket): void {
-        let { hasMapData, userAgent } = data;
+        let { regionsLoaded, userAgent } = data;
+
+        this.player.handleUserAgent(userAgent, regionsLoaded);
+
+        this.player.handler.startUpdateInterval();
+
+        this.player.ready = true;
 
         this.player.updateRegion();
         this.player.updateEntities();
         this.player.updateEntityList();
 
-        this.player.handler.startUpdateInterval();
-
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
-        // TODO - cleanup
-        if (
-            (this.player.regionsLoaded.length > 0 && !hasMapData) ||
-            this.player.userAgent !== userAgent
-        ) {
-            this.player.userAgent = userAgent;
-
-            this.player.regionsLoaded = [];
-            //this.player.updateRegion(true);
-        }
-
         if (this.player.isDead()) this.player.deathCallback?.();
-
-        this.player.ready = true;
     }
 
     /**
