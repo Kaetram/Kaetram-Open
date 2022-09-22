@@ -594,4 +594,8 @@ export default class ProcessMap {
             animations
         });
     }
+
+    public getTilesets(): { [tilesetId: number]: number } {
+        return this.map.tilesets!;
+    }
 }
