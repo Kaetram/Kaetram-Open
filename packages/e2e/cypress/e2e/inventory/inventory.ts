@@ -9,26 +9,24 @@ Given('I am testing the inventory features', function () {
 Then('I see that the {string} is empty', function (slot: string) {
     let context = getWorldContext(this),
         targeting = context.findElementViaTitle(slot);
-    targeting.invoke('attr', 'style').then((attr) => {
-        if (!!attr && attr.includes('background-image'))
-            assert.fail(`Inventory slot [${slot}] is not empty`);
-    });
+    targeting.should('exist').should('have.attr', 'data-key').and('eq', '');
 });
 
 Then(
     /^I see that the "([^"]*)" contains (\d+) "([^"]*)"$/,
     function (slot: string, amount: number, itemKey: string) {
-        let context = getWorldContext(this),
-            targeting = context.findElementViaTitle(slot);
-        targeting.should('have.attr', 'style').and('match', new RegExp(`${itemKey}`));
-        targeting
+        let context = getWorldContext(this);
+        context.findElementViaTitle(slot).should('have.attr', 'data-key').and('eq', itemKey);
+        context.findElementViaTitle(slot).should('have.attr', 'data-count').and('eq', `${amount}`);
+        context
+            .findElementViaTitle(slot)
             .get('div.inventory-item-count')
             .invoke('text')
             .then((text) => {
                 let count = text.length > 0 ? Number(text) : NaN;
                 if ((isNaN(count) && amount > 1) || (!isNaN(count) && count !== amount))
                     assert.fail(
-                        `Inventory slot does not contain the correct amount [${amount} =! ${text}, ${count}]`
+                        `Inventory slot item count label does not contain the correct amount [${amount} =! ${text}, ${count}]`
                     );
             });
     }
