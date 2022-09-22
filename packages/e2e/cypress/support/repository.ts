@@ -3,17 +3,15 @@
 import { PlayerInfo } from '../entities/playerinfo';
 import { PlayerInventory } from '../entities/playerinventory';
 
-type CollectionName = 'player_info' | 'player_inventory';
-
-/**
- * Sample usage:
- *  cy.resetCollection('player_info');
- */
-Cypress.Commands.add('resetCollection', (collection: CollectionName) => {
-    return cy.request('DELETE', `http://localhost:3000/api/v1/${collection}`).then(() => {
-        return true;
-    });
-});
+type CollectionName =
+    | 'player_achievements'
+    | 'player_bank'
+    | 'player_equipment'
+    | 'player_info'
+    | 'player_inventory'
+    | 'player_quests'
+    | 'player_skills'
+    | 'player_statistics';
 
 /**
  * Sample usage:
@@ -30,6 +28,21 @@ Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
             return true;
         });
 });
+
+/**
+ * Sample usage:
+ *  cy.removePlayerFromCollection('player_info', 'fvantom');
+ */
+Cypress.Commands.add(
+    'removePlayerFromCollection',
+    (collection: CollectionName, username: string) => {
+        return cy
+            .request('DELETE', `http://localhost:3000/api/v1/${collection}/username/${username}`)
+            .then(() => {
+                return true;
+            });
+    }
+);
 
 /**
  * Sample usage:
@@ -66,8 +79,11 @@ Cypress.Commands.add('createPlayerInventory', (playerInventory: PlayerInventory)
 declare global {
     namespace Cypress {
         interface Chainable {
-            resetCollection(collection: CollectionName): Chainable<boolean>;
             createPlayerInfo(playerInfo: PlayerInfo): Chainable<boolean>;
+            removePlayerFromCollection(
+                collection: CollectionName,
+                username: string
+            ): Chainable<boolean>;
             getPlayerInfo(username: string): Chainable<PlayerInfo>;
             createPlayerInventory(playerInventory: PlayerInventory): Chainable<boolean>;
         }
