@@ -32,6 +32,7 @@ export interface PlayerInfo {
     mute: number;
     lastWarp: number;
     mapVersion: number;
+    regionsLoaded: number[];
 }
 
 /**
@@ -252,7 +253,8 @@ export default class Creator {
             ban: player.ban,
             mute: player.mute,
             lastWarp: player.lastWarp,
-            mapVersion: player.mapVersion
+            mapVersion: player.mapVersion,
+            regionsLoaded: player.regionsLoaded
         };
     }
 }

@@ -38,7 +38,7 @@ export default class Map {
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
 
     public mapLoaded = false;
-    public preloadedData = false;
+    public regionsLoaded = 0;
     private tilesetsLoaded = false;
 
     private readyCallback?(): void;
@@ -80,7 +80,7 @@ export default class Map {
             if (event.data.data) this.data = event.data.data;
             if (event.data.grid) this.grid = event.data.grid;
 
-            if (!window.config.debug) this.loadRegionData();
+            this.loadRegionData();
 
             this.mapLoaded = true;
         });
@@ -225,7 +225,7 @@ export default class Map {
             this.objects = data.objects;
             this.cursorTiles = data.cursorTiles;
 
-            this.preloadedData = true;
+            this.regionsLoaded = keys.length;
 
             log.info(`Preloaded map data with ${keys.length} regions.`);
         }
