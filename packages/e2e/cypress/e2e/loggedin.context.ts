@@ -16,6 +16,7 @@ export default class LoggedInContext extends WorldContext {
     }
 
     before(): void {
+        Cypress.config('defaultCommandTimeout', 10_000);
         cy.get('#login-name-input').type(this.USERNAME);
         cy.get('#login-password-input').type(this.PASSWORD);
         cy.get('#login').click();
