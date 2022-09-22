@@ -192,6 +192,7 @@ export default class Player extends Character {
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
+        this.regionsLoaded = data.regionsLoaded || [];
 
         this.setPoison(data.poison.type, data.poison.start);
         this.setLastWarp(data.lastWarp);
@@ -595,6 +596,31 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the user agent from the browser. If the player receives a different
+     * user agent than the previous one, it means that their cached map data may
+     * differ. We must then send them the region data once again. We also check
+     * if their map version matches the server's map version.
+     * @param userAgent The user agent string.
+     * @param hasMapData Whether or not the client reports having map data.
+     */
+
+    public handleUserAgent(userAgent: string, regionsLoaded = 0): void {
+        // Client's number of regions loaded, user agent, and map version must match.
+        if (
+            this.regionsLoaded.length === regionsLoaded &&
+            this.userAgent === userAgent &&
+            this.mapVersion === this.map.version
+        )
+            return;
+        // Update user agent and map version, and reset loaded regions information.
+        this.userAgent = userAgent;
+        this.mapVersion = this.map.version;
+        this.regionsLoaded = [];
+
+        log.debug(`Reset user agent and regions loaded for ${this.username}.`);
+    }
+
+    /**
      * Updates the PVP status of the player and syncs it up with the
      * other players in the region.
      * @param pvp The PVP status we are detecting.
@@ -874,6 +900,11 @@ export default class Player extends Character {
     public getMinigame(): Minigame {
         return this.world.minigames.get(this.minigame);
     }
+
+    /**
+     * Adds a region id to the list of loaded regions.
+     * @param region The region id we are adding.
+     */
 
     public loadRegion(region: number): void {
         this.regionsLoaded.push(region);

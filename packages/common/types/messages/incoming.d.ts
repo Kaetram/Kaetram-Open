@@ -17,7 +17,7 @@ export interface EquipmentPacket {
 }
 
 export interface ReadyPacket {
-    hasMapData: string;
+    regionsLoaded: number;
     userAgent: string;
 }
 
