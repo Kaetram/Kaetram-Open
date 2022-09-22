@@ -1,10 +1,8 @@
 import { Constants } from '@kaetram/common/network/modules';
-import { ObjectBuilder } from 'typescript-object-builder';
-import { PlayerInfo } from '@kaetram/e2e/cypress/entities/playerinfo';
-import defaultPlayerInfo from '@kaetram/e2e/cypress/fixtures/playerinfo.default.json';
+import { buildPlayerInfo } from '@kaetram/e2e/cypress/fixtures/builders/playerinfo.builder';
 
 export default abstract class WorldContext {
-    public USERNAME = 'fvantom';
+    public USERNAME = `fvantom_${Math.floor(Math.random() * 10_000_000) + 1}`;
     public PASSWORD = 'test';
 
     private lookups = new Map<string, string>();
@@ -32,18 +30,28 @@ export default abstract class WorldContext {
 
     abstract before(): void;
 
-    injectDefaultPlayers() {
-        // TODO do not reset the whole collection
-        cy.resetCollection('player_info');
+    public cleanup(): void {
+        this.cleanupDefaultPlayers();
+    }
 
-        let [x, y] = Constants.SPAWN_POINT?.split(',') || [0, 0];
-        cy.log(`injectDefaultData: ${x}, ${y}`);
-        let playerInfo = ObjectBuilder.basedOn<PlayerInfo>(defaultPlayerInfo)
-            .with('username', this.USERNAME)
-            .with('x', +x)
-            .with('y', +y)
-            .build();
+    injectDefaultPlayers() {
+        let [x, y] = Constants.SPAWN_POINT?.split(',') || [0, 0],
+            playerInfo = buildPlayerInfo(this.USERNAME, {
+                x: +x,
+                y: +y
+            });
 
         cy.createPlayerInfo(playerInfo);
+    }
+
+    cleanupDefaultPlayers() {
+        cy.removePlayerFromCollection('player_achievements', this.USERNAME);
+        cy.removePlayerFromCollection('player_bank', this.USERNAME);
+        cy.removePlayerFromCollection('player_equipment', this.USERNAME);
+        cy.removePlayerFromCollection('player_info', this.USERNAME);
+        cy.removePlayerFromCollection('player_inventory', this.USERNAME);
+        cy.removePlayerFromCollection('player_quests', this.USERNAME);
+        cy.removePlayerFromCollection('player_skills', this.USERNAME);
+        cy.removePlayerFromCollection('player_statistics', this.USERNAME);
     }
 }
