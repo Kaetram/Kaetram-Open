@@ -174,7 +174,7 @@ export default class Game {
         this.updater.setSprites(this.entities.sprites);
 
         this.socket.send(Packets.Ready, {
-            hasMapData: this.map.preloadedData,
+            regionsLoaded: this.map.regionsLoaded,
             userAgent: agent
         });
 
