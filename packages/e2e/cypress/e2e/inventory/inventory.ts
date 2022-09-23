@@ -18,16 +18,17 @@ Then(
         let context = getWorldContext(this);
         context.findElementViaTitle(slot).should('have.attr', 'data-key').and('eq', itemKey);
         context.findElementViaTitle(slot).should('have.attr', 'data-count').and('eq', `${amount}`);
-        context
-            .findElementViaTitle(slot)
-            .get('div.inventory-item-count')
-            .invoke('text')
-            .then((text) => {
-                let count = text.length > 0 ? Number(text) : NaN;
-                if ((isNaN(count) && amount > 1) || (!isNaN(count) && count !== amount))
-                    assert.fail(
-                        `Inventory slot item count label does not contain the correct amount [${amount} =! ${text}, ${count}]`
-                    );
-            });
+        context.findElementViaTitle(slot).within(() => {
+            cy.get('div.inventory-item-count')
+                .invoke('text')
+                .then((text) => {
+                    cy.log(`amount: ${amount}, text: ${text}`);
+                    let count = text.length > 0 ? Number(text) : NaN;
+                    if ((isNaN(count) && amount > 1) || (!isNaN(count) && count !== amount))
+                        assert.fail(
+                            `Inventory slot item count label does not contain the correct amount [${amount} =! ${text}, ${count}]`
+                        );
+                });
+        });
     }
 );
