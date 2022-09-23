@@ -10,6 +10,7 @@ export default abstract class WorldContext {
 
     protected constructor() {
         // Lookups that you want to reuse across all contexts go here
+        this.registerLookup('notification popup', '#notification');
     }
 
     protected registerLookup(title: string, lookup: string) {

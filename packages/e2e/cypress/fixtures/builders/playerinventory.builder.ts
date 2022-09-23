@@ -3,10 +3,11 @@ import defaultPlayerInventory from '@kaetram/e2e/cypress/fixtures/playerinventor
 
 export function buildPlayerInventory(
     username: string,
-    overwrites: Partial<PlayerInventory> = {}
+    overwrites: Partial<PlayerInventory> = {},
+    defaults: PlayerInventory = defaultPlayerInventory
 ): PlayerInventory {
     return {
-        ...defaultPlayerInventory,
+        ...defaults,
         ...overwrites,
         username
     };
