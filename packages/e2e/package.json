@@ -3,8 +3,8 @@
     "type": "module",
     "scripts": {
         "test": "NODE_ENV=e2e server-test 'yarn workspace kaetram dev' 'http-get://127.0.0.1:9000|http://127.0.0.1:9001' 'NODE_ENV=e2e yarn tsx database/server' '3000/api/v1/health'",
-        "test:run": "yarn test 'yarn cypress run --browser chrome -e TAGS=\"not @ignore\"'",
-        "test:open": "yarn test 'yarn cypress open --browser chrome -e TAGS=\"not @ignore\"'"
+        "test:run": "yarn test 'yarn cypress run -e TAGS=\"not @ignore\"'",
+        "test:open": "yarn test 'yarn cypress open -e TAGS=\"not @ignore\"'"
     },
     "devDependencies": {
         "@badeball/cypress-cucumber-preprocessor": "^12.0.0",
