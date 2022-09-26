@@ -47,6 +47,10 @@ export default class Handler {
         this.mongo.upsert({ username }, collectionName, body, callback);
     }
 
+    delete(collectionName: string, username: string, callback: (error?: AnyError) => void) {
+        this.mongo.delete({ username }, collectionName, callback);
+    }
+
     deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
         this.mongo.deleteCollection(collectionName, callback);
     }

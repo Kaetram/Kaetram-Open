@@ -4,7 +4,7 @@ export interface PlayerInfo {
     email: string;
     x: number;
     y: number;
-    userAgent: string;
+    userAgent: string | null;
     experience: number;
     rights: number;
     poison: string;
