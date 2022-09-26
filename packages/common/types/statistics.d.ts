@@ -3,7 +3,7 @@ export interface StatisticsData {
     pvpDeaths: number;
 
     creationTime: number;
-    totalSecondsPlayed: number;
+    totalTimePlayed: number;
     averageTimePlayed: number;
     lastLogin: number;
     loginCount: number;
