@@ -204,11 +204,11 @@ export default class Messages {
                 break;
 
             case 'userexists':
-                this.app.sendError('The username you have chosen already exists.');
+                this.app.sendError('The username you have entered already exists.');
                 break;
 
             case 'emailexists':
-                this.app.sendError('The email you have chosen is not available.');
+                this.app.sendError('The email you have entered is not available.');
                 break;
 
             case 'invalidinput':
