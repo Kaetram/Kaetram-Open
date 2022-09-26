@@ -119,8 +119,9 @@ export default class MongoDB {
 
         // Check if email exists.
         emailCursor.toArray().then((emailData) => {
-            // If email exists in the database we reject the registration.
-            if (emailData.length > 0) return player.connection.reject('emailexists');
+            // If email exists and is specified by player, we check database for duplicates and reject if that's the case.
+            if (emailData.length > 0 && player.email !== '')
+                return player.connection.reject('emailexists');
 
             // Check if username exists.
             usernameCursor.toArray().then((playerInfo) => {
