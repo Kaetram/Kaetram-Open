@@ -13,7 +13,8 @@ let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),
     serverDestination = '../../../server/data/map/world.json',
     clientDestination = '../../../client/data/maps/map.json',
-    tilesetDirectory = '../../../client/public/img/tilesets/';
+    tilesetDirectory = '../../../client/public/img/tilesets/',
+    mapDirectory = '../data/';
 
 export default class Exporter {
     /** The map file we are parsing */
@@ -66,7 +67,7 @@ export default class Exporter {
             let name = `tilesheet-${parseInt(key) + 1}.png`;
 
             fs.copyFile(
-                resolve(path.join(tilesetDirectory, name)),
+                resolve(path.join(mapDirectory, name)),
                 resolve(path.join(tilesetDirectory, name)),
                 (error) => {
                     if (error) throw `An error has occurred while copying tilesets:\n${error}`;
