@@ -2,10 +2,10 @@
 # gitignore template for the CypressIO, browser test framework
 # website: https://www.cypress.io/
 
-cypress/results/*
-cypress/reports/*
-cypress/screenshots/*
-cypress/videos/*
+/packages/e2e/cypress/results/*
+/packages/e2e/cypress/reports/*
+/packages/e2e/cypress/videos/*
+/packages/e2e/cypress/screenshots/*
 
 ### Emacs ###
 # -*- mode: gitignore; -*-

@@ -14,6 +14,7 @@ After(function () {
 When('I click on the {string}', function (title: string) {
     let context = getWorldContext(this);
     context.findElementViaTitle(title).click();
+    cy.wait(100);
 });
 
 Given('I fill in the {string} field', function (fieldName: string) {
