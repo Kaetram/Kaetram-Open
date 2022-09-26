@@ -27,6 +27,7 @@ export default defineConfig({
         baseUrl: 'http://localhost:9000',
         defaultCommandTimeout: 10_000,
         specPattern: '**/*.feature',
+        watchForFileChanges: true,
         setupNodeEvents
     }
 });

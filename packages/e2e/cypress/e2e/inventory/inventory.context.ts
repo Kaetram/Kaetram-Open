@@ -10,8 +10,7 @@ export default class InventoryContext extends LoggedInContext {
             'first inventory slot',
             '#inventory > ul > li:first-child div.item-slot'
         );
-        // This assumes the first action is 'drop', add a 'data-test' attribute to each action for better targeting
-        this.registerLookup('drop command', '#action-container div.action-button:first-child');
+        this.registerLookup('drop command', '#action-button-drop');
     }
 
     override injectDefaultData(): void {
