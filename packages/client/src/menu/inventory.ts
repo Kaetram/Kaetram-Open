@@ -223,6 +223,10 @@ export default class Inventory extends Menu {
 
         slotElement.style.backgroundImage = key ? Util.getImageURL(key) : '';
 
+        // Set data properties for easy testing (see Cypress best practices)
+        slotElement.dataset.key = key;
+        slotElement.dataset.count = `${count}`;
+
         // Update the edible and equippable properties.
         slotElement.edible = edible;
         slotElement.equippable = equippable;
