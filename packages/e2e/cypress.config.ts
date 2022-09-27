@@ -23,6 +23,7 @@ async function setupNodeEvents(
 }
 
 export default defineConfig({
+    projectId: 'wkwqqh',
     e2e: {
         baseUrl: 'http://localhost:9000',
         defaultCommandTimeout: 10_000,
