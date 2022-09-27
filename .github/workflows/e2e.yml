@@ -24,4 +24,7 @@ jobs:
             - name: Run Cypress
               uses: cypress-io/github-action@v4
               with:
-                  command: yarn workspace @kaetram/e2e test:run
+                  command: yarn workspace @kaetram/e2e test:run:record
+              env:
+                  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
