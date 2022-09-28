@@ -298,5 +298,31 @@
         ]
       }
     }
+  },
+
+  "evilsanta": {
+    "name": "Evil Santa",
+    "description": "The young sherpa on the mountain needs your help!",
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "snowshepherdboy",
+        "text": [
+          "Oh dear adventurer, I'm so glad you're here!",
+          "I have discovered something sinister.",
+          "You see, I came up here looking for Santa.",
+          "But while I was looking through his factory",
+          "I've stumbled upon his evil plan to take over the world!",
+          "Please, you must help me defeat him.",
+          "In exchange I will show you how to get to the hidden ice world."
+        ],
+        "completedText": [
+          "Please start by exploring the factory on the northern side of the mountain."
+        ]
+      },
+      "1": {
+        "task": "door"
+      }
+    }
   }
 }
