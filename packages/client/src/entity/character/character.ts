@@ -16,6 +16,7 @@ export default class Character extends Entity {
     private interrupted = false;
     public explosion = false;
     public healing = false;
+    public fire = false;
 
     public path: number[][] | null = null;
     public target: Entity | null = null;
@@ -48,6 +49,7 @@ export default class Character extends Entity {
     private stunAnimation: Animation = new Animation('atk_down', 6, 0, 48, 48);
     private explosionAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
     private healingAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private fireAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
 
     private secondStepCallback?(): void;
     private beforeStepCallback?(): void;
@@ -111,6 +113,16 @@ export default class Character extends Entity {
 
             this.healingAnimation.reset();
             this.healingAnimation.count = 1;
+        });
+
+        // Lavaball / fire animation
+        this.fireAnimation.setSpeed(100);
+
+        this.fireAnimation.setCount(2, () => {
+            this.fire = false;
+
+            this.fireAnimation.reset();
+            this.fireAnimation.count = 2;
         });
     }
 
@@ -484,7 +496,14 @@ export default class Character extends Entity {
     }
 
     public hasEffect(): boolean {
-        return this.critical || this.stunned || this.terror || this.explosion || this.healing;
+        return (
+            this.critical ||
+            this.stunned ||
+            this.terror ||
+            this.explosion ||
+            this.healing ||
+            this.fire
+        );
     }
 
     public getEffectAnimation(): Animation | undefined {
@@ -497,6 +516,8 @@ export default class Character extends Entity {
         if (this.explosion) return this.explosionAnimation;
 
         if (this.healing) return this.healingAnimation;
+
+        if (this.fire) return this.fireAnimation;
     }
 
     public getActiveEffect(): string {
@@ -509,6 +530,8 @@ export default class Character extends Entity {
         if (this.explosion) return 'explosion-fireball';
 
         if (this.healing) return 'explosion-heal';
+
+        if (this.fire) return 'explosion-lavaball';
 
         return '';
     }

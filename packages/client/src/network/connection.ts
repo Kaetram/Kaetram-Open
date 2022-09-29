@@ -593,6 +593,14 @@ export default class Connection {
             case 'toggleterror':
                 this.game.player.terror = true;
                 break;
+
+            case 'toggleexplosion':
+                this.game.player.explosion = true;
+                break;
+
+            case 'togglefire':
+                this.game.player.fire = true;
+                break;
         }
     }
 
