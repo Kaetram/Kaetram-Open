@@ -12,11 +12,13 @@
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&style=flat)][discord]
 [![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
 
-Kaetram is an open-source game engine created to aid those interested in entering the game
-development realm, and intended to be used as a learning tool. The codebase is simple, clean, and
-intuitive. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest (BQ), and
-uses original BQ assets as well as custom-made ones. The entire codebase has been rewritten from
-scratch using more modern approaches.
+Kaetram is an open-source 2D MMORPG that expands on the original idea created by Little Workshop's BrowserQuest (BQ).
+We aim to provide a standalong gaming experience as well as a game-engine for those interested in creating their
+own version. The game is still in early development stages and all help, suggestions, and bug reports are welcome.
+All of the assets are licensed under CC-BY-SA3.0 and we aim to hold onto the original BQ assets as well as expand
+upon them. The entire code-base has been re-written from scratch, optimized, and documented. Please see the GitHub
+wiki for information regarding development. Kaetram first started development in 2015 under the name of 
+Tap Tap Adventure (TTA). In 2017, Kaetram was started as a complete re-write of the code which was formerly BQ-based.
 
 Live Version &ndash; <https://kaetram.com>
 
@@ -30,18 +32,23 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 ## Technologies
 
-BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only
-served to advance. Kaetram contains a lot of ideas and [features](#features) that build on top of
-its predecessor, a couple being:
+BQ was initially written as an HTML5 experiment showcasing the capabilities of web technologies
+back in 2012. Kaetram builds on top of the idea and uses modern standards to help facilitate
+readability, performance, and compatibility. Some of the many features are as follows:
 
 - Multiplayer using [Socket.IO](https://socket.io).
 - Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles).
-- Region system (client receives only necessary data and saves it).
-- Questing and achievements system.
-- Plugin-based combat system (for bosses/special enemies).
-- Supports RESTful API.
-- Discord server integration.
+- Region/chunking system (client caches and saves data from the server as needed).
+    - Dynamic tiles (tiles that change depending on player's progress in achievements/quests/etc).
+    - Global objects (tiles such as trees (and more in the future) that the player can interact with).
+- Quest and achievement system.
+- Minigame system for special in-game events.
+- Plugin-based mob behaviour (used for special mobs such as bosses).
+- Plugin-based item interaction
+- RESTful API for cross-server communication
+- Discord server integration (in-game and discord server can communicate with eachother).
 - Cross-server private messaging and interactions.
+- Enhanced map parsing w/ support for compressed tilemaps.
 - Yarn v3 with workspaces for monorepo packaging.
 - And much more!
 
@@ -154,19 +161,19 @@ yarn test:open
 
 ### Regions
 
-The region system sends data to the client according to the map data of the server. The collisions
-are checked both server-side and client-side to avoid cheating. The region system makes use of
-dynamic tiles, which are unlocked according to a player's progress. Furthermore, there is integrated
-support for instancing, where we can use a section of the map (or clone it), and reuse it for
-certain groups of players. The instancing is perfect for activities such as minigames, where we will
-want to run multiple instances in parallel.
+The region system works by segmenting the map into smaller chunks that are then sent to the client. The client caches
+the map data and stores it for quicker loading in the local storage. When a new map version is present, the client
+purges the cache and starts the process again. The region system is split into static tiles and dynamic tiles. Static
+tiles do not undergo a change and are part of the map permanently. Dynamic tiles change depending on conditions such
+as a player's achievement/quest progress, or, in the case of trees, depending on whether the tree has been cut or not.
+In the future we plan to use this region system to create instanced versions of areas, for example running multiple minigame
+instances at the same time.
 
 ### Tilemap
 
-Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The
-tilemap can easily be constructed using the [Tiled Map Editor](https://www.mapeditor.org/). Using
-our [map parsing](#map-parsing) tool, you can easily export your creation to both the client and the
-server.
+Kaetram uses [Tiled Map Editor](https://www.mapeditor.org/) to create and modify the map. Our [map parsing](#map-parsing) tool
+is used to export a condesed version of the map data. The server receives the bulk of the information and uses it to calculate
+collisions, tile data information, and areas (pvp, music, etc). The client stores minimal data such as tile 'z-index' and animations.
 
 ### Map Parsing
 
@@ -210,31 +217,12 @@ See also the [open issues][issues] for a list of proposed features (and known is
 
 ### TODO
 
-#### Gameplay
-
-- Finalize the new map.
-- Polish mob attributes.
-- Have a consistent storyline that goes with the game.
-- Implement special abilities and weapon perks.
-- Improve anti-cheating detections.
-- Add PvP
-- Add minigames (PvP, Capture the Flag, Hold the Base)
-- Improve client/server synchronization for all players
-- Add player trading abilities
-- Transition to a more suitable WebGL framework
-- Add friends list
-- Improve the enchanting system
-- Make bosses more responsive
-- All trees in the world must be cuttable
-
-#### Codebase Development
-
-- Write documentation outlining the entirety of the source code.
-- Improvements and optimizations to the lighting system.
-
-#### Miscellaneous
-
-- Add (continue) to NPC talking&mdash;spacebar when talking
+- Finish adding content to the map (achievements, quests, activities, etc.)
+- Split the current armour and sword system into more parts (helmet, chest, legs, boots, shield, etc.)
+- Add player trading abilities.
+- Add special abilities and enchantments to weapons/armours.
+- Add player friend list
+- Enhance the damage/defense combat formulas.
 
 ## Donations
 
