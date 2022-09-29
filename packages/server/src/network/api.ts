@@ -5,6 +5,8 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import { version } from 'kaetram/package.json';
+
 import type Player from '../game/entity/character/player/player';
 import type World from '../game/world';
 import { Modules } from '@kaetram/common/network';
@@ -59,8 +61,8 @@ export default class API {
             response.json({
                 name: config.name,
                 port: config.socketioPort, // Sends the server port.
-                gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
+                gameVersion: version,
                 playerCount: this.world.getPopulation()
             });
         });

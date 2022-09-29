@@ -1,7 +1,7 @@
 import http from 'http';
 import ws from 'ws';
 
-import config from '@kaetram/common/config';
+import { version } from 'kaetram/package.json';
 import log from '@kaetram/common/util/log';
 
 import type { Server, Socket } from 'socket.io';
@@ -12,8 +12,6 @@ export type AnySocket = Socket & ws;
 export type SocketType = 'WebSocket' | 'SocketIO';
 
 export default abstract class WebSocket {
-    private version = config.gver;
-
     public server!: Server | ws.Server; // The SocketIO server
     public httpServer!: http.Server;
 
@@ -68,7 +66,7 @@ export default abstract class WebSocket {
      */
 
     public verifyVersion(connection: Connection, gameVersion: string): boolean {
-        let status = gameVersion === this.version;
+        let status = gameVersion === version;
 
         if (!status) connection.reject('updated');
 

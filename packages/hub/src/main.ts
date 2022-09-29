@@ -4,6 +4,8 @@ import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 
+import { version } from 'kaetram/package.json';
+
 import Servers from './controllers/servers';
 import Console from './console';
 
@@ -14,7 +16,7 @@ export default class Main {
     private api: API;
 
     public constructor() {
-        log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
+        log.notice(`Initializing ${config.name} Hub v${version}.`);
 
         this.api = new API(this.servers, this.discord);
 

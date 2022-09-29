@@ -3,10 +3,11 @@
 import { each, isArray } from 'lodash-es';
 import { io } from 'socket.io-client';
 
-import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+
+import { version } from 'kaetram/package.json';
 
 import Entity from './entity';
 
@@ -52,7 +53,7 @@ export default class Bot {
             log.info('Connection established...');
 
             connection.emit('client', {
-                gVer: config.gver,
+                gVer: version,
                 cType: 'HTML5',
                 bot: true
             });

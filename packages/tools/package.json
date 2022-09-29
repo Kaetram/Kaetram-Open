@@ -9,6 +9,7 @@
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
+        "kaetram": "workspace:*",
         "lodash-es": "^4.17.21",
         "socket.io-client": "^4.5.1",
         "tsx": "^3.8.0"
