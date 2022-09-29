@@ -2,8 +2,9 @@
     "name": "@kaetram/client",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc --noEmit && vite build",
+        "vite": "tsx ../../node_modules/vite/bin/vite",
+        "dev": "yarn vite",
+        "build": "tsc --noEmit && yarn vite build",
         "start": "sirv dist -p 9000 --no-logs"
     },
     "dependencies": {
@@ -23,10 +24,11 @@
         "@types/node": "^18.6.3",
         "@types/pako": "^2.0.0",
         "@types/workbox-build": "^5.0.1",
-        "@vitejs/plugin-legacy": "^1.8.2",
+        "@vitejs/plugin-legacy": "^2.2.0",
         "autoprefixer": "^10.4.8",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
+        "kaetram": "workspace:*",
         "postcss": "^8.4.14",
         "postcss-custom-media": "^8.0.2",
         "postcss-preset-env": "^7.7.2",
@@ -36,10 +38,10 @@
         "stylelint-config-clean-order": "^0.8.0",
         "stylelint-config-prettier": "^9.0.3",
         "stylelint-config-standard-scss": "^5.0.0",
+        "tsx": "^3.9.0",
         "typescript": "^4.7.4",
-        "vite": "^2.9.14",
+        "vite": "^3.1.4",
         "vite-plugin-html": "^3.2.0",
-        "vite-plugin-pwa": "^0.12.3",
-        "workbox-window": "^6.5.4"
+        "vite-plugin-pwa": "^0.13.1"
     }
 }
