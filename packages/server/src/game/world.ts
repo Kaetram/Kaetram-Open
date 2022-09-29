@@ -59,7 +59,7 @@ export default class World {
 
         this.onConnection(this.network.handleConnection.bind(this.network));
 
-        log.info('******************************************');
+        log.info('*'.repeat(config.name.length + 36));
 
         this.tick();
     }

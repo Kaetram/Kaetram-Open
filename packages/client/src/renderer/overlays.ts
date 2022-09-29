@@ -20,7 +20,7 @@ export default class Overlay {
         overlay.crossOrigin = 'Anonymous';
         overlay.src = image;
 
-        overlay.addEventListener('load', () => log.debug(`Loaded ${name}`));
+        overlay.addEventListener('load', () => log.info(`Loaded ${name}`));
 
         return overlay;
     }

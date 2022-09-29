@@ -42,7 +42,7 @@ export default abstract class WebSocket {
      */
 
     private ready(): void {
-        log.notice(`[${this.type}] Server is now listening on port: ${this.port}.`);
+        log.notice(`[${this.type}] Server is now listening on port ${this.port}`);
 
         this.initializedCallback?.();
     }

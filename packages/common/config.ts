@@ -2,7 +2,7 @@ import log from './util/log';
 
 import resolvedConfig, { path } from '@kaetram/config/src/resolved';
 
-if (path) log.debug(`Loading config values from [${path}] file.`);
+if (path) log.debug(`Loading config values from \`${path}\` file.`);
 
 let { NODE_ENV } = process.env;
 
