@@ -13,7 +13,6 @@ import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
-import Abilities from './abilities/abilities';
 import Formulas from '../../../../info/formulas';
 import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
@@ -89,7 +88,6 @@ export default class Player extends Character {
     public skills: Skills = new Skills(this);
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public abilities: Abilities = new Abilities(this);
     public statistics: Statistics = new Statistics();
 
     public handler: Handler = new Handler(this);
