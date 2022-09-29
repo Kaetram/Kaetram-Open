@@ -9,7 +9,7 @@
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
 [![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
 [![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
-[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&style=flat)][discord]
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&labelColor=fff&style=flat)][discord]
 [![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
 
 Kaetram is an open-source game engine created to aid those interested in entering the game
@@ -64,9 +64,9 @@ the server.
 
 > MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
 > install it and run an online environment with all the features enabled. To do this, see
-> [Configuration](#configuration), and set `SKIP_DATABASE=false`. _If you do choose to install
-> MongoDB, a user is not necessary, but you can enable authentication with the `MONGODB_AUTH`
-> setting._
+> [Configuration](#configuration), and set `skipDatabase` to `false`. _If you do choose to install
+> MongoDB, a user is not necessary, but you can enable authentication with the `mongodbAuth`
+> option._
 
 #### Yarn
 
@@ -117,27 +117,33 @@ Add `--host` at the end to make the game visible on your network.
 
 ### Configuration
 
-Optionally, if you want some additional configuration, There is a file named
-[`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
-file, or by setting environmental variables.
+To change your local configuration, create a file named `config.ts` at the root of the project containing the following:
 
-Copy and rename [`.env.defaults`](.env.defaults) to `.env`, and modify the contents to fit your
-needs.
+```ts
+import { defineConfig } from '@kaetram/config';
 
-_Keep in mind_, you have to rebuild the client and restart the server every time you change your
-configuration.
+export default defineConfig({
+    // config options
+});
+```
+
+Any options in `config.ts` will override the default configuration, defined in [`packages/config/src/default.ts`](packages/config/src/default.ts).
+
+Additionally, if `NODE_ENV` is defined in your environment, it will also load `config.${NODE_ENV}.ts`, if present, and override any options in `config.ts`, if present, along with the default configuration.
+For example, if `NODE_ENV=e2e`, it will try to load [`config.e2e.ts`](config.e2e.ts), and merge it with `config.ts` and the default configuration.
+
+_Keep in mind_, you have to rebuild the client and restart the server every time you change any options.
 
 ## Testing
 
 ### End to End
 
-As a [prerequisite](#prerequisites) to run the E2E tests, you need a MongoDB server running as well.
+As a [prerequisite](#prerequisites) to run the E2E tests, you need a MongoDB server running first.
 
-[Configuration](#configuration) for test-only environments can be configured on
-[`.env.e2e`](`.env.e2e`). All it's values will fallback to `.env`, then to
-[`.env.defaults`](.env.defaults), if present.
+[Configuration](#configuration) for test-only environments can be changed in
+[`config.e2e.ts`](config.e2e.ts).
 
-To run test on your console, use
+To run the tests, use
 
 ```console
 yarn test:run
