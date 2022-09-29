@@ -1,0 +1,9 @@
+{
+    "name": "@kaetram/config",
+    "type": "module",
+    "main": "./src/main.ts",
+    "types": "./src/types.d.ts",
+    "devDependencies": {
+        "kaetram": "workspace:*"
+    }
+}
