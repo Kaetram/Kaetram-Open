@@ -1,15 +1,21 @@
 import defaultConfig from './default';
 
-import type { Config } from './types';
+export let configFiles: { file: string; config: string }[] = [];
 
 async function resolveConfig(path: string) {
-    let { default: config } = await import(`kaetram/${path}`);
+    try {
+        let { default: config } = await import(`kaetram/${path}`);
 
-    return { path, config };
+        configFiles.push({ file: path, config });
+    } catch {
+        //
+    }
 }
 
-export let { path, config } = await resolveConfig(
-    `config.${process.env.NODE_ENV?.toLowerCase()}`
-).catch(() => resolveConfig('config').catch(() => ({ path: undefined, config: undefined })));
+await resolveConfig(`config.${process.env.NODE_ENV}`);
+await resolveConfig('config');
 
-export default Object.assign(defaultConfig, config) as Readonly<Config>;
+export default configFiles.reduce(
+    (previous, current) => Object.assign(previous, current.config),
+    defaultConfig
+);

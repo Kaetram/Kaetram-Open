@@ -1,8 +1,11 @@
 import log from './util/log';
 
-import resolvedConfig, { path } from '@kaetram/config/src/resolved';
+import resolvedConfig, { configFiles } from '@kaetram/config/src/resolved';
 
-if (path) log.debug(`Loading config values from \`${path}\` file.`);
+let formatter = new Intl.ListFormat(),
+    files = formatter.format(configFiles.map(({ file }) => `\`${file}\``));
+
+if (files) log.debug(`Loading options from ${files}.`);
 
 let { NODE_ENV } = process.env;
 
@@ -12,7 +15,7 @@ if (NODE_ENV === 'e2e' && !resolvedConfig.mongodbDatabase.includes('e2e')) {
     );
 
     throw new Error(
-        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV}, mongodbDatabase=${resolvedConfig.mongodbDatabase}]`
+        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV}, mongodbDatabase=${resolvedConfig.mongodbDatabase}].`
     );
 }
 
