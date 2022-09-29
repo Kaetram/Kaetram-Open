@@ -1,1 +1,1 @@
-export type DatabaseTypes = 'mongo' | 'mongodb';
+export type { DatabaseTypes } from '@kaetram/config';

@@ -1,7 +1,7 @@
 import { Client, Message, IntentsBitField, TextChannel } from 'discord.js';
 
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
+import config from '../config';
+import log from '../util/log';
 
 export default class Discord {
     private client!: Client;
@@ -81,6 +81,8 @@ export default class Discord {
         if (!this.client) return;
 
         try {
+            if (!config.discordChannelId) return log.error('Discord channel ID is not set.');
+
             let channel = this.client.channels.cache.get(config.discordChannelId) as TextChannel;
 
             if (channel) channel.send(message);

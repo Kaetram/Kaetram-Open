@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import config from '../config';
+import resolvedConfig from '@kaetram/config/src/resolved';
 
 type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 
@@ -11,11 +11,11 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
  */
 
 class Log {
-    private logLevel = config.debugLevel || 'all';
+    private logLevel = resolvedConfig.debugLevel;
     // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
+    private stream = resolvedConfig.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
-    private debugging = config.debugging;
+    private debugging = resolvedConfig.debugging;
 
     public info(...data: unknown[]): void {
         this.send('info', data);

@@ -1,93 +1,21 @@
-import dotenv from 'dotenv-extended';
-import dotenvParseVariables from 'dotenv-parse-variables';
-import { camelCase } from 'lodash-es';
+import log from './util/log';
 
-import type { DatabaseTypes } from './types/database';
+import resolvedConfig, { path } from '@kaetram/config/src/resolved';
 
-export interface Config {
-    name: string;
-    host: string;
-    ssl: boolean;
+if (path) log.debug(`Loading config values from [${path}] file.`);
 
-    socketioPort: number;
-    websocketPort: number;
+let { NODE_ENV } = process.env;
 
-    serverId: number;
-    accessToken: string;
-    apiEnabled: boolean;
-    apiPort: number;
-
-    hubEnabled: boolean;
-    hubHost: string;
-    hubPort: number;
-    hubPing: number;
-    hubAccessToken: string;
-    remoteServerHost: string;
-
-    clientRemoteHost: string;
-    clientRemotePort: number;
-
-    cleanupThreshold: number;
-    cleanupTime: number;
-
-    database: DatabaseTypes;
-    skipDatabase: boolean;
-
-    mongodbHost: string;
-    mongodbPort: number;
-    mongodbUser: string;
-    mongodbPassword: string;
-    mongodbDatabase: string;
-    mongodbSrv: boolean;
-    mongodbTls: boolean;
-
-    worldSwitch: boolean;
-    tutorialEnabled: boolean;
-    overrideAuth: boolean;
-    maxPlayers: number;
-    updateTime: number;
-    gver: string;
-
-    discordEnabled: boolean;
-    discordChannelId: string;
-    discordBotToken: string;
-
-    debugging: boolean;
-    debugLevel: 'all';
-    fsDebugging: boolean;
-}
-
-console.debug(`Loading env values from [.env] with fallback to [.env.defaults]`);
-
-let { NODE_ENV } = process.env,
-    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
-
-if (NODE_ENV) {
-    console.debug(`Loading additional env values from [.env.${NODE_ENV}]`);
-
-    Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
-}
-
-let envConfig = dotenvParseVariables(env),
-    config = {} as Config;
-
-for (let key of Object.keys(envConfig)) {
-    let camelCaseKey = camelCase(key) as keyof Config;
-
-    config[camelCaseKey] = envConfig[key] as never;
-}
-
-config.hubHost = config.hubHost || config.host;
-
-if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
-    console.error(
-        `Something is wrong with your configuration, your NODE_ENV is set to 'e2e' and your database name does not include 'e2e'.
-        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`
+if (NODE_ENV === 'e2e' && !resolvedConfig.mongodbDatabase.includes('e2e')) {
+    log.critical(
+        `Something is wrong with your configuration, your NODE_ENV is set to 'e2e' and your database name does not include 'e2e'. This might cause you to mess up [${resolvedConfig.mongodbDatabase}] via the e2e tests. Stopping the server.`
     );
 
     throw new Error(
-        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
+        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV}, mongodbDatabase=${resolvedConfig.mongodbDatabase}]`
     );
 }
 
-export default config;
+export type { Config } from '@kaetram/config';
+
+export { default } from '@kaetram/config/src/resolved';
