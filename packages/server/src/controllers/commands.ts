@@ -136,6 +136,7 @@ export default class Commands {
             y: number,
             instance: string,
             target: string,
+            key: string,
             entity: Character,
             targetEntity: Character,
             questKey: string,
@@ -352,8 +353,12 @@ export default class Commands {
                 break;
             }
 
-            case 'toggleheal':
-                return this.player.send(new Command({ command: 'toggleheal' }));
+            case 'toggle':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No key specified.');
+
+                return this.player.send(new Command({ command: `toggle${key}` }));
 
             case 'popup':
                 this.player.popup(

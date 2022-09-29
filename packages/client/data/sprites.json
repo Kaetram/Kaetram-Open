@@ -18735,6 +18735,19 @@
     "offsetY": -16
   },
   {
+    "id": "explosion-lavaball",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "explosion": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24
+  },
+  {
     "id": "explosion-heal",
     "width": 48,
     "height": 48,
@@ -18805,19 +18818,6 @@
     },
     "offsetX": -24,
     "offsetY": -32
-  },
-  {
-    "id": "explosion-lavaball",
-    "width": 48,
-    "height": 48,
-    "animations": {
-      "explosion": {
-        "length": 8,
-        "row": 0
-      }
-    },
-    "offsetX": -24,
-    "offsetY": -40
   },
   {
     "id": "icegoblin",
