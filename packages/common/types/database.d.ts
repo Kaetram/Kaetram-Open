@@ -1,1 +1,1 @@
-export type { DatabaseTypes } from '@kaetram/config';
+export type { DatabaseTypes } from '../config/types';

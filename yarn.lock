@@ -1762,13 +1762,6 @@ __metadata:
   dependencies:
     "@types/node": ^18.6.3
     discord.js: ^14.3.0
-  languageName: unknown
-  linkType: soft
-
-"@kaetram/config@workspace:packages/config":
-  version: 0.0.0-use.local
-  resolution: "@kaetram/config@workspace:packages/config"
-  dependencies:
     kaetram: "workspace:*"
   languageName: unknown
   linkType: soft

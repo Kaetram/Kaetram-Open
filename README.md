@@ -120,7 +120,7 @@ Add `--host` at the end to make the game visible on your network.
 To change your local configuration, create a file named `config.ts` at the root of the project containing the following:
 
 ```ts
-import { defineConfig } from '@kaetram/config';
+import { defineConfig } from '@kaetram/common/config/define';
 
 export default defineConfig({
     // config options

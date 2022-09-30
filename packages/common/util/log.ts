@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import resolvedConfig from '@kaetram/config/src/resolved';
+import resolvedConfig from '../config/resolved';
 
 type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 

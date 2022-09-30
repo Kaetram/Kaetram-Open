@@ -1,6 +1,6 @@
-import log from './util/log';
+import log from '../util/log';
 
-import resolvedConfig, { configFiles } from '@kaetram/config/src/resolved';
+import resolvedConfig, { configFiles } from './resolved';
 
 let formatter = new Intl.ListFormat(),
     files = formatter.format(configFiles.map(({ file }) => `\`${file}\``));
@@ -19,6 +19,6 @@ if (NODE_ENV === 'e2e' && !resolvedConfig.mongodbDatabase.includes('e2e')) {
     );
 }
 
-export type { Config } from '@kaetram/config';
+export type { Config } from './define';
 
-export { default } from '@kaetram/config/src/resolved';
+export { default } from './resolved';

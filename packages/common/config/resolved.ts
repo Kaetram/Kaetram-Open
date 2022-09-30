@@ -2,11 +2,11 @@ import defaultConfig from './default';
 
 export let configFiles: { file: string; config: string }[] = [];
 
-async function resolveConfig(path: string) {
+async function resolveConfig(file: string) {
     try {
-        let { default: config } = await import(`kaetram/${path}`);
+        let { default: config } = await import(`kaetram/${file}`);
 
-        configFiles.push({ file: path, config });
+        configFiles.push({ file, config });
     } catch {
         //
     }
