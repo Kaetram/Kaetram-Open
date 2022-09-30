@@ -4,6 +4,7 @@ import Menu from '../menu';
 import State from './impl/state';
 import Tasks from './impl/tasks';
 import Skills from './impl/skills';
+import Abilities from './impl/abilities';
 
 import Player from '../../entity/character/player/player';
 
@@ -16,9 +17,10 @@ export default class Profile extends Menu {
     private state: State = new State();
     private tasks: Tasks = new Tasks();
     private skills: Skills = new Skills();
+    private abilities: Abilities = new Abilities();
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state, this.tasks, this.skills];
+    private pages: Menu[] = [this.state, this.tasks, this.skills, this.abilities];
 
     // Current page we are on.
     private activePage = 0;

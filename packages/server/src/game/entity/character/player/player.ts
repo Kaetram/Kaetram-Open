@@ -5,6 +5,7 @@ import Handler from './handler';
 import NPC from '../../npc/npc';
 import Mana from '../points/mana';
 import Map from '../../../map/map';
+import Abilities from './abilities';
 import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
@@ -83,6 +84,7 @@ export default class Player extends Character {
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
+    public abilities: Abilities = new Abilities(this);
     public quests: Quests = new Quests(this);
     public achievements: Achievements = new Achievements(this);
     public skills: Skills = new Skills(this);
@@ -594,12 +596,12 @@ export default class Player extends Character {
     }
 
     /**
-     * Handles the user agent from the browser. If the player receives a different
-     * user agent than the previous one, it means that their cached map data may
-     * differ. We must then send them the region data once again. We also check
-     * if their map version matches the server's map version.
+     * Compares the user agent and regions loaded against values from the database. We also
+     * ensure that the map version of the player when he last logged in is the same as the
+     * most recent one. If these conditions aren't met we signal to the server that the player
+     * has no map data saved.
      * @param userAgent The user agent string.
-     * @param hasMapData Whether or not the client reports having map data.
+     * @param regionsLoaded Number of regions that the client has loaded.
      */
 
     public handleUserAgent(userAgent: string, regionsLoaded = 0): void {
