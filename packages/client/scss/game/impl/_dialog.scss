@@ -39,11 +39,6 @@
     position: absolute;
 }
 
-.skill-slots {
-    position: relative;
-
-    float: left;
-}
 
 @each $size, $i in media.$sizes {
     @media ($size) {
