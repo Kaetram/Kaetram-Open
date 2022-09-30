@@ -83,18 +83,14 @@ export default {
 
     /**
      * Overrides which host client connects to.
-     * @default host
+     * @default undefined
      */
-    get clientRemoteHost() {
-        return this.host;
-    },
+    clientRemoteHost: undefined as string | undefined,
     /**
      * Overrides which port the client connects to.
-     * @default socketioPort
+     * @default undefined
      */
-    get clientRemotePort() {
-        return this.socketioPort;
-    },
+    clientRemotePort: undefined as number | undefined,
 
     /**
      * Server list cleanup threshold.
