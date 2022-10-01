@@ -10,6 +10,7 @@ import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 import { StatisticsData } from '@kaetram/common/types/statistics';
+import { SerializedAbilities } from '@kaetram/common/types/ability';
 
 export default class Loader {
     public constructor(private database?: Db) {}
@@ -170,6 +171,23 @@ export default class Loader {
             let [statistics] = info as StatisticsData[];
 
             callback(statistics);
+        });
+    }
+
+    /**
+     * Loads the abilities information from the database and returns a SerializedAbilities object.
+     * @param player The palyer we are loading the abilities data for.
+     * @param callback Contains the abilities data from the database.
+     */
+
+    public loadAbilities(player: Player, callback: (abilities: SerializedAbilities) => void): void {
+        this.load(player.username, 'player_abilities', (info: unknown) => {
+            if (!info)
+                return log.warning(`[player_abilities] No abilities found for ${player.username}.`);
+
+            let [abilities] = info as SerializedAbilities[];
+
+            callback(abilities);
         });
     }
 }

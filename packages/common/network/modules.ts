@@ -96,16 +96,6 @@ export enum Projectiles {
     Tornado
 }
 
-export enum Abilities {
-    Freeze,
-    Curse,
-    Smash,
-    Tornado,
-    Run,
-    Call,
-    Evasion
-}
-
 export enum Equipment {
     Armour,
     Boots,

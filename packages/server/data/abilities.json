@@ -1,22 +1,43 @@
 {
-  "Fire Strike": {
-    "id": 1,
+  "intimidate": {
     "type": "active",
-    "mana": [15, 25, 40, 65],
-    "cooldown": [9, 11, 13, 15]
+    "levels": {
+      "1": {
+        "cooldown": 60,
+        "duration": 15,
+        "mana": 15
+      }
+    }
   },
 
-  "Ice Attack": {
-    "id": 2,
+  "run": {
     "type": "active",
-    "mana": [17, 34, 53, 74],
-    "cooldown": [10, 12, 14, 16]
+    "levels": {
+      "1": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 10
+      }
+    }
   },
 
-  "Run": {
-    "id": 3,
-    "type": "active",
-    "mana": [5, 10, 20, 35],
-    "cooldown": [7, 10, 13, 16]
+  "awareness": {
+    "type": "passive"
+  },
+
+  "dualistsmark": {
+    "type": "active"
+  },
+
+  "hotshot": {
+    "type": "active"
+  },
+
+  "thickskin": {
+    "type": "active"
+  },
+
+  "precognition": {
+    "type": "passive"
   }
 }
