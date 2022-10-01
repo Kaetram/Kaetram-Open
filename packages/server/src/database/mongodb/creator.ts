@@ -63,6 +63,7 @@ export default class Creator {
             this.saveAchievements(player);
             this.saveSkills(player);
             this.saveStatistics(player);
+            this.saveAbilities(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             log.error(error);
@@ -154,6 +155,16 @@ export default class Creator {
         let collection = this.database.collection('player_statistics');
 
         this.updateCollection(collection, player.username, player.statistics.serialize());
+    }
+
+    /**
+     * Serializes the player's abilities and stores them into the database.
+     */
+
+    private saveAbilities(player: Player): void {
+        let collection = this.database.collection('player_abilities');
+
+        this.updateCollection(collection, player.username, player.abilities.serialize());
     }
 
     /**
