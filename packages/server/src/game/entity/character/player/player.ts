@@ -212,9 +212,10 @@ export default class Player extends Character {
         this.loadAchievements();
         this.loadSkills();
         this.loadStatistics();
+        this.loadAbilities();
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> intro
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> abilities -> intro
     }
 
     /**
@@ -274,6 +275,14 @@ export default class Player extends Character {
 
     public loadStatistics(): void {
         this.database.loader?.loadStatistics(this, this.statistics.load.bind(this.statistics));
+    }
+
+    /**
+     * Loads the abilities data from the database.
+     */
+
+    public loadAbilities(): void {
+        this.database.loader?.loadAbilities(this, this.abilities.load.bind(this.abilities));
     }
 
     /**
@@ -754,6 +763,12 @@ export default class Player extends Character {
     /**
      * Setters
      */
+
+    public setMovementSpeed(movementSpeed: number): void {
+        this.movementSpeed = movementSpeed;
+
+        this.sync();
+    }
 
     /**
      * Override for the superclass `setPosition` function. Since the player must always be
