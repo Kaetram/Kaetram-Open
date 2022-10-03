@@ -29,7 +29,7 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import { SerializedAbilities, SerializedAbility } from '@kaetram/common/types/ability';
+import { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
 import {
     AbilityPacket,
     AchievementPacket,
@@ -645,14 +645,15 @@ export default class Connection {
     private handleAbility(opcode: Opcodes.Ability, info: AbilityPacket): void {
         switch (opcode) {
             case Opcodes.Ability.Batch:
-                this.game.player.loadAbilities((info as SerializedAbilities).abilities);
+                this.game.player.loadAbilities((info as SerializedAbility).abilities);
                 break;
 
+            // Update the ability data whenever we receive any information.
             case Opcodes.Ability.Level:
-                this.game.player.setAbility(
-                    (info as SerializedAbility).key!,
-                    (info as SerializedAbility).level!
-                );
+            case Opcodes.Ability.Add:
+            case Opcodes.Ability.QuickSlot:
+                info = info as AbilityData;
+                this.game.player.setAbility(info.key, info.level, info.type, info.quickSlot);
                 break;
         }
 

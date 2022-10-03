@@ -60,7 +60,9 @@ export enum Container {
 
 export enum Ability {
     Batch,
-    Level
+    Add,
+    Level,
+    QuickSlot
 }
 
 export enum Quest {
