@@ -43,7 +43,8 @@ import type {
     CameraCallback,
     BubbleCallback,
     SkillCallback,
-    UpdateCallback
+    UpdateCallback,
+    EffectCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
@@ -89,6 +90,7 @@ export default class Messages {
     private skillCallback?: SkillCallback;
     private updateCallback?: UpdateCallback;
     private minigameCallback?: MinigameCallback;
+    private effectCallback?: EffectCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -141,6 +143,7 @@ export default class Messages {
         this.messages[Packets.Skill] = () => this.skillCallback;
         this.messages[Packets.Update] = () => this.updateCallback;
         this.messages[Packets.Minigame] = () => this.minigameCallback;
+        this.messages[Packets.Effect] = () => this.effectCallback;
     }
 
     /**
@@ -395,5 +398,9 @@ export default class Messages {
 
     public onMinigame(callback: MinigameCallback): void {
         this.minigameCallback = callback;
+    }
+
+    public onEffect(callback: EffectCallback): void {
+        this.effectCallback = callback;
     }
 }

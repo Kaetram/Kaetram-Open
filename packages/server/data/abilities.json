@@ -3,9 +3,24 @@
     "type": "active",
     "levels": {
       "1": {
-        "cooldown": 60,
-        "duration": 15,
+        "cooldown": 60000,
+        "duration": 10000,
         "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 17
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 20000,
+        "mana": 19
+      },
+      "4": {
+        "cooldown": 60000,
+        "duration": 25000,
+        "mana": 21
       }
     }
   },
@@ -15,8 +30,23 @@
     "levels": {
       "1": {
         "cooldown": 60000,
+        "duration": 10000,
+        "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 12000,
+        "mana": 15
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 14000,
+        "mana": 15
+      },
+      "4": {
+        "cooldown": 60000,
         "duration": 15000,
-        "mana": 10
+        "mana": 15
       }
     }
   },
@@ -26,15 +56,81 @@
   },
 
   "dualistsmark": {
-    "type": "active"
+    "type": "active",
+    "levels": {
+      "1": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "4": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      }
+    }
   },
 
   "hotshot": {
-    "type": "active"
+    "type": "active",
+    "levels": {
+      "1": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "4": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      }
+    }
   },
 
   "thickskin": {
-    "type": "active"
+    "type": "active",
+    "levels": {
+      "1": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "4": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      }
+    }
   },
 
   "precognition": {

@@ -58,6 +58,7 @@ export interface MovementPacket {
     target?: string; // Entity instance we are trying to follow if specified.
     orientation?: Modules.Orientation;
     state?: boolean; // State about stun/freeze.
+    movementSpeed?: number; // Movement speed of the entity.
 }
 
 export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) => void;
@@ -338,3 +339,15 @@ export interface MinigamePacket {
 }
 
 export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface EffectPacket {
+    instance: string;
+    movementSpeed?: number;
+    status?: string;
+}
+
+export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
