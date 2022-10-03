@@ -37,3 +37,4 @@ export { default as Bubble } from './bubble';
 export { default as Skill } from './skill';
 export { default as Update } from './update';
 export { default as Minigame } from './minigame';
+export { default as Effect } from './effect';

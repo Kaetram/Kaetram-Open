@@ -54,7 +54,8 @@ import {
     Pointer,
     PVP,
     Spawn,
-    Respawn
+    Respawn,
+    Effect
 } from '@kaetram/server/src/network/packets';
 
 type KillCallback = (character: Character) => void;
@@ -767,7 +768,13 @@ export default class Player extends Character {
     public setMovementSpeed(movementSpeed: number): void {
         this.movementSpeed = movementSpeed;
 
-        this.sync();
+        // Sync to other players in the region.
+        this.sendToRegions(
+            new Effect(Opcodes.Effect.Speed, {
+                instance: this.instance,
+                movementSpeed
+            })
+        );
     }
 
     /**
@@ -1105,7 +1112,7 @@ export default class Player extends Character {
 
     /**
      * Function to be used for syncing up health,
-     * mana, exp, and other variables
+     * mana, exp, and other variables.
      */
 
     public sync(): void {

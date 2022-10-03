@@ -62,7 +62,8 @@ export enum Ability {
     Batch,
     Add,
     Level,
-    QuickSlot
+    QuickSlot,
+    Use
 }
 
 export enum Quest {
@@ -173,4 +174,9 @@ export enum Minigame {
 export enum Bubble {
     Entity,
     Position
+}
+
+export enum Effect {
+    Speed,
+    Critical
 }

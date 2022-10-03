@@ -56,6 +56,7 @@ export default class MenuController {
         this.store.onSelect(this.handleStoreSelect.bind(this));
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+        this.profile.onAbility(this.handleAbility.bind(this));
 
         this.load();
     }
@@ -196,6 +197,20 @@ export default class MenuController {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Unequip,
             type
+        });
+    }
+
+    /**
+     * Callback for when an action within the abilities menu occurs.
+     * Generally this will consist of activating an ability or dragging it
+     * into the quick slot menu.
+     * @param key The key of the ability we are performing an action on.
+     */
+
+    private handleAbility(key: string): void {
+        this.game.socket.send(Packets.Ability, {
+            opcode: Opcodes.Ability.Use,
+            key
         });
     }
 
