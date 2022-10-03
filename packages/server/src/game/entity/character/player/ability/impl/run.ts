@@ -4,8 +4,8 @@ import Ability from '../ability';
 import { Modules } from '@kaetram/common/network';
 
 export default class Run extends Ability {
-    public constructor(level: number) {
-        super('run', level);
+    public constructor(level: number, quickSlot = false) {
+        super('run', level, quickSlot);
 
         // Revert the player's speed back to normal when ability is deactivated.
         this.onDeactivate((player: Player) =>

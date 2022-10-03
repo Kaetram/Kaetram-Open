@@ -4,7 +4,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import {
     Container,
-    Ability,
+    Ability as AbilityPacket,
     Quest,
     Achievement,
     Equipment as EquipmentPacket,
@@ -22,6 +22,7 @@ import Equipment from './equipment/equipment';
 import Character from '../character';
 import Light from '../../../globals/impl/light';
 import Entity from '../../entity';
+import Ability from './ability/ability';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
@@ -82,6 +83,9 @@ export default class Handler {
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
         this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+
+        // Ability callbacks
+        this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -302,6 +306,15 @@ export default class Handler {
     }
 
     /**
+     * Sends a pacet to the client to add a new ability.
+     * @param ability The ability that the player is adding.
+     */
+
+    private handleAbilityAdd(ability: Ability): void {
+        this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize()));
+    }
+
+    /**
      * Callback for when the inventory is loaded. Relay message to the client.
      */
 
@@ -394,7 +407,7 @@ export default class Handler {
 
     private handleAbilities(): void {
         this.player.send(
-            new Ability(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
+            new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
         );
     }
 

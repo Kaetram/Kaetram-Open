@@ -9,8 +9,8 @@ import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
 import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
-import { StatisticsData } from '@kaetram/common/types/statistics';
-import { SerializedAbilities } from '@kaetram/common/types/ability';
+import type { StatisticsData } from '@kaetram/common/types/statistics';
+import type { SerializedAbility } from '@kaetram/common/types/ability';
 
 export default class Loader {
     public constructor(private database?: Db) {}
@@ -180,12 +180,12 @@ export default class Loader {
      * @param callback Contains the abilities data from the database.
      */
 
-    public loadAbilities(player: Player, callback: (abilities: SerializedAbilities) => void): void {
+    public loadAbilities(player: Player, callback: (abilities: SerializedAbility) => void): void {
         this.load(player.username, 'player_abilities', (info: unknown) => {
             if (!info)
                 return log.warning(`[player_abilities] No abilities found for ${player.username}.`);
 
-            let [abilities] = info as SerializedAbilities[];
+            let [abilities] = info as SerializedAbility[];
 
             callback(abilities);
         });
