@@ -1,6 +1,7 @@
 import Menu from '../../menu';
 
 import log from '../../../lib/log';
+import Player from '../../../entity/character/player/player';
 
 export default class Abilities extends Menu {
     private activeAbilities: HTMLUListElement = document.querySelector('#active-abilities')!;
@@ -8,6 +9,15 @@ export default class Abilities extends Menu {
 
     public constructor() {
         super('#abilities-page');
+    }
+
+    /**
+     * Synchronizes ability information from the player object into the interface.
+     * @param player The player object we are synchronizing abilities from.
+     */
+
+    public override synchronize(player: Player): void {
+        //
     }
 
     /**

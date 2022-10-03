@@ -15,10 +15,13 @@ export default class Header {
     private experience: HTMLElement = document.querySelector('#exp')!; // The green element within the exp bar.
     private experienceBar: HTMLElement = document.querySelector('#exp-bar')!; // Used for determining width of exp bar.
 
+    private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
+
     public constructor(private player: Player) {
         this.player.onHitPoints(this.handleHitPoints.bind(this));
         this.player.onExperience(this.handleExperience.bind(this));
         this.player.onPoison(this.handlePoison.bind(this));
+        this.player.onAbility(this.handleAbility.bind(this));
     }
 
     /**
@@ -75,5 +78,16 @@ export default class Header {
         this.health.classList.add(style);
 
         window.setTimeout(() => this.health.classList.remove(style), 500);
+    }
+
+    /**
+     * Handles the ability bar for when an ability has been added.
+     */
+
+    private handleAbility(): void {
+        this.abilityBar.hidden = false;
+
+        // This is in order to give the ability bar a fade in effect when it first appears.
+        setTimeout(() => (this.abilityBar.style.opacity = '1'), 100);
     }
 }
