@@ -26,6 +26,8 @@ type ExperienceCallback = (
     nextExperience: number
 ) => void;
 
+type AbilityCallback = (key: string, level: number, quickSlot?: boolean) => void;
+
 type PoisonCallback = (status: boolean) => void;
 
 export default class Player extends Character {
@@ -72,7 +74,7 @@ export default class Player extends Character {
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
-    private abilityCallback?: () => void;
+    private abilityCallback?: AbilityCallback;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -309,7 +311,7 @@ export default class Player extends Character {
         else this.abilities[key]?.update(level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
-        if (type === Modules.AbilityType.Active) this.abilityCallback?.();
+        if (type === Modules.AbilityType.Active) this.abilityCallback?.(key, level, quickSlot);
     }
 
     /**
@@ -402,7 +404,7 @@ export default class Player extends Character {
      * client that we want to display the quick slots menu.
      */
 
-    public onAbility(callback: () => void): void {
+    public onAbility(callback: AbilityCallback): void {
         this.abilityCallback = callback;
     }
 }
