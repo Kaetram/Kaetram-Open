@@ -311,7 +311,7 @@ export default class Handler {
      */
 
     private handleAbilityAdd(ability: Ability): void {
-        this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize()));
+        this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize(true)));
     }
 
     /**
