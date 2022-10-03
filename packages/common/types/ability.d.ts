@@ -1,24 +1,29 @@
 import { Modules } from '../network';
-export interface AbilityLevelData {
+
+// Raw ability information from the JSON file.
+
+export interface RawAbilityLevelData {
     cooldown?: number;
     duration?: number;
     mana?: number;
 }
 
-export interface AbilityInfo {
+export interface RawAbilityData {
     type: string;
-    levels?: { [level: number]: AbilityLevelData };
+    levels?: { [level: number]: RawAbilityLevelData };
 }
 
-export type AbilityData = { [key: string]: AbilityInfo };
+export type RawAbility = { [key: string]: RawAbilityInfo };
 
-export interface SerializedAbility {
+// Object ability information
+
+export interface AbilityData {
     key: string;
     level: number;
+    quickSlot?: boolean;
     type?: Modules.AbilityType;
 }
 
-export interface SerializedAbilities {
-    abilities: SerializedAbility[];
-    quickSlots: string[];
+export interface SerializedAbility {
+    abilities: AbilityData[];
 }
