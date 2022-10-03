@@ -1,25 +1,29 @@
 import Player from '../player';
 
 import log from '@kaetram/common/util/log';
+
+import { Modules } from '@kaetram/common/network';
 import { AbilityData, AbilityInfo, SerializedAbility } from '@kaetram/common/types/ability';
 
 import Data from '../../../../../../data/abilities.json';
 
 type DeactivateCallback = (player: Player) => void;
+type LevelCallback = (key: string, level: number) => void;
 export default class Ability {
     private data: AbilityInfo;
 
     private lastActivated = 0;
 
     private deactivateCallback?: DeactivateCallback;
+    private levelCallback?: LevelCallback;
 
-    public constructor(public key: string, private level: number) {
+    public constructor(public key: string, private level = 1) {
         this.data = (Data as AbilityData)[this.key];
     }
 
     /**
      * Superclass implementation for when an ability is activated.
-     * @param _player Player parameter that will be used by subclasses.
+     * @param player The player object that activated the ability.
      */
 
     public activate(player: Player): void {
@@ -58,6 +62,15 @@ export default class Ability {
     }
 
     /**
+     * Ensures the integrity of the ability data.
+     * @returns True if the ability data exists, false otherwise.
+     */
+
+    public isValid(): boolean {
+        return !!this.data;
+    }
+
+    /**
      * Checks if the ability is still in cooldown.
      * @param cooldown The cooldown integer value of an ability.
      * @returns Whether or not the ability is still in cooldown.
@@ -68,15 +81,39 @@ export default class Ability {
     }
 
     /**
+     * Sets the level of the ability and creates a callback.
+     * @param level The new level of the ability.
+     */
+
+    public setLevel(level: number): void {
+        // Ability levels range from 1-4.
+        if (level < 1) level = 1;
+        if (level > 4) level = 4;
+
+        this.level = level;
+
+        this.levelCallback?.(this.key, level);
+    }
+
+    /**
      * Serializes the ability's information into an AbilityData object.
+     * @param includeType Includes the ability type in the serialized object.
      * @returns An AbilityData object containing necessary data for database storage.
      */
 
-    public serialize(): SerializedAbility {
-        return {
+    public serialize(includeType = false): SerializedAbility {
+        let data: SerializedAbility = {
             key: this.key,
             level: this.level
         };
+
+        if (includeType)
+            data.type =
+                this.data.type === 'active'
+                    ? Modules.AbilityType.Active
+                    : Modules.AbilityType.Passive;
+
+        return data;
     }
 
     /**
@@ -86,5 +123,14 @@ export default class Ability {
 
     public onDeactivate(callback: DeactivateCallback): void {
         this.deactivateCallback = callback;
+    }
+
+    /**
+     * Callback for when the ability has been leveled up.
+     * @param callback Contains the key and level parameters.
+     */
+
+    public onLevel(callback: LevelCallback): void {
+        this.levelCallback = callback;
     }
 }

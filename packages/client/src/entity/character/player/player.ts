@@ -17,6 +17,8 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
 import { QuestData } from '@kaetram/common/types/quest';
+import Ability from './ability';
+import { SerializedAbility } from '@kaetram/common/types/ability';
 
 type ExperienceCallback = (
     experience: number,
@@ -63,12 +65,14 @@ export default class Player extends Character {
         [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
     };
 
+    public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
 
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
+    private abilityCallback?: () => void;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -148,6 +152,17 @@ export default class Player extends Character {
                 achievement.stageCount!
             );
         });
+    }
+
+    /**
+     * Parses through the serialized ability data and creates a new ability object.
+     * @param abilities List of abilities received from the server.
+     */
+
+    public loadAbilities(abilities: SerializedAbility[]): void {
+        _.each(abilities, (ability: SerializedAbility) =>
+            this.setAbility(ability.key, ability.level, ability.type)
+        );
     }
 
     /**
@@ -275,6 +290,22 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates an ability's key and level.
+     * @param key The key of the ability we are updating.
+     * @param level The level of the ability.
+     * @param type Optional parameter passed when we are creating a new ability.
+     */
+
+    public setAbility(key: string, level: number, type?: Modules.AbilityType): void {
+        // This function is used when adding abilities for the first time too.
+        if (!(key in this.abilities)) this.abilities[key] = new Ability(type!, key, level);
+        else this.abilities[key]?.update(level);
+
+        // If any active ability is detected then we create a callback to display the quick slots.
+        if (type === Modules.AbilityType.Active) this.abilityCallback?.();
+    }
+
+    /**
      * Updates the poison status of the player.
      * @param poison Poison status to update with.
      */
@@ -357,5 +388,14 @@ export default class Player extends Character {
 
     public onSync(callback: () => void): void {
         this.syncCallback = callback;
+    }
+
+    /**
+     * Callback for when an active ability is added and we signal to the
+     * client that we want to display the quick slots menu.
+     */
+
+    public onAbility(callback: () => void): void {
+        this.abilityCallback = callback;
     }
 }

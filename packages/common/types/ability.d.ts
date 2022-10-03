@@ -1,3 +1,4 @@
+import { Modules } from '../network';
 export interface AbilityLevelData {
     cooldown?: number;
     duration?: number;
@@ -14,6 +15,7 @@ export type AbilityData = { [key: string]: AbilityInfo };
 export interface SerializedAbility {
     key: string;
     level: number;
+    type?: Modules.AbilityType;
 }
 
 export interface SerializedAbilities {

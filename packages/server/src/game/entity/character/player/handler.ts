@@ -4,6 +4,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import {
     Container,
+    Ability,
     Quest,
     Achievement,
     Equipment as EquipmentPacket,
@@ -66,6 +67,7 @@ export default class Handler {
         this.player.quests.onLoaded(this.handleQuests.bind(this));
         this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
+        this.player.abilities.onLoaded(this.handleAbilities.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -384,6 +386,16 @@ export default class Handler {
 
     private handleSkills(): void {
         this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
+    }
+
+    /**
+     * Sends a packet to the client containing serialized abilities.
+     */
+
+    private handleAbilities(): void {
+        this.player.send(
+            new Ability(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
+        );
     }
 
     /**
