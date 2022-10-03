@@ -58,6 +58,11 @@ export enum Container {
     Swap
 }
 
+export enum Ability {
+    Batch,
+    Level
+}
+
 export enum Quest {
     Batch,
     Progress,

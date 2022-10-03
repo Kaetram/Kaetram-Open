@@ -1,10 +1,8 @@
-import { AchievementPacket, PVPPacket } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import log from '../lib/log';
 
 import type App from '../app';
-import type Storage from '../utils/storage';
 import type Overlays from '../renderer/overlays';
 import type InfoController from '../controllers/info';
 import type Game from '../game';
@@ -31,7 +29,10 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import { SerializedAbilities, SerializedAbility } from '@kaetram/common/types/ability';
 import {
+    AbilityPacket,
+    AchievementPacket,
     AnimationPacket,
     BubblePacket,
     ChatPacket,
@@ -49,6 +50,7 @@ import {
     OverlayPacket,
     PointerPacket,
     PointsPacket,
+    PVPPacket,
     QuestPacket,
     RespawnPacket,
     StorePacket,
@@ -634,12 +636,27 @@ export default class Connection {
     }
 
     /**
-     * Unhandled function. This will be used when player
-     * special abilities are finally implemented.
+     * Handler for when we receive an ability packet. Ability packets contain
+     * batch data or a single ability undergoing a change (generally level).
+     * @param opcode The type of ability packet we are working with.
+     * @param info Contains information in batch about abilities or a single ability serialized information.
      */
 
-    private handleAbility(): void {
-        log.debug('Unhandled ability packet.');
+    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacket): void {
+        switch (opcode) {
+            case Opcodes.Ability.Batch:
+                this.game.player.loadAbilities((info as SerializedAbilities).abilities);
+                break;
+
+            case Opcodes.Ability.Level:
+                this.game.player.setAbility(
+                    (info as SerializedAbility).key!,
+                    (info as SerializedAbility).level!
+                );
+                break;
+        }
+
+        this.menu.synchronize();
     }
 
     /**
