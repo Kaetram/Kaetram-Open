@@ -22,6 +22,8 @@ export default class Run extends Ability {
     public override activate(player: Player): void {
         super.activate(player);
 
-        player.setMovementSpeed(225);
+        player.setMovementSpeed(200);
+
+        console.log(`Player ${player.username} is now running.`);
     }
 }

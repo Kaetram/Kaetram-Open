@@ -7,12 +7,23 @@ import Player from '../../../entity/character/player/player';
 import Ability from '../../../entity/character/player/ability';
 import { Modules } from '@kaetram/common/network';
 
+interface AbilityElement extends HTMLElement {
+    key?: string;
+}
+
+type SelectCallback = (key: string) => void;
+
 export default class Abilities extends Menu {
     private activeAbilities: HTMLUListElement = document.querySelector('#active-abilities')!;
     private passiveAbilities: HTMLUListElement = document.querySelector('#passive-abilities')!;
 
+    private selectCallback?: SelectCallback;
+
     public constructor() {
         super('#abilities-page');
+
+        for (let i = 0; i < this.activeAbilities.children.length; i++)
+            this.activeAbilities.children[i].addEventListener('click', () => this.handleAction(i));
     }
 
     /**
@@ -26,8 +37,6 @@ export default class Abilities extends Menu {
 
         let activeIndex = 0,
             passiveIndex = 0;
-
-        console.log(player.abilities);
 
         /**
          * Depending on whether the ability is passive or active, we increment
@@ -49,6 +58,14 @@ export default class Abilities extends Menu {
         });
     }
 
+    private handleAction(index: number): void {
+        let ability = this.activeAbilities.children[index] as AbilityElement;
+
+        if (ability.style.display === 'none' || !ability.key) return;
+
+        this.selectCallback?.(ability.key);
+    }
+
     /**
      * Takes in an HTMLElement object and assigns the necessary information to it. This is used
      * by both the active and passive abilities.
@@ -57,7 +74,7 @@ export default class Abilities extends Menu {
      * @param level The level of the ability.
      */
 
-    private setAbility(ability: HTMLElement, key: string, level = 1): void {
+    private setAbility(ability: AbilityElement, key: string, level = 1): void {
         // Clear the inner HTML first (to erase any potential existing elements such as levels).
         ability.innerHTML = '';
         ability.className = `ability ability-icon-${key}`; // Clear the classes
@@ -88,7 +105,7 @@ export default class Abilities extends Menu {
      */
 
     public setActiveAbility(index: number, key: string, level = 1): void {
-        let ability = this.activeAbilities.children[index] as HTMLElement;
+        let ability = this.activeAbilities.children[index] as AbilityElement;
 
         // Invalid index is provided.
         if (!ability) return log.error(`Could not find ability with index ${index}, key: ${key}.`);
@@ -97,6 +114,8 @@ export default class Abilities extends Menu {
         if (!key) return this.hideAbility(ability);
 
         this.setAbility(ability, key, level);
+
+        ability.key = key;
     }
 
     /**
@@ -107,7 +126,7 @@ export default class Abilities extends Menu {
      */
 
     public setPassiveAbility(index: number, key: string, level = 1): void {
-        let ability = this.passiveAbilities.children[index] as HTMLElement;
+        let ability = this.passiveAbilities.children[index] as AbilityElement;
 
         // Invalid index is provided.
         if (!ability) return log.error(`Could not find ability with index ${index}, key: ${key}.`);
@@ -138,5 +157,14 @@ export default class Abilities extends Menu {
 
         for (let i = 0; i < this.passiveAbilities.children.length; i++)
             this.hideAbility(this.passiveAbilities.children[i] as HTMLElement);
+    }
+
+    /**
+     * Callback for when an active ability is selected within the menu.
+     * @param callback Contains the key of the ability that was selected.
+     */
+
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 }

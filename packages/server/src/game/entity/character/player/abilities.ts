@@ -51,6 +51,15 @@ export default class Abilities {
     }
 
     /**
+     * Activates an ability based on the key.
+     * @param key The key of the ability to activate.
+     */
+
+    public use(key: string): void {
+        this.abilities[key]?.activate(this.player);
+    }
+
+    /**
      * Uses the ability key to find the ability subclass and creates an object
      * based on that. The level is passed to the subclass constructor.
      * @param key The key of the ability we are creating.

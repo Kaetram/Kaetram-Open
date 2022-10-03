@@ -56,7 +56,8 @@ import {
     StorePacket,
     TeleportPacket,
     SkillPacket,
-    MinigamePacket
+    MinigamePacket,
+    EffectPacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -147,6 +148,7 @@ export default class Connection {
         this.messages.onSkill(this.handleSkill.bind(this));
         this.messages.onUpdate(this.handleUpdate.bind(this));
         this.messages.onMinigame(this.handleMinigame.bind(this));
+        this.messages.onEffect(this.handleEffect.bind(this));
     }
 
     /**
@@ -285,7 +287,10 @@ export default class Connection {
      */
 
     private handleSync(data: PlayerData): void {
-        let player = this.entities.get<Player>(data.instance);
+        let player =
+            data.instance === this.game.player.instance
+                ? this.game.player
+                : this.entities.get<Player>(data.instance);
 
         // Invalid instance, player not found/not spawned.
         if (!player || player.teleporting || player.dead || !player.ready) return;
@@ -1177,11 +1182,34 @@ export default class Connection {
     }
 
     /**
+     * Effects are special conditions that can be applied to a player or an entity.
+     * When a player uses the run ability, we may want to display a special effect on
+     * top of modifying their movement speed.
+     * @param opcode The type of effect we are applying.
+     * @param info Information about the entity we are applying the effect to.
+     */
+
+    private handleEffect(opcode: Opcodes.Effect, info: EffectPacket): void {
+        let entity =
+            info.instance === this.game.player.instance
+                ? this.game.player
+                : this.entities.get(info.instance);
+
+        if (!entity) return;
+
+        switch (opcode) {
+            case Opcodes.Effect.Speed:
+                entity.movementSpeed = info.movementSpeed!;
+                break;
+        }
+    }
+
+    /**
      * Compares the epoch between the last entity list update request and current
      * time. This is in order to prevent spams to the server and timeout.
      */
 
     private canRequestEntityList(): boolean {
-        return Date.now() - this.lastEntityListRequest > 2000; // every 2 seconds
+        return Date.now() - this.lastEntityListRequest > 5000; // every 2 seconds
     }
 }
