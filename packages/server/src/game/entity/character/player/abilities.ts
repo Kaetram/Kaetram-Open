@@ -60,11 +60,14 @@ export default class Abilities {
      */
 
     public add(key: string, level: number, quickSlot = false, skipAddCallback = false): void {
+        // Ensure the ability exists within the index.
+        if (!(key in AbilitiesIndex)) return log.warning(`Ability ${key} does not exist.`);
+
         // Create ability based on the key from index of ability classes.
         let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](level, quickSlot);
 
         // Ensure the ability has valid data.
-        if (!ability.isValid())
+        if (!ability || !ability.isValid())
             return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
 
         // On level change listener for the ability.
@@ -82,10 +85,25 @@ export default class Abilities {
         if (!skipAddCallback) this.addCallback?.(ability);
     }
 
-    /** */
+    /**
+     * Updates an ability's level given a key.
+     * @param key The key of the ability we are updating.
+     * @param level The level we are setting the ability to.
+     */
 
     public setLevel(key: string, level: number): void {
         this.abilities[key]?.setLevel(level);
+    }
+
+    /**
+     * Resets all the abilities.
+     */
+
+    public reset(): void {
+        this.abilities = {};
+
+        // Signal to the client to reload the abilities.
+        this.loadCallback?.();
     }
 
     /**

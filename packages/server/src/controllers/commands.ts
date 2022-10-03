@@ -594,6 +594,28 @@ export default class Commands {
                 player.connection.close();
 
                 break;
+
+            case 'addability':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify(`Malformed command, expected /addability key`);
+
+                this.player.abilities.add(key, 1);
+                break;
+
+            case 'setability':
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || !x)
+                    return this.player.notify(`Malformed command, expected /setability key level`);
+
+                this.player.abilities.setLevel(key, x);
+
+                break;
+
+            case 'resetabilities':
+                return this.player.abilities.reset();
         }
     }
 }

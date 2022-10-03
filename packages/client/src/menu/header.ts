@@ -84,10 +84,12 @@ export default class Header {
      * Handles the ability bar for when an ability has been added.
      */
 
-    private handleAbility(): void {
+    private handleAbility(key: string, level: number, quickSlot?: boolean): void {
         this.abilityBar.hidden = false;
 
         // This is in order to give the ability bar a fade in effect when it first appears.
         setTimeout(() => (this.abilityBar.style.opacity = '1'), 100);
+
+        if (!quickSlot) return;
     }
 }

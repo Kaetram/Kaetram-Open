@@ -1,7 +1,11 @@
+import _ from 'lodash';
+
 import Menu from '../../menu';
 
 import log from '../../../lib/log';
 import Player from '../../../entity/character/player/player';
+import Ability from '../../../entity/character/player/ability';
+import { Modules } from '@kaetram/common/network';
 
 export default class Abilities extends Menu {
     private activeAbilities: HTMLUListElement = document.querySelector('#active-abilities')!;
@@ -17,7 +21,32 @@ export default class Abilities extends Menu {
      */
 
     public override synchronize(player: Player): void {
-        //
+        // Hide all abilities and start from scratch.
+        this.hideAll();
+
+        let activeIndex = 0,
+            passiveIndex = 0;
+
+        console.log(player.abilities);
+
+        /**
+         * Depending on whether the ability is passive or active, we increment
+         * the adequate index and add it to the appropriate list.
+         */
+
+        _.each(player.abilities, (ability: Ability) => {
+            switch (ability.type) {
+                case Modules.AbilityType.Active:
+                    this.setActiveAbility(activeIndex, ability.key, ability.level);
+                    activeIndex++;
+                    break;
+
+                case Modules.AbilityType.Passive:
+                    this.setPassiveAbility(passiveIndex, ability.key, ability.level);
+                    passiveIndex++;
+                    break;
+            }
+        });
     }
 
     /**
@@ -96,5 +125,18 @@ export default class Abilities extends Menu {
 
     private hideAbility(ability: HTMLElement): void {
         ability.style.display = 'none';
+    }
+
+    /**
+     * Goes through all the passive and active abilities and hides
+     * all of them. We generally use this during batching.
+     */
+
+    private hideAll(): void {
+        for (let i = 0; i < this.activeAbilities.children.length; i++)
+            this.hideAbility(this.activeAbilities.children[i] as HTMLElement);
+
+        for (let i = 0; i < this.passiveAbilities.children.length; i++)
+            this.hideAbility(this.passiveAbilities.children[i] as HTMLElement);
     }
 }
