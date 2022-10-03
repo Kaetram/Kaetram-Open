@@ -3,22 +3,22 @@ import Player from '../player';
 import log from '@kaetram/common/util/log';
 
 import { Modules } from '@kaetram/common/network';
-import { AbilityData, AbilityInfo, SerializedAbility } from '@kaetram/common/types/ability';
+import { RawAbility, AbilityData } from '@kaetram/common/types/ability';
 
 import Data from '../../../../../../data/abilities.json';
 
 type DeactivateCallback = (player: Player) => void;
 type LevelCallback = (key: string, level: number) => void;
 export default class Ability {
-    private data: AbilityInfo;
+    private data: RawAbility;
 
     private lastActivated = 0;
 
     private deactivateCallback?: DeactivateCallback;
     private levelCallback?: LevelCallback;
 
-    public constructor(public key: string, private level = 1) {
-        this.data = (Data as AbilityData)[this.key];
+    public constructor(public key: string, private level = 1, private quickSlot = false) {
+        this.data = (Data as RawAbility)[this.key];
     }
 
     /**
@@ -80,6 +80,12 @@ export default class Ability {
         return Date.now() - this.lastActivated < cooldown;
     }
 
+    public getType(): Modules.AbilityType {
+        return this.data.type === 'active'
+            ? Modules.AbilityType.Active
+            : Modules.AbilityType.Passive;
+    }
+
     /**
      * Sets the level of the ability and creates a callback.
      * @param level The new level of the ability.
@@ -101,17 +107,14 @@ export default class Ability {
      * @returns An AbilityData object containing necessary data for database storage.
      */
 
-    public serialize(includeType = false): SerializedAbility {
-        let data: SerializedAbility = {
+    public serialize(includeType = false): AbilityData {
+        let data: AbilityData = {
             key: this.key,
-            level: this.level
+            level: this.level,
+            quickSlot: this.quickSlot
         };
 
-        if (includeType)
-            data.type =
-                this.data.type === 'active'
-                    ? Modules.AbilityType.Active
-                    : Modules.AbilityType.Passive;
+        if (includeType) data.type = this.getType() as number;
 
         return data;
     }

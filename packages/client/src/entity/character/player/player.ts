@@ -7,6 +7,7 @@ import { Modules } from '@kaetram/common/network';
 import Character from '../character';
 import Task from './task';
 import Skill from './skill';
+import Ability from './ability';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
@@ -17,8 +18,7 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
 import { QuestData } from '@kaetram/common/types/quest';
-import Ability from './ability';
-import { SerializedAbility } from '@kaetram/common/types/ability';
+import { AbilityData } from '@kaetram/common/types/ability';
 
 type ExperienceCallback = (
     experience: number,
@@ -159,9 +159,9 @@ export default class Player extends Character {
      * @param abilities List of abilities received from the server.
      */
 
-    public loadAbilities(abilities: SerializedAbility[]): void {
-        _.each(abilities, (ability: SerializedAbility) =>
-            this.setAbility(ability.key, ability.level, ability.type)
+    public loadAbilities(abilities: AbilityData[]): void {
+        _.each(abilities, (ability: AbilityData) =>
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
         );
     }
 
@@ -294,12 +294,19 @@ export default class Player extends Character {
      * @param key The key of the ability we are updating.
      * @param level The level of the ability.
      * @param type Optional parameter passed when we are creating a new ability.
+     * @param quickSlot Whether or not the ability is part of the quick slots.
      */
 
-    public setAbility(key: string, level: number, type?: Modules.AbilityType): void {
+    public setAbility(
+        key: string,
+        level: number,
+        type?: Modules.AbilityType,
+        quickSlot = false
+    ): void {
         // This function is used when adding abilities for the first time too.
-        if (!(key in this.abilities)) this.abilities[key] = new Ability(type!, key, level);
-        else this.abilities[key]?.update(level);
+        if (!(key in this.abilities))
+            this.abilities[key] = new Ability(type!, key, level, quickSlot);
+        else this.abilities[key]?.update(level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
         if (type === Modules.AbilityType.Active) this.abilityCallback?.();

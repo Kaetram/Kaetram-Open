@@ -7,7 +7,7 @@ import { SerializedStoreItem } from '../stores';
 import { SerializedEquipment, EquipmentData } from '../equipment';
 import { SerializedSkills, SkillData } from '../skills';
 import { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
-import { SerializedAbilities, SerializedAbility } from '../ability';
+import { SerializedAbility, AbilityData } from '../ability';
 
 import type { Modules, Opcodes } from '../../network';
 
@@ -153,7 +153,7 @@ export type ContainerCallback = (opcode: Opcodes.Container, info: ContainerPacke
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type AbilityPacket = SerializedAbilities | SerializedAbility;
+export type AbilityPacket = SerializedAbility | AbilityData;
 
 export type AbilityCallback = (opcode: Opcodes.Ability, info: AbilityPacket) => void;
 
