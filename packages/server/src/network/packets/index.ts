@@ -15,6 +15,7 @@ export { default as Network } from './network';
 export { default as Chat } from './chat';
 export { default as Command } from './command';
 export { default as Container } from './container';
+export { default as Ability } from './ability';
 export { default as Quest } from './quest';
 export { default as Achievement } from './achievement';
 export { default as Notification } from './notification';
