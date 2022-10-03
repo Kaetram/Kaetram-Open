@@ -4,7 +4,8 @@ export default class Ability {
     public constructor(
         public type: Modules.AbilityType,
         public key: string,
-        public level: number
+        public level: number,
+        public quickSlot = false
     ) {}
 
     /**
@@ -12,7 +13,8 @@ export default class Ability {
      * @param level New level to set the ability to.
      */
 
-    public update(level: number): void {
+    public update(level: number, quickSlot = this.quickSlot): void {
         this.level = level;
+        this.quickSlot = quickSlot;
     }
 }
