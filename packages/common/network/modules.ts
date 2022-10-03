@@ -44,6 +44,11 @@ export enum EntityType {
     Object
 }
 
+export enum AbilityType {
+    Active,
+    Passive
+}
+
 export type HealTypes = 'passive' | 'hitpoints' | 'mana';
 
 /**
