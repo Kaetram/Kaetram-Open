@@ -81,33 +81,3 @@
         color: transparent;
     }
 }
-
-@keyframes flash {
-    0% {
-        background-color: #ffa2a2;
-    }
-
-    100% {
-        background-color: #e22525;
-    }
-}
-
-@keyframes flash-green {
-    0% {
-        background-color: #a2ffa2;
-    }
-
-    100% {
-        background-color: #25e225;
-    }
-}
-
-@keyframes flash-poison {
-    0% {
-        background-color: #0cab3c;
-    }
-
-    100% {
-        background-color: #035819;
-    }
-}

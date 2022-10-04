@@ -285,13 +285,17 @@
             font-size: 8px * $i;
         }
 
-        .ability {
+        .ability, .ability-icon {
             position: absolute;
 
             display: none;
 
             width: 16px * $i;
             height: 16px * $i;
+        }
+
+        .ability-icon {
+            display: block;
         }
 
         .ability-icon-intimidate {

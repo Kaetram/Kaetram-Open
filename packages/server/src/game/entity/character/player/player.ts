@@ -102,6 +102,8 @@ export default class Player extends Character {
     public questsLoaded = false;
     public achievementsLoaded = false;
 
+    public running = false;
+
     // Player info
     public password = '';
     public email = '';
@@ -747,18 +749,13 @@ export default class Player extends Character {
      * @returns The movement speed of the player.
      */
 
-    private getMovementSpeed(): number {
-        // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
-        //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
+    public getMovementSpeed(): number {
+        let { movementSpeed, running } = this;
 
-        // /*
-        //  * Here we can handle equipment/potions/abilities that alter
-        //  * the player's movement speed. We then just broadcast it.
-        //  */
+        // Apply a 10% speed boost if the player running effect is present.
+        if (running) movementSpeed = Math.floor(movementSpeed * 0.9);
 
-        // this.movementSpeed = movementSpeed;
-
-        return this.movementSpeed;
+        return movementSpeed;
     }
 
     /**
@@ -773,6 +770,27 @@ export default class Player extends Character {
             new Effect(Opcodes.Effect.Speed, {
                 instance: this.instance,
                 movementSpeed
+            })
+        );
+    }
+
+    /**
+     * Updates the running status of the player and sends an update of the movement
+     * speed to the client. We use the the `getMovementSpeed()` function to calculate
+     * the speed of the player. We do this since there may be other effects present,
+     * so we want the speed to stack with other effects rather than be overwritten.
+     * @param running Whether or not the player is running.
+     */
+
+    public setRunning(running: boolean): void {
+        log.debug(`${this.username} is running: ${running}`);
+
+        this.running = running;
+
+        this.sendToRegions(
+            new Effect(Opcodes.Effect.Speed, {
+                instance: this.instance,
+                movementSpeed: this.getMovementSpeed()
             })
         );
     }

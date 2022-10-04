@@ -220,7 +220,8 @@ export default class Incoming {
             case Opcodes.Movement.Started:
                 this.player.movementStart = Date.now();
 
-                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore();
+                if (movementSpeed !== this.player.getMovementSpeed())
+                    this.player.incrementCheatScore();
 
                 if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
                     return;
@@ -265,7 +266,7 @@ export default class Incoming {
                 if (!(this.player.oldX === playerX && this.player.oldY === playerY)) {
                     diff = this.player.lastMovement - this.player.movementStart;
 
-                    if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
+                    if (diff < this.player.getMovementSpeed()) this.player.incrementCheatScore();
                 }
 
                 break;

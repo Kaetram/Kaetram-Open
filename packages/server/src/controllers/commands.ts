@@ -346,9 +346,7 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.movementSpeed = movementSpeed;
-
-                this.player.sync();
+                this.player.setMovementSpeed(movementSpeed);
 
                 break;
             }
@@ -612,6 +610,18 @@ export default class Commands {
 
                 this.player.abilities.setLevel(key, x);
 
+                break;
+
+            case 'setquickslot':
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || isNaN(x))
+                    return this.player.notify(
+                        `Malformed command, expected /setquickslot key quickslot`
+                    );
+
+                this.player.abilities.setQuickSlot(key, x);
                 break;
 
             case 'resetabilities':
