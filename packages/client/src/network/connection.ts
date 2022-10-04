@@ -654,9 +654,8 @@ export default class Connection {
                 break;
 
             // Update the ability data whenever we receive any information.
-            case Opcodes.Ability.Level:
             case Opcodes.Ability.Add:
-            case Opcodes.Ability.QuickSlot:
+            case Opcodes.Ability.Update:
                 info = info as AbilityData;
                 this.game.player.setAbility(info.key, info.level, info.type, info.quickSlot);
                 break;

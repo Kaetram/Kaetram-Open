@@ -33,13 +33,13 @@ export default class Header {
     private handleHitPoints(hitPoints: number, maxHitPoints: number, decrease?: boolean) {
         let percentage = hitPoints / maxHitPoints;
 
-        if (decrease) this.flash('white');
-
         this.health.style.width = `${Math.floor(
             this.healthBar.offsetWidth * percentage
         ).toString()}px`;
 
         this.text.textContent = `${hitPoints}/${maxHitPoints}`;
+
+        if (decrease) this.flash('white');
     }
 
     /**
@@ -84,12 +84,24 @@ export default class Header {
      * Handles the ability bar for when an ability has been added.
      */
 
-    private handleAbility(key: string, level: number, quickSlot?: boolean): void {
+    private handleAbility(key: string, level: number, quickSlot = -1): void {
         this.abilityBar.hidden = false;
 
         // This is in order to give the ability bar a fade in effect when it first appears.
         setTimeout(() => (this.abilityBar.style.opacity = '1'), 100);
 
-        if (!quickSlot) return;
+        // No quick slot identification.
+        if (quickSlot === -1) return;
+
+        // We use the quickslot index to determine which ability to update.
+        let quickSlotIndex = this.abilityBar.children[quickSlot];
+
+        if (!quickSlotIndex) return;
+
+        // Reset to default class.
+        quickSlotIndex.className = 'ability-quickslot';
+
+        // Add the ability icon based on the key provided.
+        quickSlotIndex.classList.add(`ability-icon-${key}`);
     }
 }
