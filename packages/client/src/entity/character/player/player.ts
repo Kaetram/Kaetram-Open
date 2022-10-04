@@ -26,7 +26,7 @@ type ExperienceCallback = (
     nextExperience: number
 ) => void;
 
-type AbilityCallback = (key: string, level: number, quickSlot?: boolean) => void;
+type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 
 type PoisonCallback = (status: boolean) => void;
 
@@ -296,14 +296,14 @@ export default class Player extends Character {
      * @param key The key of the ability we are updating.
      * @param level The level of the ability.
      * @param type Optional parameter passed when we are creating a new ability.
-     * @param quickSlot Whether or not the ability is part of the quick slots.
+     * @param quickSlot The id of the quickslot the ability is in.
      */
 
     public setAbility(
         key: string,
         level: number,
         type?: Modules.AbilityType,
-        quickSlot = false
+        quickSlot = -1
     ): void {
         // This function is used when adding abilities for the first time too.
         if (!(key in this.abilities))
@@ -311,7 +311,8 @@ export default class Player extends Character {
         else this.abilities[key]?.update(level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
-        if (type === Modules.AbilityType.Active) this.abilityCallback?.(key, level, quickSlot);
+        if (type === Modules.AbilityType.Active || quickSlot !== -1)
+            this.abilityCallback?.(key, level, quickSlot);
     }
 
     /**
