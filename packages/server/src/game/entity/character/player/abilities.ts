@@ -39,13 +39,15 @@ export default class Abilities {
      * Sends a packet to the player when an ability undergoes a change in level.
      * @param key The key of the ability that has changed.
      * @param level The new level of the ability.
+     * @param quickSlot The quick slot id that the ability is in.
      */
 
-    private handleLevel(key: string, level: number): void {
+    private handleUpdate(key: string, level: number, quickSlot: number): void {
         this.player.send(
-            new AbilityPacket(Opcodes.Ability.Level, {
+            new AbilityPacket(Opcodes.Ability.Update, {
                 key,
-                level
+                level,
+                quickSlot
             })
         );
     }
@@ -64,23 +66,26 @@ export default class Abilities {
      * based on that. The level is passed to the subclass constructor.
      * @param key The key of the ability we are creating.
      * @param level The level of the ability.
-     * @param quickSlot Whether or not the ability is in the quick slots.
+     * @param quickSlot The identification of the quick slot.
      * @param skipAddCallback Whether or not to skip the add callback.
      */
 
-    public add(key: string, level: number, quickSlot = false, skipAddCallback = false): void {
+    public add(key: string, level: number, quickSlot = -1, skipAddCallback = false): void {
         // Ensure the ability exists within the index.
         if (!(key in AbilitiesIndex)) return log.warning(`Ability ${key} does not exist.`);
 
         // Create ability based on the key from index of ability classes.
-        let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](level, quickSlot);
+        let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](
+            level,
+            quickSlot
+        ) as Ability;
 
         // Ensure the ability has valid data.
         if (!ability || !ability.isValid())
             return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
 
-        // On level change listener for the ability.
-        ability.onLevel(this.handleLevel.bind(this));
+        // On ability update listener.
+        ability.onUpdate(this.handleUpdate.bind(this));
 
         // Add the ability to the player's abilities.
         this.abilities[key] = ability;
@@ -102,6 +107,16 @@ export default class Abilities {
 
     public setLevel(key: string, level: number): void {
         this.abilities[key]?.setLevel(level);
+    }
+
+    /**
+     * Updates the quickslot id of the ability.
+     * @param key The key of the ability we are updating.
+     * @param quickSlot The quickslot id we are setting the ability to.
+     */
+
+    public setQuickSlot(key: string, quickSlot: number): void {
+        this.abilities[key]?.setQuickSlot(quickSlot);
     }
 
     /**

@@ -67,6 +67,49 @@ export default class Abilities extends Menu {
     }
 
     /**
+     * Event handler for when a slot begins the dragging and dropping
+     * process.
+     * @param key The key of the ability that is being dragged.
+     */
+
+    private dragStart(key: string): void {
+        //
+        console.log('drag start');
+    }
+
+    /**
+     * The drop event within the drag and drop actions. The target represents
+     * the slot that the item is being dropped into.
+     * @param event Contains event data about the target.
+     */
+
+    private dragDrop(event: DragEvent, key: string): void {
+        //
+    }
+
+    /**
+     * Event handler for when a slot is being dragged over (but not dropped).
+     * We use this to give the user feedback on which slot they are hovering.
+     * @param event Contains event data and the ability element being dragged
+     */
+
+    private dragOver(event: DragEvent): void {
+        // Check that a target exists firstly.
+        if (!event.target || !(event.target as HTMLElement).draggable) return;
+
+        event.preventDefault();
+    }
+
+    /**
+     * Event handler for when an item being dragged exits a valid slot area.
+     * @param event Contains the target slot that is exited.
+     */
+
+    private dragLeave(event: DragEvent): void {
+        //
+    }
+
+    /**
      * Takes in an HTMLElement object and assigns the necessary information to it. This is used
      * by both the active and passive abilities.
      * @param ability The HTML element that we are modifying.
@@ -77,23 +120,39 @@ export default class Abilities extends Menu {
     private setAbility(ability: AbilityElement, key: string, level = 1): void {
         // Clear the inner HTML first (to erase any potential existing elements such as levels).
         ability.innerHTML = '';
-        ability.className = `ability ability-icon-${key}`; // Clear the classes
+        ability.className = `ability`; // Clear the classes
 
         // Make ability visible.
         ability.style.display = 'block';
+
+        // Handle icons for the abilities
+        let icon = document.createElement('div');
+
+        // Set the icon class and add it to the ability.
+        icon.classList.add('ability-icon');
+        icon.classList.add(`ability-icon-${key}`);
+
+        // Make the icon draggable.
+        icon.draggable = true;
+
+        // Add event listeners for drag and drop for the ability icon.
+        icon.addEventListener('dragstart', () => this.dragStart(key));
+        icon.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, key));
+        icon.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
+        icon.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
 
         // Clamp the level.
         if (level > 4) level = 4;
         if (level < 1) level = 1;
 
-        // Add the levels to the ability.
+        // Add the levels to the ability.t
         for (let i = 0; i < level; i++) {
             let level = document.createElement('div');
 
             level.classList.add('ability-level');
             level.classList.add(`ability-level${i + 1}`);
 
-            ability.append(level);
+            ability.append(level, icon);
         }
     }
 
