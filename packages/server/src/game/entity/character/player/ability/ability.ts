@@ -8,16 +8,16 @@ import { RawAbility, AbilityData } from '@kaetram/common/types/ability';
 import Data from '../../../../../../data/abilities.json';
 
 type DeactivateCallback = (player: Player) => void;
-type LevelCallback = (key: string, level: number) => void;
+type UpdateCallback = (key: string, level: number, quickSlot: number) => void;
 export default class Ability {
     private data: RawAbility;
 
     private lastActivated = 0;
 
     private deactivateCallback?: DeactivateCallback;
-    private levelCallback?: LevelCallback;
+    private updateCallback?: UpdateCallback;
 
-    public constructor(public key: string, private level = 1, private quickSlot = false) {
+    public constructor(public key: string, private level = 1, private quickSlot = -1) {
         this.data = (Data as RawAbility)[this.key];
     }
 
@@ -26,30 +26,39 @@ export default class Ability {
      * @param player The player object that activated the ability.
      */
 
-    public activate(player: Player): void {
+    public activate(player: Player): boolean {
         // Passive abilities are not activated.
-        if (this.data.type !== 'active' || !this.data.levels) return;
+        if (this.data.type !== 'active' || !this.data.levels) return false;
 
         let { cooldown, duration, mana } = this.data.levels[this.level];
 
         // Someone somewhere forgot to specify a mana cost for the ability.
-        if (!mana) return log.warning(`Ability ${this.key} has no mana cost.`);
+        if (!mana) {
+            log.warning(`Ability ${this.key} has no mana cost.`);
+            return false;
+        }
 
         // Ensure active abilities have a cooldown and duration.
-        if (!cooldown || !duration)
-            return log.warning(`Ability ${this.key} has no cooldown or duration.`);
+        if (!cooldown || !duration) {
+            log.warning(`Ability ${this.key} has no cooldown or duration.`);
+            return false;
+        }
 
         // Player doesn't have enough mana.
-        if (player.mana.getMana() < mana)
-            return player.notify('You do not have enough mana to use this ability.');
+        if (player.mana.getMana() < mana) {
+            player.notify('You do not have enough mana to use this ability.');
+            return false;
+        }
 
         // Ensure the ability is not on cooldown.
-        if (this.isCooldown(cooldown))
-            return player.notify(
+        if (this.isCooldown(cooldown)) {
+            player.notify(
                 `You need to wait ${Math.floor(
-                    cooldown - (Date.now() - this.lastActivated)
+                    (cooldown - (Date.now() - this.lastActivated)) / 1000
                 )} seconds before using this ability again.`
             );
+            return false;
+        }
 
         // Remove the ability mana cost from the player.
         player.mana.decrement(mana);
@@ -59,6 +68,8 @@ export default class Ability {
 
         // Update the date of the last time the ability was activated.
         this.lastActivated = Date.now();
+
+        return true;
     }
 
     /**
@@ -80,6 +91,11 @@ export default class Ability {
         return Date.now() - this.lastActivated < cooldown;
     }
 
+    /**
+     * The type of ability using the Modules enum.
+     * @returns The type of ability.
+     */
+
     public getType(): Modules.AbilityType {
         return this.data.type === 'active'
             ? Modules.AbilityType.Active
@@ -98,7 +114,21 @@ export default class Ability {
 
         this.level = level;
 
-        this.levelCallback?.(this.key, level);
+        this.updateCallback?.(this.key, level, this.quickSlot);
+    }
+
+    /**
+     * Assigns a quick slot id to the ability.
+     * @param quickSlot The quickSlot id to assign.
+     */
+
+    public setQuickSlot(quickSlot: number): void {
+        if (quickSlot < 0) quickSlot = -1;
+        if (quickSlot > 4) quickSlot = 4;
+
+        this.quickSlot = quickSlot;
+
+        this.updateCallback?.(this.key, this.level, quickSlot);
     }
 
     /**
@@ -129,11 +159,10 @@ export default class Ability {
     }
 
     /**
-     * Callback for when the ability has been leveled up.
-     * @param callback Contains the key and level parameters.
+     * Callback for when the ability has undergone an update (level or quickSlot).
      */
 
-    public onLevel(callback: LevelCallback): void {
-        this.levelCallback = callback;
+    public onUpdate(callback: UpdateCallback): void {
+        this.updateCallback = callback;
     }
 }

@@ -61,8 +61,7 @@ export enum Container {
 export enum Ability {
     Batch,
     Add,
-    Level,
-    QuickSlot,
+    Update,
     Use
 }
 

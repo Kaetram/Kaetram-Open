@@ -2,7 +2,7 @@ import Player from '../../player';
 import Ability from '../ability';
 
 export default class DualistsMark extends Ability {
-    public constructor(level: number, quickSlot = false) {
+    public constructor(level: number, quickSlot = -1) {
         super('dualistsmark', level, quickSlot);
     }
 
@@ -12,9 +12,12 @@ export default class DualistsMark extends Ability {
      * @param player The player we are updating the movement speed for.
      */
 
-    public override activate(player: Player): void {
-        if (!player.hasTarget()) return player.notify(`You must be in combat to use this ability.`);
+    public override activate(player: Player): boolean {
+        if (!player.hasTarget()) {
+            player.notify(`You must be in combat to use this ability.`);
+            return false;
+        }
 
-        super.activate(player);
+        return super.activate(player);
     }
 }

@@ -1,16 +1,11 @@
 import Player from '../../player';
 import Ability from '../ability';
-
-import { Modules } from '@kaetram/common/network';
-
 export default class Run extends Ability {
-    public constructor(level: number, quickSlot = false) {
+    public constructor(level: number, quickSlot = -1) {
         super('run', level, quickSlot);
 
         // Revert the player's speed back to normal when ability is deactivated.
-        this.onDeactivate((player: Player) =>
-            player.setMovementSpeed(Modules.Defaults.MOVEMENT_SPEED)
-        );
+        this.onDeactivate((player: Player) => player.setRunning(false));
     }
 
     /**
@@ -19,11 +14,9 @@ export default class Run extends Ability {
      * @param player The player we are updating the movement speed for.
      */
 
-    public override activate(player: Player): void {
-        super.activate(player);
+    public override activate(player: Player): boolean {
+        if (super.activate(player)) player.setRunning(true);
 
-        player.setMovementSpeed(200);
-
-        console.log(`Player ${player.username} is now running.`);
+        return false;
     }
 }

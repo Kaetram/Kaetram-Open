@@ -20,7 +20,7 @@ export type RawAbility = { [key: string]: RawAbilityInfo };
 export interface AbilityData {
     key: string;
     level: number;
-    quickSlot?: boolean;
+    quickSlot?: number;
     type?: Modules.AbilityType;
 }
 

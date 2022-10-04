@@ -2,7 +2,7 @@ import Player from '../../player';
 import Ability from '../ability';
 
 export default class Awareness extends Ability {
-    public constructor(level: number, quickSlot = false) {
+    public constructor(level: number, quickSlot = -1) {
         super('awareness', level, quickSlot);
     }
 
@@ -12,7 +12,7 @@ export default class Awareness extends Ability {
      * @param player The player we are updating the movement speed for.
      */
 
-    public override activate(player: Player): void {
-        super.activate(player);
+    public override activate(player: Player): boolean {
+        return super.activate(player);
     }
 }
