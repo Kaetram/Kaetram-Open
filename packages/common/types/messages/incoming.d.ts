@@ -53,6 +53,7 @@ export interface ContainerPacket {
 export interface AbilityPacket {
     opcode: Opcodes.Ability;
     key: string;
+    index?: number;
 }
 
 export interface WarpPacket {
