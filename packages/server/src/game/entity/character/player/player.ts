@@ -310,7 +310,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(this.serialize(false, true)));
+        this.send(new Welcome(this.serialize(false, true, true)));
     }
 
     /**
@@ -407,11 +407,13 @@ export default class Player extends Character {
      * @param type The type of heal we are performing ('passive' | 'hitpoints' | 'mana');
      */
 
-    public override heal(amount: number, type: Modules.HealTypes = 'passive'): void {
+    public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
             case 'passive':
+                if (!this.mana.isFull()) this.mana.increment(amount);
+
                 super.heal(amount);
-                this.mana.increment(amount);
+
                 break;
 
             case 'hitpoints':
@@ -1275,10 +1277,15 @@ export default class Player extends Character {
      * be able to see.
      * @param withEquipment Whether or not to include equipment batch data.
      * @param withExperience Whether or not to incluide experience data.
+     * @param withMana Whether or not to include mana data.
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment = false, withExperience = false): PlayerData {
+    public override serialize(
+        withEquipment = false,
+        withExperience = false,
+        withMana = false
+    ): PlayerData {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
@@ -1300,6 +1307,11 @@ export default class Player extends Character {
             data.experience = this.experience;
             data.prevExperience = this.prevExperience;
             data.nextExperience = this.nextExperience;
+        }
+
+        if (withMana) {
+            data.mana = this.mana.getMana();
+            data.maxMana = this.mana.getMaxMana();
         }
 
         return data;

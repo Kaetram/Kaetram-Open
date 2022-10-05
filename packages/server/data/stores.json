@@ -4,7 +4,22 @@
       {
         "key": "flask",
         "count": 20,
-        "price": 50
+        "price": 75
+      },
+      {
+        "key": "manaflask",
+        "count": 10,
+        "price": 200
+      },
+      {
+        "key": "burger",
+        "count": 5,
+        "price": 1000
+      },
+      {
+        "key": "bigflask",
+        "count": 3,
+        "price": 2000
       },
       {
         "key": "axe",
@@ -18,8 +33,43 @@
       },
       {
         "key": "bluesword",
-        "count": 1,
+        "count": 3,
+        "price": 200
+      },
+      {
+        "key": "woodenbow",
+        "count": 10,
+        "price": 100
+      },
+      {
+        "key": "plasticbow",
+        "count": 5,
+        "price": 200
+      },
+      {
+        "key": "leatherarcherarmor",
+        "count": 5,
         "price": 500
+      },
+      {
+        "key": "mailarcherarmor",
+        "count": 1,
+        "price": 1000
+      },
+      {
+        "key": "pendant1",
+        "count": 1,
+        "price": 10000
+      },
+      {
+        "key": "ring1",
+        "count": 1,
+        "price": 10000
+      },
+      {
+        "key": "mailarcherarmor",
+        "count": 1,
+        "price": 1000
       }
     ],
     "refresh": 60000,

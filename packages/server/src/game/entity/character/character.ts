@@ -171,6 +171,9 @@ export default abstract class Character extends Entity {
         // Cannot heal if character is being attacked.
         if (this.getAttackerCount() > 0) return;
 
+        // Stops the character from healing if they are at max hitpoints.
+        if (this.hitPoints.isFull()) return;
+
         this.hitPoints.increment(amount);
     }
 
