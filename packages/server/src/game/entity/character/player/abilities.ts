@@ -116,6 +116,12 @@ export default class Abilities {
      */
 
     public setQuickSlot(key: string, quickSlot: number): void {
+        // Clears a quick slot from another ability if it is found.
+        _.each(this.abilities, (ability: Ability) => {
+            if (ability.hasQuickSlot(quickSlot)) ability.setQuickSlot(-1);
+        });
+
+        // Updates the quick slot of the ability.
         this.abilities[key]?.setQuickSlot(quickSlot);
     }
 

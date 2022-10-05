@@ -15,13 +15,10 @@ export default class Header {
     private experience: HTMLElement = document.querySelector('#exp')!; // The green element within the exp bar.
     private experienceBar: HTMLElement = document.querySelector('#exp-bar')!; // Used for determining width of exp bar.
 
-    private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
-
     public constructor(private player: Player) {
         this.player.onHitPoints(this.handleHitPoints.bind(this));
         this.player.onExperience(this.handleExperience.bind(this));
         this.player.onPoison(this.handlePoison.bind(this));
-        this.player.onAbility(this.handleAbility.bind(this));
     }
 
     /**
@@ -78,30 +75,5 @@ export default class Header {
         this.health.classList.add(style);
 
         window.setTimeout(() => this.health.classList.remove(style), 500);
-    }
-
-    /**
-     * Handles the ability bar for when an ability has been added.
-     */
-
-    private handleAbility(key: string, level: number, quickSlot = -1): void {
-        this.abilityBar.hidden = false;
-
-        // This is in order to give the ability bar a fade in effect when it first appears.
-        setTimeout(() => (this.abilityBar.style.opacity = '1'), 100);
-
-        // No quick slot identification.
-        if (quickSlot === -1) return;
-
-        // We use the quickslot index to determine which ability to update.
-        let quickSlotIndex = this.abilityBar.children[quickSlot];
-
-        if (!quickSlotIndex) return;
-
-        // Reset to default class.
-        quickSlotIndex.className = 'ability-quickslot';
-
-        // Add the ability icon based on the key provided.
-        quickSlotIndex.classList.add(`ability-icon-${key}`);
     }
 }
