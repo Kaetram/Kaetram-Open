@@ -333,6 +333,11 @@
             background-position: -96px * $i 1px;
         }
 
+        .ability-icon-secretcalling {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -112px * $i 1px;
+        }
+
         .ability-level {
             position: absolute;
 
