@@ -30,6 +30,8 @@ type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 
 type PoisonCallback = (status: boolean) => void;
 
+type ManaCallback = (mana: number, maxMana: number) => void;
+
 export default class Player extends Character {
     public rights = 0;
     public wanted = false;
@@ -75,6 +77,7 @@ export default class Player extends Character {
     private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
     private abilityCallback?: AbilityCallback;
+    private manaCallback?: ManaCallback;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -258,6 +261,8 @@ export default class Player extends Character {
         this.mana = mana;
 
         if (maxMana) this.maxMana = maxMana;
+
+        this.manaCallback?.(this.mana, maxMana || this.maxMana);
     }
 
     /**
@@ -407,5 +412,14 @@ export default class Player extends Character {
 
     public onAbility(callback: AbilityCallback): void {
         this.abilityCallback = callback;
+    }
+
+    /**
+     * Callback for when the player's mana changes.
+     * @param callback Contains the current mana and max mana.
+     */
+
+    public onMana(callback: ManaCallback): void {
+        this.manaCallback = callback;
     }
 }
