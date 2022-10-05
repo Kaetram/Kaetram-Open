@@ -135,5 +135,31 @@
 
   "precognition": {
     "type": "passive"
+  },
+
+  "secretcalling": {
+    "type": "active",
+    "levels": {
+      "1": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "2": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "3": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      },
+      "4": {
+        "cooldown": 60000,
+        "duration": 15000,
+        "mana": 15
+      }
+    }
   }
 }

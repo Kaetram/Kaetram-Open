@@ -5,6 +5,7 @@ import dualistsmark from './dualistsmark';
 import hotshot from './hotshot';
 import thickskin from './thickskin';
 import precognition from './precognition';
+import secretcalling from './secretcalling';
 
 export default {
     intimidate,
@@ -13,5 +14,6 @@ export default {
     dualistsmark,
     hotshot,
     thickskin,
-    precognition
+    precognition,
+    secretcalling
 };
