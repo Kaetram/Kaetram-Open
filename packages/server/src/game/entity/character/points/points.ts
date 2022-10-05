@@ -52,7 +52,7 @@ export default abstract class Points {
     protected setPoints(points: number): void {
         this.points = points;
 
-        if (this.points >= this.maxPoints) this.points = this.maxPoints;
+        if (this.points >= this.maxPoints || isNaN(points)) this.points = this.maxPoints;
         if (this.points < 0) this.points = 0;
     }
 

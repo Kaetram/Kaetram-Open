@@ -13,7 +13,8 @@ import {
     Despawn,
     Skill,
     Overlay,
-    Poison as PoisonPacket
+    Poison as PoisonPacket,
+    Points
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -98,6 +99,9 @@ export default class Handler {
 
         // Cheat-score callback
         this.player.onCheatScore(this.handleCheatScore.bind(this));
+
+        // Mana callback
+        this.player.mana.onMana(this.handleMana.bind(this));
     }
 
     /**
@@ -543,6 +547,20 @@ export default class Handler {
         if (this.player.cheatScore > 10) this.player.timeout();
 
         log.debug(`Cheat score - ${this.player.cheatScore}`);
+    }
+
+    /**
+     * Callback for when a change in player's mana has occurred.
+     */
+
+    private handleMana(): void {
+        this.player.send(
+            new Points({
+                instance: this.player.instance,
+                mana: this.player.mana.getMana(),
+                maxMana: this.player.mana.getMaxMana()
+            })
+        );
     }
 
     /**

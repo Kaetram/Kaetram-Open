@@ -28,7 +28,7 @@ export default class MenuController {
     private warp: Warp;
     private notification: Notification;
     private settings: Settings;
-    private quickSlots: QuickSlots;
+    public header: Header;
 
     public menu: Menu[];
 
@@ -41,7 +41,7 @@ export default class MenuController {
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
-        this.quickSlots = new QuickSlots(game.player);
+        this.header = new Header(game.player);
 
         this.menu = [
             this.inventory,
@@ -70,7 +70,7 @@ export default class MenuController {
      */
 
     private load(): void {
-        new Header(this.game.player);
+        new QuickSlots(this.game.player);
 
         this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
@@ -97,6 +97,8 @@ export default class MenuController {
      */
 
     public resize(): void {
+        this.header.resize(); // Non Menu UI (for now?)
+
         this.forEachMenu((menu: Menu) => menu.resize());
     }
 

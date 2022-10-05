@@ -564,7 +564,7 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`FPS: ${this.fps}`, 10, 31, false, 'white');
+        this.drawText(`FPS: ${this.fps}`, 10, 61, false, 'white');
     }
 
     /**
@@ -604,9 +604,9 @@ export default class Renderer {
             `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
                 player.gridX,
                 player.gridY
-            )}`,
+            )} movementSpeed: ${player.movementSpeed}`,
             10,
-            51,
+            81,
             false,
             'white'
         );
@@ -617,14 +617,14 @@ export default class Renderer {
             this.drawText(
                 `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
                 10,
-                71,
+                101,
                 false,
                 'white'
             );
 
             // Draw the entity's attack range.
             if (input.entity.attackRange)
-                this.drawText(`att range: ${input.entity.attackRange}`, 10, 91, false, 'white');
+                this.drawText(`att range: ${input.entity.attackRange}`, 10, 121, false, 'white');
         }
     }
 
