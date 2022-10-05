@@ -5,25 +5,41 @@ import Menu from '../../menu';
 import log from '../../../lib/log';
 import Player from '../../../entity/character/player/player';
 import Ability from '../../../entity/character/player/ability';
-import { Modules } from '@kaetram/common/network';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 interface AbilityElement extends HTMLElement {
     key?: string;
 }
 
-type SelectCallback = (key: string) => void;
+export type SelectCallback = (type: Opcodes.Ability, key: string, index?: number) => void;
 
 export default class Abilities extends Menu {
     private activeAbilities: HTMLUListElement = document.querySelector('#active-abilities')!;
     private passiveAbilities: HTMLUListElement = document.querySelector('#passive-abilities')!;
+
+    private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
+
+    private draggedElement = '';
 
     private selectCallback?: SelectCallback;
 
     public constructor() {
         super('#abilities-page');
 
+        // Loads the event listeners for when we click on an ability.
         for (let i = 0; i < this.activeAbilities.children.length; i++)
             this.activeAbilities.children[i].addEventListener('click', () => this.handleAction(i));
+
+        // Creates the drag detection listener onto the ability bar.
+        for (let i = 0; i < this.abilityBar.children.length; i++) {
+            let element = this.abilityBar.children[i] as AbilityElement;
+
+            element.draggable = true;
+
+            element.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
+            element.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, i));
+        }
     }
 
     /**
@@ -58,33 +74,41 @@ export default class Abilities extends Menu {
         });
     }
 
+    /**
+     * Handler for when an ability at a specific index is used. We createa a callback
+     * that is passed through the controllers to the the server.
+     * @param index The index of the ability.
+     */
+
     private handleAction(index: number): void {
         let ability = this.activeAbilities.children[index] as AbilityElement;
 
         if (ability.style.display === 'none' || !ability.key) return;
 
-        this.selectCallback?.(ability.key);
+        this.selectCallback?.(Opcodes.Ability.Use, ability.key);
     }
 
     /**
      * Event handler for when a slot begins the dragging and dropping
-     * process.
+     * process. We store the key of the ability we are currently dragging.
      * @param key The key of the ability that is being dragged.
      */
 
     private dragStart(key: string): void {
-        //
-        console.log('drag start');
+        this.draggedElement = key;
     }
 
     /**
      * The drop event within the drag and drop actions. The target represents
      * the slot that the item is being dropped into.
      * @param event Contains event data about the target.
+     * @param index The index of the quick slot we are dragging ability onto.
      */
 
-    private dragDrop(event: DragEvent, key: string): void {
-        //
+    private dragDrop(event: DragEvent, index: number): void {
+        this.selectCallback?.(Opcodes.Ability.QuickSlot, this.draggedElement, index);
+
+        this.draggedElement = '';
     }
 
     /**
@@ -136,10 +160,8 @@ export default class Abilities extends Menu {
         icon.draggable = true;
 
         // Add event listeners for drag and drop for the ability icon.
-        icon.addEventListener('dragstart', () => this.dragStart(key));
-        icon.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, key));
-        icon.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
         icon.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
+        icon.addEventListener('dragstart', () => this.dragStart(key));
 
         // Clamp the level.
         if (level > 4) level = 4;

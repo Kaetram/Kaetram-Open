@@ -438,8 +438,8 @@ export default class Incoming {
             case Opcodes.Ability.Use:
                 return this.player.abilities.use(packet.key);
 
-            // case Opcodes.Ability.QuickSlot:
-            //     return this.player.abilities...;
+            case Opcodes.Ability.QuickSlot:
+                return this.player.abilities.setQuickSlot(packet.key, packet.index!);
         }
     }
 
