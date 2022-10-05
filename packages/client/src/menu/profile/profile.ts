@@ -8,10 +8,11 @@ import Abilities from './impl/abilities';
 
 import Player from '../../entity/character/player/player';
 
-import { Modules } from '@kaetram/common/network';
+import { SelectCallback } from './impl/abilities';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 type UnequipCallback = (type: Modules.Equipment) => void;
-type AbilityCallback = (key: string) => void;
 
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
@@ -31,7 +32,7 @@ export default class Profile extends Menu {
     private next: HTMLElement = document.querySelector('#next')!;
 
     private unequipCallback?: UnequipCallback;
-    private abilityCallback?: AbilityCallback;
+    private abilityCallback?: SelectCallback;
 
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
@@ -45,7 +46,9 @@ export default class Profile extends Menu {
 
         // Initialize callbacks for pages.
         this.state.onSelect((type: Modules.Equipment) => this.unequipCallback?.(type));
-        this.abilities.onSelect((key: string) => this.abilityCallback?.(key));
+        this.abilities.onSelect((type: Opcodes.Ability, key: string, index?: number) =>
+            this.abilityCallback?.(type, key, index)
+        );
     }
 
     /**
@@ -135,7 +138,7 @@ export default class Profile extends Menu {
      * @param callback Contains data about the action.
      */
 
-    public onAbility(callback: AbilityCallback): void {
+    public onAbility(callback: SelectCallback): void {
         this.abilityCallback = callback;
     }
 }

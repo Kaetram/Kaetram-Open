@@ -13,6 +13,7 @@ import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
+import QuickSlots from '../menu/quickslots';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -27,6 +28,7 @@ export default class MenuController {
     private warp: Warp;
     private notification: Notification;
     private settings: Settings;
+    private quickSlots: QuickSlots;
 
     public menu: Menu[];
 
@@ -39,6 +41,7 @@ export default class MenuController {
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
+        this.quickSlots = new QuickSlots(game.player);
 
         this.menu = [
             this.inventory,
@@ -204,13 +207,16 @@ export default class MenuController {
      * Callback for when an action within the abilities menu occurs.
      * Generally this will consist of activating an ability or dragging it
      * into the quick slot menu.
+     * @param type The type of action we are performing (using ability or dragging it to a quickslot).
      * @param key The key of the ability we are performing an action on.
+     * @param index The index of the quickslot we are dragging to (only specified when dragging).
      */
 
-    private handleAbility(key: string): void {
+    private handleAbility(type: Opcodes.Ability, key: string, index?: number): void {
         this.game.socket.send(Packets.Ability, {
-            opcode: Opcodes.Ability.Use,
-            key
+            opcode: type,
+            key,
+            index
         });
     }
 

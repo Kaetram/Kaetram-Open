@@ -62,7 +62,8 @@ export enum Ability {
     Batch,
     Add,
     Update,
-    Use
+    Use,
+    QuickSlot
 }
 
 export enum Quest {
