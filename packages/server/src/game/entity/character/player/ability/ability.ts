@@ -92,6 +92,17 @@ export default class Ability {
     }
 
     /**
+     * Verifies if an ability has a quick slot assigned to it or if a parameter
+     * is specified then whether or not that quick slot is assigned to the ability.
+     * @param quickSlot Optional parameter to check if the ability is assigned to a specific quick slot.
+     * @returns Whether or not the ability has a quick slot assigned to it or specified quick slot matches.
+     */
+
+    public hasQuickSlot(quickSlot?: number): boolean {
+        return quickSlot !== undefined ? this.quickSlot === quickSlot : this.quickSlot > -1;
+    }
+
+    /**
      * The type of ability using the Modules enum.
      * @returns The type of ability.
      */
