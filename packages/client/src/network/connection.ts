@@ -287,10 +287,7 @@ export default class Connection {
      */
 
     private handleSync(data: PlayerData): void {
-        let player =
-            data.instance === this.game.player.instance
-                ? this.game.player
-                : this.entities.get<Player>(data.instance);
+        let player = this.entities.get<Player>(data.instance);
 
         // Invalid instance, player not found/not spawned.
         if (!player || player.teleporting || player.dead || !player.ready) return;

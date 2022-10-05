@@ -84,15 +84,15 @@
 }
 
 .store-item-name {
-    left: 20%;
+    left: 15%;
 }
 
 .store-item-count {
-    left: 55%;
+    left: 65%;
 }
 
 .store-item-price {
-    left: 65%;
+    left: 73%;
 }
 
 .store-item-buy {
@@ -151,7 +151,11 @@
     .store-item-count,
     .store-item-price,
     .store-item-buy {
-        font-size: 16px;
+        font-size: 14px;
+    }
+
+    .store-item-name {
+        left: 10%;
     }
 }
 
