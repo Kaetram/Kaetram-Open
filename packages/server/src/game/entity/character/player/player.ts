@@ -996,9 +996,22 @@ export default class Player extends Character {
      */
 
     public refreshTimeout(): void {
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
+        // Clear the existing timeout and start over.
+        this.clearTimeout();
 
+        // Start a new timeout and set the player's timeout variable.
         this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
+    }
+
+    /**
+     * Clears the existing disconnect timeout.
+     */
+
+    public clearTimeout(): void {
+        if (!this.disconnectTimeout) return;
+
+        clearTimeout(this.disconnectTimeout);
+        this.disconnectTimeout = null;
     }
 
     /**
