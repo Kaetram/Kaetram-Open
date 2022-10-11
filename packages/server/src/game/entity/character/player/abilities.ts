@@ -74,6 +74,9 @@ export default class Abilities {
         // Ensure the ability exists within the index.
         if (!(key in AbilitiesIndex)) return log.warning(`Ability ${key} does not exist.`);
 
+        // If the ability already exists, we just update the level.
+        if (this.has(key)) return this.setLevel(key, level);
+
         // Create ability based on the key from index of ability classes.
         let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](
             level,
@@ -97,6 +100,16 @@ export default class Abilities {
          */
 
         if (!skipAddCallback) this.addCallback?.(ability);
+    }
+
+    /**
+     * Checks if the player already has the ability.
+     * @param key The key of the ability to check.
+     * @returns Whether the ability exists in the ability dictionary.
+     */
+
+    public has(key: string): boolean {
+        return key in this.abilities;
     }
 
     /**

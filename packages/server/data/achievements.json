@@ -29,6 +29,12 @@
         "description": "Kill some secret spooky skeletons somewhere."
     },
 
+    "wormholes": {
+        "name": "Wormholes",
+        "description": "Investigate the spooky occurrence in Mudwich.",
+        "rewardAbility": "precognition"
+    },
+
     "ancientwizard": {
         "name": "Ancient Wizard",
         "description": "Defeat the ancient wizard in Mudwich!"

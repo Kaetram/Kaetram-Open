@@ -21,6 +21,9 @@ export interface RawAchievement {
 
     rewardExperience?: number; // How much experience to reward.
 
+    rewardAbility?: string; // Key of the ability that is being rewarded.
+    rewardAbilityLevel?: number; // Optional, otherwise defaults to 1.
+
     // Experience reward to skills will be added later.
 }
 

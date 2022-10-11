@@ -60,9 +60,17 @@ export default class Achievements {
      * @param itemKey The key of the item we are rewarding.
      * @param itemCount Amount of an item we are rewarding.
      * @param experience How much experience we are rewarding to the player.
+     * @param ability The ability we are rewarding.
+     * @param abilityLevel The level of the ability we are rewarding.
      */
 
-    private handleFinish(itemKey?: string, itemCount?: number, experience?: number): void {
+    private handleFinish(
+        itemKey?: string,
+        itemCount?: number,
+        experience?: number,
+        ability?: string,
+        abilityLevel?: number
+    ): void {
         // Handles an item reward.
         if (itemKey) {
             let item = new Item(itemKey, -1, -1, true, itemCount);
@@ -80,6 +88,9 @@ export default class Achievements {
 
         // Add experience if it exists.
         if (experience) this.player.addExperience(experience);
+
+        // Add ability if it exists.
+        if (ability) this.player.abilities.add(ability, abilityLevel!);
 
         // Update dynamic tiles.
         this.player.updateRegion();
