@@ -16,7 +16,13 @@ import { RawAchievement, AchievementData } from '@kaetram/common/types/achieveme
  * A player is generally rewarded with an item or some experience.
  */
 
-type FinishCallback = (item?: string, itemCount?: number, experience?: number) => void;
+type FinishCallback = (
+    item?: string,
+    itemCount?: number,
+    experience?: number,
+    ability?: string,
+    abilityLevel?: number
+) => void;
 type ProgressCallback = (key: string, stage: number, name: string) => void;
 type PopupCallback = (popup: PopupData) => void;
 type TalkCallback = (npc: NPC, player: Player) => void;
@@ -36,6 +42,8 @@ export default class Achievement {
     private rewardItem = '';
     private rewardItemCount = 1;
     private rewardExperience = 0;
+    private rewardAbility = '';
+    private rewardAbilityLevel = 1;
 
     private finishCallback?: FinishCallback;
     private progressCallback?: ProgressCallback;
@@ -59,6 +67,8 @@ export default class Achievement {
         this.rewardItem = rawData.rewardItem || '';
         this.rewardItemCount = rawData.rewardItemCount || 1;
         this.rewardExperience = rawData.rewardExperience || 0;
+        this.rewardAbility = rawData.rewardAbility || '';
+        this.rewardAbilityLevel = rawData.rewardAbilityLevel || 1;
 
         // Callbacks for the achievement.
         this.onTalk(this.handleTalk.bind(this));
@@ -166,7 +176,13 @@ export default class Achievement {
         if (this.stage >= this.stageCount) {
             // Achievement is finished!
             this.popupCallback?.(this.getFinishPopup());
-            this.finishCallback?.(this.rewardItem, this.rewardItemCount, this.rewardExperience);
+            this.finishCallback?.(
+                this.rewardItem,
+                this.rewardItemCount,
+                this.rewardExperience,
+                this.rewardAbility,
+                this.rewardAbilityLevel
+            );
         } else if (this.stage === 1) this.popupCallback?.(this.getDiscoveredPopup());
     }
 
@@ -242,14 +258,25 @@ export default class Achievement {
     }
 
     /**
-     * Generates a standardized popup for when an achievement is finished.
+     * Generates a standardized popup for when an achievement is finished depending on
+     * what the achievement rewards are.
      * @returns A popup data object containing the completed message.
      */
 
     private getFinishPopup(): PopupData {
+        let text = `@green@You have completed the achievement @crimson@${this.getName()}@green@!`;
+
+        if (this.rewardExperience > 0)
+            text = `@green@ You have received @crimson@${this.rewardExperience} experience@green@.`;
+        else if (this.rewardAbility)
+            text =
+                this.rewardAbilityLevel === 1
+                    ? `@green@ You have unlocked the @crimson@${this.rewardAbility}@green@ ability.`
+                    : `@green@ Your @crimson@${this.rewardAbility} ability is now level ${this.rewardAbilityLevel}@green@.`;
+
         return {
             title: 'Achievement Completed!',
-            text: `@green@You have completed the achievement @crimson@${this.getName()}@green@!`,
+            text,
             colour: '#33cc33'
         };
     }
