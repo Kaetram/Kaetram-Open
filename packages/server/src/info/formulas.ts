@@ -1,6 +1,10 @@
-import { Modules } from '@kaetram/common/network';
+import _ from 'lodash';
+
 import Utils from '@kaetram/common/util/utils';
 
+import { Modules } from '@kaetram/common/network';
+
+import type Skill from '../game/entity/character/player/skill/skill';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 
@@ -163,8 +167,23 @@ export default {
     },
 
     /**
-     * Formula usd to calcualte maximum hitpoints.
-     * @param level The level used to calculate the maximum hitpoints.
+     * The combat level is calculated using the cumulative level of the player's
+     * combat skills (accuracy, archery, magic, strength)
+     * @param player The player we are calculating the combat level for.
+     */
+
+    getCombatLevel(player: Player): number {
+        let level = 1,
+            skills = player.skills.getCombatSkills();
+
+        _.each(skills, (skill: Skill) => (level += skill.getLevel()));
+
+        return level;
+    },
+
+    /**
+     * Formula used to calcualte maximum hitpoints.
+     * @param level The level of the health skill generally.
      * @returns The maximum hitpoints number value.
      */
 
