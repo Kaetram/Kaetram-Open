@@ -14,11 +14,14 @@ type ExperienceCallback = (
 ) => void;
 
 export default abstract class Skill {
+    public name = '';
     public experience = 0;
 
     private experienceCallback?: ExperienceCallback;
 
-    public constructor(public type: Modules.Skills, public name = '') {}
+    public constructor(public type: Modules.Skills) {
+        this.name = Modules.Skills[this.type];
+    }
 
     /**
      * Unimplemented `stop()` function for the subclasses.

@@ -64,11 +64,7 @@ export default class Player extends Character {
         [Modules.Equipment.Weapon]: new Weapon()
     };
 
-    public skills = {
-        [Modules.Skills.Lumberjacking]: new Skill(Modules.Skills.Lumberjacking),
-        [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
-    };
-
+    public skills: { [key: number]: Skill } = {};
     public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
@@ -271,6 +267,8 @@ export default class Player extends Character {
      */
 
     public setSkill({ type, experience, level, percentage }: SkillData): void {
+        if (!this.skills[type]) this.skills[type] = new Skill(type);
+
         this.skills[type as Modules.Skills].update(experience, level!, percentage!);
     }
 

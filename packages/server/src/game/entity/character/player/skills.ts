@@ -7,11 +7,25 @@ import Lumberjacking from './skill/impl/lumberjacking';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
+import Accuracy from './skill/impl/accuracy';
+import Archery from './skill/impl/archery';
+import Magic from './skill/impl/magic';
+import Strength from './skill/impl/strength';
 
 export default class Skills {
+    private accuracy: Accuracy = new Accuracy();
+    private archery: Archery = new Archery();
     private lumberjacking: Lumberjacking = new Lumberjacking();
+    private magic: Magic = new Magic();
+    private strength: Strength = new Strength();
 
-    private skills: Skill[] = [this.lumberjacking];
+    private skills: Skill[] = [
+        this.accuracy,
+        this.archery,
+        this.lumberjacking,
+        this.magic,
+        this.strength
+    ];
 
     private loadCallback?: () => void;
 
