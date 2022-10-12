@@ -18,7 +18,7 @@ export default class Lumberjacking extends Skill {
     private loop?: NodeJS.Timeout | undefined;
 
     public constructor() {
-        super(Modules.Skills.Lumberjacking, 'Lumberjacking');
+        super(Modules.Skills.Lumberjacking);
     }
 
     /**
