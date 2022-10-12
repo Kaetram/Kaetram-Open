@@ -208,6 +208,7 @@ export enum Warps {
 export enum Skills {
     Accuracy,
     Archery,
+    Health,
     Lumberjacking,
     Magic,
     Mining,
@@ -224,17 +225,6 @@ export enum Enchantment {
     AntiStun,
     Splash
 }
-
-export let EnchantmentNames = [
-    'Bloodsucking',
-    'Critical',
-    'Evasion',
-    'Spike',
-    'Explosive',
-    'Stun',
-    'AntiStun',
-    'Splash'
-];
 
 export interface Colours {
     fill: string;
