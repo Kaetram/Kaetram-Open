@@ -2,19 +2,21 @@ import _ from 'lodash-es';
 
 import Player from './player';
 import Skill from './skill/skill';
+import Accuracy from './skill/impl/accuracy';
+import Archery from './skill/impl/archery';
+import Health from './skill/impl/health';
 import Lumberjacking from './skill/impl/lumberjacking';
+import Magic from './skill/impl/magic';
+import Strength from './skill/impl/strength';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
-import Accuracy from './skill/impl/accuracy';
-import Archery from './skill/impl/archery';
-import Magic from './skill/impl/magic';
-import Strength from './skill/impl/strength';
 
 export default class Skills {
     private accuracy: Accuracy = new Accuracy();
     private archery: Archery = new Archery();
+    private health: Health = new Health();
     private lumberjacking: Lumberjacking = new Lumberjacking();
     private magic: Magic = new Magic();
     private strength: Strength = new Strength();
@@ -22,6 +24,7 @@ export default class Skills {
     private skills: Skill[] = [
         this.accuracy,
         this.archery,
+        this.health,
         this.lumberjacking,
         this.magic,
         this.strength
@@ -111,6 +114,15 @@ export default class Skills {
 
     private get(type: Modules.Skills): Skill | undefined {
         return _.find(this.skills, (skill: Skill) => skill.type === type);
+    }
+
+    /**
+     * Gets the combat skills of the player and returns an array.
+     * @returns An array of all the combat-related skills.
+     */
+
+    public getCombatSkills(): Skill[] {
+        return _.filter(this.skills, (skill: Skill) => skill.combat);
     }
 
     /**

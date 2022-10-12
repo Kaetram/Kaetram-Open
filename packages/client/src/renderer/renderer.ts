@@ -927,7 +927,7 @@ export default class Renderer {
 
                 if (entity.ability > -1)
                     this.drawText(
-                        `${Modules.EnchantmentNames[entity.ability]} [+${entity.abilityLevel}]`,
+                        `${Modules.Enchantment[entity.ability]} [+${entity.abilityLevel}]`,
                         x,
                         entity.y + 20,
                         true,
