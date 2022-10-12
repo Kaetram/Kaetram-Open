@@ -262,7 +262,7 @@ export default class Player extends Character {
     }
 
     /**
-     * Updates the experience of the skill.
+     * Updates the experience of the skill or create a new one first if it doesn't exist.
      * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
