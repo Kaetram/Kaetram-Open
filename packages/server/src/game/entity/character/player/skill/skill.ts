@@ -17,6 +17,8 @@ export default abstract class Skill {
     public name = '';
     public experience = 0;
 
+    public combat = false;
+
     private experienceCallback?: ExperienceCallback;
 
     public constructor(public type: Modules.Skills) {
