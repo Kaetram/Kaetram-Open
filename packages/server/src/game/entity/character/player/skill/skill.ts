@@ -1,7 +1,5 @@
 import Formulas from '../../../../../info/formulas';
 
-import log from '@kaetram/common/util/log';
-
 import { Modules } from '@kaetram/common/network';
 import { SkillData } from '@kaetram/common/types/skills';
 
@@ -15,6 +13,7 @@ type ExperienceCallback = (
 
 export default abstract class Skill {
     public name = '';
+    public level = 1;
     public experience = 0;
 
     public combat = false;
@@ -30,16 +29,7 @@ export default abstract class Skill {
      */
 
     public stop(): void {
-        log.debug(`[Skill] stop() uninitialized in ${this.type}`);
-    }
-
-    /**
-     * Converts the skill's experience to a level integer.
-     * @returns Level integer of the skill.
-     */
-
-    public getLevel(): number {
-        return Formulas.expToLevel(this.experience);
+        //
     }
 
     /**
@@ -62,19 +52,16 @@ export default abstract class Skill {
      */
 
     public addExperience(experience: number): void {
-        let level = this.getLevel();
+        let previousLevel = this.level;
 
         this.setExperience(this.experience + experience);
-
-        // Level after adding experience.
-        let currentLevel = this.getLevel();
 
         this.experienceCallback?.(
             this.type,
             this.name,
             experience,
-            currentLevel,
-            level !== currentLevel
+            this.level,
+            this.level !== previousLevel
         );
     }
 
@@ -84,6 +71,7 @@ export default abstract class Skill {
      */
 
     public setExperience(experience: number): void {
+        this.level = Formulas.expToLevel(experience);
         this.experience = experience;
     }
 
@@ -101,8 +89,9 @@ export default abstract class Skill {
         };
 
         if (includeLevel) {
-            data.level = this.getLevel();
+            data.level = this.level;
             data.percentage = this.getPercentage();
+            data.combat = this.combat;
         }
 
         return data;

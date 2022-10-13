@@ -167,21 +167,6 @@ export default {
     },
 
     /**
-     * The combat level is calculated using the cumulative level of the player's
-     * combat skills (accuracy, archery, magic, strength)
-     * @param player The player we are calculating the combat level for.
-     */
-
-    getCombatLevel(player: Player): number {
-        let level = 1,
-            skills = player.skills.getCombatSkills();
-
-        _.each(skills, (skill: Skill) => (level += skill.getLevel()));
-
-        return level;
-    },
-
-    /**
      * Formula used to calcualte maximum hitpoints.
      * @param level The level of the health skill generally.
      * @returns The maximum hitpoints number value.
