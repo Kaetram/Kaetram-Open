@@ -53,22 +53,22 @@ export default class Skills {
         });
 
         this.loadCallback?.();
+        this.sync();
     }
 
     /**
-     * After all the skills have been loaded the player's hitPoints and mana are
-     * updated to reflect the new max values. The level is also calculated using
-     * the combat skills.
+     * Synchronizes the player's health, mana, and level with the client and sends
+     * all the necessary packets.
      */
 
-    public loadSkillInfo(): void {
+    public sync(): void {
         let health = this.get(Modules.Skills.Health),
             magic = this.get(Modules.Skills.Magic);
 
         this.player.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(health.level));
         this.player.mana.setMaxMana(Formulas.getMaxMana(magic.level));
 
-        this.player.level = this.player.getCombatLevel();
+        this.player.level = this.getCombatLevel();
 
         this.player.send(
             new Experience(Opcodes.Experience.Sync, {
@@ -124,6 +124,9 @@ export default class Skills {
             // Update the player's max health if they have gained a level in health skill.
             if (type === Modules.Skills.Health)
                 this.player.setHitPoints(Formulas.getMaxHitPoints(level));
+
+            // Update the player's level if they have gained a level in a combat skill.
+            this.sync();
         }
 
         this.player.send(
@@ -163,6 +166,21 @@ export default class Skills {
 
     public getLumberjacking(): Lumberjacking {
         return this.lumberjacking;
+    }
+
+    /**
+     * Calculates the total combat level by adding up all the combat-related skill levels.
+     * @returns Number representing the total combat level.
+     */
+
+    public getCombatLevel(): number {
+        let level = 1,
+            skills = this.getCombatSkills();
+
+        // Faster than using lodash.
+        for (let i = 0; i < skills.length; i++) level += skills[i].level;
+
+        return level;
     }
 
     /**
