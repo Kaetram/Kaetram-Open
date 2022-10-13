@@ -21,20 +21,18 @@ export default class Skills {
     private magic: Magic = new Magic();
     private strength: Strength = new Strength();
 
-    private skills: Skill[] = [
-        this.accuracy,
-        this.archery,
-        this.health,
-        this.lumberjacking,
-        this.magic,
-        this.strength
-    ];
+    private skills: { [key: string]: Skill } = {
+        [Modules.Skills.Accuracy]: this.accuracy,
+        [Modules.Skills.Archery]: this.archery,
+        [Modules.Skills.Health]: this.health,
+        [Modules.Skills.Lumberjacking]: this.lumberjacking,
+        [Modules.Skills.Magic]: this.magic,
+        [Modules.Skills.Strength]: this.strength
+    };
 
     private loadCallback?: () => void;
 
-    public constructor(private player: Player) {
-        this.loadCallbacks();
-    }
+    public constructor(private player: Player) {}
 
     /**
      * Iterates through the data from the database and finds the
@@ -47,20 +45,12 @@ export default class Skills {
         _.each(data, (skillData: SkillData) => {
             let skill = this.get(skillData.type);
 
+            skill.onExperience(this.handleExperience.bind(this));
+
             if (skill) skill.setExperience(skillData.experience);
         });
 
         this.loadCallback?.();
-    }
-
-    /**
-     * Loads all the callbacks for skills. Currently this implies only
-     * the experience callback. We use this to determine packets to send
-     * to the player's client.
-     */
-
-    private loadCallbacks(): void {
-        this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
     }
 
     /**
@@ -92,7 +82,7 @@ export default class Skills {
         if (newLevel)
             this.player.popup(
                 'Skill level up!',
-                `Congratulations, your ${name} skill has reached level ${level}!`,
+                `Congratulations, your ${name} has reached level ${level}!`,
                 '#9933ff'
             );
 
@@ -107,13 +97,13 @@ export default class Skills {
     }
 
     /**
-     * Grabs a skill from our array of skills based on its type.
-     * @param type The skill type identifier to look for.
+     * Grabs a skill from our dictionary of skills based on its type.
+     * @param type The skill type identifier to get.
      * @returns The instance of the skill if found, otherwise undefined.
      */
 
-    private get(type: Modules.Skills): Skill | undefined {
-        return _.find(this.skills, (skill: Skill) => skill.type === type);
+    public get(type: Modules.Skills): Skill {
+        return this.skills[type];
     }
 
     /**

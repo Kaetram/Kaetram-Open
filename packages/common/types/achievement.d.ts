@@ -19,6 +19,7 @@ export interface RawAchievement {
     rewardItem?: string; // String of the item we are rewarding.
     rewardItemCount?: number; // How much of the item to reward.
 
+    rewardSkill?: string; // Skill we are rewarding experience in.
     rewardExperience?: number; // How much experience to reward.
 
     rewardAbility?: string; // Key of the ability that is being rewarded.
