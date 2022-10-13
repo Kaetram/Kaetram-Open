@@ -5,6 +5,7 @@ export interface SkillData {
     experience: number;
     level?: number;
     percentage?: number;
+    combat?: boolean;
 }
 
 export interface SerializedSkills {
