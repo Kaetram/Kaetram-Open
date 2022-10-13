@@ -23,11 +23,18 @@ export default class InfoController {
         amount: number,
         x: number,
         y: number,
-        isTarget = false
+        isTarget = false,
+        skill = -1,
+        randomize = false
     ): void {
+        if (randomize) {
+            x += Utils.randomInt(-16, 16);
+            y += Utils.randomInt(-10, 10);
+        }
+
         let id = Utils.createId(Date.now(), x, y);
 
-        this.addInfo(new Splat(id, type, amount, x, y, isTarget));
+        this.addInfo(new Splat(id, type, amount, x, y, isTarget, skill));
     }
 
     /**

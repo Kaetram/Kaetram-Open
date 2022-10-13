@@ -60,6 +60,7 @@ import {
     EffectPacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import util from '../utils/util';
 
 export default class Connection {
     /**
@@ -782,38 +783,21 @@ export default class Connection {
         let isPlayer = player.instance === this.game.player.instance;
 
         switch (opcode) {
-            case Opcodes.Experience.Combat: {
-                /**
-                 * We only receive level information about other entities.
-                 */
-                if (player.level !== info.level) {
-                    player.level = info.level!;
-                    this.info.create(Modules.Hits.LevelUp, 0, player.x, player.y);
-                }
-
-                /**
-                 * When we receive experience information about our own player
-                 * we update the experience bar and create an info.
-                 */
-
-                if (isPlayer) {
-                    this.game.player.setExperience(
-                        info.experience!,
-                        info.nextExperience!,
-                        info.prevExperience!
-                    );
-
-                    this.info.create(Modules.Hits.Experience, info.amount, player.x, player.y);
-                }
-
-                //this.menu.profile.update();
-
+            case Opcodes.Experience.Sync:
+                player.level = info.level!;
                 break;
-            }
 
             case Opcodes.Experience.Skill:
                 if (isPlayer)
-                    this.info.create(Modules.Hits.Profession, info.amount, player.x, player.y);
+                    this.info.create(
+                        Modules.Hits.Profession,
+                        info.amount!,
+                        player.x,
+                        player.y,
+                        false,
+                        info.skill,
+                        true
+                    );
 
                 break;
         }

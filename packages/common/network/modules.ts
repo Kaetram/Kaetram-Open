@@ -282,6 +282,43 @@ export let DamageColours = {
     }
 };
 
+export let SkillExpColours = {
+    [Skills.Lumberjacking]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Accuracy]: {
+        fill: 'rgb(6, 191, 188)',
+        stroke: 'rgb(2, 94, 93)'
+    },
+
+    [Skills.Archery]: {
+        fill: 'rgb(34, 214, 130)',
+        stroke: 'rgb(7, 184, 101)'
+    },
+
+    [Skills.Health]: {
+        fill: 'rgb(239, 90, 90)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Magic]: {
+        fill: 'rgb(37, 124, 210)',
+        stroke: 'rgb(12, 55, 208)'
+    },
+
+    [Skills.Mining]: {
+        fill: 'rgb(105, 106, 107)',
+        stroke: 'rgb(45, 45, 46)'
+    },
+
+    [Skills.Strength]: {
+        fill: 'rgb(232, 211, 185)',
+        stroke: 'rgb(189, 172, 151)'
+    }
+};
+
 export let NameColours = {
     [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
