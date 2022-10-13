@@ -876,21 +876,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Calculates the total combat level by adding up all the combat-related skill levels.
-     * @returns Number representing the total combat level.
-     */
-
-    public getCombatLevel(): number {
-        let level = 1,
-            skills = this.skills.getCombatSkills();
-
-        // Faster than using lodash.
-        for (let i = 0; i < skills.length; i++) level += skills[i].level;
-
-        return level;
-    }
-
-    /**
      * Calculates the total experience by adding up all the skills experience.
      * @returns Integer representing the total experience.
      */
@@ -1273,7 +1258,7 @@ export default class Player extends Character {
         data.key = this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
         data.rights = this.rights;
-        data.level = this.getCombatLevel();
+        data.level = this.skills.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
