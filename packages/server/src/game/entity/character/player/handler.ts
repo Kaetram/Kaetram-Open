@@ -500,6 +500,9 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        // Handle the experience upon killing a mob.
+        this.player.handleExperience((character as Mob).experience);
+
         /**
          * Special mobs (such as minibosses and bosses) have achievements
          * associated with them. Upon killing them, we complete the achievement.

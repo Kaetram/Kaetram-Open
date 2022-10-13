@@ -1,10 +1,7 @@
-import _ from 'lodash';
-
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Skill from '../game/entity/character/player/skill/skill';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 

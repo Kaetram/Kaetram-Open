@@ -5,6 +5,8 @@ import { Modules } from '@kaetram/common/network';
 
 export default class Weapon extends Equipment {
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public strength = 0; // Strength based weapon
+    public dexterity = 0; // Dexterity based weapon (increases accuracy).
 
     public constructor(key = '', count = -1, ability = -1, abilityLevel = -1) {
         super(Modules.Equipment.Weapon, key, count, ability, abilityLevel);
