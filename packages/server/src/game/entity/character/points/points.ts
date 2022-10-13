@@ -62,6 +62,8 @@ export default abstract class Points {
      */
 
     protected setMaxPoints(maxPoints: number): void {
+        if (this.points > maxPoints) this.points = maxPoints;
+
         this.maxPoints = maxPoints;
     }
 
