@@ -6,6 +6,7 @@ import NPC from '../../../npc/npc';
 
 import log from '@kaetram/common/util/log';
 
+import { Modules } from '@kaetram/common/network';
 import { PopupData } from '@kaetram/common/types/popup';
 import { RawAchievement, AchievementData } from '@kaetram/common/types/achievement';
 
@@ -17,9 +18,10 @@ import { RawAchievement, AchievementData } from '@kaetram/common/types/achieveme
  */
 
 type FinishCallback = (
+    skill: Modules.Skills,
+    experience?: number,
     item?: string,
     itemCount?: number,
-    experience?: number,
     ability?: string,
     abilityLevel?: number
 ) => void;
@@ -41,6 +43,7 @@ export default class Achievement {
     private itemCount = 1; // How much of the item for completion.
     private rewardItem = '';
     private rewardItemCount = 1;
+    private rewardSkill = -1;
     private rewardExperience = 0;
     private rewardAbility = '';
     private rewardAbilityLevel = 1;
@@ -66,6 +69,7 @@ export default class Achievement {
         this.itemCount = rawData.itemCount || 1;
         this.rewardItem = rawData.rewardItem || '';
         this.rewardItemCount = rawData.rewardItemCount || 1;
+        this.rewardSkill = this.getSkill(rawData.rewardSkill!);
         this.rewardExperience = rawData.rewardExperience || 0;
         this.rewardAbility = rawData.rewardAbility || '';
         this.rewardAbilityLevel = rawData.rewardAbilityLevel || 1;
@@ -177,9 +181,10 @@ export default class Achievement {
             // Achievement is finished!
             this.popupCallback?.(this.getFinishPopup());
             this.finishCallback?.(
+                this.rewardSkill,
+                this.rewardExperience,
                 this.rewardItem,
                 this.rewardItemCount,
-                this.rewardExperience,
                 this.rewardAbility,
                 this.rewardAbilityLevel
             );
@@ -242,6 +247,20 @@ export default class Achievement {
 
     private getName(): string {
         return this.isStarted() ? this.name : '????????';
+    }
+
+    /**
+     * Converts a string key into a Modules element that can be
+     * used in rewarding skills.
+     * @param key Raw key from the achievement JSON.
+     */
+
+    private getSkill(key: string): Modules.Skills {
+        if (!key) return -1;
+
+        key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+
+        return Modules.Skills[key as keyof typeof Modules.Skills] || -1;
     }
 
     /**
