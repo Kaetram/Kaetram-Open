@@ -85,7 +85,7 @@ export enum Notification {
 }
 
 export enum Experience {
-    Combat,
+    Sync,
     Skill
 }
 

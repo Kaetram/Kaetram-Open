@@ -208,11 +208,9 @@ export type HealCallback = (info: HealPacket) => void;
 
 export interface ExperiencePacket {
     instance: string;
-    amount: number;
+    amount?: number;
     level?: number;
-    experience?: number;
-    nextExperience?: number;
-    prevExperience?: number;
+    skill?: Modules.Skills;
 }
 
 export type ExperienceCallback = (opcode: Opcodes.Experience, info: ExperiencePacket) => void;
