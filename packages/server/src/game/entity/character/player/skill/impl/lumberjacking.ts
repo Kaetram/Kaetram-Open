@@ -44,7 +44,7 @@ export default class Lumberjacking extends Skill {
             return log.warning(`${player.username} attempted to cut tree with invalid tree data.`);
 
         // Level required for this tree is too high for the player.
-        if (treeInfo.levelRequirement > this.getLevel())
+        if (treeInfo.levelRequirement > this.level)
             return player.notify(LumberjackingEn.INVALID_LEVEL);
 
         // Unable to cut the tree if the player hasn't completed the required achievement.
@@ -132,7 +132,7 @@ export default class Lumberjacking extends Skill {
 
     private canCutTree(level: number, info: TreeInfo): boolean {
         // Subtract the product of the weapon's level and lumberjacking level from the tree's difficulty.
-        let probability = info.difficulty - level * this.getLevel();
+        let probability = info.difficulty - level * this.level;
 
         // Prevent probability from going too low.
         if (probability < 2) probability = 2;

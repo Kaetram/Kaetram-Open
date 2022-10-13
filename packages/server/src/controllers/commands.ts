@@ -11,7 +11,7 @@ import Region from '../game/map/region';
 import Entity from '../game/entity/entity';
 import Utils from '@kaetram/common/util/utils';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { Command, Pointer, Network, Notification } from '../network/packets';
 export default class Commands {
     private world;
@@ -300,7 +300,17 @@ export default class Commands {
 
             case 'addexp':
             case 'addexperience':
-                this.player.addExperience(parseInt(blocks.shift()!));
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || !x) return;
+
+                key = key.charAt(0).toUpperCase() + key.slice(1);
+
+                this.player.skills
+                    .get(Modules.Skills[key as keyof typeof Modules.Skills])
+                    ?.addExperience(x);
+
                 return;
 
             case 'attackrange':

@@ -57,6 +57,7 @@ import {
     Respawn,
     Effect
 } from '@kaetram/server/src/network/packets';
+import Skill from './skill/skill';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -904,35 +905,18 @@ export default class Player extends Character {
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
-    public getHit(target: Character): Hit | undefined {
-        let weapon = this.equipment.getWeapon(),
-            defaultDamage = Formulas.getDamage(this, target),
-            isSpecial = Utils.randomInt(0, 100) < 30 + weapon.abilityLevel * 3;
+    /**
+     * Calculates the total combat level by adding up all the combat-related skill levels.
+     * @returns Number representing the total combat level.
+     */
 
-        if (!isSpecial || !this.hasSpecialAttack())
-            return new Hit(Modules.Hits.Damage, defaultDamage);
+    public getCombatLevel(): number {
+        let level = 1,
+            skills = this.skills.getCombatSkills();
 
-        let multiplier: number, damage: number;
+        _.each(skills, (skill: Skill) => (level += skill.level));
 
-        switch (weapon.ability) {
-            case Modules.Enchantment.Critical:
-                /**
-                 * Still experimental, not sure how likely it is that you're
-                 * gonna do a critical strike. I just do not want it getting
-                 * out of hand, it's easier to buff than to nerf..
-                 */
-
-                multiplier = 1 + weapon.abilityLevel;
-                damage = defaultDamage * multiplier;
-
-                return new Hit(Modules.Hits.Critical, damage);
-
-            case Modules.Enchantment.Stun:
-                return new Hit(Modules.Hits.Stun, defaultDamage);
-
-            case Modules.Enchantment.Explosive:
-                return new Hit(Modules.Hits.Explosive, defaultDamage);
-        }
+        return level;
     }
 
     /**

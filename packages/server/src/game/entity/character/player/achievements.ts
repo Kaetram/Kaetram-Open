@@ -16,7 +16,7 @@ import {
     AchievementData,
     SerializedAchievement
 } from '@kaetram/common/types/achievement';
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import Item from '../../objects/item';
 
 export default class Achievements {
@@ -65,9 +65,10 @@ export default class Achievements {
      */
 
     private handleFinish(
+        skill: Modules.Skills,
+        experience?: number,
         itemKey?: string,
         itemCount?: number,
-        experience?: number,
         ability?: string,
         abilityLevel?: number
     ): void {
@@ -87,7 +88,7 @@ export default class Achievements {
         }
 
         // Add experience if it exists.
-        if (experience) this.player.addExperience(experience);
+        if (skill > -1 && experience) this.player.skills.get(skill)?.addExperience(experience);
 
         // Add ability if it exists.
         if (ability) this.player.abilities.add(ability, abilityLevel!);
