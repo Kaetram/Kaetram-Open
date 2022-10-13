@@ -16,17 +16,9 @@ export default class Header {
     private healthText: HTMLElement = document.querySelector('#health-bar-text')!; // Numerical value of the health bar.
     private manaText: HTMLElement = document.querySelector('#mana-bar-text')!;
 
-    private experience: HTMLElement = document.querySelector('#exp')!; // The green element within the exp bar.
-    private experienceBar: HTMLElement = document.querySelector('#exp-bar')!; // Used for determining width of exp bar.
-
-    // Stored and updated every time experience change occurs, we store it for use during resizing.
-    private prevExperience = 0;
-    private nextExperience = 0;
-
     public constructor(private player: Player) {
         this.player.onHitPoints(this.handleHitPoints.bind(this));
         this.player.onMana(this.handleMana.bind(this));
-        this.player.onExperience(this.handleExperience.bind(this));
         this.player.onPoison(this.handlePoison.bind(this));
     }
 
@@ -59,28 +51,6 @@ export default class Header {
     }
 
     /**
-     * Updates the experience bar whenever the player acquires experience.
-     * @param experience The current experience amount.
-     * @param prevExperience Experience amount the current level starts at.
-     * @param nextExperience The experience amount necessary for next level.
-     */
-
-    private handleExperience(
-        experience: number,
-        prevExperience: number,
-        nextExperience: number
-    ): void {
-        let percentage = (experience - prevExperience) / (nextExperience - prevExperience);
-
-        this.experience.style.width = `${Math.floor(
-            this.experienceBar.offsetWidth * percentage
-        ).toString()}px`;
-
-        this.prevExperience = prevExperience;
-        this.nextExperience = nextExperience;
-    }
-
-    /**
      * Updates the poison status by changing the colour of the health bar.
      * @param status The current status of the player's poison.
      */
@@ -98,7 +68,6 @@ export default class Header {
     public resize(): void {
         this.handleHitPoints(this.player.hitPoints, this.player.maxHitPoints);
         this.handleMana(this.player.mana, this.player.maxMana);
-        this.handleExperience(this.player.experience, this.prevExperience, this.nextExperience);
     }
 
     /**

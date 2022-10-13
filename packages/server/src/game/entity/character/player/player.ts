@@ -35,14 +35,12 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
-import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { Team } from '@kaetram/common/types/minigame.d';
 import {
     Music,
     Camera,
     Chat,
-    Experience,
     Heal,
     Movement,
     Notification,
@@ -189,7 +187,6 @@ export default class Player extends Character {
         this.y = data.y;
         this.name = data.username;
         this.rights = data.rights;
-        this.experience = data.experience;
         this.ban = data.ban;
         this.mute = data.mute;
         this.orientation = data.orientation;
@@ -200,20 +197,16 @@ export default class Player extends Character {
         this.setPoison(data.poison.type, data.poison.start);
         this.setLastWarp(data.lastWarp);
 
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
-        this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
-        this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
+        this.hitPoints.updateHitPoints([data.hitPoints, data.hitPoints]);
+        this.mana.updateMana([data.mana, data.mana]);
 
         // Being the loading process.
+        this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
         this.loadBank();
         this.loadQuests();
         this.loadAchievements();
-        this.loadSkills();
         this.loadStatistics();
         this.loadAbilities();
         this.intro();
@@ -898,6 +891,19 @@ export default class Player extends Character {
     }
 
     /**
+     * Calculates the total experience by adding up all the skills experience.
+     * @returns Integer representing the total experience.
+     */
+
+    public getTotalExperience(): number {
+        let total = 0;
+
+        this.skills.forEachSkill((skill: Skill) => (total += skill.experience));
+
+        return total;
+    }
+
+    /**
      * @returns Finds and returns a minigame based on the player's minigame.
      */
 
@@ -1267,7 +1273,7 @@ export default class Player extends Character {
         data.key = this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
         data.rights = this.rights;
-        data.level = this.level;
+        data.level = this.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
@@ -1278,11 +1284,7 @@ export default class Player extends Character {
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
 
-        if (withExperience) {
-            data.experience = this.experience;
-            data.prevExperience = this.prevExperience;
-            data.nextExperience = this.nextExperience;
-        }
+        if (withExperience) data.experience = this.getTotalExperience();
 
         if (withMana) {
             data.mana = this.mana.getMana();

@@ -159,6 +159,8 @@ export default class Incoming {
         this.player.updateEntities();
         this.player.updateEntityList();
 
+        this.player.skills.loadSkillInfo();
+
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
