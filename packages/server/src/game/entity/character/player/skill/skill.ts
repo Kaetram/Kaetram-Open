@@ -38,9 +38,11 @@ export default abstract class Skill {
 
     public getPercentage(): number {
         let prevExperience = Formulas.prevExp(this.experience),
-            nextExperience = Formulas.nextExp(this.experience);
+            nextExperience = Formulas.nextExp(this.experience),
+            percentage =
+                ((this.experience - prevExperience) / (nextExperience - prevExperience)) * 100;
 
-        return ((this.experience - prevExperience) / (nextExperience - prevExperience)) * 100;
+        return percentage < 0 ? 0 : percentage;
     }
 
     /**
