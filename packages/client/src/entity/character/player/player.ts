@@ -104,10 +104,6 @@ export default class Player extends Character {
         this.setMana(data.mana!, data.maxMana!);
 
         if (data.equipments) _.each(data.equipments, this.equip.bind(this));
-
-        // Only used when loading the main player.
-        if (!isNaN(data.experience!))
-            this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -245,6 +241,21 @@ export default class Player extends Character {
 
     public getWeapon(): Weapon {
         return this.equipments[Modules.Equipment.Weapon] as Weapon;
+    }
+
+    /**
+     * Adds up the experience from every skill and returns the total.
+     * @returns Integer value of the total experience.
+     */
+
+    public getTotalExperience(): number {
+        let total = 0;
+
+        _.each(this.skills, (skill: Skill) => {
+            total += skill.experience;
+        });
+
+        return total;
     }
 
     /**

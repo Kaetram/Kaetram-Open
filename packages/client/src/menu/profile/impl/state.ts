@@ -51,7 +51,7 @@ export default class State extends Menu {
         // Synchronize the player's general information
         this.name.textContent = player.name;
         this.level.textContent = `Level ${player.level}`;
-        this.experience.textContent = `${player.experience}`;
+        this.experience.textContent = `${player.getTotalExperience()}`;
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(player.getWeapon().key);

@@ -13,7 +13,7 @@ import Formulas from '../../../../info/formulas';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
+import { Experience, Skill as SkillPacket, Points } from '@kaetram/server/src/network/packets';
 
 export default class Skills {
     private accuracy: Accuracy = new Accuracy();
@@ -53,6 +53,39 @@ export default class Skills {
         });
 
         this.loadCallback?.();
+    }
+
+    /**
+     * After all the skills have been loaded the player's hitPoints and mana are
+     * updated to reflect the new max values. The level is also calculated using
+     * the combat skills.
+     */
+
+    public loadSkillInfo(): void {
+        let health = this.get(Modules.Skills.Health),
+            magic = this.get(Modules.Skills.Magic);
+
+        this.player.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(health.level));
+        this.player.mana.setMaxMana(Formulas.getMaxMana(magic.level));
+
+        this.player.level = this.player.getCombatLevel();
+
+        this.player.send(
+            new Experience(Opcodes.Experience.Sync, {
+                instance: this.player.instance,
+                level: this.player.level
+            })
+        );
+
+        this.player.send(
+            new Points({
+                instance: this.player.instance,
+                hitPoints: this.player.hitPoints.getHitPoints(),
+                maxHitPoints: this.player.hitPoints.getMaxHitPoints(),
+                mana: this.player.mana.getMana(),
+                maxMana: this.player.mana.getMaxMana()
+            })
+        );
     }
 
     /**
@@ -96,7 +129,8 @@ export default class Skills {
         this.player.send(
             new Experience(Opcodes.Experience.Skill, {
                 instance: this.player.instance,
-                amount: experience
+                amount: experience,
+                skill: type
             })
         );
 
@@ -153,7 +187,7 @@ export default class Skills {
      * @param callback Contains skill being iterated currently.
      */
 
-    private forEachSkill(callback: (skill: Skill) => void): void {
+    public forEachSkill(callback: (skill: Skill) => void): void {
         _.each(this.skills, callback);
     }
 
