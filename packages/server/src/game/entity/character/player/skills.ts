@@ -9,6 +9,8 @@ import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
 
+import Formulas from '../../../../info/formulas';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { Experience, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
@@ -79,12 +81,17 @@ export default class Skills {
         level: number,
         newLevel?: boolean
     ): void {
-        if (newLevel)
+        if (newLevel) {
             this.player.popup(
                 'Skill level up!',
                 `Congratulations, your ${name} has reached level ${level}!`,
                 '#9933ff'
             );
+
+            // Update the player's max health if they have gained a level in health skill.
+            if (type === Modules.Skills.Health)
+                this.player.setHitPoints(Formulas.getMaxHitPoints(level));
+        }
 
         this.player.send(
             new Experience(Opcodes.Experience.Skill, {
