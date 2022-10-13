@@ -1,6 +1,5 @@
 import Skills from './skills';
 import Quests from './quests';
-import Hit from '../combat/hit';
 import Handler from './handler';
 import NPC from '../../npc/npc';
 import Mana from '../points/mana';
@@ -339,68 +338,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Adds experience to the player and handles level ups/popups/packets/etc.
-     * @param exp The amount of experience we are adding to the player.
-     */
-
-    public addExperience(exp: number): void {
-        this.experience += exp;
-
-        // Prevent a null or excessive negative value from breaking the experience system.
-        if (this.experience < 0) this.experience = 0;
-        if (!this.experience) this.experience = 0;
-
-        let oldLevel = this.level;
-
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
-        let data = {
-            instance: this.instance,
-            level: this.level
-        } as ExperiencePacket;
-
-        // Update hit points and send a popup to the player when a level up occurs.
-        if (oldLevel !== this.level) {
-            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.heal(this.hitPoints.maxPoints, 'hitpoints');
-
-            this.updateRegion();
-
-            // Let the player know if they've unlocked a new warp.
-            if (this.world.warps.unlockedWarp(this.level))
-                this.popup(
-                    'Level Up!',
-                    `You have unlocked a new warp! You are now level ${this.level}!`,
-                    '#ff6600'
-                );
-            else
-                this.popup(
-                    'Level Up!',
-                    `Congratulations, you are now level ${this.level}!`,
-                    '#ff6600'
-                );
-        }
-
-        /**
-         * Sending two sets of data as other users do not need to
-         * know the experience of another player.. (yet).
-         */
-
-        this.sendToRegions(new Experience(Opcodes.Experience.Combat, data), true);
-
-        data.amount = exp;
-        data.experience = this.experience;
-        data.nextExperience = this.nextExperience;
-        data.prevExperience = this.prevExperience;
-
-        this.send(new Experience(Opcodes.Experience.Combat, data));
-
-        this.sync();
-    }
-
-    /**
      * Override of the heal superclass function. Heals by a specified amount, and givne the
      * type, we will heal only the hitpoints or the mana with a special effect associated. If no
      * type is specified, then it proceeds to heal both hitpoints and mana.
@@ -633,6 +570,46 @@ export default class Player extends Character {
         this.regionsLoaded = [];
 
         log.debug(`Reset user agent and regions loaded for ${this.username}.`);
+    }
+
+    /**
+     * Handles experience received from killing a mob. Here we check the type of
+     * damage the player was dealing, whether or not he was using magic, ranged, or
+     * melee, and what kind of melee weapon he was using. We then add the experience
+     * to the appropriate skill.
+     * @param experience The amount of experience we are adding.
+     */
+
+    public handleExperience(experience: number): void {
+        let weapon = this.equipment.getWeapon();
+
+        /**
+         * Health experience is a third of the total experience the mob rewards. This is
+         * because the player is being rewarded experience for the other skills. Health
+         * experience is always granted regardless of the damage type.
+         */
+
+        this.skills.get(Modules.Skills.Health).addExperience(Math.floor(experience / 3));
+
+        // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
+        experience = Math.ceil(experience - experience / 3);
+
+        // Ranged/archery based damage, we add remaining experience to the archery skill.
+        if (weapon.ranged) return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+
+        /**
+         * If the weapon is both a strength and dexterity weapon, then we evenly distribute
+         * the remaining experience to both the strength and dexterity skills. Otherwise
+         * we add the remaining experience to the skill that the weapon is based on. Default
+         * is accuracy if the weapon is not based on any skill.
+         */
+
+        if (weapon.strength > 0 && weapon.dexterity > 0) {
+            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(experience / 2));
+            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience / 2));
+        } else if (weapon.strength > 0)
+            this.skills.get(Modules.Skills.Strength).addExperience(experience);
+        else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
     }
 
     /**
@@ -914,7 +891,8 @@ export default class Player extends Character {
         let level = 1,
             skills = this.skills.getCombatSkills();
 
-        _.each(skills, (skill: Skill) => (level += skill.level));
+        // Faster than using lodash.
+        for (let i = 0; i < skills.length; i++) level += skills[i].level;
 
         return level;
     }
