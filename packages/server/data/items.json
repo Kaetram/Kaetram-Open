@@ -3,7 +3,7 @@
     "type": "weapon",
     "attackLevel": 2,
     "name": "Heavy Sword",
-    "requirement": 2
+    "level": 2
   },
 
   "axe": {
@@ -11,7 +11,7 @@
     "attackLevel": 3,
     "name": "Axe",
     "lumberjacking": 1,
-    "requirement": 1
+    "level": 1
   },
 
   "morningstar": {
@@ -543,7 +543,7 @@
     "type": "weaponarcher",
     "attackLevel": 1,
     "name": "Wooden Bow",
-    "requirement": 1
+    "level": 1
   },
 
   "plasticbow": {
@@ -1525,7 +1525,7 @@
     "type": "weapon",
     "attackLevel": 1,
     "name": "Sword",
-    "requirement": 1
+    "level": 1
   },
 
   "banana": {
@@ -1624,7 +1624,9 @@
     "type": "weapon",
     "attackLevel": 5,
     "name": "Rusted Axe",
-    "lumberjacking": 2
+    "lumberjacking": 2,
+    "level": 5,
+    "skill": "lumberjacking"
   },
 
   "fireaxe": {
