@@ -357,15 +357,17 @@ export default abstract class Quest {
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;
 
-            // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
-            if (stage.itemRequirement! && this.stage === i) {
-                // Verify that the player has the required items and return the dialogue for it.
-                if (player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!))
-                    return stage.hasItemText!;
-
-                // Skip to next stage iteration.
-                continue;
-            }
+            /**
+             * Checks if the current stage has an item requirement and verifies if the player
+             * has the required item in their inventory. This is to make the NPC use the `hasItemText`
+             * array of dialogue. If the player doesn't have the item, we use the `text` array.
+             */
+            if (
+                stage.itemRequirement! &&
+                this.stage === i &&
+                player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!)
+            )
+                return stage.hasItemText!;
 
             /**
              * If the stage we are currently on is not the same as the most
