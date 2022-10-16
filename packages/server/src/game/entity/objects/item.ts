@@ -1,5 +1,6 @@
 import Entity from '../entity';
 import Player from '../character/player/player';
+import Skills from '../character/player/skills';
 
 import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
@@ -29,8 +30,11 @@ export default class Item extends Entity {
     public price = 1;
     public storeCount = -1;
 
+    // Requirement for equipping the item.
+    public level = -1;
+    public skill = '';
+
     // Equipment variables
-    public requirement = -1;
     public attackLevel = 1;
     public defenseLevel = 1;
     public pendantLevel = 0;
@@ -87,7 +91,8 @@ export default class Item extends Entity {
         this.maxStackSize = this.data.maxStackSize || this.maxStackSize;
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
-        this.requirement = this.data.requirement || this.requirement;
+        this.level = this.data.level || this.level;
+        this.skill = this.data.skill || this.skill;
         this.attackLevel = this.data.attackLevel || this.attackLevel;
         this.defenseLevel = this.data.defenseLevel || this.defenseLevel;
         this.pendantLevel = this.data.pendantLevel || this.pendantLevel;
@@ -190,8 +195,28 @@ export default class Item extends Entity {
     public canEquip(player: Player): boolean {
         let requirement = this.getRequirement();
 
+        /**
+         * If the item has a skill requirement we check the existence
+         * of that skill and compare the level against the requirement.
+         */
+
+        if (this.skill) {
+            let skill = player.skills.get(Utils.getSkill(this.skill));
+
+            // Separate conditional if skill exists.
+            if (skill)
+                if (skill.level < requirement) {
+                    // If the player's skill level is less than the requirement.
+                    player.notify(
+                        `Your ${skill.name} level must be at least ${requirement} to equip this item.`
+                    );
+                    return false;
+                } else return true; // If the player's skill fulfills the requirement.
+        }
+
+        // Default to using the total level for the requirement.
         if (player.level < requirement) {
-            player.notify(`You need to be level ${requirement} to equip this.`);
+            player.notify(`Your total level must be at least ${requirement} to equip this item.`);
             return false;
         }
 
@@ -204,10 +229,10 @@ export default class Item extends Entity {
      */
 
     public getRequirement(): number {
-        if (this.requirement !== -1) return this.requirement;
+        if (this.level !== -1) return this.level;
 
-        if (this.isWeapon()) return Math.floor(this.attackLevel * 1.5);
-        if (this.isArmour()) return Math.floor(this.defenseLevel * 1.5);
+        if (this.isWeapon()) return Math.floor(this.attackLevel * 3);
+        if (this.isArmour()) return Math.floor(this.defenseLevel * 3);
 
         return 0;
     }
