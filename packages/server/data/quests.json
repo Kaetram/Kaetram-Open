@@ -299,7 +299,12 @@
         ],
         "completedText": [
           "Farewell adventurer, this may be the last time we meet."
-        ]
+        ],
+        "popup": {
+          "title": "Quest completed!",
+          "text": "@green@You have just finished @crimson@Desert Quest@green@. You have gained nothing out of that!",
+          "colour": "#33cc33"
+        }
       }
     }
   },

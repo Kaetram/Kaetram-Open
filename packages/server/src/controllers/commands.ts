@@ -393,6 +393,18 @@ export default class Commands {
 
                 break;
 
+            case 'resetquests':
+                this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
+                break;
+
+            case 'resetquest':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No quest specified.');
+
+                this.player.quests.get(key)?.setStage(0);
+                break;
+
             case 'resetachievements':
                 this.player.achievements.forEachAchievement((achievement) =>
                     achievement.setStage(0)
