@@ -270,6 +270,9 @@
         "task": "talk",
         "npc": "villagegirl",
         "text": [
+          "Hello? Why are you in my house..?"
+        ],
+        "hasItemText": [
           "Who are you and why are you in my house?",
           "Is it about my husband?",
           "Oh my god I knew it, that bastard is cheating on me!",
@@ -278,7 +281,8 @@
           "He wanted me to have this CD?",
           "That bastard is still trying to sell his",
           "demo tape even on his death bed.",
-          "Tell him I'll take it but will probably never listen to it."],
+          "Tell him I'll take it but will probably never listen to it."
+        ],
         "completedText": [
           "Go on now, tell him."
         ],
