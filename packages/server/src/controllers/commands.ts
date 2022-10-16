@@ -13,6 +13,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Command, Pointer, Network, Notification } from '../network/packets';
+import Skill from '../game/entity/character/player/skill/skill';
 export default class Commands {
     private world;
     private entities;
@@ -312,6 +313,22 @@ export default class Commands {
                     ?.addExperience(x);
 
                 return;
+
+            case 'resetskills':
+                // Skills aren't meant to go backwards so you gotta sync and stuff lmao.
+                this.player.skills.forEachSkill((skill: Skill) => {
+                    skill.setExperience(0);
+                    skill.addExperience(0);
+                });
+                this.player.skills.sync();
+                break;
+
+            case 'max':
+                this.player.skills.forEachSkill((skill: Skill) => {
+                    skill.setExperience(0);
+                    skill.addExperience(669_420_769);
+                });
+                break;
 
             case 'attackrange':
                 log.info(this.player.attackRange);
