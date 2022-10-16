@@ -103,6 +103,8 @@ export default abstract class Quest {
         // Extract the dialogue for the NPC.
         let dialogue = this.getNPCDialogue(npc, player);
 
+        if (!dialogue) return log.warning(`[${this.name}] No dialogue found for NPC: ${npc.key}.`);
+
         /**
          * Ends the conversation. If the player has the required item in the inventory
          * it will check for that first. If the stage requires the player be given an item
@@ -357,17 +359,15 @@ export default abstract class Quest {
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;
 
-            /**
-             * Checks if the current stage has an item requirement and verifies if the player
-             * has the required item in their inventory. This is to make the NPC use the `hasItemText`
-             * array of dialogue. If the player doesn't have the item, we use the `text` array.
-             */
-            if (
-                stage.itemRequirement! &&
-                this.stage === i &&
-                player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!)
-            )
-                return stage.hasItemText!;
+            // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
+            if (stage.itemRequirement! && this.stage === i) {
+                // Verify that the player has the required items and return the dialogue for it.
+                if (player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!))
+                    return stage.hasItemText!;
+
+                // Skip to next stage iteration.
+                continue;
+            }
 
             /**
              * If the stage we are currently on is not the same as the most
@@ -378,6 +378,9 @@ export default abstract class Quest {
 
             return stage.text!;
         }
+
+        // The default text witll be the `text` array of strings.
+        if (this.stageData.npc === npc.key) return this.stageData.text!;
 
         return [''];
     }
