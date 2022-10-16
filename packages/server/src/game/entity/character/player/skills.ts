@@ -44,13 +44,15 @@ export default class Skills {
      */
 
     public load(data: SkillData[]): void {
+        // Load each skill from the database (empty if new player).
         _.each(data, (skillData: SkillData) => {
             let skill = this.get(skillData.type);
 
-            skill.onExperience(this.handleExperience.bind(this));
-
             if (skill) skill.setExperience(skillData.experience);
         });
+
+        // Create a callback that links to `handleExperience` for every skill.
+        this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
 
         this.loadCallback?.();
         this.sync();
