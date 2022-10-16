@@ -528,7 +528,7 @@ export default class Connection {
     private handlePoints(info: PointsPacket): void {
         let character = this.entities.get<Player>(info.instance);
 
-        if (!character) return;
+        if (!character || character.dead) return;
 
         if (info.mana) character.setMana(info.mana, info.maxMana);
 
@@ -811,13 +811,20 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        // Remove the minigame interfaces.
         this.game.minigame.reset();
 
+        // Stops the player from performing actions.
         this.game.player.teleporting = true;
 
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
 
+        // Set health and mana to 0
+        this.game.player.setHitPoints(0);
+        this.game.player.setMana(0);
+
+        // Stop the music playing.
         this.audio.stopMusic();
 
         // Perform the death animation.

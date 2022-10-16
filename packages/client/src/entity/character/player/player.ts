@@ -49,11 +49,11 @@ export default class Player extends Character {
 
     public moving = false;
 
-    public override hitPoints = -1;
-    public override maxHitPoints = -1;
+    public override hitPoints = 0;
+    public override maxHitPoints = 0;
 
-    public override mana = -1;
-    public override maxMana = -1;
+    public override mana = 0;
+    public override maxMana = 0;
 
     // Mapping of all equipments to their type.
     public equipments = {
