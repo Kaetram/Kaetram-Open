@@ -1105,6 +1105,9 @@ export default class Player extends Character {
         // Update attack range each-time we sync.
         this.attackRange = this.isRanged() ? 7 : 1;
 
+        // Synchronize health, mana and experience with the player.
+        this.skills.sync();
+
         // Sync the player information to the surrounding regions.
         this.sendToRegions(new Sync(this.serialize(true)), true);
     }
