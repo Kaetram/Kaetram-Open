@@ -15,7 +15,8 @@ export interface ItemData {
     plugin?: string;
     price?: number;
     storeCount?: number;
-    requirement?: number; // enhance this at some point
+    skill?: string; // Skill requirement for the item.
+    level?: number; // Requirement level for the item.
     attackLevel?: number;
     defenseLevel?: number;
     pendantLevel?: number;

@@ -5,6 +5,7 @@ import Mob from '../../mob/mob';
 import NPC from '../../../npc/npc';
 
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
 import { PopupData } from '@kaetram/common/types/popup';
@@ -69,7 +70,7 @@ export default class Achievement {
         this.itemCount = rawData.itemCount || 1;
         this.rewardItem = rawData.rewardItem || '';
         this.rewardItemCount = rawData.rewardItemCount || 1;
-        this.rewardSkill = this.getSkill(rawData.rewardSkill!);
+        this.rewardSkill = Utils.getSkill(rawData.rewardSkill!);
         this.rewardExperience = rawData.rewardExperience || 0;
         this.rewardAbility = rawData.rewardAbility || '';
         this.rewardAbilityLevel = rawData.rewardAbilityLevel || 1;
@@ -247,20 +248,6 @@ export default class Achievement {
 
     private getName(): string {
         return this.isStarted() ? this.name : '????????';
-    }
-
-    /**
-     * Converts a string key into a Modules element that can be
-     * used in rewarding skills.
-     * @param key Raw key from the achievement JSON.
-     */
-
-    private getSkill(key: string): Modules.Skills {
-        if (!key) return -1;
-
-        key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-
-        return Modules.Skills[key as keyof typeof Modules.Skills] || -1;
     }
 
     /**

@@ -9,7 +9,7 @@ import zlib from 'zlib';
 import log from './log';
 import config from '../config';
 
-import { Packets } from '../network';
+import { Modules, Packets } from '../network';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
@@ -234,5 +234,21 @@ export default {
 
     getUrl(host: string, port: number, path: string, ssl = false): string {
         return config.ssl && !ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
+    },
+
+    /**
+     * Converts a string key into a Modules element that can be
+     * used in rewarding skills.
+     * @param key Raw key from the achievement JSON.
+     */
+
+    getSkill(key: string): Modules.Skills {
+        if (!key) return -1;
+
+        key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+
+        let skill = Modules.Skills[key as keyof typeof Modules.Skills];
+
+        return skill !== undefined ? skill : -1;
     }
 };
