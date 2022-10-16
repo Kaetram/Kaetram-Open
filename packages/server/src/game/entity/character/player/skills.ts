@@ -169,7 +169,8 @@ export default class Skills {
     }
 
     /**
-     * Calculates the total combat level by adding up all the combat-related skill levels.
+     * Calculates the total combat level by adding up all the combat-related skill levels. We subtract 1 from
+     * each skill in order to keep the combat level at 1 when the player has 1 in all combat skills.
      * @returns Number representing the total combat level.
      */
 
@@ -178,7 +179,7 @@ export default class Skills {
             skills = this.getCombatSkills();
 
         // Faster than using lodash.
-        for (let i = 0; i < skills.length; i++) level += skills[i].level;
+        for (let i = 0; i < skills.length; i++) level += skills[i].level - 1;
 
         return level;
     }
