@@ -41,6 +41,18 @@ export default class Item extends Entity {
     public ringLevel = 0;
     public bootsLevel = 0;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public poisonous = false;
+
+    // Stats
+    public crush = 0;
+    public slash = 0;
+    public stab = 0;
+    public magic = 0;
+
+    // Bonuses
+    public dexterity = 0;
+    public strength = 0;
+    public archery = 0;
 
     // Miscellaneous variables
     public movementSpeed = -1;
