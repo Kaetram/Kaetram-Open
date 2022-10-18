@@ -1,0 +1,25 @@
+@use '../../abstracts/media';
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #equipments {
+            cursor: url('/img/3/hand.png'), auto;
+
+            position: absolute;
+            top: 25%;
+            left: 23%;
+
+            display: none;
+
+            width: 345px * $i;
+            height: 157px * $i;
+
+            background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
+        }
+    }
+}
+
+#close-equipments {
+    top: -2%;
+    left: 96%;   
+}
