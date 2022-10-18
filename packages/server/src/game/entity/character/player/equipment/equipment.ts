@@ -9,8 +9,25 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import Item from '../../../objects/item';
 
 export default class Equipment {
-    private updateCallback?: (equipment: Equipment) => void;
+    // Properties
     public name = '';
+
+    public ranged = false;
+    public lumberjacking = -1;
+    public poisonous = false;
+
+    // Stats
+    public crush = 0;
+    public slash = 0;
+    public stab = 0;
+    public magic = 0;
+
+    // Bonuses
+    public dexterity = 0;
+    public strength = 0;
+    public archery = 0;
+
+    private updateCallback?: (equipment: Equipment) => void;
 
     // Basic initialization
     public constructor(
@@ -18,12 +35,7 @@ export default class Equipment {
         public key = '',
         public count = 1,
         public ability = -1,
-        public abilityLevel = -1,
-        public power = 1,
-        public ranged = false, // Applies to weapons specifically
-        public amplifier = 1,
-        public lumberjacking = -1,
-        public poisonous = false
+        public abilityLevel = -1
     ) {}
 
     /**
@@ -37,7 +49,18 @@ export default class Equipment {
         this.count = count;
         this.ability = item.ability;
         this.abilityLevel = item.abilityLevel;
+
         this.lumberjacking = item.lumberjacking;
+        this.poisonous = item.poisonous;
+
+        this.crush = item.crush;
+        this.slash = item.slash;
+        this.stab = item.stab;
+        this.magic = item.magic;
+
+        this.dexterity = item.dexterity;
+        this.strength = item.strength;
+        this.archery = item.archery;
 
         this.updateCallback?.(this);
     }
@@ -48,15 +71,25 @@ export default class Equipment {
 
     public empty(): void {
         this.key = '';
+
         this.count = 1;
         this.ability = -1;
         this.abilityLevel = -1;
+
+        this.name = '';
+
         this.ranged = false;
-        this.power = 0;
-        this.amplifier = 1;
         this.lumberjacking = -1;
         this.poisonous = false;
-        this.name = '';
+
+        this.crush = 0;
+        this.slash = 0;
+        this.stab = 0;
+        this.magic = 0;
+
+        this.dexterity = 0;
+        this.strength = 0;
+        this.archery = 0;
     }
 
     /**
@@ -79,36 +112,39 @@ export default class Equipment {
     }
 
     /**
-     * Returns the amplifier bonus used to calculate
-     * extra damage. Generally associated with pendants,
-     * rings, and boots.
-     * @returns Integer value of the amplifier.
+     * Serializes the equipment information into a JSON object that may either be
+     * saved in the database or sent to the client depending on the context.
+     * @param clientInfo Whether or not to include data that is only relevant to the client.
+     * @returns The serialized equipment data.
      */
 
-    public getAmplifier(): number {
-        return this.amplifier;
-    }
-
-    /**
-     * Serializes the information about the equipment and returns it in the format
-     * of the SEquipemnt interface object.
-     * @returns An SEquipment object containing the id, count, ability, and abilityLevel
-     */
-
-    public serialize(): EquipmentData {
-        let { type, key, name, count, ability, abilityLevel, power, ranged, poisonous } = this;
-
-        return {
-            type,
-            key,
-            name,
-            count,
-            ability,
-            abilityLevel,
-            power,
-            ranged,
-            poisonous
+    public serialize(clientInfo = false): EquipmentData {
+        let data: EquipmentData = {
+            type: this.type,
+            key: this.key,
+            count: this.count,
+            ability: this.ability,
+            abilityLevel: this.abilityLevel
         };
+
+        // Includes information only relevant to the client.
+        if (clientInfo) {
+            data.name = this.name;
+            data.ranged = this.ranged;
+            data.poisonous = this.poisonous;
+
+            data.stats = {
+                crush: this.crush,
+                slash: this.slash,
+                stab: this.stab,
+                magic: this.magic,
+                dexterity: this.dexterity,
+                strength: this.strength,
+                archery: this.archery
+            };
+        }
+
+        return data;
     }
 
     // Callback for when the currently equipped item is updated.

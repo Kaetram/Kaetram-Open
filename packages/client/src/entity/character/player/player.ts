@@ -169,11 +169,11 @@ export default class Player extends Character {
      */
 
     public equip(equipment: EquipmentData): void {
-        let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
+        let { type, name, key, count, ability, abilityLevel, ranged, stats } = equipment;
 
         if (!key) return this.unequip(type);
 
-        this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
+        this.equipments[type].update(key, name, count, ability, abilityLevel, ranged, stats!);
     }
 
     /**
