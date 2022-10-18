@@ -13,17 +13,18 @@ export default class State extends Menu {
     private experience: HTMLElement = document.querySelector('#profile-experience')!;
 
     // Equipment information
-    private weapon: HTMLElement = document.querySelector('#weapon-slot')!;
-    private armour: HTMLElement = document.querySelector('#armour-slot')!;
-
-    private pendant: HTMLElement = document.querySelector('#pendant-slot')!;
-    private ring: HTMLElement = document.querySelector('#ring-slot')!;
-    private boots: HTMLElement = document.querySelector('#boots-slot')!;
+    private weapon: HTMLElement = document.querySelector('#state-page > .weapon-slot')!;
+    private armour: HTMLElement = document.querySelector('#state-page > .armour-slot')!;
+    private pendant: HTMLElement = document.querySelector('#state-page > .pendant-slot')!;
+    private ring: HTMLElement = document.querySelector('#state-page > .ring-slot')!;
+    private boots: HTMLElement = document.querySelector('#state-page > .boots-slot')!;
 
     private selectCallback?: SelectCallback;
 
     public constructor() {
         super('#state-page');
+
+        console.log(this.weapon);
 
         this.weapon.addEventListener('click', () =>
             this.selectCallback?.(Modules.Equipment.Weapon)
@@ -50,6 +51,8 @@ export default class State extends Menu {
         this.name.textContent = player.name;
         this.level.textContent = `Level ${player.level}`;
         this.experience.textContent = `${player.getTotalExperience()}`;
+
+        console.log(player.getWeapon());
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(player.getWeapon().key);
