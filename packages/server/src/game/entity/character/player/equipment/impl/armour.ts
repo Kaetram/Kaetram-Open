@@ -13,7 +13,5 @@ export default class Armour extends Equipment {
 
     public override update(item: Item): void {
         super.update(item);
-
-        this.power = item.defenseLevel;
     }
 }

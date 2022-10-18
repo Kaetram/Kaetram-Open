@@ -1288,7 +1288,7 @@ export default class Player extends Character {
      */
 
     public override getWeaponLevel(): number {
-        return this.equipment.getWeapon().power;
+        return 1;
     }
 
     /**
@@ -1297,7 +1297,7 @@ export default class Player extends Character {
      */
 
     public override getArmourLevel(): number {
-        return this.equipment.getArmour().power;
+        return 1;
     }
 
     /**
