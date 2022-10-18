@@ -14,6 +14,7 @@ import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
 import QuickSlots from '../menu/quickslots';
+import Equipments from '../menu/equipments';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -28,6 +29,7 @@ export default class MenuController {
     private warp: Warp;
     private notification: Notification;
     private settings: Settings;
+    private equipments: Equipments;
     public header: Header;
 
     public menu: Menu[];
@@ -42,6 +44,7 @@ export default class MenuController {
         this.notification = new Notification();
         this.settings = new Settings(game);
         this.header = new Header(game.player);
+        this.equipments = new Equipments(game.player);
 
         this.menu = [
             this.inventory,
@@ -51,7 +54,8 @@ export default class MenuController {
             this.enchant,
             this.warp,
             this.notification,
-            this.settings
+            this.settings,
+            this.equipments
         ];
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
