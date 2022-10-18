@@ -187,13 +187,16 @@ export default class Equipments {
     /**
      * Goes through each one of our equipments and serializes it. It extracts
      * cruical information, such as the id, count, ability, and abilityLevel.
+     * @param clientInfo Whether or not we are sending this information to the client.
      * @returns A serialized version of the equipment information.
      */
 
-    public serialize(): SerializedEquipment {
+    public serialize(clientInfo = false): SerializedEquipment {
         let equipments: EquipmentData[] = [];
 
-        this.forEachEquipment((equipment: Equipment) => equipments.push(equipment.serialize()));
+        this.forEachEquipment((equipment: Equipment) =>
+            equipments.push(equipment.serialize(clientInfo))
+        );
 
         // Store in an object so that it gets saved into Database faster.
         return { equipments };

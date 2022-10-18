@@ -1,11 +1,22 @@
+import { EquipmentStats } from '@kaetram/common/types/equipment';
+
 export default abstract class Equipment {
+    public stats: EquipmentStats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0,
+        dexterity: 0,
+        strength: 0,
+        archery: 0
+    };
+
     public constructor(
         public key = '',
         public name = '',
         public count = 0,
         public ability = -1,
         public abilityLevel = -1,
-        public power = 0,
         public ranged = false
     ) {}
 
@@ -17,7 +28,8 @@ export default abstract class Equipment {
      * @param count The amount of items in the equipment (if it is stackable).
      * @param ability The ability that the item gives.
      * @param abilityLevel The level of the ability.
-     * @param power The power of the item (generally used as a power indicator in the UI).
+     * @param ranged Whether or not the item is ranged.
+     * @param stats The stats of the item.
      */
 
     public update(
@@ -26,16 +38,17 @@ export default abstract class Equipment {
         count = 0,
         ability = -1,
         abilityLevel = -1,
-        power = 0,
-        ranged = false
+        ranged = false,
+        stats?: EquipmentStats
     ): void {
         this.key = key;
         this.name = name;
         this.count = count;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
-        this.power = power;
         this.ranged = ranged;
+
+        if (stats) this.stats = stats;
     }
 
     /**
