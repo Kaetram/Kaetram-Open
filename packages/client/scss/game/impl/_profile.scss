@@ -99,7 +99,7 @@
 
 @each $size, $i in media.$sizes {
     @media ($size) {
-        #state-page {
+        #state-page, .state-page {
             display: block;
 
             background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
@@ -167,7 +167,7 @@
             text-shadow: 1px 1px #808080;
         }
 
-        #equipment-info-button {
+        #equipment-button {
             position: absolute;
             top: 55%;
             right: 51px * $i;
@@ -178,45 +178,45 @@
             background: url('/img/#{$i}/characterdialogsheet.png') 0 -257px * $i;
         }
 
-        #equipment-info-button:hover {
+        #equipment-button:hover {
             background: url('/img/#{$i}/characterdialogsheet.png') -42px * $i -257px * $i;
         }
 
-        #equipment-info-button:active, #equipment-info-button.active {
+        #equipment-button:active, #equipment-button.active {
             background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
         }
 
-        #weapon-slot,
-        #armour-slot,
-        #pendant-slot,
-        #ring-slot,
-        #boots-slot {
+        .weapon-slot,
+        .armour-slot,
+        .pendant-slot,
+        .ring-slot,
+        .boots-slot {
             margin-top: -2px * $i;
 
             background-size: 600%;
         }
 
-        #weapon-slot {
+        .weapon-slot {
             top: 120px * $i;
             left: 4px * $i;
         }
 
-        #armour-slot {
+        .armour-slot {
             top: 119px * $i;
             left: 104px * $i;
         }
 
-        #pendant-slot {
+        .pendant-slot {
             top: 78px * $i;
             left: 54px * $i;
         }
 
-        #ring-slot {
+        .ring-slot {
             top: 172px * $i;
             left: 27px * $i;
         }
 
-        #boots-slot {
+        .boots-slot {
             top: 173px * $i;
             left: 82px * $i;
         }
