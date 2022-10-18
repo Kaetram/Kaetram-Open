@@ -167,17 +167,23 @@
             text-shadow: 1px 1px #808080;
         }
 
-        #weapon-slot-info {
-            top: 123px * $i;
-            left: 22px * $i;
+        #equipment-info-button {
+            position: absolute;
+            top: 55%;
+            right: 51px * $i;
+        
+            width: 21px * $i;
+            height: 17px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 -257px * $i;
         }
 
-        #armour-slot-info {
-            top: 123px * $i;
+        #equipment-info-button:hover {
+            background: url('/img/#{$i}/characterdialogsheet.png') -42px * $i -257px * $i;
+        }
 
-            width: 102px * $i;
-
-            text-align: right;
+        #equipment-info-button:active, #equipment-info-button.active {
+            background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
         }
 
         #weapon-slot,
