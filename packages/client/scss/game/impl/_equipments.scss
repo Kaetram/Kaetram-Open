@@ -16,6 +16,24 @@
 
             background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
         }
+
+        #equipment-slots {
+            top: 15px * $i;
+            left: 55px * $i;
+
+            overflow: hidden;
+
+            width: 120px * $i;
+            height: 132px * $i;
+
+            background-position: -2px * $i -70px * $i;
+        }
+
+        #equipment-slot-container {
+            position: absolute;
+            top: -68px * $i;
+            left: -2px * $i;
+        }
     }
 }
 
