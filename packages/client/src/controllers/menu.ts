@@ -44,7 +44,7 @@ export default class MenuController {
         this.notification = new Notification();
         this.settings = new Settings(game);
         this.header = new Header(game.player);
-        this.equipments = new Equipments(game.player);
+        this.equipments = new Equipments(game.player, game.sprites);
 
         this.menu = [
             this.inventory,
