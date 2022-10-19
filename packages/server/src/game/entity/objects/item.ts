@@ -1,6 +1,5 @@
 import Entity from '../entity';
 import Player from '../character/player/player';
-import Skills from '../character/player/skills';
 
 import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
@@ -8,7 +7,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
-import { ItemData } from '@kaetram/common/types/item';
+import { Bonuses, ItemData, Stats } from '@kaetram/common/types/item';
 import { EntityData } from '@kaetram/common/types/entity';
 import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
 
@@ -44,15 +43,26 @@ export default class Item extends Entity {
     public poisonous = false;
 
     // Stats
-    public crush = 0;
-    public slash = 0;
-    public stab = 0;
-    public magic = 0;
+    public attackStats: Stats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0
+    };
+
+    public defenseStats: Stats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0
+    };
 
     // Bonuses
-    public dexterity = 0;
-    public strength = 0;
-    public archery = 0;
+    public bonuses: Bonuses = {
+        dexterity: 0,
+        strength: 0,
+        archery: 0
+    };
 
     // Miscellaneous variables
     public movementSpeed = -1;
@@ -105,11 +115,9 @@ export default class Item extends Entity {
         this.storeCount = this.data.storeCount || this.storeCount;
         this.level = this.data.level || this.level;
         this.skill = this.data.skill || this.skill;
-        this.attackLevel = this.data.attackLevel || this.attackLevel;
-        this.defenseLevel = this.data.defenseLevel || this.defenseLevel;
-        this.pendantLevel = this.data.pendantLevel || this.pendantLevel;
-        this.ringLevel = this.data.ringLevel || this.ringLevel;
-        this.bootsLevel = this.data.bootsLevel || this.bootsLevel;
+        this.attackStats = this.data.attackStats || this.attackStats;
+        this.defenseStats = this.data.defenseStats || this.defenseStats;
+        this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;

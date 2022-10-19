@@ -1,14 +1,23 @@
 {
   "sword2": {
     "type": "weapon",
-    "attackLevel": 2,
     "name": "Heavy Sword",
-    "level": 2
+    "level": 2,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "dexterity": 2,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "axe": {
     "type": "weapon",
-    "attackLevel": 3,
     "name": "Axe",
     "lumberjacking": 1,
     "level": 1
@@ -16,1139 +25,1018 @@
 
   "morningstar": {
     "type": "weapon",
-    "attackLevel": 4,
     "name": "Morning Star"
   },
 
   "bluesword": {
     "type": "weapon",
-    "attackLevel": 5,
     "name": "Water Sword"
   },
  
   "redsword": {
     "type": "weapon",
-    "attackLevel": 6,
     "name": "Fire Sword"
   },
 
   "goldensword": {
     "type": "weapon",
-    "attackLevel": 7,
     "name": "Golden Sword"
   },
 
   "sidesword": {
     "type": "weapon",
-    "attackLevel": 8,
     "name": "Side Sword"
   },
 
   "spear": {
     "type": "weapon",
-    "attackLevel": 9,
-    "name": "Silly Spear"
+    "name": "Silly Spear",
+    "attackStats": {
+      "crush": 0,
+      "slash": 12,
+      "stab": 20,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "dexterity": 8,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "scimitar": {
     "type": "weapon",
-    "attackLevel": 11,
     "name": "Pirate's Scimitar"
   },
 
   "trident": {
     "type": "weapon",
-    "attackLevel": 11,
     "name": "Trident Of The Seas"
   },
 
   "bluescimitar": {
     "type": "weapon",
-    "attackLevel": 12,
     "name": "Blue Scimitar"
   },
 
   "hammer": {
     "type": "weapon",
-    "attackLevel": 13,
     "name": "Hammer"
   },
 
   "greenlightsaber": {
     "type": "weapon",
-    "attackLevel": 14,
     "name": "Green Light Saber"
   },
 
   "skylightsaber": {
     "type": "weapon",
-    "attackLevel": 15,
     "name": "Sky Light Saber"
   },
 
   "redlightsaber": {
     "type": "weapon",
-    "attackLevel": 16,
     "name": "Red Light Saber"
   },
 
   "bastardsword": {
     "type": "weapon",
-    "attackLevel": 17,
     "name": "Heavy Sword"
   },
 
   "redmetalsword": {
     "type": "weapon",
-    "attackLevel": 18,
     "name": "Red Metal Sword"
   },
 
   "justicehammer": {
     "type": "weapon",
-    "attackLevel": 19,
     "name": "Justice Hammer"
   },
 
   "rose": {
     "type": "weapon",
-    "attackLevel": 20,
     "name": "Rose"
   },
 
   "icerose": {
     "type": "weapon",
-    "attackLevel": 21,
     "name": "Ice Rose"
   },
 
   "halberd": {
     "type": "weapon",
-    "attackLevel": 22,
     "name": "Halberd"
   },
 
   "whip": {
     "type": "weapon",
-    "attackLevel": 23,
     "name": "Whip"
   },
 
   "forestguardiansword": {
     "type": "weapon",
-    "attackLevel": 24,
     "name": "Forest Guardian Sword"
   },
 
   "sickle": {
     "type": "weapon",
-    "attackLevel": 25,
     "name": "Sickle"
   },
 
   "plunger": {
     "type": "weapon",
-    "attackLevel": 26,
     "name": "Plunger"
   },
 
   "redsickle": {
     "type": "weapon",
-    "attackLevel": 27,
     "name": "Red Sickle"
   },
 
   "daywalker": {
     "type": "weapon",
-    "attackLevel": 20,
     "name": "Day Walker"
   },
 
   "purplecloudkallege": {
     "type": "weapon",
-    "attackLevel": 29,
     "name": "Purple Cloud Kallege"
   },
 
   "searage": {
     "type": "weapon",
-    "attackLevel": 30,
     "name": "Sea rage"
   },
 
   "breaker": {
     "type": "weapon",
-    "attackLevel": 31,
     "name": "Breaker"
   },
 
   "eneltrident": {
     "type": "weapon",
-    "attackLevel": 45,
     "name": "Enel Trident"
   },
 
   "rainbowsword": {
     "type": "weapon",
-    "attackLevel": 33,
     "name": "Rainbow Sword"
   },
 
   "typhoon": {
     "type": "weapon",
-    "attackLevel": 34,
     "name": "Typhoon"
   },
 
   "memme": {
     "type": "weapon",
-    "attackLevel": 35,
     "name": "Memme"
   },
 
   "candybar": {
     "type": "weapon",
-    "attackLevel": 36,
     "name": "Candy Bar"
   },
 
   "butcherknife": {
     "type": "weapon",
-    "attackLevel": 37,
     "name": "Butcher Knife"
   },
 
   "fireshot": {
     "type": "weapon",
-    "attackLevel": 38,
     "name": "Fire Shot"
   },
 
   "comb": {
     "type": "weapon",
-    "attackLevel": 39,
     "name": "Comb"
   },
 
   "squeakyhammer": {
     "type": "weapon",
-    "attackLevel": 40,
     "name": "Squeaky Hammer"
   },
 
   "fireplay": {
     "type": "weapon",
-    "attackLevel": 41,
     "name": "Fire Play"
   },
 
   "weastaff": {
     "type": "weapon",
-    "attackLevel": 42,
     "name": "Wea Staff"
   },
 
   "pinksword": {
     "type": "weapon",
-    "attackLevel": 43,
     "name": "Pink Sword"
   },
 
   "conferencecall": {
     "type": "weapon",
-    "attackLevel": 70,
     "name": "Stick"
   },
 
   "cactusaxe": {
     "type": "weapon",
-    "attackLevel": 9,
     "name": "Cactus Axe",
     "lumberjacking": 6
   },
 
   "goldaxe": {
     "type": "weapon",
-    "attackLevel": 14,
     "name": "Gold Axe",
     "lumberjacking": 7
   },
 
   "devilkazyasword": {
     "type": "weapon",
-    "attackLevel": 46,
     "name": "Devil Kazya Sword"
   },
 
   "bamboospear": {
     "type": "weapon",
-    "attackLevel": 47,
     "name": "Bamboo Spear"
   },
 
   "paewoldo": {
     "type": "weapon",
-    "attackLevel": 30,
     "name": "Paewoldo"
   },
 
   "magicspear": {
     "type": "weapon",
-    "attackLevel": 49,
     "name": "Magic Spear"
   },
 
   "firesword": {
     "type": "weapon",
-    "attackLevel": 50,
     "name": "Fire Sword"
   },
 
   "pendant1": {
     "type": "pendant",
-    "pendantLevel": 5,
     "name": "Emerald Pendant"
   },
 
   "greenpendant": {
     "type": "pendant",
-    "pendantLevel": 10,
     "name": "Jade Pendant"
   },
 
   "pearlpendant": {
     "type": "pendant",
-    "pendantLevel": 15,
-    "name": "Pearl Pendant"
+    "name": "Pearl Pendant",
+    "attackStats": {
+      "crush": 12,
+      "slash": 12,
+      "stab": 12,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 10,
+      "stab": 10,
+      "magic": 2
+    },
+    "bonuses": {
+      "dexterity": 2,
+      "strength": 4,
+      "archery": 2
+    }
   },
 
   "marblependant": {
     "type": "pendant",
-    "pendantLevel": 25,
     "name": "Diamond Pendant"
   },
 
   "goldring": {
     "type": "ring",
-    "ringLevel": 1,
     "name": "Gold Ring"
   },
   
   "silverring": {
     "type": "ring",
-    "ringLevel": 1,
     "name": "Silver Ring"
   },
 
   "ring1": {
     "type": "ring",
-    "ringLevel": 5,
     "name": "Emerald Ring"
   },
 
   "sproutring": {
     "type": "ring",
-    "ringLevel": 10,
     "name": "Sprout Ring"
   },
 
   "pearlring": {
     "type": "ring",
-    "ringLevel": 15,
     "name": "Pearl Ring"
   },
 
   "topazring": {
     "type": "ring",
-    "ringLevel": 20,
-    "name": "Topaz Ring"
+    "name": "Topaz Ring",
+    "attackStats": {
+      "crush": 16,
+      "slash": 16,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 12,
+      "stab": 10,
+      "magic": 6
+    },
+    "bonuses": {
+      "dexterity": 3,
+      "strength": 6,
+      "archery": 3
+    }
   },
 
   "spiritring": {
     "type": "ring",
-    "ringLevel": 25,
     "name": "Spirit Ring"
   },
 
   "essentialrage": {
     "type": "ring",
-    "ringLevel": 35,
     "name": "Essential Rage"
   },
 
   "armorarcher1": {
-    "defenseLevel": 1,
     "type": "armourarcher",
     "name": "Archer Armor",
     "spriteName": "armorarcher"
   },
 
   "leatherarcherarmor": {
-    "defenseLevel": 2,
     "type": "armourarcher",
     "name": "Leather Archer Armour"
   },
 
   "mailarcherarmor": {
-    "defenseLevel": 3,
     "type": "armourarcher",
     "name": "Mail Archer Armour"
   },
 
   "platearcherarmor": {
-    "defenseLevel": 4,
     "type": "armourarcher",
     "name": "Plate Archer Armour"
   },
 
   "redarcherarmor": {
-    "defenseLevel": 5,
     "type": "armourarcher",
     "name": "Red Archer Armour"
   },
 
   "goldenarcherarmor": {
-    "defenseLevel": 6,
     "type": "armourarcher",
     "name": "Golden Archer Armour"
   },
 
   "greenarcherarmor": {
-    "defenseLevel": 7,
     "type": "armourarcher",
     "name": "Green Archer Armour"
   },
 
   "greenwingarcherarmor": {
-    "defenseLevel": 8,
     "type": "armourarcher",
     "name": "Green Wing Archer Armour"
   },
 
   "guardarcherarmor": {
-    "defenseLevel": 9,
     "type": "armourarcher",
     "name": "Guard Archer Armour"
   },
 
   "redguardarcherarmor": {
-    "defenseLevel": 10,
     "type": "armourarcher",
     "name": "Red Guard Archer Armour"
   },
 
   "whitearcherarmor": {
-    "defenseLevel": 11,
     "type": "armourarcher",
     "name": "White Archer Armour"
   },
 
   "ratarcherarmor": {
-    "defenseLevel": 12,
     "type": "armourarcher",
     "name": "Rat Archer Armour"
   },
 
   "piratearcherarmor": {
-    "defenseLevel": 13,
     "type": "armourarcher",
     "name": "Pirate Archer Armour"
   },
 
   "cheoliarcherarmor": {
-    "defenseLevel": 14,
     "type": "armourarcher",
     "name": "Cheolia Archer Armour"
   },
 
   "dovakinarcherarmor": {
-    "defenseLevel": 15,
     "type": "armourarcher",
     "name": "Dovakina Archer Armour"
   },
 
   "gbwingarcherarmor": {
-    "defenseLevel": 16,
     "type": "armourarcher",
     "name": "GbwingarcherArmour"
   },
 
   "redwingarcherarmor": {
-    "defenseLevel": 17,
     "type": "armourarcher",
     "name": "Red Wing Archer Armour"
   },
 
   "snowfoxarcherarmor": {
-    "defenseLevel": 18,
     "type": "armourarcher",
     "name": "Snow Fox Archer Armour"
   },
 
   "wolfarcherarmor": {
-    "defenseLevel": 18,
     "type": "armourarcher",
     "name": "Wolf Archer Armour"
   },
 
   "bluewingarcherarmor": {
-    "defenseLevel": 20,
     "type": "armourarcher",
     "name": "Blue Wing Archer Armour"
   },
 
   "fallenarcherarmor": {
-    "defenseLevel": 21,
     "type": "armourarcher",
     "name": "Fallen Archer Armour"
   },
 
   "crystalarcherarmor": {
-    "defenseLevel": 22,
     "type": "armourarcher",
     "name": "Crystal Archer Armour"
   },
 
   "legolasarmor": {
-    "defenseLevel": 23,
     "type": "armourarcher",
     "name": "Legolas Armour"
   },
 
   "adhererarcherarmor": {
-    "defenseLevel": 24,
     "type": "armourarcher",
     "name": "Adherer Archer Armour"
   },
 
   "archerschoolUniform": {
-    "defenseLevel": 25,
     "type": "armourarcher",
     "name": "Archer School Uniform"
   },
 
   "combatuniform": {
-    "defenseLevel": 26,
     "type": "armourarcher",
     "name": "Combat Uniform"
   },
 
   "gayarcherarmor": {
-    "defenseLevel": 27,
     "type": "armourarcher",
     "name": "Sketchy Archer Armour"
   },
 
   "woodenbow": {
     "type": "weaponarcher",
-    "attackLevel": 1,
-    "name": "Wooden Bow",
-    "level": 1
+    "name": "Wooden Bow"
   },
 
   "plasticbow": {
     "type": "weaponarcher",
-    "attackLevel": 2,
     "name": "Plastic Bow"
   },
 
   "ironbow": {
     "type": "weaponarcher",
-    "attackLevel": 3,
     "name": "Iron Bow"
   },
 
   "redbow": {
     "type": "weaponarcher",
-    "attackLevel": 4,
     "name": "Red Bow"
   },
 
   "violetbow": {
     "type": "weaponarcher",
-    "attackLevel": 5,
     "name": "Violet Bow"
   },
 
   "deathbow": {
     "type": "weaponarcher",
-    "attackLevel": 6,
     "name": "Death Bow"
   },
 
   "goldenbow": {
     "type": "weaponarcher",
-    "attackLevel": 7,
     "name": "Golden Bow"
   },
 
   "watermelonbow": {
     "type": "weaponarcher",
-    "attackLevel": 8,
     "name": "Watermelon Bow"
   },
 
   "greenbow": {
     "type": "weaponarcher",
-    "attackLevel": 9,
     "name": "Greenbow"
   },
 
   "redenelbow": {
     "type": "weaponarcher",
-    "attackLevel": 30,
     "name": "Redenel Bow"
   },
 
   "mermaidbow": {
     "type": "weaponarcher",
-    "attackLevel": 11,
     "name": "Mermaid Bow"
   },
 
   "seahorsebow": {
     "type": "weaponarcher",
-    "attackLevel": 12,
     "name": "Seahorse Bow"
   },
 
   "hunterbow": {
     "type": "weaponarcher",
-    "attackLevel": 13,
     "name": "Hunter Bow"
   },
 
   "greenlightbow": {
     "type": "weaponarcher",
-    "attackLevel": 14,
     "name": "Green Light Bow"
   },
 
   "skylightbow": {
     "type": "weaponarcher",
-    "attackLevel": 15,
     "name": "Sky Light Bow"
   },
 
   "redlightbow": {
     "type": "weaponarcher",
-    "attackLevel": 16,
     "name": "Red Light Bow"
   },
 
   "captainbow": {
     "type": "weaponarcher",
-    "attackLevel": 17,
     "name": "Captain Bow"
   },
 
   "redmetalbow": {
     "type": "weaponarcher",
-    "attackLevel": 18,
     "name": "Red Metal Bow"
   },
 
   "justicebow": {
     "type": "weaponarcher",
-    "attackLevel": 19,
     "name": "Justice Bow"
   },
 
   "rosebow": {
     "type": "weaponarcher",
-    "attackLevel": 20,
     "name": "Rose Bow"
   },
 
   "marinebow": {
     "type": "weaponarcher",
-    "attackLevel": 21,
     "name": "Marine Bow"
   },
 
   "crystalbow": {
     "type": "weaponarcher",
-    "attackLevel": 22,
     "name": "Crystal Bow"
   },
 
   "gaybow": {
     "type": "weaponarcher",
-    "attackLevel": 23,
     "name": "Gay Bow"
   },
 
   "forestbow": {
     "type": "weaponarcher",
-    "attackLevel": 24,
     "name": "Forest Bow"
   },
 
   "sicklebow": {
     "type": "weaponarcher",
-    "attackLevel": 25,
     "name": "Sickle Bow"
   },
 
   "bloodbow": {
     "type": "weaponarcher",
-    "attackLevel": 26,
     "name": "Blood Bow"
   },
 
   "redsicklebow": {
     "type": "weaponarcher",
-    "attackLevel": 27,
     "name": "Red Sickle Bow"
   },
 
   "clotharmor": {
-    "defenseLevel": 1,
     "type": "armour",
     "name": "Cloth Armour"
   },
 
   "leatherarmor": {
-    "defenseLevel": 2,
     "type": "armour",
     "name": "Leather Armour"
   },
 
   "mailarmor": {
-    "defenseLevel": 3,
     "type": "armour",
     "name": "Chain Mail"
   },
 
   "platearmor": {
-    "defenseLevel": 4,
     "type": "armour",
     "name": "Steel Armour"
   },
 
   "redarmor": {
-    "defenseLevel": 5,
     "type": "armour",
-    "name": "Ruby Armour"
+    "name": "Ruby Armour",
+    "level": 30,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 3,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 20,
+      "stab": 6,
+      "magic": -4
+    },
+    "bonuses": {
+      "dexterity": 0,
+      "strength": 3,
+      "archery": -1
+    }
   },
 
   "goldenarmor": {
-    "defenseLevel": 6,
     "type": "armour",
     "name": "Golden Armour"
   },
 
   "greenarmor": {
-    "defenseLevel": 7,
     "type": "armour",
     "name": "Green Armour"
   },
 
   "greenwingarmor": {
-    "defenseLevel": 8,
     "type": "armour",
     "name": "Green Wing Armour"
   },
 
   "guardarmor": {
-    "defenseLevel": 9,
     "type": "armour",
     "name": "Guard Armour"
   },
 
   "redguardarmor": {
-    "defenseLevel": 10,
     "type": "armour",
     "name": "Red Guard Armour"
   },
 
   "whitearmor": {
-    "defenseLevel": 11,
     "type": "armour",
     "name": "White Armour"
   },
 
   "ratarmor": {
-    "defenseLevel": 12,
     "type": "armour",
     "name": "Rat Armour"
   },
 
   "bluepiratearmor": {
-    "defenseLevel": 13,
     "type": "armour",
     "name": "Blue Pirate Armour"
   },
 
   "cheoliarmor": {
-    "defenseLevel": 14,
     "type": "armour",
     "name": "Cheoli Armour"
   },
 
   "dovakinarmor": {
-    "defenseLevel": 15,
     "type": "armour",
     "name": "Dovakin Armour"
   },
 
   "gbwingarmor": {
-    "defenseLevel": 16,
     "type": "armour",
     "name": "GB Wing Armour"
   },
 
   "redwingarmor": {
-    "defenseLevel": 17,
     "type": "armour",
     "name": "Red Wing Armour"
   },
 
   "snowfoxarmor": {
-    "defenseLevel": 18,
     "type": "armour",
     "name": "Snow Fox Armour"
   },
 
   "wolfarmor": {
-    "defenseLevel": 20,
     "type": "armour",
     "name": "Wolf Armour"
   },
 
   "bluewingarmor": {
-    "defenseLevel": 20,
     "type": "armour",
     "name": "Blue Wing Armour"
   },
 
   "thiefarmor": {
-    "defenseLevel": 21,
     "type": "armour",
     "name": "Thief Armour"
   },
 
   "ninjaarmor": {
-    "defenseLevel": 22,
     "type": "armour",
     "name": "Ninja Armour"
   },
 
   "dragonarmor": {
-    "defenseLevel": 48,
     "type": "armour",
     "name": "Dragon Armour"
   },
 
   "fallenarmor": {
-    "defenseLevel": 24,
     "type": "armour",
     "name": "Fallen Armour"
   },
 
   "paladinarmor": {
-    "defenseLevel": 25,
     "type": "armour",
     "name": "Paladin Armour"
   },
 
   "crystalarmor": {
-    "defenseLevel": 23,
     "type": "armour",
     "name": "Crystal Armour"
   },
 
   "adhererrobe": {
-    "defenseLevel": 27,
     "type": "armour",
     "name": "Adherer Robe"
   },
 
   "frostarmor": {
-    "defenseLevel": 28,
     "type": "armour",
     "name": "Frost Armour"
   },
 
   "gayarmor": {
-    "defenseLevel": 29,
     "type": "armour",
     "name": "Gay Armour"
   },
 
   "schooluniform": {
-    "defenseLevel": 30,
     "type": "armour",
     "name": "School Uniform"
   },
 
   "beautifullife": {
-    "defenseLevel": 31,
     "type": "armour",
     "name": "Beautiful Life"
   },
 
   "regionarmor": {
-    "defenseLevel": 37,
     "type": "armour",
     "name": "Region Armour"
   },
 
   "ghostrider": {
-    "defenseLevel": 33,
     "type": "armour",
     "name": "Ghost Rider"
   },
 
   "taekwondo": {
-    "defenseLevel": 34,
     "type": "armour",
     "name": "Taekwondo"
   },
 
   "rabbitarmor": {
-    "defenseLevel": 35,
     "type": "armour",
     "name": "Rabbit Armour",
     "movementSpeed": 210
   },
 
   "portalarmor": {
-    "defenseLevel": 36,
     "type": "armour",
     "name": "Portal Armour"
   },
 
   "pirateKing": {
-    "defenseLevel": 37,
     "type": "armour",
     "name": "Pirate King"
   },
 
   "peadragonarmor": {
-    "defenseLevel": 38,
     "type": "armour",
     "name": "Sea Dragon Armour"
   },
 
   "shadowregionarmor": {
-    "defenseLevel": 39,
     "type": "armour",
     "name": "Shadow Region Armour"
   },
 
   "enelarmor": {
-    "defenseLevel": 50,
     "type": "armour",
     "name": "Enel Armour"
   },
 
   "miniseadragonarmor": {
-    "defenseLevel": 41,
     "type": "armour",
     "name": "Mini Sea Dragon Armour"
   },
 
   "huniarmor": {
-    "defenseLevel": 42,
     "type": "armour",
     "name": "Huni Armour"
   },
 
   "damboarmor": {
-    "defenseLevel": 43,
     "type": "armour",
     "name": "Dambo Armour"
   },
 
   "squidarmor": {
-    "defenseLevel": 44,
     "type": "armour",
     "name": "Squid Armour"
   },
 
   "beearmor": {
-    "defenseLevel": 45,
     "type": "armour",
     "name": "Bee Armour"
   },
 
   "bluedamboarmor": {
-    "defenseLevel": 46,
     "type": "armour",
     "name": "Blue Dambo Armour"
   },
 
   "rudolfarmor": {
-    "defenseLevel": 47,
     "type": "armour",
     "name": "Rudolf Armour"
   },
 
   "christmasarmor": {
-    "defenseLevel": 48,
     "type": "armour",
     "name": "Christmas Armour"
   },
 
   "robocoparmor": {
-    "defenseLevel": 49,
     "type": "armour",
     "name": "Robocop Armour"
   },
 
   "pinkcockroacharmor": {
-    "defenseLevel": 50,
     "type": "armour",
     "name": "Pink Cockroach Armour"
   },
 
   "cockroachSuit": {
-    "defenseLevel": 27,
     "type": "armour",
     "name": "Cockroach Suit"
   },
 
   "dinosaurarmor": {
-    "defenseLevel": 52,
     "type": "armour",
     "name": "Dinosaur Armour"
   },
 
   "catarmor": {
-    "defenseLevel": 18,
     "type": "armour",
     "name": "Cat Armour"
   },
 
   "snowmanarmor": {
-    "defenseLevel": 54,
     "type": "armour",
     "name": "Snowman Armour"
   },
 
   "beetlearmor": {
-    "defenseLevel": 55,
     "type": "armour",
     "name": "Beetle Armour"
   },
 
   "hongcheolarmor": {
-    "defenseLevel": 56,
     "type": "armour",
     "name": "Hongcheol Armour"
   },
 
   "tigerarmor": {
-    "defenseLevel": 49,
     "type": "armour",
     "name": "Tiger Armour"
   },
 
   "wizardrobe": {
-    "defenseLevel": 14,
     "type": "armour",
     "name": "Wizard Robe"
   },
 
   "ironknightarmor": {
-    "defenseLevel": 25,
     "type": "armour",
     "name": "Iron Knight Armour"
   },
 
   "evilarmor": {
-    "defenseLevel": 60,
     "type": "armour",
     "name": "Evil Armour"
   },
 
   "greendamboarmor": {
-    "defenseLevel": 61,
     "type": "armour",
     "name": "Green Dambo Armour"
   },
 
   "reddamboarmor": {
-    "defenseLevel": 62,
     "type": "armour",
     "name": "Red Dambo Armour"
   },
 
   "devilkazyaarmor": {
-    "defenseLevel": 63,
     "type": "armour",
     "name": "Devil Kazya Armour"
   },
 
   "bridalmask": {
-    "defenseLevel": 26,
     "type": "armour",
     "name": "Bridal Mask"
   },
 
   "blackspiderarmor": {
-    "defenseLevel": 65,
     "type": "armour",
     "name": "Black Spider Armour"
   },
 
   "frogarmor": {
-    "defenseLevel": 66,
     "type": "armour",
     "name": "Frog Armour"
   },
 
   "bearseonbiarmor": {
-    "defenseLevel": 67,
     "type": "armour",
     "name": "Bearseonbi Armour"
   },
 
   "rainbowapro": {
-    "defenseLevel": 68,
     "type": "armour",
     "name": "Rainbow A Pro"
   },
 
   "cokearmor": {
-    "defenseLevel": 69,
     "type": "armour",
     "name": "Coke Armour"
   },
 
   "friedpotatoarmor": {
-    "defenseLevel": 70,
     "type": "armour",
     "name": "Fried Potato Armour"
   },
 
   "burgerarmor": {
-    "defenseLevel": 71,
     "type": "armour",
     "name": "Burger Armour"
   },
 
   "radisharmor": {
-    "defenseLevel": 72,
     "type": "armour",
     "name": "Radish Armour"
   },
 
   "halloweenjkarmor": {
-    "defenseLevel": 73,
     "type": "armour",
     "name": "Halloween JK Armour"
   },
 
   "frankensteinarmor": {
-    "defenseLevel": 74,
     "type": "armour",
     "name": "Frankenstein Armour"
   },
 
   "adminarmor": {
-    "defenseLevel": 75,
     "type": "armour",
     "name": "Admin Armour"
   },
@@ -1523,7 +1411,6 @@
 
   "sword1": {
     "type": "weapon",
-    "attackLevel": 1,
     "name": "Sword",
     "level": 1
   },
@@ -1580,36 +1467,30 @@
 
   "ghost": {
     "type": "armour",
-    "defenseLevel": 3,
     "name": "Ghost"
   },
 
   "pickle": {
     "type": "armour",
-    "defenseLevel": 20,
     "name": "Pickle Armour"
   },
 
   "bluearmor": {
-    "defenseLevel": 6,
     "type": "armour",
     "name": "Crystal Armour"
   },
 
   "icesword": {
     "type": "weapon",
-    "attackLevel": 6,
     "name": "Ice Sword"
   },
 
   "platinumsword": {
     "type": "weapon",
-    "attackLevel": 8,
     "name": "Platinum Sword"
   },
 
   "platinumarmor": {
-    "defenseLevel": 7,
     "type": "armour",
     "name": "Platinum Armour"
   },
@@ -1622,7 +1503,6 @@
 
   "rustedaxe": {
     "type": "weapon",
-    "attackLevel": 5,
     "name": "Rusted Axe",
     "lumberjacking": 2,
     "level": 5,
@@ -1631,21 +1511,18 @@
 
   "fireaxe": {
     "type": "weapon",
-    "attackLevel": 6,
     "name": "Fire Axe",
     "lumberjacking": 3
   },
 
   "poisonaxe": {
     "type": "weapon",
-    "attackLevel": 7,
     "name": "Poison Axe",
     "lumberjacking": 4
   },
 
   "carnelianaxe": {
     "type": "weapon",
-    "attackLevel": 9,
     "name": "Carnelian Axe",
     "lumberjacking": 8
   },
