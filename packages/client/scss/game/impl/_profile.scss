@@ -91,7 +91,7 @@
     font-weight: bold;
 }
 
-#navigator {
+.navigator {
     position: absolute;
     top: 89%;
     left: 37%;
@@ -233,13 +233,13 @@
             top: 50px * $i;
         }
 
-        #navigator {
+        .navigator {
             width: 42px * $i;
             height: 17px * $i;
         }
 
-        #previous,
-        #next {
+        .previous,
+        .next {
             position: absolute;
             top: 0;
             left: initial;
@@ -250,7 +250,7 @@
             background-image: url('/img/#{$i}/characterdialogsheet.png');
         }
 
-        #previous {
+        .previous {
             cursor: pointer;
 
             left: 0;
@@ -264,7 +264,7 @@
             }
         }
 
-        #next {
+        .next {
             cursor: pointer;
 
             left: 21px * $i;

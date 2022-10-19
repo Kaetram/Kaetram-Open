@@ -24,8 +24,6 @@ export default class State extends Menu {
     public constructor() {
         super('#state-page');
 
-        console.log(this.weapon);
-
         this.weapon.addEventListener('click', () =>
             this.selectCallback?.(Modules.Equipment.Weapon)
         );
@@ -51,8 +49,6 @@ export default class State extends Menu {
         this.name.textContent = player.name;
         this.level.textContent = `Level ${player.level}`;
         this.experience.textContent = `${player.getTotalExperience()}`;
-
-        console.log(player.getWeapon());
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(player.getWeapon().key);
