@@ -1,12 +1,16 @@
+import _ from 'lodash';
+
 import Menu from './menu';
 
 import SpritesController from '../controllers/sprites';
 
 import Player from '../entity/character/player/player';
+import Equipment from '../entity/character/player/equipment/equipment';
 
 import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 export default class Equipments extends Menu {
     // Player image elements
     private playerArmour: HTMLElement = document.querySelector('#player-image-armour')!;
@@ -23,8 +27,13 @@ export default class Equipments extends Menu {
     private previous: HTMLElement = document.querySelector('#player-image-navigator > .previous')!;
     private next: HTMLElement = document.querySelector('#player-image-navigator > .next')!;
 
+    // Stats elements
+    private attackStats: HTMLElement = document.querySelector('#attackStats')!;
+    private defenseStats: HTMLElement = document.querySelector('#defenseStats')!;
+    private bonuses: HTMLElement = document.querySelector('#bonuses')!;
+
     // Class properties
-    private imageOrientation: Modules.Orientation = Modules.Orientation.Left;
+    private imageOrientation: Modules.Orientation = Modules.Orientation.Down;
 
     public constructor(private player: Player, private sprites: SpritesController) {
         super('#equipments', '#close-equipments', '#equipment-button');
@@ -39,6 +48,7 @@ export default class Equipments extends Menu {
      */
 
     public override synchronize(): void {
+        this.loadStats();
         this.loadPlayerImage();
 
         // Synchronize equipment data
@@ -86,6 +96,71 @@ export default class Equipments extends Menu {
         this.imageOrientation = orientations[index];
 
         this.loadPlayerImage();
+    }
+
+    /**
+     * Adds up all the attack, defense, and bonuses from all the equipments and displays them.
+     */
+
+    private loadStats(): void {
+        let attackStats: Stats = {
+                crush: 0,
+                slash: 0,
+                stab: 0,
+                magic: 0
+            },
+            defenseStats: Stats = {
+                crush: 0,
+                slash: 0,
+                stab: 0,
+                magic: 0
+            },
+            bonuses: Bonuses = {
+                dexterity: 0,
+                strength: 0,
+                archery: 0
+            };
+
+        // iterate through all the equipments and add up the stats.
+        _.each(this.player.equipments, (equipment: Equipment) => {
+            if (!equipment) return;
+
+            attackStats.crush += equipment.attackStats.crush;
+            attackStats.slash += equipment.attackStats.slash;
+            attackStats.stab += equipment.attackStats.stab;
+            attackStats.magic += equipment.attackStats.magic;
+
+            defenseStats.crush += equipment.defenseStats.crush;
+            defenseStats.slash += equipment.defenseStats.slash;
+            defenseStats.stab += equipment.defenseStats.stab;
+            defenseStats.magic += equipment.defenseStats.magic;
+
+            bonuses.dexterity += equipment.bonuses.dexterity;
+            bonuses.strength += equipment.bonuses.strength;
+            bonuses.archery += equipment.bonuses.archery;
+        });
+
+        let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
+            bonsuses = ['Dexterity', 'Strength', 'Archery'];
+
+        _.each(stats, (stat: string) => {
+            let lStat = stat.toLowerCase(),
+                attackElement = this.attackStats.querySelector(`.${lStat.toLowerCase()}`)!,
+                defenseElement = this.defenseStats.querySelector(`.${lStat.toLowerCase()}`)!,
+                attackStat = attackStats[lStat as keyof Stats],
+                defenseStat = defenseStats[lStat as keyof Stats];
+
+            attackElement.textContent = `${stat}: ${attackStat > 0 ? '+' : ''}${attackStat}`;
+            defenseElement.textContent = `${stat}: ${defenseStat > 0 ? '+' : ''}${defenseStat}`;
+        });
+
+        _.each(bonsuses, (bonus: string) => {
+            let lBonus = bonus.toLowerCase(),
+                bonusElement = this.bonuses.querySelector(`.${lBonus.toLowerCase()}`)!,
+                bonusStat = bonuses[lBonus as keyof Bonuses];
+
+            bonusElement.textContent = `${bonus}: ${bonusStat > 0 ? '+' : ''}${bonusStat}`;
+        });
     }
 
     /**

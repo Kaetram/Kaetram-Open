@@ -262,7 +262,7 @@ export default class Mob extends Character {
      */
 
     public canAggro(player: Player): boolean {
-        if (!this.aggressive || this.target) return false;
+        if (!this.aggressive || this.target || !player.ready) return false;
 
         if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
 

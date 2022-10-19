@@ -1,11 +1,21 @@
-import { EquipmentStats } from '@kaetram/common/types/equipment';
+import { Stats, Bonuses } from '@kaetram/common/types/item';
 
 export default abstract class Equipment {
-    public stats: EquipmentStats = {
+    public attackStats: Stats = {
         crush: 0,
         slash: 0,
         stab: 0,
-        magic: 0,
+        magic: 0
+    };
+
+    public defenseStats: Stats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0
+    };
+
+    public bonuses: Bonuses = {
         dexterity: 0,
         strength: 0,
         archery: 0
@@ -29,7 +39,9 @@ export default abstract class Equipment {
      * @param ability The ability that the item gives.
      * @param abilityLevel The level of the ability.
      * @param ranged Whether or not the item is ranged.
-     * @param stats The stats of the item.
+     * @param attackStats The attack stats of the item.
+     * @param defenseStats The defense stats of the item.
+     * @param bonuses The bonuses of the item.
      */
 
     public update(
@@ -39,7 +51,9 @@ export default abstract class Equipment {
         ability = -1,
         abilityLevel = -1,
         ranged = false,
-        stats?: EquipmentStats
+        attackStats?: Stats,
+        defenseStats?: Stats,
+        bonuses?: Bonuses
     ): void {
         this.key = key;
         this.name = name;
@@ -48,7 +62,10 @@ export default abstract class Equipment {
         this.abilityLevel = abilityLevel;
         this.ranged = ranged;
 
-        if (stats) this.stats = stats;
+        // Add the stats and bonuses only if they exist.
+        if (attackStats) this.attackStats = attackStats;
+        if (defenseStats) this.defenseStats = defenseStats;
+        if (bonuses) this.bonuses = bonuses;
     }
 
     /**
