@@ -1,6 +1,6 @@
 import Equipment from './equipment';
 
-import { EquipmentStats } from '@kaetram/common/types/equipment';
+import { Stats, Bonuses } from '@kaetram/common/types/item';
 
 export default class Armour extends Equipment {
     public constructor(
@@ -27,8 +27,20 @@ export default class Armour extends Equipment {
         ability = -1,
         abilityLevel = -1,
         ranged = false,
-        stats?: EquipmentStats
+        attackStats?: Stats,
+        defenseStats?: Stats,
+        bonuses?: Bonuses
     ): void {
-        super.update(key, name, count, ability, abilityLevel, ranged, stats);
+        super.update(
+            key,
+            name,
+            count,
+            ability,
+            abilityLevel,
+            ranged,
+            attackStats,
+            defenseStats,
+            bonuses
+        );
     }
 }

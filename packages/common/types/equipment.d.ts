@@ -1,15 +1,5 @@
 import type { Modules } from '../network';
-
-export interface EquipmentStats {
-    crush: number;
-    slash: number;
-    stab: number;
-    magic: number;
-
-    dexterity: number;
-    strength: number;
-    archery: number;
-}
+import type { Stats, Bonuses } from './item';
 
 export interface EquipmentData {
     type: Modules.Equipment;
@@ -20,7 +10,9 @@ export interface EquipmentData {
     abilityLevel: number;
     ranged?: boolean; // Specifically for weapon type.
     poisonous?: boolean;
-    stats?: EquipmentStats;
+    attackStats?: Stats;
+    defenseStats?: Stats;
+    bonuses?: Bonuses;
 }
 
 export interface SerializedEquipment {

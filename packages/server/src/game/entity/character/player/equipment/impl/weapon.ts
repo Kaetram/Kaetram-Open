@@ -20,4 +20,22 @@ export default class Weapon extends Equipment {
         this.ranged = item.isRangedWeapon();
         this.attackRate = item.attackRate;
     }
+
+    /**
+     * A weapon is a strength-based weapon when its strength bonus is greater than 0.
+     * @returns Whether or not the weapon's strength bonus is greater than 0.
+     */
+
+    public isStrength(): boolean {
+        return this.bonuses.strength > 0;
+    }
+
+    /**
+     * A weapon is a dexterity based weapon when its dexterity bonus is greater than 0.
+     * @returns Whether or not the weapon's dexterity bonus is above 0.
+     */
+
+    public isDexterity(): boolean {
+        return this.bonuses.dexterity > 0;
+    }
 }

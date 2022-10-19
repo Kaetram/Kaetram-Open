@@ -6,6 +6,19 @@ export interface ContainerItem {
     abilityLevel?: number;
 }
 
+export interface Stats {
+    crush: number;
+    slash: number;
+    stab: number;
+    magic: number;
+}
+
+export interface Bonuses {
+    dexterity: number;
+    strength: number;
+    archery: number;
+}
+
 export interface ItemData {
     type: string;
     name: string;
@@ -17,15 +30,13 @@ export interface ItemData {
     storeCount?: number;
     skill?: string; // Skill requirement for the item.
     level?: number; // Requirement level for the item.
-    attackLevel?: number;
-    defenseLevel?: number;
-    pendantLevel?: number;
-    ringLevel?: number;
-    bootsLevel?: number;
     attackRate?: number;
     movementSpeed?: number;
     lumberjacking?: number;
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;
+    bonuses?: Bonuses;
+    attackStats?: Stats;
+    defenseStats?: Stats;
 }

@@ -53,6 +53,38 @@
             top: 94px * $i;
             left: 95px * $i;
         }
+
+        .title {
+            font-size: 10px * $i;
+            text-decoration: underline;
+        }
+
+        #attackStats, #defenseStats, #bonuses {
+            font-size: 8px * $i;
+
+            border-color: black;
+            border-radius: 1px;
+        }
+
+        #attackStats, #defenseStats {
+            width: 70px * $i;
+            height: 80px * $i;
+        }
+
+        #attackStats {
+            top: 10px * $i;
+            left: 180px * $i;
+        }
+
+        #defenseStats {
+            top: 10px * $i;
+            left: 250px * $i;
+        }
+
+        #bonuses {
+            top: 90px * $i;
+            left: 180px * $i;
+        }
     }
 }
 
@@ -61,6 +93,12 @@
         top: 60px;
         left: 100px;
     }
+}
+
+#attackStats, #defenseStats, #bonuses {
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
 }
 
 #close-equipments {
