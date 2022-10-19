@@ -4,9 +4,11 @@
  * equipment slot instead of inventory slot.
  */
 
-import { Modules } from '@kaetram/common/network';
-import { EquipmentData } from '@kaetram/common/types/equipment';
 import Item from '../../../objects/item';
+
+import { Modules } from '@kaetram/common/network';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Equipment {
     // Properties
@@ -17,15 +19,25 @@ export default class Equipment {
     public poisonous = false;
 
     // Stats
-    public crush = 0;
-    public slash = 0;
-    public stab = 0;
-    public magic = 0;
+    public attackStats: Stats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0
+    };
 
-    // Bonuses
-    public dexterity = 0;
-    public strength = 0;
-    public archery = 0;
+    public defenseStats: Stats = {
+        crush: 0,
+        slash: 0,
+        stab: 0,
+        magic: 0
+    };
+
+    public bonuses: Bonuses = {
+        dexterity: 0,
+        strength: 0,
+        archery: 0
+    };
 
     private updateCallback?: (equipment: Equipment) => void;
 
@@ -53,14 +65,9 @@ export default class Equipment {
         this.lumberjacking = item.lumberjacking;
         this.poisonous = item.poisonous;
 
-        this.crush = item.crush;
-        this.slash = item.slash;
-        this.stab = item.stab;
-        this.magic = item.magic;
-
-        this.dexterity = item.dexterity;
-        this.strength = item.strength;
-        this.archery = item.archery;
+        this.attackStats = item.attackStats;
+        this.defenseStats = item.defenseStats;
+        this.bonuses = item.bonuses;
 
         this.updateCallback?.(this);
     }
@@ -81,15 +88,6 @@ export default class Equipment {
         this.ranged = false;
         this.lumberjacking = -1;
         this.poisonous = false;
-
-        this.crush = 0;
-        this.slash = 0;
-        this.stab = 0;
-        this.magic = 0;
-
-        this.dexterity = 0;
-        this.strength = 0;
-        this.archery = 0;
     }
 
     /**
@@ -133,15 +131,9 @@ export default class Equipment {
             data.ranged = this.ranged;
             data.poisonous = this.poisonous;
 
-            data.stats = {
-                crush: this.crush,
-                slash: this.slash,
-                stab: this.stab,
-                magic: this.magic,
-                dexterity: this.dexterity,
-                strength: this.strength,
-                archery: this.archery
-            };
+            data.attackStats = this.attackStats;
+            data.defenseStats = this.defenseStats;
+            data.bonuses = this.bonuses;
         }
 
         return data;
