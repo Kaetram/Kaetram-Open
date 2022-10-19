@@ -28,8 +28,8 @@ export default class Profile extends Menu {
     private activePage = 0;
 
     // Navigation buttons for the profile.
-    private previous: HTMLElement = document.querySelector('#previous')!;
-    private next: HTMLElement = document.querySelector('#next')!;
+    private previous: HTMLElement = document.querySelector('#profile-navigator > .previous')!;
+    private next: HTMLElement = document.querySelector('#profile-navigator > .next')!;
 
     private unequipCallback?: UnequipCallback;
     private abilityCallback?: SelectCallback;
