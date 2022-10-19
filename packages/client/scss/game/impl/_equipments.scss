@@ -67,17 +67,17 @@
         }
 
         #attackStats, #defenseStats {
+            top: 16px * $i;
+
             width: 70px * $i;
             height: 80px * $i;
         }
 
         #attackStats {
-            top: 10px * $i;
             left: 180px * $i;
         }
 
         #defenseStats {
-            top: 10px * $i;
             left: 250px * $i;
         }
 
