@@ -60,7 +60,6 @@ import {
     EffectPacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import util from '../utils/util';
 
 export default class Connection {
     /**

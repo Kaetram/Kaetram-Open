@@ -29,11 +29,37 @@
             background-position: -2px * $i -70px * $i;
         }
 
-        #equipment-slot-container {
+        #equipment-container {
             position: absolute;
             top: -68px * $i;
             left: -2px * $i;
         }
+
+        .player-image {
+            position: absolute;
+            top: 70px * $i;
+            left: 110px * $i;
+
+            overflow: auto;
+
+            width: 32px;
+            height: 32px;
+
+            scale: $i;
+        }
+
+        #player-image-navigator {
+            position: absolute;
+            top: 94px * $i;
+            left: 95px * $i;
+        }
+    }
+}
+
+@media(--sm) {
+    .player-image {
+        top: 60px;
+        left: 100px;
     }
 }
 

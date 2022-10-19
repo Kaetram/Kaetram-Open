@@ -40,7 +40,7 @@ export default class QuickSlots {
         quickSlotIndex.className = 'ability-quickslot';
 
         // Add the ability icon based on the key provided.
-        quickSlotIndex.classList.add(`ability-icon-${key}`);
+        quickSlotIndex.classList.add(`quickslot-icon-${key}`);
     }
 
     /**
@@ -51,7 +51,7 @@ export default class QuickSlots {
 
     private clean(key: string): void {
         for (let i = 0; i < this.abilityBar.children.length; i++)
-            if (this.abilityBar.children[i].classList.contains(`ability-icon-${key}`))
-                this.abilityBar.children[i].classList.remove(`ability-icon-${key}`);
+            if (this.abilityBar.children[i].classList.contains(`quickslot-icon-${key}`))
+                this.abilityBar.children[i].classList.remove(`quickslot-icon-${key}`);
     }
 }
