@@ -11,6 +11,9 @@ import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
+
+type SelectCallback = (type: Modules.Equipment) => void;
+
 export default class Equipments extends Menu {
     // Player image elements
     private playerArmour: HTMLElement = document.querySelector('#player-image-armour')!;
@@ -35,12 +38,27 @@ export default class Equipments extends Menu {
     // Class properties
     private imageOrientation: Modules.Orientation = Modules.Orientation.Down;
 
+    private selectCallback?: SelectCallback;
+
     public constructor(private player: Player, private sprites: SpritesController) {
         super('#equipments', '#close-equipments', '#equipment-button');
 
         // Navigation event listeners.
         this.previous.addEventListener('click', () => this.handleNavigation('previous'));
         this.next.addEventListener('click', () => this.handleNavigation('next'));
+
+        // Equipment slot event listeners -- definitely not stolen from the state page :)
+        this.weapon.addEventListener('click', () =>
+            this.selectCallback?.(Modules.Equipment.Weapon)
+        );
+        this.armour.addEventListener('click', () =>
+            this.selectCallback?.(Modules.Equipment.Armour)
+        );
+        this.pendant.addEventListener('click', () =>
+            this.selectCallback?.(Modules.Equipment.Pendant)
+        );
+        this.ring.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Ring));
+        this.boots.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Boots));
     }
 
     /**
@@ -213,5 +231,14 @@ export default class Equipments extends Menu {
             case Modules.Orientation.Down:
                 return 7;
         }
+    }
+
+    /**
+     * Callback for when we click on an equipment slot.
+     * @param callback Contains the slot type we are selecting.
+     */
+
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 }
