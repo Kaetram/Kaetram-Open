@@ -103,27 +103,13 @@ export default class Equipments extends Menu {
      */
 
     private loadStats(): void {
-        let attackStats: Stats = {
-                crush: 0,
-                slash: 0,
-                stab: 0,
-                magic: 0
-            },
-            defenseStats: Stats = {
-                crush: 0,
-                slash: 0,
-                stab: 0,
-                magic: 0
-            },
-            bonuses: Bonuses = {
-                dexterity: 0,
-                strength: 0,
-                archery: 0
-            };
+        let attackStats: Stats = Util.getEmptyStats(),
+            defenseStats: Stats = Util.getEmptyStats(),
+            bonuses: Bonuses = Util.getEmptyBonuses();
 
         // iterate through all the equipments and add up the stats.
         _.each(this.player.equipments, (equipment: Equipment) => {
-            if (!equipment) return;
+            if (!equipment.exists()) return;
 
             attackStats.crush += equipment.attackStats.crush;
             attackStats.slash += equipment.attackStats.slash;

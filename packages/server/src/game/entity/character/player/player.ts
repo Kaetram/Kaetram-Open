@@ -55,6 +55,7 @@ import {
     Effect
 } from '@kaetram/server/src/network/packets';
 import Skill from './skill/skill';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -1304,21 +1305,33 @@ export default class Player extends Character {
     }
 
     /**
-     * Override for obtaining the weapon power level.
-     * @returns The player's currently equipped weapon's power level.
+     * Override for the superclass attack stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total attack stats for the player.
      */
 
-    public override getWeaponLevel(): number {
-        return 1;
+    public override getAttackStats(): Stats {
+        return this.equipment.totalAttackStats;
     }
 
     /**
-     * Override for obtaining the armour power level.
-     * @returns The player's currently equipped armour's power level.
+     * Override for the superclass defence stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total defence stats for the player.
      */
 
-    public override getArmourLevel(): number {
-        return 1;
+    public override getDefenseStats(): Stats {
+        return this.equipment.totalDefenseStats;
+    }
+
+    /**
+     * Override for the superclass bonuses function. We use the total
+     * equipment bonuses instead.
+     * @returns The total equipment bonuses.
+     */
+
+    public override getBonuses(): Bonuses {
+        return this.equipment.totalBonuses;
     }
 
     /**
