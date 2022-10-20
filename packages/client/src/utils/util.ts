@@ -178,7 +178,7 @@ export default {
 
     getEmptyBonuses(): Bonuses {
         return {
-            dexterity: 0,
+            accuracy: 0,
             strength: 0,
             archery: 0
         };

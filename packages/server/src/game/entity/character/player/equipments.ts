@@ -162,7 +162,7 @@ export default class Equipments {
             this.totalDefenseStats.magic += equipment.defenseStats.magic;
 
             // Bonuses
-            this.totalBonuses.dexterity += equipment.bonuses.dexterity;
+            this.totalBonuses.accuracy += equipment.bonuses.accuracy;
             this.totalBonuses.strength += equipment.bonuses.strength;
             this.totalBonuses.archery += equipment.bonuses.archery;
         });
