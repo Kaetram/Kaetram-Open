@@ -56,6 +56,10 @@ export default {
         return min + Math.floor(Math.random() * (max - min + 1));
     },
 
+    randomWeightedInt(min: number, max: number, weight: number): number {
+        return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
+    },
+
     /**
      * Gets a distance between two points in the grid space.
      * @param startX Starting point x grid space coordinate.
@@ -274,7 +278,7 @@ export default {
 
     getEmptyBonuses(): Bonuses {
         return {
-            dexterity: 0,
+            accuracy: 0,
             strength: 0,
             archery: 0
         };

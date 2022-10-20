@@ -31,11 +31,11 @@ export default class Weapon extends Equipment {
     }
 
     /**
-     * A weapon is a dexterity based weapon when its dexterity bonus is greater than 0.
-     * @returns Whether or not the weapon's dexterity bonus is above 0.
+     * A weapon is a accuracy based weapon when its accuracy bonus is greater than 0.
+     * @returns Whether or not the weapon's accuracy bonus is above 0.
      */
 
-    public isDexterity(): boolean {
-        return this.bonuses.dexterity > 0;
+    public isAccuracy(): boolean {
+        return this.bonuses.accuracy > 0;
     }
 }

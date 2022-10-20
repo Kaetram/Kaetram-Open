@@ -10,7 +10,7 @@
       "magic": 0
     },
     "bonuses": {
-      "dexterity": 2,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0
     }
@@ -64,7 +64,7 @@
       "magic": 0
     },
     "bonuses": {
-      "dexterity": 8,
+      "accuracy": 8,
       "strength": 0,
       "archery": 0
     }
@@ -308,7 +308,7 @@
       "magic": 2
     },
     "bonuses": {
-      "dexterity": 2,
+      "accuracy": 2,
       "strength": 4,
       "archery": 2
     }
@@ -360,7 +360,7 @@
       "magic": 6
     },
     "bonuses": {
-      "dexterity": 3,
+      "accuracy": 3,
       "strength": 6,
       "archery": 3
     }
@@ -684,7 +684,7 @@
       "magic": -4
     },
     "bonuses": {
-      "dexterity": 0,
+      "accuracy": 0,
       "strength": 3,
       "archery": -1
     }

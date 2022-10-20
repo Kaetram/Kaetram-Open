@@ -314,6 +314,24 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Default implementation for the character's accuracy level.
+     * @returns Placeholder value for accuracy of 1.
+     */
+
+    public getAccuracyLevel(): number {
+        return 1;
+    }
+
+    /**
+     * Default implementation for the character's strength level (used for combat damage calculation).
+     * @returns Placeholder value for strength of 1.
+     */
+
+    public getStrengthLevel(): number {
+        return 1;
+    }
+
+    /**
      * @returns Default probability for poison to be inflicted.
      */
 

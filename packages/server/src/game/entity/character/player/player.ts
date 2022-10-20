@@ -613,13 +613,13 @@ export default class Player extends Character {
         if (weapon.ranged) return this.skills.get(Modules.Skills.Archery).addExperience(experience);
 
         /**
-         * If the weapon is both a strength and dexterity weapon, then we evenly distribute
-         * the remaining experience to both the strength and dexterity skills. Otherwise
+         * If the weapon is both a strength and accuracy weapon, then we evenly distribute
+         * the remaining experience to both the strength and accuracy skills. Otherwise
          * we add the remaining experience to the skill that the weapon is based on. Default
          * is accuracy if the weapon is not based on any skill.
          */
 
-        if (weapon.isStrength() && weapon.isDexterity()) {
+        if (weapon.isStrength() && weapon.isAccuracy()) {
             this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(experience / 2));
             this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience / 2));
         } else if (weapon.isStrength())
@@ -1332,6 +1332,22 @@ export default class Player extends Character {
 
     public override getBonuses(): Bonuses {
         return this.equipment.totalBonuses;
+    }
+
+    /**
+     * @returns The player's current accuracy level from the skills controller.
+     */
+
+    public override getAccuracyLevel(): number {
+        return this.skills.get(Modules.Skills.Accuracy).level;
+    }
+
+    /**
+     * @returns The player's current strength level from the skills controller.
+     */
+
+    public override getStrengthLevel(): number {
+        return this.skills.get(Modules.Skills.Strength).level;
     }
 
     /**
