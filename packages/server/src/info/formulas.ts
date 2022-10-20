@@ -27,77 +27,79 @@ export default {
     },
 
     getMaxDamage(attacker: Character, target: Character, special = false): number | undefined {
-        if (!attacker || !target) return;
+        return 1;
 
-        let damageDealt = 0,
-            damageAbsorbed: number,
-            damageAmplifier = 1,
-            absorptionAmplifier = 1,
-            weaponLevel = attacker.getWeaponLevel(),
-            armourLevel = attacker.getArmourLevel(),
-            targetArmour = target.getArmourLevel(),
-            pendant,
-            ring,
-            boots,
-            targetPendant,
-            targetRing,
-            targetBoots;
+        // if (!attacker || !target) return;
 
-        if (attacker.isPlayer()) damageDealt += 10;
+        // let damageDealt = 0,
+        //     damageAbsorbed: number,
+        //     damageAmplifier = 1,
+        //     absorptionAmplifier = 1,
+        //     weaponLevel = attacker.getWeaponLevel(),
+        //     armourLevel = attacker.getArmourLevel(),
+        //     targetArmour = target.getArmourLevel(),
+        //     pendant,
+        //     ring,
+        //     boots,
+        //     targetPendant,
+        //     targetRing,
+        //     targetBoots;
 
-        // ({ pendant, ring, boots } = attacker as Player);
+        // if (attacker.isPlayer()) damageDealt += 10;
 
-        // if (target.isPlayer())
-        //     ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
+        // // ({ pendant, ring, boots } = attacker as Player);
 
-        damageDealt +=
-            attacker.level +
-            (attacker.level * weaponLevel) / 4 +
-            (attacker.level + weaponLevel * armourLevel) / 8;
+        // // if (target.isPlayer())
+        // //     ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
 
-        /**
-         * Apply ranged damage deficit
-         */
+        // damageDealt +=
+        //     attacker.level +
+        //     (attacker.level * weaponLevel) / 4 +
+        //     (attacker.level + weaponLevel * armourLevel) / 8;
 
-        if (attacker.isRanged()) damageDealt /= 1.275;
+        // /**
+        //  * Apply ranged damage deficit
+        //  */
 
-        if (special) damageDealt *= 1.0575;
+        // if (attacker.isRanged()) damageDealt /= 1.275;
 
-        /**
-         * Apply special amulets
-         */
+        // if (special) damageDealt *= 1.0575;
 
-        // if (pendant && pendant.pendantLevel > 0) damageAmplifier *= pendant.getBaseAmplifier();
+        // /**
+        //  * Apply special amulets
+        //  */
 
-        // if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
+        // // if (pendant && pendant.pendantLevel > 0) damageAmplifier *= pendant.getBaseAmplifier();
 
-        // if (boots && boots.bootsLevel > 0) damageAmplifier *= boots.getBaseAmplifier();
+        // // if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
 
-        /**
-         * Just so amplifiers don't get out of hand.
-         */
+        // // if (boots && boots.bootsLevel > 0) damageAmplifier *= boots.getBaseAmplifier();
 
-        if (damageAmplifier > 1.6) damageAmplifier = 1.6;
+        // /**
+        //  * Just so amplifiers don't get out of hand.
+        //  */
 
-        damageDealt *= damageAmplifier;
+        // if (damageAmplifier > 1.6) damageAmplifier = 1.6;
 
-        damageAbsorbed = target.level + targetArmour / 2;
+        // damageDealt *= damageAmplifier;
 
-        // if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
+        // damageAbsorbed = target.level + targetArmour / 2;
 
-        // if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
+        // // if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
 
-        // if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
+        // // if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
 
-        damageAbsorbed *= absorptionAmplifier;
+        // // if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
 
-        let damage = damageDealt - damageAbsorbed;
+        // damageAbsorbed *= absorptionAmplifier;
 
-        damage = Math.ceil(damage);
+        // let damage = damageDealt - damageAbsorbed;
 
-        if (isNaN(damage) || !damage || damage < 0) damage = 0;
+        // damage = Math.ceil(damage);
 
-        return damage;
+        // if (isNaN(damage) || !damage || damage < 0) damage = 0;
+
+        // return damage;
     },
 
     getCritical(attacker: Player, target: Character): number | undefined {

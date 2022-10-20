@@ -6,6 +6,8 @@
 
 import Item from '../../../objects/item';
 
+import Utils from '@kaetram/common/util/utils';
+
 import { Modules } from '@kaetram/common/network';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { EquipmentData } from '@kaetram/common/types/equipment';
@@ -19,25 +21,9 @@ export default class Equipment {
     public poisonous = false;
 
     // Stats
-    public attackStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
-
-    public defenseStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
-
-    public bonuses: Bonuses = {
-        dexterity: 0,
-        strength: 0,
-        archery: 0
-    };
+    public attackStats: Stats = Utils.getEmptyStats();
+    public defenseStats: Stats = Utils.getEmptyStats();
+    public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private updateCallback?: (equipment: Equipment) => void;
 
@@ -88,6 +74,10 @@ export default class Equipment {
         this.ranged = false;
         this.lumberjacking = -1;
         this.poisonous = false;
+
+        this.attackStats = Utils.getEmptyStats();
+        this.defenseStats = Utils.getEmptyStats();
+        this.bonuses = Utils.getEmptyBonuses();
     }
 
     /**

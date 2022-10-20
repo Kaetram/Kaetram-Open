@@ -1,4 +1,5 @@
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export let isInt = (n: number): boolean => n % 1 === 0;
 
@@ -154,5 +155,32 @@ export default {
             regY = Math.floor(y / Modules.Constants.MAP_DIVISION_SIZE);
 
         return regX + regY * this.sideLength;
+    },
+
+    /**
+     * For the purpose of not repeatedly writing the same stats.
+     * @returns Empty stats values.
+     */
+
+    getEmptyStats(): Stats {
+        return {
+            crush: 0,
+            slash: 0,
+            stab: 0,
+            magic: 0
+        };
+    },
+
+    /**
+     * Creates an empty bonuses object.
+     * @returns Empty bonuses object with default values.
+     */
+
+    getEmptyBonuses(): Bonuses {
+        return {
+            dexterity: 0,
+            strength: 0,
+            archery: 0
+        };
     }
 };

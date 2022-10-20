@@ -24,6 +24,7 @@ import { MobData } from '@kaetram/common/types/mob';
 import { Movement } from '@kaetram/server/src/network/packets';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type RawData = {
     [key: string]: MobData;
@@ -45,6 +46,11 @@ export default class Mob extends Character {
     public poisonous = false;
     public aggressive = false;
     private hiddenName = false;
+
+    // Stats & Bonuses
+    private attackStats: Stats = Utils.getEmptyStats();
+    private defenseStats: Stats = Utils.getEmptyStats();
+    private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
@@ -74,6 +80,7 @@ export default class Mob extends Character {
         this.loadData(data);
         this.loadPlugin(data.plugin!);
         this.loadSpawns();
+        this.loadStats();
 
         if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
     }
@@ -164,6 +171,32 @@ export default class Mob extends Character {
 
         // Custom plugin can be specified on a per-instance bassis.
         if (data.plugin) this.loadPlugin(data.plugin);
+    }
+
+    /**
+     * Loads the attack, defense stats, and the bonuses for the mob.
+     */
+
+    private loadStats(): void {
+        this.attackStats = {
+            crush: this.attackLevel * 2,
+            stab: this.attackLevel * 2,
+            slash: this.attackLevel * 2,
+            magic: this.attackLevel
+        };
+
+        this.defenseStats = {
+            crush: this.defenseLevel * 2,
+            stab: this.defenseLevel * 2,
+            slash: this.defenseLevel * 2,
+            magic: this.defenseLevel
+        };
+
+        this.bonuses = {
+            dexterity: this.attackLevel,
+            strength: this.attackLevel,
+            archery: this.attackRange + this.attackLevel
+        };
     }
 
     /**
@@ -423,21 +456,30 @@ export default class Mob extends Character {
     }
 
     /**
-     * Override to obtain the mob's weapon level.
-     * @returns The mob's weapon power level.
+     * Override for the superclass attack stats function.
+     * @return The total attack stats for the mob
      */
 
-    public override getWeaponLevel(): number {
-        return this.attackLevel;
+    public override getAttackStats(): Stats {
+        return this.attackStats;
     }
 
     /**
-     * Override to obtain the current mob's armour level.
-     * @returns The mob's armour level.
+     * Override for the superclass defence stats function.
+     * @return The total defence stats for the mob
      */
 
-    public override getArmourLevel(): number {
-        return this.defenseLevel;
+    public override getDefenseStats(): Stats {
+        return this.defenseStats;
+    }
+
+    /**
+     * Override for the superclass bonuses function.
+     * @returns The total bonuses of the mob.
+     */
+
+    public override getBonuses(): Bonuses {
+        return this.bonuses;
     }
 
     /**

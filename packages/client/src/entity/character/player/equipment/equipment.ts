@@ -1,25 +1,11 @@
+import Util from '../../../../utils/util';
+
 import { Stats, Bonuses } from '@kaetram/common/types/item';
 
 export default abstract class Equipment {
-    public attackStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
-
-    public defenseStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
-
-    public bonuses: Bonuses = {
-        dexterity: 0,
-        strength: 0,
-        archery: 0
-    };
+    public attackStats: Stats = Util.getEmptyStats();
+    public defenseStats: Stats = Util.getEmptyStats();
+    public bonuses: Bonuses = Util.getEmptyBonuses();
 
     public constructor(
         public key = '',

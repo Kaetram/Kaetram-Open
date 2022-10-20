@@ -3,17 +3,20 @@ import _ from 'lodash-es';
 import Entity from '../entity';
 import Combat from './combat/combat';
 
+import Poison from './poison';
+import Hit from './combat/hit';
 import World from '../../world';
 import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
 import Formulas from '../../../info/formulas';
-import Poison from './poison';
 
-import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
+import Utils from '@kaetram/common/util/utils';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
-import Hit from './combat/hit';
+import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
@@ -283,21 +286,31 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Unimplmented weapon level function for the superclass.
-     * @returns Default weapon level of 1.
+     * Superclass implementation for attack stats. These are just placeholder
+     * values and are replaced when the subclass implements them.
+     * @returns Placeholder default values for stats.
      */
 
-    public getWeaponLevel(): number {
-        return 1;
+    public getAttackStats(): Stats {
+        return Utils.getEmptyStats();
     }
 
     /**
-     * Unimplmented armour level function for the superclass.
-     * @returns Default armour level of 1.
+     * Superclass implementation for defense stats.
+     * @returns Placeholder empty stats (similar to attack stats).
      */
 
-    public getArmourLevel(): number {
-        return 1;
+    public getDefenseStats(): Stats {
+        return Utils.getEmptyStats();
+    }
+
+    /**
+     * Superclass implementation for bonsuses. Subclasses will change these accordingly.
+     * @returns Empty placeholder values for bonuses.
+     */
+
+    public getBonuses(): Bonuses {
+        return Utils.getEmptyBonuses();
     }
 
     /**

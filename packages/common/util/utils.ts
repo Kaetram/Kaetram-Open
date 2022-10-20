@@ -10,6 +10,7 @@ import log from './log';
 import config from '../config';
 
 import { Modules, Packets } from '../network';
+import { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
@@ -250,5 +251,32 @@ export default {
         let skill = Modules.Skills[key as keyof typeof Modules.Skills];
 
         return skill !== undefined ? skill : -1;
+    },
+
+    /**
+     * For the purpose of not repeatedly writing the same stats.
+     * @returns Empty stats values.
+     */
+
+    getEmptyStats(): Stats {
+        return {
+            crush: 0,
+            slash: 0,
+            stab: 0,
+            magic: 0
+        };
+    },
+
+    /**
+     * Creates an empty bonuses object.
+     * @returns Empty bonuses object with default values.
+     */
+
+    getEmptyBonuses(): Bonuses {
+        return {
+            dexterity: 0,
+            strength: 0,
+            archery: 0
+        };
     }
 };
