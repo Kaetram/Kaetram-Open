@@ -13,10 +13,16 @@ export default {
      * Damage is calculated by taking into consideration the attacker's accuracy
      * level and bonus. We then use the `randomWeightedInt` to create a weighted distribution
      * for the likelihood of attaining maximum damage. The maximum attainable accuracy is
-     * dictacted by the constant MAX_ACCURACY, when this is achieved then the likelihood of dealing
-     * maximum hit is roughly 1 in (MAX_ACCURACY / 2). We `add` onto the max accuracy such that
+     * dictacted by the constant MAX_ACCURACY. The higher the accuracy value the less likely to achieve
+     * maximum damage in a hit. We `add` onto the max accuracy such that
      * the higher the level the lower the addition. The higher the accuracy, the lower the chance
      * of hitting max damage.
+     *
+     * Max hit chance based on accuracy:
+     * > 0.45 - 2.19%
+     * > 0.90 - 0.94%
+     * > 1.35 - 0.71%
+     * > 2.50 -> 0.48%
      */
 
     getDamage(attacker: Character, target: Character, critical = false): number {
