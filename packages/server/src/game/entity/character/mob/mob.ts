@@ -54,8 +54,8 @@ export default class Mob extends Character {
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
-    private defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
-    private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
+    public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
+    public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
@@ -193,7 +193,7 @@ export default class Mob extends Character {
         };
 
         this.bonuses = {
-            dexterity: this.attackLevel,
+            accuracy: this.attackLevel,
             strength: this.attackLevel,
             archery: this.attackRange + this.attackLevel
         };
@@ -480,6 +480,25 @@ export default class Mob extends Character {
 
     public override getBonuses(): Bonuses {
         return this.bonuses;
+    }
+
+    /**
+     * Implementation for accuracy level. We use the attack level for mobs.
+     * @returns The attack level of the mob.
+     */
+
+    public override getAccuracyLevel(): number {
+        return this.attackLevel;
+    }
+
+    /**
+     * Implementation for strength level. In the case of mobs, we just
+     * use their attack level to calculate their damage output.
+     * @returns The mob's attack level.
+     */
+
+    public override getStrengthLevel(): number {
+        return this.attackLevel;
     }
 
     /**

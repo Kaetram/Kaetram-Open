@@ -14,7 +14,7 @@ export interface Stats {
 }
 
 export interface Bonuses {
-    dexterity: number;
+    accuracy: number;
     strength: number;
     archery: number;
 }

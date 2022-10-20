@@ -121,13 +121,13 @@ export default class Equipments extends Menu {
             defenseStats.stab += equipment.defenseStats.stab;
             defenseStats.magic += equipment.defenseStats.magic;
 
-            bonuses.dexterity += equipment.bonuses.dexterity;
+            bonuses.accuracy += equipment.bonuses.accuracy;
             bonuses.strength += equipment.bonuses.strength;
             bonuses.archery += equipment.bonuses.archery;
         });
 
         let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
-            bonsuses = ['Dexterity', 'Strength', 'Archery'];
+            bonsuses = ['Accuracy', 'Strength', 'Archery'];
 
         _.each(stats, (stat: string) => {
             let lStat = stat.toLowerCase(),
@@ -159,6 +159,8 @@ export default class Equipments extends Menu {
             armourSprite = this.player.sprite,
             isFlipped = this.imageOrientation === Modules.Orientation.Left,
             index = this.getOrientationIndex();
+
+        if (!armourSprite) return;
 
         // Set the player armour sprite.
         this.playerArmour.style.backgroundImage = armourUrl;
