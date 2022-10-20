@@ -65,6 +65,8 @@ export default class MenuController {
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
 
+        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
+
         this.load();
     }
 
