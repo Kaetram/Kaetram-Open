@@ -166,10 +166,6 @@ export default class Equipments {
             this.totalBonuses.strength += equipment.bonuses.strength;
             this.totalBonuses.archery += equipment.bonuses.archery;
         });
-
-        console.log(this.totalAttackStats);
-        console.log(this.totalDefenseStats);
-        console.log(this.totalBonuses);
     }
 
     /**
