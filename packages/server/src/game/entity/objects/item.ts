@@ -59,7 +59,7 @@ export default class Item extends Entity {
 
     // Bonuses
     public bonuses: Bonuses = {
-        dexterity: 0,
+        accuracy: 0,
         strength: 0,
         archery: 0
     };

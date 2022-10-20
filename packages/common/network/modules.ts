@@ -372,7 +372,8 @@ export const enum Constants {
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
     TREE_REGROW = 30_000,
-    SKILL_LOOP = 1000 // How often we check the loop of a skill
+    SKILL_LOOP = 1000, // How often we check the loop of a skill
+    MAX_ACCURACY = 0.45 // Maximum attainable accuracy for a character.
 }
 
 export enum MinigameConstants {
