@@ -49,9 +49,9 @@ export default abstract class Equipment {
         this.ranged = ranged;
 
         // Add the stats and bonuses only if they exist.
-        if (attackStats) this.attackStats = attackStats;
-        if (defenseStats) this.defenseStats = defenseStats;
-        if (bonuses) this.bonuses = bonuses;
+        this.attackStats = attackStats || Util.getEmptyStats();
+        this.defenseStats = defenseStats || Util.getEmptyStats();
+        this.bonuses = bonuses || Util.getEmptyBonuses();
     }
 
     /**
