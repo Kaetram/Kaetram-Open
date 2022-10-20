@@ -56,8 +56,6 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
-        console.log(`maxDamage: ${maxDamage}, accuracy: ${accuracy}`);
-
         return Utils.randomWeightedInt(0, maxDamage, accuracy);
     },
 
