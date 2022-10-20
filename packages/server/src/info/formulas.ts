@@ -57,7 +57,8 @@ export default {
         accuracy += (1 / accuracyLevel) * 1.25;
 
         // We use the scalar difference of the stats to append onto the accuracy.
-        if (stats !== 0) accuracy -= Math.pow(stats, 0.33) * 0.01;
+        if (stats > 0) accuracy -= Math.pow(stats, 0.33) * 0.01;
+        else accuracy += Math.pow(Math.abs(stats), 0.33) * 0.01;
 
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
