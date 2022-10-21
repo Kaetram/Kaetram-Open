@@ -43,26 +43,11 @@ export default class Item extends Entity {
     public poisonous = false;
 
     // Stats
-    public attackStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
-
-    public defenseStats: Stats = {
-        crush: 0,
-        slash: 0,
-        stab: 0,
-        magic: 0
-    };
+    public attackStats: Stats = Utils.getEmptyStats();
+    public defenseStats: Stats = Utils.getEmptyStats();
 
     // Bonuses
-    public bonuses: Bonuses = {
-        accuracy: 0,
-        strength: 0,
-        archery: 0
-    };
+    public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Miscellaneous variables
     public movementSpeed = -1;
@@ -107,6 +92,7 @@ export default class Item extends Entity {
 
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
+        this.key = this.data.spriteName || this.key;
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
@@ -146,7 +132,6 @@ export default class Item extends Entity {
 
     public destroy(): void {
         clearTimeout(this.blinkTimeout!);
-
         clearTimeout(this.despawnTimeout!);
 
         if (!this.dropped) this.respawn();

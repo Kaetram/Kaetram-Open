@@ -57,8 +57,7 @@ export default {
         accuracy += (1 / accuracyLevel) * 1.25;
 
         // We use the scalar difference of the stats to append onto the accuracy.
-        if (stats > 0) accuracy -= Math.pow(stats, 0.33) * 0.01;
-        else accuracy += Math.pow(Math.abs(stats), 0.33) * 0.01;
+        accuracy += Math.abs((1 / stats) * 1.25);
 
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
@@ -67,15 +66,15 @@ export default {
     },
 
     /**
-     * Calculates the maximum damage attainable by a character given their strength stats,
-     * their weapon bonuses, and any special active effects.
+     * Calculates the maximum damage attainable by a character given their strength (or archery) level,
+     * their equipment bonuses, and any special active effects.
      * @param critical A critical hit boosts the damage multiplier by 1.5x;
      */
 
     getMaxDamage(character: Character, critical = false): number {
-        let strengthBonus = character.getBonuses().strength,
-            strengthLevel = character.getStrengthLevel(),
-            damage = (strengthBonus + strengthLevel) * 1.25;
+        let bonus = character.getDamageBonus(),
+            level = character.getSkillDamageLevel(),
+            damage = (bonus + level) * 1.25;
 
         // Apply the critical damage multiplier onto the damage.
         if (critical) damage *= 1.5;
