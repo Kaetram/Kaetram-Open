@@ -65,7 +65,7 @@ export default class Mob extends Character {
     private respawnCallback?: () => void;
 
     public talkCallback?: (message: string) => void;
-    public roamingCallback?: () => void;
+    public roamingCallback?: (retries?: number) => void;
 
     public constructor(world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
@@ -123,7 +123,13 @@ export default class Mob extends Character {
 
         // The roaming interval if the mob is a roaming entity.
         if (data.roaming)
-            setInterval(() => this.roamingCallback?.(), Modules.MobDefaults.ROAM_FREQUENCY);
+            setTimeout(() => {
+                this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
+                setInterval(
+                    () => this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES),
+                    Modules.MobDefaults.ROAM_FREQUENCY
+                );
+            }, Utils.randomInt(0, Modules.MobDefaults.ROAM_FREQUENCY - 1));
     }
 
     /**
