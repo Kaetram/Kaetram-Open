@@ -1,11 +1,18 @@
+import Util from '../../../../utils/util';
+
+import { Stats, Bonuses } from '@kaetram/common/types/item';
+
 export default abstract class Equipment {
+    public attackStats: Stats = Util.getEmptyStats();
+    public defenseStats: Stats = Util.getEmptyStats();
+    public bonuses: Bonuses = Util.getEmptyBonuses();
+
     public constructor(
         public key = '',
         public name = '',
         public count = 0,
         public ability = -1,
         public abilityLevel = -1,
-        public power = 0,
         public ranged = false
     ) {}
 
@@ -17,7 +24,10 @@ export default abstract class Equipment {
      * @param count The amount of items in the equipment (if it is stackable).
      * @param ability The ability that the item gives.
      * @param abilityLevel The level of the ability.
-     * @param power The power of the item (generally used as a power indicator in the UI).
+     * @param ranged Whether or not the item is ranged.
+     * @param attackStats The attack stats of the item.
+     * @param defenseStats The defense stats of the item.
+     * @param bonuses The bonuses of the item.
      */
 
     public update(
@@ -26,16 +36,22 @@ export default abstract class Equipment {
         count = 0,
         ability = -1,
         abilityLevel = -1,
-        power = 0,
-        ranged = false
+        ranged = false,
+        attackStats?: Stats,
+        defenseStats?: Stats,
+        bonuses?: Bonuses
     ): void {
         this.key = key;
         this.name = name;
         this.count = count;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
-        this.power = power;
         this.ranged = ranged;
+
+        // Add the stats and bonuses only if they exist.
+        this.attackStats = attackStats || Util.getEmptyStats();
+        this.defenseStats = defenseStats || Util.getEmptyStats();
+        this.bonuses = bonuses || Util.getEmptyBonuses();
     }
 
     /**

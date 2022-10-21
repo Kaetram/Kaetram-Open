@@ -1,10 +1,40 @@
+@keyframes flash {
+    0% {
+        background-color: #ffa2a2;
+    }
+
+    100% {
+        background-color: #e22525;
+    }
+}
+
+@keyframes flash-green {
+    0% {
+        background-color: #a2ffa2;
+    }
+
+    100% {
+        background-color: #25e225;
+    }
+}
+
+@keyframes flash-poison {
+    0% {
+        background-color: #0cab3c;
+    }
+
+    100% {
+        background-color: #035819;
+    }
+}
+
 #player-info {
     position: absolute;
     top: 10px;
     left: 10px;
 }
 
-#health-bar-text {
+#health-bar-text, #mana-bar-text {
     font-family: AdvoCut, sans-serif;
     text-align: center;
     vertical-align: middle;
@@ -12,12 +42,19 @@
 
 #health,
 #health-info {
-    cursor: default;
+    cursor: url('/img/3/hand.png'), auto;
 }
 
 #health {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to right, #f00, #ef5a5a);
+
+    transition: 0.5s width ease;
+}
+
+#mana {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to right, rgb(12 55 208), #257cd2);
 
     transition: 0.5s width ease;
 }
@@ -42,12 +79,9 @@
 }
 
 @media (--lg) {
-    #health,
-    #health-bar {
+    #health, #health-bar, #mana, #mana-bar {
         position: absolute;
-        top: 4.5px;
-        left: 30px;
-
+    
         width: 230px;
         height: 26px;
         margin: 0;
@@ -58,10 +92,18 @@
         border: 0;
     }
 
-    #health-info {
+    #health, #health-bar {
+        top: 4.5px;
+        left: 30px;
+    }
+
+    #mana, #mana-bar {
+        top: 44px;
+        left: 30px;
+    }
+
+    #health-info, #mana-info {
         position: absolute;
-        top: 0;
-        left: 0;
 
         width: 264px;
         height: 39px;
@@ -71,18 +113,35 @@
         color: white;
         text-align: center;
 
-        background-image: url('/img/3/main.png');
-        background-position: 0 -834px;
         border: 0;
     }
 
-    #exp {
+    #health-info {
+        top: 0;
+        left: 0;
+
+        background-image: url('/img/3/main.png');
+        background-position: 0 -834px;
+    }
+
+    #mana-info {
+        top: 38px;
+        left: 0;
+
+        background-image: url('/img/3/main.png');
+        background-position: -264px -834px;
+    }
+
+    #exp, #exp-bar {
         position: absolute;
         top: 30px;
         left: 36px;
 
         width: 228px;
         height: 15px;
+    }
+
+    #exp {
         margin: 0;
         padding: 0;
 
@@ -90,20 +149,13 @@
     }
 
     #exp-bar {
-        position: absolute;
-        top: 30px;
-        left: 36px;
-
-        width: 228px;
-        height: 15px;
-
         color: rgb(255 255 255 / 100%);
 
         background-image: url('/img/3/main.png');
         background-position: 0 -873px;
     }
 
-    #health-bar-text {
+    #health-bar-text, #mana-bar-text {
         margin: 10px 0 0 30px;
 
         font-size: 18px;
@@ -111,11 +163,8 @@
 }
 
 @media (--md) {
-    #health,
-    #health-bar {
+    #health, #health-bar, #mana, #mana-bar {
         position: absolute;
-        top: 3px;
-        left: 20px;
 
         width: 154px;
         height: 20px;
@@ -127,10 +176,13 @@
         border: 0;
     }
 
-    #health-info {
+    #health, #health-bar {
+        top: 3px;
+        left: 20px;
+    }
+
+    #health-info, #mana-info {
         position: absolute;
-        top: 0;
-        left: 0;
 
         width: 176px;
         height: 26px;
@@ -140,22 +192,40 @@
         color: white;
         text-align: center;
 
-        background-image: url('/img/2/main.png');
-        background-position: 0 -556px;
         border: 0;
     }
 
-    #health-bar-text {
-        margin: 5px 0 0 20px;
+    #health-info {
+        top: 0;
+        left: 0;
+
+        background-image: url('/img/2/main.png');
+        background-position: 0 -556px;
     }
 
-    #exp {
+    #mana-info {
+        top: 26px;
+        left: 0;
+
+        background-image: url('/img/2/main.png');
+        background-position: -176px -556px;
+    }
+
+    #mana, #mana-bar {
+        top: 28px;
+        left: 20px;
+    }
+
+    #exp, #exp-bar {
         position: absolute;
         top: 20px;
         left: 24px;
 
         width: 152px;
         height: 9px;
+    }
+
+    #exp {
         margin: 0;
         padding: 0;
 
@@ -163,16 +233,13 @@
     }
 
     #exp-bar {
-        position: absolute;
-        top: 20px;
-        left: 24px;
-
-        width: 152px;
-        height: 9px;
-
         color: rgb(255 255 255 / 100%);
 
         background-image: url('/img/2/main.png');
         background-position: 0 -582px;
+    }
+
+    #health-bar-text, #mana-bar-text {
+        margin: 5px 0 0 20px;
     }
 }

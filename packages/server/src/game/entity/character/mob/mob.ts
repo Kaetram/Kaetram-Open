@@ -24,6 +24,7 @@ import { MobData } from '@kaetram/common/types/mob';
 import { Movement } from '@kaetram/server/src/network/packets';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type RawData = {
     [key: string]: MobData;
@@ -46,10 +47,15 @@ export default class Mob extends Character {
     public aggressive = false;
     private hiddenName = false;
 
+    // Stats & Bonuses
+    private attackStats: Stats = Utils.getEmptyStats();
+    private defenseStats: Stats = Utils.getEmptyStats();
+    private bonuses: Bonuses = Utils.getEmptyBonuses();
+
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
-    private defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
-    private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
+    public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
+    public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
@@ -74,6 +80,7 @@ export default class Mob extends Character {
         this.loadData(data);
         this.loadPlugin(data.plugin!);
         this.loadSpawns();
+        this.loadStats();
 
         if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
     }
@@ -173,6 +180,32 @@ export default class Mob extends Character {
     }
 
     /**
+     * Loads the attack, defense stats, and the bonuses for the mob.
+     */
+
+    private loadStats(): void {
+        this.attackStats = {
+            crush: this.attackLevel * 2,
+            stab: this.attackLevel * 2,
+            slash: this.attackLevel * 2,
+            magic: this.attackLevel
+        };
+
+        this.defenseStats = {
+            crush: this.defenseLevel * 2,
+            stab: this.defenseLevel * 2,
+            slash: this.defenseLevel * 2,
+            magic: this.defenseLevel
+        };
+
+        this.bonuses = {
+            accuracy: this.attackLevel,
+            strength: this.attackLevel,
+            archery: this.attackRange + this.attackLevel
+        };
+    }
+
+    /**
      * Destroys the mob and removes all targets. Begins
      * the respawning process if the mob is respawnable.
      * Sets the mob's position back to the spawn point,
@@ -268,7 +301,7 @@ export default class Mob extends Character {
      */
 
     public canAggro(player: Player): boolean {
-        if (!this.aggressive || this.target) return false;
+        if (!this.aggressive || this.target || !player.ready) return false;
 
         if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
 
@@ -429,21 +462,59 @@ export default class Mob extends Character {
     }
 
     /**
-     * Override to obtain the mob's weapon level.
-     * @returns The mob's weapon power level.
+     * Override for the superclass attack stats function.
+     * @return The total attack stats for the mob
      */
 
-    public override getWeaponLevel(): number {
+    public override getAttackStats(): Stats {
+        return this.attackStats;
+    }
+
+    /**
+     * Override for the superclass defence stats function.
+     * @return The total defence stats for the mob
+     */
+
+    public override getDefenseStats(): Stats {
+        return this.defenseStats;
+    }
+
+    /**
+     * Override for the superclass bonuses function.
+     * @returns The total bonuses of the mob.
+     */
+
+    public override getBonuses(): Bonuses {
+        return this.bonuses;
+    }
+
+    /**
+     * Implementation for accuracy level. We use the attack level for mobs.
+     * @returns The attack level of the mob.
+     */
+
+    public override getAccuracyLevel(): number {
         return this.attackLevel;
     }
 
     /**
-     * Override to obtain the current mob's armour level.
-     * @returns The mob's armour level.
+     * Implementation for strength level. In the case of mobs, we just
+     * use their attack level to calculate their damage output.
+     * @returns The mob's attack level.
      */
 
-    public override getArmourLevel(): number {
-        return this.defenseLevel;
+    public override getStrengthLevel(): number {
+        return this.attackLevel;
+    }
+
+    /**
+     * Implementation for archery level. In the case of mobs, we just
+     * use their attack level to calculate their damage output.
+     * @returns The mob's archery level.
+     */
+
+    public override getArcheryLevel(): number {
+        return this.attackLevel;
     }
 
     /**

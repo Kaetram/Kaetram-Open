@@ -91,7 +91,7 @@
     font-weight: bold;
 }
 
-#navigator {
+.navigator {
     position: absolute;
     top: 89%;
     left: 37%;
@@ -99,13 +99,13 @@
 
 @each $size, $i in media.$sizes {
     @media ($size) {
-        #state-page {
+        #state-page, .state-page {
             display: block;
 
             background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
         }
 
-        #skill-page {
+        #abilities-page {
             display: none;
 
             background: url('/img/#{$i}/characterdialogsheet.png') -124px * $i 0;
@@ -167,50 +167,56 @@
             text-shadow: 1px 1px #808080;
         }
 
-        #weapon-slot-info {
-            top: 123px * $i;
-            left: 22px * $i;
+        #equipment-button {
+            position: absolute;
+            top: 55%;
+            right: 51px * $i;
+        
+            width: 21px * $i;
+            height: 17px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 -257px * $i;
         }
 
-        #armour-slot-info {
-            top: 123px * $i;
-
-            width: 102px * $i;
-
-            text-align: right;
+        #equipment-button:hover {
+            background: url('/img/#{$i}/characterdialogsheet.png') -42px * $i -257px * $i;
         }
 
-        #weapon-slot,
-        #armour-slot,
-        #pendant-slot,
-        #ring-slot,
-        #boots-slot {
+        #equipment-button:active, #equipment-button.active {
+            background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
+        }
+
+        .weapon-slot,
+        .armour-slot,
+        .pendant-slot,
+        .ring-slot,
+        .boots-slot {
             margin-top: -2px * $i;
 
             background-size: 600%;
         }
 
-        #weapon-slot {
+        .weapon-slot {
             top: 120px * $i;
             left: 4px * $i;
         }
 
-        #armour-slot {
+        .armour-slot {
             top: 119px * $i;
             left: 104px * $i;
         }
 
-        #pendant-slot {
+        .pendant-slot {
             top: 78px * $i;
             left: 54px * $i;
         }
 
-        #ring-slot {
+        .ring-slot {
             top: 172px * $i;
             left: 27px * $i;
         }
 
-        #boots-slot {
+        .boots-slot {
             top: 173px * $i;
             left: 82px * $i;
         }
@@ -227,13 +233,13 @@
             top: 50px * $i;
         }
 
-        #navigator {
+        .navigator {
             width: 42px * $i;
             height: 17px * $i;
         }
 
-        #previous,
-        #next {
+        .previous,
+        .next {
             position: absolute;
             top: 0;
             left: initial;
@@ -244,7 +250,7 @@
             background-image: url('/img/#{$i}/characterdialogsheet.png');
         }
 
-        #previous {
+        .previous {
             cursor: pointer;
 
             left: 0;
@@ -252,13 +258,13 @@
             background-position: 0 -240px * $i;
 
             &.disabled {
-                cursor: default;
+                cursor: url('/img/3/hand.png'), auto;
 
                 background-position: 0 -223px * $i;
             }
         }
 
-        #next {
+        .next {
             cursor: pointer;
 
             left: 21px * $i;
@@ -266,7 +272,7 @@
             background-position: -21px * $i -223px * $i;
 
             &.disabled {
-                cursor: default;
+                cursor: url('/img/3/hand.png'), auto;
 
                 background-position: -21px * $i -240px * $i;
             }
@@ -283,6 +289,170 @@
             height: 8px * $i;
 
             font-size: 8px * $i;
+        }
+
+        .ability, .ability-icon {
+            position: absolute;
+
+            display: none;
+
+            width: 16px * $i;
+            height: 16px * $i;
+        }
+
+        .ability-icon {
+            display: block;
+        }
+
+        .ability-icon-intimidate {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: 0 1px;
+        }
+
+        .ability-icon-run {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -16px * $i 1px;
+        }
+
+        .ability-icon-awareness {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -32px * $i 1px;
+        }
+
+        .ability-icon-dualistsmark {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -48px * $i 1px;
+        }
+
+        .ability-icon-hotshot {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -64px * $i 1px;
+        }
+
+        .ability-icon-thickskin {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -80px * $i 1px;
+        }
+
+        .ability-icon-precognition {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -96px * $i 1px;
+        }
+
+        .ability-icon-secretcalling {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -112px * $i 1px;
+        }
+
+        .ability-level {
+            position: absolute;
+
+            width: 5px * $i;
+            height: 6px * $i;
+            margin-top: 10px * $i;
+
+            background-image: url('/img/#{$i}/characterdialogsheet.png');
+            background-position: -97px * $i -242px * $i;
+        }
+
+        .ability-level1 {
+            margin-left: 19px * $i;
+        }
+
+        .ability-level2 {
+            margin-left: 25px * $i;
+        }
+
+        .ability-level3 {
+            margin-left: 31px * $i;
+        }
+
+        .ability-level4 {
+            margin-left: 37px * $i;
+        }
+
+        // Active abilities
+
+        #activeability1 {
+            top: 16px * $i;
+            left: 14px * $i;
+        }
+
+        #activeability2 {
+            top: 16px * $i;
+            left: 70px * $i;
+        }
+
+        #activeability3 {
+            top: 36px * $i;
+            left: 14px * $i;
+        }
+
+        #activeability4 {
+            top: 36px * $i;
+            left: 70px * $i;
+        }
+
+        #activeability5 {
+            top: 56px * $i;
+            left: 14px * $i;
+        }
+
+        #activeability6 {
+            top: 56px * $i;
+            left: 70px * $i;
+        }
+
+        #activeability7 {
+            top: 76px * $i;
+            left: 14px * $i;
+        }
+
+        #activeability8 {
+            top: 76px * $i;
+            left: 70px * $i;
+        }
+
+        // Passive abilities
+
+        #passiveability1 {
+            top: 112px * $i;
+            left: 14px * $i;
+        }
+
+        #passiveability2 {
+            top: 112px * $i;
+            left: 70px * $i;
+        }
+
+        #passiveability3 {
+            top: 132px * $i;
+            left: 14px * $i;
+        }
+
+        #passiveability4 {
+            top: 132px * $i;
+            left: 70px * $i;
+        }
+
+        #passiveability5 {
+            top: 152px * $i;
+            left: 14px * $i;
+        }
+
+        #passiveability6 {
+            top: 152px * $i;
+            left: 70px * $i;
+        }
+
+        #passiveability7 {
+            top: 172px * $i;
+            left: 14px * $i;
+        }
+
+        #passiveability8 {
+            top: 172px * $i;
+            left: 70px * $i;
         }
     }
 }
@@ -301,11 +471,6 @@
     #achievement-list {
         width: 318px;
         height: 246px;
-    }
-
-    .skill-slots {
-        width: 48px;
-        height: 48px;
     }
 
     .quest-name,
@@ -328,13 +493,6 @@
     #achievement-list {
         width: 212px;
         height: 164px;
-    }
-
-    .skill-slots {
-        width: 32px;
-        height: 32px;
-
-        background-image: url('/img/2/skillicons.png');
     }
 
     .quest-name,
@@ -360,11 +518,6 @@
     #achievement-list {
         width: 104px;
         height: 82px;
-    }
-
-    .skill-slots {
-        width: 16px;
-        height: 16px;
     }
 
     .quest-name,

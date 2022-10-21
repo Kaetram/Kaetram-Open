@@ -34,6 +34,10 @@ export interface RawStage {
     itemKey?: string;
     itemCount?: number;
 
+    /** If the stage grants the user an ability. */
+    ability?: string;
+    abilityLevel?: number; // Sets an ability to a level.
+
     /** If a tree must be cut. */
     tree?: string;
     treeCount?: number; // Amount of tress to be cut.
@@ -59,6 +63,8 @@ export interface StageData {
     popup?: PopupData;
     itemKey?: string;
     itemCount?: number;
+    ability?: string;
+    abilityLevel?: number;
     tree?: string;
     treeCount?: number;
 }

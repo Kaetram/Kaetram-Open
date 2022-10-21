@@ -63,10 +63,8 @@ export default class Network {
         let player = new Player(this.world, this.database, connection),
             timeDifference = Date.now() - this.getLastConnection(connection);
 
-        if (!config.debugging && timeDifference < this.timeoutThreshold) {
-            connection.reject('toofast');
-            return;
-        }
+        if (!config.debugging && timeDifference < this.timeoutThreshold)
+            return connection.reject('toofast');
 
         this.createPacketQueue(player);
 

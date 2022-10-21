@@ -5,7 +5,7 @@ export default class Statistics {
     public pvpDeaths = 0;
 
     public creationTime = Date.now(); // Time of game's creation.
-    public totalSecondsPlayed = 0;
+    public totalTimePlayed = 0; // Total time played in milliseconds.
     public averageTimePlayed = 0;
     public lastLogin = Date.now();
     public loginCount = 1;
@@ -22,7 +22,7 @@ export default class Statistics {
         this.pvpKills = data.pvpKills || this.pvpKills;
         this.pvpDeaths = data.pvpDeaths || this.pvpDeaths;
         this.creationTime = data.creationTime || this.creationTime;
-        this.totalSecondsPlayed = data.totalSecondsPlayed || this.totalSecondsPlayed;
+        this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
         this.averageTimePlayed = data.averageTimePlayed || this.averageTimePlayed;
         this.lastLogin = data.lastLogin || this.lastLogin;
         this.loginCount = data.loginCount + 1 || this.loginCount;
@@ -56,14 +56,14 @@ export default class Statistics {
     public serialize(): StatisticsData {
         // Serializing also gets treated as a logging out event, so we calculate stuff here.
         this.lastLogin = Date.now();
-        this.totalSecondsPlayed += Date.now() - this.loginTime; // add time played to total time played.
+        this.totalTimePlayed += Date.now() - this.loginTime; // add time played to total time played.
         this.calculateAverageTimePlayed();
 
         return {
             pvpKills: this.pvpKills,
             pvpDeaths: this.pvpDeaths,
             creationTime: this.creationTime,
-            totalSecondsPlayed: this.totalSecondsPlayed,
+            totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,
             lastLogin: this.lastLogin,
             loginCount: this.loginCount

@@ -13,6 +13,8 @@ import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
+import QuickSlots from '../menu/quickslots';
+import Equipments from '../menu/equipments';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -27,6 +29,8 @@ export default class MenuController {
     private warp: Warp;
     private notification: Notification;
     private settings: Settings;
+    private equipments: Equipments;
+    public header: Header;
 
     public menu: Menu[];
 
@@ -39,6 +43,8 @@ export default class MenuController {
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
+        this.header = new Header(game.player);
+        this.equipments = new Equipments(game.player, game.sprites);
 
         this.menu = [
             this.inventory,
@@ -48,7 +54,8 @@ export default class MenuController {
             this.enchant,
             this.warp,
             this.notification,
-            this.settings
+            this.settings,
+            this.equipments
         ];
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -56,6 +63,9 @@ export default class MenuController {
         this.store.onSelect(this.handleStoreSelect.bind(this));
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+        this.profile.onAbility(this.handleAbility.bind(this));
+
+        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
 
         this.load();
     }
@@ -66,7 +76,7 @@ export default class MenuController {
      */
 
     private load(): void {
-        new Header(this.game.player);
+        new QuickSlots(this.game.player);
 
         this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
@@ -93,6 +103,8 @@ export default class MenuController {
      */
 
     public resize(): void {
+        this.header.resize(); // Non Menu UI (for now?)
+
         this.forEachMenu((menu: Menu) => menu.resize());
     }
 
@@ -196,6 +208,23 @@ export default class MenuController {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Unequip,
             type
+        });
+    }
+
+    /**
+     * Callback for when an action within the abilities menu occurs.
+     * Generally this will consist of activating an ability or dragging it
+     * into the quick slot menu.
+     * @param type The type of action we are performing (using ability or dragging it to a quickslot).
+     * @param key The key of the ability we are performing an action on.
+     * @param index The index of the quickslot we are dragging to (only specified when dragging).
+     */
+
+    private handleAbility(type: Opcodes.Ability, key: string, index?: number): void {
+        this.game.socket.send(Packets.Ability, {
+            opcode: type,
+            key,
+            index
         });
     }
 

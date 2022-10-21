@@ -103,6 +103,8 @@ export default abstract class Quest {
         // Extract the dialogue for the NPC.
         let dialogue = this.getNPCDialogue(npc, player);
 
+        if (!dialogue) return log.warning(`[${this.name}] No dialogue found for NPC: ${npc.key}.`);
+
         /**
          * Ends the conversation. If the player has the required item in the inventory
          * it will check for that first. If the stage requires the player be given an item
@@ -110,11 +112,10 @@ export default abstract class Quest {
          */
         if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
             if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
-            else if (
-                this.hasItemToGive() &&
-                this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!)
-            )
-                this.progress();
+            else if (this.hasItemToGive()) {
+                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!))
+                    this.progress();
+            } else if (this.hasAbility()) this.givePlayerAbility(player);
             else this.progress();
 
         // Talk to the NPC and progress the dialogue.
@@ -204,6 +205,9 @@ export default abstract class Quest {
         if (this.hasItemToGive())
             this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
 
+        // If the stage rewards an ability, we give it to the player.
+        if (this.hasAbility()) this.givePlayerAbility(player);
+
         this.progress();
     }
 
@@ -212,8 +216,6 @@ export default abstract class Quest {
      */
 
     private progress(subStage?: boolean): void {
-        log.debug(`${this.name} Quest progression.`);
-
         // Progress substage only if the parameter is defined.
         if (subStage) this.setStage(this.stage, this.subStage + 1);
         else this.setStage(this.stage + 1);
@@ -230,6 +232,15 @@ export default abstract class Quest {
 
     private givePlayerItem(player: Player, key: string, count = 1): boolean {
         return player.inventory.add(new Item(key, -1, -1, false, count));
+    }
+
+    /**
+     * Grants the player an ability and defaults to level 1 if no level is specified.
+     * @param player The player we are granting the ability to.
+     */
+
+    private givePlayerAbility(player: Player): void {
+        player.abilities.add(this.stageData.ability!, this.stageData.abilityLevel || 1);
     }
 
     /**
@@ -258,6 +269,15 @@ export default abstract class Quest {
 
     private hasItemToGive(): boolean {
         return !!this.stageData.itemKey;
+    }
+
+    /**
+     * Checks whether or not the current stage has an ability to give to the player.
+     * @returns If the `ability` property exists in the current stage.
+     */
+
+    private hasAbility(): boolean {
+        return !!this.stageData.ability;
     }
 
     /**
@@ -358,6 +378,9 @@ export default abstract class Quest {
 
             return stage.text!;
         }
+
+        // The default text witll be the `text` array of strings.
+        if (this.stageData.npc === npc.key) return this.stageData.text!;
 
         return [''];
     }

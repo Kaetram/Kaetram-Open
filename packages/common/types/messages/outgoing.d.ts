@@ -7,6 +7,7 @@ import { SerializedStoreItem } from '../stores';
 import { SerializedEquipment, EquipmentData } from '../equipment';
 import { SerializedSkills, SkillData } from '../skills';
 import { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import { SerializedAbility, AbilityData } from '../ability';
 
 import type { Modules, Opcodes } from '../../network';
 
@@ -57,6 +58,7 @@ export interface MovementPacket {
     target?: string; // Entity instance we are trying to follow if specified.
     orientation?: Modules.Orientation;
     state?: boolean; // State about stun/freeze.
+    movementSpeed?: number; // Movement speed of the entity.
 }
 
 export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) => void;
@@ -152,7 +154,9 @@ export type ContainerCallback = (opcode: Opcodes.Container, info: ContainerPacke
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type AbilityCallback = () => void;
+export type AbilityPacket = SerializedAbility | AbilityData;
+
+export type AbilityCallback = (opcode: Opcodes.Ability, info: AbilityPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -204,11 +208,9 @@ export type HealCallback = (info: HealPacket) => void;
 
 export interface ExperiencePacket {
     instance: string;
-    amount: number;
+    amount?: number;
     level?: number;
-    experience?: number;
-    nextExperience?: number;
-    prevExperience?: number;
+    skill?: Modules.Skills;
 }
 
 export type ExperienceCallback = (opcode: Opcodes.Experience, info: ExperiencePacket) => void;
@@ -335,3 +337,15 @@ export interface MinigamePacket {
 }
 
 export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface EffectPacket {
+    instance: string;
+    movementSpeed?: number;
+    status?: string;
+}
+
+export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////

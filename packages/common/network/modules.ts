@@ -44,6 +44,11 @@ export enum EntityType {
     Object
 }
 
+export enum AbilityType {
+    Active,
+    Passive
+}
+
 export type HealTypes = 'passive' | 'hitpoints' | 'mana';
 
 /**
@@ -94,16 +99,6 @@ export enum Projectiles {
     IceBall,
     Terror,
     Tornado
-}
-
-export enum Abilities {
-    Freeze,
-    Curse,
-    Smash,
-    Tornado,
-    Run,
-    Call,
-    Evasion
 }
 
 export enum Equipment {
@@ -207,16 +202,17 @@ export enum Languages {
 
 export enum Warps {
     Mudwich,
-    Southorn,
-    Lakesworld,
-    Aynor,
-    Crullfeld,
-    Patsow
+    Undersea
 }
 
 export enum Skills {
     Lumberjacking,
-    Mining
+    Accuracy,
+    Archery,
+    Health,
+    Magic,
+    Mining,
+    Strength
 }
 
 export enum Enchantment {
@@ -229,17 +225,6 @@ export enum Enchantment {
     AntiStun,
     Splash
 }
-
-export let EnchantmentNames = [
-    'Bloodsucking',
-    'Critical',
-    'Evasion',
-    'Spike',
-    'Explosive',
-    'Stun',
-    'AntiStun',
-    'Splash'
-];
 
 export interface Colours {
     fill: string;
@@ -297,6 +282,43 @@ export let DamageColours = {
     }
 };
 
+export let SkillExpColours = {
+    [Skills.Lumberjacking]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Accuracy]: {
+        fill: 'rgb(6, 191, 188)',
+        stroke: 'rgb(2, 94, 93)'
+    },
+
+    [Skills.Archery]: {
+        fill: 'rgb(34, 214, 130)',
+        stroke: 'rgb(7, 184, 101)'
+    },
+
+    [Skills.Health]: {
+        fill: 'rgb(239, 90, 90)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Magic]: {
+        fill: 'rgb(37, 124, 210)',
+        stroke: 'rgb(12, 55, 208)'
+    },
+
+    [Skills.Mining]: {
+        fill: 'rgb(105, 106, 107)',
+        stroke: 'rgb(45, 45, 46)'
+    },
+
+    [Skills.Strength]: {
+        fill: 'rgb(232, 211, 185)',
+        stroke: 'rgb(189, 172, 151)'
+    }
+};
+
 export let NameColours = {
     [SpecialEntityTypes.Achievement]: 'rgb(60, 179, 113)',
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
@@ -350,7 +372,8 @@ export const enum Constants {
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
     TREE_REGROW = 30_000,
-    SKILL_LOOP = 1000 // How often we check the loop of a skill
+    SKILL_LOOP = 1000, // How often we check the loop of a skill
+    MAX_ACCURACY = 0.45 // Maximum attainable accuracy for a character.
 }
 
 export enum MinigameConstants {

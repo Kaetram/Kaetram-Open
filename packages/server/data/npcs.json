@@ -5,8 +5,9 @@
   },
 
   "villagegirl": {
-    "name": "Azaria",
-    "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
+    "name": "Wife",
+    "text": [
+      "Please, call me Azaria."]
   },
 
   "villager": {
@@ -24,7 +25,15 @@
   },
 
   "agent": {
-    "name": "Secret Agent"
+    "name": "Secret Agent",
+    "text": [
+      "Hello there, would you be so kind as to assist me?",
+      "It seems I have stumbled upon this strange phenomenon.",
+      "You see, this cave I am heavily guarding appears to be",
+      "exhibiting a warm-hole like situation.",
+      "Regardless, I feel its best to send a stup-",
+      "I mean, brave adventurer in there rather than me."
+    ]
   },
 
   "nyan": {
