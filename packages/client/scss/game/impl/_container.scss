@@ -39,7 +39,7 @@
     user-select: none;
 
     @media (--sm) {
-        cursor: default;
+        cursor: url('/img/3/hand.png'), auto;
     }
 }
 

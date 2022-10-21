@@ -1,10 +1,8 @@
-import { AchievementPacket, PVPPacket } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import log from '../lib/log';
 
 import type App from '../app';
-import type Storage from '../utils/storage';
 import type Overlays from '../renderer/overlays';
 import type InfoController from '../controllers/info';
 import type Game from '../game';
@@ -31,7 +29,10 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
 import {
+    AbilityPacket,
+    AchievementPacket,
     AnimationPacket,
     BubblePacket,
     ChatPacket,
@@ -49,12 +50,14 @@ import {
     OverlayPacket,
     PointerPacket,
     PointsPacket,
+    PVPPacket,
     QuestPacket,
     RespawnPacket,
     StorePacket,
     TeleportPacket,
     SkillPacket,
-    MinigamePacket
+    MinigamePacket,
+    EffectPacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -145,6 +148,7 @@ export default class Connection {
         this.messages.onSkill(this.handleSkill.bind(this));
         this.messages.onUpdate(this.handleUpdate.bind(this));
         this.messages.onMinigame(this.handleMinigame.bind(this));
+        this.messages.onEffect(this.handleEffect.bind(this));
     }
 
     /**
@@ -523,7 +527,7 @@ export default class Connection {
     private handlePoints(info: PointsPacket): void {
         let character = this.entities.get<Player>(info.instance);
 
-        if (!character) return;
+        if (!character || character.dead) return;
 
         if (info.mana) character.setMana(info.mana, info.maxMana);
 
@@ -593,6 +597,14 @@ export default class Connection {
             case 'toggleterror':
                 this.game.player.terror = true;
                 break;
+
+            case 'toggleexplosion':
+                this.game.player.explosion = true;
+                break;
+
+            case 'togglefire':
+                this.game.player.fire = true;
+                break;
         }
     }
 
@@ -626,12 +638,27 @@ export default class Connection {
     }
 
     /**
-     * Unhandled function. This will be used when player
-     * special abilities are finally implemented.
+     * Handler for when we receive an ability packet. Ability packets contain
+     * batch data or a single ability undergoing a change (generally level).
+     * @param opcode The type of ability packet we are working with.
+     * @param info Contains information in batch about abilities or a single ability serialized information.
      */
 
-    private handleAbility(): void {
-        log.debug('Unhandled ability packet.');
+    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacket): void {
+        switch (opcode) {
+            case Opcodes.Ability.Batch:
+                this.game.player.loadAbilities((info as SerializedAbility).abilities);
+                break;
+
+            // Update the ability data whenever we receive any information.
+            case Opcodes.Ability.Add:
+            case Opcodes.Ability.Update:
+                info = info as AbilityData;
+                this.game.player.setAbility(info.key, info.level, info.type, info.quickSlot);
+                break;
+        }
+
+        this.menu.synchronize();
     }
 
     /**
@@ -755,38 +782,21 @@ export default class Connection {
         let isPlayer = player.instance === this.game.player.instance;
 
         switch (opcode) {
-            case Opcodes.Experience.Combat: {
-                /**
-                 * We only receive level information about other entities.
-                 */
-                if (player.level !== info.level) {
-                    player.level = info.level!;
-                    this.info.create(Modules.Hits.LevelUp, 0, player.x, player.y);
-                }
-
-                /**
-                 * When we receive experience information about our own player
-                 * we update the experience bar and create an info.
-                 */
-
-                if (isPlayer) {
-                    this.game.player.setExperience(
-                        info.experience!,
-                        info.nextExperience!,
-                        info.prevExperience!
-                    );
-
-                    this.info.create(Modules.Hits.Experience, info.amount, player.x, player.y);
-                }
-
-                //this.menu.profile.update();
-
+            case Opcodes.Experience.Sync:
+                player.level = info.level!;
                 break;
-            }
 
             case Opcodes.Experience.Skill:
                 if (isPlayer)
-                    this.info.create(Modules.Hits.Profession, info.amount, player.x, player.y);
+                    this.info.create(
+                        Modules.Hits.Profession,
+                        info.amount!,
+                        player.x,
+                        player.y,
+                        false,
+                        info.skill,
+                        true
+                    );
 
                 break;
         }
@@ -800,13 +810,20 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        // Remove the minigame interfaces.
         this.game.minigame.reset();
 
+        // Stops the player from performing actions.
         this.game.player.teleporting = true;
 
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
 
+        // Set health and mana to 0
+        this.game.player.setHitPoints(0);
+        this.game.player.setMana(0);
+
+        // Stop the music playing.
         this.audio.stopMusic();
 
         // Perform the death animation.
@@ -1151,11 +1168,34 @@ export default class Connection {
     }
 
     /**
+     * Effects are special conditions that can be applied to a player or an entity.
+     * When a player uses the run ability, we may want to display a special effect on
+     * top of modifying their movement speed.
+     * @param opcode The type of effect we are applying.
+     * @param info Information about the entity we are applying the effect to.
+     */
+
+    private handleEffect(opcode: Opcodes.Effect, info: EffectPacket): void {
+        let entity =
+            info.instance === this.game.player.instance
+                ? this.game.player
+                : this.entities.get(info.instance);
+
+        if (!entity) return;
+
+        switch (opcode) {
+            case Opcodes.Effect.Speed:
+                entity.movementSpeed = info.movementSpeed!;
+                break;
+        }
+    }
+
+    /**
      * Compares the epoch between the last entity list update request and current
      * time. This is in order to prevent spams to the server and timeout.
      */
 
     private canRequestEntityList(): boolean {
-        return Date.now() - this.lastEntityListRequest > 2000; // every 2 seconds
+        return Date.now() - this.lastEntityListRequest > 5000; // every 2 seconds
     }
 }

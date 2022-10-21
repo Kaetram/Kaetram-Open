@@ -11,8 +11,9 @@ import Region from '../game/map/region';
 import Entity from '../game/entity/entity';
 import Utils from '@kaetram/common/util/utils';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { Command, Pointer, Network, Notification } from '../network/packets';
+import Skill from '../game/entity/character/player/skill/skill';
 export default class Commands {
     private world;
     private entities;
@@ -44,17 +45,16 @@ export default class Commands {
                 let population = this.world.getPopulation(),
                     singular = population === 1;
 
-                if (this.player.isAdmin())
-                    this,
-                        this.entities.forEachPlayer((player: Player) => {
-                            this.player.notify(player.username);
-                        });
-
                 this.player.notify(
                     `There ${singular ? 'is' : 'are'} currently ${population} ${
                         singular ? 'person' : 'people'
                     } online.`
                 );
+
+                if (this.player.isAdmin())
+                    this.entities.forEachPlayer((player: Player) => {
+                        this.player.notify(player.username);
+                    });
 
                 return;
             }
@@ -137,6 +137,7 @@ export default class Commands {
             y: number,
             instance: string,
             target: string,
+            key: string,
             entity: Character,
             targetEntity: Character,
             questKey: string,
@@ -300,8 +301,34 @@ export default class Commands {
 
             case 'addexp':
             case 'addexperience':
-                this.player.addExperience(parseInt(blocks.shift()!));
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || !x) return;
+
+                key = key.charAt(0).toUpperCase() + key.slice(1);
+
+                this.player.skills
+                    .get(Modules.Skills[key as keyof typeof Modules.Skills])
+                    ?.addExperience(x);
+
                 return;
+
+            case 'resetskills':
+                // Skills aren't meant to go backwards so you gotta sync and stuff lmao.
+                this.player.skills.forEachSkill((skill: Skill) => {
+                    skill.setExperience(0);
+                    skill.addExperience(0);
+                });
+                this.player.skills.sync();
+                break;
+
+            case 'max':
+                this.player.skills.forEachSkill((skill: Skill) => {
+                    skill.setExperience(0);
+                    skill.addExperience(669_420_769);
+                });
+                break;
 
             case 'attackrange':
                 log.info(this.player.attackRange);
@@ -346,15 +373,17 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.movementSpeed = movementSpeed;
-
-                this.player.sync();
+                this.player.setMovementSpeed(movementSpeed);
 
                 break;
             }
 
-            case 'toggleheal':
-                return this.player.send(new Command({ command: 'toggleheal' }));
+            case 'toggle':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No key specified.');
+
+                return this.player.send(new Command({ command: `toggle${key}` }));
 
             case 'popup':
                 this.player.popup(
@@ -362,6 +391,18 @@ export default class Commands {
                     '@blue@New @darkblue@quest @green@has@red@ been discovered!'
                 );
 
+                break;
+
+            case 'resetquests':
+                this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
+                break;
+
+            case 'resetquest':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No quest specified.');
+
+                this.player.quests.get(key)?.setStage(0);
                 break;
 
             case 'resetachievements':
@@ -575,6 +616,55 @@ export default class Commands {
 
                 this.player.notify(`Noclip: ${this.player.noclip}`);
                 break;
+
+            case 'kick':
+                username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kick username`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.connection.close();
+
+                break;
+
+            case 'addability':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify(`Malformed command, expected /addability key`);
+
+                this.player.abilities.add(key, 1);
+                break;
+
+            case 'setability':
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || !x)
+                    return this.player.notify(`Malformed command, expected /setability key level`);
+
+                this.player.abilities.setLevel(key, x);
+
+                break;
+
+            case 'setquickslot':
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!key || isNaN(x))
+                    return this.player.notify(
+                        `Malformed command, expected /setquickslot key quickslot`
+                    );
+
+                this.player.abilities.setQuickSlot(key, x);
+                break;
+
+            case 'resetabilities':
+                return this.player.abilities.reset();
         }
     }
 }

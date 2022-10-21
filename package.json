@@ -1,6 +1,6 @@
 {
     "name": "kaetram",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "private": true,
     "packageManager": "yarn@3.2.0",
     "author": "Veradictus",
