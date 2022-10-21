@@ -1,7 +1,5 @@
-import { ObjectBuilder } from 'typescript-object-builder';
-import defaultPlayerInventory from '../../fixtures/playerinventory.default.json';
 import LoggedInContext from '../loggedin.context';
-import { PlayerInventory } from '../../entities/playerinventory';
+import { buildPlayerInventory } from '@kaetram/e2e/cypress/fixtures/builders/playerinventory.builder';
 
 export default class InventoryContext extends LoggedInContext {
     constructor() {
@@ -12,19 +10,13 @@ export default class InventoryContext extends LoggedInContext {
             'first inventory slot',
             '#inventory > ul > li:first-child div.item-slot'
         );
-        // This assumes the first action is 'drop', add a 'data-test' attribute to each action for better targeting
-        this.registerLookup('drop command', '#action-container div.action-button:first-child');
+        this.registerLookup('drop command', '#action-button-drop');
     }
 
     override injectDefaultData(): void {
         super.injectDefaultData();
 
-        cy.resetCollection('player_inventory');
-
-        let playerInventory = ObjectBuilder.basedOn<PlayerInventory>(defaultPlayerInventory)
-            .with('username', 'fvantom')
-            .build();
-
+        let playerInventory = buildPlayerInventory(this.USERNAME);
         cy.createPlayerInventory(playerInventory);
     }
 }

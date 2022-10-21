@@ -8,4 +8,8 @@ export default class DefaultContext extends WorldContext {
     injectDefaultData(): void {
         // default data to inject in the db goes here
     }
+
+    before(): void {
+        // default data to inject in the db goes here
+    }
 }
