@@ -7,8 +7,8 @@ Feature: Login
 
         @positive @smoke
         Example: The one where I enter the correct account details
-            Given I fill in the "username" field with "fvantom"
-            And I fill in the "password" field with "test"
+            Given I fill in the "username" field
+            And I fill in the "password" field
             When I click on the "login button"
             Then I am logged in successfully
 
