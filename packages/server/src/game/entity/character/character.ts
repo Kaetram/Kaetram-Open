@@ -332,6 +332,36 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Default implementation for the character's archery level (used for combat damage calculation).
+     * @returns The character's current arhcery level.
+     */
+
+    public getArcheryLevel(): number {
+        return 1;
+    }
+
+    /**
+     * Picks the bonus from the total bonuses as either archery bonus or strength bonus
+     * depending on whether the character is using a ranged weapon or not.
+     * @returns The bonus value for either archery or strength.
+     */
+
+    public getDamageBonus(): number {
+        return this.isRanged() ? this.getBonuses().archery : this.getBonuses().strength;
+    }
+
+    /**
+     * This function is to condense the amount of code needed to obtain whether the
+     * strength level or the archery level. Instead we just check if the character is
+     * ranged based and choose the appropriate skill leve (strength or archery).
+     * @returns The level of the skill that is being used for combat.
+     */
+
+    public getSkillDamageLevel(): number {
+        return this.isRanged() ? this.getArcheryLevel() : this.getStrengthLevel();
+    }
+
+    /**
      * @returns Default probability for poison to be inflicted.
      */
 
