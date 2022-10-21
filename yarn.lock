@@ -1749,7 +1749,6 @@ __metadata:
     start-server-and-test: ^1.14.0
     tsx: ^3.8.0
     typescript: ^4.7.4
-    typescript-object-builder: ^0.3.0
   languageName: unknown
   linkType: soft
 
@@ -10212,13 +10211,6 @@ __metadata:
     media-typer: "npm:0.3.0"
     mime-types: "npm:~2.1.24"
   checksum: 2c8e47675d55f8b4e404bcf529abdf5036c537a04c2b20177bcf78c9e3c1da69da3942b1346e6edb09e823228c0ee656ef0e033765ec39a70d496ef601a0c657
-  languageName: node
-  linkType: hard
-
-"typescript-object-builder@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "typescript-object-builder@npm:0.3.0"
-  checksum: 913fd400b2d959c473a446e933448699b46b42a92dec06efaf36b3e1167930dee47ef5eacbf337768fd10d4ac3ee06a6cdf50eede5331e6e976dfbeabf9bb0b0
   languageName: node
   linkType: hard
 
