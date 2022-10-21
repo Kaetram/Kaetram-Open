@@ -2,7 +2,7 @@
 
 #profile-dialog,
 #settings-page {
-    cursor: default;
+    cursor: url('/img/3/hand.png'), auto;
     user-select: none;
 
     position: absolute;
@@ -39,11 +39,6 @@
     position: absolute;
 }
 
-.skill-slots {
-    position: relative;
-
-    float: left;
-}
 
 @each $size, $i in media.$sizes {
     @media ($size) {

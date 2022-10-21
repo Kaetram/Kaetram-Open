@@ -162,7 +162,7 @@ export default class Regions {
      */
 
     private handleEnter(entity: Entity, region: number): void {
-        if (!entity.isPlayer()) return;
+        if (!entity.isPlayer() || !entity.ready) return;
 
         log.debug(`Entity: ${entity.instance} entering region: ${region}.`);
 

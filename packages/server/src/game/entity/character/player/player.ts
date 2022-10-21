@@ -1,10 +1,10 @@
 import Skills from './skills';
 import Quests from './quests';
-import Hit from '../combat/hit';
 import Handler from './handler';
 import NPC from '../../npc/npc';
 import Mana from '../points/mana';
 import Map from '../../../map/map';
+import Abilities from './abilities';
 import Character from '../character';
 import Equipments from './equipments';
 import Item from '../../objects/item';
@@ -13,7 +13,6 @@ import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
 import Tree from '../../../globals/impl/tree';
-import Abilities from './abilities/abilities';
 import Formulas from '../../../../info/formulas';
 import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
@@ -36,14 +35,12 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
-import { ExperiencePacket } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { Team } from '@kaetram/common/types/minigame.d';
 import {
     Music,
     Camera,
     Chat,
-    Experience,
     Heal,
     Movement,
     Notification,
@@ -54,8 +51,11 @@ import {
     Pointer,
     PVP,
     Spawn,
-    Respawn
+    Respawn,
+    Effect
 } from '@kaetram/server/src/network/packets';
+import Skill from './skill/skill';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -84,12 +84,12 @@ export default class Player extends Character {
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
+    public abilities: Abilities = new Abilities(this);
     public quests: Quests = new Quests(this);
     public achievements: Achievements = new Achievements(this);
     public skills: Skills = new Skills(this);
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public abilities: Abilities = new Abilities(this);
     public statistics: Statistics = new Statistics();
 
     public handler: Handler = new Handler(this);
@@ -101,6 +101,8 @@ export default class Player extends Character {
     public questsLoaded = false;
     public achievementsLoaded = false;
 
+    public running = false;
+
     // Player info
     public password = '';
     public email = '';
@@ -110,8 +112,6 @@ export default class Player extends Character {
 
     // Experience
     public experience = 0;
-    private nextExperience = -1;
-    private prevExperience = -1;
 
     // Warps
     public lastWarp = 0;
@@ -186,34 +186,32 @@ export default class Player extends Character {
         this.y = data.y;
         this.name = data.username;
         this.rights = data.rights;
-        this.experience = data.experience;
         this.ban = data.ban;
         this.mute = data.mute;
+        this.experience = data.experience;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
+        this.regionsLoaded = data.regionsLoaded || [];
 
         this.setPoison(data.poison.type, data.poison.start);
         this.setLastWarp(data.lastWarp);
 
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
-        this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
-        this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
+        this.hitPoints.updateHitPoints([data.hitPoints, data.hitPoints]);
+        this.mana.updateMana([data.mana, data.mana]);
 
         // Being the loading process.
+        this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
         this.loadBank();
         this.loadQuests();
         this.loadAchievements();
-        this.loadSkills();
         this.loadStatistics();
+        this.loadAbilities();
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> intro
+        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> abilities -> intro
     }
 
     /**
@@ -276,6 +274,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Loads the abilities data from the database.
+     */
+
+    public loadAbilities(): void {
+        this.database.loader?.loadAbilities(this, this.abilities.load.bind(this.abilities));
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
@@ -297,29 +303,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(this.serialize(false, true)));
-    }
-
-    /**
-     * Destroys all the isntances in the player to aid the garbage collector.
-     */
-
-    public destroy(): void {
-        this.combat.stop();
-        this.skills.stop();
-
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
-
-        this.disconnectTimeout = null;
-
-        this.handler = null!;
-        this.inventory = null!;
-        this.abilities = null!;
-        this.skills = null!;
-        this.quests = null!;
-        this.bank = null!;
-
-        this.connection = null!;
+        this.send(new Welcome(this.serialize(false, true, true)));
     }
 
     /**
@@ -347,68 +331,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Adds experience to the player and handles level ups/popups/packets/etc.
-     * @param exp The amount of experience we are adding to the player.
-     */
-
-    public addExperience(exp: number): void {
-        this.experience += exp;
-
-        // Prevent a null or excessive negative value from breaking the experience system.
-        if (this.experience < 0) this.experience = 0;
-        if (!this.experience) this.experience = 0;
-
-        let oldLevel = this.level;
-
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
-        let data = {
-            instance: this.instance,
-            level: this.level
-        } as ExperiencePacket;
-
-        // Update hit points and send a popup to the player when a level up occurs.
-        if (oldLevel !== this.level) {
-            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.heal(this.hitPoints.maxPoints, 'hitpoints');
-
-            this.updateRegion();
-
-            // Let the player know if they've unlocked a new warp.
-            if (this.world.warps.unlockedWarp(this.level))
-                this.popup(
-                    'Level Up!',
-                    `You have unlocked a new warp! You are now level ${this.level}!`,
-                    '#ff6600'
-                );
-            else
-                this.popup(
-                    'Level Up!',
-                    `Congratulations, you are now level ${this.level}!`,
-                    '#ff6600'
-                );
-        }
-
-        /**
-         * Sending two sets of data as other users do not need to
-         * know the experience of another player.. (yet).
-         */
-
-        this.sendToRegions(new Experience(Opcodes.Experience.Combat, data), true);
-
-        data.amount = exp;
-        data.experience = this.experience;
-        data.nextExperience = this.nextExperience;
-        data.prevExperience = this.prevExperience;
-
-        this.send(new Experience(Opcodes.Experience.Combat, data));
-
-        this.sync();
-    }
-
-    /**
      * Override of the heal superclass function. Heals by a specified amount, and givne the
      * type, we will heal only the hitpoints or the mana with a special effect associated. If no
      * type is specified, then it proceeds to heal both hitpoints and mana.
@@ -416,11 +338,13 @@ export default class Player extends Character {
      * @param type The type of heal we are performing ('passive' | 'hitpoints' | 'mana');
      */
 
-    public override heal(amount: number, type: Modules.HealTypes = 'passive'): void {
+    public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
             case 'passive':
+                if (!this.mana.isFull()) this.mana.increment(amount);
+
                 super.heal(amount);
-                this.mana.increment(amount);
+
                 break;
 
             case 'hitpoints':
@@ -463,6 +387,28 @@ export default class Player extends Character {
 
     public updateEntityList(): void {
         this.regions.sendEntities(this);
+    }
+
+    /**
+     * This is a temporary function that will be used to update the players to the new
+     * skilling system. Whereas before we would have a single total combat level, we now
+     * split it into multiple skills and it is cummulatively calculated. Here we just
+     * divide the former experience system in 3 and assign it to the 3 most common skills.
+     */
+
+    public updateExperience(): void {
+        if (this.experience > 0) {
+            log.debug(`[${this.username}] Moving player experience to skills.`);
+
+            // Add a third of the experience to each primary skill and then nullify the experience.
+            this.skills.get(Modules.Skills.Health).addExperience(Math.floor(this.experience / 3));
+            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(this.experience / 3));
+            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(this.experience / 3));
+
+            this.experience = 0;
+
+            this.save();
+        }
     }
 
     /**
@@ -519,6 +465,37 @@ export default class Player extends Character {
     }
 
     /**
+     * Verifies that the movement is valid and not no-clipping through collisions.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @returns Whether or not the location is colliding.
+     */
+
+    private verifyCollision(x: number, y: number): boolean {
+        let isColliding = this.map.isColliding(x, y, this) && !this.noclip;
+
+        if (isColliding) {
+            /**
+             * If the old coordinate values are invalid or they may cause a loop
+             * in the `teleport` function, we instead send the player to the spawn point.
+             */
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            ) {
+                this.sendToSpawn();
+                return true;
+            }
+
+            // Send player to the last valid position.
+            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
+            this.teleport(this.oldX, this.oldY);
+        }
+
+        return isColliding;
+    }
+
+    /**
      * Handler for when a container slot is selected at a specified index. Depending
      * on the type, we act accordingly. If we click an inventory, we check if the item
      * is equippable or consumable and remove it from the inventory. If we click a bank
@@ -540,10 +517,7 @@ export default class Player extends Character {
 
                 if (!item) return;
 
-                if (item.edible) {
-                    item.plugin?.onUse(this);
-                    this.inventory.remove(index, 1);
-                }
+                if (item.edible && item.plugin?.onUse(this)) this.inventory.remove(index, 1);
 
                 if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
@@ -586,6 +560,71 @@ export default class Player extends Character {
 
         // Start the cutting process.
         this.skills.getLumberjacking().cut(this, tree);
+    }
+
+    /**
+     * Compares the user agent and regions loaded against values from the database. We also
+     * ensure that the map version of the player when he last logged in is the same as the
+     * most recent one. If these conditions aren't met we signal to the server that the player
+     * has no map data saved.
+     * @param userAgent The user agent string.
+     * @param regionsLoaded Number of regions that the client has loaded.
+     */
+
+    public handleUserAgent(userAgent: string, regionsLoaded = 0): void {
+        // Client's number of regions loaded, user agent, and map version must match.
+        if (
+            this.regionsLoaded.length === regionsLoaded &&
+            this.userAgent === userAgent &&
+            this.mapVersion === this.map.version
+        )
+            return;
+        // Update user agent and map version, and reset loaded regions information.
+        this.userAgent = userAgent;
+        this.mapVersion = this.map.version;
+        this.regionsLoaded = [];
+
+        log.debug(`Reset user agent and regions loaded for ${this.username}.`);
+    }
+
+    /**
+     * Handles experience received from killing a mob. Here we check the type of
+     * damage the player was dealing, whether or not he was using magic, ranged, or
+     * melee, and what kind of melee weapon he was using. We then add the experience
+     * to the appropriate skill.
+     * @param experience The amount of experience we are adding.
+     */
+
+    public handleExperience(experience: number): void {
+        let weapon = this.equipment.getWeapon();
+
+        /**
+         * Health experience is a third of the total experience the mob rewards. This is
+         * because the player is being rewarded experience for the other skills. Health
+         * experience is always granted regardless of the damage type.
+         */
+
+        this.skills.get(Modules.Skills.Health).addExperience(Math.floor(experience / 3));
+
+        // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
+        experience = Math.ceil(experience - experience / 3);
+
+        // Ranged/archery based damage, we add remaining experience to the archery skill.
+        if (weapon.ranged) return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+
+        /**
+         * If the weapon is both a strength and accuracy weapon, then we evenly distribute
+         * the remaining experience to both the strength and accuracy skills. Otherwise
+         * we add the remaining experience to the skill that the weapon is based on. Default
+         * is accuracy if the weapon is not based on any skill.
+         */
+
+        if (weapon.isStrength() && weapon.isAccuracy()) {
+            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(experience / 2));
+            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience / 2));
+        } else if (weapon.isStrength())
+            this.skills.get(Modules.Skills.Strength).addExperience(experience);
+        else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
     }
 
     /**
@@ -705,23 +744,51 @@ export default class Player extends Character {
      * @returns The movement speed of the player.
      */
 
-    private getMovementSpeed(): number {
-        // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
-        //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
+    public getMovementSpeed(): number {
+        let { movementSpeed, running } = this;
 
-        // /*
-        //  * Here we can handle equipment/potions/abilities that alter
-        //  * the player's movement speed. We then just broadcast it.
-        //  */
+        // Apply a 10% speed boost if the player running effect is present.
+        if (running) movementSpeed = Math.floor(movementSpeed * 0.9);
 
-        // this.movementSpeed = movementSpeed;
-
-        return this.movementSpeed;
+        return movementSpeed;
     }
 
     /**
      * Setters
      */
+
+    public setMovementSpeed(movementSpeed: number): void {
+        this.movementSpeed = movementSpeed;
+
+        // Sync to other players in the region.
+        this.sendToRegions(
+            new Effect(Opcodes.Effect.Speed, {
+                instance: this.instance,
+                movementSpeed
+            })
+        );
+    }
+
+    /**
+     * Updates the running status of the player and sends an update of the movement
+     * speed to the client. We use the the `getMovementSpeed()` function to calculate
+     * the speed of the player. We do this since there may be other effects present,
+     * so we want the speed to stack with other effects rather than be overwritten.
+     * @param running Whether or not the player is running.
+     */
+
+    public setRunning(running: boolean): void {
+        log.debug(`${this.username} is running: ${running}`);
+
+        this.running = running;
+
+        this.sendToRegions(
+            new Effect(Opcodes.Effect.Speed, {
+                instance: this.instance,
+                movementSpeed: this.getMovementSpeed()
+            })
+        );
+    }
 
     /**
      * Override for the superclass `setPosition` function. Since the player must always be
@@ -737,24 +804,7 @@ export default class Player extends Character {
      */
 
     public override setPosition(x: number, y: number, forced = false, skip = false): void {
-        if (this.dead) return;
-
-        // Check against noclipping by verifying the collision w/ dynamic tiles.
-        if (this.map.isColliding(x, y, this) && !this.noclip) {
-            /**
-             * If the old coordinate values are invalid or they may cause a loop
-             * in the `teleport` function, we instead send the player to the spawn point.
-             */
-            if (
-                (this.oldX === -1 && this.oldY === -1) ||
-                (this.oldX === this.x && this.oldY === this.y)
-            )
-                return this.sendToSpawn();
-
-            this.notify(`Noclip detected in your movement, please submit a bug report.`);
-            this.teleport(this.oldX, this.oldY);
-            return;
-        }
+        if (this.dead || this.verifyCollision(x, y)) return;
 
         // Sets the player's new position.
         super.setPosition(x, y);
@@ -847,35 +897,17 @@ export default class Player extends Character {
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
-    public getHit(target: Character): Hit | undefined {
-        let weapon = this.equipment.getWeapon(),
-            defaultDamage = Formulas.getDamage(this, target),
-            isSpecial = Utils.randomInt(0, 100) < 30 + weapon.abilityLevel * 3;
+    /**
+     * Calculates the total experience by adding up all the skills experience.
+     * @returns Integer representing the total experience.
+     */
 
-        if (!isSpecial || !this.hasSpecialAttack())
-            return new Hit(Modules.Hits.Damage, defaultDamage);
+    public getTotalExperience(): number {
+        let total = 0;
 
-        let multiplier: number, damage: number;
+        this.skills.forEachSkill((skill: Skill) => (total += skill.experience));
 
-        switch (weapon.ability) {
-            case Modules.Enchantment.Critical:
-                /**
-                 * Still experimental, not sure how likely it is that you're
-                 * gonna do a critical strike. I just do not want it getting
-                 * out of hand, it's easier to buff than to nerf..
-                 */
-
-                multiplier = 1 + weapon.abilityLevel;
-                damage = defaultDamage * multiplier;
-
-                return new Hit(Modules.Hits.Critical, damage);
-
-            case Modules.Enchantment.Stun:
-                return new Hit(Modules.Hits.Stun, defaultDamage);
-
-            case Modules.Enchantment.Explosive:
-                return new Hit(Modules.Hits.Explosive, defaultDamage);
-        }
+        return total;
     }
 
     /**
@@ -885,6 +917,11 @@ export default class Player extends Character {
     public getMinigame(): Minigame {
         return this.world.minigames.get(this.minigame);
     }
+
+    /**
+     * Adds a region id to the list of loaded regions.
+     * @param region The region id we are adding.
+     */
 
     public loadRegion(region: number): void {
         this.regionsLoaded.push(region);
@@ -934,9 +971,22 @@ export default class Player extends Character {
      */
 
     public refreshTimeout(): void {
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
+        // Clear the existing timeout and start over.
+        this.clearTimeout();
 
+        // Start a new timeout and set the player's timeout variable.
         this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
+    }
+
+    /**
+     * Clears the existing disconnect timeout.
+     */
+
+    public clearTimeout(): void {
+        if (!this.disconnectTimeout) return;
+
+        clearTimeout(this.disconnectTimeout);
+        this.disconnectTimeout = null;
     }
 
     /**
@@ -1070,12 +1120,15 @@ export default class Player extends Character {
 
     /**
      * Function to be used for syncing up health,
-     * mana, exp, and other variables
+     * mana, exp, and other variables.
      */
 
     public sync(): void {
         // Update attack range each-time we sync.
         this.attackRange = this.isRanged() ? 7 : 1;
+
+        // Synchronize health, mana and experience with the player.
+        this.skills.sync();
 
         // Sync the player information to the surrounding regions.
         this.sendToRegions(new Sync(this.serialize(true)), true);
@@ -1215,17 +1268,22 @@ export default class Player extends Character {
      * be able to see.
      * @param withEquipment Whether or not to include equipment batch data.
      * @param withExperience Whether or not to incluide experience data.
+     * @param withMana Whether or not to include mana data.
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment = false, withExperience = false): PlayerData {
+    public override serialize(
+        withEquipment = false,
+        withExperience = false,
+        withMana = false
+    ): PlayerData {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
         data.key = this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
         data.rights = this.rights;
-        data.level = this.level;
+        data.level = this.skills.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
@@ -1236,31 +1294,68 @@ export default class Player extends Character {
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
 
-        if (withExperience) {
-            data.experience = this.experience;
-            data.prevExperience = this.prevExperience;
-            data.nextExperience = this.nextExperience;
+        if (withExperience) data.experience = this.getTotalExperience();
+
+        if (withMana) {
+            data.mana = this.mana.getMana();
+            data.maxMana = this.mana.getMaxMana();
         }
 
         return data;
     }
 
     /**
-     * Override for obtaining the weapon power level.
-     * @returns The player's currently equipped weapon's power level.
+     * Override for the superclass attack stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total attack stats for the player.
      */
 
-    public override getWeaponLevel(): number {
-        return this.equipment.getWeapon().power;
+    public override getAttackStats(): Stats {
+        return this.equipment.totalAttackStats;
     }
 
     /**
-     * Override for obtaining the armour power level.
-     * @returns The player's currently equipped armour's power level.
+     * Override for the superclass defence stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total defence stats for the player.
      */
 
-    public override getArmourLevel(): number {
-        return this.equipment.getArmour().power;
+    public override getDefenseStats(): Stats {
+        return this.equipment.totalDefenseStats;
+    }
+
+    /**
+     * Override for the superclass bonuses function. We use the total
+     * equipment bonuses instead.
+     * @returns The total equipment bonuses.
+     */
+
+    public override getBonuses(): Bonuses {
+        return this.equipment.totalBonuses;
+    }
+
+    /**
+     * @returns The player's current accuracy level from the skills controller.
+     */
+
+    public override getAccuracyLevel(): number {
+        return this.skills.get(Modules.Skills.Accuracy).level;
+    }
+
+    /**
+     * @returns The player's current strength level from the skills controller.
+     */
+
+    public override getStrengthLevel(): number {
+        return this.skills.get(Modules.Skills.Strength).level;
+    }
+
+    /**
+     * @returns The player's archery level from the skills controller.
+     */
+
+    public override getArcheryLevel(): number {
+        return this.skills.get(Modules.Skills.Archery).level;
     }
 
     /**

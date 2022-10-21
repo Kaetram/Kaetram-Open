@@ -32,6 +32,7 @@ export interface PlayerInfo {
     mute: number;
     lastWarp: number;
     mapVersion: number;
+    regionsLoaded: number[];
 }
 
 /**
@@ -62,6 +63,7 @@ export default class Creator {
             this.saveAchievements(player);
             this.saveSkills(player);
             this.saveStatistics(player);
+            this.saveAbilities(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             log.error(error);
@@ -156,6 +158,16 @@ export default class Creator {
     }
 
     /**
+     * Serializes the player's abilities and stores them into the database.
+     */
+
+    private saveAbilities(player: Player): void {
+        let collection = this.database.collection('player_abilities');
+
+        this.updateCollection(collection, player.username, player.abilities.serialize());
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
@@ -221,7 +233,7 @@ export default class Creator {
     public static verifyPlayer(player: Player): boolean {
         if (!player.username || player.username.length === 0) return false;
         if (!player.password || player.password.length < 3) return false;
-        if (!player.email || !Utils.isEmail(player.email)) return false;
+        if (player.email && !Utils.isEmail(player.email)) return false;
 
         return true;
     }
@@ -252,7 +264,8 @@ export default class Creator {
             ban: player.ban,
             mute: player.mute,
             lastWarp: player.lastWarp,
-            mapVersion: player.mapVersion
+            mapVersion: player.mapVersion,
+            regionsLoaded: player.regionsLoaded
         };
     }
 }

@@ -7,6 +7,7 @@ import { Modules } from '@kaetram/common/network';
 import Character from '../character';
 import Task from './task';
 import Skill from './skill';
+import Ability from './ability';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
@@ -17,6 +18,7 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
 import { QuestData } from '@kaetram/common/types/quest';
+import { AbilityData } from '@kaetram/common/types/ability';
 
 type ExperienceCallback = (
     experience: number,
@@ -24,7 +26,11 @@ type ExperienceCallback = (
     nextExperience: number
 ) => void;
 
+type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
+
 type PoisonCallback = (status: boolean) => void;
+
+type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
     public rights = 0;
@@ -43,11 +49,11 @@ export default class Player extends Character {
 
     public moving = false;
 
-    public override hitPoints = -1;
-    public override maxHitPoints = -1;
+    public override hitPoints = 0;
+    public override maxHitPoints = 0;
 
-    public override mana = -1;
-    public override maxMana = -1;
+    public override mana = 0;
+    public override maxMana = 0;
 
     // Mapping of all equipments to their type.
     public equipments = {
@@ -58,17 +64,16 @@ export default class Player extends Character {
         [Modules.Equipment.Weapon]: new Weapon()
     };
 
-    public skills = {
-        [Modules.Skills.Lumberjacking]: new Skill(Modules.Skills.Lumberjacking),
-        [Modules.Skills.Mining]: new Skill(Modules.Skills.Mining)
-    };
-
+    public skills: { [key: number]: Skill } = {};
+    public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
 
     private syncCallback?: () => void;
     private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
+    private abilityCallback?: AbilityCallback;
+    private manaCallback?: ManaCallback;
 
     public constructor(instance: string) {
         super(instance, Modules.EntityType.Player);
@@ -99,10 +104,6 @@ export default class Player extends Character {
         this.setMana(data.mana!, data.maxMana!);
 
         if (data.equipments) _.each(data.equipments, this.equip.bind(this));
-
-        // Only used when loading the main player.
-        if (!isNaN(data.experience!))
-            this.setExperience(data.experience!, data.nextExperience!, data.prevExperience!);
     }
 
     /**
@@ -151,17 +152,49 @@ export default class Player extends Character {
     }
 
     /**
+     * Parses through the serialized ability data and creates a new ability object.
+     * @param abilities List of abilities received from the server.
+     */
+
+    public loadAbilities(abilities: AbilityData[]): void {
+        _.each(abilities, (ability: AbilityData) =>
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
+        );
+    }
+
+    /**
      * Equips the item based on the equipment type.
      * @param equipment Contains data about the equipment such as
      * type, name, count, ability, etc.
      */
 
     public equip(equipment: EquipmentData): void {
-        let { type, name, key, count, ability, abilityLevel, power, ranged } = equipment;
+        let {
+            type,
+            name,
+            key,
+            count,
+            ability,
+            abilityLevel,
+            ranged,
+            attackStats,
+            defenseStats,
+            bonuses
+        } = equipment;
 
         if (!key) return this.unequip(type);
 
-        this.equipments[type].update(key, name, count, ability, abilityLevel, power, ranged);
+        this.equipments[type].update(
+            key,
+            name,
+            count,
+            ability,
+            abilityLevel,
+            ranged,
+            attackStats,
+            defenseStats,
+            bonuses
+        );
     }
 
     /**
@@ -232,6 +265,21 @@ export default class Player extends Character {
     }
 
     /**
+     * Adds up the experience from every skill and returns the total.
+     * @returns Integer value of the total experience.
+     */
+
+    public getTotalExperience(): number {
+        let total = 0;
+
+        _.each(this.skills, (skill: Skill) => {
+            total += skill.experience;
+        });
+
+        return total;
+    }
+
+    /**
      * Updates the mana of the player.
      * @param mana The current amount of mana.
      * @param maxMana Optional parameter for the max mana.
@@ -241,14 +289,18 @@ export default class Player extends Character {
         this.mana = mana;
 
         if (maxMana) this.maxMana = maxMana;
+
+        this.manaCallback?.(this.mana, maxMana || this.maxMana);
     }
 
     /**
-     * Updates the experience of the skill.
+     * Updates the experience of the skill or create a new one first if it doesn't exist.
      * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
     public setSkill({ type, experience, level, percentage }: SkillData): void {
+        if (!this.skills[type]) this.skills[type] = new Skill(type);
+
         this.skills[type as Modules.Skills].update(experience, level!, percentage!);
     }
 
@@ -272,6 +324,30 @@ export default class Player extends Character {
 
     public setAchievement(key: string, stage: number, name: string): void {
         this.achievements[key]?.update(stage, undefined, name);
+    }
+
+    /**
+     * Updates an ability's key and level.
+     * @param key The key of the ability we are updating.
+     * @param level The level of the ability.
+     * @param type Optional parameter passed when we are creating a new ability.
+     * @param quickSlot The id of the quickslot the ability is in.
+     */
+
+    public setAbility(
+        key: string,
+        level: number,
+        type?: Modules.AbilityType,
+        quickSlot = -1
+    ): void {
+        // This function is used when adding abilities for the first time too.
+        if (!(key in this.abilities))
+            this.abilities[key] = new Ability(type!, key, level, quickSlot);
+        else this.abilities[key]?.update(level, quickSlot);
+
+        // If any active ability is detected then we create a callback to display the quick slots.
+        if (type === Modules.AbilityType.Active || quickSlot !== -1)
+            this.abilityCallback?.(key, level, quickSlot);
     }
 
     /**
@@ -357,5 +433,23 @@ export default class Player extends Character {
 
     public onSync(callback: () => void): void {
         this.syncCallback = callback;
+    }
+
+    /**
+     * Callback for when an active ability is added and we signal to the
+     * client that we want to display the quick slots menu.
+     */
+
+    public onAbility(callback: AbilityCallback): void {
+        this.abilityCallback = callback;
+    }
+
+    /**
+     * Callback for when the player's mana changes.
+     * @param callback Contains the current mana and max mana.
+     */
+
+    public onMana(callback: ManaCallback): void {
+        this.manaCallback = callback;
     }
 }

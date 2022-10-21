@@ -3,17 +3,20 @@ import _ from 'lodash-es';
 import Entity from '../entity';
 import Combat from './combat/combat';
 
+import Poison from './poison';
+import Hit from './combat/hit';
 import World from '../../world';
 import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
 import Formulas from '../../../info/formulas';
-import Poison from './poison';
 
-import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
+import Utils from '@kaetram/common/util/utils';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
-import Hit from './combat/hit';
+import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
@@ -171,6 +174,9 @@ export default abstract class Character extends Entity {
         // Cannot heal if character is being attacked.
         if (this.getAttackerCount() > 0) return;
 
+        // Stops the character from healing if they are at max hitpoints.
+        if (this.hitPoints.isFull()) return;
+
         this.hitPoints.increment(amount);
     }
 
@@ -280,21 +286,79 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Unimplmented weapon level function for the superclass.
-     * @returns Default weapon level of 1.
+     * Superclass implementation for attack stats. These are just placeholder
+     * values and are replaced when the subclass implements them.
+     * @returns Placeholder default values for stats.
      */
 
-    public getWeaponLevel(): number {
+    public getAttackStats(): Stats {
+        return Utils.getEmptyStats();
+    }
+
+    /**
+     * Superclass implementation for defense stats.
+     * @returns Placeholder empty stats (similar to attack stats).
+     */
+
+    public getDefenseStats(): Stats {
+        return Utils.getEmptyStats();
+    }
+
+    /**
+     * Superclass implementation for bonsuses. Subclasses will change these accordingly.
+     * @returns Empty placeholder values for bonuses.
+     */
+
+    public getBonuses(): Bonuses {
+        return Utils.getEmptyBonuses();
+    }
+
+    /**
+     * Default implementation for the character's accuracy level.
+     * @returns Placeholder value for accuracy of 1.
+     */
+
+    public getAccuracyLevel(): number {
         return 1;
     }
 
     /**
-     * Unimplmented armour level function for the superclass.
-     * @returns Default armour level of 1.
+     * Default implementation for the character's strength level (used for combat damage calculation).
+     * @returns Placeholder value for strength of 1.
      */
 
-    public getArmourLevel(): number {
+    public getStrengthLevel(): number {
         return 1;
+    }
+
+    /**
+     * Default implementation for the character's archery level (used for combat damage calculation).
+     * @returns The character's current arhcery level.
+     */
+
+    public getArcheryLevel(): number {
+        return 1;
+    }
+
+    /**
+     * Picks the bonus from the total bonuses as either archery bonus or strength bonus
+     * depending on whether the character is using a ranged weapon or not.
+     * @returns The bonus value for either archery or strength.
+     */
+
+    public getDamageBonus(): number {
+        return this.isRanged() ? this.getBonuses().archery : this.getBonuses().strength;
+    }
+
+    /**
+     * This function is to condense the amount of code needed to obtain whether the
+     * strength level or the archery level. Instead we just check if the character is
+     * ranged based and choose the appropriate skill leve (strength or archery).
+     * @returns The level of the skill that is being used for combat.
+     */
+
+    public getSkillDamageLevel(): number {
+        return this.isRanged() ? this.getArcheryLevel() : this.getStrengthLevel();
     }
 
     /**

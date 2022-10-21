@@ -75,9 +75,18 @@ export default abstract class WebSocket {
         return status;
     }
 
+    /**
+     * Callback for when a connection is added.
+     * @param callback Contains the connection that was just added.
+     */
+
     public onAdd(callback: (connection: Connection) => void): void {
         this.addCallback = callback;
     }
+
+    /**
+     * Callback for when the web socket has finished initializing.
+     */
 
     public onInitialize(callback: () => void): void {
         this.initializedCallback = callback;

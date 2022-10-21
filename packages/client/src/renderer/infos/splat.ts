@@ -33,7 +33,8 @@ export default class Splat {
         public value: number,
         public x: number,
         public y: number,
-        isTarget = false
+        isTarget = false,
+        skill = -1
     ) {
         this.text = `${value}`;
         this.prefix = '';
@@ -43,6 +44,8 @@ export default class Splat {
         this.updateY = this.isHeal() ? 2 : 1;
         this.duration = this.isHeal() ? 400 : 1000;
         this.colour = (Modules.DamageColours as Colours)[type];
+
+        if (skill > -1) this.colour = (Modules.SkillExpColours as Colours)[skill];
 
         this.fill = this.colour.fill;
         this.stroke = this.colour.stroke;

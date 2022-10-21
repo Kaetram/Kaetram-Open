@@ -17,7 +17,7 @@ export interface EquipmentPacket {
 }
 
 export interface ReadyPacket {
-    hasMapData: string;
+    regionsLoaded: number;
     userAgent: string;
 }
 
@@ -48,6 +48,12 @@ export interface ContainerPacket {
     index?: number;
     tIndex?: number;
     count?: number;
+}
+
+export interface AbilityPacket {
+    opcode: Opcodes.Ability;
+    key: string;
+    index?: number;
 }
 
 export interface WarpPacket {

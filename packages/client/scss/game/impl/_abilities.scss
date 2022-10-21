@@ -2,7 +2,15 @@
 
 #ability-shortcut {
     position: absolute;
-    left: 38%;
+
+    margin-left: 40%;
+
+    opacity: 0;
+
+    transition: opacity 2s;
+    transition: opacity 2s;
+    transition: opacity 2s;
+    transition: opacity 2s;
 }
 
 #ability-shortcut ul {
@@ -25,12 +33,157 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         #ability-shortcut {
-            top: 240px * $i;
+            cursor: url('/img/3/hand.png'), auto;
 
-            width: 122px * $i;
+            bottom: 5px;
+
+            width: 100px * $i;
             height: 20px * $i;
 
             background-image: url('/img/#{$i}/skillslots.png');
         }
+
+        .ability-quickslot {
+            cursor: url('/img/3/hand.png'), auto;
+
+            position: absolute;
+
+            width: 16px * $i;
+            height: 16px * $i;
+        }
+
+        .quickslot-icon-intimidate {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: 0 1px;
+        }
+
+        .quickslot-icon-run {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -16px * $i 1px;
+        }
+
+        .quickslot-icon-awareness {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -32px * $i 1px;
+        }
+
+        .quickslot-icon-dualistsmark {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -48px * $i 1px;
+        }
+
+        .quickslot-icon-hotshot {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -64px * $i 1px;
+        }
+
+        .quickslot-icon-thickskin {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -80px * $i 1px;
+        }
+
+        .quickslot-icon-precognition {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -96px * $i 1px;
+        }
+
+        .quickslot-icon-secretcalling {
+            background-image: url('/img/#{$i}/abilityicons.png');
+            background-position: -112px * $i 1px;
+        }
+
+        #ability-quickslot1 {
+            top: 2px * $i;
+            left: 9px * $i;
+        }
+
+        #ability-quickslot2 {
+            top: 2px * $i;
+            left: 31px * $i;
+        }
+
+        #ability-quickslot3 {
+            top: 2px * $i;
+            left: 53px * $i;
+        }
+
+        #ability-quickslot4 {
+            top: 2px * $i;
+            left: 75px * $i;
+        }
+    }
+}
+
+@media (--sm) {
+    #ability-shortcut {
+        width: 200px;
+        height: 40px;
+
+        background-image: url('/img/2/skillslots.png');
+    }
+
+    .ability-quickslot {
+        width: 32px;
+        height: 32px;
+    }
+
+    .quickslot-icon-intimidate {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: 0 1px;
+    }
+
+    .quickslot-icon-run {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -32px 1px;
+    }
+
+    .quickslot-icon-awareness {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -64px 1px;
+    }
+
+    .quickslot-icon-dualistsmark {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -96px 1px;
+    }
+
+    .quickslot-icon-hotshot {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -128px 1px;
+    }
+
+    .quickslot-icon-thickskin {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -160px 1px;
+    }
+
+    .quickslot-icon-precognition {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -188px 1px;
+    }
+
+    .quickslot-icon-secretcalling {
+        background-image: url('/img/2/abilityicons.png');
+        background-position: -224px 1px;
+    }
+
+    #ability-quickslot1 {
+        top: 4px;
+        left: 18px;
+    }
+
+    #ability-quickslot2 {
+        top: 4px;
+        left: 62px;
+    }
+
+    #ability-quickslot3 {
+        top: 4px;
+        left: 106px;
+    }
+
+    #ability-quickslot4 {
+        top: 4px;
+        left: 150px;
     }
 }

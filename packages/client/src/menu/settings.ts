@@ -21,6 +21,9 @@ export default class Settings extends Menu {
     private showLevelsCheckbox: HTMLInputElement = document.querySelector(
         '#show-levels-checkbox > input'
     )!;
+    private disableCachingCheckbox: HTMLInputElement = document.querySelector(
+        '#disable-region-caching-checkbox > input'
+    )!;
 
     public constructor(private game: Game) {
         super('#settings-page', undefined, '#settings-button');
@@ -34,6 +37,7 @@ export default class Settings extends Menu {
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
         this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
         this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
+        this.disableCachingCheckbox.addEventListener('change', this.handleCaching.bind(this));
 
         this.load();
     }
@@ -57,6 +61,7 @@ export default class Settings extends Menu {
         this.debugCheckbox.checked = settings.debugMode;
         this.showNamesCheckbox.checked = settings.showNames;
         this.showLevelsCheckbox.checked = settings.showLevels;
+        this.disableCachingCheckbox.checked = settings.disableCaching;
 
         // Update brightness value.
         this.handleBrightness();
@@ -150,5 +155,13 @@ export default class Settings extends Menu {
     private handleLevel(): void {
         this.game.storage.setShowLevels(this.showLevelsCheckbox.checked);
         this.game.renderer.drawLevels = this.showLevelsCheckbox.checked;
+    }
+
+    /**
+     * Disables the region caching checkbox.
+     */
+
+    private handleCaching(): void {
+        this.game.storage.setDisableCaching(this.disableCachingCheckbox.checked);
     }
 }

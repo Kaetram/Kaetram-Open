@@ -16,7 +16,7 @@ export default class Socket {
 
     public constructor(private game: Game) {
         this.config = game.app.config;
-        this.messages = new Messages(game);
+        this.messages = new Messages(game.app);
     }
 
     /**

@@ -58,6 +58,14 @@ export enum Container {
     Swap
 }
 
+export enum Ability {
+    Batch,
+    Add,
+    Update,
+    Use,
+    QuickSlot
+}
+
 export enum Quest {
     Batch,
     Progress,
@@ -77,7 +85,7 @@ export enum Notification {
 }
 
 export enum Experience {
-    Combat,
+    Sync,
     Skill
 }
 
@@ -166,4 +174,9 @@ export enum Minigame {
 export enum Bubble {
     Entity,
     Position
+}
+
+export enum Effect {
+    Speed,
+    Critical
 }
