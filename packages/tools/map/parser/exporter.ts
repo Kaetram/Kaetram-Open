@@ -1,5 +1,7 @@
 #!/usr/bin/env -S yarn tsx
 
+import _ from 'lodash';
+
 import fs from 'fs';
 import path from 'path';
 
@@ -10,7 +12,9 @@ import Parser from './parser';
 let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),
     serverDestination = '../../../server/data/map/world.json',
-    clientDestination = '../../../client/data/maps/map.json';
+    clientDestination = '../../../client/data/maps/map.json',
+    tilesetDirectory = '../../../client/public/img/tilesets/',
+    mapDirectory = '../data/';
 
 export default class Exporter {
     /** The map file we are parsing */
@@ -41,7 +45,8 @@ export default class Exporter {
         }
 
         // Create the parser and subsequently parse the map
-        let parser = new Parser(JSON.parse(data));
+        let parser = new Parser(JSON.parse(data)),
+            tilesets = parser.getTilesets();
 
         // Write the server map file.
         fs.writeFile(resolve(serverDestination), parser.getMap(), (error) => {
@@ -55,6 +60,19 @@ export default class Exporter {
             if (error) throw `An error has occurred while writing map files:\n${error}`;
 
             log.notice(`Map file successfully saved at ${relative(clientDestination)}.`);
+        });
+
+        // Copy tilesets from the map to the client.
+        _.each(tilesets, (_id: number, key: string) => {
+            let name = `tilesheet-${parseInt(key) + 1}.png`;
+
+            fs.copyFile(
+                resolve(path.join(mapDirectory, name)),
+                resolve(path.join(tilesetDirectory, name)),
+                (error) => {
+                    if (error) throw `An error has occurred while copying tilesets:\n${error}`;
+                }
+            );
         });
     }
 

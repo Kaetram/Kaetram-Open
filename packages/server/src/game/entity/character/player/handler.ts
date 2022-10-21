@@ -4,6 +4,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import {
     Container,
+    Ability as AbilityPacket,
     Quest,
     Achievement,
     Equipment as EquipmentPacket,
@@ -12,7 +13,8 @@ import {
     Despawn,
     Skill,
     Overlay,
-    Poison as PoisonPacket
+    Poison as PoisonPacket,
+    Points
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -21,6 +23,7 @@ import Equipment from './equipment/equipment';
 import Character from '../character';
 import Light from '../../../globals/impl/light';
 import Entity from '../../entity';
+import Ability from './ability/ability';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
@@ -66,6 +69,7 @@ export default class Handler {
         this.player.quests.onLoaded(this.handleQuests.bind(this));
         this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
+        this.player.abilities.onLoaded(this.handleAbilities.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -81,6 +85,9 @@ export default class Handler {
         this.player.equipment.onEquip(this.handleEquip.bind(this));
         this.player.equipment.onUnequip(this.handleUnequip.bind(this));
 
+        // Ability callbacks
+        this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
+
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
 
@@ -92,6 +99,9 @@ export default class Handler {
 
         // Cheat-score callback
         this.player.onCheatScore(this.handleCheatScore.bind(this));
+
+        // Mana callback
+        this.player.mana.onMana(this.handleMana.bind(this));
     }
 
     /**
@@ -161,6 +171,7 @@ export default class Handler {
 
         this.player.skills.stop();
         this.player.combat.stop();
+        this.player.save();
 
         // Send death packet only to the player.
         this.player.send(new Death(this.player.instance));
@@ -265,7 +276,7 @@ export default class Handler {
     private handleEquipment(): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Batch, {
-                data: this.player.equipment.serialize()
+                data: this.player.equipment.serialize(true)
             })
         );
     }
@@ -296,6 +307,15 @@ export default class Handler {
 
         // Sync to nearby players.
         this.player.sync();
+    }
+
+    /**
+     * Sends a pacet to the client to add a new ability.
+     * @param ability The ability that the player is adding.
+     */
+
+    private handleAbilityAdd(ability: Ability): void {
+        this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize(true)));
     }
 
     /**
@@ -386,6 +406,16 @@ export default class Handler {
     }
 
     /**
+     * Sends a packet to the client containing serialized abilities.
+     */
+
+    private handleAbilities(): void {
+        this.player.send(
+            new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
+        );
+    }
+
+    /**
      * Sends a packet to the client whenever
      * we add an item in our bank.
      * @param slot The slot we just added the item to.
@@ -470,6 +500,9 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        // Handle the experience upon killing a mob.
+        this.player.handleExperience((character as Mob).experience);
+
         /**
          * Special mobs (such as minibosses and bosses) have achievements
          * associated with them. Upon killing them, we complete the achievement.
@@ -517,6 +550,20 @@ export default class Handler {
         if (this.player.cheatScore > 10) this.player.timeout();
 
         log.debug(`Cheat score - ${this.player.cheatScore}`);
+    }
+
+    /**
+     * Callback for when a change in player's mana has occurred.
+     */
+
+    private handleMana(): void {
+        this.player.send(
+            new Points({
+                instance: this.player.instance,
+                mana: this.player.mana.getMana(),
+                maxMana: this.player.mana.getMaxMana()
+            })
+        );
     }
 
     /**
@@ -626,6 +673,8 @@ export default class Handler {
      */
 
     private clear(): void {
+        this.player.clearTimeout();
+
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
     }

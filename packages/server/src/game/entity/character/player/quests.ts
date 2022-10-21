@@ -86,6 +86,7 @@ export default class Quests {
         if (this.get(key).isFinished()) this.player.updateRegion();
 
         this.player.updateEntities();
+        this.player.save();
     }
 
     /**
@@ -209,7 +210,7 @@ export default class Quests {
      * @param callback Quest currently being iterated.
      */
 
-    private forEachQuest(callback: (quest: Quest) => void): void {
+    public forEachQuest(callback: (quest: Quest) => void): void {
         _.each(this.quests, callback);
     }
 

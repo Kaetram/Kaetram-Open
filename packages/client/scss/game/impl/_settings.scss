@@ -47,7 +47,8 @@
 #debug-mode-checkbox,
 #centre-checkbox,
 #show-names-checkbox,
-#show-levels-checkbox {
+#show-levels-checkbox,
+#disable-region-caching-checkbox {
     left: 50%;
 }
 
@@ -104,6 +105,10 @@
 
         #show-levels-checkbox {
             top: 82px * $i;
+        }
+
+        #disable-region-caching-checkbox {
+            top: 102px * $i;
         }
     }
 }

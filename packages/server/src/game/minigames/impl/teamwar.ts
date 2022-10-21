@@ -72,8 +72,6 @@ export default class TeamWar extends Minigame {
     public override disconnect(player: Player): void {
         let lobbyPosition = this.getLobbyPosition();
 
-        console.log(`Player ${player.username} disconnected from the game.`);
-
         // Push the player outside the game area.
         player.setPosition(lobbyPosition.x, lobbyPosition.y, false, true);
 
@@ -168,7 +166,15 @@ export default class TeamWar extends Minigame {
         let redTeam = _.shuffle(this.playersLobby);
 
         // Not enough players, we're not starting the game.
-        if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) return;
+        if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) {
+            // Notify all players there aren't enough players in the lobby.
+            _.each(redTeam, (player: Player) =>
+                player.notify(
+                    `There must be at least ${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS} players to start the game.`
+                )
+            );
+            return;
+        }
 
         this.started = true;
 

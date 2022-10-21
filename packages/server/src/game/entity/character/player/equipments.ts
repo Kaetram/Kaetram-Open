@@ -12,8 +12,11 @@ import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
 import Item from '../../objects/item';
 
+import Utils from '@kaetram/common/util/utils';
+
 import { Modules } from '@kaetram/common/network';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 export default class Equipments {
     private armour: Armour = new Armour();
     private boots: Boots = new Boots();
@@ -30,6 +33,10 @@ export default class Equipments {
         this.ring,
         this.weapon
     ];
+
+    public totalAttackStats: Stats = Utils.getEmptyStats();
+    public totalDefenseStats: Stats = Utils.getEmptyStats();
+    public totalBonuses: Bonuses = Utils.getEmptyBonuses();
 
     private loadCallback?: () => void;
     private equipCallback?: (equipment: Equipment) => void;
@@ -58,6 +65,8 @@ export default class Equipments {
         this.loadCallback?.();
 
         this.player.sync();
+
+        this.calculateStats();
     }
 
     /**
@@ -89,6 +98,8 @@ export default class Equipments {
         equipment.update(item);
 
         this.equipCallback?.(equipment);
+
+        this.calculateStats();
     }
 
     /**
@@ -118,6 +129,43 @@ export default class Equipments {
         equipment.empty();
 
         this.unequipCallback?.(type);
+
+        this.calculateStats();
+    }
+
+    /**
+     * We use this function to calculate total stats and bonsuses every time
+     * an item is equipped or unequipped. This is so that it is not calculated
+     * each time the player's damage is calculated. We iterate through every
+     * equipment and add up the stats and bonuses to the total.
+     */
+
+    private calculateStats(): void {
+        // Clear the current stats and bonuses.
+        this.totalAttackStats = Utils.getEmptyStats();
+        this.totalDefenseStats = Utils.getEmptyStats();
+        this.totalBonuses = Utils.getEmptyBonuses();
+
+        this.forEachEquipment((equipment: Equipment) => {
+            if (equipment.isEmpty()) return;
+
+            // Attack stats
+            this.totalAttackStats.crush += equipment.attackStats.crush;
+            this.totalAttackStats.slash += equipment.attackStats.slash;
+            this.totalAttackStats.stab += equipment.attackStats.stab;
+            this.totalAttackStats.magic += equipment.attackStats.magic;
+
+            // Defense stats
+            this.totalDefenseStats.crush += equipment.defenseStats.crush;
+            this.totalDefenseStats.slash += equipment.defenseStats.slash;
+            this.totalDefenseStats.stab += equipment.defenseStats.stab;
+            this.totalDefenseStats.magic += equipment.defenseStats.magic;
+
+            // Bonuses
+            this.totalBonuses.accuracy += equipment.bonuses.accuracy;
+            this.totalBonuses.strength += equipment.bonuses.strength;
+            this.totalBonuses.archery += equipment.bonuses.archery;
+        });
     }
 
     /**
@@ -187,13 +235,16 @@ export default class Equipments {
     /**
      * Goes through each one of our equipments and serializes it. It extracts
      * cruical information, such as the id, count, ability, and abilityLevel.
+     * @param clientInfo Whether or not we are sending this information to the client.
      * @returns A serialized version of the equipment information.
      */
 
-    public serialize(): SerializedEquipment {
+    public serialize(clientInfo = false): SerializedEquipment {
         let equipments: EquipmentData[] = [];
 
-        this.forEachEquipment((equipment: Equipment) => equipments.push(equipment.serialize()));
+        this.forEachEquipment((equipment: Equipment) =>
+            equipments.push(equipment.serialize(clientInfo))
+        );
 
         // Store in an object so that it gets saved into Database faster.
         return { equipments };

@@ -70,6 +70,9 @@ export default class Handler {
         // Stops the attacker's combat if the character is dead.
         if (attacker) attacker.combat.stop();
 
+        // Add exo to the attacker if it's a player.
+        if (attacker?.isPlayer()) attacker.killCallback?.(this.mob);
+
         // Spawn item drops.
         let drops = this.mob.getDrops();
 
@@ -78,12 +81,7 @@ export default class Handler {
                 this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
             );
 
-        // Add exo to the attacker if it's a player.
-        if (attacker?.isPlayer()) {
-            attacker.addExperience(this.mob.experience);
-            attacker.killCallback?.(this.mob);
-        }
-
+        // Stop the combat.
         this.mob.combat.stop();
 
         // Remove entity from chest area.

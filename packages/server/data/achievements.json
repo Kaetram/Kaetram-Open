@@ -17,7 +17,9 @@
         "mobCount": 20,
 
         "rewardItem": "axe",
-        "rewardExperience": 200
+
+        "rewardSkill": "strength",
+        "rewardExperience": 369
     },
 
     "ahiddenpath": {
@@ -27,6 +29,12 @@
     "hiddenreward": {
         "name": "Hidden Reward",
         "description": "Kill some secret spooky skeletons somewhere."
+    },
+
+    "wormholes": {
+        "name": "Wormholes",
+        "description": "Investigate the spooky occurrence in Mudwich.",
+        "rewardAbility": "precognition"
     },
 
     "ancientwizard": {
@@ -51,7 +59,8 @@
         "mob": ["crab", "hermitcrab"],
         "mobCount": 10,
 
-        "rewardExperience": 1000
+        "rewardSkill": "accuracy",
+        "rewardExperience": 696
     },
 
     "warriorcrab": {
@@ -72,7 +81,7 @@
     "ogreguardian": {
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
-        "rewardExperience": 600
+        "rewardExperience": 1420
     },
 
     "pathofdeath": {
@@ -88,19 +97,25 @@
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "Defeat the Ogre Lord!",
-        "rewardExperience": 1000
+
+        "rewardSkill": "strength",
+        "rewardExperience": 12560
     },
 
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Defeat the Skeleton King!",
-        "rewardExperience": 2000
+
+        "rewardSkill": "strength",
+        "rewardExperience": 12560
     },
 
     "notwhatitseems": {
         "name": "Not What It Seems",
         "description": "Discover a mimic.",
-        "rewardExperience": 1000
+
+        "rewardSkill": "magic",
+        "rewardExperience": 400
     },
 
     "vulture": {
@@ -116,5 +131,10 @@
     "frozentundra": {
         "name": "Frozen Tundra",
         "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
+    },
+
+    "underwatertreasure": {
+        "name": "Underwater Treasure",
+        "description": "Find the treasure hidden underwater."
     }
 }

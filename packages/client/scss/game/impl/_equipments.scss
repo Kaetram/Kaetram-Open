@@ -1,0 +1,107 @@
+@use '../../abstracts/media';
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #equipments {
+            cursor: url('/img/3/hand.png'), auto;
+
+            position: absolute;
+            inset: 0;
+
+            display: none;
+
+            width: 345px * $i;
+            height: 157px * $i;
+            margin: auto;
+
+            background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
+        }
+
+        #equipment-slots {
+            top: 15px * $i;
+            left: 55px * $i;
+
+            overflow: hidden;
+
+            width: 120px * $i;
+            height: 132px * $i;
+
+            background-position: -2px * $i -70px * $i;
+        }
+
+        #equipment-container {
+            position: absolute;
+            top: -70px * $i;
+            left: -2px * $i;
+        }
+
+        .player-image {
+            position: absolute;
+            top: 70px * $i;
+            left: 110px * $i;
+
+            overflow: auto;
+
+            width: 32px;
+            height: 32px;
+
+            scale: $i;
+        }
+
+        #player-image-navigator {
+            position: absolute;
+            top: 94px * $i;
+            left: 95px * $i;
+        }
+
+        .title {
+            font-size: 10px * $i;
+            text-decoration: underline;
+        }
+
+        #attackStats, #defenseStats, #bonuses {
+            font-size: 8px * $i;
+
+            border-color: black;
+            border-radius: 1px;
+        }
+
+        #attackStats, #defenseStats {
+            top: 16px * $i;
+
+            width: 70px * $i;
+            height: 80px * $i;
+        }
+
+        #attackStats {
+            left: 180px * $i;
+        }
+
+        #defenseStats {
+            left: 250px * $i;
+        }
+
+        #bonuses {
+            top: 90px * $i;
+            left: 180px * $i;
+        }
+    }
+}
+
+@media(--sm) {
+    .player-image {
+        top: 60px;
+        left: 100px;
+    }
+}
+
+#attackStats, #defenseStats, #bonuses {
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
+}
+
+#close-equipments {
+    top: -2%;
+    left: 96%;   
+}

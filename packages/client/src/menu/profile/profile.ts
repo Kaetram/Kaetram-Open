@@ -4,10 +4,13 @@ import Menu from '../menu';
 import State from './impl/state';
 import Tasks from './impl/tasks';
 import Skills from './impl/skills';
+import Abilities from './impl/abilities';
 
 import Player from '../../entity/character/player/player';
 
-import { Modules } from '@kaetram/common/network';
+import { SelectCallback } from './impl/abilities';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 type UnequipCallback = (type: Modules.Equipment) => void;
 
@@ -16,18 +19,20 @@ export default class Profile extends Menu {
     private state: State = new State();
     private tasks: Tasks = new Tasks();
     private skills: Skills = new Skills();
+    private abilities: Abilities = new Abilities();
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state, this.tasks, this.skills];
+    private pages: Menu[] = [this.state, this.tasks, this.skills, this.abilities];
 
     // Current page we are on.
     private activePage = 0;
 
     // Navigation buttons for the profile.
-    private previous: HTMLElement = document.querySelector('#previous')!;
-    private next: HTMLElement = document.querySelector('#next')!;
+    private previous: HTMLElement = document.querySelector('#profile-navigator > .previous')!;
+    private next: HTMLElement = document.querySelector('#profile-navigator > .next')!;
 
     private unequipCallback?: UnequipCallback;
+    private abilityCallback?: SelectCallback;
 
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
@@ -41,6 +46,9 @@ export default class Profile extends Menu {
 
         // Initialize callbacks for pages.
         this.state.onSelect((type: Modules.Equipment) => this.unequipCallback?.(type));
+        this.abilities.onSelect((type: Opcodes.Ability, key: string, index?: number) =>
+            this.abilityCallback?.(type, key, index)
+        );
     }
 
     /**
@@ -123,5 +131,14 @@ export default class Profile extends Menu {
 
     public onUnequip(callback: UnequipCallback): void {
         this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when an ability action occurs.
+     * @param callback Contains data about the action.
+     */
+
+    public onAbility(callback: SelectCallback): void {
+        this.abilityCallback = callback;
     }
 }
