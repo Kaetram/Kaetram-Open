@@ -227,6 +227,7 @@ export default class App {
         this.body.className = 'intro';
 
         this.menuHidden = false;
+        this.gameVersion.hidden = false;
     }
 
     /**
@@ -240,6 +241,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
+        this.gameVersion.hidden = true;
 
         this.saveLogin();
     }
@@ -329,7 +331,7 @@ export default class App {
                 return this.sendError('Passwords do not match.', this.passwordConfirmation);
 
             // Verify email against regex.
-            if (!Util.isEmail(this.getEmail()))
+            if (this.getEmail() !== '' && !Util.isEmail(this.getEmail()))
                 return this.sendError(`The email you've entered is not valid.`, this.emailField);
         }
 

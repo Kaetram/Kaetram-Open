@@ -70,7 +70,7 @@ export default class ChestCollection extends Collection<Chest> {
                 count: item.count
             });
 
-            if (player && chest.achievement) player.achievements.get(chest.achievement).finish();
+            if (player && chest.achievement) player.achievements.get(chest.achievement)?.finish();
         });
         return chest;
     }

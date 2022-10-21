@@ -16,6 +16,7 @@ import { Spawn } from '../network/packets';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type {
+    AbilityPacket,
     ContainerPacket,
     EquipmentPacket,
     LoginPacket,
@@ -85,6 +86,8 @@ export default class Incoming {
                         return this.handleCommand(message);
                     case Packets.Container:
                         return this.handleContainer(message);
+                    case Packets.Ability:
+                        return this.handleAbility(message);
                     case Packets.Respawn:
                         return this.player.respawn();
                     case Packets.Trade:
@@ -144,31 +147,23 @@ export default class Incoming {
     }
 
     private handleReady(data: ReadyPacket): void {
-        let { hasMapData, userAgent } = data;
+        let { regionsLoaded, userAgent } = data;
+
+        this.player.handleUserAgent(userAgent, regionsLoaded);
+
+        this.player.handler.startUpdateInterval();
+
+        this.player.ready = true;
 
         this.player.updateRegion();
         this.player.updateEntities();
         this.player.updateEntityList();
-
-        this.player.handler.startUpdateInterval();
+        this.player.updateExperience();
 
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
-        // TODO - cleanup
-        if (
-            (this.player.regionsLoaded.length > 0 && !hasMapData) ||
-            this.player.userAgent !== userAgent
-        ) {
-            this.player.userAgent = userAgent;
-
-            this.player.regionsLoaded = [];
-            //this.player.updateRegion(true);
-        }
-
         if (this.player.isDead()) this.player.deathCallback?.();
-
-        this.player.ready = true;
     }
 
     /**
@@ -226,7 +221,8 @@ export default class Incoming {
             case Opcodes.Movement.Started:
                 this.player.movementStart = Date.now();
 
-                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore();
+                if (movementSpeed !== this.player.getMovementSpeed())
+                    this.player.incrementCheatScore();
 
                 if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
                     return;
@@ -268,9 +264,11 @@ export default class Incoming {
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
-                diff = this.player.lastMovement - this.player.movementStart;
+                if (!(this.player.oldX === playerX && this.player.oldY === playerY)) {
+                    diff = this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed) this.player.incrementCheatScore();
+                    if (diff < this.player.getMovementSpeed()) this.player.incrementCheatScore();
+                }
 
                 break;
 
@@ -427,6 +425,22 @@ export default class Incoming {
             case Opcodes.Container.Swap:
                 container.swap(packet.index!, packet.tIndex!);
                 break;
+        }
+    }
+
+    /**
+     * Handles incoming abilities actions from the client. Things such as using
+     * an ability or moving one to a quick slot.
+     * @param packet Contains infomration about which ability to use and where to move it.
+     */
+
+    private handleAbility(packet: AbilityPacket): void {
+        switch (packet.opcode) {
+            case Opcodes.Ability.Use:
+                return this.player.abilities.use(packet.key);
+
+            case Opcodes.Ability.QuickSlot:
+                return this.player.abilities.setQuickSlot(packet.key, packet.index!);
         }
     }
 

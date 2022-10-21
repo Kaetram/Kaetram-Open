@@ -1,10 +1,9 @@
-import { MinigameCallback } from './../../../common/types/messages/outgoing.d';
 import _ from 'lodash-es';
 
 import { Packets } from '@kaetram/common/network';
+import { MinigameCallback } from '@kaetram/common/types/messages/outgoing.d';
 
 import type App from '../app';
-import type Game from '../game';
 import type {
     HandshakeCallback,
     WelcomeCallback,
@@ -44,12 +43,12 @@ import type {
     CameraCallback,
     BubbleCallback,
     SkillCallback,
-    UpdateCallback
+    UpdateCallback,
+    EffectCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
-    private messages;
-    private app: App;
+    private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
     private handshakeCallback?: HandshakeCallback;
     private welcomeCallback?: WelcomeCallback;
@@ -91,6 +90,7 @@ export default class Messages {
     private skillCallback?: SkillCallback;
     private updateCallback?: UpdateCallback;
     private minigameCallback?: MinigameCallback;
+    private effectCallback?: EffectCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -102,53 +102,48 @@ export default class Messages {
      * Please respect the order of the Packets Enum and arrange functions
      * accordingly.
      */
-    public constructor(private game: Game) {
-        this.app = game.app;
-
-        let messages: (() => ((...data: never[]) => void) | undefined)[] = [];
-
-        messages[Packets.Handshake] = () => this.handshakeCallback;
-        messages[Packets.Welcome] = () => this.welcomeCallback;
-        messages[Packets.Spawn] = () => this.spawnCallback;
-        messages[Packets.Equipment] = () => this.equipmentCallback;
-        messages[Packets.List] = () => this.entityListCallback;
-        messages[Packets.Sync] = () => this.syncCallback;
-        messages[Packets.Movement] = () => this.movementCallback;
-        messages[Packets.Teleport] = () => this.teleportCallback;
-        messages[Packets.Despawn] = () => this.despawnCallback;
-        messages[Packets.Combat] = () => this.combatCallback;
-        messages[Packets.Animation] = () => this.animationCallback;
-        messages[Packets.Points] = () => this.pointsCallback;
-        messages[Packets.Network] = () => this.networkCallback;
-        messages[Packets.Chat] = () => this.chatCallback;
-        messages[Packets.Command] = () => this.commandCallback;
-        messages[Packets.Container] = () => this.containerCallback;
-        messages[Packets.Ability] = () => this.abilityCallback;
-        messages[Packets.Quest] = () => this.questCallback;
-        messages[Packets.Achievement] = () => this.achievementCallback;
-        messages[Packets.Notification] = () => this.notificationCallback;
-        messages[Packets.Blink] = () => this.blinkCallback;
-        messages[Packets.Heal] = () => this.healCallback;
-        messages[Packets.Experience] = () => this.experienceCallback;
-        messages[Packets.Death] = () => this.deathCallback;
-        messages[Packets.Music] = () => this.musicCallback;
-        messages[Packets.NPC] = () => this.npcCallback;
-        messages[Packets.Respawn] = () => this.respawnCallback;
-        messages[Packets.Enchant] = () => this.enchantCallback;
-        messages[Packets.Guild] = () => this.guildCallback;
-        messages[Packets.Pointer] = () => this.pointerCallback;
-        messages[Packets.PVP] = () => this.pvpCallback;
-        messages[Packets.Poison] = () => this.poisonCallback;
-        messages[Packets.Store] = () => this.storeCallback;
-        messages[Packets.Map] = () => this.mapCallback;
-        messages[Packets.Overlay] = () => this.overlayCallback;
-        messages[Packets.Camera] = () => this.cameraCallback;
-        messages[Packets.Bubble] = () => this.bubbleCallback;
-        messages[Packets.Skill] = () => this.skillCallback;
-        messages[Packets.Update] = () => this.updateCallback;
-        messages[Packets.Minigame] = () => this.minigameCallback;
-
-        this.messages = messages;
+    public constructor(private app: App) {
+        this.messages[Packets.Handshake] = () => this.handshakeCallback;
+        this.messages[Packets.Welcome] = () => this.welcomeCallback;
+        this.messages[Packets.Spawn] = () => this.spawnCallback;
+        this.messages[Packets.Equipment] = () => this.equipmentCallback;
+        this.messages[Packets.List] = () => this.entityListCallback;
+        this.messages[Packets.Sync] = () => this.syncCallback;
+        this.messages[Packets.Movement] = () => this.movementCallback;
+        this.messages[Packets.Teleport] = () => this.teleportCallback;
+        this.messages[Packets.Despawn] = () => this.despawnCallback;
+        this.messages[Packets.Combat] = () => this.combatCallback;
+        this.messages[Packets.Animation] = () => this.animationCallback;
+        this.messages[Packets.Points] = () => this.pointsCallback;
+        this.messages[Packets.Network] = () => this.networkCallback;
+        this.messages[Packets.Chat] = () => this.chatCallback;
+        this.messages[Packets.Command] = () => this.commandCallback;
+        this.messages[Packets.Container] = () => this.containerCallback;
+        this.messages[Packets.Ability] = () => this.abilityCallback;
+        this.messages[Packets.Quest] = () => this.questCallback;
+        this.messages[Packets.Achievement] = () => this.achievementCallback;
+        this.messages[Packets.Notification] = () => this.notificationCallback;
+        this.messages[Packets.Blink] = () => this.blinkCallback;
+        this.messages[Packets.Heal] = () => this.healCallback;
+        this.messages[Packets.Experience] = () => this.experienceCallback;
+        this.messages[Packets.Death] = () => this.deathCallback;
+        this.messages[Packets.Music] = () => this.musicCallback;
+        this.messages[Packets.NPC] = () => this.npcCallback;
+        this.messages[Packets.Respawn] = () => this.respawnCallback;
+        this.messages[Packets.Enchant] = () => this.enchantCallback;
+        this.messages[Packets.Guild] = () => this.guildCallback;
+        this.messages[Packets.Pointer] = () => this.pointerCallback;
+        this.messages[Packets.PVP] = () => this.pvpCallback;
+        this.messages[Packets.Poison] = () => this.poisonCallback;
+        this.messages[Packets.Store] = () => this.storeCallback;
+        this.messages[Packets.Map] = () => this.mapCallback;
+        this.messages[Packets.Overlay] = () => this.overlayCallback;
+        this.messages[Packets.Camera] = () => this.cameraCallback;
+        this.messages[Packets.Bubble] = () => this.bubbleCallback;
+        this.messages[Packets.Skill] = () => this.skillCallback;
+        this.messages[Packets.Update] = () => this.updateCallback;
+        this.messages[Packets.Minigame] = () => this.minigameCallback;
+        this.messages[Packets.Effect] = () => this.effectCallback;
     }
 
     /**
@@ -204,11 +199,11 @@ export default class Messages {
                 break;
 
             case 'userexists':
-                this.app.sendError('The username you have chosen already exists.');
+                this.app.sendError('The username you have entered already exists.');
                 break;
 
             case 'emailexists':
-                this.app.sendError('The email you have chosen is not available.');
+                this.app.sendError('The email you have entered is not available.');
                 break;
 
             case 'invalidinput':
@@ -229,6 +224,10 @@ export default class Messages {
 
             case 'timeout':
                 this.app.sendError('You have been disconnected for being inactive for too long.');
+                break;
+
+            case 'updated':
+                this.app.sendError('The game has been updated. Please clear your browser cache.');
                 break;
 
             default:
@@ -399,5 +398,9 @@ export default class Messages {
 
     public onMinigame(callback: MinigameCallback): void {
         this.minigameCallback = callback;
+    }
+
+    public onEffect(callback: EffectCallback): void {
+        this.effectCallback = callback;
     }
 }

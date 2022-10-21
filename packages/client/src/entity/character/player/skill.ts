@@ -17,6 +17,6 @@ export default class Skill {
     public update(experience: number, level: number, percentage: number): void {
         this.experience = experience;
         this.level = level || this.level;
-        this.percentage = percentage || this.percentage;
+        this.percentage = percentage || 0;
     }
 }

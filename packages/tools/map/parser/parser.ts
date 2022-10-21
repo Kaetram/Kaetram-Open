@@ -76,7 +76,7 @@ export default class ProcessMap {
              * of each tileset (firstGID) as the key's value.
              */
 
-            let [, tilesetId] = tileset.image.split('-');
+            let [, tilesetId] = tileset.name.split('-');
 
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
@@ -593,5 +593,9 @@ export default class ProcessMap {
             tilesets,
             animations
         });
+    }
+
+    public getTilesets(): { [tilesetId: number]: number } {
+        return this.map.tilesets!;
     }
 }

@@ -1,5 +1,7 @@
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+
+import { Modules } from '@kaetram/common/network';
+import { Stats } from '@kaetram/common/types/item';
 
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -8,95 +10,103 @@ export default {
     LevelExp: [] as number[],
 
     /**
-     * Damage is calculated on a random basis. We first calculate the maximum
-     * attainable damage of the attacker against the target. We then use a random
-     * accuracy metric picking a number between 0 and the attacker's level. Finally
-     * we use that range between the accuracy and the max damage to determine damage output.
-     * @param attacker The attacker hitting the target.
-     * @param target The target taking the damage.
-     * @param special Whether the attack has special damage associated with it.
-     * @returns Integer value of the damage.
+     * Damage is calculated by taking into consideration the attacker's accuracy
+     * level and bonus. We then use the `randomWeightedInt` to create a weighted distribution
+     * for the likelihood of attaining maximum damage. The maximum attainable accuracy is
+     * dictacted by the constant MAX_ACCURACY. The higher the accuracy value the less likely to achieve
+     * maximum damage in a hit. We `add` onto the max accuracy such that
+     * the higher the level the lower the addition. The higher the accuracy, the lower the chance
+     * of hitting max damage.
+     *
+     * Max hit chance based on accuracy:
+     * > 0.45 - 2.19%
+     * > 0.90 - 0.94%
+     * > 1.35 - 0.71%
+     * > 2.50 -> 0.48%
      */
 
-    getDamage(attacker: Character, target: Character, special = false): number {
-        let maxDamage = this.getMaxDamage(attacker, target, special)!,
-            accuracy = Utils.randomInt(0, attacker.level);
+    getDamage(attacker: Character, target: Character, critical = false): number {
+        let accuracyBonus = attacker.getBonuses().accuracy,
+            accuracyLevel = attacker.getAccuracyLevel(),
+            stats = this.getStatsDifference(attacker.getAttackStats(), target.getDefenseStats()),
+            maxDamage = this.getMaxDamage(attacker, critical),
+            accuracy: number = Modules.Constants.MAX_ACCURACY;
 
-        return Utils.randomInt(accuracy, maxDamage);
+        /**
+         * Take for example the following mock-up values used to calculate accuracy:
+         * accuracyBonus = +13
+         * accuracyLevel = 35
+         * accuracy = 0.45 // MAX_ACCURACY
+         *
+         * accuracy += (1 / accuracyBonus) * 0.8
+         * If the maximum attainable bonus is 100, then accuracy is only disrupted by 0.008
+         * otherwise if the player has 1 accuracy bonus (0 defaults to 1), then the formula
+         * disrupts the accuracy by 0.8. A 0.45 accuracy has a chance of 2.45% of attaining
+         * max damage, whereas an accuracy of 1.25 has merely a chance of 0.62%.
+         *
+         * The same principle applies to the accuracy level. The defense and offense stats
+         * are used to calculate a discrepancy in a similar fashion. If the taget's defense
+         * is overwhelmed by the attacker's attack, then the amount added to the accuracy
+         * modifier is smaller.
+         */
+
+        // Append the accuracy bonus property and ensure the value is not 0.
+        accuracy += (1 / (accuracyBonus === 0 ? 1 : accuracyBonus)) * 0.8;
+
+        // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
+        accuracy += (1 / accuracyLevel) * 1.25;
+
+        // We use the scalar difference of the stats to append onto the accuracy.
+        accuracy += Math.abs((1 / stats) * 1.25);
+
+        // Critical damage boosts accuracy by a factor of 0.05;
+        if (critical) accuracy -= 0.05;
+
+        return Utils.randomWeightedInt(0, maxDamage, accuracy);
     },
 
-    getMaxDamage(attacker: Character, target: Character, special = false): number | undefined {
-        if (!attacker || !target) return;
+    /**
+     * Calculates the maximum damage attainable by a character given their strength (or archery) level,
+     * their equipment bonuses, and any special active effects.
+     * @param critical A critical hit boosts the damage multiplier by 1.5x;
+     */
 
-        let damageDealt = 0,
-            damageAbsorbed: number,
-            damageAmplifier = 1,
-            absorptionAmplifier = 1,
-            weaponLevel = attacker.getWeaponLevel(),
-            armourLevel = attacker.getArmourLevel(),
-            targetArmour = target.getArmourLevel(),
-            pendant,
-            ring,
-            boots,
-            targetPendant,
-            targetRing,
-            targetBoots;
+    getMaxDamage(character: Character, critical = false): number {
+        let bonus = character.getDamageBonus(),
+            level = character.getSkillDamageLevel(),
+            damage = (bonus + level) * 1.25;
 
-        if (attacker.isPlayer()) damageDealt += 10;
+        // Apply the critical damage multiplier onto the damage.
+        if (critical) damage *= 1.5;
 
-        // ({ pendant, ring, boots } = attacker as Player);
-
-        // if (target.isPlayer())
-        //     ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
-
-        damageDealt +=
-            attacker.level +
-            (attacker.level * weaponLevel) / 4 +
-            (attacker.level + weaponLevel * armourLevel) / 8;
-
-        /**
-         * Apply ranged damage deficit
-         */
-
-        if (attacker.isRanged()) damageDealt /= 1.275;
-
-        if (special) damageDealt *= 1.0575;
-
-        /**
-         * Apply special amulets
-         */
-
-        // if (pendant && pendant.pendantLevel > 0) damageAmplifier *= pendant.getBaseAmplifier();
-
-        // if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
-
-        // if (boots && boots.bootsLevel > 0) damageAmplifier *= boots.getBaseAmplifier();
-
-        /**
-         * Just so amplifiers don't get out of hand.
-         */
-
-        if (damageAmplifier > 1.6) damageAmplifier = 1.6;
-
-        damageDealt *= damageAmplifier;
-
-        damageAbsorbed = target.level + targetArmour / 2;
-
-        // if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
-
-        // if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
-
-        // if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
-
-        damageAbsorbed *= absorptionAmplifier;
-
-        let damage = damageDealt - damageAbsorbed;
-
-        damage = Math.ceil(damage);
-
-        if (isNaN(damage) || !damage || damage < 0) damage = 0;
+        // Player characters get a boost of 5 damage.
+        if (character.isPlayer()) damage += 5;
 
         return damage;
+    },
+
+    /**
+     * Calculates the total scalar difference between the attacker's stats and the target's.
+     * We subtract the target's stats from that of the attacker's and then add all of their
+     * values together.
+     * @param attackerStats The stats of the entity doing the attacking.
+     * @param targetStats The stats of the entity being attacked.
+     * @returns Scalar value representing the total stat difference.
+     */
+
+    getStatsDifference(attackerStats: Stats, targetStats: Stats): number {
+        let diff = {
+            crush: attackerStats.crush - targetStats.crush,
+            slash: attackerStats.slash - targetStats.slash,
+            stab: attackerStats.stab - targetStats.stab
+        };
+
+        /**
+         * We exclude magic from this calculation since it will be processed separately
+         * whenever that feature is implemented.
+         */
+
+        return diff.crush + diff.slash + diff.stab;
     },
 
     getCritical(attacker: Player, target: Character): number | undefined {
@@ -163,8 +173,8 @@ export default {
     },
 
     /**
-     * Formula usd to calcualte maximum hitpoints.
-     * @param level The level used to calculate the maximum hitpoints.
+     * Formula used to calcualte maximum hitpoints.
+     * @param level The level of the health skill generally.
      * @returns The maximum hitpoints number value.
      */
 

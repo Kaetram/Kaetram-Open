@@ -296,7 +296,7 @@
                                 id="register-email-input"
                                 class="stroke"
                                 name="player-email"
-                                placeholder="Email Address"
+                                placeholder="Email Address (optional)"
                                 aria-label="Email Address"
                                 maxlength="64"
                                 autocomplete="email"
@@ -340,6 +340,13 @@
                             <br />
                             <br />
                             More pixel assets by
+                            <a
+                                rel="noopener noreferrer"
+                                class="clickable"
+                                target="_blank"
+                                href="https://opengameart.org/users/buch"
+                                >Buch</a
+                            >,
                             <a
                                 rel="noopener noreferrer"
                                 class="clickable"
@@ -472,6 +479,13 @@
                     </ul>
                 </div>
 
+                <div id="ability-shortcut" hidden>
+                    <div id="ability-quickslot1" class="ability-quickslot"></div>
+                    <div id="ability-quickslot2" class="ability-quickslot"></div>
+                    <div id="ability-quickslot3" class="ability-quickslot"></div>
+                    <div id="ability-quickslot4" class="ability-quickslot"></div>
+                </div>
+
                 <div id="drop-dialog">
                     <div id="drop-title">Input drop count.</div>
                     <div align="center">
@@ -492,13 +506,12 @@
                         <div id="profile-name" class="profile-info"></div>
                         <div id="profile-level" class="profile-info"></div>
                         <div id="profile-experience" class="profile-info"></div>
-                        <div id="weapon-slot" class="profile-slot"></div>
-                        <div id="weapon-slot-info" class="profile-item-info"></div>
-                        <div id="armour-slot" class="profile-slot"></div>
-                        <div id="armour-slot-info" class="profile-item-info"></div>
-                        <div id="pendant-slot" class="profile-slot"></div>
-                        <div id="ring-slot" class="profile-slot"></div>
-                        <div id="boots-slot" class="profile-slot"></div>
+                        <div class="profile-slot weapon-slot"></div>
+                        <div class="profile-slot armour-slot"></div>
+                        <div class="profile-slot pendant-slot"></div>
+                        <div class="profile-slot ring-slot"></div>
+                        <div class="profile-slot boots-slot"></div>
+                        <div id="equipment-button"></div>
                     </div>
 
                     <div id="quest-page" class="page">
@@ -512,11 +525,35 @@
                         <div id="skills-list"><ul></ul></div>
                     </div>
 
+                    <div id="abilities-page" class="page">
+                        <ul id="active-abilities">
+                            <div id="activeability1" class="ability"></div>
+                            <div id="activeability2" class="ability"></div>
+                            <div id="activeability3" class="ability"></div>
+                            <div id="activeability4" class="ability"></div>
+                            <div id="activeability5" class="ability"></div>
+                            <div id="activeability6" class="ability"></div>
+                            <div id="activeability7" class="ability"></div>
+                            <div id="activeability8" class="ability"></div>
+                        </ul>
+
+                        <ul id="passive-abilities">
+                            <div id="passiveability1" class="ability"></div>
+                            <div id="passiveability2" class="ability"></div>
+                            <div id="passiveability3" class="ability"></div>
+                            <div id="passiveability4" class="ability"></div>
+                            <div id="passiveability5" class="ability"></div>
+                            <div id="passiveability6" class="ability"></div>
+                            <div id="passiveability7" class="ability"></div>
+                            <div id="passiveability8" class="ability"></div>
+                        </ul>
+                    </div>
+
                     <div id="guild-page" class="page"></div>
 
-                    <div id="navigator">
-                        <div id="previous"></div>
-                        <div id="next"></div>
+                    <div id="profile-navigator" class="navigator">
+                        <div class="previous"></div>
+                        <div class="next"></div>
                     </div>
                 </div>
 
@@ -563,6 +600,7 @@
                         <p id="debug-mode-checkbox-text">Debug Mode</p>
                         <p id="show-names-checkbox-text">Show Names</p>
                         <p id="show-levels-checkbox-text">Show Levels</p>
+                        <p id="disable-region-caching-text">Disable Caching</p>
                     </div>
 
                     <div id="info"></div>
@@ -588,6 +626,10 @@
                             <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
                             <span class="checkmark"></span>
                         </label>
+                        <label id="disable-region-caching-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
 
@@ -600,10 +642,9 @@
                 <div id="map-frame">
                     <div id="warp0" class="map-button"></div>
                     <div id="warp1" class="map-button"></div>
-                    <div id="warp2" class="map-button"></div>
+                    <!-- <div id="warp2" class="map-button"></div>
                     <div id="warp3" class="map-button"></div>
-                    <div id="warp4" class="map-button"></div>
-                    <div id="warp5" class="map-button"></div>
+                    <div id="warp4" class="map-button"></div> -->
                     <div id="close-map-frame" class="close"></div>
                 </div>
 
@@ -660,6 +701,50 @@
                     </div>
                 </div>
 
+                <div id="equipments">
+                    <div id="close-equipments" class="close"></div>
+                    <div id="equipment-stats"></div>
+                    <div id="equipment-slots" class="page state-page">
+                        <div id="equipment-container">
+                            <div class="profile-slot weapon-slot"></div>
+                            <div class="profile-slot armour-slot"></div>
+                            <div class="profile-slot pendant-slot"></div>
+                            <div class="profile-slot ring-slot"></div>
+                            <div class="profile-slot boots-slot"></div>
+                        </div>
+                    </div>
+                    <div id="player-image-armour" class="player-image"></div>
+                    <div id="player-image-weapon" class="player-image"></div>
+                    <div id="player-image-navigator">
+                        <div class="previous"></div>
+                        <div class="next"></div>
+                    </div>
+
+                    <div id="attackStats">
+                        <p class="title">Attack Stats</p>
+                        <br>
+                        <p class="crush">Crush:</p>
+                        <p class="slash">Slash:</p>
+                        <p class="stab">Stab:</p>
+                        <p class="magic">Magic:</p>
+                    </div>
+                    <div id="defenseStats">
+                        <p class="title">Defense Stats</p>
+                        <br>
+                        <p class="crush">Crush:</p>
+                        <p class="slash">Slash:</p>
+                        <p class="stab">Stab:</p>
+                        <p class="magic">Magic:</p>
+                    </div>
+                    <div id="bonuses">
+                        <p class="title">Bonuses</p>
+                        <br>
+                        <p class="accuracy">Accuracy:</p>
+                        <p class="strength">Strength:</p>
+                        <p class="archery">Archery:</p>
+                    </div>
+                </div>
+
                 <div id="bubbles"></div>
 
                 <div id="notification">
@@ -707,8 +792,12 @@
                     <div id="health-info">
                         <div id="health-bar-text"></div>
                     </div>
-                    <div id="exp"></div>
-                    <div id="exp-bar"></div>
+
+                    <div id="mana"></div>
+                    <div id="mana-bar"></div>
+                    <div id="mana-info">
+                        <div id="mana-bar-text"></div>
+                    </div>
                 </div>
             </div>
         </div>
