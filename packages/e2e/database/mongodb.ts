@@ -106,6 +106,23 @@ export default class MongoDB {
         });
     }
 
+    public delete(
+        filter: { [key: string]: string },
+        collectionName: string,
+        callback: (error?: AnyError) => void
+    ) {
+        let collection = this.database.collection(collectionName);
+        collection.deleteOne(filter, (error) => {
+            if (error)
+                log.error(
+                    `An error occurred while deleting ${JSON.stringify(filter)} from ${
+                        collection.collectionName
+                    }: ${error}`
+                );
+            callback(error);
+        });
+    }
+
     public deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
         let collection = this.database.collection(collectionName);
         collection
