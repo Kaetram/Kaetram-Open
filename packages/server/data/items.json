@@ -5,7 +5,7 @@
     "level": 2,
     "attackStats": {
       "crush": 2,
-      "slash": 2,
+      "slash": 6,
       "stab": 2,
       "magic": 0
     },
@@ -20,74 +20,197 @@
     "type": "weapon",
     "name": "Axe",
     "lumberjacking": 1,
-    "level": 1
+    "level": 1,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "morningstar": {
     "type": "weapon",
-    "name": "Morning Star"
+    "name": "Morning Star",
+    "level": 6,
+    "attackStats": {
+      "crush": 12,
+      "slash": 6,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 8,
+      "archery": 0
+    }
   },
 
   "bluesword": {
     "type": "weapon",
-    "name": "Water Sword"
+    "name": "Water Sword",
+    "level": 10,
+    "attackStats": {
+      "crush": 2,
+      "slash": 16,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 0
+    }
   },
  
   "redsword": {
     "type": "weapon",
-    "name": "Fire Sword"
+    "name": "Fire Sword",
+    "level": 14,
+    "attackStats": {
+      "crush": 18,
+      "slash": 2,
+      "stab": 8,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "goldensword": {
     "type": "weapon",
-    "name": "Golden Sword"
+    "name": "Golden Sword",
+    "level": 22,
+    "attackStats": {
+      "crush": 4,
+      "slash": 24,
+      "stab": 8,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 4,
+      "archery": 0
+    }
   },
 
   "sidesword": {
     "type": "weapon",
-    "name": "Side Sword"
+    "name": "Side Sword",
+    "level": 24,
+    "attackStats": {
+      "crush": 8,
+      "slash": 24,
+      "stab": 6,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "spear": {
     "type": "weapon",
     "name": "Silly Spear",
+    "level": 28,
     "attackStats": {
-      "crush": 0,
-      "slash": 12,
-      "stab": 20,
+      "crush": 6,
+      "slash": 18,
+      "stab": 26,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 2,
-      "slash": 6,
+      "crush": 4,
+      "slash": 8,
       "stab": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 8,
-      "strength": 0,
+      "accuracy": 15,
+      "strength": 2,
       "archery": 0
     }
   },
 
   "scimitar": {
     "type": "weapon",
-    "name": "Pirate's Scimitar"
+    "name": "Pirate's Scimitar",
+    "level": 30,
+    "attackStats": {
+      "crush": 2,
+      "slash": 30,
+      "stab": 10,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 10,
+      "archery": 0
+    }
   },
 
   "trident": {
     "type": "weapon",
-    "name": "Trident Of The Seas"
+    "name": "Trident Of The Seas",
+    "attackStats": {
+      "crush": 4,
+      "slash": 42,
+      "stab": 22,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 18,
+      "stab": 2,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 12,
+      "archery": 0
+    }
   },
 
   "bluescimitar": {
     "type": "weapon",
-    "name": "Blue Scimitar"
+    "name": "Blue Scimitar",
+    "attackStats": {
+      "crush": 18,
+      "slash": 14,
+      "stab": 12,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 10,
+      "archery": 0
+    }
   },
 
   "hammer": {
     "type": "weapon",
-    "name": "Hammer"
+    "name": "Hammer",
+    "attackStats": {
+      "crush": 32,
+      "slash": 4,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 24,
+      "archery": 0
+    }
   },
 
   "greenlightsaber": {
@@ -137,7 +260,18 @@
 
   "whip": {
     "type": "weapon",
-    "name": "Whip"
+    "name": "Whip",
+    "attackStats": {
+      "crush": 8,
+      "slash": 36,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 24,
+      "strength": 6,
+      "archery": 0
+    }
   },
 
   "forestguardiansword": {
@@ -244,6 +378,26 @@
     "type": "weapon",
     "name": "Stick"
   },
+  
+  "rustedaxe": {
+    "type": "weapon",
+    "name": "Rusted Axe",
+    "lumberjacking": 2,
+    "level": 5,
+    "skill": "lumberjacking"
+  },
+
+  "fireaxe": {
+    "type": "weapon",
+    "name": "Fire Axe",
+    "lumberjacking": 3
+  },
+
+  "poisonaxe": {
+    "type": "weapon",
+    "name": "Poison Axe",
+    "lumberjacking": 4
+  },
 
   "cactusaxe": {
     "type": "weapon",
@@ -255,6 +409,12 @@
     "type": "weapon",
     "name": "Gold Axe",
     "lumberjacking": 7
+  },
+
+  "carnelianaxe": {
+    "type": "weapon",
+    "name": "Carnelian Axe",
+    "lumberjacking": 8
   },
 
   "devilkazyasword": {
@@ -269,7 +429,18 @@
 
   "paewoldo": {
     "type": "weapon",
-    "name": "Paewoldo"
+    "name": "Paewoldo",
+    "attackStats": {
+      "crush": 19,
+      "slash": 124,
+      "stab": 38,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 69,
+      "archery": 0
+    }
   },
 
   "magicspear": {
@@ -284,17 +455,29 @@
 
   "pendant1": {
     "type": "pendant",
-    "name": "Emerald Pendant"
+    "name": "Emerald Pendant",
+    "attackStats": {
+      "crush": 8,
+      "slash": 8,
+      "stab": 8,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 5,
+      "stab": 5,
+      "magic": 3
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 2
+    }
   },
 
   "greenpendant": {
     "type": "pendant",
-    "name": "Jade Pendant"
-  },
-
-  "pearlpendant": {
-    "type": "pendant",
-    "name": "Pearl Pendant",
+    "name": "Jade Pendant",
     "attackStats": {
       "crush": 12,
       "slash": 12,
@@ -305,18 +488,57 @@
       "crush": 10,
       "slash": 10,
       "stab": 10,
-      "magic": 2
+      "magic": 6
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 4,
       "strength": 4,
-      "archery": 2
+      "archery": 3
+    }
+  },
+
+  "pearlpendant": {
+    "type": "pendant",
+    "name": "Pearl Pendant",
+    "attackStats": {
+      "crush": 16,
+      "slash": 16,
+      "stab": 16,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 15,
+      "stab": 15,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 8,
+      "archery": 4
     }
   },
 
   "marblependant": {
     "type": "pendant",
-    "name": "Diamond Pendant"
+    "name": "Diamond Pendant",
+    "attackStats": {
+      "crush": 18,
+      "slash": 28,
+      "stab": 18,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 20,
+      "stab": 20,
+      "magic": 13
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 12,
+      "archery": 6
+    }
   },
 
   "goldring": {
@@ -331,55 +553,139 @@
 
   "ring1": {
     "type": "ring",
-    "name": "Emerald Ring"
+    "name": "Emerald Ring",
+    "attackStats": {
+      "crush": 8,
+      "slash": 8,
+      "stab": 8,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 5,
+      "stab": 5,
+      "magic": 3
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 2
+    }
   },
 
   "sproutring": {
     "type": "ring",
-    "name": "Sprout Ring"
+    "name": "Sprout Ring",
+    "attackStats": {
+      "crush": 10,
+      "slash": 10,
+      "stab": 10,
+      "magic": 3
+    },
+    "defenseStats": {
+      "crush": 7,
+      "slash": 8,
+      "stab": 7,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 8,
+      "archery": 3
+    }
   },
 
   "pearlring": {
     "type": "ring",
-    "name": "Pearl Ring"
+    "name": "Pearl Ring",
+    "attackStats": {
+      "crush": 16,
+      "slash": 16,
+      "stab": 16,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 15,
+      "stab": 15,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 8,
+      "archery": 4
+    }
   },
 
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
     "attackStats": {
-      "crush": 16,
-      "slash": 16,
-      "stab": 14,
-      "magic": 6
+      "crush": 18,
+      "slash": 28,
+      "stab": 18,
+      "magic": 8
     },
     "defenseStats": {
-      "crush": 12,
-      "slash": 12,
-      "stab": 10,
-      "magic": 6
+      "crush": 20,
+      "slash": 20,
+      "stab": 20,
+      "magic": 13
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 6,
-      "archery": 3
+      "accuracy": 8,
+      "strength": 10,
+      "archery": 6
     }
   },
 
   "spiritring": {
     "type": "ring",
-    "name": "Spirit Ring"
+    "name": "Spirit Ring",
+    "attackStats": {
+      "crush": 12,
+      "slash": 10,
+      "stab": 8,
+      "magic": 28
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 10,
+      "stab": 8,
+      "magic": 28
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 4,
+      "archery": 16
+    }
   },
 
   "essentialrage": {
     "type": "ring",
-    "name": "Essential Rage"
+    "name": "Essential Rage",
+    "attackStats": {
+      "crush": 22,
+      "slash": 34,
+      "stab": 18,
+      "magic": 12
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 30,
+      "stab": 16,
+      "magic": 13
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 14,
+      "archery": 16
+    }
   },
 
-  "armorarcher1": {
-    "type": "armourarcher",
-    "name": "Archer Armor",
-    "spriteName": "armorarcher"
+  "archerarmor": {
+    "type": "archerarmor",
+    "name": "Archer Armor"
   },
 
   "leatherarcherarmor": {
@@ -514,57 +820,178 @@
 
   "woodenbow": {
     "type": "weaponarcher",
-    "name": "Wooden Bow"
+    "name": "Wooden Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 8,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 1,
+      "archery": 3
+    }
   },
 
   "plasticbow": {
     "type": "weaponarcher",
-    "name": "Plastic Bow"
+    "name": "Plastic Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 12,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 1,
+      "archery": 5
+    }
   },
 
   "ironbow": {
     "type": "weaponarcher",
-    "name": "Iron Bow"
+    "name": "Iron Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 14,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 1,
+      "archery": 7
+    }
   },
 
   "redbow": {
     "type": "weaponarcher",
-    "name": "Red Bow"
+    "name": "Red Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 18,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 1,
+      "archery": 10
+    }
   },
 
   "violetbow": {
     "type": "weaponarcher",
-    "name": "Violet Bow"
+    "name": "Violet Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 21,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 1,
+      "archery": 12
+    }
   },
 
   "deathbow": {
     "type": "weaponarcher",
-    "name": "Death Bow"
+    "name": "Death Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 23,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 1,
+      "archery": 14
+    }
   },
 
   "goldenbow": {
     "type": "weaponarcher",
-    "name": "Golden Bow"
+    "name": "Golden Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 26,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 16,
+      "strength": 1,
+      "archery": 15
+    }
   },
 
   "watermelonbow": {
     "type": "weaponarcher",
-    "name": "Watermelon Bow"
+    "name": "Watermelon Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 28,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 1,
+      "archery": 17
+    }
   },
 
   "greenbow": {
     "type": "weaponarcher",
-    "name": "Greenbow"
+    "name": "Greenbow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 31,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 1,
+      "archery": 19
+    }
   },
 
   "redenelbow": {
     "type": "weaponarcher",
-    "name": "Redenel Bow"
+    "name": "Redenel Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 34,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 22,
+      "strength": 1,
+      "archery": 21
+    }
   },
 
   "mermaidbow": {
     "type": "weaponarcher",
-    "name": "Mermaid Bow"
+    "name": "Mermaid Bow",
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 28,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 1,
+      "archery": 17
+    }
   },
 
   "seahorsebow": {
@@ -654,23 +1081,77 @@
 
   "leatherarmor": {
     "type": "armour",
-    "name": "Leather Armour"
+    "name": "Leather Armour",
+    "level": 2,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": -3
+    },
+    "defenseStats": {
+      "crush": 8,
+      "slash": 12,
+      "stab": 3,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 5,
+      "archery": -2
+    }
   },
 
   "mailarmor": {
     "type": "armour",
-    "name": "Chain Mail"
+    "name": "Chain Mail",
+    "level": 6,
+    "attackStats": {
+      "crush": 4,
+      "slash": 6,
+      "stab": 5,
+      "magic": -3
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 14,
+      "stab": 5,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 5,
+      "archery": -2
+    }
   },
 
   "platearmor": {
     "type": "armour",
-    "name": "Steel Armour"
+    "name": "Steel Armour",
+    "level": 12,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": -3
+    },
+    "defenseStats": {
+      "crush": 8,
+      "slash": 12,
+      "stab": 9,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 6,
+      "archery": -2
+    }
   },
 
   "redarmor": {
     "type": "armour",
     "name": "Ruby Armour",
-    "level": 30,
+    "level": 18,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -680,44 +1161,152 @@
     "defenseStats": {
       "crush": 12,
       "slash": 20,
-      "stab": 6,
+      "stab": 12,
       "magic": -4
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 3,
+      "strength": 8,
       "archery": -1
     }
   },
 
   "goldenarmor": {
     "type": "armour",
-    "name": "Golden Armour"
+    "name": "Golden Armour",
+    "level": 23,
+    "attackStats": {
+      "crush": 6,
+      "slash": 12,
+      "stab": 5,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 24,
+      "stab": 14,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 10,
+      "archery": -1
+    }
   },
 
   "greenarmor": {
     "type": "armour",
-    "name": "Green Armour"
+    "name": "Green Armour",
+    "level": 28,
+    "attackStats": {
+      "crush": 7,
+      "slash": 14,
+      "stab": 8,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 22,
+      "slash": 20,
+      "stab": 16,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 6,
+      "archery": -1
+    }
   },
 
   "greenwingarmor": {
     "type": "armour",
-    "name": "Green Wing Armour"
+    "name": "Green Wing Armour",
+    "level": 28,
+    "attackStats": {
+      "crush": 7,
+      "slash": 14,
+      "stab": 8,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": 23,
+      "stab": 18,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 8,
+      "archery": -1
+    }
   },
 
   "guardarmor": {
     "type": "armour",
-    "name": "Guard Armour"
+    "name": "Guard Armour",
+    "level": 48,
+    "attackStats": {
+      "crush": 10,
+      "slash": 18,
+      "stab": 12,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 28,
+      "slash": 24,
+      "stab": 20,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 12,
+      "archery": -1
+    }
   },
 
   "redguardarmor": {
     "type": "armour",
-    "name": "Red Guard Armour"
+    "name": "Red Guard Armour",
+    "level": 52,
+    "attackStats": {
+      "crush": 10,
+      "slash": 18,
+      "stab": 12,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 28,
+      "slash": 28,
+      "stab": 22,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 14,
+      "archery": -1
+    }
   },
 
   "whitearmor": {
     "type": "armour",
-    "name": "White Armour"
+    "name": "White Armour",
+    "level": 56,
+    "attackStats": {
+      "crush": 12,
+      "slash": 24,
+      "stab": 14,
+      "magic": -2
+    },
+    "defenseStats": {
+      "crush": 32,
+      "slash": 32,
+      "stab": 22,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 16,
+      "archery": -1
+    }
   },
 
   "ratarmor": {
@@ -1038,7 +1627,25 @@
 
   "adminarmor": {
     "type": "armour",
-    "name": "Admin Armour"
+    "name": "Admin Armour",
+    "level": 225,
+    "attackStats": {
+      "crush": 88,
+      "slash": 130,
+      "stab": 78,
+      "magic": 50
+    },
+    "defenseStats": {
+      "crush": 160,
+      "slash": 198,
+      "stab": 146,
+      "magic": 68
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 48,
+      "archery": 32
+    }
   },
 
   "flask": {
@@ -1499,32 +2106,6 @@
     "type": "object",
     "name": "Logs",
     "price": 20
-  },
-
-  "rustedaxe": {
-    "type": "weapon",
-    "name": "Rusted Axe",
-    "lumberjacking": 2,
-    "level": 5,
-    "skill": "lumberjacking"
-  },
-
-  "fireaxe": {
-    "type": "weapon",
-    "name": "Fire Axe",
-    "lumberjacking": 3
-  },
-
-  "poisonaxe": {
-    "type": "weapon",
-    "name": "Poison Axe",
-    "lumberjacking": 4
-  },
-
-  "carnelianaxe": {
-    "type": "weapon",
-    "name": "Carnelian Axe",
-    "lumberjacking": 8
   },
 
   "palmlogs": {

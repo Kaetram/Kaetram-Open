@@ -502,6 +502,16 @@ export default class Mob extends Character {
     }
 
     /**
+     * Implementation for archery level. In the case of mobs, we just
+     * use their attack level to calculate their damage output.
+     * @returns The mob's archery level.
+     */
+
+    public override getArcheryLevel(): number {
+        return this.attackLevel;
+    }
+
+    /**
      * Callback for when the mob respawns.
      */
 

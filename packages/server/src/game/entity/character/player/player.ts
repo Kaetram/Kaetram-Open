@@ -1351,6 +1351,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The player's archery level from the skills controller.
+     */
+
+    public override getArcheryLevel(): number {
+        return this.skills.get(Modules.Skills.Archery).level;
+    }
+
+    /**
      * An override function for the player's attack rate since it
      * is dependent on their weapon at the moment. We may be doing
      * calculations from special equipments/effects in the future.
