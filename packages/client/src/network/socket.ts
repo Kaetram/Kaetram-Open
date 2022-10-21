@@ -50,6 +50,7 @@ export default class Socket {
 
             // Create a SocketIO connection with the url generated.
             this.connection = io(url, {
+                transports: ['websocket'],
                 forceNew: true,
                 reconnection: false
             });
@@ -58,7 +59,10 @@ export default class Socket {
             this.connection.on('connect', this.handleConnection.bind(this));
 
             // Handler for when a connection error occurs.
-            this.connection.on('connect_error', () => this.handleConnectionError(host, port));
+            this.connection.on('connect_error', (err) => {
+                console.error(`connect_error due to ${err.message}`);
+                this.handleConnectionError(host, port);
+            });
 
             // Handler for when a message is received.
             this.connection.on('message', (message) => this.receive(message.message || message));
