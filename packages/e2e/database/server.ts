@@ -21,7 +21,12 @@ router.get('/health', (req, res) => {
 
 router.post<MongoRestParams>('/:collectionName/username/:username', (req, res) => {
     let { collectionName, username } = req.params;
-    handler.upsert(collectionName, username, req.body, (error) => res.end());
+    handler.upsert(collectionName, username, req.body, () => res.end());
+});
+
+router.delete<MongoRestParams>('/:collectionName/username/:username', (req, res) => {
+    let { collectionName, username } = req.params;
+    handler.delete(collectionName, username, () => res.end());
 });
 
 router.get<MongoRestParams>('/:collectionName/username/:username', (req, res) => {
