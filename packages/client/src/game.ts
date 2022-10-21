@@ -163,8 +163,6 @@ export default class Game {
 
         this.player.idle();
 
-        this.audio.load();
-
         this.camera.centreOn(this.player);
 
         new PlayerHandler(this, this.player);
