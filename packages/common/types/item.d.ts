@@ -36,6 +36,7 @@ export interface ItemData {
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;
+    spriteName?: string;
     bonuses?: Bonuses;
     attackStats?: Stats;
     defenseStats?: Stats;
