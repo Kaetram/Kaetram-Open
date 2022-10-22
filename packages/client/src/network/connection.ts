@@ -223,6 +223,8 @@ export default class Connection {
 
         // Update the animated tiles when we receive new map data.
         this.renderer.updateAnimatedTiles();
+
+        if (!this.map.hasCachedDate()) this.app.fadeMenu();
     }
 
     /**

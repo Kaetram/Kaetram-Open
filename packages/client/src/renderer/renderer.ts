@@ -160,6 +160,7 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
 
         this.loadSizes();
+        this.loadStaticSprites();
     }
 
     /**

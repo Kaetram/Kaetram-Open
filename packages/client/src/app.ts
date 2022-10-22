@@ -236,6 +236,8 @@ export default class App {
      */
 
     public fadeMenu(): void {
+        if (this.menuHidden) return;
+
         this.updateLoader();
 
         this.body.className = 'game';
