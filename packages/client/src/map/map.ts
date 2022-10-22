@@ -337,6 +337,15 @@ export default class Map {
     }
 
     /**
+     * Cached data is represented by the amount of regions loaded.
+     * @returns Whether or not the amount of regions loaded is greater than 0.
+     */
+
+    public hasCachedDate(): boolean {
+        return this.regionsLoaded > 0;
+    }
+
+    /**
      * Verifies if x and y are integers and whether or not they are within the bounds of
      * the map. That is, whether x and y are not smaller than 0, and no greater than the
      * width and height of the map respectively.

@@ -150,7 +150,10 @@ export default abstract class Entity {
     public setSprite(sprite: Sprite): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
-        if (this.isPlayer()) sprite.loadHurt = true;
+        if (this.isPlayer()) {
+            sprite.loadHurt = true;
+            this.idle();
+        }
 
         if (!sprite.loaded) sprite.load();
 
