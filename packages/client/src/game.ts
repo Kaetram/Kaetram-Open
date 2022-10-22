@@ -100,7 +100,6 @@ export default class Game {
 
         this.started = true;
 
-        this.app.fadeMenu();
         this.tick();
     }
 
@@ -153,15 +152,11 @@ export default class Game {
      * by the server and the client received the connection.
      */
     public postLoad(): void {
-        this.renderer.loadStaticSprites();
-
         this.entities.addEntity(this.player);
 
         this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
 
         if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
-
-        this.player.idle();
 
         this.camera.centreOn(this.player);
 
@@ -180,6 +175,8 @@ export default class Game {
             this.storage.data.new = false;
             this.storage.save();
         }
+
+        if (this.map.hasCachedDate()) this.app.fadeMenu();
     }
 
     /**
