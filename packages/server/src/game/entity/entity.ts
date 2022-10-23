@@ -246,6 +246,15 @@ abstract class Entity {
     }
 
     /**
+     * Checks whether or not the entity is a projectile.
+     * @returns Whether the type is equal to the EntityType projectile.
+     */
+
+    public isProjectile(): this is Projectile {
+        return this.type === Modules.EntityType.Projectile;
+    }
+
+    /**
      * This is entity superclass serialization. It provides
      * the absolute most basic data about the entity. Entities
      * that extend the Entity class will use this to get initial data

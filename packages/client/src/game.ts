@@ -155,6 +155,7 @@ export default class Game {
         this.entities.addEntity(this.player);
 
         this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
+        this.player.idle();
 
         if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
 
