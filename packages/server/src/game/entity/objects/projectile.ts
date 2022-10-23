@@ -9,11 +9,31 @@ import { EntityData } from '@kaetram/common/types/entity';
 
 export default class Projectile extends Entity {
     public hitType = Modules.Hits.Damage;
+    private impactCallback?: () => void;
 
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
         super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', owner.x, owner.y);
 
         this.key = owner.projectileName;
+
+        /**
+         * The rough speed of the projectile is 1 tile per 100ms, so we use that
+         * to calculate the approximate time it takes for impact to occur.
+         */
+
+        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 100);
+    }
+
+    /**
+     * Handles the impact of the projectile with its target. We do this server-sided
+     * since we cannot rely on the client to send us the correct information.
+     */
+
+    private handleImpact(): void {
+        this.target?.hit(this.hit.getDamage(), this.owner);
+
+        // Despawn callback.
+        this.impactCallback?.();
     }
 
     /**
@@ -31,5 +51,13 @@ export default class Projectile extends Entity {
         data.hitType = this.hitType;
 
         return data;
+    }
+
+    /**
+     * Callback for when the projectile impacts the target.
+     */
+
+    public onImpact(callback: () => void): void {
+        this.impactCallback = callback;
     }
 }
