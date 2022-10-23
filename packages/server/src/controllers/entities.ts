@@ -133,7 +133,12 @@ export default class Entities {
      */
 
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        return <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
+        let projectile = <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
+
+        // Remove on impact
+        projectile.onImpact(() => this.removeProjectile(projectile));
+
+        return projectile;
     }
 
     /**
@@ -200,6 +205,15 @@ export default class Entities {
 
     public removeMob(mob: Mob): void {
         this.collections.mobs.remove(mob);
+    }
+
+    /**
+     * Removes the projectile from our entity and projectile dictionary.
+     * @param projectile The projectile we are removing.
+     */
+
+    public removeProjectile(projectile: Projectile): void {
+        this.collections.projectiles.remove(projectile);
     }
 
     /**

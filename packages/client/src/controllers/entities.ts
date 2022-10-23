@@ -13,7 +13,7 @@ import Projectile from '../entity/objects/projectile';
 
 import { EntityData } from '@kaetram/common/types/entity';
 import { PlayerData } from '@kaetram/common/types/player';
-import { Modules, Packets, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Entity from '../entity/entity';
@@ -213,13 +213,6 @@ export default class EntitiesController {
              * The data in the projectile is only for rendering purposes
              * there is nothing you can change for the actual damage output here.
              */
-
-            if (this.isPlayer(projectile.owner.instance) || this.isPlayer(target.instance))
-                this.game.socket.send(Packets.Projectile, {
-                    opcode: Opcodes.Projectile.Impact,
-                    instance: info.instance,
-                    target: target.instance
-                });
 
             if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 

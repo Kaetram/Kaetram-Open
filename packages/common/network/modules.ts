@@ -370,7 +370,7 @@ export const enum Constants {
     MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '56,46', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
+    TUTORIAL_SPAWN_POINT = '405,27', // 'x,y' values
     TREE_REGROW = 30_000,
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45 // Maximum attainable accuracy for a character.
