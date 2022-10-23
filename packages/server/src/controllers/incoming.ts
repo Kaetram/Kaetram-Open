@@ -76,8 +76,6 @@ export default class Incoming {
                         return this.handleMovement(message);
                     case Packets.Target:
                         return this.handleTarget(message);
-                    case Packets.Projectile:
-                        return this.handleProjectile(message);
                     case Packets.Network:
                         return this.handleNetwork(message);
                     case Packets.Chat:
@@ -335,18 +333,6 @@ export default class Incoming {
             case Opcodes.Target.Object:
                 return this.player.handleObjectInteraction(instance);
         }
-    }
-
-    private handleProjectile(message: ProjectilePacket): void {
-        let projectile = this.entities.get(message.instance) as Projectile,
-            target = this.entities.get(message.target) as Character;
-
-        if (!projectile) return log.warning(`[Incoming] Projectile not found: ${message.instance}`);
-        if (!target) return log.warning(`[Incoming] Target not found: ${message.target}`);
-
-        target.hit(projectile.hit.getDamage(), projectile.owner);
-
-        this.entities.remove(projectile);
     }
 
     private handleNetwork(message: [Opcodes.Network]): void {
