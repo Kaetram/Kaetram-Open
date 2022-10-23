@@ -343,6 +343,9 @@ export default class Player extends Character {
             case 'passive':
                 if (!this.mana.isFull()) this.mana.increment(amount);
 
+                // Scale the heal rate by the maximum hitpoints.
+                amount += Math.floor(this.hitPoints.getMaxHitPoints() * 0.005);
+
                 super.heal(amount);
 
                 break;
