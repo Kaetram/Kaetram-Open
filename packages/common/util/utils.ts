@@ -56,6 +56,17 @@ export default {
         return min + Math.floor(Math.random() * (max - min + 1));
     },
 
+    /**
+     * Creates a distribution based on weight. Instead of having an equal chance
+     * of picking out a number between min and max, we can have a higher chance
+     * of either numbers depending on the weight. Lower weight means more likely
+     * to pick numbers closer to maximum, and vice versa.
+     * @param min Minimum number (inclusive)
+     * @param max Maximum number (inclusive)
+     * @param weight 0-infinity, closer to 0 higher chance of picking maximum.
+     * @returns Random integer with weight between min and max.
+     */
+
     randomWeightedInt(min: number, max: number, weight: number): number {
         return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
     },
