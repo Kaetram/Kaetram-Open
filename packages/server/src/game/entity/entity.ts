@@ -4,6 +4,7 @@ import type Combat from './character/combat/combat';
 import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
+import type Projectile from './objects/projectile';
 
 import { Modules } from '@kaetram/common/network';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
