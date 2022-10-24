@@ -15,7 +15,6 @@ enum Packets {
     Target,
     Combat,
     Animation,
-    Projectile,
     Points,
     Network,
     Chat,
