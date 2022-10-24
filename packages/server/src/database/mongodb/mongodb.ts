@@ -12,6 +12,8 @@ import type Player from '../../game/entity/character/player/player';
 
 import { Modules } from '@kaetram/common/network';
 
+import Filter from '@kaetram/common/util/filter';
+
 export default class MongoDB {
     private connectionUrl: string;
 
@@ -110,8 +112,9 @@ export default class MongoDB {
     public register(player: Player): void {
         if (!this.hasDatabase()) return;
 
-        // Verify account credentials for input validity.
-        if (!Creator.verifyPlayer(player)) return player.connection.reject('invalidinput');
+        // Verify account credentials for input validity and ensure username isn't profane.
+        if (!Creator.verifyPlayer(player) || Filter.isProfane(player.username))
+            return player.connection.reject('invalidinput');
 
         let collection = this.database.collection<PlayerInfo>('player_info'),
             usernameCursor = collection.find({ username: player.username }),
