@@ -10,7 +10,7 @@ import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Player from '../game/entity/character/player/player';
 
-import StoreEn from '@kaetram/common/text/store-en';
+import StoreEn from '@kaetram/common/text/en/store';
 
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Store as StorePacket } from '../network/packets';

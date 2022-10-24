@@ -6,7 +6,7 @@ import { Animation } from '../../../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import LumberjackingEn from '@kaetram/common/text/lumberjacking-en';
+import LumberjackingEn from '@kaetram/common/text/en/lumberjacking';
 import { Modules } from '@kaetram/common/network';
 import { TreeData, TreeInfo } from '@kaetram/common/types/trees';
 
