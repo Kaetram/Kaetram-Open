@@ -21,7 +21,6 @@ import type {
     EquipmentPacket,
     LoginPacket,
     MovementPacket,
-    ProjectilePacket,
     ReadyPacket,
     StorePacket,
     WarpPacket
@@ -33,7 +32,6 @@ import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
-import type Projectile from '../game/entity/objects/projectile';
 
 export default class Incoming {
     private world: World;
@@ -364,7 +362,7 @@ export default class Incoming {
         // Handle commands if the prefix is / or ;
         if (text.charAt(0) === '/' || text.charAt(0) === ';') return this.commands.parse(text);
 
-        this.player.chat(text);
+        this.player.chat(Filter.clean(text));
     }
 
     private handleCommand(message: [Opcodes.Command, Position]): void {
