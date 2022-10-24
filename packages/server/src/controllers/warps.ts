@@ -17,7 +17,7 @@ export default class Warp {
     public constructor(private world: World) {
         this.warps = this.world.map.warps;
 
-        log.debug(`Loaded ${this.warps.length} warp${this.warps.length === 1 ? '' : 's'}.`);
+        log.info(`Loaded ${this.warps.length} warp${this.warps.length === 1 ? '' : 's'}.`);
     }
 
     /**
