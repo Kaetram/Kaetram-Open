@@ -492,6 +492,9 @@ export default class Incoming {
     private handleStore(data: StorePacket): void {
         log.debug(`Received store packet: ${data.opcode}`);
 
+        // Ignore invalid packets.
+        if (data.index < 0) return;
+
         switch (data.opcode) {
             case Opcodes.Store.Buy:
                 return this.world.stores.purchase(this.player, data.key, data.index, data.count);
