@@ -4,6 +4,7 @@ import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
 
 import Connection from '../network/connection';
 import World from '../game/world';
