@@ -155,6 +155,8 @@ export default class Network {
      */
 
     public sendToSurroundingRegions(regionId: number, packet: Packet, ignore?: string): void {
+        if (regionId < 0) return;
+
         this.regions.forEachSurroundingRegion(regionId, (surroundingRegion: number) => {
             this.sendToRegion(surroundingRegion, packet, ignore);
         });
