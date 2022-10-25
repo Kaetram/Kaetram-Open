@@ -14,7 +14,7 @@ export default class Main {
     private api: API;
 
     public constructor() {
-        log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
+        log.notice(`Initializing ${config.name} Hub ${config.gver}.`);
 
         this.api = new API(this.servers, this.discord);
 

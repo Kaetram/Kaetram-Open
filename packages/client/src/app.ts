@@ -94,7 +94,7 @@ export default class App {
             if (this.hasFooterOpen()) this.openScroll('load-character');
         });
 
-        this.gameVersion.textContent = `v${this.config.version}`;
+        this.gameVersion.textContent = `${this.config.version}`;
 
         // Document callbacks such as clicks and keystrokes.
         document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
