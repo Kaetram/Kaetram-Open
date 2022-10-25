@@ -512,6 +512,11 @@ export default class Regions {
         this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
             let region = this.get(surroundingRegion);
 
+            if (!region)
+                return log.warning(
+                    `[${player.username}] Invalid surrounding region: ${surroundingRegion} for player's region: ${player.region}.`
+                );
+
             region.forEachEntity((entity: Entity) => {
                 if (!entity.hasDisplayInfo(player)) return;
 
@@ -618,7 +623,12 @@ export default class Regions {
 
     private getSurroundingRegions(region: number): number[] {
         let surroundingRegions = [region],
-            { sideLength } = this;
+            { sideLength, regions } = this;
+
+        if (region < 0 || region > regions.length - 1) {
+            log.warning(`Attempted to grab surrounding regions for invalid region: ${region}.`);
+            return [];
+        }
 
         // Handle regions near edge of the map and horizontally.
         // left edge piece
