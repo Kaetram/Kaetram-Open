@@ -92,6 +92,7 @@ export default class Player extends Character {
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
+        this.rights = data.rights!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
