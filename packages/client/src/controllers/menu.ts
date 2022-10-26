@@ -149,6 +149,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The warp menu object
+     */
+
+    public getWarp(): Warp {
+        return this.warp;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param index Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
