@@ -2,11 +2,12 @@
     "alpha-2.2.3": {
         "title": "Kaetram alpha-2.2.3",
         "content": [
-            "- Projectiles are now handled server-sided",
-            "- \"Could not create entity\" bug now fixed",
-            "- Enabled tutorial for the main-game",
-            "- Small fix on map with entity appearing in an inaccessible area",
-            "- Passive healing (when not in combat) now scales with your maximum hitpoints"
+            "- Audio fixes",
+            "- Added new achievement",
+            "- Minor map updates",
+            "- This neat little interface :)",
+            "- Hotkeys 'm' for map and 'p' for profile",
+            "- Admins and moderators name now displays a different colour"
         ]
     }
 }
