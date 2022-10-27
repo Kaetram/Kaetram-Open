@@ -109,5 +109,10 @@
     "level": 25,
     "attackLevel": 8,
     "achievement": "pathofdeath"
+  },
+
+  "53-306": {
+    "name": "Baby Sea Dragon",
+    "miniboss": true
   }
 }
