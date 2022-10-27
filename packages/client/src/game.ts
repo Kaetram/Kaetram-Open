@@ -165,8 +165,6 @@ export default class Game {
 
         this.renderer.updateAnimatedTiles();
 
-        this.updater.setSprites(this.entities.sprites);
-
         this.socket.send(Packets.Ready, {
             regionsLoaded: this.map.regionsLoaded,
             userAgent: agent
