@@ -46,9 +46,12 @@ let storage = window.localStorage,
 
 export default class Storage {
     public data: StorageData = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+    public newVersion = false;
 
     public constructor() {
-        if (this.isNewVersion()) this.set(this.create());
+        this.newVersion = this.isNewVersion();
+
+        if (this.newVersion) this.set(this.create());
     }
 
     /**
@@ -347,6 +350,14 @@ export default class Storage {
 
     public hasRemember(): boolean {
         return this.data.player.rememberMe;
+    }
+
+    /**
+     * @returns Whether or not the new variable is set to true in the storage.
+     */
+
+    public isNew(): boolean {
+        return this.data.new;
     }
 
     /**
