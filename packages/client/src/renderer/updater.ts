@@ -9,10 +9,12 @@ import SpritesController from '../controllers/sprites';
 export default class Updater {
     private tileSize: number;
 
-    private sprites: SpritesController | null = null;
+    private sprites: SpritesController;
 
     public constructor(private game: Game) {
         this.tileSize = game.map.tileSize;
+
+        this.sprites = game.sprites;
     }
 
     public update(): void {
@@ -207,16 +209,11 @@ export default class Updater {
         this.game.pointer?.update();
     }
 
-    private updateSounds() {
-        this.game.audio.updatePlayerListener();
-    }
-
     /**
-     * Sets the sprite controller so that the updater can use it.
-     * @param sprites The sprites controller object.
+     * Updates the music controller's directional audio.
      */
 
-    public setSprites(sprites: SpritesController): void {
-        this.sprites = sprites;
+    private updateSounds() {
+        this.game.audio.updatePlayerListener();
     }
 }
