@@ -187,11 +187,11 @@ export default class InputController {
                 return;
 
             case 'm':
-                //this.game.menu.warp.open();
+                this.game.menu.getWarp().toggle();
                 return;
 
             case 'p':
-                //this.game.menu.profile.open();
+                this.game.menu.getProfile().toggle();
                 return;
 
             case 'Escape':
