@@ -133,6 +133,11 @@
         "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
     },
 
+    "babyseadragon": {
+        "name": "Baby Sea Dragon",
+        "description": "Defeat the baby sea dragon guardian!"  
+    },
+
     "underwatertreasure": {
         "name": "Underwater Treasure",
         "description": "Find the treasure hidden underwater."
