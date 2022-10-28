@@ -4,6 +4,8 @@ import Ability from '../ability';
 export default class DualistsMark extends Ability {
     public constructor(level: number, quickSlot = -1) {
         super('dualistsmark', level, quickSlot);
+
+        this.onDeactivate((player: Player) => player.setDualistsMark(false));
     }
 
     /**
@@ -13,11 +15,8 @@ export default class DualistsMark extends Ability {
      */
 
     public override activate(player: Player): boolean {
-        if (!player.hasTarget()) {
-            player.notify(`You must be in combat to use this ability.`);
-            return false;
-        }
+        if (super.activate(player)) player.setDualistsMark(true);
 
-        return super.activate(player);
+        return false;
     }
 }

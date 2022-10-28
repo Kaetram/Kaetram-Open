@@ -101,7 +101,10 @@ export default class Player extends Character {
     public questsLoaded = false;
     public achievementsLoaded = false;
 
+    // Special status
     public running = false;
+    public dualistsMark = false;
+    public thickSkin = false;
 
     // Player info
     public password = '';
@@ -794,6 +797,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Sets the status of the dualists mark effect and updates
+     * the combat loop to represent the new attack rate.
+     * @param dualistsMark Effect status of the dualists mark.
+     */
+
+    public setDualistsMark(dualistsMark: boolean): void {
+        this.dualistsMark = dualistsMark;
+
+        this.combat.updateLoop();
+    }
+
+    /**
      * Override for the superclass `setPosition` function. Since the player must always be
      * synced up to nearby players, this function sends a packet to the nearby region about
      * every movement. It also checks gainst no-clipping and player positionining. In the event
@@ -1362,6 +1377,21 @@ export default class Player extends Character {
     }
 
     /**
+     * Override for the damage absoprption modifier. Effects such as thick
+     * skin lessent the max damage an entity is able to deal.
+     * @returns Modifier number value between 0 and 1, closer to 0 the higher the damage reduction.
+     */
+
+    public override getDamageReduction(): number {
+        let reduction = 1;
+
+        // Thick skin increases damage reduction by 20%.
+        if (this.thickSkin) reduction -= 0.2;
+
+        return reduction;
+    }
+
+    /**
      * An override function for the player's attack rate since it
      * is dependent on their weapon at the moment. We may be doing
      * calculations from special equipments/effects in the future.
@@ -1370,6 +1400,9 @@ export default class Player extends Character {
      */
 
     public override getAttackRate(): number {
+        // Dualists mark status effect boosts attack speed by 200 milliseconds.
+        if (this.dualistsMark) return this.equipment.getWeapon().attackRate - 200;
+
         return this.equipment.getWeapon().attackRate;
     }
 
