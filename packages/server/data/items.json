@@ -162,6 +162,7 @@
   "trident": {
     "type": "weapon",
     "name": "Trident Of The Seas",
+    "level": 40,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -184,6 +185,7 @@
   "bluescimitar": {
     "type": "weapon",
     "name": "Blue Scimitar",
+    "level": 40,
     "attackStats": {
       "crush": 18,
       "slash": 14,
@@ -200,6 +202,7 @@
   "hammer": {
     "type": "weapon",
     "name": "Hammer",
+    "level": 50,
     "attackStats": {
       "crush": 32,
       "slash": 4,
@@ -215,52 +218,165 @@
 
   "greenlightsaber": {
     "type": "weapon",
-    "name": "Green Light Saber"
+    "name": "Green Light Saber",
+    "level": 56,
+    "attackStats": {
+      "crush": 0,
+      "slash": 30,
+      "stab": 22,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "skylightsaber": {
     "type": "weapon",
-    "name": "Sky Light Saber"
+    "name": "Sky Light Saber",
+    "level": 57,
+    "attackStats": {
+      "crush": 0,
+      "slash": 30,
+      "stab": 18,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "redlightsaber": {
     "type": "weapon",
-    "name": "Red Light Saber"
+    "name": "Red Light Saber",
+    "level": 56,
+    "attackStats": {
+      "crush": 0,
+      "slash": 36,
+      "stab": 16,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "bastardsword": {
     "type": "weapon",
-    "name": "Heavy Sword"
+    "name": "Heavy Sword",
+    "skill": "strength",
+    "level": 40,
+    "attackStats": {
+      "crush": 24,
+      "slash": 34,
+      "stab": 6,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 28,
+      "archery": 0
+    }
   },
 
   "redmetalsword": {
     "type": "weapon",
-    "name": "Red Metal Sword"
+    "name": "Red Metal Sword",
+    "skill": "strength",
+    "level": 42,
+    "attackStats": {
+      "crush": 18,
+      "slash": 38,
+      "stab": 4,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 32,
+      "archery": 0
+    }
   },
 
   "justicehammer": {
     "type": "weapon",
-    "name": "Justice Hammer"
+    "name": "Justice Hammer",
+    "skill": "strength",
+    "level": 50,
+    "attackStats": {
+      "crush": 50,
+      "slash": 0,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 36,
+      "archery": 0
+    }
   },
 
   "rose": {
     "type": "weapon",
-    "name": "Rose"
+    "name": "Rose",
+    "level": 36,
+    "attackStats": {
+      "crush": 36,
+      "slash": 0,
+      "stab": 0,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "icerose": {
     "type": "weapon",
-    "name": "Ice Rose"
+    "name": "Ice Rose",
+    "level": 86,
+    "attackStats": {
+      "crush": 38,
+      "slash": 0,
+      "stab": 0,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "halberd": {
     "type": "weapon",
-    "name": "Halberd"
+    "name": "Halberd",
+    "level": 90,
+    "attackStats": {
+      "crush": 10,
+      "slash": 44,
+      "stab": 24,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 20,
+      "archery": 0
+    }
   },
 
   "whip": {
     "type": "weapon",
     "name": "Whip",
+    "skill": "accuracy",
+    "level": 60,
     "attackStats": {
       "crush": 8,
       "slash": 36,
@@ -276,107 +392,361 @@
 
   "forestguardiansword": {
     "type": "weapon",
-    "name": "Forest Guardian Sword"
+    "name": "Forest Guardian Sword",
+    "level": 106,
+    "attackStats": {
+      "crush": 2,
+      "slash": 40,
+      "stab": 16,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 14,
+      "archery": 0
+    }
   },
 
   "sickle": {
     "type": "weapon",
-    "name": "Sickle"
+    "name": "Sickle",
+    "level": 110,
+    "attackStats": {
+      "crush": 0,
+      "slash": 48,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 24,
+      "archery": 0
+    }
   },
 
   "plunger": {
     "type": "weapon",
-    "name": "Plunger"
+    "name": "Plunger",
+    "level": 98,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 30,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 14,
+      "archery": 0
+    }
   },
 
   "redsickle": {
     "type": "weapon",
-    "name": "Red Sickle"
+    "name": "Red Sickle",
+    "level": 116,
+    "attackStats": {
+      "crush": 0,
+      "slash": 52,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 24,
+      "archery": 0
+    }
   },
 
   "daywalker": {
     "type": "weapon",
-    "name": "Day Walker"
+    "name": "Day Walker",
+    "level": 160,
+    "attackStats": {
+      "crush": 8,
+      "slash": 60,
+      "stab": 8,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 30,
+      "archery": 0
+    }
   },
 
   "purplecloudkallege": {
     "type": "weapon",
-    "name": "Purple Cloud Kallege"
+    "name": "Purple Cloud Kallege",
+    "level": 160,
+    "attackStats": {
+      "crush": 18,
+      "slash": 60,
+      "stab": 18,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 32,
+      "archery": 0
+    }
   },
 
   "searage": {
     "type": "weapon",
-    "name": "Sea rage"
+    "name": "Sea rage",
+    "level": 160,
+    "attackStats": {
+      "crush": 46,
+      "slash": 20,
+      "stab": 10,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 34,
+      "archery": 0
+    }
   },
 
   "breaker": {
     "type": "weapon",
-    "name": "Breaker"
+    "name": "Breaker",
+    "level": 176,
+    "attackStats": {
+      "crush": 50,
+      "slash": 30,
+      "stab": 20,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 38,
+      "archery": 0
+    }
   },
 
   "eneltrident": {
     "type": "weapon",
-    "name": "Enel Trident"
+    "name": "Enel Trident",
+    "level": 200,
+    "attackStats": {
+      "crush": 56,
+      "slash": 30,
+      "stab": 10,
+      "magic": 60
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 44,
+      "archery": 0
+    }
   },
 
   "rainbowsword": {
     "type": "weapon",
-    "name": "Rainbow Sword"
+    "name": "Rainbow Sword",
+    "level": 110,
+    "attackStats": {
+      "crush": 40,
+      "slash": 20,
+      "stab": 10,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 10,
+      "archery": 0
+    }
   },
 
   "typhoon": {
     "type": "weapon",
-    "name": "Typhoon"
+    "name": "Typhoon",
+    "level": 106,
+    "attackStats": {
+      "crush": 20,
+      "slash": 40,
+      "stab": 10,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 10,
+      "archery": 0
+    }
   },
 
   "memme": {
     "type": "weapon",
-    "name": "Memme"
+    "name": "Memme",
+    "level": 216,
+    "attackStats": {
+      "crush": 50,
+      "slash": 36,
+      "stab": 20,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "candybar": {
     "type": "weapon",
-    "name": "Candy Bar"
+    "name": "Candy Bar",
+    "level": 100,
+    "attackStats": {
+      "crush": 40,
+      "slash": 10,
+      "stab": 10,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 16,
+      "archery": 0
+    }
   },
 
   "butcherknife": {
     "type": "weapon",
-    "name": "Butcher Knife"
+    "name": "Butcher Knife",
+    "level": 138,
+    "attackStats": {
+      "crush": 20,
+      "slash": 40,
+      "stab": 15,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 20,
+      "archery": 0
+    }
   },
 
   "fireshot": {
     "type": "weapon",
-    "name": "Fire Shot"
+    "name": "Fire Shot",
+    "level": 216,
+    "attackStats": {
+      "crush": 30,
+      "slash": 50,
+      "stab": 20,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 38,
+      "archery": 0
+    }
   },
 
   "comb": {
     "type": "weapon",
-    "name": "Comb"
+    "name": "Comb",
+    "level": 226,
+    "attackStats": {
+      "crush": 10,
+      "slash": 40,
+      "stab": 10,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "squeakyhammer": {
     "type": "weapon",
-    "name": "Squeaky Hammer"
+    "name": "Squeaky Hammer",
+    "skill": "strength",
+    "level": 66,
+    "attackStats": {
+      "crush": 84,
+      "slash": 0,
+      "stab": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "fireplay": {
     "type": "weapon",
-    "name": "Fire Play"
+    "name": "Fire Play",
+    "level": 300,
+    "attackStats": {
+      "crush": 30,
+      "slash": 54,
+      "stab": 20,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 44,
+      "archery": 0
+    }
   },
 
   "weastaff": {
     "type": "weapon",
-    "name": "Wea Staff"
+    "name": "Wea Staff",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 6,
+      "slash": 4,
+      "stab": 4,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0
+    }
   },
 
   "pinksword": {
     "type": "weapon",
-    "name": "Pink Sword"
+    "name": "Pink Sword",
+    "level": 256,
+    "attackStats": {
+      "crush": 50,
+      "slash": 70,
+      "stab": 30,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "conferencecall": {
     "type": "weapon",
-    "name": "Stick"
+    "name": "Stick",
+    "level": 342,
+    "attackStats": {
+      "crush": 60,
+      "slash": 80,
+      "stab": 40,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 60,
+      "archery": 0
+    }
   },
   
   "rustedaxe": {
@@ -384,52 +754,143 @@
     "name": "Rusted Axe",
     "lumberjacking": 2,
     "level": 5,
-    "skill": "lumberjacking"
+    "skill": "lumberjacking",
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "fireaxe": {
     "type": "weapon",
     "name": "Fire Axe",
-    "lumberjacking": 3
+    "lumberjacking": 3,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "poisonaxe": {
     "type": "weapon",
     "name": "Poison Axe",
-    "lumberjacking": 4
+    "lumberjacking": 4,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "cactusaxe": {
     "type": "weapon",
     "name": "Cactus Axe",
-    "lumberjacking": 6
+    "lumberjacking": 6,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "goldaxe": {
     "type": "weapon",
     "name": "Gold Axe",
-    "lumberjacking": 7
+    "lumberjacking": 7,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "carnelianaxe": {
     "type": "weapon",
     "name": "Carnelian Axe",
-    "lumberjacking": 8
+    "lumberjacking": 8,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 2,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 0
+    }
   },
 
   "devilkazyasword": {
     "type": "weapon",
-    "name": "Devil Kazya Sword"
+    "name": "Devil Kazya Sword",
+    "level": 240,
+    "attackStats": {
+      "crush": 40,
+      "slash": 100,
+      "stab": 50,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "bamboospear": {
     "type": "weapon",
-    "name": "Bamboo Spear"
+    "name": "Bamboo Spear",
+    "level": 256,
+    "attackStats": {
+      "crush": 10,
+      "slash": 20,
+      "stab": 100,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 30,
+      "strength": 30,
+      "archery": 0
+    }
   },
 
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
+    "level": 400,
     "attackStats": {
       "crush": 19,
       "slash": 124,
@@ -445,7 +906,19 @@
 
   "magicspear": {
     "type": "weapon",
-    "name": "Magic Spear"
+    "name": "Magic Spear",
+    "level": 400,
+    "attackStats": {
+      "crush": 10,
+      "slash": 20,
+      "stab": 120,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 40,
+      "archery": 0
+    }
   },
 
   "firesword": {
@@ -754,7 +1227,8 @@
   "platearcherarmor": {
     "type": "armourarcher",
     "name": "Plate Archer Armour",
-    "level": 12,
+    "skill": "archery",
+    "level": 10,
     "attackStats": {
       "crush": 3,
       "slash": 8,
@@ -777,7 +1251,8 @@
   "redarcherarmor": {
     "type": "armourarcher",
     "name": "Red Archer Armour",
-    "level": 18,
+    "skill": "archery",
+    "level": 15,
     "attackStats": {
       "crush": 3,
       "slash": 8,
@@ -800,7 +1275,8 @@
   "goldenarcherarmor": {
     "type": "armourarcher",
     "name": "Golden Archer Armour",
-    "level": 23,
+    "skill": "archery",
+    "level": 17,
     "attackStats": {
       "crush": 4,
       "slash": 7,
@@ -823,7 +1299,8 @@
   "greenarcherarmor": {
     "type": "armourarcher",
     "name": "Green Archer Armour",
-    "level": 28,
+    "skill": "archery",
+    "level": 18,
     "attackStats": {
       "crush": 8,
       "slash": 8,
@@ -846,7 +1323,8 @@
   "greenwingarcherarmor": {
     "type": "armourarcher",
     "name": "Green Wing Archer Armour",
-    "level": 31,
+    "skill": "archery",
+    "level": 20,
     "attackStats": {
       "crush": 9,
       "slash": 10,
@@ -869,7 +1347,8 @@
   "guardarcherarmor": {
     "type": "armourarcher",
     "name": "Guard Archer Armour",
-    "level": 48,
+    "skill": "archery",
+    "level": 24,
     "attackStats": {
       "crush": 12,
       "slash": 16,
@@ -891,87 +1370,410 @@
 
   "redguardarcherarmor": {
     "type": "armourarcher",
-    "name": "Red Guard Archer Armour"
+    "name": "Red Guard Archer Armour",
+    "skill": "archery",
+    "level": 28,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 12,
+      "magic": 5
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 24,
+      "stab": 15,
+      "magic": 5
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 0,
+      "archery": 19
+    }
   },
 
   "whitearcherarmor": {
     "type": "armourarcher",
-    "name": "White Archer Armour"
+    "name": "White Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 12,
+      "slash": 20,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 28,
+      "stab": 17,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 0,
+      "archery": 20
+    }
   },
 
   "ratarcherarmor": {
     "type": "armourarcher",
-    "name": "Rat Archer Armour"
+    "name": "Rat Archer Armour",
+    "skill": "archery",
+    "level": 32,
+    "attackStats": {
+      "crush": 12,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 30,
+      "stab": 11,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 0,
+      "archery": 20
+    }
   },
 
   "piratearcherarmor": {
     "type": "armourarcher",
-    "name": "Pirate Archer Armour"
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19
+    }
   },
 
   "cheoliarcherarmor": {
     "type": "armourarcher",
-    "name": "Cheolia Archer Armour"
+    "name": "Cheolia Archer Armour",
+    "skill": "archery",
+    "level": 34,
+    "attackStats": {
+      "crush": 12,
+      "slash": 20,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 24,
+      "stab": 22,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 0,
+      "archery": 22
+    }
   },
 
   "dovakinarcherarmor": {
     "type": "armourarcher",
-    "name": "Dovakina Archer Armour"
+    "name": "Dovakina Archer Armour",
+    "skill": "archery",
+    "level": 38,
+    "attackStats": {
+      "crush": 18,
+      "slash": 28,
+      "stab": 10,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 20,
+      "stab": 14,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 24
+    }
   },
 
   "gbwingarcherarmor": {
     "type": "armourarcher",
-    "name": "GbwingarcherArmour"
+    "name": "GbwingarcherArmour",
+    "skill": "archery",
+    "level": 38,
+    "attackStats": {
+      "crush": 18,
+      "slash": 28,
+      "stab": 10,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 22,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 22
+    }
   },
 
   "redwingarcherarmor": {
     "type": "armourarcher",
-    "name": "Red Wing Archer Armour"
+    "name": "Red Wing Archer Armour",
+    "skill": "archery",
+    "level": 40,
+    "attackStats": {
+      "crush": 18,
+      "slash": 28,
+      "stab": 14,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 26,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 24
+    }
   },
 
   "snowfoxarcherarmor": {
     "type": "armourarcher",
-    "name": "Snow Fox Archer Armour"
+    "name": "Snow Fox Archer Armour",
+    "skill": "archery",
+    "level": 44,
+    "attackStats": {
+      "crush": 28,
+      "slash": 28,
+      "stab": 15,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 32,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 26
+    }
   },
 
   "wolfarcherarmor": {
     "type": "armourarcher",
-    "name": "Wolf Archer Armour"
+    "name": "Wolf Archer Armour",
+    "skill": "archery",
+    "level": 44,
+    "attackStats": {
+      "crush": 28,
+      "slash": 30,
+      "stab": 15,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 34,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 0,
+      "archery": 26
+    }
   },
 
   "bluewingarcherarmor": {
     "type": "armourarcher",
-    "name": "Blue Wing Archer Armour"
+    "name": "Blue Wing Archer Armour",
+    "skill": "archery",
+    "level": 46,
+    "attackStats": {
+      "crush": 28,
+      "slash": 36,
+      "stab": 15,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 38,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 0,
+      "archery": 28
+    }
   },
 
   "fallenarcherarmor": {
     "type": "armourarcher",
-    "name": "Fallen Archer Armour"
+    "name": "Fallen Archer Armour",
+    "skill": "archery",
+    "level": 50,
+    "attackStats": {
+      "crush": 28,
+      "slash": 40,
+      "stab": 15,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 46,
+      "stab": 6,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 18,
+      "strength": 0,
+      "archery": 28
+    }
   },
 
   "crystalarcherarmor": {
     "type": "armourarcher",
-    "name": "Crystal Archer Armour"
+    "name": "Crystal Archer Armour",
+    "skill": "archery",
+    "level": 54,
+    "attackStats": {
+      "crush": 21,
+      "slash": 20,
+      "stab": 35,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 6,
+      "slash": 18,
+      "stab": 6,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 0,
+      "archery": 40
+    }
   },
 
   "legolasarmor": {
     "type": "armourarcher",
-    "name": "Legolas Armour"
+    "name": "Legolas Armour",
+    "skill": "archery",
+    "level": 58,
+    "attackStats": {
+      "crush": 21,
+      "slash": 20,
+      "stab": 35,
+      "magic": 10
+    },
+    "defenseStats": {
+      "crush": 6,
+      "slash": 28,
+      "stab": 18,
+      "magic": 14
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 44
+    }
   },
 
   "adhererarcherarmor": {
     "type": "armourarcher",
-    "name": "Adherer Archer Armour"
+    "name": "Adherer Archer Armour",
+    "skill": "archery",
+    "level": 64,
+    "attackStats": {
+      "crush": 21,
+      "slash": 20,
+      "stab": 35,
+      "magic": 28
+    },
+    "defenseStats": {
+      "crush": 6,
+      "slash": 38,
+      "stab": 18,
+      "magic": 16
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 54
+    }
   },
 
   "archerschoolUniform": {
     "type": "armourarcher",
-    "name": "Archer School Uniform"
+    "name": "Archer School Uniform",
+    "skill": "archery",
+    "level": 20,
+    "attackStats": {
+      "crush": 11,
+      "slash": 10,
+      "stab": 15,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 6,
+      "slash": 18,
+      "stab": 12,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 24
+    }
   },
 
   "combatuniform": {
     "type": "armourarcher",
-    "name": "Combat Uniform"
+    "name": "Combat Uniform",
+    "skill": "archery",
+    "level": 40,
+    "attackStats": {
+      "crush": 11,
+      "slash": 15,
+      "stab": 25,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 6,
+      "slash": 18,
+      "stab": 18,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 16
+    }
   },
 
   "gayarcherarmor": {
@@ -982,6 +1784,7 @@
   "woodenbow": {
     "type": "weaponarcher",
     "name": "Wooden Bow",
+    "skill": "archery",
     "level": 1,
     "attackStats": {
       "crush": 2,
@@ -999,6 +1802,7 @@
   "plasticbow": {
     "type": "weaponarcher",
     "name": "Plastic Bow",
+    "skill": "archery",
     "level": 3,
     "attackStats": {
       "crush": 2,
@@ -1016,6 +1820,7 @@
   "ironbow": {
     "type": "weaponarcher",
     "name": "Iron Bow",
+    "skill": "archery",
     "level": 7,
     "attackStats": {
       "crush": 2,
@@ -1033,6 +1838,7 @@
   "redbow": {
     "type": "weaponarcher",
     "name": "Red Bow",
+    "skill": "archery",
     "level": 11,
     "attackStats": {
       "crush": 2,
@@ -1041,8 +1847,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 8,
-      "strength": 2,
+      "accuracy": 3,
+      "strength": 5,
       "archery": 9
     }
   },
@@ -1050,6 +1856,7 @@
   "violetbow": {
     "type": "weaponarcher",
     "name": "Violet Bow",
+    "skill": "archery",
     "level": 14,
     "attackStats": {
       "crush": 2,
@@ -1058,8 +1865,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 11,
-      "strength": 3,
+      "accuracy": 5,
+      "strength": 2,
       "archery": 11
     }
   },
@@ -1067,6 +1874,7 @@
   "deathbow": {
     "type": "weaponarcher",
     "name": "Death Bow",
+    "skill": "archery",
     "level": 18,
     "attackStats": {
       "crush": 2,
@@ -1075,8 +1883,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 12,
-      "strength": 2,
+      "accuracy": 5,
+      "strength": 3,
       "archery": 15
     }
   },
@@ -1084,6 +1892,7 @@
   "goldenbow": {
     "type": "weaponarcher",
     "name": "Golden Bow",
+    "skill": "archery",
     "level": 22,
     "attackStats": {
       "crush": 2,
@@ -1092,8 +1901,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 15,
-      "strength": 4,
+      "accuracy": 1,
+      "strength": 1,
       "archery": 12
     }
   },
@@ -1101,6 +1910,7 @@
   "watermelonbow": {
     "type": "weaponarcher",
     "name": "Watermelon Bow",
+    "skill": "archery",
     "level": 26,
     "attackStats": {
       "crush": 2,
@@ -1109,8 +1919,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 16,
-      "strength": 3,
+      "accuracy": 3,
+      "strength": 2,
       "archery": 14
     }
   },
@@ -1118,6 +1928,7 @@
   "greenbow": {
     "type": "weaponarcher",
     "name": "Greenbow",
+    "skill": "archery",
     "level": 29,
     "attackStats": {
       "crush": 2,
@@ -1126,8 +1937,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 17,
-      "strength": 5,
+      "accuracy": 4,
+      "strength": 2,
       "archery": 15
     }
   },
@@ -1135,6 +1946,7 @@
   "redenelbow": {
     "type": "weaponarcher",
     "name": "Redenel Bow",
+    "skill": "archery",
     "level": 33,
     "attackStats": {
       "crush": 2,
@@ -1143,7 +1955,7 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 16,
+      "accuracy": 1,
       "strength": 4,
       "archery": 21
     }
@@ -1152,7 +1964,8 @@
   "mermaidbow": {
     "type": "weaponarcher",
     "name": "Mermaid Bow",
-    "level": 39,
+    "skill": "archery",
+    "level": 35,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -1160,90 +1973,298 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 15,
-      "strength": 5,
+      "accuracy": 3,
+      "strength": 2,
       "archery": 17
     }
   },
 
   "seahorsebow": {
     "type": "weaponarcher",
-    "name": "Seahorse Bow"
+    "name": "Seahorse Bow",
+    "skill": "archery",
+    "level": 35,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 30,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 5,
+      "archery": 19
+    }
   },
 
   "hunterbow": {
     "type": "weaponarcher",
-    "name": "Hunter Bow"
+    "name": "Hunter Bow",
+    "skill": "archery",
+    "level": 37,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 36,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 7,
+      "archery": 20
+    }
   },
 
   "greenlightbow": {
     "type": "weaponarcher",
-    "name": "Green Light Bow"
+    "name": "Green Light Bow",
+    "skill": "archery",
+    "level": 39,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 38,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 5,
+      "archery": 24
+    }
   },
 
   "skylightbow": {
     "type": "weaponarcher",
-    "name": "Sky Light Bow"
+    "name": "Sky Light Bow",
+    "skill": "archery",
+    "level": 42,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 40,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 5,
+      "archery": 25
+    }
   },
 
   "redlightbow": {
     "type": "weaponarcher",
-    "name": "Red Light Bow"
+    "name": "Red Light Bow",
+    "skill": "archery",
+    "level": 41,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 41,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 30
+    }
   },
 
   "captainbow": {
     "type": "weaponarcher",
-    "name": "Captain Bow"
+    "name": "Captain Bow",
+    "skill": "archery",
+    "level": 44,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 45,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 5,
+      "archery": 24
+    }
   },
 
   "redmetalbow": {
     "type": "weaponarcher",
-    "name": "Red Metal Bow"
+    "name": "Red Metal Bow",
+    "skill": "archery",
+    "level": 45,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 41,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 5,
+      "archery": 28
+    }
   },
 
   "justicebow": {
     "type": "weaponarcher",
-    "name": "Justice Bow"
+    "name": "Justice Bow",
+    "skill": "archery",
+    "level": 45,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 50,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 33
+    }
   },
 
   "rosebow": {
     "type": "weaponarcher",
-    "name": "Rose Bow"
+    "name": "Rose Bow",
+    "skill": "archery",
+    "level": 50,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 55,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 2,
+      "archery": 38
+    }
   },
 
   "marinebow": {
     "type": "weaponarcher",
-    "name": "Marine Bow"
+    "name": "Marine Bow",
+    "skill": "archery",
+    "level": 52,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 48,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 35
+    }
   },
 
   "crystalbow": {
     "type": "weaponarcher",
-    "name": "Crystal Bow"
+    "name": "Crystal Bow",
+    "skill": "archery",
+    "level": 53,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 60,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 38
+    }
   },
 
   "gaybow": {
     "type": "weaponarcher",
-    "name": "Gay Bow"
+    "name": "Gay Bow",
+    "skill": "archery",
+    "level": 54,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 62,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 40
+    }
   },
 
   "forestbow": {
     "type": "weaponarcher",
-    "name": "Forest Bow"
+    "name": "Forest Bow",
+    "skill": "archery",
+    "level": 55,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 64,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 44
+    }
   },
 
   "sicklebow": {
     "type": "weaponarcher",
-    "name": "Sickle Bow"
+    "name": "Sickle Bow",
+    "skill": "archery",
+    "level": 56,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 68,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 48
+    }
   },
 
   "bloodbow": {
     "type": "weaponarcher",
-    "name": "Blood Bow"
+    "name": "Blood Bow",
+    "skill": "archery",
+    "level": 58,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 70,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 50
+    }
   },
 
   "redsicklebow": {
     "type": "weaponarcher",
-    "name": "Red Sickle Bow"
+    "name": "Red Sickle Bow",
+    "skill": "archery",
+    "level": 66,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 70,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 8,
+      "archery": 55
+    }
   },
 
   "clotharmor": {
@@ -1293,7 +2314,7 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 5,
-      "archery": -2
+      "archery": -5
     }
   },
 
@@ -1316,7 +2337,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 6,
-      "archery": -2
+      "archery": -4
     }
   },
 
@@ -1339,7 +2360,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 8,
-      "archery": -1
+      "archery": -3
     }
   },
 
@@ -1500,7 +2521,7 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 20,
-      "archery": 0
+      "archery": -4
     }
   },
 
@@ -1523,7 +2544,7 @@
     "bonuses": {
       "accuracy": 11,
       "strength": 21,
-      "archery": 2
+      "archery": -2
     }
   },
 
@@ -1546,7 +2567,7 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 22,
-      "archery": 3
+      "archery": -3
     }
   },
 
@@ -1575,67 +2596,301 @@
 
   "gbwingarmor": {
     "type": "armour",
-    "name": "GB Wing Armour"
+    "name": "GB Wing Armour",
+    "level": 64,
+    "attackStats": {
+      "crush": 13,
+      "slash": 32,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 30,
+      "slash": 46,
+      "stab": 28,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 13,
+      "strength": 25,
+      "archery": -8
+    }
   },
 
   "redwingarmor": {
     "type": "armour",
-    "name": "Red Wing Armour"
+    "name": "Red Wing Armour",
+    "level": 66,
+    "attackStats": {
+      "crush": 13,
+      "slash": 40,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 30,
+      "slash": 50,
+      "stab": 28,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 13,
+      "strength": 25,
+      "archery": -5
+    }
   },
 
   "snowfoxarmor": {
     "type": "armour",
-    "name": "Snow Fox Armour"
+    "name": "Snow Fox Armour",
+    "level": 78,
+    "attackStats": {
+      "crush": 13,
+      "slash": 40,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 30,
+      "slash": 40,
+      "stab": 28,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 13,
+      "strength": 26,
+      "archery": -4
+    }
   },
 
   "wolfarmor": {
     "type": "armour",
-    "name": "Wolf Armour"
+    "name": "Wolf Armour",
+    "level": 80,
+    "attackStats": {
+      "crush": 13,
+      "slash": 46,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 30,
+      "slash": 40,
+      "stab": 28,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 13,
+      "strength": 28,
+      "archery": -10
+    }
   },
 
   "bluewingarmor": {
     "type": "armour",
-    "name": "Blue Wing Armour"
+    "name": "Blue Wing Armour",
+    "level": 78,
+    "attackStats": {
+      "crush": 13,
+      "slash": 48,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 34,
+      "slash": 42,
+      "stab": 20,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 28,
+      "archery": -10
+    }
   },
 
   "thiefarmor": {
     "type": "armour",
-    "name": "Thief Armour"
+    "name": "Thief Armour",
+    "level": 78,
+    "attackStats": {
+      "crush": 13,
+      "slash": 48,
+      "stab": 24,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 32,
+      "stab": 16,
+      "magic": 5
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 28,
+      "archery": 3
+    }
   },
 
   "ninjaarmor": {
     "type": "armour",
-    "name": "Ninja Armour"
+    "name": "Ninja Armour",
+    "level": 84,
+    "attackStats": {
+      "crush": 15,
+      "slash": 50,
+      "stab": 24,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 32,
+      "stab": 16,
+      "magic": 5
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 28,
+      "archery": 4
+    }
   },
 
   "dragonarmor": {
     "type": "armour",
-    "name": "Dragon Armour"
+    "name": "Dragon Armour",
+    "level": 90,
+    "attackStats": {
+      "crush": 12,
+      "slash": 40,
+      "stab": 24,
+      "magic": 14
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": 32,
+      "stab": 28,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 30,
+      "archery": 1
+    }
   },
 
   "fallenarmor": {
     "type": "armour",
-    "name": "Fallen Armour"
+    "name": "Fallen Armour",
+    "level": 94,
+    "attackStats": {
+      "crush": 28,
+      "slash": 34,
+      "stab": 32,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 20,
+      "stab": 32,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 28,
+      "archery": -12
+    }
   },
 
   "paladinarmor": {
     "type": "armour",
-    "name": "Paladin Armour"
+    "name": "Paladin Armour",
+    "level": 102,
+    "attackStats": {
+      "crush": 28,
+      "slash": 36,
+      "stab": 32,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 24,
+      "stab": 30,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 30,
+      "archery": -8
+    }
   },
 
   "crystalarmor": {
     "type": "armour",
-    "name": "Crystal Armour"
+    "name": "Crystal Armour",
+    "level": 110,
+    "attackStats": {
+      "crush": 58,
+      "slash": 76,
+      "stab": 42,
+      "magic": 22
+    },
+    "defenseStats": {
+      "crush": 8,
+      "slash": 4,
+      "stab": 10,
+      "magic": 40
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 10,
+      "archery": -8
+    }
   },
 
   "adhererrobe": {
     "type": "armour",
-    "name": "Adherer Robe"
+    "name": "Adherer Robe",
+    "level": 126,
+    "attackStats": {
+      "crush": 68,
+      "slash": 56,
+      "stab": 62,
+      "magic": 42
+    },
+    "defenseStats": {
+      "crush": 8,
+      "slash": 4,
+      "stab": 10,
+      "magic": 60
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 20,
+      "archery": -4
+    }
   },
 
   "frostarmor": {
     "type": "armour",
-    "name": "Frost Armour"
+    "name": "Frost Armour",
+    "level": 100,
+    "attackStats": {
+      "crush": 38,
+      "slash": 56,
+      "stab": 22,
+      "magic": 26
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": 16,
+      "stab": 14,
+      "magic": 36
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 18,
+      "archery": -1
+    }
   },
 
   "gayarmor": {
@@ -1655,7 +2910,25 @@
 
   "regionarmor": {
     "type": "armour",
-    "name": "Region Armour"
+    "name": "Region Armour",
+    "level": 200,
+    "attackStats": {
+      "crush": 38,
+      "slash": 26,
+      "stab": 32,
+      "magic": 16
+    },
+    "defenseStats": {
+      "crush": 124,
+      "slash": 86,
+      "stab": 64,
+      "magic": 36
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 40,
+      "archery": -1
+    }
   },
 
   "ghostrider": {
@@ -1697,7 +2970,7 @@
     "name": "Portal Armour"
   },
 
-  "pirateKing": {
+  "pirateking": {
     "type": "armour",
     "name": "Pirate King"
   },
@@ -1809,7 +3082,25 @@
 
   "ironknightarmor": {
     "type": "armour",
-    "name": "Iron Knight Armour"
+    "name": "Iron Knight Armour",
+    "level": 160,
+    "attackStats": {
+      "crush": 38,
+      "slash": 56,
+      "stab": 26,
+      "magic": 26
+    },
+    "defenseStats": {
+      "crush": 54,
+      "slash": 46,
+      "stab": 34,
+      "magic": 36
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 22,
+      "archery": -1
+    }
   },
 
   "evilarmor": {
