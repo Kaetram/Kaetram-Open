@@ -62,6 +62,9 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
+        // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
+        maxDamage *= target.getDamageReduction();
+
         return Utils.randomWeightedInt(0, maxDamage, accuracy);
     },
 
