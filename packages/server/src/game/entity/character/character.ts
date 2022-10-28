@@ -362,6 +362,16 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * This value is used by subclasses to determine the amount of damage a
+     * character will absorb during the combat damage calculation.
+     * @returns A placeholder value of 1. The value is between 0 and 1.
+     */
+
+    public getDamageReduction(): number {
+        return 1;
+    }
+
+    /**
      * @returns Default probability for poison to be inflicted.
      */
 
