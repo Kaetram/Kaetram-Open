@@ -563,17 +563,22 @@ export default class Connection {
         if (info.source)
             return this.input.chatHandler.add(info.source, info.message, info.colour, true);
 
-        let entity = this.entities.get<Character>(info.instance!);
+        let entity = this.entities.get<Player>(info.instance!);
 
         if (!entity) return;
 
+        let { name, rights, x, y } = entity;
+
+        if (rights === 1) name = `[Moderator] ${name}`;
+        if (rights === 2) name = `[Admin] ${name}`;
+
         // Add to the chatbox, if global, we prefix it to the entity's name.
-        this.input.chatHandler.add(entity.name, info.message, info.colour);
+        this.input.chatHandler.add(name, info.message, info.colour);
 
         // Draw bubble and play audio.
         if (info.withBubble) {
             this.bubble.create(info.instance!, info.message);
-            this.bubble.setTo(info.instance!, entity.x, entity.y);
+            this.bubble.setTo(info.instance!, x, y);
 
             this.audio.playSound('npctalk', entity);
         }
