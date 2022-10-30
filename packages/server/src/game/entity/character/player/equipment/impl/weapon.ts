@@ -19,6 +19,7 @@ export default class Weapon extends Equipment {
 
         this.ranged = item.isRangedWeapon();
         this.attackRate = item.attackRate;
+        this.poisonous = item.poisonous;
     }
 
     /**
