@@ -12,7 +12,7 @@ interface SerializedContainer {
 }
 
 export default abstract class Container {
-    private slots: Slot[] = [];
+    protected slots: Slot[] = [];
 
     private emptySpaces = 0;
 

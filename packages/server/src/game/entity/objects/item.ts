@@ -26,7 +26,7 @@ export default class Item extends Entity {
     public plugin: Plugin | undefined;
 
     // Store variables
-    public price = 1;
+    public price = -2;
     public storeCount = -1;
 
     // Requirement for equipping the item.
@@ -53,6 +53,7 @@ export default class Item extends Entity {
     public lumberjacking = -1;
 
     public exists = true;
+    public undroppable = false;
 
     private respawnTime = Modules.ItemDefaults.RESPAWN_DELAY;
     private despawnDuration = Modules.ItemDefaults.DESPAWN_DURATION;
@@ -105,6 +106,7 @@ export default class Item extends Entity {
         this.poisonous = this.data.poisonous || this.poisonous;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+        this.undroppable = this.data.undroppable || this.undroppable;
 
         if (this.data.plugin) this.loadPlugin();
     }
