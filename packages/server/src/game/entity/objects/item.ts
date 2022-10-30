@@ -102,6 +102,7 @@ export default class Item extends Entity {
         this.defenseStats = this.data.defenseStats || this.defenseStats;
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
+        this.poisonous = this.data.poisonous || this.poisonous;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
 
