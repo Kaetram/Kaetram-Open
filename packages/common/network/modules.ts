@@ -336,7 +336,7 @@ export let PoisonInfo = {
         name: 'Venom',
         damage: 2,
         duration: 30,
-        rate: 2 // every second
+        rate: 3 // every second
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -392,7 +392,7 @@ export enum APIConstants {
 export enum Defaults {
     MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000, // every 1 second
-    POISON_CHANCE = 10 // 10% chance to poison a character
+    POISON_CHANCE = 15 // 15 in (235 - level) chance to poison
 }
 
 export enum ItemDefaults {

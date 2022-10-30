@@ -799,6 +799,7 @@
     "type": "weapon",
     "name": "Poison Axe",
     "price": 10000,
+    "poisonous": true,
     "lumberjacking": 4,
     "attackStats": {
       "crush": 4,
