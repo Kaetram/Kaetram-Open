@@ -3,6 +3,12 @@ import { Client, Message, IntentsBitField, TextChannel } from 'discord.js';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
+/**
+ * It is important that the bot has the correct permissions in the Discord server
+ * to ensure optimal functionality. The bot needs to be able to send messages and
+ * modify the server topic (manage channels).
+ */
+
 export default class Discord {
     private client!: Client;
 
@@ -15,7 +21,8 @@ export default class Discord {
             intents: [
                 IntentsBitField.Flags.Guilds,
                 IntentsBitField.Flags.GuildMessages,
-                IntentsBitField.Flags.MessageContent
+                IntentsBitField.Flags.MessageContent,
+                IntentsBitField.Flags.GuildPresences
             ]
         });
 
@@ -52,6 +59,23 @@ export default class Discord {
     }
 
     /**
+     * Sets the topic of the primary Discord channel.
+     * @param message Message to set as the topic.
+     */
+
+    public setTopic(message: string): void {
+        if (!message || !config.discordEnabled || !this.client) return;
+
+        try {
+            let channel = this.getChannel();
+
+            if (channel) channel.setTopic(message);
+        } catch {
+            log.error('An error has occurred while setting the Discord channel topic.');
+        }
+    }
+
+    /**
      * Formats a message and then sends the raw string to the Discord server.
      * @param source The player username that is sending the message.
      * @param text The message that the player is sending.
@@ -81,7 +105,7 @@ export default class Discord {
         if (!this.client) return;
 
         try {
-            let channel = this.client.channels.cache.get(config.discordChannelId) as TextChannel;
+            let channel = this.getChannel();
 
             if (channel) channel.send(message);
         } catch {
@@ -96,5 +120,13 @@ export default class Discord {
 
     public onMessage(callback: (source: string, text: string, colour: string) => void): void {
         this.messageCallback = callback;
+    }
+
+    /**
+     * @returns The default channel that the bot is assigned to.
+     */
+
+    private getChannel(): TextChannel {
+        return this.client.channels.cache.get(config.discordChannelId) as TextChannel;
     }
 }

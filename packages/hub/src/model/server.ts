@@ -9,6 +9,8 @@ export interface SerializedServer {
 export default class Server {
     public lastPing = Date.now();
 
+    private updateCallback?: () => void;
+
     public constructor(
         public host: string,
         public port: number,
@@ -28,6 +30,8 @@ export default class Server {
     public update(data: ServerData): void {
         this.lastPing = Date.now();
         this.players = data.players;
+
+        this.updateCallback?.();
     }
 
     /**
@@ -42,5 +46,13 @@ export default class Server {
             port: this.port,
             maxPlayers: this.maxPlayers
         };
+    }
+
+    /**
+     * Callback for when the server has updated.
+     */
+
+    public onUpdate(callback: () => void): void {
+        this.updateCallback = callback;
     }
 }
