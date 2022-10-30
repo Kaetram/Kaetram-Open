@@ -43,4 +43,5 @@ export interface ItemData {
     bonuses?: Bonuses;
     attackStats?: Stats;
     defenseStats?: Stats;
+    undroppable?: boolean;
 }

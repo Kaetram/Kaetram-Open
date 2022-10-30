@@ -12,7 +12,7 @@ import Entity from '../game/entity/entity';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, Pointer, Network, Notification } from '../network/packets';
+import { Command, Pointer, Network, Notification, Store } from '../network/packets';
 import Skill from '../game/entity/character/player/skill/skill';
 export default class Commands {
     private world;
@@ -665,6 +665,17 @@ export default class Commands {
 
             case 'resetabilities':
                 return this.player.abilities.reset();
+
+            case 'store':
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify(`Malformed command, expected /store key`);
+
+                this.player.send(new Store(Opcodes.Store.Open, this.world.stores.serialize(key)));
+
+                this.player.storeOpen = key;
+
+                break;
         }
     }
 }
