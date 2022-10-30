@@ -30,15 +30,12 @@ export default class Item extends Entity {
     public storeCount = -1;
 
     // Requirement for equipping the item.
-    public level = -1;
-    public skill = '';
+    private level = -1;
+    private skill = '';
+    private achievement = '';
+    private quest = '';
 
     // Equipment variables
-    public attackLevel = 1;
-    public defenseLevel = 1;
-    public pendantLevel = 0;
-    public ringLevel = 0;
-    public bootsLevel = 0;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
 
@@ -225,6 +222,29 @@ export default class Item extends Entity {
             return false;
         }
 
+        // Check if the item has an achievement requirement and if it is completed.
+        if (this.achievement && !player.achievements.get(this.achievement)?.isFinished()) {
+            player.notify(`This item requires a secret achievement to wield.`);
+            return false;
+        }
+
+        // If an item has a quest requirement, we check it here.
+        if (this.quest) {
+            let quest = player.quests.get(this.quest);
+
+            // Send an error if the quest cannot be found.
+            if (!quest) {
+                log.error(`[Item: ${this.key}] Could not find quest ${this.quest}.`);
+                return false;
+            }
+
+            // Check if the quest is finished.
+            if (!quest.isFinished()) {
+                player.notify(`You must complete ${quest.name} to wield this item.`);
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -235,9 +255,6 @@ export default class Item extends Entity {
 
     public getRequirement(): number {
         if (this.level !== -1) return this.level;
-
-        if (this.isWeapon()) return Math.floor(this.attackLevel * 3);
-        if (this.isArmour()) return Math.floor(this.defenseLevel * 3);
 
         return 0;
     }
