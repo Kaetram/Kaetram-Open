@@ -15,7 +15,7 @@
 [![Reddit](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social)](https://reddit.com/r/kaetram 'Reddit')
 
 Kaetram is an open-source 2D MMORPG that expands on the original idea created by Little Workshop's BrowserQuest (BQ).
-We aim to provide a standalone gaming experience as well as a game-engine for those interested in creating their
+We aim to provide a collaborative gaming experience as well as a game-engine for those interested in creating their
 own version. The game is still in early development stages and all help, suggestions, and bug reports are welcome.
 All of the assets are licensed under CC-BY-SA3.0 and we aim to hold onto the original BQ assets as well as expand
 upon them. The entire code-base has been re-written from scratch, optimized, and documented. Please see the GitHub

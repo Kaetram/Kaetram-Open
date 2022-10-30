@@ -12,7 +12,8 @@
 
   "villager": {
     "name": "Forester",
-    "text": ["Good day to you!"]
+    "text": ["Good day to you!"],
+    "store": "forester"
   },
 
   "beachnpc": {

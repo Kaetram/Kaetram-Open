@@ -770,8 +770,11 @@ export default class Renderer {
         if (!weapon.loaded) weapon.load();
 
         let animation = player.animation!,
-            weaponAnimationData = weapon.animationData[animation.name],
-            { frame, row } = animation,
+            weaponAnimationData = weapon.animationData[animation.name];
+
+        if (!weaponAnimationData) return;
+
+        let { frame, row } = animation,
             index =
                 frame.index < weaponAnimationData.length
                     ? frame.index
