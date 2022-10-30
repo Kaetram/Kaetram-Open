@@ -9,5 +9,16 @@
             "- Hotkeys 'm' for map and 'p' for profile",
             "- Admins and moderators name now displays a different colour"
         ]
+    },
+    "alpha-2.2.4": {
+        "title": "Kaetram alpha-2.2.4",
+        "content": [
+            "- Discord bot updates",
+            "- Forester now sells axes",
+            "- Map updates and loading time improvements",
+            "- Armour and weapon stats for all items",
+            "- Added default price to majority of items",
+            "- Profanity filter fixes and improvements"
+        ]
     }
 }
