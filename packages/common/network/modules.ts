@@ -367,7 +367,7 @@ export const enum Constants {
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 5000, // healing every 5 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
-    MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
+    MAP_DIVISION_SIZE = 48, // The size of a region the map is split into.
     SPAWN_POINT = '405,27', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '570,11', // 'x,y' values

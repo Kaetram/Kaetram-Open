@@ -529,6 +529,7 @@
   "eneltrident": {
     "type": "weapon",
     "name": "Enel Trident",
+    "price": 30000,
     "level": 200,
     "attackStats": {
       "crush": 56,
@@ -580,6 +581,7 @@
   "memme": {
     "type": "weapon",
     "name": "Memme",
+    "price": 30000,
     "level": 216,
     "attackStats": {
       "crush": 50,
@@ -614,6 +616,7 @@
   "butcherknife": {
     "type": "weapon",
     "name": "Butcher Knife",
+    "price": 30000,
     "level": 138,
     "attackStats": {
       "crush": 20,
@@ -631,6 +634,7 @@
   "fireshot": {
     "type": "weapon",
     "name": "Fire Shot",
+    "price": 30000,
     "level": 216,
     "attackStats": {
       "crush": 30,
@@ -648,6 +652,7 @@
   "comb": {
     "type": "weapon",
     "name": "Comb",
+    "price": 30000,
     "level": 226,
     "attackStats": {
       "crush": 10,
@@ -683,6 +688,7 @@
   "fireplay": {
     "type": "weapon",
     "name": "Fire Play",
+    "price": 30000,
     "level": 300,
     "attackStats": {
       "crush": 30,
@@ -718,6 +724,7 @@
   "pinksword": {
     "type": "weapon",
     "name": "Pink Sword",
+    "price": 30000,
     "level": 256,
     "attackStats": {
       "crush": 50,
@@ -735,6 +742,7 @@
   "conferencecall": {
     "type": "weapon",
     "name": "Stick",
+    "price": 30000,
     "level": 342,
     "attackStats": {
       "crush": 60,
@@ -752,6 +760,7 @@
   "rustedaxe": {
     "type": "weapon",
     "name": "Rusted Axe",
+    "price": 5000,
     "lumberjacking": 2,
     "level": 5,
     "skill": "lumberjacking",
@@ -771,6 +780,7 @@
   "fireaxe": {
     "type": "weapon",
     "name": "Fire Axe",
+    "price": 7500,
     "lumberjacking": 3,
     "attackStats": {
       "crush": 4,
@@ -788,6 +798,7 @@
   "poisonaxe": {
     "type": "weapon",
     "name": "Poison Axe",
+    "price": 10000,
     "lumberjacking": 4,
     "attackStats": {
       "crush": 4,
@@ -805,6 +816,7 @@
   "cactusaxe": {
     "type": "weapon",
     "name": "Cactus Axe",
+    "price": 15000,
     "lumberjacking": 6,
     "attackStats": {
       "crush": 4,
@@ -822,6 +834,7 @@
   "goldaxe": {
     "type": "weapon",
     "name": "Gold Axe",
+    "price": 25000,
     "lumberjacking": 7,
     "attackStats": {
       "crush": 4,
@@ -839,6 +852,7 @@
   "carnelianaxe": {
     "type": "weapon",
     "name": "Carnelian Axe",
+    "price": 50000,
     "lumberjacking": 8,
     "attackStats": {
       "crush": 4,
@@ -856,6 +870,7 @@
   "devilkazyasword": {
     "type": "weapon",
     "name": "Devil Kazya Sword",
+    "price": 30000,
     "level": 240,
     "attackStats": {
       "crush": 40,
@@ -873,6 +888,7 @@
   "bamboospear": {
     "type": "weapon",
     "name": "Bamboo Spear",
+    "price": 30000,
     "level": 256,
     "attackStats": {
       "crush": 10,
@@ -890,6 +906,7 @@
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
+    "price": 30000,
     "level": 400,
     "attackStats": {
       "crush": 19,
@@ -907,6 +924,7 @@
   "magicspear": {
     "type": "weapon",
     "name": "Magic Spear",
+    "price": 30000,
     "level": 400,
     "attackStats": {
       "crush": 10,
@@ -929,6 +947,7 @@
   "pendant1": {
     "type": "pendant",
     "name": "Emerald Pendant",
+    "price": 5000,
     "attackStats": {
       "crush": 8,
       "slash": 8,
@@ -951,6 +970,7 @@
   "greenpendant": {
     "type": "pendant",
     "name": "Jade Pendant",
+    "price": 5000,
     "attackStats": {
       "crush": 12,
       "slash": 12,
@@ -973,6 +993,7 @@
   "pearlpendant": {
     "type": "pendant",
     "name": "Pearl Pendant",
+    "price": 5000,
     "attackStats": {
       "crush": 16,
       "slash": 16,
@@ -995,6 +1016,7 @@
   "marblependant": {
     "type": "pendant",
     "name": "Diamond Pendant",
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -1016,17 +1038,20 @@
 
   "goldring": {
     "type": "ring",
-    "name": "Gold Ring"
+    "name": "Gold Ring",
+    "price": 125000
   },
   
   "silverring": {
     "type": "ring",
-    "name": "Silver Ring"
+    "name": "Silver Ring",
+    "price": 52500
   },
 
   "ring1": {
     "type": "ring",
     "name": "Emerald Ring",
+    "price": 5000,
     "attackStats": {
       "crush": 8,
       "slash": 8,
@@ -1049,6 +1074,7 @@
   "sproutring": {
     "type": "ring",
     "name": "Sprout Ring",
+    "price": 5000,
     "attackStats": {
       "crush": 10,
       "slash": 10,
@@ -1071,6 +1097,7 @@
   "pearlring": {
     "type": "ring",
     "name": "Pearl Ring",
+    "price": 5000,
     "attackStats": {
       "crush": 16,
       "slash": 16,
@@ -1093,6 +1120,7 @@
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -1115,6 +1143,7 @@
   "spiritring": {
     "type": "ring",
     "name": "Spirit Ring",
+    "price": 5000,
     "attackStats": {
       "crush": 12,
       "slash": 10,
@@ -1137,6 +1166,7 @@
   "essentialrage": {
     "type": "ring",
     "name": "Essential Rage",
+    "price": 5000,
     "attackStats": {
       "crush": 22,
       "slash": 34,
@@ -2275,6 +2305,7 @@
   "leatherarmor": {
     "type": "armour",
     "name": "Leather Armour",
+    "price": 200,
     "level": 2,
     "attackStats": {
       "crush": 2,
@@ -2298,6 +2329,7 @@
   "mailarmor": {
     "type": "armour",
     "name": "Chain Mail",
+    "price": 320,
     "level": 6,
     "attackStats": {
       "crush": 4,
@@ -2321,6 +2353,7 @@
   "platearmor": {
     "type": "armour",
     "name": "Steel Armour",
+    "price": 500,
     "level": 12,
     "attackStats": {
       "crush": 2,
@@ -2344,6 +2377,7 @@
   "redarmor": {
     "type": "armour",
     "name": "Ruby Armour",
+    "price": 1000,
     "level": 18,
     "attackStats": {
       "crush": 4,
@@ -2367,6 +2401,7 @@
   "goldenarmor": {
     "type": "armour",
     "name": "Golden Armour",
+    "price": 2500,
     "level": 23,
     "attackStats": {
       "crush": 6,
@@ -2390,6 +2425,7 @@
   "greenarmor": {
     "type": "armour",
     "name": "Green Armour",
+    "price": 3000,
     "level": 28,
     "attackStats": {
       "crush": 7,
@@ -2413,6 +2449,7 @@
   "greenwingarmor": {
     "type": "armour",
     "name": "Green Wing Armour",
+    "price": 2500,
     "level": 28,
     "attackStats": {
       "crush": 7,
@@ -2436,6 +2473,7 @@
   "guardarmor": {
     "type": "armour",
     "name": "Guard Armour",
+    "price": 2500,
     "level": 36,
     "attackStats": {
       "crush": 10,
@@ -2459,6 +2497,7 @@
   "redguardarmor": {
     "type": "armour",
     "name": "Red Guard Armour",
+    "price": 2750,
     "level": 40,
     "attackStats": {
       "crush": 10,
@@ -2482,6 +2521,7 @@
   "whitearmor": {
     "type": "armour",
     "name": "White Armour",
+    "price": 3000,
     "level": 46,
     "attackStats": {
       "crush": 12,
@@ -2505,6 +2545,7 @@
   "ratarmor": {
     "type": "armour",
     "name": "Rat Armour",
+    "price": 3000,
     "level": 52,
     "attackStats": {
       "crush": 12,
@@ -2528,6 +2569,7 @@
   "bluepiratearmor": {
     "type": "armour",
     "name": "Blue Pirate Armour",
+    "price": 3500,
     "level": 55,
     "attackStats": {
       "crush": 13,
@@ -2551,6 +2593,7 @@
   "cheoliarmor": {
     "type": "armour",
     "name": "Cheoli Armour",
+    "price": 4000,
     "level": 60,
     "attackStats": {
       "crush": 13,
@@ -2574,6 +2617,7 @@
   "dovakinarmor": {
     "type": "armour",
     "name": "Dovakin Armour",
+    "price": 4500,
     "level": 58,
     "attackStats": {
       "crush": 13,
@@ -2597,6 +2641,7 @@
   "gbwingarmor": {
     "type": "armour",
     "name": "GB Wing Armour",
+    "price": 4500,
     "level": 64,
     "attackStats": {
       "crush": 13,
@@ -2620,6 +2665,7 @@
   "redwingarmor": {
     "type": "armour",
     "name": "Red Wing Armour",
+    "price": 4500,
     "level": 66,
     "attackStats": {
       "crush": 13,
@@ -2643,6 +2689,7 @@
   "snowfoxarmor": {
     "type": "armour",
     "name": "Snow Fox Armour",
+    "price": 5000,
     "level": 78,
     "attackStats": {
       "crush": 13,
@@ -2666,6 +2713,7 @@
   "wolfarmor": {
     "type": "armour",
     "name": "Wolf Armour",
+    "price": 5000,
     "level": 80,
     "attackStats": {
       "crush": 13,
@@ -2689,6 +2737,7 @@
   "bluewingarmor": {
     "type": "armour",
     "name": "Blue Wing Armour",
+    "price": 5000,
     "level": 78,
     "attackStats": {
       "crush": 13,
@@ -2712,6 +2761,7 @@
   "thiefarmor": {
     "type": "armour",
     "name": "Thief Armour",
+    "price": 5500,
     "level": 78,
     "attackStats": {
       "crush": 13,
@@ -2735,6 +2785,7 @@
   "ninjaarmor": {
     "type": "armour",
     "name": "Ninja Armour",
+    "price": 6000,
     "level": 84,
     "attackStats": {
       "crush": 15,
@@ -2758,6 +2809,7 @@
   "dragonarmor": {
     "type": "armour",
     "name": "Dragon Armour",
+    "price": 6500,
     "level": 90,
     "attackStats": {
       "crush": 12,
@@ -2781,6 +2833,7 @@
   "fallenarmor": {
     "type": "armour",
     "name": "Fallen Armour",
+    "price": 7500,
     "level": 94,
     "attackStats": {
       "crush": 28,
@@ -2804,6 +2857,7 @@
   "paladinarmor": {
     "type": "armour",
     "name": "Paladin Armour",
+    "price": 10000,
     "level": 102,
     "attackStats": {
       "crush": 28,
@@ -2827,6 +2881,7 @@
   "crystalarmor": {
     "type": "armour",
     "name": "Crystal Armour",
+    "price": 20000,
     "level": 110,
     "attackStats": {
       "crush": 58,
@@ -2850,6 +2905,7 @@
   "adhererrobe": {
     "type": "armour",
     "name": "Adherer Robe",
+    "price": 20000,
     "level": 126,
     "attackStats": {
       "crush": 68,
@@ -2873,6 +2929,7 @@
   "frostarmor": {
     "type": "armour",
     "name": "Frost Armour",
+    "price": 20000,
     "level": 100,
     "attackStats": {
       "crush": 38,
@@ -2911,6 +2968,7 @@
   "regionarmor": {
     "type": "armour",
     "name": "Region Armour",
+    "price": 20000,
     "level": 200,
     "attackStats": {
       "crush": 38,
@@ -2944,6 +3002,7 @@
   "rabbitarmor": {
     "type": "armour",
     "name": "Rabbit Armour",
+    "price": 20000,
     "movementSpeed": 210,
     "level": 63,
     "attackStats": {
@@ -2967,27 +3026,32 @@
 
   "portalarmor": {
     "type": "armour",
-    "name": "Portal Armour"
+    "name": "Portal Armour",
+    "price": 20000
   },
 
   "pirateking": {
     "type": "armour",
-    "name": "Pirate King"
+    "name": "Pirate King",
+    "price": 20000
   },
 
   "peadragonarmor": {
     "type": "armour",
-    "name": "Sea Dragon Armour"
+    "name": "Sea Dragon Armour",
+    "price": 20000
   },
 
   "shadowregionarmor": {
     "type": "armour",
-    "name": "Shadow Region Armour"
+    "name": "Shadow Region Armour",
+    "price": 20000
   },
 
   "enelarmor": {
     "type": "armour",
-    "name": "Enel Armour"
+    "name": "Enel Armour",
+    "price": 20000
   },
 
   "miniseadragonarmor": {
@@ -3084,6 +3148,7 @@
     "type": "armour",
     "name": "Iron Knight Armour",
     "level": 160,
+    "price": 20000,
     "attackStats": {
       "crush": 38,
       "slash": 56,
