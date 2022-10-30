@@ -171,6 +171,9 @@ as a player's achievement/quest progress, or, in the case of trees, depending on
 In the future we plan to use this region system to create instanced versions of areas, for example running multiple minigame
 instances at the same time.
 
+Video example showcasing region system using an exaggerated example:
+[![Kaetram Region System](https://img.youtube.com/vi/pt_CEgjfORE/0.jpg)](https://www.youtube.com/watch?v=pt_CEgjfORE)
+
 ### Tilemap
 
 Kaetram uses [Tiled Map Editor](https://www.mapeditor.org/) to create and modify the map. Our [map parsing](#map-parsing) tool
