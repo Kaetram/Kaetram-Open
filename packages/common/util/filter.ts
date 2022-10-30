@@ -21,15 +21,14 @@ export default {
     },
 
     /**
-     * Filters a message and removes any profanities from it.
+     * Looks through every word and replaces any profane words with asterisks.
      * @param message The message we are filtering.
      * @returns The filtered message.
      */
 
     clean: (message: string): string => {
-        for (let i = 0; i < Profanities.length; i++)
-            if (message.toLowerCase().includes(Profanities[i]))
-                message = message.replace(Profanities[i], '*'.repeat(Profanities[i].length));
+        for (let profanity of Profanities)
+            message = message.replace(new RegExp(profanity, 'gi'), '*'.repeat(profanity.length));
 
         return message;
     }
