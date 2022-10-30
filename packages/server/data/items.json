@@ -3343,7 +3343,8 @@
 
   "cd": {
     "type": "object",
-    "name": "CD [Quest]"
+    "name": "CD [Quest]",
+    "undroppable": true
   },
 
   "snowpotion": {
