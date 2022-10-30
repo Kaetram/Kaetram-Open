@@ -29,7 +29,7 @@ export default abstract class Quest {
      * de-serializes its data into a quest object for later use.
      */
 
-    private name = '';
+    public name = '';
     private description = '';
     private hideNPCs: string[] = []; // NPCs to hide after quest.
     private stage = 0; // How far along in the quest we are.

@@ -30,6 +30,8 @@ export interface ItemData {
     storeCount?: number;
     skill?: string; // Skill requirement for the item.
     level?: number; // Requirement level for the item.
+    achievement?: string; // Achievement required to use the item.
+    quest?: string; // Quest requirement for the item.
     attackRate?: number;
     movementSpeed?: number;
     lumberjacking?: number;
