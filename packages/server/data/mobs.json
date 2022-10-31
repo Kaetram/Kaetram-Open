@@ -1,7 +1,6 @@
 {
   "rat": {
     "name": "Rat",
-    "id": 128,
     "drops": {"flask": 100},
     "hitPoints": 20,
     "defenseLevel": 4,
@@ -19,7 +18,6 @@
 
   "bat": {
     "name": "Batterfly",
-    "id": 1,
     "drops": {"flask": 120},
     "hitPoints": 45,
     "defenseLevel": 6,
@@ -37,7 +35,6 @@
 
   "crab": {
     "name": "Crab",
-    "id": 2,
     "drops": {"flask": 100},
     "hitPoints": 15,
     "defenseLevel": 1,
@@ -55,7 +52,6 @@
 
   "wizard": {
     "name": "Wizard",
-    "id": 3,
     "drops": {"gold": 250, "axe": 100, "morningstar": 50, "woodenbow": 50, "sword2": 200},
     "hitPoints": 100,
     "defenseLevel": 3,
@@ -74,7 +70,6 @@
 
   "goblin": {
     "name": "Goblin",
-    "id": 4,
     "drops": {"leatherarmor": 100, "plasticbow": 100, "gold": 500, "leatherarcherarmor": 100, "sword2": 100},
     "hitPoints": 70,
     "defenseLevel": 5,
@@ -92,7 +87,6 @@
 
   "skeleton": {
     "name": "Spooky Skeleton",
-    "id": 5,
     "drops": {"gold": 300, "flask": 200},
     "hitPoints": 110,
     "defenseLevel": 6,
@@ -110,7 +104,6 @@
 
   "ogre": {
     "name": "Ogre",
-    "id": 6,
     "drops": {"axe": 10, "gold": 75, "bluesword": 5, "mailarmor": 20, "ironbow": 15, "mailarcherarmor": 20},
     "hitPoints": 60,
     "defenseLevel": 8,
@@ -128,7 +121,6 @@
 
   "skeleton2": {
     "name": "Scary Skeleton",
-    "id": 7,
     "drops": {"axe": 50, "morningstar": 20, "platearmor": 15, "platearcherarmor": 15},
     "hitPoints": 350,
     "defenseLevel": 9,
@@ -146,7 +138,6 @@
 
   "snek": {
     "name": "Snek",
-    "id": 8,
     "drops": {"gold": 25, "morningstar": 5, "platearmor": 5},
     "hitPoints": 85,
     "defenseLevel": 4,
@@ -165,7 +156,6 @@
 
   "spectre": {
     "name": "Spectre",
-    "id": 9,
     "drops": {"redarmor": 30, "axe": 75, "bluesword": 20},
     "hitPoints": 170,
     "defenseLevel": 6,
@@ -183,7 +173,6 @@
 
   "eye": {
     "name": "Eye",
-    "id": 10,
     "drops": {"redarcherarmor": 20, "gold": 100, "bluesword": 20},
     "hitPoints": 160,
     "defenseLevel": 3,
@@ -201,7 +190,6 @@
 
   "deathknight": {
     "name": "Death Knight",
-    "id": 11,
     "drops": {"redsword": 20, "redarmor": 20, "morningstar": 80},
     "hitPoints": 185,
     "defenseLevel": 8,
@@ -219,7 +207,6 @@
 
   "adherer": {
     "name": "Dark Mage",
-    "id": 12,
     "drops": {"rose": 20, "redlightbow": 10, "redmetalsword": 10, "adhererarcherarmor": 10, "adhererrobe": 10},
     "hitPoints": 200,
     "defenseLevel": 5,
@@ -238,7 +225,6 @@
 
   "ant": {
     "name": "Worker Ant",
-    "id": 13,
     "drops": {"gold": 50},
     "hitPoints": 650,
     "defenseLevel": 8,
@@ -256,7 +242,6 @@
 
   "babyspider": {
     "name": "Baby Spooder",
-    "id": 14,
     "drops": {"gold": 50},
     "hitPoints": 400,
     "defenseLevel": 3,
@@ -275,7 +260,6 @@
 
   "beetle": {
     "name": "Beetle",
-    "id": 15,
     "drops": {"gold": 50},
     "hitPoints": 600,
     "defenseLevel": 5,
@@ -293,7 +277,6 @@
 
   "blackpirateskeleton": {
     "name": "Pirate Skeleton",
-    "id": 16,
     "drops": {"gold": 200},
     "hitPoints": 400,
     "defenseLevel": 10,
@@ -311,7 +294,6 @@
 
   "greenpirateskeleton": {
     "name": "Pirate Skeleton",
-    "id": 16,
     "drops": {"gold": 200},
     "hitPoints": 410,
     "defenseLevel": 8,
@@ -329,7 +311,6 @@
 
   "blackwizard": {
     "name": "Dark Wizard",
-    "id": 17,
     "drops": {"bastardsword": 100, "wizardrobe": 100, "redlightbow": 125, "topazring": 15},
     "hitPoints": 120,
     "defenseLevel": 2,
@@ -348,7 +329,6 @@
 
   "blazespider": {
     "name": "Blaze Spooder",
-    "id": 18,
     "drops": {"gold": 50},
     "hitPoints": 915,
     "defenseLevel": 0,
@@ -366,7 +346,6 @@
 
   "bluecockroach": {
     "name": "Blue Cockroach",
-    "id": 19,
     "drops": {"cockroachsuit": 40, "gayarcherarmor": 20, "sickle": 40},
     "hitPoints": 785,
     "defenseLevel": 5,
@@ -384,7 +363,6 @@
 
   "bluePpeta": {
     "name": "Blue Preta",
-    "id": 20,
     "drops": {"bluescimitar": 20, "bluewingarcherarmor": 20, "bluewingarmor": 20, "gold": 40},
     "hitPoints": 600,
     "defenseLevel": 5,
@@ -402,7 +380,6 @@
 
   "cactus": {
     "name": "Cactus",
-    "id": 21,
     "drops": {"gold": 50, "cactusaxe": 10},
     "hitPoints": 160,
     "defenseLevel": 14,
@@ -421,7 +398,6 @@
 
   "cat": {
     "name": "Cat",
-    "id": 22,
     "drops": {"catarmor": 25},
     "hitPoints": 600,
     "defenseLevel": 1,
@@ -439,7 +415,6 @@
 
   "clam": {
     "name": "Clam",
-    "id": 23,
     "drops": {"gold": 50, "spear": 40},
     "hitPoints": 200,
     "defenseLevel": 6,
@@ -457,7 +432,6 @@
 
   "cobra": {
     "name": "Cobra",
-    "id": 24,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "defenseLevel": 3,
@@ -475,7 +449,6 @@
 
   "crystalscolpion": {
     "name": "Crystal Scorpion",
-    "id": 25,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "defenseLevel": 15,
@@ -493,7 +466,6 @@
 
   "cursedhahoemask": {
     "name": "Cursed Hahoe Mask",
-    "id": 26,
     "drops": {"gold": 50},
     "hitPoints": 2100,
     "defenseLevel": 25,
@@ -511,7 +483,6 @@
 
   "curseddjangseung": {
     "name": "Cursed Djangseung",
-    "id": 27,
     "drops": {"gold": 50},
     "hitPoints": 1900,
     "defenseLevel": 25,
@@ -529,7 +500,6 @@
 
   "darkogre": {
     "name": "Dark Ogre",
-    "id": 28,
     "drops": {"ring1": 50, "skylightbow": 400, "gold": 550},
     "hitPoints": 130,
     "defenseLevel": 5,
@@ -547,7 +517,6 @@
 
   "darkscolpion": {
     "name": "Dark Scorpion",
-    "id": 29,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "defenseLevel": 10,
@@ -565,7 +534,6 @@
 
   "darkskeleton": {
     "name": "Dark Skeleton",
-    "id": 30,
     "drops": {"sproutring": 25, "hammer": 250, "hunterbow": 150, "gold": 275},
     "hitPoints": 300,
     "defenseLevel": 5,
@@ -583,7 +551,6 @@
 
   "desertscolpion": {
     "name": "Desert Scorpion",
-    "id": 31,
     "drops": {"gold": 50},
     "hitPoints": 1300,
     "defenseLevel": 10,
@@ -601,7 +568,6 @@
 
   "devilkazya": {
     "name": "Devil Blox",
-    "id": 32,
     "drops": {"gold": 50},
     "hitPoints": 2300,
     "defenseLevel": 30,
@@ -619,7 +585,6 @@
 
   "earthworm": {
     "name": "Earth Worm",
-    "id": 33,
     "drops": {"gold": 50},
     "hitPoints": 970,
     "defenseLevel": 5,
@@ -637,7 +602,6 @@
 
   "firespider": {
     "name": "Fire Spooder",
-    "id": 34,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "defenseLevel": 3,
@@ -655,7 +619,6 @@
 
   "flaredanceknight": {
     "name": "Cursed Knight",
-    "id": 35,
     "drops": {"gold": 50},
     "hitPoints": 1000,
     "defenseLevel": 15,
@@ -673,7 +636,6 @@
 
   "frog": {
     "name": "Frog",
-    "id": 36,
     "drops": {"gold": 50},
     "hitPoints": 1850,
     "defenseLevel": 10,
@@ -691,7 +653,6 @@
 
   "ghostrider": {
     "name": "Skeleton Knight",
-    "id": 37,
     "drops": {"gold": 50},
     "hitPoints": 700,
     "defenseLevel": 30,
@@ -709,7 +670,6 @@
 
   "goldgolem": {
     "name": "Golden Golem",
-    "id": 38,
     "drops": {"gold": 50},
     "hitPoints": 1150,
     "defenseLevel": 10,
@@ -727,7 +687,6 @@
 
   "golem": {
     "name": "Golem",
-    "id": 39,
     "drops": {"deathbow": 5, "bluesword": 10, "gold": 50},
     "hitPoints": 350,
     "defenseLevel": 25,
@@ -745,7 +704,6 @@
 
   "greenfish": {
     "name": "Green Fesh",
-    "id": 40,
     "drops": {"spear": 125, "pendant1": 25, "greenarcherarmor": 150, "gold": 700},
     "hitPoints": 200,
     "defenseLevel": 1,
@@ -763,7 +721,6 @@
 
   "hellspider": {
     "name": "Hell Spooder",
-    "id": 41,
     "drops": {"gold": 50},
     "hitPoints": 2000,
     "defenseLevel": 10,
@@ -781,7 +738,6 @@
 
   "hermitcrab": {
     "name": "Hermit Crab",
-    "id": 42,
     "drops": {"flask": 200, "gold": 200},
     "hitPoints": 155,
     "defenseLevel": 10,
@@ -799,7 +755,6 @@
 
   "hobgoblin": {
     "name": "Hobgoblin",
-    "id": 43,
     "drops": {"mailarmor": 200, "platearmor": 400, "platearcherarmor": 200, "mailarcherarmor": 200},
     "hitPoints": 130,
     "defenseLevel": 6,
@@ -817,7 +772,6 @@
 
   "hongcheol": {
     "name": "Hong Chul",
-    "id": 44,
     "drops": {"gold": 50},
     "hitPoints": 1550,
     "defenseLevel": 15,
@@ -835,7 +789,6 @@
 
   "icegolem": {
     "name": "Ice Golem",
-    "id": 45,
     "drops": {"bluesword": 200, "crystalarmor": 20, "crystalarcherarmor": 20, "gold": 500},
     "hitPoints": 700,
     "defenseLevel": 9,
@@ -854,7 +807,6 @@
 
   "iceknight": {
     "name": "Ice Knight",
-    "id": 46,
     "drops": {"gold": 150, "icerose": 10},
     "hitPoints": 550,
     "defenseLevel": 12,
@@ -872,7 +824,6 @@
 
   "icevulture": {
     "name": "Ice Vulture",
-    "id": 47,
     "drops": {"gold": 50},
     "hitPoints": 300,
     "defenseLevel": 1,
@@ -890,7 +841,6 @@
 
   "infectedguard": {
     "name": "Infected Guard",
-    "id": 48,
     "drops": {"gold": 50},
     "hitPoints": 2000,
     "defenseLevel": 8,
@@ -908,7 +858,6 @@
 
   "ironogre": {
     "name": "Iron Ogre",
-    "id": 49,
     "drops": {"bluescimitar": 400, "gold": 600},
     "hitPoints": 300,
     "defenseLevel": 5,
@@ -926,7 +875,6 @@
 
   "livingarmor": {
     "name": "Living armor",
-    "id": 50,
     "drops": {"whip": 10, "dovakinarcherarmor": 100, "dovakinarmor": 100, "skylightbow": 100, "gold": 690},
     "hitPoints": 340,
     "defenseLevel": 4,
@@ -944,7 +892,6 @@
 
   "mantis": {
     "name": "Praying Mantis",
-    "id": 51,
     "drops": {"gold": 50},
     "hitPoints": 2400,
     "defenseLevel": 15,
@@ -962,7 +909,6 @@
 
   "mermaid": {
     "name": "Mermaid",
-    "id": 52,
     "drops": {"gold": 600, "trident": 100, "mermaidbow": 100},
     "hitPoints": 150,
     "defenseLevel": 10,
@@ -980,7 +926,6 @@
 
   "mimic": {
     "name": "Mimic",
-    "id": 53,
     "drops": {"gold": 20, "bluescimitar": 20, "flask": 100},
     "hitPoints": 1200,
     "defenseLevel": 12,
@@ -1000,7 +945,6 @@
 
   "miniiceknight": {
     "name": "Mini Ice Knight",
-    "id": 54,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "defenseLevel": 4,
@@ -1018,7 +962,6 @@
 
   "miniknight": {
     "name": "Mini Knight",
-    "id": 55,
     "drops": {"gold": 50},
     "hitPoints": 1450,
     "defenseLevel": 3,
@@ -1036,7 +979,6 @@
 
   "oldogre": {
     "name": "Old Ogre",
-    "id": 56,
     "drops": {"pendant1": 25, "skylightbow": 475, "gold": 500},
     "hitPoints": 256,
     "defenseLevel": 5,
@@ -1054,7 +996,6 @@
 
   "orc": {
     "name": "Orc",
-    "id": 57,
     "drops": {"redsword": 200, "violetbow": 100, "redarcherarmor": 120, "spear": 30},
     "hitPoints": 75,
     "defenseLevel": 5,
@@ -1072,7 +1013,6 @@
 
   "pain": {
     "name": "Infected Villager",
-    "id": 58,
     "drops": {"gold": 50},
     "hitPoints": 1550,
     "defenseLevel": 5,
@@ -1090,7 +1030,6 @@
 
   "penguin": {
     "name": "Penguin",
-    "id": 59,
     "drops": {"bluewingarcherarmor": 200, "bluewingarmor": 200, "icerose": 200, "marinebow": 200, "gold": 200},
     "hitPoints": 526,
     "defenseLevel": 4,
@@ -1108,7 +1047,6 @@
 
   "pierrot": {
     "name": "Clown",
-    "id": 60,
     "drops": {"gold": 50},
     "hitPoints": 150,
     "defenseLevel": 30,
@@ -1126,7 +1064,6 @@
 
   "pinkelf": {
     "name": "Pink Elf",
-    "id": 61,
     "drops": {"gold": 50},
     "hitPoints": 625,
     "defenseLevel": 8,
@@ -1144,7 +1081,6 @@
 
   "poisonspider": {
     "name": "Red Spider",
-    "id": 62,
     "drops": {"gold": 50},
     "hitPoints": 990,
     "defenseLevel": 30,
@@ -1163,7 +1099,6 @@
 
   "preta": {
     "name": "Preta",
-    "id": 63,
     "drops": {"greenpendant": 40, "bluewingarcherarmor": 200, "bluewingarmor": 360, "gold": 400},
     "hitPoints": 495,
     "defenseLevel": 1,
@@ -1181,7 +1116,6 @@
 
   "purplepreta": {
     "name": "Preta",
-    "id": 64,
     "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
     "hitPoints": 431,
     "defenseLevel": 1,
@@ -1199,7 +1133,6 @@
 
   "redcockroach": {
     "name": "Red Cockroach",
-    "id": 65,
     "drops": {"gold": 50},
     "hitPoints": 1200,
     "defenseLevel": 2,
@@ -1217,7 +1150,6 @@
 
   "redelf": {
     "name": "Red Elf",
-    "id": 66,
     "drops": {"gold": 50},
     "hitPoints": 1750,
     "defenseLevel": 5,
@@ -1235,7 +1167,6 @@
 
   "redfish": {
     "name": "Red Fesh",
-    "id": 67,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "defenseLevel": 1,
@@ -1251,9 +1182,42 @@
     "respawnDelay": 35000
   },
 
+  "guardsword": {
+    "name": "Guard",
+    "drops": {"guardarmor": 50, "flask": 400, "gold": 200},
+    "hitPoints": 225,
+    "defenseLevel": 17,
+    "attackLevel": 8,
+    "experience": 420,
+    "level": 30,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000
+  },
+
+  "guardmace": {
+    "name": "Guard",
+    "drops": {"guardarmor": 50, "flask": 400, "gold": 200},
+    "hitPoints": 225,
+    "defenseLevel": 17,
+    "attackLevel": 11,
+    "experience": 469,
+    "level": 35,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000
+  },
+
   "redguard": {
     "name": "Bandit",
-    "id": 68,
     "drops": {"redguardarmor": 25, "redguardarcherarmor": 25, "ring1": 50, "scimitar": 50, "watermelonbow": 50},
     "hitPoints": 135,
     "defenseLevel": 10,
@@ -1271,7 +1235,6 @@
 
   "redmouse": {
     "name": "Red Mouse",
-    "id": 69,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 160,
     "defenseLevel": 1,
@@ -1289,7 +1252,6 @@
 
   "redpirateskeleton": {
     "name": "Pirate Skeleton",
-    "id": 70,
     "drops": {"gold": 300},
     "hitPoints": 650,
     "defenseLevel": 10,
@@ -1307,7 +1269,6 @@
 
   "rhaphidophoridae": {
     "name": "Cricket",
-    "id": 71,
     "drops": {"gold": 50},
     "hitPoints": 3500,
     "defenseLevel": 5,
@@ -1325,7 +1286,6 @@
 
   "rudolf": {
     "name": "Raindeer",
-    "id": 72,
     "drops": {"gold": 50},
     "hitPoints": 5550,
     "defenseLevel": 10,
@@ -1343,7 +1303,6 @@
 
   "santaelf": {
     "name": "Santa's Elf",
-    "id": 73,
     "drops": {"gold": 50},
     "hitPoints": 6100,
     "defenseLevel": 10,
@@ -1361,7 +1320,6 @@
 
   "scorpion": {
     "name": "Scorpion",
-    "id": 74,
     "drops": {"gold": 50},
     "hitPoints": 2700,
     "defenseLevel": 10,
@@ -1379,7 +1337,6 @@
 
   "skyelf": {
     "name": "Sky Elf",
-    "id": 75,
     "drops": {"gold": 50},
     "hitPoints": 2100,
     "defenseLevel": 6,
@@ -1397,7 +1354,6 @@
 
   "slime": {
     "name": "Slime",
-    "id": 76,
     "drops": {"gold": 50},
     "hitPoints": 420,
     "defenseLevel": 30,
@@ -1415,7 +1371,6 @@
 
   "smalldevil": {
     "name": "Corrupted Bat",
-    "id": 77,
     "drops": {"gold": 100, "flask": 50},
     "hitPoints": 100,
     "defenseLevel": 3,
@@ -1433,7 +1388,6 @@
 
   "snowelf": {
     "name": "Snow Elf",
-    "id": 78,
     "drops": {"gold": 50},
     "hitPoints": 3400,
     "defenseLevel": 10,
@@ -1451,7 +1405,6 @@
 
   "snowman": {
     "name": "Snowman",
-    "id": 79,
     "drops": {"gold": 50},
     "hitPoints": 750,
     "defenseLevel": 3,
@@ -1469,7 +1422,6 @@
 
   "snowrabbit": {
     "name": "Snow Rabbit",
-    "id": 80,
     "drops": {"gold": 50},
     "hitPoints": 295,
     "defenseLevel": 4,
@@ -1487,7 +1439,6 @@
 
   "snowwolf": {
     "name": "Snow Wolf",
-    "id": 81,
     "drops": {"gold": 850, "icerose": 50, "wolfarmor": 100},
     "hitPoints": 1185,
     "defenseLevel": 8,
@@ -1505,7 +1456,6 @@
 
   "icegoblin": {
     "name": "Frost Goblin",
-    "id": 82,
     "drops": {"gold": 50},
     "hitPoints": 475,
     "defenseLevel": 3,
@@ -1523,7 +1473,6 @@
 
   "soldierant": {
     "name": "Soldier Ant",
-    "id": 83,
     "drops": {"gold": 50},
     "hitPoints": 890,
     "defenseLevel": 6,
@@ -1541,7 +1490,6 @@
 
   "soybeanbug": {
     "name": "Soy Bean Bug",
-    "id": 84,
     "drops": {"gold": 50},
     "hitPoints": 3500,
     "defenseLevel": 30,
@@ -1559,7 +1507,6 @@
 
   "spider": {
     "name": "Spooder",
-    "id": 85,
     "drops": {"gold": 50},
     "hitPoints": 2900,
     "defenseLevel": 45,
@@ -1577,7 +1524,6 @@
 
   "squirrel": {
     "name": "Squirrel",
-    "id": 86,
     "drops": {"gold": 50},
     "hitPoints": 150,
     "defenseLevel": 3,
@@ -1595,7 +1541,6 @@
 
   "suicideghost": {
     "name": "Ghost",
-    "id": 87,
     "drops": {"gold": 50},
     "hitPoints": 750,
     "defenseLevel": 1,
@@ -1613,7 +1558,6 @@
 
   "vulture": {
     "name": "Vulture",
-    "id": 88,
     "drops": {"gold": 50},
     "hitPoints": 100,
     "defenseLevel": 5,
@@ -1631,7 +1575,6 @@
 
   "whitebear": {
     "name": "Molar Bear",
-    "id": 89,
     "drops": {"gold": 50},
     "hitPoints": 1300,
     "defenseLevel": 7,
@@ -1649,7 +1592,6 @@
 
   "whitemouse": {
     "name": "Mouse",
-    "id": 90,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 950,
     "defenseLevel": 10,
@@ -1667,7 +1609,6 @@
 
   "whitetiger": {
     "name": "Tiger",
-    "id": 91,
     "drops": {"tigerarmor": 500, "gold": 500},
     "hitPoints": 3350,
     "defenseLevel": 1,
@@ -1685,7 +1626,6 @@
 
   "wolf": {
     "name": "Wolf",
-    "id": 92,
     "drops": {"wolfarmor": 10, "wolfarcherarmor": 10, "gold": 700},
     "hitPoints": 300,
     "defenseLevel": 3,
@@ -1703,7 +1643,6 @@
 
   "yellowbat": {
     "name": "Mutated Bat",
-    "id": 93,
     "drops": {"gold": 50},
     "hitPoints": 350,
     "defenseLevel": 30,
@@ -1721,7 +1660,6 @@
 
   "yellowfish": {
     "name": "Yellow Fesh",
-    "id": 94,
     "drops": {"gold": 50},
     "hitPoints": 135,
     "defenseLevel": 3,
@@ -1739,7 +1677,6 @@
 
   "yellowmouse": {
     "name": "Yellow Mouse",
-    "id": 95,
     "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
     "hitPoints": 750,
     "defenseLevel": 3,
@@ -1757,7 +1694,6 @@
 
   "yellowpreta": {
     "name": "Preta",
-    "id": 96,
     "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
     "hitPoints": 526,
     "defenseLevel": 4,
@@ -1775,7 +1711,6 @@
 
   "zombie": {
     "name": "Zombie",
-    "id": 97,
     "drops": {"gold": 50},
     "hitPoints": 1250,
     "defenseLevel": 1,
@@ -1793,7 +1728,6 @@
 
   "skeletonking": {
     "name": "Skeleton King",
-    "id": 99,
     "drops": {"goldensword": 100, "bigflask": 250, "goldenbow": 50, "pearlpendant": 40, "pearlring": 40},
     "hitPoints": 1850,
     "defenseLevel": 20,
@@ -1815,7 +1749,6 @@
 
   "ogrelord": {
     "name": "Ogre Lord",
-    "id": 100,
     "drops": {"sidesword": 300, "bigflask": 100, "goldensword": 500, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
     "defenseLevel": 40,
@@ -1837,7 +1770,6 @@
 
   "windguardian": {
     "name": "Wind Guardian",
-    "id": 101,
     "drops": {"gold": 50},
     "hitPoints": 15000,
     "defenseLevel": 40,
@@ -1856,7 +1788,6 @@
 
   "lightningguardian": {
     "name": "Lightning Guardian",
-    "id": 102,
     "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "bridalmask": 50, "gold": 850},
     "hitPoints": 4500,
     "defenseLevel": 25,
@@ -1874,7 +1805,6 @@
 
   "darkregion": {
     "name": "Tenebris",
-    "id": 104,
     "drops": {"spiritring": 25, "regionarmor": 25, "paewoldo": 25, "gold": 925},
     "hitPoints": 4000,
     "defenseLevel": 20,
@@ -1892,7 +1822,6 @@
 
   "darkregionillusion": {
     "name": "Tenebris",
-    "id": 105,
     "hitPoints": 500,
     "defenseLevel": 4,
     "attackLevel": 5,
@@ -1909,7 +1838,6 @@
 
   "miniseadragon": {
     "name": "Mini Sea Dragon",
-    "id": 106,
     "drops": {"miniseadragonarmor": 300, "daywalker": 300, "gold": 400},
     "hitPoints": 1200,
     "defenseLevel": 22,
@@ -1927,7 +1855,6 @@
 
   "forestdragon": {
     "name": "Gragon",
-    "id": 112,
     "drops": {"dragonarmor": 25, "bamboospear": 25, "gold": 900, "marblependant": 25, "essentialrage": 25},
     "hitPoints": 25000,
     "defenseLevel": 300,
@@ -1945,7 +1872,6 @@
 
   "enel": {
     "name": "Lucendi",
-    "id": 114,
     "drops": {"redenelbow": 25, "enelarmor": 25, "eneltrident": 50, "marblependant": 100, "gold": 800},
     "hitPoints": 25000,
     "defenseLevel": 150,
@@ -1963,7 +1889,6 @@
 
   "seadragon": {
     "name": "Sea Dragon",
-    "id": 115,
     "drops": {"seadragonarmor": 100, "seahorsebow": 300, "gold": 400},
     "hitPoints": 100,
     "defenseLevel": 5,
@@ -1981,7 +1906,6 @@
 
   "minidragon": {
     "name": "Mini Dragon",
-    "id": 116,
     "drops": {"dragonarmor": 300, "spiritring": 200, "gold": 400},
     "hitPoints": 100,
     "defenseLevel": 5,
@@ -1999,7 +1923,6 @@
 
   "piratecaptain": {
     "name": "Pirate Captain",
-    "id": 120,
     "drops": {"scimitar": 100, "piratearcherarmor": 100, "bluepiratearmor": 100, "marblependant": 200, "gold": 500},
     "hitPoints": 1500,
     "defenseLevel": 5,
@@ -2018,7 +1941,6 @@
 
   "pirateskeleton": {
     "name": "Pirate Skeleton",
-    "id": 122,
     "drops": {"morningstar": 400, "redbow": 400, "gold": 300},
     "hitPoints": 420,
     "defenseLevel": 5,
@@ -2036,7 +1958,6 @@
 
   "queenant": {
     "name": "Ziana",
-    "id": 123,
     "drops": {"ironknightarmor": 25, "justicebow": 25, "whip": 25, "gold": 100},
     "hitPoints": 2000,
     "defenseLevel": 50,
@@ -2055,7 +1976,6 @@
 
   "skydinosaur": {
     "name": "Fulgur",
-    "id": 126,
     "drops": {"conferencecall": 25, "essentialrage": 50, "gold": 100},
     "hitPoints": 50000,
     "defenseLevel": 400,
@@ -2073,7 +1993,6 @@
 
   "squid": {
     "name": "Great Squid",
-    "id": 127,
     "drops": {"searage": 10, "frostarmor": 25, "bluewingarcherarmor": 25, "gold": 250},
     "hitPoints": 2800,
     "defenseLevel": 45,
@@ -2092,7 +2011,6 @@
 
   "brownmouse": {
     "name": "Brown Mouse",
-    "id": 129,
     "drops": {"ratarcherarmor": 30, "ratarmor": 30, "gold": 80},
     "hitPoints": 140,
     "defenseLevel": 1,
@@ -2110,7 +2028,6 @@
 
   "pickle": {
     "name": "Pickle Brick",
-    "id": 130,
     "drops": {"pickle": 1, "gold": 100},
     "hitPoints": 5000,
     "defenseLevel": 3,
@@ -2128,7 +2045,6 @@
 
   "icerat": {
     "name": "Ice Rat",
-    "id": 131,
     "hitPoints": 75,
     "defenseLevel": 2,
     "attackLevel": 5,
@@ -2145,7 +2061,6 @@
 
   "icebat": {
     "name": "Frozen Bat",
-    "id": 132,
     "drops": {"manaflask": 20, "flask": 50},
     "hitPoints": 125,
     "defenseLevel": 2,
@@ -2163,7 +2078,6 @@
 
   "icecrab": {
     "name": "Ice Crab",
-    "id": 133,
     "drops": {"bigflask": 50},
     "hitPoints": 50,
     "defenseLevel": 2,
