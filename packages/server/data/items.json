@@ -461,7 +461,7 @@
   "daywalker": {
     "type": "weapon",
     "name": "Day Walker",
-    "level": 160,
+    "level": 140,
     "attackStats": {
       "crush": 8,
       "slash": 60,
