@@ -154,8 +154,8 @@ export default abstract class Character extends Entity {
 
     private handlePoisonDamage(attacker: Character): void {
         // Poison is related to the strength or archery level.
-        let isPoisoned = true;
-        //    Formulas.getPoisonChance(this.getSkillDamageLevel()) < attacker.getPoisonChance();
+        let isPoisoned =
+            Formulas.getPoisonChance(this.getSkillDamageLevel()) < attacker.getPoisonChance();
 
         // Use venom as default for now.
         if (isPoisoned) this.setPoison(Modules.PoisonTypes.Venom);
