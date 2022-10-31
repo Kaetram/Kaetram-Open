@@ -173,7 +173,7 @@
 
   "snowshepherdboy": {
     "name": "Sherpa",
-    "description": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
+    "text": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
   },
 
   "angelnpc": {
@@ -220,6 +220,7 @@
   },
 
   "royalguard": {
-    "name": "Royal Guard"
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
   }
 }
