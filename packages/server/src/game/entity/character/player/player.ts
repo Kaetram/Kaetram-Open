@@ -2,6 +2,7 @@ import Skills from './skills';
 import Quests from './quests';
 import Handler from './handler';
 import NPC from '../../npc/npc';
+import Skill from './skill/skill';
 import Mana from '../points/mana';
 import Map from '../../../map/map';
 import Abilities from './abilities';
@@ -12,10 +13,10 @@ import Statistics from './statistics';
 import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
-import Tree from '../../../globals/impl/tree';
 import Formulas from '../../../../info/formulas';
 import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
+import Resource from '../../../globals/impl/resource';
 import Packet from '@kaetram/server/src/network/packet';
 import Incoming from '../../../../controllers/incoming';
 import Entities from '@kaetram/server/src/controllers/entities';
@@ -30,6 +31,7 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
@@ -54,8 +56,6 @@ import {
     Respawn,
     Effect
 } from '@kaetram/server/src/network/packets';
-import Skill from './skill/skill';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -140,7 +140,7 @@ export default class Player extends Character {
 
     // Region data
     public regionsLoaded: number[] = [];
-    public treesLoaded: { [instance: string]: Modules.TreeState } = {};
+    public resourcesLoaded: { [instance: string]: Modules.ResourceState } = {};
     public lightsLoaded: number[] = [];
 
     // NPC talking
@@ -559,7 +559,7 @@ export default class Player extends Character {
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
             index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-            tree = this.world.globals.getTrees().findTree(index);
+            tree = this.world.globals.getTrees().findResource(index);
 
         // No tree found, we stop here.
         if (!tree) return log.debug(`No tree found at ${instance}.`);
@@ -946,12 +946,12 @@ export default class Player extends Character {
     }
 
     /**
-     * Adds a tree to our loaded tree instances.
-     * @param tree The tree we are adding.
+     * Adds a resource to our loaded resource instances.
+     * @param resource The resource we are adding.
      */
 
-    public loadTree(tree: Tree): void {
-        this.treesLoaded[tree.instance] = tree.state;
+    public loadResource(resource: Resource): void {
+        this.resourcesLoaded[resource.instance] = resource.state;
     }
 
     public hasLoadedRegion(region: number): boolean {
@@ -959,13 +959,16 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the tree is within our loaded trees and that the state matches.
-     * @param tree The tree we are chceking.
-     * @returns If the tree is loaded and the state matches.
+     * Checks if the resource is within our loaded resources and that the state matches.
+     * @param resource The resource we are chceking.
+     * @returns If the resource is loaded and the state matches.
      */
 
-    public hasLoadedTree(tree: Tree): boolean {
-        return tree.instance in this.treesLoaded && this.treesLoaded[tree.instance] === tree.state;
+    public hasLoadedResource(resource: Resource): boolean {
+        return (
+            resource.instance in this.resourcesLoaded &&
+            this.resourcesLoaded[resource.instance] === resource.state
+        );
     }
 
     public hasLoadedLight(light: number): boolean {
