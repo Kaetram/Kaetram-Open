@@ -100,7 +100,7 @@ export default class Header {
 
     /**
      * Temporarily adds a class to the health (to give the visual
-     * effect of it flashing) and creates a tiemout that removes
+     * effect of it flashing) and creates a timeout that removes
      * it after 500 milliseconds.
      */
 
