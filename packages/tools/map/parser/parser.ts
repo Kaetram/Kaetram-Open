@@ -4,15 +4,19 @@ import zlib from 'zlib';
 import log from '@kaetram/common/util/log';
 
 import { Modules } from '@kaetram/common/network';
-import type { ProcessedAnimation, ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
 import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
+import type {
+    ProcessedAnimation,
+    ProcessedMap,
+    ProcessedResource
+} from '@kaetram/common/types/map';
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
     #collisionTiles: { [tileId: number]: boolean } = {};
-    #trees: { [key: string]: ProcessedTree } = {};
+    #trees: { [key: string]: ProcessedResource } = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -84,9 +88,9 @@ export default class ProcessMap {
         });
 
         // Convert local tree dictionary into an array for the server.
-        _.each(this.#trees, (tree: ProcessedTree) => {
+        _.each(this.#trees, (tree: ProcessedResource) => {
             // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
-            if (tree.stump.length !== tree.cutStump.length)
+            if (tree.base.length !== tree.depleted.length)
                 return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
 
             this.map.trees.push(tree);
@@ -341,14 +345,16 @@ export default class ProcessMap {
      * Tree data is split into `data,` `stump,` and `cutStump.` After we
      * store the tree data, we convert it into an array for the server to parse.
      * @param name The name of the property.
+     * @param tileId The tileId currently processing.
+     * @param value Property value of the tree.
      */
 
     private parseTreeProperty(name: string, tileId: number, value: never): void {
         if (!(value in this.#trees))
             this.#trees[value] = {
                 data: [],
-                stump: [],
-                cutStump: [],
+                base: [],
+                depleted: [],
                 type: value
             };
 
@@ -359,12 +365,12 @@ export default class ProcessMap {
                 break;
 
             case 'stump':
-                this.#trees[value].stump.push(tileId);
+                this.#trees[value].base.push(tileId);
                 break;
 
             case 'cutstump':
             case 'stumpcut':
-                this.#trees[value].cutStump.push(tileId);
+                this.#trees[value].depleted.push(tileId);
                 break;
         }
     }

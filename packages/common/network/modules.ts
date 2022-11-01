@@ -371,7 +371,8 @@ export const enum Constants {
     SPAWN_POINT = '405,27', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT = '570,11', // 'x,y' values
-    TREE_REGROW = 30_000,
+    RESOURCE_RESPAWN = 30_000,
+    TREE_RESPAWN = 25_000,
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45 // Maximum attainable accuracy for a character.
 }
@@ -420,9 +421,8 @@ export enum MapFlags {
     HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
-// States that a tree can be in. We can obviously add more
-// as more pixel art is added.
-export enum TreeState {
+// Handles the two states of a resource, default or depleted.
+export enum ResourceState {
     Default,
-    Cut
+    Depleted
 }
