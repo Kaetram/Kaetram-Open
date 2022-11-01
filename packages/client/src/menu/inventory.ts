@@ -24,6 +24,8 @@ export default class Inventory extends Menu {
 
     private selectCallback?: SelectCallback;
 
+    private touchClone: HTMLElement | undefined;
+
     public constructor(private actions: Actions) {
         super('#inventory', undefined, '#inventory-button');
 
@@ -141,13 +143,18 @@ export default class Inventory extends Menu {
 
     /**
      * Event handler for when a slot begins the dragging and dropping
-     * process. We udate the current index of the slot that is being
+     * process. We update the current index of the slot that is being
      * selected for later use.
      * @param index The index of the slot being dragged.
      */
 
-    private dragStart(index: number): void {
-        if (this.isEmpty(this.getElement(index))) return;
+    private dragStart(event: Event, index: number): void {
+        if (this.isEmpty(this.getElement(index))) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            return;
+        }
 
         this.selectedSlot = index;
     }
@@ -202,6 +209,73 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Event handler for when a slot begins being touched on a mobile device.
+     * @param index Index of the slot being touched.
+     */
+
+    private touchStart(index: number): void {
+        if (this.isEmpty(this.getElement(index))) return;
+
+        this.selectedSlot = index;
+    }
+
+    /**
+     * Event handler for when a slot is being moved on a mobile device.
+     * @param event Contains event data about the slot being moved.
+     * @param item The item being moved.
+     */
+
+    private touchMove(event: TouchEvent, item: HTMLDivElement) {
+        if (this.selectedSlot === -1) return;
+
+        let [touch] = event.touches;
+
+        item.classList.add('item-slot-focused');
+
+        this.touchClone ??= item.cloneNode(true) as HTMLElement;
+
+        this.touchClone.style.position = 'absolute';
+        this.touchClone.style.top = `${touch.clientY - item.clientHeight / 2}px`;
+        this.touchClone.style.left = `${touch.clientX - item.clientWidth / 2}px`;
+        this.touchClone.style.opacity = '0.75';
+
+        document.querySelector('#game-container')?.append(this.touchClone);
+    }
+    /**
+     * Event handler for when a slot touch is being cancelled.
+     * @param item The item being cancelled.
+     */
+
+    private touchCancel(item: HTMLDivElement) {
+        this.touchClone?.remove();
+        this.touchClone = undefined;
+
+        item.classList.remove('item-slot-focused');
+    }
+
+    /**
+     * Event handler for when a slot touch is being ended.
+     * @param event Contains event data about the slot being ended.
+     * @param item The item being ended.
+     */
+
+    private touchEnd(event: TouchEvent, item: HTMLDivElement) {
+        this.touchCancel(item);
+
+        let [touch] = event.changedTouches,
+            element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement | null,
+            index = element?.dataset?.index;
+
+        if (!index || this.selectedSlot === -1) return;
+
+        // Create a callback used when we swap an item from `selectedSlot` to index.
+        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, parseInt(index));
+
+        // Reset the selected slot after.
+        this.selectedSlot = -1;
+    }
+
+    /**
      * Sets the slot's image and count at a specified index. If no key is provided
      * then we remove the slot's `backgroundImage` property and set the count to
      * an empty string.
@@ -243,6 +317,8 @@ export default class Inventory extends Menu {
             item = document.createElement('div'),
             count = document.createElement('div');
 
+        item.dataset.index = `${index}`;
+
         // Assign the class to the slot and make it draggable.
         item.draggable = true;
         item.classList.add('item-slot');
@@ -259,10 +335,15 @@ export default class Inventory extends Menu {
         // Add the click event listeners to the slot.
         slot.addEventListener('click', () => this.select(index));
         slot.addEventListener('dblclick', () => this.select(index, true));
-        slot.addEventListener('dragstart', () => this.dragStart(index));
+        slot.addEventListener('dragstart', (event) => this.dragStart(event, index));
         slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, index));
         slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
         slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
+
+        slot.addEventListener('touchstart', () => this.touchStart(index));
+        slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
+        slot.addEventListener('touchcancel', () => this.touchCancel(item));
+        slot.addEventListener('touchend', (event) => this.touchEnd(event, item));
 
         return slot;
     }
