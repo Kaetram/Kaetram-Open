@@ -361,14 +361,14 @@
     "respawnDelay": 35000
   },
 
-  "bluePpeta": {
+  "bluepreta": {
     "name": "Blue Preta",
     "drops": {"bluescimitar": 20, "bluewingarcherarmor": 20, "bluewingarmor": 20, "gold": 40},
     "hitPoints": 600,
     "defenseLevel": 5,
     "attackLevel": 8,
     "experience": 212,
-    "level": 34,
+    "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
