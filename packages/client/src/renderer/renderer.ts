@@ -926,18 +926,8 @@ export default class Renderer {
             if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
                 this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
 
-            if (entity.isItem()) {
-                if (entity.count > 1) this.drawText(entity.count.toString(), x, y, true, colour);
-
-                if (entity.ability > -1)
-                    this.drawText(
-                        `${Modules.Enchantment[entity.ability]} [+${entity.abilityLevel}]`,
-                        x,
-                        entity.y + 20,
-                        true,
-                        colour
-                    );
-            }
+            if (entity.isItem() && entity.count > 1)
+                this.drawText(entity.count.toString(), x, y, true, colour);
         } else {
             // TODO - Move this countdown elsewhere.
             if (this.game.time - entity.countdownTime > 1000) {

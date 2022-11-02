@@ -1,6 +1,7 @@
-import { SlotData } from '@kaetram/common/types/slot';
-
 import Item from '../../../objects/item';
+
+import { Enchantments } from '@kaetram/common/types/item';
+import { SlotData } from '@kaetram/common/types/slot';
 
 export default class Slot {
     public edible = false;
@@ -13,8 +14,7 @@ export default class Slot {
         public index: number,
         public key = '',
         public count = 0,
-        public ability = -1,
-        public abilityLevel = -1
+        public enchantments: Enchantments = {}
     ) {}
 
     /**
@@ -27,8 +27,7 @@ export default class Slot {
     public update(item: Item): void {
         this.key = item.key;
         this.count = item.count;
-        this.ability = item.ability;
-        this.abilityLevel = item.abilityLevel;
+        this.enchantments = item.enchantments;
 
         this.edible = item.edible;
         this.equippable = item.isEquippable();
@@ -85,8 +84,7 @@ export default class Slot {
     public clear(): void {
         this.key = '';
         this.count = 0;
-        this.ability = -1;
-        this.abilityLevel = -1;
+        this.enchantments = {};
 
         this.edible = false;
         this.equippable = false;
@@ -120,14 +118,13 @@ export default class Slot {
      */
 
     public serialize(): SlotData {
-        let { index, key, count, ability, abilityLevel, edible, equippable } = this;
+        let { index, key, count, enchantments, edible, equippable } = this;
 
         return {
             index,
             key,
             count,
-            ability,
-            abilityLevel,
+            enchantments,
             edible,
             equippable
         };

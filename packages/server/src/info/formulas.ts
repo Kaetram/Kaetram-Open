@@ -112,18 +112,8 @@ export default {
         return diff.crush + diff.slash + diff.stab;
     },
 
-    getCritical(attacker: Player, target: Character): number | undefined {
-        if (!attacker || !target) return;
-
-        /**
-         * The critical is the player's max hit plus *= critical multiplier of the weapon
-         */
-
-        let weapon = attacker.equipment.getWeapon(),
-            damage = this.getDamage(attacker, target),
-            multiplier = weapon.abilityLevel / 10;
-
-        return (damage *= multiplier);
+    getCritical(attacker: Player, target: Character): number {
+        return 0;
     },
 
     getWeaponBreak(attacker: Character, target: Character): boolean | undefined {
