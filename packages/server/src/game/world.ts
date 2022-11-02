@@ -15,6 +15,7 @@ import Network from '../network/network';
 import Character from './entity/character/character';
 import Minigames from './minigames/minigames';
 import Globals from './globals/globals';
+import Enchanter from '../controllers/enchanter';
 
 import Utils from '@kaetram/common/util/utils';
 
@@ -47,6 +48,7 @@ export default class World {
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public minigames: Minigames = new Minigames(this);
+    public enchanter: Enchanter = new Enchanter(this);
 
     public discord: Discord = new Discord(config.hubEnabled);
 
