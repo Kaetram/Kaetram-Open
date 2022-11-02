@@ -150,15 +150,13 @@ export default class Commands {
         switch (command) {
             case 'spawn': {
                 let key = blocks.shift(),
-                    count = parseInt(blocks.shift()!),
-                    ability = parseInt(blocks.shift()!),
-                    abilityLevel = parseInt(blocks.shift()!);
+                    count = parseInt(blocks.shift()!);
 
                 if (!key) return;
 
                 if (!count) count = 1;
 
-                item = new Item(key, -1, -1, true, 1, ability, abilityLevel);
+                item = new Item(key, -1, -1, true, 1);
 
                 if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 

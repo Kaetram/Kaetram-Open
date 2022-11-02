@@ -1,16 +1,15 @@
 import Equipment from './equipment';
 
-import { Stats, Bonuses } from '@kaetram/common/types/item';
+import { Stats, Bonuses, Enchantments } from '@kaetram/common/types/item';
 
 export default class Armour extends Equipment {
     public constructor(
         key = 'clotharmor',
         name = 'Cloth Armor',
         count = 1,
-        ability = -1,
-        abilityLevel = -1
+        enchantments: Enchantments = {}
     ) {
-        super(key, name, count, ability, abilityLevel);
+        super(key, name, count, enchantments);
     }
 
     /**
@@ -24,23 +23,12 @@ export default class Armour extends Equipment {
         key = 'clotharmor',
         name = 'Cloth Armor',
         count = 0,
-        ability = -1,
-        abilityLevel = -1,
+        enchantments: Enchantments = {},
         ranged = false,
         attackStats?: Stats,
         defenseStats?: Stats,
         bonuses?: Bonuses
     ): void {
-        super.update(
-            key,
-            name,
-            count,
-            ability,
-            abilityLevel,
-            ranged,
-            attackStats,
-            defenseStats,
-            bonuses
-        );
+        super.update(key, name, count, enchantments, ranged, attackStats, defenseStats, bonuses);
     }
 }

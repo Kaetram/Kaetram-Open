@@ -1,6 +1,6 @@
 import Util from '../../../../utils/util';
 
-import { Stats, Bonuses } from '@kaetram/common/types/item';
+import { Stats, Bonuses, Enchantments } from '@kaetram/common/types/item';
 
 export default abstract class Equipment {
     public attackStats: Stats = Util.getEmptyStats();
@@ -11,8 +11,7 @@ export default abstract class Equipment {
         public key = '',
         public name = '',
         public count = 0,
-        public ability = -1,
-        public abilityLevel = -1,
+        public enchantments: Enchantments = {},
         public ranged = false
     ) {}
 
@@ -22,8 +21,7 @@ export default abstract class Equipment {
      * @param key The key of the item.
      * @param name The visual name of the item (the one the player sees).
      * @param count The amount of items in the equipment (if it is stackable).
-     * @param ability The ability that the item gives.
-     * @param abilityLevel The level of the ability.
+     * @param enchantments The enchantments of the item.
      * @param ranged Whether or not the item is ranged.
      * @param attackStats The attack stats of the item.
      * @param defenseStats The defense stats of the item.
@@ -34,8 +32,7 @@ export default abstract class Equipment {
         key = '',
         name = '',
         count = 0,
-        ability = -1,
-        abilityLevel = -1,
+        enchantments: Enchantments = {},
         ranged = false,
         attackStats?: Stats,
         defenseStats?: Stats,
@@ -44,8 +41,7 @@ export default abstract class Equipment {
         this.key = key;
         this.name = name;
         this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
+        this.enchantments = enchantments;
         this.ranged = ranged;
 
         // Add the stats and bonuses only if they exist.
