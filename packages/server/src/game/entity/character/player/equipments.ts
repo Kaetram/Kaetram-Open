@@ -57,9 +57,7 @@ export default class Equipments {
             if (!equipment) return;
             if (!info.key) return; // Skip if the item is already null
 
-            equipment.update(
-                new Item(info.key, -1, -1, true, info.count, info.ability, info.abilityLevel)
-            );
+            equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
         });
 
         this.loadCallback?.();
@@ -84,15 +82,7 @@ export default class Equipments {
 
         if (!equipment.isEmpty())
             this.player.inventory.add(
-                new Item(
-                    equipment.key,
-                    -1,
-                    -1,
-                    true,
-                    equipment.count,
-                    equipment.ability,
-                    equipment.abilityLevel
-                )
+                new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
             );
 
         equipment.update(item);
@@ -115,15 +105,7 @@ export default class Equipments {
         let equipment = this.getEquipment(type);
 
         this.player.inventory.add(
-            new Item(
-                equipment.key,
-                -1,
-                -1,
-                true,
-                equipment.count,
-                equipment.ability,
-                equipment.abilityLevel
-            )
+            new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
         );
 
         equipment.empty();
@@ -234,7 +216,7 @@ export default class Equipments {
 
     /**
      * Goes through each one of our equipments and serializes it. It extracts
-     * cruical information, such as the id, count, ability, and abilityLevel.
+     * cruical information, such as the id, count, and enchantments
      * @param clientInfo Whether or not we are sending this information to the client.
      * @returns A serialized version of the equipment information.
      */

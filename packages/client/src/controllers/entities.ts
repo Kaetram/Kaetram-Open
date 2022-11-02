@@ -136,13 +136,13 @@ export default class EntitiesController {
     }
 
     /**
-     * Creates a new item object with the instance, count, ability, and abilityLevel.
+     * Creates a new item object with the instance, count, and enchantments.
      * @param info EntityData object containing item information.
      * @returns A new item object.
      */
 
     private createItem(info: EntityData): Item {
-        return new Item(info.instance, info.count, info.ability, info.abilityLevel);
+        return new Item(info.instance, info.count, info.enchantments);
     }
 
     /**

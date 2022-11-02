@@ -356,8 +356,6 @@ export default class Handler {
      */
 
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        let { ability, abilityLevel } = slot;
-
         // Spawn the item in the world if drop is true.
         if (drop)
             this.world.entities.spawnItem(
@@ -366,8 +364,7 @@ export default class Handler {
                 this.player.y,
                 true,
                 count, // Note this is the amount we are dropping.
-                ability,
-                abilityLevel
+                slot.enchantments
             );
 
         this.player.send(
