@@ -309,6 +309,23 @@
     }
   },
 
+  "ancientlands": {
+    "name": "Ancient Lands",
+    "description": "Discover the lands that lie beyond the great mountains.",
+    "stages": {
+      "task": "talk",
+      "npc": "ancientmanumentnpc",
+      "text": [
+        "You seek to venture further east to the great beyond?",
+        "Adventurer, I recognize your past experience",
+        "I was there when you first arrived in this land.",
+        "Should you know of the perils, I may not hold you back.",
+        "But you must first complete a task to unlock the path.",
+        ""
+      ]
+    }
+  },
+
   "evilsanta": {
     "name": "Evil Santa",
     "description": "The young sherpa on the mountain needs your help!",
