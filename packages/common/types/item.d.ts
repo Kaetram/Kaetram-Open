@@ -1,9 +1,14 @@
+export interface Enchantment {
+    level: number;
+}
+
+export type Enchantments = { [id: number]: Enchantment };
+
 export interface ContainerItem {
     index: number;
     key: string;
     count: number;
-    ability?: number;
-    abilityLevel?: number;
+    enchantments: Enchantments;
 }
 
 export interface Stats {

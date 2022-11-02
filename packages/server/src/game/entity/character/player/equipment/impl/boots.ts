@@ -1,10 +1,12 @@
-import { Modules } from '@kaetram/common/network';
-import Item from '../../../../objects/item';
 import Equipment from '../equipment';
+import Item from '../../../../objects/item';
+
+import { Modules } from '@kaetram/common/network';
+import { Enchantments } from '@kaetram/common/types/item';
 
 export default class Boots extends Equipment {
-    public constructor(key = '', count = -1, ability = -1, abilityLevel = -1) {
-        super(Modules.Equipment.Boots, key, count, ability, abilityLevel);
+    public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
+        super(Modules.Equipment.Boots, key, count, enchantments);
     }
 
     /**

@@ -7,7 +7,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
-import { Bonuses, ItemData, Stats } from '@kaetram/common/types/item';
+import { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
 import { EntityData } from '@kaetram/common/types/entity';
 import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
 
@@ -72,8 +72,7 @@ export default class Item extends Entity {
         y: number,
         public dropped = false,
         public count = 1,
-        public ability = -1,
-        public abilityLevel = -1
+        public enchantments: Enchantments = {}
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
@@ -308,7 +307,7 @@ export default class Item extends Entity {
 
     /**
      * Expands on the entity serialization and
-     * adds item specific variables (count, ability, abilityLevel).
+     * adds item specific variables (count and enchantments).
      * @returns EntityData containing item information.
      */
 
@@ -316,8 +315,7 @@ export default class Item extends Entity {
         let data = super.serialize();
 
         data.count = this.count;
-        data.ability = this.ability;
-        data.abilityLevel = this.abilityLevel;
+        data.enchantments = this.enchantments;
 
         return data;
     }

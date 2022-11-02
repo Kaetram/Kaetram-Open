@@ -17,6 +17,7 @@ import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 
 import { ProcessedArea } from '@kaetram/common/types/map';
+import { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
     private map: Map;
@@ -70,8 +71,7 @@ export default class Entities {
      * @param y The y position in the grid to spawn the item.
      * @param dropped If the item is permanent or it will disappear.
      * @param count The amount of the item dropped.
-     * @param ability The ability type of the item.
-     * @param abilityLevel The ability level of the item.
+     * @param enchantments The enchantments applied to the item.
      */
 
     public spawnItem(
@@ -80,8 +80,7 @@ export default class Entities {
         y: number,
         dropped = false,
         count = 1,
-        ability = -1,
-        abilityLevel = -1
+        enchantments: Enchantments = {}
     ): Item {
         return <Item>this.collections.items.spawn({
             key,
@@ -89,8 +88,7 @@ export default class Entities {
             y,
             dropped,
             count,
-            ability,
-            abilityLevel
+            enchantments
         });
     }
 
