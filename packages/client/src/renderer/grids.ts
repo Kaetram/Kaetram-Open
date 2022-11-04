@@ -40,7 +40,7 @@ export default class Grids {
     }
 
     /**
-     * Adds an entity to the grid.
+     * Removes an entity from the rendering grid.
      * @param entity The entity parameter we are extracting instance, gridX, and gridY from.
      */
 

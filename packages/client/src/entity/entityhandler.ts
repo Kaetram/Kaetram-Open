@@ -45,6 +45,10 @@ export default class EntityHandler {
                 this.entity.stop(true);
         });
 
+        this.entity.onFallback((x: number, y: number) => {
+            game.teleport(this.entity, x, y);
+        });
+
         this.entity.onStopPathing(() => this.sendMovement());
 
         this.entity.ready = true;
