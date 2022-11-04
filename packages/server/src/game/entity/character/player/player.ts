@@ -100,6 +100,7 @@ export default class Player extends Character {
     public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
+    public invalidMovement = false;
 
     // Special status
     public running = false;

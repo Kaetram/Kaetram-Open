@@ -202,7 +202,8 @@ export enum Languages {
 
 export enum Warps {
     Mudwich,
-    Undersea
+    Undersea,
+    Lakesworld
 }
 
 export enum Skills {
