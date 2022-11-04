@@ -262,25 +262,25 @@ export default class Game {
      * If this player is our game client's player, then
      * we must clear some of the user interfaces and begin
      * preparing the renderer for the new location.
-     * @param player The player character we are teleporting.
+     * @param character The character we are teleporting.
      * @param gridX The x grid coordinate we are teleporting to.
      * @param gridY The y grid coordinate we are teleporting to.
      */
 
-    public teleport(player: Player, gridX: number, gridY: number): void {
-        this.entities.unregisterPosition(player);
+    public teleport(character: Character, gridX: number, gridY: number): void {
+        this.entities.unregisterPosition(character);
 
-        player.setGridPosition(gridX, gridY);
+        character.setGridPosition(gridX, gridY);
 
-        this.entities.registerPosition(player);
+        this.entities.registerPosition(character);
 
-        player.frozen = false;
-        player.teleporting = false;
+        character.frozen = false;
+        character.teleporting = false;
 
-        if (player.instance === this.player.instance) {
-            player.clearHealthBar();
+        if (character.instance === this.player.instance) {
+            character.clearHealthBar();
 
-            this.camera.centreOn(player);
+            this.camera.centreOn(character as Player);
             this.renderer.updateAnimatedTiles();
         }
     }

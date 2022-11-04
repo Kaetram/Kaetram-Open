@@ -215,14 +215,31 @@ export default class Incoming {
         if (this.player.dead) return;
 
         switch (opcode) {
+            case Opcodes.Movement.Request:
+                if (
+                    (playerX !== this.player.x || playerY !== this.player.y) &&
+                    !this.player.isAdmin()
+                ) {
+                    this.player.invalidMovement = true;
+                    this.player.incrementCheatScore();
+                }
+                break;
+
             case Opcodes.Movement.Started:
                 this.player.movementStart = Date.now();
 
-                if (movementSpeed !== this.player.getMovementSpeed())
+                if (movementSpeed !== this.player.getMovementSpeed() || this.player.invalidMovement)
                     this.player.incrementCheatScore();
 
-                if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
-                    return;
+                if (
+                    (playerX !== this.player.x ||
+                        playerY !== this.player.y ||
+                        this.player.stunned) &&
+                    !this.player.isAdmin()
+                ) {
+                    this.player.invalidMovement = false;
+                    return this.player.teleport(this.player.x, this.player.y);
+                }
 
                 // Reset combat and skills every time there is movement.
                 this.player.skills.stop();
@@ -233,7 +250,7 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Step:
-                if (this.player.stunned) return;
+                if (this.player.stunned || this.player.invalidMovement) return;
 
                 this.player.setPosition(playerX!, playerY!);
 
