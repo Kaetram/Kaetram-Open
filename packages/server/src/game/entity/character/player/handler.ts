@@ -544,7 +544,11 @@ export default class Handler {
          * It will not accomplish much, but it is enough for now.
          */
 
-        if (this.player.cheatScore > 10) this.player.timeout();
+        if (this.player.cheatScore > 10) {
+            this.player.sendToSpawn();
+
+            this.player.connection.reject('cheating');
+        }
 
         log.debug(`Cheat score - ${this.player.cheatScore}`);
     }

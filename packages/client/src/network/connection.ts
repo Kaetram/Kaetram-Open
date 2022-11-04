@@ -330,7 +330,7 @@ export default class Connection {
             case Opcodes.Movement.Move:
                 if (info.forced) entity.stop(true);
 
-                entity.go(info.x!, info.y!);
+                entity.go(info.x!, info.y!, false, info.instance !== this.game.player.instance);
                 break;
 
             case Opcodes.Movement.Follow:

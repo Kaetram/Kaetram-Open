@@ -102,15 +102,21 @@ export default class Warp {
             return false;
         }
 
+        // Check if the warp has a quest requirement.
+        if (warp.quest && !player.quests.get(warp.quest)?.isFinished()) {
+            let quest = player.quests.get(warp.quest);
+
+            if (!quest?.isFinished()) {
+                player.notify(
+                    `You must complete ${quest.name} to warp to ${Utils.formatName(warp.name)}.`
+                );
+                return false;
+            }
+        }
+
         // Check if the warp has an achievement requirement.
         if (warp.achievement && !player.achievements.get(warp.achievement)?.isFinished()) {
             player.notify(`This warp requires an achievement to be finished before use.`);
-            return false;
-        }
-
-        // Check if the warp has a quest requirement.
-        if (warp.quest && !player.quests.get(warp.quest)?.isFinished()) {
-            player.notify(`This warp requires a quest to be finished before use.`);
             return false;
         }
 
@@ -126,7 +132,7 @@ export default class Warp {
      */
 
     private getWarp(id: number): ProcessedArea | undefined {
-        let warpName = Modules.Warps[id].toLowerCase();
+        let warpName = Modules.Warps[id]?.toLowerCase();
 
         return this.warps.find((warp) => warp.name === warpName);
     }
