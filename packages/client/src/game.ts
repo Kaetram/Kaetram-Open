@@ -280,7 +280,9 @@ export default class Game {
         if (character.instance === this.player.instance) {
             character.clearHealthBar();
 
-            this.camera.centreOn(character as Player);
+            this.player.moving = false;
+            this.player.disableAction = false;
+            this.camera.centreOn(this.player);
             this.renderer.updateAnimatedTiles();
         }
     }

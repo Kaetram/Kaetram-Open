@@ -387,6 +387,7 @@ export default class Connection {
         // Stop and freeze the player until teleprtation is complete.
         player.stop(true);
         player.frozen = true;
+        player.disableAction = true;
 
         // Clears all bubbles when our main player teleports.
         if (currentPlayer) this.bubble.clean();
