@@ -160,10 +160,11 @@ export default class Updater {
             };
 
         /**
-         * Disable input if the player is frozen or if we
-         * do not have any of the conditionals active.
+         * Disables updating when the player is already moving as to not spam
+         * packets. If the player is frozen the input is ignored.
          */
-        if (player.frozen || !player.hasKeyboardMovement()) return;
+        if (player.moving || player.teleporting || player.frozen || !player.hasKeyboardMovement())
+            return;
 
         if (player.moveUp) position.y--;
         else if (player.moveDown) position.y++;
