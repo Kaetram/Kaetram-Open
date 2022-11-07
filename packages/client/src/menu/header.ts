@@ -57,8 +57,8 @@ export default class Header {
 
     public handlePoison(status: boolean): void {
         this.health.style.background = status
-            ? '-webkit-linear-gradient(right, #19B047, #046E20)'
-            : '-webkit-linear-gradient(right, #ff0000, #ef5a5a)';
+            ? 'linear-gradient(to right, #046E20, #19B047)'
+            : 'linear-gradient(to right, #f00, #ef5a5a)';
     }
 
     /**
@@ -95,7 +95,7 @@ export default class Header {
 
         textElement.textContent = `${points}/${maxPoints}`;
 
-        if (decrease) this.flash('white');
+        if (decrease) this.flash(this.player.poison ? 'poison' : 'white');
     }
 
     /**
