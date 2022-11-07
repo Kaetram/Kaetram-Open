@@ -4,10 +4,11 @@
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
-    top: 20%;
-    left: 25%;
+    inset: 0;
 
     display: none;
+
+    margin: auto;
 }
 
 #bank-container {
