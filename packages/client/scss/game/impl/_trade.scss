@@ -1,9 +1,10 @@
 #trade {
     position: absolute;
-    top: 10%;
-    left: 20%;
+    inset: 0;
 
     display: none;
+
+    margin: auto;
 }
 
 #trade-player-container,
