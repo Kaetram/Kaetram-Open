@@ -28,8 +28,7 @@
     background-size: 600%;
 
     // Safari filters so the images aren't blurry.
-    filter: opacity;
-    filter: opacity;
+    filter: opacity(100%);
 }
 
 @media (--lg) {
