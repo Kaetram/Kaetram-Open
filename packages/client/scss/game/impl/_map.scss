@@ -6,10 +6,11 @@
 
     position: absolute;
     z-index: 100;
-    top: 50%;
-    left: 50%;
+    inset: 0;
 
     display: none;
+
+    margin: auto;
 
     background-repeat: no-repeat;
 }
@@ -91,8 +92,6 @@
         #map-frame {
             width: 270px * $i;
             height: 180px * $i;
-            margin-top: -90px * $i;
-            margin-left: -135px * $i;
 
             background-image: url('/img/#{$i}/mapframe.png');
         }
