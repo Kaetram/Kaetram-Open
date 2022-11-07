@@ -53,7 +53,9 @@ export default abstract class Character extends Entity {
     public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
 
-    public lastMovement!: number;
+    public lastStep = -1;
+    public lastMovement = -1;
+    public lastRegionChange = -1;
     public lastAttacker?: Character | undefined;
 
     public stunTimeout?: NodeJS.Timeout | undefined;

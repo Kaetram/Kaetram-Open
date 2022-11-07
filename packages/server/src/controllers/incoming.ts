@@ -203,104 +203,39 @@ export default class Incoming {
                 playerX,
                 playerY,
                 movementSpeed,
-                hasTarget,
                 targetInstance,
-                orientation,
-                frozen
+                orientation
             } = data,
-            entity: Entity,
-            door: ProcessedDoor,
-            diff = 0;
+            entity: Entity;
 
         if (this.player.dead) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request:
-                if (
-                    (playerX !== this.player.x || playerY !== this.player.y) &&
-                    !this.player.isAdmin()
-                ) {
-                    this.player.invalidMovement = true;
-                    this.player.incrementCheatScore();
-                }
-                break;
+                return this.player.handleMovementRequest(requestX!, requestY!, playerX!, playerY!);
 
             case Opcodes.Movement.Started:
-                this.player.movementStart = Date.now();
-
-                if (movementSpeed !== this.player.getMovementSpeed() || this.player.invalidMovement)
-                    this.player.incrementCheatScore();
-
-                if (
-                    (playerX !== this.player.x ||
-                        playerY !== this.player.y ||
-                        this.player.stunned) &&
-                    !this.player.isAdmin()
-                ) {
-                    this.player.invalidMovement = false;
-                    return this.player.teleport(this.player.x, this.player.y);
-                }
-
-                // Reset combat and skills every time there is movement.
-                this.player.skills.stop();
-                if (!targetInstance) this.player.combat.stop();
-
-                this.player.moving = true;
-
-                break;
+                return this.player.handleMovementStarted(
+                    playerX!,
+                    playerY!,
+                    movementSpeed!,
+                    targetInstance!
+                );
 
             case Opcodes.Movement.Step:
-                if (this.player.stunned || this.player.invalidMovement) return;
-
-                this.player.setPosition(playerX!, playerY!);
-
-                break;
+                return this.player.handleMovementStep(playerX!, playerY!);
 
             case Opcodes.Movement.Stop:
-                entity = this.entities.get(targetInstance!);
-
-                if (!this.player.moving) {
-                    log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
-
-                    this.player.incrementCheatScore();
-                }
-
-                this.player.setOrientation(orientation!);
-
-                if (entity?.isItem()) this.player.inventory.add(entity as Item);
-
-                if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
-                    door = this.world.map.getDoor(playerX!, playerY!);
-
-                    this.player.doorCallback?.(door);
-                } else this.player.setPosition(playerX!, playerY!);
-
-                this.player.moving = false;
-                this.player.lastMovement = Date.now();
-
-                if (!(this.player.oldX === playerX && this.player.oldY === playerY)) {
-                    diff = this.player.lastMovement - this.player.movementStart;
-
-                    if (diff < this.player.getMovementSpeed()) this.player.incrementCheatScore();
-                }
-
-                break;
+                return this.player.handleMovementStop(
+                    playerX!,
+                    playerY!,
+                    targetInstance!,
+                    orientation!
+                );
 
             case Opcodes.Movement.Entity:
                 entity = this.entities.get(targetInstance!) as Character;
-
-                if (!entity) return;
-
-                entity.setPosition(requestX!, requestY!);
-
-                break;
-
-            case Opcodes.Movement.Freeze:
-                this.player.frozen = !!frozen;
-                break;
-
-            case Opcodes.Movement.Zone:
-                log.debug(`Zoning orientation: ${orientation}`);
+                entity?.setPosition(requestX!, requestY!);
                 break;
         }
     }

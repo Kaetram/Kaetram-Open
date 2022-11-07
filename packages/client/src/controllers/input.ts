@@ -223,22 +223,22 @@ export default class InputController {
             case 'w':
             case 'ArrowUp':
                 this.game.player.moveUp = false;
-                return;
+                break;
 
             case 'a':
             case 'ArrowLeft':
                 this.game.player.moveLeft = false;
-                return;
+                break;
 
             case 's':
             case 'ArrowDown':
                 this.game.player.moveDown = false;
-                return;
+                break;
 
             case 'd':
             case 'ArrowRight':
                 this.game.player.moveRight = false;
-                return;
+                break;
         }
 
         this.game.player.disableAction = false;
