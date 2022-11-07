@@ -4,10 +4,11 @@
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
-    top: 50%;
-    left: 50%;
+    inset: 0;
 
     display: none;
+
+    margin: auto;
 }
 
 #enchant-inventory-slots {
@@ -37,8 +38,6 @@
 
             width: 129px * $i;
             height: 155px * $i;
-            margin-top: -77px * $i;
-            margin-left: -64px * $i;
 
             background: url('/img/#{$i}/containers.png') 0 0;
         }
