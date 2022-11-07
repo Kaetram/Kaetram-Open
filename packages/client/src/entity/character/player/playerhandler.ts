@@ -10,6 +10,9 @@ import type Player from './player';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
 export default class PlayerHandler {
+    private lastStepX = -1;
+    private lastStepY = -1;
+
     private map: Map;
     private camera: Camera;
     private input: InputController;
@@ -29,7 +32,8 @@ export default class PlayerHandler {
     }
 
     private load(): void {
-        let { player, game, map, camera, input, entities, socket, renderer } = this;
+        let { player, game, map, camera, input, entities, socket, renderer, lastStepX, lastStepY } =
+            this;
 
         player.onRequestPath((x, y) => {
             if (player.dead || player.frozen) return null;
@@ -90,17 +94,11 @@ export default class PlayerHandler {
 
             camera.clip();
 
-            let instance = '',
-                entity = game.getEntityAt(x, y);
-
-            if (entity) ({ instance } = entity);
-
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Stop,
                 playerX: x,
                 playerY: y,
-                targetInstance: instance,
-                hasTarget: !!player.target,
+                targetInstance: player.target?.instance,
                 orientation: player.orientation
             });
 
@@ -113,6 +111,8 @@ export default class PlayerHandler {
                 player.lookAt(player.target);
 
                 if (player.target.isObject()) player.removeTarget();
+
+                player.disableAction = true;
             }
 
             input.setPassiveTarget();
@@ -133,12 +133,18 @@ export default class PlayerHandler {
             // Check the zoning bounds - reachign the bounds moves the screen according to which border.
             if (!camera.isCentered() || camera.lockX || camera.lockY) this.checkBounds();
 
+            // Prevent sending double packets to the server.
+            if (lastStepX === player.gridX && lastStepY === player.gridY) return;
+
             // Send a step movement packet to the server.
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
                 playerX: player.gridX,
                 playerY: player.gridY
             });
+
+            lastStepX = player.gridX;
+            lastStepY = player.gridY;
 
             // Input update for moving attackable entities (mobs and players).
             if (!this.isAttackable() || !player.target) return;

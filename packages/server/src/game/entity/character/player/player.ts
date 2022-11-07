@@ -463,8 +463,9 @@ export default class Player extends Character {
      * @param amount The amount we are increasing the cheat score by.
      */
 
-    public incrementCheatScore(amount = 1): void {
+    public incrementCheatScore(reason = '', amount = 1): void {
         if (this.combat.started) return;
+        if (reason) log.debug(`[${this.username}] ${reason}`);
 
         this.cheatScore += amount;
 
@@ -500,6 +501,30 @@ export default class Player extends Character {
         }
 
         return isColliding;
+    }
+
+    /**
+     * Used to verify an anomaly within the player's step movement. We check a variety
+     * of factors to avoid false-positives.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     */
+
+    private verifyMovement(x: number, y: number): boolean {
+        let now = Date.now(),
+            stepDiff = now - this.lastStep,
+            regionDiff = now - this.lastRegionChange;
+
+        // Firstly ensure that the last step was behaving normally.
+        if (stepDiff > this.movementSpeed) return false;
+
+        // A region change may trigger a movement anomaly, so we ignore movement within 1 second of a region change.
+        if (regionDiff < 1000) return false;
+
+        // Check if the player is currently going into a door.
+        if (this.map.isDoor(x, y)) return false;
+
+        return true;
     }
 
     /**
@@ -632,6 +657,103 @@ export default class Player extends Character {
         } else if (weapon.isStrength())
             this.skills.get(Modules.Skills.Strength).addExperience(experience);
         else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
+    }
+
+    /**
+     * Handles the request for a movement to a new position. This is the preliminary check for
+     * anti-cheating.
+     * @param requestX Requested x coordinate.
+     * @param requestY Requested y coordinate.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     */
+
+    public handleMovementRequest(requestX: number, requestY: number, x: number, y: number): void {
+        if (this.map.isDoor(x, y)) return;
+
+        if (x !== this.x || y !== this.y) {
+            this.notify(
+                `No-clipping has been detected in your client. Your movement will not be registered.`
+            );
+            this.invalidMovement = true;
+        }
+    }
+
+    /**
+     * Handles the beginning of the player's movement. We mark down when the player has started moving
+     * and check against the movement speed with the server value. We stop skills and combat when
+     * movement has commenced.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param speed The movement speed of the player.
+     * @param target A character target instance if the player is moving towards a character.
+     */
+
+    public handleMovementStarted(x: number, y: number, speed: number, target: string): void {
+        this.movementStart = Date.now();
+
+        // Invalid movement speed reported by the client.
+        if (speed !== this.movementSpeed) this.incrementCheatScore('Mismatch in movement speed.');
+
+        // Stop combat and skills every time thre is movement.
+        this.skills.stop();
+
+        if (!target) this.combat.stop();
+
+        // Mark the player as moving.
+        this.moving = true;
+    }
+
+    /**
+     * A movement step occurs every time a player traverses to the next tile.
+     * @param x The current x coordinate of the player as reported by the client.
+     * @param y The current y coordinate of the player as reported by the client.
+     */
+
+    public handleMovementStep(x: number, y: number): void {
+        if (this.stunned || this.invalidMovement) return;
+
+        if (this.verifyMovement(x, y))
+            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
+
+        this.setPosition(x, y);
+
+        this.lastStep = Date.now();
+    }
+
+    /**
+     * Handles the player coming to a stop after movement has finished.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param target A character target instance if the player is stopping at an entity.
+     * @param orientation The orientation of the player as reported by the client.
+     */
+
+    public handleMovementStop(x: number, y: number, target: string, orientation: number): void {
+        let entity = this.entities.get(target);
+
+        // No start movement received.
+        if (!this.moving) this.incrementCheatScore('Did not receive movement started packet.');
+
+        // Update orientation
+        this.setOrientation(orientation);
+
+        // Player has stopped on top of an item.
+        if (entity?.isItem()) this.inventory.add(entity);
+
+        // Update the player's position.
+        if (!this.invalidMovement) this.setPosition(x, y);
+
+        // Handle doors when the player stops on one.
+        if (this.map.isDoor(x, y) && !target) {
+            let door = this.map.getDoor(x, y);
+
+            this.doorCallback?.(door);
+        }
+
+        // Movement has come to an end.
+        this.moving = false;
+        this.lastMovement = Date.now();
     }
 
     /**
