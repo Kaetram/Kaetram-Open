@@ -18,6 +18,7 @@ import Globals from './globals/globals';
 import Enchanter from '../controllers/enchanter';
 
 import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
 
 import { Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -132,7 +133,7 @@ export default class World {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message: Utils.parseMessage(message),
+                message: Filter.clean(Utils.parseMessage(message)),
                 colour
             })
         });
