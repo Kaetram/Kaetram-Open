@@ -201,8 +201,8 @@ export default class Player extends Character {
         this.setPoison(data.poison.type, data.poison.start);
         this.setLastWarp(data.lastWarp);
 
-        this.hitPoints.updateHitPoints([data.hitPoints, data.hitPoints]);
-        this.mana.updateMana([data.mana, data.mana]);
+        this.hitPoints.updateHitPoints(data.hitPoints);
+        this.mana.updateMana(data.mana);
 
         // Being the loading process.
         this.loadSkills();

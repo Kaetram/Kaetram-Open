@@ -95,7 +95,7 @@ export default class Mob extends Character {
     private loadData(data: MobData): void {
         this.experience = data.experience || this.experience;
 
-        if (data.hitPoints) this.hitPoints.updateHitPoints([data.hitPoints]);
+        if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
         this.drops = data.drops || this.drops;
