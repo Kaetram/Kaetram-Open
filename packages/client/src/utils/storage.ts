@@ -49,7 +49,7 @@ export default class Storage {
     public newVersion = false;
 
     public constructor() {
-        this.newVersion = this.isNewVersion();
+        this.newVersion = true;
 
         if (this.newVersion) this.set(this.create());
     }
