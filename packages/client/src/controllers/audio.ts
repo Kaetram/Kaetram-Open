@@ -173,6 +173,12 @@ export default class AudioController {
         let { player } = this.game,
             { positionX, positionY, forwardX, forwardY } = this.context.listener;
 
+        if (!positionX || !positionY || !forwardX || !forwardY) {
+            this.context.listener.setPosition(player.x, player.y, 0);
+
+            return;
+        }
+
         positionX.value = player.x;
         positionY.value = player.y;
 
