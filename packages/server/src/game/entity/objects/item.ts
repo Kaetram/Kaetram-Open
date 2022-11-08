@@ -7,7 +7,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
-import { Bonuses, ItemData, Stats } from '@kaetram/common/types/item';
+import { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
 import { EntityData } from '@kaetram/common/types/entity';
 import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
 
@@ -26,19 +26,16 @@ export default class Item extends Entity {
     public plugin: Plugin | undefined;
 
     // Store variables
-    public price = 1;
+    public price = -2;
     public storeCount = -1;
 
     // Requirement for equipping the item.
-    public level = -1;
-    public skill = '';
+    private level = -1;
+    private skill = '';
+    private achievement = '';
+    private quest = '';
 
     // Equipment variables
-    public attackLevel = 1;
-    public defenseLevel = 1;
-    public pendantLevel = 0;
-    public ringLevel = 0;
-    public bootsLevel = 0;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
 
@@ -56,6 +53,7 @@ export default class Item extends Entity {
     public lumberjacking = -1;
 
     public exists = true;
+    public undroppable = false;
 
     private respawnTime = Modules.ItemDefaults.RESPAWN_DELAY;
     private despawnDuration = Modules.ItemDefaults.DESPAWN_DURATION;
@@ -74,8 +72,7 @@ export default class Item extends Entity {
         y: number,
         public dropped = false,
         public count = 1,
-        public ability = -1,
-        public abilityLevel = -1
+        public enchantments: Enchantments = {}
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
@@ -105,8 +102,10 @@ export default class Item extends Entity {
         this.defenseStats = this.data.defenseStats || this.defenseStats;
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
+        this.poisonous = this.data.poisonous || this.poisonous;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+        this.undroppable = this.data.undroppable || this.undroppable;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -225,6 +224,29 @@ export default class Item extends Entity {
             return false;
         }
 
+        // Check if the item has an achievement requirement and if it is completed.
+        if (this.achievement && !player.achievements.get(this.achievement)?.isFinished()) {
+            player.notify(`This item requires a secret achievement to wield.`);
+            return false;
+        }
+
+        // If an item has a quest requirement, we check it here.
+        if (this.quest) {
+            let quest = player.quests.get(this.quest);
+
+            // Send an error if the quest cannot be found.
+            if (!quest) {
+                log.error(`[Item: ${this.key}] Could not find quest ${this.quest}.`);
+                return false;
+            }
+
+            // Check if the quest is finished.
+            if (!quest.isFinished()) {
+                player.notify(`You must complete ${quest.name} to wield this item.`);
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -235,9 +257,6 @@ export default class Item extends Entity {
 
     public getRequirement(): number {
         if (this.level !== -1) return this.level;
-
-        if (this.isWeapon()) return Math.floor(this.attackLevel * 3);
-        if (this.isArmour()) return Math.floor(this.defenseLevel * 3);
 
         return 0;
     }
@@ -288,7 +307,7 @@ export default class Item extends Entity {
 
     /**
      * Expands on the entity serialization and
-     * adds item specific variables (count, ability, abilityLevel).
+     * adds item specific variables (count and enchantments).
      * @returns EntityData containing item information.
      */
 
@@ -296,8 +315,7 @@ export default class Item extends Entity {
         let data = super.serialize();
 
         data.count = this.count;
-        data.ability = this.ability;
-        data.abilityLevel = this.abilityLevel;
+        data.enchantments = this.enchantments;
 
         return data;
     }

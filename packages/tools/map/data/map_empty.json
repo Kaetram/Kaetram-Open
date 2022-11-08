@@ -1,102 +1,102 @@
 { "compressionlevel":-1,
- "height":256,
+ "height":240,
  "infinite":false,
  "layers":[
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":4,
          "name":"ground",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":31,
          "name":"plateau1",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":35,
          "name":"plateau2",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":37,
          "name":"plateau3",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":39,
          "name":"plateau4",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":30,
          "name":"entities",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwTEBAAAAwqD1T+1tB6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AADwAAQ==",
+         "data":"eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAE=",
          "encoding":"base64",
-         "height":256,
+         "height":240,
          "id":19,
          "name":"blocking",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
-         "width":256,
+         "width":240,
          "x":0,
          "y":0
         }, 
@@ -225,7 +225,7 @@
  "nextobjectid":215,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.0",
+ "tiledversion":"1.9.0",
  "tileheight":16,
  "tilesets":[
         {
@@ -2809,7 +2809,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":804,
                  "properties":[
@@ -5188,7 +5189,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":1465,
                  "properties":[
@@ -7846,7 +7848,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "animation":[
                         {
@@ -10301,7 +10304,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":2993,
                  "properties":[
@@ -12587,7 +12591,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":3776,
                  "properties":[
@@ -16071,7 +16076,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":1305,
                  "properties":[
@@ -18566,7 +18572,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":3209,
                  "properties":[
@@ -23931,7 +23938,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":769,
                  "properties":[
@@ -26091,7 +26099,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":1625,
                  "properties":[
@@ -28251,7 +28260,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":2502,
                  "properties":[
@@ -30411,7 +30421,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":3209,
                  "properties":[
@@ -33939,6 +33950,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.6",
- "width":256
+ "version":"1.9",
+ "width":240
 }

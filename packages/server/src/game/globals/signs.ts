@@ -3,9 +3,9 @@ import _ from 'lodash';
 import Map from '../map/map';
 import Sign from './impl/sign';
 
-import { ProcessedArea } from '@kaetram/common/types/map';
-
 import log from '@kaetram/common/util/log';
+
+import { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Signs {
     private signs: { [coordinate: string]: Sign } = {};

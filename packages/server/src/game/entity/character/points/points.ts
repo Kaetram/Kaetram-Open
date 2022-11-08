@@ -31,17 +31,15 @@ export default abstract class Points {
 
     /**
      * Updates the points based on the specified `info`.
-     * @param info The info to update the points with.
+     * @param points The hit points to set.
+     * @param maxPoints The maximum hit points to set.
      */
 
-    protected updatePoints(info: number[]): void {
-        if (info.length === 0) return;
+    protected updatePoints(points: number, maxPoints?: number): void {
+        if (!maxPoints) maxPoints = points;
 
-        let points = info.shift(),
-            maxPoints = info.shift() || points;
-
-        this.setMaxPoints(maxPoints as number);
-        this.setPoints(points as number);
+        this.setMaxPoints(maxPoints);
+        this.setPoints(points);
     }
 
     /**

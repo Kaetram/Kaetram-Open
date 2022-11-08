@@ -10,7 +10,7 @@ import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Player from '../game/entity/character/player/player';
 
-import StoreEn from '@kaetram/common/text/store-en';
+import StoreEn from '@kaetram/common/text/en/store';
 
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Store as StorePacket } from '../network/packets';
@@ -248,6 +248,9 @@ export default class Stores {
             storeItem = _.find(store.items, { key: slot.key }),
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
+        // Items without prices (quest items) cannot be sold.
+        if (price < 0) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
         player.inventory.remove(index, count);
 
         // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
@@ -295,6 +298,10 @@ export default class Stores {
             storeItem = _.find(store.items, { key: slot.key }),
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
+        // Items without prices (quest items) cannot be sold.
+        if (price < 1) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Invalid price, this shouldn't happen.
         if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
 
         // Create the select packet for the client to process and move the item into the slot.

@@ -3,7 +3,7 @@ import _ from 'lodash-es';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Area from './areas/area';
-import Tree from '../globals/impl/tree';
+import Resource from '../globals/impl/resource';
 import Light from '../globals/impl/light';
 
 export default class Region {
@@ -11,7 +11,7 @@ export default class Region {
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
-    private trees: Tree[] = [];
+    private resources: Resource[] = [];
     private lights: Light[] = [];
 
     public constructor(
@@ -96,20 +96,20 @@ export default class Region {
     }
 
     /**
-     * Adds a tree to the region.
-     * @param tree The tree we are adding to the region.
+     * Adds a resource to the region.
+     * @param resource The resource we are adding to the region.
      */
 
-    public addTree(tree: Tree): void {
-        this.trees.push(tree);
+    public addResource(resource: Resource): void {
+        this.resources.push(resource);
     }
 
     /**
-     * @returns If the amount of trees in the array is greater than 0.
+     * @returns If the amount of resources in the array is greater than 0.
      */
 
-    public hasTrees(): boolean {
-        return this.trees.length > 0;
+    public hasResources(): boolean {
+        return this.resources.length > 0;
     }
 
     /**
@@ -216,12 +216,12 @@ export default class Region {
     }
 
     /**
-     * Iterates through all the trees and returns each tree.
-     * @param callback Tree that is being iterated.
+     * Iterates through all the resources and returns each resource.
+     * @param callback Resource that is being iterated.
      */
 
-    public forEachTree(callback: (tree: Tree) => void): void {
-        _.each(this.trees, callback);
+    public forEachResource(callback: (resource: Resource) => void): void {
+        _.each(this.resources, callback);
     }
 
     /**

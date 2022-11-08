@@ -2,6 +2,7 @@ import Skills from './skills';
 import Quests from './quests';
 import Handler from './handler';
 import NPC from '../../npc/npc';
+import Skill from './skill/skill';
 import Mana from '../points/mana';
 import Map from '../../../map/map';
 import Abilities from './abilities';
@@ -12,10 +13,10 @@ import Statistics from './statistics';
 import Bank from './containers/impl/bank';
 import Achievements from './achievements';
 import Regions from '../../../map/regions';
-import Tree from '../../../globals/impl/tree';
 import Formulas from '../../../../info/formulas';
 import Minigame from '../../../minigames/minigame';
 import Inventory from './containers/impl/inventory';
+import Resource from '../../../globals/impl/resource';
 import Packet from '@kaetram/server/src/network/packet';
 import Incoming from '../../../../controllers/incoming';
 import Entities from '@kaetram/server/src/controllers/entities';
@@ -30,6 +31,7 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import { PlayerData } from '@kaetram/common/types/player';
@@ -54,8 +56,6 @@ import {
     Respawn,
     Effect
 } from '@kaetram/server/src/network/packets';
-import Skill from './skill/skill';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -100,8 +100,12 @@ export default class Player extends Character {
     public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
+    public invalidMovement = false;
 
+    // Special status
     public running = false;
+    public dualistsMark = false;
+    public thickSkin = false;
 
     // Player info
     public password = '';
@@ -137,7 +141,7 @@ export default class Player extends Character {
 
     // Region data
     public regionsLoaded: number[] = [];
-    public treesLoaded: { [instance: string]: Modules.TreeState } = {};
+    public resourcesLoaded: { [instance: string]: Modules.ResourceState } = {};
     public lightsLoaded: number[] = [];
 
     // NPC talking
@@ -197,8 +201,8 @@ export default class Player extends Character {
         this.setPoison(data.poison.type, data.poison.start);
         this.setLastWarp(data.lastWarp);
 
-        this.hitPoints.updateHitPoints([data.hitPoints, data.hitPoints]);
-        this.mana.updateMana([data.mana, data.mana]);
+        this.hitPoints.updateHitPoints(data.hitPoints);
+        this.mana.updateMana(data.mana);
 
         // Being the loading process.
         this.loadSkills();
@@ -343,6 +347,9 @@ export default class Player extends Character {
             case 'passive':
                 if (!this.mana.isFull()) this.mana.increment(amount);
 
+                // Scale the heal rate by the maximum hitpoints.
+                amount += Math.floor(this.hitPoints.getMaxHitPoints() * 0.005);
+
                 super.heal(amount);
 
                 break;
@@ -456,8 +463,9 @@ export default class Player extends Character {
      * @param amount The amount we are increasing the cheat score by.
      */
 
-    public incrementCheatScore(amount = 1): void {
+    public incrementCheatScore(reason = '', amount = 1): void {
         if (this.combat.started) return;
+        if (reason) log.debug(`[${this.username}] ${reason}`);
 
         this.cheatScore += amount;
 
@@ -493,6 +501,30 @@ export default class Player extends Character {
         }
 
         return isColliding;
+    }
+
+    /**
+     * Used to verify an anomaly within the player's step movement. We check a variety
+     * of factors to avoid false-positives.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     */
+
+    private verifyMovement(x: number, y: number): boolean {
+        let now = Date.now(),
+            stepDiff = now - this.lastStep,
+            regionDiff = now - this.lastRegionChange;
+
+        // Firstly ensure that the last step was behaving normally.
+        if (stepDiff > this.movementSpeed) return false;
+
+        // A region change may trigger a movement anomaly, so we ignore movement within 1 second of a region change.
+        if (regionDiff < 1000) return false;
+
+        // Check if the player is currently going into a door.
+        if (this.map.isDoor(x, y)) return false;
+
+        return true;
     }
 
     /**
@@ -553,7 +585,7 @@ export default class Player extends Character {
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
             index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-            tree = this.world.globals.getTrees().findTree(index);
+            tree = this.world.globals.getTrees().findResource(index);
 
         // No tree found, we stop here.
         if (!tree) return log.debug(`No tree found at ${instance}.`);
@@ -625,6 +657,103 @@ export default class Player extends Character {
         } else if (weapon.isStrength())
             this.skills.get(Modules.Skills.Strength).addExperience(experience);
         else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
+    }
+
+    /**
+     * Handles the request for a movement to a new position. This is the preliminary check for
+     * anti-cheating.
+     * @param requestX Requested x coordinate.
+     * @param requestY Requested y coordinate.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     */
+
+    public handleMovementRequest(requestX: number, requestY: number, x: number, y: number): void {
+        if (this.map.isDoor(x, y)) return;
+
+        if (x !== this.x || y !== this.y) {
+            this.notify(
+                `No-clipping has been detected in your client. Your movement will not be registered.`
+            );
+            this.invalidMovement = true;
+        }
+    }
+
+    /**
+     * Handles the beginning of the player's movement. We mark down when the player has started moving
+     * and check against the movement speed with the server value. We stop skills and combat when
+     * movement has commenced.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param speed The movement speed of the player.
+     * @param target A character target instance if the player is moving towards a character.
+     */
+
+    public handleMovementStarted(x: number, y: number, speed: number, target: string): void {
+        this.movementStart = Date.now();
+
+        // Invalid movement speed reported by the client.
+        if (speed !== this.movementSpeed) this.incrementCheatScore('Mismatch in movement speed.');
+
+        // Stop combat and skills every time thre is movement.
+        this.skills.stop();
+
+        if (!target) this.combat.stop();
+
+        // Mark the player as moving.
+        this.moving = true;
+    }
+
+    /**
+     * A movement step occurs every time a player traverses to the next tile.
+     * @param x The current x coordinate of the player as reported by the client.
+     * @param y The current y coordinate of the player as reported by the client.
+     */
+
+    public handleMovementStep(x: number, y: number): void {
+        if (this.stunned || this.invalidMovement) return;
+
+        if (this.verifyMovement(x, y))
+            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
+
+        this.setPosition(x, y);
+
+        this.lastStep = Date.now();
+    }
+
+    /**
+     * Handles the player coming to a stop after movement has finished.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param target A character target instance if the player is stopping at an entity.
+     * @param orientation The orientation of the player as reported by the client.
+     */
+
+    public handleMovementStop(x: number, y: number, target: string, orientation: number): void {
+        let entity = this.entities.get(target);
+
+        // No start movement received.
+        if (!this.moving) this.incrementCheatScore('Did not receive movement started packet.');
+
+        // Update orientation
+        this.setOrientation(orientation);
+
+        // Player has stopped on top of an item.
+        if (entity?.isItem()) this.inventory.add(entity);
+
+        // Update the player's position.
+        if (!this.invalidMovement) this.setPosition(x, y);
+
+        // Handle doors when the player stops on one.
+        if (this.map.isDoor(x, y) && !target) {
+            let door = this.map.getDoor(x, y);
+
+            this.doorCallback?.(door);
+        }
+
+        // Movement has come to an end.
+        this.moving = false;
+        this.lastMovement = Date.now();
     }
 
     /**
@@ -791,6 +920,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Sets the status of the dualists mark effect and updates
+     * the combat loop to represent the new attack rate.
+     * @param dualistsMark Effect status of the dualists mark.
+     */
+
+    public setDualistsMark(dualistsMark: boolean): void {
+        this.dualistsMark = dualistsMark;
+
+        this.combat.updateLoop();
+    }
+
+    /**
      * Override for the superclass `setPosition` function. Since the player must always be
      * synced up to nearby players, this function sends a packet to the nearby region about
      * every movement. It also checks gainst no-clipping and player positionining. In the event
@@ -928,12 +1069,12 @@ export default class Player extends Character {
     }
 
     /**
-     * Adds a tree to our loaded tree instances.
-     * @param tree The tree we are adding.
+     * Adds a resource to our loaded resource instances.
+     * @param resource The resource we are adding.
      */
 
-    public loadTree(tree: Tree): void {
-        this.treesLoaded[tree.instance] = tree.state;
+    public loadResource(resource: Resource): void {
+        this.resourcesLoaded[resource.instance] = resource.state;
     }
 
     public hasLoadedRegion(region: number): boolean {
@@ -941,13 +1082,16 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the tree is within our loaded trees and that the state matches.
-     * @param tree The tree we are chceking.
-     * @returns If the tree is loaded and the state matches.
+     * Checks if the resource is within our loaded resources and that the state matches.
+     * @param resource The resource we are chceking.
+     * @returns If the resource is loaded and the state matches.
      */
 
-    public hasLoadedTree(tree: Tree): boolean {
-        return tree.instance in this.treesLoaded && this.treesLoaded[tree.instance] === tree.state;
+    public hasLoadedResource(resource: Resource): boolean {
+        return (
+            resource.instance in this.resourcesLoaded &&
+            this.resourcesLoaded[resource.instance] === resource.state
+        );
     }
 
     public hasLoadedLight(light: number): boolean {
@@ -1359,6 +1503,21 @@ export default class Player extends Character {
     }
 
     /**
+     * Override for the damage absoprption modifier. Effects such as thick
+     * skin lessent the max damage an entity is able to deal.
+     * @returns Modifier number value between 0 and 1, closer to 0 the higher the damage reduction.
+     */
+
+    public override getDamageReduction(): number {
+        let reduction = 1;
+
+        // Thick skin increases damage reduction by 20%.
+        if (this.thickSkin) reduction -= 0.2;
+
+        return reduction;
+    }
+
+    /**
      * An override function for the player's attack rate since it
      * is dependent on their weapon at the moment. We may be doing
      * calculations from special equipments/effects in the future.
@@ -1367,6 +1526,9 @@ export default class Player extends Character {
      */
 
     public override getAttackRate(): number {
+        // Dualists mark status effect boosts attack speed by 200 milliseconds.
+        if (this.dualistsMark) return this.equipment.getWeapon().attackRate - 200;
+
         return this.equipment.getWeapon().attackRate;
     }
 

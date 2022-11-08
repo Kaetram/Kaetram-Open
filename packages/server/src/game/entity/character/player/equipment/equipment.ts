@@ -9,7 +9,7 @@ import Item from '../../../objects/item';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
+import { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Equipment {
@@ -32,8 +32,7 @@ export default class Equipment {
         public type: Modules.Equipment,
         public key = '',
         public count = 1,
-        public ability = -1,
-        public abilityLevel = -1
+        public enchantments: Enchantments = {}
     ) {}
 
     /**
@@ -45,8 +44,7 @@ export default class Equipment {
         this.key = item.key;
         this.name = item.name;
         this.count = count;
-        this.ability = item.ability;
-        this.abilityLevel = item.abilityLevel;
+        this.enchantments = item.enchantments;
 
         this.lumberjacking = item.lumberjacking;
         this.poisonous = item.poisonous;
@@ -66,8 +64,7 @@ export default class Equipment {
         this.key = '';
 
         this.count = 1;
-        this.ability = -1;
-        this.abilityLevel = -1;
+        this.enchantments = {};
 
         this.name = '';
 
@@ -111,8 +108,7 @@ export default class Equipment {
             type: this.type,
             key: this.key,
             count: this.count,
-            ability: this.ability,
-            abilityLevel: this.abilityLevel
+            enchantments: this.enchantments
         };
 
         // Includes information only relevant to the client.

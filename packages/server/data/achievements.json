@@ -94,17 +94,17 @@
         "description": "I literally said to tread carefully."
     },
 
-    "ogrelord": {
-        "name": "Ogre Lord",
-        "description": "Defeat the Ogre Lord!",
+    "skeletonking": {
+        "name": "Skeleton King",
+        "description": "Defeat the Skeleton King!",
 
         "rewardSkill": "strength",
         "rewardExperience": 12560
     },
 
-    "skeletonking": {
-        "name": "Skeleton King",
-        "description": "Defeat the Skeleton King!",
+    "ogrelord": {
+        "name": "Ogre Lord",
+        "description": "Defeat the Ogre Lord!",
 
         "rewardSkill": "strength",
         "rewardExperience": 12560
@@ -131,6 +131,11 @@
     "frozentundra": {
         "name": "Frozen Tundra",
         "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
+    },
+
+    "babyseadragon": {
+        "name": "Baby Sea Dragon",
+        "description": "Defeat the baby sea dragon guardian!"  
     },
 
     "underwatertreasure": {

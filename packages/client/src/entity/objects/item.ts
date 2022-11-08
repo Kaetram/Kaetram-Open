@@ -1,5 +1,7 @@
-import { Modules } from '@kaetram/common/network';
 import Entity from '../entity';
+
+import { Modules } from '@kaetram/common/network';
+import { Enchantments } from '@kaetram/common/types/item';
 
 export default class Item extends Entity {
     public dropped = false;
@@ -7,8 +9,7 @@ export default class Item extends Entity {
     public constructor(
         instance: string,
         public count: number = 1,
-        public ability: number = -1,
-        public abilityLevel: number = -1
+        public enchantments: Enchantments = {}
     ) {
         super(instance, Modules.EntityType.Item);
     }
