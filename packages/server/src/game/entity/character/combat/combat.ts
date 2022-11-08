@@ -56,6 +56,19 @@ export default class Combat {
     }
 
     /**
+     * Function is used by a character when their attack rate undergoes a change. We do not
+     * want to stop the combat, but we do want to update the loop.
+     */
+
+    public updateLoop(): void {
+        if (!this.loop) return;
+
+        clearInterval(this.loop);
+
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
+    }
+
+    /**
      * Starts a combat session if not started and attacks
      * the target if possible.
      * @param target The target we are going to attack.

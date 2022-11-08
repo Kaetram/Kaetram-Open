@@ -1,6 +1,4 @@
 export interface MobData {
-    //id: number;
-    //key: string;
     name: string;
     experience?: number;
     hitPoints?: number;

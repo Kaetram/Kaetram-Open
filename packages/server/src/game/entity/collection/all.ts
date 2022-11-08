@@ -39,6 +39,8 @@ export default class AllCollection {
 
         this.entities[entity.instance] = entity;
 
+        if (entity.isProjectile()) return;
+
         this.regions.handle(entity);
 
         this.grids.addToEntityGrid(entity);

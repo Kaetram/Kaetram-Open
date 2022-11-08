@@ -4,6 +4,8 @@ import Ability from '../ability';
 export default class ThickSkin extends Ability {
     public constructor(level: number, quickSlot = -1) {
         super('thickskin', level, quickSlot);
+
+        this.onDeactivate((player: Player) => (player.thickSkin = false));
     }
 
     /**
@@ -13,11 +15,8 @@ export default class ThickSkin extends Ability {
      */
 
     public override activate(player: Player): boolean {
-        if (!player.hasTarget()) {
-            player.notify(`You must be in combat to use this ability.`);
-            return false;
-        }
+        if (super.activate(player)) player.thickSkin = true;
 
-        return super.activate(player);
+        return false;
     }
 }

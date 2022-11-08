@@ -86,11 +86,11 @@ export interface ProcessedDoor {
     level: number;
 }
 
-export interface ProcessedTree {
-    data: number[]; // What is considered a tree.
-    stump: number[]; // The tree's stump
-    cutStump: number[]; // What the tree gets replaced with when cut.
-    type: string; // Store type.
+export interface ProcessedResource {
+    data: number[]; // What is considered a resource.
+    base: number[]; // The base of the resource (the interactable part).
+    depleted: number[]; // The resource after it has been depleted.
+    type: string; // Identifier for the resource.
 }
 
 export interface ProcessedTileset {
@@ -128,7 +128,7 @@ export interface ProcessedMap {
     objects: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    trees: ProcessedTree[];
+    trees: ProcessedResource[];
 }
 
 export interface ProcessedClientMap {

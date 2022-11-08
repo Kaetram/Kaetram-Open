@@ -48,6 +48,13 @@ export default class Console {
 
                     break;
 
+                case 'update':
+                    this.world.entities.forEachPlayer((player: Player) => {
+                        player.connection.reject('updated');
+                    });
+
+                    break;
+
                 case 'kill':
                     username = blocks.join(' ');
 

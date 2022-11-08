@@ -9,13 +9,13 @@ import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
-import Tree from '../globals/impl/tree';
 
 import { Modules } from '@kaetram/common/network';
 import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
 import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 import { Tile } from '@kaetram/common/types/map';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import Resource from '../globals/impl/resource';
 
 /**
  * Class responsible for chunking up the map.
@@ -391,11 +391,11 @@ export default class Regions {
             // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            // Parse and send tree data.
-            if (region.hasTrees())
+            // Parse and send resource data.
+            if (region.hasResources())
                 data[surroundingRegion] = [
                     ...data[surroundingRegion],
-                    ...this.getRegionTreeData(region, player)
+                    ...this.getRegionResourceData(region, player)
                 ];
 
             // Parse and send dynamic areas.
@@ -445,7 +445,7 @@ export default class Regions {
 
                 /**
                  * Empty static tile data should be ignored. Otherwise this
-                 * will cause issues when trying to send tree data.
+                 * will cause issues when trying to send resource data.
                  */
 
                 if (tile.data < 1) return;
@@ -457,40 +457,40 @@ export default class Regions {
     }
 
     /**
-     * Parses through all the trees within the region specified and
+     * Parses through all the resources within the region specified and
      * grabs tile data from them. It returns a RegionTileData array.
-     * @param region The region we are looking for trees in.
-     * @returns RegionTileData containing tree information.
+     * @param region The region we are looking for resources in.
+     * @returns RegionTileData containing resource information.
      */
 
-    private getRegionTreeData(region: Region, player: Player): RegionTileData[] {
+    private getRegionResourceData(region: Region, player: Player): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        // Iterate through all the trees in the region.
-        region.forEachTree((tree: Tree) => {
-            // No need to reload trees that haven't changed.
-            if (player.hasLoadedTree(tree)) return;
+        // Iterate through all the resources in the region.
+        region.forEachResource((resource: Resource) => {
+            // No need to reload resources that haven't changed.
+            if (player.hasLoadedResource(resource)) return;
 
-            // Parse tree tiles.
-            tileData = [...tileData, ...this.getTreeData(tree)];
+            // Parse resource tiles.
+            tileData = [...tileData, ...this.getResourceData(resource)];
 
-            player.loadTree(tree);
+            player.loadResource(resource);
         });
 
         return tileData;
     }
 
     /**
-     * Grabs individual tree data from a specified tree.
-     * @param tree The tree we are grabbing data for.
-     * @returns RegionTileData array containing tree information.
+     * Grabs individual resource data from a specified resource.
+     * @param resource The resource we are grabbing data for.
+     * @returns RegionTileData array containing resource information.
      */
 
-    private getTreeData(tree: Tree): RegionTileData[] {
+    private getResourceData(resource: Resource): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        tree.forEachTile((data: Tile, index: number) => {
-            // Perhaps we can optimize further by storing this directly in the tree?
+        resource.forEachTile((data: Tile, index: number) => {
+            // Perhaps we can optimize further by storing this directly in the resource?
             let coord = this.map.indexToCoord(index);
 
             tileData.push(this.buildTile(coord.x, coord.y, index, data));
@@ -511,6 +511,11 @@ export default class Regions {
 
         this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
             let region = this.get(surroundingRegion);
+
+            if (!region)
+                return log.warning(
+                    `[${player.username}] Invalid surrounding region: ${surroundingRegion} for player's region: ${player.region}.`
+                );
 
             region.forEachEntity((entity: Entity) => {
                 if (!entity.hasDisplayInfo(player)) return;
@@ -618,7 +623,12 @@ export default class Regions {
 
     private getSurroundingRegions(region: number): number[] {
         let surroundingRegions = [region],
-            { sideLength } = this;
+            { sideLength, regions } = this;
+
+        if (region < 0 || region > regions.length - 1) {
+            log.warning(`Attempted to grab surrounding regions for invalid region: ${region}.`);
+            return [];
+        }
 
         // Handle regions near edge of the map and horizontally.
         // left edge piece

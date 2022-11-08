@@ -92,6 +92,7 @@ export default class Player extends Character {
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
+        this.rights = data.rights!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
@@ -169,18 +170,8 @@ export default class Player extends Character {
      */
 
     public equip(equipment: EquipmentData): void {
-        let {
-            type,
-            name,
-            key,
-            count,
-            ability,
-            abilityLevel,
-            ranged,
-            attackStats,
-            defenseStats,
-            bonuses
-        } = equipment;
+        let { type, name, key, count, enchantments, ranged, attackStats, defenseStats, bonuses } =
+            equipment;
 
         if (!key) return this.unequip(type);
 
@@ -188,8 +179,7 @@ export default class Player extends Character {
             key,
             name,
             count,
-            ability,
-            abilityLevel,
+            enchantments,
             ranged,
             attackStats,
             defenseStats,

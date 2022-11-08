@@ -53,7 +53,9 @@ export default abstract class Character extends Entity {
     public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
 
-    public lastMovement!: number;
+    public lastStep = -1;
+    public lastMovement = -1;
+    public lastRegionChange = -1;
     public lastAttacker?: Character | undefined;
 
     public stunTimeout?: NodeJS.Timeout | undefined;
@@ -153,7 +155,9 @@ export default abstract class Character extends Entity {
      */
 
     private handlePoisonDamage(attacker: Character): void {
-        let isPoisoned = Formulas.getPoisonChance(this.level) < attacker.getPoisonChance();
+        // Poison is related to the strength or archery level.
+        let isPoisoned =
+            Formulas.getPoisonChance(this.getSkillDamageLevel()) < attacker.getPoisonChance();
 
         // Use venom as default for now.
         if (isPoisoned) this.setPoison(Modules.PoisonTypes.Venom);
@@ -232,7 +236,8 @@ export default abstract class Character extends Entity {
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
 
-        if (attacker?.isPoisonous()) this.handlePoisonDamage(attacker);
+        // Poison only occurs when we land a hit and attacker has a poisonous weapon.
+        if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
     }
 
     /**
@@ -359,6 +364,16 @@ export default abstract class Character extends Entity {
 
     public getSkillDamageLevel(): number {
         return this.isRanged() ? this.getArcheryLevel() : this.getStrengthLevel();
+    }
+
+    /**
+     * This value is used by subclasses to determine the amount of damage a
+     * character will absorb during the combat damage calculation.
+     * @returns A placeholder value of 1. The value is between 0 and 1.
+     */
+
+    public getDamageReduction(): number {
+        return 1;
     }
 
     /**
@@ -540,13 +555,18 @@ export default abstract class Character extends Entity {
         // No need to remove a non-existant status.
         if (remove && !this.poison) return;
 
+        // Used to prevent poison status stacking.
+        let exists = type !== -1 && !!this.poison;
+
         // Set or remove the poison status.
         this.poison = remove ? undefined : new Poison(type, start);
 
+        // Remove the poison status or create an interval for the poison.
         if (remove) {
             clearInterval(this.poisonInterval!);
             this.poisonInterval = undefined;
-        } else this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
+        } else if (!exists)
+            this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
 
         this.poisonCallback?.(type);
     }
