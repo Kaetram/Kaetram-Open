@@ -4,6 +4,7 @@ import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
 
 import Connection from '../network/connection';
 import World from '../game/world';
@@ -21,7 +22,6 @@ import type {
     EquipmentPacket,
     LoginPacket,
     MovementPacket,
-    ProjectilePacket,
     ReadyPacket,
     StorePacket,
     WarpPacket
@@ -33,7 +33,6 @@ import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
-import type Projectile from '../game/entity/objects/projectile';
 
 export default class Incoming {
     private world: World;
@@ -76,8 +75,6 @@ export default class Incoming {
                         return this.handleMovement(message);
                     case Packets.Target:
                         return this.handleTarget(message);
-                    case Packets.Projectile:
-                        return this.handleProjectile(message);
                     case Packets.Network:
                         return this.handleNetwork(message);
                     case Packets.Chat:
@@ -206,87 +203,39 @@ export default class Incoming {
                 playerX,
                 playerY,
                 movementSpeed,
-                hasTarget,
                 targetInstance,
-                orientation,
-                frozen
+                orientation
             } = data,
-            entity: Entity,
-            door: ProcessedDoor,
-            diff = 0;
+            entity: Entity;
 
         if (this.player.dead) return;
 
         switch (opcode) {
+            case Opcodes.Movement.Request:
+                return this.player.handleMovementRequest(requestX!, requestY!, playerX!, playerY!);
+
             case Opcodes.Movement.Started:
-                this.player.movementStart = Date.now();
-
-                if (movementSpeed !== this.player.getMovementSpeed())
-                    this.player.incrementCheatScore();
-
-                if (playerX !== this.player.x || playerY !== this.player.y || this.player.stunned)
-                    return;
-
-                // Reset combat and skills every time there is movement.
-                this.player.skills.stop();
-                if (!targetInstance) this.player.combat.stop();
-
-                this.player.moving = true;
-
-                break;
+                return this.player.handleMovementStarted(
+                    playerX!,
+                    playerY!,
+                    movementSpeed!,
+                    targetInstance!
+                );
 
             case Opcodes.Movement.Step:
-                if (this.player.stunned) return;
-
-                this.player.setPosition(playerX!, playerY!);
-
-                break;
+                return this.player.handleMovementStep(playerX!, playerY!);
 
             case Opcodes.Movement.Stop:
-                entity = this.entities.get(targetInstance!);
-
-                if (!this.player.moving) {
-                    log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
-
-                    this.player.incrementCheatScore();
-                }
-
-                this.player.setOrientation(orientation!);
-
-                if (entity?.isItem()) this.player.inventory.add(entity as Item);
-
-                if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
-                    door = this.world.map.getDoor(playerX!, playerY!);
-
-                    this.player.doorCallback?.(door);
-                } else this.player.setPosition(playerX!, playerY!);
-
-                this.player.moving = false;
-                this.player.lastMovement = Date.now();
-
-                if (!(this.player.oldX === playerX && this.player.oldY === playerY)) {
-                    diff = this.player.lastMovement - this.player.movementStart;
-
-                    if (diff < this.player.getMovementSpeed()) this.player.incrementCheatScore();
-                }
-
-                break;
+                return this.player.handleMovementStop(
+                    playerX!,
+                    playerY!,
+                    targetInstance!,
+                    orientation!
+                );
 
             case Opcodes.Movement.Entity:
                 entity = this.entities.get(targetInstance!) as Character;
-
-                if (!entity) return;
-
-                entity.setPosition(requestX!, requestY!);
-
-                break;
-
-            case Opcodes.Movement.Freeze:
-                this.player.frozen = !!frozen;
-                break;
-
-            case Opcodes.Movement.Zone:
-                log.debug(`Zoning orientation: ${orientation}`);
+                entity?.setPosition(requestX!, requestY!);
                 break;
         }
     }
@@ -337,18 +286,6 @@ export default class Incoming {
         }
     }
 
-    private handleProjectile(message: ProjectilePacket): void {
-        let projectile = this.entities.get(message.instance) as Projectile,
-            target = this.entities.get(message.target) as Character;
-
-        if (!projectile) return log.warning(`[Incoming] Projectile not found: ${message.instance}`);
-        if (!target) return log.warning(`[Incoming] Target not found: ${message.target}`);
-
-        target.hit(projectile.hit.getDamage(), projectile.owner);
-
-        this.entities.remove(projectile);
-    }
-
     private handleNetwork(message: [Opcodes.Network]): void {
         let [opcode] = message;
 
@@ -378,7 +315,7 @@ export default class Incoming {
         // Handle commands if the prefix is / or ;
         if (text.charAt(0) === '/' || text.charAt(0) === ';') return this.commands.parse(text);
 
-        this.player.chat(text);
+        this.player.chat(Filter.clean(text));
     }
 
     private handleCommand(message: [Opcodes.Command, Position]): void {
@@ -505,6 +442,9 @@ export default class Incoming {
 
     private handleStore(data: StorePacket): void {
         log.debug(`Received store packet: ${data.opcode}`);
+
+        // Ignore invalid packets.
+        if (data.index < 0) return;
 
         switch (data.opcode) {
             case Opcodes.Store.Buy:

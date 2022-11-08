@@ -26,6 +26,9 @@
 .item-slot {
     background-color: rgb(0 0 0 / 50%);
     background-size: 600%;
+
+    // Safari filters so the images aren't blurry.
+    filter: opacity(100%);
 }
 
 @media (--lg) {

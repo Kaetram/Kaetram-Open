@@ -251,6 +251,8 @@ export default class Handler {
         this.handleLights(region);
 
         this.player.updateEntityList();
+
+        this.player.lastRegionChange = Date.now();
     }
 
     /**
@@ -356,8 +358,6 @@ export default class Handler {
      */
 
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        let { ability, abilityLevel } = slot;
-
         // Spawn the item in the world if drop is true.
         if (drop)
             this.world.entities.spawnItem(
@@ -366,8 +366,7 @@ export default class Handler {
                 this.player.y,
                 true,
                 count, // Note this is the amount we are dropping.
-                ability,
-                abilityLevel
+                slot.enchantments
             );
 
         this.player.send(
@@ -547,7 +546,11 @@ export default class Handler {
          * It will not accomplish much, but it is enough for now.
          */
 
-        if (this.player.cheatScore > 10) this.player.timeout();
+        if (this.player.cheatScore > 15) {
+            this.player.sendToSpawn();
+
+            this.player.connection.reject('cheating');
+        }
 
         log.debug(`Cheat score - ${this.player.cheatScore}`);
     }
@@ -572,6 +575,7 @@ export default class Handler {
 
     private handleUpdate(): void {
         if (this.isTickInterval(4)) this.detectAggro();
+        if (this.isTickInterval(10)) this.player.cheatScore = 0;
 
         this.updateTicks++;
     }

@@ -16,6 +16,8 @@ import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import { Experience, Skill as SkillPacket, Points } from '@kaetram/server/src/network/packets';
 
 export default class Skills {
+    private loaded = false;
+
     private accuracy: Accuracy = new Accuracy();
     private archery: Archery = new Archery();
     private health: Health = new Health();
@@ -54,6 +56,8 @@ export default class Skills {
         // Create a callback that links to `handleExperience` for every skill.
         this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
 
+        this.loaded = true;
+
         this.loadCallback?.();
         this.sync();
     }
@@ -64,14 +68,20 @@ export default class Skills {
      */
 
     public sync(): void {
+        // Prevent a sync prior to loading from messing up player information.
+        if (!this.loaded) return;
+
         let health = this.get(Modules.Skills.Health),
             magic = this.get(Modules.Skills.Magic);
 
+        // Update max hit points and mana.
         this.player.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(health.level));
         this.player.mana.setMaxMana(Formulas.getMaxMana(magic.level));
 
+        // Update the player's level.
         this.player.level = this.getCombatLevel();
 
+        // Synchronize the player's level packet.
         this.player.send(
             new Experience(Opcodes.Experience.Sync, {
                 instance: this.player.instance,
@@ -79,6 +89,7 @@ export default class Skills {
             })
         );
 
+        // Synchronize mana and hit points.
         this.player.send(
             new Points({
                 instance: this.player.instance,

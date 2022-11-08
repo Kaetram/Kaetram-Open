@@ -5,6 +5,7 @@
  */
 
 import { Modules } from '../network';
+import { Enchantments } from './item';
 
 export interface EntityDisplayInfo {
     instance: string;
@@ -43,8 +44,7 @@ export interface EntityData {
 
     // Item data
     count?: number;
-    ability?: number;
-    abilityLevel?: number;
+    enchantments?: Enchantments;
 
     // Projectile data
     ownerInstance?: string;

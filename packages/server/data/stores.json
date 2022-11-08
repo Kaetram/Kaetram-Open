@@ -22,11 +22,6 @@
         "price": 2000
       },
       {
-        "key": "axe",
-        "count": 10,
-        "price": 100
-      },
-      {
         "key": "sword2",
         "count": 10,
         "price": 100
@@ -68,6 +63,42 @@
       }
     ],
     "refresh": 60000,
+    "currency": "gold"
+  },
+
+  "forester": {
+    "items": [
+      {
+        "key": "axe",
+        "count": 20,
+        "price": 75
+      },
+      {
+        "key": "rustedaxe",
+        "count": 15
+      },
+      {
+        "key": "fireaxe",
+        "count": 5
+      },
+      {
+        "key": "poisonaxe",
+        "count": 5
+      },
+      {
+        "key": "cactusaxe",
+        "count": 3
+      },
+      {
+        "key": "goldaxe",
+        "count": 3
+      },
+      {
+        "key": "carnelianaxe",
+        "count": 1
+      }
+    ],
+    "refresh": 600000,
     "currency": "gold"
   }
 }

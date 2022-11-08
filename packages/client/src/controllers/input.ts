@@ -187,11 +187,11 @@ export default class InputController {
                 return;
 
             case 'm':
-                //this.game.menu.warp.open();
+                this.game.menu.getWarp().toggle();
                 return;
 
             case 'p':
-                //this.game.menu.profile.open();
+                this.game.menu.getProfile().toggle();
                 return;
 
             case 'Escape':
@@ -223,22 +223,22 @@ export default class InputController {
             case 'w':
             case 'ArrowUp':
                 this.game.player.moveUp = false;
-                return;
+                break;
 
             case 'a':
             case 'ArrowLeft':
                 this.game.player.moveLeft = false;
-                return;
+                break;
 
             case 's':
             case 'ArrowDown':
                 this.game.player.moveDown = false;
-                return;
+                break;
 
             case 'd':
             case 'ArrowRight':
                 this.game.player.moveRight = false;
-                return;
+                break;
         }
 
         this.game.player.disableAction = false;

@@ -9,10 +9,12 @@ import SpritesController from '../controllers/sprites';
 export default class Updater {
     private tileSize: number;
 
-    private sprites: SpritesController | null = null;
+    private sprites: SpritesController;
 
     public constructor(private game: Game) {
         this.tileSize = game.map.tileSize;
+
+        this.sprites = game.sprites;
     }
 
     public update(): void {
@@ -158,10 +160,11 @@ export default class Updater {
             };
 
         /**
-         * Disable input if the player is frozen or if we
-         * do not have any of the conditionals active.
+         * Disables updating when the player is already moving as to not spam
+         * packets. If the player is frozen the input is ignored.
          */
-        if (player.frozen || !player.hasKeyboardMovement()) return;
+        if (player.moving || player.teleporting || player.frozen || !player.hasKeyboardMovement())
+            return;
 
         if (player.moveUp) position.y--;
         else if (player.moveDown) position.y++;
@@ -207,16 +210,11 @@ export default class Updater {
         this.game.pointer?.update();
     }
 
-    private updateSounds() {
-        this.game.audio.updatePlayerListener();
-    }
-
     /**
-     * Sets the sprite controller so that the updater can use it.
-     * @param sprites The sprites controller object.
+     * Updates the music controller's directional audio.
      */
 
-    public setSprites(sprites: SpritesController): void {
-        this.sprites = sprites;
+    private updateSounds() {
+        this.game.audio.updatePlayerListener();
     }
 }

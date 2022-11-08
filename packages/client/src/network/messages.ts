@@ -230,6 +230,10 @@ export default class Messages {
                 this.app.sendError('The game has been updated. Please clear your browser cache.');
                 break;
 
+            case 'cheating':
+                this.app.sendError(`You have been disconnected for no-clipping or hacking.`);
+                break;
+
             default:
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
