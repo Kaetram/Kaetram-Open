@@ -8,6 +8,7 @@ import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
+type FallbackCallback = (x: number, y: number) => void;
 
 export default class Character extends Entity {
     public healthBarVisible = false;
@@ -58,6 +59,7 @@ export default class Character extends Entity {
     private startPathingCallback?(path: number[][]): void;
     private moveCallback?(): void;
     private requestPathCallback?(x: number, y: number): number[][] | null;
+    private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
 
     public forced!: boolean;
@@ -334,9 +336,10 @@ export default class Character extends Entity {
      * @param x The grid x position to move to.
      * @param y The grid y position to move to.
      * @param forced Forced movement overrides any other movement.
+     * @param fallback Entities that cannot path correctly are teleported instead.
      */
 
-    public go(x: number, y: number, forced = false): void {
+    public go(x: number, y: number, forced = false, fallback = false): void {
         if (this.frozen) return;
 
         if (this.following) {
@@ -344,7 +347,7 @@ export default class Character extends Entity {
             this.removeTarget();
         }
 
-        this.move(x, y, forced);
+        this.move(x, y, forced, fallback);
     }
 
     /**
@@ -352,11 +355,18 @@ export default class Character extends Entity {
      * @param x The new grid x coordinate we are trying to move the character to.
      * @param y The new grid y coordinate we are trying to move the character to.
      * @param forced Whether or not to update the current pathing or request a new one.
+     * @param fallback Whether or not to teleport the entity if pathing fails.
      */
 
-    private move(x: number, y: number, forced = false): void {
+    private move(x: number, y: number, forced = false, fallback = false): void {
         if (this.hasPath() && !forced) this.proceed(x, y);
-        else this.followPath(this.requestPathfinding(x, y));
+        else {
+            let path = this.requestPathfinding(x, y);
+
+            if ((!path || path.length < 2) && fallback) return this.fallbackCallback?.(x, y);
+
+            this.followPath(path);
+        }
 
         this.destination = { x, y };
     }
@@ -463,6 +473,11 @@ export default class Character extends Entity {
         if (path[step][1] > path[step - 1][1])
             this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
     }
+
+    /**
+     * Begins the procedure to follow a path after it has been found.
+     * @param path The path we are following.
+     */
 
     private followPath(path: number[][] | null): void {
         /**
@@ -716,5 +731,14 @@ export default class Character extends Entity {
 
     public onHitPoints(callback: HitPointsCallback): void {
         this.hitPointsCallback = callback;
+    }
+
+    /**
+     * Callback for when we want to perform a fallback for entity movement.
+     * @param callback Contains the x and y coordinates to teleport the entity to.
+     */
+
+    public onFallback(callback: FallbackCallback): void {
+        this.fallbackCallback = callback;
     }
 }

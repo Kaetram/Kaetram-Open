@@ -12,7 +12,8 @@
 
   "villager": {
     "name": "Forester",
-    "text": ["Good day to you!"]
+    "text": ["Good day to you!"],
+    "store": "forester"
   },
 
   "beachnpc": {
@@ -20,8 +21,9 @@
     "text": [
       "Well, thanks for the help.",
       "Not really doing much but thanks regardless.",
-      "Though I did hear some cave crumbling nearby as you killed those crabs...",
-      "I think it'd be best to check it out if you can."]
+      "Though I did hear some crunbling east of here, a cave might've opened up.",
+      "This might just be an urban legend but it is said that an entire",
+      "underworld exists beneath the surface of this beach."]
   },
 
   "agent": {
@@ -171,7 +173,7 @@
 
   "snowshepherdboy": {
     "name": "Sherpa",
-    "description": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
+    "text": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
   },
 
   "angelnpc": {
@@ -218,6 +220,7 @@
   },
 
   "royalguard": {
-    "name": "Royal Guard"
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
   }
 }

@@ -19,8 +19,8 @@ export default class HitPoints extends Points {
         this.hitPointsCallback?.();
     }
 
-    public updateHitPoints(info: number[]): void {
-        super.updatePoints(info);
+    public updateHitPoints(hitPoints: number, maxHitPoints?: number): void {
+        super.updatePoints(hitPoints, maxHitPoints);
     }
 
     public setHitPoints(hitPoints: number): void {

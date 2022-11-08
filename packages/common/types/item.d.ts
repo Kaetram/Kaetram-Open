@@ -1,9 +1,14 @@
+export interface Enchantment {
+    level: number;
+}
+
+export type Enchantments = { [id: number]: Enchantment };
+
 export interface ContainerItem {
     index: number;
     key: string;
     count: number;
-    ability?: number;
-    abilityLevel?: number;
+    enchantments: Enchantments;
 }
 
 export interface Stats {
@@ -30,7 +35,10 @@ export interface ItemData {
     storeCount?: number;
     skill?: string; // Skill requirement for the item.
     level?: number; // Requirement level for the item.
+    achievement?: string; // Achievement required to use the item.
+    quest?: string; // Quest requirement for the item.
     attackRate?: number;
+    poisonous?: boolean;
     movementSpeed?: number;
     lumberjacking?: number;
     healAmount?: number;
@@ -40,4 +48,5 @@ export interface ItemData {
     bonuses?: Bonuses;
     attackStats?: Stats;
     defenseStats?: Stats;
+    undroppable?: boolean;
 }

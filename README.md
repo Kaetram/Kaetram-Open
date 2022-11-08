@@ -10,10 +10,12 @@
 [![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
 [![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&style=flat)][discord]
-[![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
+[![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UC0atP4sQbb4LJd6y4jijOHg 'YouTube')
+[![Twitter](https://img.shields.io/twitter/follow/kaetramofficial?style=social)](https://twitter.com/kaetramofficial 'Twitter')
+[![Reddit](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social)](https://reddit.com/r/kaetram 'Reddit')
 
 Kaetram is an open-source 2D MMORPG that expands on the original idea created by Little Workshop's BrowserQuest (BQ).
-We aim to provide a standalone gaming experience as well as a game-engine for those interested in creating their
+We aim to provide a collaborative gaming experience as well as a game-engine for those interested in creating their
 own version. The game is still in early development stages and all help, suggestions, and bug reports are welcome.
 All of the assets are licensed under CC-BY-SA3.0 and we aim to hold onto the original BQ assets as well as expand
 upon them. The entire code-base has been re-written from scratch, optimized, and documented. Please see the GitHub
@@ -168,6 +170,9 @@ tiles do not undergo a change and are part of the map permanently. Dynamic tiles
 as a player's achievement/quest progress, or, in the case of trees, depending on whether the tree has been cut or not.
 In the future we plan to use this region system to create instanced versions of areas, for example running multiple minigame
 instances at the same time.
+
+Video example showcasing region system using an exaggerated example:
+[![Kaetram Region System](https://img.youtube.com/vi/pt_CEgjfORE/0.jpg)](https://www.youtube.com/watch?v=pt_CEgjfORE)
 
 ### Tilemap
 

@@ -62,6 +62,9 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
+        // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
+        maxDamage *= target.getDamageReduction();
+
         return Utils.randomWeightedInt(0, maxDamage, accuracy);
     },
 
@@ -109,18 +112,8 @@ export default {
         return diff.crush + diff.slash + diff.stab;
     },
 
-    getCritical(attacker: Player, target: Character): number | undefined {
-        if (!attacker || !target) return;
-
-        /**
-         * The critical is the player's max hit plus *= critical multiplier of the weapon
-         */
-
-        let weapon = attacker.equipment.getWeapon(),
-            damage = this.getDamage(attacker, target),
-            multiplier = weapon.abilityLevel / 10;
-
-        return (damage *= multiplier);
+    getCritical(attacker: Player, target: Character): number {
+        return 0;
     },
 
     getWeaponBreak(attacker: Character, target: Character): boolean | undefined {
@@ -193,13 +186,16 @@ export default {
     },
 
     /**
-     * For now, the poison probability is calculated on a per-level basis.
-     * In the future, we will be implementing status effects and poison resistance.
+     * Probability is calculated using the primary skill for dealing damage. For example
+     * the player's strength if using a sword, or the archery if using a bow. 235 is picked
+     * such that the maximum attainable poison chance is a random integer between 1 and 100.
+     * With a poison chance of 10 as specified in Modules, the player has a minimum 6% chance
+     * of poisoning another character, and a maximum of 15% when the respective skill is maxed.
      * @param level The level of the player.
      */
 
     getPoisonChance(level: number): number {
-        // Chance is per 100, and each level decreases the chance by level * 3 percent.
-        return Utils.randomInt(0, 100 + level * 3);
+        // Chance is per 235 - level, each level increases the chance in poisioning.
+        return Utils.randomInt(0, 235 - level);
     }
 };

@@ -1,12 +1,14 @@
 import Skill from '../skill';
 
 import Player from '../../player';
-import Tree from '../../../../../globals/impl/tree';
-import { Animation } from '../../../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import LumberjackingEn from '@kaetram/common/text/lumberjacking-en';
+import Resource from '../../../../../globals/impl/resource';
+import LumberjackingEn from '@kaetram/common/text/en/lumberjacking';
+
+import { Animation } from '../../../../../../network/packets';
+
 import { Modules } from '@kaetram/common/network';
 import { TreeData, TreeInfo } from '@kaetram/common/types/trees';
 
@@ -29,8 +31,9 @@ export default class Lumberjacking extends Skill {
      * @param tree The tree instance that we are attempting to cut.
      */
 
-    public cut(player: Player, tree: Tree): void {
-        if (tree.isCut()) return log.debug(`${player.username} attempted to cut already cut tree.`);
+    public cut(player: Player, tree: Resource): void {
+        if (tree.isDepleted())
+            return log.debug(`${player.username} attempted to cut already cut tree.`);
 
         let weapon = player.equipment.getWeapon();
 
@@ -68,7 +71,7 @@ export default class Lumberjacking extends Skill {
 
         this.loop = setInterval(() => {
             // Stops loop if we detect that the tree was cut globally (perhaps by someone else).
-            if (tree.isCut()) return this.stop();
+            if (tree.isDepleted()) return this.stop();
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
@@ -90,7 +93,7 @@ export default class Lumberjacking extends Skill {
                 if (treeInfo.quest) player.quests.get(treeInfo.quest)?.treeCallback?.(tree.type);
 
                 // Cut the tree from the region.
-                tree.cut();
+                tree.deplete();
             }
         }, Modules.Constants.SKILL_LOOP);
     }

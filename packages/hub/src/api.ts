@@ -192,7 +192,7 @@ export default class API {
     }
 
     /**
-     * Sends a chat to a given server.
+     * Sends a global chat to a given server.
      * @param server Server we are sending the chat to.
      * @param source Who is sending the message.
      * @param text The contents of the message.

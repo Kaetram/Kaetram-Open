@@ -30,8 +30,11 @@ export interface ServerData {
 export default class Servers {
     private servers: { [key: string]: Server } = {};
 
+    public totalPlayers = 0;
+
     private addCallback?: AddCallback;
     private removeCallback?: RemoveCallback;
+    private updateCallback?: () => void;
 
     public constructor() {
         // Create the cleaning interval.
@@ -40,12 +43,18 @@ export default class Servers {
 
     /**
      * Handles cleaning and deletion of servers that have not
-     * responded in a while.
+     * responded in a while. Also updates the total amount of players.
      */
 
     private handleCleanUp(): void {
+        this.totalPlayers = 0;
+
         this.forEachServer((server, key) => {
-            if (!this.isServerTimedOut(server)) return;
+            if (!this.isServerTimedOut(server)) {
+                // Update total players with servers that are still active.
+                this.totalPlayers += server.players.length;
+                return;
+            }
 
             this.removeCallback?.(key);
 
@@ -73,6 +82,8 @@ export default class Servers {
         );
 
         this.addCallback?.(data.serverId);
+
+        this.servers[data.serverId].onUpdate(() => this.updateCallback?.());
     }
 
     /**
@@ -181,5 +192,13 @@ export default class Servers {
 
     public onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
+    }
+
+    /**
+     * Callback for when one of the servers has updated.
+     */
+
+    public onUpdate(callback: () => void): void {
+        this.updateCallback = callback;
     }
 }

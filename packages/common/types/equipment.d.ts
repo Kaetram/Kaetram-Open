@@ -1,13 +1,12 @@
 import type { Modules } from '../network';
-import type { Stats, Bonuses } from './item';
+import type { Stats, Bonuses, Enchantments } from './item';
 
 export interface EquipmentData {
     type: Modules.Equipment;
     key: string;
     name?: string;
     count: number;
-    ability: number;
-    abilityLevel: number;
+    enchantments: Enchantments;
     ranged?: boolean; // Specifically for weapon type.
     poisonous?: boolean;
     attackStats?: Stats;
