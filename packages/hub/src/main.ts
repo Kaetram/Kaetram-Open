@@ -14,7 +14,7 @@ export default class Main {
     private api: API;
 
     public constructor() {
-        log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
+        log.notice(`Initializing ${config.name} Hub ${config.gver}.`);
 
         this.api = new API(this.servers, this.discord);
 
@@ -22,6 +22,7 @@ export default class Main {
 
         this.servers.onAdd(this.handleAdd.bind(this));
         this.servers.onRemove(this.handleRemove.bind(this));
+        this.servers.onUpdate(this.handleUpdate.bind(this));
 
         new Console(this.servers);
     }
@@ -50,6 +51,17 @@ export default class Main {
         this.discord.sendRawMessage(
             `:octagonal_sign: **${config.name} ${serverId} has gone offline!**`
         );
+    }
+
+    /**
+     * Callback handler for when servers undergo an update in their data. This is
+     * usually for the player count that we then update the Discord bot with.
+     */
+
+    private handleUpdate(): void {
+        let players = this.servers.totalPlayers;
+
+        this.discord.setTopic(`Currently ${players} player${players === 1 ? '' : 's'} online.`);
     }
 }
 

@@ -70,6 +70,13 @@ export default class Socket {
             // Handler for when a disconnection occurs.
             this.connection.on('disconnect', () => this.game.handleDisconnection());
         });
+
+        /**
+         * The audio controller can only be properly initialized when the player interacts
+         * with the website. This is the best possible place to initialize it.
+         */
+
+        this.game.audio.createContext();
     }
 
     /**

@@ -1,3 +1,5 @@
+import { Enchantments } from './item';
+
 export type SlotType = 'inventory' | 'bank';
 
 export interface SerializedContainer {
@@ -9,10 +11,8 @@ export interface SlotData {
     index: number;
     key: string;
     count: number;
+    enchantments: Enchantments;
     name?: string;
-    ability?: number;
-    abilityLevel?: number;
-
     edible?: boolean;
     equippable?: boolean;
     price?: number;

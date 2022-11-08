@@ -4,6 +4,7 @@ import type Combat from './character/combat/combat';
 import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
+import type Projectile from './objects/projectile';
 
 import { Modules } from '@kaetram/common/network';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
@@ -243,6 +244,15 @@ abstract class Entity {
 
     public isPlayer(): this is Player {
         return this.type === Modules.EntityType.Player;
+    }
+
+    /**
+     * Checks whether or not the entity is a projectile.
+     * @returns Whether the type is equal to the EntityType projectile.
+     */
+
+    public isProjectile(): this is Projectile {
+        return this.type === Modules.EntityType.Projectile;
     }
 
     /**

@@ -15,8 +15,10 @@ import Network from '../network/network';
 import Character from './entity/character/character';
 import Minigames from './minigames/minigames';
 import Globals from './globals/globals';
+import Enchanter from '../controllers/enchanter';
 
 import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
 
 import { Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -47,6 +49,7 @@ export default class World {
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public minigames: Minigames = new Minigames(this);
+    public enchanter: Enchanter = new Enchanter(this);
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -130,7 +133,7 @@ export default class World {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message: Utils.parseMessage(message),
+                message: Filter.clean(Utils.parseMessage(message)),
                 colour
             })
         });

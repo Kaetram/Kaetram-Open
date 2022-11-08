@@ -5,6 +5,8 @@ import Storage from './utils/storage';
 
 import { isMobile } from './utils/detect';
 
+import Updates from '@kaetram/common/text/en/updates.json';
+
 type EmptyCallback = () => void;
 type KeyDownCallback = (e: KeyboardEvent) => void;
 type KeyUpCallback = (e: KeyboardEvent) => void;
@@ -92,9 +94,10 @@ export default class App {
 
         this.parchment.addEventListener('click', () => {
             if (this.hasFooterOpen()) this.openScroll('load-character');
+            if (this.body.classList.contains('news')) this.body.classList.remove('news');
         });
 
-        this.gameVersion.textContent = `v${this.config.version}`;
+        this.gameVersion.textContent = `${this.config.version}`;
 
         // Document callbacks such as clicks and keystrokes.
         document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
@@ -236,14 +239,17 @@ export default class App {
      */
 
     public fadeMenu(): void {
-        this.updateLoader();
+        if (this.menuHidden) return;
 
         this.body.className = 'game';
 
         this.menuHidden = true;
         this.gameVersion.hidden = true;
 
+        this.updateLoader();
         this.saveLogin();
+
+        setTimeout(() => this.displayNews(), 1000);
     }
 
     /**
@@ -368,6 +374,38 @@ export default class App {
 
     public updateLoader(message = ''): void {
         this.loading.innerHTML = message ? message + this.getLoaderDots() : '';
+    }
+
+    /**
+     * When a new player or an update to the game has occurred we send a scroll
+     * notification. In the case of a new player we welcome them to the game,
+     * in the case of an update, we show the update changelog using the JSON in `common`.
+     */
+
+    public displayNews(): void {
+        let title = document.querySelector('#news-title') as HTMLElement,
+            content = document.querySelector('#news-content') as HTMLElement;
+
+        if (!title || !content) return;
+
+        // Show the default welcome screen when there is a new player.
+        if (this.storage.isNew()) return this.body.classList.add('news');
+
+        // Display new version changelogs.
+        if (this.storage.newVersion) {
+            title.textContent = `Kaetram ${this.config.version} Changelog`;
+
+            let changes = Updates[this.config.version as keyof typeof Updates];
+
+            if (!changes) return;
+
+            content.textContent = '';
+
+            for (let i = 0; i < changes.content.length; i++)
+                content.innerHTML += `${changes.content[i]}<br>`;
+
+            this.body.classList.add('news');
+        }
     }
 
     /**

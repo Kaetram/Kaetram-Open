@@ -1,0 +1,38 @@
+{
+    "alpha-2.2.3": {
+        "title": "Kaetram alpha-2.2.3",
+        "content": [
+            "- Audio fixes",
+            "- Added new achievement",
+            "- Minor map updates",
+            "- This neat little interface :)",
+            "- Hotkeys 'm' for map and 'p' for profile",
+            "- Admins and moderators name now displays a different colour"
+        ]
+    },
+    "alpha-2.2.4": {
+        "title": "Kaetram alpha-2.2.4",
+        "content": [
+            "- Discord bot updates",
+            "- Forester now sells axes",
+            "- Map updates and loading time improvements",
+            "- Armour and weapon stats for all items",
+            "- Added default price to majority of items",
+            "- Profanity filter fixes and improvements"
+        ]
+    },
+    "alpha-2.2.5": {
+        "title": "Kaetram alpha-2.2.5",
+        "content": [
+            "- Fixes health bar resetting when logging out",
+            "- Anti-cheating measures updated",
+            "- Minor fixes to the UI animations",
+            "- Mobile support drag & drop",
+            "- Un-droppable/un-sellable quest items",
+            "- Fixes bug with poison weapons",
+            "- Respawn duration changes to Skeleton King and Ogre Lord",
+            "- Map changes and more content",
+            "- A lot of game engine improvements and preparations for new content ;)"
+        ]
+    }
+}

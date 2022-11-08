@@ -12,7 +12,7 @@ interface SerializedContainer {
 }
 
 export default abstract class Container {
-    private slots: Slot[] = [];
+    protected slots: Slot[] = [];
 
     private emptySpaces = 0;
 
@@ -226,7 +226,7 @@ export default abstract class Container {
      */
 
     public getItem(slot: Slot | SlotData | ContainerItem): Item {
-        return new Item(slot.key, -1, -1, true, slot.count, slot.ability, slot.abilityLevel);
+        return new Item(slot.key, -1, -1, true, slot.count, slot.enchantments);
     }
 
     /**

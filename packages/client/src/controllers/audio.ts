@@ -18,14 +18,23 @@ export default class AudioController {
     private buffers: { [url: string]: Promise<AudioBuffer> } = {};
 
     /** The main audio context. */
-    private context: AudioContext = new AudioContext();
+    private context!: AudioContext;
 
     /** Gain node used to fade in/out the background music */
     private musicGainNode!: GainNode;
+
     /** Make sure there's only one gain node for music. */
     private isMusicConnected = false;
 
     public constructor(private game: Game) {}
+
+    /**
+     * Creates an audio context (generally when player first interacts with the website).
+     */
+
+    public createContext(): void {
+        this.context = new AudioContext();
+    }
 
     /**
      * Plays a new sound.
@@ -216,7 +225,6 @@ export default class AudioController {
      */
 
     private initMusicNode() {
-        console.log(this.context);
         this.musicGainNode = new GainNode(this.context, { gain: this.musicMinGain });
     }
 

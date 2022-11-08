@@ -12,7 +12,7 @@ import type {
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
-    ProcessedTree
+    ProcessedResource
 } from '@kaetram/common/types/map';
 
 import type { RegionTile } from '@kaetram/common/types/region';
@@ -44,7 +44,7 @@ export default class Map {
     public cursors: { [tileId: number]: string } = map.cursors;
     public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
-    public trees: ProcessedTree[] = map.trees || [];
+    public trees: ProcessedResource[] = map.trees || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 

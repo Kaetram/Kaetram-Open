@@ -202,7 +202,8 @@ export enum Languages {
 
 export enum Warps {
     Mudwich,
-    Undersea
+    Undersea,
+    Lakesworld
 }
 
 export enum Skills {
@@ -336,7 +337,7 @@ export let PoisonInfo = {
         name: 'Venom',
         damage: 2,
         duration: 30,
-        rate: 2 // every second
+        rate: 3 // every second
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -365,13 +366,14 @@ export const enum Constants {
     BANK_SIZE = 69, // Maximum bank size
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
-    HEAL_RATE = 5000, // healing every 10 seconds
+    HEAL_RATE = 5000, // healing every 5 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
-    MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
-    SPAWN_POINT = '56,46', // Default starting point outside the tutorial
+    MAP_DIVISION_SIZE = 48, // The size of a region the map is split into.
+    SPAWN_POINT = '405,27', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '571,10', // 'x,y' values
-    TREE_REGROW = 30_000,
+    TUTORIAL_SPAWN_POINT = '570,11', // 'x,y' values
+    RESOURCE_RESPAWN = 30_000,
+    TREE_RESPAWN = 25_000,
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45 // Maximum attainable accuracy for a character.
 }
@@ -392,7 +394,7 @@ export enum APIConstants {
 export enum Defaults {
     MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000, // every 1 second
-    POISON_CHANCE = 10 // 10% chance to poison a character
+    POISON_CHANCE = 15 // 15 in (235 - level) chance to poison
 }
 
 export enum ItemDefaults {
@@ -420,9 +422,8 @@ export enum MapFlags {
     HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
-// States that a tree can be in. We can obviously add more
-// as more pixel art is added.
-export enum TreeState {
+// Handles the two states of a resource, default or depleted.
+export enum ResourceState {
     Default,
-    Cut
+    Depleted
 }
