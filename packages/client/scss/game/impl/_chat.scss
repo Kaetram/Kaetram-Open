@@ -4,8 +4,7 @@
     pointer-events: none;
 
     position: absolute;
-    bottom: 10%;
-    left: 5%;
+    bottom: 5%;
 
     display: none;
 
@@ -22,7 +21,9 @@
 
     text-shadow: 2px 2px 2px black;
 
-    background-color: rgb(0 0 0 / 25%);
+    border-radius: 8px;
+
+    //background-color: rgb(0 0 0 / 10%);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
