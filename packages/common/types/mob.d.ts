@@ -21,4 +21,5 @@ export interface MobData {
     boss?: boolean;
     miniboss?: boolean;
     roamDistance?: number;
+    healRate?: number;
 }
