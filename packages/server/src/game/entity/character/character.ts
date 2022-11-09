@@ -30,10 +30,11 @@ export default abstract class Character extends Entity {
 
     public hitPoints: HitPoints;
 
-    public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
-    public attackRate = Modules.Defaults.ATTACK_RATE;
-    public healingRate = Modules.Constants.HEAL_RATE;
-    public orientation = Modules.Orientation.Down;
+    public healRate: number = Modules.Constants.HEAL_RATE;
+    public movementSpeed: number = Modules.Defaults.MOVEMENT_SPEED;
+    public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public healingRate: number = Modules.Constants.HEAL_RATE;
+    public orientation: number = Modules.Orientation.Down;
 
     /* States */
     public poison?: Poison | undefined;
@@ -85,7 +86,7 @@ export default abstract class Character extends Entity {
         this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
 
-        this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
+        this.healingInterval = setInterval(this.heal.bind(this), this.healRate);
     }
 
     /**
