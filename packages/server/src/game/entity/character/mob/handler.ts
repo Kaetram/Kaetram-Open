@@ -29,6 +29,8 @@ export default class Handler {
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onTalk(this.handleTalk.bind(this));
+        this.mob.combat.onStart(this.handleCombatStart.bind(this));
+        this.mob.combat.onStop(this.handleCombatStop.bind(this));
     }
 
     /**
@@ -184,5 +186,21 @@ export default class Handler {
                 text
             })
         );
+    }
+
+    /**
+     * Callback handler for when a mob starts combat.
+     */
+
+    protected handleCombatStart(): void {
+        //
+    }
+
+    /**
+     * Callback handler for when a mob stops combat.
+     */
+
+    protected handleCombatStop(): void {
+        //
     }
 }

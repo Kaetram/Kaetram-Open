@@ -1957,21 +1957,23 @@
   },
 
   "queenant": {
-    "name": "Ziana",
+    "name": "Queen Ant",
     "drops": {"ironknightarmor": 25, "justicebow": 25, "whip": 25, "gold": 100},
-    "hitPoints": 2000,
+    "hitPoints": 3600,
     "defenseLevel": 50,
-    "attackLevel": 100,
+    "attackLevel": 25,
     "experience": 960,
-    "level": 54,
-    "aggroRange": 5,
+    "level": 68,
+    "aggroRange": 12,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
     "attackRate": 1500,
+    "roamDistance": 16,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "healRate": 1000
   },
 
   "skydinosaur": {
