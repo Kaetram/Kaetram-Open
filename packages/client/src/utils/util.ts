@@ -182,5 +182,44 @@ export default {
             strength: 0,
             archery: 0
         };
+    },
+
+    /**
+     * Fades in an element.
+     * @param element The element to fade in.
+     */
+    fadeIn(element: HTMLElement): void {
+        element.style.opacity ||= '0';
+        element.style.display = 'block';
+
+        let fade = () => {
+            let opacity = parseFloat(element.style.opacity) + 0.1;
+
+            if (opacity <= 1) {
+                element.style.opacity = opacity.toString();
+                requestAnimationFrame(fade);
+            }
+        };
+
+        requestAnimationFrame(fade);
+    },
+
+    /**
+     * Fades out an element.
+     * @param element The element to fade out.
+     */
+    fadeOut(element: HTMLElement): void {
+        element.style.opacity ||= '1';
+
+        let fade = () => {
+            let opacity = parseFloat(element.style.opacity) - 0.1;
+
+            if (opacity >= 0) {
+                element.style.opacity = opacity.toString();
+                requestAnimationFrame(fade);
+            } else element.style.display = 'none';
+        };
+
+        requestAnimationFrame(fade);
     }
 };
