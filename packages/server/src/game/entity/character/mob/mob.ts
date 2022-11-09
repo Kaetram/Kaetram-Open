@@ -115,6 +115,7 @@ export default class Mob extends Character {
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
         this.roamDistance = data.roamDistance || this.roamDistance;
+        this.healRate = data.healRate || this.healRate;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 

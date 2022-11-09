@@ -16,6 +16,9 @@ export default class Combat {
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
 
+    private startCallback?: () => void;
+    private stopCallback?: () => void;
+
     public constructor(private character: Character) {}
 
     /**
@@ -26,6 +29,8 @@ export default class Combat {
         if (this.started) return;
 
         this.started = true;
+
+        this.startCallback?.();
 
         /**
          * Start the loop at a third the attack rate with a 15 millisecond offset. This is
@@ -50,6 +55,8 @@ export default class Combat {
         // Clear target and attackers.
         this.character.clearTarget();
         this.character.clearAttackers();
+
+        this.stopCallback?.();
 
         // Mark the combat as stopped.
         this.started = false;
@@ -201,5 +208,21 @@ export default class Combat {
 
     private canAttack(): boolean {
         return Date.now() - this.lastAttack >= this.character.getAttackRate();
+    }
+
+    /**
+     * Callback for when the combat starts.
+     */
+
+    public onStart(callback: () => void): void {
+        this.startCallback = callback;
+    }
+
+    /**
+     * Callback for when the combat stops.
+     */
+
+    public onStop(callback: () => void): void {
+        this.stopCallback = callback;
     }
 }
