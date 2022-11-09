@@ -1,20 +1,21 @@
-import $ from 'jquery';
-
 import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
+import Util from '../utils/util';
 
 export default class ChatController {
-    private chatBox: JQuery<HTMLElement> = $('#chat');
-    private log: JQuery<HTMLElement> = $('#chat-log');
-    private input: JQuery<HTMLElement> = $('#chat-input');
-    private button = $('#chat-button');
+    private chatBox: HTMLElement = document.querySelector('#chat')!;
+    private log: HTMLElement = document.querySelector('#chat-log')!;
+    private input: HTMLInputElement = document.querySelector('#chat-input')!;
+    private button = document.querySelector('#chat-button')!;
 
     private readonly fadingDuration = 5000;
     private fadingTimeout!: number | undefined;
 
     public constructor(private game: Game) {
-        this.button.on('click', () => this.toggle());
+        this.button.addEventListener('click', () => this.toggle());
+
+        this.input.addEventListener('blur', () => this.hide());
     }
 
     /**
@@ -24,7 +25,7 @@ export default class ChatController {
      */
 
     public keyDown(key: string): void {
-        if (key === 'Enter' && this.input.val() !== '') return this.send();
+        if (key === 'Enter' && this.input.value !== '') return this.send();
         if (key === 'Escape' || key === 'Enter') this.toggle();
     }
 
@@ -39,20 +40,17 @@ export default class ChatController {
     public add(source: string, message: string, colour = '', notify = false): void {
         let element = this.createElement(source, message);
 
-        element.css('color', colour || 'white');
+        element.style.color = colour || 'white';
+        if (notify) element.style.fontWeight = 'bold';
 
         // Scroll to the bottom of the chat log.
-        this.log.append(element).scrollTop(this.log.prop('scrollHeight'));
+        this.log.append(element);
+        this.log.scrollTop = this.log.scrollHeight;
 
         this.displayChatBox();
 
         // Start the timeout for hiding the chatbox.
         this.hideChatBox();
-
-        if (notify) {
-            this.clearTimeout();
-            this.hide();
-        }
     }
 
     /**
@@ -61,8 +59,11 @@ export default class ChatController {
      * @param message The contents of the message.
      */
 
-    private createElement(source: string, message: string): JQuery<HTMLElement> {
-        return $(`<p>${source} » ${message}</p>`);
+    private createElement(source: string, message: string): HTMLElement {
+        let element = document.createElement('p');
+        element.textContent = `${source} » ${message}`;
+
+        return element;
     }
 
     /**
@@ -71,7 +72,7 @@ export default class ChatController {
      */
 
     public send(): void {
-        this.game.socket.send(Packets.Chat, [this.input.val()]);
+        this.game.socket.send(Packets.Chat, [this.input.value]);
 
         this.hide();
     }
@@ -93,12 +94,19 @@ export default class ChatController {
      */
 
     private display(): void {
-        this.button.addClass('active');
+        this.button.classList.add('active');
+
+        if (this.inputVisible()) this.input.style.display = 'block';
+        else Util.fadeIn(this.input);
 
         this.displayChatBox();
 
         // Fade input in, clear the input field, and focus it.
-        this.input.fadeIn('fast').val('').trigger('focus');
+
+        this.input.focus();
+        this.input.value = '';
+
+        Util.fadeIn(this.input);
     }
 
     /**
@@ -106,7 +114,7 @@ export default class ChatController {
      */
 
     private displayChatBox(): void {
-        this.chatBox.fadeIn('fast');
+        Util.fadeIn(this.chatBox);
     }
 
     /**
@@ -115,12 +123,16 @@ export default class ChatController {
      */
 
     private hide(): void {
-        this.button.removeClass('active');
+        this.button.classList.remove('active');
 
         this.hideChatBox();
 
         // Fade input out and clear the input field.
-        this.input.fadeOut('fast').val('').trigger('blur');
+
+        this.input.blur();
+        this.input.value = '';
+
+        Util.fadeOut(this.input);
     }
 
     /**
@@ -129,8 +141,10 @@ export default class ChatController {
      */
 
     private hideChatBox(): void {
+        this.clearTimeout();
+
         this.fadingTimeout = window.setTimeout(() => {
-            if (!this.inputVisible()) this.chatBox.fadeOut('slow');
+            if (!this.inputVisible()) Util.fadeOut(this.chatBox);
         }, this.fadingDuration);
     }
 
@@ -140,7 +154,7 @@ export default class ChatController {
      */
 
     public inputVisible(): boolean {
-        return this.input.is(':visible');
+        return this.input.style.display === 'block';
     }
 
     /**
