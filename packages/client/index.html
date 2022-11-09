@@ -411,7 +411,9 @@
                             Kaetram is a 2D open-source experiment. The game is still very early in
                             development, so please be wary of that. If you would like to check out
                             the source code, visit our
-                            <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open">GitHub Repository</a>.
+                            <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open"
+                                >GitHub Repository</a
+                            >.
                         </p>
 
                         <div class="close-about">
@@ -434,11 +436,14 @@
                         </h1>
 
                         <p id="news-content">
-                            Kaetram is still in alpha development stage. We are currently looking for
-                            developers and pixel artists who are interested in helping out! If you
-                            encounter any bugs or have any suggestions, feel free to submit them on our 
-                            <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open">GitHub</a> 
-                            or 
+                            Kaetram is still in alpha development stage. We are currently looking
+                            for developers and pixel artists who are interested in helping out! If
+                            you encounter any bugs or have any suggestions, feel free to submit them
+                            on our
+                            <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open"
+                                >GitHub</a
+                            >
+                            or
                             <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
                         </p>
 
@@ -530,7 +535,7 @@
                         <div class="profile-slot weapon-slot"></div>
                         <div class="profile-slot armour-slot"></div>
                         <div class="profile-slot pendant-slot"></div>
-                        <div class="profile-slot ring-slot"></div>
+                        <div class="ring-slot profile-slot"></div>
                         <div class="profile-slot boots-slot"></div>
                         <div id="equipment-button"></div>
                     </div>
@@ -730,7 +735,7 @@
                             <div class="profile-slot weapon-slot"></div>
                             <div class="profile-slot armour-slot"></div>
                             <div class="profile-slot pendant-slot"></div>
-                            <div class="profile-slot ring-slot"></div>
+                            <div class="ring-slot profile-slot"></div>
                             <div class="profile-slot boots-slot"></div>
                         </div>
                     </div>
@@ -743,7 +748,7 @@
 
                     <div id="attackStats">
                         <p class="title">Attack Stats</p>
-                        <br>
+                        <br />
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
@@ -751,7 +756,7 @@
                     </div>
                     <div id="defenseStats">
                         <p class="title">Defense Stats</p>
-                        <br>
+                        <br />
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
@@ -759,7 +764,7 @@
                     </div>
                     <div id="bonuses">
                         <p class="title">Bonuses</p>
-                        <br>
+                        <br />
                         <p class="accuracy">Accuracy:</p>
                         <p class="strength">Strength:</p>
                         <p class="archery">Archery:</p>
@@ -792,19 +797,16 @@
                 </div>
 
                 <div id="chat">
-                    <div id="talk">
-                        <form onsubmit="return false">
-                            <input
-                                title="Enter your message!"
-                                id="chat-input"
-                                type="text"
-                                maxlength="256"
-                                autocomplete="off"
-                                data-lpignore="true"
-                            />
-                        </form>
-                    </div>
                     <div id="chat-log"></div>
+
+                    <input
+                        title="Enter your message!"
+                        id="chat-input"
+                        type="text"
+                        maxlength="256"
+                        autocomplete="off"
+                        data-lpignore="true"
+                    />
                 </div>
 
                 <div id="player-info">
