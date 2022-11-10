@@ -204,7 +204,8 @@ export default class Incoming {
                 playerY,
                 movementSpeed,
                 targetInstance,
-                orientation
+                orientation,
+                following
             } = data,
             entity: Entity;
 
@@ -212,7 +213,12 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Movement.Request:
-                return this.player.handleMovementRequest(requestX!, requestY!, playerX!, playerY!);
+                return this.player.handleMovementRequest(
+                    playerX!,
+                    playerY!,
+                    targetInstance!,
+                    following!
+                );
 
             case Opcodes.Movement.Started:
                 return this.player.handleMovementStarted(
