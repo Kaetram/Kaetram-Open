@@ -157,6 +157,8 @@ export default class InputController {
     private handleKeyDown(event: KeyboardEvent): void {
         if (this.chatHandler.inputVisible()) return this.chatHandler.keyDown(event.key);
 
+        let target: Entity;
+
         switch (event.key) {
             case 'w':
             case 'ArrowUp':
@@ -192,6 +194,15 @@ export default class InputController {
 
             case 'p':
                 this.game.menu.getProfile().toggle();
+                return;
+
+            case 't':
+                target = this.game.entities.get(this.game.player.lastTarget);
+
+                console.log(target);
+
+                if (target) this.game.player.follow(target);
+
                 return;
 
             case 'Escape':
@@ -307,7 +318,6 @@ export default class InputController {
 
             // Set target and follow a targetable entity.
             if (this.isTargetable(this.entity)) {
-                this.player.setTarget(this.entity);
                 this.player.follow(this.entity);
 
                 if (this.isAttackable(this.entity))
