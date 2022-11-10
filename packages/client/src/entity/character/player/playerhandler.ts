@@ -94,11 +94,13 @@ export default class PlayerHandler {
 
             camera.clip();
 
+            let instance = player.target?.instance || game.getEntityAt(x, y)?.instance;
+
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Stop,
                 playerX: x,
                 playerY: y,
-                targetInstance: player.target?.instance,
+                targetInstance: instance,
                 orientation: player.orientation
             });
 
