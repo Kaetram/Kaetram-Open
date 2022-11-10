@@ -196,6 +196,8 @@ export default class InputController {
 
             case 'Escape':
                 this.game.menu.hide();
+
+                if (this.game.player.moving) this.game.player.stop();
                 return;
 
             case '+':
