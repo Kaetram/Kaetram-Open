@@ -670,6 +670,7 @@ export default class Player extends Character {
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
         if (this.map.isDoor(x, y) || (target && following)) return;
+        if (this.inCombat()) return;
 
         if (x !== this.x || y !== this.y) {
             this.notify(
