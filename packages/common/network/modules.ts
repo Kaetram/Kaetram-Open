@@ -227,6 +227,12 @@ export enum Enchantment {
     Splash
 }
 
+export enum AoEType {
+    Character,
+    Player,
+    Mob
+}
+
 export interface Colours {
     fill: string;
     stroke: string;

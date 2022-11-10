@@ -64,4 +64,25 @@ export default class Grids {
     public forEachEntityAt(x: number, y: number, callback: (entity: Entity) => void): void {
         for (let instance in this.entityGrid[y][x]) callback(this.entityGrid[y][x][instance]);
     }
+
+    /**
+     * Looks through each nearby tile at a specified coordinate and creates a callback for each
+     * entity that is found.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     * @param callback The entity currently being iterated at the specified coordinate.
+     * @param radius How many tiles away from the specified coordinate we are looking.
+     */
+
+    public forEachEntityNear(
+        x: number,
+        y: number,
+        callback: (entity: Entity) => void,
+        radius = 1
+    ): void {
+        for (let i = x - radius; i <= x + radius; i++)
+            for (let j = y - radius; j <= y + radius; j++)
+                if (this.entityGrid[j] && this.entityGrid[j][i])
+                    this.forEachEntityAt(i, j, callback);
+    }
 }
