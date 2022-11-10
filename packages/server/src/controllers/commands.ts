@@ -674,6 +674,11 @@ export default class Commands {
                 this.player.storeOpen = key;
 
                 break;
+
+            case 'aoe':
+                this.player.hit(100, this.player, true);
+
+                break;
         }
     }
 }

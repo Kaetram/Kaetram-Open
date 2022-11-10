@@ -137,7 +137,7 @@ export default class Combat {
      * is attacking their target.
      */
 
-    private sendAttack(hit: Hit): void {
+    public sendAttack(hit: Hit): void {
         // Ranged combat depends on when the projectile connects with the target.
         if (this.character.isRanged()) return this.sendRangedAttack(hit);
 
@@ -150,7 +150,7 @@ export default class Combat {
         );
 
         // Handle combat damage here since melee is instant.
-        this.character.target?.hit(hit.getDamage(), this.character);
+        this.character.target?.hit(hit.getDamage(), this.character, hit.aoe);
     }
 
     /**
@@ -196,7 +196,9 @@ export default class Combat {
         return new Hit(
             Modules.Hits.Damage,
             Formulas.getDamage(this.character, this.character.target!),
-            this.character.isRanged()
+            this.character.isRanged(),
+            false,
+            this.character.getAoE()
         );
     }
 
