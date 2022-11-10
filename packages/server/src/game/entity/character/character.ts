@@ -478,7 +478,7 @@ export default abstract class Character extends Entity {
      */
 
     public inCombat(): boolean {
-        return this.combat.started /*|| this.attackers.length > 0*/ || this.hasTarget();
+        return this.combat.started || this.attackers.length > 0 || this.hasTarget();
     }
 
     /**
