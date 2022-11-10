@@ -53,7 +53,9 @@ export default class PlayerHandler {
                     requestX: x,
                     requestY: y,
                     playerX: player.gridX,
-                    playerY: player.gridY
+                    playerY: player.gridY,
+                    targetInstance: player.target?.instance,
+                    following: player.following
                 });
 
             if (isObject)

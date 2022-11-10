@@ -13,7 +13,7 @@ type FallbackCallback = (x: number, y: number) => void;
 export default class Character extends Entity {
     public healthBarVisible = false;
 
-    private following = false;
+    public following = false;
     private interrupted = false;
     public explosion = false;
     public healing = false;

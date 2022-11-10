@@ -662,14 +662,14 @@ export default class Player extends Character {
     /**
      * Handles the request for a movement to a new position. This is the preliminary check for
      * anti-cheating.
-     * @param requestX Requested x coordinate.
-     * @param requestY Requested y coordinate.
      * @param x The player's x coordinate as reported by the client.
      * @param y The player's y coordinate as reported by the client.
+     * @param target If the player is requesting movement towards an entity.
+     * @param following Whether or not the player is actively following an entity.
      */
 
-    public handleMovementRequest(requestX: number, requestY: number, x: number, y: number): void {
-        if (this.map.isDoor(x, y)) return;
+    public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        if (this.map.isDoor(x, y) || (target && following)) return;
 
         if (x !== this.x || y !== this.y) {
             this.notify(
