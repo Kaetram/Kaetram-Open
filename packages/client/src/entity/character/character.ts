@@ -22,6 +22,8 @@ export default class Character extends Entity {
     public path: number[][] | null = null;
     public target: Entity | null = null;
 
+    public lastTarget = '';
+
     private attackers: { [id: string]: Character } = {};
 
     public movement = new Transition();
@@ -614,6 +616,8 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
+
+        this.lastTarget = target.instance;
     }
 
     public hasTarget(target?: Entity): boolean {
