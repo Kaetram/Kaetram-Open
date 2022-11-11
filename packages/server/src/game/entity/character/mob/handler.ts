@@ -29,8 +29,11 @@ export default class Handler {
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onTalk(this.handleTalk.bind(this));
+
+        // Combat callbacks
         this.mob.combat.onStart(this.handleCombatStart.bind(this));
         this.mob.combat.onStop(this.handleCombatStop.bind(this));
+        this.mob.combat.onAttack(this.handleAttack.bind(this));
     }
 
     /**
@@ -201,6 +204,14 @@ export default class Handler {
      */
 
     protected handleCombatStop(): void {
+        //
+    }
+
+    /**
+     * Callback for when the mob attacks a character.
+     */
+
+    protected handleAttack(): void {
         //
     }
 }
