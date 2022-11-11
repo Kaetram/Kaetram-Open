@@ -18,6 +18,7 @@ export default class Combat {
 
     private startCallback?: () => void;
     private stopCallback?: () => void;
+    private attackCallback?: () => void;
 
     public constructor(private character: Character) {}
 
@@ -119,6 +120,8 @@ export default class Combat {
             this.sendAttack(hit);
 
             this.lastAttack = Date.now();
+
+            this.attackCallback?.();
         } else this.sendFollow();
     }
 
@@ -137,7 +140,7 @@ export default class Combat {
      * is attacking their target.
      */
 
-    public sendAttack(hit: Hit): void {
+    private sendAttack(hit: Hit): void {
         // Ranged combat depends on when the projectile connects with the target.
         if (this.character.isRanged()) return this.sendRangedAttack(hit);
 
@@ -226,5 +229,13 @@ export default class Combat {
 
     public onStop(callback: () => void): void {
         this.stopCallback = callback;
+    }
+
+    /**
+     * Callback for whenever the character performs an attack.
+     */
+
+    public onAttack(callback: () => void): void {
+        this.attackCallback = callback;
     }
 }
