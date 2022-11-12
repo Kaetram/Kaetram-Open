@@ -1973,7 +1973,8 @@
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
     "respawnDelay": 95000,
-    "healRate": 1000
+    "healRate": 1000,
+    "plugin": "queenant"
   },
 
   "skydinosaur": {
