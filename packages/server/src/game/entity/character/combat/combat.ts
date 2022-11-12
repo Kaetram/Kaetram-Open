@@ -19,6 +19,7 @@ export default class Combat {
     private startCallback?: () => void;
     private stopCallback?: () => void;
     private attackCallback?: () => void;
+    private loopCallback?: () => void;
 
     public constructor(private character: Character) {}
 
@@ -109,6 +110,8 @@ export default class Combat {
 
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
+
+        this.loopCallback?.();
 
         this.checkTargetPosition();
 
@@ -237,5 +240,13 @@ export default class Combat {
 
     public onAttack(callback: () => void): void {
         this.attackCallback = callback;
+    }
+
+    /**
+     * Callback for every time the combat loop is called.
+     */
+
+    public onLoop(callback: () => void): void {
+        this.loopCallback = callback;
     }
 }
