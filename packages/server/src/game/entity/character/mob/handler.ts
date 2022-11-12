@@ -34,6 +34,7 @@ export default class Handler {
         this.mob.combat.onStart(this.handleCombatStart.bind(this));
         this.mob.combat.onStop(this.handleCombatStop.bind(this));
         this.mob.combat.onAttack(this.handleAttack.bind(this));
+        this.mob.combat.onLoop(this.handleCombatLoop.bind(this));
     }
 
     /**
@@ -212,6 +213,14 @@ export default class Handler {
      */
 
     protected handleAttack(): void {
+        //
+    }
+
+    /**
+     * Callback for every time the mob's combat loop called.
+     */
+
+    protected handleCombatLoop(): void {
         //
     }
 }
