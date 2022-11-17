@@ -59,7 +59,7 @@ export default class Main {
      */
 
     private handleUpdate(): void {
-        let players = this.servers.totalPlayers;
+        let players = this.servers.getTotalPlayers();
 
         this.discord.setTopic(`Currently ${players} player${players === 1 ? '' : 's'} online.`);
     }
