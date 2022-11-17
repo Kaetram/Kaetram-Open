@@ -165,13 +165,11 @@ export default class Servers {
      */
 
     public getTotalPlayers(): number {
-        return _.reduce(
-            this.servers,
-            (total, server: Server) => {
-                return total + server.players.length;
-            },
-            0
-        );
+        let totalPlayers = 0;
+
+        _.each(this.servers, (server: Server) => (totalPlayers += server.players.length));
+
+        return totalPlayers;
     }
 
     /**
