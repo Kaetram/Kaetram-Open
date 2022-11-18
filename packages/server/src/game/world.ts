@@ -154,6 +154,14 @@ export default class World {
     }
 
     /**
+     * Iterates through all the players currently logged in and saves their data.
+     */
+
+    public save(): void {
+        this.entities.forEachPlayer((player: Player) => player.save());
+    }
+
+    /**
      * Checks if the user is logged in.
      * @param username The username of the player we are checking.
      * @returns Boolean of whether user is online.
