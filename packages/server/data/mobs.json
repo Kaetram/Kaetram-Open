@@ -1958,12 +1958,12 @@
 
   "queenant": {
     "name": "Queen Ant",
-    "drops": {"ironknightarmor": 25, "justicebow": 25, "whip": 25, "gold": 100},
-    "hitPoints": 3600,
-    "defenseLevel": 50,
-    "attackLevel": 25,
+    "drops": {"ironknightarmor": 50, "justicebow": 50, "whip": 50, "gold": 400, "bigflask": 100},
+    "hitPoints": 4200,
+    "defenseLevel": 75,
+    "attackLevel": 30,
     "experience": 960,
-    "level": 77,
+    "level": 94,
     "aggroRange": 12,
     "attackRange": 1,
     "aggressive": true,
@@ -1972,7 +1972,7 @@
     "roamDistance": 16,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "respawnDelay": 95000,
+    "respawnDelay": 145000,
     "healRate": 1000,
     "plugin": "queenant"
   },
