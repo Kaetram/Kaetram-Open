@@ -3,6 +3,7 @@ import { ServerData } from '../controllers/servers';
 export interface SerializedServer {
     host: string;
     port: number;
+    players: number;
     maxPlayers: number;
 }
 
@@ -44,6 +45,7 @@ export default class Server {
         return {
             host: this.remoteServerHost,
             port: this.port,
+            players: this.players.length,
             maxPlayers: this.maxPlayers
         };
     }
