@@ -26,13 +26,11 @@ import type {
     StorePacket,
     WarpPacket
 } from '@kaetram/common/types/messages/incoming';
-import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
-import type Item from '../game/entity/objects/item';
 
 export default class Incoming {
     private world: World;
