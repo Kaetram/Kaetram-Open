@@ -12,7 +12,7 @@ import Entity from '../game/entity/entity';
 import Utils from '@kaetram/common/util/utils';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, Pointer, Network, Notification, Store } from '../network/packets';
+import { Command, Pointer, Network, Notification, Store, NPC } from '../network/packets';
 import Skill from '../game/entity/character/player/skill/skill';
 export default class Commands {
     private world;
@@ -676,8 +676,11 @@ export default class Commands {
                 break;
 
             case 'aoe':
-                this.player.hit(100, this.player, true);
+                this.player.hit(100, this.player, 2);
+                break;
 
+            case 'bank':
+                this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
         }
     }

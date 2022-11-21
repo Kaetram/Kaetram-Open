@@ -31,6 +31,12 @@
     background-size: 600%;
 }
 
+.bank-item-count {
+    font-family: AdvoCut, sans-serif !important;
+    color: gold !important;
+    text-shadow: 1px 1px black;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         #bank {
@@ -56,12 +62,12 @@
             overflow-y: scroll;
 
             width: 144px * $i;
-            height: 136px * $i;
+            height: 130px * $i;
         }
 
         .bank-slot {
             width: 16px * $i;
-            height: 15px * $i;
+            height: 16px * $i;
             margin-bottom: 6px * $i;
             margin-left: 2px * $i;
 
