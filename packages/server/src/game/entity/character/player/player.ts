@@ -299,6 +299,11 @@ export default class Player extends Character {
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
+        // Timeout the player if the ready packet is not received within 10 seconds.
+        setTimeout(() => {
+            if (!this.ready) this.connection.reject('error');
+        }, 10_000);
+
         /**
          * Send player data to client here
          */
