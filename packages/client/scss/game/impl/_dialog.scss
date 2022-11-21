@@ -53,7 +53,7 @@
         .item-count {
             width: 16px * $i;
             height: 7px * $i;
-            margin-left: 1px * $i;
+            margin-left: $i;
 
             text-align: center;
         }
