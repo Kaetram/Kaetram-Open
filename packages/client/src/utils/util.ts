@@ -60,6 +60,9 @@ export default {
         // Sets the class of the count.
         count.classList.add('item-count');
 
+        // Bank item counts are a different colour.
+        if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
+
         // Appends image and count onto the bank slot.
         slot.append(image);
         slot.append(count);
