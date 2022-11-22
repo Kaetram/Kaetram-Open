@@ -185,7 +185,7 @@
   "bluescimitar": {
     "type": "weapon",
     "name": "Blue Scimitar",
-    "level": 40,
+    "level": 46,
     "attackStats": {
       "crush": 18,
       "slash": 14,
