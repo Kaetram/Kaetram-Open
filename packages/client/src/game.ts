@@ -185,7 +185,6 @@ export default class Game {
      * @param x The destination x grid coordinate.
      * @param y The destination y grid coordinate.
      * @param ignores The list of character objects that we are ignoring.
-     * @param isObject Whether or not we are finding path to an object.
      * @returns A 2D array of grid coordinates that represent the path.
      */
 
@@ -193,8 +192,7 @@ export default class Game {
         character: Character,
         x: number,
         y: number,
-        ignores: Character[] = [],
-        isObject = false
+        ignores: Character[] = []
     ): number[][] {
         let path: number[][] = [];
 
@@ -205,8 +203,6 @@ export default class Game {
         path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
 
         if (ignores) this.pathfinder.clearIgnores(this.map.grid);
-
-        if (isObject) path.pop(); // Remove the last path index
 
         return path;
     }
