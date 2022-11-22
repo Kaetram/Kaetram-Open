@@ -284,6 +284,24 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Makes a character follow another character. If the target parameter is specified
+     * it will follow that character, otherwise it will use the current target. The packet
+     * is sent to nearby regions.
+     * @param target Optional parameter for which target to follow.
+     */
+
+    public follow(target?: Character): void {
+        if (!target && !this.hasTarget()) return;
+
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Follow, {
+                instance: this.instance,
+                target: target?.instance || this.target!.instance
+            })
+        );
+    }
+
+    /**
      * Sets the target to null (ending combat).
      */
 

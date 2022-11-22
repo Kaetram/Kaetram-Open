@@ -68,7 +68,7 @@ export default class Mob extends Character {
     public talkCallback?: (message: string) => void;
     public roamingCallback?: (retries?: number) => void;
 
-    public constructor(world: World, key: string, x: number, y: number) {
+    public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
 
         let data = (rawData as RawData)[key];
@@ -79,7 +79,7 @@ export default class Mob extends Character {
         }
 
         this.loadData(data);
-        this.loadPlugin(data.plugin!);
+        this.loadPlugin(plugin ? key : data.plugin!); // plugin boolean is used to load plugin based on key.
         this.loadSpawns();
         this.loadStats();
 

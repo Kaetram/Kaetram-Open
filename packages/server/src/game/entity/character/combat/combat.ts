@@ -125,7 +125,7 @@ export default class Combat {
             this.lastAttack = Date.now();
 
             this.attackCallback?.();
-        } else this.sendFollow();
+        } else this.character.follow();
     }
 
     /**
@@ -175,21 +175,6 @@ export default class Combat {
 
         // Spawn the projectile in the game client.
         this.character.sendToRegions(new Spawn(projectile));
-    }
-
-    /**
-     * Sends a follow request to the nearby regions. This
-     * notifies all the players that this current character
-     * is following their target.
-     */
-
-    private sendFollow(): void {
-        this.character.sendToRegions(
-            new Movement(Opcodes.Movement.Follow, {
-                instance: this.character.instance,
-                target: this.character.target!.instance
-            })
-        );
     }
 
     /**
