@@ -263,7 +263,7 @@
          "name":"plateau1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":816,
          "x":0,
          "y":0
@@ -3566,6 +3566,40 @@
                  "width":16,
                  "x":11920,
                  "y":2352
+                }, 
+                {
+                 "class":"",
+                 "height":16,
+                 "id":455,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"mimic",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":11216,
+                 "y":7024
+                }, 
+                {
+                 "class":"",
+                 "height":16,
+                 "id":456,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"mimic",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":12000,
+                 "y":6912
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4197,7 +4231,7 @@
          "y":0
         }],
  "nextlayerid":76,
- "nextobjectid":455,
+ "nextobjectid":457,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",
