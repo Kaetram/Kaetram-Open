@@ -45,6 +45,7 @@ export default class Mob extends Character {
     public roaming = false;
     public poisonous = false;
     public aggressive = false;
+    public alwaysAggressive = false;
     private hiddenName = false;
 
     // Stats & Bonuses
@@ -105,6 +106,7 @@ export default class Mob extends Character {
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
         this.aggressive = data.aggressive || this.aggressive;
+        this.alwaysAggressive = data.alwaysAggressive || this.alwaysAggressive;
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
@@ -302,10 +304,16 @@ export default class Mob extends Character {
      */
 
     public canAggro(player: Player): boolean {
-        if (!this.aggressive || this.target || !player.ready) return false;
+        // Skip if mob has a target or the player targeted isn't fully loaded yet.
+        if (this.target || !player.ready) return false;
 
-        if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
+        // Check for aggressive properties of the mob.
+        if (!this.aggressive && !this.alwaysAggressive) return false;
 
+        // Only aggro if the mob's level * 3 is lower than the player's level.
+        if (Math.floor(this.level * 3) < player.level && !this.alwaysAggressive) return false;
+
+        // Ensure the mob isnear the player within its aggro range.
         return this.isNear(player, this.aggroRange);
     }
 
