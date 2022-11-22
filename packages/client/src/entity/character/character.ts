@@ -13,6 +13,7 @@ type FallbackCallback = (x: number, y: number) => void;
 export default class Character extends Entity {
     public healthBarVisible = false;
 
+    public moving = false;
     public following = false;
     private interrupted = false;
     public explosion = false;
@@ -427,6 +428,8 @@ export default class Character extends Entity {
 
                 this.newDestination = null;
 
+                this.startPathingCallback?.(path);
+
                 if (path.length < 2) stop = true;
                 else this.followPath(path);
             } else if (this.hasNextStep()) {
@@ -494,7 +497,7 @@ export default class Character extends Entity {
 
         if (this.following) path.pop();
 
-        this.startPathingCallback?.(path);
+        if (!this.moving && !this.changedPath()) this.startPathingCallback?.(path);
 
         this.nextStep();
     }
@@ -598,7 +601,7 @@ export default class Character extends Entity {
         return this.path && this.path.length - 1 > this.step;
     }
 
-    private changedPath(): boolean {
+    public changedPath(): boolean {
         return !!this.newDestination;
     }
 

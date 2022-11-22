@@ -47,8 +47,6 @@ export default class Player extends Character {
     public poison = false;
     public disableAction = false;
 
-    public moving = false;
-
     public override hitPoints = 0;
     public override maxHitPoints = 0;
 
