@@ -24,11 +24,12 @@ export default class Default extends Handler {
      * @param key The key of the mob to spawn.
      * @param x The x grid coordinate to spawn the mob at.
      * @param y The y grid coordinate to spawn the mob at.
+     * @param plugin (Optional) Whether or not the mob initializes a plugin based on its key.
      * @returns The spawned minion object.
      */
 
-    protected spawn(key: string, x: number, y: number): Mob {
-        let minion = this.world.entities.spawnMob(key, x, y);
+    protected spawn(key: string, x: number, y: number, plugin = false): Mob {
+        let minion = this.world.entities.spawnMob(key, x, y, plugin);
 
         // Prevent minion from respawning after death.
         minion.respawnable = false;
@@ -55,5 +56,21 @@ export default class Default extends Handler {
         let target = this.mob.attackers[Utils.randomInt(0, this.mob.attackers.length - 1)];
 
         return target;
+    }
+
+    /**
+     * @returns Whether or not the boss is halfway through his health.
+     */
+
+    protected isHalfHealth(): boolean {
+        return this.mob.hitPoints.getHitPoints() / this.mob.hitPoints.getMaxHitPoints() <= 0.5;
+    }
+
+    /**
+     * @returns Whether or not the boss has one quarter of his life left.
+     */
+
+    protected isQuarterHealth(): boolean {
+        return this.mob.hitPoints.getHitPoints() / this.mob.hitPoints.getMaxHitPoints() <= 0.25;
     }
 }

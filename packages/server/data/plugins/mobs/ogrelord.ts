@@ -68,8 +68,8 @@ export default class OgreLord extends Default {
      */
 
     private handleMinions(): void {
-        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawnMinion(0);
-        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawnMinion(1);
+        if (this.isHalfHealth() && !this.firstWaveMinions) this.spawnMinions(0);
+        else if (this.isQuarterHealth() && !this.secondWaveMinions) this.spawnMinions(1);
     }
 
     /**
@@ -78,7 +78,7 @@ export default class OgreLord extends Default {
      * @param wave The wave of minions to spawn.
      */
 
-    private spawnMinion(wave: number): void {
+    private spawnMinions(wave: number): void {
         let key = this.minionKeys[wave];
 
         // Iterate through the positions and spawn a mob at each one.
@@ -96,22 +96,6 @@ export default class OgreLord extends Default {
 
         // Spawn minions text message.
         this.mob.talkCallback?.('My minions will surely help defeat you!');
-    }
-
-    /**
-     * @returns Whether or not the boss is halfway through his health.
-     */
-
-    private isHalfHealth(): boolean {
-        return this.mob.hitPoints.getHitPoints() / this.mob.hitPoints.getMaxHitPoints() <= 0.5;
-    }
-
-    /**
-     * @returns Whether or not the boss has one quarter of his life left.
-     */
-
-    private isQuarterHealth(): boolean {
-        return this.mob.hitPoints.getHitPoints() / this.mob.hitPoints.getMaxHitPoints() <= 0.25;
     }
 
     /**
