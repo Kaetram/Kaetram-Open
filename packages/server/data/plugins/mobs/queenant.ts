@@ -3,18 +3,66 @@ import _ from 'lodash';
 import Default from './default';
 
 import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import Character from '@kaetram/server/src/game/entity/character/character';
 
 import Utils from '@kaetram/common/util/utils';
 
 export default class QueenAnt extends Default {
+    private positions: Position[];
+
+    private minionsSpawned = false;
     private specialAttack = false;
 
     public constructor(mob: Mob) {
         super(mob);
+
+        // Spawn the mobs around the Queen Ant.
+        this.positions = [
+            { x: this.mob.spawnX + 3, y: this.mob.spawnY },
+            { x: this.mob.spawnX - 3, y: this.mob.spawnY },
+            { x: this.mob.spawnX, y: this.mob.spawnY + 3 },
+            { x: this.mob.spawnX, y: this.mob.spawnY - 3 }
+        ];
     }
 
     /**
-     * Every attack the queen ant has a small chance of using a special attack. A special
+     * Overrides the movement for the Queen Ant. When she moves, all of her minions
+     * will be following her.
+     */
+
+    protected override handleMovement(): void {
+        super.handleMovement();
+
+        _.each(this.minions, (minion: Mob) => minion.follow(this.mob));
+    }
+
+    /**
+     * Override of hit function used to spawn minions when the Queen Ant reaches half health.
+     * @param damage Damage being dealt to the mob.
+     * @param attacker (Optional) The attacker who is dealing the damage.
+     */
+
+    protected override handleHit(damage: number, attacker?: Character): void {
+        super.handleHit(damage, attacker);
+
+        if (!this.isHalfHealth() || this.minionsSpawned) return;
+
+        // Spawn minions using the positions surrounding the Queen Ant.
+        _.each(this.positions, (position: Position) => {
+            let minion = super.spawn('workerant', position.x, position.y, true);
+
+            // Queen Ant is the target.
+            minion.setTarget(this.mob);
+
+            // Minions immediately start following the Queen Ant.
+            minion.follow(this.mob);
+        });
+
+        this.minionsSpawned = true;
+    }
+
+    /**
+     * Every attack the Queen Ant has a small chance of using a special attack. A special
      * attack indicates the queen transitions to a ranged attack style, and will have a chance
      * of an AoE attack alongside terror infliction.
      */
