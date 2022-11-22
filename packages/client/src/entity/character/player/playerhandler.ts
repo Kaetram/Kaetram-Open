@@ -153,9 +153,6 @@ export default class PlayerHandler {
             // Input update for moving attackable entities (mobs and players).
             if (!this.isAttackable() || !player.target) return;
 
-            // Update the input graphic with the target's latest position.
-            input.setPosition(player.target.gridX, player.target.gridY);
-
             // Stop movement if ranged and start shooting.
             if (player.isRanged() && player.getDistance(player.target) < 7) player.stop(true);
         });
