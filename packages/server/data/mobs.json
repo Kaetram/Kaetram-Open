@@ -934,7 +934,7 @@
     "level": 25,
     "aggroRange": 1,
     "attackRange": 1,
-    "aggressive": true,
+    "alwaysAggressive": true,
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
