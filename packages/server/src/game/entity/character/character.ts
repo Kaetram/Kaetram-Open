@@ -51,7 +51,6 @@ export default abstract class Character extends Entity {
     public moving = false;
     public pvp = false;
     public frozen = false;
-    public alwaysAggressive = false;
     public invincible = false;
     public terror = false;
     public aoe = 0;
