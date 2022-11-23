@@ -1,4 +1,5 @@
 import _ from 'lodash-es';
+import fs from 'fs';
 
 import log from '@kaetram/common/util/log';
 
@@ -8,6 +9,7 @@ import Map from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Dynamic from './areas/impl/dynamic';
+import Resource from '../globals/impl/resource';
 import Area from './areas/area';
 
 import { Modules } from '@kaetram/common/network';
@@ -15,7 +17,6 @@ import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
 import { RegionData, RegionTileData } from '@kaetram/common/types/region';
 import { Tile } from '@kaetram/common/types/map';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import Resource from '../globals/impl/resource';
 
 /**
  * Class responsible for chunking up the map.
@@ -55,7 +56,7 @@ export default class Regions {
     }
 
     /**
-     * 16 x 16 regions.
+     * Example: 16 x 16 regions.
      * 00 1 2 3 4 5 ... 15
      * 16 x x x x x ... 31
      * 32 x x x x x ... 47
@@ -87,6 +88,9 @@ export default class Regions {
 
         // Number of regions per side.
         this.sideLength = this.map.width / this.divisionSize;
+
+        // Begin the region cache loading.
+        this.loadRegionCache();
     }
 
     /**
@@ -107,6 +111,60 @@ export default class Regions {
             if (region !== -1) this.regions[region].addDynamicArea(area);
             else log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
         });
+    }
+
+    /**
+     * We check for the region cache and load it into each individual region data if it exists.
+     * If no region cache is found, we create it and save it locally in the server `cache` directory.
+     * We save a local version of the region cache since it is a lot quicker for subsequent server starts
+     * to load from a local file rather than generate the data from scratch each boot up.
+     */
+
+    private loadRegionCache(): void {
+        let data: { [index: number]: RegionTileData[] } = {},
+            path = './cache/regions.json';
+
+        // Firstly check if the region cache exists.
+        if (fs.existsSync(path)) {
+            // Asynchronously read data from the file and parse it.
+            fs.readFile(path, 'utf8', (error, info) => {
+                if (error) throw error;
+
+                // Parse the JSON information from the cache file.
+                data = JSON.parse(info);
+
+                // Iterate through all the regions and assign the data to them according to their index.
+                this.forEachRegion((region: Region, index: number) => (region.data = data[index]));
+
+                log.debug(`Successfully loaded ${Object.keys(data).length} regions from cache.`);
+            });
+
+            return;
+        }
+
+        log.notice(`No region cache found. Please wait while region data is generated...`);
+
+        /**
+         * Iterate through all the regions and create region tile data for each. We assign
+         * that data to both the `data` local variable and assign it to the region itself.
+         */
+
+        this.forEachRegion(
+            (region: Region, index: number) =>
+                (data[index] = region.data = this.getRegionTileData(region))
+        );
+
+        // Create the directory first.
+        fs.mkdir('./cache', { recursive: true }, (error) => {
+            if (error) return log.error(error);
+
+            // Create the cache file for regions and write the stringified data to it.
+            fs.writeFile(path, JSON.stringify(data), (error) => {
+                if (error) throw error;
+            });
+        });
+
+        log.notice(`Region cache has been successfully created.`);
     }
 
     /**
@@ -407,10 +465,7 @@ export default class Regions {
 
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionTileData(region)
-                ];
+                data[surroundingRegion] = [...data[surroundingRegion], ...region.data];
 
                 player.loadRegion(surroundingRegion);
             }
