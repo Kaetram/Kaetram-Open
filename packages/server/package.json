@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "nodemon -e ts,json",
+        "dev": "nodemon -e ts,jso --ignore 'cache/*'",
         "build": "tsc --noEmit"
     },
     "dependencies": {
