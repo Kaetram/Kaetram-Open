@@ -6,7 +6,11 @@ import Area from './areas/area';
 import Resource from '../globals/impl/resource';
 import Light from '../globals/impl/light';
 
+import { RegionTileData } from '@kaetram/common/types/region';
+
 export default class Region {
+    public data: RegionTileData[] = [];
+
     private entities: { [instance: string]: Entity } = {};
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
