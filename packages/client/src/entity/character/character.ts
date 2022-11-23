@@ -428,10 +428,11 @@ export default class Character extends Entity {
 
                 this.newDestination = null;
 
-                this.startPathingCallback?.(path);
-
                 if (path.length < 2) stop = true;
-                else this.followPath(path);
+                else {
+                    this.startPathingCallback?.(path);
+                    this.followPath(path);
+                }
             } else if (this.hasNextStep()) {
                 this.step++;
                 this.updateMovement();
