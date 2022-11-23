@@ -16,3 +16,8 @@ export interface RegionTileData {
 export interface RegionData {
     [regionId: number]: RegionTileData[];
 }
+
+export interface RegionCache {
+    data: RegionData;
+    version: number;
+}
