@@ -14,7 +14,7 @@ import Area from './areas/area';
 
 import { Modules } from '@kaetram/common/network';
 import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
-import { RegionData, RegionTileData } from '@kaetram/common/types/region';
+import { RegionData, RegionTileData, RegionCache } from '@kaetram/common/types/region';
 import { Tile } from '@kaetram/common/types/map';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -118,31 +118,43 @@ export default class Regions {
      * If no region cache is found, we create it and save it locally in the server `cache` directory.
      * We save a local version of the region cache since it is a lot quicker for subsequent server starts
      * to load from a local file rather than generate the data from scratch each boot up.
+     * @param update Whether or not to bypass the cache and generate the region data from scratch.
      */
 
-    private loadRegionCache(): void {
-        let data: { [index: number]: RegionTileData[] } = {},
+    private loadRegionCache(update = false): void {
+        let cache: RegionCache = {
+                data: {},
+                version: this.map.version
+            },
             path = './cache/regions.json';
 
         // Firstly check if the region cache exists.
-        if (fs.existsSync(path)) {
+        if (fs.existsSync(path) && !update) {
             // Asynchronously read data from the file and parse it.
             fs.readFile(path, 'utf8', (error, info) => {
                 if (error) throw error;
 
                 // Parse the JSON information from the cache file.
-                data = JSON.parse(info);
+                cache = JSON.parse(info);
+
+                // Map data has been updated, we need to regenerate the region cache.
+                if (cache.version !== this.map.version) return this.loadRegionCache(true);
 
                 // Iterate through all the regions and assign the data to them according to their index.
-                this.forEachRegion((region: Region, index: number) => (region.data = data[index]));
+                this.forEachRegion(
+                    (region: Region, index: number) => (region.data = cache.data[index])
+                );
 
-                log.debug(`Successfully loaded ${Object.keys(data).length} regions from cache.`);
+                log.debug(
+                    `Successfully loaded ${Object.keys(cache.data).length} regions from cache.`
+                );
             });
 
             return;
         }
 
-        log.notice(`No region cache found. Please wait while region data is generated...`);
+        if (update) log.notice(`Map data has been updated, regenerating region cache...`);
+        else log.notice(`No region cache found, generating region cache...`);
 
         /**
          * Iterate through all the regions and create region tile data for each. We assign
@@ -151,7 +163,7 @@ export default class Regions {
 
         this.forEachRegion(
             (region: Region, index: number) =>
-                (data[index] = region.data = this.getRegionTileData(region))
+                (cache.data[index] = region.data = this.getRegionTileData(region))
         );
 
         // Create the directory first.
@@ -159,7 +171,7 @@ export default class Regions {
             if (error) return log.error(error);
 
             // Create the cache file for regions and write the stringified data to it.
-            fs.writeFile(path, JSON.stringify(data), (error) => {
+            fs.writeFile(path, JSON.stringify(cache), (error) => {
                 if (error) throw error;
             });
         });
