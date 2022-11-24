@@ -114,9 +114,6 @@ export default class Player extends Character {
 
     public rights = 0;
 
-    // Experience
-    public experience = 0;
-
     // Warps
     public lastWarp = 0;
 
@@ -192,7 +189,6 @@ export default class Player extends Character {
         this.rights = data.rights;
         this.ban = data.ban;
         this.mute = data.mute;
-        this.experience = data.experience;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
@@ -399,28 +395,6 @@ export default class Player extends Character {
 
     public updateEntityList(): void {
         this.regions.sendEntities(this);
-    }
-
-    /**
-     * This is a temporary function that will be used to update the players to the new
-     * skilling system. Whereas before we would have a single total combat level, we now
-     * split it into multiple skills and it is cummulatively calculated. Here we just
-     * divide the former experience system in 3 and assign it to the 3 most common skills.
-     */
-
-    public updateExperience(): void {
-        if (this.experience > 0) {
-            log.debug(`[${this.username}] Moving player experience to skills.`);
-
-            // Add a third of the experience to each primary skill and then nullify the experience.
-            this.skills.get(Modules.Skills.Health).addExperience(Math.floor(this.experience / 3));
-            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(this.experience / 3));
-            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(this.experience / 3));
-
-            this.experience = 0;
-
-            this.save();
-        }
     }
 
     /**
