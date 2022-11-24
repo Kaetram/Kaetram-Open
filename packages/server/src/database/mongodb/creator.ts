@@ -22,7 +22,6 @@ export interface PlayerInfo {
     x: number;
     y: number;
     userAgent: string;
-    experience: number;
     rights: number;
     poison: PoisonInfo;
     hitPoints: number;
@@ -252,7 +251,6 @@ export default class Creator {
             x: player.x,
             y: player.y,
             userAgent: player.userAgent,
-            experience: player.experience,
             rights: player.rights,
             poison: {
                 type: player.poison ? player.poison.type : -1,
