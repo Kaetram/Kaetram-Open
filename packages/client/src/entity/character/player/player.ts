@@ -350,28 +350,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Updates the player's current experience and creates a callback if the next
-     * experience and previous variables are provided.
-     * @param experience The current amount of experience the player has.
-     * @param nextExperience The next amount of experience required for level up.
-     * @param prevExperience Experience that the current level starts at.
-     */
-
-    public setExperience(
-        experience: number,
-        nextExperience?: number,
-        prevExperience?: number
-    ): void {
-        this.experience = experience;
-
-        this.sync();
-
-        if (isNaN(prevExperience!) || !nextExperience) return;
-
-        this.experienceCallback?.(experience, prevExperience!, nextExperience);
-    }
-
-    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
