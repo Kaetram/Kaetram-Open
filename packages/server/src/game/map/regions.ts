@@ -2,6 +2,7 @@ import _ from 'lodash-es';
 import fs from 'fs';
 
 import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
 
 import World from '../world';
 import Region from './region';
@@ -89,8 +90,8 @@ export default class Regions {
         // Number of regions per side.
         this.sideLength = this.map.width / this.divisionSize;
 
-        // Begin the region cache loading.
-        this.loadRegionCache();
+        // Begin the region cache loading if the config allows it.
+        if (config.regionCache) this.loadRegionCache();
     }
 
     /**
@@ -453,7 +454,8 @@ export default class Regions {
 
     public getRegionData(player: Player, force?: boolean): RegionData {
         let data: RegionData = {},
-            region = this.getRegion(player.x, player.y);
+            region = this.getRegion(player.x, player.y),
+            start = Date.now();
 
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
             let region = this.regions[surroundingRegion];
@@ -477,7 +479,10 @@ export default class Regions {
 
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
-                data[surroundingRegion] = [...data[surroundingRegion], ...region.data];
+                data[surroundingRegion] = [
+                    ...data[surroundingRegion],
+                    ...(config.regionCache ? region.data : this.getRegionTileData(region))
+                ];
 
                 player.loadRegion(surroundingRegion);
             }
@@ -485,6 +490,8 @@ export default class Regions {
             // Remove data to prevent client from parsing unnecessarily.
             if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
         });
+
+        console.log(`Region data processed in ${Date.now() - start}ms.`);
 
         return data;
     }
