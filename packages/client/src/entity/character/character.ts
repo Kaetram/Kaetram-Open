@@ -546,13 +546,13 @@ export default class Character extends Entity {
 
         if (this.stunned) return 'stuneffect';
 
-        if (this.terror) return 'explosion-terror';
+        if (this.terror) return 'effect-terror';
 
-        if (this.explosion) return 'explosion-fireball';
+        if (this.explosion) return 'effect-fireball';
 
-        if (this.healing) return 'explosion-heal';
+        if (this.healing) return 'effect-heal';
 
-        if (this.fire) return 'explosion-lavaball';
+        if (this.fire) return 'effect-lavaball';
 
         return '';
     }
