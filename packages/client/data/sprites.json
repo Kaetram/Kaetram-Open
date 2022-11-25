@@ -6982,7 +6982,7 @@
     }
   },
   {
-    "id": "healeffect",
+    "id": "effect-heal2",
     "width": 32,
     "height": 32,
     "animations": {
@@ -18812,7 +18812,7 @@
     "offsetAngle": 180
   },
   {
-    "id": "explosion-fireball",
+    "id": "effect-fireball",
     "width": 48,
     "height": 48,
     "animations": {
@@ -18825,7 +18825,7 @@
     "offsetY": -16
   },
   {
-    "id": "explosion-lavaball",
+    "id": "effect-lavaball",
     "width": 48,
     "height": 48,
     "animations": {
@@ -18838,7 +18838,7 @@
     "offsetY": -24
   },
   {
-    "id": "explosion-heal",
+    "id": "effect-heal",
     "width": 48,
     "height": 48,
     "animations": {
@@ -18851,7 +18851,7 @@
     "offsetY": -16
   },
   {
-    "id": "explosion-iceball",
+    "id": "effect-iceball",
     "width": 48,
     "height": 48,
     "animations": {
@@ -18864,7 +18864,7 @@
     "offsetY": -24
   },
   {
-    "id": "explosion-boulder",
+    "id": "effect-boulder",
     "width": 32,
     "height": 32,
     "animations": {
@@ -18897,7 +18897,7 @@
   },
 
   {
-    "id": "explosion-terror",
+    "id": "effect-terror",
     "width": 64,
     "height": 64,
     "animations": {
