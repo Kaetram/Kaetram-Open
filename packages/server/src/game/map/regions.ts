@@ -454,8 +454,7 @@ export default class Regions {
 
     public getRegionData(player: Player, force?: boolean): RegionData {
         let data: RegionData = {},
-            region = this.getRegion(player.x, player.y),
-            start = Date.now();
+            region = this.getRegion(player.x, player.y);
 
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
             let region = this.regions[surroundingRegion];
@@ -490,8 +489,6 @@ export default class Regions {
             // Remove data to prevent client from parsing unnecessarily.
             if (data[surroundingRegion].length === 0) delete data[surroundingRegion];
         });
-
-        console.log(`Region data processed in ${Date.now() - start}ms.`);
 
         return data;
     }
