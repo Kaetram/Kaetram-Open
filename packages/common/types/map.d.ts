@@ -20,6 +20,7 @@ export interface ProcessedArea {
     // Chest/door/area
     achievement?: string;
     reqAchievement?: string;
+    reqQuest?: string;
     mimic?: boolean;
 
     // Area
@@ -31,7 +32,6 @@ export interface ProcessedArea {
     // Door
     destination?: number;
     orientation?: string;
-    quest?: string;
     stage?: number;
 
     // Light
@@ -82,6 +82,7 @@ export interface ProcessedDoor {
     quest: string;
     achievement: string;
     reqAchievement: string; // Achievement requirement to pass through.
+    reqQuest: string;
     stage: number;
     level: number;
 }

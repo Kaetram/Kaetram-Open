@@ -213,6 +213,9 @@ export default class Handler {
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
             return;
 
+        // Ensure quest requirement is fullfilled before passing through the door.
+        if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
+
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
