@@ -110,6 +110,7 @@ export default class Map {
                 quest: door.quest || '',
                 achievement: door.achievement || '',
                 reqAchievement: door.reqAchievement || '',
+                reqQuest: door.reqQuest || '',
                 stage: door.stage || 0,
                 level: door.level || 0
             };
