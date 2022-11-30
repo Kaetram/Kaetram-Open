@@ -127,6 +127,10 @@ export default class Console {
                     log.info(`Resetting all player positions.`);
 
                     return this.database.resetPositions();
+
+                case 'save':
+                    log.info(`Saving all players.`);
+                    return this.world.save();
             }
         });
     }
