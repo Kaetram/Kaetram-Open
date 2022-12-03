@@ -97,6 +97,15 @@
     "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
   },
 
+  "755-183": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 2200,
+    "level": 84,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
+  },
+
   "168-31": {
     "name": "Old Ogre",
     "miniboss": true
@@ -133,5 +142,13 @@
     "name": "Baby Sea Dragon",
     "miniboss": true,
     "achievement": "babyseadragon"
+  },
+
+  "790-229": {
+    "name": "Ice Knight",
+    "miniboss": true,
+    "level": 62,
+    "attackLevel": 14,
+    "drops": {"gold": 300, "icesword": 125}
   }
 }
