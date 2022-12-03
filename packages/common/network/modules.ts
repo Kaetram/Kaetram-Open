@@ -157,6 +157,17 @@ export enum AoEType {
     Mob
 }
 
+export enum Effects {
+    None,
+    Critical,
+    Terror,
+    Stun,
+    Healing,
+    Fireball,
+    Burning,
+    Freezing
+}
+
 export interface Colours {
     fill: string;
     stroke: string;
