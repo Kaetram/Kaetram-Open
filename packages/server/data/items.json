@@ -3709,7 +3709,20 @@
 
   "icesword": {
     "type": "weapon",
-    "name": "Ice Sword"
+    "name": "Ice Sword",
+    "level": 94,
+    "attackStats": {
+      "crush": 8,
+      "slash": 22,
+      "stab": 12,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 4,
+      "archery": 0
+    },
+    "price": 1000
   },
 
   "platinumsword": {
