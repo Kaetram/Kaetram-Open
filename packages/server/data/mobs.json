@@ -549,21 +549,21 @@
     "respawnDelay": 35000
   },
 
-  "desertscolpion": {
+  "desertscorpion": {
     "name": "Desert Scorpion",
-    "drops": {"gold": 50},
-    "hitPoints": 1300,
-    "defenseLevel": 10,
-    "attackLevel": 15,
-    "experience": 1680,
-    "level": 90,
+    "drops": {"gold": 150},
+    "hitPoints": 124,
+    "defenseLevel": 1,
+    "attackLevel": 16,
+    "experience": 86,
+    "level": 24,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
+    "movementSpeed": 320,
+    "respawnDelay": 55000
   },
 
   "devilkazya": {
@@ -812,7 +812,7 @@
     "defenseLevel": 12,
     "attackLevel": 8,
     "experience": 300,
-    "level": 33,
+    "level": 37,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1444,7 +1444,7 @@
     "defenseLevel": 8,
     "attackLevel": 3,
     "experience": 430,
-    "level": 54,
+    "level": 55,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1592,12 +1592,12 @@
 
   "whitemouse": {
     "name": "Mouse",
-    "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
+    "drops": {"ratarcherarmor": 75, "ratarmor": 75, "gold": 400},
     "hitPoints": 950,
     "defenseLevel": 10,
     "attackLevel": 3,
     "experience": 450,
-    "level": 53,
+    "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
