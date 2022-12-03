@@ -214,7 +214,7 @@ export default class EntitiesController {
              * there is nothing you can change for the actual damage output here.
              */
 
-            if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
+            if (info.hitType === Modules.Hits.Explosive) target.effect = Modules.Effects.Explosion;
 
             this.game.info.create(
                 Modules.Hits.Damage,
