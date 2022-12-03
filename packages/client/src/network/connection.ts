@@ -353,18 +353,6 @@ export default class Connection {
             case Opcodes.Movement.Stop:
                 if (info.forced) entity.stop(true);
                 break;
-
-            case Opcodes.Movement.Freeze:
-                if (info.state) entity.stop(false);
-
-                entity.frozen = !!info.state;
-                break;
-
-            case Opcodes.Movement.Stunned:
-                if (info.state) entity.stop(false);
-
-                entity.stunned = !!info.state;
-                break;
         }
     }
 
@@ -480,10 +468,10 @@ export default class Connection {
             currentPlayerAttacker = attacker.instance === this.game.player.instance;
 
         // Set the terror effect onto the target.
-        if (info.hit.terror) target.terror = true;
+        if (info.hit.terror) target.effect = Modules.Effects.Terror;
 
         // Perform the critical effect onto the target.
-        if (info.hit.type === Modules.Hits.Critical) target.critical = true;
+        if (info.hit.type === Modules.Hits.Critical) target.effect = Modules.Effects.Critical;
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
         if (!info.hit.aoe && !info.hit.poison) {
@@ -593,27 +581,40 @@ export default class Connection {
      */
 
     private handleCommand(info: CommandPacket): void {
+        if (info.command.includes('toggle') && this.game.player.hasEffect())
+            return this.game.player.removeEffect();
+
         switch (info.command) {
             case 'debug':
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
 
             case 'toggleheal':
-                this.game.player.healing = true;
+                this.game.player.effect = Modules.Effects.Healing;
                 break;
 
             case 'toggleterror':
-                this.game.player.terror = true;
+                this.game.player.effect = Modules.Effects.Terror;
                 break;
 
-            case 'toggleexplosion':
-                this.game.player.explosion = true;
+            case 'togglefireball':
+                this.game.player.effect = Modules.Effects.Fireball;
                 break;
 
             case 'togglefire':
-                this.game.player.fire = true;
+                this.game.player.effect = Modules.Effects.Burning;
+                break;
+
+            case 'togglefreeze':
+                this.game.player.effect = Modules.Effects.Freezing;
+                break;
+
+            case 'togglestun':
+                this.game.player.effect = Modules.Effects.Stun;
                 break;
         }
+
+        log.debug(`Command: ${info.command}`);
     }
 
     /**
@@ -761,7 +762,7 @@ export default class Connection {
             case 'hitpoints':
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                this.game.player.healing = true;
+                this.game.player.effect = Modules.Effects.Healing;
                 break;
 
             case 'mana':
@@ -1187,13 +1188,25 @@ export default class Connection {
         let entity =
             info.instance === this.game.player.instance
                 ? this.game.player
-                : this.entities.get(info.instance);
+                : this.entities.get<Character>(info.instance);
 
         if (!entity) return;
 
         switch (opcode) {
             case Opcodes.Effect.Speed:
                 entity.movementSpeed = info.movementSpeed!;
+                break;
+
+            case Opcodes.Effect.Stun:
+                entity.stunned = !!info.state;
+                break;
+
+            case Opcodes.Effect.Freeze:
+                entity.effect = Modules.Effects.Freezing;
+                break;
+
+            case Opcodes.Effect.Burn:
+                entity.effect = Modules.Effects.Burning;
                 break;
         }
     }

@@ -18,7 +18,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
-import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
+import { Movement, Points, Combat as CombatPacket, Effect } from '../../../network/packets';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
@@ -102,7 +102,7 @@ export default abstract class Character extends Entity {
     private handleStun(state: boolean): void {
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
-            packet: new Movement(Opcodes.Movement.Stunned, {
+            packet: new Effect(Opcodes.Effect.Stun, {
                 instance: this.instance,
                 state
             })
