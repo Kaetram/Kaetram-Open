@@ -529,6 +529,16 @@ export default class Character extends Entity {
     public removeEffect(): void {
         this.effect = Modules.Effects.None;
     }
+
+    /**
+     * Updates the value of the currently active effect.
+     * @param effect The effect we add to the character.
+     */
+
+    public setEffect(effect: Modules.Effects): void {
+        this.effect = effect;
+    }
+
     /**
      * @returns The animation object of the currently active effect (or undefined).
      */
@@ -612,6 +622,11 @@ export default class Character extends Entity {
 
         this.lastTarget = target.instance;
     }
+
+    /**
+     * @param target Optional parameter to check if the player has a specific target.
+     * @returns Whether or not the player has a specific target or a target at all.
+     */
 
     public hasTarget(target?: Entity): boolean {
         return target ? this.target === target : !!this.target;

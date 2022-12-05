@@ -468,10 +468,10 @@ export default class Connection {
             currentPlayerAttacker = attacker.instance === this.game.player.instance;
 
         // Set the terror effect onto the target.
-        if (info.hit.terror) target.effect = Modules.Effects.Terror;
+        if (info.hit.terror) target.setEffect(Modules.Effects.Terror);
 
         // Perform the critical effect onto the target.
-        if (info.hit.type === Modules.Hits.Critical) target.effect = Modules.Effects.Critical;
+        if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
         if (!info.hit.aoe && !info.hit.poison) {
@@ -590,31 +590,29 @@ export default class Connection {
                 return;
 
             case 'toggleheal':
-                this.game.player.effect = Modules.Effects.Healing;
+                this.game.player.setEffect(Modules.Effects.Healing);
                 break;
 
             case 'toggleterror':
-                this.game.player.effect = Modules.Effects.Terror;
+                this.game.player.setEffect(Modules.Effects.Terror);
                 break;
 
             case 'togglefireball':
-                this.game.player.effect = Modules.Effects.Fireball;
+                this.game.player.setEffect(Modules.Effects.Fireball);
                 break;
 
             case 'togglefire':
-                this.game.player.effect = Modules.Effects.Burning;
+                this.game.player.setEffect(Modules.Effects.Burning);
                 break;
 
             case 'togglefreeze':
-                this.game.player.effect = Modules.Effects.Freezing;
+                this.game.player.setEffect(Modules.Effects.Freezing);
                 break;
 
             case 'togglestun':
-                this.game.player.effect = Modules.Effects.Stun;
+                this.game.player.setEffect(Modules.Effects.Stun);
                 break;
         }
-
-        log.debug(`Command: ${info.command}`);
     }
 
     /**
@@ -762,7 +760,7 @@ export default class Connection {
             case 'hitpoints':
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                this.game.player.effect = Modules.Effects.Healing;
+                this.game.player.setEffect(Modules.Effects.Healing);
                 break;
 
             case 'mana':
@@ -1202,11 +1200,11 @@ export default class Connection {
                 break;
 
             case Opcodes.Effect.Freeze:
-                entity.effect = Modules.Effects.Freezing;
+                entity.setEffect(Modules.Effects.Freezing);
                 break;
 
             case Opcodes.Effect.Burn:
-                entity.effect = Modules.Effects.Burning;
+                entity.setEffect(Modules.Effects.Burning);
                 break;
         }
     }
