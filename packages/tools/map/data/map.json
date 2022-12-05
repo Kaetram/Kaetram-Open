@@ -454,7 +454,7 @@
                         {
                          "name":"text",
                          "type":"string",
-                         "value":"Coming soon :)"
+                         "value":"Do not underestimate."
                         }],
                  "rotation":0,
                  "visible":true,
@@ -3277,8 +3277,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":16,
-                 "x":12592,
-                 "y":7008
+                 "x":12560,
+                 "y":6944
                 }, 
                 {
                  "class":"",
@@ -26469,6 +26469,15 @@
                 }, 
                 {
                  "id":122,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":125,
                  "properties":[
                         {
                          "name":"c",
