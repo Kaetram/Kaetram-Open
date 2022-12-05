@@ -168,6 +168,12 @@ export enum Effects {
     Freezing
 }
 
+export enum Medals {
+    None,
+    Silver,
+    Gold
+}
+
 export interface Colours {
     fill: string;
     stroke: string;
