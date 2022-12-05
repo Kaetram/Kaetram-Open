@@ -128,7 +128,11 @@ export default class Handler {
      */
 
     protected handleRoaming(retries = 0): void {
+        // Prevent roaming.
+        if (!this.mob.roaming) return;
+
         if (retries < 0) return;
+
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 

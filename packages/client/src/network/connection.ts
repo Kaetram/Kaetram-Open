@@ -760,7 +760,7 @@ export default class Connection {
             case 'hitpoints':
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                this.game.player.setEffect(Modules.Effects.Healing);
+                character.setEffect(Modules.Effects.Healing);
                 break;
 
             case 'mana':
