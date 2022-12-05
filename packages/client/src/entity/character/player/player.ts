@@ -270,6 +270,23 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The key of the medal based on the player's medal type.
+     */
+
+    public getMedalKey(): string {
+        switch (this.medal) {
+            case Modules.Medals.Silver:
+                return 'silvermedal';
+
+            case Modules.Medals.Gold:
+                return 'goldmedal';
+
+            default:
+                return '';
+        }
+    }
+
+    /**
      * Updates the mana of the player.
      * @param mana The current amount of mana.
      * @param maxMana Optional parameter for the max mana.
@@ -365,6 +382,14 @@ export default class Player extends Character {
 
     public hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
+    }
+
+    /**
+     * @returns Whether or not the player has a medal.
+     */
+
+    public override hasMedal(): boolean {
+        return this.medal !== Modules.Medals.None;
     }
 
     /**

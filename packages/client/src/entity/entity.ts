@@ -311,6 +311,15 @@ export default abstract class Entity {
     }
 
     /**
+     * Default implementation for medal.
+     * @returns Defaults to false.
+     */
+
+    public hasMedal(): boolean {
+        return false;
+    }
+
+    /**
      * @returns Whether or not the entity is a player type.
      */
 
