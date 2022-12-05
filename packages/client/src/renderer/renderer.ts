@@ -400,12 +400,7 @@ export default class Renderer {
         let image = this.game.overlays.get();
 
         // Draw only if there is an overlay image.
-        if (image) {
-            // Create a repeating pattern using the overlay image.
-            this.overlayContext.fillStyle = this.overlayContext.createPattern(image, 'repeat')!;
-            this.overlayContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-            this.overlayContext.fill();
-        }
+        if (image) this.overlayContext.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight);
 
         this.overlayContext.globalCompositeOperation = 'lighter';
 

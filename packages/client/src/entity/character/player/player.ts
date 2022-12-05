@@ -47,6 +47,8 @@ export default class Player extends Character {
     public poison = false;
     public disableAction = false;
 
+    public medal: Modules.Medals = Modules.Medals.None;
+
     public override hitPoints = 0;
     public override maxHitPoints = 0;
 
