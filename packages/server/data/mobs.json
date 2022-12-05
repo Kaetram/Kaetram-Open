@@ -1966,7 +1966,7 @@
     "level": 94,
     "aggroRange": 12,
     "attackRange": 1,
-    "aggressive": true,
+    "alwaysAggressive": true,
     "roaming": true,
     "attackRate": 1500,
     "roamDistance": 16,
