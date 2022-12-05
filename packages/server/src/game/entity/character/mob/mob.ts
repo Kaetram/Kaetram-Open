@@ -21,7 +21,7 @@ import DefaultPlugin from '../../../../../data/plugins/mobs/default';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { MobData } from '@kaetram/common/types/mob';
-import { Movement } from '@kaetram/server/src/network/packets';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -118,6 +118,7 @@ export default class Mob extends Character {
         this.projectileName = data.projectileName || this.projectileName;
         this.roamDistance = data.roamDistance || this.roamDistance;
         this.healRate = data.healRate || this.healRate;
+        this.roaming = data.roaming || this.roaming;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
@@ -125,7 +126,7 @@ export default class Mob extends Character {
         if (this.hiddenName) this.name = '';
 
         // The roaming interval if the mob is a roaming entity.
-        if (data.roaming)
+        if (this.roaming)
             setTimeout(() => {
                 this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
                 setInterval(
@@ -206,6 +207,30 @@ export default class Mob extends Character {
             strength: this.attackLevel,
             archery: this.attackRange + this.attackLevel
         };
+    }
+
+    /**
+     * An override for the `heal` function which adds support for heal packet.
+     * @param amount Amount we are healing the mob by.
+     * @param type The type of healing performed (passive or hitpoints).
+     */
+
+    public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
+        super.heal(amount);
+
+        if (type === 'hitpoints') {
+            // Increment hitpoints by the amount.
+            this.hitPoints.increment(amount);
+
+            // Send the heal packet to the nearby regions.
+            this.sendToRegions(
+                new Heal({
+                    instance: this.instance,
+                    type,
+                    amount
+                })
+            );
+        }
     }
 
     /**
