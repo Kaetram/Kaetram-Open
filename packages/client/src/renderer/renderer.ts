@@ -126,6 +126,8 @@ export default class Renderer {
 
     private shadowSprite!: Sprite;
     private sparksSprite!: Sprite;
+    private silverMedal!: Sprite;
+    private goldMedal!: Sprite;
 
     public constructor(public game: Game) {
         this.map = game.map;
@@ -203,6 +205,14 @@ export default class Renderer {
         this.sparksSprite = this.game.sprites.get('sparks')!;
 
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
+
+        this.silverMedal = this.game.sprites.get('silvermedal')!;
+
+        if (!this.silverMedal.loaded) this.silverMedal.load();
+
+        this.goldMedal = this.game.sprites.get('goldmedal')!;
+
+        if (!this.goldMedal.loaded) this.goldMedal.load();
     }
 
     /**
@@ -846,6 +856,24 @@ export default class Renderer {
         );
     }
 
+    private drawMedal(key: string, x: number, y: number): void {
+        let medal = key === 'goldmedal' ? this.goldMedal : this.silverMedal;
+
+        if (!medal) return;
+
+        this.textContext.drawImage(
+            medal.image,
+            0,
+            0,
+            medal.width,
+            medal.height,
+            (x - 2) * this.camera.zoomFactor,
+            (y + 1) * this.camera.zoomFactor,
+            medal.width,
+            medal.height
+        );
+    }
+
     /**
      * Draws the health bar above the entity character provided.
      * @param entity The character we are drawing the health bar for.
@@ -906,17 +934,16 @@ export default class Renderer {
 
         if (!entity.hasCounter) {
             let x = entity.x + 8,
-                y = entity.y - Math.floor(entity.sprite.height / 3);
+                y = entity.y - Math.floor(entity.sprite.height / 5);
 
-            if (this.drawNames && entity instanceof Character)
-                this.drawText(
-                    entity.name,
-                    x,
-                    this.drawLevels && !entity.isNPC() ? y - 8 : y,
-                    true,
-                    colour,
-                    'rbga(0, 0, 0, 1)'
-                );
+            if (this.drawNames && entity instanceof Character) {
+                let nameY = this.drawLevels && !entity.isNPC() ? y - 10 : y - 4;
+
+                this.drawText(entity.name, x, nameY, true, colour, 'rbga(0, 0, 0, 1)');
+
+                // Draw the medal if the entity has one.
+                if (entity.hasMedal()) this.drawMedal(entity.getMedalKey(), x, nameY);
+            }
 
             if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
                 this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
