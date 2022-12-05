@@ -49,7 +49,7 @@ export default class QueenAnt extends Default {
 
         // Spawn minions using the positions surrounding the Queen Ant.
         _.each(this.positions, (position: Position) => {
-            let minion = super.spawn('workerant', position.x, position.y, true);
+            let minion = super.spawn('ant', position.x, position.y, true);
 
             // Queen Ant is the target.
             minion.setTarget(this.mob);
