@@ -100,13 +100,7 @@ export default abstract class Character extends Entity {
      */
 
     private handleStun(state: boolean): void {
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Effect(Opcodes.Effect.Stun, {
-                instance: this.instance,
-                state
-            })
-        });
+        this.sendToRegions(new Effect(Opcodes.Effect.Stun, { instance: this.instance, state }));
     }
 
     /**
@@ -116,14 +110,13 @@ export default abstract class Character extends Entity {
 
     private handleHitPoints(): void {
         // Sync the change in hitpoints to nearby entities.
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Points({
+        this.sendToRegions(
+            new Points({
                 instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints(),
                 maxHitPoints: this.hitPoints.getMaxHitPoints()
             })
-        });
+        );
     }
 
     /**
@@ -495,7 +488,12 @@ export default abstract class Character extends Entity {
      */
 
     public inCombat(): boolean {
-        return this.combat.started || this.attackers.length > 0 || this.hasTarget();
+        return (
+            this.combat.started ||
+            this.attackers.length > 0 ||
+            this.hasTarget() ||
+            !this.combat.expired()
+        );
     }
 
     /**
