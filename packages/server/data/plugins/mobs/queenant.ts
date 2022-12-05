@@ -51,6 +51,9 @@ export default class QueenAnt extends Default {
         _.each(this.positions, (position: Position) => {
             let minion = super.spawn('ant', position.x, position.y, true);
 
+            // Prevent minion from roaming.
+            minion.roaming = false;
+
             // Queen Ant is the target.
             minion.setTarget(this.mob);
 
@@ -59,6 +62,20 @@ export default class QueenAnt extends Default {
         });
 
         this.minionsSpawned = true;
+    }
+
+    /**
+     * Override for the respawn function. We reset the boss back
+     * to default status and remove all the minion wave checks.
+     */
+
+    protected override handleDeath(attacker?: Character): void {
+        super.handleDeath(attacker);
+
+        // Removes all the minions from the list.
+        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+
+        this.minionsSpawned = false;
     }
 
     /**

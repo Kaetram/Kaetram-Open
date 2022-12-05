@@ -11,7 +11,7 @@ import { Movement, Combat as CombatPacket, Spawn } from '../../../../network/pac
 export default class Combat {
     public started = false;
 
-    private lastAttack = Date.now();
+    private lastAttack = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
@@ -201,6 +201,14 @@ export default class Combat {
 
     private canAttack(): boolean {
         return Date.now() - this.lastAttack >= this.character.getAttackRate();
+    }
+
+    /**
+     * @returns Whether or not 10 seconds from last attack has passed.
+     */
+
+    public expired(): boolean {
+        return Date.now() - this.lastAttack > 10_000;
     }
 
     /**
