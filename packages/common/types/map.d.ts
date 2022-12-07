@@ -10,6 +10,7 @@ export interface RotatedTile {
 export type Tile = number | number[];
 
 // Map data information
+export type OverlayType = 'none' | 'inside' | 'damage';
 
 export interface ProcessedArea {
     // Common
