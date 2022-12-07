@@ -132,6 +132,8 @@ export default class Handler {
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
+        this.player.clearAreas();
+
         this.player.minigameArea?.exitCallback?.(this.player);
 
         this.world.entities.removePlayer(this.player);
