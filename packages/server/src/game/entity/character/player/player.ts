@@ -769,11 +769,13 @@ export default class Player extends Character {
         // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
+        if (!overlay) this.overlayArea?.removePlayer(this);
+
         // Store for comparison.
         this.overlayArea = overlay;
 
         // No overlay object or invalid object, remove the overlay.
-        if (!overlay || !overlay.id) return this.send(new Overlay(Opcodes.Overlay.Remove));
+        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
@@ -784,6 +786,8 @@ export default class Player extends Character {
                 colour: `rgba(0, 0, 0, ${overlay.darkness})`
             })
         );
+
+        if (overlay.type === 'damage') overlay.addPlayer(this);
     }
 
     /**
@@ -1111,6 +1115,15 @@ export default class Player extends Character {
 
         clearTimeout(this.disconnectTimeout);
         this.disconnectTimeout = null;
+    }
+
+    /**
+     * Removes the player from any areas that keep track of players.
+     */
+
+    public clearAreas(): void {
+        if (this.overlayArea && this.overlayArea.type === 'damage')
+            this.overlayArea.removePlayer(this);
     }
 
     /**

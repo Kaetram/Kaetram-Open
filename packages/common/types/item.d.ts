@@ -49,4 +49,5 @@ export interface ItemData {
     attackStats?: Stats;
     defenseStats?: Stats;
     undroppable?: boolean;
+    respawnDelay?: number;
 }
