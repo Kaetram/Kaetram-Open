@@ -29,6 +29,7 @@ export interface MovementPacket {
     playerY?: number;
     movementSpeed?: number;
     targetInstance?: string;
+    following?: boolean;
     orientation?: Modules.Orientation;
     frozen?: boolean;
     direction?: Modules.Orientation;

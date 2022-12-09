@@ -25,6 +25,8 @@ class Main {
         this.database.onReady(this.handleReady.bind(this));
         this.database.onFail(this.handleFail.bind(this));
 
+        process.on('SIGINT', this.handleSignalInterrupt.bind(this));
+
         new Loader();
     }
 
@@ -91,6 +93,25 @@ class Main {
 
         // Exit the process.
         exit(1);
+    }
+
+    /**
+     * Occurs when CTRL+C is pressed and the process is asked to end.
+     */
+
+    private handleSignalInterrupt(): void {
+        // Prevent process from closing immediately.
+        process.stdin.resume();
+
+        log.info(`Saving all players and closing process...`);
+
+        // Save all players
+        this.world?.save();
+
+        log.info(`Shutting down Kaetram game engine.`);
+
+        // Actually exit the process.
+        exit();
     }
 }
 

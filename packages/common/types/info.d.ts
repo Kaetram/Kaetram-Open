@@ -4,7 +4,7 @@ export interface HitData {
     type: Modules.Hits;
     damage: number;
     ranged?: boolean;
-    aoe?: boolean;
+    aoe?: number;
     terror?: boolean;
     poison?: boolean;
 }

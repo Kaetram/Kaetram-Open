@@ -53,7 +53,9 @@ export default class PlayerHandler {
                     requestX: x,
                     requestY: y,
                     playerX: player.gridX,
-                    playerY: player.gridY
+                    playerY: player.gridY,
+                    targetInstance: player.target?.instance,
+                    following: player.following
                 });
 
             if (isObject)
@@ -94,11 +96,13 @@ export default class PlayerHandler {
 
             camera.clip();
 
+            let instance = player.target?.instance || game.getEntityAt(x, y)?.instance;
+
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Stop,
                 playerX: x,
                 playerY: y,
-                targetInstance: player.target?.instance,
+                targetInstance: instance,
                 orientation: player.orientation
             });
 
@@ -148,9 +152,6 @@ export default class PlayerHandler {
 
             // Input update for moving attackable entities (mobs and players).
             if (!this.isAttackable() || !player.target) return;
-
-            // Update the input graphic with the target's latest position.
-            input.setPosition(player.target.gridX, player.target.gridY);
 
             // Stop movement if ranged and start shooting.
             if (player.isRanged() && player.getDistance(player.target) < 7) player.stop(true);

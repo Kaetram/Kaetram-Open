@@ -29,6 +29,12 @@ export default class Handler {
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onTalk(this.handleTalk.bind(this));
+
+        // Combat callbacks
+        this.mob.combat.onStart(this.handleCombatStart.bind(this));
+        this.mob.combat.onStop(this.handleCombatStop.bind(this));
+        this.mob.combat.onAttack(this.handleAttack.bind(this));
+        this.mob.combat.onLoop(this.handleCombatLoop.bind(this));
     }
 
     /**
@@ -122,7 +128,11 @@ export default class Handler {
      */
 
     protected handleRoaming(retries = 0): void {
+        // Prevent roaming.
+        if (!this.mob.roaming) return;
+
         if (retries < 0) return;
+
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
@@ -184,5 +194,37 @@ export default class Handler {
                 text
             })
         );
+    }
+
+    /**
+     * Callback handler for when a mob starts combat.
+     */
+
+    protected handleCombatStart(): void {
+        //
+    }
+
+    /**
+     * Callback handler for when a mob stops combat.
+     */
+
+    protected handleCombatStop(): void {
+        //
+    }
+
+    /**
+     * Callback for when the mob attacks a character.
+     */
+
+    protected handleAttack(): void {
+        //
+    }
+
+    /**
+     * Callback for every time the mob's combat loop called.
+     */
+
+    protected handleCombatLoop(): void {
+        //
     }
 }

@@ -190,7 +190,6 @@ export default class API {
             serverId: config.serverId,
             x: player.x,
             y: player.y,
-            experience: player.experience,
             level: player.level,
             pvpKills: player.statistics.pvpKills,
             orientation: player.orientation,

@@ -114,9 +114,6 @@ export default class Player extends Character {
 
     public rights = 0;
 
-    // Experience
-    public experience = 0;
-
     // Warps
     public lastWarp = 0;
 
@@ -192,7 +189,6 @@ export default class Player extends Character {
         this.rights = data.rights;
         this.ban = data.ban;
         this.mute = data.mute;
-        this.experience = data.experience;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
@@ -299,6 +295,11 @@ export default class Player extends Character {
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
+        // Timeout the player if the ready packet is not received within 10 seconds.
+        setTimeout(() => {
+            if (!this.ready) this.connection.reject('error');
+        }, 10_000);
+
         /**
          * Send player data to client here
          */
@@ -394,28 +395,6 @@ export default class Player extends Character {
 
     public updateEntityList(): void {
         this.regions.sendEntities(this);
-    }
-
-    /**
-     * This is a temporary function that will be used to update the players to the new
-     * skilling system. Whereas before we would have a single total combat level, we now
-     * split it into multiple skills and it is cummulatively calculated. Here we just
-     * divide the former experience system in 3 and assign it to the 3 most common skills.
-     */
-
-    public updateExperience(): void {
-        if (this.experience > 0) {
-            log.debug(`[${this.username}] Moving player experience to skills.`);
-
-            // Add a third of the experience to each primary skill and then nullify the experience.
-            this.skills.get(Modules.Skills.Health).addExperience(Math.floor(this.experience / 3));
-            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(this.experience / 3));
-            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(this.experience / 3));
-
-            this.experience = 0;
-
-            this.save();
-        }
     }
 
     /**
@@ -662,14 +641,15 @@ export default class Player extends Character {
     /**
      * Handles the request for a movement to a new position. This is the preliminary check for
      * anti-cheating.
-     * @param requestX Requested x coordinate.
-     * @param requestY Requested y coordinate.
      * @param x The player's x coordinate as reported by the client.
      * @param y The player's y coordinate as reported by the client.
+     * @param target If the player is requesting movement towards an entity.
+     * @param following Whether or not the player is actively following an entity.
      */
 
-    public handleMovementRequest(requestX: number, requestY: number, x: number, y: number): void {
-        if (this.map.isDoor(x, y)) return;
+    public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        if (this.map.isDoor(x, y) || (target && following)) return;
+        if (this.inCombat()) return;
 
         if (x !== this.x || y !== this.y) {
             this.notify(
@@ -789,11 +769,13 @@ export default class Player extends Character {
         // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
+        if (!overlay) this.overlayArea?.removePlayer(this);
+
         // Store for comparison.
         this.overlayArea = overlay;
 
         // No overlay object or invalid object, remove the overlay.
-        if (!overlay || !overlay.id) return this.send(new Overlay(Opcodes.Overlay.Remove));
+        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
@@ -804,6 +786,8 @@ export default class Player extends Character {
                 colour: `rgba(0, 0, 0, ${overlay.darkness})`
             })
         );
+
+        if (overlay.type === 'damage') overlay.addPlayer(this);
     }
 
     /**
@@ -1131,6 +1115,15 @@ export default class Player extends Character {
 
         clearTimeout(this.disconnectTimeout);
         this.disconnectTimeout = null;
+    }
+
+    /**
+     * Removes the player from any areas that keep track of players.
+     */
+
+    public clearAreas(): void {
+        if (this.overlayArea && this.overlayArea.type === 'damage')
+            this.overlayArea.removePlayer(this);
     }
 
     /**
