@@ -1,9 +1,10 @@
-import { Modules } from '@kaetram/common/network';
 import Utils from '../utils/util';
+import Animation from './animation';
 
-import type Animation from './animation';
 import type Sprite from './sprite';
 import type { Animations } from './sprite';
+
+import { Modules } from '@kaetram/common/network';
 
 export interface EntityRenderingData {
     scale: number;
@@ -50,10 +51,6 @@ export default abstract class Entity {
 
     public angled = false;
     public angle = 0;
-
-    public critical = false;
-    public stunned = false;
-    public terror = false;
 
     public hasCounter = false;
 
@@ -310,6 +307,15 @@ export default abstract class Entity {
      */
 
     public hasShadow(): boolean {
+        return false;
+    }
+
+    /**
+     * Default implementation for medal.
+     * @returns Defaults to false.
+     */
+
+    public hasMedal(): boolean {
         return false;
     }
 

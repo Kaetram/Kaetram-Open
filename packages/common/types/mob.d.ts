@@ -9,6 +9,7 @@ export interface MobData {
     attackRange?: number;
     aggroRange?: number;
     aggressive?: boolean;
+    alwaysAggressive?: boolean;
     attackRate?: number;
     respawnDelay?: number;
     movementSpeed?: number;
@@ -21,4 +22,5 @@ export interface MobData {
     boss?: boolean;
     miniboss?: boolean;
     roamDistance?: number;
+    healRate?: number;
 }

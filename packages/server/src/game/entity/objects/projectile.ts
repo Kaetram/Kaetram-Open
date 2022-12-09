@@ -30,7 +30,7 @@ export default class Projectile extends Entity {
      */
 
     private handleImpact(): void {
-        this.target?.hit(this.hit.getDamage(), this.owner);
+        this.target?.hit(this.hit.getDamage(), this.owner, this.hit.aoe);
 
         // Despawn callback.
         this.impactCallback?.();

@@ -132,6 +132,8 @@ export default class Handler {
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
+        this.player.clearAreas();
+
         this.player.minigameArea?.exitCallback?.(this.player);
 
         this.world.entities.removePlayer(this.player);
@@ -212,6 +214,9 @@ export default class Handler {
         // Do not pass through doors that require an achievement which hasn't been completed.
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
             return;
+
+        // Ensure quest requirement is fullfilled before passing through the door.
+        if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
 
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();

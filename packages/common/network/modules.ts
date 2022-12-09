@@ -28,12 +28,6 @@ export enum Orientation {
     Right
 }
 
-export enum InputType {
-    Key,
-    LeftClick,
-    RightClick
-}
-
 export enum EntityType {
     Player,
     NPC,
@@ -119,40 +113,6 @@ export enum Hovering {
     Object
 }
 
-export enum Keys {
-    One = 49,
-    Two,
-    Three,
-    Four,
-    Five,
-
-    W = 87,
-    A = 65,
-    S = 83,
-    D = 68,
-
-    Up = 38,
-    Left = 37,
-    Down = 40,
-    Right = 39,
-
-    Esc = 27,
-    Enter = 13,
-    Slash = 191,
-    Spacebar = 32,
-
-    V = 86,
-    U = 85,
-    J = 74,
-    T = 84,
-    I = 73,
-    P = 80,
-    M = 77,
-
-    Plus = 187,
-    Minus = 189
-}
-
 export enum AudioTypes {
     Music,
     SFX
@@ -162,42 +122,6 @@ export enum PoisonTypes {
     Venom, // When a mob hits you
     Plague, // When entering a poisoned area.
     Persistent // Poison that doesn't wear off until it's cured.
-}
-
-export enum Trade {
-    Request,
-    Started,
-    Accepted,
-    Finished
-}
-
-enum Type {
-    Killing,
-    Scavenge
-}
-enum Rewards {
-    Item,
-    Experience,
-    Skill
-}
-export let Achievements = {
-    Type,
-    Rewards
-};
-
-export enum Quests {
-    Introduction,
-    BulkySituation
-}
-
-export enum Languages {
-    English,
-    Romanian,
-    French,
-    Spanish,
-    German,
-    Japanese,
-    Chinese
 }
 
 export enum Warps {
@@ -225,6 +149,29 @@ export enum Enchantment {
     Stun,
     AntiStun,
     Splash
+}
+
+export enum AoEType {
+    Character,
+    Player,
+    Mob
+}
+
+export enum Effects {
+    None,
+    Critical,
+    Terror,
+    Stun,
+    Healing,
+    Fireball,
+    Burning,
+    Freezing
+}
+
+export enum Medals {
+    None,
+    Silver,
+    Gold
 }
 
 export interface Colours {

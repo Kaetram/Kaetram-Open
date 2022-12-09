@@ -92,12 +92,13 @@ export default class Entities {
         });
     }
 
-    public spawnMob(key: string, x: number, y: number): Mob {
+    public spawnMob(key: string, x: number, y: number, plugin = false): Mob {
         return <Mob>this.collections.mobs.spawn({
             world: this.world,
             key,
             x,
-            y
+            y,
+            plugin
         });
     }
 

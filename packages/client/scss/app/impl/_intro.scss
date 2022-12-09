@@ -1,5 +1,10 @@
 @use '../../abstracts/media';
 
+.footer-button {
+    color: #c6c0a3;
+    text-decoration: none;
+}
+
 body.intro {
     #intro-container {
         transition: 0.4s opacity linear;
@@ -93,9 +98,5 @@ body.intro {
         &:nth-child(3) {
             animation-delay: 500ms;
         }
-    }
-
-    .patreon-widget {
-        display: block;
     }
 }
