@@ -222,7 +222,7 @@ export default class Area {
      */
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        _.each(this.players, callback);
+        for (let instance in this.players) callback(this.players[instance]);
     }
 
     /**
