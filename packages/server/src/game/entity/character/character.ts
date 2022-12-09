@@ -1,8 +1,10 @@
 import _ from 'lodash-es';
 
 import Entity from '../entity';
-import Combat from './combat/combat';
+import Mob from './mob/mob';
+import Player from './player/player';
 
+import Combat from './combat/combat';
 import Poison from './poison';
 import Hit from './combat/hit';
 import World from '../../world';
@@ -16,7 +18,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { PacketType } from '@kaetram/common/network/modules';
 import { EntityData } from '@kaetram/common/types/entity';
-import { Movement, Points, Combat as CombatPacket } from '../../../network/packets';
+import { Movement, Points, Combat as CombatPacket, Effect } from '../../../network/packets';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
@@ -30,10 +32,12 @@ export default abstract class Character extends Entity {
 
     public hitPoints: HitPoints;
 
-    public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
-    public attackRate = Modules.Defaults.ATTACK_RATE;
-    public healingRate = Modules.Constants.HEAL_RATE;
-    public orientation = Modules.Orientation.Down;
+    public healRate: number = Modules.Constants.HEAL_RATE;
+    public movementSpeed: number = Modules.Defaults.MOVEMENT_SPEED;
+    public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public healingRate: number = Modules.Constants.HEAL_RATE;
+    public orientation: number = Modules.Orientation.Down;
+    public aoeType: number = Modules.AoEType.Character;
 
     /* States */
     public poison?: Poison | undefined;
@@ -47,8 +51,9 @@ export default abstract class Character extends Entity {
     public moving = false;
     public pvp = false;
     public frozen = false;
-    public alwaysAggressive = false;
     public invincible = false;
+    public terror = false;
+    public aoe = 0;
 
     public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
@@ -85,7 +90,7 @@ export default abstract class Character extends Entity {
         this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
 
-        this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
+        this.healingInterval = setInterval(this.heal.bind(this), this.healRate);
     }
 
     /**
@@ -95,13 +100,7 @@ export default abstract class Character extends Entity {
      */
 
     private handleStun(state: boolean): void {
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Movement(Opcodes.Movement.Stunned, {
-                instance: this.instance,
-                state
-            })
-        });
+        this.sendToRegions(new Effect(Opcodes.Effect.Stun, { instance: this.instance, state }));
     }
 
     /**
@@ -111,14 +110,13 @@ export default abstract class Character extends Entity {
 
     private handleHitPoints(): void {
         // Sync the change in hitpoints to nearby entities.
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Points({
+        this.sendToRegions(
+            new Points({
                 instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints(),
                 maxHitPoints: this.hitPoints.getMaxHitPoints()
             })
-        });
+        );
     }
 
     /**
@@ -134,7 +132,7 @@ export default abstract class Character extends Entity {
         if (this.poison.expired()) return this.setPoison();
 
         // Create a hit object for poison damage and serialize it.
-        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, false, true).serialize();
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, true).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -147,6 +145,40 @@ export default abstract class Character extends Entity {
 
         // Do the actual damage to the character.
         this.hit(this.poison.damage);
+    }
+
+    /**
+     * Handles the damage of an AoE attack. We iterate through all the nearby entities
+     * within the character's AoE type and range, then apply damage proportional
+     * to the distance from the character. The farther away, the lesser the damage.
+     * @param damage The initial damage performed by the attack.
+     * @param attacker Who is performing the initial attack.
+     * @param range The AoE range of the attack.
+     */
+
+    private handleAoE(damage: number, attacker?: Character, range = 1): void {
+        this.forEachNearbyCharacter((character: Character) => {
+            let distance = this.getDistance(character) + 1,
+                hit = new Hit(
+                    Modules.Hits.Damage,
+                    Math.floor(damage / distance),
+                    false,
+                    false,
+                    distance
+                ).serialize();
+
+            // Create a hit packet and send it to the nearby regions.
+            this.sendToRegions(
+                new CombatPacket(Opcodes.Combat.Hit, {
+                    instance: attacker?.instance || '',
+                    target: character.instance,
+                    hit
+                })
+            );
+
+            // Apply the damage to the character.
+            character.hit(hit.damage, attacker);
+        }, range);
     }
 
     /**
@@ -221,14 +253,18 @@ export default abstract class Character extends Entity {
      * dead.
      * @param attacker The attacker dealing the damage.
      * @param damage The amount of damage being dealt.
+     * @param aoe Whether or not the damage is AoE based.
      */
 
-    public hit(damage: number, attacker?: Character): void {
+    public hit(damage: number, attacker?: Character, aoe = 0): void {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.invincible) return;
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
+
+        // If this is an AoE attack, we will damage all nearby characters.
+        if (aoe) this.handleAoE(damage, attacker, aoe);
 
         // Call the death callback if the character reaches 0 hitpoints.
         if (this.isDead()) return this.deathCallback?.(attacker);
@@ -238,6 +274,24 @@ export default abstract class Character extends Entity {
 
         // Poison only occurs when we land a hit and attacker has a poisonous weapon.
         if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
+    }
+
+    /**
+     * Makes a character follow another character. If the target parameter is specified
+     * it will follow that character, otherwise it will use the current target. The packet
+     * is sent to nearby regions.
+     * @param target Optional parameter for which target to follow.
+     */
+
+    public follow(target?: Character): void {
+        if (!target && !this.hasTarget()) return;
+
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Follow, {
+                instance: this.instance,
+                target: target?.instance || this.target!.instance
+            })
+        );
     }
 
     /**
@@ -385,6 +439,22 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * AoE damage works on a toggle basis. When a character uses an AoE attack
+     * it automatically resets the ability to use AoE attacks until it is toggled
+     * again. Toggling refers to the AoE radius value being set to anything greater
+     * than 0.
+     * @returns The current AoE radius value.
+     */
+
+    public getAoE(): number {
+        let aoeVal = this.aoe;
+
+        if (this.aoe) this.aoe = 0;
+
+        return aoeVal;
+    }
+
+    /**
      * Unimplemented special attack function for the superclass.
      * @returns Always false if not implemented.
      */
@@ -418,7 +488,12 @@ export default abstract class Character extends Entity {
      */
 
     public inCombat(): boolean {
-        return this.combat.started /*|| this.attackers.length > 0*/ || this.hasTarget();
+        return (
+            this.combat.started ||
+            this.attackers.length > 0 ||
+            this.hasTarget() ||
+            !this.combat.expired()
+        );
     }
 
     /**
@@ -622,6 +697,36 @@ export default abstract class Character extends Entity {
     }
 
     // End of packet sending functions
+
+    /**
+     * Iterates through all the entities nearby and returns the ones within range. The condition for
+     * entity filtering is based on the type of AoE damage the character is producing. This varies
+     * depending on the instance. Players will deal damage to all characters if within a PvP area,
+     * otherwise the default is to only deal damage to mobs. But mobs will only deal damage to players.
+     * @param callback A character object.
+     * @param range The range of the AoE damage.
+     */
+
+    public forEachNearbyCharacter(callback: (character: Character) => void, range = 1): void {
+        this.world.getGrids().forEachEntityNear(
+            this.x,
+            this.y,
+            (entity: Entity) => {
+                // Igmnores the current character.
+                if (entity.instance === this.instance) return;
+
+                if (
+                    this.aoeType === Modules.AoEType.Player
+                        ? entity.isPlayer()
+                        : this.aoeType === Modules.AoEType.Mob
+                        ? entity.isMob()
+                        : entity.isMob() || entity.isPlayer()
+                )
+                    callback(entity as Character);
+            },
+            range
+        );
+    }
 
     /**
      * Takes the superclass' entity data and adds `movementSpeed`.

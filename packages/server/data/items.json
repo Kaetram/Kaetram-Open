@@ -185,7 +185,7 @@
   "bluescimitar": {
     "type": "weapon",
     "name": "Blue Scimitar",
-    "level": 40,
+    "level": 46,
     "attackStats": {
       "crush": 18,
       "slash": 14,
@@ -3350,7 +3350,8 @@
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
-    "stackable": true
+    "stackable": true,
+    "respawnDelay": 90000
   },
 
   "royalazalea": {
@@ -3709,7 +3710,20 @@
 
   "icesword": {
     "type": "weapon",
-    "name": "Ice Sword"
+    "name": "Ice Sword",
+    "level": 94,
+    "attackStats": {
+      "crush": 8,
+      "slash": 22,
+      "stab": 12,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 4,
+      "archery": 0
+    },
+    "price": 1000
   },
 
   "platinumsword": {

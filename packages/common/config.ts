@@ -47,6 +47,7 @@ export interface Config {
     maxPlayers: number;
     updateTime: number;
     gver: string;
+    regionCache: boolean;
 
     discordEnabled: boolean;
     discordChannelId: string;

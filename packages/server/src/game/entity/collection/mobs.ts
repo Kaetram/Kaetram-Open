@@ -12,8 +12,14 @@ export default class MobCollection extends Collection<Mob> {
         return this.spawn({ world: this.world, key, x: position.x, y: position.y });
     }
 
-    public createEntity(params: { world: World; key: string; x: number; y: number }): Mob {
-        return new Mob(params.world, params.key, params.x, params.y);
+    public createEntity(params: {
+        world: World;
+        key: string;
+        x: number;
+        y: number;
+        plugin: boolean;
+    }): Mob {
+        return new Mob(params.world, params.key, params.x, params.y, params.plugin);
     }
 
     public override onAdd(entity: Mob): void {
