@@ -10,6 +10,7 @@ export interface RotatedTile {
 export type Tile = number | number[];
 
 // Map data information
+export type OverlayType = 'none' | 'inside' | 'damage' | 'lockX' | 'lockY' | 'player';
 
 export interface ProcessedArea {
     // Common
@@ -20,6 +21,7 @@ export interface ProcessedArea {
     // Chest/door/area
     achievement?: string;
     reqAchievement?: string;
+    reqQuest?: string;
     mimic?: boolean;
 
     // Area
@@ -31,7 +33,6 @@ export interface ProcessedArea {
     // Door
     destination?: number;
     orientation?: string;
-    quest?: string;
     stage?: number;
 
     // Light
@@ -82,6 +83,7 @@ export interface ProcessedDoor {
     quest: string;
     achievement: string;
     reqAchievement: string; // Achievement requirement to pass through.
+    reqQuest: string;
     stage: number;
     level: number;
 }

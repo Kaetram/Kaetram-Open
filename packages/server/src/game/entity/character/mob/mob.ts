@@ -21,7 +21,7 @@ import DefaultPlugin from '../../../../../data/plugins/mobs/default';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { MobData } from '@kaetram/common/types/mob';
-import { Movement } from '@kaetram/server/src/network/packets';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
 import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -45,6 +45,7 @@ export default class Mob extends Character {
     public roaming = false;
     public poisonous = false;
     public aggressive = false;
+    public alwaysAggressive = false;
     private hiddenName = false;
 
     // Stats & Bonuses
@@ -67,7 +68,7 @@ export default class Mob extends Character {
     public talkCallback?: (message: string) => void;
     public roamingCallback?: (retries?: number) => void;
 
-    public constructor(world: World, key: string, x: number, y: number) {
+    public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
 
         let data = (rawData as RawData)[key];
@@ -78,7 +79,7 @@ export default class Mob extends Character {
         }
 
         this.loadData(data);
-        this.loadPlugin(data.plugin!);
+        this.loadPlugin(plugin ? key : data.plugin!); // plugin boolean is used to load plugin based on key.
         this.loadSpawns();
         this.loadStats();
 
@@ -105,6 +106,7 @@ export default class Mob extends Character {
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
         this.aggressive = data.aggressive || this.aggressive;
+        this.alwaysAggressive = data.alwaysAggressive || this.alwaysAggressive;
         this.attackRate = data.attackRate || this.attackRate;
         this.respawnDelay = data.respawnDelay || this.respawnDelay;
         this.movementSpeed = data.movementSpeed || this.movementSpeed;
@@ -115,6 +117,8 @@ export default class Mob extends Character {
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
         this.roamDistance = data.roamDistance || this.roamDistance;
+        this.healRate = data.healRate || this.healRate;
+        this.roaming = data.roaming || this.roaming;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
@@ -122,7 +126,7 @@ export default class Mob extends Character {
         if (this.hiddenName) this.name = '';
 
         // The roaming interval if the mob is a roaming entity.
-        if (data.roaming)
+        if (this.roaming)
             setTimeout(() => {
                 this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
                 setInterval(
@@ -203,6 +207,30 @@ export default class Mob extends Character {
             strength: this.attackLevel,
             archery: this.attackRange + this.attackLevel
         };
+    }
+
+    /**
+     * An override for the `heal` function which adds support for heal packet.
+     * @param amount Amount we are healing the mob by.
+     * @param type The type of healing performed (passive or hitpoints).
+     */
+
+    public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
+        super.heal(amount);
+
+        if (type === 'hitpoints') {
+            // Increment hitpoints by the amount.
+            this.hitPoints.increment(amount);
+
+            // Send the heal packet to the nearby regions.
+            this.sendToRegions(
+                new Heal({
+                    instance: this.instance,
+                    type,
+                    amount
+                })
+            );
+        }
     }
 
     /**
@@ -301,10 +329,16 @@ export default class Mob extends Character {
      */
 
     public canAggro(player: Player): boolean {
-        if (!this.aggressive || this.target || !player.ready) return false;
+        // Skip if mob has a target or the player targeted isn't fully loaded yet.
+        if (this.target || !player.ready) return false;
 
-        if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
+        // Check for aggressive properties of the mob.
+        if (!this.aggressive && !this.alwaysAggressive) return false;
 
+        // Only aggro if the mob's level * 3 is lower than the player's level.
+        if (Math.floor(this.level * 3) < player.level && !this.alwaysAggressive) return false;
+
+        // Ensure the mob isnear the player within its aggro range.
         return this.isNear(player, this.aggroRange);
     }
 

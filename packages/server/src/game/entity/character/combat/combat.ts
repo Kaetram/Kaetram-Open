@@ -11,10 +11,15 @@ import { Movement, Combat as CombatPacket, Spawn } from '../../../../network/pac
 export default class Combat {
     public started = false;
 
-    private lastAttack = Date.now();
+    private lastAttack = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
+
+    private startCallback?: () => void;
+    private stopCallback?: () => void;
+    private attackCallback?: () => void;
+    private loopCallback?: () => void;
 
     public constructor(private character: Character) {}
 
@@ -26,6 +31,8 @@ export default class Combat {
         if (this.started) return;
 
         this.started = true;
+
+        this.startCallback?.();
 
         /**
          * Start the loop at a third the attack rate with a 15 millisecond offset. This is
@@ -50,6 +57,8 @@ export default class Combat {
         // Clear target and attackers.
         this.character.clearTarget();
         this.character.clearAttackers();
+
+        this.stopCallback?.();
 
         // Mark the combat as stopped.
         this.started = false;
@@ -102,6 +111,8 @@ export default class Combat {
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
 
+        this.loopCallback?.();
+
         this.checkTargetPosition();
 
         if (this.character.isNearTarget()) {
@@ -112,7 +123,9 @@ export default class Combat {
             this.sendAttack(hit);
 
             this.lastAttack = Date.now();
-        } else this.sendFollow();
+
+            this.attackCallback?.();
+        } else this.character.follow();
     }
 
     /**
@@ -143,7 +156,7 @@ export default class Combat {
         );
 
         // Handle combat damage here since melee is instant.
-        this.character.target?.hit(hit.getDamage(), this.character);
+        this.character.target?.hit(hit.getDamage(), this.character, hit.aoe);
     }
 
     /**
@@ -165,21 +178,6 @@ export default class Combat {
     }
 
     /**
-     * Sends a follow request to the nearby regions. This
-     * notifies all the players that this current character
-     * is following their target.
-     */
-
-    private sendFollow(): void {
-        this.character.sendToRegions(
-            new Movement(Opcodes.Movement.Follow, {
-                instance: this.character.instance,
-                target: this.character.target!.instance
-            })
-        );
-    }
-
-    /**
      * Creates a Hit object with the data from the current
      * character and its target.
      * @returns A new hit object with the damage.
@@ -189,7 +187,9 @@ export default class Combat {
         return new Hit(
             Modules.Hits.Damage,
             Formulas.getDamage(this.character, this.character.target!),
-            this.character.isRanged()
+            this.character.isRanged(),
+            false,
+            this.character.getAoE()
         );
     }
 
@@ -201,5 +201,45 @@ export default class Combat {
 
     private canAttack(): boolean {
         return Date.now() - this.lastAttack >= this.character.getAttackRate();
+    }
+
+    /**
+     * @returns Whether or not 10 seconds from last attack has passed.
+     */
+
+    public expired(): boolean {
+        return Date.now() - this.lastAttack > 10_000;
+    }
+
+    /**
+     * Callback for when the combat starts.
+     */
+
+    public onStart(callback: () => void): void {
+        this.startCallback = callback;
+    }
+
+    /**
+     * Callback for when the combat stops.
+     */
+
+    public onStop(callback: () => void): void {
+        this.stopCallback = callback;
+    }
+
+    /**
+     * Callback for whenever the character performs an attack.
+     */
+
+    public onAttack(callback: () => void): void {
+        this.attackCallback = callback;
+    }
+
+    /**
+     * Callback for every time the combat loop is called.
+     */
+
+    public onLoop(callback: () => void): void {
+        this.loopCallback = callback;
     }
 }

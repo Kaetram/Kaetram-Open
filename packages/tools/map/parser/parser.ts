@@ -136,6 +136,13 @@ export default class ProcessMap {
         });
     }
 
+    /**
+     * Handles the animated tile properties.
+     * @param tileId Tile ID of the animation tile.
+     * @param firstgid The first tile ID that the animation tile bases off of.
+     * @param animations Array containing Tiled animation information.
+     */
+
     private parseAnimation(tileId: number, firstgid: number, animations: Animation[]): void {
         // Temporary storage for animation data.
         let data: ProcessedAnimation[] = [];

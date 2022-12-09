@@ -3,6 +3,8 @@ import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
 
+import type { OverlayType } from '@kaetram/common/types/map';
+
 type AreaCallback = (player: Player) => void;
 export default class Area {
     public polygon!: Position[];
@@ -16,8 +18,9 @@ export default class Area {
 
     // Overlay properties
     public darkness = 0;
-    public type = '';
+    public type: OverlayType = 'none';
     public fog = '';
+    public reason = ''; // Message displayed when player takes damage in the area.
 
     // Properties it can hold
     public quest = '';
@@ -36,6 +39,9 @@ export default class Area {
     // Minigame
     public minigame = '';
     public mObjectType = '';
+
+    // Players
+    public players: { [instance: string]: Player } = {};
 
     public maxEntities = 0;
     public spawnDelay = 0;
@@ -72,6 +78,19 @@ export default class Area {
     }
 
     /**
+     * Adds a player to the area if it doesn't already exist.
+     * @param player The player we are adding to the area.
+     */
+
+    public addPlayer(player: Player): void {
+        if (player.instance in this.players) return;
+
+        this.players[player.instance] = player;
+
+        console.log(`Player ${player.instance} has entered area ${this.id}`);
+    }
+
+    /**
      * Remove the mob from the list and creates a callback
      * if the area has been emptied.
      * @param mob The mob we are removoing.
@@ -83,6 +102,17 @@ export default class Area {
         if (index > -1) this.entities.splice(index, 1);
 
         if (this.entities.length === 0) this.emptyCallback?.(attacker!);
+    }
+
+    /**
+     * Removes a player from the area.
+     * @param player The player we are removing.
+     */
+
+    public removePlayer(player: Player) {
+        delete this.players[player.instance];
+
+        console.log(`Player ${player.instance} has left area ${this.id}`);
     }
 
     /**
@@ -184,6 +214,15 @@ export default class Area {
     public forEachTile(callback: (x: number, y: number) => void): void {
         for (let i = this.y; i < this.y + this.height; i++)
             for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+    }
+
+    /**
+     * Iterates through all the players and creates a callback.
+     * @param callback The player currently being iterated.
+     */
+
+    public forEachPlayer(callback: (player: Player) => void): void {
+        for (let instance in this.players) callback(this.players[instance]);
     }
 
     /**

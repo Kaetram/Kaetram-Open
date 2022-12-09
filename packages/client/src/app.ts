@@ -44,7 +44,6 @@ export default class App {
 
     private about: HTMLElement = document.querySelector('#toggle-about')!;
     private credits: HTMLElement = document.querySelector('#toggle-credits')!;
-    private discord: HTMLElement = document.querySelector('#toggle-discord')!;
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
@@ -88,7 +87,6 @@ export default class App {
 
         this.about.addEventListener('click', () => this.openScroll('about'));
         this.credits.addEventListener('click', () => this.openScroll('credits'));
-        this.discord.addEventListener('click', () => window.open('https://discord.gg/MmbGAaw'));
 
         this.respawn.addEventListener('click', () => this.respawnCallback?.());
 
