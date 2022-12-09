@@ -10,17 +10,26 @@ import EntityHandler from '../entityhandler';
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;
 
+interface EffectInfo {
+    key: string;
+    animation: Animation;
+    perpetual?: boolean; // Animation plays endlessly until effect is manually removed.
+    speed?: number;
+}
+
 export default class Character extends Entity {
     public healthBarVisible = false;
 
-    private following = false;
+    public moving = false;
+    public following = false;
+    public stunned = false;
+
     private interrupted = false;
-    public explosion = false;
-    public healing = false;
-    public fire = false;
 
     public path: number[][] | null = null;
     public target: Entity | null = null;
+
+    public lastTarget = '';
 
     private attackers: { [id: string]: Character } = {};
 
@@ -33,24 +42,52 @@ export default class Character extends Entity {
     public override nextGridY = -1;
     public override movementSpeed = -1;
     public override attackRange = 1;
-    public override critical = false;
     public override frozen = false;
-    public override stunned = false;
     public override dead = false;
 
     public override orientation = Modules.Orientation.Down;
 
+    public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
 
-    private criticalAnimation: Animation = new Animation('atk_down', 10, 0, 48, 48);
-    private terrorAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
-    private stunAnimation: Animation = new Animation('atk_down', 6, 0, 48, 48);
-    private explosionAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
-    private healingAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
-    private fireAnimation: Animation = new Animation('explosion', 8, 0, 64, 64);
+    private effects: { [id: string]: EffectInfo } = {
+        [Modules.Effects.Critical]: {
+            key: 'effect-critical',
+            animation: new Animation('effect', 10, 0, 48, 48)
+        },
+        [Modules.Effects.Terror]: {
+            key: 'effect-terror',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
+        [Modules.Effects.Stun]: {
+            key: 'effect-stun',
+            animation: new Animation('effect', 6, 0, 48, 48),
+            perpetual: true
+        },
+        [Modules.Effects.Healing]: {
+            key: 'effect-heal',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
+        [Modules.Effects.Fireball]: {
+            key: 'effect-fireball',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
+        [Modules.Effects.Burning]: {
+            key: 'effect-burn',
+            animation: new Animation('effect', 4, 0, 64, 64),
+            perpetual: true,
+            speed: 150
+        },
+        [Modules.Effects.Freezing]: {
+            key: 'effect-freeze',
+            animation: new Animation('effect', 4, 0, 64, 64),
+            perpetual: true,
+            speed: 150
+        }
+    };
 
     private secondStepCallback?(): void;
     private beforeStepCallback?(): void;
@@ -77,54 +114,18 @@ export default class Character extends Entity {
      */
 
     private loadAnimations(): void {
-        // Critical Hit Animation
-        this.criticalAnimation.setSpeed(30);
-        this.criticalAnimation.setCount(1, () => {
-            this.critical = false;
+        // Iterate through all the effects and load default speed and end callback events.
+        _.each(this.effects, (effect: EffectInfo) => {
+            // Default speed
+            effect.animation.setSpeed(effect.speed || 50);
 
-            this.criticalAnimation.reset();
-            this.criticalAnimation.count = 1;
-        });
+            // Remove effect once it has finished playing.
+            effect.animation.setCount(1, () => {
+                if (!effect.perpetual) this.removeEffect();
 
-        // Terror Animation
-        this.terrorAnimation.setSpeed(50);
-        this.terrorAnimation.setCount(1, () => {
-            this.terror = false;
-
-            this.terrorAnimation.reset();
-            this.terrorAnimation.count = 1;
-        });
-
-        // Stunned Animation
-        this.stunAnimation.setSpeed(30);
-
-        // Explosion Animation
-        this.explosionAnimation.setSpeed(50);
-        this.explosionAnimation.setCount(1, () => {
-            this.explosion = false;
-
-            this.explosionAnimation.reset();
-            this.explosionAnimation.count = 1;
-        });
-
-        // Healing Animation
-        this.healingAnimation.setSpeed(50);
-
-        this.healingAnimation.setCount(1, () => {
-            this.healing = false;
-
-            this.healingAnimation.reset();
-            this.healingAnimation.count = 1;
-        });
-
-        // Lavaball / fire animation
-        this.fireAnimation.setSpeed(100);
-
-        this.fireAnimation.setCount(2, () => {
-            this.fire = false;
-
-            this.fireAnimation.reset();
-            this.fireAnimation.count = 2;
+                effect.animation.reset();
+                effect.animation.count = 1;
+            });
         });
     }
 
@@ -426,7 +427,10 @@ export default class Character extends Entity {
                 this.newDestination = null;
 
                 if (path.length < 2) stop = true;
-                else this.followPath(path);
+                else {
+                    this.startPathingCallback?.(path);
+                    this.followPath(path);
+                }
             } else if (this.hasNextStep()) {
                 this.step++;
                 this.updateMovement();
@@ -492,7 +496,7 @@ export default class Character extends Entity {
 
         if (this.following) path.pop();
 
-        this.startPathingCallback?.(path);
+        if (!this.moving && !this.changedPath()) this.startPathingCallback?.(path);
 
         this.nextStep();
     }
@@ -510,45 +514,46 @@ export default class Character extends Entity {
         }
     }
 
+    /**
+     * @returns Whether or not the character has an active effect.
+     */
+
     public hasEffect(): boolean {
-        return (
-            this.critical ||
-            this.stunned ||
-            this.terror ||
-            this.explosion ||
-            this.healing ||
-            this.fire
-        );
+        return this.effect !== Modules.Effects.None;
     }
 
-    public getEffectAnimation(): Animation | undefined {
-        if (this.critical) return this.criticalAnimation;
+    /**
+     * Resets the currently active effect for the character.
+     */
 
-        if (this.stunned) return this.stunAnimation;
-
-        if (this.terror) return this.terrorAnimation;
-
-        if (this.explosion) return this.explosionAnimation;
-
-        if (this.healing) return this.healingAnimation;
-
-        if (this.fire) return this.fireAnimation;
+    public removeEffect(): void {
+        this.effect = Modules.Effects.None;
     }
+
+    /**
+     * Updates the value of the currently active effect.
+     * @param effect The effect we add to the character.
+     */
+
+    public setEffect(effect: Modules.Effects): void {
+        this.effect = effect;
+    }
+
+    /**
+     * @returns The animation object of the currently active effect (or undefined).
+     */
+
+    public getEffectAnimation(): Animation {
+        return this.effects[this.effect]?.animation;
+    }
+
+    /**
+     * Returns the key of the currently active effect or an empty string if none.
+     * @returns The current key of the effect.
+     */
 
     public getActiveEffect(): string {
-        if (this.critical) return 'criticaleffect';
-
-        if (this.stunned) return 'stuneffect';
-
-        if (this.terror) return 'explosion-terror';
-
-        if (this.explosion) return 'explosion-fireball';
-
-        if (this.healing) return 'explosion-heal';
-
-        if (this.fire) return 'explosion-lavaball';
-
-        return '';
+        return this.effects[this.effect]?.key || '';
     }
 
     /**
@@ -596,7 +601,7 @@ export default class Character extends Entity {
         return this.path && this.path.length - 1 > this.step;
     }
 
-    private changedPath(): boolean {
+    public changedPath(): boolean {
         return !!this.newDestination;
     }
 
@@ -614,7 +619,14 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
+
+        this.lastTarget = target.instance;
     }
+
+    /**
+     * @param target Optional parameter to check if the player has a specific target.
+     * @returns Whether or not the player has a specific target or a target at all.
+     */
 
     public hasTarget(target?: Entity): boolean {
         return target ? this.target === target : !!this.target;

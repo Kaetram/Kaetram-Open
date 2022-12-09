@@ -18,8 +18,6 @@ export enum Movement {
     Move,
     Follow,
     Entity,
-    Freeze,
-    Stunned,
     Zone
 }
 
@@ -178,5 +176,8 @@ export enum Bubble {
 
 export enum Effect {
     Speed,
-    Critical
+    Critical,
+    Freeze,
+    Stun,
+    Burn
 }

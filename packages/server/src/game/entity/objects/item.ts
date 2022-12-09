@@ -55,7 +55,7 @@ export default class Item extends Entity {
     public exists = true;
     public undroppable = false;
 
-    private respawnTime = Modules.ItemDefaults.RESPAWN_DELAY;
+    private respawnDelay = Modules.ItemDefaults.RESPAWN_DELAY;
     private despawnDuration = Modules.ItemDefaults.DESPAWN_DURATION;
     private blinkDelay = Modules.ItemDefaults.BLINK_DELAY;
 
@@ -106,6 +106,7 @@ export default class Item extends Entity {
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.undroppable = this.data.undroppable || this.undroppable;
+        this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -155,11 +156,11 @@ export default class Item extends Entity {
     }
 
     /**
-     * Sends the respawn callback signal after `respawnTime` milliseconds pass.
+     * Sends the respawn callback signal after `respawnDelay` milliseconds pass.
      */
 
     public respawn(): void {
-        setTimeout(() => this.respawnCallback?.(), this.respawnTime);
+        setTimeout(() => this.respawnCallback?.(), this.respawnDelay);
     }
 
     /**

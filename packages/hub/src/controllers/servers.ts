@@ -30,8 +30,6 @@ export interface ServerData {
 export default class Servers {
     private servers: { [key: string]: Server } = {};
 
-    public totalPlayers = 0;
-
     private addCallback?: AddCallback;
     private removeCallback?: RemoveCallback;
     private updateCallback?: () => void;
@@ -47,14 +45,8 @@ export default class Servers {
      */
 
     private handleCleanUp(): void {
-        this.totalPlayers = 0;
-
         this.forEachServer((server, key) => {
-            if (!this.isServerTimedOut(server)) {
-                // Update total players with servers that are still active.
-                this.totalPlayers += server.players.length;
-                return;
-            }
+            if (!this.isServerTimedOut(server)) return;
 
             this.removeCallback?.(key);
 
@@ -165,6 +157,19 @@ export default class Servers {
 
     public getServerCount(): number {
         return Object.keys(this.servers).length;
+    }
+
+    /**
+     * Goes through all the servers and obtains the total amount of players.
+     * @returns Number indicating the total amount of players.
+     */
+
+    public getTotalPlayers(): number {
+        let totalPlayers = 0;
+
+        _.each(this.servers, (server: Server) => (totalPlayers += server.players.length));
+
+        return totalPlayers;
     }
 
     /**

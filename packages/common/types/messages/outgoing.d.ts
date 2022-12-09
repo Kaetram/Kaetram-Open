@@ -338,12 +338,12 @@ export interface MinigamePacket {
 
 export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) => void;
 
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////s//////////////////////////////////////////////////
 
 export interface EffectPacket {
     instance: string;
     movementSpeed?: number;
-    status?: string;
+    state?: boolean;
 }
 
 export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;

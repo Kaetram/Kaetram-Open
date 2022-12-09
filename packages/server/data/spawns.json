@@ -61,13 +61,13 @@
   "295-361": {
     "name": "Mimic",
     "achievement": "notwhatitseems",
-    "drops": {"gold": 700, "bigflask": 300, "spear": 100, "sproutring": 100, "pendant1": 100, "goldring": 6}
+    "drops": {"gold": 700, "bigflask": 300, "spear": 100, "ring1": 100, "pendant1": 100, "goldring": 6}
   },
 
-  "629-283": {
+  "744-72": {
     "name": "Mimic",
     "achievement": "treadcarefully",
-    "drops": {"gold": 300, "bigflask": 500, "spear": 100, "sproutring": 100, "pendant1": 100}
+    "drops": {"gold": 300, "bigflask": 500, "spear": 100, "ring1": 100, "pendant1": 100}
   },
 
   "228-156": {
@@ -77,6 +77,33 @@
     "level": 30,
     "defenseLevel": 10,
     "drops": {"gold": 800, "bigflask": 400, "silverring": 10, "scimitar": 75, "pendant1": 125}
+  },
+
+  "701-439": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 2200,
+    "level": 84,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "manaflask": 100, "sproutring": 10, "bluescimitar": 50, "shardt1": 50}
+  },
+
+  "750-432": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 2200,
+    "level": 84,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
+  },
+
+  "755-183": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 2200,
+    "level": 84,
+    "defenseLevel": 10,
+    "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
   },
 
   "168-31": {
@@ -113,6 +140,15 @@
 
   "53-306": {
     "name": "Baby Sea Dragon",
-    "miniboss": true
+    "miniboss": true,
+    "achievement": "babyseadragon"
+  },
+
+  "790-229": {
+    "name": "Ice Knight",
+    "miniboss": true,
+    "level": 62,
+    "attackLevel": 14,
+    "drops": {"gold": 300, "icesword": 125}
   }
 }

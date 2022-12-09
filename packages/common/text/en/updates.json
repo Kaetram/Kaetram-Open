@@ -34,5 +34,19 @@
             "- Map changes and more content",
             "- A lot of game engine improvements and preparations for new content ;)"
         ]
+    },
+    "alpha-2.2.6": {
+        "title": "Kaetram alpha-2.2.6",
+        "content": [
+            "- Chatbox fixes and new layout",
+            "- Added stop movement by pressing ESC",
+            "- Added attack last target by pressing 't'",
+            "- Combat system improvements",
+            "- Anti-cheat detection/no-clipping fixes (hopefully)",
+            "- Gold coin image update",
+            "- Map loading improvements",
+            "- Client backend work, support for special effects and more",
+            "- New map content"
+        ]
     }
 }
