@@ -1,0 +1,101 @@
+@use '../../abstracts/media';
+
+#world-select-button {
+    cursor: pointer;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    margin: 3.5em;
+    padding: 0.5em 1em;
+
+    font-family: AdvoCut, sans-serif, arial;
+    font-size: 24px;
+    color: #eee;
+
+    background-color: #d83939;
+    border: 2px solid #373737;
+    border-radius: 0.25em;
+
+    &:hover {
+        background-color: #e26d6d;
+        border-color: #fcda5c;
+    }
+
+    &:active {
+        background-color: #db4848;
+    }
+
+    span {
+        display: block;
+
+        font-size: 20px;
+    }
+}
+
+#world-select form {
+    display: flex;
+    flex-flow: column;
+
+    height: 65%;
+    padding: 1em 5em;
+}
+
+#worlds {
+    overflow-y: auto;
+    flex: 1;
+
+    padding: 0 5em;
+
+    list-style: decimal-leading-zero inside;
+
+    li {
+        cursor: pointer;
+
+        margin: 0.5em 0;
+        padding: 0.75em 0;
+
+        &:nth-child(odd) {
+            background-color: rgb(0 0 0 / 25%);
+        }
+
+        &:hover {
+            background-color: rgb(0 0 0 / 50%);
+        }
+
+        &:active {
+            background-color: rgb(0 0 0 / 75%);
+        }
+
+        &.active {
+            color: #fcda5c;
+
+            background-color: rgb(0 0 0 / 75%);
+            border: 2px solid #fcda5c;
+        }
+
+        span {
+            padding: 0 5em;
+        }
+    }
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+#cancel-worlds,
+#continue-worlds {
+    position: relative;
+}
+
+@media (--lg) {
+    #world-select form {
+        padding: 1em 7.5em;
+    }
+}
