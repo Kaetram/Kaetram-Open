@@ -1,8 +1,6 @@
-export interface APIData {
+export interface SerializedServer {
     host: string;
-    serverId: number;
     port: number;
-    gameVersion: string;
+    players: number;
     maxPlayers: number;
-    playerCount: number;
 }
