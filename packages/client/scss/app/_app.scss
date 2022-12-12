@@ -2,7 +2,7 @@
 @use 'impl/parchment';
 @use 'impl/login';
 @use 'impl/intro';
-@use 'impl/world-switch';
+@use 'impl/worlds';
 
 #alert {
     width: 100%;
@@ -18,14 +18,14 @@
     border-bottom: 1px solid #000;
 }
 
-.version {
+#game-version {
     position: absolute;
     right: 0;
     bottom: 0;
 
     padding: 3em;
-    
+
     font-family: AdvoCut, sans-serif, arial;
-    font-size: 20px;
+    font-size: 24px;
     color: #eee;
 }
