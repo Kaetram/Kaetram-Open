@@ -1,11 +1,6 @@
 import { ServerData } from '../controllers/servers';
 
-export interface SerializedServer {
-    host: string;
-    port: number;
-    players: number;
-    maxPlayers: number;
-}
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 export default class Server {
     public lastPing = Date.now();

@@ -1,8 +1,10 @@
 import _ from 'lodash-es';
 
-import Server, { SerializedServer } from '../model/server';
+import Server from '../model/server';
 
 import config from '@kaetram/common/config';
+
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 type AddCallback = (id: number) => void;
 type RemoveCallback = (key: string) => void;
