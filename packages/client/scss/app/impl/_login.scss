@@ -5,8 +5,7 @@
     top: 120%;
 }
 
-#continue,
-#cancel-button,
+#cancel-register,
 #play {
     top: 92.5%;
 }
@@ -15,7 +14,7 @@
     left: 15%;
 }
 
-#cancel-button {
+#cancel-register {
     left: 10%;
 }
 
@@ -86,19 +85,21 @@ input[type='range'] {
             background-position-x: -$button-width * 2;
         }
 
-        #cancel-button {
+        #cancel-register,
+        #cancel-worlds {
             background-position-x: -$button-width * 3;
         }
 
-        #continue {
+        #continue-worlds {
             background-position-x: -$button-width * 4;
         }
 
         #play,
         #login,
         #new-account,
-        #cancel-button,
-        #continue {
+        #cancel-register,
+        #cancel-worlds,
+        #continue-worlds {
             cursor: pointer;
 
             position: absolute;

@@ -308,11 +308,38 @@
                                 title="Cancel"
                                 aria-label="Cancel"
                                 type="button"
-                                id="cancel-button"
+                                id="cancel-register"
                             ></button>
                             <button title="Play" aria-label="Play" type="submit" id="play"></button>
 
                             <div class="validation-summary"></div>
+                        </form>
+                    </article>
+
+                    <article id="world-select">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            World Select
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form onsubmit="return false">
+                            <ol id="worlds"></ol>
+
+                            <div class="button-row">
+                                <button
+                                    title="Cancel"
+                                    aria-label="Cancel"
+                                    type="button"
+                                    id="cancel-worlds"
+                                ></button>
+                                <button
+                                    title="Continue"
+                                    aria-label="Continue"
+                                    type="submit"
+                                    id="continue-worlds"
+                                ></button>
+                            </div>
                         </form>
                     </article>
 
@@ -461,6 +488,14 @@
                 <div class="parchment-right"></div>
             </section>
 
+            <button id="world-select-button" hidden>
+                World Select
+
+                <span>...</span>
+            </button>
+
+            <span id="game-version" class="version"></span>
+
             <footer>
                 <div id="about-link" class="clickable">
                     <span id="toggle-about">About</span>
@@ -477,7 +512,11 @@
                 </div>
                 <span>&ndash;</span>
                 <div class="clickable">
-                    <a class="footer-button" target="_blank" href="https://www.patreon.com/bePatron?u=29287394">
+                    <a
+                        class="footer-button"
+                        target="_blank"
+                        href="https://www.patreon.com/bePatron?u=29287394"
+                    >
                         <span>Patreon</span>
                     </a>
                 </div>
@@ -824,7 +863,5 @@
                 </div>
             </div>
         </div>
-
-        <p id="game-version" class="version"></p>
     </body>
 </html>
