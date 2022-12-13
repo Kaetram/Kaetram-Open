@@ -72,6 +72,7 @@ export default class Servers {
             data.accessToken,
             data.remoteServerHost,
             data.maxPlayers,
+            `${config.name} ${data.serverId}`,
             data.players
         );
 

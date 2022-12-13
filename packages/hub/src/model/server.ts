@@ -14,6 +14,7 @@ export default class Server {
         public accessToken: string,
         public remoteServerHost: string,
         public maxPlayers: number,
+        private name: string,
         public players: string[]
     ) {}
 
@@ -40,6 +41,7 @@ export default class Server {
         return {
             host: this.remoteServerHost,
             port: this.port,
+            name: this.name,
             players: this.players.length,
             maxPlayers: this.maxPlayers
         };
