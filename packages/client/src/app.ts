@@ -773,6 +773,8 @@ export default class App {
      */
 
     private async loadWorlds(): Promise<void> {
+        if (!this.config.hub) return;
+
         // Fetch a list of servers from the hub
         let res = await fetch(`${this.config.hub}/all`),
             servers: SerializedServer[] = await res.json(),
