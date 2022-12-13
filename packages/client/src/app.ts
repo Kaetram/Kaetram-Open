@@ -753,35 +753,51 @@ export default class App {
         this.respawnCallback = callback;
     }
 
+    /**
+     * Selects the server to connect to and displays its player count on the button.
+     *
+     * @param server The server to connect to.
+     */
+
     private selectServer(server: SerializedServer): void {
         this.selectedServer = server;
 
-        this.worldSelectButton.querySelector(
-            'span'
-        )!.textContent = `${server.players}/${server.maxPlayers} players`;
+        let buttonSpan = this.worldSelectButton.querySelector('span')!;
+        buttonSpan.textContent = `${server.players}/${server.maxPlayers} players`;
     }
+
+    /**
+     * Loads the list of worlds from the hub and adds them to the world select.
+     * The first world in the list is automatically selected.
+     */
 
     private async loadWorlds(): Promise<void> {
         if (!this.config.worldSwitch) return;
 
         this.worldSelectButton.hidden = false;
 
+        // Fetch a list of servers from the hub
         let res = await fetch(`${this.config.hub}/all`),
             servers: SerializedServer[] = await res.json();
 
         for (let [i, server] of Object.entries(servers)) {
+            // Create a new <li> element for each server
             let li = document.createElement('li'),
                 players = document.createElement('span');
 
+            // If this is the first server in the list, select it and mark it as active
             if (i === '0') {
                 this.selectServer(server);
                 li.classList.add('active');
             }
 
+            // Add the number of players to the <li> element
             players.textContent = `${server.players}/${server.maxPlayers} players`;
 
+            // Append the <span> element to the <li> element
             li.append(players);
 
+            // When the <li> element is clicked, select the server and update the active class
             li.addEventListener('click', () => {
                 this.selectServer(server);
 
@@ -789,6 +805,7 @@ export default class App {
                 li.classList.add('active');
             });
 
+            // Add the <li> element to the list of worlds
             this.worldsList.append(li);
         }
     }
