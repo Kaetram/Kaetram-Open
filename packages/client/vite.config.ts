@@ -8,7 +8,7 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 
 import { name, description } from '../../package.json';
 
-let expose = ['name', 'host', 'ssl', 'worldSwitch', 'serverId'] as const;
+let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
 interface ExposedConfig extends Pick<Config, typeof expose[number]> {
     debug: boolean;
@@ -34,8 +34,7 @@ function loadEnv(isProduction: boolean): ExposedConfig {
             hubPort,
             host,
             socketioPort,
-            ssl,
-            worldSwitch
+            ssl
         } = config;
 
     for (let key of expose) env[key] = config[key] as never;
@@ -49,8 +48,7 @@ function loadEnv(isProduction: boolean): ExposedConfig {
         version: gver,
         host: clientHost,
         port: clientPort,
-        hub: hubEnabled && hub,
-        worldSwitch: hubEnabled && worldSwitch
+        hub: hubEnabled && hub
     });
 }
 
