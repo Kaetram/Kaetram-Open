@@ -86,8 +86,6 @@ export default class Area {
         if (player.instance in this.players) return;
 
         this.players[player.instance] = player;
-
-        console.log(`Player ${player.instance} has entered area ${this.id}`);
     }
 
     /**
