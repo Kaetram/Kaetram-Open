@@ -8,14 +8,14 @@ export default class Server {
     private updateCallback?: () => void;
 
     public constructor(
+        public name: string,
         public host: string,
         public port: number,
         public apiPort: number,
         public accessToken: string,
         public remoteServerHost: string,
-        public maxPlayers: number,
-        private name: string,
-        public players: string[]
+        public players: string[],
+        public maxPlayers: number
     ) {}
 
     /**
@@ -39,9 +39,9 @@ export default class Server {
 
     public serialize(): SerializedServer {
         return {
+            name: this.name,
             host: this.remoteServerHost,
             port: this.port,
-            name: this.name,
             players: this.players.length,
             maxPlayers: this.maxPlayers
         };
