@@ -41,7 +41,6 @@ export interface Config {
     mongodbSrv: boolean;
     mongodbTls: boolean;
 
-    worldSwitch: boolean;
     tutorialEnabled: boolean;
     overrideAuth: boolean;
     maxPlayers: number;
