@@ -763,8 +763,11 @@ export default class App {
     private selectServer(server: SerializedServer): void {
         this.selectedServer = server;
 
-        let buttonSpan = this.worldSelectButton.querySelector('span')!;
-        buttonSpan.textContent = `${server.players}/${server.maxPlayers} players`;
+        let name = this.worldSelectButton.querySelector('strong')!;
+        name.textContent = `${server.name}`;
+
+        let players = this.worldSelectButton.querySelector('span')!;
+        players.textContent = `(${server.players}/${server.maxPlayers} players)`;
     }
 
     /**
@@ -800,15 +803,17 @@ export default class App {
         for (let [i, server] of Object.entries(servers)) {
             // Create a new <li> element for each server
             let li = document.createElement('li'),
+                name = document.createElement('strong'),
                 players = document.createElement('span');
 
             // If this is the first server in the list, select it and mark it as active
             if (i === '0') li.classList.add('active');
 
-            // Add the number of players to the <li> element
+            name.textContent = server.name;
+
             players.textContent = `${server.players}/${server.maxPlayers} players`;
 
-            // Append the <span> element to the <li> element
+            li.append(name);
             li.append(players);
 
             // When the <li> element is clicked, select the server and update the active class

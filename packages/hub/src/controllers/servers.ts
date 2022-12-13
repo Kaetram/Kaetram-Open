@@ -66,14 +66,14 @@ export default class Servers {
         if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
 
         this.servers[data.serverId] = new Server(
+            `${config.name} ${data.serverId}`,
             data.host,
             data.port,
             data.apiPort,
             data.accessToken,
             data.remoteServerHost,
-            data.maxPlayers,
-            `${config.name} ${data.serverId}`,
-            data.players
+            data.players,
+            data.maxPlayers
         );
 
         this.addCallback?.(data.serverId);
