@@ -65,6 +65,7 @@ export default class App {
     public statusMessage = '';
 
     private selectedServer?: SerializedServer;
+    private showWorldSelect = false;
 
     public keyDownCallback?: KeyDownCallback;
     public keyUpCallback?: KeyUpCallback;
@@ -259,7 +260,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
-        this.worldSelectButton.hidden = this.config.worldSwitch;
+        this.worldSelectButton.hidden = this.showWorldSelect;
         this.gameVersion.hidden = true;
 
         this.updateLoader();
@@ -772,13 +773,27 @@ export default class App {
      */
 
     private async loadWorlds(): Promise<void> {
-        if (!this.config.worldSwitch) return;
-
-        this.worldSelectButton.hidden = false;
-
         // Fetch a list of servers from the hub
         let res = await fetch(`${this.config.hub}/all`),
-            servers: SerializedServer[] = await res.json();
+            servers: SerializedServer[] = await res.json(),
+            [firstServer] = servers;
+
+        // Check if there are no servers
+        if (!firstServer) {
+            // Display an error message.
+            this.setValidation('validation-error', 'No servers are currently available.');
+
+            return;
+        }
+
+        // Select the first server
+        this.selectServer(firstServer);
+
+        // If there is only one server, then hide the world select button
+        if (servers.length < 2) return;
+
+        this.showWorldSelect = true;
+        this.worldSelectButton.hidden = false;
 
         for (let [i, server] of Object.entries(servers)) {
             // Create a new <li> element for each server
@@ -786,10 +801,7 @@ export default class App {
                 players = document.createElement('span');
 
             // If this is the first server in the list, select it and mark it as active
-            if (i === '0') {
-                this.selectServer(server);
-                li.classList.add('active');
-            }
+            if (i === '0') li.classList.add('active');
 
             // Add the number of players to the <li> element
             players.textContent = `${server.players}/${server.maxPlayers} players`;
