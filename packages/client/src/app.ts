@@ -776,17 +776,17 @@ export default class App {
         if (!this.config.hub) return;
 
         // Fetch a list of servers from the hub
-        let res = await fetch(`${this.config.hub}/all`),
-            servers: SerializedServer[] = await res.json(),
+        let res = await fetch(`${this.config.hub}/all`).catch(() => null);
+
+        if (!res) return this.setValidation('validation-error', 'Unable to load world list.');
+
+        let servers: SerializedServer[] = await res.json(),
             [firstServer] = servers;
 
         // Check if there are no servers
-        if (!firstServer) {
+        if (!firstServer)
             // Display an error message.
-            this.setValidation('validation-error', 'No servers are currently available.');
-
-            return;
-        }
+            return this.setValidation('validation-error', 'No servers are currently available.');
 
         // Select the first server
         this.selectServer(firstServer);
