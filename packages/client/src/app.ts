@@ -7,9 +7,12 @@ import { isMobile } from './utils/detect';
 
 import Updates from '@kaetram/common/text/en/updates.json';
 
+import type { SerializedServer } from '@kaetram/common/types/api';
+
 type EmptyCallback = () => void;
 type KeyDownCallback = (e: KeyboardEvent) => void;
 type KeyUpCallback = (e: KeyboardEvent) => void;
+type LoginCallback = (server?: SerializedServer) => void;
 type LeftClickCallback = (e: MouseEvent) => void;
 type RightClickCallback = (e: PointerEvent) => void;
 type MouseMoveCallback = (e: MouseEvent) => void;
@@ -28,6 +31,8 @@ export default class App {
     private loginForm: HTMLElement = document.querySelector('#load-character form')!;
     private registerForm: HTMLElement = document.querySelector('#create-character form')!;
 
+    private worldsList: HTMLOListElement = document.querySelector('#worlds')!;
+
     private passwordConfirmation: HTMLInputElement = document.querySelector(
         '#register-password-confirmation-input'
     )!;
@@ -35,7 +40,9 @@ export default class App {
 
     private loginButton: HTMLButtonElement = document.querySelector('#login')!;
     private registerButton: HTMLButtonElement = document.querySelector('#new-account')!;
-    private cancelButton: HTMLButtonElement = document.querySelector('#cancel-button')!;
+    private cancelRegister: HTMLButtonElement = document.querySelector('#cancel-register')!;
+    private cancelWorlds: HTMLButtonElement = document.querySelector('#cancel-worlds')!;
+    private continueWorlds: HTMLButtonElement = document.querySelector('#continue-worlds')!;
 
     private respawn: HTMLButtonElement = document.querySelector('#respawn')!;
 
@@ -47,6 +54,7 @@ export default class App {
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
+    private worldSelectButton: HTMLElement = document.querySelector('#world-select-button')!;
     private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
     private currentScroll = 'load-character';
@@ -56,9 +64,12 @@ export default class App {
 
     public statusMessage = '';
 
+    private selectedServer?: SerializedServer;
+    private showWorldSelect = false;
+
     public keyDownCallback?: KeyDownCallback;
     public keyUpCallback?: KeyUpCallback;
-    public loginCallback?: EmptyCallback;
+    public loginCallback?: LoginCallback;
     public leftClickCallback?: LeftClickCallback;
     public rightClickCallback?: RightClickCallback;
     public mouseMoveCallback?: MouseMoveCallback;
@@ -83,7 +94,10 @@ export default class App {
         this.registerForm.addEventListener('submit', this.login.bind(this));
 
         this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
-        this.cancelButton.addEventListener('click', () => this.openScroll('load-character'));
+        this.cancelRegister.addEventListener('click', () => this.openScroll('load-character'));
+
+        this.cancelWorlds.addEventListener('click', () => this.openScroll('load-character'));
+        this.continueWorlds.addEventListener('click', () => this.openScroll('load-character'));
 
         this.about.addEventListener('click', () => this.openScroll('about'));
         this.credits.addEventListener('click', () => this.openScroll('credits'));
@@ -94,6 +108,8 @@ export default class App {
             if (this.hasFooterOpen()) this.openScroll('load-character');
             if (this.body.classList.contains('news')) this.body.classList.remove('news');
         });
+
+        this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
 
         this.gameVersion.textContent = `${this.config.version}`;
 
@@ -180,6 +196,7 @@ export default class App {
         this.loginButton.disabled = false;
 
         this.loadLogin();
+        this.loadWorlds();
     }
 
     /**
@@ -194,7 +211,7 @@ export default class App {
         this.toggleLogin(true);
 
         // Creates a callback with all the fields.
-        this.loginCallback?.();
+        this.loginCallback?.(this.selectedServer);
 
         // Installs the PWA.
         install();
@@ -228,6 +245,7 @@ export default class App {
         this.body.className = 'intro';
 
         this.menuHidden = false;
+        this.worldSelectButton.hidden = false;
         this.gameVersion.hidden = false;
     }
 
@@ -242,6 +260,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
+        this.worldSelectButton.hidden = this.showWorldSelect;
         this.gameVersion.hidden = true;
 
         this.updateLoader();
@@ -685,7 +704,7 @@ export default class App {
      * if the user is registering.
      */
 
-    public onLogin(callback: EmptyCallback): void {
+    public onLogin(callback: LoginCallback): void {
         this.loginCallback = callback;
     }
 
@@ -733,5 +752,80 @@ export default class App {
 
     public onRespawn(callback: EmptyCallback): void {
         this.respawnCallback = callback;
+    }
+
+    /**
+     * Selects the server to connect to and displays its player count on the button.
+     *
+     * @param server The server to connect to.
+     */
+
+    private selectServer(server: SerializedServer): void {
+        this.selectedServer = server;
+
+        let name = this.worldSelectButton.querySelector('strong')!;
+        name.textContent = `${server.name}`;
+
+        let players = this.worldSelectButton.querySelector('span')!;
+        players.textContent = `(${server.players}/${server.maxPlayers} players)`;
+    }
+
+    /**
+     * Loads the list of worlds from the hub and adds them to the world select.
+     * The first world in the list is automatically selected.
+     */
+
+    private async loadWorlds(): Promise<void> {
+        if (!this.config.hub) return;
+
+        // Fetch a list of servers from the hub
+        let res = await fetch(`${this.config.hub}/all`).catch(() => null);
+
+        if (!res) return this.setValidation('validation-error', 'Unable to load world list.');
+
+        let servers: SerializedServer[] = await res.json(),
+            [firstServer] = servers;
+
+        // Check if there are no servers
+        if (!firstServer)
+            // Display an error message.
+            return this.setValidation('validation-error', 'No servers are currently available.');
+
+        // Select the first server
+        this.selectServer(firstServer);
+
+        // If there is only one server, then hide the world select button
+        if (servers.length < 2) return;
+
+        this.showWorldSelect = true;
+        this.worldSelectButton.hidden = false;
+
+        for (let [i, server] of Object.entries(servers)) {
+            // Create a new <li> element for each server
+            let li = document.createElement('li'),
+                name = document.createElement('strong'),
+                players = document.createElement('span');
+
+            // If this is the first server in the list, select it and mark it as active
+            if (i === '0') li.classList.add('active');
+
+            name.textContent = server.name;
+
+            players.textContent = `${server.players}/${server.maxPlayers} players`;
+
+            li.append(name);
+            li.append(players);
+
+            // When the <li> element is clicked, select the server and update the active class
+            li.addEventListener('click', () => {
+                this.selectServer(server);
+
+                this.worldsList.querySelector('li.active')?.classList.remove('active');
+                li.classList.add('active');
+            });
+
+            // Add the <li> element to the list of worlds
+            this.worldsList.append(li);
+        }
     }
 }
