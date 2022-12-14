@@ -191,6 +191,8 @@ export default class Area {
      */
 
     private inPolygon(x: number, y: number): boolean {
+        let inside = false;
+
         for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
             let xi = this.polygon[i].x,
                 yi = this.polygon[i].y,
@@ -198,10 +200,10 @@ export default class Area {
                 yj = this.polygon[j].y,
                 intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
-            if (intersect) return true;
+            if (intersect) inside = !inside;
         }
 
-        return false;
+        return inside;
     }
 
     /**
