@@ -497,10 +497,6 @@
                  "name":"",
                  "polygon":[
                         {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
                          "x":64,
                          "y":-64
                         }, 
@@ -517,7 +513,7 @@
                          "y":-112
                         }, 
                         {
-                         "x":336,
+                         "x":320,
                          "y":384
                         }, 
                         {
@@ -613,12 +609,8 @@
                          "y":-16
                         }, 
                         {
-                         "x":-32,
+                         "x":16,
                          "y":-16
-                        }, 
-                        {
-                         "x":0,
-                         "y":0
                         }],
                  "properties":[
                         {
@@ -735,7 +727,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -4096,16 +4088,12 @@
                          "y":0
                         }, 
                         {
-                         "x":1568,
-                         "y":0
+                         "x":1584,
+                         "y":32
                         }, 
                         {
-                         "x":1568,
-                         "y":534.5
-                        }, 
-                        {
-                         "x":1680,
-                         "y":576
+                         "x":1664,
+                         "y":560
                         }, 
                         {
                          "x":1616,
@@ -4117,10 +4105,10 @@
                         }, 
                         {
                          "x":1456,
-                         "y":2304
+                         "y":2256
                         }, 
                         {
-                         "x":0,
+                         "x":-16,
                          "y":2320
                         }, 
                         {
@@ -4128,8 +4116,8 @@
                          "y":1888
                         }, 
                         {
-                         "x":0,
-                         "y":1824
+                         "x":32,
+                         "y":1792
                         }],
                  "properties":[
                         {
@@ -4152,6 +4140,30 @@
                  "width":1568,
                  "x":5104,
                  "y":1728
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":471,
+                 "name":"",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":112,
+                         "y":-16
+                        }, 
+                        {
+                         "x":64,
+                         "y":-80
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":784,
+                 "y":1280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4512,7 +4524,7 @@
          "y":0
         }],
  "nextlayerid":76,
- "nextobjectid":470,
+ "nextobjectid":472,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.0",
@@ -34269,10 +34281,22 @@
                  "id":874
                 }, 
                 {
-                 "id":875
+                 "id":875,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
-                 "id":876
+                 "id":876,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":877
@@ -34591,10 +34615,22 @@
                  "id":938
                 }, 
                 {
-                 "id":939
+                 "id":939,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
-                 "id":940
+                 "id":940,
+                 "properties":[
+                        {
+                         "name":"cutstump",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":941
@@ -34760,11 +34796,6 @@
                  "id":972,
                  "properties":[
                         {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
                          "name":"cursor",
                          "type":"string",
                          "value":"axe"
@@ -34784,11 +34815,6 @@
                  "id":973,
                  "properties":[
                         {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
                          "name":"cursor",
                          "type":"string",
                          "value":"axe"
@@ -34807,11 +34833,6 @@
                 {
                  "id":974,
                  "properties":[
-                        {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
                         {
                          "name":"cursor",
                          "type":"string",
@@ -35081,11 +35102,6 @@
                  "id":1033,
                  "properties":[
                         {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
                          "name":"cursor",
                          "type":"string",
                          "value":"axe"
@@ -35143,11 +35159,6 @@
                  "id":1036,
                  "properties":[
                         {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
                          "name":"cursor",
                          "type":"string",
                          "value":"axe"
@@ -35166,11 +35177,6 @@
                 {
                  "id":1037,
                  "properties":[
-                        {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
                         {
                          "name":"cursor",
                          "type":"string",
@@ -35195,11 +35201,6 @@
                 {
                  "id":1038,
                  "properties":[
-                        {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
                         {
                          "name":"cursor",
                          "type":"string",
@@ -35458,11 +35459,6 @@
                 {
                  "id":1097,
                  "properties":[
-                        {
-                         "name":"c",
-                         "type":"string",
-                         "value":""
-                        }, 
                         {
                          "name":"cursor",
                          "type":"string",
@@ -36127,6 +36123,11 @@
                  "id":1249,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36135,6 +36136,11 @@
                 {
                  "id":1250,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -36145,6 +36151,11 @@
                  "id":1251,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36153,6 +36164,11 @@
                 {
                  "id":1252,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -36465,6 +36481,11 @@
                  "id":1313,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36473,6 +36494,11 @@
                 {
                  "id":1314,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -36483,6 +36509,11 @@
                  "id":1315,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36492,6 +36523,11 @@
                  "id":1316,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36500,6 +36536,11 @@
                 {
                  "id":1317,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -36803,6 +36844,11 @@
                  "id":1377,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36811,6 +36857,11 @@
                 {
                  "id":1378,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -36821,6 +36872,11 @@
                  "id":1379,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36830,6 +36886,11 @@
                  "id":1380,
                  "properties":[
                         {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
                          "name":"v",
                          "type":"string",
                          "value":""
@@ -36838,6 +36899,11 @@
                 {
                  "id":1381,
                  "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
                         {
                          "name":"v",
                          "type":"string",
@@ -37148,24 +37214,59 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
                  "id":1442,
                  "properties":[
                         {
-                         "name":"c",
+                         "name":"cursor",
+                         "type":"string",
+                         "value":"axe"
+                        }, 
+                        {
+                         "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
                  "id":1443,
                  "properties":[
                         {
-                         "name":"c",
+                         "name":"cursor",
+                         "type":"string",
+                         "value":"axe"
+                        }, 
+                        {
+                         "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
@@ -37175,10 +37276,21 @@
                          "name":"c",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
-                 "id":1445
+                 "id":1445,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":1447,
@@ -37492,28 +37604,70 @@
                  "id":1504
                 }, 
                 {
-                 "id":1505
+                 "id":1505,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":1506,
                  "properties":[
                         {
-                         "name":"c",
+                         "name":"cursor",
+                         "type":"string",
+                         "value":"axe"
+                        }, 
+                        {
+                         "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
                  "id":1507,
                  "properties":[
                         {
-                         "name":"c",
+                         "name":"cursor",
+                         "type":"string",
+                         "value":"axe"
+                        }, 
+                        {
+                         "name":"o",
                          "type":"string",
                          "value":""
+                        }, 
+                        {
+                         "name":"stump",
+                         "type":"string",
+                         "value":"willow"
+                        }, 
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
                         }]
                 }, 
                 {
-                 "id":1508
+                 "id":1508,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":1509
@@ -37798,16 +37952,40 @@
                  "id":1568
                 }, 
                 {
-                 "id":1569
+                 "id":1569,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
-                 "id":1570
+                 "id":1570,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
-                 "id":1571
+                 "id":1571,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
-                 "id":1572
+                 "id":1572,
+                 "properties":[
+                        {
+                         "name":"tree",
+                         "type":"string",
+                         "value":"willow"
+                        }]
                 }, 
                 {
                  "id":1573
