@@ -1,8 +1,10 @@
 import _ from 'lodash-es';
 
-import Server, { SerializedServer } from '../model/server';
+import Server from '../model/server';
 
 import config from '@kaetram/common/config';
+
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 type AddCallback = (id: number) => void;
 type RemoveCallback = (key: string) => void;
@@ -64,13 +66,14 @@ export default class Servers {
         if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
 
         this.servers[data.serverId] = new Server(
+            `${config.name} ${data.serverId}`,
             data.host,
             data.port,
             data.apiPort,
             data.accessToken,
             data.remoteServerHost,
-            data.maxPlayers,
-            data.players
+            data.players,
+            data.maxPlayers
         );
 
         this.addCallback?.(data.serverId);
