@@ -1,3 +1,8 @@
+/**
+ * A class that handles logging.
+ *
+ * @param level The level of logging to perform.
+ */
 class Logger {
     public constructor(public level: 'debug' | 'info') {}
 

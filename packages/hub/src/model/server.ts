@@ -1,11 +1,6 @@
 import { ServerData } from '../controllers/servers';
 
-export interface SerializedServer {
-    host: string;
-    port: number;
-    players: number;
-    maxPlayers: number;
-}
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 export default class Server {
     public lastPing = Date.now();
@@ -13,13 +8,14 @@ export default class Server {
     private updateCallback?: () => void;
 
     public constructor(
+        public name: string,
         public host: string,
         public port: number,
         public apiPort: number,
         public accessToken: string,
         public remoteServerHost: string,
-        public maxPlayers: number,
-        public players: string[]
+        public players: string[],
+        public maxPlayers: number
     ) {}
 
     /**
@@ -43,6 +39,7 @@ export default class Server {
 
     public serialize(): SerializedServer {
         return {
+            name: this.name,
             host: this.remoteServerHost,
             port: this.port,
             players: this.players.length,

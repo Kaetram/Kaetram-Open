@@ -1,10 +1,9 @@
-import $ from 'jquery';
 import { io, Socket as SocketIO } from 'socket.io-client';
 
 import log from '../lib/log';
 import Messages from './messages';
 
-import type { APIData } from '@kaetram/common/types/api';
+import type { SerializedServer } from '@kaetram/common/types/api';
 import type Game from '../game';
 
 export default class Socket {
@@ -25,17 +24,17 @@ export default class Socket {
      * we default to normal server connection.
      */
 
-    private getServer(callback: (data?: APIData) => void): void {
+    private async getServer(): Promise<SerializedServer | void> {
         // Skip if hub is disabled in the config.
-        if (!this.config.hub) return callback();
+        if (!this.config.hub) return;
 
         // Attempt to get API data from the hub.
         try {
-            $.get(`${this.config.hub}/server`, (response) => {
-                callback(response.status === 'error' ? undefined : response);
-            });
+            let result = await fetch(`${this.config.hub}/server`);
+
+            return await result.json();
         } catch {
-            callback();
+            return;
         }
     }
 
@@ -43,33 +42,31 @@ export default class Socket {
      * Creates a websocket connection to the server.
      */
 
-    public connect(): void {
-        this.getServer((result) => {
-            let { host, port } = result || this.config,
-                url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
+    public async connect(server?: SerializedServer): Promise<void> {
+        let { host, port } = server || (await this.getServer()) || this.config,
+            url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
 
-            // Create a SocketIO connection with the url generated.
-            this.connection = io(url, {
-                transports: ['websocket'],
-                forceNew: true,
-                reconnection: false
-            });
-
-            // Handler for when a connection is successfully established.
-            this.connection.on('connect', this.handleConnection.bind(this));
-
-            // Handler for when a connection error occurs.
-            this.connection.on('connect_error', (err) => {
-                console.error(`connect_error due to ${err.message}`);
-                this.handleConnectionError(host, port);
-            });
-
-            // Handler for when a message is received.
-            this.connection.on('message', (message) => this.receive(message.message || message));
-
-            // Handler for when a disconnection occurs.
-            this.connection.on('disconnect', () => this.game.handleDisconnection());
+        // Create a SocketIO connection with the url generated.
+        this.connection = io(url, {
+            transports: ['websocket'],
+            forceNew: true,
+            reconnection: false
         });
+
+        // Handler for when a connection is successfully established.
+        this.connection.on('connect', this.handleConnection.bind(this));
+
+        // Handler for when a connection error occurs.
+        this.connection.on('connect_error', (err) => {
+            console.error(`connect_error due to ${err.message}`);
+            this.handleConnectionError(host, port);
+        });
+
+        // Handler for when a message is received.
+        this.connection.on('message', (message) => this.receive(message.message || message));
+
+        // Handler for when a disconnection occurs.
+        this.connection.on('disconnect', () => this.game.handleDisconnection());
 
         /**
          * The audio controller can only be properly initialized when the player interacts
