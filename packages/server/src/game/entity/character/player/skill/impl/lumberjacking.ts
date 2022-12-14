@@ -48,7 +48,7 @@ export default class Lumberjacking extends Skill {
 
         // Level required for this tree is too high for the player.
         if (treeInfo.levelRequirement > this.level)
-            return player.notify(LumberjackingEn.INVALID_LEVEL);
+            return player.notify(LumberjackingEn.INVALID_LEVEL(treeInfo.levelRequirement));
 
         // Unable to cut the tree if the player hasn't completed the required achievement.
         if (
