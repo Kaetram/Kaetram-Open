@@ -26,10 +26,11 @@ export default class PointerController {
         if (id in pointers) return;
 
         switch (type) {
-            case Opcodes.Pointer.Button:
+            case Opcodes.Pointer.Button: {
                 pointers[id] = new Arrow(id, $(`#${name}`), type);
 
                 break;
+            }
 
             default: {
                 let element = $(`<div id="${id}" class="pointer"></div>`);
@@ -196,11 +197,12 @@ export default class PointerController {
                     break;
                 }
 
-                case Opcodes.Pointer.Location:
+                case Opcodes.Pointer.Location: {
                     if (pointer.x !== -1 && pointer.y !== -1)
                         this.set(pointer, pointer.x, pointer.y);
 
                     break;
+                }
             }
         });
     }

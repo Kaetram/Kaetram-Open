@@ -28,7 +28,7 @@ export default {
 
     clean: (message: string): string => {
         for (let profanity of Profanities)
-            message = message.replace(new RegExp(profanity, 'gi'), '*'.repeat(profanity.length));
+            message = message.replaceAll(new RegExp(profanity, 'gi'), '*'.repeat(profanity.length));
 
         return message;
     }

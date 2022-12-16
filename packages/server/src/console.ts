@@ -19,7 +19,7 @@ export default class Console {
         let stdin = process.openStdin();
 
         stdin.addListener('data', (data: Buffer) => {
-            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            let message = data.toString().replaceAll(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
@@ -32,7 +32,7 @@ export default class Console {
             let username: string, player: Player;
 
             switch (command) {
-                case 'players':
+                case 'players': {
                     log.info(
                         `There are a total of ${
                             this.world.entities.getPlayerUsernames().length
@@ -40,22 +40,25 @@ export default class Console {
                     );
 
                     break;
+                }
 
-                case 'total':
+                case 'total': {
                     this.database.registeredCount((count) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
                     break;
+                }
 
-                case 'update':
+                case 'update': {
                     this.world.entities.forEachPlayer((player: Player) => {
                         player.connection.reject('updated');
                     });
 
                     break;
+                }
 
-                case 'kill':
+                case 'kill': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -67,9 +70,10 @@ export default class Console {
                     player.hit(player.hitPoints.getHitPoints());
 
                     break;
+                }
 
                 case 'kick':
-                case 'timeout':
+                case 'timeout': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -82,9 +86,10 @@ export default class Console {
                     else player.connection.close();
 
                     break;
+                }
 
                 case 'setadmin':
-                case 'setmod':
+                case 'setmod': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -102,9 +107,10 @@ export default class Console {
                     );
 
                     break;
+                }
 
                 case 'removeadmin':
-                case 'removemod':
+                case 'removemod': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -122,15 +128,18 @@ export default class Console {
                     );
 
                     break;
+                }
 
-                case 'resetpositions':
+                case 'resetpositions': {
                     log.info(`Resetting all player positions.`);
 
                     return this.database.resetPositions();
+                }
 
-                case 'save':
+                case 'save': {
                     log.info(`Saving all players.`);
                     return this.world.save();
+                }
             }
         });
     }

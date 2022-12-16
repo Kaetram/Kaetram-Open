@@ -122,12 +122,13 @@ export default class Settings extends Menu {
 
         this.game.renderer.animateTiles = !this.lowPowerCheckbox.checked;
 
-        if (!this.lowPowerCheckbox.checked) {
+        if (this.lowPowerCheckbox.checked) this.game.camera.decenter();
+        else {
             // Force camera to recenter on the player.
             this.game.camera.center();
             this.game.camera.centreOn(this.game.player);
             this.game.renderer.updateAnimatedTiles();
-        } else this.game.camera.decenter(); // Remove the camera from the player.
+        } // Remove the camera from the player.
     }
 
     /**

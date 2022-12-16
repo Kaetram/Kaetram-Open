@@ -63,7 +63,6 @@
         #defense-stats,
         #bonuses {
             font-size: 8px * $i;
-
             border-color: black;
             border-radius: 1px;
         }
@@ -71,7 +70,6 @@
         #attack-stats,
         #defense-stats {
             top: 16px * $i;
-
             width: 70px * $i;
             height: 80px * $i;
         }
@@ -102,7 +100,6 @@
 #defense-stats,
 #bonuses {
     position: absolute;
-
     font-family: AdvoCut, sans-serif;
 }
 
