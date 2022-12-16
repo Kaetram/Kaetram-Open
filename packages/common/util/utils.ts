@@ -126,7 +126,7 @@ export default {
      */
 
     formatName(name = ''): string {
-        return name.replaceAll(
+        return name.replace(
             /\w\S*/g,
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
