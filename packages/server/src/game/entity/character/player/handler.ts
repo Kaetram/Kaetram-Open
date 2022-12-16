@@ -474,12 +474,14 @@ export default class Handler {
         if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
-            case 'banker':
+            case 'banker': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 return;
-            case 'enchanter':
+            }
+            case 'enchanter': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Enchant, {}));
                 break;
+            }
         }
 
         npc.talk(this.player);
@@ -533,8 +535,8 @@ export default class Handler {
 
     private handlePoison(type = -1): void {
         // Notify the player when the poison status changes.
-        if (type !== -1) this.player.notify('You have been poisoned.');
-        else this.player.notify('The poison has worn off.');
+        if (type === -1) this.player.notify('The poison has worn off.');
+        else this.player.notify('You have been poisoned.');
 
         this.player.send(new PoisonPacket(type));
 
@@ -625,20 +627,25 @@ export default class Handler {
                 let info = areas.inArea(x, y);
 
                 switch (name) {
-                    case 'pvp':
+                    case 'pvp': {
                         return this.player.updatePVP(!!info);
+                    }
 
-                    case 'overlay':
+                    case 'overlay': {
                         return this.player.updateOverlay(info);
+                    }
 
-                    case 'camera':
+                    case 'camera': {
                         return this.player.updateCamera(info);
+                    }
 
-                    case 'music':
+                    case 'music': {
                         return this.player.updateMusic(info);
+                    }
 
-                    case 'minigame':
+                    case 'minigame': {
                         return this.player.updateMinigame(info);
+                    }
                 }
             },
             ['pvp', 'music', 'overlay', 'camera', 'minigame']

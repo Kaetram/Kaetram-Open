@@ -30,7 +30,6 @@ body.game {
 
     #parchment {
         z-index: 0;
-
         transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
     }
 
@@ -40,21 +39,17 @@ body.game {
     #about,
     #git {
         z-index: 1000;
-
         opacity: 0;
-
         transition: 0s opacity linear 0s;
     }
 
     .parchment-left {
         left: 41%;
-
         transition: 0.5s left ease-in-out;
     }
 
     .parchment-right {
         right: 41%;
-
         transition: 0.5s right ease-in-out;
     }
 
@@ -64,9 +59,7 @@ body.game {
     &.about #about,
     &.git #git {
         z-index: 1000;
-
         opacity: 1;
-
         transition: 0.5s opacity linear 0.5s;
     }
 
@@ -77,9 +70,7 @@ body.game {
     &.git {
         #parchment {
             z-index: 1000;
-
             opacity: 1;
-
             transition: 0.5s opacity linear 0s;
         }
 
@@ -95,7 +86,6 @@ body.game {
     .parchment-middle {
         width: 0;
         margin-left: 0;
-
         transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out,
             0.5s background-position ease-in-out;
     }
@@ -106,7 +96,6 @@ body.game {
 
     footer {
         display: none;
-
         color: #8a8a8a;
     }
 }
@@ -125,7 +114,6 @@ body.game {
             .parchment-middle {
                 width: 1038px;
                 margin-left: -519px;
-
                 background-position-x: -114px;
             }
         }

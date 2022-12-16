@@ -61,15 +61,17 @@ export default class Abilities extends Menu {
 
         _.each(player.abilities, (ability: Ability) => {
             switch (ability.type) {
-                case Modules.AbilityType.Active:
+                case Modules.AbilityType.Active: {
                     this.setActiveAbility(activeIndex, ability.key, ability.level);
                     activeIndex++;
                     break;
+                }
 
-                case Modules.AbilityType.Passive:
+                case Modules.AbilityType.Passive: {
                     this.setPassiveAbility(passiveIndex, ability.key, ability.level);
                     passiveIndex++;
                     break;
+                }
             }
         });
     }

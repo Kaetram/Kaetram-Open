@@ -544,9 +544,7 @@ export default class Renderer {
         this.clearScreen(this.cursorContext);
         this.cursorContext.save();
 
-        // Load the mouse if it doesn't exist.
-        if (!cursor.loaded) cursor.load();
-        else
+        if (cursor.loaded)
             this.cursorContext.drawImage(
                 cursor.image,
                 0,
@@ -558,6 +556,8 @@ export default class Renderer {
                 this.actualTileSize,
                 this.actualTileSize
             );
+        // Load the mouse if it doesn't exist.
+        else cursor.load();
 
         this.cursorContext.restore();
 
@@ -932,7 +932,17 @@ export default class Renderer {
         this.setCameraView(this.textContext);
         this.textContext.font = '11px AdvoCut';
 
-        if (!entity.hasCounter) {
+        if (entity.hasCounter) {
+            // TODO - Move this countdown elsewhere.
+            if (this.game.time - entity.countdownTime > 1000) {
+                entity.countdownTime = this.game.time;
+                entity.counter--;
+            }
+
+            if (entity.counter <= 0) entity.hasCounter = false;
+
+            this.drawText(entity.counter.toString(), entity.x + 8, entity.y - 10, true, colour);
+        } else {
             let x = entity.x + 8,
                 y = entity.y - Math.floor(entity.sprite.height / 5);
 
@@ -950,16 +960,6 @@ export default class Renderer {
 
             if (entity.isItem() && entity.count > 1)
                 this.drawText(entity.count.toString(), x, y, true, colour);
-        } else {
-            // TODO - Move this countdown elsewhere.
-            if (this.game.time - entity.countdownTime > 1000) {
-                entity.countdownTime = this.game.time;
-                entity.counter--;
-            }
-
-            if (entity.counter <= 0) entity.hasCounter = false;
-
-            this.drawText(entity.counter.toString(), entity.x + 8, entity.y - 10, true, colour);
         }
 
         this.textContext.restore();
@@ -969,7 +969,7 @@ export default class Renderer {
         if (!this.game.minigame.exists()) return;
 
         switch (this.game.minigame.status) {
-            case 'lobby':
+            case 'lobby': {
                 this.drawText(
                     this.game.minigame.started
                         ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
@@ -980,8 +980,9 @@ export default class Renderer {
                     'white'
                 );
                 return;
+            }
 
-            case 'ingame':
+            case 'ingame': {
                 this.drawText(
                     `Red: ${this.game.minigame.redTeamScore}`,
                     this.textCanvas.width / 6 - 20,
@@ -1007,6 +1008,7 @@ export default class Renderer {
                 );
 
                 return;
+            }
         }
     }
 
@@ -1131,21 +1133,23 @@ export default class Renderer {
             // Iterate through every type of flip in our array.
             for (let index = 0; index < flips.length; index++)
                 switch (flips[index]) {
-                    case TileFlip.Horizontal:
+                    case TileFlip.Horizontal: {
                         // Flip the context2d horizontally
                         dx = -dx - cell.width;
                         context.scale(-1, 1);
 
                         break;
+                    }
 
-                    case TileFlip.Vertical:
+                    case TileFlip.Vertical: {
                         // Flip the context2d vertically
                         dy = -dy - cell.height;
                         context.scale(1, -1);
 
                         break;
+                    }
 
-                    case TileFlip.Diagonal:
+                    case TileFlip.Diagonal: {
                         // A diagonal flip is actually a transpose of 90deg clockwise.
                         context.rotate(Math.PI / 2);
                         context.translate(0, -cell.height);
@@ -1165,6 +1169,7 @@ export default class Renderer {
                         else flips.push(TileFlip.Vertical);
 
                         break;
+                    }
                 }
         }
 

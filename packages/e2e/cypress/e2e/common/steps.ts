@@ -22,12 +22,14 @@ Given('I fill in the {string} field', function (fieldName: string) {
         targeting = context.findElementViaTitle(fieldName);
     expect(targeting).to.exist;
     switch (fieldName) {
-        case 'username':
+        case 'username': {
             targeting.type(context.USERNAME);
             break;
-        case 'password':
+        }
+        case 'password': {
             targeting.type(context.PASSWORD);
             break;
+        }
     }
 });
 

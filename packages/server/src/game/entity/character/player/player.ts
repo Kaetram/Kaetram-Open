@@ -345,7 +345,7 @@ export default class Player extends Character {
 
     public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
-            case 'passive':
+            case 'passive': {
                 if (!this.mana.isFull()) this.mana.increment(amount);
 
                 // Scale the heal rate by the maximum hitpoints.
@@ -354,9 +354,10 @@ export default class Player extends Character {
                 super.heal(amount);
 
                 break;
+            }
 
             case 'hitpoints':
-            case 'mana':
+            case 'mana': {
                 if (type === 'hitpoints') this.hitPoints.increment(amount);
                 else if (type === 'mana') this.mana.increment(amount);
 
@@ -368,6 +369,7 @@ export default class Player extends Character {
                     })
                 );
                 break;
+            }
         }
 
         this.sync();
@@ -523,7 +525,7 @@ export default class Player extends Character {
         let item: Item;
 
         switch (type) {
-            case Modules.ContainerType.Inventory:
+            case Modules.ContainerType.Inventory: {
                 item = this.inventory.getItem(this.inventory.get(index));
 
                 if (!item) return;
@@ -536,13 +538,15 @@ export default class Player extends Character {
                 }
 
                 break;
+            }
 
-            case Modules.ContainerType.Bank:
+            case Modules.ContainerType.Bank: {
                 if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
                 else if (subType === Modules.ContainerType.Inventory)
                     this.bank.move(this.inventory, index);
 
                 break;
+            }
         }
     }
 
@@ -802,17 +806,20 @@ export default class Player extends Character {
 
         if (camera)
             switch (camera.type) {
-                case 'lockX':
+                case 'lockX': {
                     this.send(new Camera(Opcodes.Camera.LockX));
                     break;
+                }
 
-                case 'lockY':
+                case 'lockY': {
                     this.send(new Camera(Opcodes.Camera.LockY));
                     break;
+                }
 
-                case 'player':
+                case 'player': {
                     this.send(new Camera(Opcodes.Camera.Player));
                     break;
+                }
             }
         else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }

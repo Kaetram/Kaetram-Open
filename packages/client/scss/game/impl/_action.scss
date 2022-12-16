@@ -2,9 +2,7 @@
 
 #action-container {
     position: absolute;
-
     display: none;
-
     background-color: rgb(0 0 0 / 10%);
 
     // cursor: hand;
@@ -28,17 +26,13 @@
 
     &:hover {
         cursor: pointer;
-
         color: #fff;
-
         background-color: rgb(0 0 0 / 40%);
     }
 
     &:active {
         cursor: pointer;
-
         color: #fcda5c;
-
         background-color: rgb(0 0 0 / 50%);
     }
 }

@@ -44,21 +44,24 @@ export default class TeamWar extends Minigame {
 
     public override loadArea(area: Area): void {
         switch (area.mObjectType) {
-            case 'lobby':
+            case 'lobby': {
                 this.lobby = area;
 
                 // Lobby area enter and exit callbacks.
                 this.lobby.onEnter((player: Player) => this.addPlayer(player));
                 this.lobby.onExit((player: Player) => this.removePlayer(player));
                 return;
+            }
 
-            case 'redteamspawn':
+            case 'redteamspawn': {
                 this.redSpawn = area;
                 return;
+            }
 
-            case 'blueteamspawn':
+            case 'blueteamspawn': {
                 this.blueSpawn = area;
                 return;
+            }
         }
     }
 
@@ -131,8 +134,8 @@ export default class TeamWar extends Minigame {
             this.countdown = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
             // Attempt to start if not started, otherwise end the game.
-            if (!this.started) this.start();
-            else this.stop();
+            if (this.started) this.stop();
+            else this.start();
 
             return;
         }

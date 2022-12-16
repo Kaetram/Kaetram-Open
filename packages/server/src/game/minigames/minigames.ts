@@ -63,8 +63,9 @@ export default class Minigames {
 
     public get(opcode: Opcodes.Minigame): Minigame {
         switch (opcode) {
-            case Opcodes.Minigame.TeamWar:
+            case Opcodes.Minigame.TeamWar: {
                 return this.minigames.teamwar;
+            }
         }
     }
 }

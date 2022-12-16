@@ -70,21 +70,25 @@ function AStar(
 
     switch (f) {
         case 'Diagonal':
-        case 'Euclidean':
+        case 'Euclidean': {
             find = diagonalSuccessors;
-        case 'DiagonalFree':
+        }
+        case 'DiagonalFree': {
             distance = diagonal;
             break;
+        }
 
-        case 'EuclideanFree':
+        case 'EuclideanFree': {
             f2 = Math.sqrt;
             distance = euclidean;
             break;
+        }
 
-        default:
+        default: {
             distance = manhattan;
             find = nothingToDo;
             break;
+        }
     }
 
     find ||= diagonalSuccessorsFree;
@@ -107,7 +111,14 @@ function AStar(
         }
 
         [current] = open.splice(min, 1);
-        if (current.v !== endPos.v) {
+        if (current.v === endPos.v) {
+            let i = (length = 0);
+
+            do result[i++] = [current.x, current.y];
+            while ((current = current.p!));
+
+            result.reverse();
+        } else {
             --length;
             next = successors(find, current.x, current.y, grid, rows, cols);
 
@@ -127,13 +138,6 @@ function AStar(
                     list[adj.v] = 1;
                 }
             }
-        } else {
-            let i = (length = 0);
-
-            do result[i++] = [current.x, current.y];
-            while ((current = current.p!));
-
-            result.reverse();
         }
     } while (length);
 
