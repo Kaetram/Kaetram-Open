@@ -6,8 +6,12 @@ import log from '../lib/log';
 import mapData from '../../data/maps/map.json';
 
 import type Game from '../game';
-import type { ProcessedAnimation } from '@kaetram/common/types/map';
-import type { RegionData, RegionTile, RegionTileData } from '@kaetram/common/types/region';
+import type {
+    ProcessedAnimation,
+    RegionData,
+    RegionTile,
+    RegionTileData
+} from '@kaetram/common/types/map';
 
 export type CursorTiles = { [tileId: number]: string };
 

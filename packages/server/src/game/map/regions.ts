@@ -16,8 +16,13 @@ import type Player from '../entity/character/player/player';
 import type Dynamic from './areas/impl/dynamic';
 import type Resource from '../globals/impl/resource';
 import type Area from './areas/area';
-import type { RegionData, RegionTileData, RegionCache } from '@kaetram/common/types/region';
-import type { Tile } from '@kaetram/common/types/map';
+import type {
+    RegionData,
+    RegionTileData,
+    RegionCache,
+    RegionTile,
+    Tile
+} from '@kaetram/common/types/map';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 /**
@@ -561,7 +566,7 @@ export default class Regions {
     private getResourceData(resource: Resource): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        resource.forEachTile((data: Tile, index: number) => {
+        resource.forEachTile((data: RegionTile, index: number) => {
             // Perhaps we can optimize further by storing this directly in the resource?
             let coord = this.map.indexToCoord(index);
 
@@ -610,7 +615,7 @@ export default class Regions {
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number, data?: Tile): RegionTileData {
+    private buildTile(x: number, y: number, index?: number, data?: RegionTile): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
