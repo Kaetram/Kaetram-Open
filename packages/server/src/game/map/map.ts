@@ -12,10 +12,12 @@ import type {
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
-    ProcessedResource
+    ProcessedResource,
+    RotatedTile,
+    RegionTile,
+    FlatTile
 } from '@kaetram/common/types/map';
 
-import type { RegionTile } from '@kaetram/common/types/region';
 import type World from '../world';
 import type Areas from './areas/areas';
 import type Player from '../entity/character/player/player';
@@ -358,7 +360,7 @@ export default class Map {
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as Tile[]).push(tile as Tile);
+            if (isArray) (parsedData as FlatTile).push(tile);
             else parsedData = tile;
         });
 
@@ -376,7 +378,7 @@ export default class Map {
      * @returns A parsed tile of type `RotatedTile`.
      */
 
-    public getFlippedTile(tileId: number): RegionTile {
+    public getFlippedTile(tileId: number): RotatedTile {
         let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);

@@ -8,8 +8,7 @@ import { isMobile, isTablet } from '../utils/detect';
 import Tile from './tile';
 
 import type { SerializedLight } from '@kaetram/common/types/light';
-import type { RotatedTile } from '@kaetram/common/types/map';
-import type { RegionTile } from '@kaetram/common/types/region';
+import type { RotatedTile, RegionTile } from '@kaetram/common/types/map';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Item from '../entity/objects/item';
