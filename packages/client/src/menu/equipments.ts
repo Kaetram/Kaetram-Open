@@ -102,13 +102,15 @@ export default class Equipments extends Menu {
             index = orientations.indexOf(this.imageOrientation);
 
         switch (direction) {
-            case 'previous':
+            case 'previous': {
                 index = index === 0 ? orientations.length - 1 : index - 1;
                 break;
+            }
 
-            case 'next':
+            case 'next': {
                 index = index === orientations.length - 1 ? 0 : index + 1;
                 break;
+            }
         }
 
         this.imageOrientation = orientations[index];
@@ -222,14 +224,17 @@ export default class Equipments extends Menu {
     private getOrientationIndex(): number {
         switch (this.imageOrientation) {
             case Modules.Orientation.Left:
-            case Modules.Orientation.Right:
+            case Modules.Orientation.Right: {
                 return 1;
+            }
 
-            case Modules.Orientation.Up:
+            case Modules.Orientation.Up: {
                 return 4;
+            }
 
-            case Modules.Orientation.Down:
+            case Modules.Orientation.Down: {
                 return 7;
+            }
         }
     }
 

@@ -2,11 +2,8 @@
 
 #ability-shortcut {
     position: absolute;
-
     margin-left: 40%;
-
     opacity: 0;
-
     transition: opacity 2s;
 }
 
@@ -21,7 +18,6 @@
 
     li {
         float: left;
-
         margin-top: 1%;
         margin-right: 4%;
     }
@@ -42,9 +38,7 @@
 
         .ability-quickslot {
             cursor: url('/img/3/hand.png'), auto;
-
             position: absolute;
-
             width: 16px * $i;
             height: 16px * $i;
         }
@@ -115,7 +109,6 @@
     #ability-shortcut {
         width: 200px;
         height: 40px;
-
         background-image: url('/img/2/skillslots.png');
     }
 

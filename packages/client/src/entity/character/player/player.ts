@@ -275,14 +275,17 @@ export default class Player extends Character {
 
     public getMedalKey(): string {
         switch (this.medal) {
-            case Modules.Medals.Silver:
+            case Modules.Medals.Silver: {
                 return 'silvermedal';
+            }
 
-            case Modules.Medals.Gold:
+            case Modules.Medals.Gold: {
                 return 'goldmedal';
+            }
 
-            default:
+            default: {
                 return '';
+            }
         }
     }
 
@@ -348,9 +351,8 @@ export default class Player extends Character {
         quickSlot = -1
     ): void {
         // This function is used when adding abilities for the first time too.
-        if (!(key in this.abilities))
-            this.abilities[key] = new Ability(type!, key, level, quickSlot);
-        else this.abilities[key]?.update(level, quickSlot);
+        if (key in this.abilities) this.abilities[key]?.update(level, quickSlot);
+        else this.abilities[key] = new Ability(type!, key, level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
         if (type === Modules.AbilityType.Active || quickSlot !== -1)
