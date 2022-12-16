@@ -126,7 +126,7 @@ export default {
      */
 
     formatName(name = ''): string {
-        return name.replace(
+        return name.replaceAll(
             /\w\S*/g,
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
@@ -265,7 +265,7 @@ export default {
 
         let skill = Modules.Skills[key as keyof typeof Modules.Skills];
 
-        return skill !== undefined ? skill : -1;
+        return skill === undefined ? -1 : skill;
     },
 
     /**

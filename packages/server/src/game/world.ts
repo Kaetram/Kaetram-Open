@@ -93,31 +93,37 @@ export default class World {
 
     public push(packetType: number, data: PacketData): void {
         switch (packetType) {
-            case PacketType.Broadcast:
+            case PacketType.Broadcast: {
                 return this.network.broadcast(data.packet);
+            }
 
-            case PacketType.Player:
+            case PacketType.Player: {
                 return this.network.send(data.player as Player, data.packet);
+            }
 
-            case PacketType.Players:
+            case PacketType.Players: {
                 return this.network.sendToPlayers(data.players as Player[], data.packet);
+            }
 
-            case PacketType.Region:
+            case PacketType.Region: {
                 return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
+            }
 
-            case PacketType.Regions:
+            case PacketType.Regions: {
                 return this.network.sendToSurroundingRegions(
                     data.region as number,
                     data.packet,
                     data.ignore
                 );
+            }
 
-            case PacketType.RegionList:
+            case PacketType.RegionList: {
                 return this.network.sendToRegionList(
                     data.list as number[],
                     data.packet,
                     data.ignore
                 );
+            }
         }
     }
 

@@ -49,21 +49,18 @@
 #health {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to right, #f00, #ef5a5a);
-
     transition: 0.5s width ease;
 }
 
 #mana {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to right, rgb(12 55 208), #257cd2);
-
     transition: 0.5s width ease;
 }
 
 #exp {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to left, #4f4, #080);
-
     transition: 0.5s width ease;
 }
 
@@ -126,7 +123,6 @@
     #health-info {
         top: 0;
         left: 0;
-
         background-image: url('/img/3/main.png');
         background-position: 0 -834px;
     }
@@ -134,7 +130,6 @@
     #mana-info {
         top: 38px;
         left: 0;
-
         background-image: url('/img/3/main.png');
         background-position: -264px -834px;
     }
@@ -152,13 +147,11 @@
     #exp {
         margin: 0;
         padding: 0;
-
         border: 0;
     }
 
     #exp-bar {
         color: rgb(255 255 255 / 100%);
-
         background-image: url('/img/3/main.png');
         background-position: 0 -873px;
     }
@@ -166,7 +159,6 @@
     #health-bar-text,
     #mana-bar-text {
         margin: 10px 0 0 30px;
-
         font-size: 18px;
     }
 }
@@ -212,7 +204,6 @@
     #health-info {
         top: 0;
         left: 0;
-
         background-image: url('/img/2/main.png');
         background-position: 0 -556px;
     }
@@ -220,7 +211,6 @@
     #mana-info {
         top: 26px;
         left: 0;
-
         background-image: url('/img/2/main.png');
         background-position: -176px -556px;
     }
@@ -244,13 +234,11 @@
     #exp {
         margin: 0;
         padding: 0;
-
         border: 0;
     }
 
     #exp-bar {
         color: rgb(255 255 255 / 100%);
-
         background-image: url('/img/2/main.png');
         background-position: 0 -582px;
     }

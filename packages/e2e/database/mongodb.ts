@@ -129,9 +129,7 @@ export default class MongoDB {
             .drop()
             .then((success) => {
                 callback(
-                    !success
-                        ? new Error(`Could not drop collection [${collectionName}]`)
-                        : undefined
+                    success ? undefined : new Error(`Could not drop collection [${collectionName}]`)
                 );
             })
             .catch(function () {

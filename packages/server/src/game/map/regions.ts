@@ -109,8 +109,8 @@ export default class Regions {
 
             let region = this.getRegion(area.x, area.y);
 
-            if (region !== -1) this.regions[region].addDynamicArea(area);
-            else log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
+            if (region === -1) log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
+            else this.regions[region].addDynamicArea(area);
         });
     }
 

@@ -99,7 +99,7 @@ export default class Ability {
      */
 
     public hasQuickSlot(quickSlot?: number): boolean {
-        return quickSlot !== undefined ? this.quickSlot === quickSlot : this.quickSlot > -1;
+        return quickSlot === undefined ? this.quickSlot > -1 : this.quickSlot === quickSlot;
     }
 
     /**

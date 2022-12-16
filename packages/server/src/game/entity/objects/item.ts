@@ -171,21 +171,26 @@ export default class Item extends Entity {
     public getEquipmentType(): Modules.Equipment {
         switch (this.itemType) {
             case 'armour':
-            case 'armourarcher':
+            case 'armourarcher': {
                 return Modules.Equipment.Armour;
+            }
 
             case 'weapon':
-            case 'weaponarcher':
+            case 'weaponarcher': {
                 return Modules.Equipment.Weapon;
+            }
 
-            case 'pendant':
+            case 'pendant': {
                 return Modules.Equipment.Pendant;
+            }
 
-            case 'boots':
+            case 'boots': {
                 return Modules.Equipment.Boots;
+            }
 
-            case 'ring':
+            case 'ring': {
                 return Modules.Equipment.Ring;
+            }
         }
 
         return -1;

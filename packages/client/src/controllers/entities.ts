@@ -63,29 +63,35 @@ export default class EntitiesController {
         let entity!: Entity;
 
         switch (info.type) {
-            case Modules.EntityType.Chest:
+            case Modules.EntityType.Chest: {
                 entity = this.createChest(info.instance);
                 break;
+            }
 
-            case Modules.EntityType.NPC:
+            case Modules.EntityType.NPC: {
                 entity = this.createNPC(info.instance);
                 break;
+            }
 
-            case Modules.EntityType.Item:
+            case Modules.EntityType.Item: {
                 entity = this.createItem(info);
                 break;
+            }
 
-            case Modules.EntityType.Mob:
+            case Modules.EntityType.Mob: {
                 entity = this.createMob(info);
                 break;
+            }
 
-            case Modules.EntityType.Projectile:
+            case Modules.EntityType.Projectile: {
                 entity = this.createProjectile(info)!;
                 break;
+            }
 
-            case Modules.EntityType.Player:
+            case Modules.EntityType.Player: {
                 entity = this.createPlayer(info as PlayerData);
                 break;
+            }
         }
 
         // Something went wrong creating the entity.
