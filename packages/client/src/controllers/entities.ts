@@ -1,4 +1,5 @@
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import Mob from '../entity/character/mob/mob';
@@ -7,14 +8,12 @@ import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Grids from '../renderer/grids';
-import SpritesController from './sprites';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 
-import { EntityData } from '@kaetram/common/types/entity';
-import { PlayerData } from '@kaetram/common/types/player';
-import { Modules } from '@kaetram/common/network';
-
+import type SpritesController from './sprites';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { PlayerData } from '@kaetram/common/types/player';
 import type Game from '../game';
 import type Entity from '../entity/entity';
 
@@ -161,7 +160,7 @@ export default class EntitiesController {
     private createMob(info: EntityData): Mob {
         let mob = new Mob(info.instance);
 
-        mob.setHitPoints(info.hitPoints!, info.maxHitPoints!);
+        mob.setHitPoints(info.hitPoints!, info.maxHitPoints);
 
         // Apply the mob-specific properties
         mob.attackRange = info.attackRange!;

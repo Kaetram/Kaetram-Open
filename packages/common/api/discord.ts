@@ -1,7 +1,8 @@
-import { Client, Message, IntentsBitField, TextChannel } from 'discord.js';
-
+import { Client, IntentsBitField } from 'discord.js';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+
+import type { Message, TextChannel } from 'discord.js';
 
 /**
  * It is important that the bot has the correct permissions in the Discord server

@@ -1,8 +1,9 @@
 import $ from 'jquery';
 import _ from 'lodash-es';
 
-import Game from '../game';
 import Blob from '../renderer/bubbles/blob';
+
+import type Game from '../game';
 
 export default class BubbleController {
     private container: JQuery<HTMLElement> = $('#bubbles');

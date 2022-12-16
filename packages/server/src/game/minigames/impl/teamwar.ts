@@ -1,19 +1,15 @@
 import _ from 'lodash';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Team } from '@kaetram/common/api/minigame';
 
 import Minigame from '../minigame';
-import World from '../../world';
 import Area from '../../map/areas/area';
-import Player from '../../entity/character/player/player';
-
-import Utils from '@kaetram/common/util/utils';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-
-import { Team } from '@kaetram/common/types/minigame.d';
-
-import { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
-
 import { Minigame as Packet } from '../../../network/packets';
+
+import type World from '../../world';
+import type Player from '../../entity/character/player/player';
+import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class TeamWar extends Minigame {
     private started = false;

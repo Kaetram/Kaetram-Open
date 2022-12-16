@@ -1,7 +1,5 @@
 import _ from 'lodash-es';
-
-import Game from '../game';
-import Menu from '../menu/menu';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Actions from '../menu/actions';
 import Inventory from '../menu/inventory';
@@ -16,7 +14,8 @@ import Settings from '../menu/settings';
 import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import type Menu from '../menu/menu';
+import type Game from '../game';
 
 export default class MenuController {
     private actions: Actions = new Actions();

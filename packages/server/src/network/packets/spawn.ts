@@ -1,8 +1,10 @@
-import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
-import Entity from '../../game/entity/entity';
-import Player from '../../game/entity/character/player/player';
-import Mob from '../../game/entity/character/mob/mob';
+
+import Packet from '../packet';
+
+import type Entity from '../../game/entity/entity';
+import type Player from '../../game/entity/character/player/player';
+import type Mob from '../../game/entity/character/mob/mob';
 
 export default class Spawn extends Packet {
     /**
@@ -18,7 +20,7 @@ export default class Spawn extends Packet {
             Packets.Spawn,
             undefined,
             entity.isPlayer()
-                ? (entity as Player).serialize(true)
+                ? entity.serialize(true)
                 : entity.isMob()
                 ? (entity as Mob).serialize(player)
                 : entity.serialize()

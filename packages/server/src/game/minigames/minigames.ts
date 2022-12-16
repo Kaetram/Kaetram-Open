@@ -1,14 +1,13 @@
 import _ from 'lodash';
+import log from '@kaetram/common/util/log';
+import { Opcodes } from '@kaetram/common/network';
 
-import World from '../world';
-import Minigame from './minigame';
-import Area from '../map/areas/area';
-import Areas from '../map/areas/areas';
 import Index from './impl/index';
 
-import log from '@kaetram/common/util/log';
-
-import { Opcodes } from '@kaetram/common/network';
+import type World from '../world';
+import type Minigame from './minigame';
+import type Area from '../map/areas/area';
+import type Areas from '../map/areas/areas';
 
 /**
  * Controller for minigames, used to connect the game world to the minigames

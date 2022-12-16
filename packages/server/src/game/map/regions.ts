@@ -1,23 +1,24 @@
-import _ from 'lodash-es';
-import fs from 'fs';
+import fs from 'node:fs';
 
+import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-
-import World from '../world';
-import Region from './region';
-import Map from './map';
-import Entity from '../entity/entity';
-import Player from '../entity/character/player/player';
-import Dynamic from './areas/impl/dynamic';
-import Resource from '../globals/impl/resource';
-import Area from './areas/area';
-
 import { Modules } from '@kaetram/common/network';
+
 import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
-import { RegionData, RegionTileData, RegionCache } from '@kaetram/common/types/region';
-import { Tile } from '@kaetram/common/types/map';
-import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+
+import Region from './region';
+
+import type World from '../world';
+import type Map from './map';
+import type Entity from '../entity/entity';
+import type Player from '../entity/character/player/player';
+import type Dynamic from './areas/impl/dynamic';
+import type Resource from '../globals/impl/resource';
+import type Area from './areas/area';
+import type { RegionData, RegionTileData, RegionCache } from '@kaetram/common/types/region';
+import type { Tile } from '@kaetram/common/types/map';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 /**
  * Class responsible for chunking up the map.
@@ -237,7 +238,7 @@ export default class Regions {
 
         log.debug(`Entity: ${entity.instance} entering region: ${region}.`);
 
-        this.sendRegion(entity as Player);
+        this.sendRegion(entity);
     }
 
     /**
@@ -293,7 +294,7 @@ export default class Regions {
 
         entity.setRegion(region);
 
-        if (entity.isPlayer()) this.regions[region].addPlayer(entity as Player);
+        if (entity.isPlayer()) this.regions[region].addPlayer(entity);
 
         this.enterCallback?.(entity, region);
 
@@ -315,7 +316,7 @@ export default class Regions {
 
         let region = this.regions[entity.region];
 
-        if (entity.isPlayer()) region.removePlayer(entity as Player);
+        if (entity.isPlayer()) region.removePlayer(entity);
 
         oldRegions = this.getOldRegions(entity);
 
@@ -623,7 +624,7 @@ export default class Regions {
                 y,
                 data: data || this.map.getTileData(index)
             },
-            cursor = this.map.getCursor(tile.data);
+            cursor = this.map.getCursor(tile.data as Tile);
 
         /**
          * A tile is colliding if it exists in our array of collisions (See
@@ -633,7 +634,7 @@ export default class Regions {
          * If we find a cursor we set the `cursor` property to the cursor.
          */
         if (this.map.isCollisionIndex(index)) tile.c = true;
-        if (this.map.isObject(tile.data)) tile.o = true;
+        if (this.map.isObject(tile.data as Tile)) tile.o = true;
         if (cursor) tile.cur = cursor;
 
         return tile;

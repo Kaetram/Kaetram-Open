@@ -1,12 +1,10 @@
 import log from '@kaetram/common/util/log';
-
-import World from '../game/world';
-import Player from '../game/entity/character/player/player';
-
 import Utils from '@kaetram/common/util/utils';
-
-import { ProcessedArea } from '@kaetram/common/types/map.d';
 import { Modules } from '@kaetram/common/network';
+
+import type World from '../game/world';
+import type Player from '../game/entity/character/player/player';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Warp {
     private warps: ProcessedArea[] = [];

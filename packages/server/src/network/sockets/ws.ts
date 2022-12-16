@@ -1,15 +1,15 @@
 import { WebSocketServer } from 'ws';
-
-import http from 'http';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import Connection from '../connection';
-import SocketHandler from '../sockethandler';
-import WebSocket, { AnySocket } from '../websocket';
-import { Modules } from '@kaetram/common/network';
+import WebSocket from '../websocket';
+
+import type SocketHandler from '../sockethandler';
+import type { AnySocket } from '../websocket';
+import type http from 'node:http';
 
 declare module 'ws' {
     interface WebSocket {

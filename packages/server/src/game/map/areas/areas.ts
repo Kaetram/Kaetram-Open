@@ -1,5 +1,4 @@
 import _ from 'lodash-es';
-
 import log from '@kaetram/common/util/log';
 
 import Area from './area';
@@ -35,7 +34,7 @@ export default abstract class Areas {
             this.areas.push(area);
 
             // Callback the last element in our list alongside the processed area info
-            callback?.(this.areas[this.areas.length - 1], a);
+            callback?.(this.areas.at(-1)!, a);
         });
     }
 

@@ -1,11 +1,11 @@
 import _ from 'lodash-es';
-
-import Menu from './menu';
-import Socket from '../network/socket';
+import { Packets } from '@kaetram/common/network';
 
 import log from '../lib/log';
 
-import { Packets } from '@kaetram/common/network';
+import Menu from './menu';
+
+import type Socket from '../network/socket';
 
 export default class Warp extends Menu {
     private list: NodeListOf<HTMLElement> = document.querySelectorAll('.map-button')!;

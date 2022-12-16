@@ -1,4 +1,4 @@
-import { Packets } from '@kaetram/common/network';
+import type { Packets } from '@kaetram/common/network';
 
 /**
  * The skeleton file for each packet. We separate packets

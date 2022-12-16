@@ -1,6 +1,9 @@
+import { Packets } from '@kaetram/common/network';
+
 import Packet from '../packet';
-import { Opcodes, Packets } from '@kaetram/common/network';
-import { OverlayPacket } from '@kaetram/common/types/messages/outgoing';
+
+import type { Opcodes } from '@kaetram/common/network';
+import type { OverlayPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Overlay extends Packet {
     public constructor(opcode: Opcodes.Overlay, data?: OverlayPacket) {
