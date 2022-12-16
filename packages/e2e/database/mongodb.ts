@@ -1,6 +1,8 @@
-import { AnyError, Db, MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+
+import type { AnyError, Db } from 'mongodb';
 
 export default class MongoDB {
     private connectionUrl: string;

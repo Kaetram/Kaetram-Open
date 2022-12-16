@@ -1,5 +1,4 @@
-import { ServerData } from '../controllers/servers';
-
+import type { ServerData } from '../controllers/servers';
 import type { SerializedServer } from '@kaetram/common/types/api';
 
 export default class Server {

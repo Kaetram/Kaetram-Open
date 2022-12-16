@@ -1,11 +1,12 @@
 import _ from 'lodash-es';
 
-import { Modules } from '@kaetram/common/network';
-import { ContainerItem } from '@kaetram/common/types/item';
-import { SlotData } from '@kaetram/common/types/slot';
+import Item from '../../../objects/item';
 
 import Slot from './slot';
-import Item from '../../../objects/item';
+
+import type { Modules } from '@kaetram/common/network';
+import type { ContainerItem } from '@kaetram/common/types/item';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 interface SerializedContainer {
     slots: SlotData[];

@@ -1,23 +1,23 @@
 import _ from 'lodash-es';
 
-import Tile from './tile';
-import Camera from './camera';
-import Item from '../entity/objects/item';
-import { isMobile, isTablet } from '../utils/detect';
-import Character from '../entity/character/character';
+import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 
+import Character from '../entity/character/character';
+import { isMobile, isTablet } from '../utils/detect';
+
+import Tile from './tile';
+
+import type { SerializedLight } from '@kaetram/common/types/light';
+import type { RotatedTile } from '@kaetram/common/types/map';
+import type { RegionTile } from '@kaetram/common/types/region';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Map from '../map/map';
+import type Camera from './camera';
 import type Splat from './infos/splat';
-
-import { RegionTile } from './../../../common/types/region';
-import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
-
-import { Modules } from '@kaetram/common/network';
-import { SerializedLight } from '@kaetram/common/types/light';
 
 interface RendererTile {
     relativeTileId: number;
@@ -333,18 +333,18 @@ export default class Renderer {
         this.updateDrawingView();
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let flips: number[] = this.getFlipped(tile);
+            let flips: number[] = this.getFlipped(tile as RotatedTile);
 
             // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = tile.tileId;
+            if (flips.length > 0) tile = (tile as RotatedTile).tileId;
 
             // Determine the layer of the tile depending on if it is a high tile or not.
-            let isHighTile = this.map.isHighTile(tile),
+            let isHighTile = this.map.isHighTile(tile as number),
                 context = isHighTile ? this.foreContext : this.backContext;
 
             // Only do the lighting logic if there is an overlay.
             if (this.game.overlays.hasOverlay()) {
-                let isLightTile = this.map.isLightTile(tile);
+                let isLightTile = this.map.isLightTile(tile as number);
 
                 context = isLightTile ? this.overlayContext : context;
             }
@@ -370,8 +370,8 @@ export default class Renderer {
             }
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
-            if (!this.map.isAnimatedTile(tile) || !this.animateTiles)
-                this.drawTile(context, tile - 1, index, flips);
+            if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
+                this.drawTile(context, (tile as number) - 1, index, flips);
         });
 
         this.saveFrame();
@@ -1228,9 +1228,9 @@ export default class Renderer {
         if (!this.animateTiles) return;
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile);
+            let isFlipped = this.isFlipped(tile as RotatedTile);
 
-            if (isFlipped) tile = tile.tileId;
+            if (isFlipped) tile = (tile as RotatedTile).tileId;
 
             /**
              * We don't want to reinitialize animated tiles that already exist
@@ -1238,7 +1238,7 @@ export default class Renderer {
              * it every time the tile moves slightly.
              */
 
-            if (!this.map.isAnimatedTile(tile)) return;
+            if (!this.map.isAnimatedTile(tile as number)) return;
 
             /**
              * Push the pre-existing tiles.
@@ -1246,9 +1246,9 @@ export default class Renderer {
 
             if (!(index in this.animatedTiles))
                 this.animatedTiles[index] = new Tile(
-                    tile,
+                    tile as number,
                     index,
-                    this.map.getTileAnimation(tile),
+                    this.map.getTileAnimation(tile as number),
                     isFlipped
                 );
         }, 2);
@@ -1473,7 +1473,7 @@ export default class Renderer {
      * @returns Whether or not the tile contains and flip flags.
      */
 
-    private isFlipped(tileInfo: RegionTile): boolean {
+    private isFlipped(tileInfo: RotatedTile): boolean {
         return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 
@@ -1531,7 +1531,7 @@ export default class Renderer {
      * @returns An array containing all flip flags in order.
      */
 
-    public getFlipped(tile: RegionTile): number[] {
+    public getFlipped(tile: RotatedTile): number[] {
         let flips: number[] = [];
 
         // Return empty if tile doesn't contain flip flags.

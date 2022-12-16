@@ -1,5 +1,6 @@
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
+
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export let isInt = (n: number): boolean => n % 1 === 0;
 

@@ -1,15 +1,15 @@
-import Entity from '../entity';
-import Player from '../character/player/player';
-
-import rawData from '../../../../data/items.json';
 import log from '@kaetram/common/util/log';
-
 import Utils from '@kaetram/common/util/utils';
-
 import { Modules } from '@kaetram/common/network';
-import { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
-import { EntityData } from '@kaetram/common/types/entity';
-import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
+import PluginIndex from '@kaetram/server/data/plugins/items';
+
+import Entity from '../entity';
+import rawData from '../../../../data/items.json';
+
+import type Player from '../character/player/player';
+import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { Plugin } from '@kaetram/server/data/plugins/items';
 
 type RawData = {
     [key: string]: ItemData;

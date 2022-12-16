@@ -2,7 +2,6 @@
 
 import { each, isArray } from 'lodash-es';
 import { io } from 'socket.io-client';
-
 import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';

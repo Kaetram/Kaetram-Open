@@ -1,16 +1,15 @@
 import _ from 'lodash-es';
-
 import config from '@kaetram/common/config';
 
 import Player from '../game/entity/character/player/player';
-import Entities from '../controllers/entities';
-import SocketHandler from './sockethandler';
-import Regions from '../game/map/regions';
-import MongoDB from '../database/mongodb/mongodb';
 
-import Packet from './packet';
 import { Handshake } from './packets';
 
+import type Entities from '../controllers/entities';
+import type SocketHandler from './sockethandler';
+import type Regions from '../game/map/regions';
+import type MongoDB from '../database/mongodb/mongodb';
+import type Packet from './packet';
 import type World from '../game/world';
 import type Connection from './connection';
 

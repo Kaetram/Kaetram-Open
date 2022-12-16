@@ -1,4 +1,4 @@
-import { Modules } from '../network';
+import type { Modules } from '../network';
 
 // Raw ability information from the JSON file.
 

@@ -1,10 +1,6 @@
-import _ from 'lodash-es';
-
 import log from '../lib/log';
 import Sprite from '../entity/sprite';
 import Animation from '../entity/animation';
-import Utils from '../utils/util';
-
 import spriteData from '../../data/sprites.json';
 
 import type { SpriteData } from '../entity/sprite';

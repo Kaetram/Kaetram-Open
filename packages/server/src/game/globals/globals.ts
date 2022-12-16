@@ -1,8 +1,8 @@
-import World from '../world';
-
 import Lights from './lights';
 import Signs from './signs';
 import Trees from './trees';
+
+import type World from '../world';
 
 /**
  * Class responsible for initializing and managing all the global objects

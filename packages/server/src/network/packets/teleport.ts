@@ -1,6 +1,8 @@
-import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
-import { TeleportPacket } from '@kaetram/common/types/messages/outgoing';
+
+import Packet from '../packet';
+
+import type { TeleportPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Teleport extends Packet {
     public constructor(data: TeleportPacket) {

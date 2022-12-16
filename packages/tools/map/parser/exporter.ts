@@ -1,10 +1,9 @@
 #!/usr/bin/env -S yarn tsx
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 import _ from 'lodash';
-
-import fs from 'fs';
-import path from 'path';
-
 import log from '@kaetram/common/util/log';
 
 import Parser from './parser';

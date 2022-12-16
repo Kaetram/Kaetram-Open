@@ -1,14 +1,14 @@
 import { Server } from 'socket.io';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import Connection from '../connection';
-import WebSocket, { AnySocket } from '../websocket';
+import WebSocket from '../websocket';
 
+import type { AnySocket } from '../websocket';
 import type SocketHandler from '../sockethandler';
-import { Modules } from '@kaetram/common/network';
 
 export default class SocketIO extends WebSocket {
     public constructor(socketHandler: SocketHandler) {

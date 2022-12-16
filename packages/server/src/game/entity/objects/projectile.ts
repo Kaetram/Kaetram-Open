@@ -1,11 +1,11 @@
-import Entity from '../entity';
-import Hit from '../character/combat/hit';
-import Character from '../character/character';
-
 import Utils from '@kaetram/common/util/utils';
-
 import { Modules } from '@kaetram/common/network';
-import { EntityData } from '@kaetram/common/types/entity';
+
+import Entity from '../entity';
+
+import type Hit from '../character/combat/hit';
+import type Character from '../character/character';
+import type { EntityData } from '@kaetram/common/types/entity';
 
 export default class Projectile extends Entity {
     public hitType = Modules.Hits.Damage;
