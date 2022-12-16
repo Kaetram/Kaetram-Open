@@ -6,7 +6,7 @@ import Blob from '../renderer/bubbles/blob';
 import type Game from '../game';
 
 export default class BubbleController {
-    private container: JQuery<HTMLElement> = $('#bubbles');
+    private container: JQuery = $('#bubbles');
 
     // Each entity's instance is associated with a bubble for the duration of a bubble.
     private bubbles: { [instance: string]: Blob } = {};

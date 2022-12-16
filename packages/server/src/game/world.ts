@@ -96,31 +96,27 @@ export default class World {
             }
 
             case PacketType.Player: {
-                return this.network.send(data.player as Player, data.packet);
+                return this.network.send(data.player!, data.packet);
             }
 
             case PacketType.Players: {
-                return this.network.sendToPlayers(data.players as Player[], data.packet);
+                return this.network.sendToPlayers(data.players!, data.packet);
             }
 
             case PacketType.Region: {
-                return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
+                return this.network.sendToRegion(data.region!, data.packet, data.ignore);
             }
 
             case PacketType.Regions: {
                 return this.network.sendToSurroundingRegions(
-                    data.region as number,
+                    data.region!,
                     data.packet,
                     data.ignore
                 );
             }
 
             case PacketType.RegionList: {
-                return this.network.sendToRegionList(
-                    data.list as number[],
-                    data.packet,
-                    data.ignore
-                );
+                return this.network.sendToRegionList(data.list!, data.packet, data.ignore);
             }
         }
     }
@@ -191,7 +187,7 @@ export default class World {
      */
 
     public getPlayerByName(username: string): Player {
-        return this.entities.getPlayer(username) as Player;
+        return this.entities.getPlayer(username)!;
     }
 
     /**

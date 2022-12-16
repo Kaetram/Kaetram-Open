@@ -113,8 +113,8 @@ export default class Store extends Menu {
         this.clearSellSlot();
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getElement(index).querySelector('.bank-image') as HTMLElement,
-                count = this.getElement(index).querySelector('.item-count') as HTMLElement;
+            let image = this.getElement(index).querySelector<HTMLElement>('.bank-image')!,
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!;
 
             image.style.backgroundImage = slot.style.backgroundImage;
             count.textContent = slot.textContent;
@@ -175,8 +175,8 @@ export default class Store extends Menu {
         //Refreshes the inventory container prior to moving.s
         this.synchronize();
 
-        let image = this.getElement(info.item!.index!).querySelector('.bank-image') as HTMLElement,
-            count = this.getElement(info.item!.index!).querySelector('.item-count') as HTMLElement;
+        let image = this.getElement(info.item!.index!).querySelector<HTMLElement>('.bank-image')!,
+            count = this.getElement(info.item!.index!).querySelector<HTMLElement>('.item-count')!;
 
         if (!image || !count) return log.error(`[Store] Could not find image and count elements.`);
 

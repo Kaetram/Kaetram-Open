@@ -10,7 +10,7 @@ const MAXIMUM_ZOOM = 6,
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
-    public border: JQuery<HTMLElement> = $('#border');
+    public border: JQuery = $('#border');
 
     // x and y are absolute pixel coordinates
     public x = 0;
