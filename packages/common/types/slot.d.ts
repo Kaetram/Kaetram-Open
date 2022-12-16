@@ -1,4 +1,4 @@
-import { Enchantments } from './item';
+import type { Enchantments } from './item';
 
 export type SlotType = 'inventory' | 'bank';
 

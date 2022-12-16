@@ -1,9 +1,8 @@
-import API from './api';
-
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 
+import API from './api';
 import Servers from './controllers/servers';
 import Console from './console';
 

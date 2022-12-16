@@ -1,4 +1,4 @@
-import { ProcessedAnimation } from '@kaetram/common/types/map';
+import type { ProcessedAnimation } from '@kaetram/common/types/map';
 
 export default class Tile {
     public animationIndex = 0;

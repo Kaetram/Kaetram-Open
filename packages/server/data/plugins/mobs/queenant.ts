@@ -1,11 +1,10 @@
 import _ from 'lodash';
+import Utils from '@kaetram/common/util/utils';
 
 import Default from './default';
 
-import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
-import Character from '@kaetram/server/src/game/entity/character/character';
-
-import Utils from '@kaetram/common/util/utils';
+import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import type Character from '@kaetram/server/src/game/entity/character/character';
 
 export default class QueenAnt extends Default {
     private positions: Position[];

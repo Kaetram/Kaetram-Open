@@ -1,14 +1,13 @@
-import { HitData } from '../info';
-import { EntityData, EntityDisplayInfo } from '../entity';
-import { PlayerData } from '../player';
-import { QuestData } from '../quest';
-import { SerializedLight } from '../light';
-import { SerializedStoreItem } from '../stores';
-import { SerializedEquipment, EquipmentData } from '../equipment';
-import { SerializedSkills, SkillData } from '../skills';
-import { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
-import { SerializedAbility, AbilityData } from '../ability';
-
+import type { HitData } from '../info';
+import type { EntityData, EntityDisplayInfo } from '../entity';
+import type { PlayerData } from '../player';
+import type { QuestData } from '../quest';
+import type { SerializedLight } from '../light';
+import type { SerializedStoreItem } from '../stores';
+import type { SerializedEquipment, EquipmentData } from '../equipment';
+import type { SerializedSkills, SkillData } from '../skills';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import type { SerializedAbility, AbilityData } from '../ability';
 import type { Modules, Opcodes } from '../../network';
 
 /**
@@ -82,10 +81,6 @@ export interface TeleportPacket {
 }
 
 export type TeleportCallback = (info: TeleportPacket) => void;
-
-////////////////////////////////////////////////////////////////////////////////
-
-export type DespawnCallback = (instance: string) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -1,8 +1,8 @@
 import _ from 'lodash-es';
-
 import { Modules } from '@kaetram/common/network';
 
 import mapData from '../../../data/map/world.json';
+
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
@@ -16,7 +16,6 @@ import type {
 } from '@kaetram/common/types/map';
 
 import type { RegionTile } from '@kaetram/common/types/region';
-
 import type World from '../world';
 import type Areas from './areas/areas';
 import type Player from '../entity/character/player/player';
@@ -350,7 +349,7 @@ export default class Map {
      * @returns A RegionTile object containing index tile data information.
      */
 
-    public parseTileData(data: number | number[]): RegionTile {
+    public parseTileData(data: Tile): RegionTile {
         let isArray = Array.isArray(data),
             parsedData: RegionTile = isArray ? [] : 0;
 
@@ -359,7 +358,7 @@ export default class Map {
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as RegionTile[]).push(tile);
+            if (isArray) (parsedData as Tile[]).push(tile as Tile);
             else parsedData = tile;
         });
 
@@ -421,7 +420,7 @@ export default class Map {
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
         if (_.isArray(data)) _.each(data, callback);
-        else callback(data as number);
+        else callback(data);
     }
 
     /**

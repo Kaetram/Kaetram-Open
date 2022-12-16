@@ -1,8 +1,9 @@
+import { Modules } from '@kaetram/common/network';
+
 import Entity from '../entity';
 import Utils from '../../utils/util';
 
 import type Character from '../character/character';
-import { Modules } from '@kaetram/common/network';
 
 export default class Projectile extends Entity {
     public override type = Modules.EntityType.Projectile;

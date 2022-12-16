@@ -1,14 +1,13 @@
 import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
-import Utils from '../utils/util';
 
+import Utils, { isInt } from '../utils/util';
 import log from '../lib/log';
 import mapData from '../../data/maps/map.json';
 
 import type Game from '../game';
-import { isInt } from '../utils/util';
-import { ProcessedAnimation } from '@kaetram/common/types/map';
-import { RegionData, RegionTile, RegionTileData } from './../../../common/types/region';
+import type { ProcessedAnimation } from '@kaetram/common/types/map';
+import type { RegionData, RegionTile, RegionTileData } from '@kaetram/common/types/region';
 
 export type CursorTiles = { [tileId: number]: string };
 

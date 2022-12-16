@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Area from '../map/areas/area';
-import Player from '../entity/character/player/player';
+import type Area from '../map/areas/area';
+import type Player from '../entity/character/player/player';
 
 export default class Minigame {
     public constructor(public key: string) {}

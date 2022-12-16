@@ -1,23 +1,20 @@
 import _ from 'lodash-es';
-
 import log from '@kaetram/common/util/log';
-
-import type World from '../game/world';
-import Map from '../game/map/map';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 
-import Hit from '../game/entity/character/combat/hit';
 import Character from '../game/entity/character/character';
-import Mob from '../game/entity/character/mob/mob';
-import Chest from '../game/entity/objects/chest';
-import Item from '../game/entity/objects/item';
-import Projectile from '../game/entity/objects/projectile';
 
+import type World from '../game/world';
+import type Map from '../game/map/map';
+import type Hit from '../game/entity/character/combat/hit';
+import type Mob from '../game/entity/character/mob/mob';
+import type Chest from '../game/entity/objects/chest';
+import type Item from '../game/entity/objects/item';
+import type Projectile from '../game/entity/objects/projectile';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
-
-import { ProcessedArea } from '@kaetram/common/types/map';
-import { Enchantments } from '@kaetram/common/types/item';
+import type { ProcessedArea } from '@kaetram/common/types/map';
+import type { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
     private map: Map;
@@ -276,7 +273,7 @@ export default class Entities {
 
     public forEachCharacter(callback: (character: Character) => void): void {
         this.forEachEntity((entity: Entity) => {
-            if (entity instanceof Character) callback(entity as Character);
+            if (entity instanceof Character) callback(entity);
         });
     }
 

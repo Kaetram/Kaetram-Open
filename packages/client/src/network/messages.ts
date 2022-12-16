@@ -1,10 +1,8 @@
 import _ from 'lodash-es';
-
 import { Packets } from '@kaetram/common/network';
-import { MinigameCallback } from '@kaetram/common/types/messages/outgoing.d';
 
-import type App from '../app';
 import type {
+    MinigameCallback,
     HandshakeCallback,
     WelcomeCallback,
     MapCallback,
@@ -46,6 +44,7 @@ import type {
     UpdateCallback,
     EffectCallback
 } from '@kaetram/common/types/messages/outgoing';
+import type App from '../app';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];

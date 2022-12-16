@@ -1,4 +1,6 @@
 import _ from 'lodash-es';
+import { inflate } from 'pako';
+import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
 
@@ -23,14 +25,12 @@ import type Item from '../entity/objects/item';
 import type NPC from '../entity/character/npc/npc';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
 
-import { inflate } from 'pako';
-import { PlayerData } from '@kaetram/common/types/player';
-import { Packets, Opcodes, Modules } from '@kaetram/common/network';
-import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
-import {
+import type {
     AbilityPacket,
     AchievementPacket,
     AnimationPacket,
@@ -59,7 +59,7 @@ import {
     MinigamePacket,
     EffectPacket
 } from '@kaetram/common/types/messages/outgoing';
-import { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -388,7 +388,7 @@ export default class Connection {
         else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
 
         // No animation, skip straight to teleporting.
-        if (!info.withAnimation) return this.game.teleport(player, info.x!, info.y!);
+        if (!info.withAnimation) return this.game.teleport(player, info.x, info.y);
 
         // Copy the player's sprite temporarily.
         let playerSprite = player.sprite;
@@ -400,7 +400,7 @@ export default class Connection {
         player.setSprite(this.sprites.getDeath());
 
         player.animateDeath(() => {
-            this.game.teleport(player, info.x!, info.y!);
+            this.game.teleport(player, info.x, info.y);
 
             // Reset the animation.
             player.animation = null;
@@ -776,7 +776,7 @@ export default class Connection {
      */
 
     private handleHeal(info: HealPacket): void {
-        let character = this.entities.get<Character>(info.instance!);
+        let character = this.entities.get<Character>(info.instance);
 
         if (!character) return;
 
@@ -909,7 +909,7 @@ export default class Connection {
                 if (!info.text) return this.bubble.clear(npc.instance);
 
                 // Create the bubble containing the text.
-                this.bubble.create(npc.instance, info.text!);
+                this.bubble.create(npc.instance, info.text);
                 this.bubble.setTo(npc.instance, npc.x, npc.y);
 
                 break;
@@ -954,7 +954,7 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, _info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
                 //this.menu.enchant.add(info.type!, info.index!);
@@ -988,7 +988,7 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Pointer.Entity: {
-                entity = this.entities.get(info.instance!);
+                entity = this.entities.get(info.instance);
 
                 if (!entity) return;
 
@@ -1021,7 +1021,7 @@ export default class Connection {
             }
 
             case Opcodes.Pointer.Button: {
-                this.pointer.create(info.instance!, opcode, info.button!);
+                this.pointer.create(info.instance, opcode, info.button);
                 break;
             }
         }
@@ -1101,7 +1101,7 @@ export default class Connection {
      * @param opcode The type of action we are performing with the camera.
      */
 
-    private handleCamera(opcode: Opcodes.Camera): void {
+    private handleCamera(_opcode: Opcodes.Camera): void {
         //
     }
 

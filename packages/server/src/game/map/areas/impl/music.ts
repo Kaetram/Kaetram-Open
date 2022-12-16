@@ -1,7 +1,7 @@
-import World from '../../../world';
-import Area from '../area';
 import Areas from '../areas';
 
+import type World from '../../../world';
+import type Area from '../area';
 import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Music extends Areas {
