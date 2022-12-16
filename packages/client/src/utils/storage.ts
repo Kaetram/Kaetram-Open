@@ -2,7 +2,7 @@ import { Modules } from '@kaetram/common/network';
 
 import { isMobile } from './detect';
 
-import type { RegionData, RegionTileData } from '@kaetram/common/types/region';
+import type { RegionData, RegionTileData } from '@kaetram/common/types/map';
 import type { CursorTiles } from '../map/map';
 
 interface PlayerData {

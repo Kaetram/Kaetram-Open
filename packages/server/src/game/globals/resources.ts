@@ -6,7 +6,7 @@ import Resource from './impl/resource';
 import type World from '../world';
 import type Map from '../map/map';
 import type Regions from '../map/regions';
-import type { ProcessedResource, Tile } from '@kaetram/common/types/map';
+import type { ProcessedResource } from '@kaetram/common/types/map';
 
 export default class Resources {
     private map: Map;
@@ -99,7 +99,7 @@ export default class Resources {
         if (intersection.length === 0) return false;
 
         // Add the entire tile data onto the resource.
-        resource.data[index] = this.map.parseTileData(this.map.data[index]) as Tile;
+        resource.data[index] = this.map.parseTileData(this.map.data[index]);
 
         // Remove all tiles from the map data.
         this.map.data[index] = -1;
