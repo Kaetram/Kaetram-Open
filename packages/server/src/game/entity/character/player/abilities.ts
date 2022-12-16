@@ -83,7 +83,7 @@ export default class Abilities {
         ) as Ability;
 
         // Ensure the ability has valid data.
-        if (!ability || !ability.isValid())
+        if (!ability?.isValid())
             return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
 
         // On ability update listener.

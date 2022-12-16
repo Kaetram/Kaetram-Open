@@ -97,7 +97,8 @@ export default class MongoDB {
                 log.error(
                     `An error occurred while saving ${
                         collection.collectionName
-                    } for ${JSON.stringify(filter)}: ${error}`
+                    } for ${JSON.stringify(filter)}:`,
+                    error
                 );
 
             if (!result)
@@ -119,7 +120,8 @@ export default class MongoDB {
                 log.error(
                     `An error occurred while deleting ${JSON.stringify(filter)} from ${
                         collection.collectionName
-                    }: ${error}`
+                    }:`,
+                    error
                 );
             callback(error);
         });

@@ -2,7 +2,9 @@ export interface Enchantment {
     level: number;
 }
 
-export type Enchantments = { [id: number]: Enchantment };
+export interface Enchantments {
+    [id: number]: Enchantment;
+}
 
 export interface ContainerItem {
     index: number;

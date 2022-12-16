@@ -110,8 +110,7 @@ export default {
         let keys = Object.keys(Packets),
             filtered = [];
 
-        for (let i = 0; i < keys.length; i++)
-            if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
+        for (let key of keys) if (!key.endsWith('Opcode')) filtered.push(key);
 
         return packet > -1 && packet < Packets[filtered.at(-1) as keyof typeof Packets] + 1;
     },
