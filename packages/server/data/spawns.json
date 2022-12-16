@@ -150,5 +150,10 @@
     "level": 62,
     "attackLevel": 14,
     "drops": {"gold": 300, "icesword": 125}
+  },
+
+  "785-451": {
+    "name": "Queen Ant",
+    "achievement": "queenant"
   }
 }
