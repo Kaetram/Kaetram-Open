@@ -234,11 +234,9 @@ export default class Abilities extends Menu {
      */
 
     private hideAll(): void {
-        for (let i = 0; i < this.activeAbilities.children.length; i++)
-            this.hideAbility(this.activeAbilities.children[i] as HTMLElement);
+        for (let child of this.activeAbilities.children) this.hideAbility(child as HTMLElement);
 
-        for (let i = 0; i < this.passiveAbilities.children.length; i++)
-            this.hideAbility(this.passiveAbilities.children[i] as HTMLElement);
+        for (let child of this.passiveAbilities.children) this.hideAbility(child as HTMLElement);
     }
 
     /**

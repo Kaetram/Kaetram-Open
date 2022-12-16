@@ -11,9 +11,9 @@ import type { NPCData } from '@kaetram/common/types/npc';
 import type Player from '../character/player/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
-type RawData = {
+interface RawData {
     [key: string]: NPCData;
-};
+}
 
 export default class NPC extends Entity {
     // talkIndex = 0;

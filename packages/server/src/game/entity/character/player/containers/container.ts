@@ -115,7 +115,7 @@ export default abstract class Container {
     public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
-        if (!slot || !slot.key) return;
+        if (!slot?.key) return;
 
         count = Math.min(count, slot.count);
 

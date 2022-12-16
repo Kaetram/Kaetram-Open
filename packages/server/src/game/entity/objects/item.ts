@@ -11,9 +11,9 @@ import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/typ
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { Plugin } from '@kaetram/server/data/plugins/items';
 
-type RawData = {
+interface RawData {
     [key: string]: ItemData;
-};
+}
 
 export default class Item extends Entity {
     private data: ItemData;
