@@ -110,6 +110,14 @@
         "rewardExperience": 12560
     },
 
+    "queenant": {
+        "name": "Queen Ant",
+        "description": "Defeat the Queen Ant!",
+
+        "rewardSkill": "health",
+        "rewardExperience": 33560
+    },
+
     "notwhatitseems": {
         "name": "Not What It Seems",
         "description": "Discover a mimic.",
