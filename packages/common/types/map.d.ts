@@ -9,6 +9,30 @@ export interface RotatedTile {
 // These are tiles straight from the map file.
 export type Tile = number | number[];
 
+export type FlatTile = (number | RotatedTile)[];
+
+// Tiles used when sending region data to the client.
+export type RegionTile = Tile | RotatedTile | RotatedTile[];
+
+// Tile data that is sent to the client.
+export interface RegionTileData {
+    x: number;
+    y: number;
+    data: RegionTile;
+    c?: boolean; // collision property
+    cur?: string; // cursor property
+    o?: boolean; // object property
+}
+
+export interface RegionData {
+    [regionId: number]: RegionTileData[];
+}
+
+export interface RegionCache {
+    data: RegionData;
+    version: number;
+}
+
 // Map data information
 export type OverlayType = 'none' | 'inside' | 'damage' | 'lockX' | 'lockY' | 'player';
 
@@ -89,9 +113,9 @@ export interface ProcessedDoor {
 }
 
 export interface ProcessedResource {
-    data: number[]; // What is considered a resource.
-    base: number[]; // The base of the resource (the interactable part).
-    depleted: number[]; // The resource after it has been depleted.
+    data: FlatTile; // What is considered a resource.
+    base: FlatTile; // The base of the resource (the interactable part).
+    depleted: FlatTile; // The resource after it has been depleted.
     type: string; // Identifier for the resource.
 }
 
