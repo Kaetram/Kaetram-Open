@@ -1,20 +1,20 @@
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
-import Connection from '../network/connection';
-import World from '../game/world';
-import Entities from './entities';
-import MongoDB from '../database/mongodb/mongodb';
 import Creator from '../database/mongodb/creator';
+import { Spawn } from '../network/packets';
+
 import Commands from './commands';
 
-import { Spawn } from '../network/packets';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import type Connection from '../network/connection';
+import type World from '../game/world';
+import type Entities from './entities';
+import type MongoDB from '../database/mongodb/mongodb';
 
 import type {
     AbilityPacket,
@@ -257,7 +257,7 @@ export default class Incoming {
                     playerX!,
                     playerY!,
                     targetInstance!,
-                    orientation!
+                    orientation
                 );
             }
 
@@ -383,7 +383,7 @@ export default class Incoming {
                 return this.player.handleContainerSelect(
                     packet.type,
                     packet.index!,
-                    packet.subType!
+                    packet.subType
                 );
             }
 
@@ -438,7 +438,7 @@ export default class Incoming {
         }
     }
 
-    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
+    private handleEnchant(_message: [Opcodes.Enchant, unknown]): void {
         // let [opcode] = message;
         // switch (opcode) {
         //     case Opcodes.Enchant.Select: {

@@ -1,12 +1,13 @@
-import Menu from './menu';
-import Inventory from './inventory';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Util from '../utils/util';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { StorePacket } from '@kaetram/common/types/messages/outgoing';
-import { SerializedStoreItem } from '@kaetram/common/types/stores';
 import log from '../lib/log';
+
+import Menu from './menu';
+
+import type Inventory from './inventory';
+import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
+import type { SerializedStoreItem } from '@kaetram/common/types/stores';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
@@ -183,7 +184,7 @@ export default class Store extends Menu {
         this.sellSlot.style.backgroundImage = image.style.backgroundImage;
         this.sellSlot.textContent = count.textContent;
         this.sellSlotReturn.style.backgroundImage = Util.getImageURL(this.currency);
-        this.sellSlotReturnText.textContent = info.item!.price!.toString() || '';
+        this.sellSlotReturnText.textContent = info.item!.price.toString() || '';
 
         // Visually removes the item from the inventory.
         image.style.backgroundImage = '';

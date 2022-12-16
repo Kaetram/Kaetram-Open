@@ -1,6 +1,8 @@
-import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
-import { DespawnPacket } from '@kaetram/common/types/messages/outgoing';
+
+import Packet from '../packet';
+
+import type { DespawnPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Despawn extends Packet {
     public constructor(info: DespawnPacket) {

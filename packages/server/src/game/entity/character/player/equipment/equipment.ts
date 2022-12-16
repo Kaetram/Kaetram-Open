@@ -4,13 +4,12 @@
  * equipment slot instead of inventory slot.
  */
 
-import Item from '../../../objects/item';
-
 import Utils from '@kaetram/common/util/utils';
 
-import { Modules } from '@kaetram/common/network';
-import { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
-import { EquipmentData } from '@kaetram/common/types/equipment';
+import type Item from '../../../objects/item';
+import type { Modules } from '@kaetram/common/network';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
+import type { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Equipment {
     // Properties

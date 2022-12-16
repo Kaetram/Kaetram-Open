@@ -2,7 +2,6 @@ import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 
 import type { Db } from 'mongodb';
-
 import type Player from '../../game/entity/character/player/player';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';

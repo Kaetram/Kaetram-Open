@@ -1,10 +1,9 @@
 import _ from 'lodash-es';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
-import { ProcessedResource, Tile } from '@kaetram/common/types/map';
 import { Modules } from '@kaetram/common/network';
+
+import type { ProcessedResource, Tile } from '@kaetram/common/types/map';
 
 export default class Resource {
     public instance = Utils.createInstance(Modules.EntityType.Object);

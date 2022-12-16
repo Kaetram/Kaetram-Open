@@ -16,7 +16,7 @@ export function isTablet(): boolean {
 export let isMobile = (): boolean => window.innerWidth < 1000;
 
 export function iOSVersion(): number | undefined {
-    let match = agent.match(/os (\d+)_(\d+)_?(\d+?)/);
+    let match = /os (\d+)_(\d+)_?(\d+?)/.exec(agent);
 
     if (match) {
         let version = [

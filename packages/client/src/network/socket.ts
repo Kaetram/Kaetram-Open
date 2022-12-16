@@ -1,8 +1,10 @@
-import { io, Socket as SocketIO } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import log from '../lib/log';
+
 import Messages from './messages';
 
+import type { Socket as SocketIO } from 'socket.io-client';
 import type { SerializedServer } from '@kaetram/common/types/api';
 import type Game from '../game';
 

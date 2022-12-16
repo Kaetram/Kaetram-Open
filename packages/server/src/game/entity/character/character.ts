@@ -1,24 +1,21 @@
 import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { PacketType } from '@kaetram/common/network/modules';
 
 import Entity from '../entity';
-import Mob from './mob/mob';
-import Player from './player/player';
+import Formulas from '../../../info/formulas';
+import { Movement, Points, Combat as CombatPacket, Effect } from '../../../network/packets';
 
 import Combat from './combat/combat';
 import Poison from './poison';
 import Hit from './combat/hit';
-import World from '../../world';
-import Packet from '../../../network/packet';
 import HitPoints from './points/hitpoints';
-import Formulas from '../../../info/formulas';
 
-import Utils from '@kaetram/common/util/utils';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
-import { PacketType } from '@kaetram/common/network/modules';
-import { EntityData } from '@kaetram/common/types/entity';
-import { Movement, Points, Combat as CombatPacket, Effect } from '../../../network/packets';
+import type World from '../../world';
+import type Packet from '../../../network/packet';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { EntityData } from '@kaetram/common/types/entity';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;
@@ -243,7 +240,7 @@ export default abstract class Character extends Entity {
      */
 
     public stopHealing(): void {
-        clearInterval(this.healingInterval!);
+        clearInterval(this.healingInterval);
     }
 
     /**
@@ -638,7 +635,7 @@ export default abstract class Character extends Entity {
 
         // Remove the poison status or create an interval for the poison.
         if (remove) {
-            clearInterval(this.poisonInterval!);
+            clearInterval(this.poisonInterval);
             this.poisonInterval = undefined;
         } else if (!exists)
             this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);

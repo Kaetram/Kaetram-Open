@@ -1,6 +1,8 @@
-import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
+
 import Menu from './menu';
+
+import type { Modules } from '@kaetram/common/network';
 
 export default class Actions extends Menu {
     protected override container: HTMLElement = document.querySelector('#action-container')!;

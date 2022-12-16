@@ -1,7 +1,9 @@
 import _ from 'lodash-es';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Experience, Skill as SkillPacket, Points } from '@kaetram/server/src/network/packets';
 
-import Player from './player';
-import Skill from './skill/skill';
+import Formulas from '../../../../info/formulas';
+
 import Accuracy from './skill/impl/accuracy';
 import Archery from './skill/impl/archery';
 import Health from './skill/impl/health';
@@ -9,11 +11,9 @@ import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
 
-import Formulas from '../../../../info/formulas';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import { Experience, Skill as SkillPacket, Points } from '@kaetram/server/src/network/packets';
+import type Skill from './skill/skill';
+import type Player from './player';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 
 export default class Skills {
     private loaded = false;

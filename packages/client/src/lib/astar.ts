@@ -50,7 +50,7 @@ function AStar(
         rows = grid.length,
         limit = cols * rows,
         f2 = Math.max,
-        list: Record<number, number> = {},
+        list: { [key: number]: number } = {},
         result: [x: number, y: number][] = [],
         open: Result[] = [
             {

@@ -1,19 +1,16 @@
-import Skill from '../skill';
-
-import Player from '../../player';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import Resource from '../../../../../globals/impl/resource';
 import LumberjackingEn from '@kaetram/common/text/en/lumberjacking';
+import { Modules } from '@kaetram/common/network';
 
 import { Animation } from '../../../../../../network/packets';
-
-import { Modules } from '@kaetram/common/network';
-import { TreeData, TreeInfo } from '@kaetram/common/types/trees';
-
+import Skill from '../skill';
 import Trees from '../../../../../../../data/trees.json';
 import Item from '../../../../objects/item';
+
+import type { TreeData, TreeInfo } from '@kaetram/common/types/trees';
+import type Player from '../../player';
+import type Resource from '../../../../../globals/impl/resource';
 
 export default class Lumberjacking extends Skill {
     private treeData: TreeData = Trees;

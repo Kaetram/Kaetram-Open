@@ -1,8 +1,8 @@
 import log from '@kaetram/common/util/log';
 
-import MongoDB from './database/mongodb/mongodb';
-import Player from './game/entity/character/player/player';
-import World from './game/world';
+import type MongoDB from './database/mongodb/mongodb';
+import type Player from './game/entity/character/player/player';
+import type World from './game/world';
 
 /**
  * The console lives on top of the server. It allows an admin to directly

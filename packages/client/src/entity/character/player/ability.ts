@@ -1,4 +1,4 @@
-import { Modules } from '@kaetram/common/network';
+import type { Modules } from '@kaetram/common/network';
 
 export default class Ability {
     public constructor(

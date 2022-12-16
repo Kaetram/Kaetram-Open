@@ -1,44 +1,10 @@
-import Skills from './skills';
-import Quests from './quests';
-import Handler from './handler';
-import NPC from '../../npc/npc';
-import Skill from './skill/skill';
-import Mana from '../points/mana';
-import Map from '../../../map/map';
-import Abilities from './abilities';
-import Character from '../character';
-import Equipments from './equipments';
-import Item from '../../objects/item';
-import Statistics from './statistics';
-import Bank from './containers/impl/bank';
-import Achievements from './achievements';
-import Regions from '../../../map/regions';
-import Formulas from '../../../../info/formulas';
-import Minigame from '../../../minigames/minigame';
-import Inventory from './containers/impl/inventory';
-import Resource from '../../../globals/impl/resource';
-import Packet from '@kaetram/server/src/network/packet';
-import Incoming from '../../../../controllers/incoming';
-import Entities from '@kaetram/server/src/controllers/entities';
-
-import type World from '../../../world';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Connection from '../../../../network/connection';
-import type Area from '../../../map/areas/area';
-import type { PlayerInfo } from './../../../../database/mongodb/creator';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
-import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
-import { PlayerData } from '@kaetram/common/types/player';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import { Team } from '@kaetram/common/types/minigame.d';
+import { Team } from '@kaetram/common/api/minigame';
+
 import {
     Music,
     Camera,
@@ -56,6 +22,41 @@ import {
     Respawn,
     Effect
 } from '@kaetram/server/src/network/packets';
+
+import Mana from '../points/mana';
+import Character from '../character';
+import Formulas from '../../../../info/formulas';
+import Incoming from '../../../../controllers/incoming';
+
+import Skills from './skills';
+import Quests from './quests';
+import Handler from './handler';
+import Abilities from './abilities';
+import Equipments from './equipments';
+import Statistics from './statistics';
+import Bank from './containers/impl/bank';
+import Achievements from './achievements';
+import Inventory from './containers/impl/inventory';
+
+import type NPC from '../../npc/npc';
+import type Skill from './skill/skill';
+import type Map from '../../../map/map';
+import type Item from '../../objects/item';
+import type Regions from '../../../map/regions';
+import type Minigame from '../../../minigames/minigame';
+import type Resource from '../../../globals/impl/resource';
+import type Packet from '@kaetram/server/src/network/packet';
+import type Entities from '@kaetram/server/src/controllers/entities';
+import type World from '../../../world';
+import type MongoDB from '../../../../database/mongodb/mongodb';
+import type Connection from '../../../../network/connection';
+import type Area from '../../../map/areas/area';
+import type { PlayerInfo } from '../../../../database/mongodb/creator';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;

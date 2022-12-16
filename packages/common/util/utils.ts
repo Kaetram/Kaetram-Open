@@ -2,15 +2,17 @@
  * Useful utility functions that are used all throughout the server and client.
  */
 
+import crypto from 'node:crypto';
+import zlib from 'node:zlib';
+
 import _ from 'lodash-es';
-import crypto from 'crypto';
-import zlib from 'zlib';
+
+import config from '../config';
+import { Modules, Packets } from '../network';
 
 import log from './log';
-import config from '../config';
 
-import { Modules, Packets } from '../network';
-import { Bonuses, Stats } from '../types/item';
+import type { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
@@ -111,10 +113,7 @@ export default {
         for (let i = 0; i < keys.length; i++)
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return (
-            packet > -1 &&
-            packet < Packets[filtered[filtered.length - 1] as keyof typeof Packets] + 1
-        );
+        return packet > -1 && packet < Packets[filtered.at(-1) as keyof typeof Packets] + 1;
     },
 
     /**

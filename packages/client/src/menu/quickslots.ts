@@ -1,4 +1,4 @@
-import Player from '../entity/character/player/player';
+import type Player from '../entity/character/player/player';
 
 export default class QuickSlots {
     private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
