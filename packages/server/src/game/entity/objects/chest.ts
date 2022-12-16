@@ -5,7 +5,10 @@ import Entity from '../entity';
 
 import type Player from '../character/player/player';
 
-type ItemDrop = { key: string; count: number };
+interface ItemDrop {
+    key: string;
+    count: number;
+}
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {

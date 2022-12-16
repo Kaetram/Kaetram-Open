@@ -108,7 +108,7 @@ export default abstract class Quest {
          * it will check for that first. If the stage requires the player be given an item
          * it must be given before the conversation ends and quest progresses.
          */
-        if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
+        if (this.stageData.npc === npc.key && dialogue.length === player.talkIndex)
             if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
             else if (this.hasItemToGive()) {
                 if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))

@@ -1341,16 +1341,13 @@ export default class Renderer {
     }
 
     private hasLighting(lighting: RendererLighting): boolean {
-        for (let index = 0; index < this.lightings.length; index++) {
-            let { light } = this.lightings[index];
-
+        for (let { light } of this.lightings)
             if (
                 lighting.light.origX === light.origX &&
                 lighting.light.origY === light.origY &&
                 lighting.light.distance === light.distance
             )
                 return true;
-        }
 
         return false;
     }
@@ -1647,7 +1644,7 @@ export default class Renderer {
         callback: (data: RegionTile, index: number) => void,
         offset?: number
     ): void {
-        if (!this.map || !this.map.mapLoaded) return;
+        if (!this.map?.mapLoaded) return;
 
         this.forEachVisibleIndex((index) => {
             let indexData = this.map.data[index];
