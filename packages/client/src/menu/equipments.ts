@@ -31,8 +31,8 @@ export default class Equipments extends Menu {
     private next: HTMLElement = document.querySelector('#player-image-navigator > .next')!;
 
     // Stats elements
-    private attackStats: HTMLElement = document.querySelector('#attackStats')!;
-    private defenseStats: HTMLElement = document.querySelector('#defenseStats')!;
+    private attackStats: HTMLElement = document.querySelector('#attack-stats')!;
+    private defenseStats: HTMLElement = document.querySelector('#defense-stats')!;
     private bonuses: HTMLElement = document.querySelector('#bonuses')!;
 
     // Class properties
