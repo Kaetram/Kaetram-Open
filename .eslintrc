@@ -4,7 +4,7 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         // "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        // "plugin:@typescript-eslint/strict",
+        "plugin:@typescript-eslint/strict",
         "plugin:import/recommended",
         "plugin:import/typescript",
         "plugin:unicorn/recommended",
@@ -94,7 +94,7 @@
         // NOTE: Enable on ES2022
         "prefer-object-has-own": "off",
         "prefer-template": "warn",
-        "no-constant-binary-expression": "warn", //!
+        "no-constant-binary-expression": "warn",
         "curly": ["warn", "multi"],
         "one-var": ["warn", "consecutive"],
         "yoda": "warn",

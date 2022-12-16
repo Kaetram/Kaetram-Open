@@ -308,7 +308,7 @@ export default class App {
                 this.parchment.classList.add(destination);
 
                 // Focus on the first text field in the new scroll.
-                (document.querySelector(`#${destination} input`) as HTMLElement)?.focus();
+                document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
             }, 1000);
         } else {
             this.parchment.classList.remove(this.currentScroll);
@@ -375,7 +375,7 @@ export default class App {
 
         this.setValidation('status', message);
 
-        let status = document.querySelector('.status') as HTMLElement;
+        let status = document.querySelector('.status')!;
 
         if (status) status.innerHTML = message + this.getLoaderDots();
     }
@@ -398,8 +398,8 @@ export default class App {
      */
 
     public displayNews(): void {
-        let title = document.querySelector('#news-title') as HTMLElement,
-            content = document.querySelector('#news-content') as HTMLElement;
+        let title = document.querySelector('#news-title')!,
+            content = document.querySelector('#news-content')!;
 
         if (!title || !content) return;
 
@@ -416,8 +416,7 @@ export default class App {
 
             content.textContent = '';
 
-            for (let i = 0; i < changes.content.length; i++)
-                content.innerHTML += `${changes.content[i]}<br>`;
+            for (let cc of changes.content) content.innerHTML += `${cc}<br>`;
 
             this.body.classList.add('news');
         }
@@ -569,7 +568,7 @@ export default class App {
     private getUsernameField(): HTMLInputElement {
         return document.querySelector(
             this.isRegistering() ? '#register-name-input' : '#login-name-input'
-        ) as HTMLInputElement;
+        )!;
     }
 
     /**
@@ -590,7 +589,7 @@ export default class App {
     private getPasswordField(): HTMLInputElement {
         return document.querySelector(
             this.isRegistering() ? '#register-password-input' : '#login-password-input'
-        ) as HTMLInputElement;
+        )!;
     }
 
     /**

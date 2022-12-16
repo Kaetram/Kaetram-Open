@@ -23,9 +23,9 @@ import type { MobData } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-type RawData = {
+interface RawData {
     [key: string]: MobData;
-};
+}
 
 export default class Mob extends Character {
     public spawnX: number = this.x;

@@ -26,7 +26,7 @@ export default class Socket {
      * we default to normal server connection.
      */
 
-    private async getServer(): Promise<SerializedServer | void> {
+    private async getServer(): Promise<SerializedServer | undefined> {
         // Skip if hub is disabled in the config.
         if (!this.config.hub) return;
 

@@ -192,7 +192,7 @@ export default class Skills {
             skills = this.getCombatSkills();
 
         // Faster than using lodash.
-        for (let i = 0; i < skills.length; i++) level += skills[i].level - 1;
+        for (let skill of skills) level += skill.level - 1;
 
         return level;
     }

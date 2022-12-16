@@ -344,7 +344,7 @@ export default class Incoming {
         if (!text || text.length === 0 || !/\S/.test(text)) return;
 
         // Handle commands if the prefix is / or ;
-        if (text.charAt(0) === '/' || text.charAt(0) === ';') return this.commands.parse(text);
+        if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
         this.player.chat(Filter.clean(text));
     }

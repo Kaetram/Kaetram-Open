@@ -79,24 +79,24 @@ export default class Entities {
         count = 1,
         enchantments: Enchantments = {}
     ): Item {
-        return <Item>this.collections.items.spawn({
+        return this.collections.items.spawn({
             key,
             x,
             y,
             dropped,
             count,
             enchantments
-        });
+        })!;
     }
 
     public spawnMob(key: string, x: number, y: number, plugin = false): Mob {
-        return <Mob>this.collections.mobs.spawn({
+        return this.collections.mobs.spawn({
             world: this.world,
             key,
             x,
             y,
             plugin
-        });
+        })!;
     }
 
     /**
@@ -117,7 +117,7 @@ export default class Entities {
         achievement?: string,
         mimic = false
     ): Chest {
-        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement, mimic });
+        return this.collections.chests.spawn({ items, x, y, isStatic, achievement, mimic })!;
     }
 
     /**
@@ -129,7 +129,7 @@ export default class Entities {
      */
 
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        let projectile = <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
+        let projectile = this.collections.projectiles.spawn({ owner, target, hit })!;
 
         // Remove on impact
         projectile.onImpact(() => this.removeProjectile(projectile));

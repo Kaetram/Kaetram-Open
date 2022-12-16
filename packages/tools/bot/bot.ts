@@ -109,7 +109,7 @@ export default class Bot {
     private send(connection: Socket, packet: number, data: (string | number)[]): void {
         let json = JSON.stringify([packet, data]);
 
-        if (connection && connection.connected) connection.send(json);
+        if (connection?.connected) connection.send(json);
     }
 
     private move(bot: Entity): void {

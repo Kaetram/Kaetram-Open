@@ -213,7 +213,7 @@ export default class Map {
                 let dynamicArea = region.getDynamicArea(x, y);
 
                 // Skip if no dynamic area is found or it doesn't fulfill requirements.
-                if (dynamicArea && dynamicArea.fulfillsRequirement(player)) {
+                if (dynamicArea?.fulfillsRequirement(player)) {
                     let mappedTile = dynamicArea.getMappedTile(x, y);
 
                     // Check collision if we can find a mapping tile.

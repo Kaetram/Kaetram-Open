@@ -13,7 +13,9 @@ import type {
     RegionTileData
 } from '@kaetram/common/types/map';
 
-export type CursorTiles = { [tileId: number]: string };
+export interface CursorTiles {
+    [tileId: number]: string;
+}
 
 interface TilesetInfo extends HTMLImageElement {
     path: string;
