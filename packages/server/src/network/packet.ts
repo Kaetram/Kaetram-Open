@@ -23,8 +23,8 @@ export default class Packet {
      */
 
     public serialize(): unknown {
-        return typeof this.opcode !== 'undefined'
-            ? [this.id, this.opcode, this.data, this.bufferSize]
-            : [this.id, this.data, this.bufferSize];
+        return this.opcode === undefined
+            ? [this.id, this.data, this.bufferSize]
+            : [this.id, this.opcode, this.data, this.bufferSize];
     }
 }

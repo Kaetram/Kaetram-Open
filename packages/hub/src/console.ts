@@ -8,7 +8,7 @@ export default class Console {
         let { stdin } = process;
 
         stdin.addListener('data', (data) => {
-            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            let message = data.toString().replaceAll(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
@@ -21,10 +21,11 @@ export default class Console {
             let username: string;
 
             switch (command) {
-                case 'server':
+                case 'server': {
                     return this.servers.findEmpty((server: Server) => console.log(server));
+                }
 
-                case 'player':
+                case 'player': {
                     username = blocks.join(' ');
 
                     if (!username) {
@@ -35,6 +36,7 @@ export default class Console {
                     console.log(this.servers.findPlayer(username));
 
                     break;
+                }
             }
         });
     }

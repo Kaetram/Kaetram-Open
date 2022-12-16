@@ -3,15 +3,12 @@
 #attack-info {
     position: absolute;
     left: 40%;
-
     display: none;
-
     background-color: rgb(0 0 0 / 50%);
 
     .name,
     .health {
         position: absolute;
-
         font-family: AdvoCut, sans-serif;
         color: white;
         text-align: center;
@@ -19,7 +16,6 @@
 
     .name {
         overflow: hidden;
-
         width: 100%;
     }
 
@@ -35,9 +31,7 @@
 
     .health {
         left: 5%;
-
         overflow: hidden;
-
         width: 90%;
     }
 }

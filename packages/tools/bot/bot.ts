@@ -89,10 +89,11 @@ export default class Bot {
         let [opcode, info] = message;
 
         switch (opcode) {
-            case Packets.Handshake:
+            case Packets.Handshake: {
                 this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
 
                 break;
+            }
 
             case Packets.Welcome: {
                 this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
@@ -100,8 +101,9 @@ export default class Bot {
                 break;
             }
 
-            case Packets.Combat:
+            case Packets.Combat: {
                 break;
+            }
         }
     }
 
