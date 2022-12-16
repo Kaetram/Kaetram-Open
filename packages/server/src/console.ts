@@ -19,7 +19,7 @@ export default class Console {
         let stdin = process.openStdin();
 
         stdin.addListener('data', (data: Buffer) => {
-            let message = data.toString().replaceAll(/(\r\n|\n|\r)/gm, ''),
+            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
