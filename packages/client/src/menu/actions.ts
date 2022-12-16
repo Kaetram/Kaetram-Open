@@ -42,7 +42,7 @@ export default class Actions extends Menu {
     public override add(menuAction: Modules.MenuActions): void {
         let element = document.createElement('li'),
             action = document.createElement('div'),
-            idSuffix = menuAction.toLowerCase().replaceAll(/[^\dA-Za-z]+/g, '-');
+            idSuffix = menuAction.toLowerCase().replace(/[^\dA-Za-z]+/g, '-');
 
         action.classList.add('action-button');
         action.id = `action-button-${idSuffix}`;
