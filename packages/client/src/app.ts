@@ -260,7 +260,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
-        this.worldSelectButton.hidden = this.showWorldSelect;
+        this.worldSelectButton.hidden = !this.showWorldSelect;
         this.gameVersion.hidden = true;
 
         this.updateLoader();
