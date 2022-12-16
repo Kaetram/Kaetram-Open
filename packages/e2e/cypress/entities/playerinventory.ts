@@ -1,4 +1,4 @@
-import { PlayerInventorySlot } from './playerinventoryslot';
+import type { PlayerInventorySlot } from './playerinventoryslot';
 
 export interface PlayerInventory {
     username: string;

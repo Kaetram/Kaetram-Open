@@ -1,10 +1,9 @@
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+
 import Entity from '../entity';
 
-import Utils from '@kaetram/common/util/utils';
-
 import type Player from '../character/player/player';
-
-import { Modules } from '@kaetram/common/network';
 
 type ItemDrop = { key: string; count: number };
 type OpenCallback = (player?: Player) => void;

@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import { PlayerInfo } from '../entities/playerinfo';
-import { PlayerInventory } from '../entities/playerinventory';
+import type { PlayerInfo } from '../entities/playerinfo';
+import type { PlayerInventory } from '../entities/playerinventory';
 
 type CollectionName =
     | 'player_achievements'

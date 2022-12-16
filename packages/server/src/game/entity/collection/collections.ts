@@ -1,4 +1,3 @@
-import World from '@kaetram/server/src/game/world';
 import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
 import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
@@ -6,10 +5,12 @@ import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
 import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
 import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
 import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
-import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
-import Entity from '../entity';
+
+import type Collection from '@kaetram/server/src/game/entity/collection/collection';
+import type World from '@kaetram/server/src/game/world';
+import type Entity from '../entity';
 
 /**
  * A class for collections of entities of a certain type in the game.

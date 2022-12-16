@@ -1,8 +1,9 @@
-import Util from '../utils/util';
-
 import { Packets } from '@kaetram/common/network';
 
+import Util from '../utils/util';
+
 import type Game from '../game';
+
 export default class ChatController {
     private chatBox: HTMLElement = document.querySelector('#chat')!;
     private log: HTMLElement = document.querySelector('#chat-log')!;

@@ -1,5 +1,6 @@
 import Menu from './menu';
-import Game from '../game';
+
+import type Game from '../game';
 
 export default class Settings extends Menu {
     private musicSlider: HTMLInputElement = document.querySelector('#music')!;

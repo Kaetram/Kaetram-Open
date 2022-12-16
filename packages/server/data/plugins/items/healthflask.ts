@@ -1,6 +1,5 @@
-import { ItemData } from '@kaetram/common/types/item';
+import type { ItemData } from '@kaetram/common/types/item';
 import type { Plugin } from '.';
-
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 
 export default class HealthFlask implements Plugin {

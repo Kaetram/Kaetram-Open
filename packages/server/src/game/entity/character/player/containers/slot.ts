@@ -1,7 +1,6 @@
-import Item from '../../../objects/item';
-
-import { Enchantments } from '@kaetram/common/types/item';
-import { SlotData } from '@kaetram/common/types/slot';
+import type Item from '../../../objects/item';
+import type { Enchantments } from '@kaetram/common/types/item';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 export default class Slot {
     public edible = false;

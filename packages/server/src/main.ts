@@ -1,3 +1,5 @@
+import { exit } from 'node:process';
+
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
@@ -8,7 +10,6 @@ import Loader from './info/loader';
 import Console from './console';
 
 import type Connection from './network/connection';
-import { exit } from 'process';
 
 class Main {
     private world?: World;

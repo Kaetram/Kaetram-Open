@@ -1,12 +1,11 @@
 import _ from 'lodash';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Menu from '../../menu';
-
 import log from '../../../lib/log';
-import Player from '../../../entity/character/player/player';
-import Ability from '../../../entity/character/player/ability';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import type Player from '../../../entity/character/player/player';
+import type Ability from '../../../entity/character/player/ability';
 
 interface AbilityElement extends HTMLElement {
     key?: string;
@@ -131,7 +130,7 @@ export default class Abilities extends Menu {
      * @param event Contains the target slot that is exited.
      */
 
-    private dragLeave(event: DragEvent): void {
+    private dragLeave(_event: DragEvent): void {
         //
     }
 

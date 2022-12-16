@@ -1,16 +1,14 @@
 import _ from 'lodash';
-
-import Menu from './menu';
-
-import SpritesController from '../controllers/sprites';
-
-import Player from '../entity/character/player/player';
-import Equipment from '../entity/character/player/equipment/equipment';
+import { Modules } from '@kaetram/common/network';
 
 import Util from '../utils/util';
 
-import { Modules } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
+import Menu from './menu';
+
+import type SpritesController from '../controllers/sprites';
+import type Player from '../entity/character/player/player';
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type SelectCallback = (type: Modules.Equipment) => void;
 

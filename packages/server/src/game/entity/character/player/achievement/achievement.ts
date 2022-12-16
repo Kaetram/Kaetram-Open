@@ -1,15 +1,13 @@
 import _ from 'lodash-es';
-
-import Player from '../player';
-import Mob from '../../mob/mob';
-import NPC from '../../../npc/npc';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import { Modules } from '@kaetram/common/network';
-import { PopupData } from '@kaetram/common/types/popup';
-import { RawAchievement, AchievementData } from '@kaetram/common/types/achievement';
+import type Player from '../player';
+import type Mob from '../../mob/mob';
+import type NPC from '../../../npc/npc';
+import type { Modules } from '@kaetram/common/network';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { RawAchievement, AchievementData } from '@kaetram/common/types/achievement';
 
 /**
  * An achievement is a simpler version of the quest system. Think

@@ -1,5 +1,6 @@
-import Player from '../../player';
 import Ability from '../ability';
+
+import type Player from '../../player';
 
 export default class ThickSkin extends Ability {
     public constructor(level: number, quickSlot = -1) {

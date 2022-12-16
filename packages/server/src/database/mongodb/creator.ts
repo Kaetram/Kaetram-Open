@@ -1,14 +1,10 @@
 import bcryptjs from 'bcryptjs';
-import { Db } from 'mongodb';
-
-import type Player from '../../game/entity/character/player/player';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import { Modules } from '@kaetram/common/network';
-
-import type { Collection } from 'mongodb';
+import type { Db, Collection } from 'mongodb';
+import type Player from '../../game/entity/character/player/player';
+import type { Modules } from '@kaetram/common/network';
 
 export interface PoisonInfo {
     type: number; // Type of poison.

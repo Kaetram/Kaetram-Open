@@ -1,4 +1,4 @@
-import type { Tile } from './map';
+import type { Tile, RotatedTile } from './map';
 
 // Tiles used when sending region data to the client.
 export type RegionTile = Tile | RotatedTile | RotatedTile[];

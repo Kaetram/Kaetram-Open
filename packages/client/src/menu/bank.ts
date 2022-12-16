@@ -1,12 +1,13 @@
-import Menu from './menu';
-import Inventory from './inventory';
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import { Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
-import _ from 'lodash-es';
+import Menu from './menu';
+
+import type Inventory from './inventory';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 
