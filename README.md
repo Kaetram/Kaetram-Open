@@ -3,7 +3,8 @@
 [![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/releases/latest 'Version')
 [![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open)][license]
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com&style=flat)](https://kaetram.com 'Website')
-[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions 'Workflow Status')
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Kaetram/Kaetram-Open/build.yml?branch=develop&label=build)](https://github.com/Kaetram/Kaetram-Open/actions/workflows/build.yml 'Build Status')
+[![E2E Status](https://img.shields.io/github/actions/workflow/status/Kaetram/Kaetram-Open/e2e.yml?branch=develop&label=e2e)](https://github.com/Kaetram/Kaetram-Open/actions/workflows/e2e.yml 'E2E Status')
 [![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)][issues]
 
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
