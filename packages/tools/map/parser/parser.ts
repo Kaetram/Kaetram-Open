@@ -5,7 +5,6 @@ import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 
 import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
-
 import type {
     ProcessedAnimation,
     ProcessedMap,

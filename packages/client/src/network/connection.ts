@@ -29,7 +29,6 @@ import type { PlayerData } from '@kaetram/common/types/player';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
-
 import type {
     AbilityPacket,
     AchievementPacket,

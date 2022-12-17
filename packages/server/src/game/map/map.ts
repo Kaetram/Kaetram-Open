@@ -17,7 +17,6 @@ import type {
     RegionTile,
     FlatTile
 } from '@kaetram/common/types/map';
-
 import type World from '../world';
 import type Areas from './areas/areas';
 import type Player from '../entity/character/player/player';
