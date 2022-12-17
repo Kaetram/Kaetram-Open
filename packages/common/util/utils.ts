@@ -24,7 +24,7 @@ export default {
      */
 
     createInstance(identifier = 0): string {
-        return identifier.toString() + this.randomInt(1000, 100_000) + ++this.counter;
+        return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
     },
 
     /**

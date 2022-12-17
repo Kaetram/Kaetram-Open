@@ -10,7 +10,6 @@ import { Store as StorePacket } from '../network/packets';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type World from '../game/world';
-
 import type {
     SerializedStoreInfo,
     SerializedStoreItem,
