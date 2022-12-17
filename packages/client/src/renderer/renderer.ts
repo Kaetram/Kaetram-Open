@@ -1,5 +1,4 @@
 import _ from 'lodash-es';
-
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 
 import Character from '../entity/character/character';

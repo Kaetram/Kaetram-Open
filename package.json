@@ -14,10 +14,10 @@
         "hub": "yarn packages hub",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint:js": "eslint packages/**/*.ts --ignore-path .gitignore",
+        "lint:script": "eslint packages/**/*.ts --ignore-path .gitignore",
         "lint:style": "stylelint packages/**/*.scss --ignore-path .gitignore",
-        "lint:fix": "yarn lint:js --fix && yarn lint:style --fix",
-        "lint": "yarn lint:js && yarn lint:style",
+        "lint:fix": "yarn lint:script --fix && yarn lint:style --fix",
+        "lint": "yarn lint:script && yarn lint:style",
         "test:run": "yarn packages test:run",
         "test:open": "yarn packages test:open",
         "map": "yarn packages map"

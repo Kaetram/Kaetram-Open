@@ -11,7 +11,6 @@ import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
 import type { PopupData } from '@kaetram/common/types/popup';
-
 import type {
     RawAchievement,
     AchievementData,
