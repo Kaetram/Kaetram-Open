@@ -15,7 +15,6 @@ import type Connection from '../network/connection';
 import type World from '../game/world';
 import type Entities from './entities';
 import type MongoDB from '../database/mongodb/mongodb';
-
 import type {
     AbilityPacket,
     ContainerPacket,
