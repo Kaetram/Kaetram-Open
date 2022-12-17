@@ -73,7 +73,7 @@ export default class PointerController {
             height: '64px',
             margin: 'inherit',
             marginTop: '-18px',
-            background: `url("${pointer}") no-repeat`
+            background: `url("${pointer}") no-repeat -4px`
         });
     }
 
@@ -97,7 +97,7 @@ export default class PointerController {
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = game.map.tileSize * this.getZoom(), // 16 * scale
             x = (posX - camera.x) * this.getZoom(),
-            width = parseInt(element.css('width')) + 24,
+            width = parseInt(element.css('width')),
             offset = width / 2 - tileSize / 2,
             y = (posY - camera.y) * this.getZoom() - tileSize,
             outX = x / canvasWidth,
