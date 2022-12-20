@@ -53,28 +53,28 @@
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
-        "item": "logs"
+        "item": "icelogs"
     },
 
     "iceoak2": {
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
-        "item": "logs"
+        "item": "icelogs"
     },
 
     "iceoak3": {
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
-        "item": "logs"
+        "item": "icelogs"
     },
 
     "icepalm": {
         "levelRequirement": 15,
         "experience": 55,
         "difficulty": 65,
-        "item": "logs"
+        "item": "icepalmlogs"
     },
 
     "pine": {
