@@ -194,7 +194,7 @@ export default class Player extends Character {
         this.userAgent = data.userAgent;
         this.regionsLoaded = data.regionsLoaded || [];
 
-        this.setPoison(data.poison.type, data.poison.start);
+        this.setPoison(data.poison.type, Date.now() - data.poison.remaining);
         this.setLastWarp(data.lastWarp);
 
         this.hitPoints.updateHitPoints(data.hitPoints);

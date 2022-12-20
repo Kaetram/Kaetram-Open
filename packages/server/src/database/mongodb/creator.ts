@@ -12,7 +12,7 @@ import type { Collection } from 'mongodb';
 
 export interface PoisonInfo {
     type: number; // Type of poison.
-    start: number; // When the poison started.
+    remaining: number; // How much of the poison is left.
 }
 
 export interface PlayerInfo {
@@ -254,7 +254,7 @@ export default class Creator {
             rights: player.rights,
             poison: {
                 type: player.poison ? player.poison.type : -1,
-                start: player.poison ? player.poison.start : -1
+                remaining: player.poison ? player.poison.getRemainingTime() : -1
             },
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
