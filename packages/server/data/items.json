@@ -766,7 +766,7 @@
     "skill": "lumberjacking",
     "attackStats": {
       "crush": 4,
-      "slash": 2,
+      "slash": 4,
       "stab": 2,
       "magic": 0
     },
@@ -784,7 +784,7 @@
     "lumberjacking": 3,
     "attackStats": {
       "crush": 4,
-      "slash": 2,
+      "slash": 8,
       "stab": 2,
       "magic": 0
     },
@@ -803,7 +803,7 @@
     "lumberjacking": 4,
     "attackStats": {
       "crush": 4,
-      "slash": 2,
+      "slash": 12,
       "stab": 2,
       "magic": 0
     },
@@ -821,7 +821,7 @@
     "lumberjacking": 6,
     "attackStats": {
       "crush": 4,
-      "slash": 2,
+      "slash": 17,
       "stab": 2,
       "magic": 0
     },
@@ -837,15 +837,16 @@
     "name": "Gold Axe",
     "price": 25000,
     "lumberjacking": 7,
+    "level": 68,
     "attackStats": {
-      "crush": 4,
-      "slash": 2,
+      "crush": 12,
+      "slash": 32,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
+      "accuracy": 5,
+      "strength": 12,
       "archery": 0
     }
   },
@@ -3005,7 +3006,7 @@
     "name": "Rabbit Armour",
     "price": 20000,
     "movementSpeed": 210,
-    "level": 63,
+    "level": 88,
     "attackStats": {
       "crush": 15,
       "slash": 30,
@@ -3196,7 +3197,26 @@
 
   "blackspiderarmor": {
     "type": "armour",
-    "name": "Black Spider Armour"
+    "name": "Black Spider Armour",
+    "price": 25000,
+    "level": 54,
+    "attackStats": {
+      "crush": 20,
+      "slash": 20,
+      "stab": 20,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 34,
+      "stab": 18,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 12,
+      "archery": 7
+    }
   },
 
   "frogarmor": {

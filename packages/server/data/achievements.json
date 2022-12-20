@@ -94,6 +94,11 @@
         "description": "I literally said to tread carefully."
     },
 
+    "goldengolem": {
+        "name": "Golden Golem",
+        "description": "Defeat the Golden Golem!"
+    },
+
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Defeat the Skeleton King!",
@@ -124,6 +129,11 @@
 
         "rewardSkill": "magic",
         "rewardExperience": 400
+    },
+
+    "webdeveloper": {
+        "name": "Web Developer",
+        "description": "Spiders are developing webs left and right!"
     },
 
     "vulture": {
