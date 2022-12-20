@@ -531,10 +531,11 @@ export default class Handler {
      * Callback for when the player's poison status updates.
      */
 
-    private handlePoison(type = -1): void {
+    private handlePoison(type = -1, exists = false): void {
         // Notify the player when the poison status changes.
-        if (type !== -1) this.player.notify('You have been poisoned.');
-        else this.player.notify('The poison has worn off.');
+        if (type !== -1) {
+            if (exists) this.player.notify(`You have been poisoned!`);
+        } else this.player.notify('The poison has worn off.');
 
         this.player.send(new PoisonPacket(type));
     }
