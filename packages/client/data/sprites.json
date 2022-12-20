@@ -575,7 +575,7 @@
         "row": 8
       }
     },
-    "offsetX": -5,
+    "offsetX": -7,
     "offsetY": -13
   },
   {
@@ -1290,7 +1290,7 @@
     "offsetY": -8
   },
   {
-    "id": "bluecockroach",
+    "id": "greencockroach",
     "width": 42,
     "height": 42,
     "animations": {
@@ -5322,7 +5322,7 @@
         "row": 8
       }
     },
-    "offsetX": -5,
+    "offsetX": -8,
     "offsetY": -13
   },
   {
@@ -6043,7 +6043,7 @@
       }
     },
     "offsetX": -8,
-    "offsetY": -12
+    "offsetY": -24
   },
   {
     "id": "goldmedal",
