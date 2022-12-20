@@ -495,7 +495,7 @@ export default class Player extends Character {
             regionDiff = now - this.lastRegionChange;
 
         // Firstly ensure that the last step was behaving normally.
-        if (stepDiff > this.movementSpeed) return false;
+        if (stepDiff > this.getMovementSpeed()) return false;
 
         // A region change may trigger a movement anomaly, so we ignore movement within 1 second of a region change.
         if (regionDiff < 1000) return false;
@@ -858,12 +858,19 @@ export default class Player extends Character {
      */
 
     public getMovementSpeed(): number {
-        let { movementSpeed, running } = this;
+        let speed = Modules.Defaults.MOVEMENT_SPEED, // Start with default.
+            armour = this.equipment.getArmour();
+
+        // Update the movement speed with that of the armour currently wielded.
+        if (armour.hasMovementModifier()) speed = armour.movementSpeed;
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (running) movementSpeed = Math.floor(movementSpeed * 0.9);
+        if (this.running) speed = Math.floor(speed * 0.9);
 
-        return movementSpeed;
+        // Update the movement speed if there is a change from default.
+        if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
+
+        return speed;
     }
 
     /**
@@ -1261,6 +1268,8 @@ export default class Player extends Character {
      */
 
     public sync(): void {
+        let armour = this.equipment.getArmour();
+
         // Update attack range each-time we sync.
         this.attackRange = this.isRanged() ? 7 : 1;
 

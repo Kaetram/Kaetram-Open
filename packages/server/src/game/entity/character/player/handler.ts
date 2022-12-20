@@ -537,8 +537,6 @@ export default class Handler {
         else this.player.notify('The poison has worn off.');
 
         this.player.send(new PoisonPacket(type));
-
-        log.debug(`Player ${this.player.instance} updated poison status.`);
     }
 
     /**
