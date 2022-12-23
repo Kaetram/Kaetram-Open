@@ -3778,6 +3778,12 @@
     "type": "object",
     "name": "Ice Palm Logs",
     "price": 50
+  },
+
+  "bloodwoodlogs": {
+    "type": "object",
+    "name": "Bloodwood Logs",
+    "price": 150
   }
 
 }
