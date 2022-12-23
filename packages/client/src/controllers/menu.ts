@@ -61,11 +61,10 @@ export default class MenuController {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));
+        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
-
-        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
 
         this.load();
     }
