@@ -128,6 +128,7 @@ export default class Player extends Character {
     public pingTime = 0;
 
     private lastNotify = 0;
+    private lastEdible = 0;
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
@@ -528,7 +529,11 @@ export default class Player extends Character {
 
                 if (!item) return;
 
-                if (item.edible && item.plugin?.onUse(this)) this.inventory.remove(index, 1);
+                // Checks if the player can eat and uses the item's plugin to handle the action.
+                if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
+                    this.inventory.remove(index, 1);
+                    this.lastEdible = Date.now();
+                }
 
                 if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
@@ -1195,6 +1200,14 @@ export default class Player extends Character {
 
     public override isPoisonous(): boolean {
         return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last edible.
+     */
+
+    private canEat(): boolean {
+        return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
     }
 
     /**
