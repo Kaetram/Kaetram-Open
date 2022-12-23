@@ -85,9 +85,16 @@
     },
 
     "willow": {
-        "levelRequirement": 45,
+        "levelRequirement": 30,
         "experience": 150,
         "difficulty": 160,
         "item": "logs"
+    },
+
+    "bloodwood": {
+        "levelRequirement": 40,
+        "experience": 350,
+        "difficulty": 240,
+        "item": "bloodwoodlogs"
     }
 }
