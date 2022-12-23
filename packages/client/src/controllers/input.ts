@@ -196,6 +196,10 @@ export default class InputController {
                 this.game.menu.getProfile().toggle();
                 return;
 
+            case 'h':
+                this.game.menu.getInventory().selectEdible();
+                break;
+
             case 't':
                 target = this.game.entities.get(this.game.player.lastTarget);
 
