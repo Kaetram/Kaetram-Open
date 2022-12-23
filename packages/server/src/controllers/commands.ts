@@ -676,7 +676,7 @@ export default class Commands {
                 break;
 
             case 'aoe':
-                this.player.hit(100, this.player, 2);
+                this.player.hit(600, this.player, 2);
                 break;
 
             case 'bank':
