@@ -7691,6 +7691,17 @@
     "offsetY": 0
   },
   {
+    "id": "item-bloodwoodlogs",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-pickle",
     "width": 8,
     "height": 16,
