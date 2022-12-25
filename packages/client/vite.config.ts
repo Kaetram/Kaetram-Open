@@ -8,6 +8,8 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 
 import { name, description } from '../../package.json';
 
+import { internalIpV4 } from 'internal-ip';
+
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
 interface ExposedConfig extends Pick<Config, typeof expose[number]> {
@@ -52,9 +54,10 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     });
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
     let isProduction = mode === 'production',
-        env = loadEnv(isProduction);
+        env = loadEnv(isProduction),
+        ipv4 = await internalIpV4();
 
     return {
         plugins: [
@@ -98,7 +101,16 @@ export default defineConfig(({ mode }) => {
             sourcemap: true,
             chunkSizeWarningLimit: 4e3
         },
-        server: { port: 9000 },
+        server: {
+            host: '0.0.0.0',
+            port: 9000,
+            strictPort: true,
+            hmr: {
+                protocol: 'ws',
+                host: ipv4!,
+                port: 5183
+            }
+        },
         define: { 'window.config': env }
     };
 });
