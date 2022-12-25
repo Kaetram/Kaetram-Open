@@ -65,18 +65,24 @@ export default class EntityHandler {
     }
 
     /**
-     * Sends a movement update to the server.
+     * Sends a movement update to the server. Yes this is exploitable and we are
+     * aware of that. The pathfinding system will be moved to the server-side and a
+     * tick-based system will be implemented for entity movement. However, that will
+     * be done as the last update in the alpha stages and once NodeJS 14 is deprecated.
      */
 
     private sendMovement(): void {
         let { entity, game } = this;
 
-        if (entity.isMob() && (entity.hasAttackers() || entity.hasTarget()))
-            game.socket.send(Packets.Movement, {
-                opcode: Opcodes.Movement.Entity,
-                targetInstance: entity.instance,
-                requestX: entity.gridX,
-                requestY: entity.gridY
-            });
+        if (!entity.isMob()) return;
+
+        if (!entity.hasTarget() && !entity.hasAttackers()) return;
+
+        game.socket.send(Packets.Movement, {
+            opcode: Opcodes.Movement.Entity,
+            targetInstance: entity.instance,
+            requestX: entity.gridX,
+            requestY: entity.gridY
+        });
     }
 }
