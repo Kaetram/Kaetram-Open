@@ -163,6 +163,9 @@
 
     "forestdragon": {
         "name": "Forest Dragon",
-        "description": "Defeat the dragon laying dormant under Mudwich."
+        "description": "Defeat the dragon laying dormant under Mudwich.",
+
+        "rewardSkill": "health",
+        "rewardExperience": 52600
     }
 }
