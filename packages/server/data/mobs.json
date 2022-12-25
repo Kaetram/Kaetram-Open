@@ -1872,6 +1872,7 @@
     "movementSpeed": 600,
     "respawnDelay": 180000,
     "projectileName": "projectile-fireball",
+    "achievement": "forestdragon",
     "plugin": "forestdragon"
   },
 
