@@ -26,11 +26,33 @@ export default class ForestDragon extends Default {
         // 1 in 3 chance to trigger a special attack.
         if (Utils.randomInt(1, 3) !== 2) return;
 
-        // Queen ant attacks with range and inflicts terror.
+        // Inflict terror on the target.
         this.mob.attackRange = 9;
         this.mob.projectileName = 'projectile-terror';
 
         this.specialAttack = true;
+    }
+
+    /**
+     * Updates the attack style with each call of the combat loop.
+     */
+
+    protected override handleCombatLoop(): void {
+        super.handleCombatLoop();
+
+        if (this.specialAttack) return;
+
+        // Determine whether or not to use ranged attacks.
+        let useRanged =
+            this.mob.getDistance(this.mob.target!) > 1 ||
+            this.mob.target!.isRanged() ||
+            this.mob.target!.moving;
+
+        // Update the mob's range distance.
+        this.mob.attackRange = useRanged ? 10 : 1;
+
+        // Updates the projectile per combat loop to reset the special attack.
+        if (useRanged) this.mob.projectileName = 'projectile-fireball';
     }
 
     /**
