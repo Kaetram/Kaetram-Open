@@ -1,0 +1,3 @@
+[submodule "packages/app"]
+	path = packages/app
+	url = https://github.com/Kaetram/Kaetram-App
