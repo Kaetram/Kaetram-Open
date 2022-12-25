@@ -1857,14 +1857,14 @@
   },
 
   "forestdragon": {
-    "name": "Dragon of the Forest",
+    "name": "Forest Dragon",
     "drops": {"dragonarmor": 25, "bamboospear": 25, "gold": 900, "marblependant": 25, "essentialrage": 25},
     "hitPoints": 4500,
     "defenseLevel": 200,
     "attackLevel": 80,
     "experience": 4250,
     "level": 258,
-    "aggroRange": 8,
+    "aggroRange": 10,
     "attackRange": 1,
     "alwaysAggressive": true,
     "roaming": true,
