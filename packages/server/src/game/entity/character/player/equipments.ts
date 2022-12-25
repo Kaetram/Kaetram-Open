@@ -175,7 +175,7 @@ export default class Equipments {
      */
 
     public getArmour(): Armour {
-        return this.getEquipment(Modules.Equipment.Armour);
+        return this.getEquipment(Modules.Equipment.Armour) as Armour;
     }
 
     /**
