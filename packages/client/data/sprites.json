@@ -18552,6 +18552,7 @@
   },
   {
     "id": "projectile-fireball",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18566,6 +18567,7 @@
   },
   {
     "id": "projectile-fireball2",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18580,6 +18582,7 @@
   },
   {
     "id": "projectile-iceball",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18594,6 +18597,7 @@
   },
   {
     "id": "projectile-boulder",
+    "idleSpeed": 75,
     "width": 32,
     "height": 32,
     "animations": {
@@ -18608,6 +18612,7 @@
   },
   {
     "id": "projectile-pinearrow",
+    "idleSpeed": 75,
     "width": 24,
     "height": 24,
     "animations": {
@@ -18622,6 +18627,7 @@
   },
   {
     "id": "projectile-none",
+    "idleSpeed": 75,
     "width": 64,
     "height": 64,
     "animations": {
@@ -18636,6 +18642,7 @@
   },
   {
     "id": "projectile-tornado",
+    "idleSpeed": 75,
     "width": 48,
     "height": 64,
     "animations": {
@@ -18650,6 +18657,7 @@
   },
   {
     "id": "projectile-terror",
+    "idleSpeed": 75,
     "width": 64,
     "height": 64,
     "animations": {
