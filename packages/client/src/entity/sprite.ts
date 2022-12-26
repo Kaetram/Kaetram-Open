@@ -86,7 +86,7 @@ export default class Sprite {
         this.offsetY = sprite.offsetY ?? -Utils.tileSize;
         // this.offsetAngle = sprite.offsetAngle ?? 0;
 
-        this.idleSpeed = sprite.idleSpeed ?? 450;
+        this.idleSpeed = sprite.idleSpeed || 450;
     }
 
     public createAnimations(): Animations {
