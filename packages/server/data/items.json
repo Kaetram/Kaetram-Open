@@ -599,16 +599,16 @@
   "candybar": {
     "type": "weapon",
     "name": "Candy Bar",
-    "level": 100,
+    "level": 148,
     "attackStats": {
-      "crush": 40,
+      "crush": 50,
       "slash": 10,
       "stab": 10,
       "magic": 30
     },
     "bonuses": {
       "accuracy": 12,
-      "strength": 16,
+      "strength": 22,
       "archery": 0
     }
   },

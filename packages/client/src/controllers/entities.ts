@@ -198,9 +198,6 @@ export default class EntitiesController {
         projectile.setStart(attacker.x, attacker.y);
         projectile.setTarget(target);
 
-        projectile.setSprite(this.game.sprites.get(projectile.name));
-        projectile.setAnimation('travel', projectile.getSpeed());
-
         projectile.angled = true;
         projectile.type = info.type;
 
@@ -210,8 +207,8 @@ export default class EntitiesController {
 
         projectile.onImpact(() => {
             /**
-             * The data in the projectile is only for rendering purposes
-             * there is nothing you can change for the actual damage output here.
+             * Data contained within the projectile is solely for rendering purposes.
+             * The logic is handled in the backend.
              */
 
             if (info.hitType === Modules.Hits.Explosive) target.setEffect(Modules.Effects.Fireball);
