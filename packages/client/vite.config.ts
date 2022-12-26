@@ -91,7 +91,11 @@ export default defineConfig(({ mode }) => {
             }),
             legacy(),
             createHtmlPlugin({
-                minify: isProduction && { processScripts: ['application/ld+json'] }
+                minify: isProduction && { processScripts: ['application/ld+json'] },
+                pages: [
+                    { filename: 'index.html', template: 'index.html' },
+                    { filename: 'privacy.html', template: 'privacy.html' }
+                ]
             })
         ],
         build: {
