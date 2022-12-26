@@ -2036,6 +2036,25 @@
     "respawnDelay": 95000
   },
 
+  "santa": {
+    "name": "Santa",
+    "drops": {"gold": 250, "candybar": 60},
+    "hitPoints": 4500,
+    "defenseLevel": 45,
+    "attackLevel": 65,
+    "experience": 3250,
+    "level": 240,
+    "aggroRange": 7,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 500,
+    "respawnDelay": 180000,
+    "projectile": "projectile-gift",
+    "plugin": "santa"
+  },
+
   "brownmouse": {
     "name": "Brown Mouse",
     "drops": {"ratarcherarmor": 30, "ratarmor": 30, "gold": 80},
