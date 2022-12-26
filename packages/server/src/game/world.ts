@@ -147,6 +147,8 @@ export default class World {
 
     public cleanCombat(cleanCharacter: Character): void {
         this.entities.forEachCharacter((character: Character) => {
+            if (character.hasAttacker(cleanCharacter)) character.removeAttacker(cleanCharacter);
+
             if (!character.hasTarget()) return;
 
             if (character.target?.instance === cleanCharacter.instance) character.clearTarget();
