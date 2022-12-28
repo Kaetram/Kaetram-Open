@@ -44,7 +44,8 @@ import type {
     BubbleCallback,
     SkillCallback,
     UpdateCallback,
-    EffectCallback
+    EffectCallback,
+    FriendsCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
@@ -91,6 +92,7 @@ export default class Messages {
     private updateCallback?: UpdateCallback;
     private minigameCallback?: MinigameCallback;
     private effectCallback?: EffectCallback;
+    private friendsCallback?: FriendsCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -144,6 +146,7 @@ export default class Messages {
         this.messages[Packets.Update] = () => this.updateCallback;
         this.messages[Packets.Minigame] = () => this.minigameCallback;
         this.messages[Packets.Effect] = () => this.effectCallback;
+        this.messages[Packets.Friends] = () => this.friendsCallback;
     }
 
     /**
@@ -406,5 +409,9 @@ export default class Messages {
 
     public onEffect(callback: EffectCallback): void {
         this.effectCallback = callback;
+    }
+
+    public onFriends(callback: FriendsCallback): void {
+        this.friendsCallback = callback;
     }
 }
