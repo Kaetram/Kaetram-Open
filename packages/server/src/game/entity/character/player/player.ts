@@ -2,6 +2,7 @@ import Skills from './skills';
 import Quests from './quests';
 import Handler from './handler';
 import NPC from '../../npc/npc';
+import Friends from './friends';
 import Skill from './skill/skill';
 import Mana from '../points/mana';
 import Map from '../../../map/map';
@@ -91,6 +92,7 @@ export default class Player extends Character {
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
+    public friends: Friends = new Friends();
 
     public handler: Handler = new Handler(this);
 
@@ -200,6 +202,8 @@ export default class Player extends Character {
 
         this.hitPoints.updateHitPoints(data.hitPoints);
         this.mana.updateMana(data.mana);
+
+        this.friends.load(data.friends);
 
         // Being the loading process.
         this.loadSkills();

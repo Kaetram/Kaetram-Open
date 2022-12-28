@@ -57,7 +57,8 @@ import {
     TeleportPacket,
     SkillPacket,
     MinigamePacket,
-    EffectPacket
+    EffectPacket,
+    FriendsPacket
 } from '@kaetram/common/types/messages/outgoing';
 import { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -149,6 +150,7 @@ export default class Connection {
         this.messages.onUpdate(this.handleUpdate.bind(this));
         this.messages.onMinigame(this.handleMinigame.bind(this));
         this.messages.onEffect(this.handleEffect.bind(this));
+        this.messages.onFriends(this.handleFriends.bind(this));
     }
 
     /**
@@ -1205,6 +1207,26 @@ export default class Connection {
 
             case Opcodes.Effect.Burn:
                 entity.setEffect(Modules.Effects.Burning);
+                break;
+        }
+    }
+
+    /**
+     * Handles incoming packets relating to the friends list. This is how
+     * we update the client with the latest information about our friends.
+     * @param opcode What type of update we are performing.
+     * @param info Contains information about the packet we are handling.
+     */
+
+    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
+        switch (opcode) {
+            case Opcodes.Friends.List:
+                break;
+
+            case Opcodes.Friends.Add:
+                break;
+
+            case Opcodes.Friends.Remove:
                 break;
         }
     }

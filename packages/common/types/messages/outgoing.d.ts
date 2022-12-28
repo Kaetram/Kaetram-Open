@@ -349,3 +349,12 @@ export interface EffectPacket {
 export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export interface FriendsPacket {
+    list?: { [username: string]: boolean };
+    username?: string;
+}
+
+export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
