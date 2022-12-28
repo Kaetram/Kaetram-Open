@@ -14,7 +14,8 @@ import {
     Skill,
     Overlay,
     Poison as PoisonPacket,
-    Points
+    Points,
+    Friends
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -80,6 +81,11 @@ export default class Handler {
         this.player.bank.onAdd(this.handleBankAdd.bind(this));
         this.player.bank.onRemove(this.handleBankRemove.bind(this));
         this.player.bank.onNotify(this.player.notify.bind(this.player));
+
+        // Friends list callback
+        this.player.friends.onLoad(this.handleFriends.bind(this));
+        this.player.friends.onAdd(this.handleFriendsAdd.bind(this));
+        this.player.friends.onRemove(this.handleFriendsRemove.bind(this));
 
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
@@ -444,6 +450,42 @@ export default class Handler {
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
                 slot: slot.serialize()
+            })
+        );
+    }
+
+    /**
+     * Callback for when the player's friends list finishes loading
+     */
+
+    private handleFriends(): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.List, {
+                list: this.player.friends?.getFriendsList()
+            })
+        );
+    }
+
+    /**
+     * Callback for when a friend is added to the friends list.
+     */
+
+    private handleFriendsAdd(username: string): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Add, {
+                username
+            })
+        );
+    }
+
+    /**
+     * Callback for when a friend is removed from the friends list.
+     */
+
+    private handleFriendsRemove(username: string): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Remove, {
+                username
             })
         );
     }

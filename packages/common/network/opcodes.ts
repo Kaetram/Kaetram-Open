@@ -181,3 +181,9 @@ export enum Effect {
     Stun,
     Burn
 }
+
+export enum Friends {
+    List,
+    Add,
+    Remove
+}

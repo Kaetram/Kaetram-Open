@@ -32,6 +32,7 @@ export interface PlayerInfo {
     lastWarp: number;
     mapVersion: number;
     regionsLoaded: number[];
+    friends: string[];
 }
 
 /**
@@ -263,7 +264,8 @@ export default class Creator {
             mute: player.mute,
             lastWarp: player.lastWarp,
             mapVersion: player.mapVersion,
-            regionsLoaded: player.regionsLoaded
+            regionsLoaded: player.regionsLoaded,
+            friends: player.friends.serialize()
         };
     }
 }
