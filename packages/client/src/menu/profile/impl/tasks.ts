@@ -2,8 +2,8 @@ import _ from 'lodash-es';
 
 import Menu from '../../menu';
 
-import Player from '../../../entity/character/player/player';
-import Task from '../../../entity/character/player/task';
+import type Player from '../../../entity/character/player/player';
+import type Task from '../../../entity/character/player/task';
 
 export default class Tasks extends Menu {
     private questList: HTMLUListElement = document.querySelector('#quest-list > ul')!;

@@ -3,22 +3,88 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
+        // "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
         "plugin:unicorn/recommended",
         "plugin:prettier/recommended"
     ],
+    "parserOptions": {
+        "project": "tsconfig.json"
+    },
     "plugins": ["prefer-let"],
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-dynamic-delete": "off",
+        "@typescript-eslint/prefer-nullish-coalescing": "off",
+        "@typescript-eslint/no-restricted-imports": [
+            "warn",
+            {
+                "patterns": [
+                    {
+                        "group": ["*//", "*/.", "./..", "*.d"],
+                        "message": "Redundant import pattern"
+                    },
+                    {
+                        "group": [
+                            "**/../../app",
+                            "**/../../client",
+                            "**/../../server",
+                            "**/../../common",
+                            "**/../../e2e",
+                            "**/../../hub",
+                            "**/../../tools"
+                        ],
+                        "message": "Import from '@kaetram'"
+                    }
+                ]
+            }
+        ],
+        "@typescript-eslint/consistent-indexed-object-style": ["warn", "index-signature"],
+        "@typescript-eslint/consistent-type-exports": "warn",
+        "@typescript-eslint/consistent-type-imports": "warn",
+        "@typescript-eslint/explicit-member-accessibility": "warn",
+        "@typescript-eslint/method-signature-style": ["warn", "method"],
+        "@typescript-eslint/prefer-regexp-exec": "warn",
+        "@typescript-eslint/no-redundant-type-constituents": "warn",
+        // REVIEW: Consider if we need certain undefined/null checks
+        "@typescript-eslint/no-unnecessary-condition": "off",
+        "@typescript-eslint/no-unnecessary-qualifier": "warn",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 
-        "unicorn/prefer-node-protocol": "off",
+        "import/no-unresolved": "off",
+        "import/order": [
+            "warn",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "unknown",
+                    "parent",
+                    "sibling",
+                    "index",
+                    "object",
+                    "type"
+                ],
+                "newlines-between": "always-and-inside-groups"
+            }
+        ],
+
+        // TODO: Enable on ESM
         "unicorn/prefer-module": "off",
+        "unicorn/prefer-top-level-await": "off",
+
         "unicorn/no-null": "off",
+        "unicorn/no-array-reduce": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
-        "unicorn/no-array-reduce": "off",
-        // "unicorn/prefer-at": "error",
-        // "unicorn/prefer-object-has-own": "error",
-        "unicorn/prefer-string-replace-all": "error",
+
+        "unicorn/prefer-at": "warn",
+        // TODO: Enable on ES2022
+        "unicorn/prefer-string-replace-all": "off",
 
         "prettier/prettier": "warn",
 
@@ -27,20 +93,17 @@
         "no-fallthrough": "off",
         "prefer-const": "off",
 
+        // NOTE: Enable on ES2022
+        "prefer-object-has-own": "off",
         "prefer-template": "warn",
+        "no-constant-binary-expression": "warn",
         "curly": ["warn", "multi"],
         "one-var": ["warn", "consecutive"],
         "yoda": "warn",
         "no-else-return": "warn",
         "object-shorthand": "warn",
         "operator-assignment": "warn",
-        "prefer-destructuring": [
-            "warn",
-            {
-                "object": true,
-                "array": true
-            }
-        ],
+        "prefer-destructuring": ["warn", { "object": true, "array": true }],
 
         "array-callback-return": "error",
         "default-case-last": "error",

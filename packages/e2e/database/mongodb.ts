@@ -1,6 +1,8 @@
-import { AnyError, Db, MongoClient } from 'mongodb';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+import { MongoClient } from 'mongodb';
+
+import type { AnyError, Db } from 'mongodb';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -95,7 +97,8 @@ export default class MongoDB {
                 log.error(
                     `An error occurred while saving ${
                         collection.collectionName
-                    } for ${JSON.stringify(filter)}: ${error}`
+                    } for ${JSON.stringify(filter)}:`,
+                    error
                 );
 
             if (!result)
@@ -117,7 +120,8 @@ export default class MongoDB {
                 log.error(
                     `An error occurred while deleting ${JSON.stringify(filter)} from ${
                         collection.collectionName
-                    }: ${error}`
+                    }:`,
+                    error
                 );
             callback(error);
         });
@@ -129,9 +133,7 @@ export default class MongoDB {
             .drop()
             .then((success) => {
                 callback(
-                    !success
-                        ? new Error(`Could not drop collection [${collectionName}]`)
-                        : undefined
+                    success ? undefined : new Error(`Could not drop collection [${collectionName}]`)
                 );
             })
             .catch(function () {

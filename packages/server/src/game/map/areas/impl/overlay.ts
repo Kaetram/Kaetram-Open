@@ -1,8 +1,8 @@
-import World from '../../../world';
-import Area from '../area';
 import Areas from '../areas';
 
 import type { OverlayType, ProcessedArea } from '@kaetram/common/types/map';
+import type World from '../../../world';
+import type Area from '../area';
 
 export default class Overlay extends Areas {
     public constructor(data: ProcessedArea[], world: World) {

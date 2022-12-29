@@ -1,19 +1,16 @@
-import Skill from '../skill';
-
-import Player from '../../player';
-
+import { Modules } from '@kaetram/common/network';
+import LumberjackingEn from '@kaetram/common/text/en/lumberjacking';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import Resource from '../../../../../globals/impl/resource';
-import LumberjackingEn from '@kaetram/common/text/en/lumberjacking';
-
-import { Animation } from '../../../../../../network/packets';
-
-import { Modules } from '@kaetram/common/network';
-import { TreeData, TreeInfo } from '@kaetram/common/types/trees';
 
 import Trees from '../../../../../../../data/trees.json';
+import { Animation } from '../../../../../../network/packets';
 import Item from '../../../../objects/item';
+import Skill from '../skill';
+
+import type { TreeData, TreeInfo } from '@kaetram/common/types/trees';
+import type Resource from '../../../../../globals/impl/resource';
+import type Player from '../../player';
 
 export default class Lumberjacking extends Skill {
     private treeData: TreeData = Trees;
@@ -48,7 +45,7 @@ export default class Lumberjacking extends Skill {
 
         // Level required for this tree is too high for the player.
         if (treeInfo.levelRequirement > this.level)
-            return player.notify(LumberjackingEn.INVALID_LEVEL);
+            return player.notify(LumberjackingEn.INVALID_LEVEL(treeInfo.levelRequirement));
 
         // Unable to cut the tree if the player hasn't completed the required achievement.
         if (

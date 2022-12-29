@@ -94,16 +94,13 @@
             width: 216px * $i;
             height: 34px * $i;
             margin-left: -108px * $i;
-
             background: url('/img/#{$i}/spritesheet.png') no-repeat;
         }
 
         #question,
         #exclamation {
             position: relative;
-
             display: block;
-
             width: 15px * $i;
             height: 16px * $i;
         }
@@ -134,7 +131,6 @@
     #confirm {
         width: 333px;
         height: 94px;
-
         background: url('/img/2/containers.png') -601px 0;
     }
 
@@ -149,7 +145,6 @@
     #cancel {
         width: 40px;
         height: 14px;
-
         background: url('/img/2/containers.png') -601px -108px;
 
         &:hover,
@@ -169,7 +164,6 @@
         width: 432px;
         height: 68px;
         margin-left: -216px;
-
         background: url('/img/2/spritesheet.png') no-repeat;
     }
 
@@ -177,7 +171,6 @@
     #confirm {
         width: 166px;
         height: 47px;
-
         background: url('/img/1/containers.png') -300px 0;
     }
 

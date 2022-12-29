@@ -1,9 +1,9 @@
-import Item from '../../../../objects/item';
-
 import { Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
 
 import Container from '../container';
+
+import type { SlotData } from '@kaetram/common/types/slot';
+import type Item from '../../../../objects/item';
 
 export default class Inventory extends Container {
     public constructor(size: number) {

@@ -27,16 +27,13 @@
 
 #drop-title {
     margin-bottom: 10px;
-
     text-align: center;
 }
 
 #drop-accept,
 #drop-cancel {
     cursor: pointer;
-
     font-size: 18px;
-
     background-color: rgb(120 120 120 / 30%);
 
     &:hover {
@@ -45,7 +42,6 @@
 
     &:active {
         color: #fcda5c;
-
         background-color: rgb(120 120 120 / 40%);
     }
 }

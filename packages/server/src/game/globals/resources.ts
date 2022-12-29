@@ -1,13 +1,12 @@
+import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
-import World from '../world';
-import Map from '../map/map';
 import Resource from './impl/resource';
-import Regions from '../map/regions';
 
-import log from '@kaetram/common/util/log';
-
-import { ProcessedResource } from '@kaetram/common/types/map';
+import type { ProcessedResource } from '@kaetram/common/types/map';
+import type Map from '../map/map';
+import type Regions from '../map/regions';
+import type World from '../world';
 
 export default class Resources {
     private map: Map;
@@ -59,7 +58,7 @@ export default class Resources {
             region = this.regions.get(this.regions.getRegion(coords.x, coords.y));
 
         // Load actual resource tile data.
-        this.search(info, resource, index!);
+        this.search(info, resource, index);
 
         // Initialize cut resource's data.
         resource.load(info);

@@ -82,5 +82,12 @@
         "experience": 75,
         "difficulty": 80,
         "item": "logs"
+    },
+
+    "willow": {
+        "levelRequirement": 45,
+        "experience": 150,
+        "difficulty": 160,
+        "item": "logs"
     }
 }
