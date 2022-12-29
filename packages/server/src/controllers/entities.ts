@@ -1,20 +1,20 @@
-import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
+import _ from 'lodash-es';
 
 import Character from '../game/entity/character/character';
 
-import type World from '../game/world';
-import type Map from '../game/map/map';
+import type { Enchantments } from '@kaetram/common/types/item';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Hit from '../game/entity/character/combat/hit';
 import type Mob from '../game/entity/character/mob/mob';
+import type Player from '../game/entity/character/player/player';
+import type Entity from '../game/entity/entity';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-import type Player from '../game/entity/character/player/player';
-import type Entity from '../game/entity/entity';
-import type { ProcessedArea } from '@kaetram/common/types/map';
-import type { Enchantments } from '@kaetram/common/types/item';
+import type Map from '../game/map/map';
+import type World from '../game/world';
 
 export default class Entities {
     private map: Map;

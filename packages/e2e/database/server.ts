@@ -1,6 +1,6 @@
-import express from 'express';
-import Handler from '@kaetram/e2e/database/handler';
 import log from '@kaetram/common/util/log';
+import Handler from '@kaetram/e2e/database/handler';
+import express from 'express';
 
 interface MongoRestParams {
     collectionName: string;

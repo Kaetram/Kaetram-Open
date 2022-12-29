@@ -1,15 +1,15 @@
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import { NPC as NPCPacket } from '../../../network/packets';
 import rawData from '../../../../data/npcs.json';
+import { NPC as NPCPacket } from '../../../network/packets';
 import Entity from '../entity';
 
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { NPCData } from '@kaetram/common/types/npc';
 import type Player from '../character/player/player';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface RawData {
     [key: string]: NPCData;

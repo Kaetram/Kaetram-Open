@@ -1,5 +1,5 @@
-import $ from 'jquery';
 import { Modules } from '@kaetram/common/network';
+import $ from 'jquery';
 
 import type Player from '../entity/character/player/player';
 

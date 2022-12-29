@@ -1,15 +1,15 @@
-import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
 
+import type { SerializedAbility } from '@kaetram/common/types/ability';
+import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import type { StatisticsData } from '@kaetram/common/types/statistics';
 import type { Db } from 'mongodb';
 import type Player from '../../game/entity/character/player/player';
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { SlotData, SerializedContainer } from '@kaetram/common/types/slot';
-import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
-import type { SkillData, SerializedSkills } from '@kaetram/common/types/skills';
-import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
-import type { StatisticsData } from '@kaetram/common/types/statistics';
-import type { SerializedAbility } from '@kaetram/common/types/ability';
 
 export default class Loader {
     public constructor(private database?: Db) {}

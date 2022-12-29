@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import { Opcodes } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import achievements from '../../../../../data/achievements.json';
 import { Achievement as AchievementPacket } from '../../../../network/packets';
@@ -7,16 +7,16 @@ import Item from '../../objects/item';
 
 import Achievement from './achievement/achievement';
 
+import type { Modules } from '@kaetram/common/network';
+import type {
+    AchievementData,
+    RawAchievement,
+    SerializedAchievement
+} from '@kaetram/common/types/achievement';
+import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import type { PopupData } from '@kaetram/common/types/popup';
-import type {
-    RawAchievement,
-    AchievementData,
-    SerializedAchievement
-} from '@kaetram/common/types/achievement';
-import type { Modules } from '@kaetram/common/network';
 
 export default class Achievements {
     private achievements: { [key: string]: Achievement } = {};

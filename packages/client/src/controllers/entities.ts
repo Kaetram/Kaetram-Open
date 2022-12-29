@@ -1,21 +1,21 @@
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
-import log from '../lib/log';
+import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
-import Grids from '../renderer/grids';
-import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
+import log from '../lib/log';
+import Grids from '../renderer/grids';
 
-import type SpritesController from './sprites';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
-import type Game from '../game';
 import type Entity from '../entity/entity';
+import type Game from '../game';
+import type SpritesController from './sprites';
 
 interface EntitiesCollection {
     [instance: string]: Entity;

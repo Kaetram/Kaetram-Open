@@ -1,4 +1,4 @@
-import { Modules, Packets, Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
@@ -7,14 +7,14 @@ import { isMobile } from '../utils/detect';
 import Chat from './chat';
 import HUDController from './hud';
 
+import type App from '../app';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type Camera from '../renderer/camera';
-import type App from '../app';
 import type Map from '../map/map';
+import type Camera from '../renderer/camera';
 
 interface TargetData {
     sprite: Sprite;

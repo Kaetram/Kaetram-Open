@@ -3,8 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import _ from 'lodash';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 import Parser from './parser';
 

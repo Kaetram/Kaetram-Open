@@ -2,8 +2,8 @@ import { Modules } from '@kaetram/common/network';
 
 import Equipment from '../equipment';
 
-import type Item from '../../../../objects/item';
 import type { Enchantments } from '@kaetram/common/types/item';
+import type Item from '../../../../objects/item';
 
 export default class Boots extends Equipment {
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {

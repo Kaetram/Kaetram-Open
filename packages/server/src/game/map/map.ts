@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import mapData from '../../../data/map/world.json';
 
@@ -8,18 +8,18 @@ import Grids from './grids';
 import Regions from './regions';
 
 import type {
-    Tile,
+    FlatTile,
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
     ProcessedResource,
-    RotatedTile,
     RegionTile,
-    FlatTile
+    RotatedTile,
+    Tile
 } from '@kaetram/common/types/map';
+import type Player from '../entity/character/player/player';
 import type World from '../world';
 import type Areas from './areas/areas';
-import type Player from '../entity/character/player/player';
 
 let map = mapData as ProcessedMap;
 
