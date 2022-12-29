@@ -1,11 +1,11 @@
 import _ from 'lodash-es';
 
-import type Entity from '../entity/entity';
-import type Player from '../entity/character/player/player';
-import type Area from './areas/area';
-import type Resource from '../globals/impl/resource';
-import type Light from '../globals/impl/light';
 import type { RegionTileData } from '@kaetram/common/types/map';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Light from '../globals/impl/light';
+import type Resource from '../globals/impl/resource';
+import type Area from './areas/area';
 
 export default class Region {
     public data: RegionTileData[] = [];

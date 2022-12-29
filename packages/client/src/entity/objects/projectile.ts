@@ -1,7 +1,7 @@
 import { Modules } from '@kaetram/common/network';
 
-import Entity from '../entity';
 import Utils from '../../utils/util';
+import Entity from '../entity';
 
 import type Character from '../character/character';
 

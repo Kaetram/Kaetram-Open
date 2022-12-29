@@ -1,7 +1,7 @@
 import log from '@kaetram/common/util/log';
 
-import type Server from './model/server';
 import type Servers from './controllers/servers';
+import type Server from './model/server';
 
 export default class Console {
     public constructor(private servers: Servers) {

@@ -1,21 +1,21 @@
-import _ from 'lodash-es';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import Actions from '../menu/actions';
-import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
-import Store from '../menu/store';
-import Header from '../menu/header';
-import Profile from '../menu/profile/profile';
 import Enchant from '../menu/enchant';
-import Warp from '../menu/warp';
-import Notification from '../menu/notification';
-import Settings from '../menu/settings';
-import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
+import Header from '../menu/header';
+import Inventory from '../menu/inventory';
+import Notification from '../menu/notification';
+import Profile from '../menu/profile/profile';
+import QuickSlots from '../menu/quickslots';
+import Settings from '../menu/settings';
+import Store from '../menu/store';
+import Warp from '../menu/warp';
 
-import type Menu from '../menu/menu';
 import type Game from '../game';
+import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();

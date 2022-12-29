@@ -1,4 +1,4 @@
-import { Given, When, Then, After } from '@badeball/cypress-cucumber-preprocessor';
+import { After, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getWorldContext } from '../worldutils';
 

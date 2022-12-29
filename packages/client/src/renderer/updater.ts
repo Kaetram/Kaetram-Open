@@ -3,9 +3,9 @@ import { Modules } from '@kaetram/common/network';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 
-import type Game from '../game';
-import type Entity from '../entity/entity';
 import type SpritesController from '../controllers/sprites';
+import type Entity from '../entity/entity';
+import type Game from '../game';
 
 export default class Updater {
     private tileSize: number;

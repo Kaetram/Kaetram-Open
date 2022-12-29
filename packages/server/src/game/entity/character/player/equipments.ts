@@ -1,7 +1,7 @@
-import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import Item from '../../objects/item';
 
@@ -11,10 +11,10 @@ import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
 
-import type Equipment from './equipment/equipment';
-import type Player from './player';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type Equipment from './equipment/equipment';
+import type Player from './player';
 
 export default class Equipments {
     private armour: Armour = new Armour();

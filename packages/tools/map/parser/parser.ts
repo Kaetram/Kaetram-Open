@@ -1,15 +1,15 @@
 import zlib from 'node:zlib';
 
-import _ from 'lodash-es';
-import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
-import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
 import type {
     ProcessedAnimation,
     ProcessedMap,
     ProcessedResource
 } from '@kaetram/common/types/map';
+import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;

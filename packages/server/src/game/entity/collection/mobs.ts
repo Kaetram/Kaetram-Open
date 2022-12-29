@@ -1,6 +1,6 @@
+import mobData from '@kaetram/server/data/mobs.json';
 import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
-import mobData from '@kaetram/server/data/mobs.json';
 
 import type World from '@kaetram/server/src/game/world';
 

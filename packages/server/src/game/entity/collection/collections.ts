@@ -1,12 +1,12 @@
+import log from '@kaetram/common/util/log';
 import AllCollection from '@kaetram/server/src/game/entity/collection/all';
-import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
+import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
 import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
 import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
-import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
 import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
+import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
 import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
 import _ from 'lodash-es';
-import log from '@kaetram/common/util/log';
 
 import type Collection from '@kaetram/server/src/game/entity/collection/collection';
 import type World from '@kaetram/server/src/game/world';

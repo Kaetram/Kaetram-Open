@@ -1,13 +1,13 @@
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import Util from '../utils/util';
 import log from '../lib/log';
+import Util from '../utils/util';
 
 import Menu from './menu';
 
-import type Inventory from './inventory';
 import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
 import type { SerializedStoreItem } from '@kaetram/common/types/stores';
+import type Inventory from './inventory';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 

@@ -1,8 +1,8 @@
+import { Modules } from '@kaetram/common/network';
+import itemData from '@kaetram/server/data/items.json';
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Item from '@kaetram/server/src/game/entity/objects/item';
 import { Blink } from '@kaetram/server/src/network/packets';
-import { Modules } from '@kaetram/common/network';
-import itemData from '@kaetram/server/data/items.json';
 
 import type { Enchantments } from '@kaetram/common/types/item';
 

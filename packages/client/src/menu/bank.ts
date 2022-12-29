@@ -6,8 +6,8 @@ import Util from '../utils/util';
 
 import Menu from './menu';
 
-import type Inventory from './inventory';
 import type { SlotData } from '@kaetram/common/types/slot';
+import type Inventory from './inventory';
 
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 

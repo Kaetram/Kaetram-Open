@@ -1,36 +1,36 @@
 import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
 
 import {
-    Container,
     Ability as AbilityPacket,
-    Quest,
     Achievement,
-    Equipment as EquipmentPacket,
-    NPC as NPCPacket,
+    Container,
     Death,
     Despawn,
-    Skill,
+    Equipment as EquipmentPacket,
+    NPC as NPCPacket,
     Overlay,
+    Points,
     Poison as PoisonPacket,
-    Points
+    Quest,
+    Skill
 } from '../../../../network/packets';
 
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type Light from '../../../globals/impl/light';
+import type Areas from '../../../map/areas/areas';
 import type Map from '../../../map/map';
 import type World from '../../../world';
+import type Entity from '../../entity';
+import type NPC from '../../npc/npc';
+import type Character from '../character';
+import type Mob from '../mob/mob';
+import type Ability from './ability/ability';
 import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
-import type Character from '../character';
-import type Light from '../../../globals/impl/light';
-import type Entity from '../../entity';
-import type Ability from './ability/ability';
-import type Areas from '../../../map/areas/areas';
-import type NPC from '../../npc/npc';
-import type Mob from '../mob/mob';
 import type Player from './player';
-import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
     private world: World;

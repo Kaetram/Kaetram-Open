@@ -1,7 +1,7 @@
-import tutorial from './tutorial';
-import foresting from './foresting';
-import desertquest from './desertquest';
 import ancientlands from './ancientlands';
+import desertquest from './desertquest';
+import foresting from './foresting';
+import tutorial from './tutorial';
 
 export default {
     tutorial,

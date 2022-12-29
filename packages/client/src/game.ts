@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
@@ -7,8 +7,8 @@ import EntitiesController from './controllers/entities';
 import InfoController from './controllers/info';
 import InputController from './controllers/input';
 import MenuController from './controllers/menu';
-import SpritesController from './controllers/sprites';
 import Pointer from './controllers/pointer';
+import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
@@ -16,17 +16,17 @@ import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
 import Camera from './renderer/camera';
+import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import Pathfinder from './utils/pathfinder';
-import Minigame from './renderer/minigame';
 import { agent } from './utils/detect';
+import Pathfinder from './utils/pathfinder';
 
-import type Storage from './utils/storage';
-import type Entity from './entity/entity';
-import type Character from './entity/character/character';
 import type App from './app';
+import type Character from './entity/character/character';
+import type Entity from './entity/entity';
+import type Storage from './utils/storage';
 
 export default class Game {
     public storage: Storage;

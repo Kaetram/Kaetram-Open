@@ -1,10 +1,10 @@
-import log from '@kaetram/common/util/log';
-import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
 
 import API from './api';
-import Servers from './controllers/servers';
 import Console from './console';
+import Servers from './controllers/servers';
 
 export default class Main {
     private discord: Discord = new Discord();

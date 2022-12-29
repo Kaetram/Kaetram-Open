@@ -1,20 +1,16 @@
-import _ from 'lodash-es';
-import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import Filter from '@kaetram/common/util/filter';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import Filter from '@kaetram/common/util/filter';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
+import sanitizer from 'sanitizer';
 
 import Creator from '../database/mongodb/creator';
 import { Spawn } from '../network/packets';
 
 import Commands from './commands';
 
-import type Connection from '../network/connection';
-import type World from '../game/world';
-import type Entities from './entities';
-import type MongoDB from '../database/mongodb/mongodb';
 import type {
     AbilityPacket,
     ContainerPacket,
@@ -25,11 +21,15 @@ import type {
     StorePacket,
     WarpPacket
 } from '@kaetram/common/types/messages/incoming';
+import type MongoDB from '../database/mongodb/mongodb';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
+import type World from '../game/world';
+import type Connection from '../network/connection';
+import type Entities from './entities';
 
 export default class Incoming {
     private world: World;
