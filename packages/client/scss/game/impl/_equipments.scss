@@ -39,13 +39,12 @@
             position: absolute;
             top: 70px * $i;
             left: 110px * $i;
+            scale: $i;
 
             overflow: auto;
 
             width: 32px;
             height: 32px;
-
-            scale: $i;
         }
 
         #player-image-navigator {
