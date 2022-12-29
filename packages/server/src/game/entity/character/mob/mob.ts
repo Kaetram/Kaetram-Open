@@ -1,34 +1,31 @@
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
 import _ from 'lodash-es';
 
-import Utils from '@kaetram/common/util/utils';
-
-import Entity from '../../entity';
-import World from '../../../world';
-import MobHandler from './handler';
+import rawData from '../../../../../data/mobs.json';
+import PluginIndex from '../../../../../data/plugins/mobs';
+import Spawns from '../../../../../data/spawns.json';
 import Character from '../character';
-import Chest from '../../objects/chest';
 
+import MobHandler from './handler';
+
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { MobData } from '@kaetram/common/types/mob';
+import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
+import type World from '../../../world';
+import type Entity from '../../entity';
+import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 
-import PluginIndex from '../../../../../data/plugins/mobs';
-import rawData from '../../../../../data/mobs.json';
-import Spawns from '../../../../../data/spawns.json';
-import log from '@kaetram/common/util/log';
-
-import DefaultPlugin from '../../../../../data/plugins/mobs/default';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { MobData } from '@kaetram/common/types/mob';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
-
-type RawData = {
+interface RawData {
     [key: string]: MobData;
-};
+}
 
 export default class Mob extends Character {
     public spawnX: number = this.x;
@@ -142,7 +139,7 @@ export default class Mob extends Character {
      */
 
     private loadPlugin(pluginName?: string): void {
-        if (!pluginName || !(pluginName! in PluginIndex)) {
+        if (!pluginName || !(pluginName in PluginIndex)) {
             // Initialize a mob handler since we couldn't find a plugin.
             this.handler = new MobHandler(this);
             return;

@@ -1,10 +1,9 @@
 import _ from 'lodash-es';
 
+import Splat from '../renderer/infos/splat';
 import Utils from '../utils/util';
 
-import Splat from '../renderer/infos/splat';
-
-import { Modules } from '@kaetram/common/network';
+import type { Modules } from '@kaetram/common/network';
 
 export default class InfoController {
     private infos: { [info: string]: Splat } = {};

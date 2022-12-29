@@ -1,61 +1,61 @@
-import Skills from './skills';
-import Quests from './quests';
-import Handler from './handler';
-import NPC from '../../npc/npc';
-import Skill from './skill/skill';
-import Mana from '../points/mana';
-import Map from '../../../map/map';
-import Abilities from './abilities';
-import Character from '../character';
-import Equipments from './equipments';
-import Item from '../../objects/item';
-import Statistics from './statistics';
-import Bank from './containers/impl/bank';
-import Achievements from './achievements';
-import Regions from '../../../map/regions';
-import Formulas from '../../../../info/formulas';
-import Minigame from '../../../minigames/minigame';
-import Inventory from './containers/impl/inventory';
-import Resource from '../../../globals/impl/resource';
-import Packet from '@kaetram/server/src/network/packet';
-import Incoming from '../../../../controllers/incoming';
-import Entities from '@kaetram/server/src/controllers/entities';
-
-import type World from '../../../world';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Connection from '../../../../network/connection';
-import type Area from '../../../map/areas/area';
-import type { PlayerInfo } from './../../../../database/mongodb/creator';
-
+import { Team } from '@kaetram/common/api/minigame';
 import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-
-import { Bonuses, Stats } from '@kaetram/common/types/item';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
-import { PlayerData } from '@kaetram/common/types/player';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import { Team } from '@kaetram/common/types/minigame.d';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import {
-    Music,
     Camera,
     Chat,
+    Effect,
     Heal,
     Movement,
+    Music,
     Notification,
     Overlay,
-    Sync,
-    Teleport,
-    Welcome,
     Pointer,
     PVP,
-    Spawn,
     Respawn,
-    Effect
+    Spawn,
+    Sync,
+    Teleport,
+    Welcome
 } from '@kaetram/server/src/network/packets';
+
+import Incoming from '../../../../controllers/incoming';
+import Formulas from '../../../../info/formulas';
+import Character from '../character';
+import Mana from '../points/mana';
+
+import Abilities from './abilities';
+import Achievements from './achievements';
+import Bank from './containers/impl/bank';
+import Inventory from './containers/impl/inventory';
+import Equipments from './equipments';
+import Handler from './handler';
+import Quests from './quests';
+import Skills from './skills';
+import Statistics from './statistics';
+
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type Entities from '@kaetram/server/src/controllers/entities';
+import type Packet from '@kaetram/server/src/network/packet';
+import type { PlayerInfo } from '../../../../database/mongodb/creator';
+import type MongoDB from '../../../../database/mongodb/mongodb';
+import type Connection from '../../../../network/connection';
+import type Resource from '../../../globals/impl/resource';
+import type Area from '../../../map/areas/area';
+import type Map from '../../../map/map';
+import type Regions from '../../../map/regions';
+import type Minigame from '../../../minigames/minigame';
+import type World from '../../../world';
+import type NPC from '../../npc/npc';
+import type Item from '../../objects/item';
+import type Skill from './skill/skill';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -345,7 +345,7 @@ export default class Player extends Character {
 
     public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
-            case 'passive':
+            case 'passive': {
                 if (!this.mana.isFull()) this.mana.increment(amount);
 
                 // Scale the heal rate by the maximum hitpoints.
@@ -354,9 +354,10 @@ export default class Player extends Character {
                 super.heal(amount);
 
                 break;
+            }
 
             case 'hitpoints':
-            case 'mana':
+            case 'mana': {
                 if (type === 'hitpoints') this.hitPoints.increment(amount);
                 else if (type === 'mana') this.mana.increment(amount);
 
@@ -368,6 +369,7 @@ export default class Player extends Character {
                     })
                 );
                 break;
+            }
         }
 
         this.sync();
@@ -523,7 +525,7 @@ export default class Player extends Character {
         let item: Item;
 
         switch (type) {
-            case Modules.ContainerType.Inventory:
+            case Modules.ContainerType.Inventory: {
                 item = this.inventory.getItem(this.inventory.get(index));
 
                 if (!item) return;
@@ -536,13 +538,15 @@ export default class Player extends Character {
                 }
 
                 break;
+            }
 
-            case Modules.ContainerType.Bank:
+            case Modules.ContainerType.Bank: {
                 if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
                 else if (subType === Modules.ContainerType.Inventory)
                     this.bank.move(this.inventory, index);
 
                 break;
+            }
         }
     }
 
@@ -802,17 +806,20 @@ export default class Player extends Character {
 
         if (camera)
             switch (camera.type) {
-                case 'lockX':
+                case 'lockX': {
                     this.send(new Camera(Opcodes.Camera.LockX));
                     break;
+                }
 
-                case 'lockY':
+                case 'lockY': {
                     this.send(new Camera(Opcodes.Camera.LockY));
                     break;
+                }
 
-                case 'player':
+                case 'player': {
                     this.send(new Camera(Opcodes.Camera.Player));
                     break;
+                }
             }
         else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }

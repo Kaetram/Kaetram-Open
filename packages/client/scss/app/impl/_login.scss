@@ -41,7 +41,6 @@
 
 input[type='range'] {
     width: 100%;
-
     background-image: -webkit-gradient(
         linear,
         left top,
@@ -73,7 +72,6 @@ input[type='range'] {
         #guest-text {
             height: 8px * $i;
             padding-left: 5px * $i;
-
             font-size: 8px * $i;
         }
 
@@ -122,7 +120,6 @@ input[type='range'] {
 
             &:disabled {
                 cursor: wait;
-
                 background-position-y: -$button-height * 3;
             }
         }
@@ -140,13 +137,11 @@ input[type='range'] {
 
         input[type='range'] {
             height: 3px * $i;
-
             border-radius: 3px * $i;
 
             &::-webkit-slider-thumb {
                 width: 5px * $i;
                 height: 8px * $i;
-
                 border-radius: 2px * $i;
             }
         }

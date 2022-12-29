@@ -1,6 +1,8 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
-import LoginContext from './login.context';
+
 import { activateWorldContext } from '../worldutils';
+
+import LoginContext from './login.context';
 
 Given('I am testing the login features', function () {
     activateWorldContext(this, new LoginContext());

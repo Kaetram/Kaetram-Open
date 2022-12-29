@@ -1,11 +1,11 @@
+import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
-import World from '../../../world';
-import Area from '../area';
 import Areas from '../areas';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
-import log from '@kaetram/common/util/log';
+import type World from '../../../world';
+import type Area from '../area';
 
 export default class Dynamic extends Areas {
     public constructor(data: ProcessedArea[], world: World) {

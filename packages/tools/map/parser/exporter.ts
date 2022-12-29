@@ -1,11 +1,10 @@
 #!/usr/bin/env -S yarn tsx
 
-import _ from 'lodash';
-
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 import Parser from './parser';
 
@@ -50,14 +49,16 @@ export default class Exporter {
 
         // Write the server map file.
         fs.writeFile(resolve(serverDestination), parser.getMap(), (error) => {
-            if (error) throw `An error has occurred while writing map files:\n${error}`;
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(serverDestination)}.`);
         });
 
         // Write the client map file.
         fs.writeFile(resolve(clientDestination), parser.getClientMap(), (error) => {
-            if (error) throw `An error has occurred while writing map files:\n${error}`;
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(clientDestination)}.`);
         });
@@ -70,7 +71,10 @@ export default class Exporter {
                 resolve(path.join(mapDirectory, name)),
                 resolve(path.join(tilesetDirectory, name)),
                 (error) => {
-                    if (error) throw `An error has occurred while copying tilesets:\n${error}`;
+                    if (error)
+                        throw new Error(`An error has occurred while copying tilesets:\n`, {
+                            cause: error
+                        });
                 }
             );
         });

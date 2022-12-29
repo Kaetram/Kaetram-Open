@@ -17,7 +17,6 @@
 
 .map-button {
     position: absolute;
-
     background-position-y: 0;
 }
 
@@ -35,42 +34,36 @@
         #warp0 {
             top: 40px * $i;
             left: 120px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 0 0;
         }
 
         #warp1 {
             top: 55px * $i;
             left: 25px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 17px * $i 0;
         }
 
         #warp2 {
             top: 70px * $i;
             left: 175px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 32px * $i 0;
         }
 
         #warp3 {
             top: 120px * $i;
             left: 135px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 47px * $i 0;
         }
 
         #warp4 {
             top: 120px * $i;
             left: 75px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 62px * $i 0;
         }
 
         #warp5 {
             top: 80px * $i;
             left: 90px * $i;
-
             background: url('/img/#{$i}/mapicons.png') 77px * $i 0;
         }
 
@@ -92,7 +85,6 @@
         #map-frame {
             width: 270px * $i;
             height: 180px * $i;
-
             background-image: url('/img/#{$i}/mapframe.png');
         }
 
