@@ -28,12 +28,13 @@
                     },
                     {
                         "group": [
-                            "**/../client",
-                            "**/../server",
-                            "**/../common",
-                            "**/../e2e",
-                            "**/../hub",
-                            "**/../tools"
+                            "**/../../app",
+                            "**/../../client",
+                            "**/../../server",
+                            "**/../../common",
+                            "**/../../e2e",
+                            "**/../../hub",
+                            "**/../../tools"
                         ],
                         "message": "Import from '@kaetram'"
                     }
