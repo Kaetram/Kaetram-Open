@@ -1,14 +1,12 @@
-import World from '../game/world';
-
-import Item from '../game/entity/objects/item';
-import Player from '../game/entity/character/player/player';
-
-import { Modules } from '@kaetram/common/network';
+import type { Modules } from '@kaetram/common/network';
+import type Player from '../game/entity/character/player/player';
+import type Item from '../game/entity/objects/item';
+import type World from '../game/world';
 
 export default class Enchanter {
     public constructor(private world: World) {}
 
-    public enchant(player: Player): void {
+    public enchant(_player: Player): void {
         //
     }
 

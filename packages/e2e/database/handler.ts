@@ -2,10 +2,11 @@
  * The handler class file for the Mob object. We use this to better
  * organize callbacks and events instead of clumping them all.
  */
-import MongoDB from '@kaetram/e2e/database/mongodb';
-import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { AnyError } from 'mongodb';
+import log from '@kaetram/common/util/log';
+import MongoDB from '@kaetram/e2e/database/mongodb';
+
+import type { AnyError } from 'mongodb';
 
 export default class Handler {
     private mongo: MongoDB;
@@ -34,24 +35,28 @@ export default class Handler {
         );
     }
 
-    getByUsername(collectionName: string, username: string, callback: (data: unknown[]) => void) {
+    public getByUsername(
+        collectionName: string,
+        username: string,
+        callback: (data: unknown[]) => void
+    ) {
         this.mongo.load({ username }, collectionName, callback);
     }
 
-    upsert(
+    public upsert(
         collectionName: string,
         username: string,
-        body: any,
+        body: unknown,
         callback: (error?: AnyError) => void
     ) {
         this.mongo.upsert({ username }, collectionName, body, callback);
     }
 
-    delete(collectionName: string, username: string, callback: (error?: AnyError) => void) {
+    public delete(collectionName: string, username: string, callback: (error?: AnyError) => void) {
         this.mongo.delete({ username }, collectionName, callback);
     }
 
-    deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
+    public deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
         this.mongo.deleteCollection(collectionName, callback);
     }
 }

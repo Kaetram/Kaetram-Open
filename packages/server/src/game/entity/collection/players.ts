@@ -1,5 +1,6 @@
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
-import Player from '@kaetram/server/src/game/entity/character/player/player';
+
+import type Player from '@kaetram/server/src/game/entity/character/player/player';
 
 /**
  * A class for collections of entities of a certain type in the game.

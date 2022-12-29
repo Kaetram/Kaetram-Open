@@ -1,20 +1,15 @@
+import config from '@kaetram/common/config';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import Filter from '@kaetram/common/util/filter';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import Filter from '@kaetram/common/util/filter';
-
-import Connection from '../network/connection';
-import World from '../game/world';
-import Entities from './entities';
-import MongoDB from '../database/mongodb/mongodb';
 import Creator from '../database/mongodb/creator';
-import Commands from './commands';
-
 import { Spawn } from '../network/packets';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+
+import Commands from './commands';
 
 import type {
     AbilityPacket,
@@ -26,11 +21,15 @@ import type {
     StorePacket,
     WarpPacket
 } from '@kaetram/common/types/messages/incoming';
+import type MongoDB from '../database/mongodb/mongodb';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
+import type World from '../game/world';
+import type Connection from '../network/connection';
+import type Entities from './entities';
 
 export default class Incoming {
     private world: World;
@@ -59,40 +58,57 @@ export default class Incoming {
             // Prevent server from crashing due to a packet malfunction.
             try {
                 switch (packet) {
-                    case Packets.Login:
+                    case Packets.Login: {
                         return this.handleLogin(message);
-                    case Packets.Ready:
+                    }
+                    case Packets.Ready: {
                         return this.handleReady(message);
-                    case Packets.List:
+                    }
+                    case Packets.List: {
                         return this.player.updateEntityList();
-                    case Packets.Who:
+                    }
+                    case Packets.Who: {
                         return this.handleWho(message);
-                    case Packets.Equipment:
+                    }
+                    case Packets.Equipment: {
                         return this.handleEquipment(message);
-                    case Packets.Movement:
+                    }
+                    case Packets.Movement: {
                         return this.handleMovement(message);
-                    case Packets.Target:
+                    }
+                    case Packets.Target: {
                         return this.handleTarget(message);
-                    case Packets.Network:
+                    }
+                    case Packets.Network: {
                         return this.handleNetwork(message);
-                    case Packets.Chat:
+                    }
+                    case Packets.Chat: {
                         return this.handleChat(message);
-                    case Packets.Command:
+                    }
+                    case Packets.Command: {
                         return this.handleCommand(message);
-                    case Packets.Container:
+                    }
+                    case Packets.Container: {
                         return this.handleContainer(message);
-                    case Packets.Ability:
+                    }
+                    case Packets.Ability: {
                         return this.handleAbility(message);
-                    case Packets.Respawn:
+                    }
+                    case Packets.Respawn: {
                         return this.player.respawn();
-                    case Packets.Trade:
+                    }
+                    case Packets.Trade: {
                         return this.handleTrade(message);
-                    case Packets.Enchant:
+                    }
+                    case Packets.Enchant: {
                         return this.handleEnchant(message);
-                    case Packets.Warp:
+                    }
+                    case Packets.Warp: {
                         return this.handleWarp(message);
-                    case Packets.Store:
+                    }
+                    case Packets.Store: {
                         return this.handleStore(message);
+                    }
                 }
             } catch (error) {
                 log.error(error);
@@ -127,17 +143,20 @@ export default class Incoming {
 
         // Handle login for each particular case.
         switch (opcode) {
-            case Opcodes.Login.Login:
+            case Opcodes.Login.Login: {
                 return this.database.login(this.player);
+            }
 
-            case Opcodes.Login.Register:
+            case Opcodes.Login.Register: {
                 return this.database.register(this.player);
+            }
 
-            case Opcodes.Login.Guest:
+            case Opcodes.Login.Guest: {
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
                 this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
 
                 return this.player.load(Creator.serializePlayer(this.player));
+            }
         }
     }
 
@@ -187,8 +206,9 @@ export default class Incoming {
 
     private handleEquipment(data: EquipmentPacket): void {
         switch (data.opcode) {
-            case Opcodes.Equipment.Unequip:
+            case Opcodes.Equipment.Unequip: {
                 return this.player.equipment.unequip(data.type);
+            }
         }
     }
 
@@ -209,37 +229,42 @@ export default class Incoming {
         if (this.player.dead) return;
 
         switch (opcode) {
-            case Opcodes.Movement.Request:
+            case Opcodes.Movement.Request: {
                 return this.player.handleMovementRequest(
                     playerX!,
                     playerY!,
                     targetInstance!,
                     following!
                 );
+            }
 
-            case Opcodes.Movement.Started:
+            case Opcodes.Movement.Started: {
                 return this.player.handleMovementStarted(
                     playerX!,
                     playerY!,
                     movementSpeed!,
                     targetInstance!
                 );
+            }
 
-            case Opcodes.Movement.Step:
+            case Opcodes.Movement.Step: {
                 return this.player.handleMovementStep(playerX!, playerY!);
+            }
 
-            case Opcodes.Movement.Stop:
+            case Opcodes.Movement.Stop: {
                 return this.player.handleMovementStop(
                     playerX!,
                     playerY!,
                     targetInstance!,
-                    orientation!
+                    orientation
                 );
+            }
 
-            case Opcodes.Movement.Entity:
+            case Opcodes.Movement.Entity: {
                 entity = this.entities.get(targetInstance!) as Character;
                 entity?.setPosition(requestX!, requestY!);
                 break;
+            }
         }
     }
 
@@ -279,13 +304,15 @@ export default class Incoming {
                 break;
             }
 
-            case Opcodes.Target.None:
+            case Opcodes.Target.None: {
                 // Nothing do to here.
 
                 break;
+            }
 
-            case Opcodes.Target.Object:
+            case Opcodes.Target.Object: {
                 return this.player.handleObjectInteraction(instance);
+            }
         }
     }
 
@@ -316,7 +343,7 @@ export default class Incoming {
         if (!text || text.length === 0 || !/\S/.test(text)) return;
 
         // Handle commands if the prefix is / or ;
-        if (text.charAt(0) === '/' || text.charAt(0) === ';') return this.commands.parse(text);
+        if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
         this.player.chat(Filter.clean(text));
     }
@@ -351,20 +378,23 @@ export default class Incoming {
         log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
-            case Opcodes.Container.Select:
+            case Opcodes.Container.Select: {
                 return this.player.handleContainerSelect(
                     packet.type,
                     packet.index!,
-                    packet.subType!
+                    packet.subType
                 );
+            }
 
-            case Opcodes.Container.Remove:
+            case Opcodes.Container.Remove: {
                 container.remove(packet.index!, undefined, true);
                 return;
+            }
 
-            case Opcodes.Container.Swap:
+            case Opcodes.Container.Swap: {
                 container.swap(packet.index!, packet.tIndex!);
                 break;
+            }
         }
     }
 
@@ -376,11 +406,13 @@ export default class Incoming {
 
     private handleAbility(packet: AbilityPacket): void {
         switch (packet.opcode) {
-            case Opcodes.Ability.Use:
+            case Opcodes.Ability.Use: {
                 return this.player.abilities.use(packet.key);
+            }
 
-            case Opcodes.Ability.QuickSlot:
+            case Opcodes.Ability.QuickSlot: {
                 return this.player.abilities.setQuickSlot(packet.key, packet.index!);
+            }
         }
     }
 
@@ -391,18 +423,21 @@ export default class Incoming {
         if (!oPlayer) return;
 
         switch (opcode) {
-            case Opcodes.Trade.Request:
+            case Opcodes.Trade.Request: {
                 break;
+            }
 
-            case Opcodes.Trade.Accept:
+            case Opcodes.Trade.Accept: {
                 break;
+            }
 
-            case Opcodes.Trade.Decline:
+            case Opcodes.Trade.Decline: {
                 break;
+            }
         }
     }
 
-    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
+    private handleEnchant(_message: [Opcodes.Enchant, unknown]): void {
         // let [opcode] = message;
         // switch (opcode) {
         //     case Opcodes.Enchant.Select: {
@@ -450,14 +485,17 @@ export default class Incoming {
         if (data.index < 0) return;
 
         switch (data.opcode) {
-            case Opcodes.Store.Buy:
+            case Opcodes.Store.Buy: {
                 return this.world.stores.purchase(this.player, data.key, data.index, data.count);
+            }
 
-            case Opcodes.Store.Sell:
+            case Opcodes.Store.Sell: {
                 return this.world.stores.sell(this.player, data.key, data.index, data.count);
+            }
 
-            case Opcodes.Store.Select:
+            case Opcodes.Store.Select: {
                 return this.world.stores.select(this.player, data.key, data.index, data.count);
+            }
         }
     }
 

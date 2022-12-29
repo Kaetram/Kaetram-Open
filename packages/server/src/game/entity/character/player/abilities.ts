@@ -1,15 +1,14 @@
-import _ from 'lodash';
-
-import Player from './player';
-import Ability from './ability/ability';
-import AbilitiesIndex from './ability/impl/index';
-
+import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 import { Ability as AbilityPacket } from '../../../../network/packets';
 
-import { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
-import { Opcodes } from '@kaetram/common/network';
+import AbilitiesIndex from './ability/impl/index';
+
+import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
+import type Ability from './ability/ability';
+import type Player from './player';
 
 type AddCallback = (ability: Ability) => void;
 
@@ -84,7 +83,7 @@ export default class Abilities {
         ) as Ability;
 
         // Ensure the ability has valid data.
-        if (!ability || !ability.isValid())
+        if (!ability?.isValid())
             return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
 
         // On ability update listener.
