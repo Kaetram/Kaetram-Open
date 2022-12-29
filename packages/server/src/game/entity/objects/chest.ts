@@ -1,12 +1,14 @@
-import Entity from '../entity';
-
+import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+
+import Entity from '../entity';
 
 import type Player from '../character/player/player';
 
-import { Modules } from '@kaetram/common/network';
-
-type ItemDrop = { key: string; count: number };
+interface ItemDrop {
+    key: string;
+    count: number;
+}
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {

@@ -1,22 +1,21 @@
+import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import log from '../lib/log';
+import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
-import Grids from '../renderer/grids';
-import SpritesController from './sprites';
-import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
+import log from '../lib/log';
+import Grids from '../renderer/grids';
 
-import { EntityData } from '@kaetram/common/types/entity';
-import { PlayerData } from '@kaetram/common/types/player';
-import { Modules } from '@kaetram/common/network';
-
-import type Game from '../game';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { PlayerData } from '@kaetram/common/types/player';
 import type Entity from '../entity/entity';
+import type Game from '../game';
+import type SpritesController from './sprites';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -63,29 +62,35 @@ export default class EntitiesController {
         let entity!: Entity;
 
         switch (info.type) {
-            case Modules.EntityType.Chest:
+            case Modules.EntityType.Chest: {
                 entity = this.createChest(info.instance);
                 break;
+            }
 
-            case Modules.EntityType.NPC:
+            case Modules.EntityType.NPC: {
                 entity = this.createNPC(info.instance);
                 break;
+            }
 
-            case Modules.EntityType.Item:
+            case Modules.EntityType.Item: {
                 entity = this.createItem(info);
                 break;
+            }
 
-            case Modules.EntityType.Mob:
+            case Modules.EntityType.Mob: {
                 entity = this.createMob(info);
                 break;
+            }
 
-            case Modules.EntityType.Projectile:
+            case Modules.EntityType.Projectile: {
                 entity = this.createProjectile(info)!;
                 break;
+            }
 
-            case Modules.EntityType.Player:
+            case Modules.EntityType.Player: {
                 entity = this.createPlayer(info as PlayerData);
                 break;
+            }
         }
 
         // Something went wrong creating the entity.
@@ -155,7 +160,7 @@ export default class EntitiesController {
     private createMob(info: EntityData): Mob {
         let mob = new Mob(info.instance);
 
-        mob.setHitPoints(info.hitPoints!, info.maxHitPoints!);
+        mob.setHitPoints(info.hitPoints!, info.maxHitPoints);
 
         // Apply the mob-specific properties
         mob.attackRange = info.attackRange!;

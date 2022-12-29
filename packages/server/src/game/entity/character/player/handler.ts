@@ -1,37 +1,36 @@
 import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import {
-    Container,
     Ability as AbilityPacket,
-    Quest,
     Achievement,
-    Equipment as EquipmentPacket,
-    NPC as NPCPacket,
+    Container,
     Death,
     Despawn,
-    Skill,
+    Equipment as EquipmentPacket,
+    NPC as NPCPacket,
     Overlay,
+    Points,
     Poison as PoisonPacket,
-    Points
+    Quest,
+    Skill
 } from '../../../../network/packets';
-import Map from '../../../map/map';
-import World from '../../../world';
-import Slot from './containers/slot';
-import Equipment from './equipment/equipment';
-import Character from '../character';
-import Light from '../../../globals/impl/light';
-import Entity from '../../entity';
-import Ability from './ability/ability';
 
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type Light from '../../../globals/impl/light';
 import type Areas from '../../../map/areas/areas';
+import type Map from '../../../map/map';
+import type World from '../../../world';
+import type Entity from '../../entity';
 import type NPC from '../../npc/npc';
+import type Character from '../character';
 import type Mob from '../mob/mob';
+import type Ability from './ability/ability';
+import type Slot from './containers/slot';
+import type Equipment from './equipment/equipment';
 import type Player from './player';
-
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import { Modules, Opcodes } from '@kaetram/common/network';
 
 export default class Handler {
     private world: World;
@@ -188,7 +187,7 @@ export default class Handler {
     private handleHit(damage: number, attacker?: Character): void {
         if (!attacker) return;
 
-        if (!this.player.hasAttacker(attacker!)) this.player.addAttacker(attacker!);
+        if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
     }
 
     /**
@@ -474,12 +473,14 @@ export default class Handler {
         if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
-            case 'banker':
+            case 'banker': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 return;
-            case 'enchanter':
+            }
+            case 'enchanter': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Enchant, {}));
                 break;
+            }
         }
 
         npc.talk(this.player);
@@ -533,8 +534,8 @@ export default class Handler {
 
     private handlePoison(type = -1): void {
         // Notify the player when the poison status changes.
-        if (type !== -1) this.player.notify('You have been poisoned.');
-        else this.player.notify('The poison has worn off.');
+        if (type === -1) this.player.notify('The poison has worn off.');
+        else this.player.notify('You have been poisoned.');
 
         this.player.send(new PoisonPacket(type));
 
@@ -625,20 +626,25 @@ export default class Handler {
                 let info = areas.inArea(x, y);
 
                 switch (name) {
-                    case 'pvp':
+                    case 'pvp': {
                         return this.player.updatePVP(!!info);
+                    }
 
-                    case 'overlay':
+                    case 'overlay': {
                         return this.player.updateOverlay(info);
+                    }
 
-                    case 'camera':
+                    case 'camera': {
                         return this.player.updateCamera(info);
+                    }
 
-                    case 'music':
+                    case 'music': {
                         return this.player.updateMusic(info);
+                    }
 
-                    case 'minigame':
+                    case 'minigame': {
                         return this.player.updateMinigame(info);
+                    }
                 }
             },
             ['pvp', 'music', 'overlay', 'camera', 'minigame']

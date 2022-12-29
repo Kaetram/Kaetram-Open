@@ -1,15 +1,15 @@
-import _ from 'lodash-es';
-import zlib from 'zlib';
-
-import log from '@kaetram/common/util/log';
+import zlib from 'node:zlib';
 
 import { Modules } from '@kaetram/common/network';
-import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
+
 import type {
     ProcessedAnimation,
     ProcessedMap,
     ProcessedResource
 } from '@kaetram/common/types/map';
+import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
@@ -104,13 +104,15 @@ export default class ProcessMap {
     private parseLayers(): void {
         _.each(this.data.layers, (layer: Layer) => {
             switch (layer.type) {
-                case 'tilelayer':
+                case 'tilelayer': {
                     this.parseTileLayer(layer);
                     break;
+                }
 
-                case 'objectgroup':
+                case 'objectgroup': {
                     this.parseObjectLayer(layer);
                     break;
+                }
             }
         });
     }
@@ -173,22 +175,26 @@ export default class ProcessMap {
         if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
 
         switch (name) {
-            case 'v':
+            case 'v': {
                 high.push(tileId);
                 break;
+            }
 
-            case 'o':
+            case 'o': {
                 objects.push(tileId);
                 break;
+            }
 
-            case 'cursor':
+            case 'cursor': {
                 cursors[tileId] = value;
                 break;
+            }
 
             case 'tree':
             case 'stump':
-            case 'cutstump':
+            case 'cutstump': {
                 return this.parseTreeProperty(name, tileId, value);
+            }
         }
     }
 
@@ -367,18 +373,21 @@ export default class ProcessMap {
 
         // Organize tree data into their respective arrays.
         switch (name) {
-            case 'tree':
+            case 'tree': {
                 this.#trees[value].data.push(tileId);
                 break;
+            }
 
-            case 'stump':
+            case 'stump': {
                 this.#trees[value].base.push(tileId);
                 break;
+            }
 
             case 'cutstump':
-            case 'stumpcut':
+            case 'stumpcut': {
                 this.#trees[value].depleted.push(tileId);
                 break;
+            }
         }
     }
 
@@ -462,17 +471,20 @@ export default class ProcessMap {
             inflatedData: Buffer;
 
         switch (type) {
-            case 'zlib':
+            case 'zlib': {
                 inflatedData = zlib.inflateSync(dataBuffer);
                 break;
+            }
 
-            case 'gzip':
+            case 'gzip': {
                 inflatedData = zlib.gunzipSync(dataBuffer);
                 break;
+            }
 
-            default:
+            default: {
                 log.error('Invalid compression format detected.');
                 return [];
+            }
         }
 
         if (!inflatedData) return [];
