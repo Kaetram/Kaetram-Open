@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite';
-import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
+import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
+import { VitePWA as pwa } from 'vite-plugin-pwa';
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { description, name } from '../../package.json';
 import config, { type Config } from '../common/config';
-import { name, description } from '../../package.json';
 
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 

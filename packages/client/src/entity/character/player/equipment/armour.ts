@@ -1,6 +1,6 @@
 import Equipment from './equipment';
 
-import type { Stats, Bonuses, Enchantments } from '@kaetram/common/types/item';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Armour extends Equipment {
     public constructor(

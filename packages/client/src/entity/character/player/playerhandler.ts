@@ -1,12 +1,12 @@
-import { Packets, Opcodes } from '@kaetram/common/network';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
-import type Map from '../../../map/map';
-import type Camera from '../../../renderer/camera';
-import type InputController from '../../../controllers/input';
 import type EntitiesController from '../../../controllers/entities';
-import type Socket from '../../../network/socket';
-import type Renderer from '../../../renderer/renderer';
+import type InputController from '../../../controllers/input';
 import type Game from '../../../game';
+import type Map from '../../../map/map';
+import type Socket from '../../../network/socket';
+import type Camera from '../../../renderer/camera';
+import type Renderer from '../../../renderer/renderer';
 import type Player from './player';
 
 export default class PlayerHandler {

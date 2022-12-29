@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 

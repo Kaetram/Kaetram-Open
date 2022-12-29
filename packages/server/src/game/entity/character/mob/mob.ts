@@ -1,27 +1,27 @@
-import _ from 'lodash-es';
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
-import Character from '../character';
-import PluginIndex from '../../../../../data/plugins/mobs';
 import rawData from '../../../../../data/mobs.json';
+import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
+import Character from '../character';
 
 import MobHandler from './handler';
 
-import type Entity from '../../entity';
-import type World from '../../../world';
-import type Chest from '../../objects/chest';
-import type Area from '../../../map/areas/area';
-import type Areas from '../../../map/areas/areas';
-import type Player from '../player/player';
-import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
-import type { MobData } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { MobData } from '@kaetram/common/types/mob';
+import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
+import type Area from '../../../map/areas/area';
+import type Areas from '../../../map/areas/areas';
+import type World from '../../../world';
+import type Entity from '../../entity';
+import type Chest from '../../objects/chest';
+import type Player from '../player/player';
 
 interface RawData {
     [key: string]: MobData;

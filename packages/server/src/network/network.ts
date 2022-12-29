@@ -1,17 +1,17 @@
-import _ from 'lodash-es';
 import config from '@kaetram/common/config';
+import _ from 'lodash-es';
 
 import Player from '../game/entity/character/player/player';
 
 import { Handshake } from './packets';
 
 import type Entities from '../controllers/entities';
-import type SocketHandler from './sockethandler';
-import type Regions from '../game/map/regions';
 import type MongoDB from '../database/mongodb/mongodb';
-import type Packet from './packet';
+import type Regions from '../game/map/regions';
 import type World from '../game/world';
 import type Connection from './connection';
+import type Packet from './packet';
+import type SocketHandler from './sockethandler';
 
 export default class Network {
     private entities: Entities;

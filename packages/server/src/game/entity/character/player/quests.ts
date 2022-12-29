@@ -1,16 +1,16 @@
-import _ from 'lodash-es';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
-import { Quest as QuestPacket } from '../../../../network/packets';
 import quests from '../../../../../data/quests.json';
+import { Quest as QuestPacket } from '../../../../network/packets';
 
 import QuestIndex from './quest/impl';
 
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
 import type Player from './player';
 import type Quest from './quest/quest';
-import type { PopupData } from '@kaetram/common/types/popup';
-import type { PointerData } from '@kaetram/common/types/pointer';
-import type { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
 
 // Raw quest data
 import type NPC from '../../npc/npc';

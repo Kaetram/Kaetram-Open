@@ -6956,6 +6956,7 @@ __metadata:
     postcss: ^8.4.14
     postcss-value-parser: ^4.2.0
     prettier: ^2.8.1
+    prettier-plugin-organize-imports: ^3.2.1
     stylelint: ^14.16.0
     typescript: ^4.7.4
   languageName: unknown
@@ -8656,6 +8657,23 @@ __metadata:
   dependencies:
     fast-diff: "npm:^1.1.2"
   checksum: 00ce8011cf6430158d27f9c92cfea0a7699405633f7f1d4a45f07e21bf78e99895911cbcdc3853db3a824201a7c745bd49bfea8abd5fb9883e765a90f74f8392
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-organize-imports@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "prettier-plugin-organize-imports@npm:3.2.1"
+  peerDependencies:
+    "@volar/vue-language-plugin-pug": ^1.0.4
+    "@volar/vue-typescript": ^1.0.4
+    prettier: ">=2.0"
+    typescript: ">=2.9"
+  peerDependenciesMeta:
+    "@volar/vue-language-plugin-pug":
+      optional: true
+    "@volar/vue-typescript":
+      optional: true
+  checksum: 57d0539e26ed6a1f5de6bdf390f8371a5637824bf6bb269d3a50c5c77ed4bdc3cdb97a797243baf6c2d65aa1bbda0b2307e55ab67dc639331c187b8d183bcdaa
   languageName: node
   linkType: hard
 
