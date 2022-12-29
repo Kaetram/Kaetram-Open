@@ -323,7 +323,8 @@ export const enum Constants {
     TREE_RESPAWN = 25_000,
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
-    EDIBLE_COOLDOWN = 1500 // 1.5 seconds between eating foods to prevent spam.
+    EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
+    INVALID_MOVEMENT_THRESHOLD = 3 // Amount of invalid movements before ignoring packets.
 }
 
 export enum MinigameConstants {

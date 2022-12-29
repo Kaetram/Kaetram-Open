@@ -102,7 +102,7 @@ export default class Player extends Character {
     public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
-    public invalidMovement = false;
+    public invalidMovement = 0;
 
     // Special status
     public running = false;
@@ -660,11 +660,14 @@ export default class Player extends Character {
         if (this.map.isDoor(x, y) || (target && following)) return;
         if (this.inCombat()) return;
 
-        if (x !== this.x || y !== this.y) {
-            this.notify(
-                `No-clipping has been detected in your client. Your movement will not be registered.`
-            );
-            this.invalidMovement = true;
+        let diffX = Math.abs(this.x - x),
+            diffY = Math.abs(this.y - y);
+
+        if (diffX > 1 || diffY > 1) {
+            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+            this.invalidMovement++;
+
+            log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
         }
     }
 
@@ -700,7 +703,7 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number): void {
-        if (this.stunned || this.invalidMovement) return;
+        if (this.stunned || this.isInvalidMovement()) return;
 
         if (this.verifyMovement(x, y))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -731,7 +734,7 @@ export default class Player extends Character {
         if (entity?.isItem()) this.inventory.add(entity);
 
         // Update the player's position.
-        if (!this.invalidMovement) this.setPosition(x, y);
+        if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
         if (this.map.isDoor(x, y) && !target) {
@@ -1184,6 +1187,14 @@ export default class Player extends Character {
 
     public isAdmin(): boolean {
         return this.rights > 1 || config.skipDatabase;
+    }
+
+    /**
+     * @returns Whether or not the player's invalid movement count is greater than the threshold.
+     */
+
+    private isInvalidMovement(): boolean {
+        return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
     }
 
     /**
