@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import config from '../config';
 
@@ -12,8 +13,13 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 
 class Log {
     private logLevel = config.debugLevel || 'all';
+
+    private logStreamPath = `${path.resolve('../../')}/runtime.log`;
+    private bugStreamPath = `${path.resolve('../../')}/bugs.log`;
+
     // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
+    private stream = config.fsDebugging ? fs.createWriteStream(this.logStreamPath) : null; // Write to a different stream
+    private bugStream = fs.createWriteStream(this.bugStreamPath);
 
     private debugging = config.debugging;
 
@@ -47,6 +53,18 @@ class Log {
         this.send('trace', data, 35);
     }
 
+    public bug(...data: unknown[]): void {
+        this.write(new Date(), '[BUG]', data, this.bugStream);
+    }
+
+    /**
+     * Formats a piece of text and creates a log in the console.
+     * @param type The type of logging we are doing.
+     * @param data Contains the text information about the log.
+     * @param color The colour of the log.
+     * @param title Title of the log (optional).
+     */
+
     private send(type: ConsoleLogType, data: unknown[], color = 1, title: string = type): void {
         let date = new Date(),
             formattedTitle = `[${title.toUpperCase()}]`,
@@ -61,10 +79,10 @@ class Log {
         console[type](date, coloredTitle + space, ...data);
     }
 
-    private write(date: Date, title: string, data: unknown[]) {
+    private write(date: Date, title: string, data: unknown[], stream = this.stream) {
         let parsed = data.map((data) => (typeof data === 'object' ? JSON.stringify(data) : data));
 
-        this.stream?.write(`${date} ${title} ${parsed.join(' ')}\n`);
+        stream?.write(`[${date}] ${title} ${parsed.join(' ')}\n`);
     }
 
     private isLoggable(type: string) {
