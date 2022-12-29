@@ -1,12 +1,12 @@
-import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import Resource from './impl/resource';
 
-import type World from '../world';
+import type { ProcessedResource } from '@kaetram/common/types/map';
 import type Map from '../map/map';
 import type Regions from '../map/regions';
-import type { ProcessedResource } from '@kaetram/common/types/map';
+import type World from '../world';
 
 export default class Resources {
     private map: Map;

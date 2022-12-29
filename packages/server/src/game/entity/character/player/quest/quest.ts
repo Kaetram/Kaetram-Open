@@ -1,16 +1,16 @@
-import _ from 'lodash-es';
-import log from '@kaetram/common/util/log';
 import Modules from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import Item from '../../../objects/item';
 
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
 import type Player from '../player';
-import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
-import type { PointerData } from '@kaetram/common/types/pointer';
-import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { PopupData } from '@kaetram/common/types/popup';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;

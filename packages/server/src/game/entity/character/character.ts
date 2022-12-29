@@ -1,21 +1,21 @@
-import _ from 'lodash-es';
-import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
+import Utils from '@kaetram/common/util/utils';
+import _ from 'lodash-es';
 
-import Entity from '../entity';
 import Formulas from '../../../info/formulas';
-import { Movement, Points, Combat as CombatPacket, Effect } from '../../../network/packets';
+import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
+import Entity from '../entity';
 
 import Combat from './combat/combat';
-import Poison from './poison';
 import Hit from './combat/hit';
 import HitPoints from './points/hitpoints';
+import Poison from './poison';
 
-import type World from '../../world';
-import type Packet from '../../../network/packet';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { EntityData } from '@kaetram/common/types/entity';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type Packet from '../../../network/packet';
+import type World from '../../world';
 
 type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number) => void;

@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import config from '@kaetram/common/config';
+import _ from 'lodash-es';
 
 import Server from '../model/server';
 

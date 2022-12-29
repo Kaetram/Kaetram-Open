@@ -1,7 +1,7 @@
-import log from '../lib/log';
-import Sprite from '../entity/sprite';
-import Animation from '../entity/animation';
 import spriteData from '../../data/sprites.json';
+import Animation from '../entity/animation';
+import Sprite from '../entity/sprite';
+import log from '../lib/log';
 
 import type { SpriteData } from '../entity/sprite';
 

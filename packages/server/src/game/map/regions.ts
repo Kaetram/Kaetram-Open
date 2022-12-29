@@ -1,29 +1,29 @@
 import fs from 'node:fs';
 
-import _ from 'lodash-es';
-import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
-import { List, Spawn, Map as MapPacket, Update } from '../../network/packets';
+import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
 
 import Region from './region';
 
-import type World from '../world';
-import type Map from './map';
-import type Entity from '../entity/entity';
-import type Player from '../entity/character/player/player';
-import type Dynamic from './areas/impl/dynamic';
-import type Resource from '../globals/impl/resource';
-import type Area from './areas/area';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type {
-    RegionData,
-    RegionTileData,
     RegionCache,
+    RegionData,
     RegionTile,
+    RegionTileData,
     Tile
 } from '@kaetram/common/types/map';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Resource from '../globals/impl/resource';
+import type World from '../world';
+import type Area from './areas/area';
+import type Dynamic from './areas/impl/dynamic';
+import type Map from './map';
 
 /**
  * Class responsible for chunking up the map.

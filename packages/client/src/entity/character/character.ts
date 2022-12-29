@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import Transition from '../../utils/transition';
 import Animation from '../animation';

@@ -1,9 +1,9 @@
-import axios from 'axios';
-import express from 'express';
 import config from '@kaetram/common/config';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import axios from 'axios';
+import express from 'express';
 
 import type Player from '../game/entity/character/player/player';
 import type World from '../game/world';

@@ -1,22 +1,22 @@
-import _ from 'lodash-es';
-import log from '@kaetram/common/util/log';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import StoreEn from '@kaetram/common/text/en/store';
-import { Opcodes, Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
-import Item from '../game/entity/objects/item';
 import storeData from '../../data/stores.json';
+import Item from '../game/entity/objects/item';
 import { Store as StorePacket } from '../network/packets';
 
-import type Player from '../game/entity/character/player/player';
-import type NPC from '../game/entity/npc/npc';
-import type World from '../game/world';
 import type {
+    RawStore,
     SerializedStoreInfo,
     SerializedStoreItem,
     StoreData,
-    StoreItem,
-    RawStore
+    StoreItem
 } from '@kaetram/common/types/stores';
+import type Player from '../game/entity/character/player/player';
+import type NPC from '../game/entity/npc/npc';
+import type World from '../game/world';
 
 interface StoreInfo {
     items: Item[];

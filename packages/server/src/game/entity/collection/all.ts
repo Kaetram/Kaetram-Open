@@ -3,13 +3,13 @@ import log from '@kaetram/common/util/log';
 import { Despawn } from '@kaetram/server/src/network/packets';
 import _ from 'lodash-es';
 
-import type World from '@kaetram/server/src/game/world';
-import type Map from '@kaetram/server/src/game/map/map';
-import type Regions from '@kaetram/server/src/game/map/regions';
-import type Grids from '@kaetram/server/src/game/map/grids';
-import type Entity from '../entity';
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Collections from '@kaetram/server/src/game/entity/collection/collections';
+import type Grids from '@kaetram/server/src/game/map/grids';
+import type Map from '@kaetram/server/src/game/map/map';
+import type Regions from '@kaetram/server/src/game/map/regions';
+import type World from '@kaetram/server/src/game/world';
+import type Entity from '../entity';
 
 /**
  * A class for collections of entities of a certain type in the game.
