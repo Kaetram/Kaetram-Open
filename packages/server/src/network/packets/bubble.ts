@@ -1,5 +1,6 @@
+import { Opcodes, Packets } from '@kaetram/common/network';
+
 import Packet from '../packet';
-import { Packets, Opcodes } from '@kaetram/common/network';
 
 export default class Bubble extends Packet {
     public constructor(data: unknown, opcode = Opcodes.Bubble.Entity) {

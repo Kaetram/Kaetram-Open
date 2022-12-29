@@ -1,9 +1,8 @@
+import type { OverlayType } from '@kaetram/common/types/map';
 import type Character from '../../entity/character/character';
 import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
-
-import type { OverlayType } from '@kaetram/common/types/map';
 
 type AreaCallback = (player: Player) => void;
 export default class Area {
@@ -99,7 +98,7 @@ export default class Area {
 
         if (index > -1) this.entities.splice(index, 1);
 
-        if (this.entities.length === 0) this.emptyCallback?.(attacker!);
+        if (this.entities.length === 0) this.emptyCallback?.(attacker);
     }
 
     /**
@@ -191,6 +190,8 @@ export default class Area {
      */
 
     private inPolygon(x: number, y: number): boolean {
+        let inside = false;
+
         for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
             let xi = this.polygon[i].x,
                 yi = this.polygon[i].y,
@@ -198,10 +199,10 @@ export default class Area {
                 yj = this.polygon[j].y,
                 intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
-            if (intersect) return true;
+            if (intersect) inside = !inside;
         }
 
-        return false;
+        return inside;
     }
 
     /**

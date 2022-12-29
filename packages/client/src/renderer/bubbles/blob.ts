@@ -3,7 +3,7 @@ import $ from 'jquery';
 import Timer from '../../utils/timer';
 
 export default class Blob {
-    public element: JQuery<HTMLElement>;
+    public element: JQuery;
     public duration = 5000;
 
     private timer: Timer;
@@ -62,7 +62,7 @@ export default class Blob {
      * @returns A JQuery element that is appended to the container.
      */
 
-    public createBlob(instance: string, message: string): JQuery<HTMLElement> {
+    public createBlob(instance: string, message: string): JQuery {
         return $(
             `<div id="${instance}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
         );

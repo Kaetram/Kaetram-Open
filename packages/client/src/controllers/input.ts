@@ -1,20 +1,20 @@
-import { Modules, Packets, Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
+import { isMobile } from '../utils/detect';
+
 import Chat from './chat';
 import HUDController from './hud';
-import Character from '../entity/character/character';
 
+import type App from '../app';
+import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type Camera from '../renderer/camera';
-import type App from '../app';
 import type Map from '../map/map';
-
-import { isMobile } from '../utils/detect';
+import type Camera from '../renderer/camera';
 
 interface TargetData {
     sprite: Sprite;
@@ -161,42 +161,50 @@ export default class InputController {
 
         switch (event.key) {
             case 'w':
-            case 'ArrowUp':
+            case 'ArrowUp': {
                 this.game.player.moveUp = true;
                 return;
+            }
 
             case 'a':
-            case 'ArrowLeft':
+            case 'ArrowLeft': {
                 this.game.player.moveLeft = true;
                 return;
+            }
 
             case 's':
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 this.game.player.moveDown = true;
                 return;
+            }
 
             case 'd':
-            case 'ArrowRight':
+            case 'ArrowRight': {
                 this.game.player.moveRight = true;
                 return;
+            }
 
-            case 'Enter':
+            case 'Enter': {
                 this.chatHandler.toggle();
                 return;
+            }
 
-            case 'i':
+            case 'i': {
                 this.game.menu.getInventory().toggle();
                 return;
+            }
 
-            case 'm':
+            case 'm': {
                 this.game.menu.getWarp().toggle();
                 return;
+            }
 
-            case 'p':
+            case 'p': {
                 this.game.menu.getProfile().toggle();
                 return;
+            }
 
-            case 't':
+            case 't': {
                 target = this.game.entities.get(this.game.player.lastTarget);
 
                 console.log(target);
@@ -204,24 +212,28 @@ export default class InputController {
                 if (target) this.game.player.follow(target);
 
                 return;
+            }
 
-            case 'Escape':
+            case 'Escape': {
                 this.game.menu.hide();
 
                 if (this.game.player.moving) this.game.player.stop();
                 return;
+            }
 
             case '+':
-            case '=':
+            case '=': {
                 this.game.camera.zoom(0.1);
                 this.game.renderer.resize();
                 return;
+            }
 
             case '-':
-            case '_':
+            case '_': {
                 this.game.camera.zoom(-0.1);
                 this.game.renderer.resize();
                 return;
+            }
         }
     }
 
@@ -234,24 +246,28 @@ export default class InputController {
     public handleKeyUp(event: KeyboardEvent): void {
         switch (event.key) {
             case 'w':
-            case 'ArrowUp':
+            case 'ArrowUp': {
                 this.game.player.moveUp = false;
                 break;
+            }
 
             case 'a':
-            case 'ArrowLeft':
+            case 'ArrowLeft': {
                 this.game.player.moveLeft = false;
                 break;
+            }
 
             case 's':
-            case 'ArrowDown':
+            case 'ArrowDown': {
                 this.game.player.moveDown = false;
                 break;
+            }
 
             case 'd':
-            case 'ArrowRight':
+            case 'ArrowRight': {
                 this.game.player.moveRight = false;
                 break;
+            }
         }
 
         this.game.player.disableAction = false;
@@ -378,27 +394,31 @@ export default class InputController {
 
         switch (this.entity.type) {
             case Modules.EntityType.Item:
-            case Modules.EntityType.Chest:
+            case Modules.EntityType.Chest: {
                 this.setCursor(this.cursors.loot);
                 this.hovering = Modules.Hovering.Item;
                 break;
+            }
 
-            case Modules.EntityType.Mob:
+            case Modules.EntityType.Mob: {
                 this.setCursor(this.getAttackCursor());
                 this.hovering = Modules.Hovering.Mob;
                 break;
+            }
 
-            case Modules.EntityType.NPC:
+            case Modules.EntityType.NPC: {
                 this.setCursor(this.cursors.talk);
                 this.hovering = Modules.Hovering.NPC;
                 break;
+            }
 
-            case Modules.EntityType.Player:
+            case Modules.EntityType.Player: {
                 if (this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
                     this.hovering = Modules.Hovering.Player;
                 }
                 break;
+            }
         }
     }
 

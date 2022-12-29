@@ -1,4 +1,4 @@
-import Player from '../entity/character/player/player';
+import type Player from '../entity/character/player/player';
 
 export default class QuickSlots {
     private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
@@ -50,8 +50,8 @@ export default class QuickSlots {
      */
 
     private clean(key: string): void {
-        for (let i = 0; i < this.abilityBar.children.length; i++)
-            if (this.abilityBar.children[i].classList.contains(`quickslot-icon-${key}`))
-                this.abilityBar.children[i].classList.remove(`quickslot-icon-${key}`);
+        for (let child of this.abilityBar.children)
+            if (child.classList.contains(`quickslot-icon-${key}`))
+                child.classList.remove(`quickslot-icon-${key}`);
     }
 }

@@ -1,4 +1,4 @@
-import Modules from '../network/modules';
+import type Modules from '../network/modules';
 
 export interface SkillData {
     type: Modules.Skills;

@@ -1,14 +1,13 @@
+import { Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 import _ from 'lodash';
 
-import World from '../world';
-import Minigame from './minigame';
-import Area from '../map/areas/area';
-import Areas from '../map/areas/areas';
 import Index from './impl/index';
 
-import log from '@kaetram/common/util/log';
-
-import { Opcodes } from '@kaetram/common/network';
+import type Area from '../map/areas/area';
+import type Areas from '../map/areas/areas';
+import type World from '../world';
+import type Minigame from './minigame';
 
 /**
  * Controller for minigames, used to connect the game world to the minigames
@@ -63,8 +62,9 @@ export default class Minigames {
 
     public get(opcode: Opcodes.Minigame): Minigame {
         switch (opcode) {
-            case Opcodes.Minigame.TeamWar:
+            case Opcodes.Minigame.TeamWar: {
                 return this.minigames.teamwar;
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
-import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import Formulas from './formulas';
-
-import { Modules } from '@kaetram/common/network';
 
 export default class Loader {
     /**
