@@ -2,8 +2,8 @@ import { Modules } from '@kaetram/common/network';
 
 import Util from '../utils/util';
 
-import type Game from '../game';
 import type Entity from '../entity/entity';
+import type Game from '../game';
 
 export default class AudioController {
     /** Duration for background music to fade in and out. */

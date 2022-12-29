@@ -1,11 +1,11 @@
-import _ from 'lodash';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import _ from 'lodash';
 
-import Menu from '../../menu';
 import log from '../../../lib/log';
+import Menu from '../../menu';
 
-import type Player from '../../../entity/character/player/player';
 import type Ability from '../../../entity/character/player/ability';
+import type Player from '../../../entity/character/player/player';
 
 interface AbilityElement extends HTMLElement {
     key?: string;

@@ -1,11 +1,11 @@
-import axios from 'axios';
-import express, { Router } from 'express';
+import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import config from '@kaetram/common/config';
+import axios from 'axios';
+import express, { Router } from 'express';
 
-import type { Request, Response } from 'express';
 import type Discord from '@kaetram/common/api/discord';
+import type { Request, Response } from 'express';
 import type Servers from './controllers/servers';
 import type Server from './model/server';
 

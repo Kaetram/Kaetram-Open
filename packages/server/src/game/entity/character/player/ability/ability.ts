@@ -1,9 +1,9 @@
-import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import Data from '../../../../../../data/abilities.json';
 
-import type { RawAbility, AbilityData } from '@kaetram/common/types/ability';
+import type { AbilityData, RawAbility } from '@kaetram/common/types/ability';
 import type Player from '../player';
 
 type DeactivateCallback = (player: Player) => void;

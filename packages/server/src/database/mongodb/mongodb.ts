@@ -1,18 +1,18 @@
-import _ from 'lodash';
-import bcryptjs from 'bcryptjs';
-import { MongoClient } from 'mongodb';
-import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
+import log from '@kaetram/common/util/log';
+import bcryptjs from 'bcryptjs';
+import _ from 'lodash';
+import { MongoClient } from 'mongodb';
 
 import Quests from '../../../data/quests.json';
 
 import Creator from './creator';
 import Loader from './loader';
 
-import type { PlayerInfo } from './creator';
-import type Player from '../../game/entity/character/player/player';
 import type { Db } from 'mongodb';
+import type Player from '../../game/entity/character/player/player';
+import type { PlayerInfo } from './creator';
 
 export default class MongoDB {
     private connectionUrl: string;

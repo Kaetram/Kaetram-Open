@@ -1,11 +1,11 @@
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
-import type Mob from './mob';
 import type Map from '../../../map/map';
 import type World from '../../../world';
 import type Character from '../character';
+import type Mob from './mob';
 
 /**
  * The handler class file for the Mob object. We use this to better

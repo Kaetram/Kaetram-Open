@@ -3,8 +3,8 @@ import http from 'node:http';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
-import type ws from 'ws';
 import type { Server, Socket } from 'socket.io';
+import type ws from 'ws';
 import type Connection from './connection';
 import type SocketHandler from './sockethandler';
 

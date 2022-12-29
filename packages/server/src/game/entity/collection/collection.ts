@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash-es';
 
+import type Collections from '@kaetram/server/src/game/entity/collection/collections';
+import type Grids from '@kaetram/server/src/game/map/grids';
 import type Map from '@kaetram/server/src/game/map/map';
 import type Regions from '@kaetram/server/src/game/map/regions';
-import type Grids from '@kaetram/server/src/game/map/grids';
-import type Entity from '../entity';
-import type Collections from '@kaetram/server/src/game/entity/collection/collections';
 import type World from '@kaetram/server/src/game/world';
+import type Entity from '../entity';
 
 /**
  * A class for collections of entities of a certain type in the game.

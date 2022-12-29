@@ -1,31 +1,31 @@
-import _ from 'lodash-es';
-import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import Filter from '@kaetram/common/util/filter';
+import config from '@kaetram/common/config';
 import { Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
+import Filter from '@kaetram/common/util/filter';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import _ from 'lodash-es';
 
+import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Warps from '../controllers/warps';
 import API from '../network/api';
 import Network from '../network/network';
-import Enchanter from '../controllers/enchanter';
 import { Chat } from '../network/packets';
 
-import Minigames from './minigames/minigames';
 import Globals from './globals/globals';
 import Map from './map/map';
+import Minigames from './minigames/minigames';
 
-import type Character from './entity/character/character';
-import type Packet from '../network/packet';
-import type Grids from './map/grids';
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
+import type Packet from '../network/packet';
 import type SocketHandler from '../network/sockethandler';
+import type Character from './entity/character/character';
 import type Player from './entity/character/player/player';
+import type Grids from './map/grids';
 
 export interface PacketData {
     packet: Packet;

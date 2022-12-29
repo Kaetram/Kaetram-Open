@@ -1,23 +1,23 @@
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import Character from '../character';
 
-import Task from './task';
-import Skill from './skill';
 import Ability from './ability';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Skill from './skill';
+import Task from './task';
 
+import type { AbilityData } from '@kaetram/common/types/ability';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
-import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
-import type { AbilityData } from '@kaetram/common/types/ability';
+import type { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
     experience: number,

@@ -1,7 +1,7 @@
-import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type { ProcessedResource, RegionTile } from '@kaetram/common/types/map';
 

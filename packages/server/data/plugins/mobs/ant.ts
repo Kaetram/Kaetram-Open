@@ -2,8 +2,8 @@ import Utils from '@kaetram/common/util/utils';
 
 import Default from './default';
 
-import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import type Character from '@kaetram/server/src/game/entity/character/character';
+import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 
 export default class Ant extends Default {
     private healInterval: NodeJS.Timeout | null;

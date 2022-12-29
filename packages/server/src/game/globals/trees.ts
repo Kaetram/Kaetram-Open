@@ -1,5 +1,5 @@
-import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import Resources from './resources';
 

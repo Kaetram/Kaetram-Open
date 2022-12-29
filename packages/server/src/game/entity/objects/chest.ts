@@ -1,5 +1,5 @@
-import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import Entity from '../entity';
 
