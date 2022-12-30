@@ -496,11 +496,11 @@ export default class Player extends Character {
 
     private verifyMovement(x: number, y: number): boolean {
         let now = Date.now(),
-            stepDiff = now - this.lastStep - 7, // - 7ms for margin of error.
+            stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
             regionDiff = now - this.lastRegionChange;
 
         // Firstly ensure that the last step was behaving normally.
-        if (stepDiff > this.getMovementSpeed()) return false;
+        if (stepDiff >= this.getMovementSpeed()) return false;
 
         // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
         if (regionDiff < 1500) return false;
