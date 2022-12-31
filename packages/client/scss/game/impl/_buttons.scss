@@ -29,7 +29,11 @@
 #inventory-button,
 #profile-button,
 #settings-button,
-#warp-button {
+#warp-button,
+#audio-button,
+#achievement-button,
+#quest-button,
+#friends-button {
     position: relative;
 
     width: 42px;
@@ -96,5 +100,53 @@
 
     &.active {
         background-position-x: -1050px;
+    }
+}
+
+#audio-button {
+    background-position-x: -294px;
+
+    &:hover {
+        background-position-x: -378px;
+    }
+
+    &.active {
+        background-position-x: -336px;
+    }
+}
+
+#achievement-button {
+    background-position-x: -126px;
+
+    &:hover {
+        background-position-x: -168px;
+    }
+
+    &.active {
+        background-position-x: -210px;
+    }
+}
+
+#quest-button {
+    background-position-x: -840px;
+
+    &:hover {
+        background-position-x: -882px;
+    }
+
+    &.active {
+        background-position-x: -924px;
+    }
+}
+
+#friends-button {
+    background-position-x: -1092px;
+
+    &:hover {
+        background-position-x: -1134px;
+    }
+
+    &.active {
+        background-position-x: -1176px;
     }
 }
