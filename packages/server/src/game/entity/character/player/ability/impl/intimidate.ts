@@ -1,7 +1,6 @@
-import Player from '../../player';
 import Ability from '../ability';
 
-import { Modules } from '@kaetram/common/network';
+import type Player from '../../player';
 
 export default class Intimidate extends Ability {
     public constructor(level: number, quickSlot = -1) {

@@ -19,7 +19,6 @@
 #enchant-shards {
     position: absolute;
     top: 80%;
-
     background-size: 600%;
 }
 
@@ -35,10 +34,8 @@
     @media ($size) {
         #enchant {
             transform: scale(1.6);
-
             width: 129px * $i;
             height: 155px * $i;
-
             background: url('/img/#{$i}/containers.png') 0 0;
         }
 
@@ -56,9 +53,9 @@
             width: 96px * $i;
             height: 80px * $i;
         }
-    }
 
-    #shards-count {
-        width: 16px * $i;
+        #shards-count {
+            width: 16px * $i;
+        }
     }
 }

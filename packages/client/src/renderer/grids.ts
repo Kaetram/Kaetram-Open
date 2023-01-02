@@ -1,7 +1,7 @@
+import log from '../lib/log';
+
 import type Entity from '../entity/entity';
 import type Map from '../map/map';
-
-import log from '../lib/log';
 
 export default class Grids {
     // Grid used for rendering entities.

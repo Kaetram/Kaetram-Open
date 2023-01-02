@@ -19,7 +19,6 @@
 
     a {
         pointer-events: auto;
-
         color: #fcda5c;
         text-decoration: none;
     }
@@ -28,9 +27,7 @@
 .pointer {
     pointer-events: none;
     user-select: none;
-
     position: absolute;
-
     display: inline-block;
 }
 

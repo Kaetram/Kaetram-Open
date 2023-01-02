@@ -1,12 +1,11 @@
-import _ from 'lodash-es';
-
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Formulas from '../../../../info/formulas';
+import { Combat as CombatPacket, Spawn } from '../../../../network/packets';
+
 import Hit from './hit';
 
 import type Character from '../character';
-import { Movement, Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
 export default class Combat {
     public started = false;

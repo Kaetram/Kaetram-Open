@@ -1,18 +1,16 @@
+import Modules from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
-import NPC from '../../../npc/npc';
-import Mob from '../../mob/mob';
-import Player from '../player';
 import Item from '../../../objects/item';
 
-import log from '@kaetram/common/util/log';
-
-import Modules from '@kaetram/common/network/modules';
-
-import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import { PopupData } from '@kaetram/common/types/popup';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import type NPC from '../../../npc/npc';
+import type Mob from '../../mob/mob';
+import type Player from '../player';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;
@@ -110,10 +108,10 @@ export default abstract class Quest {
          * it will check for that first. If the stage requires the player be given an item
          * it must be given before the conversation ends and quest progresses.
          */
-        if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
+        if (this.stageData.npc === npc.key && dialogue.length === player.talkIndex)
             if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
             else if (this.hasItemToGive()) {
-                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount!))
+                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))
                     this.progress();
             } else if (this.hasAbility()) this.givePlayerAbility(player);
             else this.progress();
@@ -131,7 +129,7 @@ export default abstract class Quest {
     private handleDoor(door: ProcessedDoor, player: Player): void {
         log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
 
-        if (this.stage < door.stage!) return player.notify('You cannot pass through this door.');
+        if (this.stage < door.stage) return player.notify('You cannot pass through this door.');
 
         player.teleport(door.x, door.y);
 
@@ -320,7 +318,7 @@ export default abstract class Quest {
         let stage = this.stages[this.stage];
 
         return {
-            task: stage.task!,
+            task: stage.task,
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
@@ -362,7 +360,7 @@ export default abstract class Quest {
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (stage.itemRequirement! && this.stage === i) {
                 // Verify that the player has the required items and return the dialogue for it.
-                if (player.inventory.hasItem(stage.itemRequirement!, stage.itemCountRequirement!))
+                if (player.inventory.hasItem(stage.itemRequirement, stage.itemCountRequirement))
                     return stage.hasItemText!;
 
                 // Skip to next stage iteration.

@@ -1,16 +1,14 @@
+import { Modules } from '@kaetram/common/network';
 import _ from 'lodash';
-
-import Menu from './menu';
-
-import SpritesController from '../controllers/sprites';
-
-import Player from '../entity/character/player/player';
-import Equipment from '../entity/character/player/equipment/equipment';
 
 import Util from '../utils/util';
 
-import { Modules } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
+import Menu from './menu';
+
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type SpritesController from '../controllers/sprites';
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Player from '../entity/character/player/player';
 
 type SelectCallback = (type: Modules.Equipment) => void;
 
@@ -31,8 +29,8 @@ export default class Equipments extends Menu {
     private next: HTMLElement = document.querySelector('#player-image-navigator > .next')!;
 
     // Stats elements
-    private attackStats: HTMLElement = document.querySelector('#attackStats')!;
-    private defenseStats: HTMLElement = document.querySelector('#defenseStats')!;
+    private attackStats: HTMLElement = document.querySelector('#attack-stats')!;
+    private defenseStats: HTMLElement = document.querySelector('#defense-stats')!;
     private bonuses: HTMLElement = document.querySelector('#bonuses')!;
 
     // Class properties
@@ -102,13 +100,15 @@ export default class Equipments extends Menu {
             index = orientations.indexOf(this.imageOrientation);
 
         switch (direction) {
-            case 'previous':
+            case 'previous': {
                 index = index === 0 ? orientations.length - 1 : index - 1;
                 break;
+            }
 
-            case 'next':
+            case 'next': {
                 index = index === orientations.length - 1 ? 0 : index + 1;
                 break;
+            }
         }
 
         this.imageOrientation = orientations[index];
@@ -222,14 +222,17 @@ export default class Equipments extends Menu {
     private getOrientationIndex(): number {
         switch (this.imageOrientation) {
             case Modules.Orientation.Left:
-            case Modules.Orientation.Right:
+            case Modules.Orientation.Right: {
                 return 1;
+            }
 
-            case Modules.Orientation.Up:
+            case Modules.Orientation.Up: {
                 return 4;
+            }
 
-            case Modules.Orientation.Down:
+            case Modules.Orientation.Down: {
                 return 7;
+            }
         }
     }
 
