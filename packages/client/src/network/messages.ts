@@ -1,5 +1,4 @@
 import _ from 'lodash-es';
-
 import { Packets } from '@kaetram/common/network';
 
 import type {
@@ -46,7 +45,6 @@ import type {
     UpdateCallback,
     WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
-
 import type App from '../app';
 
 export default class Messages {
