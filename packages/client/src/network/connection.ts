@@ -667,7 +667,7 @@ export default class Connection {
                 break;
         }
 
-        this.menu.synchronize();
+        this.menu.synchronize('profile');
     }
 
     /**
@@ -691,7 +691,7 @@ export default class Connection {
                 break;
         }
 
-        this.menu.synchronize();
+        this.menu.synchronize('quest');
     }
 
     /**
@@ -710,11 +710,16 @@ export default class Connection {
                 break;
 
             case Opcodes.Achievement.Progress:
-                this.game.player.setAchievement(info.key!, info.stage!, info.name!);
+                this.game.player.setAchievement(
+                    info.key!,
+                    info.stage!,
+                    info.name!,
+                    info.description!
+                );
                 break;
         }
 
-        this.menu.synchronize();
+        this.menu.getAchievements().handle(opcode, info.key!);
     }
 
     /**
@@ -1117,7 +1122,7 @@ export default class Connection {
                 break;
         }
 
-        this.game.menu.synchronize();
+        this.game.menu.synchronize('profile');
     }
 
     /**

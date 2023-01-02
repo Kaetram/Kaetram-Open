@@ -31,8 +31,8 @@
 #settings-button,
 #warp-button,
 #audio-button,
-#achievement-button,
-#quest-button,
+#achievements-button,
+#quests-button,
 #friends-button {
     position: relative;
 
@@ -115,7 +115,7 @@
     }
 }
 
-#achievement-button {
+#achievements-button {
     background-position-x: -126px;
 
     &:hover {
@@ -127,7 +127,7 @@
     }
 }
 
-#quest-button {
+#quests-button {
     background-position-x: -840px;
 
     &:hover {
