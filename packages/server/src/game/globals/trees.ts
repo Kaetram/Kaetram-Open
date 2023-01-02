@@ -1,9 +1,9 @@
+import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
-import World from '../world';
 import Resources from './resources';
 
-import log from '@kaetram/common/util/log';
+import type World from '../world';
 
 export default class Trees extends Resources {
     public constructor(world: World) {

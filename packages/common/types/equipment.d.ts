@@ -1,5 +1,5 @@
 import type { Modules } from '../network';
-import type { Stats, Bonuses, Enchantments } from './item';
+import type { Bonuses, Enchantments, Stats } from './item';
 
 export interface EquipmentData {
     type: Modules.Equipment;

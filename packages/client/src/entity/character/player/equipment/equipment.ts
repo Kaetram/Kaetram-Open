@@ -1,6 +1,6 @@
 import Util from '../../../../utils/util';
 
-import { Stats, Bonuses, Enchantments } from '@kaetram/common/types/item';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default abstract class Equipment {
     public attackStats: Stats = Util.getEmptyStats();

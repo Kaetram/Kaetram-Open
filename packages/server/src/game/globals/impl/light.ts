@@ -1,4 +1,4 @@
-import { SerializedLight } from '@kaetram/common/types/light';
+import type { SerializedLight } from '@kaetram/common/types/light';
 
 export default class Light {
     /**
