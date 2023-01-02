@@ -16,6 +16,8 @@ import Settings from '../menu/settings';
 import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
+import Quests from '../menu/quests';
+import Friends from '../menu/friends';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -32,6 +34,9 @@ export default class MenuController {
     private settings: Settings;
     private equipments: Equipments;
     private achievements: Achievements;
+    private quests: Quests;
+    private friends: Friends;
+
     public header: Header;
 
     public menus: { [key: string]: Menu };
@@ -48,6 +53,8 @@ export default class MenuController {
         this.header = new Header(game.player);
         this.equipments = new Equipments(game.player, game.sprites);
         this.achievements = new Achievements(game.player);
+        this.quests = new Quests(game.player);
+        this.friends = new Friends();
 
         this.menus = {
             inventory: this.inventory,
@@ -59,7 +66,9 @@ export default class MenuController {
             notification: this.notification,
             settings: this.settings,
             equipments: this.equipments,
-            achievements: this.achievements
+            achievements: this.achievements,
+            quests: this.quests,
+            friends: this.friends
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
