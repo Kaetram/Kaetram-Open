@@ -5,6 +5,7 @@
 export interface RawAchievement {
     name: string;
     description?: string;
+    hidden?: boolean; // Whether or not to display description and achievement title.
 
     npc?: string; // NPC handing out the achievement.
     dialogueHidden?: string[]; // Dialogue to display before the achievement is discovered.
