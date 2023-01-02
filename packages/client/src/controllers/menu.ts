@@ -1,21 +1,24 @@
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Actions from '../menu/actions';
-import Bank from '../menu/bank';
-import Enchant from '../menu/enchant';
-import Equipments from '../menu/equipments';
-import Header from '../menu/header';
 import Inventory from '../menu/inventory';
-import Notification from '../menu/notification';
-import Profile from '../menu/profile/profile';
-import QuickSlots from '../menu/quickslots';
-import Settings from '../menu/settings';
+import Bank from '../menu/bank';
 import Store from '../menu/store';
+import Header from '../menu/header';
+import Profile from '../menu/profile/profile';
+import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
+import Notification from '../menu/notification';
+import Settings from '../menu/settings';
+import QuickSlots from '../menu/quickslots';
+import Equipments from '../menu/equipments';
+import Achievements from '../menu/achievements';
+import Quests from '../menu/quests';
+import Friends from '../menu/friends';
 
-import type Game from '../game';
 import type Menu from '../menu/menu';
+import type Game from '../game';
 
 export default class MenuController {
     private actions: Actions = new Actions();
@@ -29,9 +32,13 @@ export default class MenuController {
     private notification: Notification;
     private settings: Settings;
     private equipments: Equipments;
+    private achievements: Achievements;
+    private quests: Quests;
+    private friends: Friends;
+
     public header: Header;
 
-    public menu: Menu[];
+    public menus: { [key: string]: Menu };
 
     public constructor(private game: Game) {
         this.inventory = new Inventory(this.actions);
@@ -44,18 +51,24 @@ export default class MenuController {
         this.settings = new Settings(game);
         this.header = new Header(game.player);
         this.equipments = new Equipments(game.player, game.sprites);
+        this.achievements = new Achievements(game.player);
+        this.quests = new Quests(game.player);
+        this.friends = new Friends();
 
-        this.menu = [
-            this.inventory,
-            this.bank,
-            this.store,
-            this.profile,
-            this.enchant,
-            this.warp,
-            this.notification,
-            this.settings,
-            this.equipments
-        ];
+        this.menus = {
+            inventory: this.inventory,
+            bank: this.bank,
+            store: this.store,
+            profile: this.profile,
+            enchant: this.enchant,
+            warp: this.warp,
+            notification: this.notification,
+            settings: this.settings,
+            equipments: this.equipments,
+            achievements: this.achievements,
+            quests: this.quests,
+            friends: this.friends
+        };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
@@ -90,9 +103,12 @@ export default class MenuController {
 
     /**
      * Synchronizes the contains and the UI for all menus.
+     * @param key Optional key to synchronize a specific menu.
      */
 
-    public synchronize(): void {
+    public synchronize(key?: string): void {
+        if (key) return this.menus[key]?.synchronize();
+
         this.forEachMenu((menu: Menu) => menu.synchronize());
     }
 
@@ -152,6 +168,14 @@ export default class MenuController {
 
     public getWarp(): Warp {
         return this.warp;
+    }
+
+    /**
+     * @returns The achievement menu object.
+     */
+
+    public getAchievements(): Achievements {
+        return this.achievements;
     }
 
     /**
@@ -240,6 +264,6 @@ export default class MenuController {
      */
 
     private forEachMenu(callback: (menu: Menu) => void): void {
-        _.each(this.menu, callback);
+        _.each(this.menus, callback);
     }
 }

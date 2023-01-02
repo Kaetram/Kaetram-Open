@@ -1,0 +1,65 @@
+@use '../../abstracts/media';
+
+#friends-page {
+    position: absolute;
+    right: 0;
+    bottom: 45px;
+}
+
+.add, .remove {
+    position: absolute;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #friends-page {
+            display: none;
+            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+        }
+
+        .add, .remove {
+            bottom: 8px * $i;
+            width: 21px * $i;
+            height: 17px * $i;
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+
+            &:hover {
+                background-position-x: -42px * $i;
+            }
+
+            &.active {
+                background-position-x: -21px * $i;
+            }
+        }
+
+        .add {
+            left: 24px * $i;
+            background-position-y: -274px * $i;
+        }
+
+        .remove {
+            right: 24px * $i;
+            background-position-y: -291px * $i;
+        }
+    }
+
+    @media(--lg) {
+        #friends-page {
+            right: 0;
+        }
+    }
+
+    @media(--md) {
+        #friends-page {
+            right: 32px;
+        }
+    }
+
+    @media(--sm) {
+        #friends-page {
+            right: 80px;
+            bottom: 99px;
+            transform: scale(1.5);
+        }
+    }
+}
