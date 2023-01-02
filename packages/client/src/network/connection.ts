@@ -1,7 +1,5 @@
 import _ from 'lodash-es';
-
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
 import { inflate } from 'pako';
 
 import log from '../lib/log';
@@ -27,7 +25,6 @@ import type Overlays from '../renderer/overlays';
 import type Renderer from '../renderer/renderer';
 import type Messages from './messages';
 import type Socket from './socket';
-
 import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
