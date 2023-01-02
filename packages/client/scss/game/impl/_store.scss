@@ -75,11 +75,8 @@
 .store-item-price,
 .store-item-buy {
     position: absolute;
-
     float: left;
-
     padding-top: 2%;
-
     font-size: 12px;
 }
 
@@ -98,13 +95,11 @@
 .store-item-buy {
     position: relative;
     left: 75%;
-
     border: 2px solid rgb(0 255 0 / 30%);
     border-radius: 30%;
 
     &:hover {
         cursor: pointer;
-
         color: white;
     }
 }
@@ -114,14 +109,12 @@
         #store {
             width: 170px * $i;
             height: 168px * $i;
-
             background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
         }
 
         #store-inventory-container {
             width: 129px * $i;
             height: 155px * $i;
-
             background: url('/img/#{$i}/containers.png') 0 0;
         }
 
@@ -173,7 +166,6 @@
 
     .store-item {
         width: 97%;
-
         border: 1.5px solid rgb(255 255 0 / 30%);
         border-radius: 7px;
     }
@@ -181,7 +173,6 @@
     .store-item-image {
         width: 16px;
         height: 16px;
-
         border: 1px solid rgb(0 0 255 / 30%);
     }
 

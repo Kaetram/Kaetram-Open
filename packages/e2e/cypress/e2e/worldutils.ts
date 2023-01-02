@@ -1,14 +1,16 @@
-import WorldContext from './world.context';
 import DefaultContext from './default.context';
 
-export function getWorldContext<WC extends WorldContext = WorldContext>(world: any): WC {
+import type { Context } from 'mocha';
+import type WorldContext from './world.context';
+
+export function getWorldContext<WC extends WorldContext = WorldContext>(world: Context): WC {
     if (!world.worldContext) activateWorldContext(world, new DefaultContext());
 
     return world.worldContext as WC;
 }
 
 export function activateWorldContext<WC extends WorldContext = WorldContext>(
-    world: any,
+    world: Context,
     context: WC
 ): void {
     world.worldContext = context;

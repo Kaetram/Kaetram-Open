@@ -1,9 +1,10 @@
 import log from '../lib/log';
-
-import spriteData from '../../data/sprites.json';
+import Utils from '../utils/util';
 
 import Animation from './animation';
-import Utils from '../utils/util';
+
+import type spriteData from '../../data/sprites.json';
+
 interface AnimationData {
     [name: string]: {
         length: number;

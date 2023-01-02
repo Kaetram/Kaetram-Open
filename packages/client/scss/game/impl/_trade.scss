@@ -1,9 +1,7 @@
 #trade {
     position: absolute;
     inset: 0;
-
     display: none;
-
     margin: auto;
 }
 
@@ -11,7 +9,6 @@
 #trade-o-player-container {
     position: relative;
     top: 24%;
-
     float: left;
 }
 
@@ -27,7 +24,6 @@
     #trade {
         width: 500px;
         height: 339px;
-
         background: url('/img/2/trade.png') 0 0;
     }
 

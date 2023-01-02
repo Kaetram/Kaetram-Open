@@ -1,16 +1,16 @@
-import path from 'path';
+import path from 'node:path';
 
 import { defineConfig } from 'vite';
 
-import config, { type Config } from '../common/config';
-
-import { VitePWA } from 'vite-plugin-pwa';
 import ViteLegacy from '@vitejs/plugin-legacy';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
-
-import { name, description } from '../../package.json';
+import { VitePWA } from 'vite-plugin-pwa';
 
 import { internalIpV4 } from 'internal-ip';
+
+import { description, name } from '../../package.json';
+
+import config, { type Config } from '../common/config';
 
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
