@@ -15,6 +15,7 @@ import Notification from '../menu/notification';
 import Settings from '../menu/settings';
 import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
+import Achievements from '../menu/achievements';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -30,9 +31,10 @@ export default class MenuController {
     private notification: Notification;
     private settings: Settings;
     private equipments: Equipments;
+    private achievements: Achievements;
     public header: Header;
 
-    public menu: Menu[];
+    public menus: { [key: string]: Menu };
 
     public constructor(private game: Game) {
         this.inventory = new Inventory(this.actions);
@@ -45,18 +47,20 @@ export default class MenuController {
         this.settings = new Settings(game);
         this.header = new Header(game.player);
         this.equipments = new Equipments(game.player, game.sprites);
+        this.achievements = new Achievements(game.player);
 
-        this.menu = [
-            this.inventory,
-            this.bank,
-            this.store,
-            this.profile,
-            this.enchant,
-            this.warp,
-            this.notification,
-            this.settings,
-            this.equipments
-        ];
+        this.menus = {
+            inventory: this.inventory,
+            bank: this.bank,
+            store: this.store,
+            profile: this.profile,
+            enchant: this.enchant,
+            warp: this.warp,
+            notification: this.notification,
+            settings: this.settings,
+            equipments: this.equipments,
+            achievements: this.achievements
+        };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
@@ -91,9 +95,12 @@ export default class MenuController {
 
     /**
      * Synchronizes the contains and the UI for all menus.
+     * @param key Optional key to synchronize a specific menu.
      */
 
-    public synchronize(): void {
+    public synchronize(key?: string): void {
+        if (key) return this.menus[key]?.synchronize();
+
         this.forEachMenu((menu: Menu) => menu.synchronize());
     }
 
@@ -153,6 +160,14 @@ export default class MenuController {
 
     public getWarp(): Warp {
         return this.warp;
+    }
+
+    /**
+     * @returns The achievement menu object.
+     */
+
+    public getAchievements(): Achievements {
+        return this.achievements;
     }
 
     /**
@@ -241,6 +256,6 @@ export default class MenuController {
      */
 
     private forEachMenu(callback: (menu: Menu) => void): void {
-        _.each(this.menu, callback);
+        _.each(this.menus, callback);
     }
 }

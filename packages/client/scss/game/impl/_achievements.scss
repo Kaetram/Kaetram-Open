@@ -1,0 +1,103 @@
+@use '../../abstracts/media';
+
+#achievements-container {
+    position: absolute;
+    inset: 0;
+    
+    overflow: auto;
+
+    margin: auto;
+
+    font-family: AdvoCut, sans-serif;
+}
+
+.achievement-element > p.achievement-title {
+    float: left;
+
+    color: #fff;
+}
+
+.achievement-element > p.achievement-progress {
+    float: right;
+
+    color: #fff;
+}
+
+.coin {
+    position: absolute;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #achievements-container {
+            width: 318px * $i;
+            height: 130px * $i;
+
+            font-size: 22px;
+        }
+
+        #achievements-container > ul > li:last-child.achievement-element {
+            padding-bottom: 0 !important;
+        }
+
+        .achievement-element {
+            width: 318px * $i;
+            height: 26px * $i;
+            padding-bottom: 8px * $i;
+
+            background: url('/img/#{$i}/achievements.png') 0 -96px * $i no-repeat;
+        }
+
+        .achievement-element > p.achievement-title, .achievement-element > p.achievement-description {
+            padding-top: 9px * $i;
+        }
+
+        .achievement-element > p.achievement-title {
+            margin-left: 30px * $i;
+
+            font-size: 8px * $i;
+        }
+
+        .achievement-element > p.achievement-description {
+            margin-left: 95px * $i;
+        }
+
+        .achievement-element > p.achievement-progress {
+            margin-right: 2px * $i;
+        }
+
+        .coin {
+            width: 24px * $i;
+            height: 26px * $i;
+
+            background: url('/img/#{$i}/achievements.png') no-repeat;
+        }
+
+        // Coin used by default achievements when completed.
+        .coin-default {
+            background-position: -72px * $i -26px * $i;
+        }
+    }
+
+    @media(--md) {
+        .achievement-element > p.achievement-title {
+            font-size: 18px;
+        }
+
+        .achievement-element > p.achievement-description {
+            font-size: 16px;
+        }
+    }
+
+    @media(--sm) {
+        .achievement-element > p.achievement-title {
+            font-size: 10px;
+        }
+
+        .achievement-element > p.achievement-description {
+            margin-left: 110px;
+
+            font-size: 9px;
+        }
+    }
+}
