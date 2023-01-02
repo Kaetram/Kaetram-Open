@@ -1,14 +1,5 @@
 @use '../../abstracts/media';
 
-#quest-list {
-    position: absolute;
-    top: 50%;
-    left: 8%;
-
-    overflow: auto;
-}
-
-#achievement-list,
 #skills-list {
     position: absolute;
     top: 6%;
@@ -17,7 +8,6 @@
     overflow: auto;
 }
 
-.quest-item,
 .profession-item {
     width: 100%;
     height: 10%;
@@ -25,7 +15,6 @@
     font-family: AdvoCut, sans-serif;
 }
 
-.quest-name,
 .profession-name {
     z-index: 1;
 
@@ -40,26 +29,6 @@
 
     background-color: rgb(51 153 255 / 40%);
     border: 2px solid #373737;
-}
-
-#achievement-count,
-#quest-count {
-    position: absolute;
-    right: 3%;
-
-    float: right;
-
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-}
-
-#achievement-count {
-    top: 1%;
-}
-
-#quest-count {
-    top: 45.5%;
 }
 
 #armour-slot-info {
@@ -277,14 +246,6 @@
             height: 179px * $i;
         }
 
-        #achievement-count,
-        #quest-count {
-            width: 30px * $i;
-            height: 8px * $i;
-
-            font-size: 8px * $i;
-        }
-
         .ability, .ability-icon {
             position: absolute;
 
@@ -461,13 +422,6 @@
         font-size: 24px;
     }
 
-    #quest-list,
-    #achievement-list {
-        width: 318px;
-        height: 246px;
-    }
-
-    .quest-name,
     .profession-name {
         border-radius: 12px;
     }
@@ -483,13 +437,6 @@
         font-size: 18px;
     }
 
-    #quest-list,
-    #achievement-list {
-        width: 212px;
-        height: 164px;
-    }
-
-    .quest-name,
     .profession-name {
         font-size: 20px;
 
@@ -507,14 +454,7 @@
     .profile-item-info {
         font-size: 8px;
     }
-
-    #quest-list,
-    #achievement-list {
-        width: 104px;
-        height: 82px;
-    }
-
-    .quest-name,
+    
     .profession-name {
         font-size: 10px;
 
