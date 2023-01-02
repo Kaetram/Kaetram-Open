@@ -1,6 +1,8 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
-import InventoryContext from './inventory.context';
+
 import { activateWorldContext, getWorldContext } from '../worldutils';
+
+import InventoryContext from './inventory.context';
 
 Given('I am testing the inventory features', function () {
     activateWorldContext(this, new InventoryContext());

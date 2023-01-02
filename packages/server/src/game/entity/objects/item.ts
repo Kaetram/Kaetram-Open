@@ -1,19 +1,19 @@
-import Entity from '../entity';
-import Player from '../character/player/player';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import PluginIndex from '@kaetram/server/data/plugins/items';
 
 import rawData from '../../../../data/items.json';
-import log from '@kaetram/common/util/log';
+import Entity from '../entity';
 
-import Utils from '@kaetram/common/util/utils';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
+import type { Plugin } from '@kaetram/server/data/plugins/items';
+import type Player from '../character/player/player';
 
-import { Modules } from '@kaetram/common/network';
-import { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
-import { EntityData } from '@kaetram/common/types/entity';
-import PluginIndex, { Plugin } from '@kaetram/server/data/plugins/items';
-
-type RawData = {
+interface RawData {
     [key: string]: ItemData;
-};
+}
 
 export default class Item extends Entity {
     private data: ItemData;
@@ -171,21 +171,26 @@ export default class Item extends Entity {
     public getEquipmentType(): Modules.Equipment {
         switch (this.itemType) {
             case 'armour':
-            case 'armourarcher':
+            case 'armourarcher': {
                 return Modules.Equipment.Armour;
+            }
 
             case 'weapon':
-            case 'weaponarcher':
+            case 'weaponarcher': {
                 return Modules.Equipment.Weapon;
+            }
 
-            case 'pendant':
+            case 'pendant': {
                 return Modules.Equipment.Pendant;
+            }
 
-            case 'boots':
+            case 'boots': {
                 return Modules.Equipment.Boots;
+            }
 
-            case 'ring':
+            case 'ring': {
                 return Modules.Equipment.Ring;
+            }
         }
 
         return -1;

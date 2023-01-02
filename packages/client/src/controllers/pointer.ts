@@ -1,7 +1,6 @@
+import { Opcodes } from '@kaetram/common/network';
 import $ from 'jquery';
 import _ from 'lodash-es';
-
-import { Opcodes } from '@kaetram/common/network';
 
 import Arrow from '../renderer/pointers/arrow';
 
@@ -26,10 +25,11 @@ export default class PointerController {
         if (id in pointers) return;
 
         switch (type) {
-            case Opcodes.Pointer.Button:
+            case Opcodes.Pointer.Button: {
                 pointers[id] = new Arrow(id, $(`#${name}`), type);
 
                 break;
+            }
 
             default: {
                 let element = $(`<div id="${id}" class="pointer"></div>`);
@@ -73,7 +73,7 @@ export default class PointerController {
             height: '64px',
             margin: 'inherit',
             marginTop: '-18px',
-            background: `url("${pointer}") no-repeat`
+            background: `url("${pointer}") no-repeat -4px`
         });
     }
 
@@ -97,7 +97,7 @@ export default class PointerController {
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = game.map.tileSize * this.getZoom(), // 16 * scale
             x = (posX - camera.x) * this.getZoom(),
-            width = parseInt(element.css('width') + 24),
+            width = parseInt(element.css('width')),
             offset = width / 2 - tileSize / 2,
             y = (posY - camera.y) * this.getZoom() - tileSize,
             outX = x / canvasWidth,
@@ -196,11 +196,12 @@ export default class PointerController {
                     break;
                 }
 
-                case Opcodes.Pointer.Location:
+                case Opcodes.Pointer.Location: {
                     if (pointer.x !== -1 && pointer.y !== -1)
                         this.set(pointer, pointer.x, pointer.y);
 
                     break;
+                }
             }
         });
     }
