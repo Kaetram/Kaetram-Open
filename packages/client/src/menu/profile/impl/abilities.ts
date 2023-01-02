@@ -142,7 +142,7 @@ export default class Abilities extends Menu {
      * @param level The level of the ability.
      */
 
-    private setAbility(ability: AbilityElement, key: string, level = 1): void {
+    private setAbility(ability: AbilityElement, key: string, level = 1, passive = false): void {
         // Clear the inner HTML first (to erase any potential existing elements such as levels).
         ability.innerHTML = '';
         ability.className = `ability`; // Clear the classes
@@ -160,9 +160,12 @@ export default class Abilities extends Menu {
         // Make the icon draggable.
         icon.draggable = true;
 
-        // Add event listeners for drag and drop for the ability icon.
-        icon.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
-        icon.addEventListener('dragstart', () => this.dragStart(key));
+        // Ignore the drag and drop events if the ability is passive.
+        if (!passive) {
+            // Add event listeners for drag and drop for the ability icon.
+            icon.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
+            icon.addEventListener('dragstart', () => this.dragStart(key));
+        }
 
         // Clamp the level.
         if (level > 4) level = 4;
@@ -216,7 +219,7 @@ export default class Abilities extends Menu {
         // Indicates that we are clearing a passive ability.
         if (!key) return this.hideAbility(ability);
 
-        this.setAbility(ability, key, level);
+        this.setAbility(ability, key, level, true);
     }
 
     /**

@@ -26,9 +26,7 @@ type ExperienceCallback = (
 ) => void;
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
-
 type PoisonCallback = (status: boolean) => void;
-
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
@@ -123,15 +121,15 @@ export default class Player extends Character {
      */
 
     public loadQuests(quests: QuestData[]): void {
-        _.each(quests, (quest: QuestData) => {
+        for (let [i, quest] of quests.entries())
             this.quests[quest.key] = new Task(
+                i,
                 quest.name!,
                 quest.description!,
                 quest.stage,
                 quest.stageCount!,
                 quest.subStage
             );
-        });
     }
 
     /**
@@ -141,14 +139,14 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        _.each(achievements, (achievement: AchievementData) => {
+        for (let [i, achievement] of achievements.entries())
             this.achievements[achievement.key] = new Task(
+                i,
                 achievement.name!,
                 achievement.description!,
                 achievement.stage,
                 achievement.stageCount!
             );
-        });
     }
 
     /**
@@ -329,10 +327,12 @@ export default class Player extends Character {
      * Updates data about an achievement using the provided key.
      * @param key The key of the achievement we are updating.
      * @param stage The new stage of the achievement.
+     * @param name The name of the achievement.
+     * @param description The description of the achievement.
      */
 
-    public setAchievement(key: string, stage: number, name: string): void {
-        this.achievements[key]?.update(stage, undefined, name);
+    public setAchievement(key: string, stage: number, name: string, description: string): void {
+        this.achievements[key]?.update(stage, undefined, name, description);
     }
 
     /**

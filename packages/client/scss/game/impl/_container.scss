@@ -1,3 +1,5 @@
+@use '../../abstracts/media';
+
 #game-container {
     position: inherit;
     z-index: 100;
@@ -62,4 +64,28 @@
 
     // background: url('/img/1/border.png') no-repeat;
     // background-size: 100% 100%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        .container {
+            cursor: url('/img/3/hand.png'), auto;
+
+            position: absolute;
+            inset: 0;
+
+            display: none;
+
+            width: 344px * $i;
+            height: 157px * $i;
+            margin: auto;
+
+            background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
+        }
+    }
+}
+
+.close-container {
+    top: -2% !important;
+    left: 96% !important;
 }
