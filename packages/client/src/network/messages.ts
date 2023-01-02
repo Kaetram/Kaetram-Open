@@ -1,52 +1,53 @@
 import _ from 'lodash-es';
 
 import { Packets } from '@kaetram/common/network';
-import { MinigameCallback } from '@kaetram/common/types/messages/outgoing.d';
 
-import type App from '../app';
 import type {
-    HandshakeCallback,
-    WelcomeCallback,
-    MapCallback,
-    EquipmentCallback,
-    EntityListCallback,
-    SyncCallback,
-    SpawnCallback,
-    MovementCallback,
-    TeleportCallback,
-    DespawnCallback,
-    CombatCallback,
+    AbilityCallback,
+    AchievementCallback,
     AnimationCallback,
-    PointsCallback,
-    NetworkCallback,
+    BlinkCallback,
+    BubbleCallback,
+    CameraCallback,
     ChatCallback,
+    CombatCallback,
     CommandCallback,
     ContainerCallback,
-    AbilityCallback,
-    QuestCallback,
-    AchievementCallback,
-    NotificationCallback,
-    BlinkCallback,
-    HealCallback,
-    ExperienceCallback,
     DeathCallback,
-    MusicCallback,
-    NPCCallback,
-    RespawnCallback,
-    EnchantCallback,
-    GuildCallback,
-    PointerCallback,
-    PVPCallback,
-    PoisonCallback,
-    StoreCallback,
-    OverlayCallback,
-    CameraCallback,
-    BubbleCallback,
-    SkillCallback,
-    UpdateCallback,
+    DespawnCallback,
     EffectCallback,
-    FriendsCallback
+    EnchantCallback,
+    EntityListCallback,
+    EquipmentCallback,
+    ExperienceCallback,
+    FriendsCallback,
+    GuildCallback,
+    HandshakeCallback,
+    HealCallback,
+    MapCallback,
+    MinigameCallback,
+    MovementCallback,
+    MusicCallback,
+    NetworkCallback,
+    NotificationCallback,
+    NPCCallback,
+    OverlayCallback,
+    PointerCallback,
+    PointsCallback,
+    PoisonCallback,
+    PVPCallback,
+    QuestCallback,
+    RespawnCallback,
+    SkillCallback,
+    SpawnCallback,
+    StoreCallback,
+    SyncCallback,
+    TeleportCallback,
+    UpdateCallback,
+    WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
+
+import type App from '../app';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
@@ -181,65 +182,80 @@ export default class Messages {
         this.app.toggleLogin(false);
 
         switch (message) {
-            case 'full':
+            case 'full': {
                 this.app.sendError('The servers are currently full!');
                 break;
+            }
 
-            case 'error':
+            case 'error': {
                 this.app.sendError('The server has responded with an error!');
                 break;
+            }
 
-            case 'development':
+            case 'development': {
                 this.app.sendError('The game is currently in development mode.');
                 break;
+            }
 
-            case 'disallowed':
+            case 'disallowed': {
                 this.app.sendError('The server is currently not accepting connections!');
                 break;
+            }
 
-            case 'maintenance':
+            case 'maintenance': {
                 this.app.sendError('Kaetram is currently under maintenance.');
                 break;
+            }
 
-            case 'userexists':
+            case 'userexists': {
                 this.app.sendError('The username you have entered already exists.');
                 break;
+            }
 
-            case 'emailexists':
+            case 'emailexists': {
                 this.app.sendError('The email you have entered is not available.');
                 break;
+            }
 
-            case 'invalidinput':
+            case 'invalidinput': {
                 this.app.sendError('The input you have provided is invalid.');
                 break;
+            }
 
-            case 'loggedin':
+            case 'loggedin': {
                 this.app.sendError('The player is already logged in!');
                 break;
+            }
 
-            case 'invalidlogin':
+            case 'invalidlogin': {
                 this.app.sendError('You have entered the wrong username or password.');
                 break;
+            }
 
-            case 'toofast':
+            case 'toofast': {
                 this.app.sendError('You are trying to log in too fast from the same connection.');
                 break;
+            }
 
-            case 'timeout':
+            case 'timeout': {
                 this.app.sendError('You have been disconnected for being inactive for too long.');
                 break;
+            }
 
-            case 'updated':
+            case 'updated': {
                 this.app.sendError('The game has been updated. Please clear your browser cache.');
                 break;
+            }
 
-            case 'cheating':
+            case 'cheating': {
                 this.app.sendError(`You have been disconnected for no-clipping or hacking.`);
                 break;
+            }
 
-            default:
+            default: {
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
+            }
         }
     }
 

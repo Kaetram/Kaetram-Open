@@ -1,11 +1,10 @@
+import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
-import log from '@kaetram/common/util/log';
-
+import type API from '../api';
 import type { DatabaseType } from '../database/database';
 import type Creator from '../database/mongodb/creator';
 import type Loader from '../database/mongodb/loader';
-import API from '../api';
 
 interface PlayerData {
     rank: string;
@@ -57,7 +56,7 @@ export default class Guilds {
         log.info(`Finished loading ${this.getCount()} guilds.`);
     }
 
-    public create(name: string, owner: string): void {
+    public create(_name: string, _owner: string): void {
         // if (this.exists(name)) {
         //     this.api.sendChat(owner, 'Could not create a guild with that name.', 'red');
         //     return;
@@ -72,7 +71,7 @@ export default class Guilds {
         // this.save();
     }
 
-    public join(guild: GuildData, name: string, rank: string): void {
+    public join(_guild: GuildData, _name: string, _rank: string): void {
         // let playerGuild = this.findPlayer(name);
         // if (playerGuild) {
         //     this.api.sendChatToPlayer(name, 'You are already in a guild.', 'red');

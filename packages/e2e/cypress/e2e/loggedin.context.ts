@@ -7,15 +7,15 @@ import WorldContext from './world.context';
  * It just makes sure the players are logged in before starting the actual test
  */
 export default class LoggedInContext extends WorldContext {
-    constructor() {
+    public constructor() {
         super();
     }
 
-    injectDefaultData(): void {
+    public injectDefaultData(): void {
         super.injectDefaultPlayers();
     }
 
-    before(): void {
+    public before(): void {
         cy.get('#login-name-input').type(this.USERNAME);
         cy.get('#login-password-input').type(this.PASSWORD);
         cy.get('#login').click();

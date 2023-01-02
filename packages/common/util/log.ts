@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import config from '../config';
 
@@ -14,8 +14,8 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 class Log {
     private logLevel = config.debugLevel || 'all';
 
-    private logStreamPath = `${path.resolve('../../')}/runtime.log`;
-    private bugStreamPath = `${path.resolve('../../')}/bugs.log`;
+    private logStreamPath = path.resolve('../../', 'runtime.log');
+    private bugStreamPath = path.resolve('../../', 'bugs.log');
 
     // Stream can be used to keep a log of what happened.
     private stream = config.fsDebugging ? fs.createWriteStream(this.logStreamPath) : null; // Write to a different stream

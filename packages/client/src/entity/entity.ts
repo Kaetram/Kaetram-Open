@@ -1,10 +1,10 @@
-import Utils from '../utils/util';
-import Animation from './animation';
+import { Modules } from '@kaetram/common/network';
 
+import Utils from '../utils/util';
+
+import type Animation from './animation';
 import type Sprite from './sprite';
 import type { Animations } from './sprite';
-
-import { Modules } from '@kaetram/common/network';
 
 export default abstract class Entity {
     public x = 0;

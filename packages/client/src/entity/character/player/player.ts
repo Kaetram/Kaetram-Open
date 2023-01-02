@@ -1,24 +1,23 @@
-import { AchievementData } from './../../../../../common/types/achievement.d';
-import $ from 'jquery';
+import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import { Modules } from '@kaetram/common/network';
-
 import Character from '../character';
-import Task from './task';
-import Skill from './skill';
+
 import Ability from './ability';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Skill from './skill';
+import Task from './task';
 
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import { PlayerData } from '@kaetram/common/types/player';
-import { SkillData } from '@kaetram/common/types/skills';
-import { QuestData } from '@kaetram/common/types/quest';
-import { AbilityData } from '@kaetram/common/types/ability';
+import type { AbilityData } from '@kaetram/common/types/ability';
+import type { AchievementData } from '@kaetram/common/types/achievement';
+import type { EquipmentData } from '@kaetram/common/types/equipment';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { QuestData } from '@kaetram/common/types/quest';
+import type { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
     experience: number,
@@ -100,9 +99,9 @@ export default class Player extends Character {
 
         if (!sync) this.setGridPosition(data.x, data.y);
 
-        this.setHitPoints(data.hitPoints!, data.maxHitPoints!);
+        this.setHitPoints(data.hitPoints!, data.maxHitPoints);
 
-        this.setMana(data.mana!, data.maxMana!);
+        this.setMana(data.mana!, data.maxMana);
 
         if (data.equipments) _.each(data.equipments, this.equip.bind(this));
     }
@@ -219,7 +218,7 @@ export default class Player extends Character {
      */
 
     public getArmour(): Armour {
-        return this.equipments[Modules.Equipment.Armour] as Armour;
+        return this.equipments[Modules.Equipment.Armour];
     }
 
     /**
@@ -227,7 +226,7 @@ export default class Player extends Character {
      */
 
     public getBoots(): Boots {
-        return this.equipments[Modules.Equipment.Boots] as Boots;
+        return this.equipments[Modules.Equipment.Boots];
     }
 
     /**
@@ -235,7 +234,7 @@ export default class Player extends Character {
      */
 
     public getPendant(): Pendant {
-        return this.equipments[Modules.Equipment.Pendant] as Pendant;
+        return this.equipments[Modules.Equipment.Pendant];
     }
 
     /**
@@ -243,7 +242,7 @@ export default class Player extends Character {
      */
 
     public getRing(): Ring {
-        return this.equipments[Modules.Equipment.Ring] as Ring;
+        return this.equipments[Modules.Equipment.Ring];
     }
 
     /**
@@ -251,7 +250,7 @@ export default class Player extends Character {
      */
 
     public getWeapon(): Weapon {
-        return this.equipments[Modules.Equipment.Weapon] as Weapon;
+        return this.equipments[Modules.Equipment.Weapon];
     }
 
     /**
@@ -275,14 +274,17 @@ export default class Player extends Character {
 
     public getMedalKey(): string {
         switch (this.medal) {
-            case Modules.Medals.Silver:
+            case Modules.Medals.Silver: {
                 return 'silvermedal';
+            }
 
-            case Modules.Medals.Gold:
+            case Modules.Medals.Gold: {
                 return 'goldmedal';
+            }
 
-            default:
+            default: {
                 return '';
+            }
         }
     }
 
@@ -348,9 +350,8 @@ export default class Player extends Character {
         quickSlot = -1
     ): void {
         // This function is used when adding abilities for the first time too.
-        if (!(key in this.abilities))
-            this.abilities[key] = new Ability(type!, key, level, quickSlot);
-        else this.abilities[key]?.update(level, quickSlot);
+        if (key in this.abilities) this.abilities[key]?.update(level, quickSlot);
+        else this.abilities[key] = new Ability(type!, key, level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
         if (type === Modules.AbilityType.Active || quickSlot !== -1)

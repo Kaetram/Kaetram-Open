@@ -1,12 +1,11 @@
+import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash';
 
+import log from '../../../lib/log';
 import Menu from '../../menu';
 
-import log from '../../../lib/log';
-import Player from '../../../entity/character/player/player';
-import Ability from '../../../entity/character/player/ability';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
+import type Ability from '../../../entity/character/player/ability';
+import type Player from '../../../entity/character/player/player';
 
 interface AbilityElement extends HTMLElement {
     key?: string;
@@ -61,15 +60,17 @@ export default class Abilities extends Menu {
 
         _.each(player.abilities, (ability: Ability) => {
             switch (ability.type) {
-                case Modules.AbilityType.Active:
+                case Modules.AbilityType.Active: {
                     this.setActiveAbility(activeIndex, ability.key, ability.level);
                     activeIndex++;
                     break;
+                }
 
-                case Modules.AbilityType.Passive:
+                case Modules.AbilityType.Passive: {
                     this.setPassiveAbility(passiveIndex, ability.key, ability.level);
                     passiveIndex++;
                     break;
+                }
             }
         });
     }
@@ -129,7 +130,7 @@ export default class Abilities extends Menu {
      * @param event Contains the target slot that is exited.
      */
 
-    private dragLeave(event: DragEvent): void {
+    private dragLeave(_event: DragEvent): void {
         //
     }
 
@@ -233,11 +234,9 @@ export default class Abilities extends Menu {
      */
 
     private hideAll(): void {
-        for (let i = 0; i < this.activeAbilities.children.length; i++)
-            this.hideAbility(this.activeAbilities.children[i] as HTMLElement);
+        for (let child of this.activeAbilities.children) this.hideAbility(child as HTMLElement);
 
-        for (let i = 0; i < this.passiveAbilities.children.length; i++)
-            this.hideAbility(this.passiveAbilities.children[i] as HTMLElement);
+        for (let child of this.passiveAbilities.children) this.hideAbility(child as HTMLElement);
     }
 
     /**
