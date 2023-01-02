@@ -195,13 +195,14 @@ export default {
     /**
      * Fades in an element.
      * @param element The element to fade in.
+     * @param speed (Optional) The speed at which to fade in.
      */
-    fadeIn(element: HTMLElement): void {
+    fadeIn(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '0';
         element.style.display = 'block';
 
         let fade = () => {
-            let opacity = parseFloat(element.style.opacity) + 0.1;
+            let opacity = parseFloat(element.style.opacity) + speed;
 
             if (opacity <= 1) {
                 element.style.opacity = opacity.toString();
@@ -215,12 +216,13 @@ export default {
     /**
      * Fades out an element.
      * @param element The element to fade out.
+     * @param speed (Optional) The speed at which to fade out.
      */
-    fadeOut(element: HTMLElement): void {
+    fadeOut(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '1';
 
         let fade = () => {
-            let opacity = parseFloat(element.style.opacity) - 0.1;
+            let opacity = parseFloat(element.style.opacity) - speed;
 
             if (opacity >= 0) {
                 element.style.opacity = opacity.toString();

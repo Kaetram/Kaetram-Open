@@ -1,33 +1,34 @@
 import _ from 'lodash-es';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import { inflate } from 'pako';
+import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
 
 import type App from '../app';
-import type AudioController from '../controllers/audio';
-import type BubbleController from '../controllers/bubble';
-import type EntitiesController from '../controllers/entities';
+import type Overlays from '../renderer/overlays';
 import type InfoController from '../controllers/info';
-import type InputController from '../controllers/input';
-import type MenuController from '../controllers/menu';
-import type PointerController from '../controllers/pointer';
-import type SpritesController from '../controllers/sprites';
-import type Character from '../entity/character/character';
-import type NPC from '../entity/character/npc/npc';
-import type Player from '../entity/character/player/player';
-import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from '../renderer/camera';
-import type Overlays from '../renderer/overlays';
 import type Renderer from '../renderer/renderer';
-import type Messages from './messages';
+import type InputController from '../controllers/input';
 import type Socket from './socket';
-import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type PointerController from '../controllers/pointer';
+import type AudioController from '../controllers/audio';
+import type EntitiesController from '../controllers/entities';
+import type BubbleController from '../controllers/bubble';
+import type MenuController from '../controllers/menu';
+import type SpritesController from '../controllers/sprites';
+import type Messages from './messages';
+import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
+import type NPC from '../entity/character/npc/npc';
+import type Character from '../entity/character/character';
+import type Player from '../entity/character/player/player';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
 import type {
     AbilityPacket,
     AchievementPacket,
@@ -38,13 +39,10 @@ import type {
     CommandPacket,
     ContainerPacket,
     DespawnPacket,
-    EffectPacket,
     EnchantPacket,
     EquipmentPacket,
     ExperiencePacket,
-    FriendsPacket,
     HealPacket,
-    MinigamePacket,
     MovementPacket,
     NotificationPacket,
     NPCPacket,
@@ -54,12 +52,14 @@ import type {
     PVPPacket,
     QuestPacket,
     RespawnPacket,
-    SkillPacket,
     StorePacket,
-    TeleportPacket
+    TeleportPacket,
+    SkillPacket,
+    MinigamePacket,
+    EffectPacket,
+    FriendsPacket
 } from '@kaetram/common/types/messages/outgoing';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -684,7 +684,7 @@ export default class Connection {
             }
         }
 
-        this.menu.synchronize();
+        this.menu.synchronize('profile');
     }
 
     /**
@@ -710,7 +710,7 @@ export default class Connection {
             }
         }
 
-        this.menu.synchronize();
+        this.menu.synchronize('quest');
     }
 
     /**
@@ -730,18 +730,23 @@ export default class Connection {
             }
 
             case Opcodes.Achievement.Progress: {
-                this.game.player.setAchievement(info.key!, info.stage!, info.name!);
+                this.game.player.setAchievement(
+                    info.key!,
+                    info.stage!,
+                    info.name!,
+                    info.description!
+                );
                 break;
             }
         }
 
-        this.menu.synchronize();
+        this.menu.getAchievements().handle(opcode, info.key);
     }
 
     /**
      * Notifications are messages sent from the server that display only on the current
      * player's end. These can either be popups, or chatbox information.
-     * @param opcode Tyhe type of the notification.
+     * @param opcode The type of the notification.
      * @param info Contains message, title, and colour information.
      */
 
@@ -1162,7 +1167,7 @@ export default class Connection {
             }
         }
 
-        this.game.menu.synchronize();
+        this.game.menu.synchronize('profile');
     }
 
     /**
