@@ -1,0 +1,12 @@
+@use '../../abstracts/media';
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+    }
+
+    @media(--md) {
+    }
+
+    @media(--sm) {
+    }
+}
