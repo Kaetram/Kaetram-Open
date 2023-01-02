@@ -1,7 +1,8 @@
+import Utils from '@kaetram/common/util/utils';
+
 import Default from './default';
 
-import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
-import Utils from '@kaetram/common/util/utils';
+import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 
 export default class ForestDragon extends Default {
     private specialAttack = false;

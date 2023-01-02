@@ -1,8 +1,10 @@
 import _ from 'lodash';
 
-import Player from './player';
+import type Player from './player';
 
-type Friend = { [username: string]: boolean };
+interface Friend {
+    [username: string]: boolean;
+}
 
 export default class Friends {
     // A friend object has a key of the username and a value of the online status

@@ -1,7 +1,6 @@
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import {
@@ -25,16 +24,13 @@ import type Map from '../../../map/map';
 import type World from '../../../world';
 import type Entity from '../../entity';
 import type Character from '../character';
-
 import type Ability from './ability/ability';
 import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
-
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {

@@ -1,6 +1,6 @@
 import { Team } from '@kaetram/common/api/minigame';
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
@@ -31,7 +31,6 @@ import Friends from './friends';
 import Handler from './handler';
 import Quests from './quests';
 import Skills from './skills';
-
 import Abilities from './abilities';
 import Achievements from './achievements';
 import Bank from './containers/impl/bank';
