@@ -18,6 +18,9 @@
 @use 'impl/store';
 @use 'impl/trade';
 @use 'impl/equipments';
+@use 'impl/achievements';
+@use 'impl/quests';
+@use 'impl/friends';
 
 body.game {
     background: #000;

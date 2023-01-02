@@ -103,14 +103,16 @@ export default class Achievements {
      * @param key The key of the achievement we are updating.
      * @param stage The new stage of the achievement.
      * @param name The name of the achievement after discovering (or before).
+     * @param description The description of the achievement after discovering (or before).
      */
 
-    private handleProgress(key: string, stage: number, name: string): void {
+    private handleProgress(key: string, stage: number, name: string, description: string): void {
         this.player.send(
             new AchievementPacket(Opcodes.Achievement.Progress, {
                 key,
                 stage,
-                name
+                name,
+                description
             })
         );
 

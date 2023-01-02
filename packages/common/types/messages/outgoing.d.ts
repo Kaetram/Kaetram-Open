@@ -169,6 +169,7 @@ export type QuestCallback = (opcode: Opcodes.Quest, info: QuestPacket) => void;
 export interface AchievementPacket {
     key?: string;
     name?: string;
+    description?: string;
     stage?: number;
     achievements?: AchievementData[];
 }
