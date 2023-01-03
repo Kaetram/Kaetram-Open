@@ -1230,13 +1230,15 @@ export default class Connection {
                 break;
 
             case Opcodes.Friends.Add:
+                this.game.player.addFriend(info.username!, info.status!);
                 break;
 
-            case Opcodes.Friends.Remove:
+            case Opcodes.Friends.Status:
+                this.game.player.setFriendStatus(info.username!, info.status!);
                 break;
         }
 
-        this.menu.getFriends().handle(opcode, info.username!);
+        this.menu.getFriends().handle(opcode, info.username!, info.status);
     }
 
     /**
