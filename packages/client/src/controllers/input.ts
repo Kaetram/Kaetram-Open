@@ -5,6 +5,7 @@ import log from '../lib/log';
 import Chat from './chat';
 import HUDController from './hud';
 import Character from '../entity/character/character';
+import Friends from '../menu/friends';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -33,6 +34,7 @@ export default class InputController {
     private map: Map;
     private camera: Camera;
     public player: Player;
+    private friends: Friends;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -66,6 +68,7 @@ export default class InputController {
         this.map = game.map;
         this.camera = game.camera;
         this.player = game.player;
+        this.friends = game.menu.getFriends();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -116,7 +119,7 @@ export default class InputController {
         this.setCoords(event);
 
         this.keyMovement = false;
-        this.game.player.disableAction = false;
+        this.player.disableAction = false;
 
         // Admin command for teleporting to a location.
         if (this.isCtrlKey())
@@ -155,6 +158,10 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        // Popups are UI elements that are displayed on top of the game.
+        if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
+
+        // Redirect input to the chat handler if the chat input is visible.
         if (this.chatHandler.inputVisible()) return this.chatHandler.keyDown(event.key);
 
         let target: Entity;
@@ -162,22 +169,22 @@ export default class InputController {
         switch (event.key) {
             case 'w':
             case 'ArrowUp':
-                this.game.player.moveUp = true;
+                this.player.moveUp = true;
                 return;
 
             case 'a':
             case 'ArrowLeft':
-                this.game.player.moveLeft = true;
+                this.player.moveLeft = true;
                 return;
 
             case 's':
             case 'ArrowDown':
-                this.game.player.moveDown = true;
+                this.player.moveDown = true;
                 return;
 
             case 'd':
             case 'ArrowRight':
-                this.game.player.moveRight = true;
+                this.player.moveRight = true;
                 return;
 
             case 'Enter':
@@ -201,18 +208,18 @@ export default class InputController {
                 break;
 
             case 't':
-                target = this.game.entities.get(this.game.player.lastTarget);
+                target = this.game.entities.get(this.player.lastTarget);
 
                 console.log(target);
 
-                if (target) this.game.player.follow(target);
+                if (target) this.player.follow(target);
 
                 return;
 
             case 'Escape':
                 this.game.menu.hide();
 
-                if (this.game.player.moving) this.game.player.stop();
+                if (this.player.moving) this.player.stop();
                 return;
 
             case '+':
@@ -239,26 +246,26 @@ export default class InputController {
         switch (event.key) {
             case 'w':
             case 'ArrowUp':
-                this.game.player.moveUp = false;
+                this.player.moveUp = false;
                 break;
 
             case 'a':
             case 'ArrowLeft':
-                this.game.player.moveLeft = false;
+                this.player.moveLeft = false;
                 break;
 
             case 's':
             case 'ArrowDown':
-                this.game.player.moveDown = false;
+                this.player.moveDown = false;
                 break;
 
             case 'd':
             case 'ArrowRight':
-                this.game.player.moveRight = false;
+                this.player.moveRight = false;
                 break;
         }
 
-        this.game.player.disableAction = false;
+        this.player.disableAction = false;
     }
 
     /**
@@ -274,7 +281,7 @@ export default class InputController {
      */
 
     public keyMove(position: Position): void {
-        if (this.game.player.hasPath()) return;
+        if (this.player.hasPath()) return;
 
         this.move(position);
 

@@ -24,7 +24,8 @@ import type {
     MovementPacket,
     ReadyPacket,
     StorePacket,
-    WarpPacket
+    WarpPacket,
+    FriendsPacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -93,6 +94,8 @@ export default class Incoming {
                         return this.handleWarp(message);
                     case Packets.Store:
                         return this.handleStore(message);
+                    case Packets.Friends:
+                        return this.handleFriends(message);
                 }
             } catch (error) {
                 log.error(error);
@@ -156,6 +159,7 @@ export default class Incoming {
 
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
+        this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
     }
@@ -458,6 +462,22 @@ export default class Incoming {
 
             case Opcodes.Store.Select:
                 return this.world.stores.select(this.player, data.key, data.index, data.count);
+        }
+    }
+
+    /**
+     * Handles incoming packets from the client about the friends list. Contains
+     * isntructions such as adding or removing a friend from the list.
+     * @param data Contains the opcode (type of action) and the username.
+     */
+
+    private handleFriends(data: FriendsPacket): void {
+        switch (data.opcode) {
+            case Opcodes.Friends.Add:
+                return this.player.friends.add(data.username);
+
+            case Opcodes.Friends.Remove:
+                return this.player.friends.remove(data.username);
         }
     }
 
