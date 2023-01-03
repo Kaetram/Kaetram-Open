@@ -6,8 +6,64 @@
     bottom: 45px;
 }
 
+#friends-container {
+    position: absolute;
+    inset: 0;
+
+    overflow: auto;
+
+    margin: auto;
+
+    font-family: AdvoCut, sans-serif;
+}
+
+#popup-container {
+    position: absolute;
+
+    width: 100%;
+    height: 98%;
+
+    background-color: rgb(0 0 0 / 30%);
+    border-radius: 16px;
+}
+
+#add-popup {
+    position: absolute;
+    inset: 0;
+
+    margin: auto;
+}
+
+#add-friend-input {
+    position: absolute;
+
+    color: #fff;
+
+    background-color: transparent;
+    border: none;
+}
+
+.friend-slot {
+    margin: auto;
+}
+
+.friend-slot > p {
+    font-size: 20px;
+    color: rgb(168 16 5);
+    text-align: center;
+}
+
+.friend-slot > p.online {
+    color: rgb(16 168 5);
+}
+
 .add, .remove {
     position: absolute;
+}
+
+.confirm, .cancel {
+    position: absolute;
+    bottom: 0;
 }
 
 @each $size, $i in media.$sizes {
@@ -15,6 +71,43 @@
         #friends-page {
             display: none;
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+        }
+
+        #friends-container {
+            width: 106px * $i;
+            height: 172px * $i;
+            margin-top: 14px * $i;
+            padding-left: 2px * $i;
+        }
+
+        #friends-container > ul > li:last-child {
+            margin-bottom: 1px * $i;
+        }
+
+        #add-popup {
+            width: 96px * $i;
+            height: 38px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
+        }
+
+        #add-friend-input {
+            top: 8px * $i;
+            left: 8px * $i;
+
+            width: 76px * $i;
+        }
+
+        .friend-slot {
+            width: 102px * $i;
+            height: 15px * $i;
+            margin-top: 2px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
+        }
+
+        .friend-slot > p {
+            padding-top: 4px * $i;
         }
 
         .add, .remove {
@@ -27,7 +120,7 @@
                 background-position-x: -42px * $i;
             }
 
-            &.active {
+            &:active {
                 background-position-x: -21px * $i;
             }
         }
@@ -40,6 +133,36 @@
         .remove {
             right: 24px * $i;
             background-position-y: -291px * $i;
+        }
+
+        // Popup buttons
+        .confirm, .cancel {
+            width: 21px * $i;
+            height: 14px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+
+            &:hover {
+                background-position-x: -42px * $i;
+            }
+
+            &:active {
+                background-position-x: -21px * $i;
+            }
+        }
+
+        .confirm {
+            bottom: 4px * $i;
+            left: 14px * $i;
+
+            background-position-y: -308px * $i;
+        }
+
+        .cancel {
+            right: 14px * $i;
+            bottom: 4px * $i;
+
+            background-position-y: -322px * $i;
         }
     }
 
