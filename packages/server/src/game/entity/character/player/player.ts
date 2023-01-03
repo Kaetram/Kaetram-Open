@@ -92,7 +92,7 @@ export default class Player extends Character {
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
-    public friends: Friends = new Friends();
+    public friends: Friends = new Friends(this);
 
     public handler: Handler = new Handler(this);
 

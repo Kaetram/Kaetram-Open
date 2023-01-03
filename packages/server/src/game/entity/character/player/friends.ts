@@ -2,15 +2,19 @@ import _ from 'lodash';
 
 import Player from './player';
 
-type Friend = { [username: string]: boolean };
+import { Friend } from '@kaetram/common/types/friends';
 
+type SyncCallback = (username: string, status: boolean) => void;
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
     private list: Friend = {};
 
     private loadCallback?: () => void;
-    private addCallback?: (username: string) => void;
+    private addCallback?: SyncCallback;
     private removeCallback?: (username: string) => void;
+    private statusCallback?: SyncCallback;
+
+    public constructor(private player: Player) {}
 
     /**
      * Loads the list of friends from an array of usernames (received from the database).
@@ -21,7 +25,9 @@ export default class Friends {
         // Nothing to load.
         if (friends.length === 0) return;
 
-        _.each(friends, (username: string) => this.add(username));
+        _.each(friends, (username: string) => {
+            this.list[username] = this.player.world.isOnline(username);
+        });
 
         this.loadCallback?.();
     }
@@ -32,11 +38,30 @@ export default class Friends {
      */
 
     public add(player: Player | string): void {
-        let username = typeof player === 'string' ? player : player.username;
+        let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
-        this.list[username] = true;
+        // Check that someone isn't messing with the client input :)
+        if (username.length > 32) return this.player.notify('That username is too long.');
 
-        this.addCallback?.(username);
+        if (username === this.player.username)
+            return this.player.notify(
+                `Listen man I get it, you're lonely, but you can't add yourself to your friends list.`
+            );
+
+        // Ensure the player is not already on the list.
+        if (this.hasFriend(username))
+            return this.player.notify('That player is already on your friends list.');
+
+        // Ensure the player exists.
+        this.player.database.exists(username, (exists: boolean) => {
+            if (!exists) return this.player.notify('No player with that username exists.');
+
+            // Add the friend and check if they are online.
+            this.list[username] = this.player.world.isOnline(username);
+
+            // Add the friend to the list and pass on the online status to the client.
+            this.addCallback?.(username, this.list[username]);
+        });
     }
 
     /**
@@ -47,9 +72,42 @@ export default class Friends {
     public remove(player: Player | string): void {
         let username = typeof player === 'string' ? player : player.username;
 
+        // No username was found in the list.
+        if (!this.hasFriend(username))
+            return this.player.notify('That player is not in your friends list.');
+
         delete this.list[username];
 
         this.removeCallback?.(username);
+    }
+
+    /**
+     * @returns A list of all friends.
+     */
+
+    public getFriendsList(): Friend {
+        return this.list;
+    }
+
+    /**
+     * @param username String of the username to check if they are a friend.
+     * @returns Whether or not the player is a friend.
+     */
+
+    public hasFriend(username: string): boolean {
+        return username in this.list;
+    }
+
+    /**
+     * Updates the online status for a friend.
+     * @param username The username of the friend.
+     * @param status The online status of the friend.
+     */
+
+    public setStatus(username: string, status: boolean): void {
+        this.list[username] = status;
+
+        this.statusCallback?.(username, status);
     }
 
     /**
@@ -65,7 +123,7 @@ export default class Friends {
      * @param callback A callback with the username of the friend.
      */
 
-    public onAdd(callback: (username: string) => void): void {
+    public onAdd(callback: SyncCallback): void {
         this.addCallback = callback;
     }
 
@@ -79,11 +137,12 @@ export default class Friends {
     }
 
     /**
-     * @returns A list of all friends.
+     * An update is passed to the client when a friend has logged in or out.
+     * @param callback Contains the username of the friend and their online status.
      */
 
-    public getFriendsList(): Friend {
-        return this.list;
+    public onStatus(callback: SyncCallback): void {
+        this.statusCallback = callback;
     }
 
     /**
