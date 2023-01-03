@@ -1,29 +1,25 @@
-import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../character';
 
+import Task from './task';
+import Skill from './skill';
 import Ability from './ability';
+import Friend from './friend';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
-import Skill from './skill';
-import Task from './task';
 
-import type { AbilityData } from '@kaetram/common/types/ability';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
-import type { QuestData } from '@kaetram/common/types/quest';
 import type { SkillData } from '@kaetram/common/types/skills';
-
-type ExperienceCallback = (
-    experience: number,
-    prevExperience: number,
-    nextExperience: number
-) => void;
+import type { QuestData } from '@kaetram/common/types/quest';
+import type { AbilityData } from '@kaetram/common/types/ability';
+import type { Friend as FriendType } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -43,6 +39,7 @@ export default class Player extends Character {
 
     public poison = false;
     public disableAction = false;
+    public popup = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
 
@@ -65,9 +62,9 @@ export default class Player extends Character {
     public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
+    public friends: { [key: string]: Friend } = {};
 
     private syncCallback?: () => void;
-    private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
     private abilityCallback?: AbilityCallback;
     private manaCallback?: ManaCallback;
@@ -158,6 +155,21 @@ export default class Player extends Character {
         _.each(abilities, (ability: AbilityData) =>
             this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
         );
+    }
+
+    /**
+     * Loads the friend list from the server into the client.
+     * @param friends Contains information about friend usernames and their online status.
+     */
+
+    public loadFriends(friends: FriendType): void {
+        let i = 0;
+
+        _.each(friends, (status: boolean, username: string) => {
+            this.friends[username] = new Friend(i, username, status);
+
+            i++;
+        });
     }
 
     /**
@@ -400,15 +412,6 @@ export default class Player extends Character {
 
     public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
-    }
-
-    /**
-     * Callback for when the player's experience changes.
-     * @param callback Contains the experience, previous experience, and next experience.
-     */
-
-    public onExperience(callback: ExperienceCallback): void {
-        this.experienceCallback = callback;
     }
 
     /**

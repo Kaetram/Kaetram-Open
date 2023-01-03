@@ -156,6 +156,20 @@ export default class World {
     }
 
     /**
+     * Updates the status of `lPlayer` in the friends list of all players that
+     * are currently logged in and have `lPlayer` in their friends list.
+     * @param lPlayer The player that we are updating the status of relative to others.
+     * @param logout Whether the `lPlayer` is logging out or not.
+     */
+
+    public linkFriends(lPlayer: Player, logout = false): void {
+        this.entities.forEachPlayer((player: Player) => {
+            if (player.friends.hasFriend(lPlayer.username))
+                player.friends.setStatus(lPlayer.username, !logout);
+        });
+    }
+
+    /**
      * Iterates through all the players currently logged in and saves their data.
      */
 

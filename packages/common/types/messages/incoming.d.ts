@@ -66,3 +66,8 @@ export interface StorePacket {
     index: number; // Index of the item we are working with.
     count?: number; // How many of the item we are trying to buy/sell
 }
+
+export interface FriendsPacket {
+    opcode: Opcodes.Friends;
+    username: string;
+}
