@@ -475,6 +475,9 @@ export default class Incoming {
         switch (data.opcode) {
             case Opcodes.Friends.Add:
                 return this.player.friends.add(data.username);
+
+            case Opcodes.Friends.Remove:
+                return this.player.friends.remove(data.username);
         }
     }
 
