@@ -1,7 +1,28 @@
 @use '../../abstracts/media';
 
+#quests-container, #quest-log {
+    position: absolute;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
+        #quests {
+            background: url('img/#{$i}/quests.png') 0 0 no-repeat;
+        }
+
+        #quests-container {
+            width: 106px * $i;
+            height: 117px * $i;
+            margin-top: 20px * $i;
+            margin-left: 21px * $i;
+        }
+
+        #quest-log {
+            width: 172px * $i;
+            height: 117px * $i;
+            margin-top: 20px * $i;
+            margin-left: 151px * $i;
+        }
     }
 
     @media(--md) {
