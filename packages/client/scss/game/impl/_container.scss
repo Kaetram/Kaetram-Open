@@ -67,6 +67,20 @@
     // background-size: 100% 100%;
 }
 
+.container-slot {
+    margin: auto;
+}
+
+.container-slot > p {
+    font-size: 20px;
+    color: rgb(168 16 5);
+    text-align: center;
+}
+
+.container-slot > p.green {
+    color: rgb(16 168 5);
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         .container {
@@ -82,6 +96,35 @@
             margin: auto;
 
             background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
+        }
+
+
+        .container-slot {
+            width: 102px * $i;
+            height: 15px * $i;
+            margin-top: 2px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
+
+            &:hover {
+                background-position-y: -320px * $i;
+            }
+
+            &:active {
+                background-position-y: -336px * $i;
+            }
+        }
+
+        .container-slot > p {
+            padding-top: 4px * $i;
+        }
+    }
+
+    @media (--sm) {
+        .container-slot > p {
+            padding-top: 2px;
+
+            font-size: 12px;
         }
     }
 }
