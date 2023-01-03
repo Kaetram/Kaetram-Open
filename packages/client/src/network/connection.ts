@@ -1226,6 +1226,7 @@ export default class Connection {
     private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
         switch (opcode) {
             case Opcodes.Friends.List:
+                this.game.player.loadFriends(info.list!);
                 break;
 
             case Opcodes.Friends.Add:
@@ -1234,6 +1235,8 @@ export default class Connection {
             case Opcodes.Friends.Remove:
                 break;
         }
+
+        this.menu.getFriends().handle(opcode, info.username!);
     }
 
     /**
