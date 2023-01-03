@@ -21,6 +21,8 @@
     position: absolute;
     inset: 0;
 
+    display: none;
+
     width: 100%;
     height: 100%;
 
@@ -37,6 +39,8 @@
 #add-friend-input {
     position: absolute;
 
+    font-family: AdvoCut, sans-serif;
+    font-size: 16px;
     color: #fff;
 
     background-color: transparent;
@@ -112,6 +116,14 @@
             margin-top: 2px * $i;
 
             background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
+
+            &:hover {
+                background-position-y: -320px * $i;
+            }
+
+            &:active {
+                background-position-y: -336px * $i;
+            }
         }
 
         .friend-slot > p {

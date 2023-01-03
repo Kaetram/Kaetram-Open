@@ -185,5 +185,6 @@ export enum Effect {
 export enum Friends {
     List,
     Add,
-    Remove
+    Remove,
+    Status
 }
