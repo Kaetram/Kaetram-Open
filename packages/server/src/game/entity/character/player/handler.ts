@@ -144,6 +144,8 @@ export default class Handler {
         this.world.entities.removePlayer(this.player);
 
         this.world.cleanCombat(this.player);
+
+        this.world.linkFriends(this.player, true);
     }
 
     /**
