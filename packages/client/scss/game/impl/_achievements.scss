@@ -11,6 +11,10 @@
     font-family: AdvoCut, sans-serif;
 }
 
+#achievements-container > ul > li:last-child.achievement-element {
+    padding-bottom: 0 !important;
+}
+
 .achievement-element > p.achievement-title {
     float: left;
     color: #fff;
@@ -31,10 +35,6 @@
             width: 318px * $i;
             height: 130px * $i;
             font-size: 22px;
-        }
-
-        #achievements-container > ul > li:last-child.achievement-element {
-            padding-bottom: 0 !important;
         }
 
         .achievement-element {
