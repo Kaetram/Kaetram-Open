@@ -69,7 +69,7 @@
             background-color: rgb(0 0 0 / 75%);
         }
 
-        &.active {
+        &:active {
             color: #fcda5c;
             background-color: rgb(0 0 0 / 75%);
             outline: 2px solid #fcda5c;

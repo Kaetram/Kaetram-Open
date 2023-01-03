@@ -55,6 +55,23 @@ export default class Friends {
     }
 
     /**
+     * @returns A list of all friends.
+     */
+
+    public getFriendsList(): Friend {
+        return this.list;
+    }
+
+    /**
+     * @param username String of the username to check if they are a friend.
+     * @returns Whether or not the player is a friend.
+     */
+
+    public hasFriend(username: string): boolean {
+        return username in this.list;
+    }
+
+    /**
      * Callback for when the friends list has finished loading.
      */
 
@@ -78,14 +95,6 @@ export default class Friends {
 
     public onRemove(callback: (username: string) => void): void {
         this.removeCallback = callback;
-    }
-
-    /**
-     * @returns A list of all friends.
-     */
-
-    public getFriendsList(): Friend {
-        return this.list;
     }
 
     /**
