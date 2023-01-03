@@ -746,7 +746,7 @@ export default class Connection {
     /**
      * Notifications are messages sent from the server that display only on the current
      * player's end. These can either be popups, or chatbox information.
-     * @param opcode The type of the notification.
+     * @param opcode Tyhe type of the notification.
      * @param info Contains message, title, and colour information.
      */
 
@@ -1278,6 +1278,7 @@ export default class Connection {
     private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
         switch (opcode) {
             case Opcodes.Friends.List: {
+                this.game.player.loadFriends(info.list!);
                 break;
             }
 
@@ -1289,6 +1290,8 @@ export default class Connection {
                 break;
             }
         }
+
+        this.menu.getFriends().handle(opcode, info.username);
     }
 
     /**
