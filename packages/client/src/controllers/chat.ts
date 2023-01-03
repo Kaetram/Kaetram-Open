@@ -61,7 +61,7 @@ export default class ChatController {
 
     private createElement(source: string, message: string): HTMLElement {
         let element = document.createElement('p');
-        element.textContent = `${source} » ${message}`;
+        element.innerHTML = `${source} » ${message}`;
 
         return element;
     }
