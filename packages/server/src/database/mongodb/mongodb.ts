@@ -141,6 +141,22 @@ export default class MongoDB {
     }
 
     /**
+     * Checks whether or not the username exists in the database.
+     * @param username The username to check for.
+     * @param callback Contains the result of the check.
+     */
+
+    public exists(username: string, callback: (exists: boolean) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let cursor = this.database.collection('player_info').find({ username });
+
+        cursor.toArray().then((playerInfo) => {
+            callback(playerInfo.length > 0);
+        });
+    }
+
+    /**
      * Iterates through all the players in the database and (depending on their
      * tutorial quest progress) resets their positions to the defaults.
      */

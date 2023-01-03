@@ -6,19 +6,132 @@
     bottom: 45px;
 }
 
-.add, .remove {
+#friends-list {
     position: absolute;
+    inset: 0;
+
+    overflow: auto;
+
+    margin: auto;
+
+    font-family: AdvoCut, sans-serif;
+}
+
+#popup-container {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 16px;
+}
+
+#add-popup {
+    position: absolute;
+    inset: 0;
+
+    margin: auto;
+}
+
+#popup-friend-input {
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 16px;
+    color: #fff;
+
+    background-color: transparent;
+    border: none;
+}
+
+.friend-slot {
+    margin: auto;
+}
+
+.friend-slot > p {
+    font-size: 20px;
+    color: rgb(168 16 5);
+    text-align: center;
+}
+
+.friend-slot > p.online {
+    color: rgb(16 168 5);
+}
+
+.add,
+.remove {
+    position: absolute;
+}
+
+.confirm,
+.cancel {
+    position: absolute;
+    bottom: 0;
 }
 
 @each $size, $i in media.$sizes {
     @media ($size) {
         #friends-page {
             display: none;
+        }
+
+        #friends-container {
+            width: 100%;
+            height: 100%;
 
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
         }
 
-        .add, .remove {
+        #friends-list {
+            width: 106px * $i;
+            height: 172px * $i;
+            margin-top: 14px * $i;
+            padding-left: 2px * $i;
+        }
+
+        #friends-list > ul > li:last-child {
+            margin-bottom: 1px * $i;
+        }
+
+        #add-popup {
+            width: 96px * $i;
+            height: 38px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
+        }
+
+        #popup-friend-input {
+            top: 8px * $i;
+            left: 8px * $i;
+
+            width: 76px * $i;
+        }
+
+        .friend-slot {
+            width: 102px * $i;
+            height: 15px * $i;
+            margin-top: 2px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
+
+            &:hover {
+                background-position-y: -320px * $i;
+            }
+
+            &:active {
+                background-position-y: -336px * $i;
+            }
+        }
+
+        .friend-slot > p {
+            padding-top: 4px * $i;
+        }
+
+        .add,
+        .remove {
             bottom: 8px * $i;
 
             width: 21px * $i;
@@ -30,7 +143,7 @@
                 background-position-x: -42px * $i;
             }
 
-            &.active {
+            &:active {
                 background-position-x: -21px * $i;
             }
         }
@@ -46,25 +159,62 @@
 
             background-position-y: -291px * $i;
         }
+
+        // Popup buttons
+        .confirm,
+        .cancel {
+            width: 21px * $i;
+            height: 14px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+
+            &:hover {
+                background-position-x: -42px * $i;
+            }
+
+            &:active {
+                background-position-x: -21px * $i;
+            }
+        }
+
+        .confirm {
+            bottom: 4px * $i;
+            left: 14px * $i;
+
+            background-position-y: -308px * $i;
+        }
+
+        .cancel {
+            right: 14px * $i;
+            bottom: 4px * $i;
+
+            background-position-y: -322px * $i;
+        }
     }
 
-    @media(--lg) {
+    @media (--lg) {
         #friends-page {
             right: 0;
         }
     }
 
-    @media(--md) {
+    @media (--md) {
         #friends-page {
             right: 32px;
         }
     }
 
-    @media(--sm) {
+    @media (--sm) {
         #friends-page {
             right: 80px;
             bottom: 99px;
             transform: scale(1.5);
+        }
+
+        .friend-slot > p {
+            padding-top: 2px;
+
+            font-size: 12px;
         }
     }
 }
