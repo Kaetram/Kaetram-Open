@@ -8,6 +8,7 @@ import Character from '../character';
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
+import Friend from './friend';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
@@ -19,12 +20,7 @@ import { PlayerData } from '@kaetram/common/types/player';
 import { SkillData } from '@kaetram/common/types/skills';
 import { QuestData } from '@kaetram/common/types/quest';
 import { AbilityData } from '@kaetram/common/types/ability';
-
-type ExperienceCallback = (
-    experience: number,
-    prevExperience: number,
-    nextExperience: number
-) => void;
+import { Friend as FriendType } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -44,6 +40,7 @@ export default class Player extends Character {
 
     public poison = false;
     public disableAction = false;
+    public popup = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
 
@@ -66,6 +63,7 @@ export default class Player extends Character {
     public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
+    public friends: { [key: string]: Friend } = {};
 
     private syncCallback?: () => void;
     private poisonCallback?: PoisonCallback;
@@ -158,6 +156,21 @@ export default class Player extends Character {
         _.each(abilities, (ability: AbilityData) =>
             this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
         );
+    }
+
+    /**
+     * Loads the friend list from the server into the client.
+     * @param friends Contains information about friend usernames and their online status.
+     */
+
+    public loadFriends(friends: FriendType): void {
+        let i = 0;
+
+        _.each(friends, (status: boolean, username: string) => {
+            this.friends[username] = new Friend(i, username, status);
+
+            i++;
+        });
     }
 
     /**
@@ -398,15 +411,6 @@ export default class Player extends Character {
 
     public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
-    }
-
-    /**
-     * Callback for when the player's experience changes.
-     * @param callback Contains the experience, previous experience, and next experience.
-     */
-
-    public onExperience(callback: ExperienceCallback): void {
-        this.experienceCallback = callback;
     }
 
     /**
