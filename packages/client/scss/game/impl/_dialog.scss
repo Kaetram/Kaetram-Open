@@ -74,7 +74,7 @@
 
         background: url('/img/3/containers.png') -96px -498px;
 
-        &.active {
+        &:active {
             background-position-x: -144px;
         }
 
@@ -125,7 +125,7 @@
 
         background: url('/img/2/containers.png') -64px -332px;
 
-        &.active {
+        &:active {
             background-position-x: -96px;
         }
 
