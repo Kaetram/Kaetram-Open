@@ -86,6 +86,7 @@ export default class Handler {
         this.player.friends.onLoad(this.handleFriends.bind(this));
         this.player.friends.onAdd(this.handleFriendsAdd.bind(this));
         this.player.friends.onRemove(this.handleFriendsRemove.bind(this));
+        this.player.friends.onStatus(this.handleFriendsStatus.bind(this));
 
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
@@ -470,12 +471,15 @@ export default class Handler {
 
     /**
      * Callback for when a friend is added to the friends list.
+     * @param username The username of the friend we just added.
+     * @param status The online status of the friend we just added.
      */
 
-    private handleFriendsAdd(username: string): void {
+    private handleFriendsAdd(username: string, status: boolean): void {
         this.player.send(
             new Friends(Opcodes.Friends.Add, {
-                username
+                username,
+                status
             })
         );
     }
@@ -488,6 +492,21 @@ export default class Handler {
         this.player.send(
             new Friends(Opcodes.Friends.Remove, {
                 username
+            })
+        );
+    }
+
+    /**
+     * Synchronizes with the client the online status of a friend.
+     * @param username The username of the friend we are updating.
+     * @param status The online status of the friend we are updating.
+     */
+
+    private handleFriendsStatus(username: string, status: boolean): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Status, {
+                username,
+                status
             })
         );
     }
