@@ -53,7 +53,7 @@ export default class MenuController {
         this.equipments = new Equipments(game.player, game.sprites);
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
-        this.friends = new Friends();
+        this.friends = new Friends(game.player);
 
         this.menus = {
             inventory: this.inventory,
@@ -77,6 +77,8 @@ export default class MenuController {
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
+
+        this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
         this.load();
     }
@@ -179,6 +181,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The friends menu object.
+     */
+
+    public getFriends(): Friends {
+        return this.friends;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param index Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
@@ -255,6 +265,20 @@ export default class MenuController {
             opcode: type,
             key,
             index
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the type of friend action we are performing. If the
+     * `remove` variable is set to false then we are adding a friend, otherwise we are removing.
+     * @param username The username we are performing the action on.
+     * @param remove (Optional) Whether we are removing a friend or not (default: false).
+     */
+
+    private handleFriendConfirm(username: string, remove = false): void {
+        this.game.socket.send(Packets.Friends, {
+            opcode: remove ? Opcodes.Friends.Remove : Opcodes.Friends.Add,
+            username
         });
     }
 
