@@ -36,7 +36,7 @@
     margin: auto;
 }
 
-#add-friend-input {
+#popup-friend-input {
     position: absolute;
 
     font-family: AdvoCut, sans-serif;
@@ -103,7 +103,7 @@
             background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
         }
 
-        #add-friend-input {
+        #popup-friend-input {
             top: 8px * $i;
             left: 8px * $i;
 

@@ -40,7 +40,6 @@ export default class Player extends Character {
 
     public poison = false;
     public disableAction = false;
-    public popup = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
 
@@ -195,6 +194,16 @@ export default class Player extends Character {
             defenseStats,
             bonuses
         );
+    }
+
+    /**
+     * Adds a new friend to the list.
+     * @param username The username of the friend.
+     * @param status The online status of the friend.
+     */
+
+    public addFriend(username: string, status: boolean): void {
+        this.friends[username] = new Friend(_.size(this.friends), username, status);
     }
 
     /**
@@ -378,6 +387,16 @@ export default class Player extends Character {
         this.poison = poison;
 
         this.poisonCallback?.(poison);
+    }
+
+    /**
+     * Updates the online status of a friend.
+     * @param username The username of the friend we are updating.
+     * @param status The online status of the friend.
+     */
+
+    public setFriendStatus(username: string, status: boolean): void {
+        this.friends[username].online = status;
     }
 
     /**
