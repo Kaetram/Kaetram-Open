@@ -141,13 +141,13 @@ export default class Friends extends Menu {
             name = document.createElement('p');
 
         // Add styling to the friend slot element.
-        element.classList.add('friend-slot');
+        element.classList.add('container-slot');
 
         // Add styling to the friend name element.
         name.classList.add('stroke');
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) name.classList.add('online');
+        if (online) name.classList.add('green');
 
         // Set the name of the friend.
         name.innerHTML = username;
@@ -193,8 +193,8 @@ export default class Friends extends Menu {
         let name = this.list.children[friend.id].children[0] as HTMLParagraphElement;
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) name.classList.add('online');
-        else name.classList.remove('online');
+        if (online) name.classList.add('green');
+        else name.classList.remove('green');
     }
 
     /**
