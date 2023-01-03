@@ -1,10 +1,7 @@
 import _ from 'lodash';
 
+import type { Friend } from '@kaetram/common/types/friends';
 import type Player from './player';
-
-interface Friend {
-    [username: string]: boolean;
-}
 
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
@@ -13,6 +10,8 @@ export default class Friends {
     private loadCallback?: () => void;
     private addCallback?: (username: string) => void;
     private removeCallback?: (username: string) => void;
+
+    public constructor(private player: Player) {}
 
     /**
      * Loads the list of friends from an array of usernames (received from the database).
@@ -34,11 +33,23 @@ export default class Friends {
      */
 
     public add(player: Player | string): void {
-        let username = typeof player === 'string' ? player : player.username;
+        let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
-        this.list[username] = true;
+        // Check that someone isn't messing with the client input :)
+        if (username.length > 32) return this.player.notify('That username is too long.');
 
-        this.addCallback?.(username);
+        // Ensure the player is not already on the list.
+        if (this.hasFriend(username))
+            return this.player.notify('That player is already on your friends list.');
+
+        // Ensure the player exists.
+        this.player.database.exists(username, (exists: boolean) => {
+            if (!exists) return this.player.notify('No player with that username exists.');
+
+            this.list[username] = this.player.world.isOnline(username);
+
+            this.addCallback?.(username);
+        });
     }
 
     /**
@@ -48,6 +59,10 @@ export default class Friends {
 
     public remove(player: Player | string): void {
         let username = typeof player === 'string' ? player : player.username;
+
+        // No username was found in the list.
+        if (!this.hasFriend(username))
+            return this.player.notify('That player is not in your friends list.');
 
         delete this.list[username];
 
@@ -69,6 +84,16 @@ export default class Friends {
 
     public hasFriend(username: string): boolean {
         return username in this.list;
+    }
+
+    /**
+     * Updates the online status for a friend.
+     * @param username The username of the friend.
+     * @param status The online status of the friend.
+     */
+
+    public setStatus(username: string, status: boolean): void {
+        this.list[username] = status;
     }
 
     /**
