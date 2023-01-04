@@ -77,6 +77,10 @@
     text-align: center;
 }
 
+.container-slot > p.yellow {
+    color: rgb(168 168 5);
+}
+
 .container-slot > p.green {
     color: rgb(16 168 5);
 }
@@ -124,7 +128,7 @@
         .container-slot > p {
             padding-top: 2px;
 
-            font-size: 12px;
+            font-size: 10px;
         }
     }
 }
