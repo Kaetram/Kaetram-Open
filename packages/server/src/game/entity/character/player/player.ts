@@ -1294,8 +1294,8 @@ export default class Player extends Character {
             oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
             formattedName = Utils.formatName(this.username); // Formatted username of current instance.
 
-        otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
+        otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
     }
 
     /**
