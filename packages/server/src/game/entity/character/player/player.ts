@@ -1281,10 +1281,11 @@ export default class Player extends Character {
      */
 
     public sendMessage(playerName: string, message: string): void {
-        if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
-            return;
-        }
+        // TODO - Inter-world messaging
+        // if (config.hubEnabled) {
+        //     this.world.api.sendPrivateMessage(this, playerName, message);
+        //     return;
+        // }
 
         if (!this.world.isOnline(playerName))
             return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
