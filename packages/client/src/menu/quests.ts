@@ -1,7 +1,11 @@
+import _ from 'lodash';
+
 import Menu from './menu';
 
 import Player from '../entity/character/player/player';
+import Task from '../entity/character/player/task';
 
+import { Opcodes } from '@kaetram/common/network';
 export default class Quests extends Menu {
     // Contains the list of all the quests and their respective status.
     private list: HTMLUListElement = document.querySelector('#quests-container > ul')!;
@@ -11,5 +15,74 @@ export default class Quests extends Menu {
 
     public constructor(private player: Player) {
         super('#quests', '#close-quests', '#quests-button');
+    }
+
+    /**
+     * Handles the incoming packets from the server and synchronizes the quest list.
+     * @param opcode Type of action we are performing on the quest list.
+     * @param key Optional parameter passed when a quest progresses.
+     */
+
+    public handle(opcode: Opcodes.Quest, key = ''): void {
+        switch (opcode) {
+            case Opcodes.Quest.Batch:
+                _.each(this.player.quests, (quest: Task) => this.createElement(quest));
+                break;
+
+            case Opcodes.Quest.Progress:
+                return this.handleProgress(key);
+        }
+    }
+
+    /**
+     * Updates the progress of a quest.
+     * @param key Used for identifying the quest.
+     */
+
+    private handleProgress(key: string): void {
+        if (!key) return;
+
+        let quest = this.player.quests[key];
+
+        if (!quest) return;
+
+        let element = this.list.children[quest.id],
+            nameElement = element.querySelector('p')!;
+
+        if (!nameElement) return;
+
+        nameElement.classList.remove('green', 'yellow');
+
+        // Update colours of the name relative to its completion
+        if (quest.isFinished()) nameElement.classList.add('green');
+        else if (quest.isStarted()) nameElement.classList.add('yellow');
+    }
+
+    /**
+     * Creates a quest element and adds it to the list.
+     * @param questName The name of the quest.
+     */
+
+    private createElement(quest: Task): void {
+        let element = document.createElement('li'),
+            name = document.createElement('p');
+
+        // Add the slot class to the element.
+        element.classList.add('container-slot');
+
+        // Add styling to the friend name element.
+        name.classList.add('stroke');
+
+        // Set the quest name.
+        name.innerHTML = quest.name;
+
+        // Update colours of the name relative to its completion
+        if (quest.isFinished()) name.classList.add('green');
+        else if (quest.isStarted()) name.classList.add('yellow');
+
+        // Add the name element to the element.
+        element.append(name);
+
+        this.list.append(element);
     }
 }

@@ -182,6 +182,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The quests menu object.
+     */
+
+    public getQuests(): Quests {
+        return this.quests;
+    }
+
+    /**
      * @returns The friends menu object.
      */
 
