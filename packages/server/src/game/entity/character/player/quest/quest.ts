@@ -55,7 +55,7 @@ export default abstract class Quest {
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
         this.description = rawData.description;
-        this.rewards = rawData.rewards;
+        this.rewards = rawData.rewards || [];
         this.hideNPCs = rawData.hideNPCs || [];
         this.stageCount = _.size(rawData.stages);
 
