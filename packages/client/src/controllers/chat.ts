@@ -41,7 +41,7 @@ export default class ChatController {
 
         this.toggle();
 
-        this.input.value = `/pm ${username} `;
+        this.input.value = `/pm *${username}* `;
         this.input.focus();
     }
 

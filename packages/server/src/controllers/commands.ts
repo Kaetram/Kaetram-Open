@@ -74,12 +74,13 @@ export default class Commands {
 
             case 'pm':
             case 'msg': {
-                let otherPlayer = blocks.shift()!,
-                    message = blocks.join(' ');
+                let asterikBlocks = blocks.join(' ').split('*'),
+                    [, username] = asterikBlocks,
+                    message = blocks.slice(username.split(' ').length).join(' ');
 
-                this.player.sendMessage(otherPlayer, message);
+                this.player.sendMessage(username, message);
 
-                return;
+                break;
             }
 
             case 'ping': {
