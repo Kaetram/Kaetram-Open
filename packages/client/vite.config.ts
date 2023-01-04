@@ -1,9 +1,11 @@
-import legacy from '@vitejs/plugin-legacy';
-import { defineConfig } from 'vite';
-import { createHtmlPlugin } from 'vite-plugin-html';
-import { VitePWA as pwa } from 'vite-plugin-pwa';
+import path from 'node:path';
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { defineConfig } from 'vite';
+import ViteLegacy from '@vitejs/plugin-legacy';
+import { ViteMinifyPlugin } from 'vite-plugin-minify';
+import { VitePWA } from 'vite-plugin-pwa';
+import { internalIpV4 } from 'internal-ip';
+
 import { description, name } from '../../package.json';
 import config, { type Config } from '../common/config';
 
@@ -51,15 +53,16 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     });
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
     let isProduction = mode === 'production',
-        env = loadEnv(isProduction);
+        env = loadEnv(isProduction),
+        ipv4 = await internalIpV4();
 
     return {
+        appType: 'mpa',
         plugins: [
-            pwa({
+            VitePWA({
                 registerType: 'autoUpdate',
-                includeAssets: '**/*',
                 workbox: { cacheId: name },
                 manifest: {
                     name: config.name,
@@ -88,16 +91,29 @@ export default defineConfig(({ mode }) => {
                     categories: ['entertainment', 'games']
                 }
             }),
-            legacy(),
-            createHtmlPlugin({
-                minify: isProduction && { processScripts: ['application/ld+json'] }
-            })
+            ViteLegacy(),
+            ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
         ],
         build: {
             sourcemap: true,
-            chunkSizeWarningLimit: 4e3
+            chunkSizeWarningLimit: 4e3,
+            rollupOptions: {
+                input: {
+                    index: path.resolve(__dirname, 'index.html'),
+                    privacy: path.resolve(__dirname, 'privacy.html')
+                }
+            }
         },
-        server: { port: 9000 },
+        server: {
+            host: '0.0.0.0',
+            port: 9000,
+            strictPort: true,
+            hmr: {
+                protocol: 'ws',
+                host: ipv4!,
+                port: 5183
+            }
+        },
         define: { 'window.config': env }
     };
 });

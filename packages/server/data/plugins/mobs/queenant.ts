@@ -111,13 +111,17 @@ export default class QueenAnt extends Default {
 
         if (this.specialAttack) return;
 
-        // Queen Ant turns to ranged attack style if the target is too far away.
-        if (this.mob.getDistance(this.mob.target!) > 1) {
-            this.mob.attackRange = 6;
-            this.mob.projectileName = 'projectile-boulder';
-        }
+        // Determine whether or not to use ranged attacks.
+        let useRanged =
+            this.mob.getDistance(this.mob.target!) > 1 ||
+            this.mob.target!.isRanged() ||
+            this.mob.target!.moving;
 
-        this.mob.attackRange = this.mob.target?.isRanged() ? 8 : 1;
+        // Update the mob's range distance.
+        this.mob.attackRange = useRanged ? 10 : 1;
+
+        // Updates the projectile per combat loop to reset the special attack.
+        if (useRanged) this.mob.projectileName = 'projectile-boulder';
     }
 
     /**

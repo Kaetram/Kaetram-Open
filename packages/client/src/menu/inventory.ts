@@ -142,6 +142,23 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Selects the first edible item in the inventory then mimics the
+     * select function as if the player is clicking it. Used for hotkey
+     * functions to quickly heal when in combat.
+     */
+
+    public selectEdible(): void {
+        let index = this.getFirstEdible();
+
+        // No edible items found.
+        if (index === -1) return;
+
+        this.selectedSlot = index;
+
+        this.handleAction(Modules.MenuActions.Eat);
+    }
+
+    /**
      * Event handler for when a slot begins the dragging and dropping
      * process. We update the current index of the slot that is being
      * selected for later use.
@@ -397,6 +414,22 @@ export default class Inventory extends Menu {
             x: boundingRect.left - boundingRect.width,
             y: boundingRect.top - boundingRect.height * 2
         };
+    }
+
+    /**
+     * Iterates through all the slots and grabs the first edible item
+     * that appears in the inventory returning its index.
+     * @returns The slot index of the first edible item or -1 if none are found.
+     */
+
+    private getFirstEdible(): number {
+        for (let i = 0; i < this.list.children.length; i++) {
+            let slot = this.getElement(i);
+
+            if (slot.edible) return i;
+        }
+
+        return -1;
     }
 
     /**

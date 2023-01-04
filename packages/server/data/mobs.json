@@ -242,12 +242,12 @@
 
   "babyspider": {
     "name": "Baby Spooder",
-    "drops": {"gold": 50},
+    "drops": {"gold": 150, "flask": 100},
     "hitPoints": 400,
     "defenseLevel": 3,
     "attackLevel": 7,
     "experience": 242,
-    "level": 42,
+    "level": 34,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -255,7 +255,6 @@
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
-
   },
 
   "beetle": {
@@ -329,12 +328,12 @@
 
   "blazespider": {
     "name": "Blaze Spooder",
-    "drops": {"gold": 50},
-    "hitPoints": 915,
+    "drops": {"gold": 50, "blackspiderarmor": 75},
+    "hitPoints": 1350,
     "defenseLevel": 0,
     "attackLevel": 3,
-    "experience": 960,
-    "level": 60,
+    "experience": 1150,
+    "level": 77,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -344,9 +343,9 @@
     "respawnDelay": 35000
   },
 
-  "bluecockroach": {
+  "greencockroach": {
     "name": "Blue Cockroach",
-    "drops": {"cockroachsuit": 40, "gayarcherarmor": 20, "sickle": 40},
+    "drops": {"cockroachsuit": 40, "sickle": 40},
     "hitPoints": 785,
     "defenseLevel": 5,
     "attackLevel": 0,
@@ -388,7 +387,7 @@
     "level": 16,
     "aggroRange": 2,
     "attackRange": 1,
-    "aggressive": true,
+    "alwaysAggressive": true,
     "roaming": false,
     "attackRate": 1300,
     "movementSpeed": 400,
@@ -586,14 +585,14 @@
   "earthworm": {
     "name": "Earth Worm",
     "drops": {"gold": 50},
-    "hitPoints": 970,
+    "hitPoints": 315,
     "defenseLevel": 5,
     "attackLevel": 5,
-    "experience": 840,
-    "level": 78,
+    "experience": 200,
+    "level": 34,
     "aggroRange": 1,
     "attackRange": 1,
-    "aggressive": false,
+    "aggressive": true,
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
@@ -602,12 +601,12 @@
 
   "firespider": {
     "name": "Fire Spooder",
-    "drops": {"gold": 50},
-    "hitPoints": 1150,
+    "drops": {"gold": 50, "blackspiderarmor": 60},
+    "hitPoints": 850,
     "defenseLevel": 3,
     "attackLevel": 4,
-    "experience": 765,
-    "level": 83,
+    "experience": 900,
+    "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -636,16 +635,18 @@
 
   "frog": {
     "name": "Frog",
-    "drops": {"gold": 50},
-    "hitPoints": 1850,
-    "defenseLevel": 10,
+    "drops": {"gold": 50, "frogarmor": 75},
+    "hitPoints": 788,
+    "defenseLevel": 7,
     "attackLevel": 15,
-    "experience": 830,
-    "level": 89,
+    "experience": 440,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "roaming": true,
+
+    "roamDistance": 5,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -670,11 +671,11 @@
 
   "goldgolem": {
     "name": "Golden Golem",
-    "drops": {"gold": 50},
-    "hitPoints": 1150,
+    "drops": {"gold": 500, "goldaxe": 45},
+    "hitPoints": 1200,
     "defenseLevel": 10,
     "attackLevel": 15,
-    "experience": 200,
+    "experience": 560,
     "level": 75,
     "aggroRange": 1,
     "attackRange": 1,
@@ -721,16 +722,17 @@
 
   "hellspider": {
     "name": "Hell Spooder",
-    "drops": {"gold": 50},
-    "hitPoints": 2000,
+    "drops": {"gold": 50, "blackspiderarmor": 40},
+    "hitPoints": 780,
     "defenseLevel": 10,
     "attackLevel": 15,
-    "experience": 855,
-    "level": 91,
+    "experience": 840,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
+    "poisonous": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000
@@ -893,17 +895,17 @@
   "mantis": {
     "name": "Praying Mantis",
     "drops": {"gold": 50},
-    "hitPoints": 2400,
-    "defenseLevel": 15,
-    "attackLevel": 10,
-    "experience": 950,
-    "level": 89,
+    "hitPoints": 1000,
+    "defenseLevel": 7,
+    "attackLevel": 15,
+    "experience": 567,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
-    "movementSpeed": 400,
+    "movementSpeed": 350,
     "respawnDelay": 35000
   },
 
@@ -1080,8 +1082,8 @@
   },
 
   "poisonspider": {
-    "name": "Red Spider",
-    "drops": {"gold": 50},
+    "name": "Poison Spooder",
+    "drops": {"gold": 50, "blackspiderarmor": 30},
     "hitPoints": 990,
     "defenseLevel": 30,
     "attackLevel": 15,
@@ -1133,19 +1135,19 @@
 
   "redcockroach": {
     "name": "Red Cockroach",
-    "drops": {"gold": 50},
-    "hitPoints": 1200,
-    "defenseLevel": 2,
-    "attackLevel": 4,
-    "experience": 165,
-    "level": 61,
+    "drops": {"cockroachsuit": 40, "sickle": 40},
+    "hitPoints": 669,
+    "defenseLevel": 10,
+    "attackLevel": 5,
+    "experience": 350,
+    "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
     "roaming": true,
     "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
+    "movementSpeed": 300,
+    "respawnDelay": 45000
   },
 
   "redelf": {
@@ -1422,7 +1424,7 @@
 
   "snowrabbit": {
     "name": "Snow Rabbit",
-    "drops": {"gold": 50},
+    "drops": {"gold": 50, "rabbitarmor": 75},
     "hitPoints": 295,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -1507,15 +1509,16 @@
 
   "spider": {
     "name": "Spooder",
-    "drops": {"gold": 50},
-    "hitPoints": 2900,
+    "drops": {"gold": 50, "blackspiderarmor": 50},
+    "hitPoints": 650,
     "defenseLevel": 45,
     "attackLevel": 1,
-    "experience": 750,
-    "level": 91,
+    "experience": 700,
+    "level": 47,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "poisonous": true,
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
@@ -1592,12 +1595,12 @@
 
   "whitemouse": {
     "name": "Mouse",
-    "drops": {"ratarcherarmor": 75, "ratarmor": 75, "gold": 400},
-    "hitPoints": 950,
-    "defenseLevel": 10,
+    "drops": {"ratarcherarmor": 50, "ratarmor": 50, "gold": 400},
+    "hitPoints": 750,
+    "defenseLevel": 16,
     "attackLevel": 3,
-    "experience": 450,
-    "level": 44,
+    "experience": 350,
+    "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -1854,20 +1857,23 @@
   },
 
   "forestdragon": {
-    "name": "Gragon",
-    "drops": {"dragonarmor": 25, "bamboospear": 25, "gold": 900, "marblependant": 25, "essentialrage": 25},
-    "hitPoints": 25000,
-    "defenseLevel": 300,
-    "attackLevel": 120,
+    "name": "Forest Dragon",
+    "drops": {"dragonarmor": 75, "bamboospear": 75, "gold": 900, "marblependant": 75, "essentialrage": 75},
+    "hitPoints": 4500,
+    "defenseLevel": 200,
+    "attackLevel": 80,
     "experience": 4250,
-    "level": 153,
-    "aggroRange": 2,
+    "level": 258,
+    "aggroRange": 10,
     "attackRange": 1,
-    "aggressive": true,
+    "alwaysAggressive": true,
     "roaming": true,
-    "attackRate": 1100,
-    "movementSpeed": 800,
-    "respawnDelay": 95000
+    "attackRate": 1200,
+    "movementSpeed": 600,
+    "respawnDelay": 180000,
+    "projectileName": "projectile-fireball",
+    "achievement": "forestdragon",
+    "plugin": "forestdragon"
   },
 
   "enel": {
@@ -1906,19 +1912,20 @@
 
   "minidragon": {
     "name": "Mini Dragon",
-    "drops": {"dragonarmor": 300, "spiritring": 200, "gold": 400},
-    "hitPoints": 100,
+    "drops": {"dragonarmor": 3, "gold": 400},
+    "hitPoints": 380,
     "defenseLevel": 5,
-    "attackLevel": 10,
-    "experience": 135,
-    "level": 11,
-    "aggroRange": 4,
-    "attackRange": 1,
+    "attackLevel": 15,
+    "experience": 229,
+    "level": 77,
+    "aggroRange": 5,
+    "attackRange": 9,
     "aggressive": true,
     "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "projectile": "projectile-fireball"
   },
 
   "piratecaptain": {
@@ -2010,6 +2017,42 @@
     "attackRate": 1300,
     "movementSpeed": 1200,
     "respawnDelay": 95000
+  },
+
+  "eliminator": {
+    "name": "Eliminator",
+    "drops": {"gold": 250},
+    "hitPoints": 2000,
+    "defenseLevel": 45,
+    "attackLevel": 30,
+    "experience": 2250,
+    "level": 65,
+    "aggroRange": 7,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 500,
+    "respawnDelay": 95000
+  },
+
+  "santa": {
+    "name": "Santa",
+    "drops": {"gold": 250, "candybar": 60},
+    "hitPoints": 4500,
+    "defenseLevel": 45,
+    "attackLevel": 65,
+    "experience": 3250,
+    "level": 240,
+    "aggroRange": 7,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 500,
+    "respawnDelay": 180000,
+    "projectile": "projectile-gift",
+    "plugin": "santa"
   },
 
   "brownmouse": {

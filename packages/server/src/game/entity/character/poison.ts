@@ -13,6 +13,8 @@ export default class Poison {
      */
 
     public constructor(public type: Modules.PoisonTypes, public start = Date.now()) {
+        if (!this.start) this.start = Date.now();
+
         this.name = Modules.PoisonInfo[this.type].name;
         this.damage = Modules.PoisonInfo[this.type].damage;
         this.duration = Modules.PoisonInfo[this.type].duration * 1000; // Convert to milliseconds
@@ -30,5 +32,14 @@ export default class Poison {
         if (this.duration < 0) return false;
 
         return Date.now() - this.start >= this.duration;
+    }
+
+    /**
+     * @returns The remaining amount of time in the poison effect. Used for
+     * loading once the player logs back in to the game.
+     */
+
+    public getRemainingTime(): number {
+        return this.duration - (this.duration - (Date.now() - this.start));
     }
 }

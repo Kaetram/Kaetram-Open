@@ -2,13 +2,9 @@
 
 #profile-dialog,
 #settings-page {
-    cursor: url('/img/3/hand.png'), auto;
-    user-select: none;
-
     position: absolute;
     right: 0;
     bottom: 45px;
-
     display: none;
 }
 
@@ -74,7 +70,7 @@
         height: 48px;
         background: url('/img/3/containers.png') -96px -498px;
 
-        &.active {
+        &:active {
             background-position-x: -144px;
         }
 
@@ -121,7 +117,7 @@
         height: 32px;
         background: url('/img/2/containers.png') -64px -332px;
 
-        &.active {
+        &:active {
             background-position-x: -96px;
         }
 

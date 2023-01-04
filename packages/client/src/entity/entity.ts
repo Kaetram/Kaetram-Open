@@ -6,22 +6,6 @@ import type Animation from './animation';
 import type Sprite from './sprite';
 import type { Animations } from './sprite';
 
-export interface EntityRenderingData {
-    scale: number;
-    angle: number;
-
-    sprite: Sprite;
-    width: number;
-    height: number;
-
-    ox: number;
-    oy: number;
-
-    shadowWidth: number;
-    shadowHeight: number;
-    shadowOffsetY: number;
-}
-
 export default abstract class Entity {
     public x = 0;
     public y = 0;
@@ -70,18 +54,18 @@ export default abstract class Entity {
 
     private readyCallback?(): void;
 
-    public attackRange!: number;
+    public attackRange = 1;
     public hitPoints = 0;
     public maxHitPoints = 0;
     public mana = 0;
     public maxMana = 0;
     public level = 1;
     public experience = 0;
-    public movementSpeed!: number;
-    public frozen!: boolean;
-    public teleporting!: boolean;
-    public dead!: boolean;
-    public pvp!: boolean;
+    public movementSpeed = 250;
+    public frozen = false;
+    public teleporting = false;
+    public dead = false;
+    public pvp = false;
     public nameColour!: string;
     public customScale!: number;
     public nextGridX!: number;
@@ -160,6 +144,11 @@ export default abstract class Entity {
 
         sprite.onLoad(() => {
             if (sprite.loadHurt) this.hurtSprite = sprite.hurtSprite;
+
+            if (this.customScale) {
+                this.sprite.offsetX *= this.customScale;
+                this.sprite.offsetY *= this.customScale;
+            }
         });
 
         this.spriteLoaded = true;
@@ -175,7 +164,12 @@ export default abstract class Entity {
      * @param onEndCount A function to be called upon animation completion.
      */
 
-    public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
+    public setAnimation(
+        name: string,
+        speed = this.idleSpeed,
+        count = 0,
+        onEndCount?: () => void
+    ): void {
         if (!this.spriteLoaded || this.animation?.name === name) return;
 
         let anim = this.animations[name];
