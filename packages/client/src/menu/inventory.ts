@@ -1,13 +1,13 @@
+import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
-
-import Menu from './menu';
-import Actions from './actions';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import { Opcodes, Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
+import Menu from './menu';
+
+import type { SlotData } from '@kaetram/common/types/slot';
+import type Actions from './actions';
 
 type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
 

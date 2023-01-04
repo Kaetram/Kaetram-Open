@@ -1,15 +1,15 @@
 import WorldContext from './world.context';
 
 export default class DefaultContext extends WorldContext {
-    constructor() {
+    public constructor() {
         super();
     }
 
-    injectDefaultData(): void {
+    public injectDefaultData(): void {
         // default data to inject in the db goes here
     }
 
-    before(): void {
+    public before(): void {
         // default data to inject in the db goes here
     }
 }

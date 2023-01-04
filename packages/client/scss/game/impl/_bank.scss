@@ -27,7 +27,6 @@
 .bank-image {
     width: 100%;
     height: 100%;
-
     background-size: 600%;
 }
 
@@ -52,15 +51,12 @@
         #bank-container {
             width: 171px * $i;
             height: 167px * $i;
-
             background-position: -132px * $i 0;
         }
 
         #bank-slot {
             left: 140px * $i;
-
             overflow-y: scroll;
-
             width: 144px * $i;
             height: 130px * $i;
         }

@@ -1,21 +1,18 @@
+import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import Player from './player';
-import Quest from './quest/quest';
+import quests from '../../../../../data/quests.json';
+import { Quest as QuestPacket } from '../../../../network/packets';
 
 import QuestIndex from './quest/impl';
 
-import { Quest as QuestPacket } from '../../../../network/packets';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { PopupData } from '@kaetram/common/types/popup';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
-
-// Raw quest data
-import NPC from '../../npc/npc';
-import Mob from '../mob/mob';
-import quests from '../../../../../data/quests.json';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
+import type Player from './player';
+import type Quest from './quest/quest';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
 
 /**
  * Initialize all the quests on a player instance basis. The previous

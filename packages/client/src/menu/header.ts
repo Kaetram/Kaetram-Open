@@ -1,4 +1,4 @@
-import Player from '../entity/character/player/player';
+import type Player from '../entity/character/player/player';
 
 /**
  * The header is the GUI on top of the screen that displays

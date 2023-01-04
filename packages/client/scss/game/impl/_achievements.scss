@@ -17,13 +17,11 @@
 
 .achievement-element > p.achievement-title {
     float: left;
-
     color: #fff;
 }
 
 .achievement-element > p.achievement-progress {
     float: right;
-
     color: #fff;
 }
 
@@ -36,7 +34,6 @@
         #achievements-container {
             width: 318px * $i;
             height: 130px * $i;
-
             font-size: 22px;
         }
 
@@ -44,7 +41,6 @@
             width: 318px * $i;
             height: 26px * $i;
             padding-bottom: 8px * $i;
-
             background: url('/img/#{$i}/achievements.png') 0 -96px * $i no-repeat;
         }
 
@@ -54,7 +50,6 @@
 
         .achievement-element > p.achievement-title {
             margin-left: 30px * $i;
-
             font-size: 8px * $i;
         }
 
@@ -69,7 +64,6 @@
         .coin {
             width: 24px * $i;
             height: 26px * $i;
-
             background: url('/img/#{$i}/achievements.png') no-repeat;
         }
 
@@ -96,7 +90,6 @@
 
         .achievement-element > p.achievement-description {
             margin-left: 110px;
-
             font-size: 9px;
         }
     }

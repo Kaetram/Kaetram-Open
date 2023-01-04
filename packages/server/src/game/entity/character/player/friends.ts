@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import Player from './player';
-
-import { Friend } from '@kaetram/common/types/friends';
+import type { Friend } from '@kaetram/common/types/friends';
+import type Player from './player';
 
 type SyncCallback = (username: string, status: boolean) => void;
+
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
     private list: Friend = {};

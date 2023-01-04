@@ -1,8 +1,8 @@
-import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
-import Character from '@kaetram/server/src/game/entity/character/character';
+import Utils from '@kaetram/common/util/utils';
 import Handler from '@kaetram/server/src/game/entity/character/mob/handler';
 
-import Utils from '@kaetram/common/util/utils';
+import type Character from '@kaetram/server/src/game/entity/character/character';
+import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 
 /**
  * Default handler plugin for the mob. When a mob has a plugin associated

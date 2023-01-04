@@ -1,6 +1,5 @@
-import { ServerData } from '../controllers/servers';
-
 import type { SerializedServer } from '@kaetram/common/types/api';
+import type { ServerData } from '../controllers/servers';
 
 export default class Server {
     public lastPing = Date.now();

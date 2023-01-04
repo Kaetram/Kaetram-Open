@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '../lib/log';
-
 import Util from '../utils/util';
 
 export default abstract class Menu {
