@@ -87,6 +87,8 @@ export default class InputController {
             this.moveCursor();
         });
 
+        this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
+
         this.targetAnimation.setSpeed(50);
     }
 

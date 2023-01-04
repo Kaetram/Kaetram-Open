@@ -29,6 +29,7 @@ export default class Friends extends Menu {
 
     // Callbacks
     private confirmCallback?: ConfirmCallback;
+    private messageCallback?: (username: string) => void;
 
     // Booleans
     private popupActive = false;
@@ -89,6 +90,16 @@ export default class Friends extends Menu {
 
         // Send the packet to the server.
         this.confirmCallback?.(username, remove);
+    }
+
+    /**
+     * Event handler for when the user clicks on a friend's name.
+     */
+
+    private handleMessage(username: string): void {
+        if (!this.player.friends[username].online) return;
+
+        this.messageCallback?.(username);
     }
 
     /**
@@ -157,6 +168,8 @@ export default class Friends extends Menu {
 
         // Add the friend slot element to the friend list.
         this.list.append(element);
+
+        element.addEventListener('click', () => this.handleMessage(username));
     }
 
     /**
@@ -212,5 +225,15 @@ export default class Friends extends Menu {
 
     public onConfirm(callback: ConfirmCallback): void {
         this.confirmCallback = callback;
+    }
+
+    /**
+     * Event handler for when a friend is clicked. Their username is passed to
+     * chat handler.
+     * @param callback Contains username of the friend.
+     */
+
+    public onMessage(callback: (username: string) => void): void {
+        this.messageCallback = callback;
     }
 }
