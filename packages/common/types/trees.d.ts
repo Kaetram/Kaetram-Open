@@ -9,4 +9,6 @@ export interface TreeInfo {
     quest?: string; // Quest progress to be checked when cutting the tree.
 }
 
-export type TreeData = { [key: string]: TreeInfo };
+export interface TreeData {
+    [key: string]: TreeInfo;
+}

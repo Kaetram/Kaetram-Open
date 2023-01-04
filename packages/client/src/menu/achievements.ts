@@ -1,11 +1,10 @@
 import _ from 'lodash';
+import { Opcodes } from '@kaetram/common/network';
 
 import Menu from './menu';
 
-import Player from '../entity/character/player/player';
-import Task from '../entity/character/player/task';
-
-import { Opcodes } from '@kaetram/common/network';
+import type Player from '../entity/character/player/player';
+import type Task from '../entity/character/player/task';
 
 export default class Achievements extends Menu {
     // List where all the achievement objects are contained.
@@ -117,9 +116,9 @@ export default class Achievements extends Menu {
      */
 
     private update(element: HTMLLIElement, task: Task): void {
-        let title = element.querySelector('.achievement-title')! as HTMLElement,
-            description = element.querySelector('.achievement-description')! as HTMLElement,
-            progress = element.querySelector('.achievement-progress')!;
+        let title = element.querySelector<HTMLElement>('.achievement-title')!,
+            description = element.querySelector<HTMLElement>('.achievement-description')!,
+            progress = element.querySelector<HTMLElement>('.achievement-progress')!;
 
         /**
          * Synchronize the information from the task with that
@@ -154,13 +153,14 @@ export default class Achievements extends Menu {
             coin?.remove();
 
             // No progress element found.
-            if (!progress) {
-                progress = this.createProgress(task);
-                element.append(progress);
-            } else
+            if (progress)
                 progress.innerHTML = task.isStarted()
                     ? `${task.stage - 1}/${task.stageCount - 1}`
                     : '';
+            else {
+                progress = this.createProgress(task);
+                element.append(progress);
+            }
         }
     }
 }

@@ -1,8 +1,7 @@
+import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-import { Modules } from '@kaetram/common/network';
-import { Stats } from '@kaetram/common/types/item';
-
+import type { Stats } from '@kaetram/common/types/item';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 
@@ -112,7 +111,7 @@ export default {
         return diff.crush + diff.slash + diff.stab;
     },
 
-    getCritical(attacker: Player, target: Character): number {
+    getCritical(_attacker: Player, _target: Character): number {
         return 0;
     },
 

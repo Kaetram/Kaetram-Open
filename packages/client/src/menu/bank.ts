@@ -1,12 +1,13 @@
-import Menu from './menu';
-import Inventory from './inventory';
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import { Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
-import _ from 'lodash-es';
+import Menu from './menu';
+
+import type { SlotData } from '@kaetram/common/types/slot';
+import type Inventory from './inventory';
 
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 
@@ -63,8 +64,8 @@ export default class Bank extends Menu {
      */
 
     private setSlot(index: number, key = '', count = 0): void {
-        let image = this.getBankElement(index).querySelector('.bank-image') as HTMLElement,
-            countElement = this.getBankElement(index).querySelector('.item-count') as HTMLElement;
+        let image = this.getBankElement(index).querySelector<HTMLElement>('.bank-image')!,
+            countElement = this.getBankElement(index).querySelector<HTMLElement>('.item-count')!;
 
         image.style.backgroundImage = Util.getImageURL(key);
         countElement.textContent = Util.getCount(count);
@@ -78,8 +79,8 @@ export default class Bank extends Menu {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getInventoryElement(index).querySelector('.bank-image') as HTMLElement,
-                count = this.getInventoryElement(index).querySelector('.item-count') as HTMLElement;
+            let image = this.getInventoryElement(index).querySelector<HTMLElement>('.bank-image')!,
+                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!;
 
             image.style.backgroundImage = slot.style.backgroundImage;
             count.textContent = slot.textContent;

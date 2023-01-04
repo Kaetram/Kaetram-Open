@@ -1,23 +1,22 @@
+import { Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import NPC from '../../npc/npc';
-import Mob from '../mob/mob';
-import Player from './player';
+import achievements from '../../../../../data/achievements.json';
+import { Achievement as AchievementPacket } from '../../../../network/packets';
+import Item from '../../objects/item';
 
 import Achievement from './achievement/achievement';
 
-import achievements from '../../../../../data/achievements.json';
-
-import { Achievement as AchievementPacket } from '../../../../network/packets';
-
-import { PopupData } from '@kaetram/common/types/popup';
-import {
-    RawAchievement,
+import type { Modules } from '@kaetram/common/network';
+import type {
     AchievementData,
+    RawAchievement,
     SerializedAchievement
 } from '@kaetram/common/types/achievement';
-import { Modules, Opcodes } from '@kaetram/common/network';
-import Item from '../../objects/item';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
+import type Player from './player';
 
 export default class Achievements {
     private achievements: { [key: string]: Achievement } = {};
@@ -153,7 +152,7 @@ export default class Achievements {
 
         this.forEachAchievement((a: Achievement) => {
             if (a.isFinished()) return;
-            if (entity.isNPC() && !a.hasNPC(entity as NPC)) return;
+            if (entity.isNPC() && !a.hasNPC(entity)) return;
             if (entity.isMob() && (!a.hasMob(entity as Mob) || !a.isStarted())) return;
 
             achievement = a;

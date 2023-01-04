@@ -1,8 +1,8 @@
 import _ from 'lodash-es';
 
-import Character from '../entity/character/character';
 import AStar from '../lib/astar';
 
+import type Character from '../entity/character/character';
 import type { FunctionTypes } from '../lib/astar';
 
 /**
@@ -56,7 +56,7 @@ export default class PathFinder {
             let x = entity.hasPath() ? entity.nextGridX : entity.gridX,
                 y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 
-            if (x >= 0 && y >= 0) grid![y][x] = ignored ? 0 : 1;
+            if (x >= 0 && y >= 0) grid[y][x] = ignored ? 0 : 1;
         });
     }
 

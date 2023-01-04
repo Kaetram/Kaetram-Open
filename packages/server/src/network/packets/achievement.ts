@@ -1,6 +1,9 @@
+import { Packets } from '@kaetram/common/network';
+
 import Packet from '../packet';
-import { Opcodes, Packets } from '@kaetram/common/network';
-import { AchievementPacket } from '@kaetram/common/types/messages/outgoing';
+
+import type { Opcodes } from '@kaetram/common/network';
+import type { AchievementPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Achievement extends Packet {
     public constructor(opcode: Opcodes.Achievement, data: AchievementPacket) {

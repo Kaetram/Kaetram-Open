@@ -1,12 +1,11 @@
 #!/usr/bin/env -S yarn tsx
 
-import { each, isArray } from 'lodash-es';
-import { io } from 'socket.io-client';
-
 import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { each, isArray } from 'lodash-es';
+import { io } from 'socket.io-client';
 
 import Entity from './entity';
 
@@ -89,10 +88,11 @@ export default class Bot {
         let [opcode, info] = message;
 
         switch (opcode) {
-            case Packets.Handshake:
+            case Packets.Handshake: {
                 this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
 
                 break;
+            }
 
             case Packets.Welcome: {
                 this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
@@ -100,15 +100,16 @@ export default class Bot {
                 break;
             }
 
-            case Packets.Combat:
+            case Packets.Combat: {
                 break;
+            }
         }
     }
 
     private send(connection: Socket, packet: number, data: (string | number)[]): void {
         let json = JSON.stringify([packet, data]);
 
-        if (connection && connection.connected) connection.send(json);
+        if (connection?.connected) connection.send(json);
     }
 
     private move(bot: Entity): void {

@@ -1,9 +1,11 @@
-import { io, Socket as SocketIO } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import log from '../lib/log';
+
 import Messages from './messages';
 
 import type { SerializedServer } from '@kaetram/common/types/api';
+import type { Socket as SocketIO } from 'socket.io-client';
 import type Game from '../game';
 
 export default class Socket {
@@ -24,7 +26,7 @@ export default class Socket {
      * we default to normal server connection.
      */
 
-    private async getServer(): Promise<SerializedServer | void> {
+    private async getServer(): Promise<SerializedServer | undefined> {
         // Skip if hub is disabled in the config.
         if (!this.config.hub) return;
 

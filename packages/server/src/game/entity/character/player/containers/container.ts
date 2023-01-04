@@ -1,11 +1,12 @@
 import _ from 'lodash-es';
 
-import { Modules } from '@kaetram/common/network';
-import { ContainerItem } from '@kaetram/common/types/item';
-import { SlotData } from '@kaetram/common/types/slot';
+import Item from '../../../objects/item';
 
 import Slot from './slot';
-import Item from '../../../objects/item';
+
+import type { Modules } from '@kaetram/common/network';
+import type { ContainerItem } from '@kaetram/common/types/item';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 interface SerializedContainer {
     slots: SlotData[];
@@ -114,7 +115,7 @@ export default abstract class Container {
     public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
-        if (!slot || !slot.key) return;
+        if (!slot?.key) return;
 
         count = Math.min(count, slot.count);
 
@@ -143,8 +144,7 @@ export default abstract class Container {
     public removeItem(key: string, count = 1): void {
         let index = this.getIndex(key, count);
 
-        if (index !== -1) this.remove(index, count);
-        else {
+        if (index === -1) {
             let removed = 0;
 
             // Iterate through each slot and exhaust the count we are removing.
@@ -170,7 +170,7 @@ export default abstract class Container {
                 // Remove from the slot.
                 this.remove(slot.index, removeCount);
             });
-        }
+        } else this.remove(index, count);
     }
 
     /**
@@ -280,8 +280,7 @@ export default abstract class Container {
         let contains = false;
 
         // Check to see if the item is a stackable kind first.
-        if (this.getIndex(key, count) !== -1) contains = true;
-        else {
+        if (this.getIndex(key, count) === -1) {
             // Search through the slots to see if we can find `count` amount of occurrences.
             let found = 0;
 
@@ -293,7 +292,7 @@ export default abstract class Container {
 
             // We found `count` or more occurrences of an item.
             if (found >= count) contains = true;
-        }
+        } else contains = true;
 
         return contains;
     }

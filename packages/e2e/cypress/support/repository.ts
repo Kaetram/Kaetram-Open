@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import { PlayerInfo } from '../entities/playerinfo';
-import { PlayerInventory } from '../entities/playerinventory';
+import type { PlayerInfo } from '../entities/playerinfo';
+import type { PlayerInventory } from '../entities/playerinventory';
 
 type CollectionName =
     | 'player_achievements'
@@ -56,7 +56,7 @@ Cypress.Commands.add('getPlayerInfo', (username: string) => {
         .then((res) => {
             // redirect status code is 302
             expect(res.body).to.exist;
-            return (<PlayerInfo[]>res.body)[0];
+            return res.body[0] as PlayerInfo;
         });
 });
 

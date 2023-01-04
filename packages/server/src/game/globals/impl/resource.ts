@@ -1,10 +1,9 @@
-import _ from 'lodash-es';
-
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import _ from 'lodash-es';
 
-import { ProcessedResource, Tile } from '@kaetram/common/types/map';
-import { Modules } from '@kaetram/common/network';
+import type { ProcessedResource, RegionTile } from '@kaetram/common/types/map';
 
 export default class Resource {
     public instance = Utils.createInstance(Modules.EntityType.Object);
@@ -13,10 +12,10 @@ export default class Resource {
     protected respawnTime: number = Modules.Constants.RESOURCE_RESPAWN;
 
     // Data contains original tile data from the map
-    public data: { [index: number]: Tile } = {};
+    public data: { [index: number]: RegionTile } = {};
 
     // Tile data containing information after the resource has been depleted.
-    private depleted: { [index: number]: Tile } = {};
+    private depleted: { [index: number]: RegionTile } = {};
 
     // The state of the resource
     public state: Modules.ResourceState = Modules.ResourceState.Default;
@@ -27,7 +26,7 @@ export default class Resource {
     public constructor(public type: string) {}
 
     /**
-     * Takes information from the `info` paramater and determines
+     * Takes information from the `info` parameter and determines
      * if a tile is either a base or just resource data. If it's resource data,
      * we remove the resource information. If it's a base, we replace the
      * base with the tileId of the depleted resource. We store this data for later.
@@ -37,19 +36,18 @@ export default class Resource {
 
     public load(info: ProcessedResource): void {
         // Iterate through all the tile and its indexes in the resource.
-        _.each(this.data, (tile: Tile, key: string) => {
+        _.each(this.data, (tile: RegionTile, key: string) => {
             // Whacky conversion because of lodash-es.
-            let index = parseInt(key);
-
-            tile = [tile].flat();
+            let index = parseInt(key),
+                flatTile = [tile].flat();
 
             // Why would you put a resource in the void? How are you even near the resource?
-            if (!_.isArray(tile))
+            if (!_.isArray(flatTile))
                 return log.warning(`[${index}] Could not parse tile data for tree.`);
 
             // Find if the tile contains data or base data.
-            let dataIntersect = _.intersection(tile, info.data),
-                stumpIntersect = _.intersection(tile, info.base);
+            let dataIntersect = _.intersection(flatTile, info.data),
+                stumpIntersect = _.intersection(flatTile, info.base);
 
             // Tile contains data that is also a stump.
             if (dataIntersect.length > 0 && stumpIntersect.length > 0) {
@@ -60,17 +58,17 @@ export default class Resource {
                  */
 
                 let baseIndex = info.base.indexOf(stumpIntersect[0]),
-                    dataBaseIndex = tile.indexOf(stumpIntersect[0]),
-                    cloneTile = _.clone(tile);
+                    dataBaseIndex = flatTile.indexOf(stumpIntersect[0]),
+                    cloneTile = _.clone(flatTile);
 
                 // Replace the stump with the cut stump.
                 cloneTile[dataBaseIndex] = info.depleted[baseIndex];
 
                 // Store the cloned data.
-                this.depleted[index] = cloneTile;
+                this.depleted[index] = cloneTile as RegionTile;
             } else if (dataIntersect.length > 0)
                 // Remove tree data.
-                this.depleted[index] = _.difference(tile, dataIntersect);
+                this.depleted[index] = _.difference(flatTile, dataIntersect) as RegionTile;
 
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.depleted[index]].flat().length === 0) this.depleted[index] = 0;
@@ -131,11 +129,11 @@ export default class Resource {
      * @param callback The data tile alongside its parsed number index.
      */
 
-    public forEachTile(callback: (data: Tile, index: number) => void): void {
+    public forEachTile(callback: (tile: RegionTile, index: number) => void): void {
         // Data depends on the state of the resource.
         let data = this.isDepleted() ? this.depleted : this.data;
 
-        _.each(data, (tile: Tile, index: string) => callback(tile, parseInt(index)));
+        _.each(data, (tile: RegionTile, index: string) => callback(tile, parseInt(index)));
     }
 
     /**

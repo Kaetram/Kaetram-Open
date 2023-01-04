@@ -1,5 +1,5 @@
-import $ from 'jquery';
 import { Modules } from '@kaetram/common/network';
+import $ from 'jquery';
 
 import type Player from '../entity/character/player/player';
 
@@ -10,7 +10,7 @@ const MAXIMUM_ZOOM = 6,
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
-    public border: JQuery<HTMLElement> = $('#border');
+    public border: JQuery = $('#border');
 
     // x and y are absolute pixel coordinates
     public x = 0;
@@ -218,25 +218,29 @@ export default class Camera {
 
     public zone(direction: Modules.Orientation): void {
         switch (direction) {
-            case Modules.Orientation.Up:
+            case Modules.Orientation.Up: {
                 this.setGridPosition(this.gridX, this.gridY - this.gridHeight + 3);
 
                 break;
+            }
 
-            case Modules.Orientation.Down:
+            case Modules.Orientation.Down: {
                 this.setGridPosition(this.gridX, this.gridY + this.gridHeight - 3);
 
                 break;
+            }
 
-            case Modules.Orientation.Right:
+            case Modules.Orientation.Right: {
                 this.setGridPosition(this.gridX + this.gridWidth - 3, this.gridY);
 
                 break;
+            }
 
-            case Modules.Orientation.Left:
+            case Modules.Orientation.Left: {
                 this.setGridPosition(this.gridX - this.gridWidth + 3, this.gridY);
 
                 break;
+            }
         }
 
         this.zoneClip();

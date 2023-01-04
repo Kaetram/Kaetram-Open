@@ -1,6 +1,6 @@
+import npcData from '@kaetram/server/data/npcs.json';
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import NPC from '@kaetram/server/src/game/entity/npc/npc';
-import npcData from '@kaetram/server/data/npcs.json';
 
 /**
  * A class for collections of entities of a certain type in the game.

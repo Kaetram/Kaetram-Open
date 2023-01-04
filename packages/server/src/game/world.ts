@@ -1,33 +1,31 @@
+import Discord from '@kaetram/common/api/discord';
+import config from '@kaetram/common/config';
+import { Modules } from '@kaetram/common/network';
+import { PacketType } from '@kaetram/common/network/modules';
+import Filter from '@kaetram/common/util/filter';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import _ from 'lodash-es';
 
-import config from '@kaetram/common/config';
-import Discord from '@kaetram/common/api/discord';
-import log from '@kaetram/common/util/log';
-
+import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Warps from '../controllers/warps';
-import Grids from './map/grids';
-import Map from './map/map';
 import API from '../network/api';
-import Packet from '../network/packet';
 import Network from '../network/network';
-import Character from './entity/character/character';
-import Minigames from './minigames/minigames';
-import Globals from './globals/globals';
-import Enchanter from '../controllers/enchanter';
-
-import Utils from '@kaetram/common/util/utils';
-import Filter from '@kaetram/common/util/filter';
-
-import { Modules } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
 import { Chat } from '../network/packets';
+
+import Globals from './globals/globals';
+import Map from './map/map';
+import Minigames from './minigames/minigames';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
+import type Packet from '../network/packet';
 import type SocketHandler from '../network/sockethandler';
+import type Character from './entity/character/character';
 import type Player from './entity/character/player/player';
+import type Grids from './map/grids';
 
 export interface PacketData {
     packet: Packet;
@@ -93,31 +91,33 @@ export default class World {
 
     public push(packetType: number, data: PacketData): void {
         switch (packetType) {
-            case PacketType.Broadcast:
+            case PacketType.Broadcast: {
                 return this.network.broadcast(data.packet);
+            }
 
-            case PacketType.Player:
-                return this.network.send(data.player as Player, data.packet);
+            case PacketType.Player: {
+                return this.network.send(data.player!, data.packet);
+            }
 
-            case PacketType.Players:
-                return this.network.sendToPlayers(data.players as Player[], data.packet);
+            case PacketType.Players: {
+                return this.network.sendToPlayers(data.players!, data.packet);
+            }
 
-            case PacketType.Region:
-                return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
+            case PacketType.Region: {
+                return this.network.sendToRegion(data.region!, data.packet, data.ignore);
+            }
 
-            case PacketType.Regions:
+            case PacketType.Regions: {
                 return this.network.sendToSurroundingRegions(
-                    data.region as number,
+                    data.region!,
                     data.packet,
                     data.ignore
                 );
+            }
 
-            case PacketType.RegionList:
-                return this.network.sendToRegionList(
-                    data.list as number[],
-                    data.packet,
-                    data.ignore
-                );
+            case PacketType.RegionList: {
+                return this.network.sendToRegionList(data.list!, data.packet, data.ignore);
+            }
         }
     }
 
@@ -203,7 +203,7 @@ export default class World {
      */
 
     public getPlayerByName(username: string): Player {
-        return this.entities.getPlayer(username) as Player;
+        return this.entities.getPlayer(username)!;
     }
 
     /**

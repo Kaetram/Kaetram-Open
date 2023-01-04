@@ -1,7 +1,8 @@
+import { Modules } from '@kaetram/common/network';
+
 import Formulas from '../../../../../info/formulas';
 
-import { Modules } from '@kaetram/common/network';
-import { SkillData } from '@kaetram/common/types/skills';
+import type { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
     type: Modules.Skills,

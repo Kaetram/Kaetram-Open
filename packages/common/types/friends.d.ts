@@ -1,1 +1,3 @@
-export type Friend = { [username: string]: boolean };
+export interface Friend {
+    [username: string]: boolean;
+}
