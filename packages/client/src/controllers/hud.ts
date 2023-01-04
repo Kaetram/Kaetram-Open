@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
-import Character from '../entity/character/character';
-
+import type Character from '../entity/character/character';
 import type Entity from '../entity/entity';
 import type InputController from './input';
 

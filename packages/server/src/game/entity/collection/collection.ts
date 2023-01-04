@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Map from '@kaetram/server/src/game/map/map';
-import Regions from '@kaetram/server/src/game/map/regions';
-import Grids from '@kaetram/server/src/game/map/grids';
-import Entity from '../entity';
 import _ from 'lodash-es';
-import Collections from '@kaetram/server/src/game/entity/collection/collections';
-import World from '@kaetram/server/src/game/world';
+
+import type Collections from '@kaetram/server/src/game/entity/collection/collections';
+import type Grids from '@kaetram/server/src/game/map/grids';
+import type Map from '@kaetram/server/src/game/map/map';
+import type Regions from '@kaetram/server/src/game/map/regions';
+import type World from '@kaetram/server/src/game/world';
+import type Entity from '../entity';
 
 /**
  * A class for collections of entities of a certain type in the game.
@@ -44,7 +45,7 @@ export default abstract class Collection<EntityType extends Entity> {
      * @return entity Entity instance we are creating.
      */
 
-    public spawn(params: Record<string, unknown> | undefined): EntityType | undefined {
+    public spawn(params: { [key: string]: unknown } | undefined): EntityType | undefined {
         let entity = this.createEntity(params);
         if (entity) this.add(entity);
 
@@ -86,7 +87,7 @@ export default abstract class Collection<EntityType extends Entity> {
      */
 
     public abstract createEntity(
-        params: Record<string, unknown> | undefined
+        params: { [key: string]: unknown } | undefined
     ): EntityType | undefined;
 
     /**

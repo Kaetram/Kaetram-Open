@@ -1,14 +1,14 @@
 export let agent = navigator.userAgent.toLowerCase();
 
-export let isIPad = (): boolean => /ipad/.test(agent);
+export let isIPad = (): boolean => agent.includes('ipad');
 
-export let isSafari = (): boolean => /safari/.test(agent) && !/chrome/.test(agent);
+export let isSafari = (): boolean => agent.includes('safari') && !agent.includes('chrome');
 
-export let isEdge = (): boolean => /edge\//.test(agent);
+export let isEdge = (): boolean => agent.includes('edge/');
 
 export function isTablet(): boolean {
-    let isAppleTablet = /ipad/.test(agent),
-        isAndroidTablet = /android/.test(agent);
+    let isAppleTablet = agent.includes('ipad'),
+        isAndroidTablet = agent.includes('android');
 
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 }
@@ -16,7 +16,7 @@ export function isTablet(): boolean {
 export let isMobile = (): boolean => window.innerWidth < 1000;
 
 export function iOSVersion(): number | undefined {
-    let match = agent.match(/os (\d+)_(\d+)_?(\d+?)/);
+    let match = /os (\d+)_(\d+)_?(\d+?)/.exec(agent);
 
     if (match) {
         let version = [

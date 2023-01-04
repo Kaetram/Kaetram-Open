@@ -1,25 +1,25 @@
+import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import { Modules } from '@kaetram/common/network';
-
 import mapData from '../../../data/map/world.json';
+
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
 import type {
-    Tile,
+    FlatTile,
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
-    ProcessedResource
+    ProcessedResource,
+    RegionTile,
+    RotatedTile,
+    Tile
 } from '@kaetram/common/types/map';
-
-import type { RegionTile } from '@kaetram/common/types/region';
-
+import type Player from '../entity/character/player/player';
 import type World from '../world';
 import type Areas from './areas/areas';
-import type Player from '../entity/character/player/player';
 
 let map = mapData as ProcessedMap;
 
@@ -212,7 +212,7 @@ export default class Map {
                 let dynamicArea = region.getDynamicArea(x, y);
 
                 // Skip if no dynamic area is found or it doesn't fulfill requirements.
-                if (dynamicArea && dynamicArea.fulfillsRequirement(player)) {
+                if (dynamicArea?.fulfillsRequirement(player)) {
                     let mappedTile = dynamicArea.getMappedTile(x, y);
 
                     // Check collision if we can find a mapping tile.
@@ -350,7 +350,7 @@ export default class Map {
      * @returns A RegionTile object containing index tile data information.
      */
 
-    public parseTileData(data: number | number[]): RegionTile {
+    public parseTileData(data: Tile): RegionTile {
         let isArray = Array.isArray(data),
             parsedData: RegionTile = isArray ? [] : 0;
 
@@ -359,7 +359,7 @@ export default class Map {
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as RegionTile[]).push(tile);
+            if (isArray) (parsedData as FlatTile).push(tile);
             else parsedData = tile;
         });
 
@@ -377,7 +377,7 @@ export default class Map {
      * @returns A parsed tile of type `RotatedTile`.
      */
 
-    public getFlippedTile(tileId: number): RegionTile {
+    public getFlippedTile(tileId: number): RotatedTile {
         let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
@@ -421,7 +421,7 @@ export default class Map {
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
         if (_.isArray(data)) _.each(data, callback);
-        else callback(data as number);
+        else callback(data);
     }
 
     /**

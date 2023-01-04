@@ -1,13 +1,12 @@
 import _ from 'lodash';
-
-import Menu from './menu';
-
-import Player from '../entity/character/player/player';
-import Friend from '../entity/character/player/friend';
+import { Opcodes } from '@kaetram/common/network';
 
 import Util from '../utils/util';
 
-import { Opcodes } from '@kaetram/common/network';
+import Menu from './menu';
+
+import type Player from '../entity/character/player/player';
+import type Friend from '../entity/character/player/friend';
 
 type ConfirmCallback = (username: string, remove?: boolean) => void;
 
@@ -54,20 +53,24 @@ export default class Friends extends Menu {
 
     public handle(opcode: Opcodes.Friends, username = '', status = false): void {
         switch (opcode) {
-            case Opcodes.Friends.List:
+            case Opcodes.Friends.List: {
                 _.each(this.player.friends, (friend: Friend) =>
                     this.createElement(friend.username, friend.online)
                 );
                 break;
+            }
 
-            case Opcodes.Friends.Add:
+            case Opcodes.Friends.Add: {
                 return this.createElement(username, status);
+            }
 
-            case Opcodes.Friends.Remove:
+            case Opcodes.Friends.Remove: {
                 return this.removeElement(username);
+            }
 
-            case Opcodes.Friends.Status:
+            case Opcodes.Friends.Status: {
                 return this.updateStatus(username, status);
+            }
         }
     }
 

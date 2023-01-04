@@ -1,13 +1,13 @@
-import Menu from './menu';
-import Inventory from './inventory';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import log from '../lib/log';
-
 import Util from '../utils/util';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { StorePacket } from '@kaetram/common/types/messages/outgoing';
-import { SerializedStoreItem } from '@kaetram/common/types/stores';
+import Menu from './menu';
+
+import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
+import type { SerializedStoreItem } from '@kaetram/common/types/stores';
+import type Inventory from './inventory';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
@@ -113,8 +113,8 @@ export default class Store extends Menu {
         this.clearSellSlot();
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getElement(index).querySelector('.bank-image') as HTMLElement,
-                count = this.getElement(index).querySelector('.item-count') as HTMLElement;
+            let image = this.getElement(index).querySelector<HTMLElement>('.bank-image')!,
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!;
 
             image.style.backgroundImage = slot.style.backgroundImage;
             count.textContent = slot.textContent;
@@ -175,8 +175,8 @@ export default class Store extends Menu {
         //Refreshes the inventory container prior to moving.s
         this.synchronize();
 
-        let image = this.getElement(info.item!.index!).querySelector('.bank-image') as HTMLElement,
-            count = this.getElement(info.item!.index!).querySelector('.item-count') as HTMLElement;
+        let image = this.getElement(info.item!.index!).querySelector<HTMLElement>('.bank-image')!,
+            count = this.getElement(info.item!.index!).querySelector<HTMLElement>('.item-count')!;
 
         if (!image || !count) return log.error(`[Store] Could not find image and count elements.`);
 
@@ -184,7 +184,7 @@ export default class Store extends Menu {
         this.sellSlot.style.backgroundImage = image.style.backgroundImage;
         this.sellSlot.textContent = count.textContent;
         this.sellSlotReturn.style.backgroundImage = Util.getImageURL(this.currency);
-        this.sellSlotReturnText.textContent = info.item!.price!.toString() || '';
+        this.sellSlotReturnText.textContent = info.item!.price.toString() || '';
 
         // Visually removes the item from the inventory.
         image.style.backgroundImage = '';

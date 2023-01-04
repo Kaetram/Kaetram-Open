@@ -1,6 +1,6 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "types": ["@kaetram/common", "vite/client"]
+        "types": ["@kaetram/common", "vite/client", "vite-plugin-pwa/client"]
     }
 }

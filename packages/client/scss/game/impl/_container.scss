@@ -24,7 +24,6 @@
 #cursor,
 #overlay {
     transform: translateZ(0);
-
     margin: 0;
     padding: 0;
 }
@@ -107,7 +106,6 @@
             width: 102px * $i;
             height: 15px * $i;
             margin-top: 2px * $i;
-
             background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
 
             &:hover {
@@ -127,7 +125,6 @@
     @media (--sm) {
         .container-slot > p {
             padding-top: 2px;
-
             font-size: 10px;
         }
     }

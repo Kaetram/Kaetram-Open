@@ -4,8 +4,8 @@
  * to stand out for some reason (i.e. miniboss has a different scale).
  */
 
-import { Modules } from '../network';
-import { Enchantments } from './item';
+import type { Modules } from '../network';
+import type { Enchantments } from './item';
 
 export interface EntityDisplayInfo {
     instance: string;

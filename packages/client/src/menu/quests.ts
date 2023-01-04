@@ -1,11 +1,11 @@
 import _ from 'lodash';
+import { Opcodes } from '@kaetram/common/network';
 
 import Menu from './menu';
 
-import Player from '../entity/character/player/player';
-import Task from '../entity/character/player/task';
+import type Player from '../entity/character/player/player';
+import type Task from '../entity/character/player/task';
 
-import { Opcodes } from '@kaetram/common/network';
 export default class Quests extends Menu {
     // Contains the list of all the quests and their respective status.
     private list: HTMLUListElement = document.querySelector('#quests-container > ul')!;
@@ -28,12 +28,14 @@ export default class Quests extends Menu {
 
     public handle(opcode: Opcodes.Quest, key = ''): void {
         switch (opcode) {
-            case Opcodes.Quest.Batch:
+            case Opcodes.Quest.Batch: {
                 _.each(this.player.quests, (quest: Task) => this.createElement(quest));
                 break;
+            }
 
-            case Opcodes.Quest.Progress:
+            case Opcodes.Quest.Progress: {
                 return this.handleProgress(key);
+            }
         }
 
         this.buildLog(this.player.quests.tutorial);

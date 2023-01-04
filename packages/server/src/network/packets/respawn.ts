@@ -1,6 +1,8 @@
-import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
-import Entity from '../../game/entity/entity';
+
+import Packet from '../packet';
+
+import type Entity from '../../game/entity/entity';
 
 export default class Respawn extends Packet {
     public constructor(entity: Entity) {
