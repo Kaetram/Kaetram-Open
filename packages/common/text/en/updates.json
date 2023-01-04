@@ -59,5 +59,15 @@
             "- New map content and achievements",
             "- New trees have been added"
         ]
+    },
+    "alpha-2.3.0": {
+        "title": "Kaetram alpha-2.3.0",
+        "content": [
+            "- Friends list",
+            "- New achievement interface",
+            "- New quest interface",
+            "- Various user interface improvements",
+            "- Backend fixes"
+        ]
     }
 }
