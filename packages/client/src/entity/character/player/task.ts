@@ -6,11 +6,13 @@
 
 export default class Task {
     public constructor(
+        public id: number,
         public name: string,
         public description: string,
         public stage: number,
         public stageCount: number,
-        public subStage?: number
+        public subStage?: number,
+        public rewards?: string[]
     ) {}
 
     /**
@@ -18,13 +20,15 @@ export default class Task {
      * @param stage New stage we are setting the task to.
      * @param subStage New subStage we are setting the task to.
      * @param name New name we are setting the task to (used for achievements).
+     * @param description New description we are setting the task to (used for hidden achievements).
      */
 
-    public update(stage: number, subStage?: number, name?: string): void {
+    public update(stage: number, subStage?: number, name?: string, description?: string): void {
         this.stage = stage;
 
         if (subStage) this.subStage = subStage;
         if (name) this.name = name; // For achievements when they're discovered.
+        if (description) this.description = description; // For hidden achievements.
     }
 
     /**

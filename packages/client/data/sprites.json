@@ -575,7 +575,7 @@
         "row": 8
       }
     },
-    "offsetX": -5,
+    "offsetX": -7,
     "offsetY": -13
   },
   {
@@ -1290,7 +1290,7 @@
     "offsetY": -8
   },
   {
-    "id": "bluecockroach",
+    "id": "greencockroach",
     "width": 42,
     "height": 42,
     "animations": {
@@ -5322,7 +5322,7 @@
         "row": 8
       }
     },
-    "offsetX": -5,
+    "offsetX": -8,
     "offsetY": -13
   },
   {
@@ -6043,7 +6043,7 @@
       }
     },
     "offsetX": -8,
-    "offsetY": -12
+    "offsetY": -24
   },
   {
     "id": "goldmedal",
@@ -7681,6 +7681,17 @@
   },
   {
     "id": "item-icepalmlogs",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-bloodwoodlogs",
     "animations": {
       "idle": {
         "length": 6,
@@ -18541,6 +18552,7 @@
   },
   {
     "id": "projectile-fireball",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18555,6 +18567,7 @@
   },
   {
     "id": "projectile-fireball2",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18569,6 +18582,7 @@
   },
   {
     "id": "projectile-iceball",
+    "idleSpeed": 75,
     "width": 48,
     "height": 48,
     "animations": {
@@ -18583,6 +18597,7 @@
   },
   {
     "id": "projectile-boulder",
+    "idleSpeed": 75,
     "width": 32,
     "height": 32,
     "animations": {
@@ -18597,6 +18612,7 @@
   },
   {
     "id": "projectile-pinearrow",
+    "idleSpeed": 75,
     "width": 24,
     "height": 24,
     "animations": {
@@ -18611,6 +18627,7 @@
   },
   {
     "id": "projectile-none",
+    "idleSpeed": 75,
     "width": 64,
     "height": 64,
     "animations": {
@@ -18625,6 +18642,7 @@
   },
   {
     "id": "projectile-tornado",
+    "idleSpeed": 75,
     "width": 48,
     "height": 64,
     "animations": {
@@ -18639,6 +18657,7 @@
   },
   {
     "id": "projectile-terror",
+    "idleSpeed": 75,
     "width": 64,
     "height": 64,
     "animations": {
@@ -18650,6 +18669,96 @@
     "offsetX": -32,
     "offsetY": -32,
     "offsetAngle": 180
+  },
+  {
+    "id": "projectile-gift",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
+  },
+  {
+    "id": "projectile-gift2",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
+  },
+  {
+    "id": "projectile-gift3",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
+  },
+  {
+    "id": "projectile-gift4",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
+  },
+  {
+    "id": "projectile-gift5",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
+  },
+  {
+    "id": "projectile-gift6",
+    "idleSpeed": 75,
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -24,
+    "offsetAngle": 0
   },
   {
     "id": "effect-fireball",

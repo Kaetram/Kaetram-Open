@@ -1,12 +1,34 @@
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
 import { inflate } from 'pako';
+import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
 
-import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type App from '../app';
+import type Overlays from '../renderer/overlays';
+import type InfoController from '../controllers/info';
+import type Game from '../game';
+import type Map from '../map/map';
+import type Camera from '../renderer/camera';
+import type Renderer from '../renderer/renderer';
+import type InputController from '../controllers/input';
+import type Socket from './socket';
+import type PointerController from '../controllers/pointer';
+import type AudioController from '../controllers/audio';
+import type EntitiesController from '../controllers/entities';
+import type BubbleController from '../controllers/bubble';
+import type MenuController from '../controllers/menu';
+import type SpritesController from '../controllers/sprites';
+import type Messages from './messages';
+import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
+import type NPC from '../entity/character/npc/npc';
+import type Character from '../entity/character/character';
+import type Player from '../entity/character/player/player';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
 import type {
     AbilityPacket,
     AchievementPacket,
@@ -17,12 +39,10 @@ import type {
     CommandPacket,
     ContainerPacket,
     DespawnPacket,
-    EffectPacket,
     EnchantPacket,
     EquipmentPacket,
     ExperiencePacket,
     HealPacket,
-    MinigamePacket,
     MovementPacket,
     NotificationPacket,
     NPCPacket,
@@ -32,33 +52,14 @@ import type {
     PVPPacket,
     QuestPacket,
     RespawnPacket,
-    SkillPacket,
     StorePacket,
-    TeleportPacket
+    TeleportPacket,
+    SkillPacket,
+    MinigamePacket,
+    EffectPacket,
+    FriendsPacket
 } from '@kaetram/common/types/messages/outgoing';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import type App from '../app';
-import type AudioController from '../controllers/audio';
-import type BubbleController from '../controllers/bubble';
-import type EntitiesController from '../controllers/entities';
-import type InfoController from '../controllers/info';
-import type InputController from '../controllers/input';
-import type MenuController from '../controllers/menu';
-import type PointerController from '../controllers/pointer';
-import type SpritesController from '../controllers/sprites';
-import type Character from '../entity/character/character';
-import type NPC from '../entity/character/npc/npc';
-import type Player from '../entity/character/player/player';
-import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
-import type Game from '../game';
-import type Map from '../map/map';
-import type Camera from '../renderer/camera';
-import type Overlays from '../renderer/overlays';
-import type Renderer from '../renderer/renderer';
-import type Messages from './messages';
-import type Socket from './socket';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -148,6 +149,7 @@ export default class Connection {
         this.messages.onUpdate(this.handleUpdate.bind(this));
         this.messages.onMinigame(this.handleMinigame.bind(this));
         this.messages.onEffect(this.handleEffect.bind(this));
+        this.messages.onFriends(this.handleFriends.bind(this));
     }
 
     /**
@@ -682,7 +684,7 @@ export default class Connection {
             }
         }
 
-        this.menu.synchronize();
+        this.menu.synchronize('profile');
     }
 
     /**
@@ -708,7 +710,7 @@ export default class Connection {
             }
         }
 
-        this.menu.synchronize();
+        this.menu.getQuests().handle(opcode, info.key);
     }
 
     /**
@@ -728,12 +730,17 @@ export default class Connection {
             }
 
             case Opcodes.Achievement.Progress: {
-                this.game.player.setAchievement(info.key!, info.stage!, info.name!);
+                this.game.player.setAchievement(
+                    info.key!,
+                    info.stage!,
+                    info.name!,
+                    info.description!
+                );
                 break;
             }
         }
 
-        this.menu.synchronize();
+        this.menu.getAchievements().handle(opcode, info.key);
     }
 
     /**
@@ -953,7 +960,7 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, _info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
                 //this.menu.enchant.add(info.type!, info.index!);
@@ -1100,7 +1107,7 @@ export default class Connection {
      * @param opcode The type of action we are performing with the camera.
      */
 
-    private handleCamera(_opcode: Opcodes.Camera): void {
+    private handleCamera(opcode: Opcodes.Camera): void {
         //
     }
 
@@ -1160,7 +1167,7 @@ export default class Connection {
             }
         }
 
-        this.game.menu.synchronize();
+        this.game.menu.synchronize('profile');
     }
 
     /**
@@ -1259,6 +1266,34 @@ export default class Connection {
                 break;
             }
         }
+    }
+
+    /**
+     * Handles incoming packets relating to the friends list. This is how
+     * we update the client with the latest information about our friends.
+     * @param opcode What type of update we are performing.
+     * @param info Contains information about the packet we are handling.
+     */
+
+    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
+        switch (opcode) {
+            case Opcodes.Friends.List: {
+                this.game.player.loadFriends(info.list!);
+                break;
+            }
+
+            case Opcodes.Friends.Add: {
+                this.game.player.addFriend(info.username!, info.status!);
+                break;
+            }
+
+            case Opcodes.Friends.Status: {
+                this.game.player.setFriendStatus(info.username!, info.status!);
+                break;
+            }
+        }
+
+        this.menu.getFriends().handle(opcode, info.username, info.status);
     }
 
     /**

@@ -1,34 +1,28 @@
-import { Modules } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../character';
 
+import Task from './task';
+import Skill from './skill';
 import Ability from './ability';
+import Friend from './friend';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
-import Skill from './skill';
-import Task from './task';
 
-import type { AbilityData } from '@kaetram/common/types/ability';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
-import type { QuestData } from '@kaetram/common/types/quest';
 import type { SkillData } from '@kaetram/common/types/skills';
-
-type ExperienceCallback = (
-    experience: number,
-    prevExperience: number,
-    nextExperience: number
-) => void;
+import type { QuestData } from '@kaetram/common/types/quest';
+import type { AbilityData } from '@kaetram/common/types/ability';
+import type { Friend as FriendType } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
-
 type PoisonCallback = (status: boolean) => void;
-
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
@@ -67,9 +61,9 @@ export default class Player extends Character {
     public abilities: { [key: string]: Ability } = {};
     public quests: { [key: string]: Task } = {};
     public achievements: { [key: string]: Task } = {};
+    public friends: { [key: string]: Friend } = {};
 
     private syncCallback?: () => void;
-    private experienceCallback?: ExperienceCallback;
     private poisonCallback?: PoisonCallback;
     private abilityCallback?: AbilityCallback;
     private manaCallback?: ManaCallback;
@@ -123,15 +117,16 @@ export default class Player extends Character {
      */
 
     public loadQuests(quests: QuestData[]): void {
-        _.each(quests, (quest: QuestData) => {
+        for (let [i, quest] of quests.entries())
             this.quests[quest.key] = new Task(
+                i,
                 quest.name!,
                 quest.description!,
                 quest.stage,
                 quest.stageCount!,
-                quest.subStage
+                quest.subStage,
+                quest.rewards
             );
-        });
     }
 
     /**
@@ -141,14 +136,14 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        _.each(achievements, (achievement: AchievementData) => {
+        for (let [i, achievement] of achievements.entries())
             this.achievements[achievement.key] = new Task(
+                i,
                 achievement.name!,
                 achievement.description!,
                 achievement.stage,
                 achievement.stageCount!
             );
-        });
     }
 
     /**
@@ -160,6 +155,21 @@ export default class Player extends Character {
         _.each(abilities, (ability: AbilityData) =>
             this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
         );
+    }
+
+    /**
+     * Loads the friend list from the server into the client.
+     * @param friends Contains information about friend usernames and their online status.
+     */
+
+    public loadFriends(friends: FriendType): void {
+        let i = 0;
+
+        _.each(friends, (status: boolean, username: string) => {
+            this.friends[username] = new Friend(i, username, status);
+
+            i++;
+        });
     }
 
     /**
@@ -184,6 +194,16 @@ export default class Player extends Character {
             defenseStats,
             bonuses
         );
+    }
+
+    /**
+     * Adds a new friend to the list.
+     * @param username The username of the friend.
+     * @param status The online status of the friend.
+     */
+
+    public addFriend(username: string, status: boolean): void {
+        this.friends[username] = new Friend(_.size(this.friends), username, status);
     }
 
     /**
@@ -329,10 +349,12 @@ export default class Player extends Character {
      * Updates data about an achievement using the provided key.
      * @param key The key of the achievement we are updating.
      * @param stage The new stage of the achievement.
+     * @param name The name of the achievement.
+     * @param description The description of the achievement.
      */
 
-    public setAchievement(key: string, stage: number, name: string): void {
-        this.achievements[key]?.update(stage, undefined, name);
+    public setAchievement(key: string, stage: number, name: string, description: string): void {
+        this.achievements[key]?.update(stage, undefined, name, description);
     }
 
     /**
@@ -370,6 +392,16 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the online status of a friend.
+     * @param username The username of the friend we are updating.
+     * @param status The online status of the friend.
+     */
+
+    public setFriendStatus(username: string, status: boolean): void {
+        this.friends[username].online = status;
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
@@ -400,15 +432,6 @@ export default class Player extends Character {
 
     public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
-    }
-
-    /**
-     * Callback for when the player's experience changes.
-     * @param callback Contains the experience, previous experience, and next experience.
-     */
-
-    public onExperience(callback: ExperienceCallback): void {
-        this.experienceCallback = callback;
     }
 
     /**

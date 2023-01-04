@@ -1,6 +1,6 @@
 import { Team } from '@kaetram/common/api/minigame';
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
@@ -27,14 +27,15 @@ import Formulas from '../../../../info/formulas';
 import Character from '../character';
 import Mana from '../points/mana';
 
+import Friends from './friends';
+import Handler from './handler';
+import Quests from './quests';
+import Skills from './skills';
 import Abilities from './abilities';
 import Achievements from './achievements';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
-import Handler from './handler';
-import Quests from './quests';
-import Skills from './skills';
 import Statistics from './statistics';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
@@ -91,6 +92,7 @@ export default class Player extends Character {
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
+    public friends: Friends = new Friends(this);
 
     public handler: Handler = new Handler(this);
 
@@ -100,7 +102,7 @@ export default class Player extends Character {
     public noclip = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
-    public invalidMovement = false;
+    public invalidMovement = 0;
 
     // Special status
     public running = false;
@@ -128,6 +130,7 @@ export default class Player extends Character {
     public pingTime = 0;
 
     private lastNotify = 0;
+    private lastEdible = 0;
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
@@ -194,11 +197,13 @@ export default class Player extends Character {
         this.userAgent = data.userAgent;
         this.regionsLoaded = data.regionsLoaded || [];
 
-        this.setPoison(data.poison.type, data.poison.start);
+        this.setPoison(data.poison.type, Date.now() - data.poison.remaining);
         this.setLastWarp(data.lastWarp);
 
         this.hitPoints.updateHitPoints(data.hitPoints);
         this.mana.updateMana(data.mana);
+
+        this.friends.load(data.friends);
 
         // Being the loading process.
         this.loadSkills();
@@ -493,14 +498,14 @@ export default class Player extends Character {
 
     private verifyMovement(x: number, y: number): boolean {
         let now = Date.now(),
-            stepDiff = now - this.lastStep,
+            stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
             regionDiff = now - this.lastRegionChange;
 
         // Firstly ensure that the last step was behaving normally.
-        if (stepDiff > this.movementSpeed) return false;
+        if (stepDiff >= this.getMovementSpeed()) return false;
 
-        // A region change may trigger a movement anomaly, so we ignore movement within 1 second of a region change.
-        if (regionDiff < 1000) return false;
+        // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
+        if (regionDiff < 1500) return false;
 
         // Check if the player is currently going into a door.
         if (this.map.isDoor(x, y)) return false;
@@ -530,7 +535,11 @@ export default class Player extends Character {
 
                 if (!item) return;
 
-                if (item.edible && item.plugin?.onUse(this)) this.inventory.remove(index, 1);
+                // Checks if the player can eat and uses the item's plugin to handle the action.
+                if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
+                    this.inventory.remove(index, 1);
+                    this.lastEdible = Date.now();
+                }
 
                 if (item.isEquippable() && item.canEquip(this)) {
                     this.inventory.remove(index);
@@ -655,11 +664,14 @@ export default class Player extends Character {
         if (this.map.isDoor(x, y) || (target && following)) return;
         if (this.inCombat()) return;
 
-        if (x !== this.x || y !== this.y) {
-            this.notify(
-                `No-clipping has been detected in your client. Your movement will not be registered.`
-            );
-            this.invalidMovement = true;
+        let diffX = Math.abs(this.x - x),
+            diffY = Math.abs(this.y - y);
+
+        if (diffX > 1 || diffY > 1) {
+            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+            this.invalidMovement++;
+
+            log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
         }
     }
 
@@ -695,7 +707,7 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number): void {
-        if (this.stunned || this.invalidMovement) return;
+        if (this.stunned || this.isInvalidMovement()) return;
 
         if (this.verifyMovement(x, y))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -726,7 +738,7 @@ export default class Player extends Character {
         if (entity?.isItem()) this.inventory.add(entity);
 
         // Update the player's position.
-        if (!this.invalidMovement) this.setPosition(x, y);
+        if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
         if (this.map.isDoor(x, y) && !target) {
@@ -865,12 +877,19 @@ export default class Player extends Character {
      */
 
     public getMovementSpeed(): number {
-        let { movementSpeed, running } = this;
+        let speed = Modules.Defaults.MOVEMENT_SPEED, // Start with default.
+            armour = this.equipment.getArmour();
+
+        // Update the movement speed with that of the armour currently wielded.
+        if (armour.hasMovementModifier()) speed = armour.movementSpeed;
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (running) movementSpeed = Math.floor(movementSpeed * 0.9);
+        if (this.running) speed = Math.floor(speed * 0.9);
 
-        return movementSpeed;
+        // Update the movement speed if there is a change from default.
+        if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
+
+        return speed;
     }
 
     /**
@@ -1178,6 +1197,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player's invalid movement count is greater than the threshold.
+     */
+
+    private isInvalidMovement(): boolean {
+        return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
+    }
+
+    /**
      * Checks if the weapon the player is currently wielding is a ranged weapon.
      * @returns If the weapon slot is a ranged weapon.
      */
@@ -1195,6 +1222,14 @@ export default class Player extends Character {
 
     public override isPoisonous(): boolean {
         return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last edible.
+     */
+
+    private canEat(): boolean {
+        return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
     }
 
     /**
@@ -1268,6 +1303,8 @@ export default class Player extends Character {
      */
 
     public sync(): void {
+        let armour = this.equipment.getArmour();
+
         // Update attack range each-time we sync.
         this.attackRange = this.isRanged() ? 7 : 1;
 
