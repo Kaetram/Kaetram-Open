@@ -710,7 +710,7 @@ export default class Connection {
             }
         }
 
-        this.menu.synchronize('quest');
+        this.menu.getQuests().handle(opcode, info.key);
     }
 
     /**
@@ -1283,15 +1283,17 @@ export default class Connection {
             }
 
             case Opcodes.Friends.Add: {
+                this.game.player.addFriend(info.username!, info.status!);
                 break;
             }
 
-            case Opcodes.Friends.Remove: {
+            case Opcodes.Friends.Status: {
+                this.game.player.setFriendStatus(info.username!, info.status!);
                 break;
             }
         }
 
-        this.menu.getFriends().handle(opcode, info.username);
+        this.menu.getFriends().handle(opcode, info.username, info.status);
     }
 
     /**

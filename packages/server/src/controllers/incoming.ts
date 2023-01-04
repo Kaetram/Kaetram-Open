@@ -506,7 +506,7 @@ export default class Incoming {
 
     /**
      * Handles incoming packets from the client about the friends list. Contains
-     * isntructions such as adding or removing a friend from the list.
+     * instructions such as adding or removing a friend from the list.
      * @param data Contains the opcode (type of action) and the username.
      */
 
@@ -514,6 +514,10 @@ export default class Incoming {
         switch (data.opcode) {
             case Opcodes.Friends.Add: {
                 return this.player.friends.add(data.username);
+            }
+
+            case Opcodes.Friends.Remove: {
+                return this.player.friends.remove(data.username);
             }
         }
     }
