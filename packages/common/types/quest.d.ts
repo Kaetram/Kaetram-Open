@@ -46,7 +46,7 @@ export interface RawStage {
 export interface RawQuest {
     name: string;
     description: string;
-    rewards: string[];
+    rewards?: string[];
     hideNPCs?: string[]; // NPCs to hide after quest.-
     stages: { [id: number]: RawStage };
 }
