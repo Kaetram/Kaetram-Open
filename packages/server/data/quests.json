@@ -1,7 +1,8 @@
 {
   "tutorial": {
     "name": "Welcome to Kaetram",
-    "description": "Teaching you the very basics of Kaetram.",
+    "description": "Teaching you the very basics of Kaetram.|This tutorial will teach you how to move around, attack, interact with objects and use ranged weapons. Follow the arrows and talk to the NPCs if you are stuck.",
+    "rewards": ["Knowledge of the game :)"],
     "stages": {
       "0": {
         "task": "talk",
@@ -192,7 +193,8 @@
 
   "foresting": {
     "name": "Foresting",
-    "description": "Help the forester with foresting stuff.",
+    "description": "Help the forester with foresting stuff.|The forester needs your help with foresting-related things such as trees and axes and stuff like that. I don't know I'm just a quest description stop asking me questions.",
+    "rewards": ["A Rusted Axe", "Access to Forester's store"],
     "stages": {
       "0": {
         "task": "talk",
@@ -245,7 +247,8 @@
 
   "desertquest": {
     "name": "Desert Quest",
-    "description": "Help the dying adventurer send a letter to his wife.",
+    "description": "Help the dying adventurer send a letter to his wife.|The adventurer is dying and is in dire need of your help with super important matters prior to his death. You can find him in the desert.",
+    "rewards": ["Secret Reward"],
     "hideNPCs": ["lavanpc"],
     "stages": {
       "0": {
@@ -311,7 +314,8 @@
 
   "ancientlands": {
     "name": "Ancient Lands",
-    "description": "Discover the lands that lie beyond the great mountains.",
+    "description": "Discover the lands that lie beyond the great mountains.|A very spooky monument lies hidden in a peculiar icy place. You can find it by exploring the caves in the swamp lands. They may or may not be guarded by some ice golems or something, but you didn't hear that from me, I wouldn't possibly want to spoil anything for you.",
+    "rewards": ["Snow potion", "Access to the mountains beyond"],
     "stages": {
       "0": {
         "task": "talk",

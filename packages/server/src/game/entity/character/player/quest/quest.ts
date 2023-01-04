@@ -31,6 +31,7 @@ export default abstract class Quest {
 
     public name = '';
     private description = '';
+    private rewards: string[] = [];
     private hideNPCs: string[] = []; // NPCs to hide after quest.
     private stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
@@ -54,6 +55,7 @@ export default abstract class Quest {
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
         this.description = rawData.description;
+        this.rewards = rawData.rewards;
         this.hideNPCs = rawData.hideNPCs || [];
         this.stageCount = _.size(rawData.stages);
 
@@ -433,6 +435,7 @@ export default abstract class Quest {
         if (batch) {
             data.name = this.name;
             data.description = this.description;
+            data.rewards = this.rewards;
             data.stageCount = this.stageCount;
         }
 
