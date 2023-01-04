@@ -69,6 +69,7 @@ export default class Game {
         this.storage = app.storage;
 
         this.renderer = new Renderer(this);
+        this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
         this.pointer = new Pointer(this);
@@ -76,7 +77,6 @@ export default class Game {
         this.audio = new AudioController(this);
         this.entities = new EntitiesController(this);
         this.bubble = new BubbleController(this);
-        this.menu = new MenuController(this);
         this.connection = new Connection(this);
 
         app.sendStatus('Loading game');

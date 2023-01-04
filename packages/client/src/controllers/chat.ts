@@ -31,6 +31,21 @@ export default class ChatController {
     }
 
     /**
+     * Opens the chat box and automatically types the private message command.
+     * This is a temporary solution until we advance the chatbox some more.
+     * @param username The username of the friend we are messaging.
+     */
+
+    public privateMessage(username: string): void {
+        if (this.inputVisible()) return;
+
+        this.toggle();
+
+        this.input.value = `/pm ${username} `;
+        this.input.focus();
+    }
+
+    /**
      * Adds an entry to the chat box with the source,
      * message, and optional colour (defaults to white).
      * @param source Who is sending the message (username).
@@ -62,7 +77,7 @@ export default class ChatController {
 
     private createElement(source: string, message: string): HTMLElement {
         let element = document.createElement('p');
-        element.textContent = `${source} » ${message}`;
+        element.innerHTML = `${source} » ${message}`;
 
         return element;
     }
@@ -80,6 +95,7 @@ export default class ChatController {
 
     /**
      * Toggles the chat input and box.
+     * @param text Optional parameter for the text to display in the input field.
      */
 
     public toggle(): void {
@@ -92,6 +108,7 @@ export default class ChatController {
     /**
      * Makes the input field for the chat visible.
      * It also updates the state of the chat button.
+     * @param text Optional parameter for the text to display in the input field.
      */
 
     private display(): void {
@@ -103,7 +120,6 @@ export default class ChatController {
         this.displayChatBox();
 
         // Fade input in, clear the input field, and focus it.
-
         this.input.focus();
         this.input.value = '';
 
