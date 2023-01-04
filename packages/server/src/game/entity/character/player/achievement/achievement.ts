@@ -24,7 +24,7 @@ type FinishCallback = (
     ability?: string,
     abilityLevel?: number
 ) => void;
-type ProgressCallback = (key: string, stage: number, name: string) => void;
+type ProgressCallback = (key: string, stage: number, name: string, description: string) => void;
 type PopupCallback = (popup: PopupData) => void;
 type TalkCallback = (npc: NPC, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
@@ -32,6 +32,7 @@ type KillCallback = (mob: Mob) => void;
 export default class Achievement {
     private name = '';
     private description = '';
+    private hidden = false;
     private stage = 0; // Current stage of the achievement.
     private stageCount = 0; // How long the achievement is.
     private npc = '';
@@ -58,12 +59,13 @@ export default class Achievement {
         // Load all the data from the raw information.
         this.name = rawData.name;
         this.description = rawData.description || '';
+        this.hidden = !!rawData.hidden;
         this.npc = rawData.npc || '';
         this.dialogueHidden = rawData.dialogueHidden || [];
         this.dialogueStarted = rawData.dialogueStarted || [];
         this.mob = rawData.mob || '';
         // Stage count is how many mobs we must kill or a single stage (e.g. discover door).
-        this.stageCount = rawData.mobCount! || 1;
+        this.stageCount = rawData.mobCount ? rawData.mobCount + 1 : 1; // Increment by 1 to include discovery stage.
         this.item = rawData.item || '';
         this.itemCount = rawData.itemCount || 1;
         this.rewardItem = rawData.rewardItem || '';
@@ -166,7 +168,8 @@ export default class Achievement {
         this.stage = stage;
 
         // Handle quest progress callback after updating stage to grab latest name.
-        if (isProgress) this.progressCallback?.(this.key, stage, this.getName());
+        if (isProgress)
+            this.progressCallback?.(this.key, stage, this.getName(), this.getDescription());
 
         if (loading) return;
 
@@ -239,13 +242,23 @@ export default class Achievement {
     }
 
     /**
-     * The achievement's name is hidden until it is discovered, that is,
-     * until the stage does not equal 0.
-     * @returns Actual name of the achievement or ???????? if it is not discovered.
+     * Certain achievements are hidden by default and require more exploration to be
+     * discovered by players. Their name will display question marks until discovered.
+     * @returns A string that will be used for the achievement name.
      */
 
     private getName(): string {
-        return this.isStarted() ? this.name : '????????';
+        return this.hidden && !this.isStarted() ? '????????' : this.name;
+    }
+
+    /**
+     * Grabs the description for the achievement. If the achievemnet is hidden and not yet started,
+     * question marks will be displayed instead of the actual description.
+     * @returns String containing the achievement description.
+     */
+
+    private getDescription(): string {
+        return this.hidden && !this.isStarted() ? '????????' : this.description;
     }
 
     /**
@@ -301,7 +314,7 @@ export default class Achievement {
 
         if (withInfo) {
             data.name = this.getName();
-            data.description = this.description;
+            data.description = this.getDescription();
             data.stageCount = this.stageCount;
         }
 

@@ -169,6 +169,7 @@ export type QuestCallback = (opcode: Opcodes.Quest, info: QuestPacket) => void;
 export interface AchievementPacket {
     key?: string;
     name?: string;
+    description?: string;
     stage?: number;
     achievements?: AchievementData[];
 }
@@ -342,5 +343,15 @@ export interface EffectPacket {
 }
 
 export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface FriendsPacket {
+    list?: { [username: string]: boolean };
+    username?: string;
+    status?: boolean;
+}
+
+export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////

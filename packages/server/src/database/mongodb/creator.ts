@@ -8,7 +8,7 @@ import type Player from '../../game/entity/character/player/player';
 
 export interface PoisonInfo {
     type: number; // Type of poison.
-    start: number; // When the poison started.
+    remaining: number; // How much of the poison is left.
 }
 
 export interface PlayerInfo {
@@ -28,6 +28,7 @@ export interface PlayerInfo {
     lastWarp: number;
     mapVersion: number;
     regionsLoaded: number[];
+    friends: string[];
 }
 
 /**
@@ -250,7 +251,7 @@ export default class Creator {
             rights: player.rights,
             poison: {
                 type: player.poison ? player.poison.type : -1,
-                start: player.poison ? player.poison.start : -1
+                remaining: player.poison ? player.poison.getRemainingTime() : -1
             },
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
@@ -259,7 +260,8 @@ export default class Creator {
             mute: player.mute,
             lastWarp: player.lastWarp,
             mapVersion: player.mapVersion,
-            regionsLoaded: player.regionsLoaded
+            regionsLoaded: player.regionsLoaded,
+            friends: player.friends.serialize()
         };
     }
 }

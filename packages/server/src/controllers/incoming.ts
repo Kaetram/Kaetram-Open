@@ -1,16 +1,20 @@
-import config from '@kaetram/common/config';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-import Filter from '@kaetram/common/util/filter';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Creator from '../database/mongodb/creator';
 import { Spawn } from '../network/packets';
 
 import Commands from './commands';
 
+import type MongoDB from '../database/mongodb/mongodb';
+import type Entities from './entities';
+import type World from '../game/world';
+import type Connection from '../network/connection';
 import type {
     AbilityPacket,
     ContainerPacket,
@@ -19,17 +23,14 @@ import type {
     MovementPacket,
     ReadyPacket,
     StorePacket,
-    WarpPacket
+    WarpPacket,
+    FriendsPacket
 } from '@kaetram/common/types/messages/incoming';
-import type MongoDB from '../database/mongodb/mongodb';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
-import type World from '../game/world';
-import type Connection from '../network/connection';
-import type Entities from './entities';
 
 export default class Incoming {
     private world: World;
@@ -109,6 +110,9 @@ export default class Incoming {
                     case Packets.Store: {
                         return this.handleStore(message);
                     }
+                    case Packets.Friends: {
+                        return this.handleFriends(message);
+                    }
                 }
             } catch (error) {
                 log.error(error);
@@ -175,6 +179,7 @@ export default class Incoming {
 
         this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
+        this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
     }
@@ -437,7 +442,7 @@ export default class Incoming {
         }
     }
 
-    private handleEnchant(_message: [Opcodes.Enchant, unknown]): void {
+    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
         // let [opcode] = message;
         // switch (opcode) {
         //     case Opcodes.Enchant.Select: {
@@ -495,6 +500,24 @@ export default class Incoming {
 
             case Opcodes.Store.Select: {
                 return this.world.stores.select(this.player, data.key, data.index, data.count);
+            }
+        }
+    }
+
+    /**
+     * Handles incoming packets from the client about the friends list. Contains
+     * instructions such as adding or removing a friend from the list.
+     * @param data Contains the opcode (type of action) and the username.
+     */
+
+    private handleFriends(data: FriendsPacket): void {
+        switch (data.opcode) {
+            case Opcodes.Friends.Add: {
+                return this.player.friends.add(data.username);
+            }
+
+            case Opcodes.Friends.Remove: {
+                return this.player.friends.remove(data.username);
             }
         }
     }

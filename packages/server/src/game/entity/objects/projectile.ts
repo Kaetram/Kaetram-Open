@@ -12,7 +12,12 @@ export default class Projectile extends Entity {
     private impactCallback?: () => void;
 
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
-        super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', owner.x, owner.y);
+        super(
+            Utils.createInstance(Modules.EntityType.Projectile),
+            owner.projectileName,
+            owner.x,
+            owner.y
+        );
 
         this.key = owner.projectileName;
 
@@ -44,7 +49,6 @@ export default class Projectile extends Entity {
     public override serialize(): EntityData {
         let data = super.serialize();
 
-        data.name = this.owner.projectileName;
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
         data.damage = this.hit.getDamage() || 0;

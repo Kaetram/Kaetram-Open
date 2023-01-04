@@ -1,6 +1,6 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
@@ -723,7 +723,7 @@ export default class Commands {
             }
 
             case 'aoe': {
-                this.player.hit(100, this.player, 2);
+                this.player.hit(600, this.player, 2);
                 break;
             }
 

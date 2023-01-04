@@ -11,8 +11,6 @@ import type { PopupData } from '@kaetram/common/types/popup';
 import type { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
 import type Player from './player';
 import type Quest from './quest/quest';
-
-// Raw quest data
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 

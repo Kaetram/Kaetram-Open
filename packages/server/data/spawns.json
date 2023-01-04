@@ -150,5 +150,23 @@
     "level": 62,
     "attackLevel": 14,
     "drops": {"gold": 300, "icesword": 125}
+  },
+
+  "785-451": {
+    "name": "Queen Ant",
+    "achievement": "queenant"
+  },
+
+  "804-76": {
+    "name": "Golden Golem",
+    "miniboss": true,
+    "achievement": "goldengolem"
+  },
+
+  "789-57": {
+    "name": "Big Baby Spooder",
+    "miniboss": true,
+    "achievement": "webdeveloper",
+    "level": 45
   }
 }
