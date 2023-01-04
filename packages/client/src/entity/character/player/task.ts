@@ -11,7 +11,8 @@ export default class Task {
         public description: string,
         public stage: number,
         public stageCount: number,
-        public subStage?: number
+        public subStage?: number,
+        public rewards?: string[]
     ) {}
 
     /**

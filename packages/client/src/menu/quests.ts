@@ -11,7 +11,10 @@ export default class Quests extends Menu {
     private list: HTMLUListElement = document.querySelector('#quests-container > ul')!;
 
     // Contains information about a selected quest.
-    private log: HTMLElement = document.querySelector('#quest-log')!;
+    private title: HTMLElement = document.querySelector('#quest-log-title')!;
+    private shortDescription: HTMLElement = document.querySelector('#quest-log-shortdesc')!;
+    private description: HTMLElement = document.querySelector('#quest-log-description')!;
+    private rewards: HTMLElement = document.querySelector('#quest-log-rewards')!;
 
     public constructor(private player: Player) {
         super('#quests', '#close-quests', '#quests-button');
@@ -32,6 +35,8 @@ export default class Quests extends Menu {
             case Opcodes.Quest.Progress:
                 return this.handleProgress(key);
         }
+
+        this.buildLog(this.player.quests.tutorial);
     }
 
     /**
@@ -84,5 +89,24 @@ export default class Quests extends Menu {
         element.append(name);
 
         this.list.append(element);
+
+        element.addEventListener('click', () => this.buildLog(quest));
+    }
+
+    /**
+     * Uses the information from the quest to create the quest description.
+     * @param quest The quest we are using to build the log.
+     */
+
+    private buildLog(quest: Task): void {
+        let [shortDescription, description] = quest.description.split('|');
+
+        this.title.innerHTML = quest.name;
+        this.shortDescription.innerHTML = shortDescription;
+        this.description.innerHTML = description;
+
+        if (quest.rewards) this.rewards.innerHTML = quest.rewards.join('<br>');
+
+        console.log(quest);
     }
 }
