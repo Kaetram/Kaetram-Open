@@ -20,6 +20,10 @@ export default class Projectile extends Entity {
         super(instance, Modules.EntityType.Projectile);
     }
 
+    public override idle(): void {
+        this.setAnimation('travel');
+    }
+
     public impact(): void {
         this.impactCallback?.();
     }
@@ -36,8 +40,8 @@ export default class Projectile extends Entity {
         this.updateAngle();
     }
 
-    public getSpeed(): number {
-        return 1;
+    public getAnimationSpeed(): number {
+        return this.idleSpeed;
     }
 
     public getTimeDiff(): number {

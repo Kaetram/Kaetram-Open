@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '../lib/log';
+import Util from '../utils/util';
 
 export default abstract class Menu {
     protected container: HTMLElement;
@@ -83,8 +84,9 @@ export default abstract class Menu {
     public show(_var1?: unknown, _var2?: unknown, _var3?: unknown): void {
         this.showCallback?.();
 
-        this.container.style.display = 'block';
         this.button?.classList.add('active');
+
+        Util.fadeIn(this.container);
     }
 
     /**
@@ -92,9 +94,11 @@ export default abstract class Menu {
      */
 
     public hide(): void {
-        this.container.style.display = 'none';
+        if (!this.isVisible()) return;
 
         this.button?.classList.remove('active');
+
+        Util.fadeOut(this.container);
     }
 
     /**

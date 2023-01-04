@@ -1,7 +1,7 @@
 {
     "ratinfestation": {
         "name": "Rat Infestation",
-        "description": "Bulk Bogan requested you kill some rats, help him out by slaying 20 of them!",
+        "description": "Bulk Bogan needs you to defeat 20 rats!",
         "npc": "villager",
         "dialogueHidden": [
             "Hello there fellow adventurer!", 
@@ -23,7 +23,8 @@
     },
 
     "ahiddenpath": {
-        "name": "A Hidden Path"
+        "name": "Hidden Path",
+        "description": "Discover the hidden path in Mudwich."
     },
 
     "hiddenreward": {
@@ -34,6 +35,7 @@
     "wormholes": {
         "name": "Wormholes",
         "description": "Investigate the spooky occurrence in Mudwich.",
+        "hidden": true,
         "rewardAbility": "precognition"
     },
 
@@ -44,7 +46,8 @@
 
     "crabproblem": {
         "name": "Crab Problem",
-        "description": "The beach is infested with crabs! Help Bubba by killing 10 crabs.",
+        "description": "Help Bubba by defeating 10 crabs!",
+        "hidden": true,
         "npc": "beachnpc",
         "dialogueHidden": [
             "Wassup man!",
@@ -65,7 +68,7 @@
 
     "warriorcrab": {
         "name": "Warrior Crab",
-        "description": "Kill the Hermit Crab Warrior hidden somewhere on the beach."
+        "description": "Defeat the Hermit Crab Warrior hidden on the beach."
     },
 
     "sandtreasure": {
@@ -75,7 +78,8 @@
 
     "waterguardian": {
         "name": "Water Guardian",
-        "description": "Defeat the Water Guardian!"
+        "description": "Defeat the Water Guardian!",
+        "hidden": true
     },
 
     "ogreguardian": {
@@ -86,17 +90,25 @@
 
     "pathofdeath": {
         "name": "Path of Death",
-        "description": "Defeat the ogre defending the ogre lord." 
+        "description": "Defeat the ogre defending the ogre lord." ,
+        "hidden": true
     },
 
     "treadcarefully": {
         "name": "Tread Carefully",
-        "description": "I literally said to tread carefully."
+        "description": "I literally said to tread carefully.",
+        "hidden": true
+    },
+
+    "goldengolem": {
+        "name": "Golden Golem",
+        "description": "Defeat the Golden Golem!"
     },
 
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Defeat the Skeleton King!",
+        "hidden": true,
 
         "rewardSkill": "strength",
         "rewardExperience": 12560
@@ -105,22 +117,39 @@
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "Defeat the Ogre Lord!",
+        "hidden": true,
 
         "rewardSkill": "strength",
         "rewardExperience": 12560
     },
 
+    "queenant": {
+        "name": "Queen Ant",
+        "description": "Defeat the Queen Ant!",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 33560
+    },
+
     "notwhatitseems": {
-        "name": "Not What It Seems",
+        "name": "Spooky Look-alike",
         "description": "Discover a mimic.",
+        "hidden": true,
 
         "rewardSkill": "magic",
         "rewardExperience": 400
     },
 
+    "webdeveloper": {
+        "name": "Web Developer",
+        "description": "Spiders are developing webs left and right!"
+    },
+
     "vulture": {
         "name": "Vulture",
-        "description": "Defeat a vulture!"
+        "description": "Defeat a vulture!",
+        "hidden": true
     },
 
     "ogresgateway": {
@@ -130,7 +159,8 @@
 
     "frozentundra": {
         "name": "Frozen Tundra",
-        "description": "Defeat the Ice Guradians blocking the pathway to the icelands.!"
+        "description": "Gain access to icelands by defeating the guardians.",
+        "hidden": true
     },
 
     "babyseadragon": {
@@ -139,7 +169,16 @@
     },
 
     "underwatertreasure": {
-        "name": "Underwater Treasure",
+        "name": "Water Chest",
         "description": "Find the treasure hidden underwater."
+    },
+
+    "forestdragon": {
+        "name": "Forest Dragon",
+        "description": "Defeat the dragon laying dormant under Mudwich.",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 52600
     }
 }

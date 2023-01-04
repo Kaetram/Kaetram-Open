@@ -14,6 +14,7 @@ export { default as Effect } from './effect';
 export { default as Enchant } from './enchant';
 export { default as Equipment } from './equipment';
 export { default as Experience } from './experience';
+export { default as Friends } from './friends';
 export { default as Handshake } from './handshake';
 export { default as Heal } from './heal';
 export { default as List } from './list';

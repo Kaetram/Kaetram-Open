@@ -18,7 +18,7 @@ import type Packet from '../../../network/packet';
 import type World from '../../world';
 
 type StunCallback = (stun: boolean) => void;
-type PoisonCallback = (type: number) => void;
+type PoisonCallback = (type: number, exists: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
 type DeathCallback = (attacker?: Character) => void;
 
@@ -640,7 +640,7 @@ export default abstract class Character extends Entity {
         } else if (!exists)
             this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
 
-        this.poisonCallback?.(type);
+        this.poisonCallback?.(type, !exists);
     }
 
     /**

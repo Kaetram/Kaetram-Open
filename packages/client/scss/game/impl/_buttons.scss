@@ -29,7 +29,11 @@
 #inventory-button,
 #profile-button,
 #settings-button,
-#warp-button {
+#warp-button,
+#audio-button,
+#achievements-button,
+#quests-button,
+#friends-button {
     position: relative;
 
     width: 42px;
@@ -46,7 +50,7 @@
         background-position-x: -630px;
     }
 
-    &.active {
+    &.active, &:active {
         background-position-x: -672px;
     }
 }
@@ -58,7 +62,7 @@
         background-position-x: -630px;
     }
 
-    &.active {
+    &.active, &:active {
         background-position-x: -672px;
     }
 }
@@ -70,7 +74,7 @@
         background-position-x: -756px;
     }
 
-    &.active {
+    &.active, &:active {
         background-position-x: -798px;
     }
 }
@@ -82,7 +86,7 @@
         background-position-x: -1260px;
     }
 
-    &.active {
+    &.active, &:active {
         background-position-x: -1302px;
     }
 }
@@ -94,7 +98,55 @@
         background-position-x: -1008px;
     }
 
-    &.active {
+    &.active, &:active {
         background-position-x: -1050px;
+    }
+}
+
+#audio-button {
+    background-position-x: -294px;
+
+    &:hover {
+        background-position-x: -378px;
+    }
+
+    &.active, &:active {
+        background-position-x: -336px;
+    }
+}
+
+#achievements-button {
+    background-position-x: -126px;
+
+    &:hover {
+        background-position-x: -168px;
+    }
+
+    &.active, &:active {
+        background-position-x: -210px;
+    }
+}
+
+#quests-button {
+    background-position-x: -840px;
+
+    &:hover {
+        background-position-x: -882px;
+    }
+
+    &.active, &:active {
+        background-position-x: -924px;
+    }
+}
+
+#friends-button {
+    background-position-x: -1092px;
+
+    &:hover {
+        background-position-x: -1134px;
+    }
+
+    &.active, &:active {
+        background-position-x: -1176px;
     }
 }

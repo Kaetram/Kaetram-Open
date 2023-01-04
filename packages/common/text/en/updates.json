@@ -48,5 +48,16 @@
             "- Client backend work, support for special effects and more",
             "- New map content"
         ]
+    },
+    "alpha-2.2.7": {
+        "title": "Kaetram alpha-2.2.7",
+        "content": [
+            "- Improvements to the poison effect",
+            "- Adds 'h' as the hotkey for healing (will use first potion in inventory)",
+            "- Trees now indicate level required to chop",
+            "- Improvements to the backend and interactions with the map",
+            "- New map content and achievements",
+            "- New trees have been added"
+        ]
     }
 }

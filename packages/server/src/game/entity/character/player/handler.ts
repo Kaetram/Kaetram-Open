@@ -1,7 +1,7 @@
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import {
     Ability as AbilityPacket,
@@ -10,6 +10,7 @@ import {
     Death,
     Despawn,
     Equipment as EquipmentPacket,
+    Friends,
     NPC as NPCPacket,
     Overlay,
     Points,
@@ -18,19 +19,19 @@ import {
     Skill
 } from '../../../../network/packets';
 
-import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type Light from '../../../globals/impl/light';
-import type Areas from '../../../map/areas/areas';
 import type Map from '../../../map/map';
 import type World from '../../../world';
 import type Entity from '../../entity';
-import type NPC from '../../npc/npc';
 import type Character from '../character';
-import type Mob from '../mob/mob';
 import type Ability from './ability/ability';
 import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
+import type Areas from '../../../map/areas/areas';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
 import type Player from './player';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
     private world: World;
@@ -79,6 +80,12 @@ export default class Handler {
         this.player.bank.onAdd(this.handleBankAdd.bind(this));
         this.player.bank.onRemove(this.handleBankRemove.bind(this));
         this.player.bank.onNotify(this.player.notify.bind(this.player));
+
+        // Friends list callback
+        this.player.friends.onLoad(this.handleFriends.bind(this));
+        this.player.friends.onAdd(this.handleFriendsAdd.bind(this));
+        this.player.friends.onRemove(this.handleFriendsRemove.bind(this));
+        this.player.friends.onStatus(this.handleFriendsStatus.bind(this));
 
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
@@ -138,6 +145,8 @@ export default class Handler {
         this.world.entities.removePlayer(this.player);
 
         this.world.cleanCombat(this.player);
+
+        this.world.linkFriends(this.player, true);
     }
 
     /**
@@ -448,6 +457,60 @@ export default class Handler {
     }
 
     /**
+     * Callback for when the player's friends list finishes loading
+     */
+
+    private handleFriends(): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.List, {
+                list: this.player.friends?.getFriendsList()
+            })
+        );
+    }
+
+    /**
+     * Callback for when a friend is added to the friends list.
+     * @param username The username of the friend we just added.
+     * @param status The online status of the friend we just added.
+     */
+
+    private handleFriendsAdd(username: string, status: boolean): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Add, {
+                username,
+                status
+            })
+        );
+    }
+
+    /**
+     * Callback for when a friend is removed from the friends list.
+     */
+
+    private handleFriendsRemove(username: string): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Remove, {
+                username
+            })
+        );
+    }
+
+    /**
+     * Synchronizes with the client the online status of a friend.
+     * @param username The username of the friend we are updating.
+     * @param status The online status of the friend we are updating.
+     */
+
+    private handleFriendsStatus(username: string, status: boolean): void {
+        this.player.send(
+            new Friends(Opcodes.Friends.Status, {
+                username,
+                status
+            })
+        );
+    }
+
+    /**
      * Callback for when a player interacts with an NPC.
      * @param npc The NPC instance we are interacting with.
      */
@@ -532,14 +595,12 @@ export default class Handler {
      * Callback for when the player's poison status updates.
      */
 
-    private handlePoison(type = -1): void {
+    private handlePoison(type = -1, exists = false): void {
         // Notify the player when the poison status changes.
         if (type === -1) this.player.notify('The poison has worn off.');
-        else this.player.notify('You have been poisoned.');
+        else if (exists) this.player.notify(`You have been poisoned!`);
 
         this.player.send(new PoisonPacket(type));
-
-        log.debug(`Player ${this.player.instance} updated poison status.`);
     }
 
     /**

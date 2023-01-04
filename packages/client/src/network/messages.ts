@@ -1,5 +1,5 @@
-import { Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import { Packets } from '@kaetram/common/network';
 
 import type {
     AbilityCallback,
@@ -19,6 +19,7 @@ import type {
     EntityListCallback,
     EquipmentCallback,
     ExperienceCallback,
+    FriendsCallback,
     GuildCallback,
     HandshakeCallback,
     HealCallback,
@@ -90,6 +91,7 @@ export default class Messages {
     private updateCallback?: UpdateCallback;
     private minigameCallback?: MinigameCallback;
     private effectCallback?: EffectCallback;
+    private friendsCallback?: FriendsCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -143,6 +145,7 @@ export default class Messages {
         this.messages[Packets.Update] = () => this.updateCallback;
         this.messages[Packets.Minigame] = () => this.minigameCallback;
         this.messages[Packets.Effect] = () => this.effectCallback;
+        this.messages[Packets.Friends] = () => this.friendsCallback;
     }
 
     /**
@@ -420,5 +423,9 @@ export default class Messages {
 
     public onEffect(callback: EffectCallback): void {
         this.effectCallback = callback;
+    }
+
+    public onFriends(callback: FriendsCallback): void {
+        this.friendsCallback = callback;
     }
 }
