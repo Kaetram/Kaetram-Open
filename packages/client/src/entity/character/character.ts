@@ -1,6 +1,5 @@
-import _ from 'lodash-es';
-
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import Transition from '../../utils/transition';
 import Animation from '../animation';
@@ -265,21 +264,25 @@ export default class Character extends Entity {
         this.setOrientation(orientation);
 
         switch (action) {
-            case Modules.Actions.Idle:
+            case Modules.Actions.Idle: {
                 this.setAnimation('idle', this.idleSpeed);
                 break;
+            }
 
-            case Modules.Actions.Orientate:
+            case Modules.Actions.Orientate: {
                 this.setAnimation('idle', this.idleSpeed);
                 break;
+            }
 
-            case Modules.Actions.Attack:
+            case Modules.Actions.Attack: {
                 this.setAnimation('atk', this.attackAnimationSpeed, 1);
                 break;
+            }
 
-            case Modules.Actions.Walk:
+            case Modules.Actions.Walk: {
                 this.setAnimation('walk', this.walkAnimationSpeed);
                 break;
+            }
         }
     }
 
@@ -302,17 +305,21 @@ export default class Character extends Entity {
 
     private orientationToString(): string {
         switch (this.orientation) {
-            case Modules.Orientation.Left:
+            case Modules.Orientation.Left: {
                 return 'left';
+            }
 
-            case Modules.Orientation.Right:
+            case Modules.Orientation.Right: {
                 return 'right';
+            }
 
-            case Modules.Orientation.Up:
+            case Modules.Orientation.Up: {
                 return 'up';
+            }
 
-            case Modules.Orientation.Down:
+            case Modules.Orientation.Down: {
                 return 'down';
+            }
         }
     }
 

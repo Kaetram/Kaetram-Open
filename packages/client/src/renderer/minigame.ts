@@ -3,7 +3,7 @@
  * to update the player's status in the minigame.
  */
 
-import { Status } from '@kaetram/common/types/minigame';
+import type { Status } from '@kaetram/common/api/minigame';
 
 export default class Minigame {
     // TeamWar score variables.

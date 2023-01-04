@@ -1,19 +1,19 @@
 import log from '@kaetram/common/util/log';
-import Character from '../game/entity/character/character';
-import Mob from '../game/entity/character/mob/mob';
-import Item from '../game/entity/objects/item';
-import Quest from '../game/entity/character/player/quest/quest';
-import Achievement from '../game/entity/character/player/achievement/achievement';
-
-import type Player from '../game/entity/character/player/player';
-
-import Region from '../game/map/region';
-import Entity from '../game/entity/entity';
 import Utils from '@kaetram/common/util/utils';
-
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, Pointer, Network, Notification, Store, NPC } from '../network/packets';
-import Skill from '../game/entity/character/player/skill/skill';
+
+import Character from '../game/entity/character/character';
+import Item from '../game/entity/objects/item';
+import { Command, Network, Notification, NPC, Pointer, Store } from '../network/packets';
+
+import type Mob from '../game/entity/character/mob/mob';
+import type Achievement from '../game/entity/character/player/achievement/achievement';
+import type Player from '../game/entity/character/player/player';
+import type Quest from '../game/entity/character/player/quest/quest';
+import type Skill from '../game/entity/character/player/skill/skill';
+import type Entity from '../game/entity/entity';
+import type Region from '../game/map/region';
+
 export default class Commands {
     private world;
     private entities;
@@ -59,16 +59,18 @@ export default class Commands {
                 return;
             }
 
-            case 'coords':
+            case 'coords': {
                 this.player.send(
                     new Notification(Opcodes.Notification.Text, {
                         message: `x: ${this.player.x} y: ${this.player.y}`
                     })
                 );
                 return;
+            }
 
-            case 'global':
+            case 'global': {
                 return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
+            }
 
             case 'pm':
             case 'msg': {
@@ -80,10 +82,11 @@ export default class Commands {
                 return;
             }
 
-            case 'ping':
+            case 'ping': {
                 this.player.pingTime = Date.now();
                 this.player.send(new Network(Opcodes.Network.Ping));
                 break;
+            }
         }
     }
 
@@ -180,13 +183,15 @@ export default class Commands {
                 return;
             }
 
-            case 'empty':
+            case 'empty': {
                 return this.player.inventory.empty();
+            }
 
-            case 'notify':
+            case 'notify': {
                 this.player.notify('Hello!!!');
 
                 return;
+            }
 
             case 'teleport': {
                 let x = parseInt(blocks.shift()!),
@@ -198,30 +203,33 @@ export default class Commands {
                 return;
             }
 
-            case 'teletome':
+            case 'teletome': {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
                 player?.teleport(this.player.x, this.player.y);
 
                 return;
+            }
 
-            case 'teleto':
+            case 'teleto': {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
                 if (player) this.player.teleport(player.x, player.y);
 
                 return;
+            }
 
-            case 'nohit':
+            case 'nohit': {
                 log.info('invincinil');
 
                 this.player.invincible = !this.player.invincible;
 
                 return;
+            }
 
-            case 'mob':
+            case 'mob': {
                 target = blocks.shift()!;
 
                 if (!target) return this.player.notify('No mob specified.');
@@ -229,8 +237,9 @@ export default class Commands {
                 this.entities.spawnMob(target, this.player.x, this.player.y);
 
                 return;
+            }
 
-            case 'allattack':
+            case 'allattack': {
                 region = this.world.map.regions.get(this.player.region);
                 target = blocks.shift()!;
 
@@ -252,8 +261,9 @@ export default class Commands {
                 });
 
                 break;
+            }
 
-            case 'pointer':
+            case 'pointer': {
                 if (blocks.length > 1) {
                     let posX = parseInt(blocks.shift()!),
                         posY = parseInt(blocks.shift()!);
@@ -280,25 +290,29 @@ export default class Commands {
                 }
 
                 return;
+            }
 
-            case 'teleall':
+            case 'teleall': {
                 this.entities.forEachPlayer((player: Player) => {
                     player.teleport(this.player.x, this.player.y);
                 });
 
                 return;
+            }
 
-            case 'getregion':
+            case 'getregion': {
                 this.player.notify(`Current Region: ${this.player.region}`);
                 return;
+            }
 
-            case 'debug':
+            case 'debug': {
                 this.player.send(new Command({ command: 'debug' }));
 
                 return;
+            }
 
             case 'addexp':
-            case 'addexperience':
+            case 'addexperience': {
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
 
@@ -311,8 +325,9 @@ export default class Commands {
                     ?.addExperience(x);
 
                 return;
+            }
 
-            case 'resetskills':
+            case 'resetskills': {
                 // Skills aren't meant to go backwards so you gotta sync and stuff lmao.
                 this.player.skills.forEachSkill((skill: Skill) => {
                     skill.setExperience(0);
@@ -320,44 +335,51 @@ export default class Commands {
                 });
                 this.player.skills.sync();
                 break;
+            }
 
-            case 'max':
+            case 'max': {
                 this.player.skills.forEachSkill((skill: Skill) => {
                     skill.setExperience(0);
                     skill.addExperience(669_420_769);
                 });
                 break;
+            }
 
-            case 'attackrange':
+            case 'attackrange': {
                 log.info(this.player.attackRange);
                 return;
+            }
 
-            case 'resetregions':
+            case 'resetregions': {
                 log.info('Resetting regions...');
 
                 this.player.regionsLoaded = [];
                 this.player.updateRegion();
 
                 return;
+            }
 
-            case 'clear':
+            case 'clear': {
                 this.player.inventory.forEachSlot((slot) => {
                     this.player.inventory.remove(slot.index, slot.count);
                 });
 
                 break;
+            }
 
-            case 'timeout':
+            case 'timeout': {
                 this.player.timeout();
 
                 break;
+            }
 
-            case 'togglepvp':
+            case 'togglepvp': {
                 this.entities.forEachPlayer((player: Player) => {
                     player.updatePVP(true);
                 });
 
                 break;
+            }
 
             case 'ms': {
                 let movementSpeed = parseInt(blocks.shift()!);
@@ -376,34 +398,38 @@ export default class Commands {
                 break;
             }
 
-            case 'toggle':
+            case 'toggle': {
                 key = blocks.shift()!;
 
                 if (!key) return this.player.notify('No key specified.');
 
                 return this.player.send(new Command({ command: `toggle${key}` }));
+            }
 
-            case 'popup':
+            case 'popup': {
                 this.player.popup(
                     'New Quest Found!',
                     '@blue@New @darkblue@quest @green@has@red@ been discovered!'
                 );
 
                 break;
+            }
 
-            case 'resetquests':
+            case 'resetquests': {
                 this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
                 break;
+            }
 
-            case 'resetquest':
+            case 'resetquest': {
                 key = blocks.shift()!;
 
                 if (!key) return this.player.notify('No quest specified.');
 
                 this.player.quests.get(key)?.setStage(0);
                 break;
+            }
 
-            case 'resetachievements':
+            case 'resetachievements': {
                 this.player.achievements.forEachAchievement((achievement) =>
                     achievement.setStage(0)
                 );
@@ -411,8 +437,9 @@ export default class Commands {
                 this.player.updateRegion();
 
                 break;
+            }
 
-            case 'movenpc':
+            case 'movenpc': {
                 instance = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
                 y = parseInt(blocks.shift()!);
@@ -427,8 +454,10 @@ export default class Commands {
                 if (entity.isMob()) (entity as Mob).move(x, y);
 
                 break;
+            }
 
-            case 'nvn': // NPC vs NPC (specify two instances)
+            case 'nvn': {
+                // NPC vs NPC (specify two instances)
                 instance = blocks.shift()!;
                 target = blocks.shift()!;
 
@@ -446,8 +475,9 @@ export default class Commands {
                 this.player.notify(`${entity.name} is attacking ${targetEntity.name}`);
 
                 break;
+            }
 
-            case 'kill':
+            case 'kill': {
                 username = blocks.shift()!;
 
                 if (!username)
@@ -464,8 +494,9 @@ export default class Commands {
                 if (targetEntity) targetEntity.hit(targetEntity.hitPoints.getHitPoints());
 
                 break;
+            }
 
-            case 'finishquest':
+            case 'finishquest': {
                 questKey = blocks.shift()!;
 
                 if (!questKey)
@@ -477,8 +508,9 @@ export default class Commands {
                 else this.player.notify(`Could not find quest with key: ${questKey}`);
 
                 break;
+            }
 
-            case 'finishachievement':
+            case 'finishachievement': {
                 achievementKey = blocks.shift()!;
 
                 if (!achievementKey)
@@ -492,13 +524,15 @@ export default class Commands {
                 else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
 
                 break;
+            }
 
-            case 'finishachievements':
+            case 'finishachievements': {
                 return this.player.achievements.forEachAchievement((achievement) =>
                     achievement.finish()
                 );
+            }
 
-            case 'poison':
+            case 'poison': {
                 instance = blocks.shift()!;
 
                 if (instance) {
@@ -534,8 +568,9 @@ export default class Commands {
                 }
 
                 break;
+            }
 
-            case 'poisonarea':
+            case 'poisonarea': {
                 region = this.world.map.regions.get(this.player.region);
 
                 if (!region) this.player.notify('Bro something went badly wrong wtf.');
@@ -549,8 +584,9 @@ export default class Commands {
                 });
 
                 break;
+            }
 
-            case 'roam':
+            case 'roam': {
                 region = this.world.map.regions.get(this.player.region);
 
                 if (!region) this.player.notify('Bro something went badly wrong wtf.');
@@ -564,8 +600,9 @@ export default class Commands {
                 });
 
                 break;
+            }
 
-            case 'talk':
+            case 'talk': {
                 instance = blocks.shift()!;
 
                 if (!instance)
@@ -579,8 +616,9 @@ export default class Commands {
                 (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
 
                 break;
+            }
 
-            case 'distance':
+            case 'distance': {
                 x = parseInt(blocks.shift()!);
                 y = parseInt(blocks.shift()!);
 
@@ -592,15 +630,16 @@ export default class Commands {
                 );
 
                 break;
+            }
 
-            case 'nuke':
+            case 'nuke': {
                 region = this.world.map.regions.get(this.player.region);
 
                 region.forEachEntity((entity: Entity) => {
                     if (!(entity instanceof Character)) return;
                     if (entity.instance === this.player.instance) return;
 
-                    (entity as Character).deathCallback?.();
+                    entity.deathCallback?.();
                 });
 
                 this.player.notify(
@@ -608,14 +647,16 @@ export default class Commands {
                 );
 
                 break;
+            }
 
-            case 'noclip':
+            case 'noclip': {
                 this.player.noclip = !this.player.noclip;
 
                 this.player.notify(`Noclip: ${this.player.noclip}`);
                 break;
+            }
 
-            case 'kick':
+            case 'kick': {
                 username = blocks.shift()!;
 
                 if (!username)
@@ -629,16 +670,18 @@ export default class Commands {
                 player.connection.close();
 
                 break;
+            }
 
-            case 'addability':
+            case 'addability': {
                 key = blocks.shift()!;
 
                 if (!key) return this.player.notify(`Malformed command, expected /addability key`);
 
                 this.player.abilities.add(key, 1);
                 break;
+            }
 
-            case 'setability':
+            case 'setability': {
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
 
@@ -648,8 +691,9 @@ export default class Commands {
                 this.player.abilities.setLevel(key, x);
 
                 break;
+            }
 
-            case 'setquickslot':
+            case 'setquickslot': {
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
 
@@ -660,11 +704,13 @@ export default class Commands {
 
                 this.player.abilities.setQuickSlot(key, x);
                 break;
+            }
 
-            case 'resetabilities':
+            case 'resetabilities': {
                 return this.player.abilities.reset();
+            }
 
-            case 'store':
+            case 'store': {
                 key = blocks.shift()!;
 
                 if (!key) return this.player.notify(`Malformed command, expected /store key`);
@@ -674,14 +720,17 @@ export default class Commands {
                 this.player.storeOpen = key;
 
                 break;
+            }
 
-            case 'aoe':
+            case 'aoe': {
                 this.player.hit(600, this.player, 2);
                 break;
+            }
 
-            case 'bank':
+            case 'bank': {
                 this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
+            }
         }
     }
 }

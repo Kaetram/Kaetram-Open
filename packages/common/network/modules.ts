@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
+
 import { Pointer } from './opcodes';
 
 // Preset objects and values for various usages.

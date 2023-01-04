@@ -1,14 +1,13 @@
+import path from 'node:path';
+
 import { defineConfig } from 'vite';
-
-import config, { type Config } from '../common/config';
-
-import { VitePWA as pwa } from 'vite-plugin-pwa';
-import legacy from '@vitejs/plugin-legacy';
-import { createHtmlPlugin } from 'vite-plugin-html';
-
-import { name, description } from '../../package.json';
-
+import ViteLegacy from '@vitejs/plugin-legacy';
+import { ViteMinifyPlugin } from 'vite-plugin-minify';
+import { VitePWA } from 'vite-plugin-pwa';
 import { internalIpV4 } from 'internal-ip';
+
+import { description, name } from '../../package.json';
+import config, { type Config } from '../common/config';
 
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
@@ -60,10 +59,10 @@ export default defineConfig(async ({ mode }) => {
         ipv4 = await internalIpV4();
 
     return {
+        appType: 'mpa',
         plugins: [
-            pwa({
+            VitePWA({
                 registerType: 'autoUpdate',
-                includeAssets: '**/*',
                 workbox: { cacheId: name },
                 manifest: {
                     name: config.name,
@@ -92,18 +91,18 @@ export default defineConfig(async ({ mode }) => {
                     categories: ['entertainment', 'games']
                 }
             }),
-            legacy(),
-            createHtmlPlugin({
-                minify: isProduction && { processScripts: ['application/ld+json'] },
-                pages: [
-                    { filename: 'index.html', template: 'index.html' },
-                    { filename: 'privacy.html', template: 'privacy.html' }
-                ]
-            })
+            ViteLegacy(),
+            ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
         ],
         build: {
             sourcemap: true,
-            chunkSizeWarningLimit: 4e3
+            chunkSizeWarningLimit: 4e3,
+            rollupOptions: {
+                input: {
+                    index: path.resolve(__dirname, 'index.html'),
+                    privacy: path.resolve(__dirname, 'privacy.html')
+                }
+            }
         },
         server: {
             host: '0.0.0.0',

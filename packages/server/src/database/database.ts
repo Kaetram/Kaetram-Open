@@ -13,7 +13,7 @@ export default class Database {
     public constructor(databaseType: DatabaseTypes) {
         switch (databaseType) {
             case 'mongo':
-            case 'mongodb':
+            case 'mongodb': {
                 this.database = new MongoDB(
                     config.mongodbHost,
                     config.mongodbPort,
@@ -24,10 +24,12 @@ export default class Database {
                     config.mongodbSrv
                 );
                 break;
+            }
 
-            default:
+            default: {
                 log.error(`The database ${databaseType} could not be found.`);
                 break;
+            }
         }
     }
 

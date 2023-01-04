@@ -1,8 +1,9 @@
-import Menu from '../../menu';
-import Player from '../../../entity/character/player/player';
+import { Modules } from '@kaetram/common/network';
 
 import Util from '../../../utils/util';
-import { Modules } from '@kaetram/common/network';
+import Menu from '../../menu';
+
+import type Player from '../../../entity/character/player/player';
 
 type SelectCallback = (type: Modules.Equipment) => void;
 

@@ -5,7 +5,6 @@
     position: absolute;
     right: 0;
     bottom: 45px;
-
     display: none;
 }
 
@@ -43,7 +42,6 @@
         #enchant-container {
             width: 129px * $i;
             height: 127px * $i;
-
             background-position: 0 0;
         }
 
@@ -51,7 +49,6 @@
             width: 16px * $i;
             height: 7px * $i;
             margin-left: $i;
-
             text-align: center;
         }
 
@@ -71,7 +68,6 @@
     .close {
         width: 48px;
         height: 48px;
-
         background: url('/img/3/containers.png') -96px -498px;
 
         &:active {
@@ -86,7 +82,6 @@
     .ok {
         width: 42px;
         height: 42px;
-
         background: url('/img/3/containers.png') -1143px -183px;
 
         &:hover {
@@ -103,7 +98,6 @@
     .ok {
         width: 28px;
         height: 28px;
-
         background-position: -762px -122px;
     }
 
@@ -111,7 +105,6 @@
     .done {
         width: 27px;
         height: 14px;
-
         background: url('/img/2/containers.png') -642px -108px;
 
         &:hover {
@@ -122,7 +115,6 @@
     .close {
         width: 32px;
         height: 32px;
-
         background: url('/img/2/containers.png') -64px -332px;
 
         &:active {

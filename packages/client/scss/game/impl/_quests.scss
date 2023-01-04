@@ -1,10 +1,9 @@
 @use '../../abstracts/media';
 
-#quests-container, #quest-log {
+#quests-container,
+#quest-log {
     position: absolute;
-
     overflow: auto;
-
     font-family: AdvoCut, sans-serif;
 }
 
@@ -21,7 +20,7 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         #quests {
-            background: url('img/#{$i}/quests.png') 0 0 no-repeat;
+            background: url('/img/#{$i}/quests.png') 0 0 no-repeat;
         }
 
         #quests-container {
@@ -44,11 +43,12 @@
         }
     }
 
-    @media(--md) {
+    @media (--md) {
     }
 
-    @media(--sm) {
-        #quests-container, #quest-log {
+    @media (--sm) {
+        #quests-container,
+        #quest-log {
             font-size: 8px;
         }
     }

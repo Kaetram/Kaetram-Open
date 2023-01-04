@@ -1,15 +1,14 @@
 import _ from 'lodash-es';
 
 import Menu from '../menu';
+
 import State from './impl/state';
-import Skills from './impl/skills';
 import Abilities from './impl/abilities';
+import Skills from './impl/skills';
 
-import Player from '../../entity/character/player/player';
-
-import { SelectCallback } from './impl/abilities';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
+import type Player from '../../entity/character/player/player';
+import type { Modules, Opcodes } from '@kaetram/common/network';
+import type { SelectCallback } from './impl/abilities';
 
 type UnequipCallback = (type: Modules.Equipment) => void;
 

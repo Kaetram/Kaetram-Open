@@ -1,13 +1,13 @@
-import type Map from '../../../map/map';
-import type Camera from '../../../renderer/camera';
-import type InputController from '../../../controllers/input';
-import type EntitiesController from '../../../controllers/entities';
-import type Socket from '../../../network/socket';
-import type Renderer from '../../../renderer/renderer';
-import type Game from '../../../game';
-import type Player from './player';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
-import { Packets, Opcodes } from '@kaetram/common/network';
+import type EntitiesController from '../../../controllers/entities';
+import type InputController from '../../../controllers/input';
+import type Game from '../../../game';
+import type Map from '../../../map/map';
+import type Socket from '../../../network/socket';
+import type Camera from '../../../renderer/camera';
+import type Renderer from '../../../renderer/renderer';
+import type Player from './player';
 
 export default class PlayerHandler {
     private lastStepX = -1;
@@ -166,13 +166,13 @@ export default class PlayerHandler {
         });
     }
 
-    isAttackable(): boolean {
+    private isAttackable(): boolean {
         let { target } = this.player;
 
         return target ? target.isMob() || (target.isPlayer() && this.game.pvp) : false;
     }
 
-    checkBounds(): void {
+    private checkBounds(): void {
         let { player, camera, game, socket, renderer } = this,
             { zoning } = game;
         if (!zoning) return;

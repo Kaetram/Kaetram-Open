@@ -2,8 +2,8 @@ import { Modules } from '@kaetram/common/network';
 
 import Util from '../utils/util';
 
-import type Game from '../game';
 import type Entity from '../entity/entity';
+import type Game from '../game';
 
 export default class AudioController {
     /** Duration for background music to fade in and out. */
@@ -183,25 +183,29 @@ export default class AudioController {
         positionY.value = player.y;
 
         switch (player.orientation) {
-            case Modules.Orientation.Up:
+            case Modules.Orientation.Up: {
                 forwardX.value = 0;
                 forwardY.value = 1;
                 break;
+            }
 
-            case Modules.Orientation.Down:
+            case Modules.Orientation.Down: {
                 forwardX.value = 0;
                 forwardY.value = -1;
                 break;
+            }
 
-            case Modules.Orientation.Left:
+            case Modules.Orientation.Left: {
                 forwardX.value = -1;
                 forwardY.value = 0;
                 break;
+            }
 
-            case Modules.Orientation.Right:
+            case Modules.Orientation.Right: {
                 forwardX.value = 1;
                 forwardY.value = 0;
                 break;
+            }
         }
     }
 

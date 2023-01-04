@@ -27,15 +27,15 @@ export default abstract class WorldContext {
         return cy.get(lookup!);
     }
 
-    abstract injectDefaultData(): void;
+    public abstract injectDefaultData(): void;
 
-    abstract before(): void;
+    public abstract before(): void;
 
-    public cleanup(): void {
+    protected cleanup(): void {
         this.cleanupDefaultPlayers();
     }
 
-    injectDefaultPlayers() {
+    protected injectDefaultPlayers() {
         let [x, y] = Constants.SPAWN_POINT?.split(',') || [0, 0],
             playerInfo = buildPlayerInfo(this.USERNAME, {
                 x: +x,
@@ -45,7 +45,7 @@ export default abstract class WorldContext {
         cy.createPlayerInfo(playerInfo);
     }
 
-    cleanupDefaultPlayers() {
+    protected cleanupDefaultPlayers() {
         cy.removePlayerFromCollection('player_achievements', this.USERNAME);
         cy.removePlayerFromCollection('player_bank', this.USERNAME);
         cy.removePlayerFromCollection('player_equipment', this.USERNAME);

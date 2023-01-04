@@ -1,10 +1,11 @@
-import { Db, MongoClient } from 'mongodb';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+import { MongoClient } from 'mongodb';
 
 import Creator from './creator';
 import Loader from './loader';
+
+import type { Db } from 'mongodb';
 
 export default class MongoDB {
     public loader: Loader;
@@ -40,7 +41,7 @@ export default class MongoDB {
                 log.error(`Error Info:`, error);
             });
 
-        this.connection = newClient!.db(this.databaseName);
+        if (newClient) this.connection = newClient.db(this.databaseName);
 
         return this.connection;
     }

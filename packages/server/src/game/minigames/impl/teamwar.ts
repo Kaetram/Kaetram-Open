@@ -1,19 +1,15 @@
+import { Team } from '@kaetram/common/api/minigame';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 import _ from 'lodash';
 
-import Minigame from '../minigame';
-import World from '../../world';
-import Area from '../../map/areas/area';
-import Player from '../../entity/character/player/player';
-
-import Utils from '@kaetram/common/util/utils';
-
-import { Modules, Opcodes } from '@kaetram/common/network';
-
-import { Team } from '@kaetram/common/types/minigame.d';
-
-import { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
-
 import { Minigame as Packet } from '../../../network/packets';
+import Area from '../../map/areas/area';
+import Minigame from '../minigame';
+
+import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
+import type Player from '../../entity/character/player/player';
+import type World from '../../world';
 
 export default class TeamWar extends Minigame {
     private started = false;
@@ -44,21 +40,24 @@ export default class TeamWar extends Minigame {
 
     public override loadArea(area: Area): void {
         switch (area.mObjectType) {
-            case 'lobby':
+            case 'lobby': {
                 this.lobby = area;
 
                 // Lobby area enter and exit callbacks.
                 this.lobby.onEnter((player: Player) => this.addPlayer(player));
                 this.lobby.onExit((player: Player) => this.removePlayer(player));
                 return;
+            }
 
-            case 'redteamspawn':
+            case 'redteamspawn': {
                 this.redSpawn = area;
                 return;
+            }
 
-            case 'blueteamspawn':
+            case 'blueteamspawn': {
                 this.blueSpawn = area;
                 return;
+            }
         }
     }
 
@@ -131,8 +130,8 @@ export default class TeamWar extends Minigame {
             this.countdown = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
             // Attempt to start if not started, otherwise end the game.
-            if (!this.started) this.start();
-            else this.stop();
+            if (this.started) this.stop();
+            else this.start();
 
             return;
         }
