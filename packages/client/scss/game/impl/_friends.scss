@@ -35,7 +35,7 @@
     margin: auto;
 }
 
-#add-friend-input {
+#popup-friend-input {
     position: absolute;
 
     font-family: AdvoCut, sans-serif;
@@ -44,20 +44,6 @@
 
     background-color: transparent;
     border: none;
-}
-
-.friend-slot {
-    margin: auto;
-}
-
-.friend-slot > p {
-    font-size: 20px;
-    color: rgb(168 16 5);
-    text-align: center;
-}
-
-.friend-slot > p.online {
-    color: rgb(16 168 5);
 }
 
 .add,
@@ -100,29 +86,10 @@
             background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
         }
 
-        #add-friend-input {
+        #popup-friend-input {
             top: 8px * $i;
             left: 8px * $i;
             width: 76px * $i;
-        }
-
-        .friend-slot {
-            width: 102px * $i;
-            height: 15px * $i;
-            margin-top: 2px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
-
-            &:hover {
-                background-position-y: -320px * $i;
-            }
-
-            &:active {
-                background-position-y: -336px * $i;
-            }
-        }
-
-        .friend-slot > p {
-            padding-top: 4px * $i;
         }
 
         .add {
@@ -198,6 +165,14 @@
             right: 80px;
             bottom: 99px;
             transform: scale(1.5);
+        }
+
+        #popup-friend-input {
+            font-size: 8px;
+        }
+
+        #friends-container > ul > li > p {
+            font-size: 12px;
         }
     }
 }

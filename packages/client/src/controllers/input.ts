@@ -8,6 +8,7 @@ import Chat from './chat';
 import HUDController from './hud';
 
 import type Character from '../entity/character/character';
+import type Friends from '../menu/friends';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
@@ -33,6 +34,7 @@ export default class InputController {
     private map: Map;
     private camera: Camera;
     public player: Player;
+    private friends: Friends;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -66,6 +68,7 @@ export default class InputController {
         this.map = game.map;
         this.camera = game.camera;
         this.player = game.player;
+        this.friends = game.menu.getFriends();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -83,6 +86,8 @@ export default class InputController {
             this.setCoords(event);
             this.moveCursor();
         });
+
+        this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
 
         this.targetAnimation.setSpeed(50);
     }
@@ -156,7 +161,7 @@ export default class InputController {
 
     private handleKeyDown(event: KeyboardEvent): void {
         // Popups are UI elements that are displayed on top of the game.
-        if (this.player.popup) return;
+        if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 
         // Redirect input to the chat handler if the chat input is visible.
         if (this.chatHandler.inputVisible()) return this.chatHandler.keyDown(event.key);
