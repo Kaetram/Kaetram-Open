@@ -3,13 +3,16 @@ import _ from 'lodash';
 import type { Friend } from '@kaetram/common/types/friends';
 import type Player from './player';
 
+type SyncCallback = (username: string, status: boolean) => void;
+
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
     private list: Friend = {};
 
     private loadCallback?: () => void;
-    private addCallback?: (username: string) => void;
+    private addCallback?: SyncCallback;
     private removeCallback?: (username: string) => void;
+    private statusCallback?: SyncCallback;
 
     public constructor(private player: Player) {}
 
@@ -22,7 +25,9 @@ export default class Friends {
         // Nothing to load.
         if (friends.length === 0) return;
 
-        _.each(friends, (username: string) => this.add(username));
+        _.each(friends, (username: string) => {
+            this.list[username] = this.player.world.isOnline(username);
+        });
 
         this.loadCallback?.();
     }
@@ -38,6 +43,11 @@ export default class Friends {
         // Check that someone isn't messing with the client input :)
         if (username.length > 32) return this.player.notify('That username is too long.');
 
+        if (username === this.player.username)
+            return this.player.notify(
+                `Listen man I get it, you're lonely, but you can't add yourself to your friends list.`
+            );
+
         // Ensure the player is not already on the list.
         if (this.hasFriend(username))
             return this.player.notify('That player is already on your friends list.');
@@ -46,9 +56,11 @@ export default class Friends {
         this.player.database.exists(username, (exists: boolean) => {
             if (!exists) return this.player.notify('No player with that username exists.');
 
+            // Add the friend and check if they are online.
             this.list[username] = this.player.world.isOnline(username);
 
-            this.addCallback?.(username);
+            // Add the friend to the list and pass on the online status to the client.
+            this.addCallback?.(username, this.list[username]);
         });
     }
 
@@ -94,6 +106,8 @@ export default class Friends {
 
     public setStatus(username: string, status: boolean): void {
         this.list[username] = status;
+
+        this.statusCallback?.(username, status);
     }
 
     /**
@@ -109,7 +123,7 @@ export default class Friends {
      * @param callback A callback with the username of the friend.
      */
 
-    public onAdd(callback: (username: string) => void): void {
+    public onAdd(callback: SyncCallback): void {
         this.addCallback = callback;
     }
 
@@ -120,6 +134,15 @@ export default class Friends {
 
     public onRemove(callback: (username: string) => void): void {
         this.removeCallback = callback;
+    }
+
+    /**
+     * An update is passed to the client when a friend has logged in or out.
+     * @param callback Contains the username of the friend and their online status.
+     */
+
+    public onStatus(callback: SyncCallback): void {
+        this.statusCallback = callback;
     }
 
     /**
