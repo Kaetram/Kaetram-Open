@@ -28,9 +28,9 @@
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
         "internal-ip": "^7.0.0",
-        "postcss": "^8.4.14",
-        "postcss-custom-media": "^8.0.2",
-        "postcss-preset-env": "^7.7.2",
+        "postcss": "^8.4.20",
+        "postcss-custom-media": "^9.0.1",
+        "postcss-preset-env": "^7.8.3",
         "sass": "^1.57.1",
         "sirv-cli": "^2.0.2",
         "stylelint": "^14.16.1",
@@ -38,9 +38,9 @@
         "stylelint-config-prettier": "^9.0.4",
         "stylelint-config-standard-scss": "^6.1.0",
         "typescript": "^4.7.4",
-        "vite": "^4.0.3",
+        "vite": "^4.0.4",
         "vite-plugin-minify": "^1.5.2",
-        "vite-plugin-pwa": "^0.14.0",
+        "vite-plugin-pwa": "^0.14.1",
         "workbox-window": "^6.5.4"
     }
 }
