@@ -1,18 +1,18 @@
 import WorldContext from '../world.context';
 
 export default class LoginContext extends WorldContext {
-    constructor() {
+    public constructor() {
         super();
         this.registerLookup('login button', '#login');
         this.registerLookup('username', '#login-name-input');
         this.registerLookup('password', '#login-password-input');
     }
 
-    injectDefaultData(): void {
+    public injectDefaultData(): void {
         super.injectDefaultPlayers();
     }
 
-    before() {
+    public before() {
         // Nothing needs to happen here
     }
 }

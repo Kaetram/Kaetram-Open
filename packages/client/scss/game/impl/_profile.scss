@@ -5,18 +5,23 @@
     user-select: none;
 }
 
+#quest-list {
+    position: absolute;
+    top: 50%;
+    left: 8%;
+    overflow: auto;
+}
+
 #skills-list {
     position: absolute;
     top: 6%;
     left: 8%;
-
     overflow: auto;
 }
 
 .profession-item {
     width: 100%;
     height: 10%;
-
     font-family: AdvoCut, sans-serif;
 }
 
@@ -73,50 +78,48 @@
 
 @each $size, $i in media.$sizes {
     @media ($size) {
-        #state-page, .state-page {
+        #state-page,
+        .state-page {
             display: block;
-
             background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
         }
 
         #abilities-page {
             display: none;
-
             background: url('/img/#{$i}/characterdialogsheet.png') -124px * $i 0;
         }
 
         #settings-page {
             display: none;
-
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i 0;
+        }
+
+        #quest-page {
+            display: none;
+            background: url('/img/#{$i}/characterdialogsheet.png') -372px * $i 0;
         }
 
         #guild-page {
             display: none;
-
             background: url('/img/#{$i}/characterdialogsheet.png') -496px * $i 0;
         }
 
         #skills-page {
             display: none;
-
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
         }
 
         #profile-dialog,
         .page {
             position: absolute;
-
             width: 124px * $i;
             height: 217px * $i;
         }
 
         .profile-slot {
             position: absolute;
-
             width: 16px * $i;
             height: 15px * $i;
-
             background-position: 0 0;
         }
 
@@ -139,7 +142,7 @@
             position: absolute;
             top: 55%;
             right: 51px * $i;
-        
+
             width: 21px * $i;
             height: 17px * $i;
 
@@ -150,7 +153,8 @@
             background: url('/img/#{$i}/characterdialogsheet.png') -42px * $i -257px * $i;
         }
 
-        #equipment-button:active, #equipment-button.active {
+        #equipment-button:active,
+        #equipment-button.active {
             background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
         }
 
@@ -160,7 +164,6 @@
         .ring-slot,
         .boots-slot {
             margin-top: -2px * $i;
-
             background-size: 600%;
         }
 
@@ -220,28 +223,22 @@
 
         .previous {
             cursor: pointer;
-
             left: 0;
-
             background-position: 0 -240px * $i;
 
             &.disabled {
                 cursor: url('/img/3/hand.png'), auto;
-
                 background-position: 0 -223px * $i;
             }
         }
 
         .next {
             cursor: pointer;
-
             left: 21px * $i;
-
             background-position: -21px * $i -223px * $i;
 
             &.disabled {
                 cursor: url('/img/3/hand.png'), auto;
-
                 background-position: -21px * $i -240px * $i;
             }
         }
@@ -251,11 +248,17 @@
             height: 179px * $i;
         }
 
-        .ability, .ability-icon {
+        #achievement-count,
+        #quest-count {
+            width: 30px * $i;
+            height: 8px * $i;
+            font-size: 8px * $i;
+        }
+
+        .ability,
+        .ability-icon {
             position: absolute;
-
             display: none;
-
             width: 16px * $i;
             height: 16px * $i;
         }
@@ -444,7 +447,6 @@
 
     .profession-name {
         font-size: 20px;
-
         border-radius: 8px;
     }
 }
@@ -459,10 +461,9 @@
     .profile-item-info {
         font-size: 8px;
     }
-    
+
     .profession-name {
         font-size: 10px;
-
         border: 1px solid #373737;
         border-radius: 4px;
     }

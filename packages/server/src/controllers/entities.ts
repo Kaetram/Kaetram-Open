@@ -1,23 +1,20 @@
+import log from '@kaetram/common/util/log';
+import Collections from '@kaetram/server/src/game/entity/collection/collections';
 import _ from 'lodash-es';
 
-import log from '@kaetram/common/util/log';
-
-import type World from '../game/world';
-import Map from '../game/map/map';
-import Collections from '@kaetram/server/src/game/entity/collection/collections';
-
-import Hit from '../game/entity/character/combat/hit';
 import Character from '../game/entity/character/character';
-import Mob from '../game/entity/character/mob/mob';
-import Chest from '../game/entity/objects/chest';
-import Item from '../game/entity/objects/item';
-import Projectile from '../game/entity/objects/projectile';
 
+import type { Enchantments } from '@kaetram/common/types/item';
+import type { ProcessedArea } from '@kaetram/common/types/map';
+import type Hit from '../game/entity/character/combat/hit';
+import type Mob from '../game/entity/character/mob/mob';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
-
-import { ProcessedArea } from '@kaetram/common/types/map';
-import { Enchantments } from '@kaetram/common/types/item';
+import type Chest from '../game/entity/objects/chest';
+import type Item from '../game/entity/objects/item';
+import type Projectile from '../game/entity/objects/projectile';
+import type Map from '../game/map/map';
+import type World from '../game/world';
 
 export default class Entities {
     private map: Map;
@@ -82,24 +79,24 @@ export default class Entities {
         count = 1,
         enchantments: Enchantments = {}
     ): Item {
-        return <Item>this.collections.items.spawn({
+        return this.collections.items.spawn({
             key,
             x,
             y,
             dropped,
             count,
             enchantments
-        });
+        })!;
     }
 
     public spawnMob(key: string, x: number, y: number, plugin = false): Mob {
-        return <Mob>this.collections.mobs.spawn({
+        return this.collections.mobs.spawn({
             world: this.world,
             key,
             x,
             y,
             plugin
-        });
+        })!;
     }
 
     /**
@@ -120,7 +117,7 @@ export default class Entities {
         achievement?: string,
         mimic = false
     ): Chest {
-        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement, mimic });
+        return this.collections.chests.spawn({ items, x, y, isStatic, achievement, mimic })!;
     }
 
     /**
@@ -132,7 +129,7 @@ export default class Entities {
      */
 
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        let projectile = <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
+        let projectile = this.collections.projectiles.spawn({ owner, target, hit })!;
 
         // Remove on impact
         projectile.onImpact(() => this.removeProjectile(projectile));
@@ -276,7 +273,7 @@ export default class Entities {
 
     public forEachCharacter(callback: (character: Character) => void): void {
         this.forEachEntity((entity: Entity) => {
-            if (entity instanceof Character) callback(entity as Character);
+            if (entity instanceof Character) callback(entity);
         });
     }
 

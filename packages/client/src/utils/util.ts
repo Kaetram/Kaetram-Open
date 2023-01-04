@@ -1,5 +1,6 @@
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Bonuses, Stats } from '@kaetram/common/types/item';
+
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export let isInt = (n: number): boolean => n % 1 === 0;
 
@@ -120,17 +121,21 @@ export default {
         switch (menuAction) {
             case Modules.MenuActions.Use:
             case Modules.MenuActions.Equip:
-            case Modules.MenuActions.Eat:
+            case Modules.MenuActions.Eat: {
                 return Opcodes.Container.Select;
+            }
 
-            case Modules.MenuActions.Drop:
+            case Modules.MenuActions.Drop: {
                 return Opcodes.Container.Remove;
+            }
 
-            case Modules.MenuActions.Move:
+            case Modules.MenuActions.Move: {
                 return Opcodes.Container.Swap;
+            }
 
-            default:
+            default: {
                 return -1;
+            }
         }
     },
 

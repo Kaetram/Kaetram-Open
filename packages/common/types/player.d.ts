@@ -1,5 +1,5 @@
-import { EntityData } from '@kaetram/common/types/entity';
-import { EquipmentData } from '@kaetram/common/types/equipment';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { EquipmentData } from '@kaetram/common/types/equipment';
 
 export interface PlayerData extends EntityData {
     rights: number;

@@ -82,7 +82,6 @@ export default class Grids {
     ): void {
         for (let i = x - radius; i <= x + radius; i++)
             for (let j = y - radius; j <= y + radius; j++)
-                if (this.entityGrid[j] && this.entityGrid[j][i])
-                    this.forEachEntityAt(i, j, callback);
+                if (this.entityGrid[j]?.[i]) this.forEachEntityAt(i, j, callback);
     }
 }
