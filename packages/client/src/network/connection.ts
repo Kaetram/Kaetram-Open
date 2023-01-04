@@ -691,7 +691,7 @@ export default class Connection {
                 break;
         }
 
-        this.menu.synchronize('quest');
+        this.menu.getQuests().handle(opcode, info.key!);
     }
 
     /**
