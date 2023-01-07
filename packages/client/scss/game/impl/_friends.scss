@@ -92,16 +92,6 @@
             width: 76px * $i;
         }
 
-        .add {
-            left: 24px * $i;
-            background-position-y: -274px * $i;
-        }
-
-        .remove {
-            right: 24px * $i;
-            background-position-y: -291px * $i;
-        }
-
         .add,
         .remove {
             bottom: 8px * $i;
@@ -118,20 +108,17 @@
             }
         }
 
+        .add {
+            left: 24px * $i;
+            background-position-y: -274px * $i;
+        }
+
+        .remove {
+            right: 24px * $i;
+            background-position-y: -291px * $i;
+        }
+
         // Popup buttons
-
-        .confirm {
-            bottom: 4px * $i;
-            left: 14px * $i;
-            background-position-y: -308px * $i;
-        }
-
-        .cancel {
-            right: 14px * $i;
-            bottom: 4px * $i;
-            background-position-y: -322px * $i;
-        }
-
         .confirm,
         .cancel {
             width: 21px * $i;
@@ -145,6 +132,18 @@
             &:active {
                 background-position-x: -21px * $i;
             }
+        }
+
+        .confirm {
+            bottom: 4px * $i;
+            left: 14px * $i;
+            background-position-y: -308px * $i;
+        }
+
+        .cancel {
+            right: 14px * $i;
+            bottom: 4px * $i;
+            background-position-y: -322px * $i;
         }
     }
 

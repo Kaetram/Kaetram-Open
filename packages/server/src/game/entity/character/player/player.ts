@@ -1281,10 +1281,11 @@ export default class Player extends Character {
      */
 
     public sendMessage(playerName: string, message: string): void {
-        if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
-            return;
-        }
+        // TODO - Inter-world messaging
+        // if (config.hubEnabled) {
+        //     this.world.api.sendPrivateMessage(this, playerName, message);
+        //     return;
+        // }
 
         if (!this.world.isOnline(playerName))
             return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
@@ -1293,8 +1294,8 @@ export default class Player extends Character {
             oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
             formattedName = Utils.formatName(this.username); // Formatted username of current instance.
 
-        otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
+        otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
     }
 
     /**
