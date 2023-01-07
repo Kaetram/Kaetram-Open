@@ -100,7 +100,11 @@ export default class Storage {
      */
 
     public save(): void {
-        if (this.data) storage.setItem(name, JSON.stringify(this.data));
+        try {
+            if (this.data) storage.setItem(name, JSON.stringify(this.data));
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     /**
