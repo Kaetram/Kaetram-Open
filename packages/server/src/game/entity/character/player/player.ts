@@ -114,7 +114,7 @@ export default class Player extends Character {
     public email = '';
     public userAgent = '';
 
-    public rights = 0;
+    public rank: Modules.Ranks = Modules.Ranks.None;
 
     // Warps
     public lastWarp = 0;
@@ -189,7 +189,7 @@ export default class Player extends Character {
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
-        this.rights = data.rights;
+        this.rank = data.rank;
         this.ban = data.ban;
         this.mute = data.mute;
         this.orientation = data.orientation;
@@ -1181,19 +1181,19 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns If the player rights are greater than 0.
+     * @returns Whether or not the player's rank is a moderator.
      */
 
     public isMod(): boolean {
-        return this.rights > 0;
+        return this.rank === Modules.Ranks.Moderator;
     }
 
     /**
-     * @returns If the player rights are greater than 1.
+     * @returns Whether or not the player's rank is an administrator.
      */
 
     public isAdmin(): boolean {
-        return this.rights > 1 || config.skipDatabase;
+        return this.rank === Modules.Ranks.Administrator || config.skipDatabase;
     }
 
     /**
@@ -1464,7 +1464,7 @@ export default class Player extends Character {
         // Sprite key is the armour key.
         data.key = this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
-        data.rights = this.rights;
+        data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
