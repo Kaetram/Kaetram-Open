@@ -18774,6 +18774,58 @@
     "offsetY": -16
   },
   {
+    "id": "effect-bluelightning",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "effect-redlightning",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "effect-poisonball",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "effect-poisonballimpact",
+    "width": 40,
+    "height": 40,
+    "animations": {
+      "effect": {
+        "length": 10,
+        "row": 0
+      }
+    },
+    "offsetX": -15,
+    "offsetY": -14
+  },
+  {
     "id": "effect-burn",
     "width": 16,
     "height": 16,
