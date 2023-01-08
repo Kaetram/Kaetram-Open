@@ -33,20 +33,50 @@ export default class Projectile extends Entity {
     }
 
     public setTarget(target: Character): void {
-        if (!target) return;
-
         this.target = target;
 
         this.updateAngle();
     }
 
+    /**
+     * @returns How fast the projectile animation travels between frames (milliseconds)
+     */
+
     public getAnimationSpeed(): number {
         return this.idleSpeed;
     }
 
+    /**
+     * Used to calculate the projectile's approach towards the target.
+     * @returns Time difference betwene the last update and now.
+     */
+
     public getTimeDiff(): number {
         return (Date.now() - this.lastUpdate) / 1000;
     }
+
+    public getImpactEffect(): Modules.Effects {
+        switch (this.sprite.name) {
+            case 'projectile-boulder': {
+                return Modules.Effects.Boulder;
+            }
+
+            case 'projectile-poisonball': {
+                return Modules.Effects.Poisonball;
+            }
+
+            case 'projectile-iceball': {
+                return Modules.Effects.Iceball;
+            }
+        }
+
+        return Modules.Effects.None;
+    }
+
+    /**
+     * Calculates the angle between the projectile and the target.
+     * @returns Angle in radians so that the projectile faces the target.
+     */
 
     public updateAngle(): void {
         if (!this.target) return;
@@ -58,6 +88,10 @@ export default class Projectile extends Entity {
     public override getAngle(): number {
         return (this.angle * Math.PI) / 180;
     }
+
+    /**
+     * Callback for when the projectile impacts the target.
+     */
 
     public onImpact(callback: () => void): void {
         this.impactCallback = callback;

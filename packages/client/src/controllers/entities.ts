@@ -216,7 +216,9 @@ export default class EntitiesController {
              * The logic is handled in the backend.
              */
 
-            if (info.hitType === Modules.Hits.Explosive) target.setEffect(Modules.Effects.Fireball);
+            let impactEffect = projectile.getImpactEffect();
+
+            if (impactEffect !== Modules.Effects.None) target.setEffect(impactEffect);
 
             this.game.info.create(
                 Modules.Hits.Damage,
