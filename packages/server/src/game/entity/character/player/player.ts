@@ -1205,15 +1205,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the weapon the player is currently wielding is a ranged weapon.
-     * @returns If the weapon slot is a ranged weapon.
-     */
-
-    public override isRanged(): boolean {
-        return this.equipment.getWeapon().ranged;
-    }
-
-    /**
      * Players obtain their poisoning abilities from their weapon. Certain
      * weapons may be imbued with a poison effect. This checks if that status
      * is active.
@@ -1304,10 +1295,8 @@ export default class Player extends Character {
      */
 
     public sync(): void {
-        let armour = this.equipment.getArmour();
-
         // Update attack range each-time we sync.
-        this.attackRange = this.isRanged() ? 7 : 1;
+        this.attackRange = this.equipment.getWeapon().attackRange;
 
         // Synchronize health, mana and experience with the player.
         this.skills.sync();

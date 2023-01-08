@@ -476,6 +476,7 @@ export default class Connection {
 
         // Set the terror effect onto the target.
         if (info.hit.terror) target.setEffect(Modules.Effects.Terror);
+        if (info.hit.poison) target.setEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
         if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
@@ -612,6 +613,11 @@ export default class Connection {
                 break;
             }
 
+            case 'toggleiceball': {
+                this.game.player.setEffect(Modules.Effects.Iceball);
+                break;
+            }
+
             case 'togglefire': {
                 this.game.player.setEffect(Modules.Effects.Burning);
                 break;
@@ -624,6 +630,16 @@ export default class Connection {
 
             case 'togglestun': {
                 this.game.player.setEffect(Modules.Effects.Stun);
+                break;
+            }
+
+            case 'togglepoison': {
+                this.game.player.setEffect(Modules.Effects.Poisonball);
+                break;
+            }
+
+            case 'toggleboulder': {
+                this.game.player.setEffect(Modules.Effects.Boulder);
                 break;
             }
         }

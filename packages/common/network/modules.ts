@@ -166,8 +166,11 @@ export enum Effects {
     Stun,
     Healing,
     Fireball,
+    Iceball,
     Burning,
-    Freezing
+    Freezing,
+    Poisonball,
+    Boulder
 }
 
 export enum Medals {
@@ -334,7 +337,8 @@ export const enum Constants {
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD = 3 // Amount of invalid movements before ignoring packets.
+    INVALID_MOVEMENT_THRESHOLD = 3, // Amount of invalid movements before ignoring packets.
+    ARCHER_ATTACK_RANGE = 7 // Default attack range for bows if no other range is specified.
 }
 
 export enum MinigameConstants {
