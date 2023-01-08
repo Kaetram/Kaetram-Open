@@ -108,7 +108,5 @@ export default class Quests extends Menu {
         this.description.innerHTML = description;
 
         if (quest.rewards) this.rewards.innerHTML = quest.rewards.join('<br>');
-
-        console.log(quest);
     }
 }

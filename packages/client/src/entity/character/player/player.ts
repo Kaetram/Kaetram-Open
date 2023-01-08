@@ -437,8 +437,6 @@ export default class Player extends Character {
         if (!this.hasTarget()) return false;
         if (this.getDistance(this.target!) > this.attackRange - 1) return false;
 
-        console.log(this.attackRange);
-
         return true;
     }
 

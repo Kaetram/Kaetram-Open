@@ -90,7 +90,6 @@ export default class PlayerHandler {
         });
 
         player.onStopPathing((x, y) => {
-            console.log('stopping?');
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;
