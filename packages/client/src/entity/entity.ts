@@ -368,4 +368,22 @@ export default abstract class Entity {
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
     }
+
+    /**
+     * Default implementation for `isModerator()`
+     * @returns False by default.
+     */
+
+    public isModerator(): boolean {
+        return false;
+    }
+
+    /**
+     * Default implementation for `isAdmin()`
+     * @returns False by default.
+     */
+
+    public isAdmin(): boolean {
+        return false;
+    }
 }

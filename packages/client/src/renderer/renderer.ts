@@ -1,5 +1,6 @@
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
@@ -919,8 +920,8 @@ export default class Renderer {
 
         let colour = entity.wanted ? 'red' : 'white';
 
-        if (entity.rights > 1) colour = 'rgba(186,20,20, 1)';
-        else if (entity.rights > 0) colour = 'rgba(165, 154, 154, 1)';
+        if (entity.isAdmin()) colour = 'rgba(186,20,20, 1)';
+        if (entity.isModerator()) colour = 'rgba(165, 154, 154, 1)';
 
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 

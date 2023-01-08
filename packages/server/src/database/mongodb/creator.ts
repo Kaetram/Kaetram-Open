@@ -18,7 +18,7 @@ export interface PlayerInfo {
     x: number;
     y: number;
     userAgent: string;
-    rights: number;
+    rank: Modules.Ranks;
     poison: PoisonInfo;
     hitPoints: number;
     mana: number;
@@ -249,7 +249,7 @@ export default class Creator {
             x: player.x,
             y: player.y,
             userAgent: player.userAgent,
-            rights: player.rights,
+            rank: player.rank,
             poison: {
                 type: player.poison ? player.poison.type : -1,
                 remaining: player.poison ? player.poison.getRemainingTime() : -1
