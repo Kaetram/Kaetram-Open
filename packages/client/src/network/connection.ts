@@ -563,10 +563,10 @@ export default class Connection {
 
         if (!entity) return;
 
-        let { name, rights, x, y } = entity;
+        let { name, x, y } = entity;
 
-        if (rights === 1) name = `[Moderator] ${name}`;
-        if (rights === 2) name = `[Admin] ${name}`;
+        if (entity.isModerator()) name = `[Moderator] ${name}`;
+        if (entity.isAdmin()) name = `[Admin] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -582,7 +582,7 @@ export default class Connection {
 
     /**
      * Hardcoded administrative commands built into the client. When a player
-     * types a special command, the server checks against the player's rights
+     * types a special command, the server checks against the player's rank
      * before sending this packet. These are merely debugging/graphical tests.
      * @param info Packet contains the command string.
      */

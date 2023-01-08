@@ -1,3 +1,4 @@
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import type MongoDB from './database/mongodb/mongodb';
@@ -98,7 +99,10 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'setadmin' ? 2 : 1;
+                    player.rank =
+                        command === 'setadmin'
+                            ? Modules.Ranks.Administrator
+                            : Modules.Ranks.Moderator;
 
                     player.sync();
 
@@ -119,7 +123,10 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'removeadmin' ? 2 : 1;
+                    player.rank =
+                        command === 'removeadmin'
+                            ? Modules.Ranks.Administrator
+                            : Modules.Ranks.Moderator;
 
                     log.info(
                         `${player.username} is now a ${

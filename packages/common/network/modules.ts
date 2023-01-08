@@ -176,6 +176,14 @@ export enum Medals {
     Gold
 }
 
+export enum Ranks {
+    None,
+    Moderator,
+    Administrator,
+    Veteran,
+    Patron
+}
+
 export interface Colours {
     fill: string;
     stroke: string;
