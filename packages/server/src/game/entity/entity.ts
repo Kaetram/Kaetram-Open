@@ -107,10 +107,7 @@ abstract class Entity {
      */
 
     public getDistance(entity: Entity): number {
-        let x = Math.abs(this.x - entity.x),
-            y = Math.abs(this.y - entity.y);
-
-        return x > y ? x : y;
+        return Math.abs(this.x - entity.x) + Math.abs(this.y - entity.y);
     }
 
     /**

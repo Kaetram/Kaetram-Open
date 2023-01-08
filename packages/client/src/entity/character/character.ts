@@ -406,12 +406,9 @@ export default class Character extends Entity {
     }
 
     /**
-     * We can have the movement remain client sided because
-     * the server side will be responsible for determining
-     * whether or not the player should have reached the
-     * location and ban all hackers. That and the fact
-     * the movement speed is constantly updated to avoid
-     * hacks previously present in BQ.
+     * This code will remain present throughout the alpha. Once we begin moving
+     * the pathfinder to the server-side, a tick-based system will be implemented
+     * to calculate steps and movement there rather than the client.
      */
 
     public nextStep(): void {
