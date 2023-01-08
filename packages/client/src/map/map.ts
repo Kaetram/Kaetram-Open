@@ -211,29 +211,31 @@ export default class Map {
     }
 
     /**
-     * Loads the data from the storage into our map.
-     * If the region data exists, then we mark the client's map
-     * as having been preloaded. This will get relayed to the server.
+     * Uses IndexedDB to retrieve the stored map data from the previous session(s).
+     * We either receive completed data or empty region information. Once we have
+     * parsed the data, we can then proceed with loading the rest of the game.
      */
 
     public loadRegionData(): void {
-        let data = this.game.storage.getRegionData(),
-            keys = Object.keys(data.regionData);
+        this.game.storage.getRegionData((data) => {
+            // Used for debugging purposes.
+            let keys = Object.keys(data.regionData);
 
-        if (keys.length > 0) {
-            try {
-                this.loadRegions(data.regionData);
-            } catch {
-                this.game.storage.clear();
+            if (keys.length > 0) {
+                try {
+                    this.loadRegions(data.regionData);
+                } catch {
+                    this.game.storage.clear();
+                }
+
+                this.objects = data.objects;
+                this.cursorTiles = data.cursorTiles;
+
+                this.regionsLoaded = keys.length;
+
+                log.info(`Preloaded map data with ${keys.length} regions.`);
             }
-
-            this.objects = data.objects;
-            this.cursorTiles = data.cursorTiles;
-
-            this.regionsLoaded = keys.length;
-
-            log.info(`Preloaded map data with ${keys.length} regions.`);
-        }
+        });
     }
 
     /**
