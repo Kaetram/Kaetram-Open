@@ -356,7 +356,7 @@ export default class Incoming {
     private handleCommand(message: [Opcodes.Command, Position]): void {
         let [opcode, position] = message;
 
-        if (this.player.rights < 2) return;
+        if (this.player.rank !== Modules.Ranks.Administrator) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
