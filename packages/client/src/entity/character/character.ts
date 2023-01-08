@@ -74,6 +74,10 @@ export default class Character extends Entity {
             key: 'effect-fireball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
+        [Modules.Effects.Iceball]: {
+            key: 'effect-iceball',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
         [Modules.Effects.Burning]: {
             key: 'effect-burn',
             animation: new Animation('effect', 4, 0, 64, 64),
@@ -85,6 +89,15 @@ export default class Character extends Entity {
             animation: new Animation('effect', 4, 0, 64, 64),
             perpetual: true,
             speed: 150
+        },
+        [Modules.Effects.Poisonball]: {
+            key: 'effect-poisonball',
+            animation: new Animation('effect', 10, 0, 40, 40),
+            speed: 175
+        },
+        [Modules.Effects.Boulder]: {
+            key: 'effect-boulder',
+            animation: new Animation('effect', 7, 0, 32, 32)
         }
     };
 

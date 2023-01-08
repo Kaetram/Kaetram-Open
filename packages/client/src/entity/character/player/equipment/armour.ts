@@ -24,11 +24,10 @@ export default class Armour extends Equipment {
         name = 'Cloth Armor',
         count = 0,
         enchantments: Enchantments = {},
-        ranged = false,
         attackStats?: Stats,
         defenseStats?: Stats,
         bonuses?: Bonuses
     ): void {
-        super.update(key, name, count, enchantments, ranged, attackStats, defenseStats, bonuses);
+        super.update(key, name, count, enchantments, attackStats, defenseStats, bonuses);
     }
 }
