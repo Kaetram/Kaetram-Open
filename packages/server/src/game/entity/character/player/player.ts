@@ -634,7 +634,8 @@ export default class Player extends Character {
         experience = Math.ceil(experience - experience / 3);
 
         // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (weapon.ranged) return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+        if (this.isRanged())
+            return this.skills.get(Modules.Skills.Archery).addExperience(experience);
 
         /**
          * If the weapon is both a strength and accuracy weapon, then we evenly distribute
