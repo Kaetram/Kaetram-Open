@@ -221,8 +221,6 @@ export default class InputController {
             case 't': {
                 target = this.game.entities.get(this.player.lastTarget);
 
-                console.log(target);
-
                 if (target) this.player.follow(target);
 
                 return;

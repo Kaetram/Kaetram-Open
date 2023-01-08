@@ -796,8 +796,6 @@ export default class App {
             // Display an error message.
             return this.setValidation('validation-error', 'No servers are currently available.');
 
-        console.log(firstServer);
-
         // Select the first server
         this.selectServer(firstServer);
 
