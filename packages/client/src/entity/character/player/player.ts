@@ -86,6 +86,7 @@ export default class Player extends Character {
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
         this.rank = data.rank!;
+        this.attackRange = data.attackRange!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
@@ -179,17 +180,27 @@ export default class Player extends Character {
      */
 
     public equip(equipment: EquipmentData): void {
-        let { type, name, key, count, enchantments, ranged, attackStats, defenseStats, bonuses } =
-            equipment;
+        let {
+            type,
+            name,
+            key,
+            count,
+            enchantments,
+            attackRange,
+            attackStats,
+            defenseStats,
+            bonuses
+        } = equipment;
 
         if (!key) return this.unequip(type);
+
+        if (type === Modules.Equipment.Weapon) this.attackRange = attackRange || 1;
 
         this.equipments[type].update(
             key,
             name,
             count,
             enchantments,
-            ranged,
             attackStats,
             defenseStats,
             bonuses
@@ -418,11 +429,25 @@ export default class Player extends Character {
     }
 
     /**
+     * Whether or not the player can attack its target given its position.
+     * @returns True if the player is within the attack range of its target.
+     */
+
+    public canAttackTarget(): boolean {
+        if (!this.hasTarget()) return false;
+        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+
+        console.log(this.attackRange);
+
+        return true;
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
     public isRanged(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].ranged;
+        return this.attackRange > 1;
     }
 
     /**

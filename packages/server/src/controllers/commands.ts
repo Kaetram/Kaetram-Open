@@ -75,8 +75,11 @@ export default class Commands {
             case 'pm':
             case 'msg': {
                 let asterikBlocks = blocks.join(' ').split('*'),
-                    [, username] = asterikBlocks,
-                    message = blocks.slice(username.split(' ').length).join(' ');
+                    [, username] = asterikBlocks;
+
+                if (!username) return;
+
+                let message = blocks.slice(username.split(' ').length).join(' ');
 
                 this.player.sendMessage(username, message);
 

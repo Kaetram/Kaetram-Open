@@ -11,8 +11,7 @@ export default abstract class Equipment {
         public key = '',
         public name = '',
         public count = 0,
-        public enchantments: Enchantments = {},
-        public ranged = false
+        public enchantments: Enchantments = {}
     ) {}
 
     /**
@@ -33,7 +32,6 @@ export default abstract class Equipment {
         name = '',
         count = 0,
         enchantments: Enchantments = {},
-        ranged = false,
         attackStats?: Stats,
         defenseStats?: Stats,
         bonuses?: Bonuses
@@ -42,7 +40,6 @@ export default abstract class Equipment {
         this.name = name;
         this.count = count;
         this.enchantments = enchantments;
-        this.ranged = ranged;
 
         // Add the stats and bonuses only if they exist.
         this.attackStats = attackStats || Util.getEmptyStats();

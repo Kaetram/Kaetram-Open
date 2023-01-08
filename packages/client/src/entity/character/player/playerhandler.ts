@@ -90,6 +90,7 @@ export default class PlayerHandler {
         });
 
         player.onStopPathing((x, y) => {
+            console.log('stopping?');
             entities.registerPosition(player);
 
             input.selectedCellVisible = false;
@@ -150,11 +151,7 @@ export default class PlayerHandler {
             lastStepX = player.gridX;
             lastStepY = player.gridY;
 
-            // Input update for moving attackable entities (mobs and players).
-            if (!this.isAttackable() || !player.target) return;
-
-            // Stop movement if ranged and start shooting.
-            if (player.isRanged() && player.getDistance(player.target) < 7) player.stop(true);
+            if (player.canAttackTarget()) player.stop(true);
         });
 
         // Refresh animated tiles every second step.
