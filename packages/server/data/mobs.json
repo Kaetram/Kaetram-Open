@@ -798,7 +798,7 @@
     "experience": 468,
     "level": 46,
     "aggroRange": 5,
-    "attackRange": 5,
+    "attackRange": 7,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
