@@ -69,5 +69,16 @@
             "- Various user interface improvements",
             "- Backend fixes"
         ]
+    },
+    "alpha-2.3.1": {
+        "title": "Kaetram alpha-2.3.1",
+        "content": [
+            "- Added special effects to some projectiles",
+            "- Fixes some user interface quirks",
+            "- Fixes some private messaging issues",
+            "- Minor improvements to ranged combat",
+            "- Fixes a bug with the overlay sizing",
+            "- New caching system for the client map"
+        ]
     }
 }
