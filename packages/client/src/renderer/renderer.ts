@@ -1,6 +1,5 @@
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
 
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
@@ -158,7 +157,7 @@ export default class Renderer {
         this.drawingContexts = [this.backContext, this.foreContext];
 
         // Dark mask is used for the lighting system.
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         this.loadSizes();
         this.loadStaticSprites();
@@ -182,6 +181,9 @@ export default class Renderer {
         // Canvas width is the screen width multiplied by the zoom factor.
         this.canvasWidth = this.screenWidth * this.camera.zoomFactor;
         this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
+
+        // Update the dark mask sizes
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
@@ -1019,10 +1021,10 @@ export default class Renderer {
                     (lighting.light.origY - this.camera.y / this.tileSize) * this.actualTileSize;
 
             lighting.light.position = new Vec2(lightX, lightY);
-            lighting.compute(this.overlay.width, this.overlay.height);
-            this.darkMask.compute(this.overlay.width, this.overlay.height);
+            lighting.compute(this.canvasWidth, this.canvasHeight);
+            this.darkMask.compute(this.canvasWidth, this.canvasHeight);
         } else if (!lighting.computed) {
-            lighting.compute(this.overlay.width, this.overlay.height);
+            lighting.compute(this.canvasWidth, this.canvasHeight);
             lighting.computed = true;
         }
 
@@ -1289,7 +1291,7 @@ export default class Renderer {
 
     public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
         this.darkMask.color = color;
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     /**
@@ -1319,14 +1321,14 @@ export default class Renderer {
         this.darkMask.lights.push(light);
 
         this.drawLighting(lighting);
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     public removeAllLights(): void {
         this.lightings = [];
         this.darkMask.lights = [];
 
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     public removeNonRelativeLights(): void {
@@ -1337,7 +1339,7 @@ export default class Renderer {
             }
         });
 
-        this.darkMask.compute(this.overlay.width, this.overlay.height);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     private hasLighting(lighting: RendererLighting): boolean {
@@ -1514,8 +1516,8 @@ export default class Renderer {
 
     public getMiddle(): Position {
         return {
-            x: this.overlay.width / 2,
-            y: this.overlay.height / 2
+            x: this.canvasWidth / 2,
+            y: this.canvasHeight / 2
         };
     }
 
