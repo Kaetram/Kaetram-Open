@@ -772,7 +772,7 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && !target) {
+        if (this.map.isDoor(x, y) && (!target || entity.isPlayer())) {
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
