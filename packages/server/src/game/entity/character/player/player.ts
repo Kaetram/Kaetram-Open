@@ -560,6 +560,36 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the removing of an item from a container. This can be an inventory or a bank.
+     * In the case of the inventory, we check that the player isn't dropping an item in front
+     * of a door.
+     * @param type The type of container we are working with.
+     * @param index The index at which we are removing the item.
+     */
+
+    public handleContainerRemove(type: Modules.ContainerType, index: number): void {
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
+            return this.notify('You cannot drop items while standing in a door.');
+
+        container.remove(index, undefined, true);
+    }
+
+    /**
+     * Handles the swap action of a container. This is when we want to move items around.
+     * @param type The type of container we are working with.
+     * @param index The index at which we are swapping the item.
+     * @param tIndex The index at which we are swapping the item with.
+     */
+
+    public handleContainerSwap(type: Modules.ContainerType, index: number, tIndex: number): void {
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        container.swap(index, tIndex);
+    }
+
+    /**
      * Handles the interaction with a global object. This can be a tree,
      * a sign, etc.
      * @param instance The string identifier of the object. Generally
