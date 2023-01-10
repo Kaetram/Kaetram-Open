@@ -1245,14 +1245,14 @@
     },
     "defenseStats": {
       "crush": 7,
-      "slash": 12,
+      "slash": 14,
       "stab": 3,
       "magic": 1
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 3,
       "strength": 0,
-      "archery": 6
+      "archery": 7
     }
   },
 
@@ -1268,15 +1268,15 @@
       "magic": 0
     },
     "defenseStats": {
-      "crush": 8,
+      "crush": 11,
       "slash": 10,
-      "stab": 5,
+      "stab": 8,
       "magic": 1
     },
     "bonuses": {
       "accuracy": 3,
       "strength": 0,
-      "archery": 8
+      "archery": 9
     }
   },
 

@@ -40,28 +40,34 @@
         #warp1 {
             top: 55px * $i;
             left: 25px * $i;
-            background: url('/img/#{$i}/mapicons.png') 17px * $i 0;
+            background: url('/img/#{$i}/mapicons.png') -75px * $i 0;
         }
 
         #warp2 {
             top: 70px * $i;
             left: 175px * $i;
-            background: url('/img/#{$i}/mapicons.png') 32px * $i 0;
+            background: url('/img/#{$i}/mapicons.png') -60px * $i 0;
         }
 
         #warp3 {
             top: 120px * $i;
             left: 135px * $i;
-            background: url('/img/#{$i}/mapicons.png') 47px * $i 0;
+            background: url('/img/#{$i}/mapicons.png') -45px * $i 0;
         }
 
         #warp4 {
             top: 120px * $i;
             left: 75px * $i;
-            background: url('/img/#{$i}/mapicons.png') 62px * $i 0;
+            background: url('/img/#{$i}/mapicons.png') -30px * $i 0;
         }
 
         #warp5 {
+            top: 140px * $i;
+            left: 20px * $i;
+            background: url('/img/#{$i}/mapicons.png') -90px * $i 0;
+        }
+
+        #warp6 {
             top: 80px * $i;
             left: 90px * $i;
             background: url('/img/#{$i}/mapicons.png') 77px * $i 0;
@@ -72,7 +78,8 @@
         #warp2,
         #warp3,
         #warp4,
-        #warp5 {
+        #warp5,
+        #warp6 {
             &:hover {
                 background-position-y: -20px * $i;
             }
