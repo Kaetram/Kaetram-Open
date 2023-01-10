@@ -100,10 +100,10 @@ export default {
         let string = count.toString();
 
         // Converts numbers 1 million and above to short-hand format (e.g. 25M)
-        if (count > 999_999) return `${string.slice(0, Math.max(0, string.length - 6))}M`;
+        if (count > 999_999) return `${Math.floor(count / 1_000_000)}M`;
 
         // Convert numbers above 10,000 into kilo format (e.g. 25K)
-        if (count > 9999) return `${string.slice(0, 2)}K`;
+        if (count > 9999) return `${Math.floor(count / 1000)}K`;
 
         // Any number above 1 is displayed as a string.
         if (count > 1) return string;
