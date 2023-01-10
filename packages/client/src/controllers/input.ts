@@ -170,24 +170,28 @@ export default class InputController {
 
         switch (event.key) {
             case 'w':
+            case 'ц':
             case 'ArrowUp': {
                 this.player.moveUp = true;
                 return;
             }
 
             case 'a':
+            case 'ф':
             case 'ArrowLeft': {
                 this.player.moveLeft = true;
                 return;
             }
 
             case 's':
+            case 'ы':
             case 'ArrowDown': {
                 this.player.moveDown = true;
                 return;
             }
 
             case 'd':
+            case 'в':
             case 'ArrowRight': {
                 this.player.moveRight = true;
                 return;
