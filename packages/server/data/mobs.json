@@ -140,7 +140,7 @@
     "name": "Snek",
     "drops": {"gold": 25, "morningstar": 5, "platearmor": 5},
     "hitPoints": 85,
-    "defenseLevel": 4,
+    "defenseLevel": 5,
     "attackLevel": 7,
     "experience": 56,
     "level": 16,
