@@ -128,8 +128,11 @@ export enum PoisonTypes {
 
 export enum Warps {
     Mudwich,
-    Undersea,
-    Lakesworld
+    Aynor,
+    Lakesworld,
+    Patsow,
+    Crullfield,
+    Undersea
 }
 
 export enum Skills {

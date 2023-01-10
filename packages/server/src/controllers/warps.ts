@@ -58,8 +58,8 @@ export default class Warp {
      */
 
     private teleport(player: Player, warp: ProcessedArea): void {
-        let x = Utils.randomInt(warp.x, warp.x + warp.width),
-            y = Utils.randomInt(warp.y, warp.y + warp.height);
+        let x = Utils.randomInt(warp.x, warp.x + warp.width - 1),
+            y = Utils.randomInt(warp.y, warp.y + warp.height - 1);
 
         player.teleport(x, y, true);
         player.notify(`You have been warped to ${Utils.formatName(warp.name)}!`);
@@ -83,7 +83,7 @@ export default class Warp {
      */
 
     private isCooldown(player: Player): boolean {
-        return this.getDifference(player) > this.warpTimeout;
+        return this.getDifference(player) > this.warpTimeout || player.isAdmin();
     }
 
     /**
