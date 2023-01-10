@@ -557,6 +557,18 @@ export default class Character extends Entity {
     }
 
     /**
+     * Whether or not the player can attack its target given its position.
+     * @returns True if the player is within the attack range of its target.
+     */
+
+    public canAttackTarget(): boolean {
+        if (!this.hasTarget()) return false;
+        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+
+        return true;
+    }
+
+    /**
      * @returns The animation object of the currently active effect (or undefined).
      */
 
