@@ -74,6 +74,10 @@ export default class Character extends Entity {
             key: 'effect-fireball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
+        [Modules.Effects.Iceball]: {
+            key: 'effect-iceball',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
         [Modules.Effects.Burning]: {
             key: 'effect-burn',
             animation: new Animation('effect', 4, 0, 64, 64),
@@ -85,6 +89,15 @@ export default class Character extends Entity {
             animation: new Animation('effect', 4, 0, 64, 64),
             perpetual: true,
             speed: 150
+        },
+        [Modules.Effects.Poisonball]: {
+            key: 'effect-poisonball',
+            animation: new Animation('effect', 10, 0, 40, 40),
+            speed: 175
+        },
+        [Modules.Effects.Boulder]: {
+            key: 'effect-boulder',
+            animation: new Animation('effect', 7, 0, 32, 32)
         }
     };
 
@@ -393,12 +406,9 @@ export default class Character extends Entity {
     }
 
     /**
-     * We can have the movement remain client sided because
-     * the server side will be responsible for determining
-     * whether or not the player should have reached the
-     * location and ban all hackers. That and the fact
-     * the movement speed is constantly updated to avoid
-     * hacks previously present in BQ.
+     * This code will remain present throughout the alpha. Once we begin moving
+     * the pathfinder to the server-side, a tick-based system will be implemented
+     * to calculate steps and movement there rather than the client.
      */
 
     public nextStep(): void {
@@ -544,6 +554,18 @@ export default class Character extends Entity {
 
     public setEffect(effect: Modules.Effects): void {
         this.effect = effect;
+    }
+
+    /**
+     * Whether or not the player can attack its target given its position.
+     * @returns True if the player is within the attack range of its target.
+     */
+
+    public canAttackTarget(): boolean {
+        if (!this.hasTarget()) return false;
+        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+
+        return true;
     }
 
     /**

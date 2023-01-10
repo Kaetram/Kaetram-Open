@@ -7317,7 +7317,7 @@
         "row": 8
       }
     },
-    "offsetX": -8,
+    "offsetX": -5,
     "offsetY": -12
   },
   {
@@ -18595,6 +18595,46 @@
     "offsetY": -24,
     "offsetAngle": 180
   },
+  
+  {
+    "id": "projectile-bluelightning",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "projectile-redlightning",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "projectile-poisonball",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "effect": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
   {
     "id": "projectile-boulder",
     "idleSpeed": 75,
@@ -18774,6 +18814,19 @@
     "offsetY": -16
   },
   {
+    "id": "effect-poisonball",
+    "width": 40,
+    "height": 40,
+    "animations": {
+      "effect": {
+        "length": 10,
+        "row": 0
+      }
+    },
+    "offsetX": -13,
+    "offsetY": -14
+  },
+  {
     "id": "effect-burn",
     "width": 16,
     "height": 16,
@@ -18835,8 +18888,8 @@
         "row": 0
       }
     },
-    "offsetX": -24,
-    "offsetY": -24
+    "offsetX": -18,
+    "offsetY": -15
   },
   {
     "id": "effect-boulder",
@@ -18848,8 +18901,8 @@
         "row": 0
       }
     },
-    "offsetX": -16,
-    "offsetY": -16
+    "offsetX": -9,
+    "offsetY": -12
   },
   {
     "id": "spell",
