@@ -50,13 +50,13 @@ export default {
          */
 
         // Append the accuracy bonus property and ensure the value is not 0.
-        accuracy += (1 / (accuracyBonus === 0 ? 1 : accuracyBonus)) * 0.8;
+        accuracy += (1 / (accuracyBonus || 1)) * 0.8;
 
         // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
         accuracy += (1 / accuracyLevel) * 1.25;
 
         // We use the scalar difference of the stats to append onto the accuracy.
-        accuracy += Math.abs((1 / stats) * 1.25);
+        accuracy += stats < 0 ? Math.abs(stats * 0.15 + 0.3) : (1 / stats) * 0.5;
 
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
@@ -108,7 +108,7 @@ export default {
          * whenever that feature is implemented.
          */
 
-        return diff.crush + diff.slash + diff.stab;
+        return diff.crush + diff.slash + diff.stab || 1;
     },
 
     getCritical(_attacker: Player, _target: Character): number {
