@@ -15,6 +15,8 @@ type LeftClickCallback = (e: MouseEvent) => void;
 type RightClickCallback = (e: PointerEvent) => void;
 type MouseMoveCallback = (e: MouseEvent) => void;
 
+type ValidationType = 'status' | 'validation-error' | 'validation-warning';
+
 export default class App {
     public config = window.config;
 
@@ -195,6 +197,12 @@ export default class App {
 
         this.loadLogin();
         this.loadWorlds();
+
+        if (!('indexedDB' in window))
+            this.setValidation(
+                'validation-warning',
+                'Your browser does not support IndexedDB. Regions will not be cached.'
+            );
     }
 
     /**
@@ -649,7 +657,7 @@ export default class App {
      * @param message The message we are setting for the validation.
      */
 
-    private setValidation(type: 'status' | 'validation-error', message = ''): void {
+    private setValidation(type: ValidationType, message = ''): void {
         this.clearValidation();
 
         // Create a validation message based on type and string message.
@@ -664,7 +672,7 @@ export default class App {
      * @param message What to display in the message.
      */
 
-    private createValidation(type: 'status' | 'validation-error', message = ''): HTMLSpanElement {
+    private createValidation(type: ValidationType, message = ''): HTMLSpanElement {
         let spanElement = document.createElement('span');
 
         // Type of element we are creating (status is blue, error is red).

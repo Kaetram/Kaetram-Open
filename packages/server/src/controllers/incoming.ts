@@ -356,7 +356,7 @@ export default class Incoming {
     private handleCommand(message: [Opcodes.Command, Position]): void {
         let [opcode, position] = message;
 
-        if (this.player.rights < 2) return;
+        if (this.player.rank !== Modules.Ranks.Administrator) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
@@ -375,11 +375,6 @@ export default class Incoming {
      */
 
     private handleContainer(packet: ContainerPacket): void {
-        let container =
-            packet.type === Modules.ContainerType.Inventory
-                ? this.player.inventory
-                : this.player.bank;
-
         log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
@@ -392,13 +387,11 @@ export default class Incoming {
             }
 
             case Opcodes.Container.Remove: {
-                container.remove(packet.index!, undefined, true);
-                return;
+                return this.player.handleContainerRemove(packet.type, packet.index!);
             }
 
             case Opcodes.Container.Swap: {
-                container.swap(packet.index!, packet.tIndex!);
-                break;
+                return this.player.handleContainerSwap(packet.type, packet.index!, packet.tIndex!);
             }
         }
     }
