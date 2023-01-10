@@ -429,18 +429,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Whether or not the player can attack its target given its position.
-     * @returns True if the player is within the attack range of its target.
-     */
-
-    public canAttackTarget(): boolean {
-        if (!this.hasTarget()) return false;
-        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
-
-        return true;
-    }
-
-    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
