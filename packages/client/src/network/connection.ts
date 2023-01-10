@@ -476,6 +476,7 @@ export default class Connection {
 
         // Set the terror effect onto the target.
         if (info.hit.terror) target.setEffect(Modules.Effects.Terror);
+        if (info.hit.poison) target.setEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
         if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
@@ -563,10 +564,10 @@ export default class Connection {
 
         if (!entity) return;
 
-        let { name, rights, x, y } = entity;
+        let { name, x, y } = entity;
 
-        if (rights === 1) name = `[Moderator] ${name}`;
-        if (rights === 2) name = `[Admin] ${name}`;
+        if (entity.isModerator()) name = `[Moderator] ${name}`;
+        if (entity.isAdmin()) name = `[Admin] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -582,7 +583,7 @@ export default class Connection {
 
     /**
      * Hardcoded administrative commands built into the client. When a player
-     * types a special command, the server checks against the player's rights
+     * types a special command, the server checks against the player's rank
      * before sending this packet. These are merely debugging/graphical tests.
      * @param info Packet contains the command string.
      */
@@ -612,6 +613,11 @@ export default class Connection {
                 break;
             }
 
+            case 'toggleiceball': {
+                this.game.player.setEffect(Modules.Effects.Iceball);
+                break;
+            }
+
             case 'togglefire': {
                 this.game.player.setEffect(Modules.Effects.Burning);
                 break;
@@ -624,6 +630,16 @@ export default class Connection {
 
             case 'togglestun': {
                 this.game.player.setEffect(Modules.Effects.Stun);
+                break;
+            }
+
+            case 'togglepoison': {
+                this.game.player.setEffect(Modules.Effects.Poisonball);
+                break;
+            }
+
+            case 'toggleboulder': {
+                this.game.player.setEffect(Modules.Effects.Boulder);
                 break;
             }
         }

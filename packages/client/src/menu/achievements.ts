@@ -133,7 +133,7 @@ export default class Achievements extends Menu {
             title.style.color = '#fcda1d';
 
             // Remove the progression element.
-            progress.remove();
+            progress?.remove();
 
             // Styling for the coin element.
             let coin = document.createElement('div');

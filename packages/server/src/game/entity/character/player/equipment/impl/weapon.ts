@@ -19,7 +19,7 @@ export default class Weapon extends Equipment {
     public override update(item: Item): void {
         super.update(item);
 
-        this.ranged = item.isRangedWeapon();
+        this.attackRange = item.attackRange;
         this.attackRate = item.attackRate;
         this.poisonous = item.poisonous;
     }

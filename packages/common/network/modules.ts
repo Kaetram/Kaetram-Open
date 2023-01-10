@@ -128,8 +128,11 @@ export enum PoisonTypes {
 
 export enum Warps {
     Mudwich,
-    Undersea,
-    Lakesworld
+    Aynor,
+    Lakesworld,
+    Patsow,
+    Crullfield,
+    Undersea
 }
 
 export enum Skills {
@@ -166,14 +169,25 @@ export enum Effects {
     Stun,
     Healing,
     Fireball,
+    Iceball,
     Burning,
-    Freezing
+    Freezing,
+    Poisonball,
+    Boulder
 }
 
 export enum Medals {
     None,
     Silver,
     Gold
+}
+
+export enum Ranks {
+    None,
+    Moderator,
+    Administrator,
+    Veteran,
+    Patron
 }
 
 export interface Colours {
@@ -326,7 +340,8 @@ export const enum Constants {
     SKILL_LOOP = 1000, // How often we check the loop of a skill
     MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD = 3 // Amount of invalid movements before ignoring packets.
+    INVALID_MOVEMENT_THRESHOLD = 3, // Amount of invalid movements before ignoring packets.
+    ARCHER_ATTACK_RANGE = 9 // Default attack range for bows if no other range is specified.
 }
 
 export enum MinigameConstants {
@@ -360,8 +375,8 @@ export enum MobDefaults {
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
-    ROAM_FREQUENCY = 10_000, // Roam interval every 10 seconds
-    ROAM_RETRIES = 5, // 5 retries if the new spot is not possible
+    ROAM_FREQUENCY = 25_000, // Roam interval every 10 seconds
+    ROAM_RETRIES = 2, // 5 retries if the new spot is not possible
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }

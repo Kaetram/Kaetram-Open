@@ -26,7 +26,7 @@ type PoisonCallback = (status: boolean) => void;
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
-    public rights = 0;
+    public rank: Modules.Ranks = Modules.Ranks.None;
     public wanted = false;
 
     public pvpKills = -1;
@@ -85,7 +85,8 @@ export default class Player extends Character {
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
-        this.rights = data.rights!;
+        this.rank = data.rank!;
+        this.attackRange = data.attackRange!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
@@ -179,17 +180,27 @@ export default class Player extends Character {
      */
 
     public equip(equipment: EquipmentData): void {
-        let { type, name, key, count, enchantments, ranged, attackStats, defenseStats, bonuses } =
-            equipment;
+        let {
+            type,
+            name,
+            key,
+            count,
+            enchantments,
+            attackRange,
+            attackStats,
+            defenseStats,
+            bonuses
+        } = equipment;
 
         if (!key) return this.unequip(type);
+
+        if (type === Modules.Equipment.Weapon) this.attackRange = attackRange || 1;
 
         this.equipments[type].update(
             key,
             name,
             count,
             enchantments,
-            ranged,
             attackStats,
             defenseStats,
             bonuses
@@ -271,6 +282,22 @@ export default class Player extends Character {
 
     public getWeapon(): Weapon {
         return this.equipments[Modules.Equipment.Weapon];
+    }
+
+    /**
+     * @returns Whether the player has the administrator rank.
+     */
+
+    public override isAdmin(): boolean {
+        return this.rank === Modules.Ranks.Administrator;
+    }
+
+    /**
+     * @returns Whether the player has the moderator rank.
+     */
+
+    public override isModerator(): boolean {
+        return this.rank === Modules.Ranks.Moderator;
     }
 
     /**
@@ -406,7 +433,7 @@ export default class Player extends Character {
      */
 
     public isRanged(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].ranged;
+        return this.attackRange > 1;
     }
 
     /**

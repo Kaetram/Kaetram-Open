@@ -251,11 +251,9 @@ export default abstract class Entity {
      */
 
     public getDistance(entity: Entity): number {
-        let { gridX, gridY } = this,
-            x = Math.abs(gridX - entity.gridX),
-            y = Math.abs(gridY - entity.gridY);
+        let { gridX, gridY } = this;
 
-        return x > y ? x : y;
+        return Math.abs(gridX - entity.gridX) + Math.abs(gridY - entity.gridY);
     }
 
     /**
@@ -367,5 +365,23 @@ export default abstract class Entity {
 
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
+    }
+
+    /**
+     * Default implementation for `isModerator()`
+     * @returns False by default.
+     */
+
+    public isModerator(): boolean {
+        return false;
+    }
+
+    /**
+     * Default implementation for `isAdmin()`
+     * @returns False by default.
+     */
+
+    public isAdmin(): boolean {
+        return false;
     }
 }
