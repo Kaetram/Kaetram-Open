@@ -412,12 +412,17 @@ export default class Regions {
     }
 
     /**
-     * Sends a region update to all the players within the nearby regions.
-     * @param region The region to pivot the update around.
+     * Updates all the surrounding regions of the region parameter with the
+     * latest information about region data.
+     * @param region The region index to pivot the update around.
      */
 
-    public sendUpdate(region: Region): void {
-        region.forEachPlayer((player: Player) => this.sendRegion(player));
+    public sendUpdate(region: number): void {
+        this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
+            let region = this.get(surroundingRegion);
+
+            region.forEachPlayer((player: Player) => this.sendRegion(player));
+        });
     }
 
     /**
