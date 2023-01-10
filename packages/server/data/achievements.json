@@ -82,6 +82,12 @@
         "hidden": true
     },
 
+    "patsow": {
+        "name": "Patsow Pleateau",
+        "description": "Arrive at Patsow plateau!",
+        "hidden": true
+    },
+
     "ogreguardian": {
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
