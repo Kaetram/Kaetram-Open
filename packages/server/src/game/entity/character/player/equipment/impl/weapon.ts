@@ -7,6 +7,7 @@ import type Item from '../../../../objects/item';
 
 export default class Weapon extends Equipment {
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public projectileName = '';
 
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
         super(Modules.Equipment.Weapon, key, count, enchantments);
@@ -22,6 +23,7 @@ export default class Weapon extends Equipment {
         this.attackRange = item.attackRange;
         this.attackRate = item.attackRate;
         this.poisonous = item.poisonous;
+        this.projectileName = item.projectileName;
     }
 
     /**
@@ -40,5 +42,14 @@ export default class Weapon extends Equipment {
 
     public isAccuracy(): boolean {
         return this.bonuses.accuracy > 0;
+    }
+
+    /**
+     * Weapons that have a magic bonus are magic-based weapons.
+     * @returns Whether or not the weapon is a magic-based weapon.
+     */
+
+    public isMagic(): boolean {
+        return this.bonuses.magic > 0;
     }
 }

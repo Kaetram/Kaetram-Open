@@ -202,7 +202,8 @@ export default class Mob extends Character {
         this.bonuses = {
             accuracy: this.attackLevel,
             strength: this.attackLevel,
-            archery: this.attackRange + this.attackLevel
+            archery: this.attackRange + this.attackLevel,
+            magic: this.attackLevel
         };
     }
 

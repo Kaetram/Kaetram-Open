@@ -88,15 +88,6 @@ export enum Hits {
     Profession
 }
 
-export enum Projectiles {
-    Arrow,
-    Boulder,
-    FireBall,
-    IceBall,
-    Terror,
-    Tornado
-}
-
 export enum Equipment {
     Armour,
     Boots,
@@ -341,7 +332,7 @@ export const enum Constants {
     MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
     INVALID_MOVEMENT_THRESHOLD = 3, // Amount of invalid movements before ignoring packets.
-    ARCHER_ATTACK_RANGE = 9 // Default attack range for bows if no other range is specified.
+    ARCHER_ATTACK_RANGE = 8 // Default attack range for bows if no other range is specified.
 }
 
 export enum MinigameConstants {

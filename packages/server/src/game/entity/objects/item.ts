@@ -35,6 +35,8 @@ export default class Item extends Entity {
     private achievement = '';
     private quest = '';
 
+    public projectileName = '';
+
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
@@ -109,6 +111,7 @@ export default class Item extends Entity {
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
+        this.projectileName = this.data.projectileName || this.projectileName;
 
         if (this.data.plugin) this.loadPlugin();
     }
