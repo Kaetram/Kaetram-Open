@@ -19228,7 +19228,7 @@
     "width": 50,
     "height": 50,
     "animations": {
-      "effect": {
+      "travel": {
         "length": 8,
         "row": 0
       }
@@ -19241,7 +19241,46 @@
     "width": 50,
     "height": 50,
     "animations": {
-      "effect": {
+      "travel": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "projectile-greenbolt",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "travel": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "projectile-purplebolt",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "travel": {
+        "length": 8,
+        "row": 0
+      }
+    },
+    "offsetX": -18,
+    "offsetY": -17
+  },
+  {
+    "id": "projectile-yellowlightning",
+    "width": 50,
+    "height": 50,
+    "animations": {
+      "travel": {
         "length": 8,
         "row": 0
       }
@@ -19254,7 +19293,7 @@
     "width": 50,
     "height": 50,
     "animations": {
-      "effect": {
+      "travel": {
         "length": 8,
         "row": 0
       }
