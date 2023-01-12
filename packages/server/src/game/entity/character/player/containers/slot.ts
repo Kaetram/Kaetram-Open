@@ -8,10 +8,10 @@ export default class Slot {
     public edible = false;
     public equippable = false;
 
-    private name = '';
-    private attackStats: Stats = Utils.getEmptyStats();
-    private defenseStats: Stats = Utils.getEmptyStats();
-    private bonuses: Bonuses = Utils.getEmptyBonuses();
+    public name = '';
+    public attackStats: Stats = Utils.getEmptyStats();
+    public defenseStats: Stats = Utils.getEmptyStats();
+    public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
     private maxStackSize = 1;
