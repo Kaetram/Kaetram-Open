@@ -76,12 +76,16 @@ export default abstract class Menu {
 
     /**
      * Called by subclasses when we want to display the interface.
-     * @param _var1 Unknown data that may be passed when opening the menu subclass.
-     * @param _var2 Unknown data that may be passed when opening the menu subclass.
-     * @param _var3 Unknown data that may be passed when opening the menu subclass.
+     * @param _var* Unknown data that may be passed when opening the menu subclass.
      */
 
-    public show(_var1?: unknown, _var2?: unknown, _var3?: unknown): void {
+    public show(
+        _var1?: unknown,
+        _var2?: unknown,
+        _var3?: unknown,
+        _var4?: unknown,
+        _var5?: unknown
+    ): void {
         this.showCallback?.();
 
         this.button?.classList.add('active');
