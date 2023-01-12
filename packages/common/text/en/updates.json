@@ -80,5 +80,16 @@
             "- Fixes a bug with the overlay sizing",
             "- New caching system for the client map"
         ]
+    },
+    "alpha-2.3.2": {
+        "title": "Kaetram alpha-2.3.2",
+        "content": [
+            "- New inventory interface",
+            "- Fixes mobs being unattackable after they moved",
+            "- Mob position sync when returning to game tab (browsers)",
+            "- Fix bug with combat continuing after closing the game",
+            "- Backend optimizations",
+            "- Chat UI fixes on mobile"
+        ]
     }
 }
