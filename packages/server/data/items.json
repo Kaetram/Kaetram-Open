@@ -703,9 +703,81 @@
     }
   },
 
-  "weastaff": {
+  "staff": {
     "type": "weapon",
-    "name": "Wea Staff",
+    "name": "Magic Staff",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 6,
+      "slash": 4,
+      "stab": 4,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0
+    }
+  },
+
+  "lightningstaff": {
+    "type": "weapon",
+    "name": "Lightning Staff",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 6,
+      "slash": 4,
+      "stab": 4,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0
+    }
+  },
+
+  "naturestaff": {
+    "type": "weapon",
+    "name": "Nature Staff",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 6,
+      "slash": 4,
+      "stab": 4,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0
+    }
+  },
+
+  "firestaff": {
+    "type": "weapon",
+    "name": "Fire Staff",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 6,
+      "slash": 4,
+      "stab": 4,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0
+    }
+  },
+
+  "icestaff": {
+    "type": "weapon",
+    "name": "Ice Staff",
     "skill": "magic",
     "level": 40,
     "attackStats": {
@@ -1473,6 +1545,102 @@
   },
 
   "piratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19
+    }
+  },
+  
+  "blackpiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19
+    }
+  },
+
+  "greenpiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19
+    }
+  },
+
+  "purplepiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19
+    }
+  },
+
+  "redpiratearcherarmor": {
     "type": "armourarcher",
     "name": "Pirate Archer Armour",
     "skill": "archery",
@@ -2568,9 +2736,81 @@
     }
   },
 
-  "bluepiratearmor": {
+  "piratearmor": {
     "type": "armour",
-    "name": "Blue Pirate Armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2
+    }
+  },
+
+  "greenpiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2
+    }
+  },
+
+  "purplepiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2
+    }
+  },
+
+  "redpiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
     "price": 3500,
     "level": 55,
     "attackStats": {
