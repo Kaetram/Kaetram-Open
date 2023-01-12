@@ -75,6 +75,7 @@ export default class App {
     public mouseMoveCallback?: MouseMoveCallback;
     public resizeCallback?: EmptyCallback;
     public respawnCallback?: EmptyCallback;
+    public focusCallback?: EmptyCallback;
 
     public constructor() {
         this.sendStatus('Initializing the game client');
@@ -124,6 +125,8 @@ export default class App {
 
         // Window callbacks
         window.addEventListener('resize', () => this.resizeCallback?.());
+
+        window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
         document
@@ -686,6 +689,81 @@ export default class App {
     }
 
     /**
+     * Selects the server to connect to and displays its player count on the button.
+     *
+     * @param server The server to connect to.
+     */
+
+    private selectServer(server: SerializedServer): void {
+        this.selectedServer = server;
+
+        let name = this.worldSelectButton.querySelector('strong')!;
+        name.textContent = `${server.name}`;
+
+        let players = this.worldSelectButton.querySelector('span')!;
+        players.textContent = `(${server.players}/${server.maxPlayers} players)`;
+    }
+
+    /**
+     * Loads the list of worlds from the hub and adds them to the world select.
+     * The first world in the list is automatically selected.
+     */
+
+    private async loadWorlds(): Promise<void> {
+        if (!this.config.hub) return;
+
+        // Fetch a list of servers from the hub
+        let res = await fetch(`${this.config.hub}/all`).catch(() => null);
+
+        if (!res) return this.setValidation('validation-error', 'Unable to load world list.');
+
+        let servers: SerializedServer[] = await res.json(),
+            [firstServer] = servers;
+
+        // Check if there are no servers
+        if (!firstServer)
+            // Display an error message.
+            return this.setValidation('validation-error', 'No servers are currently available.');
+
+        // Select the first server
+        this.selectServer(firstServer);
+
+        // If there is only one server, then hide the world select button
+        if (servers.length < 2) return;
+
+        this.showWorldSelect = true;
+        this.worldSelectButton.hidden = false;
+
+        for (let [i, server] of Object.entries(servers)) {
+            // Create a new <li> element for each server
+            let li = document.createElement('li'),
+                name = document.createElement('strong'),
+                players = document.createElement('span');
+
+            // If this is the first server in the list, select it and mark it as active
+            if (i === '0') li.classList.add('active');
+
+            name.textContent = server.name;
+
+            players.textContent = `${server.players}/${server.maxPlayers} players`;
+
+            li.append(name);
+            li.append(players);
+
+            // When the <li> element is clicked, select the server and update the active class
+            li.addEventListener('click', () => {
+                this.selectServer(server);
+
+                this.worldsList.querySelector('li.active')?.classList.remove('active');
+                li.classList.add('active');
+            });
+
+            // Add the <li> element to the list of worlds
+            this.worldsList.append(li);
+        }
+    }
+
+    /**
      * Handles the event of a key being initially pressed down.
      * @param callback Contains event data about the key pressed.
      */
@@ -760,77 +838,10 @@ export default class App {
     }
 
     /**
-     * Selects the server to connect to and displays its player count on the button.
-     *
-     * @param server The server to connect to.
+     * Callback for when the window comes back in focus. (e.g. tab is switched)
      */
 
-    private selectServer(server: SerializedServer): void {
-        this.selectedServer = server;
-
-        let name = this.worldSelectButton.querySelector('strong')!;
-        name.textContent = `${server.name}`;
-
-        let players = this.worldSelectButton.querySelector('span')!;
-        players.textContent = `(${server.players}/${server.maxPlayers} players)`;
-    }
-
-    /**
-     * Loads the list of worlds from the hub and adds them to the world select.
-     * The first world in the list is automatically selected.
-     */
-
-    private async loadWorlds(): Promise<void> {
-        if (!this.config.hub) return;
-
-        // Fetch a list of servers from the hub
-        let res = await fetch(`${this.config.hub}/all`).catch(() => null);
-
-        if (!res) return this.setValidation('validation-error', 'Unable to load world list.');
-
-        let servers: SerializedServer[] = await res.json(),
-            [firstServer] = servers;
-
-        // Check if there are no servers
-        if (!firstServer)
-            // Display an error message.
-            return this.setValidation('validation-error', 'No servers are currently available.');
-
-        // Select the first server
-        this.selectServer(firstServer);
-
-        // If there is only one server, then hide the world select button
-        if (servers.length < 2) return;
-
-        this.showWorldSelect = true;
-        this.worldSelectButton.hidden = false;
-
-        for (let [i, server] of Object.entries(servers)) {
-            // Create a new <li> element for each server
-            let li = document.createElement('li'),
-                name = document.createElement('strong'),
-                players = document.createElement('span');
-
-            // If this is the first server in the list, select it and mark it as active
-            if (i === '0') li.classList.add('active');
-
-            name.textContent = server.name;
-
-            players.textContent = `${server.players}/${server.maxPlayers} players`;
-
-            li.append(name);
-            li.append(players);
-
-            // When the <li> element is clicked, select the server and update the active class
-            li.addEventListener('click', () => {
-                this.selectServer(server);
-
-                this.worldsList.querySelector('li.active')?.classList.remove('active');
-                li.classList.add('active');
-            });
-
-            // Add the <li> element to the list of worlds
-            this.worldsList.append(li);
-        }
+    public onFocus(callback: EmptyCallback): void {
+        this.focusCallback = callback;
     }
 }

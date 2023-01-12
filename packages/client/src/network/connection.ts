@@ -57,7 +57,8 @@ import type {
     SkillPacket,
     MinigamePacket,
     EffectPacket,
-    FriendsPacket
+    FriendsPacket,
+    ListPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -107,6 +108,8 @@ export default class Connection {
         this.menu = game.menu;
         this.sprites = game.sprites;
         this.messages = this.socket.messages;
+
+        this.app.onFocus(() => this.socket.send(Packets.Focus));
 
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
@@ -266,23 +269,47 @@ export default class Connection {
      * @param entities A list of strings that contains the instances of the entities in the region.
      */
 
-    private handleEntityList(entities: string[]): void {
-        let ids = _.map(this.entities.getAll(), 'instance'),
-            known = _.intersection(ids, entities),
-            newIds = _.difference(entities, known);
+    private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
+        switch (opcode) {
+            case Opcodes.List.Spawns: {
+                let ids = _.map(this.entities.getAll(), 'instance'),
+                    known = _.intersection(ids, info.entities),
+                    newIds = _.difference(info.entities, known);
 
-        // Prepare the entities ready for despawning.
-        this.entities.decrepit = _.reject(
-            this.entities.getAll(),
-            (entity) =>
-                _.includes(known, entity.instance) || entity.instance === this.game.player.instance
-        );
+                // Prepare the entities ready for despawning.
+                this.entities.decrepit = _.reject(
+                    this.entities.getAll(),
+                    (entity) =>
+                        _.includes(known, entity.instance) ||
+                        entity.instance === this.game.player.instance
+                );
 
-        // Clear the entities in the decrepit queue.
-        this.entities.clean();
+                // Clear the entities in the decrepit queue.
+                this.entities.clean();
 
-        // Send the new id list request to the server.
-        this.socket.send(Packets.Who, newIds);
+                // Send the new id list request to the server.
+                this.socket.send(Packets.Who, newIds);
+                break;
+            }
+
+            case Opcodes.List.Positions: {
+                // Look through all the positions of the entities and their instances.
+                _.each(info.positions, (position: Position, instance: string) => {
+                    let entity = this.entities.get<Character>(instance);
+
+                    // No entity found, just skip.
+                    if (!entity || entity.moving || entity.hasPath()) return;
+
+                    /**
+                     * When we detect a mismatch in client-sided and server-sided
+                     * entity positions we teleport the entity to the correct position.
+                     */
+
+                    if (entity.gridX !== position.x || entity.gridY !== position.y)
+                        this.game.teleport(entity, position.x, position.y);
+                });
+            }
+        }
     }
 
     /**
