@@ -55,4 +55,5 @@ export interface ItemData {
     respawnDelay?: number;
     attackRange?: number;
     projectileName?: string;
+    description?: string;
 }

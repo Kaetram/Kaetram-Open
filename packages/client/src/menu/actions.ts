@@ -38,7 +38,8 @@ export default class Actions extends Menu {
         name: string,
         attackStats: Stats,
         defenseStats: Stats,
-        bonuses: Bonuses
+        bonuses: Bonuses,
+        itemDescription = ''
     ): void {
         this.clear();
 
@@ -47,7 +48,9 @@ export default class Actions extends Menu {
         // Update the name of the selected item.
         this.name.innerHTML = name;
 
-        let description = `<u>Attack Stats:</u>&emsp;&emsp;<u>Defense Stats:</u> <br>
+        let description =
+            itemDescription ||
+            `<u>Attack Stats:</u>&emsp;&emsp;<u>Defense Stats:</u> <br>
             Crush: ${attackStats.crush}&emsp;&emsp;&emsp;&emsp;Crush: ${defenseStats.crush} <br>
             Slash: ${attackStats.slash}&emsp;&emsp;&emsp;&emsp;Slash: ${defenseStats.slash} <br>
             Stab: ${attackStats.stab}&emsp;&emsp;&emsp;&emsp;&ensp;Stab: ${defenseStats.stab} <br>

@@ -3794,7 +3794,8 @@
   "gold": {
     "type": "object",
     "name": "Gold",
-    "stackable": true
+    "stackable": true,
+    "description": "A very useful shiny metal that for some reason people like to exchange for goods."
   },
 
   "mountseadragon": {
@@ -4093,31 +4094,36 @@
   "shardt1": {
     "type": "object",
     "name": "Shard - Tier 1",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt2": {
     "type": "object",
     "name": "Shard - Tier 2",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt3": {
     "type": "object",
     "name": "Shard - Tier 3",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt4": {
     "type": "object",
     "name": "Shard - Tier 4",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt5": {
     "type": "object",
     "name": "Shard - Tier 5",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "ghost": {
