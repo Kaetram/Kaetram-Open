@@ -46,7 +46,8 @@ enum Packets {
     Update,
     Minigame,
     Effect,
-    Friends
+    Friends,
+    Focus
 }
 
 export default Packets;
