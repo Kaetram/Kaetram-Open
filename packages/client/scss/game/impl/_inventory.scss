@@ -1,13 +1,15 @@
+@use '../../abstracts/media';
+
 #inventory {
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
-    right: 5px;
-    bottom: 50px;
+    right: 10px;
+    bottom: 56px;
 
     display: none;
 
-    background-color: rgb(0 0 0 / 30%);
+    font-family: AdvoCut, sans-serif;
 
     ul {
         overflow: hidden;
@@ -21,94 +23,60 @@
     }
 }
 
-.item-slot {
-    background-color: rgb(0 0 0 / 50%);
+#inventory-container {
+    position: absolute;
+}
+
+.inventory-item-image {
+    pointer-events: none;
     background-size: 600%;
 
     // Safari filters so the images aren't blurry.
     filter: opacity(100%);
 }
 
-@media (--lg) {
-    #inventory {
-        width: 288px;
-        height: 303px;
-        border: 3px solid #373737;
-    }
+// 144 x 108
 
-    .item-slot {
-        width: 48px;
-        height: 48px;
-        margin-top: 3px;
-        margin-bottom: 21px;
-        margin-left: 3px;
-
-        border: 3px solid #707070;
-        border-radius: 9px;
-
-        &:hover {
-            border: 3px solid #eee;
+@each $size, $i in media.$bsizes {
+    @media ($size) {
+        #inventory {
+            width: 96px * $i;
+            height: 108px * $i;
+            background: url('/img/#{$i}/main.png') -288px * $i -352px * $i no-repeat;
         }
 
-        &:active {
-            border: 3px solid #fcda5c;
-        }
-    }
-
-    .item-slot-focused {
-        border: 3px solid #fcda5c !important;
-    }
-
-    .inventory-item-count {
-        width: 48px;
-        height: 21px;
-        margin-top: 54px;
-        margin-left: 3px;
-
-        font-size: 18px;
-        text-align: center;
-    }
-}
-
-@media (--md) {
-    #inventory {
-        width: 192px;
-        height: 202px;
-        border: 2px solid #373737;
-    }
-
-    .item-slot {
-        width: 32px;
-        height: 32px;
-        margin-top: 2px;
-        margin-bottom: 14px;
-        margin-left: 2px;
-
-        border: 2px solid #707070;
-        border-radius: 3px;
-
-        &:hover,
-        &.select {
-            border: 2px solid #eee;
+        #inventory-container {
+            top: 3px * $i;
+            right: 3px * $i;
+            width: 90px * $i;
+            height: 102px * $i;
         }
 
-        &:active,
-        &:focus {
-            border: 2px solid #fcda5c;
+        .item-slot {
+            margin-top: 2px * $i;
+            margin-bottom: 7px * $i;
+            margin-left: 1.5px * $i;
+            background: url('/img/#{$i}/main.png') -400px * $i -352px * $i no-repeat;
+
+            &:hover {
+                background-position-x: -416px * $i;
+            }
+
+            &:active {
+                background-position-x: -432px * $i;
+            }
         }
-    }
 
-    .item-slot-focused {
-        border: 2px solid #fcda5c !important;
-    }
+        .item-slot, .inventory-item-image {
+            width: 16px * $i;
+            height: 16px * $i;
+        }
 
-    .inventory-item-count {
-        width: 32px;
-        height: 14px;
-        margin-top: 36px;
-        margin-left: 2px;
-
-        font-size: 12px;
-        text-align: center;
+        .inventory-item-count {
+            width: 16px * $i;
+            height: 7px * $i;
+            font-size: 6px * $i;
+            text-align: center;
+        }
     }
 }
