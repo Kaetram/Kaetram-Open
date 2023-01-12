@@ -1363,12 +1363,13 @@
     "experience": 360,
     "level": 48,
     "aggroRange": 3,
-    "attackRange": 1,
+    "attackRange": 6,
     "aggressive": true,
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "projectileName": "projectile-poisonball"
   },
 
   "smalldevil": {
