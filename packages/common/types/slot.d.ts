@@ -13,6 +13,7 @@ export interface SlotData {
     count: number;
     enchantments: Enchantments;
     name?: string;
+    description?: string;
     edible?: boolean;
     equippable?: boolean;
     price?: number;
