@@ -188,7 +188,8 @@ export default {
         return {
             accuracy: 0,
             strength: 0,
-            archery: 0
+            archery: 0,
+            magic: 0
         };
     },
 

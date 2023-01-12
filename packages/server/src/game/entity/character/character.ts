@@ -52,7 +52,6 @@ export default abstract class Character extends Entity {
     public terror = false;
     public aoe = 0;
 
-    public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
 
     public lastStep = -1;
@@ -317,15 +316,6 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Returns the type of projectile the character is using.
-     * @returns A projectile integer from the enum of Projectiles.
-     */
-
-    public getProjectile(): Modules.Projectiles {
-        return this.projectile;
-    }
-
-    /**
      * @returns Returns the number of attackers currently targeting this character.
      */
 
@@ -449,6 +439,14 @@ export default abstract class Character extends Entity {
         if (this.aoe) this.aoe = 0;
 
         return aoeVal;
+    }
+
+    /**
+     * @returns Returns the projectile sprite name for the character.
+     */
+
+    public getProjectileName(): string {
+        return this.projectileName;
     }
 
     /**
