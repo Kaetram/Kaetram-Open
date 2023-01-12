@@ -60,4 +60,11 @@
             height: 100px * $i;
         }
     }
+
+    @media(--sm) {
+        #chat {
+            bottom: 70px;
+            left: 4px;
+        }
+    }
 }
