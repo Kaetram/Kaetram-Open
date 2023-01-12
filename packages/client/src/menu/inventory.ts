@@ -17,6 +17,7 @@ interface SlotElement extends HTMLElement {
     equippable?: boolean;
 
     name?: string;
+    description?: string;
     attackStats?: Stats;
     defenseStats?: Stats;
     bonuses?: Bonuses;
@@ -142,14 +143,13 @@ export default class Inventory extends Menu {
         // Push drop option as the last one.
         actions.push(Modules.MenuActions.Drop);
 
-        console.log(element.name);
-
         this.actions.show(
             actions,
             element.name!,
             element.attackStats!,
             element.defenseStats!,
-            element.bonuses!
+            element.bonuses!,
+            element.description
         );
     }
 
@@ -335,11 +335,10 @@ export default class Inventory extends Menu {
 
         // Add the item stats and name
         slotElement.name = slot.name!;
+        slotElement.description = slot.description!;
         slotElement.attackStats = slot.attackStats!;
         slotElement.defenseStats = slot.defenseStats!;
         slotElement.bonuses = slot.bonuses!;
-
-        console.log(slot);
     }
 
     /**
