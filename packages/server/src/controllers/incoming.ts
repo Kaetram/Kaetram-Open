@@ -113,6 +113,9 @@ export default class Incoming {
                     case Packets.Friends: {
                         return this.handleFriends(message);
                     }
+                    case Packets.Focus: {
+                        return this.player.updateEntityPositions();
+                    }
                 }
             } catch (error) {
                 log.error(error);

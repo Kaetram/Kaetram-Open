@@ -1,6 +1,7 @@
 import log from '@kaetram/common/util/log';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../game/entity/character/character';
 
@@ -57,6 +58,12 @@ export default class Entities {
         });
 
         log.info(`Spawned ${this.collections.chests.length} static chests!`);
+
+        // Initialize the roaming interval for mobs
+        setInterval(
+            () => this.forEachMob((mob) => mob.roamingCallback?.()),
+            Modules.MobDefaults.ROAM_FREQUENCY
+        );
     }
 
     /**
@@ -275,6 +282,16 @@ export default class Entities {
         this.forEachEntity((entity: Entity) => {
             if (entity instanceof Character) callback(entity);
         });
+    }
+
+    /**
+     * Iterates through all the entities and only selects those that are
+     * instances of Mob.
+     * @param callback The mob object we are iterating through.
+     */
+
+    public forEachMob(callback: (mob: Mob) => void): void {
+        this.collections.mobs.forEachEntity(callback);
     }
 
     /**
