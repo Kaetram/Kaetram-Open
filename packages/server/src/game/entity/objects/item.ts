@@ -34,6 +34,7 @@ export default class Item extends Entity {
     private skill = '';
     private achievement = '';
     private quest = '';
+    public description = '';
 
     public projectileName = '';
 
@@ -112,6 +113,7 @@ export default class Item extends Entity {
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
         this.projectileName = this.data.projectileName || this.projectileName;
+        this.description = this.data.description || this.description;
 
         if (this.data.plugin) this.loadPlugin();
     }

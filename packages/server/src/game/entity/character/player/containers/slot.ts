@@ -9,6 +9,7 @@ export default class Slot {
     public equippable = false;
 
     public name = '';
+    public description = '';
     public attackStats: Stats = Utils.getEmptyStats();
     public defenseStats: Stats = Utils.getEmptyStats();
     public bonuses: Bonuses = Utils.getEmptyBonuses();
@@ -39,6 +40,7 @@ export default class Slot {
         this.equippable = item.isEquippable();
 
         this.name = item.name;
+        this.description = item.description;
         this.attackStats = item.attackStats;
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
@@ -102,6 +104,7 @@ export default class Slot {
         this.maxStackSize = 1;
 
         this.name = '';
+        this.description = '';
         this.attackStats = Utils.getEmptyStats();
         this.defenseStats = Utils.getEmptyStats();
         this.bonuses = Utils.getEmptyBonuses();
@@ -142,6 +145,7 @@ export default class Slot {
             edible,
             equippable,
             name,
+            description,
             attackStats,
             defenseStats,
             bonuses
@@ -155,6 +159,7 @@ export default class Slot {
             edible,
             equippable,
             name,
+            description,
             attackStats,
             defenseStats,
             bonuses
