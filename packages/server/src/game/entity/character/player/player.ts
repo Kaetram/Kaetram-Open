@@ -405,6 +405,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Synchronizes the player's client entity positions and server entities in a region.
+     */
+
+    public updateEntityPositions(): void {
+        this.regions.sendEntityPositions(this);
+    }
+
+    /**
      * Performs a teleport to a specified destination. We send a teleport packet
      * then proceed to update the player's position server-sided.
      * @param x The new x grid coordinate.

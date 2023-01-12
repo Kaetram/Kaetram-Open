@@ -138,6 +138,10 @@ export default class Handler {
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
+        this.player.combat.stop();
+
+        this.player.skills.stop();
+
         this.player.clearAreas();
 
         this.player.minigameArea?.exitCallback?.(this.player);
@@ -179,8 +183,10 @@ export default class Handler {
         // Remove the poison status.
         this.player.setPoison();
 
+        this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
+
         this.player.save();
 
         // Send death packet only to the player.
@@ -264,6 +270,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.player.updateEntityList();
+        this.player.updateEntityPositions();
 
         this.player.lastRegionChange = Date.now();
     }
