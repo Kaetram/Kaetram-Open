@@ -83,10 +83,7 @@ export default {
      */
 
     getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        let x = Math.abs(startX - toX),
-            y = Math.abs(startY - toY);
-
-        return x > y ? x : y;
+        return Math.abs(startX - toX) + Math.abs(startY - toY);
     },
 
     /**
@@ -289,7 +286,8 @@ export default {
         return {
             accuracy: 0,
             strength: 0,
-            archery: 0
+            archery: 0,
+            magic: 0
         };
     }
 };

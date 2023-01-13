@@ -114,7 +114,7 @@ export default class Player extends Character {
     public email = '';
     public userAgent = '';
 
-    public rights = 0;
+    public rank: Modules.Ranks = Modules.Ranks.None;
 
     // Warps
     public lastWarp = 0;
@@ -189,7 +189,7 @@ export default class Player extends Character {
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
-        this.rights = data.rights;
+        this.rank = data.rank;
         this.ban = data.ban;
         this.mute = data.mute;
         this.orientation = data.orientation;
@@ -405,6 +405,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Synchronizes the player's client entity positions and server entities in a region.
+     */
+
+    public updateEntityPositions(): void {
+        this.regions.sendEntityPositions(this);
+    }
+
+    /**
      * Performs a teleport to a specified destination. We send a teleport packet
      * then proceed to update the player's position server-sided.
      * @param x The new x grid coordinate.
@@ -560,6 +568,36 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the removing of an item from a container. This can be an inventory or a bank.
+     * In the case of the inventory, we check that the player isn't dropping an item in front
+     * of a door.
+     * @param type The type of container we are working with.
+     * @param index The index at which we are removing the item.
+     */
+
+    public handleContainerRemove(type: Modules.ContainerType, index: number): void {
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
+            return this.notify('You cannot drop items while standing in a door.');
+
+        container.remove(index, undefined, true);
+    }
+
+    /**
+     * Handles the swap action of a container. This is when we want to move items around.
+     * @param type The type of container we are working with.
+     * @param index The index at which we are swapping the item.
+     * @param tIndex The index at which we are swapping the item with.
+     */
+
+    public handleContainerSwap(type: Modules.ContainerType, index: number, tIndex: number): void {
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        container.swap(index, tIndex);
+    }
+
+    /**
      * Handles the interaction with a global object. This can be a tree,
      * a sign, etc.
      * @param instance The string identifier of the object. Generally
@@ -633,8 +671,13 @@ export default class Player extends Character {
         // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
         experience = Math.ceil(experience - experience / 3);
 
+        // Magic based damage, weapons that are entirely magic based have their experience added to the magic skill.
+        if (weapon.isMagic())
+            return this.skills.get(Modules.Skills.Magic).addExperience(experience);
+
         // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (weapon.ranged) return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+        if (this.isRanged())
+            return this.skills.get(Modules.Skills.Archery).addExperience(experience);
 
         /**
          * If the weapon is both a strength and accuracy weapon, then we evenly distribute
@@ -741,7 +784,7 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && !target) {
+        if (this.map.isDoor(x, y) && (!target || entity.isPlayer())) {
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
@@ -1181,19 +1224,19 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns If the player rights are greater than 0.
+     * @returns Whether or not the player's rank is a moderator.
      */
 
     public isMod(): boolean {
-        return this.rights > 0;
+        return this.rank === Modules.Ranks.Moderator;
     }
 
     /**
-     * @returns If the player rights are greater than 1.
+     * @returns Whether or not the player's rank is an administrator.
      */
 
     public isAdmin(): boolean {
-        return this.rights > 1 || config.skipDatabase;
+        return this.rank === Modules.Ranks.Administrator || config.skipDatabase;
     }
 
     /**
@@ -1202,15 +1245,6 @@ export default class Player extends Character {
 
     private isInvalidMovement(): boolean {
         return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
-    }
-
-    /**
-     * Checks if the weapon the player is currently wielding is a ranged weapon.
-     * @returns If the weapon slot is a ranged weapon.
-     */
-
-    public override isRanged(): boolean {
-        return this.equipment.getWeapon().ranged;
     }
 
     /**
@@ -1281,10 +1315,11 @@ export default class Player extends Character {
      */
 
     public sendMessage(playerName: string, message: string): void {
-        if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
-            return;
-        }
+        // TODO - Inter-world messaging
+        // if (config.hubEnabled) {
+        //     this.world.api.sendPrivateMessage(this, playerName, message);
+        //     return;
+        // }
 
         if (!this.world.isOnline(playerName))
             return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
@@ -1293,8 +1328,8 @@ export default class Player extends Character {
             oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
             formattedName = Utils.formatName(this.username); // Formatted username of current instance.
 
-        otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
+        otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
     }
 
     /**
@@ -1303,10 +1338,8 @@ export default class Player extends Character {
      */
 
     public sync(): void {
-        let armour = this.equipment.getArmour();
-
         // Update attack range each-time we sync.
-        this.attackRange = this.isRanged() ? 7 : 1;
+        this.attackRange = this.equipment.getWeapon().attackRange;
 
         // Synchronize health, mana and experience with the player.
         this.skills.sync();
@@ -1463,7 +1496,7 @@ export default class Player extends Character {
         // Sprite key is the armour key.
         data.key = this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
-        data.rights = this.rights;
+        data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
@@ -1540,6 +1573,41 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The player's magic level from the skills controller.
+     */
+
+    private getMagicLevel(): number {
+        return this.skills.get(Modules.Skills.Magic).level;
+    }
+
+    /**
+     * Override for the damage bonus getter. Player also considers the magic
+     * bonus when using a magic weapons.
+     * @returns The bonus that the player will be using for max damage calculation
+     * given their current weapon damage type.
+     */
+
+    public override getDamageBonus(): number {
+        if (this.equipment.getWeapon().isMagic()) return this.getBonuses().magic;
+        if (this.isRanged()) return this.getBonuses().archery;
+
+        return this.getBonuses().strength;
+    }
+
+    /**
+     * Override for the player's primary skill used in damage calculation.
+     * @returns The damage level of the primary skill given the player's
+     * current weapon damage type.
+     */
+
+    public override getSkillDamageLevel(): number {
+        if (this.equipment.getWeapon().isMagic()) return this.getMagicLevel();
+        if (this.isRanged()) return this.getArcheryLevel();
+
+        return this.getStrengthLevel();
+    }
+
+    /**
      * Override for the damage absoprption modifier. Effects such as thick
      * skin lessent the max damage an entity is able to deal.
      * @returns Modifier number value between 0 and 1, closer to 0 the higher the damage reduction.
@@ -1552,6 +1620,14 @@ export default class Player extends Character {
         if (this.thickSkin) reduction -= 0.2;
 
         return reduction;
+    }
+
+    /**
+     * @returns Returns the projectile sprite name for the character.
+     */
+
+    public override getProjectileName(): string {
+        return this.equipment.getWeapon().projectileName;
     }
 
     /**

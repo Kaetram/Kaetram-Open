@@ -1,5 +1,7 @@
 import { Modules } from '@kaetram/common/network';
 
+import log from '../lib/log';
+
 import { isMobile } from './detect';
 
 import type { RegionData, RegionTileData } from '@kaetram/common/types/map';
@@ -38,7 +40,6 @@ interface StorageData {
     errorMessage: string;
     player: PlayerData;
     settings: Settings;
-    map: RegionMapData;
 }
 
 let storage = window.localStorage,
@@ -46,12 +47,17 @@ let storage = window.localStorage,
 
 export default class Storage {
     public data: StorageData = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+    public mapData!: IDBDatabase; // Where we store the region caching.
+
     public newVersion = false;
 
     public constructor() {
         this.newVersion = this.isNewVersion();
 
-        if (this.newVersion) this.set(this.create());
+        if (this.newVersion) {
+            this.set(this.create());
+            this.clearIndexedDB();
+        } else this.loadIndexedDB();
     }
 
     /**
@@ -84,14 +90,43 @@ export default class Storage {
                 showNames: true,
                 showLevels: true,
                 disableCaching: false
-            },
-
-            map: {
-                regionData: {},
-                objects: [],
-                cursorTiles: {}
             }
         };
+    }
+
+    /**
+     * Handles the creation of the IndexedDB database and population for the first run. This is
+     * where we store all of the map data for the regions.
+     */
+
+    private loadIndexedDB(): void {
+        let request: IDBOpenDBRequest = window.indexedDB?.open('mapCache', this.getDBVersion());
+
+        // If something goes wrong just re-create the database.
+        request.addEventListener('error', () => {
+            this.clearIndexedDB();
+        });
+
+        // Upgrade occurs when we change the version of the database (or a new one is created).
+        request.addEventListener('upgradeneeded', (event: Event) => {
+            let database = (event.target as IDBOpenDBRequest).result;
+
+            if (!database) console.error('Could not open IndexedDB database.');
+
+            // Create the object stores for the map data.
+            database.createObjectStore('regions');
+            database.createObjectStore('objects');
+            database.createObjectStore('cursorTiles');
+
+            log.debug(`IndexedDB created with version ${this.getDBVersion()}.`);
+        });
+
+        // Successfully managed to open the database.
+        request.addEventListener('success', (event: Event) => {
+            this.mapData = (event.target as IDBOpenDBRequest).result;
+
+            log.debug(`Successfully opened IndexedDB with version ${this.getDBVersion()}.`);
+        });
     }
 
     /**
@@ -100,7 +135,11 @@ export default class Storage {
      */
 
     public save(): void {
-        if (this.data) storage.setItem(name, JSON.stringify(this.data));
+        try {
+            if (this.data) storage.setItem(name, JSON.stringify(this.data));
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     /**
@@ -114,6 +153,18 @@ export default class Storage {
         this.set(this.create());
 
         this.save();
+    }
+
+    /**
+     * Deletes the IndexedDB database and recreates it.
+     */
+
+    private clearIndexedDB(): void {
+        this.mapData?.close();
+
+        window.indexedDB.deleteDatabase('mapCache');
+
+        this.loadIndexedDB();
     }
 
     /**
@@ -282,33 +333,42 @@ export default class Storage {
     }
 
     /**
-     * Saves map data such as objects and cursor tiles into local storage.
+     * Saves the objects and cursor tiles into the first index of their respective
+     * object store within the IndexedDB database.
      * @param objects The object tileIds.
      * @param cursorTiles The cursor tileIds.
      */
 
     public setMapData(objects: number[], cursorTiles: CursorTiles): void {
-        this.data.map.objects = objects;
-        this.data.map.cursorTiles = cursorTiles;
+        if (!this.mapData) return;
 
-        this.save();
+        let transaction = this.mapData.transaction(['objects', 'cursorTiles'], 'readwrite'),
+            objectStore = transaction.objectStore('objects'),
+            cursorStore = transaction.objectStore('cursorTiles');
+
+        // Save them at index 0.
+        objectStore.put(objects, 0);
+        cursorStore.put(cursorTiles, 0);
     }
 
     /**
-     * Appends a region and its respective data into the regionData object
-     * of the local storage. This object is later used when the client loads up
-     * in order to save time when loading up the region.
+     * Stores the region data at the specified region id as the key within
+     * the IndexedDB database. Each region is stored as an array of RegionTileData.
      * @param data Contains an array of information about each tile in the region.
      * @param region The region id we are saving.
      */
 
     public setRegionData(data: RegionTileData[], region: number): void {
-        // Prevent overwriting for cached information.
-        if (region in this.data.map.regionData) return;
+        if (!this.mapData) return;
 
-        this.data.map.regionData[region] = data;
+        let objectStore = this.mapData.transaction('regions', 'readwrite').objectStore('regions'),
+            request = objectStore.get(region);
 
-        this.save();
+        request.addEventListener('success', () => {
+            if (request.result) return;
+
+            objectStore.put(data, region);
+        });
     }
 
     /**
@@ -344,6 +404,15 @@ export default class Storage {
     }
 
     /**
+     * Converts the game version string into a number.
+     * @returns The current version to be used in the IndexedDB database.
+     */
+
+    public getDBVersion(): number {
+        return parseInt(this.data.clientVersion.replace(/\D/g, '')) || 1;
+    }
+
+    /**
      * Whether or not the remember me toggle is on.
      * @returns Boolean value of the remember me toggle.
      */
@@ -365,12 +434,39 @@ export default class Storage {
      * @returns RegionMapData object containing all the data stored so far.
      */
 
-    public getRegionData(): RegionMapData {
-        return {
-            regionData: this.data.settings.disableCaching ? {} : this.data.map.regionData,
-            objects: this.data.map.objects,
-            cursorTiles: this.data.map.cursorTiles
+    public getRegionData(callback: (data: RegionMapData) => void): void {
+        let info: RegionMapData = {
+            regionData: {},
+            objects: [],
+            cursorTiles: {}
         };
+
+        if (!this.mapData) return callback(info);
+
+        // Create the transaction and begin grabbing data from each object store.
+        let transaction = this.mapData.transaction(
+                ['regions', 'objects', 'cursorTiles'],
+                'readonly'
+            ),
+            regionRequest = transaction.objectStore('regions').openCursor(), // Grab all the indexes and the keys.
+            objectRequest = transaction.objectStore('objects').get(0), // Only need the first index.
+            cursorRequest = transaction.objectStore('cursorTiles').get(0); // Only need the first index.
+
+        transaction.addEventListener('error', () => callback(info));
+
+        regionRequest.addEventListener('success', (event: Event) => {
+            let cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+
+            // Cursor is the currently processed index and key.
+            if (cursor) {
+                info.regionData[cursor.primaryKey as number] = cursor.value;
+                cursor.continue();
+            }
+        });
+        objectRequest.addEventListener('success', () => (info.objects = objectRequest.result));
+        cursorRequest.addEventListener('success', () => (info.cursorTiles = cursorRequest.result));
+
+        transaction.addEventListener('complete', () => callback(info));
     }
 
     /**

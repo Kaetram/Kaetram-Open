@@ -155,7 +155,7 @@ export default class API {
 
     private handlePrivateMessage(request: Request, response: Response): void {
         if (!this.verifyRequest(request)) {
-            response.json({ status: 'error' });
+            response.json({ error: 'invalid' });
             return;
         }
 
@@ -168,7 +168,7 @@ export default class API {
             server = this.servers.findPlayer(target);
 
         if (!server) {
-            response.json({ status: 'error' });
+            response.json({ error: 'noserver' });
             return;
         }
 

@@ -97,7 +97,7 @@ export default class Combat {
          * combat is perceived as 'too snappy.'
          */
 
-        if (this.canAttack()) setTimeout(() => this.handleLoop(), 250);
+        if (this.canAttack()) setTimeout(() => this.handleLoop(), 450);
     }
 
     /**
