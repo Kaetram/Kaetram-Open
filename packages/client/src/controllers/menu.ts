@@ -78,6 +78,8 @@ export default class MenuController {
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
 
+        this.warp.onSelect(this.handleWarp.bind(this));
+
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
         this.load();
@@ -273,6 +275,17 @@ export default class MenuController {
             opcode: type,
             key,
             index
+        });
+    }
+
+    /**
+     * Sends a packet to the server about the warp that was just selected.
+     * @param id The id of the warp that was selected.
+     */
+
+    private handleWarp(id: number): void {
+        this.game.socket.send(Packets.Warp, {
+            id
         });
     }
 

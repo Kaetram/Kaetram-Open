@@ -108,8 +108,6 @@ export default class Area {
 
     public removePlayer(player: Player) {
         delete this.players[player.instance];
-
-        console.log(`Player ${player.instance} has left area ${this.id}`);
     }
 
     /**
