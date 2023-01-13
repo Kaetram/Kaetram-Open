@@ -103,11 +103,6 @@ export default {
             stab: attackerStats.stab - targetStats.stab
         };
 
-        /**
-         * We exclude magic from this calculation since it will be processed separately
-         * whenever that feature is implemented.
-         */
-
         return diff.crush + diff.slash + diff.stab || 1;
     },
 

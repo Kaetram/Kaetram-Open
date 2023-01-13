@@ -24,6 +24,7 @@ export interface Bonuses {
     accuracy: number;
     strength: number;
     archery: number;
+    magic: number;
 }
 
 export interface ItemData {
@@ -53,4 +54,6 @@ export interface ItemData {
     undroppable?: boolean;
     respawnDelay?: number;
     attackRange?: number;
+    projectileName?: string;
+    description?: string;
 }

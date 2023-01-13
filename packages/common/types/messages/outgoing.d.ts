@@ -37,7 +37,12 @@ export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacke
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type EntityListCallback = (entities: string[]) => void;
+export interface ListPacket {
+    entities?: string[]; // List of entity instances to be checked in the client.
+    positions?: { [instance: string]: Position }; // List of entity positions to verify.
+}
+
+export type EntityListCallback = (opcode: Opcodes.List, info: ListPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
