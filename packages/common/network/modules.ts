@@ -88,15 +88,6 @@ export enum Hits {
     Profession
 }
 
-export enum Projectiles {
-    Arrow,
-    Boulder,
-    FireBall,
-    IceBall,
-    Terror,
-    Tornado
-}
-
 export enum Equipment {
     Armour,
     Boots,
@@ -341,7 +332,7 @@ export const enum Constants {
     MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
     INVALID_MOVEMENT_THRESHOLD = 3, // Amount of invalid movements before ignoring packets.
-    ARCHER_ATTACK_RANGE = 9 // Default attack range for bows if no other range is specified.
+    ARCHER_ATTACK_RANGE = 8 // Default attack range for bows if no other range is specified.
 }
 
 export enum MinigameConstants {
@@ -375,8 +366,7 @@ export enum MobDefaults {
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
-    ROAM_FREQUENCY = 25_000, // Roam interval every 10 seconds
-    ROAM_RETRIES = 2, // 5 retries if the new spot is not possible
+    ROAM_FREQUENCY = 17_000, // Roam interval every 35 seconds
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }

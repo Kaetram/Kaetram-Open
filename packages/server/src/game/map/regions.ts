@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 
 import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 
+import Character from '../entity/character/character';
 import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
 
 import Region from './region';
@@ -340,7 +341,39 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
-        player.send(new List(entities));
+        player.send(new List(Opcodes.List.Spawns, { entities }));
+    }
+
+    /**
+     * Looks through all the entities in a region and sends their grid positions
+     * to the client. This is to synchronize client-server positions whenever a
+     * player teleports or changes regions.
+     * @param player The player to send entity positions to.
+     */
+
+    public sendEntityPositions(player: Player): void {
+        if (player.region === -1) return;
+
+        // Dictionary to store the positions and instances of the entities.
+        let positions: { [instance: string]: Position } = {};
+
+        // Iterate through all the entities in the region.
+        this.get(player.region).forEachEntity((entity: Entity) => {
+            // Skip non-moving entities.
+            if (!(entity instanceof Character)) return;
+
+            // Skip the player and moving entities.
+            if (entity.instance === player.instance || entity.moving) return;
+
+            // Store the position of the entity.
+            positions[entity.instance] = {
+                x: entity.x,
+                y: entity.y
+            };
+        });
+
+        // Send the positions to the client.
+        player.send(new List(Opcodes.List.Positions, { positions }));
     }
 
     /**

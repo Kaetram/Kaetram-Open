@@ -405,6 +405,14 @@ export default class Player extends Character {
     }
 
     /**
+     * Synchronizes the player's client entity positions and server entities in a region.
+     */
+
+    public updateEntityPositions(): void {
+        this.regions.sendEntityPositions(this);
+    }
+
+    /**
      * Performs a teleport to a specified destination. We send a teleport packet
      * then proceed to update the player's position server-sided.
      * @param x The new x grid coordinate.
@@ -662,6 +670,10 @@ export default class Player extends Character {
 
         // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
         experience = Math.ceil(experience - experience / 3);
+
+        // Magic based damage, weapons that are entirely magic based have their experience added to the magic skill.
+        if (weapon.isMagic())
+            return this.skills.get(Modules.Skills.Magic).addExperience(experience);
 
         // Ranged/archery based damage, we add remaining experience to the archery skill.
         if (this.isRanged())
@@ -1561,6 +1573,41 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The player's magic level from the skills controller.
+     */
+
+    private getMagicLevel(): number {
+        return this.skills.get(Modules.Skills.Magic).level;
+    }
+
+    /**
+     * Override for the damage bonus getter. Player also considers the magic
+     * bonus when using a magic weapons.
+     * @returns The bonus that the player will be using for max damage calculation
+     * given their current weapon damage type.
+     */
+
+    public override getDamageBonus(): number {
+        if (this.equipment.getWeapon().isMagic()) return this.getBonuses().magic;
+        if (this.isRanged()) return this.getBonuses().archery;
+
+        return this.getBonuses().strength;
+    }
+
+    /**
+     * Override for the player's primary skill used in damage calculation.
+     * @returns The damage level of the primary skill given the player's
+     * current weapon damage type.
+     */
+
+    public override getSkillDamageLevel(): number {
+        if (this.equipment.getWeapon().isMagic()) return this.getMagicLevel();
+        if (this.isRanged()) return this.getArcheryLevel();
+
+        return this.getStrengthLevel();
+    }
+
+    /**
      * Override for the damage absoprption modifier. Effects such as thick
      * skin lessent the max damage an entity is able to deal.
      * @returns Modifier number value between 0 and 1, closer to 0 the higher the damage reduction.
@@ -1573,6 +1620,14 @@ export default class Player extends Character {
         if (this.thickSkin) reduction -= 0.2;
 
         return reduction;
+    }
+
+    /**
+     * @returns Returns the projectile sprite name for the character.
+     */
+
+    public override getProjectileName(): string {
+        return this.equipment.getWeapon().projectileName;
     }
 
     /**
