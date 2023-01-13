@@ -1,23 +1,30 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
 import Menu from './menu';
 
-import type { SlotData } from '@kaetram/common/types/slot';
 import type Actions from './actions';
+import type { SlotData } from '@kaetram/common/types/slot';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
     equippable?: boolean;
+
+    name?: string;
+    description?: string;
+    attackStats?: Stats;
+    defenseStats?: Stats;
+    bonuses?: Bonuses;
 }
 
 export default class Inventory extends Menu {
-    private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
+    private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
@@ -71,7 +78,7 @@ export default class Inventory extends Menu {
         _.each(slots, (slot: SlotData) => {
             if (!slot.key) return;
 
-            this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+            this.setSlot(slot);
         });
     }
 
@@ -81,7 +88,7 @@ export default class Inventory extends Menu {
      */
 
     public override add(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+        this.setSlot(slot);
     }
 
     /**
@@ -91,7 +98,7 @@ export default class Inventory extends Menu {
      */
 
     public override remove(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+        this.setSlot(slot);
     }
 
     /**
@@ -136,9 +143,14 @@ export default class Inventory extends Menu {
         // Push drop option as the last one.
         actions.push(Modules.MenuActions.Drop);
 
-        let position = this.getPosition(element);
-
-        this.actions.show(actions, position.x, position.y);
+        this.actions.show(
+            actions,
+            element.name!,
+            element.attackStats!,
+            element.defenseStats!,
+            element.bonuses!,
+            element.description
+        );
     }
 
     /**
@@ -296,31 +308,37 @@ export default class Inventory extends Menu {
      * Sets the slot's image and count at a specified index. If no key is provided
      * then we remove the slot's `backgroundImage` property and set the count to
      * an empty string.
-     * @param index Index at which we are updating the slot data.
-     * @param key Optional parameter that is used to get the image for the slot.
-     * @param count Integer value to assign to the slot.
-     * @param edible Boolean value that determines if the item in the slot is edible.
-     * @param equippable Boolean value that determines if the item in the slot is equippable.
+     * @param slot Contains information about the slot element.
      */
 
-    private setSlot(index: number, key = '', count = 1, edible = false, equippable = false): void {
-        let slotElement = this.getElement(index);
+    private setSlot(slot: SlotData): void {
+        let slotElement = this.getElement(slot.index);
 
-        if (!slotElement) return log.error(`Could not find slot element at: ${index}`);
+        if (!slotElement) return log.error(`Could not find slot element at: ${slot.index}`);
 
-        let countElement = slotElement.querySelector('.inventory-item-count');
+        let imageElement: HTMLElement = slotElement.querySelector('.inventory-item-image')!,
+            countElement = slotElement.querySelector('.inventory-item-count');
 
-        if (countElement) countElement.textContent = Util.getCount(count);
+        if (!imageElement) return log.error(`Could not find image element at: ${slot.index}`);
 
-        slotElement.style.backgroundImage = key ? Util.getImageURL(key) : '';
+        if (countElement) countElement.textContent = Util.getCount(slot.count);
+
+        imageElement.style.backgroundImage = slot.key ? Util.getImageURL(slot.key) : '';
 
         // Set data properties for easy testing (see Cypress best practices)
-        slotElement.dataset.key = key;
-        slotElement.dataset.count = `${count}`;
+        slotElement.dataset.key = slot.key;
+        slotElement.dataset.count = `${slot.count}`;
 
         // Update the edible and equippable properties.
-        slotElement.edible = edible;
-        slotElement.equippable = equippable;
+        slotElement.edible = slot.edible!;
+        slotElement.equippable = slot.equippable!;
+
+        // Add the item stats and name
+        slotElement.name = slot.name!;
+        slotElement.description = slot.description!;
+        slotElement.attackStats = slot.attackStats!;
+        slotElement.defenseStats = slot.defenseStats!;
+        slotElement.bonuses = slot.bonuses!;
     }
 
     /**
@@ -332,6 +350,7 @@ export default class Inventory extends Menu {
     private createSlot(index: number): HTMLLIElement {
         let slot = document.createElement('li'),
             item = document.createElement('div'),
+            image = document.createElement('div'),
             count = document.createElement('div');
 
         item.dataset.index = `${index}`;
@@ -340,8 +359,14 @@ export default class Inventory extends Menu {
         item.draggable = true;
         item.classList.add('item-slot');
 
+        // Add the item image element onto the slot.
+        image.classList.add('inventory-item-image');
+
         // Add the class element onto the count.
         count.classList.add('inventory-item-count');
+
+        // Append the image onto the item slot.
+        item.append(image);
 
         // Append the count onto the item slot.
         item.append(count);
@@ -387,7 +412,9 @@ export default class Inventory extends Menu {
      */
 
     private isEmpty(element: SlotElement): boolean {
-        return element.style.backgroundImage === '';
+        let image: HTMLElement = element.querySelector('.inventory-item-image')!;
+
+        return !image || image.style.backgroundImage === '';
     }
 
     /**
@@ -398,22 +425,6 @@ export default class Inventory extends Menu {
 
     private getElement(index: number): SlotElement {
         return this.list.children[index].querySelector('div') as HTMLElement;
-    }
-
-    /**
-     * Retrieves the absolute position of an element
-     * relative to the screen.
-     * @param element The element we are extracting position of.
-     * @returns A position object containing the x and y coordinates.
-     */
-
-    private getPosition(element: HTMLElement): Position {
-        let boundingRect = element.getBoundingClientRect();
-
-        return {
-            x: boundingRect.left - boundingRect.width,
-            y: boundingRect.top - boundingRect.height * 2
-        };
     }
 
     /**

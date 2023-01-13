@@ -14,12 +14,10 @@ export default class Projectile extends Entity {
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
         super(
             Utils.createInstance(Modules.EntityType.Projectile),
-            owner.projectileName,
+            owner.getProjectileName(),
             owner.x,
             owner.y
         );
-
-        this.key = owner.projectileName;
 
         /**
          * The rough speed of the projectile is 1 tile per 100ms, so we use that
