@@ -82,6 +82,28 @@
         "hidden": true
     },
 
+    "pirates": {
+        "name": "Pirates",
+        "description": "There's skeleton pirates under the sea?",
+        "hidden": true
+    },
+
+    "babyseadragon": {
+        "name": "Baby Sea Dragon",
+        "description": "Defeat the baby sea dragon guardian!"  
+    },
+
+    "underwatertreasure": {
+        "name": "Water Chest",
+        "description": "Find the treasure hidden underwater."
+    },
+
+    "patsow": {
+        "name": "Patsow Pleateau",
+        "description": "Arrive at Patsow plateau!",
+        "hidden": true
+    },
+
     "ogreguardian": {
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
@@ -161,16 +183,6 @@
         "name": "Frozen Tundra",
         "description": "Gain access to icelands by defeating the guardians.",
         "hidden": true
-    },
-
-    "babyseadragon": {
-        "name": "Baby Sea Dragon",
-        "description": "Defeat the baby sea dragon guardian!"  
-    },
-
-    "underwatertreasure": {
-        "name": "Water Chest",
-        "description": "Find the treasure hidden underwater."
     },
 
     "forestdragon": {

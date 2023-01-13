@@ -63,7 +63,7 @@ export default class Mob extends Character {
     private respawnCallback?: () => void;
 
     public talkCallback?: (message: string) => void;
-    public roamingCallback?: (retries?: number) => void;
+    public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
@@ -121,16 +121,6 @@ export default class Mob extends Character {
 
         // Handle hiding the entity's name.
         if (this.hiddenName) this.name = '';
-
-        // The roaming interval if the mob is a roaming entity.
-        if (this.roaming)
-            setTimeout(() => {
-                this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
-                setInterval(
-                    () => this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES),
-                    Modules.MobDefaults.ROAM_FREQUENCY
-                );
-            }, Utils.randomInt(0, Modules.MobDefaults.ROAM_FREQUENCY - 1));
     }
 
     /**
@@ -202,7 +192,8 @@ export default class Mob extends Character {
         this.bonuses = {
             accuracy: this.attackLevel,
             strength: this.attackLevel,
-            archery: this.attackRange + this.attackLevel
+            archery: this.attackRange + this.attackLevel,
+            magic: this.attackLevel
         };
     }
 

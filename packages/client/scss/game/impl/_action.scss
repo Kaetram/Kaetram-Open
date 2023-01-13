@@ -3,52 +3,95 @@
 #action-container {
     position: absolute;
     display: none;
-    background-color: rgb(0 0 0 / 10%);
 
     // cursor: hand;
-}
-
-.action-button {
-    cursor: pointer;
-
-    width: 128px;
-    height: 32px;
 
     font-family: AdvoCut, sans-serif;
-    font-size: 20px;
-    line-height: normal;
-    color: #c6c0a3;
-    text-align: center;
-    vertical-align: middle;
 
-    background-color: rgb(0 0 0 / 30%);
-    border: 1px solid #707070;
-
-    &:hover {
-        cursor: pointer;
-        color: #fff;
-        background-color: rgb(0 0 0 / 40%);
-    }
-
-    &:active {
-        cursor: pointer;
-        color: #fcda5c;
-        background-color: rgb(0 0 0 / 50%);
+    ul {
+        position: absolute;
+        display: inline-flex;
     }
 }
 
-@each $size, $i in media.$sizes {
+.action-item-name {
+    text-align: center;
+}
+
+.action-item-name, .action-item-description {
+    color: #fff
+}
+
+@each $size, $i in media.$bsizes {
     @media ($size) {
+        #action-container {
+            right: 101px * $i;
+            bottom: 34px * $i;
+
+            width: 64px * $i;
+            height: 73px * $i;
+
+            background: url('/img/#{$i}/main.png') -224px * $i -384px * $i no-repeat;
+
+            ul {
+                bottom: 4px * $i;
+                left: 4px * $i;
+
+                li {
+                    margin-left: 3px * $i;
+                }
+            }
+        }
+
+        .action-wield,
+        .action-equip {
+            background: url('/img/#{$i}/main.png') -400px * $i -384px * $i no-repeat;
+        }
+
+        .action-drop {
+            background: url('/img/#{$i}/main.png') -400px * $i -400px * $i no-repeat;
+        }
+
+        .action-eat {
+            background: url('/img/#{$i}/main.png') -400px * $i -416px * $i no-repeat;
+        }
+
         .action-button {
-            border-width: 1px * $i;
-            border-radius: 3px * $i;
+            width: 16px * $i;
+            height: 16px * $i;
+
+            &:hover {
+                background-position-x: -432px * $i;
+            }
+
+            &:active {
+                background-position-x: -416px * $i;
+            }
+        }
+
+        .action-item-name {
+            margin-top: 3px * $i;
+            margin-left: 4px * $i;
+            font-size: 5px * $i;
+        }
+
+        .action-item-description {
+            margin-left: 3px * $i;
+            font-size: 4px * $i;
         }
     }
 }
 
 @media (--lg) {
-    .action-button {
-        width: 192px;
-        height: 48px;
+    #action-container {
+        right: 298px;
+        bottom: 80px;
+    }
+}
+
+@media (--md) {
+    #action-container {
+        right: 202px;
+        bottom: 68px;
     }
 }

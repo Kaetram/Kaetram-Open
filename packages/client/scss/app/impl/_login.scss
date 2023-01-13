@@ -125,6 +125,7 @@ input[type='range'] {
         }
 
         .validation-error,
+        .validation-warning,
         .status {
             font-size: 8px * $i;
         }
@@ -157,6 +158,7 @@ input[type='range'] {
 
 @media (--lg) {
     .validation-error,
+    .validation-warning,
     .status {
         font-size: 24px;
     }

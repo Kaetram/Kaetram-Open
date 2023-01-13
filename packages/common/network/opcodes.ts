@@ -4,6 +4,11 @@ export enum Login {
     Guest
 }
 
+export enum List {
+    Spawns,
+    Positions
+}
+
 export enum Equipment {
     Batch,
     Equip,
