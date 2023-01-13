@@ -100,5 +100,32 @@
     ],
     "refresh": 600000,
     "currency": "gold"
+  },
+
+  "sorcerer": {
+    "items": [
+      {
+        "key": "staff",
+        "count": 5
+      },
+      {
+        "key": "lightningstaff",
+        "count": 3
+      },
+      {
+        "key": "naturestaff",
+        "count": 3
+      },
+      {
+        "key": "firestaff",
+        "count": 3
+      },
+      {
+        "key": "icestaff",
+        "count": 3
+      }
+    ],
+    "refresh": 120000,
+    "currency": "gold"
   }
 }
