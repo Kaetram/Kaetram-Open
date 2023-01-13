@@ -283,6 +283,15 @@ export default class Item extends Entity {
     }
 
     /**
+     * @param id The enchantment id we are checking for.
+     * @returns Whether or not the item has the enchantment.
+     */
+
+    public hasEnchantment(id: Modules.Enchantment): boolean {
+        return id in this.enchantments;
+    }
+
+    /**
      * Checks if the item is equippable by comparing the type
      * against all the equippable items. Will probably be
      * rewritten for compactness in the future.
@@ -309,6 +318,16 @@ export default class Item extends Entity {
 
     public isArcherWeapon(): boolean {
         return this.itemType === 'weaponarcher';
+    }
+
+    /**
+     * Sets an enchantment onto an item or updates the level if it already exists.
+     * @param id The id of the enchantment.
+     * @param level The level of the enchantment.
+     */
+
+    public setEnchantment(id: Modules.Enchantment, level: number): void {
+        this.enchantments[id] = { level };
     }
 
     /**
