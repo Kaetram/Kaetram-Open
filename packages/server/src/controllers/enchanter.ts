@@ -15,16 +15,12 @@ export default class Enchanter {
      * @param item The item we are adding an enchantment onto.
      */
 
-    private add(item: Item, id: Modules.Enchantment, level: number): void {
-        // If an enchantment already exists, just update the level.
-        if (id in item.enchantments && item.enchantments[id].level < level) {
-            item.enchantments[id].level = level;
-            return;
-        }
+    private add(item: Item, id: Modules.Enchantment, level: number): boolean {
+        // Skip if the enchantment is the same level.
+        if (item.hasEnchantment(id) && item.enchantments[id].level === level) return false;
 
-        // Add the enchantment to the dictionary
-        item.enchantments[id] = {
-            level
-        };
+        item.setEnchantment(id, level);
+
+        return true;
     }
 }
