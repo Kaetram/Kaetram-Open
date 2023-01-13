@@ -1,11 +1,9 @@
 @use '../../abstracts/media';
 
 #action-container {
+    cursor: url('/img/3/hand.png'), auto;
     position: absolute;
     display: none;
-
-    // cursor: hand;
-
     font-family: AdvoCut, sans-serif;
 
     ul {
