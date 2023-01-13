@@ -4198,6 +4198,10 @@
     "type": "object",
     "name": "Bloodwood Logs",
     "price": 150
-  }
+  },
 
+  "bead": {
+    "type": "object",
+    "name": "Magic Bead"
+  }
 }
