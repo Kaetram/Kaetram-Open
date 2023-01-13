@@ -57,7 +57,8 @@ import type {
     SkillPacket,
     MinigamePacket,
     EffectPacket,
-    FriendsPacket
+    FriendsPacket,
+    ListPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -107,6 +108,8 @@ export default class Connection {
         this.menu = game.menu;
         this.sprites = game.sprites;
         this.messages = this.socket.messages;
+
+        this.app.onFocus(() => this.socket.send(Packets.Focus));
 
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
@@ -266,23 +269,47 @@ export default class Connection {
      * @param entities A list of strings that contains the instances of the entities in the region.
      */
 
-    private handleEntityList(entities: string[]): void {
-        let ids = _.map(this.entities.getAll(), 'instance'),
-            known = _.intersection(ids, entities),
-            newIds = _.difference(entities, known);
+    private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
+        switch (opcode) {
+            case Opcodes.List.Spawns: {
+                let ids = _.map(this.entities.getAll(), 'instance'),
+                    known = _.intersection(ids, info.entities),
+                    newIds = _.difference(info.entities, known);
 
-        // Prepare the entities ready for despawning.
-        this.entities.decrepit = _.reject(
-            this.entities.getAll(),
-            (entity) =>
-                _.includes(known, entity.instance) || entity.instance === this.game.player.instance
-        );
+                // Prepare the entities ready for despawning.
+                this.entities.decrepit = _.reject(
+                    this.entities.getAll(),
+                    (entity) =>
+                        _.includes(known, entity.instance) ||
+                        entity.instance === this.game.player.instance
+                );
 
-        // Clear the entities in the decrepit queue.
-        this.entities.clean();
+                // Clear the entities in the decrepit queue.
+                this.entities.clean();
 
-        // Send the new id list request to the server.
-        this.socket.send(Packets.Who, newIds);
+                // Send the new id list request to the server.
+                this.socket.send(Packets.Who, newIds);
+                break;
+            }
+
+            case Opcodes.List.Positions: {
+                // Look through all the positions of the entities and their instances.
+                _.each(info.positions, (position: Position, instance: string) => {
+                    let entity = this.entities.get<Character>(instance);
+
+                    // No entity found, just skip.
+                    if (!entity || entity.moving || entity.hasPath()) return;
+
+                    /**
+                     * When we detect a mismatch in client-sided and server-sided
+                     * entity positions we teleport the entity to the correct position.
+                     */
+
+                    if (entity.gridX !== position.x || entity.gridY !== position.y)
+                        this.game.teleport(entity, position.x, position.y);
+                });
+            }
+        }
     }
 
     /**
@@ -476,6 +503,7 @@ export default class Connection {
 
         // Set the terror effect onto the target.
         if (info.hit.terror) target.setEffect(Modules.Effects.Terror);
+        if (info.hit.poison) target.setEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
         if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
@@ -563,10 +591,10 @@ export default class Connection {
 
         if (!entity) return;
 
-        let { name, rights, x, y } = entity;
+        let { name, x, y } = entity;
 
-        if (rights === 1) name = `[Moderator] ${name}`;
-        if (rights === 2) name = `[Admin] ${name}`;
+        if (entity.isModerator()) name = `[Moderator] ${name}`;
+        if (entity.isAdmin()) name = `[Admin] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -582,7 +610,7 @@ export default class Connection {
 
     /**
      * Hardcoded administrative commands built into the client. When a player
-     * types a special command, the server checks against the player's rights
+     * types a special command, the server checks against the player's rank
      * before sending this packet. These are merely debugging/graphical tests.
      * @param info Packet contains the command string.
      */
@@ -612,6 +640,11 @@ export default class Connection {
                 break;
             }
 
+            case 'toggleiceball': {
+                this.game.player.setEffect(Modules.Effects.Iceball);
+                break;
+            }
+
             case 'togglefire': {
                 this.game.player.setEffect(Modules.Effects.Burning);
                 break;
@@ -624,6 +657,16 @@ export default class Connection {
 
             case 'togglestun': {
                 this.game.player.setEffect(Modules.Effects.Stun);
+                break;
+            }
+
+            case 'togglepoison': {
+                this.game.player.setEffect(Modules.Effects.Poisonball);
+                break;
+            }
+
+            case 'toggleboulder': {
+                this.game.player.setEffect(Modules.Effects.Boulder);
                 break;
             }
         }

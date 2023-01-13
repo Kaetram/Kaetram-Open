@@ -69,5 +69,27 @@
             "- Various user interface improvements",
             "- Backend fixes"
         ]
+    },
+    "alpha-2.3.1": {
+        "title": "Kaetram alpha-2.3.1",
+        "content": [
+            "- Added special effects to some projectiles",
+            "- Fixes some user interface quirks",
+            "- Fixes some private messaging issues",
+            "- Minor improvements to ranged combat",
+            "- Fixes a bug with the overlay sizing",
+            "- New caching system for the client map"
+        ]
+    },
+    "alpha-2.3.2": {
+        "title": "Kaetram alpha-2.3.2",
+        "content": [
+            "- New inventory interface",
+            "- Fixes mobs being unattackable after they moved",
+            "- Mob position sync when returning to game tab (browsers)",
+            "- Fix bug with combat continuing after closing the game",
+            "- Backend optimizations",
+            "- Chat UI fixes on mobile"
+        ]
     }
 }

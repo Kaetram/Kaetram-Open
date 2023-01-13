@@ -15,7 +15,7 @@ export default class Equipment {
     // Properties
     public name = '';
 
-    public ranged = false;
+    public attackRange = 1;
     public lumberjacking = -1;
     public poisonous = false;
 
@@ -67,7 +67,7 @@ export default class Equipment {
 
         this.name = '';
 
-        this.ranged = false;
+        this.attackRange = 1;
         this.lumberjacking = -1;
         this.poisonous = false;
 
@@ -113,7 +113,7 @@ export default class Equipment {
         // Includes information only relevant to the client.
         if (clientInfo) {
             data.name = this.name;
-            data.ranged = this.ranged;
+            data.attackRange = this.attackRange;
             data.poisonous = this.poisonous;
 
             data.attackStats = this.attackStats;

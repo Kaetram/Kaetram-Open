@@ -78,7 +78,7 @@ export default class API {
 
         log.info(`[API] Server chat API not implemented.`);
 
-        let { source, text, colour } = request.body;
+        let { source, text, colour, privateMessage } = request.body;
 
         this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
 

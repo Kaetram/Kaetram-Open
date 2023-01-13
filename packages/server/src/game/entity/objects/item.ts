@@ -1,6 +1,6 @@
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 import PluginIndex from '@kaetram/server/data/plugins/items';
 
 import rawData from '../../../../data/items.json';
@@ -34,6 +34,9 @@ export default class Item extends Entity {
     private skill = '';
     private achievement = '';
     private quest = '';
+    public description = '';
+
+    public projectileName = '';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
@@ -51,6 +54,7 @@ export default class Item extends Entity {
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
+    public attackRange = 1;
 
     public exists = true;
     public undroppable = false;
@@ -107,6 +111,9 @@ export default class Item extends Entity {
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
+        this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
+        this.projectileName = this.data.projectileName || this.projectileName;
+        this.description = this.data.description || this.description;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -268,6 +275,14 @@ export default class Item extends Entity {
     }
 
     /**
+     * @returns The default attack range for an item if none is specified in the configuraiton.
+     */
+
+    private getDefaultAttackRange(): number {
+        return this.isArcherWeapon() ? Modules.Constants.ARCHER_ATTACK_RANGE : this.attackRange;
+    }
+
+    /**
      * Checks if the item is equippable by comparing the type
      * against all the equippable items. Will probably be
      * rewritten for compactness in the future.
@@ -287,28 +302,13 @@ export default class Item extends Entity {
     }
 
     /**
-     * Checks if the item is a ranged weapon.
+     * Verifies whether or not the weapon is an archer weapon. We use this
+     * to default an attack range for range combat.
      * @returns If the itemType is of type `weaponarcher`.
      */
 
-    public isRangedWeapon(): boolean {
+    public isArcherWeapon(): boolean {
         return this.itemType === 'weaponarcher';
-    }
-
-    /**
-     * @returns Whether or not the item type is a weapon or archer weapon.
-     */
-
-    private isWeapon(): boolean {
-        return this.itemType === 'weapon' || this.itemType === 'weaponarcher';
-    }
-
-    /**
-     * @returns Whether or not the item type is that of a armour or archer armour.
-     */
-
-    private isArmour(): boolean {
-        return this.itemType === 'armour' || this.itemType === 'armourarcher';
     }
 
     /**

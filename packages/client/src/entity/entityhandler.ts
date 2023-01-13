@@ -33,7 +33,7 @@ export default class EntityHandler {
                 if (attacker.target.instance !== this.entity.instance)
                     return this.entity.removeAttacker(attacker);
 
-                attacker.follow(this.entity);
+                if (!attacker.canAttackTarget()) attacker.follow(this.entity);
             });
 
             this.sendMovement();

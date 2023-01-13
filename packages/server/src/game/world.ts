@@ -151,7 +151,11 @@ export default class World {
 
             if (!character.hasTarget()) return;
 
-            if (character.target?.instance === cleanCharacter.instance) character.clearTarget();
+            if (character.target?.instance !== cleanCharacter.instance) return;
+
+            character.clearTarget();
+
+            if (character.hasAttacker(cleanCharacter)) character.removeAttacker(cleanCharacter);
         });
     }
 

@@ -12,7 +12,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -30,7 +31,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -47,7 +49,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 8,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -64,7 +67,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
  
@@ -81,7 +85,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -98,7 +103,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 4,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -115,7 +121,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -138,7 +145,8 @@
     "bonuses": {
       "accuracy": 15,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -155,7 +163,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 10,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -178,7 +187,8 @@
     "bonuses": {
       "accuracy": 18,
       "strength": 12,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -195,7 +205,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 10,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -212,7 +223,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 24,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -229,7 +241,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -246,7 +259,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -263,7 +277,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -281,7 +296,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 28,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -299,7 +315,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 32,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -317,7 +334,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 36,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -334,7 +352,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -351,7 +370,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -368,7 +388,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 20,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -386,7 +407,8 @@
     "bonuses": {
       "accuracy": 24,
       "strength": 6,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -403,7 +425,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 14,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -420,7 +443,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 24,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -437,7 +461,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 14,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -454,7 +479,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 24,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -471,7 +497,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 30,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -488,7 +515,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 32,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -505,7 +533,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 34,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -522,7 +551,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 38,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -540,7 +570,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 44,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -557,7 +588,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 10,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -574,7 +606,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 10,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -592,7 +625,8 @@
     "bonuses": {
       "accuracy": 18,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -609,7 +643,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 22,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -627,7 +662,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 20,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -645,7 +681,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 38,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -663,7 +700,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -681,7 +719,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -699,26 +738,112 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 44,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
-  "weastaff": {
+  "staff": {
     "type": "weapon",
-    "name": "Wea Staff",
-    "skill": "magic",
-    "level": 40,
+    "name": "Magic Staff",
     "attackStats": {
-      "crush": 6,
+      "crush": 2,
       "slash": 4,
       "stab": 4,
-      "magic": 100
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 0,
+      "archery": 0,
+      "magic": 5
+    },
+    "attackRange": 9,
+    "projectileName": "projectile-purplebolt"
+  },
+
+  "lightningstaff": {
+    "type": "weapon",
+    "name": "Lightning Staff",
+    "skill": "magic",
+    "level": 10,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 0,
+      "archery": 0,
+      "magic": 7
+    },
+    "attackRange": 9,
+    "projectileName": "projectile-yellowlightning"
+  },
+
+  "naturestaff": {
+    "type": "weapon",
+    "name": "Nature Staff",
+    "skill": "magic",
+    "level": 17,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 0,
+      "archery": 0,
+      "magic": 10
+    },
+    "attackRange": 9,
+    "projectileName": "projectile-greenbolt"
+  },
+
+  "firestaff": {
+    "type": "weapon",
+    "name": "Fire Staff",
+    "skill": "magic",
+    "level": 25,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": 24
     },
     "bonuses": {
       "accuracy": 20,
       "strength": 0,
-      "archery": 0
-    }
+      "archery": 0,
+      "magic": 13
+    },
+    "attackRange": 9,
+    "projectileName": "projectile-fireball"
+  },
+
+  "icestaff": {
+    "type": "weapon",
+    "name": "Ice Staff",
+    "skill": "magic",
+    "level": 35,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 0,
+      "magic": 18
+    },
+    "attackRange": 9,
+    "projectileName": "projectile-iceball"
   },
 
   "pinksword": {
@@ -735,7 +860,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -753,7 +879,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 60,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
   
@@ -773,7 +900,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -791,7 +919,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -810,7 +939,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -828,7 +958,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -847,7 +978,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 12,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -865,7 +997,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -883,7 +1016,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -901,7 +1035,8 @@
     "bonuses": {
       "accuracy": 30,
       "strength": 30,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -919,7 +1054,8 @@
     "bonuses": {
       "accuracy": 18,
       "strength": 69,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -937,7 +1073,8 @@
     "bonuses": {
       "accuracy": 20,
       "strength": 40,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -965,7 +1102,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 2,
-      "archery": 2
+      "archery": 2,
+      "magic": 0
     }
   },
 
@@ -988,7 +1126,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 4,
-      "archery": 3
+      "archery": 3,
+      "magic": 0
     }
   },
 
@@ -1011,7 +1150,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 8,
-      "archery": 4
+      "archery": 4,
+      "magic": 0
     }
   },
 
@@ -1034,7 +1174,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 12,
-      "archery": 6
+      "archery": 6,
+      "magic": 0
     }
   },
 
@@ -1069,7 +1210,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 2,
-      "archery": 2
+      "archery": 2,
+      "magic": 0
     }
   },
 
@@ -1092,7 +1234,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 8,
-      "archery": 3
+      "archery": 3,
+      "magic": 0
     }
   },
 
@@ -1115,7 +1258,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 8,
-      "archery": 4
+      "archery": 4,
+      "magic": 0
     }
   },
 
@@ -1138,7 +1282,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 10,
-      "archery": 6
+      "archery": 6,
+      "magic": 0
     }
   },
 
@@ -1161,7 +1306,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 4,
-      "archery": 16
+      "archery": 16,
+      "magic": 0
     }
   },
 
@@ -1184,7 +1330,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 14,
-      "archery": 16
+      "archery": 16,
+      "magic": 0
     }
   },
 
@@ -1206,7 +1353,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     }
   },
 
@@ -1229,7 +1377,8 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 0,
-      "archery": 3
+      "archery": 3,
+      "magic": 0
     }
   },
 
@@ -1245,14 +1394,15 @@
     },
     "defenseStats": {
       "crush": 7,
-      "slash": 12,
+      "slash": 14,
       "stab": 3,
       "magic": 1
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 3,
       "strength": 0,
-      "archery": 6
+      "archery": 7,
+      "magic": 0
     }
   },
 
@@ -1268,15 +1418,16 @@
       "magic": 0
     },
     "defenseStats": {
-      "crush": 8,
+      "crush": 11,
       "slash": 10,
-      "stab": 5,
+      "stab": 8,
       "magic": 1
     },
     "bonuses": {
       "accuracy": 3,
       "strength": 0,
-      "archery": 8
+      "archery": 9,
+      "magic": 0
     }
   },
 
@@ -1300,7 +1451,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 10
+      "archery": 10,
+      "magic": 0
     }
   },
 
@@ -1324,7 +1476,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 0,
-      "archery": 12
+      "archery": 12,
+      "magic": 0
     }
   },
 
@@ -1348,7 +1501,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 0,
-      "archery": 14
+      "archery": 14,
+      "magic": 0
     }
   },
 
@@ -1372,7 +1526,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 0,
-      "archery": 15
+      "archery": 15,
+      "magic": 0
     }
   },
 
@@ -1396,7 +1551,8 @@
     "bonuses": {
       "accuracy": 9,
       "strength": 0,
-      "archery": 18
+      "archery": 18,
+      "magic": 0
     }
   },
 
@@ -1420,7 +1576,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 0,
-      "archery": 19
+      "archery": 19,
+      "magic": 0
     }
   },
 
@@ -1444,7 +1601,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 0,
-      "archery": 20
+      "archery": 20,
+      "magic": 0
     }
   },
 
@@ -1468,7 +1626,8 @@
     "bonuses": {
       "accuracy": 9,
       "strength": 0,
-      "archery": 20
+      "archery": 20,
+      "magic": 0
     }
   },
 
@@ -1492,7 +1651,108 @@
     "bonuses": {
       "accuracy": 7,
       "strength": 0,
-      "archery": 19
+      "archery": 19,
+      "magic": 0
+    }
+  },
+  
+  "blackpiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19,
+      "magic": 0
+    }
+  },
+
+  "greenpiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19,
+      "magic": 0
+    }
+  },
+
+  "purplepiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19,
+      "magic": 0
+    }
+  },
+
+  "redpiratearcherarmor": {
+    "type": "armourarcher",
+    "name": "Pirate Archer Armour",
+    "skill": "archery",
+    "level": 30,
+    "attackStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 14,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 30,
+      "stab": 14,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 0,
+      "archery": 19,
+      "magic": 0
     }
   },
 
@@ -1516,7 +1776,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 0,
-      "archery": 22
+      "archery": 22,
+      "magic": 0
     }
   },
 
@@ -1540,7 +1801,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 0,
-      "archery": 24
+      "archery": 24,
+      "magic": 0
     }
   },
 
@@ -1564,7 +1826,8 @@
     "bonuses": {
       "accuracy": 7,
       "strength": 0,
-      "archery": 22
+      "archery": 22,
+      "magic": 0
     }
   },
 
@@ -1588,7 +1851,8 @@
     "bonuses": {
       "accuracy": 7,
       "strength": 0,
-      "archery": 24
+      "archery": 24,
+      "magic": 0
     }
   },
 
@@ -1612,7 +1876,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
-      "archery": 26
+      "archery": 26,
+      "magic": 0
     }
   },
 
@@ -1636,7 +1901,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 0,
-      "archery": 26
+      "archery": 26,
+      "magic": 0
     }
   },
 
@@ -1660,7 +1926,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 0,
-      "archery": 28
+      "archery": 28,
+      "magic": 0
     }
   },
 
@@ -1684,7 +1951,8 @@
     "bonuses": {
       "accuracy": 18,
       "strength": 0,
-      "archery": 28
+      "archery": 28,
+      "magic": 0
     }
   },
 
@@ -1708,7 +1976,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 0,
-      "archery": 40
+      "archery": 40,
+      "magic": 0
     }
   },
 
@@ -1732,7 +2001,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
-      "archery": 44
+      "archery": 44,
+      "magic": 0
     }
   },
 
@@ -1756,7 +2026,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 54
+      "archery": 54,
+      "magic": 0
     }
   },
 
@@ -1780,7 +2051,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 24
+      "archery": 24,
+      "magic": 0
     }
   },
 
@@ -1804,7 +2076,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 16
+      "archery": 16,
+      "magic": 0
     }
   },
 
@@ -1827,7 +2100,8 @@
     "bonuses": {
       "accuracy": 2,
       "strength": 1,
-      "archery": 3
+      "archery": 3,
+      "magic": 0
     }
   },
 
@@ -1845,7 +2119,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 2,
-      "archery": 5
+      "archery": 5,
+      "magic": 0
     }
   },
 
@@ -1863,7 +2138,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 3,
-      "archery": 7
+      "archery": 7,
+      "magic": 0
     }
   },
 
@@ -1881,7 +2157,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 5,
-      "archery": 9
+      "archery": 9,
+      "magic": 0
     }
   },
 
@@ -1899,7 +2176,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 2,
-      "archery": 11
+      "archery": 11,
+      "magic": 0
     }
   },
 
@@ -1917,7 +2195,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 3,
-      "archery": 15
+      "archery": 15,
+      "magic": 0
     }
   },
 
@@ -1935,7 +2214,8 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 1,
-      "archery": 12
+      "archery": 12,
+      "magic": 0
     }
   },
 
@@ -1953,7 +2233,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 14
+      "archery": 14,
+      "magic": 0
     }
   },
 
@@ -1971,7 +2252,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 2,
-      "archery": 15
+      "archery": 15,
+      "magic": 0
     }
   },
 
@@ -1989,7 +2271,8 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 4,
-      "archery": 21
+      "archery": 21,
+      "magic": 0
     }
   },
 
@@ -2007,7 +2290,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 17
+      "archery": 17,
+      "magic": 0
     }
   },
 
@@ -2025,7 +2309,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 5,
-      "archery": 19
+      "archery": 19,
+      "magic": 0
     }
   },
 
@@ -2043,7 +2328,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 7,
-      "archery": 20
+      "archery": 20,
+      "magic": 0
     }
   },
 
@@ -2061,7 +2347,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 5,
-      "archery": 24
+      "archery": 24,
+      "magic": 0
     }
   },
 
@@ -2079,7 +2366,8 @@
     "bonuses": {
       "accuracy": 7,
       "strength": 5,
-      "archery": 25
+      "archery": 25,
+      "magic": 0
     }
   },
 
@@ -2097,7 +2385,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 30
+      "archery": 30,
+      "magic": 0
     }
   },
 
@@ -2115,7 +2404,8 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 5,
-      "archery": 24
+      "archery": 24,
+      "magic": 0
     }
   },
 
@@ -2133,7 +2423,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 5,
-      "archery": 28
+      "archery": 28,
+      "magic": 0
     }
   },
 
@@ -2151,7 +2442,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 33
+      "archery": 33,
+      "magic": 0
     }
   },
 
@@ -2169,7 +2461,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 2,
-      "archery": 38
+      "archery": 38,
+      "magic": 0
     }
   },
 
@@ -2187,7 +2480,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 35
+      "archery": 35,
+      "magic": 0
     }
   },
 
@@ -2205,7 +2499,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 38
+      "archery": 38,
+      "magic": 0
     }
   },
 
@@ -2223,7 +2518,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 40
+      "archery": 40,
+      "magic": 0
     }
   },
 
@@ -2241,7 +2537,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 44
+      "archery": 44,
+      "magic": 0
     }
   },
 
@@ -2259,7 +2556,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 48
+      "archery": 48,
+      "magic": 0
     }
   },
 
@@ -2277,7 +2575,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 50
+      "archery": 50,
+      "magic": 0
     }
   },
 
@@ -2295,7 +2594,8 @@
     "bonuses": {
       "accuracy": 3,
       "strength": 8,
-      "archery": 55
+      "archery": 55,
+      "magic": 0
     }
   },
 
@@ -2324,7 +2624,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 5,
-      "archery": -2
+      "archery": -2,
+      "magic": 0
     }
   },
 
@@ -2348,7 +2649,8 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 5,
-      "archery": -5
+      "archery": -5,
+      "magic": 0
     }
   },
 
@@ -2372,7 +2674,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 6,
-      "archery": -4
+      "archery": -4,
+      "magic": 0
     }
   },
 
@@ -2396,7 +2699,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 8,
-      "archery": -3
+      "archery": -3,
+      "magic": 0
     }
   },
 
@@ -2420,7 +2724,8 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 10,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2444,7 +2749,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 6,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2468,7 +2774,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 8,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2492,7 +2799,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 12,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2516,7 +2824,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 14,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2540,7 +2849,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 16,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2564,13 +2874,14 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 20,
-      "archery": -4
+      "archery": -4,
+      "magic": 0
     }
   },
 
-  "bluepiratearmor": {
+  "piratearmor": {
     "type": "armour",
-    "name": "Blue Pirate Armour",
+    "name": "Pirate Armour",
     "price": 3500,
     "level": 55,
     "attackStats": {
@@ -2588,7 +2899,83 @@
     "bonuses": {
       "accuracy": 11,
       "strength": 21,
-      "archery": -2
+      "archery": -2,
+      "magic": 0
+    }
+  },
+
+  "greenpiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2,
+      "magic": 0
+    }
+  },
+
+  "purplepiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2,
+      "magic": 0
+    }
+  },
+
+  "redpiratearmor": {
+    "type": "armour",
+    "name": "Pirate Armour",
+    "price": 3500,
+    "level": 55,
+    "attackStats": {
+      "crush": 13,
+      "slash": 25,
+      "stab": 15,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 36,
+      "slash": 36,
+      "stab": 30,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 21,
+      "archery": -2,
+      "magic": 0
     }
   },
 
@@ -2612,7 +2999,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 22,
-      "archery": -3
+      "archery": -3,
+      "magic": 0
     }
   },
 
@@ -2636,7 +3024,8 @@
     "bonuses": {
       "accuracy": 13,
       "strength": 25,
-      "archery": -10
+      "archery": -10,
+      "magic": 0
     }
   },
 
@@ -2660,7 +3049,8 @@
     "bonuses": {
       "accuracy": 13,
       "strength": 25,
-      "archery": -8
+      "archery": -8,
+      "magic": 0
     }
   },
 
@@ -2684,7 +3074,8 @@
     "bonuses": {
       "accuracy": 13,
       "strength": 25,
-      "archery": -5
+      "archery": -5,
+      "magic": 0
     }
   },
 
@@ -2708,7 +3099,8 @@
     "bonuses": {
       "accuracy": 13,
       "strength": 26,
-      "archery": -4
+      "archery": -4,
+      "magic": 0
     }
   },
 
@@ -2732,7 +3124,8 @@
     "bonuses": {
       "accuracy": 13,
       "strength": 28,
-      "archery": -10
+      "archery": -10,
+      "magic": 0
     }
   },
 
@@ -2756,7 +3149,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 28,
-      "archery": -10
+      "archery": -10,
+      "magic": 0
     }
   },
 
@@ -2780,7 +3174,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 28,
-      "archery": 3
+      "archery": 3,
+      "magic": 0
     }
   },
 
@@ -2804,7 +3199,8 @@
     "bonuses": {
       "accuracy": 15,
       "strength": 28,
-      "archery": 4
+      "archery": 4,
+      "magic": 0
     }
   },
 
@@ -2828,7 +3224,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 30,
-      "archery": 1
+      "archery": 1,
+      "magic": 0
     }
   },
 
@@ -2852,7 +3249,8 @@
     "bonuses": {
       "accuracy": 12,
       "strength": 28,
-      "archery": -12
+      "archery": -12,
+      "magic": 0
     }
   },
 
@@ -2876,7 +3274,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 30,
-      "archery": -8
+      "archery": -8,
+      "magic": 0
     }
   },
 
@@ -2900,7 +3299,8 @@
     "bonuses": {
       "accuracy": 20,
       "strength": 10,
-      "archery": -8
+      "archery": -8,
+      "magic": 0
     }
   },
 
@@ -2924,7 +3324,8 @@
     "bonuses": {
       "accuracy": 20,
       "strength": 20,
-      "archery": -4
+      "archery": -4,
+      "magic": 0
     }
   },
 
@@ -2948,7 +3349,8 @@
     "bonuses": {
       "accuracy": 10,
       "strength": 18,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -2987,7 +3389,8 @@
     "bonuses": {
       "accuracy": 6,
       "strength": 40,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -3022,7 +3425,8 @@
     "bonuses": {
       "accuracy": 18,
       "strength": 12,
-      "archery": 6
+      "archery": 6,
+      "magic": 0
     }
   },
 
@@ -3166,7 +3570,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 22,
-      "archery": -1
+      "archery": -1,
+      "magic": 0
     }
   },
 
@@ -3215,7 +3620,8 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 12,
-      "archery": 7
+      "archery": 7,
+      "magic": 0
     }
   },
 
@@ -3283,7 +3689,8 @@
     "bonuses": {
       "accuracy": 14,
       "strength": 48,
-      "archery": 32
+      "archery": 32,
+      "magic": 0
     }
   },
 
@@ -3387,7 +3794,8 @@
   "gold": {
     "type": "object",
     "name": "Gold",
-    "stackable": true
+    "stackable": true,
+    "description": "A very useful shiny metal that for some reason people like to exchange for goods."
   },
 
   "mountseadragon": {
@@ -3686,31 +4094,36 @@
   "shardt1": {
     "type": "object",
     "name": "Shard - Tier 1",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt2": {
     "type": "object",
     "name": "Shard - Tier 2",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt3": {
     "type": "object",
     "name": "Shard - Tier 3",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt4": {
     "type": "object",
     "name": "Shard - Tier 4",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "shardt5": {
     "type": "object",
     "name": "Shard - Tier 5",
-    "stackable": true
+    "stackable": true,
+    "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
 
   "ghost": {
@@ -3741,7 +4154,8 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 4,
-      "archery": 0
+      "archery": 0,
+      "magic": 0
     },
     "price": 1000
   },
