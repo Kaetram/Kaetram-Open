@@ -1,10 +1,18 @@
-import type { Enchantments } from '@kaetram/common/types/item';
-import type { SlotData } from '@kaetram/common/types/slot';
+import Utils from '@kaetram/common/util/utils';
+
 import type Item from '../../../objects/item';
+import type { SlotData } from '@kaetram/common/types/slot';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Slot {
     public edible = false;
     public equippable = false;
+
+    public name = '';
+    public description = '';
+    public attackStats: Stats = Utils.getEmptyStats();
+    public defenseStats: Stats = Utils.getEmptyStats();
+    public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
     private maxStackSize = 1;
@@ -30,6 +38,12 @@ export default class Slot {
 
         this.edible = item.edible;
         this.equippable = item.isEquippable();
+
+        this.name = item.name;
+        this.description = item.description;
+        this.attackStats = item.attackStats;
+        this.defenseStats = item.defenseStats;
+        this.bonuses = item.bonuses;
 
         if (item.stackable) this.maxStackSize = item.maxStackSize;
 
@@ -88,6 +102,12 @@ export default class Slot {
         this.edible = false;
         this.equippable = false;
         this.maxStackSize = 1;
+
+        this.name = '';
+        this.description = '';
+        this.attackStats = Utils.getEmptyStats();
+        this.defenseStats = Utils.getEmptyStats();
+        this.bonuses = Utils.getEmptyBonuses();
     }
 
     /**
@@ -117,7 +137,19 @@ export default class Slot {
      */
 
     public serialize(): SlotData {
-        let { index, key, count, enchantments, edible, equippable } = this;
+        let {
+            index,
+            key,
+            count,
+            enchantments,
+            edible,
+            equippable,
+            name,
+            description,
+            attackStats,
+            defenseStats,
+            bonuses
+        } = this;
 
         return {
             index,
@@ -125,7 +157,12 @@ export default class Slot {
             count,
             enchantments,
             edible,
-            equippable
+            equippable,
+            name,
+            description,
+            attackStats,
+            defenseStats,
+            bonuses
         };
     }
 }

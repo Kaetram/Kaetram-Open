@@ -55,7 +55,8 @@ export default class Resources {
     protected createResource(info: ProcessedResource, index: number): void {
         let resource = new Resource(info.type),
             coords = this.map.indexToCoord(index),
-            region = this.regions.get(this.regions.getRegion(coords.x, coords.y));
+            regionIndex = this.regions.getRegion(coords.x, coords.y),
+            region = this.regions.get(regionIndex);
 
         // Load actual resource tile data.
         this.search(info, resource, index);
@@ -80,7 +81,7 @@ export default class Resources {
         this.resources[resource.instance] = resource;
 
         // Send an update when a resource's state undergoes a change.
-        resource.onStateChange(() => this.regions.sendUpdate(region));
+        resource.onStateChange(() => this.regions.sendUpdate(regionIndex));
     }
 
     /**

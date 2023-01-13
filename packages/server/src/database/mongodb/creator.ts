@@ -18,7 +18,7 @@ export interface PlayerInfo {
     x: number;
     y: number;
     userAgent: string;
-    rights: number;
+    rank: Modules.Ranks;
     poison: PoisonInfo;
     hitPoints: number;
     mana: number;
@@ -227,6 +227,7 @@ export default class Creator {
      */
 
     public static verifyPlayer(player: Player): boolean {
+        if (player.username.includes('*')) return false;
         if (!player.username || player.username.length === 0) return false;
         if (!player.password || player.password.length < 3) return false;
         if (player.email && !Utils.isEmail(player.email)) return false;
@@ -248,7 +249,7 @@ export default class Creator {
             x: player.x,
             y: player.y,
             userAgent: player.userAgent,
-            rights: player.rights,
+            rank: player.rank,
             poison: {
                 type: player.poison ? player.poison.type : -1,
                 remaining: player.poison ? player.poison.getRemainingTime() : -1
