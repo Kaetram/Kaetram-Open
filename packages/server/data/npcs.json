@@ -91,7 +91,8 @@
   },
 
   "sorcerer": {
-    "name": "Sorcerer"
+    "name": "Sorcerer",
+    "store": "sorcerer"
   },
 
   "coder": {
