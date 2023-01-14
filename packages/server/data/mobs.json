@@ -1860,7 +1860,7 @@
   "forestdragon": {
     "name": "Forest Dragon",
     "drops": {"dragonarmor": 75, "bamboospear": 75, "gold": 900, "marblependant": 75, "essentialrage": 75},
-    "hitPoints": 4500,
+    "hitPoints": 6942,
     "defenseLevel": 10,
     "attackLevel": 80,
     "experience": 4250,

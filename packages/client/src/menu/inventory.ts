@@ -126,6 +126,8 @@ export default class Inventory extends Menu {
             if (element.edible) this.handleAction(Modules.MenuActions.Eat);
             else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
 
+            this.actions.hide();
+
             return;
         }
 
