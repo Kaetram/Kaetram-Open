@@ -563,6 +563,9 @@ export default class Character extends Entity {
 
     public canAttackTarget(): boolean {
         if (!this.hasTarget()) return false;
+
+        if (!this.target!.isMob()) return false;
+
         if (this.getDistance(this.target!) > this.attackRange - 1) return false;
 
         return true;
