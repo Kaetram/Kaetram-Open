@@ -747,6 +747,7 @@
     "type": "weapon",
     "name": "Magic Staff",
     "price": 1500,
+    "manaCost": 3,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -754,7 +755,7 @@
       "magic": 12
     },
     "bonuses": {
-      "accuracy": 1,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0,
       "magic": 5
@@ -768,6 +769,7 @@
     "name": "Lightning Staff",
     "skill": "magic",
     "price": 15000,
+    "manaCost": 5,
     "level": 10,
     "attackStats": {
       "crush": 2,
@@ -776,10 +778,10 @@
       "magic": 18
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 5,
       "strength": 0,
       "archery": 0,
-      "magic": 7
+      "magic": 12
     },
     "attackRange": 9,
     "projectileName": "projectile-yellowlightning"
@@ -790,6 +792,7 @@
     "name": "Nature Staff",
     "skill": "magic",
     "price": 25000,
+    "manaCost": 7,
     "level": 17,
     "attackStats": {
       "crush": 2,
@@ -798,10 +801,10 @@
       "magic": 18
     },
     "bonuses": {
-      "accuracy": 3,
+      "accuracy": 9,
       "strength": 0,
       "archery": 0,
-      "magic": 10
+      "magic": 18
     },
     "attackRange": 9,
     "projectileName": "projectile-greenbolt"
@@ -812,6 +815,7 @@
     "name": "Fire Staff",
     "skill": "magic",
     "price": 45000,
+    "manaCost": 10,
     "level": 25,
     "attackStats": {
       "crush": 2,
@@ -820,10 +824,10 @@
       "magic": 24
     },
     "bonuses": {
-      "accuracy": 20,
+      "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 13
+      "magic": 26
     },
     "attackRange": 9,
     "projectileName": "projectile-fireball"
@@ -834,6 +838,7 @@
     "name": "Ice Staff",
     "skill": "magic",
     "price": 69420,
+    "manaCost": 13,
     "level": 35,
     "attackStats": {
       "crush": 2,
@@ -842,10 +847,10 @@
       "magic": 30
     },
     "bonuses": {
-      "accuracy": 20,
+      "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 18
+      "magic": 40
     },
     "attackRange": 9,
     "projectileName": "projectile-iceball"
@@ -3566,10 +3571,10 @@
       "magic": 10
     },
     "bonuses": {
-      "accuracy": 1,
+      "accuracy": 4,
       "strength": 0,
       "archery": 1,
-      "magic": 3
+      "magic": 4
     }
   },
 
