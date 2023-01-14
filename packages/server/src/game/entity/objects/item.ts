@@ -34,9 +34,13 @@ export default class Item extends Entity {
     private skill = '';
     private achievement = '';
     private quest = '';
-    public description = '';
 
-    public projectileName = '';
+    // Points usage
+    public manaCost = 0;
+
+    // Item information
+    public description = '';
+    public projectileName = 'projectile-pinearrow';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
@@ -114,6 +118,7 @@ export default class Item extends Entity {
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
         this.projectileName = this.data.projectileName || this.projectileName;
         this.description = this.data.description || this.description;
+        this.manaCost = this.data.manaCost || this.manaCost;
 
         if (this.data.plugin) this.loadPlugin();
     }
