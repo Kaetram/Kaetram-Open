@@ -1101,7 +1101,7 @@
       "crush": 8,
       "slash": 8,
       "stab": 8,
-      "magic": 2
+      "magic": 6
     },
     "defenseStats": {
       "crush": 5,
@@ -1113,7 +1113,7 @@
       "accuracy": 2,
       "strength": 2,
       "archery": 2,
-      "magic": 0
+      "magic": 3
     }
   },
 
@@ -1125,7 +1125,7 @@
       "crush": 12,
       "slash": 12,
       "stab": 12,
-      "magic": 4
+      "magic": 10
     },
     "defenseStats": {
       "crush": 10,
@@ -1137,7 +1137,7 @@
       "accuracy": 4,
       "strength": 4,
       "archery": 3,
-      "magic": 0
+      "magic": 4
     }
   },
 
@@ -1149,7 +1149,7 @@
       "crush": 16,
       "slash": 16,
       "stab": 16,
-      "magic": 6
+      "magic": 8
     },
     "defenseStats": {
       "crush": 15,
@@ -1161,7 +1161,7 @@
       "accuracy": 6,
       "strength": 8,
       "archery": 4,
-      "magic": 0
+      "magic": 6
     }
   },
 
@@ -1173,7 +1173,7 @@
       "crush": 18,
       "slash": 28,
       "stab": 18,
-      "magic": 8
+      "magic": 12
     },
     "defenseStats": {
       "crush": 20,
@@ -1185,7 +1185,7 @@
       "accuracy": 6,
       "strength": 12,
       "archery": 6,
-      "magic": 0
+      "magic": 10
     }
   },
 
@@ -1221,7 +1221,7 @@
       "accuracy": 2,
       "strength": 2,
       "archery": 2,
-      "magic": 0
+      "magic": 2
     }
   },
 
@@ -1245,7 +1245,7 @@
       "accuracy": 4,
       "strength": 8,
       "archery": 3,
-      "magic": 0
+      "magic": 3
     }
   },
 
@@ -1269,7 +1269,7 @@
       "accuracy": 6,
       "strength": 8,
       "archery": 4,
-      "magic": 0
+      "magic": 5
     }
   },
 
@@ -1293,7 +1293,7 @@
       "accuracy": 8,
       "strength": 10,
       "archery": 6,
-      "magic": 0
+      "magic": 8
     }
   },
 
@@ -1317,7 +1317,7 @@
       "accuracy": 6,
       "strength": 4,
       "archery": 16,
-      "magic": 0
+      "magic": 12
     }
   },
 
@@ -1341,7 +1341,7 @@
       "accuracy": 8,
       "strength": 14,
       "archery": 16,
-      "magic": 0
+      "magic": 12
     }
   },
 
@@ -3575,6 +3575,106 @@
       "strength": 0,
       "archery": 1,
       "magic": 4
+    }
+  },
+
+  "orangewizardrobe": {
+    "type": "armour",
+    "name": "Lightning Robe",
+    "skill": "magic",
+    "level": 12,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 21
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 1,
+      "magic": 7
+    }
+  },
+
+  "greenwizardrobe": {
+    "type": "armour",
+    "name": "Nature Robe",
+    "skill": "magic",
+    "level": 21,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 28
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 21
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": 4,
+      "magic": 9
+    }
+  },
+
+  "darkwizardrobe": {
+    "type": "armour",
+    "name": "Dark Robe",
+    "skill": "magic",
+    "level": 30,
+    "attackStats": {
+      "crush": 6,
+      "slash": 10,
+      "stab": 8,
+      "magic": 36
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 3,
+      "stab": 3,
+      "magic": 28
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 3,
+      "archery": 6,
+      "magic": 13
+    }
+  },
+
+  "bluewizardrobe": {
+    "type": "armour",
+    "name": "Ice Robe",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 8,
+      "slash": 12,
+      "stab": 11,
+      "magic": 45
+    },
+    "defenseStats": {
+      "crush": -4,
+      "slash": -8,
+      "stab": -1,
+      "magic": 37
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 5,
+      "archery": 7,
+      "magic": 20
     }
   },
 
