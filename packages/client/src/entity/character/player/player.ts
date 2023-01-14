@@ -437,6 +437,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has a ranged-based magic weapon.
+     */
+
+    public isMagic(): boolean {
+        return this.getWeapon().bonuses.magic > 0 && this.isRanged();
+    }
+
+    /**
      * @returns Whether or not the current weapon's key isn't an empty string.
      */
 
