@@ -3552,7 +3552,25 @@
 
   "wizardrobe": {
     "type": "armour",
-    "name": "Wizard Robe"
+    "name": "Wizard Robe",
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 14
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 0,
+      "archery": 1,
+      "magic": 3
+    }
   },
 
   "ironknightarmor": {
@@ -4178,12 +4196,14 @@
   "logs": {
     "type": "object",
     "name": "Logs",
+    "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
     "price": 20
   },
 
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
+    "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
     "price": 25
   },
 
