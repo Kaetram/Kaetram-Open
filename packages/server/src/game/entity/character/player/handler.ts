@@ -54,6 +54,7 @@ export default class Handler {
 
         // Hit callback
         this.player.onHit(this.handleHit.bind(this));
+        this.player.combat.onAttack(this.handleAttack.bind(this));
 
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
@@ -203,6 +204,21 @@ export default class Handler {
         if (!attacker) return;
 
         if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
+    }
+
+    /**
+     * Callback for when the player performs an attack.
+     */
+
+    private handleAttack(): void {
+        if (!this.player.isMagic()) return;
+
+        let { manaCost } = this.player.equipment.getWeapon();
+
+        if (!this.player.hasManaForAttack())
+            return this.player.notify('You are low on mana, your attacks will be weaker.');
+
+        this.player.mana.decrement(manaCost);
     }
 
     /**
