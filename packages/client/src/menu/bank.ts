@@ -80,9 +80,12 @@ export default class Bank extends Menu {
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getInventoryElement(index).querySelector<HTMLElement>('.bank-image')!,
-                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!;
+                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.inventory-item-image')!;
 
-            image.style.backgroundImage = slot.style.backgroundImage;
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
             count.textContent = slot.textContent;
         });
     }
