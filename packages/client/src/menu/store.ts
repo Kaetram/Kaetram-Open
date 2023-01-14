@@ -114,9 +114,12 @@ export default class Store extends Menu {
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getElement(index).querySelector<HTMLElement>('.bank-image')!,
-                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!;
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.inventory-item-image')!;
 
-            image.style.backgroundImage = slot.style.backgroundImage;
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
             count.textContent = slot.textContent;
         });
     }
