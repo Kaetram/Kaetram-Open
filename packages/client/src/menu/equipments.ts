@@ -142,10 +142,11 @@ export default class Equipments extends Menu {
             bonuses.accuracy += equipment.bonuses.accuracy;
             bonuses.strength += equipment.bonuses.strength;
             bonuses.archery += equipment.bonuses.archery;
+            bonuses.magic += equipment.bonuses.magic;
         });
 
         let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
-            bonsuses = ['Accuracy', 'Strength', 'Archery'];
+            bonsuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
 
         _.each(stats, (stat: string) => {
             let lStat = stat.toLowerCase(),
