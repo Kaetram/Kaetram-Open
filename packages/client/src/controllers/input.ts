@@ -513,12 +513,15 @@ export default class InputController {
     }
 
     /**
-     * @returns A bow sprite if the player is ranged, otherwise a sword
-     * when targeting an entity.
+     * @returns If a player uses a ranged magic weapon we display the spell icon,
+     * if they are using a ranged weapon we display the bow, otherwise a sword.
      */
 
     private getAttackCursor(): Sprite {
-        return this.cursors[this.player.isRanged() ? 'bow' : 'sword'];
+        if (this.player.isMagic()) return this.cursors.spell;
+        if (this.player.isRanged()) return this.cursors.bow;
+
+        return this.cursors.sword;
     }
 
     /**
