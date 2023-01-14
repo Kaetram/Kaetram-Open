@@ -320,7 +320,7 @@
     "attackRange": 5,
     "aggressive": true,
     "roaming": true,
-    "attackRate": 900,
+    "attackRate": 1100,
     "movementSpeed": 400,
     "projectileName": "projectile-terror",
     "respawnDelay": 35000
@@ -328,7 +328,7 @@
 
   "blazespider": {
     "name": "Blaze Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 75},
+    "drops": {"gold": 50, "blackspiderarmor": 10},
     "hitPoints": 1350,
     "defenseLevel": 0,
     "attackLevel": 3,
@@ -601,7 +601,7 @@
 
   "firespider": {
     "name": "Fire Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 60},
+    "drops": {"gold": 50, "blackspiderarmor": 15},
     "hitPoints": 850,
     "defenseLevel": 3,
     "attackLevel": 4,
@@ -722,7 +722,7 @@
 
   "hellspider": {
     "name": "Hell Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 40},
+    "drops": {"gold": 50, "blackspiderarmor": 5},
     "hitPoints": 780,
     "defenseLevel": 10,
     "attackLevel": 15,
@@ -1083,7 +1083,7 @@
 
   "poisonspider": {
     "name": "Poison Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 30},
+    "drops": {"gold": 50, "blackspiderarmor": 10},
     "hitPoints": 990,
     "defenseLevel": 30,
     "attackLevel": 15,
@@ -1510,7 +1510,7 @@
 
   "spider": {
     "name": "Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 50},
+    "drops": {"gold": 50, "blackspiderarmor": 5},
     "hitPoints": 650,
     "defenseLevel": 45,
     "attackLevel": 1,
@@ -1861,7 +1861,7 @@
     "name": "Forest Dragon",
     "drops": {"dragonarmor": 75, "bamboospear": 75, "gold": 900, "marblependant": 75, "essentialrage": 75},
     "hitPoints": 4500,
-    "defenseLevel": 200,
+    "defenseLevel": 10,
     "attackLevel": 80,
     "experience": 4250,
     "level": 258,
