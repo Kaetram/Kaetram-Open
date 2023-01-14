@@ -500,6 +500,14 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * @returns Default implementation for characters.
+     */
+
+    public isMagic(): boolean {
+        return false;
+    }
+
+    /**
      * Checks if an entity is dead by verifying
      * hitPoints are above 0 or if the variable `dead` is set.
      * @returns Boolean on whether the character is dead or not.

@@ -8,6 +8,7 @@ import type Item from '../../../../objects/item';
 export default class Weapon extends Equipment {
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public projectileName = '';
+    public manaCost = 0;
 
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
         super(Modules.Equipment.Weapon, key, count, enchantments);
@@ -24,6 +25,7 @@ export default class Weapon extends Equipment {
         this.attackRate = item.attackRate;
         this.poisonous = item.poisonous;
         this.projectileName = item.projectileName;
+        this.manaCost = item.manaCost;
     }
 
     /**

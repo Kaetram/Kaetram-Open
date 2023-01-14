@@ -56,4 +56,5 @@ export interface ItemData {
     attackRange?: number;
     projectileName?: string;
     description?: string;
+    manaCost?: number;
 }

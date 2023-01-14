@@ -1073,6 +1073,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has enough mana to attack.
+     */
+
+    public hasManaForAttack(): boolean {
+        return this.mana.getMana() >= this.equipment.getWeapon().manaCost;
+    }
+
+    /**
      * Getters
      */
 
@@ -1256,6 +1264,14 @@ export default class Player extends Character {
 
     public override isPoisonous(): boolean {
         return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
+     * @returns Whether or not the player uses magic-based weapons.
+     */
+
+    public override isMagic(): boolean {
+        return this.equipment.getWeapon().isMagic();
     }
 
     /**
@@ -1553,6 +1569,9 @@ export default class Player extends Character {
      */
 
     public override getAccuracyLevel(): number {
+        // We use magic level for accuracy when the player is using a magic weapon.
+        if (this.isMagic()) return this.skills.get(Modules.Skills.Magic).level;
+
         return this.skills.get(Modules.Skills.Accuracy).level;
     }
 
@@ -1588,7 +1607,16 @@ export default class Player extends Character {
      */
 
     public override getDamageBonus(): number {
-        if (this.equipment.getWeapon().isMagic()) return this.getBonuses().magic;
+        // Handle magic bonuses
+        if (this.isMagic()) {
+            // If the player does not have enough mana for the attack decrease the damage.
+            if (!this.hasManaForAttack()) return 0;
+
+            // Return the total magic bonus.
+            return this.getBonuses().magic;
+        }
+
+        // Return the archery bonus if using ranged weapons.
         if (this.isRanged()) return this.getBonuses().archery;
 
         return this.getBonuses().strength;
