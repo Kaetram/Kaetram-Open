@@ -1,6 +1,7 @@
+import config from '@kaetram/common/config';
 import _ from 'lodash';
 
-import type { Friend } from '@kaetram/common/types/friends';
+import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
 import type Player from './player';
 
 type SyncCallback = (username: string, status: boolean) => void;
@@ -26,7 +27,12 @@ export default class Friends {
         if (friends.length === 0) return;
 
         _.each(friends, (username: string) => {
-            this.list[username] = this.player.world.isOnline(username);
+            let online = this.player.world.isOnline(username);
+
+            this.list[username] = {
+                online,
+                serverId: online ? config.serverId : -1
+            };
         });
 
         this.loadCallback?.();
@@ -57,10 +63,10 @@ export default class Friends {
             if (!exists) return this.player.notify('No player with that username exists.');
 
             // Add the friend and check if they are online.
-            this.list[username] = this.player.world.isOnline(username);
+            this.list[username].online = this.player.world.isOnline(username);
 
             // Add the friend to the list and pass on the online status to the client.
-            this.addCallback?.(username, this.list[username]);
+            this.addCallback?.(username, this.list[username].online);
         });
     }
 
@@ -90,6 +96,14 @@ export default class Friends {
     }
 
     /**
+     * @returns A string list of all the players that are inactive.
+     */
+
+    public getInactiveFriends(): string[] {
+        return Object.keys(this.list).filter((username) => !this.list[username].online);
+    }
+
+    /**
      * @param username String of the username to check if they are a friend.
      * @returns Whether or not the player is a friend.
      */
@@ -102,12 +116,25 @@ export default class Friends {
      * Updates the online status for a friend.
      * @param username The username of the friend.
      * @param status The online status of the friend.
+     * @param serverId The server ID of the friend.
      */
 
-    public setStatus(username: string, status: boolean): void {
-        this.list[username] = status;
+    public setStatus(username: string, status: boolean, serverId: number): void {
+        this.list[username].online = status;
+        this.list[username].serverId = status ? serverId : -1;
 
         this.statusCallback?.(username, status);
+    }
+
+    /**
+     * Takes a list of active friends and appends it onto the current list.
+     * @param list The list of active friends.
+     */
+
+    public setActiveFriends(list: Friend): void {
+        _.each(list, (friend: FriendInfo, username: string) =>
+            this.setStatus(username, friend.online, friend.serverId)
+        );
     }
 
     /**

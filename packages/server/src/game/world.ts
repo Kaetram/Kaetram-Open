@@ -167,9 +167,24 @@ export default class World {
      */
 
     public linkFriends(lPlayer: Player, logout = false): void {
+        // Parse the local friends first.
+        this.syncFriendsList(lPlayer.username, logout);
+
+        // If the hub is enabled, we request the hub to link friends across servers.
+        if (config.hubEnabled) this.api.linkFriends(lPlayer, logout);
+    }
+
+    /**
+     * Iterates through all the players currently logged in and updates the status
+     * of `username` in their friends list if it exists.
+     * @param username The username we are updating the status of.
+     * @param logout The status we are updating the user to.
+     */
+
+    public syncFriendsList(username: string, logout = false): void {
         this.entities.forEachPlayer((player: Player) => {
-            if (player.friends.hasFriend(lPlayer.username))
-                player.friends.setStatus(lPlayer.username, !logout);
+            if (player.friends.hasFriend(username))
+                player.friends.setStatus(username, !logout, config.serverId);
         });
     }
 

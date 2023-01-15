@@ -1326,7 +1326,7 @@ export default class Connection {
             }
 
             case Opcodes.Friends.Add: {
-                this.game.player.addFriend(info.username!, info.status!);
+                this.game.player.addFriend(info.username!, info.status!, info.serverId!);
                 break;
             }
 
