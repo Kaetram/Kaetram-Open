@@ -155,7 +155,7 @@ export default class Incoming {
         switch (opcode) {
             case Opcodes.Login.Login: {
                 // Check the player in other servers first (defaults to false if hub is not present).
-                this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+                return this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
                     if (online) return this.connection.reject('loggedin');
 
                     this.database.login(this.player);
