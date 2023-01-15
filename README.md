@@ -27,11 +27,15 @@ Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-![Demo 1](https://i.imgur.com/slnzrZB.png 'Demo 1')
+![Demo 1](https://i.imgur.com/MvErlP4.png 'Demo 1')
 
 ![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
 
-![Demo 3](https://i.imgur.com/cZTFqnd.png 'Demo 3')
+![Demo 3](https://i.imgur.com/tkgTjsf.png 'Demo 3')
+
+![Demo 4](https://i.imgur.com/64UU95B.png 'Demo 4')
+
+![Demo 5](https://i.imgur.com/L0MN6LO.png 'Demo 5')
 
 ## Technologies
 
@@ -53,7 +57,7 @@ readability, performance, and compatibility. Some of the many features are as fo
 - Cross-server private messaging and interactions.
 - Enhanced map parsing w/ support for compressed tilemaps.
 - Yarn v3 with workspaces for monorepo packaging.
-- And much more!
+- Player synchronization amongst servers (friend lists, login status)
 
 ## Get Started
 
@@ -201,12 +205,14 @@ yarn map
 
 ### Kaetram Hub
 
-There is also support for a hub server. This can help connect servers across one another, allowing
-players to interact with their friends across them in a variety of ways (private messaging and
-guilds). Furthermore, the hub serves as a gateway for determining what server to place players in.
-If a server is full, it simply returns another server that has room for the player.
+The hub functions as a gateway between servers. Due to performance limitations of NodeJS it is more feasible
+to host multiple servers instead of one big one containing thousands of players. The hub does exactly that, once
+the hub is running and a server instance is given the host address for the hub, it will automatically connect. The
+hub becomes the primary connection point for the client. When a request for connection is received, the hub
+will pick the first server that has room for the player. Alternatively, it allows players to select any server
+amongst the list of servers.
 
-To enable using the hub server, see [Configuration](#configuration), and set these values to `true`.
+To enable the hub server, see [Configuration](#configuration), and set these values to `true`.
 
 ```sh
 API_ENABLED=true
