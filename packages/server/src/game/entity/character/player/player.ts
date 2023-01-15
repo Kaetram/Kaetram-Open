@@ -1336,6 +1336,9 @@ export default class Player extends Character {
             return;
         }
 
+        if (!this.world.isOnline(playerName))
+            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
+
         this.sendMessage(playerName, message);
     }
 
@@ -1345,16 +1348,15 @@ export default class Player extends Character {
      * @param message The string contents of the message.
      */
 
-    public sendMessage(playerName: string, message: string): void {
-        if (!this.world.isOnline(playerName))
-            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
-
+    public sendMessage(playerName: string, message: string, source = ''): void {
         let otherPlayer = this.world.getPlayerByName(playerName),
-            oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
-            formattedName = Utils.formatName(this.username); // Formatted username of current instance.
+            oFormattedName = Utils.formatName(playerName), // Formated username of the player receiving the message.
+            formattedName = Utils.formatName(source || this.username); // Formatted username of the source
 
-        otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
+        if (source) this.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        else otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+
+        if (!source) this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
     }
 
     /**
