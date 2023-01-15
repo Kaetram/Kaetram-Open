@@ -1,5 +1,6 @@
 import config from '@kaetram/common/config';
 import { Modules } from '@kaetram/common/network';
+import { FriendInfo } from '@kaetram/common/types/friends';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import axios from 'axios';
@@ -67,23 +68,45 @@ export default class API {
         router.post('/player', this.handlePlayer.bind(this));
         router.post('/chat', this.handleChat.bind(this));
         router.post('/players', this.handlePlayers.bind(this));
+        router.post('/logout', this.handleLogout.bind(this));
     }
 
     private handlePlayer(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
     }
 
+    /**
+     * Receives a chat request from the hub. We use this to send messages between
+     * servers. The message from one server is sent to the hub, then the hub relays
+     * that information to the other server.
+     * @param request Contains information about the message.
+     * @param response The response we give to the hub.
+     */
+
     private handleChat(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
 
         log.info(`[API] Server chat API not implemented.`);
 
-        let { source, text, colour, privateMessage } = request.body;
+        let { source, text, colour, target } = request.body;
 
-        this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
+        if (target) {
+            let player = this.world.getPlayerByName(source);
+
+            if (!player) return;
+
+            player.sendMessage(target, text);
+        } else this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
 
         response.json({ status: 'success' });
     }
+
+    /**
+     * Grabs all the information about all the players (see `getPlayerData`) and then
+     * sends a list of those players as per request.
+     * @param request The request who is requesting the player data.
+     * @param response The response to send the player data to.
+     */
 
     private handlePlayers(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
@@ -96,6 +119,32 @@ export default class API {
 
         response.json(players);
     }
+
+    /**
+     * A logout is received by the server when a player on another server logs out.
+     * We use this information to update the player's friends list status relative
+     * to players on the current server.
+     * @param request Contains the username of the player that just logged out.
+     * @param response Generic response to the hub.
+     */
+
+    private handleLogout(request: express.Request, response: express.Response): void {
+        if (!this.verifyToken(response, request.body.accessToken)) return;
+
+        let { username } = request.body;
+
+        this.world.syncFriendsList(username, true);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * A ping is a repeated message sent to the hub to constantly update the information
+     * the hub has about the server. This contains information about the number of players
+     * and connection information to the server. This ping is what signals to the hub
+     * that the server is active. The first ping adds the server to the hub's list of
+     * servers, while the subsequent pings update the information.
+     */
 
     public async pingHub(): Promise<void> {
         let url = Utils.getUrl(config.hubHost, config.hubPort, 'ping'),
@@ -125,6 +174,15 @@ export default class API {
         }
     }
 
+    /**
+     * When the hub is active, we send the in-game chats to the hub so that they're
+     * sent to the Discord server. This is because the hub acts as the primary gateway
+     * between the game and Discord.
+     * @param source Who is sending the message.
+     * @param text The contents of the message.
+     * @param withArrow Whether to display an arrow between the source and content.
+     */
+
     public async sendChat(source: string, text: string, withArrow = true): Promise<void> {
         if (!config.hubEnabled) return;
 
@@ -146,6 +204,14 @@ export default class API {
             if (data.status === 'error') log.error(data);
         }
     }
+
+    /**
+     * Sends a request to the hub to privately message a player on another server.
+     * This is used when the player is not on our server.
+     * @param source The player object who is sending the message.
+     * @param target The username of the player who is receiving the message.
+     * @param text The contents of the message.
+     */
 
     public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
         let url = Utils.getUrl(config.hubHost, config.hubPort, 'privateMessage'),
@@ -169,6 +235,45 @@ export default class API {
         }
     }
 
+    /**
+     * Takes the inactive friends that are deemed offline by the current server and sends
+     * it to the hub to check if they are online on another server. If they are, the hub
+     * will send a request to the current server with all the friends that are online and their
+     * respective server information.
+     * @param player The player we are linking the friends list for.
+     * @param logout Determines whether we are logging out or not.
+     */
+
+    public async linkFriends(player: Player, logout = false): Promise<void> {
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'friends'),
+            data = {
+                hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId, // Server we are excluding from the search.
+                username: player.username, // Username of the player we checking for
+                inactiveFriends: logout ? [] : player.friends.getInactiveFriends(), // List of inactive friends.
+                logout // Whether we are logging out or logging in.
+            },
+            response = await axios
+                .post(url, data)
+                .catch(() => log.error('Could not send linkFriends to hub.'));
+
+        if (response) {
+            let { data } = response;
+
+            if (!data || logout || !data.activeFriends) return;
+
+            player.friends.setActiveFriends(data.activeFriends);
+        }
+    }
+
+    /**
+     * Checks whether or not the access token to communicate with the hub or
+     * the server is valid.
+     * @param response The response we are handling.
+     * @param token The token string we are checking.
+     * @returns Whether or not the token of the hub matches that of the server.
+     */
+
     private verifyToken(response: express.Response, token: string): boolean {
         let status = token === config.accessToken;
 
@@ -181,6 +286,12 @@ export default class API {
 
         return status;
     }
+
+    /**
+     * The player data that will be returned as per request from the hub.
+     * @param player The player we're getting the data from.
+     * @returns A partial player data object containing information about the player.
+     */
 
     private getPlayerData(player: Player): Partial<PlayerData> {
         if (!player) return {};
@@ -196,6 +307,13 @@ export default class API {
             mapVersion: player.mapVersion
         };
     }
+
+    /**
+     * Returns an error JSON object.
+     * @param response The response we're... responding to (ba dum tss).
+     * @param error The type of error that occurred.
+     * @param message Extra information about the error.
+     */
 
     private returnError(
         response: express.Response,
