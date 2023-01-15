@@ -1,5 +1,6 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import config from '@kaetram/common/config';
 import bcryptjs from 'bcryptjs';
 
 import type { Modules } from '@kaetram/common/network';
@@ -29,6 +30,7 @@ export interface PlayerInfo {
     mapVersion: number;
     regionsLoaded: number[];
     friends: string[];
+    lastServerId: number;
 }
 
 /**
@@ -262,7 +264,8 @@ export default class Creator {
             lastWarp: player.lastWarp,
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,
-            friends: player.friends.serialize()
+            friends: player.friends.serialize(),
+            lastServerId: config.serverId
         };
     }
 }

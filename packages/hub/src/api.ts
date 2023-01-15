@@ -43,6 +43,9 @@ export default class API {
         router.post('/chat', this.handleChat.bind(this));
         router.post('/privateMessage', this.handlePrivateMessage.bind(this));
         router.post('/friends', this.handleFriends.bind(this));
+        router.post('/login', this.handleLogin.bind(this));
+        router.post('/logout', this.handleLogout.bind(this));
+        router.post('/isOnline', this.handleIsOnline.bind(this));
     }
 
     /**
@@ -197,17 +200,7 @@ export default class API {
         // Iterate through the servers and find the friends that are online.
         this.servers.forEachServer((server: Server, key: string) => {
             // Ignore the server we received the request from.
-            if (parseInt(key) === serverId) {
-                /**
-                 * Since we call this when a player logs in or out, we can
-                 * do updates of the player list of the server here.
-                 */
-
-                if (logout) server.removePlayer(username);
-                else server.addPlayer(username);
-
-                return;
-            }
+            if (parseInt(key) === serverId) return;
 
             // Skip servers where there are no players.
             if (server.players.length === 0) return;
@@ -230,6 +223,74 @@ export default class API {
         response.json({
             status: 'success',
             activeFriends
+        });
+    }
+
+    /**
+     * Adds a player to the server list when they log in.
+     * @param request Contains the serverId and username of the player.
+     * @param response Generic response.\
+     */
+
+    private handleLogin(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { serverId, username } = request.body;
+
+        // Add the player to the server.
+        this.servers.get(serverId)?.addPlayer(username);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Removes a player from the server list when they log out.
+     * @param request Contains the serverId and username of the player.
+     * @param response Generic response.
+     */
+
+    private handleLogout(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { serverId, username } = request.body;
+
+        // Remove the player from the server.
+        this.servers.get(serverId)?.removePlayer(username);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Checks if the player is online in any of the servers.
+     * @param request Contains the username of the player and the server we are checking from.
+     * @param response Responds with a boolean indicating if the player is online anywhere else.
+     */
+
+    private handleIsOnline(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { username, serverId } = request.body,
+            online = false;
+
+        // Look through all the servers and see if the player is online.
+        this.servers.forEachServer((server, key) => {
+            if (parseInt(key) === serverId) return;
+
+            if (server.players.includes(username)) online = true;
+        });
+
+        response.json({
+            status: 'success',
+            online
         });
     }
 

@@ -144,6 +144,9 @@ export default class Incoming {
             if (this.world.isOnline(this.player.username))
                 return this.connection.reject('loggedin');
 
+            // Synchronize the login immediately with the hub.
+            this.world.api.sendLogin(this.player.username);
+
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
         }
@@ -151,7 +154,12 @@ export default class Incoming {
         // Handle login for each particular case.
         switch (opcode) {
             case Opcodes.Login.Login: {
-                return this.database.login(this.player);
+                // Check the player in other servers first (defaults to false if hub is not present).
+                this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+                    if (online) return this.connection.reject('loggedin');
+
+                    this.database.login(this.player);
+                });
             }
 
             case Opcodes.Login.Register: {
@@ -185,6 +193,11 @@ export default class Incoming {
         this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
+
+        // A secondary check after the player has fully loaded in.
+        this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+            if (online) this.player.connection.reject('loggedin');
+        });
     }
 
     /**
