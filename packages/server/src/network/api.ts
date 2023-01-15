@@ -297,7 +297,7 @@ export default class API {
                 username
             };
 
-        axios.post(url, data).catch(() => log.error('Could not send login to hub.'));
+        axios.post(url, data).catch(() => log.error('Could not send `login` to hub.'));
     }
 
     /**
@@ -315,7 +315,7 @@ export default class API {
                 username
             };
 
-        axios.post(url, data).catch(() => log.error('Could not send logout to hub.'));
+        axios.post(url, data).catch(() => log.error('Could not send `logout` to hub.'));
     }
 
     /**
@@ -326,7 +326,7 @@ export default class API {
     public isPlayerOnline(username: string, callback: (online: boolean) => void): void {
         if (!config.hubEnabled) return callback(false);
 
-        let url = Utils.getUrl(config.hubHost, config.hubPort, 'isPlayerOnline'),
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'isOnline'),
             data = {
                 hubAccessToken: config.hubAccessToken,
                 serverId: config.serverId,
@@ -336,7 +336,7 @@ export default class API {
         axios
             .post(url, data)
             .then(({ data }) => callback(data.online))
-            .catch(() => log.error('Could not send `isPlayerOnline` to hub.'));
+            .catch(() => log.error('Could not send `isOnline` to hub.'));
     }
 
     /**
