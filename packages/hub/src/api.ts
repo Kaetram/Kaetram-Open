@@ -215,6 +215,8 @@ export default class API {
             // If it's a logout request, send the logout request to all the servers.
             if (logout) return this.sendLogout(server, key, username);
 
+            this.sendLogin(server, key, username);
+
             // Find all the friends online on the server and add them to the `activeFriends` object.
             for (let friend of inactiveFriends)
                 if (server.players.includes(friend))
@@ -272,6 +274,26 @@ export default class API {
 
         axios.post(url, data).catch((error) => {
             log.error(`Could not send chat to ${config.name} ${key}`);
+            log.error(error);
+        });
+    }
+
+    /**
+     * Sends a login signal to the specified server.
+     * @param server The server we are sending the login to.
+     * @param key The key of the server we are sending the login to.
+     * @param username The username of the player that is logging in.
+     */
+
+    private sendLogin(server: Server, key: string, username: string): void {
+        let url = Utils.getUrl(server.host, server.apiPort, 'login', true),
+            data = {
+                accessToken: server.accessToken,
+                username
+            };
+
+        axios.post(url, data).catch((error) => {
+            log.error(`Could not send login to ${config.name} ${key}`);
             log.error(error);
         });
     }
