@@ -17,7 +17,9 @@ export default class Database {
                     config.mongodbPort,
                     config.mongodbUser,
                     config.mongodbPassword,
-                    config.mongodbDatabase
+                    config.mongodbDatabase,
+                    config.mongodbTls,
+                    config.mongodbSrv
                 );
                 break;
             }

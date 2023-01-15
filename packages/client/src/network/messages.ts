@@ -250,6 +250,11 @@ export default class Messages {
                 break;
             }
 
+            case 'lost': {
+                this.app.sendError('The connection to the server has been lost.');
+                break;
+            }
+
             default: {
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
