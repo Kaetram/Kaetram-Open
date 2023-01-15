@@ -173,6 +173,8 @@ export default class API {
         }
 
         this.sendChat(server, source, text, 'aquamarine', target);
+
+        response.json({ status: 'success' });
     }
 
     /**
