@@ -233,8 +233,8 @@ export default class API {
         let url = Utils.getUrl(config.hubHost, config.hubPort, 'privateMessage'),
             data = {
                 hubAccessToken: config.hubAccessToken,
-                source: Utils.formatName(source.username),
-                target: Utils.formatName(target),
+                source: source.username,
+                target,
                 text
             },
             response = await axios
