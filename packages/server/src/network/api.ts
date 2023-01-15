@@ -283,6 +283,63 @@ export default class API {
     }
 
     /**
+     * Tells the hub that the player has logged in. This is used to update the hub's list of players.
+     * @param username The username that has logged in.
+     */
+
+    public async sendLogin(username: string): Promise<void> {
+        if (!config.hubEnabled) return;
+
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'login'),
+            data = {
+                hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId,
+                username
+            };
+
+        axios.post(url, data).catch(() => log.error('Could not send login to hub.'));
+    }
+
+    /**
+     * Tells the hub that the player has logged out.
+     * @param username The username that has logged out.
+     */
+
+    public async sendLogout(username: string): Promise<void> {
+        if (!config.hubEnabled) return;
+
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'logout'),
+            data = {
+                hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId,
+                username
+            };
+
+        axios.post(url, data).catch(() => log.error('Could not send logout to hub.'));
+    }
+
+    /**
+     * Checks whether the player is online on another server.
+     * @param username The username of the player we are checking for.
+     */
+
+    public isPlayerOnline(username: string, callback: (online: boolean) => void): void {
+        if (!config.hubEnabled) return callback(false);
+
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'isPlayerOnline'),
+            data = {
+                hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId,
+                username
+            };
+
+        axios
+            .post(url, data)
+            .then(({ data }) => callback(data.online))
+            .catch(() => log.error('Could not send `isPlayerOnline` to hub.'));
+    }
+
+    /**
      * Checks whether or not the access token to communicate with the hub or
      * the server is valid.
      * @param response The response we are handling.

@@ -27,6 +27,8 @@ class Main {
         this.database.onFail(this.handleFail.bind(this));
 
         process.on('SIGINT', this.handleSignalInterrupt.bind(this));
+        process.on('SIGQUIT', this.handleSignalInterrupt.bind(this));
+        process.on('SIGTERM', this.handleSignalInterrupt.bind(this));
 
         new Loader();
     }
@@ -112,7 +114,7 @@ class Main {
         log.info(`Shutting down Kaetram game engine.`);
 
         // Actually exit the process.
-        exit();
+        setTimeout(() => exit(0), 2000);
     }
 }
 
