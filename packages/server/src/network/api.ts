@@ -233,6 +233,7 @@ export default class API {
         let url = Utils.getUrl(config.hubHost, config.hubPort, 'privateMessage'),
             data = {
                 hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId,
                 source: source.username,
                 target,
                 text
@@ -248,6 +249,8 @@ export default class API {
                 source.notify(`Player @aquamarine@${target}@white@ is not online.`);
                 return;
             }
+
+            source.notify(`[To ${Utils.formatName(target)}]: ${text}`, 'aquamarine');
         }
     }
 
