@@ -172,8 +172,6 @@ export default class API {
             return;
         }
 
-        source = `[From ${source}]`;
-
         this.sendChat(server, source, text, 'aquamarine', target);
     }
 

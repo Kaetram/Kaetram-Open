@@ -1324,18 +1324,28 @@ export default class Player extends Character {
     }
 
     /**
-     * Sends a private message to another player. If the hub is enabled, we use the API
-     * to send a message to a player.
+     * Entrypoint for sending a private message across servers. This function is bypassed
+     * when we receive a message from another server and we use `sendMessage` instead.
      * @param playerName The username of the player we are sending the message to.
      * @param message The string contents of the message.
      */
 
-    public sendMessage(playerName: string, message: string): void {
+    public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.api.sendPrivateMessage(this, playerName, message);
             return;
         }
 
+        this.sendMessage(playerName, message);
+    }
+
+    /**
+     * Sends the message to the player specified in the current server.
+     * @param playerName The username of the player we are sending the message to.
+     * @param message The string contents of the message.
+     */
+
+    public sendMessage(playerName: string, message: string): void {
         if (!this.world.isOnline(playerName))
             return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
 
