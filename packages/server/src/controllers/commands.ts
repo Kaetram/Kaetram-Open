@@ -81,7 +81,7 @@ export default class Commands {
 
                 let message = blocks.slice(username.split(' ').length).join(' ');
 
-                this.player.sendMessage(username, message);
+                this.player.sendPrivateMessage(username, message);
 
                 break;
             }
