@@ -152,6 +152,8 @@ export default class Handler {
         this.world.cleanCombat(this.player);
 
         this.world.linkFriends(this.player, true);
+
+        this.world.api.sendLogout(this.player.username);
     }
 
     /**
