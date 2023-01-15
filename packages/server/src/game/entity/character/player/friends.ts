@@ -63,7 +63,14 @@ export default class Friends {
             if (!exists) return this.player.notify('No player with that username exists.');
 
             // Add the friend and check if they are online.
-            this.list[username].online = this.player.world.isOnline(username);
+            let online = this.player.world.isOnline(username);
+
+            this.list[username] = {
+                online,
+                serverId: online ? config.serverId : -1
+            };
+
+            if (!online) this.player.world.linkFriends(this.player, false);
 
             // Add the friend to the list and pass on the online status to the client.
             this.addCallback?.(username, this.list[username].online);

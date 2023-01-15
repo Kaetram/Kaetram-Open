@@ -68,6 +68,7 @@ export default class API {
         router.post('/player', this.handlePlayer.bind(this));
         router.post('/chat', this.handleChat.bind(this));
         router.post('/players', this.handlePlayers.bind(this));
+        router.post('/login', this.handleLogin.bind(this));
         router.post('/logout', this.handleLogout.bind(this));
     }
 
@@ -85,8 +86,6 @@ export default class API {
 
     private handleChat(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
-
-        log.info(`[API] Server chat API not implemented.`);
 
         let { source, text, colour, target } = request.body;
 
@@ -118,6 +117,23 @@ export default class API {
         });
 
         response.json(players);
+    }
+
+    /**
+     * Signals that a player in another world has logged in. This is to sync up friends
+     * list in this world with the player that just logged in.
+     * @param request Contains the username of the player that just logged in.
+     * @param response Generic response to the hub.
+     */
+
+    private handleLogin(request: express.Request, response: express.Response): void {
+        if (!this.verifyToken(response, request.body.accessToken)) return;
+
+        let { username } = request.body;
+
+        this.world.syncFriendsList(username, false);
+
+        response.json({ status: 'success' });
     }
 
     /**
