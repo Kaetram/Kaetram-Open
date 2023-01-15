@@ -164,7 +164,7 @@ export default class API {
             return;
         }
 
-        let { source, target, text } = request.body,
+        let { source, target, text, serverId } = request.body,
             server = this.servers.findPlayer(target);
 
         if (!server) {
@@ -172,7 +172,7 @@ export default class API {
             return;
         }
 
-        this.sendChat(server, source, text, 'aquamarine', target);
+        this.sendChat(server, `${serverId}`, source, text, 'aquamarine', target);
 
         response.json({ status: 'success' });
     }
