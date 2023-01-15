@@ -90,11 +90,11 @@ export default class API {
         let { source, text, colour, target } = request.body;
 
         if (target) {
-            let player = this.world.getPlayerByName(source);
+            let player = this.world.getPlayerByName(target);
 
             if (!player) return;
 
-            player.sendMessage(target, text);
+            player.sendMessage(target, text, source);
         } else this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
 
         response.json({ status: 'success' });
