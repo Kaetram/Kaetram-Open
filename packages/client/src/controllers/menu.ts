@@ -167,6 +167,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The enchant menu object.
+     */
+
+    public getEnchant(): Enchant {
+        return this.enchant;
+    }
+
+    /**
      * @returns The warp menu object
      */
 

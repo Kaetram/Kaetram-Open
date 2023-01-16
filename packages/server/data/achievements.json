@@ -88,6 +88,12 @@
         "hidden": true
     },
 
+    "piratestreasure": {
+        "name": "Pirate's Treasure",
+        "description": "Find the treasure hidden in the pirate's ship.",
+        "hidden": true
+    },
+
     "babyseadragon": {
         "name": "Baby Sea Dragon",
         "description": "Defeat the baby sea dragon guardian!"  
