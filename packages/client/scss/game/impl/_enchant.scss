@@ -33,7 +33,6 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         #enchant {
-            transform: scale(1.6);
             width: 129px * $i;
             height: 155px * $i;
             background: url('/img/#{$i}/containers.png') 0 0;

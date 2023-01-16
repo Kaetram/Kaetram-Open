@@ -225,7 +225,12 @@ export default class InputController {
             case 't': {
                 target = this.game.entities.get(this.player.lastTarget);
 
-                if (target) this.player.follow(target);
+                if (!target) return;
+
+                this.setAttackTarget();
+                this.setPosition(target.gridX, target.gridY);
+
+                this.player.follow(target);
 
                 return;
             }
@@ -343,7 +348,7 @@ export default class InputController {
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        this.entity = this.entity || this.game.getEntityAt(position.x, position.y);
+        this.entity = this.game.getEntityAt(position.x, position.y);
 
         if (this.entity) {
             this.setAttackTarget();
