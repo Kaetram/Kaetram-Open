@@ -8745,39 +8745,6 @@
     "offsetY": 0
   },
   {
-    "id": "item-mountseadragon",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "item-mountforestdragon",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "item-mountwhitetiger",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
     "id": "item-forestbow",
     "animations": {
       "idle": {

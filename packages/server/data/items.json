@@ -3825,6 +3825,7 @@
   "flask": {
     "type": "object",
     "name": "Flask [+100 HP]",
+    "description": "A flask used to increment your health from one point to another. How much does it increment it by? Well it says in the name there silly!",
     "storeCount": 10,
     "price": 40,
     "stackable": true,
@@ -3837,6 +3838,7 @@
   "cure": {
     "type": "object",
     "name": "Antidote",
+    "description": "Are you poisoned? Have you been involved in a fight with a poisonous snake? Well this is the cure for you!",
     "storeCount": 10,
     "price": 150,
     "stackable": false,
@@ -3847,6 +3849,7 @@
   "manaflask": {
     "type": "object",
     "name": "Mana Flask [+35 MP]",
+    "description": "A refreshing drink for those a little bit low on mana!",
     "storeCount": 10,
     "price": 200,
     "stackable": true,
@@ -3859,6 +3862,7 @@
   "burger": {
     "type": "object",
     "name": "Burger [+200 HP]",
+    "description": "How did a burger make its way into a fantasy world? Who knows, but it's delicious!",
     "storeCount": 10,
     "price": 350,
     "stackable": true,
@@ -3871,6 +3875,7 @@
   "bigflask": {
     "type": "object",
     "name": "Big Flask [+250 HP]",
+    "description": "It's like the other flask, except it's bigger, so obviously it must heal more!",
     "storeCount": 10,
     "price": 600,
     "stackable": true,
@@ -3883,7 +3888,8 @@
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
-    "stackable": true
+    "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
+    "edible": true
   },
 
   "cake": {
@@ -3901,14 +3907,16 @@
   "cd": {
     "type": "object",
     "name": "CD [Quest]",
+    "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
     "undroppable": true
   },
 
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
+    "description": "A magical potion received by some weird monument. It temporarily prevents the player from taking damage from the cold.",
     "stackable": true,
-    "respawnDelay": 90000
+    "respawnDelay": 120000
   },
 
   "royalazalea": {
@@ -3918,7 +3926,10 @@
 
   "blackpotion": {
     "type": "object",
-    "name": "Black Potion"
+    "name": "Black Potion",
+    "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
+    "plugin": "blackpotion",
+    "edible": true
   },
 
   "gold": {
@@ -3926,21 +3937,6 @@
     "name": "Gold",
     "stackable": true,
     "description": "A very useful shiny metal that for some reason people like to exchange for goods."
-  },
-
-  "mountseadragon": {
-    "type": "object",
-    "name": "Mount Sea Dragon"
-  },
-
-  "mountforestdragon": {
-    "type": "object",
-    "name": "Mount Forest Dragon"
-  },
-
-  "mountwhitetiger": {
-    "type": "object",
-    "name": "Mount White Tiger"
   },
 
   "leafcommon": {
