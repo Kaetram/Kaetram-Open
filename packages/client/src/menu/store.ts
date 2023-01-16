@@ -206,35 +206,30 @@ export default class Store extends Menu {
 
     private createStoreItem(item: SerializedStoreItem, index: number): HTMLElement {
         let listElement = document.createElement('li'),
-            itemElement = document.createElement('div'),
             image = document.createElement('div'),
             name = document.createElement('div'),
             count = document.createElement('div'),
-            price = document.createElement('div'),
-            buyButton = document.createElement('div');
+            price = document.createElement('div');
 
         // Add the class to the elements.
-        itemElement.classList.add('store-item');
+        listElement.classList.add('store-item');
         image.classList.add('store-item-image');
-        name.classList.add('store-item-name');
-        count.classList.add('store-item-count');
-        price.classList.add('store-item-price');
-        buyButton.classList.add('store-item-buy');
+        name.classList.add('store-item-name', 'stroke');
+        count.classList.add('store-item-count', 'stroke');
+        price.classList.add('store-item-price', 'stroke');
 
         // Set the text HTML values for the children elements.
         count.textContent = item.count.toString();
         name.textContent = item.name;
         price.textContent = item.price.toString();
-        buyButton.textContent = 'Buy';
 
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);
 
-        buyButton.addEventListener('click', () => this.buy(index));
+        listElement.addEventListener('click', () => this.buy(index));
 
         // Append all the elements together and nest them.
-        itemElement.append(image, name, count, price, buyButton);
-        listElement.append(itemElement);
+        listElement.append(image, name, count, price);
 
         return listElement;
     }
