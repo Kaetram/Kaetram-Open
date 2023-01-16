@@ -260,11 +260,12 @@
           "when all of the sudden I lost my entire magic contrband!",
           "I can't run a business if I don't have my equipment.",
           "Tell you what, if you bring me back 3 magic beads, I'll",
-          "teach you how to craft magic staffs!"
+          "grant you access to my shop!", "You'll be taught how to",
+          "craft your own magic staffs!"
         ],
         "completedText": [
           "Please bring me 3 magic beads.",
-          "I'll teach you how to craft magic staffs in exchange!"
+          "If I'm not mistaken, one of the crabs might've stolen it."
         ]
       },
 
