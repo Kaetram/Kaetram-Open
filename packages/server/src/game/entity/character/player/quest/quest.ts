@@ -1,8 +1,8 @@
+import Item from '../../../objects/item';
+
 import Modules from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
-
-import Item from '../../../objects/item';
 
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';

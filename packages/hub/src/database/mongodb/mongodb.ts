@@ -1,8 +1,8 @@
-import { MongoClient } from 'mongodb';
-import log from '@kaetram/common/util/log';
-
 import Creator from './creator';
 import Loader from './loader';
+
+import { MongoClient } from 'mongodb';
+import log from '@kaetram/common/util/log';
 
 import type { Db } from 'mongodb';
 

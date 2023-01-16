@@ -1,9 +1,9 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import Menu from './menu';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
 import type { SerializedStoreItem } from '@kaetram/common/types/stores';

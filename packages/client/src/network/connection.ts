@@ -1,8 +1,8 @@
+import log from '../lib/log';
+
 import _ from 'lodash-es';
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
-
-import log from '../lib/log';
 
 import type App from '../app';
 import type Overlays from '../renderer/overlays';

@@ -1,9 +1,9 @@
-import Updates from '@kaetram/common/text/en/updates.json';
-
 import install from './lib/pwa';
 import { isMobile } from './utils/detect';
 import Storage from './utils/storage';
 import Util from './utils/util';
+
+import Updates from '@kaetram/common/text/en/updates.json';
 
 import type { SerializedServer } from '@kaetram/common/types/api';
 

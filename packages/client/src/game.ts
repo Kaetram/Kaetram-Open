@@ -1,6 +1,3 @@
-import { Packets } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
 import EntitiesController from './controllers/entities';
@@ -22,6 +19,9 @@ import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
 import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
+
+import _ from 'lodash-es';
+import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
 import type Character from './entity/character/character';

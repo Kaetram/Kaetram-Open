@@ -1,10 +1,10 @@
-import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
-import _ from 'lodash-es';
+import Tile from './tile';
 
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import Tile from './tile';
+import _ from 'lodash-es';
+import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 
 import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';

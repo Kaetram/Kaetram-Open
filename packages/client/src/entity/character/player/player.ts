@@ -1,8 +1,3 @@
-import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
-
-import Character from '../character';
-
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
@@ -12,6 +7,11 @@ import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+
+import Character from '../character';
+
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';

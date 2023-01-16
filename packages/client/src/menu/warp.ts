@@ -1,8 +1,8 @@
-import _ from 'lodash-es';
+import Menu from './menu';
 
 import log from '../lib/log';
 
-import Menu from './menu';
+import _ from 'lodash-es';
 
 import type Socket from '../network/socket';
 

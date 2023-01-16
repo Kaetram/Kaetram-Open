@@ -1,15 +1,15 @@
-import { Modules } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
-
-import Item from '../../objects/item';
-
 import Armour from './equipment/impl/armour';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
+
+import Item from '../../objects/item';
+
+import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
 
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';

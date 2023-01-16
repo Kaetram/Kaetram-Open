@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import Menu from './menu';
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type { SlotData } from '@kaetram/common/types/slot';
 import type Inventory from './inventory';
