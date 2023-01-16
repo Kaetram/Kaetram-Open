@@ -972,7 +972,7 @@ export default class Connection {
             }
 
             case Opcodes.NPC.Enchant: {
-                //this.menu.enchant.display();
+                this.menu.getEnchant().show();
                 break;
             }
         }

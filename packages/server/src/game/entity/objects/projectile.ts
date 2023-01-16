@@ -24,7 +24,7 @@ export default class Projectile extends Entity {
          * to calculate the approximate time it takes for impact to occur.
          */
 
-        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 100);
+        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 90);
     }
 
     /**
