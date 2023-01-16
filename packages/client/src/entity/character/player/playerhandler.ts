@@ -128,7 +128,11 @@ export default class PlayerHandler {
             player.moving = false;
         });
 
-        player.onBeforeStep(() => entities.unregisterPosition(player));
+        player.onBeforeStep(() => {
+            if (player.canAttackTarget()) player.stop(true);
+
+            entities.unregisterPosition(player);
+        });
 
         player.onStep(() => {
             // Update the position if there is any pathing left.
