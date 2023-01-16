@@ -894,6 +894,9 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        // Stop player movement
+        this.game.player.stop(true);
+
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
