@@ -35,7 +35,7 @@
 
   "crab": {
     "name": "Crab",
-    "drops": {"flask": 100},
+    "drops": {"flask": 100, "bead": 50},
     "hitPoints": 15,
     "defenseLevel": 1,
     "attackLevel": 2,
@@ -87,7 +87,7 @@
 
   "skeleton": {
     "name": "Spooky Skeleton",
-    "drops": {"gold": 300, "flask": 200},
+    "drops": {"gold": 200, "flask": 100},
     "hitPoints": 110,
     "defenseLevel": 6,
     "attackLevel": 4,
@@ -860,7 +860,7 @@
 
   "ironogre": {
     "name": "Iron Ogre",
-    "drops": {"bluescimitar": 400, "gold": 600},
+    "drops": {"bluescimitar": 75, "gold": 420},
     "hitPoints": 300,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -877,7 +877,7 @@
 
   "livingarmor": {
     "name": "Living armor",
-    "drops": {"whip": 10, "dovakinarcherarmor": 100, "dovakinarmor": 100, "skylightbow": 100, "gold": 690},
+    "drops": {"whip": 5, "dovakinarcherarmor": 25, "dovakinarmor": 25, "skylightbow": 15, "gold": 420},
     "hitPoints": 340,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -911,7 +911,7 @@
 
   "mermaid": {
     "name": "Mermaid",
-    "drops": {"gold": 600, "trident": 100, "mermaidbow": 100},
+    "drops": {"gold": 420, "trident": 45, "mermaidbow": 45},
     "hitPoints": 150,
     "defenseLevel": 10,
     "attackLevel": 12,
@@ -981,7 +981,7 @@
 
   "oldogre": {
     "name": "Old Ogre",
-    "drops": {"pendant1": 25, "skylightbow": 475, "gold": 500},
+    "drops": {"pendant1": 25, "skylightbow": 115, "gold": 500},
     "hitPoints": 256,
     "defenseLevel": 5,
     "attackLevel": 1,
@@ -998,7 +998,7 @@
 
   "orc": {
     "name": "Orc",
-    "drops": {"redsword": 200, "violetbow": 100, "redarcherarmor": 120, "spear": 30},
+    "drops": {"redsword": 75, "violetbow": 50, "redarcherarmor": 45, "spear": 30},
     "hitPoints": 75,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -1032,7 +1032,7 @@
 
   "penguin": {
     "name": "Penguin",
-    "drops": {"bluewingarcherarmor": 200, "bluewingarmor": 200, "icerose": 200, "marinebow": 200, "gold": 200},
+    "drops": {"bluewingarcherarmor": 75, "bluewingarmor": 75, "icerose": 50, "marinebow": 15, "gold": 100},
     "hitPoints": 526,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -1101,7 +1101,7 @@
 
   "preta": {
     "name": "Preta",
-    "drops": {"greenpendant": 40, "bluewingarcherarmor": 200, "bluewingarmor": 360, "gold": 400},
+    "drops": {"greenpendant": 20, "bluewingarcherarmor": 50, "bluewingarmor": 45, "gold": 200},
     "hitPoints": 495,
     "defenseLevel": 1,
     "attackLevel": 7,
@@ -1118,7 +1118,7 @@
 
   "purplepreta": {
     "name": "Preta",
-    "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
+    "drops": {"bluescimitar": 55, "bluewingarcherarmor": 50, "bluewingarmor": 45, "gold": 200},
     "hitPoints": 431,
     "defenseLevel": 1,
     "attackLevel": 6,
@@ -1932,19 +1932,20 @@
   "piratecaptain": {
     "name": "Pirate Captain",
     "drops": {"scimitar": 100, "marblependant": 200, "gold": 500},
-    "hitPoints": 1500,
-    "defenseLevel": 5,
-    "attackLevel": 10,
-    "experience": 696,
-    "level": 46,
-    "aggroRange": 4,
-    "attackRange": 7,
-    "aggressive": false,
+    "hitPoints": 4750,
+    "defenseLevel": 78,
+    "attackLevel": 40,
+    "experience": 1300,
+    "level": 145,
+    "aggroRange": 10,
+    "attackRange": 1,
+    "aggressive": true,
     "projectileName": "projectile-iceball",
     "roaming": true,
-    "attackRate": 1500,
-    "movementSpeed": 600,
-    "respawnDelay": 115000
+    "attackRate": 1100,
+    "movementSpeed": 350,
+    "respawnDelay": 115000,
+    "plugin": "piratecaptain"
   },
 
   "pirateskeleton": {

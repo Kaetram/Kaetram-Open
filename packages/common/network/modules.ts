@@ -318,7 +318,7 @@ export const enum Constants {
     MAX_LEVEL = 135, // Maximum attainable level.
     INVENTORY_SIZE = 20, // Maximum inventory size
     BANK_SIZE = 69, // Maximum bank size
-    DROP_PROBABILITY = 1000, // 1 in 1000
+    DROP_PROBABILITY = 1750, // 1 in 1750
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 5000, // healing every 5 seconds
     STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds

@@ -399,14 +399,14 @@
     "skill": "accuracy",
     "level": 60,
     "attackStats": {
-      "crush": 8,
-      "slash": 36,
+      "crush": 14,
+      "slash": 68,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 24,
-      "strength": 6,
+      "strength": 12,
       "archery": 0,
       "magic": 0
     }
@@ -3870,14 +3870,14 @@
 
   "bigflask": {
     "type": "object",
-    "name": "Big Flask [+350 HP]",
+    "name": "Big Flask [+250 HP]",
     "storeCount": 10,
     "price": 600,
     "stackable": true,
     "edible": true,
     "maxStackSize": 2,
     "plugin": "healthflask",
-    "healAmount": 500
+    "healAmount": 250
   },
 
   "firepotion": {
@@ -3888,12 +3888,14 @@
 
   "cake": {
     "type": "object",
-    "name": "Cake [Quest]"
+    "name": "Cake [Quest]",
+    "undroppable": true
   },
 
   "book": {
     "type": "object",
-    "name": "Book [Quest]"
+    "name": "Book [Quest]",
+    "undroppable": true
   },
 
   "cd": {
@@ -4201,22 +4203,26 @@
 
   "banana": {
     "type": "object",
-    "name": "Banana"
+    "name": "Banana",
+    "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber."
   },
 
   "watermelon": {
     "type": "object",
-    "name": "Watermelon"
+    "name": "Watermelon",
+    "description": "A watermelon, I should probably cut this up before eating it."
   },
 
   "apple": {
     "type": "object",
-    "name": "Apple"
+    "name": "Apple",
+    "description": "An apple, an excellent source of energy!"
   },
 
   "orange": {
     "type": "object",
-    "name": "Orange"
+    "name": "Orange",
+    "description": "It's funny, the name of the fruit is the same as the colour and its colour."
   },
 
   "shardt1": {
@@ -4315,23 +4321,57 @@
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
-    "price": 35
+    "price": 35,
+    "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
 
   "icepalmlogs": {
     "type": "object",
     "name": "Ice Palm Logs",
-    "price": 50
+    "price": 50,
+    "description": "These logs are made out of ice and palm wood. They're very cold to the touch."
   },
 
   "bloodwoodlogs": {
     "type": "object",
     "name": "Bloodwood Logs",
-    "price": 150
+    "price": 150,
+    "description": "It almost looks like they're bleeding."
   },
 
   "bead": {
     "type": "object",
-    "name": "Magic Bead"
+    "name": "Magic Bead",
+    "description": "A bead that emanates magical properties. Can be used in conjunction with other items to create magical items."
+  },
+
+  "lightningbead": {
+    "type": "object",
+    "name": "Lightning Bead",
+    "description": "A magical bead imbued with lightning properties. Can be used to craft magical items."
+  },
+
+  "naturebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A magical bead imbued with the power of nature. Can be used to craft magical items."
+  },
+
+  "firebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A magical bead imbued with fire. Can be used to craft magical items."
+  },
+
+  "icebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A strong magical bead perpetually frozen. Can be used to craft magical items."
+  },
+
+  "stick": {
+    "type": "object",
+    "name": "Stick",
+    "description": "A stick. It's a stick. What else do you want me to say about it?"
   }
 }
