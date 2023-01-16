@@ -22,6 +22,7 @@ export default class Character extends Entity {
     public moving = false;
     public following = false;
     public stunned = false;
+    public forced = false;
 
     private interrupted = false;
 
@@ -110,8 +111,6 @@ export default class Character extends Entity {
     private requestPathCallback?(x: number, y: number): number[][] | null;
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
-
-    public forced!: boolean;
 
     public handler: EntityHandler = new EntityHandler(this);
 
@@ -464,7 +463,7 @@ export default class Character extends Entity {
             if (this.stopPathingCallback)
                 this.stopPathingCallback(this.gridX, this.gridY, this.forced);
 
-            this.forced &&= false;
+            this.forced = false;
         }
     }
 
