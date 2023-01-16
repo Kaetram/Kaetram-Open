@@ -318,7 +318,7 @@ export default class InputController {
      */
 
     private move(position: Position): void {
-        if (this.player.stunned) return;
+        if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
         this.setPassiveTarget();
