@@ -1,9 +1,19 @@
-import { Team } from '@kaetram/common/api/minigame';
-import config from '@kaetram/common/config';
-import { Opcodes, Modules } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
+import Friends from './friends';
+import Handler from './handler';
+import Quests from './quests';
+import Skills from './skills';
+import Abilities from './abilities';
+import Achievements from './achievements';
+import Bank from './containers/impl/bank';
+import Inventory from './containers/impl/inventory';
+import Equipments from './equipments';
+import Statistics from './statistics';
+
+import Mana from '../points/mana';
+import Character from '../character';
+import Formulas from '../../../../info/formulas';
+import Incoming from '../../../../controllers/incoming';
+
 import {
     Camera,
     Chat,
@@ -21,22 +31,12 @@ import {
     Teleport,
     Welcome
 } from '@kaetram/server/src/network/packets';
-
-import Incoming from '../../../../controllers/incoming';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
-import Mana from '../points/mana';
-
-import Friends from './friends';
-import Handler from './handler';
-import Quests from './quests';
-import Skills from './skills';
-import Abilities from './abilities';
-import Achievements from './achievements';
-import Bank from './containers/impl/bank';
-import Inventory from './containers/impl/inventory';
-import Equipments from './equipments';
-import Statistics from './statistics';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import config from '@kaetram/common/config';
+import { Team } from '@kaetram/common/api/minigame';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';

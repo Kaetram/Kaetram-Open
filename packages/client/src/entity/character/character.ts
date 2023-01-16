@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;

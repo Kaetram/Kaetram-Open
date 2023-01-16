@@ -1,15 +1,15 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
-
-import Formulas from '../../../../info/formulas';
-
 import Accuracy from './skill/impl/accuracy';
 import Archery from './skill/impl/archery';
 import Health from './skill/impl/health';
 import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
+
+import Formulas from '../../../../info/formulas';
+
+import _ from 'lodash-es';
+import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type Player from './player';

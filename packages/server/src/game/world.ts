@@ -1,11 +1,6 @@
-import Discord from '@kaetram/common/api/discord';
-import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
-import Filter from '@kaetram/common/util/filter';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
+import Globals from './globals/globals';
+import Map from './map/map';
+import Minigames from './minigames/minigames';
 
 import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
@@ -15,9 +10,14 @@ import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
 
-import Globals from './globals/globals';
-import Map from './map/map';
-import Minigames from './minigames/minigames';
+import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import Filter from '@kaetram/common/util/filter';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Modules } from '@kaetram/common/network';
+import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';

@@ -1,9 +1,9 @@
-import config from '@kaetram/common/config';
-import _ from 'lodash-es';
+import { Handshake } from './packets';
 
 import Player from '../game/entity/character/player/player';
 
-import { Handshake } from './packets';
+import config from '@kaetram/common/config';
+import _ from 'lodash-es';
 
 import type Entities from '../controllers/entities';
 import type MongoDB from '../database/mongodb/mongodb';
