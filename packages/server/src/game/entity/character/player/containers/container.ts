@@ -1,8 +1,8 @@
-import _ from 'lodash-es';
+import Slot from './slot';
 
 import Item from '../../../objects/item';
 
-import Slot from './slot';
+import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
 import type { ContainerItem } from '@kaetram/common/types/item';

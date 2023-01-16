@@ -1,7 +1,7 @@
+import Server from '../model/server';
+
 import config from '@kaetram/common/config';
 import _ from 'lodash-es';
-
-import Server from '../model/server';
 
 import type { SerializedServer } from '@kaetram/common/types/api';
 

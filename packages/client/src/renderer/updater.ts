@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
-
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
+
+import { Modules } from '@kaetram/common/network';
 
 import type SpritesController from '../controllers/sprites';
 import type Entity from '../entity/entity';

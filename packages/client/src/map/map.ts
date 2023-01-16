@@ -1,9 +1,9 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import Utils, { isInt } from '../utils/util';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type {
     ProcessedAnimation,

@@ -1,13 +1,13 @@
 #!/usr/bin/env -S yarn tsx
 
+import Entity from './entity';
+
 import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { each, isArray } from 'lodash-es';
 import { io } from 'socket.io-client';
-
-import Entity from './entity';
 
 import type { Socket } from 'socket.io-client';
 
