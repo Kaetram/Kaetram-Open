@@ -206,7 +206,7 @@
   },
 
   "vendingmachine": {
-    "name": "Enchantment Table",
+    "name": "Enchantment Vendor",
     "role": "enchanter"
   },
 
