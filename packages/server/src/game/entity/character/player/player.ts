@@ -324,10 +324,11 @@ export default class Player extends Character {
         // Cannot respawn if the player is not marked as dead.
         if (!this.dead) return log.warning(`Invalid respawn request.`);
 
+        this.dead = false;
+
         let spawn = this.getSpawn();
 
-        this.dead = false;
-        this.setPosition(spawn.x, spawn.y);
+        this.teleport(spawn.x, spawn.y);
 
         // Signal to other players that the player is spawning.
         this.sendToRegions(new Spawn(this), true);
