@@ -1,6 +1,3 @@
-import _ from 'lodash-es';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
 import Actions from '../menu/actions';
 import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
@@ -16,6 +13,9 @@ import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
 import Quests from '../menu/quests';
 import Friends from '../menu/friends';
+
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type Menu from '../menu/menu';
 import type Game from '../game';

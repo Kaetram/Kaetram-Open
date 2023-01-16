@@ -5144,6 +5144,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-import-order-aesthetic@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "eslint-plugin-import-order-aesthetic@npm:1.0.5"
+  dependencies:
+    requireindex: ~1.2.0
+  checksum: 8284f2981f1bd7e2033d6a064a6273af38c0c3dbfb0a0d1a6267a822a58b080fa3edab455a57fbce6481317ddcc861da973ab03f373cffe88ae56da4262e33d7
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-import@npm:^2.26.0":
   version: 2.26.0
   resolution: "eslint-plugin-import@npm:2.26.0"
@@ -7129,6 +7138,7 @@ __metadata:
     eslint: ^8.31.0
     eslint-config-prettier: ^8.6.0
     eslint-plugin-import: ^2.26.0
+    eslint-plugin-import-order-aesthetic: ^1.0.5
     eslint-plugin-prefer-let: ^3.0.1
     eslint-plugin-prettier: ^4.2.1
     eslint-plugin-unicorn: ^45.0.2
