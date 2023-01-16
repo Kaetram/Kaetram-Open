@@ -1,16 +1,16 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
+import MobHandler from './handler';
 
 import rawData from '../../../../../data/mobs.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
 import Character from '../character';
 
-import MobHandler from './handler';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';

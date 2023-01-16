@@ -1,3 +1,8 @@
+import Commands from './commands';
+
+import Creator from '../database/mongodb/creator';
+import { Spawn } from '../network/packets';
+
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
@@ -5,11 +10,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
-import Creator from '../database/mongodb/creator';
-import { Spawn } from '../network/packets';
-
-import Commands from './commands';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Entities from './entities';

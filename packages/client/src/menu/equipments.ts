@@ -1,9 +1,9 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash';
+import Menu from './menu';
 
 import Util from '../utils/util';
 
-import Menu from './menu';
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type SpritesController from '../controllers/sprites';

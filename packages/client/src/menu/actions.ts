@@ -1,6 +1,6 @@
-import _ from 'lodash-es';
-
 import Menu from './menu';
+
+import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
