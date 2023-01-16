@@ -38,6 +38,8 @@ export default class PlayerHandler {
         player.onRequestPath((x, y) => {
             if (player.dead || player.frozen) return null;
 
+            if (player.canAttackTarget()) return null;
+
             /**
              * If the position is the same as the player's current position
              * we will return nothing. Otherwise this will just create
@@ -128,11 +130,7 @@ export default class PlayerHandler {
             player.moving = false;
         });
 
-        player.onBeforeStep(() => {
-            if (player.canAttackTarget()) player.stop(true);
-
-            entities.unregisterPosition(player);
-        });
+        player.onBeforeStep(() => entities.unregisterPosition(player));
 
         player.onStep(() => {
             // Update the position if there is any pathing left.
