@@ -144,7 +144,7 @@ export default class InputController {
         this.setCoords(event);
 
         let position = this.getCoords(),
-            entity = this.game.getEntityAt(position.x, position.y);
+            entity = this.game.searchForEntityAt(position);
 
         if (!entity) return;
 
@@ -306,7 +306,7 @@ export default class InputController {
      * requested grid coordinates.
      */
 
-    public keyMove(position: Position): void {
+    public keyMove(position: Coordinate): void {
         if (this.player.hasPath()) return;
 
         this.move(position);
@@ -322,7 +322,7 @@ export default class InputController {
      * @param position The grid coordinates of the position we're requesting.
      */
 
-    private move(position: Position): void {
+    private move(position: Coordinate): void {
         if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
@@ -332,7 +332,7 @@ export default class InputController {
         if (this.player.disableAction || this.game.zoning.direction) return;
 
         // Prevent input outside map boundaries.
-        if (this.game.map.isOutOfBounds(position.x, position.y)) return;
+        if (this.game.map.isOutOfBounds(position.gridX, position.gridY)) return;
 
         // If chat is open on mobile we automatically toggle it so it gets out of the way.
         if (isMobile() && this.chatHandler.inputVisible()) this.chatHandler.toggle();
@@ -341,14 +341,14 @@ export default class InputController {
         this.game.menu.hide();
 
         // Handle object interaction.
-        if (this.game.map.isObject(position.x, position.y))
+        if (this.game.map.isObject(position.gridX, position.gridY))
             return this.player.setObjectTarget(position);
 
         // Remove player's targets prior to an action.
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        this.entity = this.game.getEntityAt(position.x, position.y);
+        this.entity = this.game.searchForEntityAt(position);
 
         if (this.entity) {
             this.setAttackTarget();
@@ -369,7 +369,7 @@ export default class InputController {
         }
 
         // Move the player to the new position.
-        this.player.go(position.x, position.y);
+        this.player.go(position.gridX, position.gridY);
     }
 
     /**
@@ -385,7 +385,7 @@ export default class InputController {
         let position = this.getCoords();
 
         // The entity we are currently hovering over.
-        this.entity = this.game.getEntityAt(position.x, position.y);
+        this.entity = this.game.searchForEntityAt(position);
 
         // Update the overlay with entity information.
         this.hud.update(this.entity);
@@ -396,8 +396,8 @@ export default class InputController {
              * case for checking if the hovering coordinates are objects.
              */
 
-            if (this.map.isObject(position.x, position.y)) {
-                let cursor = this.map.getTileCursor(position.x, position.y);
+            if (this.map.isObject(position.gridX, position.gridY)) {
+                let cursor = this.map.getTileCursor(position.gridX, position.gridY);
 
                 // Default to the talk if no cursor is specified for the object.
                 this.setCursor(this.cursors[cursor || 'talk']);
@@ -535,14 +535,15 @@ export default class InputController {
      * @returns A position object containing the grid coordinates.
      */
 
-    public getCoords(): Position {
-        let tileScale = this.map.tileSize * this.camera.zoomFactor,
-            offsetX = this.mouse.x % tileScale,
-            offsetY = this.mouse.y % tileScale,
-            x = Math.round((this.mouse.x - offsetX) / tileScale) + this.game.camera.gridX,
-            y = Math.round((this.mouse.y - offsetY) / tileScale) + this.game.camera.gridY;
+    public getCoords(): Coordinate {
+        let offsetX = this.mouse.x % this.camera.zoomFactor,
+            offsetY = this.mouse.y % this.camera.zoomFactor,
+            x = (this.mouse.x - offsetX) / this.camera.zoomFactor + this.camera.x,
+            y = (this.mouse.y - offsetY) / this.camera.zoomFactor + this.camera.y,
+            gridX = Math.floor(x / this.map.tileSize),
+            gridY = Math.floor(y / this.map.tileSize);
 
-        return { x, y };
+        return { x, y, gridX, gridY };
     }
 
     /**

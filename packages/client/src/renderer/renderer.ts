@@ -437,13 +437,13 @@ export default class Renderer {
         let { input } = this.game,
             location = input.getCoords();
 
-        if (this.isSelectedCell(location.x, location.y)) return;
+        if (this.isSelectedCell(location.gridX, location.gridY)) return;
 
-        let isColliding = this.map.isColliding(location.x, location.y);
+        let isColliding = this.map.isColliding(location.gridX, location.gridY);
 
         this.drawCellHighlight(
-            location.x,
-            location.y,
+            location.gridX,
+            location.gridY,
             isColliding ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
         );
     }
