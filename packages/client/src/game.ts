@@ -12,6 +12,7 @@ import PlayerHandler from './entity/character/player/playerhandler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
+import Utils from './utils/util';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
@@ -251,6 +252,45 @@ export default class Game {
 
         // Returns entity if there is a key, otherwise just undefined.
         return entities[keys[0]];
+    }
+
+    /**
+     * Looks through the entity rendering grid within the specified radius to find
+     * any entities that are within the boundaries of the position provided.
+     * @param position The position we are checking around (usually the mouse position).
+     * @param radius How many tiles away from the position we are checking.
+     * @returns An entity if found, otherwise undefined.
+     */
+
+    public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
+        let entities = this.entities.grids.getEntitiesAround(
+            position.gridX!,
+            position.gridY!,
+            radius
+        );
+
+        /**
+         * Create a slightly larger than a tile boundary around the entity and check
+         * if the position is within that boundary. If it is, then we have found the
+         * entity we are looking for.
+         */
+
+        for (let entity of entities) {
+            let spriteStartX = entity.x - Utils.thirdTile,
+                spriteStartY = entity.y - Utils.thirdTile,
+                spriteEndX = entity.x + Utils.tileAndAQuarter,
+                spriteEndY = entity.y + Utils.tileAndAQuarter;
+
+            if (
+                position.x >= spriteStartX &&
+                position.x <= spriteEndX &&
+                position.y >= spriteStartY &&
+                position.y <= spriteEndY
+            )
+                return entity;
+        }
+
+        return undefined;
     }
 
     /**
