@@ -663,17 +663,25 @@ export default class Character extends Entity {
         return target ? this.target === target : !!this.target;
     }
 
-    public setObjectTarget(position: Position): void {
+    /**
+     * Mocks a entity-based target function and targets an object instead.
+     * @param position The position of the object we are targeting.
+     */
+
+    public setObjectTarget(position: Coordinate): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
-        character.setGridPosition(position.x, position.y);
+        let character = new Character(
+            `${position.gridX}-${position.gridY}`,
+            Modules.EntityType.Object
+        );
+        character.setGridPosition(position.gridX, position.gridY);
 
         this.setTarget(character);
-        this.followPosition(position.x, position.y);
+        this.followPosition(position.gridX, position.gridY);
     }
 
     /**
