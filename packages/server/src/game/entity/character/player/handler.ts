@@ -255,7 +255,7 @@ export default class Handler {
 
         this.player.teleport(door.x, door.y);
 
-        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
+        log.debug(`[${this.player.username}] Going through door: ${door.x} - ${door.y}`);
     }
 
     /**
@@ -299,7 +299,7 @@ export default class Handler {
      */
 
     private handleRecentRegions(regions: number[]): void {
-        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+        //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
             new Despawn({
@@ -580,8 +580,6 @@ export default class Handler {
      */
 
     private handleKill(character: Character): void {
-        log.debug(`Received kill callback for: ${character.instance}.`);
-
         // Have the minigame handle the kill if present.
         if (character.isPlayer()) {
             if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
@@ -644,7 +642,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`Cheat score - ${this.player.cheatScore}`);
+        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**
