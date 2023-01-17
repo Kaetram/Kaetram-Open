@@ -1305,12 +1305,12 @@
 
   "santaelf": {
     "name": "Santa's Elf",
-    "drops": {"gold": 50},
+    "drops": {"gold": 100},
     "hitPoints": 6100,
-    "defenseLevel": 10,
+    "defenseLevel": 15,
     "attackLevel": 15,
     "experience": 3250,
-    "level": 144,
+    "level": 136,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -2041,20 +2041,21 @@
   "santa": {
     "name": "Santa",
     "drops": {"gold": 250, "candybar": 60},
-    "hitPoints": 4500,
-    "defenseLevel": 45,
+    "hitPoints": 6500,
+    "defenseLevel": 15,
     "attackLevel": 65,
     "experience": 3250,
     "level": 240,
-    "aggroRange": 7,
-    "attackRange": 1,
+    "aggroRange": 12,
+    "attackRange": 9,
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 500,
     "respawnDelay": 180000,
     "projectile": "projectile-gift",
-    "plugin": "santa"
+    "plugin": "santa",
+    "roamingDistance": 16
   },
 
   "brownmouse": {
