@@ -27,7 +27,7 @@ export default {
     getDamage(attacker: Character, target: Character, critical = false): number {
         let accuracyBonus = attacker.getBonuses().accuracy,
             accuracyLevel = attacker.getAccuracyLevel(),
-            stats = this.getStatsDifference(attacker.getAttackStats(), target.getDefenseStats()),
+            stats = this.getStatsDifference(attacker, target),
             maxDamage = this.getMaxDamage(attacker, critical),
             accuracy: number = Modules.Constants.MAX_ACCURACY;
 
@@ -90,13 +90,28 @@ export default {
     /**
      * Calculates the total scalar difference between the attacker's stats and the target's.
      * We subtract the target's stats from that of the attacker's and then add all of their
-     * values together.
-     * @param attackerStats The stats of the entity doing the attacking.
-     * @param targetStats The stats of the entity being attacked.
+     * values together. If the attacker is using target then we use the target's defense
+     * stats against magic attacks.
+     * @param attacker The character instance that is attacking.
+     * @param target The character instance that is being attacked.
      * @returns Scalar value representing the total stat difference.
      */
 
-    getStatsDifference(attackerStats: Stats, targetStats: Stats): number {
+    getStatsDifference(attacker: Character, target: Character): number {
+        let attackerStats = attacker.getAttackStats(),
+            targetStats = target.getDefenseStats();
+
+        // When using magic we only use the target's magic defense.
+        if (attacker.isMagic()) return attackerStats.magic - targetStats.magic || 1;
+
+        /**
+         * This is a temporary solution and will be expanded in the future as weapon and
+         * armour stats evolve. Weapons will have a specialty in either crush, slash, or
+         * stab. The same will apply to armours.
+         *
+         * For now, we obtain a scalar difference between the attacker's attack stats and
+         * the target's defense stats.
+         */
         let diff = {
             crush: attackerStats.crush - targetStats.crush,
             slash: attackerStats.slash - targetStats.slash,
@@ -104,10 +119,6 @@ export default {
         };
 
         return diff.crush + diff.slash + diff.stab || 1;
-    },
-
-    getCritical(_attacker: Player, _target: Character): number {
-        return 0;
     },
 
     getWeaponBreak(attacker: Character, target: Character): boolean | undefined {
@@ -124,15 +135,6 @@ export default {
         return breakChance > 75;
     },
 
-    getAoEDamage(attacker: Character, target: Character): number {
-        /**
-         * Preliminary setup until this function is expanded
-         * and fits in the necessary algorithms.
-         */
-
-        return this.getDamage(attacker, target);
-    },
-
     nextExp(experience: number): number {
         if (experience < 0) return -1;
 
@@ -145,7 +147,7 @@ export default {
     prevExp(experience: number): number {
         if (experience < 0) return 0;
 
-        for (let i = Modules.Constants.MAX_LEVEL as number; i > 0; i--)
+        for (let i = Modules.Constants.MAX_LEVEL; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
 
         return 0;
