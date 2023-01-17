@@ -369,15 +369,14 @@ export default class Incoming {
         this.player.chat(Filter.clean(text));
     }
 
-    private handleCommand(message: [Opcodes.Command, Position]): void {
+    private handleCommand(message: [Opcodes.Command, Coordinate]): void {
         let [opcode, position] = message;
 
         if (this.player.rank !== Modules.Ranks.Administrator) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.x, position.y, true);
-
+                this.player.teleport(position.gridX, position.gridY, true);
                 break;
             }
         }
