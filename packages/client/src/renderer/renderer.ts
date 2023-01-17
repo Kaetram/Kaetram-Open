@@ -618,6 +618,8 @@ export default class Renderer {
             'white'
         );
 
+        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
+
         // Draw information about the entity we're hovering over.
         if (input.hovering && input.entity) {
             // Draw the entity's grid coordinates and tile index.
