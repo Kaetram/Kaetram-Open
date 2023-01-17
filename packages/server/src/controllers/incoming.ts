@@ -390,7 +390,7 @@ export default class Incoming {
      */
 
     private handleContainer(packet: ContainerPacket): void {
-        log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
+        //log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
