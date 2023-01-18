@@ -158,6 +158,10 @@
         #friends-page {
             right: 32px;
         }
+
+        #popup-friend-input {
+            top: 12px;
+        }
     }
 
     @media (--sm) {
@@ -168,7 +172,8 @@
         }
 
         #popup-friend-input {
-            font-size: 8px;
+            top: 6px;
+            font-size: 7px;
         }
 
         #friends-container > ul > li > p {
