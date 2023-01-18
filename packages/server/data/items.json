@@ -3522,7 +3522,25 @@
 
   "cockroachsuit": {
     "type": "armour",
-    "name": "Cockroach Suit"
+    "name": "Cockroach Suit",
+    "attackStats": {
+      "crush": 5,
+      "slash": 6,
+      "stab": 7,
+      "magic": 3
+    },
+    "defenseStats": {
+      "crush": 68,
+      "slash": 55,
+      "stab": 60,
+      "magic": 45
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 3,
+      "archery": -10,
+      "magic": -10
+    }
   },
 
   "dinosaurarmor": {
