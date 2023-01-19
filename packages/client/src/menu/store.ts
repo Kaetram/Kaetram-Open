@@ -219,9 +219,9 @@ export default class Store extends Menu {
         price.classList.add('store-item-price', 'stroke');
 
         // Set the text HTML values for the children elements.
-        count.textContent = item.count.toString();
+        count.textContent = `x${item.count.toString()}`;
         name.textContent = item.name;
-        price.textContent = item.price.toString();
+        price.textContent = `${item.price.toString()}g`;
 
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);
