@@ -5,6 +5,7 @@ import { Command, Network, Notification, NPC, Pointer, Store } from '../network/
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import Filter from '@kaetram/common/util/filter';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';
@@ -69,7 +70,12 @@ export default class Commands {
             }
 
             case 'global': {
-                return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
+                return this.player.chat(
+                    Filter.clean(blocks.join(' ')),
+                    true,
+                    false,
+                    'rgba(191, 161, 63, 1.0)'
+                );
             }
 
             case 'pm':
