@@ -100,9 +100,7 @@ export default class Console {
                     if (!player) return log.info(`Player not found.`);
 
                     player.rank =
-                        command === 'setadmin'
-                            ? Modules.Ranks.Administrator
-                            : Modules.Ranks.Moderator;
+                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator;
 
                     player.sync();
 
@@ -124,9 +122,7 @@ export default class Console {
                     if (!player) return log.info(`Player not found.`);
 
                     player.rank =
-                        command === 'removeadmin'
-                            ? Modules.Ranks.Administrator
-                            : Modules.Ranks.Moderator;
+                        command === 'removeadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator;
 
                     log.info(
                         `${player.username} is now a ${
