@@ -133,7 +133,7 @@ export default class World {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message: Filter.clean(Utils.parseMessage(message)),
+                message: Utils.parseMessage(message),
                 colour
             })
         });
