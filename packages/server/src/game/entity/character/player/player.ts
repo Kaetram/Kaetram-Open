@@ -189,7 +189,7 @@ export default class Player extends Character {
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
-        this.rank = data.rank;
+        this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
         this.orientation = data.orientation;
@@ -1245,7 +1245,7 @@ export default class Player extends Character {
      */
 
     public isAdmin(): boolean {
-        return this.rank === Modules.Ranks.Administrator || config.skipDatabase;
+        return this.rank === Modules.Ranks.Admin || config.skipDatabase;
     }
 
     /**
@@ -1391,8 +1391,14 @@ export default class Player extends Character {
 
         log.debug(`[${this.username}] ${message}`);
 
-        let name = Utils.formatName(this.username),
-            source = `${global ? '[Global]' : ''} ${name}`;
+        let name = Utils.formatName(this.username);
+
+        if (this.rank !== Modules.Ranks.None) {
+            name = `[${Modules.Ranks[this.rank]}] ${name}`;
+            colour = global ? '' : Modules.RankColours[this.rank];
+        }
+
+        let source = `${global ? '[Global]' : ''} ${name}`;
 
         // Relay the message to the discord channel.
         if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);

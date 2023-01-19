@@ -591,10 +591,9 @@ export default class Connection {
 
         if (!entity) return;
 
-        let { name, x, y } = entity;
+        let { name, rank, x, y } = entity;
 
-        if (entity.isModerator()) name = `[Moderator] ${name}`;
-        if (entity.isAdmin()) name = `[Admin] ${name}`;
+        if (rank !== Modules.Ranks.None) name = `[${Modules.Ranks[rank]}] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);

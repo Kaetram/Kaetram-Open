@@ -176,10 +176,20 @@ export enum Medals {
 export enum Ranks {
     None,
     Moderator,
-    Administrator,
+    Admin,
     Veteran,
-    Patron
+    Patron,
+    Artist
 }
+
+export let RankColours = {
+    [Ranks.None]: '',
+    [Ranks.Moderator]: '#02f070',
+    [Ranks.Admin]: '#3bbaff',
+    [Ranks.Veteran]: '#d84343',
+    [Ranks.Patron]: '#db753c',
+    [Ranks.Artist]: '#702faa'
+};
 
 export interface Colours {
     fill: string;
