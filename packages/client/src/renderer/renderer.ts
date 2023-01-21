@@ -5,6 +5,7 @@ import { isMobile, isTablet } from '../utils/detect';
 
 import _ from 'lodash-es';
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
+import { Modules } from '@kaetram/common/network';
 
 import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
@@ -924,9 +925,10 @@ export default class Renderer {
 
         let colour = entity.wanted ? 'red' : 'white';
 
-        if (entity.isAdmin()) colour = 'rgba(186,20,20, 1)';
-        if (entity.isModerator()) colour = 'rgba(165, 154, 154, 1)';
+        // If entity has any rank aside from default then we use their colour.
+        if (entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
 
+        // Draw the yellow name above the entity if it's the same entity as our current player.
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
         if (entity.nameColour) colour = entity.nameColour;
