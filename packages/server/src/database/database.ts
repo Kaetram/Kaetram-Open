@@ -1,7 +1,7 @@
+import MongoDB from './mongodb/mongodb';
+
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-
-import MongoDB from './mongodb/mongodb';
 
 import type { DatabaseTypes } from '@kaetram/common/types/database';
 

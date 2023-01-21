@@ -1,10 +1,11 @@
-import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
-import _ from 'lodash-es';
+import Tile from './tile';
 
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import Tile from './tile';
+import _ from 'lodash-es';
+import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
+import { Modules } from '@kaetram/common/network';
 
 import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
@@ -437,13 +438,13 @@ export default class Renderer {
         let { input } = this.game,
             location = input.getCoords();
 
-        if (this.isSelectedCell(location.x, location.y)) return;
+        if (this.isSelectedCell(location.gridX, location.gridY)) return;
 
-        let isColliding = this.map.isColliding(location.x, location.y);
+        let isColliding = this.map.isColliding(location.gridX, location.gridY);
 
         this.drawCellHighlight(
-            location.x,
-            location.y,
+            location.gridX,
+            location.gridY,
             isColliding ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
         );
     }
@@ -617,6 +618,8 @@ export default class Renderer {
             false,
             'white'
         );
+
+        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
 
         // Draw information about the entity we're hovering over.
         if (input.hovering && input.entity) {
@@ -922,9 +925,10 @@ export default class Renderer {
 
         let colour = entity.wanted ? 'red' : 'white';
 
-        if (entity.isAdmin()) colour = 'rgba(186,20,20, 1)';
-        if (entity.isModerator()) colour = 'rgba(165, 154, 154, 1)';
+        // If entity has any rank aside from default then we use their colour.
+        if (entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
 
+        // Draw the yellow name above the entity if it's the same entity as our current player.
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
         if (entity.nameColour) colour = entity.nameColour;

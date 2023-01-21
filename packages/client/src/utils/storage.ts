@@ -1,8 +1,8 @@
-import { Modules } from '@kaetram/common/network';
+import { isMobile } from './detect';
 
 import log from '../lib/log';
 
-import { isMobile } from './detect';
+import { Modules } from '@kaetram/common/network';
 
 import type { RegionData, RegionTileData } from '@kaetram/common/types/map';
 import type { CursorTiles } from '../map/map';

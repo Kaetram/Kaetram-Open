@@ -1,10 +1,10 @@
+import rawData from '../../../../data/items.json';
+import Entity from '../entity';
+
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import PluginIndex from '@kaetram/server/data/plugins/items';
-
-import rawData from '../../../../data/items.json';
-import Entity from '../entity';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
@@ -34,9 +34,13 @@ export default class Item extends Entity {
     private skill = '';
     private achievement = '';
     private quest = '';
-    public description = '';
 
-    public projectileName = '';
+    // Points usage
+    public manaCost = 0;
+
+    // Item information
+    public description = '';
+    public projectileName = 'projectile-pinearrow';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
@@ -54,6 +58,7 @@ export default class Item extends Entity {
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
+    public mining = -1;
     public attackRange = 1;
 
     public exists = true;
@@ -109,11 +114,13 @@ export default class Item extends Entity {
         this.poisonous = this.data.poisonous || this.poisonous;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+        this.mining = this.data.mining || this.mining;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
         this.projectileName = this.data.projectileName || this.projectileName;
         this.description = this.data.description || this.description;
+        this.manaCost = this.data.manaCost || this.manaCost;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -283,6 +290,15 @@ export default class Item extends Entity {
     }
 
     /**
+     * @param id The enchantment id we are checking for.
+     * @returns Whether or not the item has the enchantment.
+     */
+
+    public hasEnchantment(id: Modules.Enchantment): boolean {
+        return id in this.enchantments;
+    }
+
+    /**
      * Checks if the item is equippable by comparing the type
      * against all the equippable items. Will probably be
      * rewritten for compactness in the future.
@@ -309,6 +325,16 @@ export default class Item extends Entity {
 
     public isArcherWeapon(): boolean {
         return this.itemType === 'weaponarcher';
+    }
+
+    /**
+     * Sets an enchantment onto an item or updates the level if it already exists.
+     * @param id The id of the enchantment.
+     * @param level The level of the enchantment.
+     */
+
+    public setEnchantment(id: Modules.Enchantment, level: number): void {
+        this.enchantments[id] = { level };
     }
 
     /**

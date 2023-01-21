@@ -92,22 +92,6 @@
             width: 76px * $i;
         }
 
-        .add,
-        .remove {
-            bottom: 8px * $i;
-            width: 21px * $i;
-            height: 17px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
-
-            &:hover {
-                background-position-x: -42px * $i;
-            }
-
-            &:active {
-                background-position-x: -21px * $i;
-            }
-        }
-
         .add {
             left: 24px * $i;
             background-position-y: -274px * $i;
@@ -118,12 +102,12 @@
             background-position-y: -291px * $i;
         }
 
-        // Popup buttons
-        .confirm,
-        .cancel {
+        .add,
+        .remove {
+            bottom: 8px * $i;
             width: 21px * $i;
-            height: 14px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+            height: 17px * $i;
+            background-image: url('/img/#{$i}/characterdialogsheet.png');
 
             &:hover {
                 background-position-x: -42px * $i;
@@ -133,6 +117,8 @@
                 background-position-x: -21px * $i;
             }
         }
+
+        // Popup buttons
 
         .confirm {
             bottom: 4px * $i;
@@ -144,6 +130,21 @@
             right: 14px * $i;
             bottom: 4px * $i;
             background-position-y: -322px * $i;
+        }
+
+        .confirm,
+        .cancel {
+            width: 21px * $i;
+            height: 14px * $i;
+            background-image: url('/img/#{$i}/characterdialogsheet.png');
+
+            &:hover {
+                background-position-x: -42px * $i;
+            }
+
+            &:active {
+                background-position-x: -21px * $i;
+            }
         }
     }
 
@@ -157,6 +158,10 @@
         #friends-page {
             right: 32px;
         }
+
+        #popup-friend-input {
+            top: 12px;
+        }
     }
 
     @media (--sm) {
@@ -167,7 +172,8 @@
         }
 
         #popup-friend-input {
-            font-size: 8px;
+            top: 6px;
+            font-size: 7px;
         }
 
         #friends-container > ul > li > p {

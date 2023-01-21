@@ -1,10 +1,11 @@
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
-
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
 import { Command, Network, Notification, NPC, Pointer, Store } from '../network/packets';
+
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import Filter from '@kaetram/common/util/filter';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';
@@ -69,7 +70,12 @@ export default class Commands {
             }
 
             case 'global': {
-                return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
+                return this.player.chat(
+                    Filter.clean(blocks.join(' ')),
+                    true,
+                    false,
+                    'rgba(191, 161, 63, 1.0)'
+                );
             }
 
             case 'pm':
@@ -81,14 +87,13 @@ export default class Commands {
 
                 let message = blocks.slice(username.split(' ').length).join(' ');
 
-                this.player.sendMessage(username, message);
+                this.player.sendPrivateMessage(username, message);
 
                 break;
             }
 
             case 'ping': {
-                this.player.pingTime = Date.now();
-                this.player.send(new Network(Opcodes.Network.Ping));
+                this.player.ping();
                 break;
             }
         }
@@ -225,10 +230,12 @@ export default class Commands {
                 return;
             }
 
-            case 'nohit': {
-                log.info('invincinil');
-
+            case 'nohit':
+            case 'invincible': {
                 this.player.invincible = !this.player.invincible;
+
+                if (this.player.invincible) this.player.notify('You are now invincible.');
+                else this.player.notify('You are no longer invincible.');
 
                 return;
             }
@@ -733,6 +740,29 @@ export default class Commands {
 
             case 'bank': {
                 this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                break;
+            }
+
+            case 'setrank': {
+                username = blocks.shift()!;
+
+                let rankText = blocks.shift()!;
+
+                if (!username || !rankText)
+                    return this.player.notify(`Malformed command, expected /setrank username rank`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
+
+                if (!rank) return this.player.notify(`Invalid rank: ${rankText}`);
+
+                player.setRank(rank);
+                player.sync();
+
                 break;
             }
         }

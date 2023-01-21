@@ -35,7 +35,7 @@
 
   "crab": {
     "name": "Crab",
-    "drops": {"flask": 100},
+    "drops": {"flask": 100, "bead": 50},
     "hitPoints": 15,
     "defenseLevel": 1,
     "attackLevel": 2,
@@ -87,7 +87,7 @@
 
   "skeleton": {
     "name": "Spooky Skeleton",
-    "drops": {"gold": 300, "flask": 200},
+    "drops": {"gold": 200, "flask": 100},
     "hitPoints": 110,
     "defenseLevel": 6,
     "attackLevel": 4,
@@ -320,7 +320,7 @@
     "attackRange": 5,
     "aggressive": true,
     "roaming": true,
-    "attackRate": 900,
+    "attackRate": 1100,
     "movementSpeed": 400,
     "projectileName": "projectile-terror",
     "respawnDelay": 35000
@@ -328,7 +328,7 @@
 
   "blazespider": {
     "name": "Blaze Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 75},
+    "drops": {"gold": 50, "blackspiderarmor": 10},
     "hitPoints": 1350,
     "defenseLevel": 0,
     "attackLevel": 3,
@@ -533,7 +533,7 @@
 
   "darkskeleton": {
     "name": "Dark Skeleton",
-    "drops": {"sproutring": 25, "hammer": 250, "hunterbow": 150, "gold": 275},
+    "drops": {"ring1": 25, "hammer": 250, "hunterbow": 150, "gold": 275},
     "hitPoints": 300,
     "defenseLevel": 5,
     "attackLevel": 2,
@@ -601,7 +601,7 @@
 
   "firespider": {
     "name": "Fire Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 60},
+    "drops": {"gold": 50, "blackspiderarmor": 15},
     "hitPoints": 850,
     "defenseLevel": 3,
     "attackLevel": 4,
@@ -705,7 +705,7 @@
 
   "greenfish": {
     "name": "Green Fesh",
-    "drops": {"spear": 125, "pendant1": 25, "greenarcherarmor": 150, "gold": 700},
+    "drops": {"spear": 125, "pendant1": 10, "greenarcherarmor": 150, "gold": 700},
     "hitPoints": 200,
     "defenseLevel": 1,
     "attackLevel": 1,
@@ -722,7 +722,7 @@
 
   "hellspider": {
     "name": "Hell Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 40},
+    "drops": {"gold": 50, "blackspiderarmor": 5},
     "hitPoints": 780,
     "defenseLevel": 10,
     "attackLevel": 15,
@@ -740,9 +740,9 @@
 
   "hermitcrab": {
     "name": "Hermit Crab",
-    "drops": {"flask": 200, "gold": 200},
+    "drops": {"flask": 200, "gold": 200, "bead": 1750},
     "hitPoints": 155,
-    "defenseLevel": 10,
+    "defenseLevel": 12,
     "attackLevel": 4,
     "experience": 146,
     "level": 15,
@@ -860,7 +860,7 @@
 
   "ironogre": {
     "name": "Iron Ogre",
-    "drops": {"bluescimitar": 400, "gold": 600},
+    "drops": {"redsword": 75, "gold": 420},
     "hitPoints": 300,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -877,7 +877,7 @@
 
   "livingarmor": {
     "name": "Living armor",
-    "drops": {"whip": 10, "dovakinarcherarmor": 100, "dovakinarmor": 100, "skylightbow": 100, "gold": 690},
+    "drops": {"whip": 5, "dovakinarcherarmor": 25, "dovakinarmor": 25, "skylightbow": 15, "gold": 420},
     "hitPoints": 340,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -911,7 +911,7 @@
 
   "mermaid": {
     "name": "Mermaid",
-    "drops": {"gold": 600, "trident": 100, "mermaidbow": 100},
+    "drops": {"gold": 420, "trident": 45, "mermaidbow": 45},
     "hitPoints": 150,
     "defenseLevel": 10,
     "attackLevel": 12,
@@ -981,7 +981,7 @@
 
   "oldogre": {
     "name": "Old Ogre",
-    "drops": {"pendant1": 25, "skylightbow": 475, "gold": 500},
+    "drops": {"pendant1": 25, "skylightbow": 115, "gold": 500},
     "hitPoints": 256,
     "defenseLevel": 5,
     "attackLevel": 1,
@@ -998,7 +998,7 @@
 
   "orc": {
     "name": "Orc",
-    "drops": {"redsword": 200, "violetbow": 100, "redarcherarmor": 120, "spear": 30},
+    "drops": {"redsword": 75, "violetbow": 50, "redarcherarmor": 45, "spear": 30},
     "hitPoints": 75,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -1032,7 +1032,7 @@
 
   "penguin": {
     "name": "Penguin",
-    "drops": {"bluewingarcherarmor": 200, "bluewingarmor": 200, "icerose": 200, "marinebow": 200, "gold": 200},
+    "drops": {"bluewingarcherarmor": 75, "bluewingarmor": 75, "icerose": 50, "marinebow": 15, "gold": 100},
     "hitPoints": 526,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -1083,7 +1083,7 @@
 
   "poisonspider": {
     "name": "Poison Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 30},
+    "drops": {"gold": 50, "blackspiderarmor": 10},
     "hitPoints": 990,
     "defenseLevel": 30,
     "attackLevel": 15,
@@ -1101,7 +1101,7 @@
 
   "preta": {
     "name": "Preta",
-    "drops": {"greenpendant": 40, "bluewingarcherarmor": 200, "bluewingarmor": 360, "gold": 400},
+    "drops": {"greenpendant": 20, "bluewingarcherarmor": 50, "bluewingarmor": 45, "gold": 200},
     "hitPoints": 495,
     "defenseLevel": 1,
     "attackLevel": 7,
@@ -1118,7 +1118,7 @@
 
   "purplepreta": {
     "name": "Preta",
-    "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
+    "drops": {"bluescimitar": 55, "bluewingarcherarmor": 50, "bluewingarmor": 45, "gold": 200},
     "hitPoints": 431,
     "defenseLevel": 1,
     "attackLevel": 6,
@@ -1305,12 +1305,12 @@
 
   "santaelf": {
     "name": "Santa's Elf",
-    "drops": {"gold": 50},
+    "drops": {"gold": 100},
     "hitPoints": 6100,
-    "defenseLevel": 10,
+    "defenseLevel": 15,
     "attackLevel": 15,
     "experience": 3250,
-    "level": 144,
+    "level": 136,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1510,7 +1510,7 @@
 
   "spider": {
     "name": "Spooder",
-    "drops": {"gold": 50, "blackspiderarmor": 50},
+    "drops": {"gold": 50, "blackspiderarmor": 5},
     "hitPoints": 650,
     "defenseLevel": 45,
     "attackLevel": 1,
@@ -1732,9 +1732,9 @@
 
   "skeletonking": {
     "name": "Skeleton King",
-    "drops": {"goldensword": 100, "bigflask": 250, "goldenbow": 50, "pearlpendant": 40, "pearlring": 40},
+    "drops": {"goldensword": 75, "bigflask": 250, "goldenbow": 75, "greenpendant": 15, "sproutring": 15},
     "hitPoints": 1850,
-    "defenseLevel": 20,
+    "defenseLevel": 25,
     "attackLevel": 7,
     "experience": 150,
     "level": 32,
@@ -1860,8 +1860,8 @@
   "forestdragon": {
     "name": "Forest Dragon",
     "drops": {"dragonarmor": 75, "bamboospear": 75, "gold": 900, "marblependant": 75, "essentialrage": 75},
-    "hitPoints": 4500,
-    "defenseLevel": 200,
+    "hitPoints": 6942,
+    "defenseLevel": 10,
     "attackLevel": 80,
     "experience": 4250,
     "level": 258,
@@ -1931,25 +1931,27 @@
 
   "piratecaptain": {
     "name": "Pirate Captain",
-    "drops": {"scimitar": 100, "marblependant": 200, "gold": 500},
-    "hitPoints": 1500,
-    "defenseLevel": 5,
-    "attackLevel": 10,
-    "experience": 696,
-    "level": 46,
-    "aggroRange": 4,
-    "attackRange": 7,
-    "aggressive": false,
+    "drops": {"scimitar": 15, "rubyring": 15, "gold": 500, "rubypendant": 15},
+    "hitPoints": 4750,
+    "defenseLevel": 36,
+    "attackLevel": 32,
+    "experience": 1300,
+    "level": 175,
+    "aggroRange": 10,
+    "attackRange": 1,
+    "aggressive": true,
     "projectileName": "projectile-iceball",
     "roaming": true,
-    "attackRate": 1500,
-    "movementSpeed": 600,
-    "respawnDelay": 115000
+    "roamingDistance": 12,
+    "attackRate": 1100,
+    "movementSpeed": 350,
+    "respawnDelay": 115000,
+    "plugin": "piratecaptain"
   },
 
   "pirateskeleton": {
     "name": "Pirate Skeleton",
-    "drops": {"morningstar": 400, "redbow": 400, "gold": 300},
+    "drops": {"morningstar": 100, "redbow": 50, "gold": 300},
     "hitPoints": 460,
     "defenseLevel": 8,
     "attackLevel": 12,
@@ -2040,20 +2042,21 @@
   "santa": {
     "name": "Santa",
     "drops": {"gold": 250, "candybar": 60},
-    "hitPoints": 4500,
-    "defenseLevel": 45,
+    "hitPoints": 6500,
+    "defenseLevel": 15,
     "attackLevel": 65,
     "experience": 3250,
     "level": 240,
-    "aggroRange": 7,
-    "attackRange": 1,
+    "aggroRange": 12,
+    "attackRange": 9,
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 500,
     "respawnDelay": 180000,
     "projectile": "projectile-gift",
-    "plugin": "santa"
+    "plugin": "santa",
+    "roamingDistance": 16
   },
 
   "brownmouse": {

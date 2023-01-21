@@ -1,32 +1,3 @@
-import { Team } from '@kaetram/common/api/minigame';
-import config from '@kaetram/common/config';
-import { Opcodes, Modules } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import {
-    Camera,
-    Chat,
-    Effect,
-    Heal,
-    Movement,
-    Music,
-    Notification,
-    Overlay,
-    Pointer,
-    PVP,
-    Respawn,
-    Spawn,
-    Sync,
-    Teleport,
-    Welcome
-} from '@kaetram/server/src/network/packets';
-
-import Incoming from '../../../../controllers/incoming';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
-import Mana from '../points/mana';
-
 import Friends from './friends';
 import Handler from './handler';
 import Quests from './quests';
@@ -37,6 +8,37 @@ import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
+
+import Mana from '../points/mana';
+import Character from '../character';
+import Formulas from '../../../../info/formulas';
+import Incoming from '../../../../controllers/incoming';
+
+import {
+    Camera,
+    Chat,
+    Effect,
+    Heal,
+    Movement,
+    Music,
+    Network,
+    Notification,
+    Overlay,
+    Pointer,
+    PVP,
+    Rank,
+    Respawn,
+    Spawn,
+    Sync,
+    Teleport,
+    Welcome
+} from '@kaetram/server/src/network/packets';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import config from '@kaetram/common/config';
+import { Team } from '@kaetram/common/api/minigame';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -189,7 +191,7 @@ export default class Player extends Character {
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
-        this.rank = data.rank;
+        this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
         this.orientation = data.orientation;
@@ -324,10 +326,11 @@ export default class Player extends Character {
         // Cannot respawn if the player is not marked as dead.
         if (!this.dead) return log.warning(`Invalid respawn request.`);
 
+        this.dead = false;
+
         let spawn = this.getSpawn();
 
-        this.dead = false;
-        this.setPosition(spawn.x, spawn.y);
+        this.teleport(spawn.x, spawn.y);
 
         // Signal to other players that the player is spawning.
         this.sendToRegions(new Spawn(this), true);
@@ -502,12 +505,17 @@ export default class Player extends Character {
      * of factors to avoid false-positives.
      * @param x The grid x coordinate we are checking.
      * @param y The grid y coordinate we are checking.
+     * @param timestamp Timestamp at which the packet was originally sent.
      */
 
-    private verifyMovement(x: number, y: number): boolean {
+    private verifyMovement(x: number, y: number, timestamp: number): boolean {
         let now = Date.now(),
             stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
-            regionDiff = now - this.lastRegionChange;
+            regionDiff = now - this.lastRegionChange,
+            timestampDiff = now - timestamp;
+
+        // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
+        if (timestampDiff > 20 && stepDiff < 10) return false;
 
         // Firstly ensure that the last step was behaving normally.
         if (stepDiff >= this.getMovementSpeed()) return false;
@@ -617,11 +625,13 @@ export default class Player extends Character {
             index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
-        // No tree found, we stop here.
-        if (!tree) return log.debug(`No tree found at ${instance}.`);
+        if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
-        // Start the cutting process.
-        this.skills.getLumberjacking().cut(this, tree);
+        // If we don't find a tree then we try finding a rock.
+
+        let rock = this.world.globals.getRocks().findResource(index);
+
+        if (rock) return this.skills.getMining().mine(this, rock);
     }
 
     /**
@@ -732,7 +742,8 @@ export default class Player extends Character {
         this.movementStart = Date.now();
 
         // Invalid movement speed reported by the client.
-        if (speed !== this.movementSpeed) this.incrementCheatScore('Mismatch in movement speed.');
+        if (speed !== this.movementSpeed)
+            this.incrementCheatScore(`${this.username} Received incorrect movement speed.`);
 
         // Stop combat and skills every time thre is movement.
         this.skills.stop();
@@ -747,12 +758,13 @@ export default class Player extends Character {
      * A movement step occurs every time a player traverses to the next tile.
      * @param x The current x coordinate of the player as reported by the client.
      * @param y The current y coordinate of the player as reported by the client.
+     * @param timestamp The time when the packet was sent (UNIX timestamp).
      */
 
-    public handleMovementStep(x: number, y: number): void {
+    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
         if (this.stunned || this.isInvalidMovement()) return;
 
-        if (this.verifyMovement(x, y))
+        if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
 
         this.setPosition(x, y);
@@ -985,6 +997,17 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the player's rank and sends a packet to the client.
+     * @param rank The new rank of the player, defaults to `None`.
+     */
+
+    public setRank(rank: Modules.Ranks = Modules.Ranks.None): void {
+        this.rank = rank;
+
+        this.send(new Rank(rank));
+    }
+
+    /**
      * Override for the superclass `setPosition` function. Since the player must always be
      * synced up to nearby players, this function sends a packet to the nearby region about
      * every movement. It also checks gainst no-clipping and player positionining. In the event
@@ -1070,6 +1093,14 @@ export default class Player extends Character {
 
     public override hasDisplayInfo(): boolean {
         return this.inMinigame();
+    }
+
+    /**
+     * @returns Whether or not the player has enough mana to attack.
+     */
+
+    public hasManaForAttack(): boolean {
+        return this.mana.getMana() >= this.equipment.getWeapon().manaCost;
     }
 
     /**
@@ -1163,6 +1194,16 @@ export default class Player extends Character {
     }
 
     /**
+     * Sends a ping request to the client. This is used to calculate the latency.
+     */
+
+    public ping(): void {
+        this.pingTime = Date.now();
+
+        this.send(new Network(Opcodes.Network.Ping));
+    }
+
+    /**
      * Resets the timeout every time an action is performed. This way we keep
      * a `countdown` going constantly that resets every time an action is performed.
      */
@@ -1236,7 +1277,7 @@ export default class Player extends Character {
      */
 
     public isAdmin(): boolean {
-        return this.rank === Modules.Ranks.Administrator || config.skipDatabase;
+        return this.rank === Modules.Ranks.Admin || config.skipDatabase;
     }
 
     /**
@@ -1256,6 +1297,14 @@ export default class Player extends Character {
 
     public override isPoisonous(): boolean {
         return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
+     * @returns Whether or not the player uses magic-based weapons.
+     */
+
+    public override isMagic(): boolean {
+        return this.equipment.getWeapon().isMagic();
     }
 
     /**
@@ -1308,28 +1357,39 @@ export default class Player extends Character {
     }
 
     /**
-     * Sends a private message to another player. If the hub is enabled, we use the API
-     * to send a message to a player.
+     * Entrypoint for sending a private message across servers. This function is bypassed
+     * when we receive a message from another server and we use `sendMessage` instead.
      * @param playerName The username of the player we are sending the message to.
      * @param message The string contents of the message.
      */
 
-    public sendMessage(playerName: string, message: string): void {
-        // TODO - Inter-world messaging
-        // if (config.hubEnabled) {
-        //     this.world.api.sendPrivateMessage(this, playerName, message);
-        //     return;
-        // }
+    public sendPrivateMessage(playerName: string, message: string): void {
+        if (config.hubEnabled) {
+            this.world.api.sendPrivateMessage(this, playerName, message);
+            return;
+        }
 
         if (!this.world.isOnline(playerName))
             return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
 
-        let otherPlayer = this.world.getPlayerByName(playerName),
-            oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
-            formattedName = Utils.formatName(this.username); // Formatted username of current instance.
+        this.sendMessage(playerName, message);
+    }
 
-        otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
+    /**
+     * Sends the message to the player specified in the current server.
+     * @param playerName The username of the player we are sending the message to.
+     * @param message The string contents of the message.
+     */
+
+    public sendMessage(playerName: string, message: string, source = ''): void {
+        let otherPlayer = this.world.getPlayerByName(playerName),
+            oFormattedName = Utils.formatName(playerName), // Formated username of the player receiving the message.
+            formattedName = Utils.formatName(source || this.username); // Formatted username of the source
+
+        if (source) this.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        else otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+
+        if (!source) this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
     }
 
     /**
@@ -1363,8 +1423,14 @@ export default class Player extends Character {
 
         log.debug(`[${this.username}] ${message}`);
 
-        let name = Utils.formatName(this.username),
-            source = `${global ? '[Global]' : ''} ${name}`;
+        let name = Utils.formatName(this.username);
+
+        if (this.rank !== Modules.Ranks.None) {
+            name = `[${Modules.Ranks[this.rank]}] ${name}`;
+            colour = global ? '' : Modules.RankColours[this.rank];
+        }
+
+        let source = `${global ? '[Global]' : ''} ${name}`;
 
         // Relay the message to the discord channel.
         if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
@@ -1553,6 +1619,9 @@ export default class Player extends Character {
      */
 
     public override getAccuracyLevel(): number {
+        // We use magic level for accuracy when the player is using a magic weapon.
+        if (this.isMagic()) return this.skills.get(Modules.Skills.Magic).level;
+
         return this.skills.get(Modules.Skills.Accuracy).level;
     }
 
@@ -1588,7 +1657,16 @@ export default class Player extends Character {
      */
 
     public override getDamageBonus(): number {
-        if (this.equipment.getWeapon().isMagic()) return this.getBonuses().magic;
+        // Handle magic bonuses
+        if (this.isMagic()) {
+            // If the player does not have enough mana for the attack decrease the damage.
+            if (!this.hasManaForAttack()) return 0;
+
+            // Return the total magic bonus.
+            return this.getBonuses().magic;
+        }
+
+        // Return the archery bonus if using ranged weapons.
         if (this.isRanged()) return this.getBonuses().archery;
 
         return this.getBonuses().strength;

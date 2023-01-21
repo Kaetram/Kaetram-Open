@@ -1,6 +1,6 @@
-import { Packets } from '@kaetram/common/network';
-
 import Util from '../utils/util';
+
+import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
 
