@@ -624,11 +624,13 @@ export default class Player extends Character {
             index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
-        // No tree found, we stop here.
-        if (!tree) return log.debug(`No tree found at ${instance}.`);
+        if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
-        // Start the cutting process.
-        this.skills.getLumberjacking().cut(this, tree);
+        // If we don't find a tree then we try finding a rock.
+
+        let rock = this.world.globals.getRocks().findResource(index);
+
+        if (rock) return this.skills.getMining().mine(this, rock);
     }
 
     /**

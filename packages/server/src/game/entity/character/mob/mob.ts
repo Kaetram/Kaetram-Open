@@ -176,16 +176,16 @@ export default class Mob extends Character {
 
     private loadStats(): void {
         this.attackStats = {
-            crush: this.attackLevel * 2,
-            stab: this.attackLevel * 2,
-            slash: this.attackLevel * 2,
+            crush: this.attackLevel,
+            stab: this.attackLevel,
+            slash: this.attackLevel,
             magic: this.attackLevel
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel * 2,
-            stab: this.defenseLevel * 2,
-            slash: this.defenseLevel * 2,
+            crush: this.defenseLevel,
+            stab: this.defenseLevel,
+            slash: this.defenseLevel,
             magic: this.defenseLevel
         };
 
