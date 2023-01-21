@@ -21,6 +21,7 @@ import {
     Heal,
     Movement,
     Music,
+    Network,
     Notification,
     Overlay,
     Pointer,
@@ -1169,6 +1170,16 @@ export default class Player extends Character {
 
         this.connection.sendUTF8('timeout');
         this.connection.close('Player timed out.');
+    }
+
+    /**
+     * Sends a ping request to the client. This is used to calculate the latency.
+     */
+
+    public ping(): void {
+        this.pingTime = Date.now();
+
+        this.send(new Network(Opcodes.Network.Ping));
     }
 
     /**
