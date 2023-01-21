@@ -36,6 +36,26 @@
     }
   },
 
+  "pickaxe": {
+    "type": "weapon",
+    "name": "Pickaxe",
+    "mining": 1,
+    "level": 1,
+    "price": 25000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 0,
+      "stab": 5,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "morningstar": {
     "type": "weapon",
     "name": "Morning Star",
@@ -3930,7 +3950,7 @@
     "type": "armour",
     "name": "Iron Knight Armour",
     "level": 160,
-    "price": 20000,
+    "price": 10000,
     "attackStats": {
       "crush": 38,
       "slash": 56,
@@ -3979,7 +3999,7 @@
   "blackspiderarmor": {
     "type": "armour",
     "name": "Black Spider Armour",
-    "price": 25000,
+    "price": 15000,
     "level": 54,
     "attackStats": {
       "crush": 20,
@@ -4581,6 +4601,36 @@
     "name": "Bloodwood Logs",
     "price": 150,
     "description": "It almost looks like they're bleeding."
+  },
+
+  "nisocore": {
+    "type": "object",
+    "name": "Nisoc Ore",
+    "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things."
+  },
+
+  "cinnabarore": {
+    "type": "object",
+    "name": "Cinnabar Ore",
+    "description": "A red ore containing special metals. May be used for crafting of certain weapons."
+  },
+
+  "pytharore": {
+    "type": "object",
+    "name": "Pythar Ore",
+    "description": "A purple crystal with magical properties."
+  },
+
+  "goldore": {
+    "type": "object",
+    "name": "Gold Ore",
+    "description": "Raw gold ore, will need to be processed before it can be turned into something nice."
+  },
+
+  "iboore": {
+    "type": "object",
+    "name": "Ibo Ore",
+    "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something."
   },
 
   "bead": {
