@@ -41,6 +41,10 @@ export interface RawStage {
     /** If a tree must be cut. */
     tree?: string;
     treeCount?: number; // Amount of tress to be cut.
+
+    /** Skill experience rewards */
+    skill?: string;
+    experience?: number;
 }
 
 export interface RawQuest {
@@ -68,6 +72,8 @@ export interface StageData {
     abilityLevel?: number;
     tree?: string;
     treeCount?: number;
+    skill?: string;
+    experience?: number;
 }
 
 export interface QuestData {

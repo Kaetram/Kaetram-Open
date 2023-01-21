@@ -60,10 +60,6 @@
         "key": "ring1",
         "count": 1,
         "price": 10000
-      },
-      {
-        "key": "pickaxe",
-        "count": 10
       }
     ],
     "refresh": 30000,
@@ -102,7 +98,7 @@
         "count": 1
       }
     ],
-    "refresh": 600000,
+    "refresh": 120000,
     "currency": "gold"
   },
 
@@ -130,6 +126,42 @@
       }
     ],
     "refresh": 120000,
+    "currency": "gold"
+  },
+
+  "miner": {
+    "items": [
+      {
+        "key": "pickaxe",
+        "count": 5
+      },
+      {
+        "key": "nisocore",
+        "count": 1,
+        "price": 220
+      },
+      {
+        "key": "cinnabarore",
+        "count": 0,
+        "price": 460
+      },
+      {
+        "key": "pytharore",
+        "count": 0,
+        "price": 670
+      },
+      {
+        "key": "goldore",
+        "count": 0,
+        "price": 850
+      },
+      {
+        "key": "iboore",
+        "count": 0,
+        "price": 1250
+      }
+    ],
+    "refresh": 600000,
     "currency": "gold"
   }
 }
