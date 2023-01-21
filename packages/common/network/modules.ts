@@ -2,11 +2,8 @@
 
 import { Pointer } from './opcodes';
 
-// Preset objects and values for various usages.
-export default {
-    EmptyPointer: {
-        type: Pointer.Remove
-    }
+export let EmptyPointer = {
+    type: Pointer.Remove
 };
 
 export enum PacketType {
@@ -127,13 +124,13 @@ export enum Warps {
 }
 
 export enum Skills {
-    Lumberjacking,
     Accuracy,
     Archery,
     Health,
     Magic,
+    Strength,
     Mining,
-    Strength
+    Lumberjacking
 }
 
 export enum Enchantment {
@@ -188,7 +185,7 @@ export let RankColours = {
     [Ranks.Admin]: '#3bbaff',
     [Ranks.Veteran]: '#d84343',
     [Ranks.Patron]: '#db753c',
-    [Ranks.Artist]: '#702faa'
+    [Ranks.Artist]: '#b552f7'
 };
 
 export interface Colours {
