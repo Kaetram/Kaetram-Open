@@ -1095,7 +1095,7 @@
 
   "pendant1": {
     "type": "pendant",
-    "name": "Emerald Pendant",
+    "name": "Pendant",
     "price": 5000,
     "attackStats": {
       "crush": 8,
@@ -1122,16 +1122,16 @@
     "name": "Jade Pendant",
     "price": 5000,
     "attackStats": {
-      "crush": 12,
+      "crush": 11,
       "slash": 12,
-      "stab": 12,
-      "magic": 10
+      "stab": 10,
+      "magic": 7
     },
     "defenseStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
-      "magic": 6
+      "magic": 4
     },
     "bonuses": {
       "accuracy": 4,
@@ -1186,6 +1186,54 @@
       "strength": 12,
       "archery": 6,
       "magic": 10
+    }
+  },
+
+  "rubypendant": {
+    "type": "pendant",
+    "name": "Ruby Pendant",
+    "price": 5000,
+    "attackStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "magic": 7
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 4,
+      "magic": 14
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 4
+    }
+  },
+
+  "emeraldpendant": {
+    "type": "pendant",
+    "name": "Emerald Pendant",
+    "price": 5000,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 3,
+      "stab": 7,
+      "magic": 23
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 6
     }
   },
 
@@ -1340,8 +1388,190 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 14,
-      "archery": 16,
+      "archery": 12,
       "magic": 12
+    }
+  },
+
+  "rubyring": {
+    "type": "ring",
+    "name": "Ruby Ring",
+    "skill": "magic",
+    "level": 10,
+    "price": 5000,
+    "attackStats": {
+      "crush": 6,
+      "slash": 6,
+      "stab": 6,
+      "magic": 18
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 4,
+      "stab": 8,
+      "magic": 22
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 8
+    }
+  },
+
+  "sapphirering": {
+    "type": "ring",
+    "name": "Sapphire Ring",
+    "skill": "magic",
+    "level": 20,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 22
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 22
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 11
+    }
+  },
+
+  "emeraldring": {
+    "type": "ring",
+    "name": "Emerald Ring",
+    "skill": "magic",
+    "level": 30,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 33
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 8
+    }
+  },
+
+  "dolring": {
+    "type": "ring",
+    "name": "Fragmented Ring",
+    "skill": "magic",
+    "level": 40,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 10
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 18
+    }
+  },
+
+  "diamondring": {
+    "type": "ring",
+    "name": "Diamond Ring",
+    "skill": "magic",
+    "level": 50,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 17
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 33
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 14
+    }
+  },
+
+  "pytharring": {
+    "type": "ring",
+    "name": "Pythar Ring",
+    "skill": "strength",
+    "level": 50,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 7,
+      "stab": 5,
+      "magic": 7
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 16,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "nisocring": {
+    "type": "ring",
+    "name": "Nisoc Ring",
+    "skill": "accuracy",
+    "level": 41,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 7,
+      "stab": 5,
+      "magic": 7
+    },
+    "bonuses": {
+      "accuracy": 16,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
     }
   },
 

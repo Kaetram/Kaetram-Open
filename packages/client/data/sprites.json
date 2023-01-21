@@ -9446,6 +9446,28 @@
     "offsetY": 0
   },
   {
+    "id": "item-rubypendant",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-emeraldpendant",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-pinkcockroacharmor",
     "animations": {
       "idle": {
@@ -9975,6 +9997,28 @@
   },
   {
     "id": "item-sapphirering",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-pytharring",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-nisocring",
     "animations": {
       "idle": {
         "length": 6,
