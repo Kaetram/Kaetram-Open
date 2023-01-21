@@ -33,6 +33,7 @@ export interface MovementPacket {
     orientation?: Modules.Orientation;
     frozen?: boolean;
     direction?: Modules.Orientation;
+    timestamp?: number;
 }
 
 export interface ProjectilePacket {
