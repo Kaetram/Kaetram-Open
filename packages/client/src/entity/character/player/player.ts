@@ -1,8 +1,3 @@
-import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
-
-import Character from '../character';
-
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
@@ -13,13 +8,18 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
+import Character from '../character';
+
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
+
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType } from '@kaetram/common/types/friends';
+import type { Friend as FriendType, FriendInfo } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -166,8 +166,8 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        _.each(friends, (status: boolean, username: string) => {
-            this.friends[username] = new Friend(i, username, status);
+        _.each(friends, (info: FriendInfo, username: string) => {
+            this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
         });
@@ -210,11 +210,11 @@ export default class Player extends Character {
     /**
      * Adds a new friend to the list.
      * @param username The username of the friend.
-     * @param status The online status of the friend.
+     * @param status Whether the friend is online or not.
      */
 
-    public addFriend(username: string, status: boolean): void {
-        this.friends[username] = new Friend(_.size(this.friends), username, status);
+    public addFriend(username: string, status: boolean, serverId: number): void {
+        this.friends[username] = new Friend(_.size(this.friends), username, status, serverId);
     }
 
     /**
@@ -289,7 +289,7 @@ export default class Player extends Character {
      */
 
     public override isAdmin(): boolean {
-        return this.rank === Modules.Ranks.Administrator;
+        return this.rank === Modules.Ranks.Admin;
     }
 
     /**
@@ -434,6 +434,14 @@ export default class Player extends Character {
 
     public isRanged(): boolean {
         return this.attackRange > 1;
+    }
+
+    /**
+     * @returns Whether or not the player has a ranged-based magic weapon.
+     */
+
+    public isMagic(): boolean {
+        return this.getWeapon().bonuses.magic > 0 && this.isRanged();
     }
 
     /**

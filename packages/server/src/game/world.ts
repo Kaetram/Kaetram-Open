@@ -1,11 +1,6 @@
-import Discord from '@kaetram/common/api/discord';
-import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
-import Filter from '@kaetram/common/util/filter';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
+import Globals from './globals/globals';
+import Map from './map/map';
+import Minigames from './minigames/minigames';
 
 import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
@@ -15,9 +10,14 @@ import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
 
-import Globals from './globals/globals';
-import Map from './map/map';
-import Minigames from './minigames/minigames';
+import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import Filter from '@kaetram/common/util/filter';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Modules } from '@kaetram/common/network';
+import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
@@ -133,7 +133,7 @@ export default class World {
         this.push(Modules.PacketType.Broadcast, {
             packet: new Chat({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message: Filter.clean(Utils.parseMessage(message)),
+                message: Utils.parseMessage(message),
                 colour
             })
         });
@@ -167,9 +167,24 @@ export default class World {
      */
 
     public linkFriends(lPlayer: Player, logout = false): void {
+        // Parse the local friends first.
+        this.syncFriendsList(lPlayer.username, logout);
+
+        // If the hub is enabled, we request the hub to link friends across servers.
+        if (config.hubEnabled) this.api.linkFriends(lPlayer, logout);
+    }
+
+    /**
+     * Iterates through all the players currently logged in and updates the status
+     * of `username` in their friends list if it exists.
+     * @param username The username we are updating the status of.
+     * @param logout The status we are updating the user to.
+     */
+
+    public syncFriendsList(username: string, logout = false): void {
         this.entities.forEachPlayer((player: Player) => {
-            if (player.friends.hasFriend(lPlayer.username))
-                player.friends.setStatus(lPlayer.username, !logout);
+            if (player.friends.hasFriend(username))
+                player.friends.setStatus(username, !logout, config.serverId);
         });
     }
 

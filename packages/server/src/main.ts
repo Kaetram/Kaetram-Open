@@ -1,13 +1,13 @@
 import { exit } from 'node:process';
 
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-
 import Console from './console';
 import Database from './database/database';
 import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
+
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
 
 import type Connection from './network/connection';
 
@@ -27,6 +27,8 @@ class Main {
         this.database.onFail(this.handleFail.bind(this));
 
         process.on('SIGINT', this.handleSignalInterrupt.bind(this));
+        process.on('SIGQUIT', this.handleSignalInterrupt.bind(this));
+        process.on('SIGTERM', this.handleSignalInterrupt.bind(this));
 
         new Loader();
     }
@@ -112,7 +114,7 @@ class Main {
         log.info(`Shutting down Kaetram game engine.`);
 
         // Actually exit the process.
-        exit();
+        setTimeout(() => exit(0), 2000);
     }
 }
 

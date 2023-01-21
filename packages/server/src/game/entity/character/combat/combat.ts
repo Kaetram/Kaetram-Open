@@ -1,9 +1,9 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
+import Hit from './hit';
 
 import Formulas from '../../../../info/formulas';
 import { Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
-import Hit from './hit';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Character from '../character';
 
@@ -109,6 +109,9 @@ export default class Combat {
 
     private handleLoop(): void {
         if (!this.character.hasTarget()) return this.stop();
+
+        // Do not attack while teleporting.
+        if (this.character.teleporting) return;
 
         this.loopCallback?.();
 

@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
-
 import Util from '../../../utils/util';
 import Menu from '../../menu';
+
+import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../../entity/character/player/player';
 

@@ -1,6 +1,6 @@
-import { buildPlayerInventory } from '@kaetram/e2e/cypress/fixtures/builders/playerinventory.builder';
-
 import LoggedInContext from '../loggedin.context';
+
+import { buildPlayerInventory } from '@kaetram/e2e/cypress/fixtures/builders/playerinventory.builder';
 
 export default class InventoryContext extends LoggedInContext {
     public constructor() {
@@ -9,9 +9,9 @@ export default class InventoryContext extends LoggedInContext {
         this.registerLookup('inventory window', '#inventory');
         this.registerLookup(
             'first inventory slot',
-            '#inventory > ul > li:first-child div.item-slot'
+            '#inventory-container > ul > li:first-child div.item-slot'
         );
-        this.registerLookup('drop command', '#action-button-drop');
+        this.registerLookup('drop command', '.action-drop');
     }
 
     public override injectDefaultData(): void {

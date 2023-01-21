@@ -23,13 +23,14 @@
 
     overflow-y: scroll;
 
-    width: 85%;
-    height: 80%;
-
     font-family: AdvoCut, sans-serif;
 
     ul li {
-        padding-bottom: 5px;
+        margin-bottom: 5px;
+
+        &:first-child {
+            margin-top: 5px;
+        }
     }
 }
 
@@ -49,59 +50,29 @@
     left: 70%;
 }
 
-.store-item {
-    display: inline-flex;
-
-    width: 98%;
-    height: 5%;
-
-    border: 3px solid rgb(255 255 0 / 30%);
-    border-radius: 10px;
-}
-
 .store-item-image {
-    transform: scale(0.9);
-
+    position: relative;
     width: 32px;
     height: 32px;
-
     background-size: 600%;
-    border: 2px solid rgb(0 0 255 / 30%);
-    border-radius: 100%;
 }
 
 .store-item-name,
 .store-item-count,
-.store-item-price,
-.store-item-buy {
-    position: absolute;
-    float: left;
-    padding-top: 2%;
+.store-item-price {
+    position: relative;
+    font-family: AdvoCut, sans-serif;
     font-size: 12px;
+    color: #fff;
 }
 
 .store-item-name {
-    left: 15%;
+    float: left;
 }
 
-.store-item-count {
-    left: 65%;
-}
-
+.store-item-count,
 .store-item-price {
-    left: 73%;
-}
-
-.store-item-buy {
-    position: relative;
-    left: 75%;
-    border: 2px solid rgb(0 255 0 / 30%);
-    border-radius: 30%;
-
-    &:hover {
-        cursor: pointer;
-        color: white;
-    }
+    float: right;
 }
 
 @each $size, $i in media.$sizes {
@@ -110,6 +81,11 @@
             width: 170px * $i;
             height: 168px * $i;
             background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
+        }
+
+        #store-container {
+            width: 146px * $i;
+            height: 134px * $i;
         }
 
         #store-inventory-container {
@@ -136,61 +112,94 @@
         #store-sell-slot-return {
             left: 44px * $i;
         }
-    }
-}
 
-@media (--lg) {
-    .store-item-name,
-    .store-item-count,
-    .store-item-price,
-    .store-item-buy {
-        font-size: 14px;
-    }
+        .store-item {
+            width: 136px * $i;
+            height: 22px * $i;
+            margin-left: 4px * $i;
+            background: url('/img/#{$i}/containers.png') -352px * $i -112px * $i;
 
-    .store-item-name {
-        left: 10%;
-    }
-}
+            &:hover {
+                background-position-y: -134px * $i;
+            }
 
-@media (--sm) {
-    #store {
-        top: 30%;
-        left: 55%;
-        transform: scale(1.5);
-    }
+            &:active {
+                background-position-y: -156px * $i;
+            }
+        }
 
-    #store-container ul li {
-        padding-top: 1px;
-        padding-bottom: 1px;
-    }
+        .store-item-name,
+        .store-item-count,
+        .store-item-price {
+            bottom: 2px * $i;
+            font-size: 18px;
+        }
 
-    .store-item {
-        width: 97%;
-        border: 1.5px solid rgb(255 255 0 / 30%);
-        border-radius: 7px;
-    }
+        .store-item-name {
+            left: 28px * $i;
+        }
 
-    .store-item-image {
-        width: 16px;
-        height: 16px;
-        border: 1px solid rgb(0 0 255 / 30%);
-    }
+        .store-item-count {
+            right: 38px * $i;
+        }
 
-    .store-item-name,
-    .store-item-count,
-    .store-item-price {
-        font-size: 7px;
+        .store-item-price {
+            right: 8px * $i;
+        }
+
+        .store-item-image {
+            top: 5px * $i;
+            left: 5px * $i;
+        }
     }
 
-    .store-item-buy {
-        position: relative;
+        
+    @media (--lg) {
+        // .store-item-name,
+        // .store-item-count,
+        // .store-item-price {
+        //     font-size: 14px;
+        // }
 
-        float: left;
-
-        padding-top: 2%;
-
-        font-size: 6px;
-
-        border: 1px solid rgb(0 255 0 / 30%);
+        // .store-item-image {
+        //     transform: scale(1.5);
+        // }
     }
+
+    @media (--md) {
+        .store-item-image {
+            top: 6px;
+            left: 6px;
+        }
+
+        .store-item-name,
+        .store-item-count,
+        .store-item-price {
+            bottom: 16px;
+            font-size: 14px;
+        }
+    }
+
+    @media (--sm) {
+        #store {
+            top: 30%;
+            left: 55%;
+            transform: scale(1.7);
+        }
+
+        .store-item-image {
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .store-item-name,
+        .store-item-count,
+        .store-item-price {
+            bottom: 8px;
+            font-size: 7px;
+        }
+    }
+
 }

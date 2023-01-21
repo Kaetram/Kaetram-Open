@@ -36,6 +36,7 @@ import type {
     PoisonCallback,
     PVPCallback,
     QuestCallback,
+    RankCallback,
     RespawnCallback,
     SkillCallback,
     SpawnCallback,
@@ -92,6 +93,7 @@ export default class Messages {
     private minigameCallback?: MinigameCallback;
     private effectCallback?: EffectCallback;
     private friendsCallback?: FriendsCallback;
+    private rankCallback?: RankCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -146,6 +148,7 @@ export default class Messages {
         this.messages[Packets.Minigame] = () => this.minigameCallback;
         this.messages[Packets.Effect] = () => this.effectCallback;
         this.messages[Packets.Friends] = () => this.friendsCallback;
+        this.messages[Packets.Rank] = () => this.rankCallback;
     }
 
     /**
@@ -246,7 +249,12 @@ export default class Messages {
             }
 
             case 'cheating': {
-                this.app.sendError(`You have been disconnected for no-clipping or hacking.`);
+                this.app.sendError(`An error in client-server syncing has occurred.`);
+                break;
+            }
+
+            case 'lost': {
+                this.app.sendError('The connection to the server has been lost.');
                 break;
             }
 
@@ -427,5 +435,9 @@ export default class Messages {
 
     public onFriends(callback: FriendsCallback): void {
         this.friendsCallback = callback;
+    }
+
+    public onRank(callback: RankCallback): void {
+        this.rankCallback = callback;
     }
 }

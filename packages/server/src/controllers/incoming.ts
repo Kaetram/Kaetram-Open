@@ -1,3 +1,8 @@
+import Commands from './commands';
+
+import Creator from '../database/mongodb/creator';
+import { Spawn } from '../network/packets';
+
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
@@ -5,11 +10,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
-import Creator from '../database/mongodb/creator';
-import { Spawn } from '../network/packets';
-
-import Commands from './commands';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Entities from './entities';
@@ -144,6 +144,9 @@ export default class Incoming {
             if (this.world.isOnline(this.player.username))
                 return this.connection.reject('loggedin');
 
+            // Synchronize the login immediately with the hub.
+            this.world.api.sendLogin(this.player.username);
+
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
         }
@@ -151,7 +154,12 @@ export default class Incoming {
         // Handle login for each particular case.
         switch (opcode) {
             case Opcodes.Login.Login: {
-                return this.database.login(this.player);
+                // Check the player in other servers first (defaults to false if hub is not present).
+                return this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+                    if (online) return this.connection.reject('loggedin');
+
+                    this.database.login(this.player);
+                });
             }
 
             case Opcodes.Login.Register: {
@@ -185,6 +193,11 @@ export default class Incoming {
         this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
+
+        // A secondary check after the player has fully loaded in.
+        this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+            if (online) this.player.connection.reject('loggedin');
+        });
     }
 
     /**
@@ -230,7 +243,8 @@ export default class Incoming {
                 movementSpeed,
                 targetInstance,
                 orientation,
-                following
+                following,
+                timestamp
             } = data,
             entity: Entity;
 
@@ -256,7 +270,7 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!);
+                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
             }
 
             case Opcodes.Movement.Stop: {
@@ -356,15 +370,14 @@ export default class Incoming {
         this.player.chat(Filter.clean(text));
     }
 
-    private handleCommand(message: [Opcodes.Command, Position]): void {
+    private handleCommand(message: [Opcodes.Command, Coordinate]): void {
         let [opcode, position] = message;
 
-        if (this.player.rank !== Modules.Ranks.Administrator) return;
+        if (this.player.rank !== Modules.Ranks.Admin) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.x, position.y, true);
-
+                this.player.teleport(position.gridX, position.gridY, true);
                 break;
             }
         }
@@ -378,7 +391,7 @@ export default class Incoming {
      */
 
     private handleContainer(packet: ContainerPacket): void {
-        log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
+        //log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {

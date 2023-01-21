@@ -2,11 +2,8 @@
 
 import { Pointer } from './opcodes';
 
-// Preset objects and values for various usages.
-export default {
-    EmptyPointer: {
-        type: Pointer.Remove
-    }
+export let EmptyPointer = {
+    type: Pointer.Remove
 };
 
 export enum PacketType {
@@ -127,13 +124,13 @@ export enum Warps {
 }
 
 export enum Skills {
-    Lumberjacking,
     Accuracy,
     Archery,
     Health,
     Magic,
+    Strength,
     Mining,
-    Strength
+    Lumberjacking
 }
 
 export enum Enchantment {
@@ -176,10 +173,20 @@ export enum Medals {
 export enum Ranks {
     None,
     Moderator,
-    Administrator,
+    Admin,
     Veteran,
-    Patron
+    Patron,
+    Artist
 }
+
+export let RankColours = {
+    [Ranks.None]: '',
+    [Ranks.Moderator]: '#02f070',
+    [Ranks.Admin]: '#3bbaff',
+    [Ranks.Veteran]: '#d84343',
+    [Ranks.Patron]: '#db753c',
+    [Ranks.Artist]: '#b552f7'
+};
 
 export interface Colours {
     fill: string;
@@ -313,27 +320,28 @@ export enum NPCRole {
     Clerk
 }
 
-export const enum Constants {
-    MAX_STACK = 2_147_483_647, // Maximum default stack size for a stackable item.
-    MAX_LEVEL = 135, // Maximum attainable level.
-    INVENTORY_SIZE = 20, // Maximum inventory size
-    BANK_SIZE = 69, // Maximum bank size
-    DROP_PROBABILITY = 1000, // 1 in 1000
-    MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
-    HEAL_RATE = 5000, // healing every 5 seconds
-    STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
-    MAP_DIVISION_SIZE = 48, // The size of a region the map is split into.
-    SPAWN_POINT = '405,27', // Default starting point outside the tutorial
-    TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '570,11', // 'x,y' values
-    RESOURCE_RESPAWN = 30_000,
-    TREE_RESPAWN = 25_000,
-    SKILL_LOOP = 1000, // How often we check the loop of a skill
-    MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
-    EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD = 3, // Amount of invalid movements before ignoring packets.
-    ARCHER_ATTACK_RANGE = 8 // Default attack range for bows if no other range is specified.
-}
+export const Constants = {
+    MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
+    MAX_LEVEL: 135, // Maximum attainable level.
+    INVENTORY_SIZE: 20, // Maximum inventory size
+    BANK_SIZE: 69, // Maximum bank size
+    DROP_PROBABILITY: 1750, // 1 in 1750
+    MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
+    HEAL_RATE: 5000, // healing every 5 seconds
+    STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
+    MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
+    SPAWN_POINT: '405,27', // Default starting point outside the tutorial
+    TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
+    TUTORIAL_SPAWN_POINT: '570,11', // 'x,y' values
+    RESOURCE_RESPAWN: 30_000,
+    TREE_RESPAWN: 25_000,
+    CHEST_RESPAWN: 50_000, // 50 seconds
+    SKILL_LOOP: 1000, // How often we check the loop of a skill
+    MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
+    EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
+    INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
+    ARCHER_ATTACK_RANGE: 8 // Default attack range for bows if no other range is specified.
+};
 
 export enum MinigameConstants {
     TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby

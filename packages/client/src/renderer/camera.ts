@@ -4,7 +4,7 @@ import $ from 'jquery';
 import type Player from '../entity/character/player/player';
 
 const MAXIMUM_ZOOM = 6,
-    MINIMUM_ZOOM = 2.8,
+    MINIMUM_ZOOM = 2.6,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
 

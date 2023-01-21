@@ -1,8 +1,3 @@
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
-
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -18,6 +13,11 @@ import {
     Quest,
     Skill
 } from '../../../../network/packets';
+
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
@@ -54,6 +54,7 @@ export default class Handler {
 
         // Hit callback
         this.player.onHit(this.handleHit.bind(this));
+        this.player.combat.onAttack(this.handleAttack.bind(this));
 
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
@@ -151,6 +152,8 @@ export default class Handler {
         this.world.cleanCombat(this.player);
 
         this.world.linkFriends(this.player, true);
+
+        this.world.api.sendLogout(this.player.username);
     }
 
     /**
@@ -206,6 +209,21 @@ export default class Handler {
     }
 
     /**
+     * Callback for when the player performs an attack.
+     */
+
+    private handleAttack(): void {
+        if (!this.player.isMagic()) return;
+
+        let { manaCost } = this.player.equipment.getWeapon();
+
+        if (!this.player.hasManaForAttack())
+            return this.player.notify('You are low on mana, your attacks will be weaker.');
+
+        this.player.mana.decrement(manaCost);
+    }
+
+    /**
      * Receive a callback about the door destination coordinate
      * and quest information (if existant).
      */
@@ -237,7 +255,7 @@ export default class Handler {
 
         this.player.teleport(door.x, door.y);
 
-        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
+        log.debug(`[${this.player.username}] Going through door: ${door.x} - ${door.y}`);
     }
 
     /**
@@ -281,7 +299,7 @@ export default class Handler {
      */
 
     private handleRecentRegions(regions: number[]): void {
-        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+        //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
             new Despawn({
@@ -562,8 +580,6 @@ export default class Handler {
      */
 
     private handleKill(character: Character): void {
-        log.debug(`Received kill callback for: ${character.instance}.`);
-
         // Have the minigame handle the kill if present.
         if (character.isPlayer()) {
             if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
@@ -626,7 +642,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`Cheat score - ${this.player.cheatScore}`);
+        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**

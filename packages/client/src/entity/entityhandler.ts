@@ -1,6 +1,6 @@
-import { Opcodes, Packets } from '@kaetram/common/network';
-
 import Character from './character/character';
+
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type EntitiesController from '../controllers/entities';
 import type Game from '../game';
