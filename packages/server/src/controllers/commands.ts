@@ -107,7 +107,8 @@ export default class Commands {
                     targetName = blocks.join(' '),
                     user: Player = this.world.getPlayerByName(targetName);
 
-                if (!user) return;
+                if (!user)
+                    return this.player.notify(`Could not find player with name: ${targetName}`);
 
                 if (!duration) duration = 24;
 
@@ -138,6 +139,22 @@ export default class Commands {
                 uUser.save();
 
                 return;
+            }
+
+            case 'kick': {
+                let username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kick username`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.connection.close();
+
+                break;
             }
         }
     }
@@ -664,22 +681,6 @@ export default class Commands {
                 this.player.noclip = !this.player.noclip;
 
                 this.player.notify(`Noclip: ${this.player.noclip}`);
-                break;
-            }
-
-            case 'kick': {
-                username = blocks.shift()!;
-
-                if (!username)
-                    return this.player.notify(`Malformed command, expected /kick username`);
-
-                player = this.world.getPlayerByName(username);
-
-                if (!player)
-                    return this.player.notify(`Could not find player with name: ${username}`);
-
-                player.connection.close();
-
                 break;
             }
 
