@@ -17,6 +17,7 @@ export default class Equipment {
 
     public attackRange = 1;
     public lumberjacking = -1;
+    public mining = -1;
     public poisonous = false;
 
     // Stats
@@ -46,6 +47,7 @@ export default class Equipment {
         this.enchantments = item.enchantments;
 
         this.lumberjacking = item.lumberjacking;
+        this.mining = item.mining;
         this.poisonous = item.poisonous;
 
         this.attackStats = item.attackStats;
@@ -69,6 +71,7 @@ export default class Equipment {
 
         this.attackRange = 1;
         this.lumberjacking = -1;
+        this.mining = -1;
         this.poisonous = false;
 
         this.attackStats = Utils.getEmptyStats();
@@ -93,6 +96,15 @@ export default class Equipment {
 
     public isLumberjacking(): boolean {
         return this.lumberjacking > 0;
+    }
+
+    /**
+     * Whether or not this weapon can be used for mining.
+     * @returns Whether the mining weapon level is greater than 0.
+     */
+
+    public isMining(): boolean {
+        return this.mining > 0;
     }
 
     /**

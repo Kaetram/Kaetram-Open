@@ -1,0 +1,36 @@
+{
+    "nisoc": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "cinnabar": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "pythar": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "gold": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
+    "ibo": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    }
+}

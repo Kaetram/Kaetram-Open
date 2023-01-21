@@ -740,9 +740,9 @@
 
   "hermitcrab": {
     "name": "Hermit Crab",
-    "drops": {"flask": 200, "gold": 200},
+    "drops": {"flask": 200, "gold": 200, "bead": 600},
     "hitPoints": 155,
-    "defenseLevel": 10,
+    "defenseLevel": 12,
     "attackLevel": 4,
     "experience": 146,
     "level": 15,
