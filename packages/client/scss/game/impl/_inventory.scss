@@ -52,6 +52,12 @@
             height: 102px * $i;
         }
 
+        .item-slot,
+        .inventory-item-image {
+            width: 16px * $i;
+            height: 16px * $i;
+        }
+
         .item-slot {
             margin-top: 2px * $i;
             margin-bottom: 7px * $i;
@@ -65,11 +71,6 @@
             &:active {
                 background-position-x: -432px * $i;
             }
-        }
-
-        .item-slot, .inventory-item-image {
-            width: 16px * $i;
-            height: 16px * $i;
         }
 
         .inventory-item-count {

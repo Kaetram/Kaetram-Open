@@ -17,7 +17,8 @@
       "flask": 200,
       "gold": 750,
       "spear": 75,
-      "platearmor": 100
+      "platearmor": 100,
+      "bead": 1750
     },
     "roaming": true,
     "miniboss": true,
@@ -94,7 +95,7 @@
     "hitPoints": 2200,
     "level": 84,
     "defenseLevel": 10,
-    "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
+    "drops": {"gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50}
   },
 
   "755-183": {
@@ -103,7 +104,16 @@
     "hitPoints": 2200,
     "level": 84,
     "defenseLevel": 10,
-    "drops": {"gold": 800, "cure": 100, "shardt1": 50, "bluescimitar": 50, "greenpendant": 75}
+    "drops": {"gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50}
+  },
+
+  "875-11": {
+    "name": "Mimic",
+    "achievement": "notwhatitseems",
+    "hitPoints": 1300,
+    "level": 62,
+    "defenseLevel": 15,
+    "drops": {"gold": 500, "cure": 50, "shardt1": 50, "bluescimitar": 50, "greenpendant": 45}
   },
 
   "168-31": {

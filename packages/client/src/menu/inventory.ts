@@ -1,10 +1,10 @@
-import _ from 'lodash-es';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import Menu from './menu';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -125,6 +125,8 @@ export default class Inventory extends Menu {
         if (doubleClick) {
             if (element.edible) this.handleAction(Modules.MenuActions.Eat);
             else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+
+            this.actions.hide();
 
             return;
         }

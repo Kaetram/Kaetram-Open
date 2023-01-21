@@ -1,16 +1,16 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
+import MobHandler from './handler';
 
 import rawData from '../../../../../data/mobs.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
 import Character from '../character';
 
-import MobHandler from './handler';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -176,16 +176,16 @@ export default class Mob extends Character {
 
     private loadStats(): void {
         this.attackStats = {
-            crush: this.attackLevel * 2,
-            stab: this.attackLevel * 2,
-            slash: this.attackLevel * 2,
+            crush: this.attackLevel,
+            stab: this.attackLevel,
+            slash: this.attackLevel,
             magic: this.attackLevel
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel * 2,
-            stab: this.defenseLevel * 2,
-            slash: this.defenseLevel * 2,
+            crush: this.defenseLevel,
+            stab: this.defenseLevel,
+            slash: this.defenseLevel,
             magic: this.defenseLevel
         };
 
@@ -270,6 +270,17 @@ export default class Mob extends Character {
                 y
             })
         });
+    }
+
+    /**
+     * Override for the superclass `setPosition` with added teleporting support.
+     */
+
+    public override setPosition(x: number, y: number): void {
+        // Prevent changes in position if the mob is teleporting.
+        if (this.teleporting) return;
+
+        super.setPosition(x, y);
     }
 
     /**

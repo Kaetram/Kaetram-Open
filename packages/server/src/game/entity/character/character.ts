@@ -1,16 +1,16 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { PacketType } from '@kaetram/common/network/modules';
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
-
-import Formulas from '../../../info/formulas';
-import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
-import Entity from '../entity';
-
 import Combat from './combat/combat';
 import Hit from './combat/hit';
 import HitPoints from './points/hitpoints';
 import Poison from './poison';
+
+import Entity from '../entity';
+import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
+import Formulas from '../../../info/formulas';
+
+import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -50,6 +50,7 @@ export default abstract class Character extends Entity {
     public frozen = false;
     public invincible = false;
     public terror = false;
+    public teleporting = false;
     public aoe = 0;
 
     public projectileName = 'projectile-pinearrow';
@@ -497,6 +498,14 @@ export default abstract class Character extends Entity {
 
     public isRanged(): boolean {
         return this.attackRange > 1;
+    }
+
+    /**
+     * @returns Default implementation for characters.
+     */
+
+    public isMagic(): boolean {
+        return false;
     }
 
     /**

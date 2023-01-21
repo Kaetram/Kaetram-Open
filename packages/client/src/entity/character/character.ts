@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;
@@ -22,6 +22,7 @@ export default class Character extends Entity {
     public moving = false;
     public following = false;
     public stunned = false;
+    public forced = false;
 
     private interrupted = false;
 
@@ -110,8 +111,6 @@ export default class Character extends Entity {
     private requestPathCallback?(x: number, y: number): number[][] | null;
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
-
-    public forced!: boolean;
 
     public handler: EntityHandler = new EntityHandler(this);
 
@@ -464,7 +463,7 @@ export default class Character extends Entity {
             if (this.stopPathingCallback)
                 this.stopPathingCallback(this.gridX, this.gridY, this.forced);
 
-            this.forced &&= false;
+            this.forced = false;
         }
     }
 
@@ -563,6 +562,9 @@ export default class Character extends Entity {
 
     public canAttackTarget(): boolean {
         if (!this.hasTarget()) return false;
+
+        if (!this.target!.isMob() && !this.target!.isPlayer()) return false;
+
         if (this.getDistance(this.target!) > this.attackRange - 1) return false;
 
         return true;
@@ -661,17 +663,25 @@ export default class Character extends Entity {
         return target ? this.target === target : !!this.target;
     }
 
-    public setObjectTarget(position: Position): void {
+    /**
+     * Mocks a entity-based target function and targets an object instead.
+     * @param position The position of the object we are targeting.
+     */
+
+    public setObjectTarget(position: Coordinate): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
-        character.setGridPosition(position.x, position.y);
+        let character = new Character(
+            `${position.gridX}-${position.gridY}`,
+            Modules.EntityType.Object
+        );
+        character.setGridPosition(position.gridX, position.gridY);
 
         this.setTarget(character);
-        this.followPosition(position.x, position.y);
+        this.followPosition(position.gridX, position.gridY);
     }
 
     /**

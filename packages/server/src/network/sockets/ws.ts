@@ -1,11 +1,11 @@
+import Connection from '../connection';
+import WebSocket from '../websocket';
+
 import config from '@kaetram/common/config';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { WebSocketServer } from 'ws';
-
-import Connection from '../connection';
-import WebSocket from '../websocket';
 
 import type http from 'node:http';
 import type SocketHandler from '../sockethandler';

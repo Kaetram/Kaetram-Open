@@ -1,10 +1,10 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import QuestIndex from './quest/impl';
 
 import quests from '../../../../../data/quests.json';
 import { Quest as QuestPacket } from '../../../../network/packets';
 
-import QuestIndex from './quest/impl';
+import _ from 'lodash-es';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
@@ -126,13 +126,14 @@ export default class Quests {
      */
 
     public getQuestFromNPC(npc: NPC, includeComplete = false): Quest | undefined {
-        let quest;
+        let quest: Quest | undefined;
 
         this.forEachQuest((q: Quest) => {
             if (q.isFinished() && !includeComplete) return;
             if (!q.hasNPC(npc.key)) return;
 
-            quest = q;
+            // Return only the first quest found,
+            if (!quest) quest = q;
         });
 
         return quest;

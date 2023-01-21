@@ -38,6 +38,8 @@ export default class PlayerHandler {
         player.onRequestPath((x, y) => {
             if (player.dead || player.frozen) return null;
 
+            if (player.canAttackTarget()) return null;
+
             /**
              * If the position is the same as the player's current position
              * we will return nothing. Otherwise this will just create
@@ -84,7 +86,7 @@ export default class PlayerHandler {
                 requestY: input.selectedY,
                 playerX: player.gridX,
                 playerY: player.gridY,
-                movementSpeed: player.movementSpeed,
+                movementSpeed: 250,
                 targetInstance: player.target?.instance
             });
         });
@@ -144,7 +146,8 @@ export default class PlayerHandler {
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
                 playerX: player.gridX,
-                playerY: player.gridY
+                playerY: player.gridY,
+                timestamp: Date.now()
             });
 
             lastStepX = player.gridX;

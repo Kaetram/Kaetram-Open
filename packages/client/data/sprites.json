@@ -1187,6 +1187,96 @@
     "offsetY": -22
   },
   {
+    "id": "icewizard",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -22
+  },
+  {
+    "id": "ancientwizard",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -16,
+    "offsetY": -22
+  },
+  {
     "id": "blazespider",
     "width": 48,
     "height": 48,
@@ -8655,39 +8745,6 @@
     "offsetY": 0
   },
   {
-    "id": "item-mountseadragon",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "item-mountforestdragon",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "item-mountwhitetiger",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
     "id": "item-forestbow",
     "animations": {
       "idle": {
@@ -9389,6 +9446,28 @@
     "offsetY": 0
   },
   {
+    "id": "item-rubypendant",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-emeraldpendant",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-pinkcockroacharmor",
     "animations": {
       "idle": {
@@ -9928,6 +10007,28 @@
     "offsetY": 0
   },
   {
+    "id": "item-pytharring",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-nisocring",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-schooluniform",
     "animations": {
       "idle": {
@@ -10271,6 +10372,72 @@
     "offsetY": 0
   },
   {
+    "id": "item-bead",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-lightningbead",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-naturebead",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-firebead",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icebead",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-stick",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-staff",
     "animations": {
       "idle": {
@@ -10360,6 +10527,50 @@
   },
   {
     "id": "item-wizardrobe",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-bluewizardrobe",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-darkwizardrobe",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-greenwizardrobe",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-orangewizardrobe",
     "animations": {
       "idle": {
         "length": 6,
@@ -17517,6 +17728,18 @@
       }
     }
   },
+  
+  {
+    "id": "pickaxe_cursor",
+    "width": 14,
+    "height": 14,
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    }
+  },
   {
     "id": "target",
     "animations": {
@@ -18447,6 +18670,186 @@
   },
   {
     "id": "wizardrobe",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "bluewizardrobe",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "darkwizardrobe",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "greenwizardrobe",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "orangewizardrobe",
     "width": 32,
     "height": 32,
     "animations": {

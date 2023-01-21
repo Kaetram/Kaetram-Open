@@ -1,11 +1,11 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
-import mapData from '../../../data/map/world.json';
-
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
+
+import mapData from '../../../data/map/world.json';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type {
     FlatTile,
@@ -45,6 +45,7 @@ export default class Map {
     public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedResource[] = map.trees || [];
+    public rocks: ProcessedResource[] = map.rocks || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 

@@ -1,9 +1,9 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import Utils, { isInt } from '../utils/util';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type {
     ProcessedAnimation,
@@ -75,6 +75,8 @@ export default class Map {
         // Store tile size globally into the utils.
         Utils.tileSize = this.tileSize;
         Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
+        Utils.thirdTile = this.tileSize / 3;
+        Utils.tileAndAQuarter = this.tileSize * 1.25;
 
         let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });
 
