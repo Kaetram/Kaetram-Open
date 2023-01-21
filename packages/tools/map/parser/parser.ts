@@ -11,12 +11,17 @@ import type {
 } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
+interface Resources {
+    [key: string]: ProcessedResource;
+}
+
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
-    #collisionTiles: { [tileId: number]: boolean } = {};
-    #trees: { [key: string]: ProcessedResource } = {};
+    private collisionTiles: { [tileId: number]: boolean } = {};
+    private trees: Resources = {};
+    private rocks: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -52,7 +57,8 @@ export default class ProcessMap {
             objects: [],
             areas: {},
             cursors: {},
-            trees: []
+            trees: [],
+            rocks: []
         };
 
         this.parseTilesets();
@@ -87,14 +93,9 @@ export default class ProcessMap {
             this.parseTileset(tileset);
         });
 
-        // Convert local tree dictionary into an array for the server.
-        _.each(this.#trees, (tree: ProcessedResource) => {
-            // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
-            if (tree.base.length !== tree.depleted.length)
-                return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
-
-            this.map.trees.push(tree);
-        });
+        // As the last step of the tileset processing, we parse the resources and add them to the map.
+        this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
+        this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
     }
 
     /**
@@ -172,7 +173,7 @@ export default class ProcessMap {
             value = (parseInt(property.value, 10) as never) || property.value,
             { high, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
 
         switch (name) {
             case 'v': {
@@ -190,10 +191,29 @@ export default class ProcessMap {
                 break;
             }
 
-            case 'tree':
-            case 'stump':
-            case 'cutstump': {
-                return this.parseTreeProperty(name, tileId, value);
+            case 'tree': {
+                return this.parseResourceProperty(this.trees, 'data', tileId, value);
+            }
+
+            case 'stump': {
+                return this.parseResourceProperty(this.trees, 'base', tileId, value);
+            }
+
+            case 'cutstump':
+            case 'stumpcut': {
+                return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
+            }
+
+            case 'rock': {
+                return this.parseResourceProperty(this.rocks, 'data', tileId, value);
+            }
+
+            case 'rockbase': {
+                return this.parseResourceProperty(this.rocks, 'base', tileId, value);
+            }
+
+            case 'rockempty': {
+                return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
             }
         }
     }
@@ -246,7 +266,7 @@ export default class ProcessMap {
             if (this.isFlipped(value)) value = this.removeFlipFlags(value);
 
             // Add collision indexes to the map.
-            if (value in this.#collisionTiles) collisions.push(index);
+            if (value in this.collisionTiles) collisions.push(index);
         });
     }
 
@@ -353,18 +373,23 @@ export default class ProcessMap {
     }
 
     /**
-     * Takes tree property data and stores it into the map trees property.
-     * If a tree already exists within said property, it appends data to it.
-     * Tree data is split into `data,` `stump,` and `cutStump.` After we
-     * store the tree data, we convert it into an array for the server to parse.
-     * @param name The name of the property.
-     * @param tileId The tileId currently processing.
-     * @param value Property value of the tree.
+     * Generic implementation for parsing a resource property. This may be a tree, or a rock
+     * or anything else in the future. When we pass properties onto this function, we ensure
+     * they use the standard `data,` `base,` and `depleted` properties.
+     * @param resourceType The type of resource we are adding data onto (trees, rocks, etc.)
+     * @param name The name of the property (data, base, depleted)
+     * @param tileId The tileId being processed currently (the tile data).
+     * @param value The value represents the resource's identifier.
      */
 
-    private parseTreeProperty(name: string, tileId: number, value: never): void {
-        if (!(value in this.#trees))
-            this.#trees[value] = {
+    private parseResourceProperty(
+        resourceType: Resources,
+        name: string,
+        tileId: number,
+        value: never
+    ): void {
+        if (!(value in resourceType))
+            resourceType[value] = {
                 data: [],
                 base: [],
                 depleted: [],
@@ -373,22 +398,40 @@ export default class ProcessMap {
 
         // Organize tree data into their respective arrays.
         switch (name) {
-            case 'tree': {
-                this.#trees[value].data.push(tileId);
+            case 'data': {
+                resourceType[value].data.push(tileId);
                 break;
             }
 
-            case 'stump': {
-                this.#trees[value].base.push(tileId);
+            case 'base': {
+                resourceType[value].base.push(tileId);
                 break;
             }
 
-            case 'cutstump':
-            case 'stumpcut': {
-                this.#trees[value].depleted.push(tileId);
+            case 'depleted': {
+                resourceType[value].depleted.push(tileId);
                 break;
             }
         }
+    }
+
+    /**
+     * Parses through a specified resource and creates a callback after it has been validated.
+     * @param resources The list of processed resources to look through.
+     * @param callback Contains resource currently being processed.
+     */
+
+    private parseResources(
+        resources: Resources,
+        callback: (resource: ProcessedResource) => void
+    ): void {
+        _.each(resources, (resource: ProcessedResource) => {
+            // Determine whether the normal and exhausted resource match lengths, otherwise skip.
+            if (resource.base.length !== resource.depleted.length)
+                return log.error(`${resource.type} has a base and depleted length mismatch.`);
+
+            callback(resource);
+        });
     }
 
     /**
@@ -581,7 +624,8 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks
         } = this.map;
 
         return JSON.stringify({
@@ -597,7 +641,8 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks
         });
     }
 

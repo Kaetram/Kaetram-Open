@@ -126,13 +126,14 @@ export default class Quests {
      */
 
     public getQuestFromNPC(npc: NPC, includeComplete = false): Quest | undefined {
-        let quest;
+        let quest: Quest | undefined;
 
         this.forEachQuest((q: Quest) => {
             if (q.isFinished() && !includeComplete) return;
             if (!q.hasNPC(npc.key)) return;
 
-            quest = q;
+            // Return only the first quest found,
+            if (!quest) quest = q;
         });
 
         return quest;

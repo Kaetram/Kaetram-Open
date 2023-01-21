@@ -58,6 +58,7 @@ export default class Item extends Entity {
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
+    public mining = -1;
     public attackRange = 1;
 
     public exists = true;
@@ -113,6 +114,7 @@ export default class Item extends Entity {
         this.poisonous = this.data.poisonous || this.poisonous;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+        this.mining = this.data.mining || this.mining;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();

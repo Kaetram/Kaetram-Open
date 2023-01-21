@@ -44,6 +44,7 @@ export interface ItemData {
     poisonous?: boolean;
     movementSpeed?: number;
     lumberjacking?: number;
+    mining?: number;
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;
