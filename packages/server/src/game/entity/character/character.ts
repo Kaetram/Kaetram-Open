@@ -50,6 +50,7 @@ export default abstract class Character extends Entity {
     public frozen = false;
     public invincible = false;
     public terror = false;
+    public teleporting = false;
     public aoe = 0;
 
     public projectileName = 'projectile-pinearrow';
