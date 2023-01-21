@@ -3,27 +3,27 @@
     "items": [
       {
         "key": "flask",
-        "count": 20,
-        "price": 75
+        "count": 25,
+        "price": 150
       },
       {
         "key": "manaflask",
-        "count": 10,
-        "price": 200
+        "count": 25,
+        "price": 500
       },
       {
         "key": "burger",
-        "count": 5,
-        "price": 1000
+        "count": 10,
+        "price": 3000
       },
       {
         "key": "bigflask",
-        "count": 3,
-        "price": 2000
+        "count": 10,
+        "price": 4000
       },
       {
         "key": "sword2",
-        "count": 10,
+        "count": 5,
         "price": 100
       },
       {
@@ -33,17 +33,17 @@
       },
       {
         "key": "woodenbow",
-        "count": 10,
+        "count": 5,
         "price": 100
       },
       {
         "key": "plasticbow",
-        "count": 5,
+        "count": 3,
         "price": 200
       },
       {
         "key": "leatherarcherarmor",
-        "count": 5,
+        "count": 3,
         "price": 500
       },
       {
@@ -60,9 +60,13 @@
         "key": "ring1",
         "count": 1,
         "price": 10000
+      },
+      {
+        "key": "pickaxe",
+        "count": 10
       }
     ],
-    "refresh": 60000,
+    "refresh": 30000,
     "currency": "gold"
   },
 
