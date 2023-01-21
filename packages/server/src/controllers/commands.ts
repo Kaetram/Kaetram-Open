@@ -230,10 +230,12 @@ export default class Commands {
                 return;
             }
 
-            case 'nohit': {
-                log.info('invincinil');
-
+            case 'nohit':
+            case 'invincible': {
                 this.player.invincible = !this.player.invincible;
+
+                if (this.player.invincible) this.player.notify('You are now invincible.');
+                else this.player.notify('You are no longer invincible.');
 
                 return;
             }

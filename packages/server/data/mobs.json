@@ -533,7 +533,7 @@
 
   "darkskeleton": {
     "name": "Dark Skeleton",
-    "drops": {"sproutring": 25, "hammer": 250, "hunterbow": 150, "gold": 275},
+    "drops": {"ring1": 25, "hammer": 250, "hunterbow": 150, "gold": 275},
     "hitPoints": 300,
     "defenseLevel": 5,
     "attackLevel": 2,
@@ -705,7 +705,7 @@
 
   "greenfish": {
     "name": "Green Fesh",
-    "drops": {"spear": 125, "pendant1": 25, "greenarcherarmor": 150, "gold": 700},
+    "drops": {"spear": 125, "pendant1": 10, "greenarcherarmor": 150, "gold": 700},
     "hitPoints": 200,
     "defenseLevel": 1,
     "attackLevel": 1,
@@ -860,7 +860,7 @@
 
   "ironogre": {
     "name": "Iron Ogre",
-    "drops": {"bluescimitar": 75, "gold": 420},
+    "drops": {"redsword": 75, "gold": 420},
     "hitPoints": 300,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -1732,9 +1732,9 @@
 
   "skeletonking": {
     "name": "Skeleton King",
-    "drops": {"goldensword": 100, "bigflask": 250, "goldenbow": 50, "pearlpendant": 40, "pearlring": 40},
+    "drops": {"goldensword": 75, "bigflask": 250, "goldenbow": 75, "greenpendant": 15, "sproutring": 15},
     "hitPoints": 1850,
-    "defenseLevel": 20,
+    "defenseLevel": 25,
     "attackLevel": 7,
     "experience": 150,
     "level": 32,
@@ -1931,17 +1931,18 @@
 
   "piratecaptain": {
     "name": "Pirate Captain",
-    "drops": {"scimitar": 100, "marblependant": 200, "gold": 500},
+    "drops": {"scimitar": 15, "rubyring": 15, "gold": 500, "rubypendant": 15},
     "hitPoints": 4750,
-    "defenseLevel": 78,
-    "attackLevel": 40,
+    "defenseLevel": 36,
+    "attackLevel": 32,
     "experience": 1300,
-    "level": 145,
+    "level": 175,
     "aggroRange": 10,
     "attackRange": 1,
     "aggressive": true,
     "projectileName": "projectile-iceball",
     "roaming": true,
+    "roamingDistance": 12,
     "attackRate": 1100,
     "movementSpeed": 350,
     "respawnDelay": 115000,
@@ -1950,7 +1951,7 @@
 
   "pirateskeleton": {
     "name": "Pirate Skeleton",
-    "drops": {"morningstar": 400, "redbow": 400, "gold": 300},
+    "drops": {"morningstar": 100, "redbow": 50, "gold": 300},
     "hitPoints": 460,
     "defenseLevel": 8,
     "attackLevel": 12,

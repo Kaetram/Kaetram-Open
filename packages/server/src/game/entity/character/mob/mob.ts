@@ -273,6 +273,17 @@ export default class Mob extends Character {
     }
 
     /**
+     * Override for the superclass `setPosition` with added teleporting support.
+     */
+
+    public override setPosition(x: number, y: number): void {
+        // Prevent changes in position if the mob is teleporting.
+        if (this.teleporting) return;
+
+        super.setPosition(x, y);
+    }
+
+    /**
      * Primitive function for drop generation. Will be rewritten.
      */
 
