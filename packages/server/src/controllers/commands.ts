@@ -93,8 +93,7 @@ export default class Commands {
             }
 
             case 'ping': {
-                this.player.pingTime = Date.now();
-                this.player.send(new Network(Opcodes.Network.Ping));
+                this.player.ping();
                 break;
             }
         }
