@@ -18097,6 +18097,19 @@
     "offsetY": -8
   },
   {
+    "id": "miner",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
     "id": "violetbow",
     "width": 48,
     "height": 48,
