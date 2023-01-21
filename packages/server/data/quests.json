@@ -265,7 +265,8 @@
         ],
         "completedText": [
           "Please bring me 3 magic beads.",
-          "If I'm not mistaken, one of the crabs might've stolen it."
+          "If I recall correctly, some big macho crab took it",
+          "and then retreated in a cave west of here."
         ]
       },
 
@@ -277,7 +278,12 @@
         ],
         "itemRequirement": "bead",
         "itemCountRequirement": 3,
-        "itemKey": "staff"
+        "itemKey": "staff",
+        "popup": {
+          "title": "Quest completed!",
+          "text": "@green@You have just finished @crimson@Sorcery and Stuff@green@ quest. You have received a @crimson@Magic Staff@green@!",
+          "colour": "#33cc33"
+        }
       }
     }
   },
