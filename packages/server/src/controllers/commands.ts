@@ -740,6 +740,29 @@ export default class Commands {
                 this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
             }
+
+            case 'setrank': {
+                username = blocks.shift()!;
+
+                let rankText = blocks.shift()!;
+
+                if (!username || !rankText)
+                    return this.player.notify(`Malformed command, expected /setrank username rank`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
+
+                if (!rank) return this.player.notify(`Invalid rank: ${rankText}`);
+
+                player.setRank(rank);
+                player.sync();
+
+                break;
+            }
         }
     }
 }
