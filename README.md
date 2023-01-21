@@ -31,9 +31,9 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 ![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
 
-![Demo 3](https://i.imgur.com/tkgTjsf.png 'Demo 3')
+![Demo 3](https://i.imgur.com/KrqVNFw.png 'Demo 3')
 
-![Demo 4](https://i.imgur.com/64UU95B.png 'Demo 4')
+![Demo 4](https://i.imgur.com/ErBNdkf.png 'Demo 4')
 
 ![Demo 5](https://i.imgur.com/L0MN6LO.png 'Demo 5')
 
