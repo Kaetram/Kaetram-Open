@@ -243,7 +243,8 @@ export default class Incoming {
                 movementSpeed,
                 targetInstance,
                 orientation,
-                following
+                following,
+                timestamp
             } = data,
             entity: Entity;
 
@@ -269,7 +270,7 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!);
+                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
             }
 
             case Opcodes.Movement.Stop: {

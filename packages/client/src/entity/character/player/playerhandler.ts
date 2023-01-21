@@ -86,7 +86,7 @@ export default class PlayerHandler {
                 requestY: input.selectedY,
                 playerX: player.gridX,
                 playerY: player.gridY,
-                movementSpeed: player.movementSpeed,
+                movementSpeed: 250,
                 targetInstance: player.target?.instance
             });
         });
@@ -146,7 +146,8 @@ export default class PlayerHandler {
             socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Step,
                 playerX: player.gridX,
-                playerY: player.gridY
+                playerY: player.gridY,
+                timestamp: Date.now()
             });
 
             lastStepX = player.gridX;

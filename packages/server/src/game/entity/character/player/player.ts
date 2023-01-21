@@ -504,12 +504,17 @@ export default class Player extends Character {
      * of factors to avoid false-positives.
      * @param x The grid x coordinate we are checking.
      * @param y The grid y coordinate we are checking.
+     * @param timestamp Timestamp at which the packet was originally sent.
      */
 
-    private verifyMovement(x: number, y: number): boolean {
+    private verifyMovement(x: number, y: number, timestamp: number): boolean {
         let now = Date.now(),
             stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
-            regionDiff = now - this.lastRegionChange;
+            regionDiff = now - this.lastRegionChange,
+            timestampDiff = now - timestamp;
+
+        // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
+        if (timestampDiff > 20 && stepDiff < 10) return false;
 
         // Firstly ensure that the last step was behaving normally.
         if (stepDiff >= this.getMovementSpeed()) return false;
@@ -734,7 +739,8 @@ export default class Player extends Character {
         this.movementStart = Date.now();
 
         // Invalid movement speed reported by the client.
-        if (speed !== this.movementSpeed) this.incrementCheatScore('Mismatch in movement speed.');
+        if (speed !== this.movementSpeed)
+            this.incrementCheatScore(`${this.username} Received incorrect movement speed.`);
 
         // Stop combat and skills every time thre is movement.
         this.skills.stop();
@@ -749,12 +755,13 @@ export default class Player extends Character {
      * A movement step occurs every time a player traverses to the next tile.
      * @param x The current x coordinate of the player as reported by the client.
      * @param y The current y coordinate of the player as reported by the client.
+     * @param timestamp The time when the packet was sent (UNIX timestamp).
      */
 
-    public handleMovementStep(x: number, y: number): void {
+    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
         if (this.stunned || this.isInvalidMovement()) return;
 
-        if (this.verifyMovement(x, y))
+        if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
 
         this.setPosition(x, y);

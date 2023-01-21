@@ -246,7 +246,7 @@ export default class Messages {
             }
 
             case 'cheating': {
-                this.app.sendError(`You have been disconnected for no-clipping or hacking.`);
+                this.app.sendError(`An error in client-server syncing has occurred.`);
                 break;
             }
 
