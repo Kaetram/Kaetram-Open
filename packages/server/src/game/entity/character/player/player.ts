@@ -26,6 +26,7 @@ import {
     Overlay,
     Pointer,
     PVP,
+    Rank,
     Respawn,
     Spawn,
     Sync,
@@ -993,6 +994,17 @@ export default class Player extends Character {
         this.dualistsMark = dualistsMark;
 
         this.combat.updateLoop();
+    }
+
+    /**
+     * Updates the player's rank and sends a packet to the client.
+     * @param rank The new rank of the player, defaults to `None`.
+     */
+
+    public setRank(rank: Modules.Ranks = Modules.Ranks.None): void {
+        this.rank = rank;
+
+        this.send(new Rank(rank));
     }
 
     /**

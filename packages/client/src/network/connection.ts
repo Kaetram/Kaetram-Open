@@ -153,6 +153,7 @@ export default class Connection {
         this.messages.onMinigame(this.handleMinigame.bind(this));
         this.messages.onEffect(this.handleEffect.bind(this));
         this.messages.onFriends(this.handleFriends.bind(this));
+        this.messages.onRank(this.handleRank.bind(this));
     }
 
     /**
@@ -324,6 +325,8 @@ export default class Connection {
 
         // Invalid instance, player not found/not spawned.
         if (!player || player.teleporting || player.dead || !player.ready) return;
+
+        console.log(data);
 
         player.load(data, true);
 
@@ -1339,6 +1342,17 @@ export default class Connection {
         }
 
         this.menu.getFriends().handle(opcode, info.username, info.status);
+    }
+
+    /**
+     * Updates the rank of the current player. Packet contains the new rank.
+     * @param rank The new rank we are updating the player to.
+     */
+
+    private handleRank(rank: Modules.Ranks): void {
+        console.log(`Rank updated to ${rank}.`);
+
+        this.game.player.rank = rank;
     }
 
     /**
