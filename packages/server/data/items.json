@@ -4606,31 +4606,36 @@
   "nisocore": {
     "type": "object",
     "name": "Nisoc Ore",
-    "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things."
+    "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
+    "price": 150
   },
 
   "cinnabarore": {
     "type": "object",
     "name": "Cinnabar Ore",
-    "description": "A red ore containing special metals. May be used for crafting of certain weapons."
+    "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
+    "price": 250
   },
 
   "pytharore": {
     "type": "object",
     "name": "Pythar Ore",
-    "description": "A purple crystal with magical properties."
+    "description": "A purple crystal with magical properties.",
+    "price": 400
   },
 
   "goldore": {
     "type": "object",
     "name": "Gold Ore",
-    "description": "Raw gold ore, will need to be processed before it can be turned into something nice."
+    "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
+    "price": 550
   },
 
   "iboore": {
     "type": "object",
     "name": "Ibo Ore",
-    "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something."
+    "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
+    "price": 700
   },
 
   "bead": {
