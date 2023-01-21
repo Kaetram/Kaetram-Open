@@ -4,6 +4,7 @@ import Health from './skill/impl/health';
 import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
+import Mining from './skill/impl/mining';
 
 import Formulas from '../../../../info/formulas';
 
@@ -24,6 +25,7 @@ export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
     private magic: Magic = new Magic();
     private strength: Strength = new Strength();
+    private mining: Mining = new Mining();
 
     private skills: { [key: string]: Skill } = {
         [Modules.Skills.Accuracy]: this.accuracy,
@@ -31,7 +33,8 @@ export default class Skills {
         [Modules.Skills.Health]: this.health,
         [Modules.Skills.Lumberjacking]: this.lumberjacking,
         [Modules.Skills.Magic]: this.magic,
-        [Modules.Skills.Strength]: this.strength
+        [Modules.Skills.Strength]: this.strength,
+        [Modules.Skills.Mining]: this.mining
     };
 
     private loadCallback?: () => void;
@@ -179,6 +182,14 @@ export default class Skills {
 
     public getLumberjacking(): Lumberjacking {
         return this.lumberjacking;
+    }
+
+    /**
+     * @returns The mining class instance.
+     */
+
+    public getMining(): Mining {
+        return this.mining;
     }
 
     /**

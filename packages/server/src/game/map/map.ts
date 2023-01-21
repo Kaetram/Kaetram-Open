@@ -45,6 +45,7 @@ export default class Map {
     public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedResource[] = map.trees || [];
+    public rocks: ProcessedResource[] = map.rocks || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 

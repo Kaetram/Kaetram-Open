@@ -24,7 +24,10 @@ export interface PropertyValues {
     tree?: string;
     stump?: string;
     cutstump?: string;
-    rock?: never;
+    stumpcut?: string;
+    rock?: string;
+    rockbase?: string;
+    rockempty?: string;
     cursor?: never;
 }
 
