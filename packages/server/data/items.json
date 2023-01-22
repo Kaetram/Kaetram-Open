@@ -3370,22 +3370,22 @@
     "price": 5000,
     "level": 80,
     "attackStats": {
-      "crush": 13,
-      "slash": 46,
-      "stab": 15,
-      "magic": 2
+      "crush": 11,
+      "slash": 38,
+      "stab": 13,
+      "magic": -5
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
-      "magic": 10
+      "magic": -10
     },
     "bonuses": {
-      "accuracy": 13,
-      "strength": 28,
+      "accuracy": 20,
+      "strength": 14,
       "archery": -10,
-      "magic": 0
+      "magic": -10
     }
   },
 
@@ -3398,19 +3398,19 @@
       "crush": 13,
       "slash": 48,
       "stab": 15,
-      "magic": 2
+      "magic": -8
     },
     "defenseStats": {
       "crush": 34,
       "slash": 42,
       "stab": 20,
-      "magic": 8
+      "magic": -4
     },
     "bonuses": {
       "accuracy": 10,
       "strength": 28,
       "archery": -10,
-      "magic": 0
+      "magic": -4
     }
   },
 

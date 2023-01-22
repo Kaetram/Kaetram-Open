@@ -3,6 +3,7 @@ export interface MobData {
     experience?: number;
     hitPoints?: number;
     drops?: { [itemKey: string]: number };
+    dropTables?: string[];
     level?: number;
     attackLevel?: number;
     defenseLevel?: number;
