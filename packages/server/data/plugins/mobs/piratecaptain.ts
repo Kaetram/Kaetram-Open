@@ -38,8 +38,8 @@ export default class PirateCaptain extends Default {
      * Override for the death callback. Removes all the minions for the pirate captain.
      */
 
-    public override handleDeath(): void {
-        super.handleDeath();
+    public override handleDeath(attacker?: Character): void {
+        super.handleDeath(attacker);
 
         _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
 
