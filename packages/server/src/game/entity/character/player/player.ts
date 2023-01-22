@@ -515,7 +515,7 @@ export default class Player extends Character {
             timestampDiff = now - timestamp;
 
         // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
-        if (timestampDiff > 20 && stepDiff < 10) return false;
+        if (timestampDiff > 35 && stepDiff < 35) return false;
 
         // Firstly ensure that the last step was behaving normally.
         if (stepDiff >= this.getMovementSpeed()) return false;
