@@ -3,6 +3,7 @@ import Item from '../../../objects/item';
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
@@ -116,6 +117,7 @@ export default abstract class Quest {
                 if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))
                     this.progress();
             } else if (this.hasAbility()) this.givePlayerAbility(player);
+            else if (this.hasExperience()) this.givePlayerExperience(player);
             else this.progress();
 
         // Talk to the NPC and progress the dialogue.
@@ -206,6 +208,8 @@ export default abstract class Quest {
         if (this.hasItemToGive())
             this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
 
+        if (this.hasExperience()) this.givePlayerExperience(player);
+
         // If the stage rewards an ability, we give it to the player.
         if (this.hasAbility()) this.givePlayerAbility(player);
 
@@ -245,6 +249,17 @@ export default abstract class Quest {
     }
 
     /**
+     * Verifies the integrity of the skill and grants the player experience in that skill.
+     * @param player The player we are granting experience to.
+     */
+
+    private givePlayerExperience(player: Player): void {
+        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!));
+
+        skill?.addExperience(this.stageData.experience!);
+    }
+
+    /**
      * Checks if an NPC key is contained in the quest.
      * @param key The NPC key we are checking.
      * @returns If the key exists in the npcs array.
@@ -279,6 +294,15 @@ export default abstract class Quest {
 
     private hasAbility(): boolean {
         return !!this.stageData.ability;
+    }
+
+    /**
+     * Whether or not the quest grants experience to a skill.
+     * @returns Whether the stage data has an experience property and skill which to grant towards.
+     */
+
+    private hasExperience(): boolean {
+        return !!this.stageData.experience && !!this.stageData.skill;
     }
 
     /**
@@ -333,7 +357,9 @@ export default abstract class Quest {
             itemKey: stage.itemKey! || '',
             itemCount: stage.itemCount! || 0,
             tree: stage.tree! || '',
-            treeCount: stage.treeCount! || 0
+            treeCount: stage.treeCount! || 0,
+            skill: stage.skill! || '',
+            experience: stage.experience! || 0
         };
     }
 

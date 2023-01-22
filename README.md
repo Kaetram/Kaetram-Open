@@ -31,9 +31,9 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 ![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
 
-![Demo 3](https://i.imgur.com/tkgTjsf.png 'Demo 3')
+![Demo 3](https://i.imgur.com/KrqVNFw.png 'Demo 3')
 
-![Demo 4](https://i.imgur.com/64UU95B.png 'Demo 4')
+![Demo 4](https://i.imgur.com/ErBNdkf.png 'Demo 4')
 
 ![Demo 5](https://i.imgur.com/L0MN6LO.png 'Demo 5')
 
@@ -229,12 +229,14 @@ See also the [open issues][issues] for a list of proposed features (and known is
 
 ### TODO
 
-- Finish adding content to the map (achievements, quests, activities, etc.)
-- Split the current armour and sword system into more parts (helmet, chest, legs, boots, shield, etc.)
-- Add player trading abilities.
-- Add special abilities and enchantments to weapons/armours.
-- Add player friend list
-- Enhance the damage/defense combat formulas.
+- Add player trading
+- Add special attacks to weapons
+- Add functionality to the special abilities
+- Add player-owned guilds and/or parties
+- Weapons/armours/rings/pendants enchantments
+- Diversify game content (add more skills, minigames, activities, items, etc)
+- Improve usability of the user interface on mobile devices
+- Move pathfinding to the server-side once alpha is over
 
 ## Donations
 
