@@ -1,6 +1,7 @@
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
-import { Command, Network, Notification, NPC, Pointer, Store } from '../network/packets';
+import Formulas from '../info/formulas';
+import { Command, Notification, NPC, Pointer, Store } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
@@ -354,6 +355,31 @@ export default class Commands {
                 this.player.skills
                     .get(Modules.Skills[key as keyof typeof Modules.Skills])
                     ?.addExperience(x);
+
+                return;
+            }
+
+            case 'setlevel': {
+                username = blocks.shift()!;
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+
+                if (!username || !key || !x) return this.player.notify('Invalid command.');
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} is not online.`);
+
+                key = key.charAt(0).toUpperCase() + key.slice(1);
+
+                let skill = player.skills.get(Modules.Skills[key as keyof typeof Modules.Skills]);
+
+                if (!skill) return this.player.notify('Invalid skill.');
+
+                if (x < skill.level) {
+                    skill.setExperience(0);
+                    skill.addExperience(0);
+                } else skill.addExperience(Formulas.levelsToExperience(skill.level, x));
 
                 return;
             }
