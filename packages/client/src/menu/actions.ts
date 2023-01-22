@@ -6,8 +6,6 @@ import type { Modules } from '@kaetram/common/network';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export default class Actions extends Menu {
-    protected override container: HTMLElement = document.querySelector('#action-container')!;
-
     // Contains the list of actions.
     private list: HTMLUListElement = document.querySelector('#action-container > ul')!;
 
@@ -20,7 +18,7 @@ export default class Actions extends Menu {
     private buttonCallback?: (menuAction: Modules.MenuActions) => void;
 
     public constructor() {
-        super();
+        super('#action-container');
     }
 
     /**
