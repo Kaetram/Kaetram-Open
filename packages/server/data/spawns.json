@@ -17,9 +17,9 @@
       "flask": 200,
       "gold": 750,
       "spear": 75,
-      "platearmor": 100,
-      "bead": 1750
+      "platearmor": 100
     },
+    "dropTables": ["ordinary", "unusual", "warriorcrab"],
     "roaming": true,
     "miniboss": true,
     "hitPoints": 300,
