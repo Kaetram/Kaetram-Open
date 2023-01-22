@@ -20,6 +20,6 @@ export default class Rocks extends Resources {
 
         let amount = _.size(this.resources);
 
-        log.info(`Loaded ${amount} rocks${amount > 1 ? 's' : ''}.`);
+        log.info(`Loaded ${amount} rock${amount > 1 ? 's' : ''}.`);
     }
 }

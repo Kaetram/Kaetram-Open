@@ -3,27 +3,27 @@
     "items": [
       {
         "key": "flask",
-        "count": 20,
-        "price": 75
+        "count": 25,
+        "price": 150
       },
       {
         "key": "manaflask",
-        "count": 10,
-        "price": 200
+        "count": 25,
+        "price": 500
       },
       {
         "key": "burger",
-        "count": 5,
-        "price": 1000
+        "count": 10,
+        "price": 3000
       },
       {
         "key": "bigflask",
-        "count": 3,
-        "price": 2000
+        "count": 10,
+        "price": 4000
       },
       {
         "key": "sword2",
-        "count": 10,
+        "count": 5,
         "price": 100
       },
       {
@@ -33,17 +33,17 @@
       },
       {
         "key": "woodenbow",
-        "count": 10,
+        "count": 5,
         "price": 100
       },
       {
         "key": "plasticbow",
-        "count": 5,
+        "count": 3,
         "price": 200
       },
       {
         "key": "leatherarcherarmor",
-        "count": 5,
+        "count": 3,
         "price": 500
       },
       {
@@ -62,7 +62,7 @@
         "price": 10000
       }
     ],
-    "refresh": 60000,
+    "refresh": 30000,
     "currency": "gold"
   },
 
@@ -98,7 +98,7 @@
         "count": 1
       }
     ],
-    "refresh": 600000,
+    "refresh": 120000,
     "currency": "gold"
   },
 
@@ -126,6 +126,42 @@
       }
     ],
     "refresh": 120000,
+    "currency": "gold"
+  },
+
+  "miner": {
+    "items": [
+      {
+        "key": "pickaxe",
+        "count": 5
+      },
+      {
+        "key": "nisocore",
+        "count": 1,
+        "price": 220
+      },
+      {
+        "key": "cinnabarore",
+        "count": 0,
+        "price": 460
+      },
+      {
+        "key": "pytharore",
+        "count": 0,
+        "price": 670
+      },
+      {
+        "key": "goldore",
+        "count": 0,
+        "price": 850
+      },
+      {
+        "key": "iboore",
+        "count": 0,
+        "price": 1250
+      }
+    ],
+    "refresh": 600000,
     "currency": "gold"
   }
 }
