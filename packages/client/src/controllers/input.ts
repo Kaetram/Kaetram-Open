@@ -152,7 +152,7 @@ export default class InputController {
 
         if (!entity) return;
 
-        this.interact.show(this.mouse);
+        //this.interact.show(this.mouse);
 
         console.log(entity);
         //this.game.menu.actions.show();
