@@ -1662,7 +1662,7 @@ export default class Player extends Character {
         // Handle magic bonuses
         if (this.isMagic()) {
             // If the player does not have enough mana for the attack decrease the damage.
-            if (!this.hasManaForAttack()) return 0;
+            if (!this.hasManaForAttack()) return -3;
 
             // Return the total magic bonus.
             return this.getBonuses().magic;
