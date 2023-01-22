@@ -1,35 +1,27 @@
+@use '../../abstracts/media';
+
 #trade {
+    cursor: url('/img/3/hand.png'), auto;
+
     position: absolute;
     inset: 0;
+
     display: none;
+
     margin: auto;
 }
 
-#trade-player-container,
-#trade-o-player-container {
-    position: relative;
-    top: 24%;
-    float: left;
+#close-trade {
+    left: 98% !important;
 }
 
-#trade-player-container {
-    left: 5%;
-}
-
-#trade-o-player-container {
-    left: 12.5%;
-}
-
-@media (--md) {
-    #trade {
-        width: 500px;
-        height: 339px;
-        background: url('/img/2/trade.png') 0 0;
-    }
-
-    #trade-player-container,
-    #trade-o-player-container {
-        width: 206px;
-        height: 186px;
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #trade {
+            width: 379px * $i;
+            height: 170px * $i;
+            background: url('/img/#{$i}/trade.png') 0 0 no-repeat;
+        }
     }
 }
+

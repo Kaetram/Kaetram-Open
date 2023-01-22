@@ -742,7 +742,7 @@ export default class Player extends Character {
         this.movementStart = Date.now();
 
         // Invalid movement speed reported by the client.
-        if (speed !== this.movementSpeed)
+        if (speed !== this.getMovementSpeed())
             this.incrementCheatScore(`${this.username} Received incorrect movement speed.`);
 
         // Stop combat and skills every time thre is movement.
@@ -1400,6 +1400,8 @@ export default class Player extends Character {
     public sync(): void {
         // Update attack range each-time we sync.
         this.attackRange = this.equipment.getWeapon().attackRange;
+
+        this.getMovementSpeed();
 
         // Synchronize health, mana and experience with the player.
         this.skills.sync();
