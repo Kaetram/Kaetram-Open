@@ -22,6 +22,16 @@
         "price": 4000
       },
       {
+        "key": "axe",
+        "count": 20,
+        "price": 75
+      },
+      {
+        "key": "pickaxe",
+        "count": 5,
+        "price": 25000
+      },
+      {
         "key": "sword2",
         "count": 5,
         "price": 100
@@ -68,11 +78,6 @@
 
   "forester": {
     "items": [
-      {
-        "key": "axe",
-        "count": 20,
-        "price": 75
-      },
       {
         "key": "rustedaxe",
         "count": 15
