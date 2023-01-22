@@ -3,23 +3,38 @@
     "items": [
       {
         "key": "flask",
-        "count": 25,
-        "price": 150
+        "count": 100,
+        "price": 225
       },
       {
         "key": "manaflask",
-        "count": 25,
-        "price": 500
+        "count": 100,
+        "price": 650
       },
       {
         "key": "burger",
-        "count": 10,
-        "price": 3000
+        "count": 45,
+        "price": 1000
       },
       {
         "key": "bigflask",
-        "count": 10,
-        "price": 4000
+        "count": 45,
+        "price": 2000
+      },
+      {
+        "key": "bigmanaflask",
+        "count": 45,
+        "price": 3500
+      },
+      {
+        "key": "axe",
+        "count": 20,
+        "price": 75
+      },
+      {
+        "key": "pickaxe",
+        "count": 5,
+        "price": 25000
       },
       {
         "key": "sword2",
@@ -42,11 +57,6 @@
         "price": 200
       },
       {
-        "key": "leatherarcherarmor",
-        "count": 3,
-        "price": 500
-      },
-      {
         "key": "mailarcherarmor",
         "count": 1,
         "price": 1000
@@ -54,12 +64,12 @@
       {
         "key": "pendant1",
         "count": 1,
-        "price": 10000
+        "price": 100000
       },
       {
         "key": "ring1",
         "count": 1,
-        "price": 10000
+        "price": 100000
       }
     ],
     "refresh": 30000,
@@ -68,11 +78,6 @@
 
   "forester": {
     "items": [
-      {
-        "key": "axe",
-        "count": 20,
-        "price": 75
-      },
       {
         "key": "rustedaxe",
         "count": 15
