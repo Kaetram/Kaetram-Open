@@ -41,7 +41,7 @@
     "name": "Pickaxe",
     "mining": 1,
     "level": 1,
-    "price": 25000,
+    "price": 10000,
     "attackStats": {
       "crush": 4,
       "slash": 0,
