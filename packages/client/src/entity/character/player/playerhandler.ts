@@ -86,7 +86,7 @@ export default class PlayerHandler {
                 requestY: input.selectedY,
                 playerX: player.gridX,
                 playerY: player.gridY,
-                movementSpeed: 250,
+                movementSpeed: player.movementSpeed,
                 targetInstance: player.target?.instance
             });
         });
