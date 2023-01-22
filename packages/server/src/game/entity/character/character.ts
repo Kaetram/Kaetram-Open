@@ -530,7 +530,7 @@ export default abstract class Character extends Entity {
          */
         if (this.isRanged())
             return (
-                this.getDistance(this.target!) <= this.attackRange - 1 &&
+                this.getDistance(this.target!) <= this.attackRange &&
                 this.plateauLevel >= this.target!.plateauLevel
             );
 
