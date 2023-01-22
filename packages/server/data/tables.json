@@ -1,0 +1,20 @@
+{
+    "ordinary": {
+        "gold": 350,
+        "flask": 275,
+        "bigflask": 90,
+        "manaflask": 145,
+        "burger": 100
+    },
+
+    "unusual": {
+        "blackpotion": 50,
+        "shardt1": 25,
+        "logs": 25,
+        "stick": 50
+    },
+
+    "warriorcrab": {
+        "bead": 2500
+    }
+}
