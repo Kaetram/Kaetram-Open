@@ -47,6 +47,7 @@ export interface Config {
     updateTime: number;
     gver: string;
     regionCache: boolean;
+    saveInterval: number;
 
     discordEnabled: boolean;
     discordChannelId: string;
