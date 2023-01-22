@@ -162,6 +162,16 @@ export default {
     },
 
     /**
+     * Calculates the experience required to go from one level to another.
+     * @param startLevel The level we are starting from.
+     * @param endLevel The level we are ending at.
+     */
+
+    levelsToExperience(startLevel: number, endLevel: number): number {
+        return this.LevelExp[endLevel] - this.LevelExp[startLevel];
+    },
+
+    /**
      * Formula used to calcualte maximum hitpoints.
      * @param level The level of the health skill generally.
      * @returns The maximum hitpoints number value.
