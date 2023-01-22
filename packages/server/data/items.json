@@ -767,7 +767,7 @@
     "type": "weapon",
     "name": "Magic Staff",
     "price": 1500,
-    "manaCost": 3,
+    "manaCost": 2,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -789,7 +789,7 @@
     "name": "Lightning Staff",
     "skill": "magic",
     "price": 25000,
-    "manaCost": 5,
+    "manaCost": 4,
     "level": 10,
     "attackStats": {
       "crush": 2,
@@ -812,7 +812,7 @@
     "name": "Nature Staff",
     "skill": "magic",
     "price": 45000,
-    "manaCost": 7,
+    "manaCost": 6,
     "level": 17,
     "attackStats": {
       "crush": 2,
@@ -835,7 +835,7 @@
     "name": "Fire Staff",
     "skill": "magic",
     "price": 75000,
-    "manaCost": 10,
+    "manaCost": 7,
     "level": 25,
     "attackStats": {
       "crush": 2,
@@ -858,7 +858,7 @@
     "name": "Ice Staff",
     "skill": "magic",
     "price": 420069,
-    "manaCost": 13,
+    "manaCost": 9,
     "level": 35,
     "attackStats": {
       "crush": 2,
