@@ -176,7 +176,8 @@ export enum Ranks {
     Admin,
     Veteran,
     Patron,
-    Artist
+    Artist,
+    Cheater
 }
 
 export let RankColours = {

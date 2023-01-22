@@ -112,6 +112,9 @@ export default class Commands {
 
                 if (!duration) duration = 24;
 
+                if (command === 'mute' && duration > 168) duration = 168;
+                if (command === 'ban' && duration > 72) duration = 72;
+
                 let timeFrame = Date.now() + duration * 60 * 60;
 
                 if (command === 'mute') user.mute = timeFrame;
