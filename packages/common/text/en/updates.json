@@ -91,5 +91,19 @@
             "- Backend optimizations",
             "- Chat UI fixes on mobile"
         ]
+    },
+    "alpha-2.3.3": {
+        "title": "Kaetram alpha-2.3.3",
+        "content": [
+            "- Mining skill",
+            "- Magic is now publicly available",
+            "- Added support for in-game special ranks",
+            "- Added new quests, bosses, weapons, rings, pendants, and areas",
+            "- Fixes to disconnection issues due to high-latency",
+            "- Fixes and updates to multiple interfaces",
+            "- Improvements to clicking moving mobs and ranged combat",
+            "- Combat formula and defense stats of mobs updated",
+            "- Support for multiple game worlds now completed"
+        ]
     }
 }
