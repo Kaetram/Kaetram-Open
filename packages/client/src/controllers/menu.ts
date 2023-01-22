@@ -13,6 +13,8 @@ import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
 import Quests from '../menu/quests';
 import Friends from '../menu/friends';
+import Trade from '../menu/trade';
+import Interact from '../menu/interact';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
@@ -22,6 +24,7 @@ import type Game from '../game';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private interact: Interact = new Interact();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -35,6 +38,7 @@ export default class MenuController {
     private achievements: Achievements;
     private quests: Quests;
     private friends: Friends;
+    private trade: Trade;
 
     public header: Header;
 
@@ -54,6 +58,7 @@ export default class MenuController {
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
+        this.trade = new Trade();
 
         this.menus = {
             inventory: this.inventory,
@@ -67,7 +72,9 @@ export default class MenuController {
             equipments: this.equipments,
             achievements: this.achievements,
             quests: this.quests,
-            friends: this.friends
+            friends: this.friends,
+            trade: this.trade,
+            interact: this.interact
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -81,6 +88,8 @@ export default class MenuController {
         this.warp.onSelect(this.handleWarp.bind(this));
 
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
+
+        this.trade.onClose(this.handleTradeClose.bind(this));
 
         this.load();
     }
@@ -124,6 +133,14 @@ export default class MenuController {
         this.header.resize(); // Non Menu UI (for now?)
 
         this.forEachMenu((menu: Menu) => menu.resize());
+    }
+
+    /**
+     * @returns The interact menu object.
+     */
+
+    public getInteract(): Interact {
+        return this.interact;
     }
 
     /**
@@ -309,6 +326,14 @@ export default class MenuController {
             opcode: remove ? Opcodes.Friends.Remove : Opcodes.Friends.Add,
             username
         });
+    }
+
+    /**
+     * Sends a tade packet to the server indicating that the session has been closed.
+     */
+
+    private handleTradeClose(): void {
+        this.game.socket.send(Packets.Trade, [Opcodes.Trade.Close]);
     }
 
     /**

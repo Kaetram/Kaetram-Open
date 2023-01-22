@@ -7,6 +7,7 @@ import { isMobile } from '../utils/detect';
 
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
+import type Interact from '../menu/interact';
 import type Character from '../entity/character/character';
 import type Friends from '../menu/friends';
 import type Player from '../entity/character/player/player';
@@ -35,6 +36,7 @@ export default class InputController {
     private camera: Camera;
     public player: Player;
     private friends: Friends;
+    private interact: Interact;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -69,6 +71,7 @@ export default class InputController {
         this.camera = game.camera;
         this.player = game.player;
         this.friends = game.menu.getFriends();
+        this.interact = game.menu.getInteract();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -148,6 +151,8 @@ export default class InputController {
             entity = this.game.searchForEntityAt(position);
 
         if (!entity) return;
+
+        this.interact.show(this.mouse);
 
         console.log(entity);
         //this.game.menu.actions.show();
