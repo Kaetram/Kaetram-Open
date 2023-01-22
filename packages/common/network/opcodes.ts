@@ -103,7 +103,8 @@ export enum NPC {
 export enum Trade {
     Request,
     Accept,
-    Decline
+    Decline,
+    Close
 }
 
 export enum Enchant {

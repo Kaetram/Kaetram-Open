@@ -448,6 +448,10 @@ export default class Incoming {
             case Opcodes.Trade.Decline: {
                 break;
             }
+
+            case Opcodes.Trade.Close: {
+                break;
+            }
         }
     }
 
