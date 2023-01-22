@@ -126,13 +126,13 @@ export enum Warps {
 }
 
 export enum Skills {
+    Lumberjacking,
     Accuracy,
     Archery,
     Health,
     Magic,
-    Strength,
     Mining,
-    Lumberjacking
+    Strength
 }
 
 export enum Enchantment {
