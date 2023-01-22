@@ -72,6 +72,8 @@ export enum MenuActions {
     Move = 'Move'
 }
 
+export enum InteractActions {}
+
 export enum Hits {
     Damage,
     Poison,
@@ -186,7 +188,8 @@ export let RankColours = {
     [Ranks.Admin]: '#3bbaff',
     [Ranks.Veteran]: '#d84343',
     [Ranks.Patron]: '#db753c',
-    [Ranks.Artist]: '#b552f7'
+    [Ranks.Artist]: '#b552f7',
+    [Ranks.Cheater]: '#ffffff'
 };
 
 export interface Colours {
