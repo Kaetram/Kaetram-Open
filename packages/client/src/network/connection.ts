@@ -326,8 +326,6 @@ export default class Connection {
         // Invalid instance, player not found/not spawned.
         if (!player || player.teleporting || player.dead || !player.ready) return;
 
-        console.log(data);
-
         player.load(data, true);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
@@ -1350,8 +1348,6 @@ export default class Connection {
      */
 
     private handleRank(rank: Modules.Ranks): void {
-        console.log(`Rank updated to ${rank}.`);
-
         this.game.player.rank = rank;
     }
 
