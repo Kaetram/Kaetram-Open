@@ -84,6 +84,9 @@ export default {
         // Player characters get a boost of 5 damage.
         if (character.isPlayer()) damage += 5;
 
+        // Ensure the damage is not negative.
+        if (damage < 0) damage = 0;
+
         return damage;
     },
 
