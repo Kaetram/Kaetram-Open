@@ -123,6 +123,8 @@ export default class ChatController {
         this.input.focus();
         this.input.value = '';
 
+        this.log.scrollTop = this.log.scrollHeight;
+
         Util.fadeIn(this.input);
     }
 
@@ -148,6 +150,8 @@ export default class ChatController {
 
         this.input.blur();
         this.input.value = '';
+
+        this.log.scrollTop = this.log.scrollHeight;
 
         Util.fadeOut(this.input);
     }

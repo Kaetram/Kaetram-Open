@@ -315,9 +315,9 @@ export default class InputController {
     public keyMove(position: Coordinate): void {
         if (this.player.hasPath()) return;
 
-        this.move(position);
-
         this.keyMovement = true;
+
+        this.move(position);
     }
 
     /**
@@ -328,7 +328,7 @@ export default class InputController {
      * @param position The grid coordinates of the position we're requesting.
      */
 
-    private move(position: Coordinate): void {
+    private move(position: Coordinate, useSearch = !this.keyMovement): void {
         if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
@@ -354,7 +354,9 @@ export default class InputController {
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        this.entity = this.game.searchForEntityAt(position);
+        this.entity = useSearch
+            ? this.game.searchForEntityAt(position)
+            : this.game.getEntityAt(position.gridX, position.gridY);
 
         if (this.entity) {
             this.setAttackTarget();
