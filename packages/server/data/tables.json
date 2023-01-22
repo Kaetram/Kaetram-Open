@@ -1,10 +1,11 @@
 {
     "ordinary": {
-        "gold": 350,
-        "flask": 275,
-        "bigflask": 90,
-        "manaflask": 145,
-        "burger": 100
+        "gold": 400,
+        "flask": 225,
+        "bigflask": 130,
+        "manaflask": 200,
+        "bigmanaflask": 100,
+        "burger": 120
     },
 
     "unusual": {

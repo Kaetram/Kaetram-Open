@@ -3,23 +3,28 @@
     "items": [
       {
         "key": "flask",
-        "count": 25,
-        "price": 150
+        "count": 100,
+        "price": 225
       },
       {
         "key": "manaflask",
-        "count": 25,
-        "price": 500
+        "count": 100,
+        "price": 650
       },
       {
         "key": "burger",
-        "count": 10,
-        "price": 3000
+        "count": 45,
+        "price": 1000
       },
       {
         "key": "bigflask",
-        "count": 10,
-        "price": 4000
+        "count": 45,
+        "price": 2000
+      },
+      {
+        "key": "bigmanaflask",
+        "count": 45,
+        "price": 3500
       },
       {
         "key": "axe",
@@ -50,11 +55,6 @@
         "key": "plasticbow",
         "count": 3,
         "price": 200
-      },
-      {
-        "key": "leatherarcherarmor",
-        "count": 3,
-        "price": 500
       },
       {
         "key": "mailarcherarmor",

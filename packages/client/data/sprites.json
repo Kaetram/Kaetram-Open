@@ -8845,6 +8845,17 @@
     "offsetY": 0
   },
   {
+    "id": "item-manabigflask",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-gold",
     "animations": {
       "idle": {
