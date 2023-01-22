@@ -21,6 +21,7 @@
 @use 'impl/achievements';
 @use 'impl/quests';
 @use 'impl/friends';
+@use 'impl/interact';
 
 body.game {
     background: #000;
