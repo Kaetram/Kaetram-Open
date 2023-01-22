@@ -80,6 +80,8 @@ export default class World {
         }, 1000 / config.updateTime);
 
         if (config.hubEnabled) setIntervalAsync(async () => this.api.pingHub(), config.hubPing);
+
+        setIntervalAsync(async () => this.save(), config.saveInterval);
     }
 
     /**
@@ -194,6 +196,8 @@ export default class World {
 
     public save(): void {
         this.entities.forEachPlayer((player: Player) => player.save());
+
+        log.debug(`${config.name} ${config.serverId} has successfully saved.`);
     }
 
     /**
