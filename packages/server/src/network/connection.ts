@@ -18,7 +18,7 @@ export default class Connection {
         private socketHandler: SocketHandler
     ) {
         this.socket.on('message', this.handleMessage.bind(this));
-        this.socket.on(this.getCloseSignal(), this.handleClose.bind(this));
+        this.socket.on('disconnect', this.handleClose.bind(this));
     }
 
     /**
@@ -37,12 +37,14 @@ export default class Connection {
      * Depending on the type of socket currently present, a different function is used
      * for closing the connection.
      * @param details Optional parameter for debugging why connection was closed.
+     * @param withCallback Whether or not to call the close callback.
      */
 
-    public close(details?: string): void {
-        if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
+    public close(details?: string, withCallback = false): void {
+        this.socket.disconnect(true);
 
-        this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
+        if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
+        if (withCallback) this.closeCallback?.();
     }
 
     /**
@@ -67,9 +69,9 @@ export default class Connection {
     private handleClose(): void {
         log.info(`Closed socket: ${this.address}.`);
 
-        this.closeCallback?.();
-
         this.socketHandler.remove(this.id);
+
+        this.closeCallback?.();
     }
 
     /**
@@ -89,16 +91,6 @@ export default class Connection {
 
     public sendUTF8(message: string): void {
         this.socket.send(message);
-    }
-
-    /**
-     * Depending on the type of socket connection,
-     * we use a different keyword for determining
-     * the closing callback.
-     */
-
-    public getCloseSignal(): 'close' | 'disconnect' {
-        return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 
     /**

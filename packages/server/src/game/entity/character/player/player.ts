@@ -1206,14 +1206,15 @@ export default class Player extends Character {
     /**
      * Resets the timeout every time an action is performed. This way we keep
      * a `countdown` going constantly that resets every time an action is performed.
+     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
      */
 
-    public refreshTimeout(): void {
+    public refreshTimeout(duration = this.timeoutDuration): void {
         // Clear the existing timeout and start over.
         this.clearTimeout();
 
         // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.timeout(), this.timeoutDuration);
+        this.disconnectTimeout = setTimeout(() => this.timeout(), duration);
     }
 
     /**
