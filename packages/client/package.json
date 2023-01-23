@@ -13,7 +13,7 @@
         "jquery": "^3.6.3",
         "lodash-es": "^4.17.21",
         "pako": "^2.1.0",
-        "socket.io-client": "^4.5.1"
+        "socket.io-client": "^4.5.4"
     },
     "devDependencies": {
         "@types/dotenv-parse-variables": "^2.0.1",
