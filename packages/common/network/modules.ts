@@ -65,11 +65,16 @@ export enum Actions {
 }
 
 export enum MenuActions {
-    Use = 'Use',
-    Drop = 'Drop',
-    Equip = 'Equip',
-    Eat = 'Eat',
-    Move = 'Move'
+    Drop = 'drop',
+    Wield = 'wield',
+    Equip = 'equip',
+    Attack = 'attack',
+    Eat = 'eat',
+    Eat2 = 'eat2',
+    Trade = 'trade',
+    Potion = 'potion',
+    Follow = 'follow',
+    Examine = 'examine'
 }
 
 export enum InteractActions {}
