@@ -67,8 +67,6 @@ export default class Interact extends Menu {
         super.hide();
 
         this.closeCallback?.();
-
-        console.log('hide');
     }
 
     /**
