@@ -8859,7 +8859,7 @@
     "id": "item-gold",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 7,
         "row": 0
       }
     },
