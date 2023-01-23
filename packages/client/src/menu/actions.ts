@@ -73,7 +73,7 @@ export default class Actions extends Menu {
         let element = document.createElement('li');
 
         // Set the type of action to the button element
-        element.classList.add('action-button', `action-${menuAction.toLowerCase()}`);
+        element.classList.add('action-button', `action-${menuAction}`);
 
         // Assign an action when the element is clicked.
         element.addEventListener('click', () => this.buttonCallback?.(menuAction));

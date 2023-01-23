@@ -36,6 +36,13 @@ export default class EntityHandler {
                 if (!attacker.canAttackTarget()) attacker.follow(this.entity);
             });
 
+            this.entity.forEachFollower((follower: Character) => {
+                if (!follower.target || follower.target.instance !== this.entity.instance)
+                    return this.entity.removeFollower(follower);
+
+                follower.follow(this.entity);
+            });
+
             this.sendMovement();
 
             if (
