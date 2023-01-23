@@ -34,14 +34,14 @@ function loadEnv(isProduction: boolean): ExposedConfig {
             hubHost,
             hubPort,
             host,
-            socketioPort,
+            port,
             ssl
         } = config;
 
     for (let key of expose) env[key] = config[key] as never;
 
     let clientHost = clientRemoteHost || (hubEnabled ? hubHost : host),
-        clientPort = clientRemotePort || (hubEnabled ? hubPort : socketioPort),
+        clientPort = clientRemotePort || (hubEnabled ? hubPort : port),
         hub = ssl ? `https://${clientHost}` : `http://${clientHost}:${clientPort}`;
 
     return Object.assign(env, {
