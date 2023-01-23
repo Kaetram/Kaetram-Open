@@ -36,9 +36,10 @@ export default class Commands {
 
         this.handlePlayerCommands(command, blocks);
 
-        if (this.player.isMod()) this.handleModeratorCommands(command, blocks);
-
         if (this.player.isAdmin()) this.handleAdminCommands(command, blocks);
+
+        if (this.player.isMod() || this.player.isAdmin())
+            this.handleModeratorCommands(command, blocks);
     }
 
     private handlePlayerCommands(command: string, blocks: string[]): void {
@@ -145,7 +146,8 @@ export default class Commands {
                 return;
             }
 
-            case 'kick': {
+            case 'kick':
+            case 'forcekick': {
                 let username = blocks.shift()!;
 
                 if (!username)
@@ -156,7 +158,10 @@ export default class Commands {
                 if (!player)
                     return this.player.notify(`Could not find player with name: ${username}`);
 
-                player.connection.close();
+                player.connection.close(
+                    `${this.player.username} kicked ${username}`,
+                    command === 'forcekick'
+                );
 
                 break;
             }

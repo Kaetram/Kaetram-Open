@@ -7,10 +7,8 @@ import type { DatabaseTypes } from './types/database';
 export interface Config {
     name: string;
     host: string;
+    port: number;
     ssl: boolean;
-
-    socketioPort: number;
-    websocketPort: number;
 
     serverId: number;
     accessToken: string;
