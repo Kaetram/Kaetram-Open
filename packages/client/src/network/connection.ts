@@ -1289,8 +1289,6 @@ export default class Connection {
                 ? this.game.player
                 : this.entities.get<Character>(info.instance);
 
-        console.log(info);
-
         if (!entity) return;
 
         switch (opcode) {

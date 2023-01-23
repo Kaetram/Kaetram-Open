@@ -35,12 +35,16 @@ export default class Commands {
         let command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
-
-        if (this.player.isAdmin()) this.handleAdminCommands(command, blocks);
-
-        if (this.player.isMod() || this.player.isAdmin())
-            this.handleModeratorCommands(command, blocks);
+        this.handleArtistCommands(command, blocks);
+        this.handleModeratorCommands(command, blocks);
+        this.handleAdminCommands(command, blocks);
     }
+
+    /**
+     * Commands that are accessible to all the players.
+     * @param command The command that was entered.
+     * @param blocks Associated string blocks after the command.
+     */
 
     private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
@@ -101,7 +105,35 @@ export default class Commands {
         }
     }
 
+    /**
+     * Commands accessible only to artists and administrators.
+     * @param command The command that was entered.
+     * @param blocks The associated string blocks after the command.
+     */
+
+    private handleArtistCommands(command: string, blocks: string[]): void {
+        if (!this.player.isArtist() && !this.player.isAdmin()) return;
+
+        switch (command) {
+            case 'toggle': {
+                let key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No key specified.');
+
+                return this.player.send(new Command({ command: `toggle${key}` }));
+            }
+        }
+    }
+
+    /**
+     * Commands only accessible to moderators and administrators.
+     * @param command The command that was entered.
+     * @param blocks The associated string blocks after the command.
+     */
+
     private handleModeratorCommands(command: string, blocks: string[]): void {
+        if (!this.player.isMod() && !this.player.isAdmin()) return;
+
         switch (command) {
             case 'mute':
             case 'ban': {
@@ -168,7 +200,15 @@ export default class Commands {
         }
     }
 
+    /**
+     * The commands only accessible to administrators.
+     * @param command The command that was entered.
+     * @param blocks The associated string blocks after the command.
+     */
+
     private handleAdminCommands(command: string, blocks: string[]): void {
+        if (!this.player.isAdmin()) return;
+
         let username: string,
             player: Player,
             x: number,
@@ -458,14 +498,6 @@ export default class Commands {
                 this.player.setMovementSpeed(movementSpeed);
 
                 break;
-            }
-
-            case 'toggle': {
-                key = blocks.shift()!;
-
-                if (!key) return this.player.notify('No key specified.');
-
-                return this.player.send(new Command({ command: `toggle${key}` }));
             }
 
             case 'popup': {
