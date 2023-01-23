@@ -7,6 +7,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Server } from 'socket.io';
 
+import type { Socket } from 'socket.io';
 import type SocketHandler from '../sockethandler';
 import type { AnySocket } from '../websocket';
 
@@ -24,16 +25,7 @@ export default class SocketIO extends WebSocket {
         this.server.on('connection', this.handleConnection.bind(this));
     }
 
-    /**
-     * Unsure what type to specify for the socket here. If anyone has the time
-     * and energy to really figure it out go on ahead please.
-     * I can't be bothered to focus too much on SocketIO since the intention
-     * is to completely deprecate it once Godot client becomes more advanced.
-     * TODO - Figure out the types for this.
-     */
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private handleConnection(socket: any): void {
+    private handleConnection(socket: Socket): void {
         let remoteAddress = (socket.handshake.headers['cf-connecting-ip'] as string) || '127.0.0.1';
 
         log.info(`Received connection from: ${remoteAddress}.`);
