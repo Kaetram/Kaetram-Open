@@ -58,7 +58,7 @@ export default class API {
         router.get('/', (_request, response) => {
             response.json({
                 name: config.name,
-                port: config.socketioPort, // Sends the server port.
+                port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
                 playerCount: this.world.getPopulation()
@@ -167,7 +167,7 @@ export default class API {
             data = {
                 serverId: config.serverId,
                 accessToken: config.accessToken,
-                port: config.socketioPort,
+                port: config.port,
                 apiPort: config.apiPort,
                 remoteServerHost: config.remoteServerHost,
                 maxPlayers: config.maxPlayers,
