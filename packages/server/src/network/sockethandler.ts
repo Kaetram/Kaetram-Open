@@ -1,11 +1,9 @@
 import SocketIO from './sockets/socketio';
-import WS from './sockets/ws';
 
 import type Connection from './connection';
 
 export default class SocketHandler {
     private socketIO: SocketIO;
-    private ws: WS;
 
     public addressTimes: { [address: string]: number } = {}; // Keeping track of address connection times.
     public connections: { [id: string]: Connection } = {};
@@ -14,10 +12,8 @@ export default class SocketHandler {
 
     public constructor() {
         this.socketIO = new SocketIO(this);
-        this.ws = new WS(this);
 
         this.socketIO.onAdd(this.add.bind(this));
-        this.ws.onAdd(this.add.bind(this));
     }
 
     /**
