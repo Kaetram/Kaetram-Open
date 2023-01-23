@@ -19,8 +19,9 @@ import Interact from '../menu/interact';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import type Menu from '../menu/menu';
 import type Game from '../game';
+import type Menu from '../menu/menu';
+import type Entity from '../entity/entity';
 
 export default class MenuController {
     private actions: Actions = new Actions();

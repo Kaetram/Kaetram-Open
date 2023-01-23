@@ -42,7 +42,8 @@
         }
 
         .action-wield,
-        .action-equip {
+        .action-equip,
+        .action-attack {
             background: url('/img/#{$i}/main.png') -400px * $i -384px * $i no-repeat;
         }
 
@@ -52,6 +53,26 @@
 
         .action-eat {
             background: url('/img/#{$i}/main.png') -400px * $i -416px * $i no-repeat;
+        }
+
+        .action-eat2 {
+            background: url('/img/#{$i}/main.png') -400px * $i -432px * $i no-repeat;
+        }
+
+        .action-trade {
+            background: url('/img/#{$i}/main.png') -400px * $i -448px * $i no-repeat;
+        }
+
+        .action-potion {
+            background: url('/img/#{$i}/main.png') -400px * $i -464px * $i no-repeat;
+        }
+
+        .action-follow {
+            background: url('/img/#{$i}/main.png') -400px * $i -480px * $i no-repeat;
+        }
+
+        .action-examine {
+            background: url('/img/#{$i}/main.png') -400px * $i -496px * $i no-repeat;
         }
 
         .action-button {
