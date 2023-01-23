@@ -13,7 +13,6 @@ import { Chat } from '../network/packets';
 import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
-import Filter from '@kaetram/common/util/filter';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';

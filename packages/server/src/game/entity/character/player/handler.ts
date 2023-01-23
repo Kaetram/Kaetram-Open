@@ -125,6 +125,8 @@ export default class Handler {
      */
 
     private handleClose(): void {
+        console.log(`Player ${this.player.username} has disconnected.`);
+
         this.player.stopHealing();
 
         this.clear();
@@ -147,12 +149,11 @@ export default class Handler {
 
         this.player.minigameArea?.exitCallback?.(this.player);
 
-        this.world.entities.removePlayer(this.player);
-
         this.world.cleanCombat(this.player);
 
         this.world.linkFriends(this.player, true);
 
+        this.world.entities.removePlayer(this.player);
         this.world.api.sendLogout(this.player.username);
     }
 

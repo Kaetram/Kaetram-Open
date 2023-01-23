@@ -10,7 +10,7 @@
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
         "lodash-es": "^4.17.21",
-        "socket.io-client": "^4.5.1",
+        "socket.io-client": "^4.5.4",
         "tsx": "^3.8.0"
     },
     "devDependencies": {
