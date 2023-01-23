@@ -13,7 +13,7 @@ import type { AnySocket } from '../websocket';
 
 export default class SocketIO extends WebSocket {
     public constructor(socketHandler: SocketHandler) {
-        super(config.host, config.socketioPort, 'SocketIO', socketHandler);
+        super(config.host, config.port, 'SocketIO', socketHandler);
         super.loadServer();
 
         this.server = new Server(this.httpServer, {
@@ -40,7 +40,7 @@ export default class SocketIO extends WebSocket {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         socket.on('client', (data: any) => {
-            if (!this.verifyVersion(connection, data.gVer)) return;
+            if (!this.verifyVersion(connection, data.gVer)) return socket.disconnect(true);
 
             this.addCallback?.(connection);
         });

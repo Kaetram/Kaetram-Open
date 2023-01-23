@@ -9,7 +9,7 @@ import type Connection from './connection';
 import type SocketHandler from './sockethandler';
 
 export type AnySocket = Socket & ws;
-export type SocketType = 'WebSocket' | 'SocketIO';
+export type SocketType = 'SocketIO';
 
 export default abstract class WebSocket {
     private version = config.gver;
