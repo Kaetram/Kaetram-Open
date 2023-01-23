@@ -426,6 +426,8 @@ export default class Regions {
      */
 
     public sendDisplayInfo(player: Player): void {
+        if (player.region === -1) return;
+
         let displayInfos: EntityDisplayInfo[] = this.getDisplayInfo(player);
 
         // Don't send empty data.
