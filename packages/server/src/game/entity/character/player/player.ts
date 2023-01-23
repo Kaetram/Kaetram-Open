@@ -1266,6 +1266,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether the player's rank is artist.
+     */
+
+    public isArtist(): boolean {
+        return this.rank === Modules.Ranks.Artist;
+    }
+
+    /**
      * @returns Whether or not the player's rank is a moderator.
      */
 

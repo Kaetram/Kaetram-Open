@@ -125,8 +125,6 @@ export default class Handler {
      */
 
     private handleClose(): void {
-        console.log(`Player ${this.player.username} has disconnected.`);
-
         this.player.stopHealing();
 
         this.clear();
