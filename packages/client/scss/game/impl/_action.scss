@@ -16,8 +16,9 @@
     text-align: center;
 }
 
-.action-item-name, .action-item-description {
-    color: #fff
+.action-item-name,
+.action-item-description {
+    color: #fff;
 }
 
 @each $size, $i in media.$bsizes {

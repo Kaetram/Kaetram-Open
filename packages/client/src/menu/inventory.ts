@@ -6,11 +6,12 @@ import Util from '../utils/util';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
+import type { MenuAction } from './actions';
 import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
+type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
@@ -26,6 +27,11 @@ interface SlotElement extends HTMLElement {
 export default class Inventory extends Menu {
     private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
+    private dropDialog: HTMLElement = document.querySelector('#drop-dialog')!;
+    private dropCount: HTMLInputElement = document.querySelector('#drop-count')!;
+    private dropAccept: HTMLElement = document.querySelector('#drop-accept')!;
+    private dropCancel: HTMLElement = document.querySelector('#drop-cancel')!;
+
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
@@ -38,7 +44,7 @@ export default class Inventory extends Menu {
 
         this.load();
 
-        this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
+        this.actions.onButton((action: MenuAction) => this.handleAction(action));
     }
 
     /**
@@ -53,15 +59,40 @@ export default class Inventory extends Menu {
         // Create slots based on the constants.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
             this.list.append(this.createSlot(i));
+
+        this.dropAccept.addEventListener('click', () => this.drop());
+
+        window.addEventListener('click', (event) => {
+            if (event.target !== this.dropCount) this.dropDialog.style.display = 'none';
+        });
+    }
+
+    /**
+     * Drops the selected item from the inventory.
+     */
+
+    private drop(): void {
+        let count = this.dropCount.valueAsNumber;
+
+        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count);
+
+        this.dropCount.value = '';
+        this.actions.hide();
     }
 
     /**
      * Creates a select callback using the action parameter specified.
-     * @param action Which type of action is being performed.
+     * @param menuAction Which type of action is being performed.
      */
 
-    private handleAction(action: Modules.MenuActions): void {
-        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(action));
+    private handleAction(menuAction: MenuAction): void {
+        if (menuAction.action === Modules.MenuActions.Drop && menuAction.alt) {
+            this.dropDialog.style.display = 'block';
+
+            return;
+        }
+
+        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction.action));
 
         this.actions.hide();
     }
@@ -123,8 +154,8 @@ export default class Inventory extends Menu {
          */
 
         if (doubleClick) {
-            if (element.edible) this.handleAction(Modules.MenuActions.Eat);
-            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+            if (element.edible) this.handleAction({ action: Modules.MenuActions.Eat });
+            else if (element.equippable) this.handleAction({ action: Modules.MenuActions.Equip });
 
             this.actions.hide();
 
@@ -137,13 +168,16 @@ export default class Inventory extends Menu {
          * be expanded as more item properties are added.
          */
 
-        let actions: Modules.MenuActions[] = [];
+        let actions: MenuAction[] = [];
 
-        if (element.edible) actions.push(Modules.MenuActions.Eat);
-        if (element.equippable) actions.push(Modules.MenuActions.Equip);
+        if (element.edible) actions.push({ action: Modules.MenuActions.Eat });
+        if (element.equippable) actions.push({ action: Modules.MenuActions.Equip });
 
         // Push drop option as the last one.
-        actions.push(Modules.MenuActions.Drop);
+        actions.push(
+            { action: Modules.MenuActions.Drop },
+            { action: Modules.MenuActions.Drop, alt: true }
+        );
 
         this.actions.show(
             actions,
@@ -169,7 +203,7 @@ export default class Inventory extends Menu {
 
         this.selectedSlot = index;
 
-        this.handleAction(Modules.MenuActions.Eat);
+        this.handleAction({ action: Modules.MenuActions.Eat });
     }
 
     /**
