@@ -9,7 +9,7 @@
       {
         "key": "manaflask",
         "count": 100,
-        "price": 650
+        "price": 125
       },
       {
         "key": "burger",
@@ -24,7 +24,7 @@
       {
         "key": "bigmanaflask",
         "count": 45,
-        "price": 3500
+        "price": 1750
       },
       {
         "key": "axe",
