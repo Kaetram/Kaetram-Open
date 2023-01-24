@@ -194,6 +194,8 @@ export default class Incoming {
 
         if (this.player.isDead()) this.player.deathCallback?.();
 
+        this.player.welcome();
+
         // A secondary check after the player has fully loaded in.
         this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
             if (online) this.player.connection.reject('loggedin');
