@@ -121,9 +121,10 @@ export default {
 
     getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container {
         switch (menuAction) {
-            case Modules.MenuActions.Use:
+            case Modules.MenuActions.Wield:
             case Modules.MenuActions.Equip:
-            case Modules.MenuActions.Eat: {
+            case Modules.MenuActions.Eat:
+            case Modules.MenuActions.Eat2: {
                 return Opcodes.Container.Select;
             }
 
