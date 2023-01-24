@@ -20,14 +20,16 @@
             left: -2px * $i;
         }
 
-        .player-image {
+        #player-image {
             position: absolute;
             top: 70px * $i;
             left: 110px * $i;
-            scale: $i;
+        }
 
+        #player-image-armour,
+        #player-image-weapon {
+            transform: scale($i);
             overflow: auto;
-
             width: 32px;
             height: 32px;
         }
@@ -74,7 +76,7 @@
 }
 
 @media (--sm) {
-    .player-image {
+    #player-image {
         top: 60px;
         left: 100px;
     }
