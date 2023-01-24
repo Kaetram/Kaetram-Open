@@ -71,6 +71,7 @@ export enum MenuActions {
     Attack = 'attack',
     Eat = 'eat',
     Eat2 = 'eat2',
+    Move = 'move',
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
