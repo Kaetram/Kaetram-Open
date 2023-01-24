@@ -344,6 +344,22 @@ export default class Player extends Character {
     }
 
     /**
+     * Sends a welcome notification when the player logs in the game. If the player is new
+     * then we will send a slightly different welcome message. If there are other players
+     * online, we will also send a notification to the player with the player count.
+     */
+
+    public welcome(): void {
+        if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
+
+        this.notify(`Welcome back to ${config.name}!`);
+
+        let population = this.world.getPopulation();
+
+        if (population > 1) this.notify(`There are currently ${population} players online.`, true);
+    }
+
+    /**
      * Override of the heal superclass function. Heals by a specified amount, and givne the
      * type, we will heal only the hitpoints or the mana with a special effect associated. If no
      * type is specified, then it proceeds to heal both hitpoints and mana.
@@ -1290,6 +1306,15 @@ export default class Player extends Character {
     }
 
     /**
+     * Accounts younger than 1 minute are considered new accounts.
+     * @returns Whether the account's creation date is within the last minute.
+     */
+
+    public isNew(): boolean {
+        return Date.now() - this.statistics.creationTime < 60_000;
+    }
+
+    /**
      * @returns Whether or not the player's invalid movement count is greater than the threshold.
      */
 
@@ -1488,13 +1513,14 @@ export default class Player extends Character {
      * Sends a chatbox message to the player.
      * @param message String text we want to display to the player.
      * @param colour Optional parameter indicating text colour.
+     * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour = ''): void {
+    public notify(message: string, colour = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
-        if (Date.now() - this.lastNotify < 250) return;
+        if (bypass && Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
