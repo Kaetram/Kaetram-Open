@@ -356,7 +356,8 @@ export default class Player extends Character {
 
         let population = this.world.getPopulation();
 
-        if (population > 1) this.notify(`There are currently ${population} players online.`, true);
+        if (population > 1)
+            this.notify(`There are currently ${population} players online.`, '', true);
     }
 
     /**
