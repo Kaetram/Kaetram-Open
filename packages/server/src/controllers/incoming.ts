@@ -544,12 +544,25 @@ export default class Incoming {
     private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.isMob() || target.isMob()) return true;
 
-        return (
-            attacker.isPlayer() &&
-            target.isPlayer() &&
-            attacker.pvp &&
-            target.pvp &&
-            attacker.team !== target.team
-        );
+        // If either of the entities are not players, we don't want to handle this.
+        if (!attacker.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            attacker.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (attacker.isCheater()) {
+            attacker.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        return attacker.pvp && target.pvp && attacker.team !== target.team;
     }
 }
