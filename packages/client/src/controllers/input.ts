@@ -333,6 +333,11 @@ export default class InputController {
                     this.game.player.pursue(this.interactEntity);
                 break;
             }
+
+            case Modules.MenuActions.Examine: {
+                this.game.socket.send(Packets.Examine, [this.interactEntity.instance]);
+                break;
+            }
         }
 
         this.interact.hide();
