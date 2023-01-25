@@ -116,6 +116,9 @@ export default class Incoming {
                     case Packets.Focus: {
                         return this.player.updateEntityPositions();
                     }
+                    case Packets.Examine: {
+                        return this.handleExamine(message);
+                    }
                 }
             } catch (error) {
                 log.error(error);
@@ -535,6 +538,22 @@ export default class Incoming {
                 return this.player.friends.remove(data.username);
             }
         }
+    }
+
+    /**
+     * Handles the interaction with the examine button. Just displays
+     * the description for the entity selected (generally a mob).
+     * @param instance The instance of the entity.
+     */
+
+    private handleExamine(instance: string): void {
+        let entity = this.entities.get(instance);
+
+        if (!entity.isMob() && !entity.isItem()) return;
+
+        if (!entity.description) return this.player.notify('I have no idea what that is.');
+
+        this.player.notify(entity.description);
     }
 
     /**
