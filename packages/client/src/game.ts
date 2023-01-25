@@ -322,4 +322,14 @@ export default class Game {
             this.renderer.updateAnimatedTiles();
         }
     }
+
+    /**
+     * Zooms out the game and updates the camera.
+     * @param amount Amount to zoom in or out by.
+     */
+
+    public zoom(amount: number): void {
+        this.camera.zoom(amount);
+        this.renderer.resize();
+    }
 }

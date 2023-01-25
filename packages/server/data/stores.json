@@ -64,12 +64,12 @@
       {
         "key": "pendant1",
         "count": 1,
-        "price": 100000
+        "price": 50000
       },
       {
         "key": "ring1",
         "count": 1,
-        "price": 100000
+        "price": 50000
       }
     ],
     "refresh": 30000,
@@ -130,7 +130,7 @@
         "count": 3
       }
     ],
-    "refresh": 120000,
+    "refresh": 180000,
     "currency": "gold"
   },
 
