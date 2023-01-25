@@ -229,7 +229,7 @@ export default class Creator {
      */
 
     public static verifyPlayer(player: Player): boolean {
-        if (player.username.includes('*')) return false;
+        if (!Utils.isValidUsername(player.username)) return false;
         if (!player.username || player.username.length === 0) return false;
         if (!player.password || player.password.length < 3) return false;
         if (player.email && !Utils.isEmail(player.email)) return false;
