@@ -43,10 +43,22 @@ export default class Connection {
      * @param withCallback Whether or not to call the close callback.
      */
 
-    public close(details?: string, withCallback = false): void {
+    public close(details?: string, withCallback = true): void {
         this.socket.disconnect(true);
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
+
+        /**
+         * Before you question the redundancy of this. SocketIO experiences an issue where the player
+         * closes the browser but the `disconnect` signal is not being fired. This is a solution to the
+         * problem. We do not want `closeCallback` called twice unnecessarily, but in the event that
+         * `handleClose` does not fire up due to the issue mentioned above, we want to call the callback
+         * forcibly through here. Since the `disconnect` signal is not fired, then the timeout will continue
+         * to countdown (`handleClose` is never fired) until it forcibly calls this function and kicks the
+         * player out. In the event that we rely on the timeout to kick the player out, this callback will
+         * only fire once, since again, the reason this exists is because `disconnect` doesn't fire properly.
+         */
+
         if (withCallback) this.closeCallback?.();
     }
 
