@@ -7,6 +7,7 @@ import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Arrows from './equipment/arrows';
 
 import Character from '../character';
 
@@ -54,7 +55,8 @@ export default class Player extends Character {
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon()
+        [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.Arrows]: new Arrows()
     };
 
     public skills: { [key: number]: Skill } = {};
@@ -258,6 +260,14 @@ export default class Player extends Character {
 
     public getBoots(): Boots {
         return this.equipments[Modules.Equipment.Boots];
+    }
+
+    /**
+     * @returns The arrows object of the player.
+     */
+
+    public getArrows(): Arrows {
+        return this.equipments[Modules.Equipment.Arrows];
     }
 
     /**
