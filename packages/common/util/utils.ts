@@ -234,6 +234,16 @@ export default {
     },
 
     /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
+    },
+
+    /**
      * Grabs the URL of a server depending on whether
      * or not SSL is currently enabled.
      * @param host The hostname of the server.
