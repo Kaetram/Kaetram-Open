@@ -58,11 +58,6 @@ export default class Commands {
                     } online.`
                 );
 
-                if (this.player.isAdmin())
-                    this.entities.forEachPlayer((player: Player) => {
-                        this.player.notify(player.username);
-                    });
-
                 return;
             }
 
@@ -481,7 +476,7 @@ export default class Commands {
             }
 
             case 'timeout': {
-                this.player.timeout();
+                this.player.connection.reject('timeout', true);
 
                 break;
             }
