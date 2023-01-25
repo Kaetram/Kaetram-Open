@@ -4739,7 +4739,7 @@
     "type": "arrow",
     "name": "Arrow",
     "stackable": true,
-    "maxStackSize": 50,
+    "maxStackSize": 99,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4752,7 +4752,7 @@
     "type": "arrow",
     "name": "Fire Arrow",
     "stackable": true,
-    "maxStackSize": 50,
+    "maxStackSize": 99,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4765,7 +4765,7 @@
     "type": "arrow",
     "name": "Poison Arrow",
     "stackable": true,
-    "maxStackSize": 50,
+    "maxStackSize": 99,
     "poisonous": true,
     "bonuses": {
       "accuracy": 0,
@@ -4779,7 +4779,7 @@
     "type": "arrow",
     "name": "Lightning Arrow",
     "stackable": true,
-    "maxStackSize": 50,
+    "maxStackSize": 99,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4792,7 +4792,7 @@
     "type": "arrow",
     "name": "Ice Arrow",
     "stackable": true,
-    "maxStackSize": 50,
+    "maxStackSize": 99,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
