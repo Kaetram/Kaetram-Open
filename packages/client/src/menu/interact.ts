@@ -28,14 +28,16 @@ export default class Interact extends Menu {
 
         let actions: Modules.MenuActions[] = [];
 
+        if (entity.isItem()) actions.push(Modules.MenuActions.Examine);
+
         // Add attack interactions to all mob entities.
-        if (entity.isMob()) actions.push(Modules.MenuActions.Attack);
+        if (entity.isMob()) actions.push(Modules.MenuActions.Attack, Modules.MenuActions.Examine);
 
         // Add the trade and follow interactions to all player entities.
         if (entity.isPlayer()) {
             if (pvp) actions.push(Modules.MenuActions.Attack);
 
-            actions.push(Modules.MenuActions.Trade, Modules.MenuActions.Follow);
+            actions.push(Modules.MenuActions.Follow);
         }
 
         // Add all the actions to the list.

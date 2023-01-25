@@ -37,6 +37,8 @@ export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
+    public description = '';
+
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
     public area!: Area;
@@ -104,6 +106,7 @@ export default class Mob extends Character {
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
+        this.description = data.description || this.description;
         this.drops = data.drops || this.drops;
         this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
