@@ -98,7 +98,8 @@ export enum Equipment {
     Boots,
     Pendant,
     Ring,
-    Weapon
+    Weapon,
+    Arrows
 }
 
 export enum Hovering {
