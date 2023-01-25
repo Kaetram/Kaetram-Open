@@ -4,9 +4,10 @@ import $ from 'jquery';
 import type Player from '../entity/character/player/player';
 
 const MAXIMUM_ZOOM = 6,
-    MINIMUM_ZOOM = 2.6,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
+
+let MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
@@ -268,13 +269,26 @@ export default class Camera {
      * @param zoomAmount Float value we are zooming by.
      */
 
-    public zoom(zoomAmount: number): void {
+    public zoom(zoomAmount = 0): void {
         this.zoomFactor += zoomAmount;
 
         if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
         if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
 
         this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
+    }
+
+    /**
+     * Updates the minimum zoom when the screen is resized. Mobiles devices
+     * have a smaller screen size so we allow more zooming out. Once the
+     * device returns to normal proportions, we limit the zoom again.
+     */
+
+    public updateMinimumZoom(mobile = false): void {
+        // Update the minimum zoom.
+        MINIMUM_ZOOM = mobile ? 2 : 2.6;
+
+        this.zoom();
     }
 
     /**
