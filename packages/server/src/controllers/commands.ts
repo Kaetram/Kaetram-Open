@@ -247,6 +247,17 @@ export default class Commands {
                 return;
             }
 
+            case 'drop': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!);
+
+                if (!key) return;
+
+                if (!count) count = 1;
+
+                this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
+            }
+
             case 'remove': {
                 let key = blocks.shift(),
                     count = parseInt(blocks.shift()!);

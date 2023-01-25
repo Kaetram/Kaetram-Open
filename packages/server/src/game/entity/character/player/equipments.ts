@@ -98,14 +98,11 @@ export default class Equipments {
      */
 
     public unequip(type: Modules.Equipment): void {
-        if (!this.player.inventory.hasSpace())
-            return this.player.notify('You do not have enough space in your inventory.');
+        let equipment = this.getEquipment(type),
+            item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
 
-        let equipment = this.getEquipment(type);
-
-        this.player.inventory.add(
-            new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
-        );
+        // We stop here if the item cannot be added to the inventory.
+        if (!this.player.inventory.add(item)) return;
 
         equipment.empty();
 
