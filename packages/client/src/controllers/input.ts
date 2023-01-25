@@ -254,16 +254,12 @@ export default class InputController {
 
             case '+':
             case '=': {
-                this.game.camera.zoom(0.2);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(0.2);
             }
 
             case '-':
             case '_': {
-                this.game.camera.zoom(-0.2);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(-0.2);
             }
         }
     }

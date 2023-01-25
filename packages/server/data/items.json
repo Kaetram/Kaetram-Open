@@ -4710,5 +4710,94 @@
     "type": "object",
     "name": "Stick",
     "description": "A stick. It's a stick. What else do you want me to say about it?"
+  },
+
+  "leatherboots": {
+    "type": "boots",
+    "name": "Leather Boots",
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "magic": -4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "arrow": {
+    "type": "arrow",
+    "name": "Arrow",
+    "stackable": true,
+    "maxStackSize": 50,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 4,
+      "magic": 0
+    }
+  },
+
+  "firearrow": {
+    "type": "arrow",
+    "name": "Fire Arrow",
+    "stackable": true,
+    "maxStackSize": 50,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 6,
+      "magic": 0
+    }
+  },
+
+  "poisonarrow": {
+    "type": "arrow",
+    "name": "Poison Arrow",
+    "stackable": true,
+    "maxStackSize": 50,
+    "poisonous": true,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 8,
+      "magic": 0
+    }
+  },
+
+  "lightningarrow": {
+    "type": "arrow",
+    "name": "Lightning Arrow",
+    "stackable": true,
+    "maxStackSize": 50,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 14,
+      "magic": 0
+    }
+  },
+
+  "icearrow": {
+    "type": "arrow",
+    "name": "Ice Arrow",
+    "stackable": true,
+    "maxStackSize": 50,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 11,
+      "magic": 0
+    }
   }
 }

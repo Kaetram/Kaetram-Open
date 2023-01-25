@@ -88,9 +88,9 @@ export default class Character extends Entity {
         },
         [Modules.Effects.Freezing]: {
             key: 'effect-freeze',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
-            speed: 150
+            speed: 200
         },
         [Modules.Effects.Poisonball]: {
             key: 'effect-poisonball',
@@ -594,6 +594,11 @@ export default class Character extends Entity {
 
     public setEffect(effect: Modules.Effects): void {
         this.effect = effect;
+
+        if (this.effect === Modules.Effects.None) return;
+
+        // Reset the animation when we change effects.
+        this.effects[effect].animation.reset();
     }
 
     /**
