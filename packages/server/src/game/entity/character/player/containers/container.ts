@@ -15,8 +15,6 @@ interface SerializedContainer {
 export default abstract class Container {
     protected slots: Slot[] = [];
 
-    private emptySpaces = 0;
-
     private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
@@ -31,8 +29,6 @@ export default abstract class Container {
     public constructor(public type: Modules.ContainerType, private size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
-
-        this.emptySpaces = size;
     }
 
     /**
@@ -46,8 +42,6 @@ export default abstract class Container {
             if (!item.key) return;
 
             this.slots[item.index].update(this.getItem(item));
-
-            this.emptySpaces--;
         });
 
         this.loadCallback?.();
@@ -78,9 +72,6 @@ export default abstract class Container {
             slot = this.find(item)!;
 
             added = !!slot?.add(item.count);
-
-            // If a new item was stacked, we don't lose an empty space.
-            if (added) this.emptySpaces++;
         }
 
         // All slots are taken.
@@ -97,10 +88,7 @@ export default abstract class Container {
             }
         }
 
-        if (added) {
-            this.emptySpaces--;
-            this.addCallback?.(slot!);
-        }
+        if (added) this.addCallback?.(slot!);
 
         return added;
     }
@@ -124,7 +112,6 @@ export default abstract class Container {
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
-        this.emptySpaces++;
         this.removeCallback?.(slot, serializedSlot.key, count, drop);
 
         return serializedSlot;
@@ -262,11 +249,11 @@ export default abstract class Container {
 
     /**
      * Checks if there are empty spaces in the container.
-     * @returns Whether the amount of empty spaces is greater than 0.
+     * @returns Whether or not we can find a slot that is empty.
      */
 
     public hasSpace(): boolean {
-        return this.emptySpaces > 0;
+        return !!this.getEmptySlot();
     }
 
     /**
