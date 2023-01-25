@@ -234,6 +234,9 @@ export default class Renderer {
         // Update camera grid width and height.
         this.camera.update();
 
+        // Update the camera minimum zoom limits.
+        this.camera.updateMinimumZoom(this.mobile);
+
         // Recalculate canvas sizes.
         this.loadSizes();
 
