@@ -19,6 +19,7 @@ export default class State extends Menu {
     private pendant: HTMLElement = document.querySelector('#state-page > .pendant-slot')!;
     private ring: HTMLElement = document.querySelector('#state-page > .ring-slot')!;
     private boots: HTMLElement = document.querySelector('#state-page > .boots-slot')!;
+    private arrow: HTMLElement = document.querySelector('#state-page > .arrows-slot')!;
 
     private selectCallback?: SelectCallback;
 
@@ -36,6 +37,7 @@ export default class State extends Menu {
         );
         this.ring.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Ring));
         this.boots.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Boots));
+        this.arrow.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Arrows));
     }
 
     /**
@@ -60,6 +62,7 @@ export default class State extends Menu {
         this.pendant.style.backgroundImage = Util.getImageURL(player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(player.getBoots().key);
+        this.arrow.style.backgroundImage = Util.getImageURL(player.getArrows().key);
     }
 
     /**
