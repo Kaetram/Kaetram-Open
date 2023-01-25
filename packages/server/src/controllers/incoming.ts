@@ -54,7 +54,7 @@ export default class Incoming {
                 return;
             }
 
-            player.refreshTimeout();
+            player.connection.refreshTimeout();
 
             // Prevent server from crashing due to a packet malfunction.
             try {

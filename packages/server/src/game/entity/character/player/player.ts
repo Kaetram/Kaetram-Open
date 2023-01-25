@@ -134,9 +134,6 @@ export default class Player extends Character {
     private lastNotify = 0;
     private lastEdible = 0;
 
-    private disconnectTimeout: NodeJS.Timeout | null = null;
-    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
-
     private currentSong: string | undefined;
 
     public minigameArea: Area | undefined = undefined;
@@ -304,7 +301,7 @@ export default class Player extends Character {
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         setTimeout(() => {
-            if (!this.ready) this.connection.reject('error');
+            if (!this.ready) this.connection.reject('error', true);
         }, 10_000);
 
         /**
@@ -1200,17 +1197,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Disconnects the player and sends the UTF8 error message to the client.
-     */
-
-    public timeout(): void {
-        if (!this.connection) return;
-
-        this.connection.sendUTF8('timeout');
-        this.connection.close('Player timed out.');
-    }
-
-    /**
      * Sends a ping request to the client. This is used to calculate the latency.
      */
 
@@ -1218,31 +1204,6 @@ export default class Player extends Character {
         this.pingTime = Date.now();
 
         this.send(new Network(Opcodes.Network.Ping));
-    }
-
-    /**
-     * Resets the timeout every time an action is performed. This way we keep
-     * a `countdown` going constantly that resets every time an action is performed.
-     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
-     */
-
-    public refreshTimeout(duration = this.timeoutDuration): void {
-        // Clear the existing timeout and start over.
-        this.clearTimeout();
-
-        // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.timeout(), duration);
-    }
-
-    /**
-     * Clears the existing disconnect timeout.
-     */
-
-    public clearTimeout(): void {
-        if (!this.disconnectTimeout) return;
-
-        clearTimeout(this.disconnectTimeout);
-        this.disconnectTimeout = null;
     }
 
     /**
