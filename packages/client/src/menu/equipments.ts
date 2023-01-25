@@ -14,7 +14,6 @@ type SelectCallback = (type: Modules.Equipment) => void;
 
 export default class Equipments extends Menu {
     // Player image elements
-    private playerImage: HTMLElement = document.querySelector('#player-image')!;
     private playerArmour: HTMLElement = document.querySelector('#player-image-armour')!;
     private playerWeapon: HTMLElement = document.querySelector('#player-image-weapon')!;
 
@@ -211,7 +210,8 @@ export default class Equipments extends Menu {
         } else this.playerWeapon.style.backgroundImage = 'none';
 
         // Flip the player image if we are rendering the right orientation.
-        this.playerImage.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
+        this.playerArmour.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
+        this.playerWeapon.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
     }
 
     /**
