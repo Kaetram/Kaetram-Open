@@ -1,8 +1,8 @@
 import log from '@kaetram/common/util/log';
 
+import type { Socket } from 'socket.io';
 import type { Packets } from '@kaetram/common/network';
 import type SocketHandler from './sockethandler';
-import type { AnySocket, SocketType } from './websocket';
 
 type MessageCallback = (message: [Packets, never]) => void;
 
@@ -12,13 +12,12 @@ export default class Connection {
 
     public constructor(
         public id: string,
-        public type: SocketType,
         public address: string,
-        private socket: AnySocket,
+        private socket: Socket,
         private socketHandler: SocketHandler
     ) {
+        this.socket.once('disconnect', this.handleClose.bind(this));
         this.socket.on('message', this.handleMessage.bind(this));
-        this.socket.on('disconnect', this.handleClose.bind(this));
     }
 
     /**

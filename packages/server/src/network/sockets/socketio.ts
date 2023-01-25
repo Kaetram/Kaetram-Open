@@ -9,17 +9,14 @@ import { Server } from 'socket.io';
 
 import type { Socket } from 'socket.io';
 import type SocketHandler from '../sockethandler';
-import type { AnySocket } from '../websocket';
 
 export default class SocketIO extends WebSocket {
     public constructor(socketHandler: SocketHandler) {
-        super(config.host, config.port, 'SocketIO', socketHandler);
+        super(config.host, config.port, socketHandler);
         super.loadServer();
 
         this.server = new Server(this.httpServer, {
-            cors: {
-                origin: '*'
-            }
+            cors: { origin: '*' }
         });
 
         this.server.on('connection', this.handleConnection.bind(this));
@@ -32,9 +29,8 @@ export default class SocketIO extends WebSocket {
 
         let connection = new Connection(
             Utils.createInstance(Modules.EntityType.Player),
-            this.type,
             remoteAddress,
-            socket as AnySocket,
+            socket,
             this.socketHandler
         );
 
