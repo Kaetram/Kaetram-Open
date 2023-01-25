@@ -3,6 +3,7 @@ import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
+import Arrows from './equipment/impl/arrows';
 
 import Item from '../../objects/item';
 
@@ -22,6 +23,7 @@ export default class Equipments {
     private pendant: Pendant = new Pendant();
     private ring: Ring = new Ring();
     private weapon: Weapon = new Weapon();
+    private arrows: Arrows = new Arrows();
 
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
@@ -30,7 +32,8 @@ export default class Equipments {
         this.boots,
         this.pendant,
         this.ring,
-        this.weapon
+        this.weapon,
+        this.arrows
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -72,7 +75,10 @@ export default class Equipments {
      */
 
     public equip(item: Item): void {
-        if (!item) return log.warning('Tried to equip something mysterious.');
+        if (!item)
+            return log.warning(
+                `[${this.player.username}] Attempted to equip something mysterious.`
+            );
 
         let type = item.getEquipmentType(),
             equipment = this.getEquipment(type);
