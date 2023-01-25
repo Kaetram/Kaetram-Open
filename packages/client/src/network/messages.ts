@@ -219,7 +219,9 @@ export default class Messages {
             }
 
             case 'invalidinput': {
-                this.app.sendError('The input you have provided is invalid.');
+                this.app.sendError(
+                    'The input you have entered is invalid. Please do not use special characters.'
+                );
                 break;
             }
 
