@@ -7,6 +7,7 @@ import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
 import type Projectile from './objects/projectile';
+import type Mob from './character/mob/mob';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -202,7 +203,7 @@ abstract class Entity {
      * @returns Whether the type is equal to the EntityType mob.
      */
 
-    public isMob(): boolean {
+    public isMob(): this is Mob {
         return this.type === Modules.EntityType.Mob;
     }
 
