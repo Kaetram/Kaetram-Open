@@ -10,6 +10,9 @@ export default class Connection {
     private messageCallback?: MessageCallback;
     private closeCallback?: () => void;
 
+    private disconnectTimeout: NodeJS.Timeout | null = null;
+    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+
     public constructor(
         public id: string,
         public address: string,
@@ -24,11 +27,12 @@ export default class Connection {
      * Sends a UTF8 message to the client for closing the connection,
      * then closes the connection (duh).
      * @param reason UTF8 reason for why the connection was closed.
+     * @param withCallback Whether or not to call the close callback.
      */
 
-    public reject(reason: string): void {
+    public reject(reason: string, withCallback = false): void {
         this.sendUTF8(reason);
-        this.close(reason);
+        this.close(reason, withCallback);
     }
 
     /**
@@ -55,7 +59,7 @@ export default class Connection {
     private handleMessage(message: string): void {
         try {
             this.messageCallback?.(JSON.parse(message));
-        } catch (error: unknown) {
+        } catch (error) {
             log.error(`Message could not be parsed: ${message}.`);
             log.error(error);
         }
@@ -71,6 +75,33 @@ export default class Connection {
         this.socketHandler.remove(this.id);
 
         this.closeCallback?.();
+
+        this.clearTimeout();
+    }
+
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
+     */
+
+    public refreshTimeout(duration = this.timeoutDuration): void {
+        // Clear the existing timeout and start over.
+        this.clearTimeout();
+
+        // Start a new timeout and set the player's timeout variable.
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout', true), duration);
+    }
+
+    /**
+     * Clears the existing disconnect timeout.
+     */
+
+    private clearTimeout(): void {
+        if (!this.disconnectTimeout) return;
+
+        clearTimeout(this.disconnectTimeout);
+        this.disconnectTimeout = null;
     }
 
     /**
