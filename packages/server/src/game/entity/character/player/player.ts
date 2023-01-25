@@ -1244,6 +1244,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether the player has the cheater rank.
+     */
+
+    public isCheater(): boolean {
+        return this.rank === Modules.Ranks.Cheater;
+    }
+
+    /**
      * @returns Whether the player's rank is artist.
      */
 
