@@ -105,5 +105,19 @@
             "- Combat formula and defense stats of mobs updated",
             "- Support for multiple game worlds now completed"
         ]
+    },
+    "alpha-2.3.4": {
+        "title": "Kaetram alpha-2.3.4",
+        "content": [
+            "- Added arrows to archery",
+            "- Added boots",
+            "- Added following functionality",
+            "- Right-click interaction with mobs and items",
+            "- Zooming now available on mobile",
+            "- Fixes player stuck online bug",
+            "- Fixes bug where items would disappear when unequipping",
+            "- Fixes and improvements to the user interface",
+            "- Fixes WASD interaction with NPCs/mobs"    
+        ]
     }
 }
