@@ -220,11 +220,9 @@ export default class Handler {
                 return this.player.notify('You are low on mana, your attacks will be weaker.');
 
             this.player.mana.decrement(manaCost);
-
-            return;
         }
 
-        if (this.player.isRanged()) {
+        if (this.player.isArcher()) {
             if (!this.player.hasArrows())
                 return this.player.notify('You do not have any arrows to shoot.');
 

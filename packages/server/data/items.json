@@ -809,7 +809,7 @@
   },
 
   "staff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Magic Staff",
     "price": 1500,
     "manaCost": 2,
@@ -831,7 +831,7 @@
   },
 
   "lightningstaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Lightning Staff",
     "skill": "magic",
     "price": 25000,
@@ -855,7 +855,7 @@
   },
 
   "naturestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Nature Staff",
     "skill": "magic",
     "price": 45000,
@@ -879,7 +879,7 @@
   },
 
   "firestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Fire Staff",
     "skill": "magic",
     "price": 75000,
@@ -903,7 +903,7 @@
   },
 
   "icestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Ice Staff",
     "skill": "magic",
     "price": 420069,

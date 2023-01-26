@@ -700,7 +700,7 @@ export default class Player extends Character {
             return this.skills.get(Modules.Skills.Magic).addExperience(experience);
 
         // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (this.isRanged())
+        if (weapon.isArcher())
             return this.skills.get(Modules.Skills.Archery).addExperience(experience);
 
         /**
@@ -1307,6 +1307,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player is using archery-based weapons.
+     */
+
+    public isArcher(): boolean {
+        return this.equipment.getWeapon().isArcher();
+    }
+
+    /**
      * Players obtain their poisoning abilities from their weapon. Certain
      * weapons may be imbued with a poison effect. This checks if that status
      * is active.
@@ -1687,7 +1695,7 @@ export default class Player extends Character {
         }
 
         // Return the archery bonus if using ranged weapons.
-        if (this.isRanged()) return this.getBonuses().archery;
+        if (this.isArcher()) return this.getBonuses().archery;
 
         return this.getBonuses().strength;
     }
@@ -1699,8 +1707,8 @@ export default class Player extends Character {
      */
 
     public override getSkillDamageLevel(): number {
-        if (this.equipment.getWeapon().isMagic()) return this.getMagicLevel();
-        if (this.isRanged()) return this.getArcheryLevel();
+        if (this.isMagic()) return this.getMagicLevel();
+        if (this.isArcher()) return this.getArcheryLevel();
 
         return this.getStrengthLevel();
     }
@@ -1725,11 +1733,11 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
-        // Use `Character` default projectile nmame in tutorial.
+        // Use `Character` default `projectileName` in tutorial.
         if (!this.quests.isTutorialFinished()) return this.projectileName;
 
         // Use the projectile name of the arrows if the player is using ranged weapons.
-        if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
+        if (this.isArcher()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
     }

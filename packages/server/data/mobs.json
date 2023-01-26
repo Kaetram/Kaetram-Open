@@ -39,7 +39,7 @@
     "description": "I wonder if I can eat this.",
     "hitPoints": 15,
     "defenseLevel": 1,
-    "attackLevel": 2,
+    "attackLevel": 1,
     "experience": 52,
     "level": 1,
     "aggroRange": 1,
