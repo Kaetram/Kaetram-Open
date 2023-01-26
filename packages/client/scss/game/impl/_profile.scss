@@ -325,6 +325,22 @@
             background-position: -112px * $i 1px;
         }
 
+        .ability-icon-run,
+        .ability-icon-awareness,
+        .ability-icon-dualistsmark,
+        .ability-icon-hotshot,
+        .ability-icon-thickskin,
+        .ability-icon-precognition,
+        .ability-icon-secretcalling {
+            &:hover {
+                background-position-y: -15px * $i;
+            }
+
+            &:active, &.active {
+                background-position-y: -30px * $i;
+            }
+        }
+
         .ability-level {
             position: absolute;
 

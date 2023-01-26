@@ -962,8 +962,6 @@ export default class Player extends Character {
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
 
-        console.log(this.movementSpeed);
-
         return speed;
     }
 
