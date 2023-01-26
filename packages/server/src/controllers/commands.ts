@@ -133,29 +133,39 @@ export default class Commands {
             case 'mute':
             case 'ban': {
                 let duration = parseInt(blocks.shift()!),
-                    targetName = blocks.join(' '),
-                    user: Player = this.world.getPlayerByName(targetName);
+                    targetName = blocks.join(' ');
+
+                if (!duration || !targetName)
+                    return this.player.notify(
+                        'Malformed command, expected /ban(mute) [duration] [username]'
+                    );
+
+                let user: Player = this.world.getPlayerByName(targetName);
 
                 if (!user)
-                    return this.player.notify(`Could not find player with name: ${targetName}`);
+                    return this.player.notify(`Could not find player with name: ${targetName}.`);
 
-                if (!duration) duration = 24;
-
-                if (command === 'mute' && duration > 168) duration = 168;
-                if (command === 'ban' && duration > 72) duration = 72;
+                // Moderators can only mute/ban people within certain limits.
+                if (this.player.isMod()) {
+                    if (command === 'mute' && duration > 168) duration = 168;
+                    if (command === 'ban' && duration > 72) duration = 72;
+                }
 
                 let timeFrame = Date.now() + duration * 60 * 60;
 
-                if (command === 'mute') user.mute = timeFrame;
-                else if (command === 'ban') {
-                    user.ban = timeFrame;
+                if (command === 'mute') {
+                    user.mute = timeFrame;
                     user.save();
+
+                    this.player.notify(`${user.username} has been muted for ${duration} hours.`);
+                } else if (command === 'ban') {
+                    user.ban = timeFrame;
 
                     user.connection.sendUTF8('ban');
                     user.connection.close('banned');
-                }
 
-                user.save();
+                    this.player.notify(`${user.username} has been banned for ${duration} hours.`);
+                }
 
                 return;
             }
@@ -551,7 +561,7 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                if (entity.isMob()) (entity as Mob).move(x, y);
+                if (entity.isMob()) entity.move(x, y);
 
                 break;
             }
@@ -696,7 +706,7 @@ export default class Commands {
                 region.forEachEntity((entity: Entity) => {
                     if (!entity.isMob()) return;
 
-                    (entity as Mob).roamingCallback?.();
+                    entity.roamingCallback?.();
                 });
 
                 break;
