@@ -36,18 +36,38 @@
     }
   },
 
+  "pickaxe": {
+    "type": "weapon",
+    "name": "Pickaxe",
+    "mining": 1,
+    "level": 1,
+    "price": 10000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 0,
+      "stab": 5,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "morningstar": {
     "type": "weapon",
     "name": "Morning Star",
     "level": 6,
     "attackStats": {
-      "crush": 12,
+      "crush": 14,
       "slash": 6,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 2,
       "strength": 8,
       "archery": 0,
       "magic": 0
@@ -59,14 +79,14 @@
     "name": "Water Sword",
     "level": 10,
     "attackStats": {
-      "crush": 2,
+      "crush": 4,
       "slash": 16,
-      "stab": 2,
+      "stab": 12,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 10,
-      "strength": 0,
+      "accuracy": 12,
+      "strength": 2,
       "archery": 0,
       "magic": 0
     }
@@ -77,14 +97,14 @@
     "name": "Fire Sword",
     "level": 14,
     "attackStats": {
-      "crush": 18,
-      "slash": 2,
-      "stab": 8,
+      "crush": 4,
+      "slash": 15,
+      "stab": 14,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 10,
-      "strength": 0,
+      "strength": 3,
       "archery": 0,
       "magic": 0
     }
@@ -95,14 +115,14 @@
     "name": "Golden Sword",
     "level": 22,
     "attackStats": {
-      "crush": 4,
+      "crush": 6,
       "slash": 24,
-      "stab": 8,
+      "stab": 12,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 8,
-      "strength": 4,
+      "accuracy": 13,
+      "strength": 7,
       "archery": 0,
       "magic": 0
     }
@@ -113,14 +133,14 @@
     "name": "Side Sword",
     "level": 24,
     "attackStats": {
-      "crush": 8,
+      "crush": 12,
       "slash": 24,
-      "stab": 6,
+      "stab": 8,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 12,
-      "strength": 0,
+      "accuracy": 17,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
@@ -131,9 +151,9 @@
     "name": "Silly Spear",
     "level": 28,
     "attackStats": {
-      "crush": 6,
-      "slash": 18,
-      "stab": 26,
+      "crush": 16,
+      "slash": 12,
+      "stab": 30,
       "magic": 0
     },
     "defenseStats": {
@@ -143,8 +163,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 15,
-      "strength": 2,
+      "accuracy": 19,
+      "strength": 6,
       "archery": 0,
       "magic": 0
     }
@@ -155,13 +175,13 @@
     "name": "Pirate's Scimitar",
     "level": 30,
     "attackStats": {
-      "crush": 2,
-      "slash": 30,
-      "stab": 10,
+      "crush": 6,
+      "slash": 41,
+      "stab": 12,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 12,
+      "accuracy": 18,
       "strength": 10,
       "archery": 0,
       "magic": 0
@@ -215,13 +235,13 @@
     "name": "Hammer",
     "level": 50,
     "attackStats": {
-      "crush": 32,
+      "crush": 40,
       "slash": 4,
       "stab": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 8,
       "strength": 24,
       "archery": 0,
       "magic": 0
@@ -234,13 +254,13 @@
     "level": 56,
     "attackStats": {
       "crush": 0,
-      "slash": 30,
+      "slash": 42,
       "stab": 22,
       "magic": 6
     },
     "bonuses": {
-      "accuracy": 4,
-      "strength": 0,
+      "accuracy": 8,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -252,13 +272,13 @@
     "level": 57,
     "attackStats": {
       "crush": 0,
-      "slash": 30,
-      "stab": 18,
+      "slash": 40,
+      "stab": 26,
       "magic": 4
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 0,
+      "accuracy": 12,
+      "strength": 12,
       "archery": 0,
       "magic": 0
     }
@@ -276,7 +296,7 @@
     },
     "bonuses": {
       "accuracy": 4,
-      "strength": 0,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
@@ -285,17 +305,18 @@
   "bastardsword": {
     "type": "weapon",
     "name": "Heavy Sword",
+    "attackRate": 1350,
     "skill": "strength",
     "level": 40,
     "attackStats": {
-      "crush": 24,
-      "slash": 34,
+      "crush": 35,
+      "slash": 50,
       "stab": 6,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 28,
+      "accuracy": 6,
+      "strength": 30,
       "archery": 0,
       "magic": 0
     }
@@ -304,17 +325,18 @@
   "redmetalsword": {
     "type": "weapon",
     "name": "Red Metal Sword",
+    "attackRate": 1450,
     "skill": "strength",
     "level": 42,
     "attackStats": {
-      "crush": 18,
-      "slash": 38,
+      "crush": 28,
+      "slash": 60,
       "stab": 4,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 32,
+      "strength": 34,
       "archery": 0,
       "magic": 0
     }
@@ -399,14 +421,14 @@
     "skill": "accuracy",
     "level": 60,
     "attackStats": {
-      "crush": 8,
-      "slash": 36,
+      "crush": 14,
+      "slash": 68,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 24,
-      "strength": 6,
+      "strength": 12,
       "archery": 0,
       "magic": 0
     }
@@ -746,6 +768,8 @@
   "staff": {
     "type": "weapon",
     "name": "Magic Staff",
+    "price": 1500,
+    "manaCost": 2,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -753,7 +777,7 @@
       "magic": 12
     },
     "bonuses": {
-      "accuracy": 1,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0,
       "magic": 5
@@ -766,6 +790,8 @@
     "type": "weapon",
     "name": "Lightning Staff",
     "skill": "magic",
+    "price": 25000,
+    "manaCost": 4,
     "level": 10,
     "attackStats": {
       "crush": 2,
@@ -774,10 +800,10 @@
       "magic": 18
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 5,
       "strength": 0,
       "archery": 0,
-      "magic": 7
+      "magic": 12
     },
     "attackRange": 9,
     "projectileName": "projectile-yellowlightning"
@@ -787,6 +813,8 @@
     "type": "weapon",
     "name": "Nature Staff",
     "skill": "magic",
+    "price": 45000,
+    "manaCost": 6,
     "level": 17,
     "attackStats": {
       "crush": 2,
@@ -795,10 +823,10 @@
       "magic": 18
     },
     "bonuses": {
-      "accuracy": 3,
+      "accuracy": 9,
       "strength": 0,
       "archery": 0,
-      "magic": 10
+      "magic": 18
     },
     "attackRange": 9,
     "projectileName": "projectile-greenbolt"
@@ -808,6 +836,8 @@
     "type": "weapon",
     "name": "Fire Staff",
     "skill": "magic",
+    "price": 75000,
+    "manaCost": 7,
     "level": 25,
     "attackStats": {
       "crush": 2,
@@ -816,10 +846,10 @@
       "magic": 24
     },
     "bonuses": {
-      "accuracy": 20,
+      "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 13
+      "magic": 26
     },
     "attackRange": 9,
     "projectileName": "projectile-fireball"
@@ -829,6 +859,8 @@
     "type": "weapon",
     "name": "Ice Staff",
     "skill": "magic",
+    "price": 420069,
+    "manaCost": 9,
     "level": 35,
     "attackStats": {
       "crush": 2,
@@ -837,10 +869,10 @@
       "magic": 30
     },
     "bonuses": {
-      "accuracy": 20,
+      "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 18
+      "magic": 40
     },
     "attackRange": 9,
     "projectileName": "projectile-iceball"
@@ -890,7 +922,7 @@
     "price": 5000,
     "lumberjacking": 2,
     "level": 5,
-    "skill": "lumberjacking",
+    "skill": "strength",
     "attackStats": {
       "crush": 4,
       "slash": 4,
@@ -910,6 +942,8 @@
     "name": "Fire Axe",
     "price": 7500,
     "lumberjacking": 3,
+    "skill": "strength",
+    "level": 16,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -930,15 +964,17 @@
     "price": 10000,
     "poisonous": true,
     "lumberjacking": 4,
+    "skill": "strength",
+    "level": 24,
     "attackStats": {
       "crush": 4,
-      "slash": 12,
+      "slash": 24,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
+      "accuracy": 12,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
@@ -949,15 +985,17 @@
     "name": "Cactus Axe",
     "price": 15000,
     "lumberjacking": 6,
+    "skill": "strength",
+    "level": 36,
     "attackStats": {
-      "crush": 4,
-      "slash": 17,
+      "crush": 8,
+      "slash": 31,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
+      "accuracy": 16,
+      "strength": 5,
       "archery": 0,
       "magic": 0
     }
@@ -968,16 +1006,17 @@
     "name": "Gold Axe",
     "price": 25000,
     "lumberjacking": 7,
-    "level": 68,
+    "skill": "strength",
+    "level": 44,
     "attackStats": {
-      "crush": 12,
+      "crush": 24,
       "slash": 32,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 12,
+      "accuracy": 9,
+      "strength": 18,
       "archery": 0,
       "magic": 0
     }
@@ -988,15 +1027,17 @@
     "name": "Carnelian Axe",
     "price": 50000,
     "lumberjacking": 8,
+    "skill": "strength",
+    "level": 56,
     "attackStats": {
-      "crush": 4,
-      "slash": 2,
+      "crush": 30,
+      "slash": 45,
       "stab": 2,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
+      "accuracy": 12,
+      "strength": 24,
       "archery": 0,
       "magic": 0
     }
@@ -1085,13 +1126,13 @@
 
   "pendant1": {
     "type": "pendant",
-    "name": "Emerald Pendant",
+    "name": "Pendant",
     "price": 5000,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
-      "magic": 2
+      "magic": 6
     },
     "defenseStats": {
       "crush": 5,
@@ -1103,7 +1144,7 @@
       "accuracy": 2,
       "strength": 2,
       "archery": 2,
-      "magic": 0
+      "magic": 3
     }
   },
 
@@ -1112,22 +1153,22 @@
     "name": "Jade Pendant",
     "price": 5000,
     "attackStats": {
-      "crush": 12,
+      "crush": 11,
       "slash": 12,
-      "stab": 12,
-      "magic": 4
+      "stab": 10,
+      "magic": 7
     },
     "defenseStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
-      "magic": 6
+      "magic": 4
     },
     "bonuses": {
       "accuracy": 4,
       "strength": 4,
       "archery": 3,
-      "magic": 0
+      "magic": 4
     }
   },
 
@@ -1139,7 +1180,7 @@
       "crush": 16,
       "slash": 16,
       "stab": 16,
-      "magic": 6
+      "magic": 8
     },
     "defenseStats": {
       "crush": 15,
@@ -1151,7 +1192,7 @@
       "accuracy": 6,
       "strength": 8,
       "archery": 4,
-      "magic": 0
+      "magic": 6
     }
   },
 
@@ -1163,7 +1204,7 @@
       "crush": 18,
       "slash": 28,
       "stab": 18,
-      "magic": 8
+      "magic": 12
     },
     "defenseStats": {
       "crush": 20,
@@ -1175,7 +1216,55 @@
       "accuracy": 6,
       "strength": 12,
       "archery": 6,
-      "magic": 0
+      "magic": 10
+    }
+  },
+
+  "rubypendant": {
+    "type": "pendant",
+    "name": "Ruby Pendant",
+    "price": 5000,
+    "attackStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "magic": 7
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 4,
+      "magic": 14
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 4
+    }
+  },
+
+  "emeraldpendant": {
+    "type": "pendant",
+    "name": "Emerald Pendant",
+    "price": 5000,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 3,
+      "stab": 7,
+      "magic": 23
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 6
     }
   },
 
@@ -1211,7 +1300,7 @@
       "accuracy": 2,
       "strength": 2,
       "archery": 2,
-      "magic": 0
+      "magic": 2
     }
   },
 
@@ -1235,7 +1324,7 @@
       "accuracy": 4,
       "strength": 8,
       "archery": 3,
-      "magic": 0
+      "magic": 3
     }
   },
 
@@ -1259,7 +1348,7 @@
       "accuracy": 6,
       "strength": 8,
       "archery": 4,
-      "magic": 0
+      "magic": 5
     }
   },
 
@@ -1283,7 +1372,7 @@
       "accuracy": 8,
       "strength": 10,
       "archery": 6,
-      "magic": 0
+      "magic": 8
     }
   },
 
@@ -1307,7 +1396,7 @@
       "accuracy": 6,
       "strength": 4,
       "archery": 16,
-      "magic": 0
+      "magic": 12
     }
   },
 
@@ -1330,7 +1419,189 @@
     "bonuses": {
       "accuracy": 8,
       "strength": 14,
-      "archery": 16,
+      "archery": 12,
+      "magic": 12
+    }
+  },
+
+  "rubyring": {
+    "type": "ring",
+    "name": "Ruby Ring",
+    "skill": "magic",
+    "level": 10,
+    "price": 5000,
+    "attackStats": {
+      "crush": 6,
+      "slash": 6,
+      "stab": 6,
+      "magic": 18
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 4,
+      "stab": 8,
+      "magic": 22
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 8
+    }
+  },
+
+  "sapphirering": {
+    "type": "ring",
+    "name": "Sapphire Ring",
+    "skill": "magic",
+    "level": 20,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 22
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 22
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 11
+    }
+  },
+
+  "emeraldring": {
+    "type": "ring",
+    "name": "Emerald Ring",
+    "skill": "magic",
+    "level": 30,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 6
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 33
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 8
+    }
+  },
+
+  "dolring": {
+    "type": "ring",
+    "name": "Fragmented Ring",
+    "skill": "magic",
+    "level": 40,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 10
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 18
+    }
+  },
+
+  "diamondring": {
+    "type": "ring",
+    "name": "Diamond Ring",
+    "skill": "magic",
+    "level": 50,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 17
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 7,
+      "stab": 11,
+      "magic": 33
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 2,
+      "magic": 14
+    }
+  },
+
+  "pytharring": {
+    "type": "ring",
+    "name": "Pythar Ring",
+    "skill": "strength",
+    "level": 50,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 7,
+      "stab": 5,
+      "magic": 7
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 16,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "nisocring": {
+    "type": "ring",
+    "name": "Nisoc Ring",
+    "skill": "accuracy",
+    "level": 41,
+    "price": 5000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 7,
+      "stab": 5,
+      "magic": 7
+    },
+    "bonuses": {
+      "accuracy": 16,
+      "strength": 0,
+      "archery": 0,
       "magic": 0
     }
   },
@@ -2092,15 +2363,15 @@
     "skill": "archery",
     "level": 1,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 8,
+      "crush": 5,
+      "slash": 4,
+      "stab": 10,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 2,
       "strength": 1,
-      "archery": 3,
+      "archery": 4,
       "magic": 0
     }
   },
@@ -2111,15 +2382,15 @@
     "skill": "archery",
     "level": 3,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 12,
+      "crush": 4,
+      "slash": 6,
+      "stab": 16,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 4,
-      "strength": 2,
-      "archery": 5,
+      "strength": 0,
+      "archery": 7,
       "magic": 0
     }
   },
@@ -2130,15 +2401,15 @@
     "skill": "archery",
     "level": 7,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 14,
+      "crush": 3,
+      "slash": 4,
+      "stab": 21,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 6,
-      "strength": 3,
-      "archery": 7,
+      "strength": 0,
+      "archery": 12,
       "magic": 0
     }
   },
@@ -2151,13 +2422,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 18,
+      "stab": 25,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 3,
-      "strength": 5,
-      "archery": 9,
+      "strength": 0,
+      "archery": 15,
       "magic": 0
     }
   },
@@ -2169,14 +2440,14 @@
     "level": 14,
     "attackStats": {
       "crush": 2,
-      "slash": 3,
-      "stab": 21,
+      "slash": 4,
+      "stab": 31,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 5,
-      "strength": 2,
-      "archery": 11,
+      "strength": 0,
+      "archery": 19,
       "magic": 0
     }
   },
@@ -2187,15 +2458,15 @@
     "skill": "archery",
     "level": 18,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 23,
+      "crush": 5,
+      "slash": 4,
+      "stab": 38,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 5,
-      "strength": 3,
-      "archery": 15,
+      "strength": 0,
+      "archery": 22,
       "magic": 0
     }
   },
@@ -2208,13 +2479,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 26,
+      "stab": 45,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 1,
-      "strength": 1,
-      "archery": 12,
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 25,
       "magic": 0
     }
   },
@@ -2227,13 +2498,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 28,
+      "stab": 41,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
-      "archery": 14,
+      "accuracy": 12,
+      "strength": 0,
+      "archery": 27,
       "magic": 0
     }
   },
@@ -2246,13 +2517,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 31,
+      "stab": 37,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 4,
-      "strength": 2,
-      "archery": 15,
+      "accuracy": 14,
+      "strength": 0,
+      "archery": 26,
       "magic": 0
     }
   },
@@ -2263,15 +2534,15 @@
     "skill": "archery",
     "level": 33,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
+      "crush": 4,
+      "slash": 8,
       "stab": 34,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 1,
-      "strength": 4,
-      "archery": 21,
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 23,
       "magic": 0
     }
   },
@@ -2282,15 +2553,15 @@
     "skill": "archery",
     "level": 35,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 28,
+      "crush": 4,
+      "slash": 9,
+      "stab": 35,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
+      "accuracy": 10,
       "strength": 2,
-      "archery": 17,
+      "archery": 34,
       "magic": 0
     }
   },
@@ -2303,13 +2574,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 30,
+      "stab": 33,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 5,
-      "archery": 19,
+      "accuracy": 15,
+      "strength": 0,
+      "archery": 30,
       "magic": 0
     }
   },
@@ -2320,15 +2591,15 @@
     "skill": "archery",
     "level": 37,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 36,
+      "crush": 4,
+      "slash": 7,
+      "stab": 40,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 7,
-      "archery": 20,
+      "accuracy": 20,
+      "strength": 0,
+      "archery": 25,
       "magic": 0
     }
   },
@@ -2345,8 +2616,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 5,
+      "accuracy": 12,
+      "strength": 0,
       "archery": 24,
       "magic": 0
     }
@@ -2360,13 +2631,13 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 40,
+      "stab": 43,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 7,
-      "strength": 5,
-      "archery": 25,
+      "accuracy": 27,
+      "strength": 0,
+      "archery": 35,
       "magic": 0
     }
   },
@@ -2377,13 +2648,13 @@
     "skill": "archery",
     "level": 41,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 41,
+      "crush": 6,
+      "slash": 4,
+      "stab": 52,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 35,
       "strength": 0,
       "archery": 30,
       "magic": 0
@@ -2396,15 +2667,15 @@
     "skill": "archery",
     "level": 44,
     "attackStats": {
-      "crush": 2,
-      "slash": 3,
-      "stab": 45,
+      "crush": 4,
+      "slash": 7,
+      "stab": 55,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 5,
-      "archery": 24,
+      "accuracy": 30,
+      "strength": 0,
+      "archery": 30,
       "magic": 0
     }
   },
@@ -2412,18 +2683,19 @@
   "redmetalbow": {
     "type": "weaponarcher",
     "name": "Red Metal Bow",
+    "attackRate": 1500,
     "skill": "archery",
     "level": 45,
     "attackStats": {
-      "crush": 2,
-      "slash": 6,
-      "stab": 41,
+      "crush": 10,
+      "slash": 4,
+      "stab": 68,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 5,
-      "archery": 28,
+      "accuracy": 40,
+      "strength": 0,
+      "archery": 40,
       "magic": 0
     }
   },
@@ -2436,12 +2708,12 @@
     "attackStats": {
       "crush": 2,
       "slash": 6,
-      "stab": 50,
+      "stab": 55,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
+      "accuracy": 28,
+      "strength": 0,
       "archery": 33,
       "magic": 0
     }
@@ -2453,14 +2725,14 @@
     "skill": "archery",
     "level": 50,
     "attackStats": {
-      "crush": 2,
+      "crush": 10,
       "slash": 6,
       "stab": 55,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 2,
+      "accuracy": 30,
+      "strength": 0,
       "archery": 38,
       "magic": 0
     }
@@ -2472,14 +2744,14 @@
     "skill": "archery",
     "level": 52,
     "attackStats": {
-      "crush": 2,
-      "slash": 6,
+      "crush": 0,
+      "slash": 0,
       "stab": 48,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
+      "accuracy": 25,
+      "strength": 0,
       "archery": 35,
       "magic": 0
     }
@@ -2498,7 +2770,7 @@
     },
     "bonuses": {
       "accuracy": 3,
-      "strength": 8,
+      "strength": 0,
       "archery": 38,
       "magic": 0
     }
@@ -2517,7 +2789,7 @@
     },
     "bonuses": {
       "accuracy": 3,
-      "strength": 8,
+      "strength": 0,
       "archery": 40,
       "magic": 0
     }
@@ -2529,14 +2801,14 @@
     "skill": "archery",
     "level": 55,
     "attackStats": {
-      "crush": 2,
+      "crush": 10,
       "slash": 4,
-      "stab": 64,
+      "stab": 70,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
+      "accuracy": 25,
+      "strength": 0,
       "archery": 44,
       "magic": 0
     }
@@ -2548,15 +2820,15 @@
     "skill": "archery",
     "level": 56,
     "attackStats": {
-      "crush": 2,
-      "slash": 4,
-      "stab": 68,
+      "crush": 10,
+      "slash": 8,
+      "stab": 75,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
-      "archery": 48,
+      "accuracy": 27,
+      "strength": 0,
+      "archery": 50,
       "magic": 0
     }
   },
@@ -2573,8 +2845,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
+      "accuracy": 33,
+      "strength": 0,
       "archery": 50,
       "magic": 0
     }
@@ -2588,12 +2860,12 @@
     "attackStats": {
       "crush": 2,
       "slash": 4,
-      "stab": 70,
+      "stab": 85,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
-      "strength": 8,
+      "accuracy": 37,
+      "strength": 0,
       "archery": 55,
       "magic": 0
     }
@@ -3110,22 +3382,22 @@
     "price": 5000,
     "level": 80,
     "attackStats": {
-      "crush": 13,
-      "slash": 46,
-      "stab": 15,
-      "magic": 2
+      "crush": 11,
+      "slash": 38,
+      "stab": 13,
+      "magic": -5
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
-      "magic": 10
+      "magic": -10
     },
     "bonuses": {
-      "accuracy": 13,
-      "strength": 28,
+      "accuracy": 20,
+      "strength": 14,
       "archery": -10,
-      "magic": 0
+      "magic": -10
     }
   },
 
@@ -3138,19 +3410,19 @@
       "crush": 13,
       "slash": 48,
       "stab": 15,
-      "magic": 2
+      "magic": -8
     },
     "defenseStats": {
       "crush": 34,
       "slash": 42,
       "stab": 20,
-      "magic": 8
+      "magic": -4
     },
     "bonuses": {
       "accuracy": 10,
       "strength": 28,
       "archery": -10,
-      "magic": 0
+      "magic": -4
     }
   },
 
@@ -3308,24 +3580,25 @@
     "type": "armour",
     "name": "Adherer Robe",
     "price": 20000,
-    "level": 126,
+    "skill": "magic",
+    "level": 38,
     "attackStats": {
-      "crush": 68,
-      "slash": 56,
-      "stab": 62,
-      "magic": 42
+      "crush": 32,
+      "slash": 20,
+      "stab": 28,
+      "magic": 40
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
-      "magic": 60
+      "magic": 65
     },
     "bonuses": {
-      "accuracy": 20,
-      "strength": 20,
+      "accuracy": 7,
+      "strength": 10,
       "archery": -4,
-      "magic": 0
+      "magic": 18
     }
   },
 
@@ -3408,7 +3681,7 @@
     "type": "armour",
     "name": "Rabbit Armour",
     "price": 20000,
-    "movementSpeed": 210,
+    "movementModifier": 0.95,
     "level": 88,
     "attackStats": {
       "crush": 15,
@@ -3442,7 +3715,7 @@
     "price": 20000
   },
 
-  "peadragonarmor": {
+  "seadragonarmor": {
     "type": "armour",
     "name": "Sea Dragon Armour",
     "price": 20000
@@ -3510,9 +3783,27 @@
     "name": "Pink Cockroach Armour"
   },
 
-  "cockroachSuit": {
+  "cockroachsuit": {
     "type": "armour",
-    "name": "Cockroach Suit"
+    "name": "Cockroach Suit",
+    "attackStats": {
+      "crush": 5,
+      "slash": 6,
+      "stab": 7,
+      "magic": 3
+    },
+    "defenseStats": {
+      "crush": 68,
+      "slash": 55,
+      "stab": 60,
+      "magic": 45
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 3,
+      "archery": -10,
+      "magic": -10
+    }
   },
 
   "dinosaurarmor": {
@@ -3547,14 +3838,132 @@
 
   "wizardrobe": {
     "type": "armour",
-    "name": "Wizard Robe"
+    "name": "Wizard Robe",
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 14
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": -1,
+      "magic": 4
+    }
+  },
+
+  "orangewizardrobe": {
+    "type": "armour",
+    "name": "Lightning Robe",
+    "skill": "magic",
+    "level": 12,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 21
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": -1,
+      "magic": 7
+    }
+  },
+
+  "greenwizardrobe": {
+    "type": "armour",
+    "name": "Nature Robe",
+    "skill": "magic",
+    "level": 21,
+    "attackStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "magic": 28
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 1,
+      "stab": 0,
+      "magic": 21
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 0,
+      "archery": -4,
+      "magic": 9
+    }
+  },
+
+  "darkwizardrobe": {
+    "type": "armour",
+    "name": "Dark Robe",
+    "skill": "magic",
+    "level": 30,
+    "attackStats": {
+      "crush": 6,
+      "slash": 10,
+      "stab": 8,
+      "magic": 36
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 3,
+      "stab": 3,
+      "magic": 28
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 3,
+      "archery": -6,
+      "magic": 13
+    }
+  },
+
+  "bluewizardrobe": {
+    "type": "armour",
+    "name": "Ice Robe",
+    "skill": "magic",
+    "level": 40,
+    "attackStats": {
+      "crush": 8,
+      "slash": 12,
+      "stab": 11,
+      "magic": 45
+    },
+    "defenseStats": {
+      "crush": -4,
+      "slash": -8,
+      "stab": -1,
+      "magic": 37
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 5,
+      "archery": -7,
+      "magic": 20
+    }
   },
 
   "ironknightarmor": {
     "type": "armour",
     "name": "Iron Knight Armour",
     "level": 160,
-    "price": 20000,
+    "price": 10000,
     "attackStats": {
       "crush": 38,
       "slash": 56,
@@ -3603,7 +4012,7 @@
   "blackspiderarmor": {
     "type": "armour",
     "name": "Black Spider Armour",
-    "price": 25000,
+    "price": 15000,
     "level": 54,
     "attackStats": {
       "crush": 20,
@@ -3696,7 +4105,8 @@
 
   "flask": {
     "type": "object",
-    "name": "Flask [+100 HP]",
+    "name": "Flask",
+    "description": "A flask used to increment your health from one point to another. How much does it increment it by? +100 HP!",
     "storeCount": 10,
     "price": 40,
     "stackable": true,
@@ -3709,6 +4119,7 @@
   "cure": {
     "type": "object",
     "name": "Antidote",
+    "description": "Are you poisoned? Have you been involved in a fight with a poisonous snake? Well this is the cure for you!",
     "storeCount": 10,
     "price": 150,
     "stackable": false,
@@ -3718,7 +4129,8 @@
 
   "manaflask": {
     "type": "object",
-    "name": "Mana Flask [+35 MP]",
+    "name": "Mana Flask",
+    "description": "A refreshing drink for those a little bit low on mana! +35 MP!",
     "storeCount": 10,
     "price": 200,
     "stackable": true,
@@ -3730,7 +4142,8 @@
 
   "burger": {
     "type": "object",
-    "name": "Burger [+200 HP]",
+    "name": "Burger",
+    "description": "How did a burger make its way into a fantasy world? Who knows, but it's delicious! +200 HP!",
     "storeCount": 10,
     "price": 350,
     "stackable": true,
@@ -3742,43 +4155,62 @@
 
   "bigflask": {
     "type": "object",
-    "name": "Big Flask [+350 HP]",
+    "name": "Big Flask",
+    "description": "It's like the other flask, except it's bigger, so obviously it must heal more! +250 HP!",
     "storeCount": 10,
     "price": 600,
     "stackable": true,
     "edible": true,
     "maxStackSize": 2,
     "plugin": "healthflask",
-    "healAmount": 500
+    "healAmount": 250
+  },
+
+  "bigmanaflask": {
+    "type": "object",
+    "name": "Big Mana Flask",
+    "description": "For those seriously thirsty for some mana! +95 MP!",
+    "storeCount": 10,
+    "price": 600,
+    "stackable": true,
+    "edible": true,
+    "maxStackSize": 2,
+    "plugin": "healthflask",
+    "manaAmount": 95
   },
 
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
-    "stackable": true
+    "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
+    "edible": true
   },
 
   "cake": {
     "type": "object",
-    "name": "Cake [Quest]"
+    "name": "Cake [Quest]",
+    "undroppable": true
   },
 
   "book": {
     "type": "object",
-    "name": "Book [Quest]"
+    "name": "Book [Quest]",
+    "undroppable": true
   },
 
   "cd": {
     "type": "object",
     "name": "CD [Quest]",
+    "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
     "undroppable": true
   },
 
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
+    "description": "A magical potion received by some weird monument. It temporarily prevents the player from taking damage from the cold.",
     "stackable": true,
-    "respawnDelay": 90000
+    "respawnDelay": 120000
   },
 
   "royalazalea": {
@@ -3788,7 +4220,10 @@
 
   "blackpotion": {
     "type": "object",
-    "name": "Black Potion"
+    "name": "Black Potion",
+    "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
+    "plugin": "blackpotion",
+    "edible": true
   },
 
   "gold": {
@@ -3796,21 +4231,6 @@
     "name": "Gold",
     "stackable": true,
     "description": "A very useful shiny metal that for some reason people like to exchange for goods."
-  },
-
-  "mountseadragon": {
-    "type": "object",
-    "name": "Mount Sea Dragon"
-  },
-
-  "mountforestdragon": {
-    "type": "object",
-    "name": "Mount Forest Dragon"
-  },
-
-  "mountwhitetiger": {
-    "type": "object",
-    "name": "Mount White Tiger"
   },
 
   "leafcommon": {
@@ -4067,28 +4487,44 @@
 
   "sword1": {
     "type": "weapon",
-    "name": "Sword",
-    "level": 1
+    "name": "Best In-Slot Sword",
+    "level": 1,
+    "attackStats": {
+      "crush": -69,
+      "slash": -69,
+      "stab": -69,
+      "magic": -420
+    },
+    "bonuses": {
+      "accuracy": -69,
+      "strength": -69,
+      "archery": -69,
+      "magic": -69
+    }
   },
 
   "banana": {
     "type": "object",
-    "name": "Banana"
+    "name": "Banana",
+    "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber."
   },
 
   "watermelon": {
     "type": "object",
-    "name": "Watermelon"
+    "name": "Watermelon",
+    "description": "A watermelon, I should probably cut this up before eating it."
   },
 
   "apple": {
     "type": "object",
-    "name": "Apple"
+    "name": "Apple",
+    "description": "An apple, an excellent source of energy!"
   },
 
   "orange": {
     "type": "object",
-    "name": "Orange"
+    "name": "Orange",
+    "description": "It's funny, the name of the fruit is the same as the colour and its colour."
   },
 
   "shardt1": {
@@ -4173,31 +4609,293 @@
   "logs": {
     "type": "object",
     "name": "Logs",
+    "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
     "price": 20
   },
 
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
+    "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
     "price": 25
   },
 
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
-    "price": 35
+    "price": 35,
+    "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
 
   "icepalmlogs": {
     "type": "object",
     "name": "Ice Palm Logs",
-    "price": 50
+    "price": 50,
+    "description": "These logs are made out of ice and palm wood. They're very cold to the touch."
   },
 
   "bloodwoodlogs": {
     "type": "object",
     "name": "Bloodwood Logs",
-    "price": 150
-  }
+    "price": 150,
+    "description": "It almost looks like they're bleeding."
+  },
 
+  "nisocore": {
+    "type": "object",
+    "name": "Nisoc Ore",
+    "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
+    "price": 150
+  },
+
+  "cinnabarore": {
+    "type": "object",
+    "name": "Cinnabar Ore",
+    "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
+    "price": 250
+  },
+
+  "pytharore": {
+    "type": "object",
+    "name": "Pythar Ore",
+    "description": "A purple crystal with magical properties.",
+    "price": 400
+  },
+
+  "goldore": {
+    "type": "object",
+    "name": "Gold Ore",
+    "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
+    "price": 550
+  },
+
+  "iboore": {
+    "type": "object",
+    "name": "Ibo Ore",
+    "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
+    "price": 700
+  },
+
+  "bead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A bead that emanates magical properties. Can be used in conjunction with other items to create magical items."
+  },
+
+  "lightningbead": {
+    "type": "object",
+    "name": "Lightning Bead",
+    "description": "A magical bead imbued with lightning properties. Can be used to craft magical items."
+  },
+
+  "naturebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A magical bead imbued with the power of nature. Can be used to craft magical items."
+  },
+
+  "firebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A magical bead imbued with fire. Can be used to craft magical items."
+  },
+
+  "icebead": {
+    "type": "object",
+    "name": "Magic Bead",
+    "description": "A strong magical bead perpetually frozen. Can be used to craft magical items."
+  },
+
+  "stick": {
+    "type": "object",
+    "name": "Stick",
+    "description": "A stick. It's a stick. What else do you want me to say about it?"
+  },
+
+  "leatherboots": {
+    "type": "boots",
+    "name": "Leather Boots",
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "magic": -4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "steelboots": {
+    "type": "boots",
+    "name": "Steel Boots",
+    "attackStats": {
+      "crush": 6,
+      "slash": 7,
+      "stab": 4,
+      "magic": -6
+    },
+    "defenseStats": {
+      "crush": 7,
+      "slash": 12,
+      "stab": 6,
+      "magic": -5
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "goldboots": {
+    "type": "boots",
+    "name": "Golden Boots",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "magic": 12
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 6
+    }
+  },
+
+  "swiftboots": {
+    "type": "boots",
+    "name": "Swift Boots",
+    "movementModifier": 0.95,
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 1
+    }
+  },
+
+  "lavaboots": {
+    "type": "boots",
+    "name": "Lava Boots",
+    "attackStats": {
+      "crush": 9,
+      "slash": 12,
+      "stab": 10,
+      "magic": 3
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 12,
+      "stab": 12,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 4,
+      "archery": 8,
+      "magic": 0
+    }
+  },
+
+  "arrow": {
+    "type": "arrow",
+    "name": "Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 4,
+      "magic": 0
+    },
+    "projectileName": "projectile-arrow"
+  },
+
+  "firearrow": {
+    "type": "arrow",
+    "name": "Fire Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 6,
+      "magic": 0
+    },
+    "projectileName": "projectile-firearrow"
+  },
+
+  "poisonarrow": {
+    "type": "arrow",
+    "name": "Poison Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "poisonous": true,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 8,
+      "magic": 0
+    },
+    "projectileName": "projectile-poisonarrow"
+  },
+
+  "lightningarrow": {
+    "type": "arrow",
+    "name": "Lightning Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 14,
+      "magic": 0
+    },
+    "projectileName": "projectile-lightningarrow"
+  },
+
+  "icearrow": {
+    "type": "arrow",
+    "name": "Ice Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 11,
+      "magic": 0
+    },
+    "projectileName": "projectile-icearrow"
+  }
 }

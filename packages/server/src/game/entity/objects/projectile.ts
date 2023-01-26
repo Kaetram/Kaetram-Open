@@ -1,7 +1,7 @@
+import Entity from '../entity';
+
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
-
-import Entity from '../entity';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type Character from '../character/character';
@@ -24,7 +24,7 @@ export default class Projectile extends Entity {
          * to calculate the approximate time it takes for impact to occur.
          */
 
-        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 100);
+        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 90);
     }
 
     /**

@@ -1,6 +1,6 @@
-import Utils from '@kaetram/common/util/utils';
-
 import Areas from '../areas';
+
+import Utils from '@kaetram/common/util/utils';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Character from '../../../entity/character/character';

@@ -1,7 +1,7 @@
+import Resource from './impl/resource';
+
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
-
-import Resource from './impl/resource';
 
 import type { ProcessedResource } from '@kaetram/common/types/map';
 import type Map from '../map/map';

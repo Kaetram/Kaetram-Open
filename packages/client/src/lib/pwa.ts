@@ -1,6 +1,6 @@
-import { registerSW } from 'virtual:pwa-register';
-
 import log from './log';
+
+import { registerSW } from 'virtual:pwa-register';
 
 /**
  * The `BeforeInstallPromptEvent` is fired at the `Window.onbeforeinstallprompt` handler

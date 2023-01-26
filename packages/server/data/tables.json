@@ -1,0 +1,29 @@
+{
+    "ordinary": {
+        "gold": 400,
+        "flask": 225,
+        "bigflask": 130,
+        "manaflask": 200,
+        "bigmanaflask": 100,
+        "burger": 120
+    },
+
+    "arrows": {
+        "arrow": 300,
+        "firearrow": 150,
+        "poisonarrow": 125,
+        "lightningarrow": 85,
+        "icearrow": 50
+    },
+
+    "unusual": {
+        "blackpotion": 50,
+        "shardt1": 25,
+        "logs": 25,
+        "stick": 50
+    },
+
+    "warriorcrab": {
+        "bead": 2500
+    }
+}

@@ -1,13 +1,13 @@
 import path from 'node:path';
 
+import { description, name } from '../../package.json';
+import config, { type Config } from '../common/config';
+
 import { defineConfig } from 'vite';
 import ViteLegacy from '@vitejs/plugin-legacy';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import { VitePWA } from 'vite-plugin-pwa';
 import { internalIpV4 } from 'internal-ip';
-
-import { description, name } from '../../package.json';
-import config, { type Config } from '../common/config';
 
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
@@ -34,14 +34,14 @@ function loadEnv(isProduction: boolean): ExposedConfig {
             hubHost,
             hubPort,
             host,
-            socketioPort,
+            port,
             ssl
         } = config;
 
     for (let key of expose) env[key] = config[key] as never;
 
     let clientHost = clientRemoteHost || (hubEnabled ? hubHost : host),
-        clientPort = clientRemotePort || (hubEnabled ? hubPort : socketioPort),
+        clientPort = clientRemotePort || (hubEnabled ? hubPort : port),
         hub = ssl ? `https://${clientHost}` : `http://${clientHost}:${clientPort}`;
 
     return Object.assign(env, {

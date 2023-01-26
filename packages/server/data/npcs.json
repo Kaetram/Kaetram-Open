@@ -16,6 +16,12 @@
     "store": "forester"
   },
 
+  "miner": {
+    "name": "Miner",
+    "text": ["Leave me alone, I'm busy pretending to work!"],
+    "store": "miner"
+  },
+
   "beachnpc": {
     "name": "Bubba",
     "text": [
@@ -91,7 +97,8 @@
   },
 
   "sorcerer": {
-    "name": "Sorcerer"
+    "name": "Sorcerer",
+    "store": "sorcerer"
   },
 
   "coder": {
@@ -205,7 +212,7 @@
   },
 
   "vendingmachine": {
-    "name": "Enchantment Table",
+    "name": "Enchantment Vendor",
     "role": "enchanter"
   },
 

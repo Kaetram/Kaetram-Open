@@ -1,6 +1,6 @@
-import { Opcodes, Packets } from '@kaetram/common/network';
-
 import Character from './character/character';
+
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type EntitiesController from '../controllers/entities';
 import type Game from '../game';
@@ -34,6 +34,13 @@ export default class EntityHandler {
                     return this.entity.removeAttacker(attacker);
 
                 if (!attacker.canAttackTarget()) attacker.follow(this.entity);
+            });
+
+            this.entity.forEachFollower((follower: Character) => {
+                if (!follower.target || follower.target.instance !== this.entity.instance)
+                    return this.entity.removeFollower(follower);
+
+                follower.follow(this.entity);
             });
 
             this.sendMovement();
