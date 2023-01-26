@@ -32,6 +32,7 @@ export type MapCallback = (data: string) => void;
 export interface EquipmentPacket {
     data?: SerializedEquipment | EquipmentData;
     type?: Modules.Equipment; // Specified when equipping a specific item
+    count?: number;
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;

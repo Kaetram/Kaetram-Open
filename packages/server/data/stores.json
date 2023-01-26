@@ -27,6 +27,11 @@
         "price": 550
       },
       {
+        "key": "arrow",
+        "count": 10000,
+        "price": 100
+      },
+      {
         "key": "axe",
         "count": 20,
         "price": 75
