@@ -40,7 +40,7 @@
           "And when you're not killing stuff...",
           "You'll still be killing stuff!",
           "But regardless, I won't ask you to kill stuff just yet.",
-          "Take this axe and cut down 3 trees for me."
+          "Take this axe and cut down 2 trees for me."
         ],
         "completedText": ["What are you waiting for?", "Go cut me some trees."],
         "itemKey": "axe",
@@ -144,7 +144,8 @@
           "Over there is my small rat farm!",
           "I'm actually going to need you to uhm...",
           "filter out the population.",
-          "Take this bow and shoot 5 of them for me!"],
+          "Take this bow and shoot 5 of them for me!",
+          "Don't worry, in this magical land, you don't need arrows!"],
         "completedText": ["Don't be afraid young one, they'll grow back very quickly!", "Kill 5 rats for me please!"],
         "itemKey": "woodenbow",
         "popup": {
