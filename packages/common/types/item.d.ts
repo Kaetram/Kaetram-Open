@@ -42,7 +42,7 @@ export interface ItemData {
     quest?: string; // Quest requirement for the item.
     attackRate?: number;
     poisonous?: boolean;
-    movementSpeed?: number;
+    movementModifier?: number;
     lumberjacking?: number;
     mining?: number;
     healAmount?: number;
