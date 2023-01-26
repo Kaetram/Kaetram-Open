@@ -1,15 +1,16 @@
-import { Modules } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
-
-import Item from '../../objects/item';
-
 import Armour from './equipment/impl/armour';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
+import Arrows from './equipment/impl/arrows';
+
+import Item from '../../objects/item';
+
+import _ from 'lodash-es';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
 
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -22,6 +23,7 @@ export default class Equipments {
     private pendant: Pendant = new Pendant();
     private ring: Ring = new Ring();
     private weapon: Weapon = new Weapon();
+    private arrows: Arrows = new Arrows();
 
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
@@ -30,7 +32,8 @@ export default class Equipments {
         this.boots,
         this.pendant,
         this.ring,
-        this.weapon
+        this.weapon,
+        this.arrows
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -39,7 +42,7 @@ export default class Equipments {
 
     private loadCallback?: () => void;
     private equipCallback?: (equipment: Equipment) => void;
-    private unequipCallback?: (type: Modules.Equipment) => void;
+    private unequipCallback?: (type: Modules.Equipment, count?: number) => void;
 
     public constructor(private player: Player) {}
 
@@ -51,7 +54,7 @@ export default class Equipments {
 
     public load(equipmentInfo: EquipmentData[]): void {
         _.each(equipmentInfo, (info: EquipmentData) => {
-            let equipment = this.getEquipment(info.type);
+            let equipment = this.get(info.type);
 
             if (!equipment) return;
             if (!info.key) return; // Skip if the item is already null
@@ -72,10 +75,13 @@ export default class Equipments {
      */
 
     public equip(item: Item): void {
-        if (!item) return log.warning('Tried to equip something mysterious.');
+        if (!item)
+            return log.warning(
+                `[${this.player.username}] Attempted to equip something mysterious.`
+            );
 
         let type = item.getEquipmentType(),
-            equipment = this.getEquipment(type);
+            equipment = this.get(type);
 
         if (!equipment) return;
 
@@ -98,20 +104,35 @@ export default class Equipments {
      */
 
     public unequip(type: Modules.Equipment): void {
-        if (!this.player.inventory.hasSpace())
-            return this.player.notify('You do not have enough space in your inventory.');
+        let equipment = this.get(type),
+            item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
 
-        let equipment = this.getEquipment(type);
-
-        this.player.inventory.add(
-            new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
-        );
+        // We stop here if the item cannot be added to the inventory.
+        if (!this.player.inventory.add(item)) return;
 
         equipment.empty();
 
         this.unequipCallback?.(type);
 
         this.calculateStats();
+    }
+
+    /**
+     * Handles decrementing an item from the equipment. This is used in the case
+     * of arrows. In the future this will be generalized to handle other items
+     * that can be used up throughout combat.
+     */
+
+    public decrementArrows(): void {
+        let arrows = this.get(Modules.Equipment.Arrows);
+
+        // Remove 1 arrow from the stack.
+        arrows.count -= 1;
+
+        // If there are no more arrows, we empty the equipment.
+        if (arrows.count < 1) arrows.empty();
+
+        this.unequipCallback?.(Modules.Equipment.Arrows, arrows.count);
     }
 
     /**
@@ -146,6 +167,7 @@ export default class Equipments {
             this.totalBonuses.accuracy += equipment.bonuses.accuracy;
             this.totalBonuses.strength += equipment.bonuses.strength;
             this.totalBonuses.archery += equipment.bonuses.archery;
+            this.totalBonuses.magic += equipment.bonuses.magic;
         });
     }
 
@@ -158,7 +180,7 @@ export default class Equipments {
      * @returns The equipment in the index.
      */
 
-    public getEquipment(type: Modules.Equipment): Equipment {
+    public get(type: Modules.Equipment): Equipment {
         return this.equipments[type];
     }
 
@@ -174,7 +196,7 @@ export default class Equipments {
      */
 
     public getArmour(): Armour {
-        return this.getEquipment(Modules.Equipment.Armour) as Armour;
+        return this.get(Modules.Equipment.Armour) as Armour;
     }
 
     /**
@@ -183,7 +205,7 @@ export default class Equipments {
      */
 
     public getBoots(): Boots {
-        return this.getEquipment(Modules.Equipment.Boots);
+        return this.get(Modules.Equipment.Boots);
     }
 
     /**
@@ -192,7 +214,7 @@ export default class Equipments {
      */
 
     public getPendant(): Pendant {
-        return this.getEquipment(Modules.Equipment.Pendant);
+        return this.get(Modules.Equipment.Pendant);
     }
 
     /**
@@ -201,7 +223,7 @@ export default class Equipments {
      */
 
     public getRing(): Ring {
-        return this.getEquipment(Modules.Equipment.Ring);
+        return this.get(Modules.Equipment.Ring);
     }
 
     /**
@@ -210,7 +232,16 @@ export default class Equipments {
      */
 
     public getWeapon(): Weapon {
-        return this.getEquipment(Modules.Equipment.Weapon) as Weapon;
+        return this.get(Modules.Equipment.Weapon) as Weapon;
+    }
+
+    /**
+     * Grabs the arrows equipment of the player.
+     * @returns Arrow equipment type.
+     */
+
+    public getArrows(): Arrows {
+        return this.get(Modules.Equipment.Arrows) as Arrows;
     }
 
     /**

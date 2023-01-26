@@ -27,15 +27,14 @@
 }
 
 #remember-me {
-    left: 20%;
+    left: 18%;
 }
 
 #guest {
-    left: 64%;
+    left: 61%;
 }
 
 #guest-text {
-    top: 5%;
     left: 110%;
 }
 
@@ -72,7 +71,7 @@ input[type='range'] {
         #guest-text {
             height: 8px * $i;
             padding-left: 5px * $i;
-            font-size: 8px * $i;
+            font-size: 10px * $i;
         }
 
         #login {
@@ -171,7 +170,7 @@ input[type='range'] {
 
     #remember-me-text,
     #guest-text {
-        width: 168px;
+        width: 225px;
     }
 
     .validation-summary {
@@ -182,7 +181,7 @@ input[type='range'] {
 @media (--md) {
     #remember-me-text,
     #guest-text {
-        width: 112px;
+        width: 150px;
     }
 
     input[type='range']::-webkit-slider-thumb {
@@ -193,7 +192,7 @@ input[type='range'] {
 @media (--sm) {
     #remember-me-text,
     #guest-text {
-        width: 70px;
+        width: 100px;
     }
 
     #yes {

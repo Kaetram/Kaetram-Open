@@ -14,18 +14,28 @@ export default class HealthFlask implements Plugin {
     }
 
     public onUse(player: Player): boolean {
-        if (player.hitPoints.isFull()) {
-            player.notify(`You are already at full health.`);
-            return false;
+        if (this.manaAmount) {
+            if (player.mana.isFull()) {
+                player.notify(`You are already at full mana.`);
+                return false;
+            }
+
+            player.heal(this.manaAmount, 'mana');
         }
 
-        if (this.healPercent) {
-            player.heal(player.hitPoints.getMaxHitPoints() * this.healPercent, 'hitpoints');
-            return true;
-        }
+        if (this.healAmount || this.healPercent) {
+            if (player.hitPoints.isFull()) {
+                player.notify(`You are already at full health.`);
+                return false;
+            }
 
-        if (this.healAmount) player.heal(this.healAmount, 'hitpoints');
-        if (this.manaAmount) player.heal(this.manaAmount, 'mana');
+            if (this.healPercent) {
+                player.heal(player.hitPoints.getMaxHitPoints() * this.healPercent, 'hitpoints');
+                return true;
+            }
+
+            player.heal(this.healAmount, 'hitpoints');
+        }
 
         return true;
     }

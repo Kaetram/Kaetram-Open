@@ -31,6 +31,30 @@ export default class Server {
     }
 
     /**
+     * Adds a player to the server player list.
+     * @param username The username we want to add.
+     */
+
+    public addPlayer(username: string): void {
+        if (this.players.includes(username)) return;
+
+        this.players.push(username);
+
+        this.updateCallback?.();
+    }
+
+    /**
+     * Removes a player from the server player list.
+     * @param username The username we want to remove.
+     */
+
+    public removePlayer(username: string): void {
+        this.players.splice(this.players.indexOf(username), 1);
+
+        this.updateCallback?.();
+    }
+
+    /**
      * Serializes the server data into a minimal object
      * to be used by the client to connect.
      * @returns A `SerializedServer` object.

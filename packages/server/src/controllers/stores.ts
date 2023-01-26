@@ -1,11 +1,11 @@
+import storeData from '../../data/stores.json';
+import Item from '../game/entity/objects/item';
+import { Store as StorePacket } from '../network/packets';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 import StoreEn from '@kaetram/common/text/en/store';
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
-
-import storeData from '../../data/stores.json';
-import Item from '../game/entity/objects/item';
-import { Store as StorePacket } from '../network/packets';
 
 import type {
     RawStore,
@@ -253,9 +253,10 @@ export default class Stores {
         if (!player.inventory.add(this.getCurrency(store.currency, price)))
             return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
-        // Increment item amount in the store otherwise add item to store.
-        if (storeItem) storeItem.count += count;
-        else store.items.push(item);
+        // Increment the item count or add to store only if the player isn't a cheater :)
+        if (!player.isCheater())
+            if (storeItem) storeItem.count += count;
+            else store.items.push(item);
 
         // Sync up new store data to all players.
         this.updatePlayers(key);

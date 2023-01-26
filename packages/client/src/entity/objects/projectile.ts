@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
-
 import Utils from '../../utils/util';
 import Entity from '../entity';
+
+import { Modules } from '@kaetram/common/network';
 
 import type Character from '../character/character';
 
@@ -65,8 +65,16 @@ export default class Projectile extends Entity {
                 return Modules.Effects.Poisonball;
             }
 
+            case 'projectile-fireball': {
+                return Modules.Effects.Fireball;
+            }
+
             case 'projectile-iceball': {
                 return Modules.Effects.Iceball;
+            }
+
+            case 'projectile-terror': {
+                return Modules.Effects.Terror;
             }
         }
 

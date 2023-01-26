@@ -1,7 +1,7 @@
+import Animation from './animation';
+
 import log from '../lib/log';
 import Utils from '../utils/util';
-
-import Animation from './animation';
 
 import type spriteData from '../../data/sprites.json';
 

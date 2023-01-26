@@ -3,18 +3,14 @@ import http from 'node:http';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
-import type { Server, Socket } from 'socket.io';
-import type ws from 'ws';
+import type { Server } from 'socket.io';
 import type Connection from './connection';
 import type SocketHandler from './sockethandler';
-
-export type AnySocket = Socket & ws;
-export type SocketType = 'WebSocket' | 'SocketIO';
 
 export default abstract class WebSocket {
     private version = config.gver;
 
-    public server!: Server | ws.Server; // The SocketIO server
+    public server!: Server; // The SocketIO server
     public httpServer!: http.Server;
 
     public addCallback?: (connection: Connection) => void;
@@ -23,7 +19,6 @@ export default abstract class WebSocket {
     protected constructor(
         protected host: string,
         protected port: number,
-        protected type: SocketType,
         protected socketHandler: SocketHandler
     ) {}
 
@@ -44,7 +39,7 @@ export default abstract class WebSocket {
      */
 
     private ready(): void {
-        log.notice(`[${this.type}] Server is now listening on port: ${this.port}.`);
+        log.notice(`Server is now listening on port: ${this.port}.`);
 
         this.initializedCallback?.();
     }

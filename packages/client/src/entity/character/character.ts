@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;
@@ -17,11 +17,10 @@ interface EffectInfo {
 }
 
 export default class Character extends Entity {
-    public healthBarVisible = false;
-
     public moving = false;
     public following = false;
     public stunned = false;
+    public forced = false;
 
     private interrupted = false;
 
@@ -31,6 +30,7 @@ export default class Character extends Entity {
     public lastTarget = '';
 
     private attackers: { [id: string]: Character } = {};
+    private followers: { [id: string]: Character } = {};
 
     public movement = new Transition();
 
@@ -86,9 +86,9 @@ export default class Character extends Entity {
         },
         [Modules.Effects.Freezing]: {
             key: 'effect-freeze',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
-            speed: 150
+            speed: 200
         },
         [Modules.Effects.Poisonball]: {
             key: 'effect-poisonball',
@@ -110,8 +110,6 @@ export default class Character extends Entity {
     private requestPathCallback?(x: number, y: number): number[][] | null;
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
-
-    public forced!: boolean;
 
     public handler: EntityHandler = new EntityHandler(this);
 
@@ -229,6 +227,20 @@ export default class Character extends Entity {
     }
 
     /**
+     * Pursues a character. Similar to following except no attacking
+     * is done and the character will not stop following until you
+     * click on something else.
+     * @param character The character we will be pursuing.
+     */
+
+    public pursue(character: Character): void {
+        this.setTarget(character);
+        this.move(character.gridX, character.gridY);
+
+        character.addFollower(this);
+    }
+
+    /**
      * Not technically a following action, but it is used since
      * it removes the last step from the path.
      * @param x The x grid coordinate of the position we are moving towards.
@@ -251,6 +263,15 @@ export default class Character extends Entity {
     }
 
     /**
+     * Adds a follower to the dictionary of followers.
+     * @param character Character we are adding to the dictionary.
+     */
+
+    public addFollower(character: Character): void {
+        this.followers[character.instance] = character;
+    }
+
+    /**
      * Removes a character from the list of attackers.
      * @param character The character we are trying to remove.
      */
@@ -260,11 +281,28 @@ export default class Character extends Entity {
     }
 
     /**
+     * Removes a follower from the list of followers.
+     * @param character The character we are trying to remove.
+     */
+
+    public removeFollower(character: Character): void {
+        delete this.followers[character.instance];
+    }
+
+    /**
      * @returns Whether or not the character has any attackers.
      */
 
     public hasAttackers(): boolean {
         return Object.keys(this.attackers).length > 0;
+    }
+
+    /**
+     * @returns Whether or not the character has any followers.
+     */
+
+    public hasFollowers(): boolean {
+        return Object.keys(this.followers).length > 0;
     }
 
     /**
@@ -464,7 +502,7 @@ export default class Character extends Entity {
             if (this.stopPathingCallback)
                 this.stopPathingCallback(this.gridX, this.gridY, this.forced);
 
-            this.forced &&= false;
+            this.forced = false;
         }
     }
 
@@ -554,6 +592,11 @@ export default class Character extends Entity {
 
     public setEffect(effect: Modules.Effects): void {
         this.effect = effect;
+
+        if (this.effect === Modules.Effects.None) return;
+
+        // Reset the animation when we change effects.
+        this.effects[effect].animation.reset();
     }
 
     /**
@@ -563,6 +606,9 @@ export default class Character extends Entity {
 
     public canAttackTarget(): boolean {
         if (!this.hasTarget()) return false;
+
+        if (!this.target!.isMob() && !this.target!.isPlayer()) return false;
+
         if (this.getDistance(this.target!) > this.attackRange - 1) return false;
 
         return true;
@@ -614,8 +660,22 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
+    /**
+     * Iterates through all the attackers in the list and returns them.
+     * @param callback The attacker currently being iterated.
+     */
+
     public forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => callback(attacker));
+    }
+
+    /**
+     * Iterates through all the followers in the list and returns them.
+     * @param callback The follower currently being iterated.
+     */
+
+    public forEachFollower(callback: (follower: Character) => void): void {
+        _.each(this.followers, (follower) => callback(follower));
     }
 
     public override hasShadow(): boolean {
@@ -661,17 +721,25 @@ export default class Character extends Entity {
         return target ? this.target === target : !!this.target;
     }
 
-    public setObjectTarget(position: Position): void {
+    /**
+     * Mocks a entity-based target function and targets an object instead.
+     * @param position The position of the object we are targeting.
+     */
+
+    public setObjectTarget(position: Coordinate): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
-        character.setGridPosition(position.x, position.y);
+        let character = new Character(
+            `${position.gridX}-${position.gridY}`,
+            Modules.EntityType.Object
+        );
+        character.setGridPosition(position.gridX, position.gridY);
 
         this.setTarget(character);
-        this.followPosition(position.x, position.y);
+        this.followPosition(position.gridX, position.gridY);
     }
 
     /**

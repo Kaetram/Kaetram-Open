@@ -1,6 +1,6 @@
-import { Modules } from '@kaetram/common/network';
-
 import Formulas from '../../../../../info/formulas';
+
+import { Modules } from '@kaetram/common/network';
 
 import type { SkillData } from '@kaetram/common/types/skills';
 

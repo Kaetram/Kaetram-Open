@@ -1,7 +1,7 @@
+import Data from '../../../../../../data/abilities.json';
+
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-
-import Data from '../../../../../../data/abilities.json';
 
 import type { AbilityData, RawAbility } from '@kaetram/common/types/ability';
 import type Player from '../player';
@@ -63,7 +63,12 @@ export default class Ability {
         player.mana.decrement(mana);
 
         // Ability will deactivate and create a callback after `duration` milliseconds.
-        setTimeout(() => this.deactivateCallback?.(player), duration);
+        setTimeout(() => {
+            this.deactivateCallback?.(player);
+
+            // Send a packet to the client to untoggle the ability.
+            player.abilities.toggleCallback?.(this.key);
+        }, duration);
 
         // Update the date of the last time the ability was activated.
         this.lastActivated = Date.now();

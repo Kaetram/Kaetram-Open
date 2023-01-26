@@ -1,6 +1,6 @@
-import $ from 'jquery';
-
 import Timer from '../../utils/timer';
+
+import $ from 'jquery';
 
 export default class Blob {
     public element: JQuery;

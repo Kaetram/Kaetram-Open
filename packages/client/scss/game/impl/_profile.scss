@@ -76,6 +76,13 @@
     left: 37%;
 }
 
+#arrows-count {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         #state-page,
@@ -162,24 +169,25 @@
         .armour-slot,
         .pendant-slot,
         .ring-slot,
-        .boots-slot {
+        .boots-slot,
+        .arrows-slot {
             margin-top: -2px * $i;
-            background-size: 600%;
+            background-size: cover;
         }
 
         .weapon-slot {
-            top: 120px * $i;
+            top: 128px * $i;
             left: 4px * $i;
         }
 
         .armour-slot {
-            top: 119px * $i;
+            top: 130px * $i;
             left: 104px * $i;
         }
 
         .pendant-slot {
-            top: 78px * $i;
-            left: 54px * $i;
+            top: 88px * $i;
+            left: 26px * $i;
         }
 
         .ring-slot {
@@ -190,6 +198,16 @@
         .boots-slot {
             top: 173px * $i;
             left: 82px * $i;
+        }
+        
+        .arrows-slot {
+            top: 87px * $i;
+            left: 81px * $i;
+        }
+
+        #arrows-count {
+            top: 18px * $i;
+            left: 2px * $i;
         }
 
         #profile-name {
@@ -305,6 +323,22 @@
         .ability-icon-secretcalling {
             background-image: url('/img/#{$i}/abilityicons.png');
             background-position: -112px * $i 1px;
+        }
+
+        .ability-icon-run,
+        .ability-icon-awareness,
+        .ability-icon-dualistsmark,
+        .ability-icon-hotshot,
+        .ability-icon-thickskin,
+        .ability-icon-precognition,
+        .ability-icon-secretcalling {
+            &:hover {
+                background-position-y: -15px * $i;
+            }
+
+            &:active, &.active {
+                background-position-y: -30px * $i;
+            }
         }
 
         .ability-level {

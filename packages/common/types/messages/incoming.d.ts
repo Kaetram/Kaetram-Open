@@ -33,6 +33,7 @@ export interface MovementPacket {
     orientation?: Modules.Orientation;
     frozen?: boolean;
     direction?: Modules.Orientation;
+    timestamp?: number;
 }
 
 export interface ProjectilePacket {
@@ -46,8 +47,7 @@ export interface ContainerPacket {
     type: Modules.ContainerType; // Container the action is taking place in.
     subType: Modules.ContainerType; // Used by the bank to determine container actions.
     index?: number;
-    tIndex?: number;
-    count?: number;
+    value?: number;
 }
 
 export interface AbilityPacket {

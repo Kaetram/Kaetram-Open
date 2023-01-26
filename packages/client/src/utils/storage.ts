@@ -1,8 +1,8 @@
-import { Modules } from '@kaetram/common/network';
+import { isMobile } from './detect';
 
 import log from '../lib/log';
 
-import { isMobile } from './detect';
+import { Modules } from '@kaetram/common/network';
 
 import type { RegionData, RegionTileData } from '@kaetram/common/types/map';
 import type { CursorTiles } from '../map/map';
@@ -13,6 +13,7 @@ interface PlayerData {
     autoLogin: boolean;
     rememberMe: boolean;
     orientation: number;
+    zoom: number;
 }
 
 interface Settings {
@@ -77,7 +78,8 @@ export default class Storage {
                 password: '',
                 autoLogin: false,
                 rememberMe: false,
-                orientation: Modules.Orientation.Down
+                orientation: Modules.Orientation.Down,
+                zoom: 3
             },
 
             settings: {
@@ -328,6 +330,17 @@ export default class Storage {
 
     public setOrientation(orientation: number): void {
         this.data.player.orientation = orientation;
+
+        this.save();
+    }
+
+    /**
+     * Updates the zoom factor in the local storage.
+     * @param zoom New zoom factor we are saving.
+     */
+
+    public setZoom(zoom: number): void {
+        this.data.player.zoom = zoom;
 
         this.save();
     }
