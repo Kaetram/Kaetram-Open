@@ -725,6 +725,11 @@ export default class Connection {
                 this.game.player.setAbility(info.key, info.level, info.type, info.quickSlot);
                 break;
             }
+
+            case Opcodes.Ability.Toggle: {
+                this.game.player.toggleAbility((info as AbilityData).key);
+                break;
+            }
         }
 
         this.menu.synchronize('profile');
