@@ -1724,7 +1724,7 @@ export default class Player extends Character {
 
     public override getProjectileName(): string {
         // Use the projectile name of the arrows if the player is using ranged weapons.
-        if (this.isRanged()) return this.equipment.getArrows().projectileName;
+        if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
     }
