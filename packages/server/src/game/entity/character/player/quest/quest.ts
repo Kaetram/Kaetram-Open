@@ -1,8 +1,9 @@
-import Modules from '@kaetram/common/network/modules';
+import Item from '../../../objects/item';
+
 import log from '@kaetram/common/util/log';
 import _ from 'lodash-es';
-
-import Item from '../../../objects/item';
+import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
@@ -19,7 +20,7 @@ type PopupCallback = (popup: PopupData) => void;
 type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
-type TreeCallback = (type: string) => void;
+type ResourceCallback = (type: Modules.Skills, resourceType: string) => void;
 
 export default abstract class Quest {
     /**
@@ -48,7 +49,7 @@ export default abstract class Quest {
     public talkCallback?: TalkCallback;
     public doorCallback?: DoorCallback;
     public killCallback?: KillCallback;
-    public treeCallback?: TreeCallback;
+    public resourceCallback?: ResourceCallback;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -67,7 +68,7 @@ export default abstract class Quest {
         this.onTalk(this.handleTalk.bind(this));
         this.onDoor(this.handleDoor.bind(this));
         this.onKill(this.handleKill.bind(this));
-        this.onTree(this.handleTree.bind(this));
+        this.onResource(this.handleResource.bind(this));
     }
 
     /**
@@ -98,7 +99,7 @@ export default abstract class Quest {
      */
 
     private handleTalk(npc: NPC, player: Player): void {
-        log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
+        //log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
         let dialogue = this.getNPCDialogue(npc, player);
@@ -116,6 +117,7 @@ export default abstract class Quest {
                 if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))
                     this.progress();
             } else if (this.hasAbility()) this.givePlayerAbility(player);
+            else if (this.hasExperience()) this.givePlayerExperience(player);
             else this.progress();
 
         // Talk to the NPC and progress the dialogue.
@@ -160,12 +162,13 @@ export default abstract class Quest {
     }
 
     /**
-     * Callback for when a tree has been cut. This only gets called if the quest
-     * has not yet been completed.
-     * @param type The type of tree we are cutting.
+     * Callback for when a resource is depleted. Contains the type of resource and the subType
+     * for the resource. For example, the type is the SkillType and the subType is the tree type.
+     * @param type The skill type of the resource.
+     * @param subType The type of resource that was mined (oak, palm, gold, etc.)
      */
 
-    private handleTree(type: string): void {
+    private handleResource(type: Modules.Skills, subType: string): void {
         // Stop if the quest has already been completed.
         if (this.isFinished()) return;
 
@@ -173,7 +176,7 @@ export default abstract class Quest {
         if (!this.stageData.tree) return;
 
         // Don't progress if we are not cutting the tree specified.
-        if (this.stageData.tree !== type) return;
+        if (this.stageData.tree !== subType) return;
 
         // Progress the quest if no tree count is specified but a tree stage is present.
         if (!this.stageData.treeCount) return this.progress();
@@ -204,6 +207,8 @@ export default abstract class Quest {
         // If the stage contains item rewards, we give it to the player.
         if (this.hasItemToGive())
             this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
+
+        if (this.hasExperience()) this.givePlayerExperience(player);
 
         // If the stage rewards an ability, we give it to the player.
         if (this.hasAbility()) this.givePlayerAbility(player);
@@ -244,6 +249,17 @@ export default abstract class Quest {
     }
 
     /**
+     * Verifies the integrity of the skill and grants the player experience in that skill.
+     * @param player The player we are granting experience to.
+     */
+
+    private givePlayerExperience(player: Player): void {
+        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!));
+
+        skill?.addExperience(this.stageData.experience!);
+    }
+
+    /**
      * Checks if an NPC key is contained in the quest.
      * @param key The NPC key we are checking.
      * @returns If the key exists in the npcs array.
@@ -278,6 +294,15 @@ export default abstract class Quest {
 
     private hasAbility(): boolean {
         return !!this.stageData.ability;
+    }
+
+    /**
+     * Whether or not the quest grants experience to a skill.
+     * @returns Whether the stage data has an experience property and skill which to grant towards.
+     */
+
+    private hasExperience(): boolean {
+        return !!this.stageData.experience && !!this.stageData.skill;
     }
 
     /**
@@ -332,7 +357,9 @@ export default abstract class Quest {
             itemKey: stage.itemKey! || '',
             itemCount: stage.itemCount! || 0,
             tree: stage.tree! || '',
-            treeCount: stage.treeCount! || 0
+            treeCount: stage.treeCount! || 0,
+            skill: stage.skill! || '',
+            experience: stage.experience! || 0
         };
     }
 
@@ -495,11 +522,11 @@ export default abstract class Quest {
     }
 
     /**
-     * Callbakc for when a tree has been cut down.
-     * @param callback Contains the tree type that was cut.
+     * Callback for when a resource has been exhausted
+     * @param callback Contains the resource type and identifier of the resource.
      */
 
-    public onTree(callback: TreeCallback): void {
-        this.treeCallback = callback;
+    public onResource(callback: ResourceCallback): void {
+        this.resourceCallback = callback;
     }
 }

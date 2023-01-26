@@ -60,12 +60,12 @@
             {
                 "groups": [
                     "builtin",
+                    "sibling",
+                    "parent",
+                    "index",
                     "external",
                     "internal",
                     "unknown",
-                    "parent",
-                    "sibling",
-                    "index",
                     "object",
                     "type"
                 ],

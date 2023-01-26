@@ -1,16 +1,17 @@
+import MobHandler from './handler';
+
+import rawData from '../../../../../data/mobs.json';
+import dropTables from '../../../../../data/tables.json';
+import PluginIndex from '../../../../../data/plugins/mobs';
+import Spawns from '../../../../../data/spawns.json';
+import Character from '../character';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Heal, Movement } from '@kaetram/server/src/network/packets';
 import _ from 'lodash-es';
-
-import rawData from '../../../../../data/mobs.json';
-import PluginIndex from '../../../../../data/plugins/mobs';
-import Spawns from '../../../../../data/spawns.json';
-import Character from '../character';
-
-import MobHandler from './handler';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -27,9 +28,16 @@ interface RawData {
     [key: string]: MobData;
 }
 
+interface ItemDrop {
+    key: string;
+    count: number;
+}
+
 export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
+
+    public description = '';
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
@@ -51,6 +59,8 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
+    private dropTables: string[] = ['ordinary', 'unusual']; // Default drop table for all mobs.
+
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
@@ -96,7 +106,9 @@ export default class Mob extends Character {
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
+        this.description = data.description || this.description;
         this.drops = data.drops || this.drops;
+        this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
         this.attackLevel = data.attackLevel || this.attackLevel;
         this.defenseLevel = data.defenseLevel || this.defenseLevel;
@@ -176,16 +188,16 @@ export default class Mob extends Character {
 
     private loadStats(): void {
         this.attackStats = {
-            crush: this.attackLevel * 2,
-            stab: this.attackLevel * 2,
-            slash: this.attackLevel * 2,
+            crush: this.attackLevel,
+            stab: this.attackLevel,
+            slash: this.attackLevel,
             magic: this.attackLevel
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel * 2,
-            stab: this.defenseLevel * 2,
-            slash: this.defenseLevel * 2,
+            crush: this.defenseLevel,
+            stab: this.defenseLevel,
+            slash: this.defenseLevel,
             magic: this.defenseLevel
         };
 
@@ -273,23 +285,88 @@ export default class Mob extends Character {
     }
 
     /**
-     * Primitive function for drop generation. Will be rewritten.
+     * Override for the superclass `setPosition` with added teleporting support.
      */
 
-    public getDrops(): { key: string; count: number }[] {
-        if (!this.drops) return [];
+    public override setPosition(x: number, y: number): void {
+        // Prevent changes in position if the mob is teleporting.
+        if (this.teleporting) return;
 
-        let drops: { key: string; count: number }[] = [];
+        super.setPosition(x, y);
+    }
 
-        _.each(this.drops, (chance: number, key: string) => {
-            if (Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) > chance) return;
+    /**
+     * The drop function works by picking a random item from the mob's personal
+     * drop list. We randomly select an item and roll its chance against the overall
+     * drop chance. We add the item to the list if the roll is successful. We continue
+     * by looking through the mob's drop tables and doing the same thing. We then
+     * return the list of items that the mob will drop.
+     * @returns A list of items that the mob will drop.
+     */
 
-            let count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+    public getDrops(): ItemDrop[] {
+        let drops: ItemDrop[] = [], // The items that the mob will drop
+            randomItem = this.getRandomItem(this.drops);
 
-            drops.push({ key, count });
+        // Add a random item from the mob's personal list of drops.
+        if (randomItem) drops.push(randomItem);
+
+        // Add items from the mob's drop table.
+        drops = [...drops, ...this.getDropTableItems()];
+
+        return drops;
+    }
+
+    /**
+     * Looks through the drop tables of the mob and iterates through those to get items.
+     * @returns List of items from the drop table.
+     */
+
+    private getDropTableItems(): ItemDrop[] {
+        let drops: ItemDrop[] = [];
+
+        _.each(this.dropTables, (key: string) => {
+            let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+
+            // Something went wrong.
+            if (!table) return log.warning(`Mob ${this.key} has an invalid drop table.`);
+
+            let randomItem = this.getRandomItem(table);
+
+            // Add a random item from the table.
+            if (randomItem) drops.push(randomItem);
         });
 
         return drops;
+    }
+
+    /**
+     * Given a list of items (whether from the mob's drops) or the drop table, we will pick
+     * a random item then roll that item's chance against the overall drop chance. We return
+     * the item if the roll is successful, otherwise undefined.
+     * @param items The list of items to pick from.
+     * @returns Returns an `ItemDrop` object containing the key and the count.
+     */
+
+    private getRandomItem(items: { [key: string]: number }): ItemDrop | undefined {
+        let keys = Object.keys(items);
+
+        // No items to pick from.
+        if (keys.length === 0) return undefined;
+
+        let key = keys[Utils.randomInt(0, keys.length - 1)],
+            drop = items[key],
+            count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+
+        // Something went wrong when trying to get the item drop.
+        if (!drop) {
+            log.warning(`Mob ${this.key} has an invalid drop.`);
+            return undefined;
+        }
+
+        return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
+            ? { key, count }
+            : undefined;
     }
 
     /**

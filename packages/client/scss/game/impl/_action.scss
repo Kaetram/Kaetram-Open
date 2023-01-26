@@ -1,11 +1,9 @@
 @use '../../abstracts/media';
 
 #action-container {
+    cursor: url('/img/3/hand.png'), auto;
     position: absolute;
     display: none;
-
-    // cursor: hand;
-
     font-family: AdvoCut, sans-serif;
 
     ul {
@@ -18,8 +16,9 @@
     text-align: center;
 }
 
-.action-item-name, .action-item-description {
-    color: #fff
+.action-item-name,
+.action-item-description {
+    color: #fff;
 }
 
 @each $size, $i in media.$bsizes {
@@ -29,9 +28,9 @@
             bottom: 34px * $i;
 
             width: 64px * $i;
-            height: 73px * $i;
+            height: 89px * $i;
 
-            background: url('/img/#{$i}/main.png') -224px * $i -384px * $i no-repeat;
+            background: url('/img/#{$i}/main.png') -224px * $i -368px * $i no-repeat;
 
             ul {
                 bottom: 4px * $i;
@@ -44,7 +43,8 @@
         }
 
         .action-wield,
-        .action-equip {
+        .action-equip,
+        .action-attack {
             background: url('/img/#{$i}/main.png') -400px * $i -384px * $i no-repeat;
         }
 
@@ -54,6 +54,26 @@
 
         .action-eat {
             background: url('/img/#{$i}/main.png') -400px * $i -416px * $i no-repeat;
+        }
+
+        .action-eat2 {
+            background: url('/img/#{$i}/main.png') -400px * $i -432px * $i no-repeat;
+        }
+
+        .action-trade {
+            background: url('/img/#{$i}/main.png') -400px * $i -448px * $i no-repeat;
+        }
+
+        .action-potion {
+            background: url('/img/#{$i}/main.png') -400px * $i -464px * $i no-repeat;
+        }
+
+        .action-follow {
+            background: url('/img/#{$i}/main.png') -400px * $i -480px * $i no-repeat;
+        }
+
+        .action-examine {
+            background: url('/img/#{$i}/main.png') -400px * $i -496px * $i no-repeat;
         }
 
         .action-button {
@@ -71,8 +91,9 @@
 
         .action-item-name {
             margin-top: 3px * $i;
+            margin-bottom: 2px * $i;
             margin-left: 4px * $i;
-            font-size: 5px * $i;
+            font-size: 6px * $i;
         }
 
         .action-item-description {

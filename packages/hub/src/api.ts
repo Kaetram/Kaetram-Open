@@ -5,6 +5,7 @@ import axios from 'axios';
 import express, { Router } from 'express';
 
 import type Discord from '@kaetram/common/api/discord';
+import type { Friend } from '@kaetram/common/types/friends';
 import type { Request, Response } from 'express';
 import type Servers from './controllers/servers';
 import type Server from './model/server';
@@ -41,6 +42,10 @@ export default class API {
         router.post('/ping', this.handlePing.bind(this));
         router.post('/chat', this.handleChat.bind(this));
         router.post('/privateMessage', this.handlePrivateMessage.bind(this));
+        router.post('/friends', this.handleFriends.bind(this));
+        router.post('/login', this.handleLogin.bind(this));
+        router.post('/logout', this.handleLogout.bind(this));
+        router.post('/isOnline', this.handleIsOnline.bind(this));
     }
 
     /**
@@ -159,12 +164,7 @@ export default class API {
             return;
         }
 
-        /**
-         * From who we are receiving the text
-         * Who we're sending the text to
-         * The text
-         */
-        let { source, target, text } = request.body,
+        let { source, target, text, serverId } = request.body,
             server = this.servers.findPlayer(target);
 
         if (!server) {
@@ -172,9 +172,126 @@ export default class API {
             return;
         }
 
-        source = `[From ${source}]`;
+        this.sendChat(server, `${serverId}`, source, text, 'aquamarine', target);
 
-        this.sendChat(server, source, text, 'aquamarine', target);
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Handles a request to handle player friends linking. When we receive a logout request,
+     * we signal to all the servers that the player has logged out (except the server that
+     * sent the request originally). When we receive a login request, we grab the friend list
+     * from the player that has logged in and look through our list of server to see if the
+     * inactive friends in that server are active anywhere else.
+     * @param request The request contains the serverId that made the request, username, list
+     * of inactive friends, and whether or not the player is logging out.
+     * @param response How we respond to the request.
+     */
+
+    private handleFriends(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { serverId, username, inactiveFriends, logout } = request.body,
+            activeFriends: Friend = {};
+
+        // Iterate through the servers and find the friends that are online.
+        this.servers.forEachServer((server: Server, key: string) => {
+            // Ignore the server we received the request from.
+            if (parseInt(key) === serverId) return;
+
+            // Skip servers where there are no players.
+            if (server.players.length === 0) return;
+
+            // If it's a logout request, send the logout request to all the servers.
+            if (logout) return this.sendLogout(server, key, username);
+
+            this.sendLogin(server, key, username);
+
+            // Find all the friends online on the server and add them to the `activeFriends` object.
+            for (let friend of inactiveFriends)
+                if (server.players.includes(friend))
+                    activeFriends[friend] = {
+                        online: true,
+                        serverId: parseInt(key)
+                    };
+        });
+
+        // Respond to the original server with the list of active friends.
+        response.json({
+            status: 'success',
+            activeFriends
+        });
+    }
+
+    /**
+     * Adds a player to the server list when they log in.
+     * @param request Contains the serverId and username of the player.
+     * @param response Generic response.\
+     */
+
+    private handleLogin(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { serverId, username } = request.body;
+
+        // Add the player to the server.
+        this.servers.get(serverId)?.addPlayer(username);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Removes a player from the server list when they log out.
+     * @param request Contains the serverId and username of the player.
+     * @param response Generic response.
+     */
+
+    private handleLogout(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { serverId, username } = request.body;
+
+        // Remove the player from the server.
+        this.servers.get(serverId)?.removePlayer(username);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Checks if the player is online in any of the servers.
+     * @param request Contains the username of the player and the server we are checking from.
+     * @param response Responds with a boolean indicating if the player is online anywhere else.
+     */
+
+    private handleIsOnline(request: Request, response: Response): void {
+        if (!this.verifyRequest(request)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        let { username, serverId } = request.body,
+            online = false;
+
+        // Look through all the servers and see if the player is online.
+        this.servers.forEachServer((server, key) => {
+            if (parseInt(key) === serverId) return;
+
+            if (server.players.includes(username)) online = true;
+        });
+
+        response.json({
+            status: 'success',
+            online
+        });
     }
 
     /**
@@ -204,18 +321,60 @@ export default class API {
         key: string,
         source: string,
         text: string,
-        colour: string
+        colour: string,
+        target = ''
     ): void {
         let url = Utils.getUrl(server.host, server.apiPort, 'chat', true),
             data = {
                 accessToken: server.accessToken,
                 text,
                 source,
-                colour
+                colour,
+                target
             };
 
         axios.post(url, data).catch((error) => {
             log.error(`Could not send chat to ${config.name} ${key}`);
+            log.error(error);
+        });
+    }
+
+    /**
+     * Sends a login signal to the specified server.
+     * @param server The server we are sending the login to.
+     * @param key The key of the server we are sending the login to.
+     * @param username The username of the player that is logging in.
+     */
+
+    private sendLogin(server: Server, key: string, username: string): void {
+        let url = Utils.getUrl(server.host, server.apiPort, 'login', true),
+            data = {
+                accessToken: server.accessToken,
+                username
+            };
+
+        axios.post(url, data).catch((error) => {
+            log.error(`Could not send login to ${config.name} ${key}`);
+            log.error(error);
+        });
+    }
+
+    /**
+     * Sends a logout signal to the specified server.
+     * @param server The server we are sending the logout to.
+     * @param key The key of the server we are sending the logout to.
+     * @param username The username of the player that is logging out.
+     */
+
+    private sendLogout(server: Server, key: string, username: string): void {
+        let url = Utils.getUrl(server.host, server.apiPort, 'logout', true),
+            data = {
+                accessToken: server.accessToken,
+                username
+            };
+
+        axios.post(url, data).catch((error) => {
+            log.error(`Could not send logout to ${config.name} ${key}`);
             log.error(error);
         });
     }

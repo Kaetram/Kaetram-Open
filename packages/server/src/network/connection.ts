@@ -1,8 +1,8 @@
 import log from '@kaetram/common/util/log';
 
+import type { Socket } from 'socket.io';
 import type { Packets } from '@kaetram/common/network';
 import type SocketHandler from './sockethandler';
-import type { AnySocket, SocketType } from './websocket';
 
 type MessageCallback = (message: [Packets, never]) => void;
 
@@ -10,26 +10,29 @@ export default class Connection {
     private messageCallback?: MessageCallback;
     private closeCallback?: () => void;
 
+    private disconnectTimeout: NodeJS.Timeout | null = null;
+    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+
     public constructor(
         public id: string,
-        public type: SocketType,
         public address: string,
-        private socket: AnySocket,
+        private socket: Socket,
         private socketHandler: SocketHandler
     ) {
+        this.socket.once('disconnect', this.handleClose.bind(this));
         this.socket.on('message', this.handleMessage.bind(this));
-        this.socket.on(this.getCloseSignal(), this.handleClose.bind(this));
     }
 
     /**
      * Sends a UTF8 message to the client for closing the connection,
      * then closes the connection (duh).
      * @param reason UTF8 reason for why the connection was closed.
+     * @param withCallback Whether or not to call the close callback.
      */
 
-    public reject(reason: string): void {
+    public reject(reason: string, withCallback = false): void {
         this.sendUTF8(reason);
-        this.close(reason);
+        this.close(reason, withCallback);
     }
 
     /**
@@ -37,12 +40,26 @@ export default class Connection {
      * Depending on the type of socket currently present, a different function is used
      * for closing the connection.
      * @param details Optional parameter for debugging why connection was closed.
+     * @param withCallback Whether or not to call the close callback.
      */
 
-    public close(details?: string): void {
+    public close(details?: string, withCallback = true): void {
+        this.socket.disconnect(true);
+
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
 
-        this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
+        /**
+         * Before you question the redundancy of this. SocketIO experiences an issue where the player
+         * closes the browser but the `disconnect` signal is not being fired. This is a solution to the
+         * problem. We do not want `closeCallback` called twice unnecessarily, but in the event that
+         * `handleClose` does not fire up due to the issue mentioned above, we want to call the callback
+         * forcibly through here. Since the `disconnect` signal is not fired, then the timeout will continue
+         * to countdown (`handleClose` is never fired) until it forcibly calls this function and kicks the
+         * player out. In the event that we rely on the timeout to kick the player out, this callback will
+         * only fire once, since again, the reason this exists is because `disconnect` doesn't fire properly.
+         */
+
+        if (withCallback) this.closeCallback?.();
     }
 
     /**
@@ -54,7 +71,7 @@ export default class Connection {
     private handleMessage(message: string): void {
         try {
             this.messageCallback?.(JSON.parse(message));
-        } catch (error: unknown) {
+        } catch (error) {
             log.error(`Message could not be parsed: ${message}.`);
             log.error(error);
         }
@@ -67,9 +84,36 @@ export default class Connection {
     private handleClose(): void {
         log.info(`Closed socket: ${this.address}.`);
 
+        this.socketHandler.remove(this.id);
+
         this.closeCallback?.();
 
-        this.socketHandler.remove(this.id);
+        this.clearTimeout();
+    }
+
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
+     */
+
+    public refreshTimeout(duration = this.timeoutDuration): void {
+        // Clear the existing timeout and start over.
+        this.clearTimeout();
+
+        // Start a new timeout and set the player's timeout variable.
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout', true), duration);
+    }
+
+    /**
+     * Clears the existing disconnect timeout.
+     */
+
+    private clearTimeout(): void {
+        if (!this.disconnectTimeout) return;
+
+        clearTimeout(this.disconnectTimeout);
+        this.disconnectTimeout = null;
     }
 
     /**
@@ -89,16 +133,6 @@ export default class Connection {
 
     public sendUTF8(message: string): void {
         this.socket.send(message);
-    }
-
-    /**
-     * Depending on the type of socket connection,
-     * we use a different keyword for determining
-     * the closing callback.
-     */
-
-    public getCloseSignal(): 'close' | 'disconnect' {
-        return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 
     /**

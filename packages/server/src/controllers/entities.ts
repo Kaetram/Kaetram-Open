@@ -1,9 +1,9 @@
+import Character from '../game/entity/character/character';
+
 import log from '@kaetram/common/util/log';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
-
-import Character from '../game/entity/character/character';
 
 import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedArea } from '@kaetram/common/types/map';

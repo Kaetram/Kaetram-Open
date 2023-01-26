@@ -1,14 +1,14 @@
 import fs from 'node:fs';
 
-import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
+import Region from './region';
 
 import Character from '../entity/character/character';
 import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
 
-import Region from './region';
+import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type {
@@ -426,6 +426,8 @@ export default class Regions {
      */
 
     public sendDisplayInfo(player: Player): void {
+        if (player.region === -1) return;
+
         let displayInfos: EntityDisplayInfo[] = this.getDisplayInfo(player);
 
         // Don't send empty data.

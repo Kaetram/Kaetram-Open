@@ -29,9 +29,6 @@ export default class Animation {
      */
 
     public update(time: number): void {
-        // If we've just reset the attack animation, we start animation at current game tick.
-        //if (!this.lastTime && this.name.includes('atk')) this.lastTime = time;
-
         if (!this.canAnimate()) return;
 
         this.lastTime = time;

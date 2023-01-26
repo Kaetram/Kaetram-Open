@@ -1,8 +1,8 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import _ from 'lodash';
-
 import log from '../../../lib/log';
 import Menu from '../../menu';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
+import _ from 'lodash';
 
 import type Ability from '../../../entity/character/player/ability';
 import type Player from '../../../entity/character/player/player';
@@ -61,7 +61,7 @@ export default class Abilities extends Menu {
         _.each(player.abilities, (ability: Ability) => {
             switch (ability.type) {
                 case Modules.AbilityType.Active: {
-                    this.setActiveAbility(activeIndex, ability.key, ability.level);
+                    this.setActiveAbility(activeIndex, ability.key, ability.level, ability.active);
                     activeIndex++;
                     break;
                 }
@@ -189,7 +189,7 @@ export default class Abilities extends Menu {
      * @param level The level of the ability.
      */
 
-    public setActiveAbility(index: number, key: string, level = 1): void {
+    public setActiveAbility(index: number, key: string, level = 1, active = false): void {
         let ability = this.activeAbilities.children[index] as AbilityElement;
 
         // Invalid index is provided.
@@ -201,6 +201,14 @@ export default class Abilities extends Menu {
         this.setAbility(ability, key, level);
 
         ability.key = key;
+
+        let icon = ability.querySelector('.ability-icon')!;
+
+        if (!icon) return;
+
+        // Toggle the ability if it has been activated.
+        if (active) icon.classList.add('active');
+        else icon.classList.remove('active');
     }
 
     /**
