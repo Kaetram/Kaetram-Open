@@ -178,6 +178,7 @@ export default {
             crush: 0,
             slash: 0,
             stab: 0,
+            archery: 0,
             magic: 0
         };
     },
