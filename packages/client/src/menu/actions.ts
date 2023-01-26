@@ -54,15 +54,16 @@ export default class Actions extends Menu {
         let description =
             itemDescription ||
             `<u>Attack Stats:</u>&emsp;&emsp;<u>Defense Stats:</u> <br>
-            Crush: ${attackStats.crush}&emsp;&emsp;&emsp;&emsp;Crush: ${defenseStats.crush} <br>
-            Slash: ${attackStats.slash}&emsp;&emsp;&emsp;&emsp;Slash: ${defenseStats.slash} <br>
-            Stab: ${attackStats.stab}&emsp;&emsp;&emsp;&emsp;&ensp;Stab: ${defenseStats.stab} <br>
-            Magic: ${attackStats.magic}&emsp;&emsp;&emsp;&emsp;Magic: ${defenseStats.magic} <br>
+             Crush: ${attackStats.crush}&emsp;&emsp;&emsp;&emsp; Crush: ${defenseStats.crush} <br>
+             Slash: ${attackStats.slash}&emsp;&emsp;&emsp;&emsp; Slash: ${defenseStats.slash} <br>
+             Stab: ${attackStats.stab}&emsp;&emsp;&emsp;&emsp;&ensp; Stab: ${defenseStats.stab} <br>
+             Archery: ${attackStats.archery}&emsp;&emsp;&emsp; Archery: ${defenseStats.archery} <br>
+             Magic: ${attackStats.magic}&emsp;&emsp;&emsp;&emsp; Magic: ${defenseStats.magic} <br><br>
             <u>Bonuses</u>: <br>
-            Accuracy: ${bonuses.accuracy} <br>
-            Strength: ${bonuses.strength} <br>
-            Archery: ${bonuses.archery} <br>
-            Magic: ${bonuses.magic} <br>`;
+             Accuracy: ${bonuses.accuracy} <br>
+             Strength: ${bonuses.strength} <br>
+             Archery: ${bonuses.archery} <br>
+             Magic: ${bonuses.magic} <br>`;
 
         this.description.innerHTML = description;
 
