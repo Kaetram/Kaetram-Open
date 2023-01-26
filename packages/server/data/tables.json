@@ -8,6 +8,14 @@
         "burger": 120
     },
 
+    "arrows": {
+        "arrow": 300,
+        "firearrow": 150,
+        "poisonarrow": 125,
+        "lightningarrow": 85,
+        "icearrow": 50
+    },
+
     "unusual": {
         "blackpotion": 50,
         "shardt1": 25,

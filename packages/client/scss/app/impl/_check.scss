@@ -17,6 +17,7 @@
         cursor: pointer;
 
         position: absolute;
+        top: -200%;
 
         width: 0;
         height: 0;
@@ -26,7 +27,7 @@
 
     .checkmark {
         position: absolute;
-        top: -1.5px;
+        top: 0.5px;
         left: 0;
 
         width: 16px;

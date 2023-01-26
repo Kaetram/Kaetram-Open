@@ -83,8 +83,7 @@ export default class Console {
 
                     if (!player) return log.info('An error has occurred.');
 
-                    if (command === 'timeout') player.timeout();
-                    else player.connection.close();
+                    player.connection.close();
 
                     break;
                 }

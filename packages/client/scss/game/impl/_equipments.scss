@@ -24,6 +24,11 @@
             position: absolute;
             top: 70px * $i;
             left: 110px * $i;
+        }
+
+        #player-image-armour,
+        #player-image-weapon {
+            transform: scale($i);
             scale: $i;
 
             overflow: auto;

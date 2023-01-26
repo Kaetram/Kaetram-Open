@@ -12,7 +12,7 @@ export default class Inventory extends Container {
 
     public override add(item: Item): boolean {
         if (!super.add(item)) {
-            this.notifyCallback?.('There is not enough room in your inventory!');
+            this.notifyCallback?.('You do not have enough space in your inventory.');
             return false;
         }
 

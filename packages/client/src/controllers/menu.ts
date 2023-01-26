@@ -19,8 +19,9 @@ import Interact from '../menu/interact';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import type Menu from '../menu/menu';
 import type Game from '../game';
+import type Menu from '../menu/menu';
+import type Entity from '../entity/entity';
 
 export default class MenuController {
     private actions: Actions = new Actions();
@@ -227,15 +228,15 @@ export default class MenuController {
      * Callback handler for when an item in the inventory is selected.
      * @param index Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
-     * @param tIndex Optional parameter passed when we specify a selected slot to swap with.
+     * @param value Optional parameter passed when we specify a selected slot to swap with.
      */
 
-    private handleInventorySelect(index: number, opcode: Opcodes.Container, tIndex?: number): void {
+    private handleInventorySelect(index: number, opcode: Opcodes.Container, value?: number): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
             index,
-            tIndex
+            value
         });
     }
 

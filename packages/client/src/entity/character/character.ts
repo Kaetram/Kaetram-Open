@@ -17,8 +17,6 @@ interface EffectInfo {
 }
 
 export default class Character extends Entity {
-    public healthBarVisible = false;
-
     public moving = false;
     public following = false;
     public stunned = false;
@@ -32,6 +30,7 @@ export default class Character extends Entity {
     public lastTarget = '';
 
     private attackers: { [id: string]: Character } = {};
+    private followers: { [id: string]: Character } = {};
 
     public movement = new Transition();
 
@@ -87,9 +86,9 @@ export default class Character extends Entity {
         },
         [Modules.Effects.Freezing]: {
             key: 'effect-freeze',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
-            speed: 150
+            speed: 200
         },
         [Modules.Effects.Poisonball]: {
             key: 'effect-poisonball',
@@ -228,6 +227,20 @@ export default class Character extends Entity {
     }
 
     /**
+     * Pursues a character. Similar to following except no attacking
+     * is done and the character will not stop following until you
+     * click on something else.
+     * @param character The character we will be pursuing.
+     */
+
+    public pursue(character: Character): void {
+        this.setTarget(character);
+        this.move(character.gridX, character.gridY);
+
+        character.addFollower(this);
+    }
+
+    /**
      * Not technically a following action, but it is used since
      * it removes the last step from the path.
      * @param x The x grid coordinate of the position we are moving towards.
@@ -250,6 +263,15 @@ export default class Character extends Entity {
     }
 
     /**
+     * Adds a follower to the dictionary of followers.
+     * @param character Character we are adding to the dictionary.
+     */
+
+    public addFollower(character: Character): void {
+        this.followers[character.instance] = character;
+    }
+
+    /**
      * Removes a character from the list of attackers.
      * @param character The character we are trying to remove.
      */
@@ -259,11 +281,28 @@ export default class Character extends Entity {
     }
 
     /**
+     * Removes a follower from the list of followers.
+     * @param character The character we are trying to remove.
+     */
+
+    public removeFollower(character: Character): void {
+        delete this.followers[character.instance];
+    }
+
+    /**
      * @returns Whether or not the character has any attackers.
      */
 
     public hasAttackers(): boolean {
         return Object.keys(this.attackers).length > 0;
+    }
+
+    /**
+     * @returns Whether or not the character has any followers.
+     */
+
+    public hasFollowers(): boolean {
+        return Object.keys(this.followers).length > 0;
     }
 
     /**
@@ -553,6 +592,11 @@ export default class Character extends Entity {
 
     public setEffect(effect: Modules.Effects): void {
         this.effect = effect;
+
+        if (this.effect === Modules.Effects.None) return;
+
+        // Reset the animation when we change effects.
+        this.effects[effect].animation.reset();
     }
 
     /**
@@ -616,8 +660,22 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
+    /**
+     * Iterates through all the attackers in the list and returns them.
+     * @param callback The attacker currently being iterated.
+     */
+
     public forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => callback(attacker));
+    }
+
+    /**
+     * Iterates through all the followers in the list and returns them.
+     * @param callback The follower currently being iterated.
+     */
+
+    public forEachFollower(callback: (follower: Character) => void): void {
+        _.each(this.followers, (follower) => callback(follower));
     }
 
     public override hasShadow(): boolean {

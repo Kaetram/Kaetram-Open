@@ -7,6 +7,7 @@ import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Arrows from './equipment/arrows';
 
 import Character from '../character';
 
@@ -54,7 +55,8 @@ export default class Player extends Character {
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon()
+        [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.Arrows]: new Arrows()
     };
 
     public skills: { [key: number]: Skill } = {};
@@ -221,10 +223,13 @@ export default class Player extends Character {
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
+     * @param count Optional parameter to remove a certain amount of items.
      */
 
-    public unequip(type: Modules.Equipment): void {
-        this.equipments[type].update();
+    public unequip(type: Modules.Equipment, count = 0): void {
+        // Decrement count if provided, otherwise reset the equipment slot.
+        if (count > 0) this.equipments[type].count = count;
+        else this.equipments[type].update();
     }
 
     /**
@@ -258,6 +263,14 @@ export default class Player extends Character {
 
     public getBoots(): Boots {
         return this.equipments[Modules.Equipment.Boots];
+    }
+
+    /**
+     * @returns The arrows object of the player.
+     */
+
+    public getArrows(): Arrows {
+        return this.equipments[Modules.Equipment.Arrows];
     }
 
     /**

@@ -4,11 +4,11 @@ import HUDController from './hud';
 import Animation from '../entity/animation';
 import log from '../lib/log';
 import { isMobile } from '../utils/detect';
+import Character from '../entity/character/character';
 
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Interact from '../menu/interact';
-import type Character from '../entity/character/character';
 import type Friends from '../menu/friends';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -64,6 +64,7 @@ export default class InputController {
     public hud: HUDController;
 
     public entity: Entity | undefined;
+    public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.
 
     public constructor(private game: Game) {
         this.app = game.app;
@@ -89,6 +90,9 @@ export default class InputController {
             this.setCoords(event);
             this.moveCursor();
         });
+
+        this.interact.onButton(this.handleInteract.bind(this));
+        this.interact.onClose(() => (this.interactEntity = undefined));
 
         this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
 
@@ -150,12 +154,12 @@ export default class InputController {
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);
 
-        if (!entity) return;
+        // Ignore if no entity or the entity is the player.
+        if (!entity || entity.instance === this.player.instance) return this.interact.hide();
 
-        //this.interact.show(this.mouse);
+        this.interact.show(this.mouse, entity, this.game.pvp);
 
-        console.log(entity);
-        //this.game.menu.actions.show();
+        this.interactEntity = entity;
     }
 
     /**
@@ -250,16 +254,19 @@ export default class InputController {
 
             case '+':
             case '=': {
-                this.game.camera.zoom(0.2);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(0.2);
             }
 
             case '-':
             case '_': {
-                this.game.camera.zoom(-0.2);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(-0.2);
+            }
+
+            case '0':
+            case ')': {
+                this.camera.setZoom();
+
+                return this.game.zoom(0);
             }
         }
     }
@@ -298,6 +305,45 @@ export default class InputController {
         }
 
         this.player.disableAction = false;
+    }
+
+    /**
+     * Receives an interact menu action from the interact handler. We use the entity
+     * in the input to determine the course of action.
+     * @param menuAction Which button in the interact menu was pressed.
+     */
+
+    private handleInteract(menuAction: Modules.MenuActions): void {
+        // No entity to interact with, perhaps this was called with the interact menu closed?
+        if (!this.interactEntity) return;
+
+        switch (menuAction) {
+            case Modules.MenuActions.Attack: {
+                return this.move({
+                    x: this.interactEntity.x,
+                    y: this.interactEntity.y,
+                    gridX: this.interactEntity.gridX,
+                    gridY: this.interactEntity.gridY
+                });
+            }
+
+            case Modules.MenuActions.Trade: {
+                break;
+            }
+
+            case Modules.MenuActions.Follow: {
+                if (this.interactEntity instanceof Character)
+                    this.game.player.pursue(this.interactEntity);
+                break;
+            }
+
+            case Modules.MenuActions.Examine: {
+                this.game.socket.send(Packets.Examine, [this.interactEntity.instance]);
+                break;
+            }
+        }
+
+        this.interact.hide();
     }
 
     /**

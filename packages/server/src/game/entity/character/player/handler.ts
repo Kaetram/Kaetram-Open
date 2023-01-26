@@ -125,8 +125,6 @@ export default class Handler {
      */
 
     private handleClose(): void {
-        console.log(`Player ${this.player.username} has disconnected.`);
-
         this.player.stopHealing();
 
         this.clear();
@@ -214,14 +212,21 @@ export default class Handler {
      */
 
     private handleAttack(): void {
-        if (!this.player.isMagic()) return;
+        if (this.player.isRanged()) {
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
 
-        let { manaCost } = this.player.equipment.getWeapon();
+            this.player.equipment.decrementArrows();
+        }
 
-        if (!this.player.hasManaForAttack())
-            return this.player.notify('You are low on mana, your attacks will be weaker.');
+        if (this.player.isMagic()) {
+            let { manaCost } = this.player.equipment.getWeapon();
 
-        this.player.mana.decrement(manaCost);
+            if (!this.player.hasManaForAttack())
+                return this.player.notify('You are low on mana, your attacks will be weaker.');
+
+            this.player.mana.decrement(manaCost);
+        }
     }
 
     /**
@@ -341,10 +346,11 @@ export default class Handler {
     /**
      * Callback for when the equipment is removed.
      * @param type The equipment type we are removing.
+     * @param count (Optional) The amount of items we are removing.
      */
 
-    private handleUnequip(type: Modules.Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
+    private handleUnequip(type: Modules.Equipment, count?: number): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type, count }));
 
         // Sync to nearby players.
         this.player.sync();
@@ -397,8 +403,8 @@ export default class Handler {
      */
 
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        // Spawn the item in the world if drop is true.
-        if (drop)
+        // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
+        if (drop && !this.player.isCheater())
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
@@ -593,26 +599,26 @@ export default class Handler {
         if (!character.isMob()) return;
 
         // Handle the experience upon killing a mob.
-        this.player.handleExperience((character as Mob).experience);
+        this.player.handleExperience(character.experience);
 
         /**
          * Special mobs (such as minibosses and bosses) have achievements
          * associated with them. Upon killing them, we complete the achievement.
          */
 
-        let mobAchievement = (character as Mob).achievement;
+        let mobAchievement = character.achievement;
 
         if (mobAchievement) this.player.achievements.get(mobAchievement).finish();
 
         // Checks if the mob has a active quest associated with it.
-        let quest = this.player.quests.getQuestFromMob(character as Mob);
+        let quest = this.player.quests.getQuestFromMob(character);
 
-        if (quest) quest.killCallback?.(character as Mob);
+        if (quest) quest.killCallback?.(character);
 
         // Checks if the mob has an active achievement associated with it.
-        let achievement = this.player.achievements.getAchievementFromEntity(character as Mob);
+        let achievement = this.player.achievements.getAchievementFromEntity(character);
 
-        if (achievement) achievement.killCallback?.(character as Mob);
+        if (achievement) achievement.killCallback?.(character);
     }
 
     /**
@@ -750,7 +756,7 @@ export default class Handler {
             if (!entity.isMob()) return;
 
             // Check if the mob can aggro the player and initiate the combat.
-            if ((entity as Mob).canAggro(this.player)) (entity as Mob).combat.attack(this.player);
+            if (entity.canAggro(this.player)) entity.combat.attack(this.player);
         });
     }
 
@@ -773,8 +779,6 @@ export default class Handler {
      */
 
     private clear(): void {
-        this.player.clearTimeout();
-
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
     }

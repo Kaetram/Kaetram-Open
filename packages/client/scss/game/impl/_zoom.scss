@@ -1,0 +1,47 @@
+@use '../../abstracts/media';
+
+#zoom-buttons {
+    position: absolute;
+    z-index: 1000;
+    top: 1em;
+    right: 2em;
+    transform: scale(2);
+
+    display: none;
+    flex-direction: row;
+
+    button {
+        width: 24px;
+        height: 24px;
+
+        opacity: 0.5;
+        background-color: transparent;
+        background-image: url('/img/1/main.png');
+        background-position-x: 338px;
+        border: none;
+
+        &:hover {
+            opacity: 0.75;
+            background-position-x: 314px;
+        }
+
+        &:active {
+            opacity: 0.75;
+            background-position-x: 290px;
+        }
+    }
+}
+
+#zoom-in {
+    background-position-y: 688px;
+}
+
+#zoom-out {
+    background-position-y: 664px;
+}
+
+@media (--sm) {
+    #zoom-buttons {
+        display: flex;
+    }
+}

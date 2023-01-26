@@ -158,7 +158,12 @@ export default class Game {
         this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
         this.player.idle();
 
-        if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
+        if (this.storage) {
+            this.player.setOrientation(this.storage.data.player.orientation);
+            this.camera.setZoom(this.storage.data.player.zoom);
+
+            this.renderer.resize();
+        }
 
         this.camera.centreOn(this.player);
 
@@ -321,5 +326,17 @@ export default class Game {
             this.camera.centreOn(this.player);
             this.renderer.updateAnimatedTiles();
         }
+    }
+
+    /**
+     * Zooms out the game and updates the camera.
+     * @param amount Amount to zoom in or out by.
+     */
+
+    public zoom(amount: number): void {
+        this.camera.zoom(amount);
+        this.storage.setZoom(this.camera.zoomFactor);
+
+        this.renderer.resize();
     }
 }
