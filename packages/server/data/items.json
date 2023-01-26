@@ -7,6 +7,7 @@
       "crush": 2,
       "slash": 6,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -26,6 +27,7 @@
       "crush": 4,
       "slash": 2,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -46,6 +48,7 @@
       "crush": 4,
       "slash": 0,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -64,6 +67,7 @@
       "crush": 14,
       "slash": 6,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -82,6 +86,7 @@
       "crush": 4,
       "slash": 16,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -100,6 +105,7 @@
       "crush": 4,
       "slash": 15,
       "stab": 14,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -118,6 +124,7 @@
       "crush": 6,
       "slash": 24,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -136,6 +143,7 @@
       "crush": 12,
       "slash": 24,
       "stab": 8,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -154,12 +162,14 @@
       "crush": 16,
       "slash": 12,
       "stab": 30,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 4,
       "slash": 8,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -178,6 +188,7 @@
       "crush": 6,
       "slash": 41,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -196,12 +207,14 @@
       "crush": 4,
       "slash": 42,
       "stab": 22,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 18,
       "slash": 18,
       "stab": 2,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -220,6 +233,7 @@
       "crush": 18,
       "slash": 14,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -238,6 +252,7 @@
       "crush": 40,
       "slash": 4,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -256,6 +271,7 @@
       "crush": 0,
       "slash": 42,
       "stab": 22,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -274,6 +290,7 @@
       "crush": 0,
       "slash": 40,
       "stab": 26,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -292,6 +309,7 @@
       "crush": 0,
       "slash": 36,
       "stab": 16,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -312,6 +330,7 @@
       "crush": 35,
       "slash": 50,
       "stab": 6,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -332,6 +351,7 @@
       "crush": 28,
       "slash": 60,
       "stab": 4,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -351,6 +371,7 @@
       "crush": 50,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -369,6 +390,7 @@
       "crush": 36,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -387,6 +409,7 @@
       "crush": 38,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -405,6 +428,7 @@
       "crush": 10,
       "slash": 44,
       "stab": 24,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -424,6 +448,7 @@
       "crush": 14,
       "slash": 68,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -442,6 +467,7 @@
       "crush": 2,
       "slash": 40,
       "stab": 16,
+      "archery": 0,
       "magic": 20
     },
     "bonuses": {
@@ -460,6 +486,7 @@
       "crush": 0,
       "slash": 48,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -478,6 +505,7 @@
       "crush": 0,
       "slash": 0,
       "stab": 30,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -496,6 +524,7 @@
       "crush": 0,
       "slash": 52,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -514,6 +543,7 @@
       "crush": 8,
       "slash": 60,
       "stab": 8,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -532,6 +562,7 @@
       "crush": 18,
       "slash": 60,
       "stab": 18,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -550,6 +581,7 @@
       "crush": 46,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -568,6 +600,7 @@
       "crush": 50,
       "slash": 30,
       "stab": 20,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -587,6 +620,7 @@
       "crush": 56,
       "slash": 30,
       "stab": 10,
+      "archery": 0,
       "magic": 60
     },
     "bonuses": {
@@ -605,6 +639,7 @@
       "crush": 40,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -623,6 +658,7 @@
       "crush": 20,
       "slash": 40,
       "stab": 10,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -642,6 +678,7 @@
       "crush": 50,
       "slash": 36,
       "stab": 20,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -660,6 +697,7 @@
       "crush": 50,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -679,6 +717,7 @@
       "crush": 20,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -698,6 +737,7 @@
       "crush": 30,
       "slash": 50,
       "stab": 20,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -717,6 +757,7 @@
       "crush": 10,
       "slash": 40,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -736,6 +777,7 @@
       "crush": 84,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -755,6 +797,7 @@
       "crush": 30,
       "slash": 54,
       "stab": 20,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -774,6 +817,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -797,6 +841,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -820,6 +865,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -843,6 +889,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 24
     },
     "bonuses": {
@@ -866,6 +913,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -887,6 +935,7 @@
       "crush": 50,
       "slash": 70,
       "stab": 30,
+      "archery": 0,
       "magic": 20
     },
     "bonuses": {
@@ -906,6 +955,7 @@
       "crush": 60,
       "slash": 80,
       "stab": 40,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -927,6 +977,7 @@
       "crush": 4,
       "slash": 4,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -948,6 +999,7 @@
       "crush": 4,
       "slash": 8,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -970,6 +1022,7 @@
       "crush": 4,
       "slash": 24,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -991,6 +1044,7 @@
       "crush": 8,
       "slash": 31,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1012,6 +1066,7 @@
       "crush": 24,
       "slash": 32,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1033,6 +1088,7 @@
       "crush": 30,
       "slash": 45,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1052,6 +1108,7 @@
       "crush": 40,
       "slash": 100,
       "stab": 50,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -1071,6 +1128,7 @@
       "crush": 10,
       "slash": 20,
       "stab": 100,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1090,6 +1148,7 @@
       "crush": 19,
       "slash": 124,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1109,6 +1168,7 @@
       "crush": 10,
       "slash": 20,
       "stab": 120,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1127,17 +1187,19 @@
   "pendant1": {
     "type": "pendant",
     "name": "Pendant",
-    "price": 5000,
+    "price": 1650,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 5,
       "slash": 5,
       "stab": 5,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1151,17 +1213,19 @@
   "greenpendant": {
     "type": "pendant",
     "name": "Jade Pendant",
-    "price": 5000,
+    "price": 2500,
     "attackStats": {
       "crush": 11,
       "slash": 12,
       "stab": 10,
+      "archery": 0,
       "magic": 7
     },
     "defenseStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1175,17 +1239,19 @@
   "pearlpendant": {
     "type": "pendant",
     "name": "Pearl Pendant",
-    "price": 5000,
+    "price": 4450,
     "attackStats": {
       "crush": 16,
       "slash": 16,
       "stab": 16,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 15,
       "slash": 15,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1199,17 +1265,19 @@
   "marblependant": {
     "type": "pendant",
     "name": "Diamond Pendant",
-    "price": 5000,
+    "price": 16500,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1223,17 +1291,19 @@
   "rubypendant": {
     "type": "pendant",
     "name": "Ruby Pendant",
-    "price": 5000,
+    "price": 4500,
     "attackStats": {
       "crush": 3,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": 7
     },
     "defenseStats": {
       "crush": 2,
       "slash": 2,
       "stab": 4,
+      "archery": 0,
       "magic": 14
     },
     "bonuses": {
@@ -1247,17 +1317,19 @@
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
-    "price": 5000,
+    "price": 8650,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 2,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 0,
       "slash": 3,
       "stab": 7,
+      "archery": 0,
       "magic": 23
     },
     "bonuses": {
@@ -1283,17 +1355,19 @@
   "ring1": {
     "type": "ring",
     "name": "Emerald Ring",
-    "price": 5000,
+    "price": 1500,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 5,
       "slash": 5,
       "stab": 5,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1307,17 +1381,19 @@
   "sproutring": {
     "type": "ring",
     "name": "Sprout Ring",
-    "price": 5000,
+    "price": 2350,
     "attackStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 7,
       "slash": 8,
       "stab": 7,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1331,17 +1407,19 @@
   "pearlring": {
     "type": "ring",
     "name": "Pearl Ring",
-    "price": 5000,
+    "price": 3600,
     "attackStats": {
       "crush": 16,
       "slash": 16,
       "stab": 16,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 15,
       "slash": 15,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1355,17 +1433,19 @@
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
-    "price": 5000,
+    "price": 6400,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1379,17 +1459,19 @@
   "spiritring": {
     "type": "ring",
     "name": "Spirit Ring",
-    "price": 5000,
+    "price": 7850,
     "attackStats": {
       "crush": 12,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 12,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 28
     },
     "bonuses": {
@@ -1403,17 +1485,19 @@
   "essentialrage": {
     "type": "ring",
     "name": "Essential Rage",
-    "price": 5000,
+    "price": 12500,
     "attackStats": {
       "crush": 22,
       "slash": 34,
       "stab": 18,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 20,
       "slash": 30,
       "stab": 16,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1429,17 +1513,19 @@
     "name": "Ruby Ring",
     "skill": "magic",
     "level": 10,
-    "price": 5000,
+    "price": 4500,
     "attackStats": {
       "crush": 6,
       "slash": 6,
       "stab": 6,
+      "archery": 0,
       "magic": 18
     },
     "defenseStats": {
       "crush": 4,
       "slash": 4,
       "stab": 8,
+      "archery": 0,
       "magic": 22
     },
     "bonuses": {
@@ -1455,17 +1541,19 @@
     "name": "Sapphire Ring",
     "skill": "magic",
     "level": 20,
-    "price": 5000,
+    "price": 8650,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 22
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 22
     },
     "bonuses": {
@@ -1481,17 +1569,19 @@
     "name": "Emerald Ring",
     "skill": "magic",
     "level": 30,
-    "price": 5000,
+    "price": 8650,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 33
     },
     "bonuses": {
@@ -1507,17 +1597,19 @@
     "name": "Fragmented Ring",
     "skill": "magic",
     "level": 40,
-    "price": 5000,
+    "price": 11000,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 10
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -1533,17 +1625,19 @@
     "name": "Diamond Ring",
     "skill": "magic",
     "level": 50,
-    "price": 5000,
+    "price": 16500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 17
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 33
     },
     "bonuses": {
@@ -1559,17 +1653,19 @@
     "name": "Pythar Ring",
     "skill": "strength",
     "level": 50,
-    "price": 5000,
+    "price": 7500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 7,
       "stab": 5,
+      "archery": 0,
       "magic": 7
     },
     "bonuses": {
@@ -1585,17 +1681,19 @@
     "name": "Nisoc Ring",
     "skill": "accuracy",
     "level": 41,
-    "price": 5000,
+    "price": 7800,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 7,
       "stab": 5,
+      "archery": 0,
       "magic": 7
     },
     "bonuses": {
@@ -1613,12 +1711,14 @@
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1637,12 +1737,14 @@
       "crush": 2,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": -1
     },
     "defenseStats": {
       "crush": 6,
       "slash": 10,
       "stab": 2,
+      "archery": 0,
       "magic": -3
     },
     "bonuses": {
@@ -1661,12 +1763,14 @@
       "crush": 1,
       "slash": 1,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 7,
       "slash": 14,
       "stab": 3,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1686,12 +1790,14 @@
       "crush": 3,
       "slash": 8,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 11,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1711,12 +1817,14 @@
       "crush": 3,
       "slash": 8,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 10,
       "slash": 16,
       "stab": 10,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1736,12 +1844,14 @@
       "crush": 4,
       "slash": 7,
       "stab": 6,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 10,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -1761,12 +1871,14 @@
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 16,
       "stab": 6,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1786,12 +1898,14 @@
       "crush": 9,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 9,
       "slash": 18,
       "stab": 9,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1811,12 +1925,14 @@
       "crush": 12,
       "slash": 16,
       "stab": 10,
+      "archery": 0,
       "magic": 5
     },
     "defenseStats": {
       "crush": 12,
       "slash": 21,
       "stab": 13,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -1836,12 +1952,14 @@
       "crush": 12,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": 5
     },
     "defenseStats": {
       "crush": 12,
       "slash": 24,
       "stab": 15,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -1861,12 +1979,14 @@
       "crush": 12,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 28,
       "stab": 17,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -1886,12 +2006,14 @@
       "crush": 12,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 30,
       "stab": 11,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1911,12 +2033,14 @@
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1936,12 +2060,14 @@
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1961,12 +2087,14 @@
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1986,12 +2114,14 @@
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -2011,12 +2141,14 @@
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -2036,12 +2168,14 @@
       "crush": 12,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 24,
       "stab": 22,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2061,12 +2195,14 @@
       "crush": 18,
       "slash": 28,
       "stab": 10,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 10,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2086,12 +2222,14 @@
       "crush": 18,
       "slash": 28,
       "stab": 10,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 22,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2111,12 +2249,14 @@
       "crush": 18,
       "slash": 28,
       "stab": 14,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 26,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2136,12 +2276,14 @@
       "crush": 28,
       "slash": 28,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 32,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2161,12 +2303,14 @@
       "crush": 28,
       "slash": 30,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 34,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2186,12 +2330,14 @@
       "crush": 28,
       "slash": 36,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 38,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2211,12 +2357,14 @@
       "crush": 28,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 46,
       "stab": 6,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2236,12 +2384,14 @@
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 6,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2261,12 +2411,14 @@
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 10
     },
     "defenseStats": {
       "crush": 6,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 14
     },
     "bonuses": {
@@ -2286,12 +2438,14 @@
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 6,
       "slash": 38,
       "stab": 18,
+      "archery": 0,
       "magic": 16
     },
     "bonuses": {
@@ -2311,12 +2465,14 @@
       "crush": 11,
       "slash": 10,
       "stab": 15,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2336,12 +2492,14 @@
       "crush": 11,
       "slash": 15,
       "stab": 25,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 18,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2366,6 +2524,7 @@
       "crush": 5,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2385,6 +2544,7 @@
       "crush": 4,
       "slash": 6,
       "stab": 16,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2404,6 +2564,7 @@
       "crush": 3,
       "slash": 4,
       "stab": 21,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2423,6 +2584,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 25,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2442,6 +2604,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 31,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2461,6 +2624,7 @@
       "crush": 5,
       "slash": 4,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2480,6 +2644,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 45,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2499,6 +2664,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 41,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2518,6 +2684,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 37,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2537,6 +2704,7 @@
       "crush": 4,
       "slash": 8,
       "stab": 34,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2556,6 +2724,7 @@
       "crush": 4,
       "slash": 9,
       "stab": 35,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2575,6 +2744,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 33,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2594,6 +2764,7 @@
       "crush": 4,
       "slash": 7,
       "stab": 40,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2613,6 +2784,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2632,6 +2804,7 @@
       "crush": 2,
       "slash": 3,
       "stab": 43,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2651,6 +2824,7 @@
       "crush": 6,
       "slash": 4,
       "stab": 52,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2670,6 +2844,7 @@
       "crush": 4,
       "slash": 7,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2690,6 +2865,7 @@
       "crush": 10,
       "slash": 4,
       "stab": 68,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2709,6 +2885,7 @@
       "crush": 2,
       "slash": 6,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2728,6 +2905,7 @@
       "crush": 10,
       "slash": 6,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2747,6 +2925,7 @@
       "crush": 0,
       "slash": 0,
       "stab": 48,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2766,6 +2945,7 @@
       "crush": 2,
       "slash": 6,
       "stab": 60,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2785,6 +2965,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 62,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2804,6 +2985,7 @@
       "crush": 10,
       "slash": 4,
       "stab": 70,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2823,6 +3005,7 @@
       "crush": 10,
       "slash": 8,
       "stab": 75,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2842,6 +3025,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 70,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2861,6 +3045,7 @@
       "crush": 2,
       "slash": 4,
       "stab": 85,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2885,12 +3070,14 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 12,
       "stab": 3,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2910,12 +3097,14 @@
       "crush": 4,
       "slash": 6,
       "stab": 5,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 10,
       "slash": 14,
       "stab": 5,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2935,12 +3124,14 @@
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 12,
       "stab": 9,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2960,12 +3151,14 @@
       "crush": 4,
       "slash": 8,
       "stab": 3,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 12,
       "slash": 20,
       "stab": 12,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2985,12 +3178,14 @@
       "crush": 6,
       "slash": 12,
       "stab": 5,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 14,
       "slash": 24,
       "stab": 14,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3010,12 +3205,14 @@
       "crush": 7,
       "slash": 14,
       "stab": 8,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 22,
       "slash": 20,
       "stab": 16,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3035,12 +3232,14 @@
       "crush": 7,
       "slash": 14,
       "stab": 8,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 24,
       "slash": 23,
       "stab": 18,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3060,12 +3259,14 @@
       "crush": 10,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 28,
       "slash": 24,
       "stab": 20,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3085,12 +3286,14 @@
       "crush": 10,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 28,
       "slash": 28,
       "stab": 22,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3110,12 +3313,14 @@
       "crush": 12,
       "slash": 24,
       "stab": 14,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 32,
       "slash": 32,
       "stab": 22,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3135,12 +3340,14 @@
       "crush": 12,
       "slash": 24,
       "stab": 13,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 34,
       "slash": 30,
       "stab": 26,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -3160,12 +3367,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3185,12 +3394,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3210,12 +3421,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3235,12 +3448,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3260,12 +3475,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 38,
       "slash": 40,
       "stab": 33,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -3285,12 +3502,14 @@
       "crush": 13,
       "slash": 30,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 46,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3310,12 +3529,14 @@
       "crush": 13,
       "slash": 32,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 46,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3335,12 +3556,14 @@
       "crush": 13,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 50,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3360,12 +3583,14 @@
       "crush": 13,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3385,12 +3610,14 @@
       "crush": 11,
       "slash": 38,
       "stab": 13,
+      "archery": 0,
       "magic": -5
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
+      "archery": 0,
       "magic": -10
     },
     "bonuses": {
@@ -3410,12 +3637,14 @@
       "crush": 13,
       "slash": 48,
       "stab": 15,
+      "archery": 0,
       "magic": -8
     },
     "defenseStats": {
       "crush": 34,
       "slash": 42,
       "stab": 20,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3435,12 +3664,14 @@
       "crush": 13,
       "slash": 48,
       "stab": 24,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 20,
       "slash": 32,
       "stab": 16,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -3460,12 +3691,14 @@
       "crush": 15,
       "slash": 50,
       "stab": 24,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 20,
       "slash": 32,
       "stab": 16,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -3485,12 +3718,14 @@
       "crush": 12,
       "slash": 40,
       "stab": 24,
+      "archery": 0,
       "magic": 14
     },
     "defenseStats": {
       "crush": 24,
       "slash": 32,
       "stab": 28,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -3510,12 +3745,14 @@
       "crush": 28,
       "slash": 34,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -3535,12 +3772,14 @@
       "crush": 28,
       "slash": 36,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 24,
       "stab": 30,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -3560,12 +3799,14 @@
       "crush": 58,
       "slash": 76,
       "stab": 42,
+      "archery": 0,
       "magic": 22
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 40
     },
     "bonuses": {
@@ -3586,12 +3827,14 @@
       "crush": 32,
       "slash": 20,
       "stab": 28,
+      "archery": 0,
       "magic": 40
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 65
     },
     "bonuses": {
@@ -3611,12 +3854,14 @@
       "crush": 38,
       "slash": 56,
       "stab": 22,
+      "archery": 0,
       "magic": 26
     },
     "defenseStats": {
       "crush": 24,
       "slash": 16,
       "stab": 14,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -3651,12 +3896,14 @@
       "crush": 38,
       "slash": 26,
       "stab": 32,
+      "archery": 0,
       "magic": 16
     },
     "defenseStats": {
       "crush": 124,
       "slash": 86,
       "stab": 64,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -3687,12 +3934,14 @@
       "crush": 15,
       "slash": 30,
       "stab": 20,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 36,
       "slash": 26,
       "stab": 16,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -3790,12 +4039,14 @@
       "crush": 5,
       "slash": 6,
       "stab": 7,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 68,
       "slash": 55,
       "stab": 60,
+      "archery": 0,
       "magic": 45
     },
     "bonuses": {
@@ -3843,12 +4094,14 @@
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 14
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3868,12 +4121,14 @@
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 21
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -3893,12 +4148,14 @@
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 21
     },
     "bonuses": {
@@ -3918,12 +4175,14 @@
       "crush": 6,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 36
     },
     "defenseStats": {
       "crush": 4,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": 28
     },
     "bonuses": {
@@ -3943,12 +4202,14 @@
       "crush": 8,
       "slash": 12,
       "stab": 11,
+      "archery": 0,
       "magic": 45
     },
     "defenseStats": {
       "crush": -4,
       "slash": -8,
       "stab": -1,
+      "archery": 0,
       "magic": 37
     },
     "bonuses": {
@@ -3968,12 +4229,14 @@
       "crush": 38,
       "slash": 56,
       "stab": 26,
+      "archery": 0,
       "magic": 26
     },
     "defenseStats": {
       "crush": 54,
       "slash": 46,
       "stab": 34,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -4018,12 +4281,14 @@
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 20,
       "slash": 34,
       "stab": 18,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -4087,12 +4352,14 @@
       "crush": 88,
       "slash": 130,
       "stab": 78,
+      "archery": 0,
       "magic": 50
     },
     "defenseStats": {
       "crush": 160,
       "slash": 198,
       "stab": 146,
+      "archery": 0,
       "magic": 68
     },
     "bonuses": {
@@ -4493,6 +4760,7 @@
       "crush": -69,
       "slash": -69,
       "stab": -69,
+      "archery": -69,
       "magic": -420
     },
     "bonuses": {
@@ -4585,6 +4853,7 @@
       "crush": 8,
       "slash": 22,
       "stab": 12,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -4719,12 +4988,14 @@
       "crush": 1,
       "slash": 2,
       "stab": 1,
+      "archery": 0,
       "magic": -4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 3,
       "stab": 1,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -4742,12 +5013,14 @@
       "crush": 6,
       "slash": 7,
       "stab": 4,
+      "archery": 0,
       "magic": -6
     },
     "defenseStats": {
       "crush": 7,
       "slash": 12,
       "stab": 6,
+      "archery": 0,
       "magic": -5
     },
     "bonuses": {
@@ -4765,12 +5038,14 @@
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -4789,12 +5064,14 @@
       "crush": 1,
       "slash": 2,
       "stab": 1,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 3,
       "stab": 1,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -4812,12 +5089,14 @@
       "crush": 9,
       "slash": 12,
       "stab": 10,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 12,
       "slash": 12,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {

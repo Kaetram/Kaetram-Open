@@ -760,7 +760,7 @@
 
   "hobgoblin": {
     "name": "Hobgoblin",
-    "drops": {"mailarmor": 125, "platearmor": 75, "platearcherarmor": 75, "mailarcherarmor": 125, "steelboots": 65},
+    "drops": {"mailarmor": 150, "platearmor": 105, "platearcherarmor": 105, "mailarcherarmor": 150, "steelboots": 125},
     "hitPoints": 260,
     "defenseLevel": 8,
     "attackLevel": 8,
@@ -1724,7 +1724,7 @@
 
   "ogrelord": {
     "name": "Ogre Lord",
-    "drops": {"sidesword": 100, "goldensword": 125, "pearlpendant": 50, "pearlring": 50},
+    "drops": {"sidesword": 75, "goldensword": 100, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
     "defenseLevel": 40,
     "attackLevel": 4,
@@ -1829,7 +1829,7 @@
 
   "forestdragon": {
     "name": "Forest Dragon",
-    "drops": {"dragonarmor": 45, "bamboospear": 45, "justicebow": 75, "forestbow": 4},
+    "drops": {"dragonarmor": 75, "bamboospear": 75, "justicebow": 115, "forestbow": 10},
     "hitPoints": 6942,
     "defenseLevel": 10,
     "attackLevel": 80,
@@ -1849,7 +1849,7 @@
 
   "enel": {
     "name": "Lucendi",
-    "drops": {"redenelbow": 25, "enelarmor": 25, "eneltrident": 50, "marblependant": 100},
+    "drops": {"redenelbow": 60, "enelarmor": 60, "eneltrident": 60, "marblependant": 125},
     "hitPoints": 25000,
     "defenseLevel": 150,
     "attackLevel": 120,
