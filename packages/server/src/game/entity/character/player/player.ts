@@ -1126,6 +1126,8 @@ export default class Player extends Character {
      */
 
     public override hasArrows(): boolean {
+        if (!this.quests.isTutorialFinished()) return true;
+
         return this.equipment.getArrows().count > 0;
     }
 
@@ -1723,6 +1725,9 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
+        // Use `Character` default projectile nmame in tutorial.
+        if (!this.quests.isTutorialFinished()) return this.projectileName;
+
         // Use the projectile name of the arrows if the player is using ranged weapons.
         if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
 
