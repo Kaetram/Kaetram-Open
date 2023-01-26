@@ -39,6 +39,8 @@ export default class Server {
         if (this.players.includes(username)) return;
 
         this.players.push(username);
+
+        this.updateCallback?.();
     }
 
     /**
@@ -48,6 +50,8 @@ export default class Server {
 
     public removePlayer(username: string): void {
         this.players.splice(this.players.indexOf(username), 1);
+
+        this.updateCallback?.();
     }
 
     /**
