@@ -20,6 +20,8 @@ export default class Equipment {
     public mining = -1;
     public poisonous = false;
 
+    public movementModifier = -1;
+
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
     public defenseStats: Stats = Utils.getEmptyStats();
@@ -73,6 +75,7 @@ export default class Equipment {
         this.lumberjacking = -1;
         this.mining = -1;
         this.poisonous = false;
+        this.movementModifier = -1;
 
         this.attackStats = Utils.getEmptyStats();
         this.defenseStats = Utils.getEmptyStats();
@@ -105,6 +108,14 @@ export default class Equipment {
 
     public isMining(): boolean {
         return this.mining > 0;
+    }
+
+    /**
+     * @returns Whether or not the equipment has a movement modifier.
+     */
+
+    public hasMovementModifier(): boolean {
+        return this.movementModifier !== -1;
     }
 
     /**
