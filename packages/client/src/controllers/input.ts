@@ -261,6 +261,13 @@ export default class InputController {
             case '_': {
                 return this.game.zoom(-0.2);
             }
+
+            case '0':
+            case ')': {
+                this.camera.setZoom();
+
+                return this.game.zoom(0);
+            }
         }
     }
 
