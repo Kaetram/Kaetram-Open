@@ -841,7 +841,7 @@ export default class Commands {
 
                 let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
 
-                if (!rank) return this.player.notify(`Invalid rank: ${rankText}`);
+                if (isNaN(rank)) return this.player.notify(`Invalid rank: ${rankText}`);
 
                 player.setRank(rank);
                 player.sync();
