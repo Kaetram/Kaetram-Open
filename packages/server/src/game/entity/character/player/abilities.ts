@@ -11,12 +11,14 @@ import type Ability from './ability/ability';
 import type Player from './player';
 
 type AddCallback = (ability: Ability) => void;
+type ToggleCallback = (key: string) => void;
 
 export default class Abilities {
     private abilities: { [key: string]: Ability } = {}; // All the abilities that the player has.
 
     private loadCallback?: () => void;
     private addCallback?: AddCallback;
+    public toggleCallback?: ToggleCallback;
 
     public constructor(private player: Player) {}
 
@@ -58,6 +60,8 @@ export default class Abilities {
 
     public use(key: string): void {
         this.abilities[key]?.activate(this.player);
+
+        this.toggleCallback?.(key);
     }
 
     /**
@@ -181,5 +185,15 @@ export default class Abilities {
 
     public onAdd(callback: AddCallback): void {
         this.addCallback = callback;
+    }
+
+    /**
+     * Callback for when the ability is toggled. This occurs
+     * when the ability is activated or when it is deactivated.
+     * @param callback Contains the key of the ability that was toggled.
+     */
+
+    public onToggle(callback: ToggleCallback): void {
+        this.toggleCallback = callback;
     }
 }
