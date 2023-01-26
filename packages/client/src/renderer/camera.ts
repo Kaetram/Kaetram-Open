@@ -4,6 +4,7 @@ import $ from 'jquery';
 import type Player from '../entity/character/player/player';
 
 const MAXIMUM_ZOOM = 6,
+    DEFAULT_ZOOM = 3,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
 
@@ -102,6 +103,20 @@ export default class Camera {
 
         this.x = gridX * this.tileSize;
         this.y = gridY * this.tileSize;
+    }
+
+    /**
+     * Sets the zoom factor of the camera and clamps the limits.
+     * @param zoom The new zoom factor, defaults to DEFAULT_ZOOM value.
+     */
+
+    public setZoom(zoom = DEFAULT_ZOOM): void {
+        this.zoomFactor = zoom;
+
+        if (isNaN(this.zoomFactor)) this.zoomFactor = DEFAULT_ZOOM;
+
+        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
+        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
     }
 
     /**
@@ -264,18 +279,12 @@ export default class Camera {
 
     /**
      * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
-     * we zoom out, if it's positive we zoom in. The function also checks
-     * maximum zoom.
+     * we zoom out, if it's positive we zoom in.
      * @param zoomAmount Float value we are zooming by.
      */
 
     public zoom(zoomAmount = 0): void {
-        this.zoomFactor += zoomAmount;
-
-        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
-        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
-
-        this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
+        this.setZoom(this.zoomFactor + zoomAmount);
     }
 
     /**
