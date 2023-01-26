@@ -158,7 +158,14 @@ export default class Game {
         this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
         this.player.idle();
 
-        if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
+        if (this.storage) {
+            console.log(this.storage.data.player);
+
+            this.player.setOrientation(this.storage.data.player.orientation);
+            this.camera.zoomFactor = this.storage.data.player.zoom;
+
+            this.renderer.resize();
+        }
 
         this.camera.centreOn(this.player);
 
@@ -330,6 +337,8 @@ export default class Game {
 
     public zoom(amount: number): void {
         this.camera.zoom(amount);
+        this.storage.setZoom(this.camera.zoomFactor);
+
         this.renderer.resize();
     }
 }
