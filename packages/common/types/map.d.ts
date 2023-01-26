@@ -155,6 +155,7 @@ export interface ProcessedMap {
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
     trees: ProcessedResource[];
+    rocks: ProcessedResource[];
 }
 
 export interface ProcessedClientMap {

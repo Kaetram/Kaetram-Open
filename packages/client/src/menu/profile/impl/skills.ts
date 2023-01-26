@@ -1,6 +1,6 @@
-import _ from 'lodash-es';
-
 import Menu from '../../menu';
+
+import _ from 'lodash-es';
 
 import type Player from '../../../entity/character/player/player';
 import type Skill from '../../../entity/character/player/skill';

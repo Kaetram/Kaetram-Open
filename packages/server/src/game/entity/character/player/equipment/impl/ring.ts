@@ -1,6 +1,6 @@
-import { Modules } from '@kaetram/common/network';
-
 import Equipment from '../equipment';
+
+import { Modules } from '@kaetram/common/network';
 
 import type { Enchantments } from '@kaetram/common/types/item';
 import type Item from '../../../../objects/item';

@@ -1,7 +1,7 @@
+import Blob from '../renderer/bubbles/blob';
+
 import $ from 'jquery';
 import _ from 'lodash-es';
-
-import Blob from '../renderer/bubbles/blob';
 
 import type Game from '../game';
 

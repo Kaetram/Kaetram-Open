@@ -1,7 +1,7 @@
+import MongoDB from './mongodb/mongodb';
+
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-
-import MongoDB from './mongodb/mongodb';
 
 export type DatabaseType = MongoDB;
 
@@ -17,7 +17,9 @@ export default class Database {
                     config.mongodbPort,
                     config.mongodbUser,
                     config.mongodbPassword,
-                    config.mongodbDatabase
+                    config.mongodbDatabase,
+                    config.mongodbTls,
+                    config.mongodbSrv
                 );
                 break;
             }

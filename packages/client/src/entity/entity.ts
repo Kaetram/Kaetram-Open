@@ -1,6 +1,6 @@
-import { Modules } from '@kaetram/common/network';
-
 import Utils from '../utils/util';
+
+import { Modules } from '@kaetram/common/network';
 
 import type Animation from './animation';
 import type Sprite from './sprite';
@@ -15,6 +15,8 @@ export default abstract class Entity {
     public name = '';
 
     public region = -1;
+
+    public healthBarVisible = false;
 
     public sprite!: Sprite;
 

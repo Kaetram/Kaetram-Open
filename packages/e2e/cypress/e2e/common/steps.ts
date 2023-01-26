@@ -1,6 +1,6 @@
-import { After, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
-
 import { getWorldContext } from '../worldutils';
+
+import { After, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 // this will get called before each scenario
 After(function () {

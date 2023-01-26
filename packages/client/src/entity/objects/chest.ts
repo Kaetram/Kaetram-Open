@@ -1,6 +1,6 @@
-import { Modules } from '@kaetram/common/network';
-
 import Entity from '../entity';
+
+import { Modules } from '@kaetram/common/network';
 
 export default class Chest extends Entity {
     public constructor(instance: string) {

@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
 
-import Menu from './menu';
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type { SlotData } from '@kaetram/common/types/slot';
 import type Inventory from './inventory';
@@ -80,9 +80,12 @@ export default class Bank extends Menu {
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getInventoryElement(index).querySelector<HTMLElement>('.bank-image')!,
-                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!;
+                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.inventory-item-image')!;
 
-            image.style.backgroundImage = slot.style.backgroundImage;
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
             count.textContent = slot.textContent;
         });
     }

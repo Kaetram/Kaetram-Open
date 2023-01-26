@@ -5,12 +5,12 @@
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 
-import _ from 'lodash-es';
+import log from './log';
 
 import config from '../config';
 import { Modules, Packets } from '../network';
 
-import log from './log';
+import _ from 'lodash-es';
 
 import type { Bonuses, Stats } from '../types/item';
 
@@ -231,6 +231,16 @@ export default {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
             email
         );
+    },
+
+    /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
     },
 
     /**

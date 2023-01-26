@@ -1,7 +1,7 @@
-import _ from 'lodash-es';
-
 import Splat from '../renderer/infos/splat';
 import Utils from '../utils/util';
+
+import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
 

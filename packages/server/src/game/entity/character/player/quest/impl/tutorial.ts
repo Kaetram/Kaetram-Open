@@ -1,6 +1,6 @@
-import config from '@kaetram/common/config';
-
 import Quest from '../quest';
+
+import config from '@kaetram/common/config';
 
 import type { RawQuest } from '@kaetram/common/types/quest';
 

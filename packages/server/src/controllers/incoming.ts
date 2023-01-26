@@ -1,3 +1,8 @@
+import Commands from './commands';
+
+import Creator from '../database/mongodb/creator';
+import { Spawn } from '../network/packets';
+
 import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
@@ -5,11 +10,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
-import Creator from '../database/mongodb/creator';
-import { Spawn } from '../network/packets';
-
-import Commands from './commands';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Entities from './entities';
@@ -54,7 +54,7 @@ export default class Incoming {
                 return;
             }
 
-            player.refreshTimeout();
+            player.connection.refreshTimeout();
 
             // Prevent server from crashing due to a packet malfunction.
             try {
@@ -116,6 +116,9 @@ export default class Incoming {
                     case Packets.Focus: {
                         return this.player.updateEntityPositions();
                     }
+                    case Packets.Examine: {
+                        return this.handleExamine(message);
+                    }
                 }
             } catch (error) {
                 log.error(error);
@@ -144,6 +147,9 @@ export default class Incoming {
             if (this.world.isOnline(this.player.username))
                 return this.connection.reject('loggedin');
 
+            // Synchronize the login immediately with the hub.
+            this.world.api.sendLogin(this.player.username);
+
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
         }
@@ -151,7 +157,12 @@ export default class Incoming {
         // Handle login for each particular case.
         switch (opcode) {
             case Opcodes.Login.Login: {
-                return this.database.login(this.player);
+                // Check the player in other servers first (defaults to false if hub is not present).
+                return this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+                    if (online) return this.connection.reject('loggedin');
+
+                    this.database.login(this.player);
+                });
             }
 
             case Opcodes.Login.Register: {
@@ -185,6 +196,13 @@ export default class Incoming {
         this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
+
+        this.player.welcome();
+
+        // A secondary check after the player has fully loaded in.
+        this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
+            if (online) this.player.connection.reject('loggedin');
+        });
     }
 
     /**
@@ -230,7 +248,8 @@ export default class Incoming {
                 movementSpeed,
                 targetInstance,
                 orientation,
-                following
+                following,
+                timestamp
             } = data,
             entity: Entity;
 
@@ -256,7 +275,7 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!);
+                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
             }
 
             case Opcodes.Movement.Stop: {
@@ -353,18 +372,20 @@ export default class Incoming {
         // Handle commands if the prefix is / or ;
         if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
+        // Check for mute before filtering the message.
+        if (this.player.isMuted()) return this.player.notify('You are currently muted.', 'crimson');
+
         this.player.chat(Filter.clean(text));
     }
 
-    private handleCommand(message: [Opcodes.Command, Position]): void {
+    private handleCommand(message: [Opcodes.Command, Coordinate]): void {
         let [opcode, position] = message;
 
-        if (this.player.rank !== Modules.Ranks.Administrator) return;
+        if (this.player.rank !== Modules.Ranks.Admin) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.x, position.y, true);
-
+                this.player.teleport(position.gridX, position.gridY, true);
                 break;
             }
         }
@@ -378,7 +399,7 @@ export default class Incoming {
      */
 
     private handleContainer(packet: ContainerPacket): void {
-        log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
+        //log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
@@ -390,11 +411,11 @@ export default class Incoming {
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.index!);
+                return this.player.handleContainerRemove(packet.type, packet.index!, packet.value!);
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.index!, packet.tIndex!);
+                return this.player.handleContainerSwap(packet.type, packet.index!, packet.value!);
             }
         }
     }
@@ -433,6 +454,10 @@ export default class Incoming {
             }
 
             case Opcodes.Trade.Decline: {
+                break;
+            }
+
+            case Opcodes.Trade.Close: {
                 break;
             }
         }
@@ -480,7 +505,7 @@ export default class Incoming {
      */
 
     private handleStore(data: StorePacket): void {
-        log.debug(`Received store packet: ${data.opcode}`);
+        // log.debug(`Received store packet: ${data.opcode}`);
 
         // Ignore invalid packets.
         if (data.index < 0) return;
@@ -519,18 +544,47 @@ export default class Incoming {
     }
 
     /**
+     * Handles the interaction with the examine button. Just displays
+     * the description for the entity selected (generally a mob).
+     * @param instance The instance of the entity.
+     */
+
+    private handleExamine(instance: string): void {
+        let entity = this.entities.get(instance);
+
+        if (!entity.isMob() && !entity.isItem()) return;
+
+        if (!entity.description) return this.player.notify('I have no idea what that is.');
+
+        this.player.notify(entity.description);
+    }
+
+    /**
      * Used to prevent client-sided manipulation. The client will send the packet to start combat
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
      */
     private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.isMob() || target.isMob()) return true;
 
-        return (
-            attacker.isPlayer() &&
-            target.isPlayer() &&
-            attacker.pvp &&
-            target.pvp &&
-            attacker.team !== target.team
-        );
+        // If either of the entities are not players, we don't want to handle this.
+        if (!attacker.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            attacker.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (attacker.isCheater()) {
+            attacker.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        return attacker.pvp && target.pvp && attacker.team !== target.team;
     }
 }
