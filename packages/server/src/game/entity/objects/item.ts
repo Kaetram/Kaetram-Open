@@ -190,7 +190,8 @@ export default class Item extends Entity {
             }
 
             case 'weapon':
-            case 'weaponarcher': {
+            case 'weaponarcher':
+            case 'weaponmagic': {
                 return Modules.Equipment.Weapon;
             }
 
@@ -315,6 +316,7 @@ export default class Item extends Entity {
             this.itemType === 'armourarcher' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
+            this.itemType === 'weaponmagic' ||
             this.itemType === 'pendant' ||
             this.itemType === 'boots' ||
             this.itemType === 'ring' ||
@@ -330,6 +332,14 @@ export default class Item extends Entity {
 
     public isArcherWeapon(): boolean {
         return this.itemType === 'weaponarcher';
+    }
+
+    /**
+     * @returns Whether or not the weapon is a magic-based weapon.
+     */
+
+    public isMagicWeapon(): boolean {
+        return this.itemType === 'weaponmagic';
     }
 
     /**

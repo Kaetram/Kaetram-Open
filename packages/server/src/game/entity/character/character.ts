@@ -502,6 +502,9 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * `isRanged` is a general function that checks if the character is using
+     * any form of ranged attack. This can be either a bow or magic spells. It is
+     * up to the rest of the logic to establish which is which and what to do.
      * @returns If the `attackRange` is greater than 1.
      */
 
