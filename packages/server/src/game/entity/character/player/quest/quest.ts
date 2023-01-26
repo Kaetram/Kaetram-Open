@@ -76,7 +76,7 @@ export default abstract class Quest {
      */
 
     public loaded(): void {
-        log.debug(`[${this.key}] Uninitialized loaded();`);
+        //log.debug(`[${this.key}] Uninitialized loaded();`);
     }
 
     /**
