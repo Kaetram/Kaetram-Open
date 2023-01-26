@@ -1424,7 +1424,6 @@ export default class Player extends Character {
      */
 
     public chat(message: string, global = false, withBubble = true, colour = ''): void {
-        if (this.isMuted()) return this.notify('You are currently muted.', 'crimson');
         if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
 
         log.debug(`[${this.username}] ${message}`);
