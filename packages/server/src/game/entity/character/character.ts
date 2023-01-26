@@ -478,6 +478,15 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Defaults implementation for characters.
+     * @returns Always false if not implemented.
+     */
+
+    public hasArrows(): boolean {
+        return true;
+    }
+
+    /**
      * A character is considered in combat when they have a target or are
      * being targeted by some attackers.
      * @returns Whether or not the character is in a combat.

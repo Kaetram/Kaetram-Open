@@ -42,7 +42,7 @@ export default class Equipments {
 
     private loadCallback?: () => void;
     private equipCallback?: (equipment: Equipment) => void;
-    private unequipCallback?: (type: Modules.Equipment) => void;
+    private unequipCallback?: (type: Modules.Equipment, count?: number) => void;
 
     public constructor(private player: Player) {}
 
@@ -54,7 +54,7 @@ export default class Equipments {
 
     public load(equipmentInfo: EquipmentData[]): void {
         _.each(equipmentInfo, (info: EquipmentData) => {
-            let equipment = this.getEquipment(info.type);
+            let equipment = this.get(info.type);
 
             if (!equipment) return;
             if (!info.key) return; // Skip if the item is already null
@@ -81,7 +81,7 @@ export default class Equipments {
             );
 
         let type = item.getEquipmentType(),
-            equipment = this.getEquipment(type);
+            equipment = this.get(type);
 
         if (!equipment) return;
 
@@ -104,7 +104,7 @@ export default class Equipments {
      */
 
     public unequip(type: Modules.Equipment): void {
-        let equipment = this.getEquipment(type),
+        let equipment = this.get(type),
             item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
 
         // We stop here if the item cannot be added to the inventory.
@@ -115,6 +115,24 @@ export default class Equipments {
         this.unequipCallback?.(type);
 
         this.calculateStats();
+    }
+
+    /**
+     * Handles decrementing an item from the equipment. This is used in the case
+     * of arrows. In the future this will be generalized to handle other items
+     * that can be used up throughout combat.
+     */
+
+    public decrementArrows(): void {
+        let arrows = this.get(Modules.Equipment.Arrows);
+
+        // Remove 1 arrow from the stack.
+        arrows.count -= 1;
+
+        // If there are no more arrows, we empty the equipment.
+        if (arrows.count < 1) arrows.empty();
+
+        this.unequipCallback?.(Modules.Equipment.Arrows, arrows.count);
     }
 
     /**
@@ -162,7 +180,7 @@ export default class Equipments {
      * @returns The equipment in the index.
      */
 
-    public getEquipment(type: Modules.Equipment): Equipment {
+    public get(type: Modules.Equipment): Equipment {
         return this.equipments[type];
     }
 
@@ -178,7 +196,7 @@ export default class Equipments {
      */
 
     public getArmour(): Armour {
-        return this.getEquipment(Modules.Equipment.Armour) as Armour;
+        return this.get(Modules.Equipment.Armour) as Armour;
     }
 
     /**
@@ -187,7 +205,7 @@ export default class Equipments {
      */
 
     public getBoots(): Boots {
-        return this.getEquipment(Modules.Equipment.Boots);
+        return this.get(Modules.Equipment.Boots);
     }
 
     /**
@@ -196,7 +214,7 @@ export default class Equipments {
      */
 
     public getPendant(): Pendant {
-        return this.getEquipment(Modules.Equipment.Pendant);
+        return this.get(Modules.Equipment.Pendant);
     }
 
     /**
@@ -205,7 +223,7 @@ export default class Equipments {
      */
 
     public getRing(): Ring {
-        return this.getEquipment(Modules.Equipment.Ring);
+        return this.get(Modules.Equipment.Ring);
     }
 
     /**
@@ -214,7 +232,16 @@ export default class Equipments {
      */
 
     public getWeapon(): Weapon {
-        return this.getEquipment(Modules.Equipment.Weapon) as Weapon;
+        return this.get(Modules.Equipment.Weapon) as Weapon;
+    }
+
+    /**
+     * Grabs the arrows equipment of the player.
+     * @returns Arrow equipment type.
+     */
+
+    public getArrows(): Arrows {
+        return this.get(Modules.Equipment.Arrows) as Arrows;
     }
 
     /**

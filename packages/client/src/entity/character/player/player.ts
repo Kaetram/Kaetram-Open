@@ -223,10 +223,13 @@ export default class Player extends Character {
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
+     * @param count Optional parameter to remove a certain amount of items.
      */
 
-    public unequip(type: Modules.Equipment): void {
-        this.equipments[type].update();
+    public unequip(type: Modules.Equipment, count = 0): void {
+        // Decrement count if provided, otherwise reset the equipment slot.
+        if (count > 0) this.equipments[type].count = count;
+        else this.equipments[type].update();
     }
 
     /**
