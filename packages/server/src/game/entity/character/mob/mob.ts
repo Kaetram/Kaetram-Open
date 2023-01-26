@@ -191,6 +191,7 @@ export default class Mob extends Character {
             crush: this.attackLevel,
             stab: this.attackLevel,
             slash: this.attackLevel,
+            archery: this.attackLevel,
             magic: this.attackLevel
         };
 
@@ -198,6 +199,7 @@ export default class Mob extends Character {
             crush: this.defenseLevel,
             stab: this.defenseLevel,
             slash: this.defenseLevel,
+            archery: this.defenseLevel,
             magic: this.defenseLevel
         };
 
