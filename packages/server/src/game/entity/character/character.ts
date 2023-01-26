@@ -53,7 +53,7 @@ export default abstract class Character extends Entity {
     public teleporting = false;
     public aoe = 0;
 
-    public projectileName = 'projectile-pinearrow';
+    public projectileName = 'projectile-arrow';
 
     public lastStep = -1;
     public lastMovement = -1;
