@@ -449,8 +449,6 @@ export default class Renderer {
 
         if (this.isSelectedCell(location.gridX, location.gridY)) return;
 
-        console.log(location);
-
         let isColliding = this.map.isColliding(location.gridX, location.gridY);
 
         this.drawCellHighlight(
