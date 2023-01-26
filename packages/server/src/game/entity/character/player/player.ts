@@ -1118,6 +1118,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has enough arrows to shoot the bow.
+     */
+
+    public override hasArrows(): boolean {
+        return this.equipment.getArrows().count > 0;
+    }
+
+    /**
      * Getters
      */
 
@@ -1711,6 +1719,9 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
+        // Use the projectile name of the arrows if the player is using ranged weapons.
+        if (this.isRanged()) return this.equipment.getArrows().projectileName;
+
         return this.equipment.getWeapon().projectileName;
     }
 

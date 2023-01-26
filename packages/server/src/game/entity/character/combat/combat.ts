@@ -169,6 +169,8 @@ export default class Combat {
      */
 
     private sendRangedAttack(hit: Hit): void {
+        if (!this.character.hasArrows()) return this.stop();
+
         let projectile = this.character.world.entities.spawnProjectile(
             this.character,
             this.character.target!,

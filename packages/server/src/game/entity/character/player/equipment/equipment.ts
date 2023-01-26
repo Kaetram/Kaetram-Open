@@ -31,7 +31,7 @@ export default class Equipment {
     public constructor(
         public type: Modules.Equipment,
         public key = '',
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -64,7 +64,7 @@ export default class Equipment {
     public empty(): void {
         this.key = '';
 
-        this.count = 1;
+        this.count = -1;
         this.enchantments = {};
 
         this.name = '';

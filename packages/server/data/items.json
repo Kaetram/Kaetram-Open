@@ -4745,7 +4745,8 @@
       "strength": 0,
       "archery": 4,
       "magic": 0
-    }
+    },
+    "projectileName": "projectile-arrow"
   },
 
   "firearrow": {
@@ -4758,7 +4759,8 @@
       "strength": 0,
       "archery": 6,
       "magic": 0
-    }
+    },
+    "projectileName": "projectile-firearrow"
   },
 
   "poisonarrow": {
@@ -4772,7 +4774,8 @@
       "strength": 0,
       "archery": 8,
       "magic": 0
-    }
+    },
+    "projectileName": "projectile-poisonarrow"
   },
 
   "lightningarrow": {
@@ -4785,7 +4788,8 @@
       "strength": 0,
       "archery": 14,
       "magic": 0
-    }
+    },
+    "projectileName": "projectile-lightningarrow"
   },
 
   "icearrow": {
@@ -4798,6 +4802,7 @@
       "strength": 0,
       "archery": 11,
       "magic": 0
-    }
+    },
+    "projectileName": "projectile-icearrow"
   }
 }
