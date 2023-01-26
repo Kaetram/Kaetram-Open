@@ -29,7 +29,7 @@
 
 .inventory-item-image {
     pointer-events: none;
-    background-size: 600%;
+    background-size: cover;
 
     // Safari filters so the images aren't blurry.
     filter: opacity(100%);

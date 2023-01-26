@@ -48,7 +48,8 @@ enum Packets {
     Effect,
     Friends,
     Focus,
-    Rank
+    Rank,
+    Examine
 }
 
 export default Packets;

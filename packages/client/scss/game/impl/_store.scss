@@ -54,7 +54,7 @@
     position: relative;
     width: 32px;
     height: 32px;
-    background-size: 600%;
+    background-size: cover;
 }
 
 .store-item-name,
@@ -102,7 +102,7 @@
             width: 16px * $i;
             height: 16px * $i;
 
-            background-size: 600%;
+            background-size: cover;
         }
 
         #store-sell-slot {

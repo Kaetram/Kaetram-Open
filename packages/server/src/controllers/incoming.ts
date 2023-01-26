@@ -54,7 +54,7 @@ export default class Incoming {
                 return;
             }
 
-            player.refreshTimeout();
+            player.connection.refreshTimeout();
 
             // Prevent server from crashing due to a packet malfunction.
             try {
@@ -115,6 +115,9 @@ export default class Incoming {
                     }
                     case Packets.Focus: {
                         return this.player.updateEntityPositions();
+                    }
+                    case Packets.Examine: {
+                        return this.handleExamine(message);
                     }
                 }
             } catch (error) {
@@ -193,6 +196,8 @@ export default class Incoming {
         this.world.linkFriends(this.player);
 
         if (this.player.isDead()) this.player.deathCallback?.();
+
+        this.player.welcome();
 
         // A secondary check after the player has fully loaded in.
         this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
@@ -367,6 +372,9 @@ export default class Incoming {
         // Handle commands if the prefix is / or ;
         if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
+        // Check for mute before filtering the message.
+        if (this.player.isMuted()) return this.player.notify('You are currently muted.', 'crimson');
+
         this.player.chat(Filter.clean(text));
     }
 
@@ -403,11 +411,11 @@ export default class Incoming {
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.index!);
+                return this.player.handleContainerRemove(packet.type, packet.index!, packet.value!);
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.index!, packet.tIndex!);
+                return this.player.handleContainerSwap(packet.type, packet.index!, packet.value!);
             }
         }
     }
@@ -536,18 +544,47 @@ export default class Incoming {
     }
 
     /**
+     * Handles the interaction with the examine button. Just displays
+     * the description for the entity selected (generally a mob).
+     * @param instance The instance of the entity.
+     */
+
+    private handleExamine(instance: string): void {
+        let entity = this.entities.get(instance);
+
+        if (!entity.isMob() && !entity.isItem()) return;
+
+        if (!entity.description) return this.player.notify('I have no idea what that is.');
+
+        this.player.notify(entity.description);
+    }
+
+    /**
      * Used to prevent client-sided manipulation. The client will send the packet to start combat
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
      */
     private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.isMob() || target.isMob()) return true;
 
-        return (
-            attacker.isPlayer() &&
-            target.isPlayer() &&
-            attacker.pvp &&
-            target.pvp &&
-            attacker.team !== target.team
-        );
+        // If either of the entities are not players, we don't want to handle this.
+        if (!attacker.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            attacker.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (attacker.isCheater()) {
+            attacker.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        return attacker.pvp && target.pvp && attacker.team !== target.team;
     }
 }

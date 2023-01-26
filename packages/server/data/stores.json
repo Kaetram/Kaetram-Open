@@ -4,27 +4,32 @@
       {
         "key": "flask",
         "count": 100,
-        "price": 225
+        "price": 100
       },
       {
         "key": "manaflask",
         "count": 100,
-        "price": 650
+        "price": 125
       },
       {
         "key": "burger",
         "count": 45,
-        "price": 1000
+        "price": 500
       },
       {
         "key": "bigflask",
         "count": 45,
-        "price": 2000
+        "price": 600
       },
       {
         "key": "bigmanaflask",
         "count": 45,
-        "price": 3500
+        "price": 550
+      },
+      {
+        "key": "arrow",
+        "count": 10000,
+        "price": 100
       },
       {
         "key": "axe",
@@ -64,12 +69,12 @@
       {
         "key": "pendant1",
         "count": 1,
-        "price": 100000
+        "price": 50000
       },
       {
         "key": "ring1",
         "count": 1,
-        "price": 100000
+        "price": 50000
       }
     ],
     "refresh": 30000,
@@ -130,7 +135,7 @@
         "count": 3
       }
     ],
-    "refresh": 120000,
+    "refresh": 180000,
     "currency": "gold"
   },
 

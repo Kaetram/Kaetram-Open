@@ -1,6 +1,7 @@
 {
   "rat": {
     "name": "Rat",
+    "description": "Ah yes, this rat is made out of rat.",
     "drops": {"sword1": 1},
     "hitPoints": 20,
     "defenseLevel": 4,
@@ -18,6 +19,7 @@
 
   "bat": {
     "name": "Batterfly",
+    "description": "A bat that is also a butterfly, what a strange creature.",
     "hitPoints": 45,
     "defenseLevel": 6,
     "attackLevel": 2,
@@ -34,6 +36,7 @@
 
   "crab": {
     "name": "Crab",
+    "description": "I wonder if I can eat this.",
     "hitPoints": 15,
     "defenseLevel": 1,
     "attackLevel": 2,
@@ -50,6 +53,7 @@
 
   "wizard": {
     "name": "Wizard",
+    "description": "Why does every MMORPG have one of these things?",
     "drops": {"axe": 100, "morningstar": 150, "woodenbow": 150, "sword2": 200},
     "hitPoints": 100,
     "defenseLevel": 3,
@@ -68,6 +72,7 @@
 
   "goblin": {
     "name": "Goblin",
+    "description": "Didn't I see this same style of goblin in RuneScape?",
     "drops": {"leatherarmor": 150, "plasticbow": 150},
     "hitPoints": 70,
     "defenseLevel": 5,
@@ -85,6 +90,7 @@
 
   "skeleton": {
     "name": "Spooky Skeleton",
+    "description": "I wonder if this skeleton is made out of bones.",
     "hitPoints": 110,
     "defenseLevel": 6,
     "attackLevel": 4,
@@ -101,6 +107,7 @@
 
   "ogre": {
     "name": "Ogre",
+    "description": "I really feel like the developers had to include generic fantasy creatures.",
     "drops": {"axe": 75, "bluesword": 65, "mailarmor": 125, "ironbow": 65, "mailarcherarmor": 75},
     "hitPoints": 60,
     "defenseLevel": 8,
@@ -118,6 +125,7 @@
 
   "skeleton2": {
     "name": "Scary Skeleton",
+    "description": "Ah yes, it's not spooky, this one is scary.",
     "drops": {"axe": 120, "morningstar": 60, "platearmor": 45, "platearcherarmor": 45},
     "hitPoints": 350,
     "defenseLevel": 9,
@@ -135,6 +143,7 @@
 
   "snek": {
     "name": "Snek",
+    "description": "Snek.",
     "drops": {"morningstar": 65, "platearmor": 65},
     "hitPoints": 85,
     "defenseLevel": 5,
@@ -153,6 +162,7 @@
 
   "spectre": {
     "name": "Spectre",
+    "description": "Has a scythe and looks like it's floating.",
     "drops": {"redarmor": 60, "axe": 115, "bluesword": 50},
     "hitPoints": 170,
     "defenseLevel": 6,
@@ -170,6 +180,7 @@
 
   "eye": {
     "name": "Eye",
+    "description": "Must have really poor depth perception when you think about it.",
     "drops": {"redarcherarmor": 60},
     "hitPoints": 160,
     "defenseLevel": 3,
@@ -187,6 +198,7 @@
 
   "deathknight": {
     "name": "Death Knight",
+    "description": "Seriously, who comes up with the names for these things?",
     "drops": {"redsword": 55, "redarmor": 60, "morningstar": 80},
     "hitPoints": 185,
     "defenseLevel": 8,
@@ -204,6 +216,7 @@
 
   "adherer": {
     "name": "Dark Mage",
+    "description": "I heard that these things drop roses that I can then use to hit things with.",
     "drops": {"rose": 60, "redlightbow": 50, "redmetalsword": 50, "adhererarcherarmor": 50, "adhererrobe": 50},
     "hitPoints": 200,
     "defenseLevel": 5,
@@ -222,6 +235,7 @@
 
   "ant": {
     "name": "Worker Ant",
+    "description": "A hardworking small itty bitty ant!",
     "hitPoints": 300,
     "defenseLevel": 30,
     "attackLevel": 8,
@@ -238,6 +252,7 @@
 
   "babyspider": {
     "name": "Baby Spooder",
+    "description": "It's cute now but give it a while...",
     "hitPoints": 400,
     "defenseLevel": 3,
     "attackLevel": 7,
@@ -270,6 +285,7 @@
 
   "blackpirateskeleton": {
     "name": "Pirate Skeleton",
+    "description": "Isn't this just a skeleton but wearing a pirate hat?",
     "hitPoints": 625,
     "defenseLevel": 14,
     "attackLevel": 18,
@@ -286,6 +302,7 @@
 
   "greenpirateskeleton": {
     "name": "Pirate Skeleton",
+    "description": "Isn't this just a skeleton but wearing a pirate hat?",
     "hitPoints": 585,
     "defenseLevel": 12,
     "attackLevel": 14,
@@ -302,12 +319,13 @@
 
   "blackwizard": {
     "name": "Dark Wizard",
+    "description": "They don't look all that different from the other ones.",
     "drops": {"bastardsword": 100, "wizardrobe": 100, "redlightbow": 125, "topazring": 20},
     "hitPoints": 120,
-    "defenseLevel": 2,
-    "attackLevel": 10,
+    "defenseLevel": 6,
+    "attackLevel": 12,
     "experience": 102,
-    "level": 18,
+    "level": 26,
     "aggroRange": 4,
     "attackRange": 5,
     "aggressive": true,
@@ -320,6 +338,7 @@
 
   "blazespider": {
     "name": "Blaze Spooder",
+    "description": "I wonder how high this spider is...",
     "drops": {"blackspiderarmor": 20},
     "hitPoints": 1350,
     "defenseLevel": 0,
@@ -337,6 +356,7 @@
 
   "greencockroach": {
     "name": "Blue Cockroach",
+    "description": "Ew.",
     "drops": {"cockroachsuit": 30, "sickle": 45},
     "hitPoints": 785,
     "defenseLevel": 5,
@@ -371,6 +391,7 @@
 
   "cactus": {
     "name": "Cactus",
+    "description": "So it's like, a cactus, that can move?",
     "drops": {"cactusaxe": 45},
     "hitPoints": 160,
     "defenseLevel": 14,
@@ -776,7 +797,7 @@
     "hitPoints": 700,
     "defenseLevel": 9,
     "attackLevel": 5,
-    "experience": 468,
+    "experience": 324,
     "level": 46,
     "aggroRange": 5,
     "attackRange": 7,
@@ -794,7 +815,7 @@
     "hitPoints": 550,
     "defenseLevel": 12,
     "attackLevel": 8,
-    "experience": 300,
+    "experience": 175,
     "level": 37,
     "aggroRange": 1,
     "attackRange": 1,
@@ -810,7 +831,7 @@
     "hitPoints": 300,
     "defenseLevel": 1,
     "attackLevel": 3,
-    "experience": 354,
+    "experience": 178,
     "level": 38,
     "aggroRange": 1,
     "attackRange": 1,
@@ -826,7 +847,7 @@
     "hitPoints": 2000,
     "defenseLevel": 8,
     "attackLevel": 4,
-    "experience": 542,
+    "experience": 410,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
@@ -1159,10 +1180,10 @@
     "name": "Guard",
     "drops": {"guardarmor": 75},
     "hitPoints": 225,
-    "defenseLevel": 17,
-    "attackLevel": 8,
-    "experience": 420,
-    "level": 30,
+    "defenseLevel": 27,
+    "attackLevel": 14,
+    "experience": 216,
+    "level": 36,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1177,8 +1198,8 @@
     "drops": {"guardarmor": 75},
     "hitPoints": 225,
     "defenseLevel": 17,
-    "attackLevel": 11,
-    "experience": 469,
+    "attackLevel": 18,
+    "experience": 212,
     "level": 35,
     "aggroRange": 1,
     "attackRange": 1,

@@ -31,7 +31,7 @@ export default class Equipment {
     public constructor(
         public type: Modules.Equipment,
         public key = '',
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -40,10 +40,10 @@ export default class Equipment {
      * @param item Item instance used to update the slot with.
      */
 
-    public update(item: Item, count = 1): void {
+    public update(item: Item): void {
         this.key = item.key;
         this.name = item.name;
-        this.count = count;
+        this.count = item.count;
         this.enchantments = item.enchantments;
 
         this.lumberjacking = item.lumberjacking;
@@ -64,7 +64,7 @@ export default class Equipment {
     public empty(): void {
         this.key = '';
 
-        this.count = 1;
+        this.count = -1;
         this.enchantments = {};
 
         this.name = '';
