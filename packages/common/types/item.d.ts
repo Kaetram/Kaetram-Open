@@ -17,6 +17,7 @@ export interface Stats {
     crush: number;
     slash: number;
     stab: number;
+    archery: number;
     magic: number;
 }
 
