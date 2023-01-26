@@ -54,7 +54,7 @@ export default class Item extends Entity {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Miscellaneous variables
-    public movementSpeed = -1;
+    public movementModifier = -1;
     public stockAmount = 1; // Used for stores to increase count by this amount.
     public maxCount = 1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
@@ -112,7 +112,7 @@ export default class Item extends Entity {
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.poisonous = this.data.poisonous || this.poisonous;
-        this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
+        this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
         this.undroppable = this.data.undroppable || this.undroppable;

@@ -3681,7 +3681,7 @@
     "type": "armour",
     "name": "Rabbit Armour",
     "price": 20000,
-    "movementSpeed": 210,
+    "movementModifier": 0.95,
     "level": 88,
     "attackStats": {
       "crush": 15,
@@ -4731,6 +4731,99 @@
       "accuracy": 1,
       "strength": 1,
       "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "steelboots": {
+    "type": "boots",
+    "name": "Steel Boots",
+    "attackStats": {
+      "crush": 6,
+      "slash": 7,
+      "stab": 4,
+      "magic": -6
+    },
+    "defenseStats": {
+      "crush": 7,
+      "slash": 12,
+      "stab": 6,
+      "magic": -5
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "goldboots": {
+    "type": "boots",
+    "name": "Golden Boots",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "magic": 12
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 6
+    }
+  },
+
+  "swiftboots": {
+    "type": "boots",
+    "name": "Swift Boots",
+    "movementModifier": 0.95,
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 1
+    }
+  },
+
+  "lavaboots": {
+    "type": "boots",
+    "name": "Lava Boots",
+    "attackStats": {
+      "crush": 9,
+      "slash": 12,
+      "stab": 10,
+      "magic": 3
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 12,
+      "stab": 12,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 4,
+      "archery": 8,
       "magic": 0
     }
   },
