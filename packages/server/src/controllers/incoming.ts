@@ -372,6 +372,9 @@ export default class Incoming {
         // Handle commands if the prefix is / or ;
         if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
+        // Check for mute before filtering the message.
+        if (this.player.isMuted()) return this.player.notify('You are currently muted.', 'crimson');
+
         this.player.chat(Filter.clean(text));
     }
 
