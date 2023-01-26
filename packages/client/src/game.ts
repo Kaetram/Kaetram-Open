@@ -159,10 +159,8 @@ export default class Game {
         this.player.idle();
 
         if (this.storage) {
-            console.log(this.storage.data.player);
-
             this.player.setOrientation(this.storage.data.player.orientation);
-            this.camera.zoomFactor = this.storage.data.player.zoom;
+            this.camera.setZoom(this.storage.data.player.zoom);
 
             this.renderer.resize();
         }
