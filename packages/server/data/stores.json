@@ -68,13 +68,11 @@
       },
       {
         "key": "pendant1",
-        "count": 1,
-        "price": 50000
+        "count": 1
       },
       {
         "key": "ring1",
-        "count": 1,
-        "price": 50000
+        "count": 1
       }
     ],
     "refresh": 30000,
