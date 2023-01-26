@@ -17,8 +17,6 @@ interface EffectInfo {
 }
 
 export default class Character extends Entity {
-    public healthBarVisible = false;
-
     public moving = false;
     public following = false;
     public stunned = false;

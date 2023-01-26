@@ -928,6 +928,7 @@ export default class Renderer {
     private drawName(entity: Player & Item): void {
         if (
             entity.hidden ||
+            entity.healthBarVisible ||
             !entity.level ||
             !entity.drawNames() ||
             (!this.drawNames && !this.drawLevels)
