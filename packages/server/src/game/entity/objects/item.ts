@@ -40,7 +40,7 @@ export default class Item extends Entity {
 
     // Item information
     public description = '';
-    public projectileName = 'projectile-pinearrow';
+    public projectileName = 'projectile-arrow';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
