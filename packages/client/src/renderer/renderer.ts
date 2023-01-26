@@ -63,6 +63,9 @@ export default class Renderer {
     private entitiesCanvas = document.querySelector<HTMLCanvasElement>('#entities')!;
     private cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
+    private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
+    private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
+
     private entitiesContext: CanvasRenderingContext2D; // Entities
 
     public backContext: CanvasRenderingContext2D; // Backgrond
@@ -128,7 +131,7 @@ export default class Renderer {
     private silverMedal!: Sprite;
     private goldMedal!: Sprite;
 
-    public constructor(public game: Game) {
+    public constructor(private game: Game) {
         this.map = game.map;
         this.camera = game.camera;
 
@@ -159,6 +162,9 @@ export default class Renderer {
 
         // Dark mask is used for the lighting system.
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+
+        this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
+        this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
 
         this.loadSizes();
         this.loadStaticSprites();
@@ -233,6 +239,9 @@ export default class Renderer {
 
         // Update camera grid width and height.
         this.camera.update();
+
+        // Update the camera minimum zoom limits.
+        this.camera.updateMinimumZoom(this.mobile);
 
         // Recalculate canvas sizes.
         this.loadSizes();
@@ -439,6 +448,8 @@ export default class Renderer {
             location = input.getCoords();
 
         if (this.isSelectedCell(location.gridX, location.gridY)) return;
+
+        console.log(location);
 
         let isColliding = this.map.isColliding(location.gridX, location.gridY);
 
@@ -917,6 +928,7 @@ export default class Renderer {
     private drawName(entity: Player & Item): void {
         if (
             entity.hidden ||
+            entity.healthBarVisible ||
             !entity.level ||
             !entity.drawNames() ||
             (!this.drawNames && !this.drawLevels)

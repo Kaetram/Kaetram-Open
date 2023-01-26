@@ -205,6 +205,10 @@ export default class Item extends Entity {
             case 'ring': {
                 return Modules.Equipment.Ring;
             }
+
+            case 'arrow': {
+                return Modules.Equipment.Arrows;
+            }
         }
 
         return -1;
@@ -313,7 +317,8 @@ export default class Item extends Entity {
             this.itemType === 'weaponarcher' ||
             this.itemType === 'pendant' ||
             this.itemType === 'boots' ||
-            this.itemType === 'ring'
+            this.itemType === 'ring' ||
+            this.itemType === 'arrow'
         );
     }
 

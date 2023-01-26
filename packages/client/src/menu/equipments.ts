@@ -23,6 +23,10 @@ export default class Equipments extends Menu {
     private pendant: HTMLElement = document.querySelector('#equipment-container > .pendant-slot')!;
     private ring: HTMLElement = document.querySelector('#equipment-container > .ring-slot')!;
     private boots: HTMLElement = document.querySelector('#equipment-container > .boots-slot')!;
+    private arrow: HTMLElement = document.querySelector('#equipment-container > .arrows-slot')!;
+
+    // Counts
+    private arrowsCount: HTMLElement = document.querySelector('#arrows-count')!;
 
     // Navigation elements
     private previous: HTMLElement = document.querySelector('#player-image-navigator > .previous')!;
@@ -57,6 +61,7 @@ export default class Equipments extends Menu {
         );
         this.ring.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Ring));
         this.boots.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Boots));
+        this.arrow.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Arrows));
     }
 
     /**
@@ -76,6 +81,12 @@ export default class Equipments extends Menu {
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
+        this.arrow.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
+
+        // Synchronize arrow count
+        let arrowCount = this.player.getArrows().count;
+
+        this.arrowsCount.innerHTML = arrowCount < 1 ? '' : `+${arrowCount}`;
     }
 
     /**
@@ -209,7 +220,7 @@ export default class Equipments extends Menu {
             this.playerWeapon.style.backgroundPosition = `0 -${index * weaponSprite.height}px`;
         } else this.playerWeapon.style.backgroundImage = 'none';
 
-        // Flip both armour and weapon if we are rendering the right orientation.
+        // Flip the player image if we are rendering the right orientation.
         this.playerArmour.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
         this.playerWeapon.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
     }

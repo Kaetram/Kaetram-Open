@@ -255,7 +255,7 @@ export default class Connection {
             }
 
             case Opcodes.Equipment.Unequip: {
-                this.game.player.unequip(info.type!);
+                this.game.player.unequip(info.type!, info.count);
                 break;
             }
         }
@@ -1288,8 +1288,6 @@ export default class Connection {
             info.instance === this.game.player.instance
                 ? this.game.player
                 : this.entities.get<Character>(info.instance);
-
-        console.log(info);
 
         if (!entity) return;
 

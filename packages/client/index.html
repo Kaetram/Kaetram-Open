@@ -394,8 +394,7 @@
                                 target="_blank"
                                 href="https://game-icons.net"
                                 >Game-Icons.net</a
-                            >, &amp;
-                            Boo
+                            >, &amp; Boo
                             <br />
                             <br />
                             Music by
@@ -567,6 +566,11 @@
                     </ul>
                 </div>
 
+                <div id="zoom-buttons">
+                    <button id="zoom-in"></button>
+                    <button id="zoom-out"></button>
+                </div>
+
                 <div id="ability-shortcut" hidden>
                     <div id="ability-quickslot1" class="ability-quickslot"></div>
                     <div id="ability-quickslot2" class="ability-quickslot"></div>
@@ -579,7 +583,7 @@
                     <div align="center">
                         <input
                             title="drop-count"
-                            type="text"
+                            type="number"
                             id="drop-count"
                             size="6"
                             maxlength="11"
@@ -597,8 +601,11 @@
                         <div class="profile-slot weapon-slot"></div>
                         <div class="profile-slot armour-slot"></div>
                         <div class="profile-slot pendant-slot"></div>
-                        <div class="ring-slot profile-slot"></div>
+                        <div class="profile-slot ring-slot"></div>
                         <div class="profile-slot boots-slot"></div>
+                        <div class="profile-slot arrows-slot">
+                            <div id="arrows-count" class="stroke">10</div>
+                        </div>
                         <div id="equipment-button"></div>
                     </div>
 
@@ -821,12 +828,15 @@
                             <div class="profile-slot weapon-slot"></div>
                             <div class="profile-slot armour-slot"></div>
                             <div class="profile-slot pendant-slot"></div>
-                            <div class="ring-slot profile-slot"></div>
+                            <div class="profile-slot ring-slot"></div>
                             <div class="profile-slot boots-slot"></div>
+                            <div class="profile-slot arrows-slot"></div>
                         </div>
                     </div>
+
                     <div id="player-image-armour" class="player-image"></div>
                     <div id="player-image-weapon" class="player-image"></div>
+
                     <div id="player-image-navigator">
                         <div class="previous"></div>
                         <div class="next"></div>
@@ -905,12 +915,12 @@
                     <div class="action-item-name stroke"></div>
                     <div class="action-item-description"></div>
 
-                    <ul>
-                        <li class="action-button action-wield"></li>
-                    </ul>
+                    <ul></ul>
                 </div>
 
-                <div id="interact"></div>
+                <div id="interact">
+                    <ul></ul>
+                </div>
 
                 <div id="chat">
                     <div id="chat-log"></div>

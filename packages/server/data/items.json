@@ -3580,24 +3580,25 @@
     "type": "armour",
     "name": "Adherer Robe",
     "price": 20000,
-    "level": 126,
+    "skill": "magic",
+    "level": 38,
     "attackStats": {
-      "crush": 68,
-      "slash": 56,
-      "stab": 62,
-      "magic": 42
+      "crush": 32,
+      "slash": 20,
+      "stab": 28,
+      "magic": 40
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
-      "magic": 60
+      "magic": 65
     },
     "bonuses": {
-      "accuracy": 20,
-      "strength": 20,
+      "accuracy": 7,
+      "strength": 10,
       "archery": -4,
-      "magic": 0
+      "magic": 18
     }
   },
 
@@ -3714,7 +3715,7 @@
     "price": 20000
   },
 
-  "peadragonarmor": {
+  "seadragonarmor": {
     "type": "armour",
     "name": "Sea Dragon Armour",
     "price": 20000
@@ -3853,7 +3854,7 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 1,
+      "archery": -1,
       "magic": 4
     }
   },
@@ -3878,7 +3879,7 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 1,
+      "archery": -1,
       "magic": 7
     }
   },
@@ -3903,7 +3904,7 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 0,
-      "archery": 4,
+      "archery": -4,
       "magic": 9
     }
   },
@@ -3928,7 +3929,7 @@
     "bonuses": {
       "accuracy": 4,
       "strength": 3,
-      "archery": 6,
+      "archery": -6,
       "magic": 13
     }
   },
@@ -3953,7 +3954,7 @@
     "bonuses": {
       "accuracy": 5,
       "strength": 5,
-      "archery": 7,
+      "archery": -7,
       "magic": 20
     }
   },
@@ -4709,5 +4710,99 @@
     "type": "object",
     "name": "Stick",
     "description": "A stick. It's a stick. What else do you want me to say about it?"
+  },
+
+  "leatherboots": {
+    "type": "boots",
+    "name": "Leather Boots",
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "magic": -4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "arrow": {
+    "type": "arrow",
+    "name": "Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 4,
+      "magic": 0
+    },
+    "projectileName": "projectile-arrow"
+  },
+
+  "firearrow": {
+    "type": "arrow",
+    "name": "Fire Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 6,
+      "magic": 0
+    },
+    "projectileName": "projectile-firearrow"
+  },
+
+  "poisonarrow": {
+    "type": "arrow",
+    "name": "Poison Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "poisonous": true,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 8,
+      "magic": 0
+    },
+    "projectileName": "projectile-poisonarrow"
+  },
+
+  "lightningarrow": {
+    "type": "arrow",
+    "name": "Lightning Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 14,
+      "magic": 0
+    },
+    "projectileName": "projectile-lightningarrow"
+  },
+
+  "icearrow": {
+    "type": "arrow",
+    "name": "Ice Arrow",
+    "stackable": true,
+    "maxStackSize": 99,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 11,
+      "magic": 0
+    },
+    "projectileName": "projectile-icearrow"
   }
 }

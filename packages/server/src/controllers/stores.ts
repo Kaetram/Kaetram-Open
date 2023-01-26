@@ -253,9 +253,10 @@ export default class Stores {
         if (!player.inventory.add(this.getCurrency(store.currency, price)))
             return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
-        // Increment item amount in the store otherwise add item to store.
-        if (storeItem) storeItem.count += count;
-        else store.items.push(item);
+        // Increment the item count or add to store only if the player isn't a cheater :)
+        if (!player.isCheater())
+            if (storeItem) storeItem.count += count;
+            else store.items.push(item);
 
         // Sync up new store data to all players.
         this.updatePlayers(key);

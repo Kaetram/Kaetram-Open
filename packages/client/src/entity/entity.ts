@@ -16,6 +16,8 @@ export default abstract class Entity {
 
     public region = -1;
 
+    public healthBarVisible = false;
+
     public sprite!: Sprite;
 
     public spriteFlipX = false;

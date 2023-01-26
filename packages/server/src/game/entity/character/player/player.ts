@@ -134,9 +134,6 @@ export default class Player extends Character {
     private lastNotify = 0;
     private lastEdible = 0;
 
-    private disconnectTimeout: NodeJS.Timeout | null = null;
-    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
-
     private currentSong: string | undefined;
 
     public minigameArea: Area | undefined = undefined;
@@ -304,7 +301,7 @@ export default class Player extends Character {
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         setTimeout(() => {
-            if (!this.ready) this.connection.reject('error');
+            if (!this.ready) this.connection.reject('error', true);
         }, 10_000);
 
         /**
@@ -341,6 +338,23 @@ export default class Player extends Character {
         this.mana.reset();
 
         this.sync();
+    }
+
+    /**
+     * Sends a welcome notification when the player logs in the game. If the player is new
+     * then we will send a slightly different welcome message. If there are other players
+     * online, we will also send a notification to the player with the player count.
+     */
+
+    public welcome(): void {
+        if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
+
+        this.notify(`Welcome back to ${config.name}!`);
+
+        let population = this.world.getPopulation();
+
+        if (population > 1)
+            this.notify(`There are currently ${population} players online.`, '', true);
     }
 
     /**
@@ -558,7 +572,7 @@ export default class Player extends Character {
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(index);
+                    this.inventory.remove(index, item.count);
                     this.equipment.equip(item);
                 }
 
@@ -583,26 +597,26 @@ export default class Player extends Character {
      * @param index The index at which we are removing the item.
      */
 
-    public handleContainerRemove(type: Modules.ContainerType, index: number): void {
+    public handleContainerRemove(type: Modules.ContainerType, index: number, value: number): void {
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
             return this.notify('You cannot drop items while standing in a door.');
 
-        container.remove(index, undefined, true);
+        container.remove(index, value, true);
     }
 
     /**
      * Handles the swap action of a container. This is when we want to move items around.
      * @param type The type of container we are working with.
      * @param index The index at which we are swapping the item.
-     * @param tIndex The index at which we are swapping the item with.
+     * @param value The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, index: number, tIndex: number): void {
+    public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
-        container.swap(index, tIndex);
+        container.swap(index, value);
     }
 
     /**
@@ -1104,6 +1118,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has enough arrows to shoot the bow.
+     */
+
+    public override hasArrows(): boolean {
+        return this.equipment.getArrows().count > 0;
+    }
+
+    /**
      * Getters
      */
 
@@ -1183,17 +1205,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Disconnects the player and sends the UTF8 error message to the client.
-     */
-
-    public timeout(): void {
-        if (!this.connection) return;
-
-        this.connection.sendUTF8('timeout');
-        this.connection.close('Player timed out.');
-    }
-
-    /**
      * Sends a ping request to the client. This is used to calculate the latency.
      */
 
@@ -1201,31 +1212,6 @@ export default class Player extends Character {
         this.pingTime = Date.now();
 
         this.send(new Network(Opcodes.Network.Ping));
-    }
-
-    /**
-     * Resets the timeout every time an action is performed. This way we keep
-     * a `countdown` going constantly that resets every time an action is performed.
-     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
-     */
-
-    public refreshTimeout(duration = this.timeoutDuration): void {
-        // Clear the existing timeout and start over.
-        this.clearTimeout();
-
-        // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.timeout(), duration);
-    }
-
-    /**
-     * Clears the existing disconnect timeout.
-     */
-
-    public clearTimeout(): void {
-        if (!this.disconnectTimeout) return;
-
-        clearTimeout(this.disconnectTimeout);
-        this.disconnectTimeout = null;
     }
 
     /**
@@ -1266,6 +1252,22 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether the player has the cheater rank.
+     */
+
+    public isCheater(): boolean {
+        return this.rank === Modules.Ranks.Cheater;
+    }
+
+    /**
+     * @returns Whether the player's rank is artist.
+     */
+
+    public isArtist(): boolean {
+        return this.rank === Modules.Ranks.Artist;
+    }
+
+    /**
      * @returns Whether or not the player's rank is a moderator.
      */
 
@@ -1279,6 +1281,15 @@ export default class Player extends Character {
 
     public isAdmin(): boolean {
         return this.rank === Modules.Ranks.Admin || config.skipDatabase;
+    }
+
+    /**
+     * Accounts younger than 1 minute are considered new accounts.
+     * @returns Whether the account's creation date is within the last minute.
+     */
+
+    public isNew(): boolean {
+        return Date.now() - this.statistics.creationTime < 60_000;
     }
 
     /**
@@ -1421,7 +1432,6 @@ export default class Player extends Character {
      */
 
     public chat(message: string, global = false, withBubble = true, colour = ''): void {
-        if (this.isMuted()) return this.notify('You are currently muted.', 'crimson');
         if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
 
         log.debug(`[${this.username}] ${message}`);
@@ -1480,13 +1490,14 @@ export default class Player extends Character {
      * Sends a chatbox message to the player.
      * @param message String text we want to display to the player.
      * @param colour Optional parameter indicating text colour.
+     * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour = ''): void {
+    public notify(message: string, colour = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
-        if (Date.now() - this.lastNotify < 250) return;
+        if (bypass && Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
@@ -1708,6 +1719,9 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
+        // Use the projectile name of the arrows if the player is using ranged weapons.
+        if (this.isRanged()) return this.equipment.getArrows().projectileName;
+
         return this.equipment.getWeapon().projectileName;
     }
 

@@ -7917,6 +7917,61 @@
     "offsetY": 0
   },
   {
+    "id": "item-arrow",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-firearrow",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-poisonarrow",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icearrow",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-lightningarrow",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-logs",
     "animations": {
       "idle": {
@@ -8859,7 +8914,7 @@
     "id": "item-gold",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 7,
         "row": 0
       }
     },
@@ -9550,6 +9605,61 @@
     "animations": {
       "idle": {
         "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-leatherboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-steelboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-goldboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-swiftboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-lavaboots",
+    "animations": {
+      "idle": {
+        "length": 4,
         "row": 0
       }
     },
@@ -19828,11 +19938,11 @@
   },
   {
     "id": "projectile-poisonball",
-    "width": 50,
-    "height": 50,
+    "width": 40,
+    "height": 40,
     "animations": {
       "travel": {
-        "length": 8,
+        "length": 10,
         "row": 0
       }
     },
@@ -19855,10 +19965,10 @@
     "offsetAngle": -45
   },
   {
-    "id": "projectile-pinearrow",
+    "id": "projectile-arrow",
     "idleSpeed": 75,
     "width": 24,
-    "height": 24,
+    "height": 32,
     "animations": {
       "travel": {
         "length": 1,
@@ -19866,7 +19976,67 @@
       }
     },
     "offsetX": -12,
-    "offsetY": -12,
+    "offsetY": -16,
+    "offsetAngle": 180
+  },
+  {
+    "id": "projectile-firearrow",
+    "idleSpeed": 75,
+    "width": 24,
+    "height": 36,
+    "animations": {
+      "travel": {
+        "length": 3,
+        "row": 0
+      }
+    },
+    "offsetX": -12,
+    "offsetY": -18,
+    "offsetAngle": 180
+  },
+  {
+    "id": "projectile-poisonarrow",
+    "idleSpeed": 75,
+    "width": 24,
+    "height": 36,
+    "animations": {
+      "travel": {
+        "length": 3,
+        "row": 0
+      }
+    },
+    "offsetX": -12,
+    "offsetY": -18,
+    "offsetAngle": 180
+  },
+  {
+    "id": "projectile-icearrow",
+    "idleSpeed": 75,
+    "width": 24,
+    "height": 36,
+    "animations": {
+      "travel": {
+        "length": 3,
+        "row": 0
+      }
+    },
+    "offsetX": -12,
+    "offsetY": -18,
+    "offsetAngle": 180
+  },
+  {
+    "id": "projectile-lightningarrow",
+    "idleSpeed": 75,
+    "width": 24,
+    "height": 36,
+    "animations": {
+      "travel": {
+        "length": 3,
+        "row": 0
+      }
+    },
+    "offsetX": -12,
+    "offsetY": -18,
     "offsetAngle": 180
   },
   {
@@ -20045,16 +20215,16 @@
   },
   {
     "id": "effect-freeze",
-    "width": 16,
-    "height": 16,
+    "width": 32,
+    "height": 32,
     "animations": {
       "effect": {
-        "length": 4,
+        "length": 6,
         "row": 0
       }
     },
-    "offsetX": 0,
-    "offsetY": 0
+    "offsetX": -8,
+    "offsetY": -16
   },
   {
     "id": "effect-lavaball",
