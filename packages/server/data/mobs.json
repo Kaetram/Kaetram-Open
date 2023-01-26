@@ -73,7 +73,7 @@
   "goblin": {
     "name": "Goblin",
     "description": "Didn't I see this same style of goblin in RuneScape?",
-    "drops": {"leatherarmor": 150, "plasticbow": 150},
+    "drops": {"leatherarmor": 150, "plasticbow": 150, "leatherboots": 75},
     "hitPoints": 70,
     "defenseLevel": 5,
     "attackLevel": 3,
@@ -126,7 +126,7 @@
   "skeleton2": {
     "name": "Scary Skeleton",
     "description": "Ah yes, it's not spooky, this one is scary.",
-    "drops": {"axe": 120, "morningstar": 60, "platearmor": 45, "platearcherarmor": 45},
+    "drops": {"axe": 120, "morningstar": 60, "platearmor": 45, "platearcherarmor": 45, "steelboots": 35},
     "hitPoints": 350,
     "defenseLevel": 9,
     "attackLevel": 2,
@@ -144,7 +144,7 @@
   "snek": {
     "name": "Snek",
     "description": "Snek.",
-    "drops": {"morningstar": 65, "platearmor": 65},
+    "drops": {"morningstar": 75, "platearmor": 75, "steelboots": 45},
     "hitPoints": 85,
     "defenseLevel": 5,
     "attackLevel": 7,
@@ -760,12 +760,12 @@
 
   "hobgoblin": {
     "name": "Hobgoblin",
-    "drops": {"mailarmor": 100, "platearmor": 200, "platearcherarmor": 100, "mailarcherarmor": 100},
-    "hitPoints": 130,
-    "defenseLevel": 6,
-    "attackLevel": 4,
-    "experience": 120,
-    "level": 20,
+    "drops": {"mailarmor": 125, "platearmor": 75, "platearcherarmor": 75, "mailarcherarmor": 125, "steelboots": 65},
+    "hitPoints": 260,
+    "defenseLevel": 8,
+    "attackLevel": 8,
+    "experience": 170,
+    "level": 42,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1407,7 +1407,7 @@
 
   "snowrabbit": {
     "name": "Snow Rabbit",
-    "drops": {"rabbitarmor": 35},
+    "drops": {"rabbitarmor": 35, "swiftboots": 10},
     "hitPoints": 295,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -1703,7 +1703,7 @@
 
   "skeletonking": {
     "name": "Skeleton King",
-    "drops": {"goldensword": 95, "goldenbow": 95, "greenpendant": 35, "sproutring": 35},
+    "drops": {"goldensword": 95, "goldenbow": 95, "greenpendant": 35, "sproutring": 35, "goldboots": 85},
     "hitPoints": 1850,
     "defenseLevel": 25,
     "attackLevel": 7,
