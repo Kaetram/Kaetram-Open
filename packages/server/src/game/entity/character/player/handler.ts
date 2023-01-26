@@ -213,13 +213,6 @@ export default class Handler {
      */
 
     private handleAttack(): void {
-        if (this.player.isRanged()) {
-            if (!this.player.hasArrows())
-                return this.player.notify('You do not have any arrows to shoot.');
-
-            this.player.equipment.decrementArrows();
-        }
-
         if (this.player.isMagic()) {
             let { manaCost } = this.player.equipment.getWeapon();
 
@@ -227,6 +220,15 @@ export default class Handler {
                 return this.player.notify('You are low on mana, your attacks will be weaker.');
 
             this.player.mana.decrement(manaCost);
+
+            return;
+        }
+
+        if (this.player.isRanged()) {
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
+
+            this.player.equipment.decrementArrows();
         }
     }
 
