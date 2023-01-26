@@ -9623,6 +9623,50 @@
     "offsetY": 0
   },
   {
+    "id": "item-steelboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-goldboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-swiftboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-lavaboots",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-pendant1",
     "animations": {
       "idle": {
