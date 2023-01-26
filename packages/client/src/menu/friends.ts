@@ -1,9 +1,9 @@
-import _ from 'lodash';
-import { Opcodes } from '@kaetram/common/network';
+import Menu from './menu';
 
 import Util from '../utils/util';
 
-import Menu from './menu';
+import _ from 'lodash';
+import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
 import type Friend from '../entity/character/player/friend';

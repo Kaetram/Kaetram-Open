@@ -1,6 +1,6 @@
-import { Packets } from '@kaetram/common/network';
-
 import Packet from '../packet';
+
+import { Packets } from '@kaetram/common/network';
 
 import type Mob from '../../game/entity/character/mob/mob';
 import type Player from '../../game/entity/character/player/player';

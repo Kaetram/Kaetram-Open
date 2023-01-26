@@ -1,8 +1,8 @@
+import Arrow from '../renderer/pointers/arrow';
+
 import { Opcodes } from '@kaetram/common/network';
 import $ from 'jquery';
 import _ from 'lodash-es';
-
-import Arrow from '../renderer/pointers/arrow';
 
 import type Entity from '../entity/entity';
 import type Game from '../game';

@@ -1,6 +1,3 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
@@ -10,6 +7,9 @@ import Item from '../entity/objects/item';
 import Projectile from '../entity/objects/projectile';
 import log from '../lib/log';
 import Grids from '../renderer/grids';
+
+import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';

@@ -1,6 +1,6 @@
-import _ from 'lodash-es';
-
 import AStar from '../lib/astar';
+
+import _ from 'lodash-es';
 
 import type Character from '../entity/character/character';
 import type { FunctionTypes } from '../lib/astar';

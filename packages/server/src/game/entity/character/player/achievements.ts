@@ -1,11 +1,11 @@
-import { Opcodes } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Achievement from './achievement/achievement';
 
 import achievements from '../../../../../data/achievements.json';
 import { Achievement as AchievementPacket } from '../../../../network/packets';
 import Item from '../../objects/item';
 
-import Achievement from './achievement/achievement';
+import _ from 'lodash-es';
+import { Opcodes } from '@kaetram/common/network';
 
 import type { Modules } from '@kaetram/common/network';
 import type {

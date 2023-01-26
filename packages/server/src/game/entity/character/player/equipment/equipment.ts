@@ -17,7 +17,10 @@ export default class Equipment {
 
     public attackRange = 1;
     public lumberjacking = -1;
+    public mining = -1;
     public poisonous = false;
+
+    public movementModifier = -1;
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -30,7 +33,7 @@ export default class Equipment {
     public constructor(
         public type: Modules.Equipment,
         public key = '',
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -39,13 +42,14 @@ export default class Equipment {
      * @param item Item instance used to update the slot with.
      */
 
-    public update(item: Item, count = 1): void {
+    public update(item: Item): void {
         this.key = item.key;
         this.name = item.name;
-        this.count = count;
+        this.count = item.count;
         this.enchantments = item.enchantments;
 
         this.lumberjacking = item.lumberjacking;
+        this.mining = item.mining;
         this.poisonous = item.poisonous;
 
         this.attackStats = item.attackStats;
@@ -62,14 +66,16 @@ export default class Equipment {
     public empty(): void {
         this.key = '';
 
-        this.count = 1;
+        this.count = -1;
         this.enchantments = {};
 
         this.name = '';
 
         this.attackRange = 1;
         this.lumberjacking = -1;
+        this.mining = -1;
         this.poisonous = false;
+        this.movementModifier = -1;
 
         this.attackStats = Utils.getEmptyStats();
         this.defenseStats = Utils.getEmptyStats();
@@ -93,6 +99,23 @@ export default class Equipment {
 
     public isLumberjacking(): boolean {
         return this.lumberjacking > 0;
+    }
+
+    /**
+     * Whether or not this weapon can be used for mining.
+     * @returns Whether the mining weapon level is greater than 0.
+     */
+
+    public isMining(): boolean {
+        return this.mining > 0;
+    }
+
+    /**
+     * @returns Whether or not the equipment has a movement modifier.
+     */
+
+    public hasMovementModifier(): boolean {
+        return this.movementModifier !== -1;
     }
 
     /**

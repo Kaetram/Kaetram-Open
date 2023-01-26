@@ -1,8 +1,3 @@
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
-
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -18,6 +13,11 @@ import {
     Quest,
     Skill
 } from '../../../../network/packets';
+
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
@@ -54,6 +54,7 @@ export default class Handler {
 
         // Hit callback
         this.player.onHit(this.handleHit.bind(this));
+        this.player.combat.onAttack(this.handleAttack.bind(this));
 
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
@@ -93,6 +94,7 @@ export default class Handler {
 
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
+        this.player.abilities.onToggle(this.handleAbilityToggle.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -146,11 +148,12 @@ export default class Handler {
 
         this.player.minigameArea?.exitCallback?.(this.player);
 
-        this.world.entities.removePlayer(this.player);
-
         this.world.cleanCombat(this.player);
 
         this.world.linkFriends(this.player, true);
+
+        this.world.entities.removePlayer(this.player);
+        this.world.api.sendLogout(this.player.username);
     }
 
     /**
@@ -206,6 +209,30 @@ export default class Handler {
     }
 
     /**
+     * Callback for when the player performs an attack.
+     */
+
+    private handleAttack(): void {
+        if (this.player.isMagic()) {
+            let { manaCost } = this.player.equipment.getWeapon();
+
+            if (!this.player.hasManaForAttack())
+                return this.player.notify('You are low on mana, your attacks will be weaker.');
+
+            this.player.mana.decrement(manaCost);
+
+            return;
+        }
+
+        if (this.player.isRanged()) {
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
+
+            this.player.equipment.decrementArrows();
+        }
+    }
+
+    /**
      * Receive a callback about the door destination coordinate
      * and quest information (if existant).
      */
@@ -237,7 +264,7 @@ export default class Handler {
 
         this.player.teleport(door.x, door.y);
 
-        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
+        log.debug(`[${this.player.username}] Going through door: ${door.x} - ${door.y}`);
     }
 
     /**
@@ -281,7 +308,7 @@ export default class Handler {
      */
 
     private handleRecentRegions(regions: number[]): void {
-        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+        //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
             new Despawn({
@@ -322,10 +349,11 @@ export default class Handler {
     /**
      * Callback for when the equipment is removed.
      * @param type The equipment type we are removing.
+     * @param count (Optional) The amount of items we are removing.
      */
 
-    private handleUnequip(type: Modules.Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
+    private handleUnequip(type: Modules.Equipment, count?: number): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type, count }));
 
         // Sync to nearby players.
         this.player.sync();
@@ -338,6 +366,15 @@ export default class Handler {
 
     private handleAbilityAdd(ability: Ability): void {
         this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize(true)));
+    }
+
+    /**
+     * Sends a message to the client to toggle the ability status.
+     * @param key The key of the ability we are toggling.
+     */
+
+    private handleAbilityToggle(key: string): void {
+        this.player.send(new AbilityPacket(Opcodes.Ability.Toggle, { key, level: -1 }));
     }
 
     /**
@@ -378,8 +415,8 @@ export default class Handler {
      */
 
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        // Spawn the item in the world if drop is true.
-        if (drop)
+        // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
+        if (drop && !this.player.isCheater())
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
@@ -562,8 +599,6 @@ export default class Handler {
      */
 
     private handleKill(character: Character): void {
-        log.debug(`Received kill callback for: ${character.instance}.`);
-
         // Have the minigame handle the kill if present.
         if (character.isPlayer()) {
             if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
@@ -576,26 +611,26 @@ export default class Handler {
         if (!character.isMob()) return;
 
         // Handle the experience upon killing a mob.
-        this.player.handleExperience((character as Mob).experience);
+        this.player.handleExperience(character.experience);
 
         /**
          * Special mobs (such as minibosses and bosses) have achievements
          * associated with them. Upon killing them, we complete the achievement.
          */
 
-        let mobAchievement = (character as Mob).achievement;
+        let mobAchievement = character.achievement;
 
         if (mobAchievement) this.player.achievements.get(mobAchievement).finish();
 
         // Checks if the mob has a active quest associated with it.
-        let quest = this.player.quests.getQuestFromMob(character as Mob);
+        let quest = this.player.quests.getQuestFromMob(character);
 
-        if (quest) quest.killCallback?.(character as Mob);
+        if (quest) quest.killCallback?.(character);
 
         // Checks if the mob has an active achievement associated with it.
-        let achievement = this.player.achievements.getAchievementFromEntity(character as Mob);
+        let achievement = this.player.achievements.getAchievementFromEntity(character);
 
-        if (achievement) achievement.killCallback?.(character as Mob);
+        if (achievement) achievement.killCallback?.(character);
     }
 
     /**
@@ -626,7 +661,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`Cheat score - ${this.player.cheatScore}`);
+        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**
@@ -733,7 +768,7 @@ export default class Handler {
             if (!entity.isMob()) return;
 
             // Check if the mob can aggro the player and initiate the combat.
-            if ((entity as Mob).canAggro(this.player)) (entity as Mob).combat.attack(this.player);
+            if (entity.canAggro(this.player)) entity.combat.attack(this.player);
         });
     }
 
@@ -756,8 +791,6 @@ export default class Handler {
      */
 
     private clear(): void {
-        this.player.clearTimeout();
-
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
     }

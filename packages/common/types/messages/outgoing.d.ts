@@ -3,6 +3,7 @@ import type { Modules, Opcodes } from '../../network';
 import type { AbilityData, SerializedAbility } from '../ability';
 import type { EntityData, EntityDisplayInfo } from '../entity';
 import type { EquipmentData, SerializedEquipment } from '../equipment';
+import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
 import type { PlayerData } from '../player';
@@ -31,6 +32,7 @@ export type MapCallback = (data: string) => void;
 export interface EquipmentPacket {
     data?: SerializedEquipment | EquipmentData;
     type?: Modules.Equipment; // Specified when equipping a specific item
+    count?: number;
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
@@ -352,11 +354,16 @@ export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => voi
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface FriendsPacket {
-    list?: { [username: string]: boolean };
+    list?: Friend;
     username?: string;
     status?: boolean;
+    serverId?: number;
 }
 
 export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export type RankCallback = (rank: Modules.Ranks) => void;
+
+//////////////////////////////s//////////////////////////////////////////////////

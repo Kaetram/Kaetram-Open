@@ -1,0 +1,34 @@
+@use '../../abstracts/media';
+
+#interact {
+    cursor: url('/img/3/hand.png'), auto;
+    position: absolute;
+    display: none;
+
+    ul {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@each $size, $i in media.$bsizes {
+    @media ($size) {
+        #interact {
+            width: 64px * $i;
+            height: 30px * $i;
+            background: url('/img/#{$i}/main.png') -336px * $i -464px * $i no-repeat;
+
+            ul {
+                top: 6px * $i;
+                left: 1px * $i;
+
+                li {
+                    margin-right: 3px * $i;
+                }
+            }
+        }
+    }
+}
+

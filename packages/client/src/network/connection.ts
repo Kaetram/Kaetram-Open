@@ -1,8 +1,8 @@
+import log from '../lib/log';
+
 import _ from 'lodash-es';
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
-
-import log from '../lib/log';
 
 import type App from '../app';
 import type Overlays from '../renderer/overlays';
@@ -153,6 +153,7 @@ export default class Connection {
         this.messages.onMinigame(this.handleMinigame.bind(this));
         this.messages.onEffect(this.handleEffect.bind(this));
         this.messages.onFriends(this.handleFriends.bind(this));
+        this.messages.onRank(this.handleRank.bind(this));
     }
 
     /**
@@ -254,7 +255,7 @@ export default class Connection {
             }
 
             case Opcodes.Equipment.Unequip: {
-                this.game.player.unequip(info.type!);
+                this.game.player.unequip(info.type!, info.count);
                 break;
             }
         }
@@ -591,10 +592,9 @@ export default class Connection {
 
         if (!entity) return;
 
-        let { name, x, y } = entity;
+        let { name, rank, x, y } = entity;
 
-        if (entity.isModerator()) name = `[Moderator] ${name}`;
-        if (entity.isAdmin()) name = `[Admin] ${name}`;
+        if (rank !== Modules.Ranks.None) name = `[${Modules.Ranks[rank]}] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -723,6 +723,11 @@ export default class Connection {
             case Opcodes.Ability.Update: {
                 info = info as AbilityData;
                 this.game.player.setAbility(info.key, info.level, info.type, info.quickSlot);
+                break;
+            }
+
+            case Opcodes.Ability.Toggle: {
+                this.game.player.toggleAbility((info as AbilityData).key);
                 break;
             }
         }
@@ -894,6 +899,9 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        // Stop player movement
+        this.game.player.stop(true);
+
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
@@ -969,7 +977,7 @@ export default class Connection {
             }
 
             case Opcodes.NPC.Enchant: {
-                //this.menu.enchant.display();
+                this.menu.getEnchant().show();
                 break;
             }
         }
@@ -1326,7 +1334,7 @@ export default class Connection {
             }
 
             case Opcodes.Friends.Add: {
-                this.game.player.addFriend(info.username!, info.status!);
+                this.game.player.addFriend(info.username!, info.status!, info.serverId!);
                 break;
             }
 
@@ -1337,6 +1345,15 @@ export default class Connection {
         }
 
         this.menu.getFriends().handle(opcode, info.username, info.status);
+    }
+
+    /**
+     * Updates the rank of the current player. Packet contains the new rank.
+     * @param rank The new rank we are updating the player to.
+     */
+
+    private handleRank(rank: Modules.Ranks): void {
+        this.game.player.rank = rank;
     }
 
     /**

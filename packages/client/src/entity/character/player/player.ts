@@ -1,8 +1,3 @@
-import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
-
-import Character from '../character';
-
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
@@ -12,6 +7,12 @@ import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Arrows from './equipment/arrows';
+
+import Character from '../character';
+
+import { Modules } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
@@ -19,7 +20,7 @@ import type { PlayerData } from '@kaetram/common/types/player';
 import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType } from '@kaetram/common/types/friends';
+import type { Friend as FriendType, FriendInfo } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -54,7 +55,8 @@ export default class Player extends Character {
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon()
+        [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.Arrows]: new Arrows()
     };
 
     public skills: { [key: number]: Skill } = {};
@@ -166,8 +168,8 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        _.each(friends, (status: boolean, username: string) => {
-            this.friends[username] = new Friend(i, username, status);
+        _.each(friends, (info: FriendInfo, username: string) => {
+            this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
         });
@@ -210,21 +212,24 @@ export default class Player extends Character {
     /**
      * Adds a new friend to the list.
      * @param username The username of the friend.
-     * @param status The online status of the friend.
+     * @param status Whether the friend is online or not.
      */
 
-    public addFriend(username: string, status: boolean): void {
-        this.friends[username] = new Friend(_.size(this.friends), username, status);
+    public addFriend(username: string, status: boolean, serverId: number): void {
+        this.friends[username] = new Friend(_.size(this.friends), username, status, serverId);
     }
 
     /**
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
+     * @param count Optional parameter to remove a certain amount of items.
      */
 
-    public unequip(type: Modules.Equipment): void {
-        this.equipments[type].update();
+    public unequip(type: Modules.Equipment, count = 0): void {
+        // Decrement count if provided, otherwise reset the equipment slot.
+        if (count > 0) this.equipments[type].count = count;
+        else this.equipments[type].update();
     }
 
     /**
@@ -261,6 +266,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The arrows object of the player.
+     */
+
+    public getArrows(): Arrows {
+        return this.equipments[Modules.Equipment.Arrows];
+    }
+
+    /**
      * @returns The pendant object of the player.
      */
 
@@ -289,7 +302,7 @@ export default class Player extends Character {
      */
 
     public override isAdmin(): boolean {
-        return this.rank === Modules.Ranks.Administrator;
+        return this.rank === Modules.Ranks.Admin;
     }
 
     /**
@@ -429,11 +442,28 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the active status of an ability.
+     * @param key The key of the ability we are updating.
+     */
+
+    public toggleAbility(key: string): void {
+        this.abilities[key]?.toggle();
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
     public isRanged(): boolean {
         return this.attackRange > 1;
+    }
+
+    /**
+     * @returns Whether or not the player has a ranged-based magic weapon.
+     */
+
+    public isMagic(): boolean {
+        return this.getWeapon().bonuses.magic > 0 && this.isRanged();
     }
 
     /**

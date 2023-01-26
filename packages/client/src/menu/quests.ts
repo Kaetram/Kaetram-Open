@@ -1,7 +1,7 @@
+import Menu from './menu';
+
 import _ from 'lodash';
 import { Opcodes } from '@kaetram/common/network';
-
-import Menu from './menu';
 
 import type Player from '../entity/character/player/player';
 import type Task from '../entity/character/player/task';
