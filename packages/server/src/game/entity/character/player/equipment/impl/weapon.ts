@@ -10,6 +10,10 @@ export default class Weapon extends Equipment {
     public projectileName = '';
     public manaCost = 0;
 
+    // Weapon type
+    private archer = false;
+    private magic = false;
+
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
         super(Modules.Equipment.Weapon, key, count, enchantments);
     }
@@ -26,6 +30,9 @@ export default class Weapon extends Equipment {
         this.poisonous = item.poisonous;
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
+
+        this.archer = item.isArcherWeapon();
+        this.magic = item.isMagicWeapon();
     }
 
     /**
@@ -47,11 +54,19 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * @returns Whether or not the weapon is an archer-based weapon.
+     */
+
+    public isArcher(): boolean {
+        return this.archer;
+    }
+
+    /**
      * Weapons that have a magic bonus are magic-based weapons.
      * @returns Whether or not the weapon is a magic-based weapon.
      */
 
     public isMagic(): boolean {
-        return this.bonuses.magic > 0;
+        return this.magic;
     }
 }
