@@ -255,7 +255,7 @@ export default class Connection {
             }
 
             case Opcodes.Equipment.Unequip: {
-                this.game.player.unequip(info.type!);
+                this.game.player.unequip(info.type!, info.count);
                 break;
             }
         }
