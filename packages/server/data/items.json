@@ -4378,7 +4378,7 @@
     "price": 40,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 5,
+    "maxStackSize": 35,
     "plugin": "healthflask",
     "healAmount": 100
   },
@@ -4402,7 +4402,7 @@
     "price": 200,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 5,
+    "maxStackSize": 40,
     "plugin": "healthflask",
     "manaAmount": 35
   },
@@ -4415,7 +4415,7 @@
     "price": 350,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 3,
+    "maxStackSize": 20,
     "plugin": "healthflask",
     "healAmount": 200
   },
@@ -4428,7 +4428,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 2,
+    "maxStackSize": 15,
     "plugin": "healthflask",
     "healAmount": 250
   },
@@ -4441,7 +4441,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 2,
+    "maxStackSize": 20,
     "plugin": "healthflask",
     "manaAmount": 95
   },
@@ -5111,7 +5111,7 @@
     "type": "arrow",
     "name": "Arrow",
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
