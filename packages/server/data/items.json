@@ -4043,11 +4043,11 @@
       "magic": 3
     },
     "defenseStats": {
-      "crush": 68,
-      "slash": 55,
-      "stab": 60,
-      "archery": 0,
-      "magic": 45
+      "crush": 38,
+      "slash": 35,
+      "stab": 35,
+      "archery": 25,
+      "magic": 0
     },
     "bonuses": {
       "accuracy": 3,
