@@ -358,7 +358,29 @@ export default class Mob extends Character {
 
         let key = keys[Utils.randomInt(0, keys.length - 1)],
             drop = items[key],
-            count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+            count = 1;
+
+        switch (key) {
+            case 'gold': {
+                count = Utils.randomInt(this.level, this.level * 10);
+                break;
+            }
+
+            case 'flask': {
+                count = Utils.randomInt(1, 3);
+                break;
+            }
+
+            case 'arrow': {
+                count = Utils.randomInt(1, this.level);
+                break;
+            }
+
+            case 'firearrow': {
+                count = Utils.randomInt(1, Math.ceil(this.level / 2));
+                break;
+            }
+        }
 
         // Something went wrong when trying to get the item drop.
         if (!drop) {

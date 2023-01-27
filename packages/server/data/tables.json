@@ -3,13 +3,13 @@
         "gold": 400,
         "flask": 225,
         "bigflask": 130,
-        "manaflask": 200,
+        "manaflask": 220,
         "bigmanaflask": 100,
         "burger": 120
     },
 
     "arrows": {
-        "arrow": 350,
+        "arrow": 400,
         "firearrow": 150,
         "poisonarrow": 125,
         "lightningarrow": 85,
