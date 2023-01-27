@@ -74,11 +74,11 @@ export default abstract class Container {
             added = !!slot?.add(item.count);
         }
 
-        // All slots are taken.
-        if (!this.hasSpace()) return false;
-
         // Update the next empty slot.
         if (!added) {
+            // All slots are taken and nothing was stacked, stop here.
+            if (!this.hasSpace()) return false;
+
             slot = this.getEmptySlot();
 
             if (slot) {
