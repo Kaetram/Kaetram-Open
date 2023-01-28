@@ -10,7 +10,7 @@ import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, count?: number) => void;
+type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
@@ -88,7 +88,7 @@ export default class Inventory extends Menu {
     private handleAction(menuAction: Modules.MenuActions): void {
         if (menuAction === Modules.MenuActions.DropMany) {
             Util.fadeIn(this.dropDialog);
-
+            this.dropCount.focus();
             return;
         }
 
