@@ -10,6 +10,7 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Interact from '../menu/interact';
 import type Friends from '../menu/friends';
+import type Inventory from '../menu/inventory';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
@@ -37,6 +38,7 @@ export default class InputController {
     public player: Player;
     private friends: Friends;
     private interact: Interact;
+    private inventory: Inventory;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -72,6 +74,7 @@ export default class InputController {
         this.camera = game.camera;
         this.player = game.player;
         this.friends = game.menu.getFriends();
+        this.inventory = game.menu.getInventory();
         this.interact = game.menu.getInteract();
 
         this.chatHandler = new Chat(game);
@@ -170,6 +173,9 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        // Prevent actions if the inventory drop input is visible.
+        if (this.inventory.isDropDialogVisible()) return;
+
         // Popups are UI elements that are displayed on top of the game.
         if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 

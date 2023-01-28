@@ -599,7 +599,7 @@ export default class Player extends Character {
      */
 
     public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
-        if (count < 1) return this.notify('You have entered an invalid amount.');
+        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
 
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
@@ -613,13 +613,16 @@ export default class Player extends Character {
      * Handles the swap action of a container. This is when we want to move items around.
      * @param type The type of container we are working with.
      * @param index The index at which we are swapping the item.
-     * @param count The index at which we are swapping the item with.
+     * @param value The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, index: number, count: number): void {
+    public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
+        if (isNaN(index) || isNaN(value) || index < 0 || value < 0)
+            return log.warning(`[${this.username}] Invalid container swap [${index}, ${value}}]`);
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
-        container.swap(index, count);
+        container.swap(index, value);
     }
 
     /**
