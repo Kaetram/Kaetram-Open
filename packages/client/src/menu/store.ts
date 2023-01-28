@@ -219,7 +219,7 @@ export default class Store extends Menu {
         price.classList.add('store-item-price', 'stroke');
 
         // Set the text HTML values for the children elements.
-        if (item.count) count.textContent = `x${item.count.toString()}`;
+        if (item.count !== -1) count.textContent = `x${item.count.toString()}`;
         name.textContent = item.name;
         price.textContent = `${item.price.toString()}g`;
 

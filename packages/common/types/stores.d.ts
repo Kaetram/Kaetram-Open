@@ -2,7 +2,7 @@
 
 export interface StoreItem {
     key: string;
-    count?: number;
+    count: number;
     price?: number;
     stockAmount?: number;
 }
@@ -22,7 +22,7 @@ export interface RawStore {
 export interface SerializedStoreItem {
     key: string;
     name: string;
-    count?: number;
+    count: number;
     price: number;
     index?: number;
 }
