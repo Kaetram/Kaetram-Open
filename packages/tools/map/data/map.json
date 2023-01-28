@@ -7279,7 +7279,13 @@
                          "duration":150,
                          "tileid":574
                         }],
-                 "id":569
+                 "id":569,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":576,
@@ -7466,7 +7472,13 @@
                          "duration":150,
                          "tileid":638
                         }],
-                 "id":633
+                 "id":633,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":645,
@@ -7930,7 +7942,13 @@
                          "duration":150,
                          "tileid":766
                         }],
-                 "id":761
+                 "id":761,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "animation":[
@@ -8297,7 +8315,13 @@
                          "duration":150,
                          "tileid":830
                         }],
-                 "id":825
+                 "id":825,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":835,
@@ -9047,7 +9071,13 @@
                          "duration":150,
                          "tileid":958
                         }],
-                 "id":953
+                 "id":953,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":960,
@@ -9442,7 +9472,13 @@
                          "duration":150,
                          "tileid":1022
                         }],
-                 "id":1017
+                 "id":1017,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":1024,
@@ -10447,7 +10483,13 @@
                          "duration":150,
                          "tileid":1214
                         }],
-                 "id":1209
+                 "id":1209,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":1216,
@@ -10667,7 +10709,13 @@
                          "duration":150,
                          "tileid":1278
                         }],
-                 "id":1273
+                 "id":1273,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":1280,
@@ -19744,7 +19792,13 @@
                          "duration":200,
                          "tileid":3951
                         }],
-                 "id":3946
+                 "id":3946,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "animation":[
@@ -19772,7 +19826,13 @@
                          "duration":200,
                          "tileid":3958
                         }],
-                 "id":3953
+                 "id":3953,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":3968,
@@ -19962,7 +20022,13 @@
                          "duration":200,
                          "tileid":4015
                         }],
-                 "id":4010
+                 "id":4010,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "animation":[
@@ -19990,7 +20056,13 @@
                          "duration":200,
                          "tileid":4022
                         }],
-                 "id":4017
+                 "id":4017,
+                 "properties":[
+                        {
+                         "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":4029,
