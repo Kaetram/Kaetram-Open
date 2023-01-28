@@ -88,10 +88,8 @@ export default class Inventory extends Menu {
     private handleAction(menuAction: Modules.MenuActions): void {
         console.log(menuAction);
 
-        if (menuAction === Modules.MenuActions.DropX) {
+        if (menuAction === Modules.MenuActions.DropMany) {
             Util.fadeIn(this.dropDialog);
-
-            console.log('soo.....');
 
             return;
         }
@@ -178,9 +176,9 @@ export default class Inventory extends Menu {
         if (element.equippable) actions.push(Modules.MenuActions.Equip);
 
         // Push drop option as the last one.
-        actions.push(Modules.MenuActions.Drop);
+        actions.push(Modules.MenuActions.DropOne);
 
-        if (element.count! > 1) actions.push(Modules.MenuActions.DropX);
+        if (element.count! > 1) actions.push(Modules.MenuActions.DropMany);
 
         this.actions.show(
             actions,
