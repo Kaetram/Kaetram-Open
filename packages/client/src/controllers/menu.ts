@@ -228,15 +228,15 @@ export default class MenuController {
      * Callback handler for when an item in the inventory is selected.
      * @param index Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
-     * @param count Optional parameter passed when we specify a selected slot to swap with.
+     * @param value Optional parameter that is used either for count (drop packet) or index (swap packet).
      */
 
-    private handleInventorySelect(index: number, opcode: Opcodes.Container, count?: number): void {
+    private handleInventorySelect(index: number, opcode: Opcodes.Container, value?: number): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
             index,
-            count
+            value
         });
     }
 
