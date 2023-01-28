@@ -3,7 +3,8 @@
         "items": [
             {
                 "key": "arrow",
-                "price": 5
+                "price": 5,
+                "count": -1
             },
             {
                 "key": "flask",
