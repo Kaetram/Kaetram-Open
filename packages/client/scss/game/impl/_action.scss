@@ -48,35 +48,35 @@
             background: url('/img/#{$i}/main.png') -400px * $i -384px * $i no-repeat;
         }
 
-        .action-drop {
+        .action-drop-one {
             background: url('/img/#{$i}/main.png') -400px * $i -400px * $i no-repeat;
         }
 
-        .action-eat {
+        .action-drop-many {
             background: url('/img/#{$i}/main.png') -400px * $i -416px * $i no-repeat;
         }
 
-        .action-eat2 {
+        .action-eat {
             background: url('/img/#{$i}/main.png') -400px * $i -432px * $i no-repeat;
         }
 
-        .action-trade {
+        .action-eat2 {
             background: url('/img/#{$i}/main.png') -400px * $i -448px * $i no-repeat;
         }
 
-        .action-potion {
+        .action-trade {
             background: url('/img/#{$i}/main.png') -400px * $i -464px * $i no-repeat;
         }
 
-        .action-follow {
+        .action-potion {
             background: url('/img/#{$i}/main.png') -400px * $i -480px * $i no-repeat;
         }
 
-        .action-examine {
+        .action-follow {
             background: url('/img/#{$i}/main.png') -400px * $i -496px * $i no-repeat;
         }
 
-        .action-dropx {
+        .action-examine {
             background: url('/img/#{$i}/main.png') -400px * $i -512px * $i no-repeat;
         }
 
