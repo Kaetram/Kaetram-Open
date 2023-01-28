@@ -86,8 +86,6 @@ export default class Inventory extends Menu {
      */
 
     private handleAction(menuAction: Modules.MenuActions): void {
-        console.log(menuAction);
-
         if (menuAction === Modules.MenuActions.DropMany) {
             Util.fadeIn(this.dropDialog);
 
