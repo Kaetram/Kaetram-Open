@@ -27,11 +27,6 @@ interface SlotElement extends HTMLElement {
 export default class Inventory extends Menu {
     private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
-    private dropDialog: HTMLElement = document.querySelector('#drop-dialog')!;
-    private dropCount: HTMLInputElement = document.querySelector('#drop-count')!;
-    private dropAccept: HTMLElement = document.querySelector('#drop-accept')!;
-    private dropCancel: HTMLElement = document.querySelector('#drop-cancel')!;
-
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
@@ -45,8 +40,9 @@ export default class Inventory extends Menu {
         this.load();
 
         this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
-
-        this.dropCancel.addEventListener('click', () => Util.fadeOut(this.dropDialog));
+        this.actions.onDrop((count: number) =>
+            this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count)
+        );
     }
 
     /**
@@ -61,23 +57,6 @@ export default class Inventory extends Menu {
         // Create slots based on the constants.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
             this.list.append(this.createSlot(i));
-
-        this.dropAccept.addEventListener('click', () => this.drop());
-    }
-
-    /**
-     * Drops the selected item from the inventory.
-     */
-
-    private drop(): void {
-        let count = this.dropCount.valueAsNumber;
-
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count);
-
-        this.dropCount.value = '';
-        this.actions.hide();
-
-        Util.fadeOut(this.dropDialog);
     }
 
     /**
@@ -86,13 +65,9 @@ export default class Inventory extends Menu {
      */
 
     private handleAction(menuAction: Modules.MenuActions): void {
-        if (menuAction === Modules.MenuActions.DropMany) {
-            Util.fadeIn(this.dropDialog);
-            this.dropCount.focus();
-            return;
-        }
+        if (menuAction === Modules.MenuActions.DropMany) return this.actions.showDropDialog();
 
-        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction));
+        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction), 1);
 
         this.actions.hide();
     }
@@ -438,8 +413,6 @@ export default class Inventory extends Menu {
         this.selectedSlot = -1;
 
         this.actions.hide();
-
-        Util.fadeOut(this.dropDialog);
     }
 
     /**
@@ -453,6 +426,14 @@ export default class Inventory extends Menu {
         let image: HTMLElement = element.querySelector('.inventory-item-image')!;
 
         return !image || image.style.backgroundImage === '';
+    }
+
+    /**
+     * @returns Whether or not the actiosn menu has the drop dialog visible.
+     */
+
+    public isDropDialogVisible(): boolean {
+        return this.actions.dropDialog.style.display === 'block';
     }
 
     /**

@@ -194,7 +194,7 @@ export default {
      */
 
     getMaxMana(level: number): number {
-        return 10 + level * 8;
+        return 20 + level * 24;
     },
 
     /**

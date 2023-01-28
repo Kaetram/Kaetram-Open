@@ -1,53 +1,81 @@
+@use '../../abstracts/media';
+
 #drop-dialog {
+    cursor: url('/img/3/hand.png'), auto;
+
     position: absolute;
-    top: 50%;
-    left: 50%;
+    inset: 0;
 
     display: none;
-    flex-direction: column;
-    gap: 0.5em;
 
-    margin-right: -28px;
-    margin-left: -100px;
-    padding: 0.5em;
+    margin: auto;
 
     font-family: AdvoCut, sans-serif;
     font-size: 16px;
     color: #e3e3e3;
 
     background-color: rgb(45 45 45 / 80%);
-    border-radius: 6px;
 }
 
 #drop-count {
     display: block;
+
     margin: 0 auto;
+
     font-family: AdvoCut, sans-serif;
+    color: white;
+
+    background-color: rgb(0 0 0 / 50%);
 }
 
 #drop-title {
-    margin-bottom: 10px;
     text-align: center;
 }
 
 #drop-accept,
 #drop-cancel {
     cursor: pointer;
+    cursor: url('/img/3/hand.png'), auto;
+    position: inherit;
+}
 
-    font-size: 18px;
-    color: #e3e3e3;
+#drop-buttons {
+    display: flex;
+    justify-content: space-between;
 
-    background-color: rgb(120 120 120 / 30%);
-    border-radius: 6px;
+    //margin: 0 auto;
+    padding: 0 10px;
+}
 
-    transition: background-color 0.2s;
+@each $size, $i in media.$bsizes {
+    @media ($size) {
+        #drop-dialog {
+            width: 53px * $i;
+            height: 40px * $i;
+            background: url('/img/#{$i}/main.png') -347px * $i -496px * $i no-repeat;
+        }
 
-    &:hover {
-        background-color: rgb(120 120 120 / 40%);
+        #drop-count {
+            width: 40px * $i;
+            margin-bottom: 1px * $i;
+        }
+
+        #drop-title {
+            margin-top: 3px * $i;
+            margin-bottom: 3px * $i;
+            font-size: 6px * $i;
+        }
     }
 
-    &:active {
-        color: #fcda5c;
-        background-color: rgb(120 120 120 / 40%);
+    @media (--sm) {
+        #drop-title {
+            font-size: 10px;
+        }
+
+        #drop-buttons {
+            transform: scale(2);
+            margin-top: 8px;
+            padding: 0 30px;
+        }
     }
 }
