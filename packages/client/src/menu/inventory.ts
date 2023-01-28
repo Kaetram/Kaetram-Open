@@ -6,18 +6,18 @@ import Util from '../utils/util';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
 
-import type { MenuAction } from './actions';
 import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
+type SelectCallback = (index: number, action: Opcodes.Container, count?: number) => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
     equippable?: boolean;
 
     name?: string;
+    count?: number;
     description?: string;
     attackStats?: Stats;
     defenseStats?: Stats;
@@ -44,7 +44,9 @@ export default class Inventory extends Menu {
 
         this.load();
 
-        this.actions.onButton((action: MenuAction) => this.handleAction(action));
+        this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
+
+        this.dropCancel.addEventListener('click', () => Util.fadeOut(this.dropDialog));
     }
 
     /**
@@ -61,10 +63,6 @@ export default class Inventory extends Menu {
             this.list.append(this.createSlot(i));
 
         this.dropAccept.addEventListener('click', () => this.drop());
-
-        window.addEventListener('click', (event) => {
-            if (event.target !== this.dropCount) this.dropDialog.style.display = 'none';
-        });
     }
 
     /**
@@ -78,6 +76,8 @@ export default class Inventory extends Menu {
 
         this.dropCount.value = '';
         this.actions.hide();
+
+        Util.fadeOut(this.dropDialog);
     }
 
     /**
@@ -85,14 +85,18 @@ export default class Inventory extends Menu {
      * @param menuAction Which type of action is being performed.
      */
 
-    private handleAction(menuAction: MenuAction): void {
-        if (menuAction.action === Modules.MenuActions.Drop && menuAction.alt) {
-            this.dropDialog.style.display = 'block';
+    private handleAction(menuAction: Modules.MenuActions): void {
+        console.log(menuAction);
+
+        if (menuAction === Modules.MenuActions.DropX) {
+            Util.fadeIn(this.dropDialog);
+
+            console.log('soo.....');
 
             return;
         }
 
-        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction.action));
+        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction));
 
         this.actions.hide();
     }
@@ -154,8 +158,8 @@ export default class Inventory extends Menu {
          */
 
         if (doubleClick) {
-            if (element.edible) this.handleAction({ action: Modules.MenuActions.Eat });
-            else if (element.equippable) this.handleAction({ action: Modules.MenuActions.Equip });
+            if (element.edible) this.handleAction(Modules.MenuActions.Eat);
+            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
 
             this.actions.hide();
 
@@ -168,16 +172,15 @@ export default class Inventory extends Menu {
          * be expanded as more item properties are added.
          */
 
-        let actions: MenuAction[] = [];
+        let actions: Modules.MenuActions[] = [];
 
-        if (element.edible) actions.push({ action: Modules.MenuActions.Eat });
-        if (element.equippable) actions.push({ action: Modules.MenuActions.Equip });
+        if (element.edible) actions.push(Modules.MenuActions.Eat);
+        if (element.equippable) actions.push(Modules.MenuActions.Equip);
 
         // Push drop option as the last one.
-        actions.push(
-            { action: Modules.MenuActions.Drop },
-            { action: Modules.MenuActions.Drop, alt: true }
-        );
+        actions.push(Modules.MenuActions.Drop);
+
+        if (element.count! > 1) actions.push(Modules.MenuActions.DropX);
 
         this.actions.show(
             actions,
@@ -203,7 +206,7 @@ export default class Inventory extends Menu {
 
         this.selectedSlot = index;
 
-        this.handleAction({ action: Modules.MenuActions.Eat });
+        this.handleAction(Modules.MenuActions.Eat);
     }
 
     /**
@@ -371,6 +374,7 @@ export default class Inventory extends Menu {
 
         // Add the item stats and name
         slotElement.name = slot.name!;
+        slotElement.count = slot.count!;
         slotElement.description = slot.description!;
         slotElement.attackStats = slot.attackStats!;
         slotElement.defenseStats = slot.defenseStats!;
@@ -438,6 +442,8 @@ export default class Inventory extends Menu {
         this.selectedSlot = -1;
 
         this.actions.hide();
+
+        Util.fadeOut(this.dropDialog);
     }
 
     /**
