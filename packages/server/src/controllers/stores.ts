@@ -110,7 +110,7 @@ export default class Stores {
 
     private stockItems(store: StoreInfo): void {
         _.each(store.items, (item: Item) => {
-            if (!item.count || !item.maxCount || item.count >= item.maxCount) return;
+            if (item.count === -1 || item.count >= item.maxCount) return;
 
             // If an alternate optional stock count is provided, increment by that amount.
             if (item.stockAmount) item.count += item.stockAmount;
@@ -175,7 +175,7 @@ export default class Stores {
         if (!item)
             return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
-        if (item.count) {
+        if (item.count !== -1) {
             if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
 
             // Prevent buying more than store has stock. Default to max stock.
@@ -195,7 +195,7 @@ export default class Stores {
         // Add the item to the player's inventory.
         if (!player.inventory.add(itemToAdd)) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
-        if (item.count) {
+        if (item.count !== -1) {
             // Decrement the item count by the amount we are buying.
             item.count -= count;
 
