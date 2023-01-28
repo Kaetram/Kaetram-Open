@@ -75,7 +75,8 @@ export enum MenuActions {
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
-    Examine = 'examine'
+    Examine = 'examine',
+    DropX = 'dropx'
 }
 
 export enum InteractActions {}

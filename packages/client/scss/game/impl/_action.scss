@@ -76,6 +76,10 @@
             background: url('/img/#{$i}/main.png') -400px * $i -496px * $i no-repeat;
         }
 
+        .action-dropx {
+            background: url('/img/#{$i}/main.png') -400px * $i -512px * $i no-repeat;
+        }
+
         .action-button {
             width: 16px * $i;
             height: 16px * $i;
