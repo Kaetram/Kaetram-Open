@@ -2,33 +2,33 @@
     "startshop": {
         "items": [
             {
+                "key": "arrow",
+                "price": 5
+            },
+            {
                 "key": "flask",
-                "count": 100,
+                "count": 500,
                 "price": 100
             },
             {
                 "key": "manaflask",
-                "count": 100,
+                "count": 500,
                 "price": 125
             },
             {
                 "key": "burger",
-                "count": 45,
+                "count": 100,
                 "price": 500
             },
             {
                 "key": "bigflask",
-                "count": 45,
+                "count": 100,
                 "price": 600
             },
             {
                 "key": "bigmanaflask",
-                "count": 45,
+                "count": 100,
                 "price": 550
-            },
-            {
-                "key": "arrow",
-                "price": 5
             },
             {
                 "key": "axe",
