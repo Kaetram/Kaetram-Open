@@ -10,7 +10,7 @@ import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, count?: number) => void;
+type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
@@ -86,13 +86,8 @@ export default class Inventory extends Menu {
      */
 
     private handleAction(menuAction: Modules.MenuActions): void {
-        console.log(menuAction);
-
         if (menuAction === Modules.MenuActions.DropX) {
             Util.fadeIn(this.dropDialog);
-
-            console.log('soo.....');
-
             return;
         }
 
@@ -457,6 +452,14 @@ export default class Inventory extends Menu {
         let image: HTMLElement = element.querySelector('.inventory-item-image')!;
 
         return !image || image.style.backgroundImage === '';
+    }
+
+    /**
+     * @returns Whether or not the drop dialog is currently visible.
+     */
+
+    public isDropDialogVisible(): boolean {
+        return this.dropDialog.style.display !== 'none';
     }
 
     /**

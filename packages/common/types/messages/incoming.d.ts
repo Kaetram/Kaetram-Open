@@ -47,7 +47,7 @@ export interface ContainerPacket {
     type: Modules.ContainerType; // Container the action is taking place in.
     subType: Modules.ContainerType; // Used by the bank to determine container actions.
     index?: number;
-    count?: number;
+    value?: number; // Can be either the count or the index of the item.
 }
 
 export interface AbilityPacket {
