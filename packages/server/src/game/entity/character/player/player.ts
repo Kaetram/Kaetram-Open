@@ -595,28 +595,31 @@ export default class Player extends Character {
      * of a door.
      * @param type The type of container we are working with.
      * @param index The index at which we are removing the item.
+     * @param count The amount of items we are removing.
      */
 
-    public handleContainerRemove(type: Modules.ContainerType, index: number, value: number): void {
+    public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
+        if (count < 1) return this.notify('You have entered an invalid amount.');
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
             return this.notify('You cannot drop items while standing in a door.');
 
-        container.remove(index, value, true);
+        container.remove(index, count, true);
     }
 
     /**
      * Handles the swap action of a container. This is when we want to move items around.
      * @param type The type of container we are working with.
      * @param index The index at which we are swapping the item.
-     * @param value The index at which we are swapping the item with.
+     * @param count The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
+    public handleContainerSwap(type: Modules.ContainerType, index: number, count: number): void {
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
-        container.swap(index, value);
+        container.swap(index, count);
     }
 
     /**
