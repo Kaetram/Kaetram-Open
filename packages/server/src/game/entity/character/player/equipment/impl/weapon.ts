@@ -35,6 +35,14 @@ export default class Weapon extends Equipment {
         this.magic = item.isMagicWeapon();
     }
 
+    public override empty(): void {
+        super.empty();
+
+        // Reset the weapon type
+        this.archer = false;
+        this.magic = false;
+    }
+
     /**
      * A weapon is a strength-based weapon when its strength bonus is greater than 0.
      * @returns Whether or not the weapon's strength bonus is greater than 0.
