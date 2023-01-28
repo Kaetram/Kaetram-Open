@@ -1,5 +1,7 @@
 import Menu from './menu';
 
+import Util from '../utils/util';
+
 import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
@@ -15,10 +17,40 @@ export default class Actions extends Menu {
         '#action-container > .action-item-description'
     )!;
 
+    // Drop dialog elements
+    public dropDialog: HTMLElement = document.querySelector('#drop-dialog')!;
+    private dropCount: HTMLInputElement = document.querySelector('#drop-count')!;
+    private dropAccept: HTMLElement = document.querySelector('#drop-accept')!;
+    private dropCancel: HTMLElement = document.querySelector('#drop-cancel')!;
+
     private buttonCallback?: (menuAction: Modules.MenuActions) => void;
+    private dropCallback?: (count: number) => void;
 
     public constructor() {
         super('#action-container');
+
+        this.dropCancel.addEventListener('click', this.hideDropDialog.bind(this));
+        this.dropAccept.addEventListener('click', this.handleDrop.bind(this));
+    }
+
+    /**
+     * Handles the click event for the drop dialog.
+     */
+
+    private handleDrop(): void {
+        let count = this.dropCount.valueAsNumber;
+
+        // Reset the input field value
+        this.dropCount.value = '';
+
+        // Close the drop dialog.
+        Util.fadeOut(this.dropDialog);
+
+        // Exit the actions menu dialog
+        this.hide();
+
+        // Send the callback to the inventory handler.
+        this.dropCallback?.(count);
     }
 
     /**
@@ -66,6 +98,18 @@ export default class Actions extends Menu {
     }
 
     /**
+     * Implementation of the `hide` superclass where we also hide the
+     * drop dialog upon exiting the actions menu.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        // Hide the drop dialog.
+        this.hideDropDialog();
+    }
+
+    /**
      * Appends an action element to the list of actions.
      * @param menuAction Enumeration containing the string text of the action.
      */
@@ -91,6 +135,27 @@ export default class Actions extends Menu {
     }
 
     /**
+     * Hides the description and shows the drop dialog. Also
+     * focuses on the input field for the drop dialog.
+     */
+
+    public showDropDialog(): void {
+        Util.fadeIn(this.dropDialog);
+        Util.fadeOut(this.description);
+
+        this.dropCount.focus();
+    }
+
+    /**
+     * Hides the drop dialog and brings back the description info.
+     */
+
+    private hideDropDialog(): void {
+        Util.fadeOut(this.dropDialog);
+        Util.fadeIn(this.description);
+    }
+
+    /**
      * Removes all the `div` action elements from the list.
      */
 
@@ -105,5 +170,14 @@ export default class Actions extends Menu {
 
     public onButton(callback: (menuAction: Modules.MenuActions) => void): void {
         this.buttonCallback = callback;
+    }
+
+    /**
+     * Callback handler for when the drop dialog has been accepted.
+     * @param callback Contains the number of items to be dropped.
+     */
+
+    public onDrop(callback: (count: number) => void): void {
+        this.dropCallback = callback;
     }
 }
