@@ -5,11 +5,6 @@ import _ from 'lodash-es';
 import type { Modules } from '@kaetram/common/network';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
-export interface MenuAction {
-    action: Modules.MenuActions;
-    alt?: boolean;
-}
-
 export default class Actions extends Menu {
     // Contains the list of actions.
     private list: HTMLUListElement = document.querySelector('#action-container > ul')!;
@@ -20,7 +15,7 @@ export default class Actions extends Menu {
         '#action-container > .action-item-description'
     )!;
 
-    private buttonCallback?: (menuAction: MenuAction) => void;
+    private buttonCallback?: (menuAction: Modules.MenuActions) => void;
 
     public constructor() {
         super('#action-container');
@@ -37,7 +32,7 @@ export default class Actions extends Menu {
      */
 
     public override show(
-        actions: MenuAction[],
+        actions: Modules.MenuActions[],
         name: string,
         attackStats: Stats,
         defenseStats: Stats,
@@ -46,7 +41,7 @@ export default class Actions extends Menu {
     ): void {
         this.clear();
 
-        _.each(actions, (action: MenuAction) => this.add(action));
+        _.each(actions, (action: Modules.MenuActions) => this.add(action));
 
         // Update the name of the selected item.
         this.name.innerHTML = name;
@@ -75,21 +70,20 @@ export default class Actions extends Menu {
      * @param menuAction Enumeration containing the string text of the action.
      */
 
-    public override add(menuAction: MenuAction): void {
-        let { action, alt } = menuAction,
-            element = document.querySelector(`.action-${action}`);
+    public override add(menuAction: Modules.MenuActions): void {
+        let element = document.querySelector(`.action-${menuAction}`);
 
         if (!element) {
             element = document.createElement('li');
 
             // Set the type of action to the button element
-            element.classList.add('action-button', `action-${action}`);
+            element.classList.add('action-button', `action-${menuAction}`);
 
             this.list.append(element);
         }
 
         // Assign an action when the element is clicked.
-        element.addEventListener(alt ? 'contextmenu' : 'click', (e) => {
+        element.addEventListener('click', (e) => {
             e.preventDefault();
 
             this.buttonCallback?.(menuAction);
@@ -109,7 +103,7 @@ export default class Actions extends Menu {
      * @param callback Contains the action that was pressed.
      */
 
-    public onButton(callback: (menuAction: MenuAction) => void): void {
+    public onButton(callback: (menuAction: Modules.MenuActions) => void): void {
         this.buttonCallback = callback;
     }
 }

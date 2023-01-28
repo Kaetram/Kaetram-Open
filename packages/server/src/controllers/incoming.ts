@@ -411,11 +411,11 @@ export default class Incoming {
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerRemove(packet.type, packet.index!, packet.count!);
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerSwap(packet.type, packet.index!, packet.count!);
             }
         }
     }
