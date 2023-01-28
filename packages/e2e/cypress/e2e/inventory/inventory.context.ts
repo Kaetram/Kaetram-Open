@@ -11,7 +11,7 @@ export default class InventoryContext extends LoggedInContext {
             'first inventory slot',
             '#inventory-container > ul > li:first-child div.item-slot'
         );
-        this.registerLookup('drop command', '.action-drop');
+        this.registerLookup('drop command', '.action-drop-one');
     }
 
     public override injectDefaultData(): void {
