@@ -128,7 +128,7 @@ export default {
                 return Opcodes.Container.Select;
             }
 
-            case Modules.MenuActions.Drop: {
+            case Modules.MenuActions.DropOne: {
                 return Opcodes.Container.Remove;
             }
 
