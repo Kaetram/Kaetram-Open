@@ -185,7 +185,7 @@ export default class Store extends Menu {
 
         // Updates the sell slot.
         this.sellSlot.style.backgroundImage = image.style.backgroundImage;
-        this.sellSlot.textContent = count.textContent;
+        this.sellSlotText.textContent = count.textContent;
         this.sellSlotReturn.style.backgroundImage = Util.getImageURL(this.currency);
         this.sellSlotReturnText.textContent = info.item!.price.toString() || '';
 
@@ -219,7 +219,7 @@ export default class Store extends Menu {
         price.classList.add('store-item-price', 'stroke');
 
         // Set the text HTML values for the children elements.
-        count.textContent = `x${item.count.toString()}`;
+        if (item.count) count.textContent = `x${item.count.toString()}`;
         name.textContent = item.name;
         price.textContent = `${item.price.toString()}g`;
 

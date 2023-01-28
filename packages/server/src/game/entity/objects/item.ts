@@ -55,8 +55,8 @@ export default class Item extends Entity {
 
     // Miscellaneous variables
     public movementModifier = -1;
-    public stockAmount = 1; // Used for stores to increase count by this amount.
-    public maxCount = 1; // Used for stores to know maximum limit.
+    public stockAmount?: number; // Used for stores to increase count by this amount.
+    public maxCount?: number; // Used for stores to know maximum limit.
     public lumberjacking = -1;
     public mining = -1;
     public attackRange = 1;
@@ -80,7 +80,7 @@ export default class Item extends Entity {
         x: number,
         y: number,
         public dropped = false,
-        public count = 1,
+        public count?: number,
         public enchantments: Enchantments = {}
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
@@ -94,7 +94,7 @@ export default class Item extends Entity {
         }
 
         // Count cannot be less than 1
-        if (this.count < 1) this.count = 1;
+        if (this.count && this.count < 1) this.count = 1;
 
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
