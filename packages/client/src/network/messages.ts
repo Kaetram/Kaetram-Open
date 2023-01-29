@@ -43,6 +43,7 @@ import type {
     StoreCallback,
     SyncCallback,
     TeleportCallback,
+    TradeCallback,
     UpdateCallback,
     WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
@@ -79,6 +80,7 @@ export default class Messages {
     private musicCallback?: MusicCallback;
     private npcCallback?: NPCCallback;
     private respawnCallback?: RespawnCallback;
+    private tradeCallback?: TradeCallback;
     private enchantCallback?: EnchantCallback;
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
@@ -133,6 +135,7 @@ export default class Messages {
         this.messages[Packets.Music] = () => this.musicCallback;
         this.messages[Packets.NPC] = () => this.npcCallback;
         this.messages[Packets.Respawn] = () => this.respawnCallback;
+        this.messages[Packets.Trade] = () => this.tradeCallback;
         this.messages[Packets.Enchant] = () => this.enchantCallback;
         this.messages[Packets.Guild] = () => this.guildCallback;
         this.messages[Packets.Pointer] = () => this.pointerCallback;
@@ -377,6 +380,10 @@ export default class Messages {
 
     public onRespawn(callback: RespawnCallback): void {
         this.respawnCallback = callback;
+    }
+
+    public onTrade(callback: TradeCallback): void {
+        this.tradeCallback = callback;
     }
 
     public onEnchant(callback: EnchantCallback): void {

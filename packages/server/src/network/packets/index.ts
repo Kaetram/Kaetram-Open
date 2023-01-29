@@ -32,6 +32,7 @@ export { default as Poison } from './poison';
 export { default as PVP } from './pvp';
 export { default as Quest } from './quest';
 export { default as Respawn } from './respawn';
+export { default as Trade } from './trade';
 export { default as Skill } from './skill';
 export { default as Spawn } from './spawn';
 export { default as Store } from './store';

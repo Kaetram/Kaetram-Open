@@ -8,7 +8,6 @@ import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
-import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
 import Quests from '../menu/quests';
@@ -222,6 +221,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The trade menu object.
+     */
+
+    public getTrade(): Trade {
+        return this.trade;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param index Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
@@ -331,7 +338,9 @@ export default class MenuController {
      */
 
     private handleTradeClose(): void {
-        this.game.socket.send(Packets.Trade, [Opcodes.Trade.Close]);
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Close
+        });
     }
 
     /**
