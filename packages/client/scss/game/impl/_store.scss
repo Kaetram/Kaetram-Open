@@ -34,6 +34,12 @@
     }
 }
 
+#store-help {
+    margin: 90% auto;
+    font-family: AdvoCut, sans-serif;
+    text-align: center;
+}
+
 #store-inventory-slots {
     left: 14%;
 }
@@ -87,6 +93,10 @@
         #store-container {
             width: 146px * $i;
             height: 134px * $i;
+        }
+
+        #store-help {
+            font-size: 10px * $i;
         }
 
         #store-inventory-container {
