@@ -64,7 +64,7 @@ export interface StorePacket {
     opcode: Opcodes.Store;
     key: string; // The shop's key.
     index: number; // Index of the item we are working with.
-    count?: number; // How many of the item we are trying to buy/sell
+    count: number; // How many of the item we are trying to buy/sell
 }
 
 export interface FriendsPacket {
