@@ -127,8 +127,14 @@ export default class Store extends Menu {
         this.selectCallback?.(Opcodes.Store.Buy, this.key, index, count);
     }
 
+    /**
+     * Buy dialog handler. Takes the value of the input field and sends it to the server.
+     */
+
     private handleBuy(): void {
         this.buy(this.selectedBuyIndex, this.buyCount.valueAsNumber);
+
+        this.hideBuyDialog();
     }
 
     /**
