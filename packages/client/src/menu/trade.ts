@@ -9,12 +9,13 @@ export default class Trade extends Menu {
 
     /**
      * Called when the player closes the trade menu.
+     * @param ignoreCallback Whether or not to ignore the close callback.
      */
 
-    public override hide(): void {
+    public override hide(ignoreCallback = false): void {
         super.hide();
 
-        this.closeCallback?.();
+        if (!ignoreCallback) this.closeCallback?.();
     }
 
     /**

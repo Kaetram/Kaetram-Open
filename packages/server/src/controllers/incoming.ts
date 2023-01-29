@@ -24,7 +24,8 @@ import type {
     ReadyPacket,
     StorePacket,
     WarpPacket,
-    FriendsPacket
+    FriendsPacket,
+    TradePacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -438,27 +439,22 @@ export default class Incoming {
         }
     }
 
-    private handleTrade(message: [Opcodes.Trade, string]): void {
-        let [opcode] = message,
-            oPlayer = this.entities.get(message[1]);
-
-        if (!oPlayer) return;
-
-        switch (opcode) {
+    private handleTrade(packet: TradePacket): void {
+        switch (packet.opcode) {
             case Opcodes.Trade.Request: {
-                break;
+                let oPlayer = this.entities.get(packet.instance!);
+
+                if (!oPlayer?.isPlayer()) return;
+
+                return this.player.trade.request(oPlayer);
             }
 
             case Opcodes.Trade.Accept: {
                 break;
             }
 
-            case Opcodes.Trade.Decline: {
-                break;
-            }
-
             case Opcodes.Trade.Close: {
-                break;
+                return this.player.trade.close();
             }
         }
     }

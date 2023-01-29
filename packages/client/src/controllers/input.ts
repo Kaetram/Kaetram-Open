@@ -334,6 +334,7 @@ export default class InputController {
             }
 
             case Modules.MenuActions.Trade: {
+                this.game.player.trade(this.interactEntity);
                 break;
             }
 
