@@ -247,6 +247,17 @@ export type RespawnCallback = (opcode: Opcodes.Respawn, info: RespawnPacket) => 
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export interface TradePacket {
+    instance?: string;
+    key?: string;
+    index?: number;
+    count?: number;
+}
+
+export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
 // TODO
 export interface EnchantPacket {
     index: number;
