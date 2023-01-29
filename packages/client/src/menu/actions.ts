@@ -8,20 +8,22 @@ import type { Modules } from '@kaetram/common/network';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export default class Actions extends Menu {
+    private page: HTMLElement = document.querySelector('#action-page')!;
+
     // Contains the list of actions.
-    private list: HTMLUListElement = document.querySelector('#action-container > ul')!;
+    private list: HTMLUListElement = document.querySelector('#action-page > ul')!;
 
     // Info about the current action.
-    private name: HTMLElement = document.querySelector('#action-container > .action-item-name')!;
+    private name: HTMLElement = document.querySelector('#action-page > .action-item-name')!;
     private description: HTMLElement = document.querySelector(
-        '#action-container > .action-item-description'
+        '#action-page > .action-item-description'
     )!;
 
     // Drop dialog elements
-    public dropDialog: HTMLElement = document.querySelector('#drop-dialog')!;
-    private dropCount: HTMLInputElement = document.querySelector('#drop-count')!;
-    private dropAccept: HTMLElement = document.querySelector('#drop-accept')!;
-    private dropCancel: HTMLElement = document.querySelector('#drop-cancel')!;
+    public dropDialog: HTMLElement = document.querySelector('#action-drop')!;
+    private dropCount: HTMLInputElement = document.querySelector('#action-drop .dialog-count')!;
+    private dropAccept: HTMLElement = document.querySelector('#action-drop .dialog-accept')!;
+    private dropCancel: HTMLElement = document.querySelector('#action-drop .dialog-cancel')!;
 
     private buttonCallback?: (menuAction: Modules.MenuActions) => void;
     private dropCallback?: (count: number) => void;
@@ -143,8 +145,9 @@ export default class Actions extends Menu {
         Util.fadeIn(this.dropDialog);
         Util.fadeOut(this.description);
 
-        this.container.classList.add('dimmed');
+        this.page.classList.add('dimmed');
 
+        this.dropCount.value = '1';
         this.dropCount.focus();
     }
 
@@ -156,7 +159,7 @@ export default class Actions extends Menu {
         Util.fadeOut(this.dropDialog);
         Util.fadeIn(this.description);
 
-        this.container.classList.remove('dimmed');
+        this.page.classList.remove('dimmed');
     }
 
     /**
