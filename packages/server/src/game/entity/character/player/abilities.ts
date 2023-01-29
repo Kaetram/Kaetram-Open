@@ -60,8 +60,6 @@ export default class Abilities {
 
     public use(key: string): void {
         this.abilities[key]?.activate(this.player);
-
-        this.toggleCallback?.(key);
     }
 
     /**
