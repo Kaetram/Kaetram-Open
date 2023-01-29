@@ -37,7 +37,7 @@ export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
-    public description = '';
+    public description: string | string[] = '';
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
@@ -509,6 +509,19 @@ export default class Mob extends Character {
         if (this.miniboss) displayInfo.scale = Modules.EntityScale[SpecialEntityTypes.Miniboss];
 
         return displayInfo;
+    }
+
+    /**
+     * Returns the description if it's just a string, otherwise it picks a random description
+     * from the array.
+     * @returns A string containing the description for the mob.
+     */
+
+    public getDescription(): string {
+        if (_.isArray(this.description))
+            return this.description[Utils.randomInt(0, this.description.length - 1)];
+
+        return this.description;
     }
 
     /**
