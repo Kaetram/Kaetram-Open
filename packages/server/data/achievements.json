@@ -16,8 +16,6 @@
         "mob": ["rat", "icerat"],
         "mobCount": 20,
 
-        "rewardItem": "axe",
-
         "rewardSkill": "strength",
         "rewardExperience": 369
     },

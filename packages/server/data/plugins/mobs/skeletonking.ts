@@ -22,6 +22,20 @@ export default class SkeletonKing extends Default {
     }
 
     /**
+     * Override for the hit handler callback. We spawn minions whenever the skeleton
+     * king is hit by a character.
+     * @param damage The amount of damage that was dealt.
+     * @param attacker The attacker that dealt the damage.
+     */
+
+    protected override handleHit(damage: number, attacker?: Character): void {
+        super.handleHit(damage, attacker);
+
+        // Add a random chance (1/4) to spawn a minion.
+        if (Utils.randomInt(1, 4) === 2) this.spawnMob();
+    }
+
+    /**
      * Override for the handle death callback. The skeleton king must remove
      * all of its minions upon death.
      * @param attacker The attacker that killed the skeleton king.
@@ -35,20 +49,6 @@ export default class SkeletonKing extends Default {
 
         // Reset minion spawn count.
         this.minionsSpawned = 0;
-    }
-
-    /**
-     * Override for the hit handler callback. We spawn minions whenever the skeleton
-     * king is hit by a character.
-     * @param damage The amount of damage that was dealt.
-     * @param attacker The attacker that dealt the damage.
-     */
-
-    protected override handleHit(damage: number, attacker?: Character): void {
-        super.handleHit(damage, attacker);
-
-        // Add a random chance (1/4) to spawn a minion.
-        if (Utils.randomInt(1, 4) === 2) this.spawnMob();
     }
 
     /**
