@@ -1,126 +1,80 @@
 @use '../../abstracts/media';
 
-#profile-dialog,
-#settings-page {
+dialog {
+    cursor: url('/img/3/hand.png'), auto;
+
     position: absolute;
-    right: 0;
-    bottom: 45px;
+    inset: 0;
+
     display: none;
-}
 
-#bank-inventory-container,
-#enchant-container {
-    float: left;
-}
+    margin: auto;
+    padding: 0;
 
-.inventory-slots {
-    position: absolute;
-    top: 13%;
-    left: 6%;
-}
-
-.item-count,
-.inventory-item-count {
     font-family: AdvoCut, sans-serif;
-    color: rgb(255 255 255 / 100%);
+    font-size: 16px;
+    color: #e3e3e3;
+
+    background-color: rgb(45 45 45 / 80%);
+    border: none;
 }
 
-.close {
-    position: absolute;
-    top: -3%;
-    left: 92%;
+.dialog-count {
+    display: block;
+
+    margin: 0 auto;
+
+    font-family: AdvoCut, sans-serif;
+    color: white;
+
+    background-color: rgb(0 0 0 / 50%);
 }
 
-.ok, .ok-check {
-    position: absolute;
+.dialog-title {
+    text-align: center;
 }
 
+.dialog-accept,
+.dialog-cancel {
+    cursor: pointer;
+    cursor: url('/img/3/hand.png'), auto;
+}
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #bank-inventory-container,
-        #enchant-container {
-            width: 129px * $i;
-            height: 127px * $i;
-            background-position: 0 0;
-        }
-
-        .item-count {
-            width: 16px * $i;
-            height: 7px * $i;
-            margin-left: $i;
-            text-align: center;
-        }
-
-        #store-sell-slot-return-text,
-        #store-sell-slot-text,
-        #shards-count {
-            margin-top: 19px * $i;
-        }
-
-        .ok, .ok-check {
-            background-image: url('/img/#{$i}/containers.png');
-        }
-
-        .ok {
-            width: 28px * $i;
-            height: 14px * $i;
-            background-position: -341px * $i -79px * $i;
-
-            &:hover {
-                background-position-y: -65px * $i;
-            }
-        }
-
-        .ok-check {
-            width: 14px * $i;
-            height: 14px * $i;
-            background-position: -387px * $i -79px * $i;
-
-            &:hover {
-                background-position-y: -65px * $i;
-            }
-
-            &:active {
-                background-position-y: -93px * $i;
-            }
-        }
-    }
+.dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
 }
 
 @each $size, $i in media.$bsizes {
     @media ($size) {
-        .close {
-            width: 16px * $i;
-            height: 16px * $i;
-            background: url('/img/#{$i}/containers.png') -32px * $i -166px * $i;
+        dialog {
+            width: 53px * $i;
+            height: 40px * $i;
+            background: url('/img/#{$i}/main.png') -347px * $i -496px * $i no-repeat;
+        }
 
-            &:hover {
-                background-position-x: -48px * $i;
-            }
-            
-            &:active {
-                background-position-x: -64px * $i;
-            }
+        .dialog-count {
+            width: 40px * $i;
+            margin-bottom: 1px * $i;
+        }
+
+        .dialog-title {
+            margin-top: 3px * $i;
+            margin-bottom: 3px * $i;
+            font-size: 6px * $i;
         }
     }
-}
 
-@media (--lg) {
-    .item-count {
-        font-size: 14px;
-    }
+    @media (--sm) {
+        .dialog-title {
+            font-size: 10px;
+        }
 
-}
-
-@media (--md) {
-    .item-count {
-        font-size: 11px;
-    }
-}
-
-@media (--sm) {
-    .item-count {
-        font-size: 6px;
+        .dialog-buttons {
+            transform: scale(2);
+            margin-top: 8px;
+            padding: 0 30px;
+        }
     }
 }
