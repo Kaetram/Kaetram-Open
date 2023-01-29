@@ -165,11 +165,12 @@ export default class Stores {
     public purchase(player: Player, storeKey: string, index: number, count = 1): void {
         if (!this.verifyStore(player, storeKey)) return;
 
-        // First and foremost check the user has enough space.
-        if (!player.inventory.hasSpace()) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
-
         let store = this.stores[storeKey],
             item = store.items[index];
+
+        // First and foremost check the user has enough space.
+        if (!player.inventory.hasSpace() && !player.inventory.hasItem(item.key))
+            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Check if item exists
         if (!item)
