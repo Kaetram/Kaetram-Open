@@ -1,9 +1,19 @@
 @use '../../abstracts/media';
 
+#action-page {
+    position: absolute;
+}
+
 #action-container {
     cursor: url('/img/3/hand.png'), auto;
+
     position: absolute;
+
     display: none;
+
+    width: 100%;
+    height: 100%;
+
     font-family: AdvoCut, sans-serif;
 
     ul {
@@ -23,13 +33,14 @@
 
 @each $size, $i in media.$bsizes {
     @media ($size) {
-        #action-container {
+        #action-page {
             right: 101px * $i;
             bottom: 34px * $i;
-
             width: 64px * $i;
             height: 89px * $i;
+        }
 
+        #action-container {
             background: url('/img/#{$i}/main.png') -224px * $i -368px * $i no-repeat;
 
             ul {
@@ -108,14 +119,14 @@
 }
 
 @media (--lg) {
-    #action-container {
+    #action-page {
         right: 298px;
         bottom: 80px;
     }
 }
 
 @media (--md) {
-    #action-container {
+    #action-page {
         right: 202px;
         bottom: 68px;
     }
