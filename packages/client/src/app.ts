@@ -65,7 +65,6 @@ export default class App {
     public statusMessage = '';
 
     private selectedServer?: SerializedServer;
-    private showWorldSelect = false;
 
     public keyDownCallback?: KeyDownCallback;
     public keyUpCallback?: KeyUpCallback;
@@ -731,7 +730,6 @@ export default class App {
         // If there is only one server, then hide the world select button
         if (servers.length < 2) return;
 
-        this.showWorldSelect = true;
         this.worldSelectButton.hidden = false;
 
         for (let [i, server] of Object.entries(servers)) {

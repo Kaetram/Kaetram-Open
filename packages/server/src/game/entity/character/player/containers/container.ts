@@ -259,7 +259,7 @@ export default abstract class Container {
     /**
      * Checks if the container contains an item (and a count). If it's not stackable,
      * we must count the amount of items in the container.
-     * @param key The key of the item we are looking fsor.
+     * @param key The key of the item we are looking for.
      * @param count Optional amount of items we are looking for.
      */
 
