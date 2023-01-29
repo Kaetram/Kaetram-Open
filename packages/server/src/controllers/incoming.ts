@@ -556,7 +556,7 @@ export default class Incoming {
 
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
-        this.player.notify(entity.description);
+        this.player.notify(entity.getDescription());
     }
 
     /**
