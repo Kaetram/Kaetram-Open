@@ -284,7 +284,9 @@ export default class Camera {
      */
 
     public zoom(zoomAmount = 0): void {
-        this.setZoom(this.zoomFactor + zoomAmount);
+        let zoom = parseFloat((this.zoomFactor + zoomAmount).toFixed(1));
+
+        this.setZoom(zoom);
     }
 
     /**
