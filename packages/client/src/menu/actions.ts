@@ -43,8 +43,8 @@ export default class Actions extends Menu {
         // Reset the input field value
         this.dropCount.value = '';
 
-        // Close the drop dialog.
-        Util.fadeOut(this.dropDialog);
+        // Hide the drop dialog.
+        this.hideDropDialog();
 
         // Exit the actions menu dialog
         this.hide();
@@ -143,6 +143,8 @@ export default class Actions extends Menu {
         Util.fadeIn(this.dropDialog);
         Util.fadeOut(this.description);
 
+        this.container.classList.add('dimmed');
+
         this.dropCount.focus();
     }
 
@@ -153,6 +155,8 @@ export default class Actions extends Menu {
     private hideDropDialog(): void {
         Util.fadeOut(this.dropDialog);
         Util.fadeIn(this.description);
+
+        this.container.classList.remove('dimmed');
     }
 
     /**
