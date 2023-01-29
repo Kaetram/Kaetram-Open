@@ -1,6 +1,6 @@
 @use '../../abstracts/media';
 
-#drop-dialog {
+dialog {
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
@@ -9,15 +9,17 @@
     display: none;
 
     margin: auto;
+    padding: 0;
 
     font-family: AdvoCut, sans-serif;
     font-size: 16px;
     color: #e3e3e3;
 
     background-color: rgb(45 45 45 / 80%);
+    border: none;
 }
 
-#drop-count {
+.dialog-count {
     display: block;
 
     margin: 0 auto;
@@ -28,18 +30,17 @@
     background-color: rgb(0 0 0 / 50%);
 }
 
-#drop-title {
+.dialog-title {
     text-align: center;
 }
 
-#drop-accept,
-#drop-cancel {
+.dialog-accept,
+.dialog-cancel {
     cursor: pointer;
     cursor: url('/img/3/hand.png'), auto;
-    position: inherit;
 }
 
-#drop-buttons {
+.dialog-buttons {
     display: flex;
     justify-content: space-between;
     padding: 0 10px;
@@ -47,18 +48,18 @@
 
 @each $size, $i in media.$bsizes {
     @media ($size) {
-        #drop-dialog {
+        dialog {
             width: 53px * $i;
             height: 40px * $i;
             background: url('/img/#{$i}/main.png') -347px * $i -496px * $i no-repeat;
         }
 
-        #drop-count {
+        .dialog-count {
             width: 40px * $i;
             margin-bottom: 1px * $i;
         }
 
-        #drop-title {
+        .dialog-title {
             margin-top: 3px * $i;
             margin-bottom: 3px * $i;
             font-size: 6px * $i;
@@ -66,11 +67,11 @@
     }
 
     @media (--sm) {
-        #drop-title {
+        .dialog-title {
             font-size: 10px;
         }
 
-        #drop-buttons {
+        .dialog-buttons {
             transform: scale(2);
             margin-top: 8px;
             padding: 0 30px;

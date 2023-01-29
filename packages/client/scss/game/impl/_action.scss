@@ -1,15 +1,14 @@
 @use '../../abstracts/media';
 
-#action-page {
+#action-container {
     position: absolute;
+    display: none;
 }
 
-#action-container {
+#action-page {
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
-
-    display: none;
 
     width: 100%;
     height: 100%;
@@ -33,14 +32,14 @@
 
 @each $size, $i in media.$bsizes {
     @media ($size) {
-        #action-page {
+        #action-container {
             right: 101px * $i;
             bottom: 34px * $i;
             width: 64px * $i;
             height: 89px * $i;
         }
 
-        #action-container {
+        #action-page {
             background: url('/img/#{$i}/main.png') -224px * $i -368px * $i no-repeat;
 
             ul {
@@ -119,14 +118,14 @@
 }
 
 @media (--lg) {
-    #action-page {
+    #action-container {
         right: 298px;
         bottom: 80px;
     }
 }
 
 @media (--md) {
-    #action-page {
+    #action-container {
         right: 202px;
         bottom: 68px;
     }
