@@ -8,6 +8,7 @@ import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
+import Trade from './trade';
 
 import Mana from '../points/mana';
 import Character from '../character';
@@ -95,6 +96,7 @@ export default class Player extends Character {
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
     public friends: Friends = new Friends(this);
+    public trade: Trade = new Trade(this);
 
     public handler: Handler = new Handler(this);
 

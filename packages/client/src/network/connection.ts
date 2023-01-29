@@ -58,7 +58,8 @@ import type {
     MinigamePacket,
     EffectPacket,
     FriendsPacket,
-    ListPacket
+    ListPacket,
+    TradePacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -139,6 +140,7 @@ export default class Connection {
         this.messages.onMusic(this.handleMusic.bind(this));
         this.messages.onNPC(this.handleNPC.bind(this));
         this.messages.onRespawn(this.handleRespawn.bind(this));
+        this.messages.onTrade(this.handleTrade.bind(this));
         this.messages.onEnchant(this.handleEnchant.bind(this));
         this.messages.onGuild(this.handleGuild.bind(this));
         this.messages.onPointer(this.handlePointer.bind(this));
@@ -1003,6 +1005,37 @@ export default class Connection {
 
         this.game.player.dead = false;
         this.game.player.teleporting = false;
+    }
+
+    /**
+     * Handles the logic for trading between two players. Contains information
+     * about what is going on and what to do with the interface.
+     * @param opcode The type of trade action to perform.
+     * @param info Information about the trade.
+     */
+
+    private handleTrade(opcode: Opcodes.Trade, info: TradePacket): void {
+        switch (opcode) {
+            case Opcodes.Trade.Open: {
+                return this.menu.getTrade().show();
+            }
+
+            case Opcodes.Trade.Close: {
+                return this.menu.getTrade().hide(true);
+            }
+
+            case Opcodes.Trade.Add: {
+                return;
+            }
+
+            case Opcodes.Trade.Remove: {
+                return;
+            }
+
+            case Opcodes.Trade.Accept: {
+                return;
+            }
+        }
     }
 
     /**

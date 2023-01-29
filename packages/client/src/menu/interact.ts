@@ -37,7 +37,7 @@ export default class Interact extends Menu {
         if (entity.isPlayer()) {
             if (pvp) actions.push(Modules.MenuActions.Attack);
 
-            actions.push(Modules.MenuActions.Follow);
+            actions.push(Modules.MenuActions.Follow, Modules.MenuActions.Trade);
         }
 
         // Add all the actions to the list.
