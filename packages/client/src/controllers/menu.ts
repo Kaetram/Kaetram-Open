@@ -21,7 +21,6 @@ import _ from 'lodash-es';
 
 import type Game from '../game';
 import type Menu from '../menu/menu';
-import type Entity from '../entity/entity';
 
 export default class MenuController {
     private actions: Actions = new Actions();
@@ -101,8 +100,6 @@ export default class MenuController {
      */
 
     private load(): void {
-        new QuickSlots(this.game.player);
-
         this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
 

@@ -16,10 +16,10 @@ export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
     private state: State = new State();
     private skills: Skills = new Skills();
-    private abilities: Abilities = new Abilities();
+    private abilities: Abilities;
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state, this.skills, this.abilities];
+    private pages: Menu[] = [this.state, this.skills];
 
     // Current page we are on.
     private activePage = 0;
@@ -33,6 +33,12 @@ export default class Profile extends Menu {
 
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
+
+        // Initialize the abilities page.
+        this.abilities = new Abilities(this.player);
+
+        // Add the abilities page to the pages array.
+        this.pages.push(this.abilities);
 
         // Used to initialize the navigation buttons.
         this.handleNavigation();

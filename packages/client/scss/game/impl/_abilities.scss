@@ -83,6 +83,23 @@
             background-position: -112px * $i 1px;
         }
 
+        .quickslot-icon-intimidate,
+        .quickslot-icon-run,
+        .quickslot-icon-awareness,
+        .quickslot-icon-dualistsmark,
+        .quickslot-icon-hotshot,
+        .quickslot-icon-thickskin,
+        .quickslot-icon-precognition,
+        .quickslot-icon-secretcalling {
+            &:hover {
+                background-position-y: -15px * $i;
+            }
+
+            &:active, &.active {
+                background-position-y: -30px * $i;
+            }
+        }
+
         #ability-quickslot1 {
             top: 2px * $i;
             left: 9px * $i;

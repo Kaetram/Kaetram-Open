@@ -180,7 +180,7 @@
 
   "eye": {
     "name": "Eye",
-    "description": "Must have really poor depth perception when you think about it.",
+    "description": ["Must have really poor depth perception when you think about it.", "Eye really can't seem to figure out how that thing works."],
     "drops": {"redarcherarmor": 60},
     "hitPoints": 160,
     "defenseLevel": 3,

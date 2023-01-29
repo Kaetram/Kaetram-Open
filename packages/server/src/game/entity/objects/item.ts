@@ -284,6 +284,14 @@ export default class Item extends Entity {
     }
 
     /**
+     * @returns The description of the item.
+     */
+
+    public getDescription(): string {
+        return this.description;
+    }
+
+    /**
      * @returns The default attack range for an item if none is specified in the configuraiton.
      */
 

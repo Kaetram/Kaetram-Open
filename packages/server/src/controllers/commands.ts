@@ -185,7 +185,7 @@ export default class Commands {
 
             case 'kick':
             case 'forcekick': {
-                let username = blocks.shift()!;
+                let username = blocks.join(' ');
 
                 if (!username)
                     return this.player.notify(`Malformed command, expected /kick username`);
@@ -421,11 +421,14 @@ export default class Commands {
             }
 
             case 'setlevel': {
-                username = blocks.shift()!;
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
+                username = blocks.join(' ');
 
-                if (!username || !key || !x) return this.player.notify('Invalid command.');
+                if (!username || !key || !x)
+                    return this.player.notify(
+                        'Malformed command, expected /setlevel [skill] [level] [username]'
+                    );
 
                 player = this.world.getPlayerByName(username);
 
@@ -588,7 +591,7 @@ export default class Commands {
             }
 
             case 'kill': {
-                username = blocks.shift()!;
+                username = blocks.join(' ');
 
                 if (!username)
                     return this.player.notify(
@@ -827,9 +830,9 @@ export default class Commands {
             }
 
             case 'setrank': {
-                username = blocks.shift()!;
-
                 let rankText = blocks.shift()!;
+
+                username = blocks.join(' ');
 
                 if (!username || !rankText)
                     return this.player.notify(`Malformed command, expected /setrank username rank`);
