@@ -40,9 +40,7 @@ export default class Inventory extends Menu {
         this.load();
 
         this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
-        this.actions.onDrop((count: number) =>
-            this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count)
-        );
+        this.actions.onDrop((count: number) => this.handleDrop(count));
     }
 
     /**
@@ -70,6 +68,15 @@ export default class Inventory extends Menu {
         this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction), 1);
 
         this.actions.hide();
+    }
+
+    /**
+     * Drops an item from the inventory based on the count specified.
+     * @param count The amount of items we are dropping.
+     */
+
+    private handleDrop(count: number): void {
+        return this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count);
     }
 
     /**
@@ -429,7 +436,7 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * @returns Whether or not the actiosn menu has the drop dialog visible.
+     * @returns Whether or not the actions menu has the drop dialog visible.
      */
 
     public isDropDialogVisible(): boolean {
