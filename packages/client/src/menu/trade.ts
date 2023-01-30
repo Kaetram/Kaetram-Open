@@ -1,6 +1,8 @@
 import Menu from './menu';
 
 export default class Trade extends Menu {
+    public override hideOnShow = false;
+
     private closeCallback?: () => void;
 
     public constructor() {
