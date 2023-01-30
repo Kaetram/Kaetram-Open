@@ -356,7 +356,7 @@ export default class Player extends Character {
         let population = this.world.getPopulation();
 
         if (population > 1)
-            this.notify(`There are currently ${population} players online.`, '', true);
+            this.notify(`There are currently ${population} players online.`, '', '', true);
     }
 
     /**
@@ -1515,7 +1515,7 @@ export default class Player extends Character {
      * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour = '', bypass = false): void {
+    public notify(message: string, colour = '', source = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
@@ -1526,7 +1526,8 @@ export default class Player extends Character {
         this.send(
             new Notification(Opcodes.Notification.Text, {
                 message,
-                colour
+                colour,
+                source
             })
         );
 

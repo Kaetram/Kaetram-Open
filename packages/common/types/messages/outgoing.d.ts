@@ -189,6 +189,7 @@ export interface NotificationPacket {
     title?: string; // Title when displaying a popup.
     message: string; // String message to display.
     colour?: string; // Colour of the message.
+    source?: string;
 }
 
 export type NotificationCallback = (opcode: Opcodes.Notification, info: NotificationPacket) => void;

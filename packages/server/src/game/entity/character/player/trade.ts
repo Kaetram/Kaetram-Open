@@ -1,6 +1,7 @@
 import { Trade as TradePacket } from '../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
 
 import type Player from './player';
@@ -31,9 +32,19 @@ export default class Trade {
 
         if (target.trade.lastRequest === this.player.instance) return this.open(target);
 
-        target.trade.lastRequest = this.player.instance;
+        this.lastRequest = target.instance;
 
-        target.notify(`[Trade] ${this.player.username} has requested to trade with you.`);
+        target.notify(
+            `${Utils.formatName(this.player.username)} has requested to trade with you.`,
+            'rgb(84, 224, 255)',
+            'TRADE'
+        );
+
+        this.player.notify(
+            `You have requested to trade with ${Utils.formatName(target.username)}.`,
+            '',
+            'TRADE'
+        );
     }
 
     /**
@@ -55,6 +66,10 @@ export default class Trade {
         // Set the active trade for both players.
         this.player.trade.activeTrade = target;
         target.trade.activeTrade = this.player;
+
+        // Remove the last request for both players.
+        this.lastRequest = '';
+        target.trade.lastRequest = '';
     }
 
     /**

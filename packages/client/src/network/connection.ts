@@ -803,7 +803,12 @@ export default class Connection {
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
-                return this.input.chatHandler.add('WORLD', info.message, info.colour, true);
+                return this.input.chatHandler.add(
+                    info.source || 'WORLD',
+                    info.message,
+                    info.colour,
+                    true
+                );
             }
 
             case Opcodes.Notification.Popup: {
