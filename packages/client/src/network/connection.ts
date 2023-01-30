@@ -1022,7 +1022,11 @@ export default class Connection {
     private handleTrade(opcode: Opcodes.Trade, info: TradePacket): void {
         switch (opcode) {
             case Opcodes.Trade.Open: {
-                return this.menu.getTrade().show();
+                let otherPlayer = this.entities.get<Player>(info.instance!);
+
+                if (!otherPlayer) return;
+
+                return this.menu.getTrade().show(this.game.player, otherPlayer);
             }
 
             case Opcodes.Trade.Close: {
