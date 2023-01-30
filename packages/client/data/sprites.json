@@ -8900,7 +8900,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-manabigflask",
+    "id": "item-bigmanaflask",
     "animations": {
       "idle": {
         "length": 6,
