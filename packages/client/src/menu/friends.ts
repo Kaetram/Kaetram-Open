@@ -166,7 +166,7 @@ export default class Friends extends Menu {
         if (online) name.classList.add('green');
 
         // Set the name of the friend.
-        name.innerHTML = username;
+        name.innerHTML = Util.formatName(username);
 
         // Add the name element to the friend slot element.
         element.append(name);
