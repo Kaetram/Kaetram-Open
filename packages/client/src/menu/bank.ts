@@ -64,8 +64,9 @@ export default class Bank extends Menu {
      */
 
     private setSlot(index: number, key = '', count = 0): void {
-        let image = this.getBankElement(index).querySelector<HTMLElement>('.bank-image')!,
-            countElement = this.getBankElement(index).querySelector<HTMLElement>('.item-count')!;
+        let image = this.getBankElement(index).querySelector<HTMLElement>('.item-image')!,
+            countElement =
+                this.getBankElement(index).querySelector<HTMLElement>('.inventory-item-count')!;
 
         image.style.backgroundImage = Util.getImageURL(key);
         countElement.textContent = Util.getCount(count);
@@ -79,9 +80,12 @@ export default class Bank extends Menu {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getInventoryElement(index).querySelector<HTMLElement>('.bank-image')!,
-                count = this.getInventoryElement(index).querySelector<HTMLElement>('.item-count')!,
-                slotImage = slot.querySelector<HTMLElement>('.inventory-item-image')!;
+            let image = this.getInventoryElement(index).querySelector<HTMLElement>('.item-image')!,
+                count =
+                    this.getInventoryElement(index).querySelector<HTMLElement>(
+                        '.inventory-item-count'
+                    )!,
+                slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
             if (!slotImage) return;
 
