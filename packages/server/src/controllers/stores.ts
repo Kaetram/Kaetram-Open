@@ -194,7 +194,7 @@ export default class Stores {
         itemToAdd.count = count;
 
         // Add the item to the player's inventory.
-        if (!player.inventory.add(itemToAdd)) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+        if (!player.inventory.add(itemToAdd)) return;
 
         if (item.count !== -1) {
             // Decrement the item count by the amount we are buying.
