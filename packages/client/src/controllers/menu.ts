@@ -57,7 +57,7 @@ export default class MenuController {
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
-        this.trade = new Trade();
+        this.trade = new Trade(this.inventory);
 
         this.menus = {
             inventory: this.inventory,
