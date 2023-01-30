@@ -1,4 +1,5 @@
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type Item from '../../../objects/item';
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -15,7 +16,7 @@ export default class Slot {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
-    private maxStackSize = 1;
+    private maxStackSize = Modules.Constants.MAX_STACK;
 
     public constructor(
         public index: number,
@@ -31,9 +32,10 @@ export default class Slot {
      * @param item An item object that we extract data from.
      */
 
-    public update(item: Item): void {
+    public update(item: Item, ignoreMaxStackSize = false): void {
         this.key = item.key;
-        this.count = item.count > item.maxStackSize ? item.maxStackSize : item.count;
+        this.count =
+            item.count > item.maxStackSize && !ignoreMaxStackSize ? item.maxStackSize : item.count;
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
@@ -45,7 +47,7 @@ export default class Slot {
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
 
-        if (item.stackable) this.maxStackSize = item.maxStackSize;
+        if (!ignoreMaxStackSize) this.maxStackSize = item.maxStackSize;
 
         item.despawn(true); // Despawn signal towards the item once we update the slot.
     }
@@ -101,7 +103,7 @@ export default class Slot {
 
         this.edible = false;
         this.equippable = false;
-        this.maxStackSize = 1;
+        this.maxStackSize = Modules.Constants.MAX_STACK;
 
         this.name = '';
         this.description = '';
