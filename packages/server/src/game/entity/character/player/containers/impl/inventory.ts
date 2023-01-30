@@ -1,6 +1,7 @@
 import Container from '../container';
 
 import { Modules } from '@kaetram/common/network';
+import InventoryEn from '@kaetram/common/text/en/inventory';
 
 import type { SlotData } from '@kaetram/common/types/slot';
 import type Item from '../../../../objects/item';
@@ -10,9 +11,15 @@ export default class Inventory extends Container {
         super(Modules.ContainerType.Inventory, size);
     }
 
+    /**
+     * Override for the container `add` function where we send a notification.
+     * @param item The item to add to the container.
+     * @returns Whether or not the item was successfully added.
+     */
+
     public override add(item: Item): boolean {
         if (!super.add(item)) {
-            this.notifyCallback?.('You do not have enough space in your inventory.');
+            this.notifyCallback?.(InventoryEn.NOT_ENOUGH_SPACE);
             return false;
         }
 
@@ -24,6 +31,9 @@ export default class Inventory extends Container {
     /**
      * Override for the container remove function with added functionality for prevention
      * of special items being dropped (generally applies to quest-related items).
+     * @param index The index of the item to remove.
+     * @param count The amount of items to remove.
+     * @param drop Whether or not the item is being dropped.
      */
 
     public override remove(index: number, count = 1, drop = false): SlotData | undefined {
