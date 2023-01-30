@@ -243,11 +243,9 @@ export default class Commands {
 
                 if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 
-                if (item.stackable) {
-                    item.count = count;
+                item.count = count;
 
-                    this.player.inventory.add(item);
-                } else for (let i = 0; i < count; i++) this.player.inventory.add(item);
+                this.player.inventory.add(item);
 
                 return;
             }
