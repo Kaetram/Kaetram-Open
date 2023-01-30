@@ -15,6 +15,8 @@ interface SerializedContainer {
 export default abstract class Container {
     protected slots: Slot[] = [];
 
+    protected ignoreMaxStackSize = false;
+
     private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
@@ -41,7 +43,7 @@ export default abstract class Container {
             // Create a new item instance so that the item's data is created.
             if (!item.key) return;
 
-            this.slots[item.index].update(this.getItem(item));
+            this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
         });
 
         this.loadCallback?.();
@@ -68,7 +70,7 @@ export default abstract class Container {
             slot: Slot | undefined;
 
         // Item is stackable and we already have it.
-        if (item.stackable && this.canHold(item)) {
+        if ((item.stackable && this.canHold(item)) || this.ignoreMaxStackSize) {
             slot = this.find(item)!;
 
             added = !!slot?.add(item.count);
@@ -77,14 +79,10 @@ export default abstract class Container {
         // Update the next empty slot.
         if (!added) {
             // All slots are taken and nothing was stacked, stop here.
-            if (!this.hasSpace()) return false;
-
             slot = this.getEmptySlot();
 
             if (slot) {
-                slot.update(item);
-
-                console.log(`item count: ${item.count} max stack size: ${item.maxStackSize}`);
+                slot.update(item, this.ignoreMaxStackSize);
 
                 // Recursively add items until we exhaust the count.
                 if (item.count > item.maxStackSize) {
@@ -93,7 +91,7 @@ export default abstract class Container {
                 }
 
                 added = true;
-            }
+            } else return false;
         }
 
         if (added) this.addCallback?.(slot!);
@@ -179,6 +177,9 @@ export default abstract class Container {
         if (container.get(index).isEmpty()) return;
 
         let item = container.getItem(container.get(index));
+
+        // Prevent an item from being moved if it exceeds the max stack size.
+        if (item.count > item.maxStackSize) item.count = item.maxStackSize;
 
         if (this.add(item)) container.remove(index, item.count);
     }
