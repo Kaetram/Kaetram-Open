@@ -84,6 +84,14 @@ export default abstract class Container {
             if (slot) {
                 slot.update(item);
 
+                console.log(`item count: ${item.count} max stack size: ${item.maxStackSize}`);
+
+                // Recursively add items until we exhaust the count.
+                if (item.count > item.maxStackSize) {
+                    item.count -= item.maxStackSize;
+                    this.add(item);
+                }
+
                 added = true;
             }
         }
