@@ -3,6 +3,7 @@
     "type": "weapon",
     "name": "Heavy Sword",
     "level": 2,
+    "price": 50,
     "attackStats": {
       "crush": 2,
       "slash": 6,
@@ -23,6 +24,7 @@
     "name": "Axe",
     "lumberjacking": 1,
     "level": 1,
+     "price":50,
     "attackStats": {
       "crush": 4,
       "slash": 2,
@@ -63,6 +65,7 @@
     "type": "weapon",
     "name": "Morning Star",
     "level": 6,
+    "price": 100,
     "attackStats": {
       "crush": 14,
       "slash": 6,
@@ -82,6 +85,7 @@
     "type": "weapon",
     "name": "Water Sword",
     "level": 10,
+    "price": 100,
     "attackStats": {
       "crush": 4,
       "slash": 16,
@@ -101,6 +105,7 @@
     "type": "weapon",
     "name": "Fire Sword",
     "level": 14,
+    "price": 125,
     "attackStats": {
       "crush": 4,
       "slash": 15,
@@ -120,6 +125,7 @@
     "type": "weapon",
     "name": "Golden Sword",
     "level": 22,
+    "price": 175,
     "attackStats": {
       "crush": 6,
       "slash": 24,
@@ -139,6 +145,7 @@
     "type": "weapon",
     "name": "Side Sword",
     "level": 24,
+    "price": 125,
     "attackStats": {
       "crush": 12,
       "slash": 24,
@@ -158,6 +165,7 @@
     "type": "weapon",
     "name": "Silly Spear",
     "level": 28,
+    "price": 425,
     "attackStats": {
       "crush": 16,
       "slash": 12,
@@ -184,6 +192,7 @@
     "type": "weapon",
     "name": "Pirate's Scimitar",
     "level": 30,
+    "price": 1000,
     "attackStats": {
       "crush": 6,
       "slash": 41,
@@ -203,6 +212,7 @@
     "type": "weapon",
     "name": "Trident Of The Seas",
     "level": 40,
+    "price": 1275,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -229,6 +239,7 @@
     "type": "weapon",
     "name": "Blue Scimitar",
     "level": 46,
+    "price": 1200,
     "attackStats": {
       "crush": 18,
       "slash": 14,
@@ -248,6 +259,7 @@
     "type": "weapon",
     "name": "Hammer",
     "level": 50,
+    "price": 200,
     "attackStats": {
       "crush": 40,
       "slash": 4,
@@ -266,6 +278,7 @@
   "greenlightsaber": {
     "type": "weapon",
     "name": "Green Light Saber",
+    "price": 1550,
     "level": 56,
     "attackStats": {
       "crush": 0,
@@ -285,6 +298,7 @@
   "skylightsaber": {
     "type": "weapon",
     "name": "Sky Light Saber",
+    "price": 1600,
     "level": 57,
     "attackStats": {
       "crush": 0,
@@ -305,6 +319,7 @@
     "type": "weapon",
     "name": "Red Light Saber",
     "level": 56,
+    "price": 1575,
     "attackStats": {
       "crush": 0,
       "slash": 36,
@@ -326,6 +341,7 @@
     "attackRate": 1350,
     "skill": "strength",
     "level": 40,
+    "price": 1250,
     "attackStats": {
       "crush": 35,
       "slash": 50,
@@ -347,6 +363,7 @@
     "attackRate": 1450,
     "skill": "strength",
     "level": 42,
+    "price": 5050,
     "attackStats": {
       "crush": 28,
       "slash": 60,
@@ -367,6 +384,7 @@
     "name": "Justice Hammer",
     "skill": "strength",
     "level": 50,
+    "price": 250,
     "attackStats": {
       "crush": 50,
       "slash": 0,
@@ -386,6 +404,7 @@
     "type": "weapon",
     "name": "Rose",
     "level": 36,
+    "price": 500,
     "attackStats": {
       "crush": 36,
       "slash": 0,
@@ -405,6 +424,7 @@
     "type": "weapon",
     "name": "Ice Rose",
     "level": 86,
+    "price": 350,
     "attackStats": {
       "crush": 38,
       "slash": 0,
@@ -424,8 +444,9 @@
     "type": "weapon",
     "name": "Halberd",
     "level": 90,
+    "price": 222,
     "attackStats": {
-      "crush": 10,
+      "crush": 12,
       "slash": 44,
       "stab": 24,
       "archery": 0,
@@ -433,7 +454,7 @@
     },
     "bonuses": {
       "accuracy": 8,
-      "strength": 20,
+      "strength": 23,
       "archery": 0,
       "magic": 0
     }
@@ -444,6 +465,7 @@
     "name": "Whip",
     "skill": "accuracy",
     "level": 60,
+    "price": 250,
     "attackStats": {
       "crush": 14,
       "slash": 68,
@@ -452,8 +474,8 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 24,
-      "strength": 12,
+      "accuracy": 26,
+      "strength": 14,
       "archery": 0,
       "magic": 0
     }
@@ -463,6 +485,7 @@
     "type": "weapon",
     "name": "Forest Guardian Sword",
     "level": 106,
+    "price": 410,
     "attackStats": {
       "crush": 2,
       "slash": 40,
@@ -482,6 +505,7 @@
     "type": "weapon",
     "name": "Sickle",
     "level": 110,
+    "price": 325,
     "attackStats": {
       "crush": 0,
       "slash": 48,
@@ -501,6 +525,7 @@
     "type": "weapon",
     "name": "Plunger",
     "level": 98,
+    "price": 310,
     "attackStats": {
       "crush": 0,
       "slash": 0,
@@ -520,6 +545,7 @@
     "type": "weapon",
     "name": "Red Sickle",
     "level": 116,
+    "price": 411,
     "attackStats": {
       "crush": 0,
       "slash": 52,
@@ -539,6 +565,7 @@
     "type": "weapon",
     "name": "Day Walker",
     "level": 140,
+    "price": 5550,
     "attackStats": {
       "crush": 8,
       "slash": 60,
@@ -558,6 +585,7 @@
     "type": "weapon",
     "name": "Purple Cloud Kallege",
     "level": 160,
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 60,
@@ -577,8 +605,9 @@
     "type": "weapon",
     "name": "Sea rage",
     "level": 160,
+    "price": 15000,
     "attackStats": {
-      "crush": 46,
+      "crush": 48,
       "slash": 20,
       "stab": 10,
       "archery": 0,
@@ -586,7 +615,7 @@
     },
     "bonuses": {
       "accuracy": 2,
-      "strength": 34,
+      "strength": 36,
       "archery": 0,
       "magic": 0
     }
@@ -596,6 +625,7 @@
     "type": "weapon",
     "name": "Breaker",
     "level": 176,
+    "price": 3500,
     "attackStats": {
       "crush": 50,
       "slash": 30,
@@ -635,6 +665,7 @@
     "type": "weapon",
     "name": "Rainbow Sword",
     "level": 110,
+    "price": 200,
     "attackStats": {
       "crush": 40,
       "slash": 20,
@@ -654,6 +685,7 @@
     "type": "weapon",
     "name": "Typhoon",
     "level": 106,
+    "price": 2500,
     "attackStats": {
       "crush": 20,
       "slash": 40,
@@ -693,6 +725,7 @@
     "type": "weapon",
     "name": "Candy Bar",
     "level": 148,
+    "price": 1000,
     "attackStats": {
       "crush": 50,
       "slash": 10,
@@ -773,6 +806,7 @@
     "name": "Squeaky Hammer",
     "skill": "strength",
     "level": 66,
+    "price": 10000,
     "attackStats": {
       "crush": 84,
       "slash": 0,
