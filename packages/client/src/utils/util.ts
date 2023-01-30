@@ -55,13 +55,13 @@ export default {
             count = document.createElement('div');
 
         // Sets the class of the bank slot.
-        slot.classList.add('bank-slot');
+        slot.classList.add('item-slot');
 
         // Sets the class of the image.
-        image.classList.add('bank-image');
+        image.classList.add('item-image');
 
         // Sets the class of the count.
-        count.classList.add('item-count');
+        count.classList.add('inventory-item-count');
 
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');

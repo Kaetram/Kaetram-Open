@@ -27,7 +27,7 @@
     position: absolute;
 }
 
-.inventory-item-image {
+.item-image {
     pointer-events: none;
     background-size: cover;
 
@@ -53,7 +53,7 @@
         }
 
         .item-slot,
-        .inventory-item-image {
+        .item-image {
             width: 16px * $i;
             height: 16px * $i;
         }
