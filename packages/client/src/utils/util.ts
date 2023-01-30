@@ -91,6 +91,21 @@ export default {
     },
 
     /**
+     * Takes any name (or string as a matter of fact) and capitalizes
+     * every first letter after a space.
+     * Example: 'tHiS Is a usErName' -> 'This Is A Username'
+     * @param name The raw username string defaulting to '' if not specified.
+     * @returns The formatted name string.
+     */
+
+    formatName(name = ''): string {
+        return name.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
+    },
+
+    /**
      * Converts an integer value into a compact string used
      * when wanting to display large numbers of stackable items.
      * For example, 15000 coins get displayed as 15K and

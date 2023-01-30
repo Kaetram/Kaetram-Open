@@ -108,7 +108,10 @@ export default class MenuController {
      */
 
     public hide(): void {
-        this.forEachMenu((menu: Menu) => menu.hide());
+        this.forEachMenu((menu: Menu) => {
+            // Hide only if the menu is visible to prevent unnecessary calls to subclass `hide`.
+            if (menu.isVisible()) menu.hide();
+        });
     }
 
     /**
