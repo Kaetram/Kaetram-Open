@@ -22,7 +22,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
-    public maxStackSize: number = Modules.Constants.MAX_STACK;
+    public maxStackSize = 1; // Default max stack size.
     public plugin: Plugin | undefined;
 
     // Store variables
@@ -99,7 +99,7 @@ export default class Item extends Entity {
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
-        this.maxStackSize = this.data.maxStackSize || this.maxStackSize;
+        this.maxStackSize = this.getMaxStackSize(this.data.maxStackSize);
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
         this.level = this.data.level || this.level;
@@ -175,44 +175,6 @@ export default class Item extends Entity {
     }
 
     /**
-     * Returns the type of equipment the item classifies as.
-     * @returns Equipment type from Modules.
-     */
-
-    public getEquipmentType(): Modules.Equipment {
-        switch (this.itemType) {
-            case 'armour':
-            case 'armourarcher': {
-                return Modules.Equipment.Armour;
-            }
-
-            case 'weapon':
-            case 'weaponarcher':
-            case 'weaponmagic': {
-                return Modules.Equipment.Weapon;
-            }
-
-            case 'pendant': {
-                return Modules.Equipment.Pendant;
-            }
-
-            case 'boots': {
-                return Modules.Equipment.Boots;
-            }
-
-            case 'ring': {
-                return Modules.Equipment.Ring;
-            }
-
-            case 'arrow': {
-                return Modules.Equipment.Arrows;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
      * Checks whether or not the player can equip the current item.
      * @param player The player we are checking the level of and sending notifications to.
      * @returns Whether or not the player can equip the item.
@@ -273,6 +235,44 @@ export default class Item extends Entity {
     }
 
     /**
+     * Returns the type of equipment the item classifies as.
+     * @returns Equipment type from Modules.
+     */
+
+    public getEquipmentType(): Modules.Equipment {
+        switch (this.itemType) {
+            case 'armour':
+            case 'armourarcher': {
+                return Modules.Equipment.Armour;
+            }
+
+            case 'weapon':
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return Modules.Equipment.Weapon;
+            }
+
+            case 'pendant': {
+                return Modules.Equipment.Pendant;
+            }
+
+            case 'boots': {
+                return Modules.Equipment.Boots;
+            }
+
+            case 'ring': {
+                return Modules.Equipment.Ring;
+            }
+
+            case 'arrow': {
+                return Modules.Equipment.Arrows;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Grabs the weapon requirement level for the current item object.
      * @returns The weapon requirement level in a number format.
      */
@@ -289,6 +289,18 @@ export default class Item extends Entity {
 
     public getDescription(): string {
         return this.description;
+    }
+
+    /**
+     * Extracts the max stack size of an item based on the type of item
+     * and whether it has a specified max stack size in the configuration.
+     * @param maxStackSize The maximum stack size from the configuration.
+     */
+
+    public getMaxStackSize(maxStackSize?: number): number {
+        if (this.stackable) return maxStackSize || Modules.Constants.MAX_STACK;
+
+        return this.maxStackSize;
     }
 
     /**

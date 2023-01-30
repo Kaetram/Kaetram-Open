@@ -33,7 +33,7 @@ export default class Slot {
 
     public update(item: Item): void {
         this.key = item.key;
-        this.count = item.count;
+        this.count = item.count > item.maxStackSize ? item.maxStackSize : item.count;
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
