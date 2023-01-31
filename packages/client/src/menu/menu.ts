@@ -63,7 +63,7 @@ export default abstract class Menu {
      * @param _data Unknown data that may contain information about an item.
      */
 
-    public add(_data: unknown): void {
+    public add(_data: unknown, _data1: unknown, _data2: unknown, data3: unknown): void {
         log.debug(`Unimplemented menu add() function.`);
     }
 

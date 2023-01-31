@@ -15,7 +15,9 @@
     left: 98% !important;
 }
 
-#trade-inventory-slots {
+#trade-inventory-slots,
+#trade-player-slots,
+#trade-oplayer-slots {
     position: absolute;
     overflow: hidden;
     overflow-y: scroll;
@@ -51,12 +53,53 @@
             top: 16px * $i;
             left: 20px * $i;
             width: 96px * $i;
-            height: 92px * $i;
+            height: 90px * $i;
+        }
 
+        #trade-player-slots {
+            top: 40px * $i;
+            left: 148px * $i;
+        }
+
+        #trade-oplayer-slots {
+            top: 40px * $i;
+            left: 268px * $i;
+        }
+
+        #trade-player-slots,
+        #trade-oplayer-slots {
+            width: 102px * $i;
+            height: 92px * $i;
+        }
+
+        #trade-inventory-slots,
+        #trade-player-slots,
+        #trade-oplayer-slots {
             ul {
                 li {
                     .item-slot {
                         margin-bottom: 4px * $i;
+                    }
+                }
+            }
+        }
+
+        #trade-player-slots,
+        #trade-oplayer-slots {
+            ul {
+                li {
+                    .item-slot {
+                        margin-bottom: 4px * $i;
+                    }
+                }
+            }
+        }
+
+        #trade-oplayer-slots {
+            ul {
+                li {
+                    .item-slot {
+                        pointer-events: none;
                     }
                 }
             }

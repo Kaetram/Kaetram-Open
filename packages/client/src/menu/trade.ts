@@ -7,6 +7,10 @@ import { Modules } from '@kaetram/common/network';
 import type Inventory from './inventory';
 import type Player from '../entity/character/player/player';
 
+interface PlayerSlot extends HTMLElement {
+    inventoryIndex?: number;
+}
+
 type SelectCallback = (type: Modules.ContainerType, index: number) => void;
 export default class Trade extends Menu {
     public override hideOnShow = false;
@@ -15,8 +19,18 @@ export default class Trade extends Menu {
         '#trade-inventory-slots > ul'
     )!;
 
+    // Where we visually display the changes to the trade.
+    private playerSlots: HTMLUListElement = document.querySelector('#trade-player-slots > ul')!;
+    private otherPlayerSlots: HTMLUListElement = document.querySelector(
+        '#trade-oplayer-slots > ul'
+    )!;
+
     private playerName: HTMLElement = document.querySelector('#trade-player-name')!;
     private otherPlayerName: HTMLElement = document.querySelector('#trade-oplayer-name')!;
+
+    private acceptButton: HTMLButtonElement = document.querySelector('#trade-accept')!;
+
+    private inventoryIndex = -1; // Index of the inventory slot that was last selected.
 
     private selectCallback?: SelectCallback;
     private closeCallback?: () => void;
@@ -33,10 +47,20 @@ export default class Trade extends Menu {
      */
 
     public load(): void {
-        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
+            // Inventory slots
             this.inventoryList.append(
                 Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
             );
+
+            // Player slots
+            this.playerSlots.append(
+                Util.createSlot(Modules.ContainerType.Trade, i, this.select.bind(this))
+            );
+
+            // Other player slots
+            this.otherPlayerSlots.append(Util.createSlot(Modules.ContainerType.Trade, i));
+        }
     }
 
     /**
@@ -87,6 +111,63 @@ export default class Trade extends Menu {
     }
 
     /**
+     * Adds an item to the trade menu.
+     * @param index The index of the item being added (if it is the current player adding the item).
+     * @param count The amount of the item being added.
+     * @param key The key of the item being added (if we are adding item of other player).
+     */
+
+    public override add(index: number, count: number, key: string, otherPlayer = false): void {
+        let slot = otherPlayer
+                ? this.otherPlayerSlots.children[index]
+                : this.playerSlots.children[index],
+            image = slot.querySelector<HTMLElement>('.item-image')!,
+            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+
+        // Update the icon of the item that is being added.
+        image.style.backgroundImage = otherPlayer
+            ? Util.getImageURL(key)
+            : this.getElementImage(this.inventoryIndex);
+
+        // Update the count of the item that is being added.
+        slotCount.innerHTML = count.toString();
+
+        if (!otherPlayer) {
+            // Remove the item from the inventory.
+            this.clearSlot(this.inventoryIndex);
+
+            // Store the inventory slot into the trade slot if it is the current player adding the item.
+            (slot as PlayerSlot).inventoryIndex = this.inventoryIndex;
+        }
+    }
+
+    /**
+     * Remove an item from the trade menu.
+     * @param index The index of the slot to remove the item from.
+     * @param otherPlayer Whether we are removing from the other player's trade menu.
+     */
+
+    public override remove(index: number, otherPlayer = false): void {
+        let slot = otherPlayer
+                ? this.otherPlayerSlots.children[index]
+                : this.playerSlots.children[index],
+            image = slot.querySelector<HTMLElement>('.item-image')!,
+            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+
+        // Add the item back into the inventory.
+        if (!otherPlayer)
+            this.setSlot(
+                (slot as PlayerSlot).inventoryIndex!,
+                image.style.backgroundImage,
+                slotCount.innerHTML
+            );
+
+        // Clear the image and count of the slot.
+        image.style.backgroundImage = '';
+        slotCount.innerHTML = '';
+    }
+
+    /**
      * Initializes the selection process. A callback is created so that
      * the menu controller can send specified request to the server.
      * @param type Which container is being acted on (inventory or bank).
@@ -94,6 +175,8 @@ export default class Trade extends Menu {
      */
 
     private select(type: Modules.ContainerType, index: number): void {
+        this.inventoryIndex = index;
+
         this.selectCallback?.(type, index);
     }
 
@@ -106,6 +189,49 @@ export default class Trade extends Menu {
 
     private getElement(index: number): HTMLElement {
         return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+    }
+
+    /**
+     * Grabs the item image of a specified slot.
+     * @param index The index of the slot to grab the image from.
+     * @returns The string of the css `backgroundImage` property.
+     */
+
+    private getElementImage(index: number): string {
+        let slot = this.getElement(index),
+            image = slot.querySelector<HTMLElement>('.item-image')!;
+
+        return image.style.backgroundImage;
+    }
+
+    /**
+     * Clears a slot of the inventory at a specified index.
+     * @param index The slot in the inventory that we are clearing.
+     */
+
+    private clearSlot(index: number): void {
+        let slot = this.getElement(index),
+            image = slot.querySelector<HTMLElement>('.item-image')!,
+            count = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+
+        image.style.backgroundImage = '';
+        count.innerHTML = '';
+    }
+
+    /**
+     * Sets the image slot and count at a specified index.
+     * @param index The index we are setting the slot at.
+     * @param image The image background url that we are setting.
+     * @param count The count of the item that we are setting.
+     */
+
+    private setSlot(index: number, image: string, count: string): void {
+        let slot = this.getElement(index),
+            slotImage = slot.querySelector<HTMLElement>('.item-image')!,
+            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+
+        slotImage.style.backgroundImage = image;
+        slotCount.innerHTML = count;
     }
 
     /**
