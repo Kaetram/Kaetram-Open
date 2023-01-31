@@ -4564,7 +4564,7 @@
     "name": "CD [Quest]",
     "description": "A CD received by some dying soldier Private Ryan. Contains his last mixtape. I should probably get this to his Sexy wife or something.",
     "undroppable": true
-  },\
+  },
        
   "snowpotion": {
     "type": "object",
