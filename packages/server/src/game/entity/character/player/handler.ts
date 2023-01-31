@@ -11,7 +11,8 @@ import {
     Points,
     Poison as PoisonPacket,
     Quest,
-    Skill
+    Skill,
+    Trade
 } from '../../../../network/packets';
 
 import config from '@kaetram/common/config';
@@ -29,7 +30,6 @@ import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
-import type Mob from '../mob/mob';
 import type Player from './player';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
@@ -96,6 +96,11 @@ export default class Handler {
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
         this.player.abilities.onToggle(this.handleAbilityToggle.bind(this));
 
+        // Trade callbacks
+        this.player.trade.onOpen(this.handleTradeOpen.bind(this));
+        this.player.trade.onAdd(this.handleTradeAdd.bind(this));
+        this.player.trade.onRemove(this.handleTradeRemove.bind(this));
+
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
 
@@ -139,6 +144,8 @@ export default class Handler {
         }
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
+
+        this.player.trade.close();
 
         this.player.combat.stop();
 
@@ -373,6 +380,36 @@ export default class Handler {
 
     private handleAbilityToggle(key: string): void {
         this.player.send(new AbilityPacket(Opcodes.Ability.Toggle, { key, level: -1 }));
+    }
+
+    /**
+     * Callback for when the trade is opened. Relays a message to the player.
+     * @param instance The instance of the player we are trading with.
+     */
+
+    private handleTradeOpen(instance: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Open, { instance }));
+    }
+
+    /**
+     * Callback for when an item is added to the trade.
+     * @param instance The instance of the player who is adding the item.
+     * @param index The index of the item (in the inventory) that we are adding.
+     * @param count The amount of the item we are adding.
+     */
+
+    private handleTradeAdd(instance: string, index: number, count: number, key: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Add, { instance, index, count, key }));
+    }
+
+    /**
+     * Removes an item from the trade.
+     * @param instance The instance of the player who is removing the item.
+     * @param index The index of the item in the trade screen that we are removing.
+     */
+
+    private handleTradeRemove(instance: string, index: number): void {
+        this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
     }
 
     /**

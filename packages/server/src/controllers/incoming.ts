@@ -456,6 +456,14 @@ export default class Incoming {
             case Opcodes.Trade.Close: {
                 return this.player.trade.close();
             }
+
+            case Opcodes.Trade.Add: {
+                return this.player.trade.add(packet.index!, packet.count);
+            }
+
+            case Opcodes.Trade.Remove: {
+                return this.player.trade.remove(packet.index!);
+            }
         }
     }
 

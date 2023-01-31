@@ -4,9 +4,8 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
 
-import type { SlotData } from '@kaetram/common/types/slot';
 import type Player from './player';
-import type Slot from './containers/slot';
+import type Item from '../../objects/item';
 
 /**
  * The trade instance is used to handle trading between two players. Whenever a trade is initiated,
@@ -15,14 +14,20 @@ import type Slot from './containers/slot';
  * both parties.
  */
 
+type OpenCallback = (instance: string) => void;
+type AddCallback = (instance: string, index: number, count: number, key: string) => void;
+type RemoveCallback = (instance: string, index: number) => void;
+
 export default class Trade {
     // The items that the player is offering to the other player (use the other player's `itemOffered` to get the items exchanged.)
-    private itemsOffered: Slot[] = [];
+    private itemsOffered: Item[] = [];
 
     public lastRequest = ''; // The last person who requested to trade with the player.
     public activeTrade?: Player | null; // The player who we are currently trading with.
 
-    public openCallback?: (instance: string, slotData: SlotData) => void;
+    public openCallback?: OpenCallback;
+    public addCallback?: AddCallback;
+    public removeCallback?: RemoveCallback;
 
     public constructor(private player: Player) {}
 
@@ -30,15 +35,44 @@ export default class Trade {
      * Takes an item from the inventory and stores it into the items up for offer. These items
      * are used by both instances to commence the trade of items. Visually the item is taken
      * from the inventory and added into the trade interface.
-     * @param item The slot in the inventory that we are offering to trade.
+     * @param index The index in the inventory of the slot we selected.
+     * @param count The amount of items we are offering to trade.
      */
 
-    public add(item: Slot): void {
+    public add(index: number, count = -1): void {
         // How would this even happen?
         if (this.itemsOffered.length >= this.player.inventory.size)
             return log.warning(`${this.player.username} has too many items in their trade.`);
 
-        this.itemsOffered.push(item);
+        // Grab the slot from the inventory.
+        let slot = this.player.inventory.get(index);
+
+        // Ensure the slot exists and is not empty.
+        if (slot?.isEmpty()) return;
+
+        // Create an item instance and make necessary changes to it.
+        let item = this.player.inventory.getItem(slot);
+
+        // Ensure the item exists.
+        if (!item) return;
+
+        // Sync the count of the item in the inventory with the count of the item in the trade.
+        item.count = count === -1 ? slot.count : count;
+
+        // Add the item to the items offered array.
+        this.itemsOffered.push(this.player.inventory.getItem(slot));
+
+        // The index at which we are adding the item to the items offered array.
+        let tradeIndex = this.itemsOffered.length - 1;
+
+        // Callbacks for both instances of the trade.
+        this.addCallback?.(this.player.instance, tradeIndex, item.count, item.key);
+        this.getActiveTrade()?.addCallback?.(
+            this.player.instance,
+            tradeIndex,
+            item.count,
+            item.key
+        );
     }
 
     /**
@@ -49,6 +83,10 @@ export default class Trade {
 
     public remove(index: number): void {
         this.itemsOffered.splice(index, 1);
+
+        // Send the callback to both trade instances.
+        this.removeCallback?.(this.player.instance, index);
+        this.getActiveTrade()?.removeCallback?.(this.player.instance, index);
     }
 
     /**
@@ -92,8 +130,8 @@ export default class Trade {
          * player's instance as a parameter. As such, they are each-other's target.
          */
 
-        this.player.send(this.getOpenPacket(target.instance));
-        target.send(this.getOpenPacket(this.player.instance));
+        this.openCallback?.(target.instance);
+        target.trade.openCallback?.(this.player.instance);
 
         // Set the active trade for both players.
         this.player.trade.activeTrade = target;
@@ -110,6 +148,8 @@ export default class Trade {
      */
 
     public close(): void {
+        if (!this.activeTrade) return;
+
         log.debug(
             `Closing trade between ${this.player.username} and ${this.activeTrade?.username}.`
         );
@@ -122,7 +162,7 @@ export default class Trade {
 
         // Clear the active trade for both players.
         this.clear();
-        this.activeTrade?.trade.clear();
+        this.getActiveTrade()?.clear();
     }
 
     /**
@@ -135,14 +175,37 @@ export default class Trade {
     }
 
     /**
-     * Function to create a trading packet for opening the interface. Used to
-     * prevent duplicate code in the open function.
-     * @param instance The instance of the target player.
+     * @returns The currently active trade (the instance of the other player's trade.)
      */
 
-    private getOpenPacket(instance: string): TradePacket {
-        return new TradePacket(Opcodes.Trade.Open, {
-            instance
-        });
+    public getActiveTrade(): Trade | undefined {
+        return this.activeTrade?.trade;
+    }
+
+    /**
+     * Callback for when we want to open the trade interface.
+     * @param callback Contains the instance of the other player.
+     */
+
+    public onOpen(callback: OpenCallback): void {
+        this.openCallback = callback;
+    }
+
+    /**
+     * Callback for when we want to add an item to the trade.
+     * @param callback Contains the instance of who is adding the item and the slot data.
+     */
+
+    public onAdd(callback: AddCallback): void {
+        this.addCallback = callback;
+    }
+
+    /**
+     * Callback for when we want to remove an item from the trade.
+     * @param callback Contains the instance of who is removing the item and the index.
+     */
+
+    public onRemove(callback: RemoveCallback): void {
+        this.removeCallback = callback;
     }
 }
