@@ -34,11 +34,16 @@
 }
 
 #trade-player-name,
-#trade-oplayer-name {
+#trade-oplayer-name,
+#trade-status {
     position: absolute;
     font-family: AdvoCut, sans-serif;
     color: white;
     text-align: center;
+}
+
+#trade-status {
+    color: brown;
 }
 
 @each $size, $i in media.$sizes {
@@ -111,6 +116,16 @@
             width: 104px * $i;
             height: 10px * $i;
             font-size: 10px * $i;
+        }
+
+        #trade-status {
+            top: 27px * $i;
+            right: 22px * $i;
+
+            width: 208px * $i;
+            height: 10px * $i;
+
+            font-size: 6px * $i;
         }
 
         #trade-player-name {

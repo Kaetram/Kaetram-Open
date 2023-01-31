@@ -27,18 +27,24 @@ export default class Trade extends Menu {
 
     private playerName: HTMLElement = document.querySelector('#trade-player-name')!;
     private otherPlayerName: HTMLElement = document.querySelector('#trade-oplayer-name')!;
+    private tradeStatus: HTMLElement = document.querySelector('#trade-status')!;
 
     private acceptButton: HTMLButtonElement = document.querySelector('#trade-accept')!;
 
     private inventoryIndex = -1; // Index of the inventory slot that was last selected.
+    private totalItems = 0; // Total items that are in the trade
 
     private selectCallback?: SelectCallback;
+    private acceptCallback?: () => void;
     private closeCallback?: () => void;
 
     public constructor(private inventory: Inventory) {
         super('#trade', undefined, '#close-trade');
 
         this.load();
+
+        // Send the accept callback when the accept button is clicked.
+        this.acceptButton.addEventListener('click', () => this.acceptCallback?.());
     }
 
     /**
@@ -108,6 +114,12 @@ export default class Trade extends Menu {
         super.hide();
 
         if (!ignoreCallback) this.closeCallback?.();
+
+        this.clearAll();
+
+        this.inventoryIndex = -1;
+        this.totalItems = 0;
+        this.tradeStatus.innerHTML = '';
     }
 
     /**
@@ -130,7 +142,7 @@ export default class Trade extends Menu {
             : this.getElementImage(this.inventoryIndex);
 
         // Update the count of the item that is being added.
-        slotCount.innerHTML = count.toString();
+        slotCount.innerHTML = count > 1 ? count.toString() : '';
 
         if (!otherPlayer) {
             // Remove the item from the inventory.
@@ -139,6 +151,11 @@ export default class Trade extends Menu {
             // Store the inventory slot into the trade slot if it is the current player adding the item.
             (slot as PlayerSlot).inventoryIndex = this.inventoryIndex;
         }
+
+        this.totalItems++;
+        this.tradeStatus.innerHTML = '';
+
+        this.updateAcceptButton();
     }
 
     /**
@@ -165,6 +182,24 @@ export default class Trade extends Menu {
         // Clear the image and count of the slot.
         image.style.backgroundImage = '';
         slotCount.innerHTML = '';
+
+        this.totalItems--;
+        this.tradeStatus.innerHTML = '';
+
+        this.updateAcceptButton();
+    }
+
+    /**
+     * Visually updates the text information in the trade for when the current player
+     * or the other player has put in a request to accept the trade.
+     */
+
+    public accept(otherPlayer = false): void {
+        let text = otherPlayer
+            ? 'The other player has accepted the trade.'
+            : 'You have accepted the trade.';
+
+        this.tradeStatus.innerHTML = text;
     }
 
     /**
@@ -205,6 +240,15 @@ export default class Trade extends Menu {
     }
 
     /**
+     * Updates the disabled status of the accept button depending on how many items there are.
+     */
+
+    private updateAcceptButton(): void {
+        if (this.totalItems > 0) this.acceptButton.classList.remove('disabled');
+        else this.acceptButton.classList.add('disabled');
+    }
+
+    /**
      * Clears a slot of the inventory at a specified index.
      * @param index The slot in the inventory that we are clearing.
      */
@@ -216,6 +260,31 @@ export default class Trade extends Menu {
 
         image.style.backgroundImage = '';
         count.innerHTML = '';
+    }
+
+    /**
+     * Clears both the player's slots and the other player's slots of any images
+     * or item counts that were previously set. This occurs when the trade is finalized.
+     */
+
+    private clearAll(): void {
+        // Clear the player's slots.
+        for (let i of this.playerSlots.children) {
+            let image = i.querySelector<HTMLElement>('.item-image')!,
+                count = i.querySelector<HTMLElement>('.inventory-item-count')!;
+
+            image.style.backgroundImage = '';
+            count.innerHTML = '';
+        }
+
+        // Clear the other player's slots.
+        for (let i of this.otherPlayerSlots.children) {
+            let image = i.querySelector<HTMLElement>('.item-image')!,
+                count = i.querySelector<HTMLElement>('.inventory-item-count')!;
+
+            image.style.backgroundImage = '';
+            count.innerHTML = '';
+        }
     }
 
     /**
@@ -243,6 +312,14 @@ export default class Trade extends Menu {
 
     public onSelect(callback: SelectCallback): void {
         this.selectCallback = callback;
+    }
+
+    /**
+     * Callback for when the player clicks the accept button.
+     */
+
+    public onAccept(callback: () => void): void {
+        this.acceptCallback = callback;
     }
 
     /**
