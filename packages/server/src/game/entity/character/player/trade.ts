@@ -1,5 +1,6 @@
 import { Trade as TradePacket } from '../../../../network/packets';
 
+import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
@@ -17,19 +18,28 @@ import type Item from '../../objects/item';
 type OpenCallback = (instance: string) => void;
 type AddCallback = (instance: string, index: number, count: number, key: string) => void;
 type RemoveCallback = (instance: string, index: number) => void;
+interface OfferedItem {
+    inventoryIndex: number;
+    item: Item;
+}
 
 export default class Trade {
     // The items that the player is offering to the other player (use the other player's `itemOffered` to get the items exchanged.)
-    private itemsOffered: Item[] = [];
+    private itemsOffered: { [index: number]: OfferedItem | undefined } = {};
 
     public lastRequest = ''; // The last person who requested to trade with the player.
     public activeTrade?: Player | null; // The player who we are currently trading with.
+    public accepted = false;
 
     public openCallback?: OpenCallback;
     public addCallback?: AddCallback;
     public removeCallback?: RemoveCallback;
+    public acceptCallback?: OpenCallback; // Send the instance of who is accepting the trade.
 
-    public constructor(private player: Player) {}
+    public constructor(private player: Player) {
+        // Create an empty items offered container mock.
+        for (let i = 0; i < this.player.inventory.size; i++) this.itemsOffered[i] = undefined;
+    }
 
     /**
      * Takes an item from the inventory and stores it into the items up for offer. These items
@@ -40,9 +50,10 @@ export default class Trade {
      */
 
     public add(index: number, count = -1): void {
-        // How would this even happen?
-        if (this.itemsOffered.length >= this.player.inventory.size)
-            return log.warning(`${this.player.username} has too many items in their trade.`);
+        let offerIndex = this.getEmptySlot();
+
+        if (offerIndex === -1)
+            return this.player.notify(`You cannot add any more items to the trade.`, '', 'TRADE');
 
         // Grab the slot from the inventory.
         let slot = this.player.inventory.get(index);
@@ -60,16 +71,19 @@ export default class Trade {
         item.count = count === -1 ? slot.count : count;
 
         // Add the item to the items offered array.
-        this.itemsOffered.push(this.player.inventory.getItem(slot));
+        this.itemsOffered[offerIndex] = {
+            inventoryIndex: index,
+            item
+        };
 
-        // The index at which we are adding the item to the items offered array.
-        let tradeIndex = this.itemsOffered.length - 1;
+        // Any addition or removal of an item resets the trade acceptance.
+        this.accepted = false;
 
         // Callbacks for both instances of the trade.
-        this.addCallback?.(this.player.instance, tradeIndex, item.count, item.key);
+        this.addCallback?.(this.player.instance, offerIndex, item.count, item.key);
         this.getActiveTrade()?.addCallback?.(
             this.player.instance,
-            tradeIndex,
+            offerIndex,
             item.count,
             item.key
         );
@@ -82,11 +96,67 @@ export default class Trade {
      */
 
     public remove(index: number): void {
-        this.itemsOffered.splice(index, 1);
+        this.itemsOffered[index] = undefined;
+
+        // Any addition or removal of an item resets the trade acceptance.
+        this.accepted = false;
 
         // Send the callback to both trade instances.
         this.removeCallback?.(this.player.instance, index);
         this.getActiveTrade()?.removeCallback?.(this.player.instance, index);
+    }
+
+    /**
+     * Handles the accepting of trade and relaying to the other person that the
+     * trade has been requested to be accepted. In order for a trade to be accepted,
+     * both parties must accept the trade. If any item changes occur, then both
+     * parties must accept the trade again.
+     */
+
+    public accept(): void {
+        // If the other player has already accepted the trade, then we can do the exchange.
+        if (this.getActiveTrade()?.accepted) {
+            // Ensure both players have enough space in their inventories.
+            if (
+                this.player.inventory.getEmptySlots() <
+                this.getActiveTrade()!.getTotalOfferedCount()
+            ) {
+                this.activeTrade?.notify(
+                    `The other player does not have enough space in their inventory.`,
+                    '',
+                    'TRADE'
+                );
+                return this.player.notify(
+                    `You do not have enough space in your inventory.`,
+                    '',
+                    'TRADE'
+                );
+            }
+
+            // Start giving both players the items.
+            this.forEachOfferedItem((inventoryIndex: number, item: Item) => {
+                if (this.activeTrade!.inventory.add(item))
+                    this.player.inventory.remove(inventoryIndex, item.count);
+            });
+
+            this.getActiveTrade()!.forEachOfferedItem((inventoryIndex: number, item: Item) => {
+                if (this.player.inventory.add(item))
+                    this.activeTrade!.inventory.remove(inventoryIndex, item.count);
+            });
+
+            // Notify both that the trade is complete.
+            this.player.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
+            this.activeTrade?.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
+
+            return this.close();
+        }
+
+        // Relay to the client that one of the parties accepted the trade.
+        this.acceptCallback?.(this.player.instance);
+        this.getActiveTrade()?.acceptCallback?.(this.player.instance);
+
+        // Set the trade to accepted.
+        this.accepted = true;
     }
 
     /**
@@ -161,8 +231,8 @@ export default class Trade {
         this.activeTrade?.send(new TradePacket(Opcodes.Trade.Close, {}));
 
         // Clear the active trade for both players.
+        this.getActiveTrade()?.clear(); // Clear first so it's not undefined.
         this.clear();
-        this.getActiveTrade()?.clear();
     }
 
     /**
@@ -171,7 +241,37 @@ export default class Trade {
 
     public clear(): void {
         this.activeTrade = null;
-        this.itemsOffered = [];
+        this.accepted = false;
+
+        // Clear the items offered array and set them back to undefined.
+        for (let i in this.itemsOffered) this.itemsOffered[i] = undefined;
+    }
+
+    /**
+     * Finds an empty slot in the array of items offered.
+     * @returns The index of the empty slot, otherwise -1.
+     */
+
+    private getEmptySlot(): number {
+        let index = -1;
+
+        // Try to find an index that is empty.
+        for (let i in this.itemsOffered) if (!this.itemsOffered[i]) return parseInt(i);
+
+        return index;
+    }
+
+    /**
+     * Checks the total amount of items offered in the trade.
+     * @returns The total amount of items offered in the trade.
+     */
+
+    public getTotalOfferedCount(): number {
+        let count = 0;
+
+        for (let i in this.itemsOffered) if (this.itemsOffered[i]) count++;
+
+        return count;
     }
 
     /**
@@ -180,6 +280,18 @@ export default class Trade {
 
     public getActiveTrade(): Trade | undefined {
         return this.activeTrade?.trade;
+    }
+
+    /**
+     * Iterates through every offered item in the dictionary and returns the item and its
+     * index in the inventory.
+     * @param callback A valid existing item within the offered slots and its inventory index.
+     */
+
+    private forEachOfferedItem(callback: (inventoryIndex: number, item: Item) => void): void {
+        _.each(this.itemsOffered, (offeredItem: OfferedItem | undefined) => {
+            if (offeredItem?.item) callback(offeredItem.inventoryIndex, offeredItem.item);
+        });
     }
 
     /**
@@ -207,5 +319,14 @@ export default class Trade {
 
     public onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
+    }
+
+    /**
+     * Callback for when we want to accept the trade.
+     * @param callback Contains the instance of who is accepting the trade.
+     */
+
+    public onAccept(callback: OpenCallback): void {
+        this.acceptCallback = callback;
     }
 }

@@ -1051,7 +1051,7 @@ export default class Connection {
             }
 
             case Opcodes.Trade.Accept: {
-                return;
+                return this.menu.getTrade().accept(info.instance !== this.game.player.instance);
             }
         }
     }
