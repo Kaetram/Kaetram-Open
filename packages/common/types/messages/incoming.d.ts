@@ -59,6 +59,8 @@ export interface AbilityPacket {
 export interface TradePacket {
     opcode: Opcodes.Trade;
     instance?: string;
+    index?: number;
+    count?: number;
 }
 
 export interface WarpPacket {

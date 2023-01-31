@@ -88,6 +88,7 @@ export default class MenuController {
 
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
+        this.trade.onSelect(this.handleTradeSelect.bind(this));
         this.trade.onClose(this.handleTradeClose.bind(this));
 
         this.load();
@@ -334,6 +335,33 @@ export default class MenuController {
             opcode: remove ? Opcodes.Friends.Remove : Opcodes.Friends.Add,
             username
         });
+    }
+
+    /**
+     * Handles the select action for the trade interface. When the player clicks an
+     * item in the inventory we send a packet to the server that we are adding an item
+     * to the trade session. When the player clicks an item in the trade window we send
+     * a packet to the server that we are removing an item from the trade session.
+     * @param type The type of container the action is performed in, determines the add/remove opcode.
+     * @param index The index in the container that the action is performed on.
+     */
+
+    private handleTradeSelect(type: Modules.ContainerType, index: number): void {
+        switch (type) {
+            case Modules.ContainerType.Inventory: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Add,
+                    index
+                });
+            }
+
+            case Modules.ContainerType.Trade: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Remove,
+                    index
+                });
+            }
+        }
     }
 
     /**
