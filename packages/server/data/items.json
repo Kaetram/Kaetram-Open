@@ -4472,7 +4472,7 @@
     "price": 40,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 35,
+    "maxStackSize": 25,
     "plugin": "healthflask",
     "healAmount": 100
   },
@@ -4496,7 +4496,7 @@
     "price": 200,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 40,
+    "maxStackSize": 30,
     "plugin": "healthflask",
     "manaAmount": 35
   },
@@ -4509,7 +4509,7 @@
     "price": 350,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 20,
+    "maxStackSize": 7,
     "plugin": "healthflask",
     "healAmount": 200
   },
@@ -4522,7 +4522,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 15,
+    "maxStackSize": 5,
     "plugin": "healthflask",
     "healAmount": 250
   },
@@ -4535,7 +4535,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 20,
+    "maxStackSize": 10,
     "plugin": "healthflask",
     "manaAmount": 95
   },
@@ -5040,11 +5040,11 @@
     "price": 700
   },
       
-  "moonrock": {
-      "type": "object",
-      "name": "Space Rock",
-      "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
-      "price": 1200
+  "moonrockore": {
+    "type": "object",
+    "name": "Space Rock",
+    "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
+    "price": 1200
   },
       
   "bead": {
