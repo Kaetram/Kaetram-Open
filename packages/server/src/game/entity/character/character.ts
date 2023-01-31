@@ -41,8 +41,11 @@ export default abstract class Character extends Entity {
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
+
     // List of entities attacking this character.
     public attackers: Character[] = []; // Used by combat to determine which character to target.
+
+    public damageTable: { [instance: string]: number } = {};
 
     public stunned = false;
     public moving = false;
@@ -256,6 +259,9 @@ export default abstract class Character extends Entity {
     public hit(damage: number, attacker?: Character, aoe = 0): void {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.invincible) return;
+
+        // Add an entry to the damage table.
+        if (attacker?.isPlayer()) this.addToDamageTable(attacker, damage);
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
@@ -599,6 +605,23 @@ export default abstract class Character extends Entity {
 
     public addAttacker(attacker: Character): void {
         this.attackers.push(attacker);
+    }
+
+    /**
+     * Adds or creates an entry in the damage table for the attacker.
+     * @param attacker The attacker we are adding to the damage table.
+     * @param damage The damage we are adding to the damage table.
+     */
+
+    public addToDamageTable(attacker: Character, damage: number): void {
+        // Max out the damage to the remaining hit points.
+        if (damage >= this.hitPoints.getHitPoints()) damage = this.hitPoints.getHitPoints();
+
+        // Add a new entry to the damage table if it doesn't exist.
+        if (!(attacker.instance in this.damageTable)) this.damageTable[attacker.instance] = damage;
+
+        // Otherwise, add the damage to the existing entry.
+        this.damageTable[attacker.instance] += damage;
     }
 
     /**
