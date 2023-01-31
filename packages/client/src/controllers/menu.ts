@@ -89,6 +89,7 @@ export default class MenuController {
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
         this.trade.onSelect(this.handleTradeSelect.bind(this));
+        this.trade.onAccept(this.handleTradeAccept.bind(this));
         this.trade.onClose(this.handleTradeClose.bind(this));
 
         this.load();
@@ -362,6 +363,17 @@ export default class MenuController {
                 });
             }
         }
+    }
+
+    /**
+     * Handles the clicking of the accept button. Both players must accept to the trade
+     * in order to complete it.
+     */
+
+    private handleTradeAccept(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Accept
+        });
     }
 
     /**

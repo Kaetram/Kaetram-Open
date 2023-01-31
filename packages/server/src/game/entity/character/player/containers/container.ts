@@ -304,6 +304,14 @@ export default abstract class Container {
     }
 
     /**
+     * @returns The total amount of empty slots.
+     */
+
+    public getEmptySlots(): number {
+        return this.slots.filter((slot) => !slot.key).length;
+    }
+
+    /**
      * Iterates through the slots and returns each one.
      * @param callback Slot currently being iterated.
      */

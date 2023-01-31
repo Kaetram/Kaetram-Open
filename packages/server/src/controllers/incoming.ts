@@ -450,7 +450,7 @@ export default class Incoming {
             }
 
             case Opcodes.Trade.Accept: {
-                break;
+                return this.player.trade.accept();
             }
 
             case Opcodes.Trade.Close: {
