@@ -244,6 +244,7 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
+        this.damageTable = {};
 
         this.combat.stop();
 
@@ -391,6 +392,32 @@ export default class Mob extends Character {
         return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
             ? { key, count }
             : undefined;
+    }
+
+    /**
+     * Sorts the damage table by the amount of damage done from highest to lowest.
+     * @returns An array of the damage table sorted by the amount of damage done.
+     * The first element is the instance, the is the damage percentage.
+     */
+
+    public getExperienceTable(): [string, number][] {
+        let sortedTable = Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
+
+        /**
+         * We iterate through each damage amount and extract a percentage of the damage done
+         * to the total health points of the mob. We multiply by the experience to gain a percentage
+         * amount of experience to give to the player. The player with most damage receives all
+         * of the mob's experience. The rest receive fractions.
+         */
+
+        _.each(sortedTable, (entry: [string, number], index: number) => {
+            entry[1] =
+                index === 0
+                    ? this.experience
+                    : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
+        });
+
+        return sortedTable;
     }
 
     /**
