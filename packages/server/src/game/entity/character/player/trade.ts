@@ -4,7 +4,9 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
 
+import type { SlotData } from '@kaetram/common/types/slot';
 import type Player from './player';
+import type Slot from './containers/slot';
 
 /**
  * The trade instance is used to handle trading between two players. Whenever a trade is initiated,
@@ -14,10 +16,40 @@ import type Player from './player';
  */
 
 export default class Trade {
+    // The items that the player is offering to the other player (use the other player's `itemOffered` to get the items exchanged.)
+    private itemsOffered: Slot[] = [];
+
     public lastRequest = ''; // The last person who requested to trade with the player.
     public activeTrade?: Player | null; // The player who we are currently trading with.
 
+    public openCallback?: (instance: string, slotData: SlotData) => void;
+
     public constructor(private player: Player) {}
+
+    /**
+     * Takes an item from the inventory and stores it into the items up for offer. These items
+     * are used by both instances to commence the trade of items. Visually the item is taken
+     * from the inventory and added into the trade interface.
+     * @param item The slot in the inventory that we are offering to trade.
+     */
+
+    public add(item: Slot): void {
+        // How would this even happen?
+        if (this.itemsOffered.length >= this.player.inventory.size)
+            return log.warning(`${this.player.username} has too many items in their trade.`);
+
+        this.itemsOffered.push(item);
+    }
+
+    /**
+     * Removes an item from the items offered array. This is then updated
+     * to both instances of the trade. Visually it is added back to the inventory.
+     * @param index The index in the itemsOffered array that we are removing.
+     */
+
+    public remove(index: number): void {
+        this.itemsOffered.splice(index, 1);
+    }
 
     /**
      * A request is when one of the player attempts to start a trade
@@ -99,6 +131,7 @@ export default class Trade {
 
     public clear(): void {
         this.activeTrade = null;
+        this.itemsOffered = [];
     }
 
     /**
