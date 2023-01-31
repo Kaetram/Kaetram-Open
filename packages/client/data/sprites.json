@@ -8038,6 +8038,17 @@
     "offsetY": 0
   },
   {
+    "id": "item-moonrockore",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-palmlogs",
     "animations": {
       "idle": {
