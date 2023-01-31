@@ -1034,11 +1034,20 @@ export default class Connection {
             }
 
             case Opcodes.Trade.Add: {
-                return;
+                return this.menu
+                    .getTrade()
+                    .add(
+                        info.index!,
+                        info.count!,
+                        info.key!,
+                        info.instance !== this.game.player.instance
+                    );
             }
 
             case Opcodes.Trade.Remove: {
-                return;
+                return this.menu
+                    .getTrade()
+                    .remove(info.index!, info.instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Accept: {
