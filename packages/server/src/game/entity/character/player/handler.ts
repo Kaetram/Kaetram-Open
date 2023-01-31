@@ -190,6 +190,9 @@ export default class Handler {
             true
         );
 
+        // Clear the player's target.
+        this.player.damageTable = {};
+
         // Remove the poison status.
         this.player.setPoison();
 
