@@ -100,6 +100,7 @@ export default class Handler {
         this.player.trade.onOpen(this.handleTradeOpen.bind(this));
         this.player.trade.onAdd(this.handleTradeAdd.bind(this));
         this.player.trade.onRemove(this.handleTradeRemove.bind(this));
+        this.player.trade.onAccept(this.handleTradeAccept.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -413,6 +414,15 @@ export default class Handler {
 
     private handleTradeRemove(instance: string, index: number): void {
         this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
+    }
+
+    /**
+     * Relays a message to the client that the trade has been accepted by one of the players.
+     * @param instance Who accepted the trade, determines what message to display.
+     */
+
+    private handleTradeAccept(instance: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Accept, { instance }));
     }
 
     /**
