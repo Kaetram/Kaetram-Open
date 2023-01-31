@@ -28,7 +28,7 @@ export default abstract class Container {
     ) => void;
     protected notifyCallback?: (message: string) => void;
 
-    public constructor(public type: Modules.ContainerType, protected size: number) {
+    public constructor(public type: Modules.ContainerType, public size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
     }
