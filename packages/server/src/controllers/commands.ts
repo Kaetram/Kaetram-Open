@@ -838,7 +838,10 @@ export default class Commands {
                 player = this.world.getPlayerByName(username);
 
                 if (!player)
-                    return this.player.notify(`Could not find player with name: ${username}`);
+                    return this.world.database.setRank(
+                        username,
+                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+                    );
 
                 let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
 
