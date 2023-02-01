@@ -322,13 +322,14 @@ export default abstract class Container {
 
     /**
      * Iterates through each slot and serializes it.
+     * @param clientInfo Whether or not we are sending this data to the client.
      * @returns An array of serialized slot data.
      */
 
-    public serialize(): SerializedContainer {
+    public serialize(clientInfo = false): SerializedContainer {
         let slots: SlotData[] = [];
 
-        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize()));
+        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize(clientInfo)));
 
         return { slots };
     }

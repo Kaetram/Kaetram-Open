@@ -14,11 +14,13 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 class Log {
     private logLevel = config.debugLevel || 'all';
 
-    private logStreamPath = path.resolve('../../', 'runtime.log');
+    private streamPath = path.resolve('../../', 'runtime.log');
+    private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
 
     // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream(this.logStreamPath) : null; // Write to a different stream
+    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null; // Write to a different stream
+    private logStream = fs.createWriteStream(this.logStreamPath);
     private bugStream = fs.createWriteStream(this.bugStreamPath);
 
     private debugging = config.debugging;
@@ -55,6 +57,10 @@ class Log {
 
     public bug(...data: unknown[]): void {
         this.write(new Date(), '[BUG]', data, this.bugStream);
+    }
+
+    public log(...data: unknown[]): void {
+        this.write(new Date(), '[LOG]', data, this.logStream);
     }
 
     /**
