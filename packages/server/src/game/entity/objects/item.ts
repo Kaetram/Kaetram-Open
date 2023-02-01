@@ -81,7 +81,8 @@ export default class Item extends Entity {
         y: number,
         public dropped = false,
         public count = 1,
-        public enchantments: Enchantments = {}
+        public enchantments: Enchantments = {},
+        public owner = ''
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
@@ -161,6 +162,9 @@ export default class Item extends Entity {
 
         this.blinkTimeout = setTimeout(() => {
             this.blinkCallback?.();
+
+            // Clear the owner of the item when it starts blinking.
+            this.owner = '';
 
             this.despawnTimeout = setTimeout(() => this.despawnCallback?.(), this.despawnDuration);
         }, this.blinkDelay);
@@ -318,6 +322,20 @@ export default class Item extends Entity {
 
     public hasEnchantment(id: Modules.Enchantment): boolean {
         return id in this.enchantments;
+    }
+
+    /**
+     * Check if the item is owned by the player. An item owned by the player
+     * can only be picked up by that player. Once the item starts blinking,
+     * its ownership is renounced.
+     * @param username Username of the player we are checking the ownership of.
+     * @returns Whether or not the item is owned by the player.
+     */
+
+    public isOwner(username: string): boolean {
+        if (!this.owner) return true;
+
+        return this.owner === username;
     }
 
     /**
