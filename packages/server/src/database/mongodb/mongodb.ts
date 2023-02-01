@@ -230,6 +230,8 @@ export default class MongoDB {
      */
 
     public cleanDupes(): void {
+        if (!this.hasDatabase()) return;
+
         let inventoryCollection = this.database.collection('player_inventory'),
             bankCollection = this.database.collection('player_bank'),
             staffCount = 0, // how many ice staves we found.
@@ -238,32 +240,34 @@ export default class MongoDB {
                 switch (slot?.key) {
                     case 'gold': {
                         if (slot.count > 2_000_000) {
+                            log.notice(
+                                `Player ${username} had ${slot.count} gold in their inventory.`
+                            );
+
                             slot.key = '';
                             slot.count = 0;
 
-                            log.log(`Removed gold from ${username}.`);
-                            log.notice(`Removed gold from ${username}.`);
+                            this.setRank(username, Modules.Ranks.Cheater);
                         }
                         break;
                     }
 
                     case 'icestaff': {
-                        // Bank case since only banks can have stackable items.
-                        if (slot.count > 1) {
-                            slot.count = 1;
+                        if (slot.count > 2) {
+                            log.notice(
+                                `Player ${username} had ${slot.count} ice staves in their bank.`
+                            );
 
-                            log.log(`Removed ice staff from bank of ${username}.`);
-                            log.notice(`Removed ice staff from bank of ${username}.`);
-                            return;
+                            slot.key = '';
+                            slot.count = 0;
+
+                            this.setRank(username, Modules.Ranks.Cheater);
                         }
 
                         // Inventory non-stacking case
                         if (staffCount > 0) {
                             slot.key = '';
                             slot.count = 0;
-
-                            log.log(`Removed ice staff from ${username}.`);
-                            log.notice(`Removed ice staff from ${username}.`);
                         }
 
                         staffCount++;
@@ -279,9 +283,6 @@ export default class MongoDB {
                 _.each(inventories, (info) => {
                     let { username, slots } = info;
 
-                    //before
-                    if (username === 'test') console.log(slots[3]);
-
                     _.each(slots, (slot) => searchSlot(username, slot));
 
                     // update
@@ -296,30 +297,60 @@ export default class MongoDB {
                     );
 
                     staffCount = 0;
-
-                    // Check bank second
-                    bankCollection
-                        .find({})
-                        .toArray()
-                        .then((banks) => {
-                            _.each(banks, (info) => {
-                                let { username, slots } = info;
-
-                                _.each(slots, (slot) => searchSlot(username, slot));
-
-                                // update
-                                bankCollection.updateOne(
-                                    { username },
-                                    {
-                                        $set: {
-                                            slots
-                                        }
-                                    },
-                                    { upsert: true }
-                                );
-                            });
-                        });
                 });
+            });
+
+        // Check bank second
+        bankCollection
+            .find({})
+            .toArray()
+            .then((banks) => {
+                _.each(banks, (info) => {
+                    let { username, slots } = info;
+
+                    _.each(slots, (slot) => searchSlot(username, slot));
+
+                    // update
+                    bankCollection.updateOne(
+                        { username },
+                        {
+                            $set: {
+                                slots
+                            }
+                        },
+                        { upsert: true }
+                    );
+                });
+            });
+    }
+
+    /**
+     * Sets a rank of a player in the database. For use when the player is offline.
+     * @param username The username of the player.
+     * @param rankId The rank id of the player (relative to the Modules enum).
+     */
+
+    public setRank(username: string, rankId: number): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('player_info');
+
+        collection
+            .find({ username })
+            .toArray()
+            .then((info) => {
+                if (info.length === 0)
+                    return log.warning(`No player found with the username ${username}.`);
+
+                collection.updateOne(
+                    { username },
+                    {
+                        $set: {
+                            rank: rankId
+                        }
+                    },
+                    { upsert: true }
+                );
             });
     }
 
