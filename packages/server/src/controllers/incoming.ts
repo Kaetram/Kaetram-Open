@@ -321,21 +321,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                let target = this.entities.get(instance) as Character;
-
-                if (!target || target.dead || !this.canAttack(this.player, target)) return;
-
-                this.player.cheatScore = 0;
-
-                this.player.combat.attack(target);
-
-                break;
-            }
-
-            case Opcodes.Target.None: {
-                // Nothing do to here.
-
-                break;
+                return this.player.handleTargetAttack(instance);
             }
 
             case Opcodes.Target.Object: {
@@ -561,34 +547,5 @@ export default class Incoming {
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
         this.player.notify(entity.getDescription());
-    }
-
-    /**
-     * Used to prevent client-sided manipulation. The client will send the packet to start combat
-     * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
-     */
-    private canAttack(attacker: Character, target: Character): boolean {
-        if (attacker.isMob() || target.isMob()) return true;
-
-        // If either of the entities are not players, we don't want to handle this.
-        if (!attacker.isPlayer() || !target.isPlayer()) return false;
-
-        // Prevent cheaters from being targeted by other players.
-        if (target.isCheater()) {
-            attacker.notify(`That player is a cheater, you don't wanna attack someone like that!`);
-
-            return false;
-        }
-
-        // Prevent cheaters from starting a fight with other players.
-        if (attacker.isCheater()) {
-            attacker.notify(
-                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
-            );
-
-            return false;
-        }
-
-        return attacker.pvp && target.pvp && attacker.team !== target.team;
     }
 }
