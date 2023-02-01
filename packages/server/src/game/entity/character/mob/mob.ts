@@ -266,6 +266,22 @@ export default class Mob extends Character {
     }
 
     /**
+     * Handles the dropping of items from the mob.
+     * @param owner The leading attacker in the mob's death. Only they will be able
+     * to pick up the drop for a certain period of time.
+     */
+
+    public drop(owner = ''): void {
+        let drops = this.getDrops();
+
+        if (drops.length === 0) return;
+
+        _.each(drops, (drop) =>
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner)
+        );
+    }
+
+    /**
      * Moves the mob and broadcasts the action
      * to all the adjacent regions.
      * @param x The new x position of the mob.
@@ -415,6 +431,9 @@ export default class Mob extends Character {
                 index === 0
                     ? this.experience
                     : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
+
+            // Prevent getting more experience than the mob has (if mob heals and whatnot).
+            if (entry[1] > this.experience) entry[1] = this.experience;
         });
 
         return sortedTable;

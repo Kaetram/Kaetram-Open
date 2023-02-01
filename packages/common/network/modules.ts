@@ -377,8 +377,8 @@ export enum Defaults {
 
 export enum ItemDefaults {
     RESPAWN_DELAY = 30_000, // 30 seconds
-    DESPAWN_DURATION = 17_000, // 17 seconds of blinking before despawning
-    BLINK_DELAY = 40_000 // 40 seconds until item starts blinking.
+    DESPAWN_DURATION = 34_000, // 34 seconds of blinking before despawning
+    BLINK_DELAY = 30_000 // 40 seconds until item starts blinking.
 }
 
 // Defaults that apply specifically to mobs

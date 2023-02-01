@@ -84,7 +84,8 @@ export default class Entities {
         y: number,
         dropped = false,
         count = 1,
-        enchantments: Enchantments = {}
+        enchantments: Enchantments = {},
+        owner = ''
     ): Item {
         return this.collections.items.spawn({
             key,
@@ -92,7 +93,8 @@ export default class Entities {
             y,
             dropped,
             count,
-            enchantments
+            enchantments,
+            owner
         })!;
     }
 
