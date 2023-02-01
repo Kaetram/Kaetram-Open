@@ -546,6 +546,28 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the action of attacking a target. We receive a packet from the client
+     * with the instance of the target and perform checks prior to initiating combat.
+     * @param instance The instance of the target we are attacking.
+     */
+
+    public handleTargetAttack(instance: string): void {
+        let target = this.entities.get(instance);
+
+        // Ignore if the target is not a character that can actually be attacked.
+        if (!target?.isCharacter() || target.dead) return;
+
+        // Ensure that the player can actually attack the target.
+        if (!this.canAttack(target)) return;
+
+        // Clear the cheat score
+        this.cheatScore = 0;
+
+        // Start combat with the target.
+        this.combat.attack(target);
+    }
+
+    /**
      * Handler for when a container slot is selected at a specified index. Depending
      * on the type, we act accordingly. If we click an inventory, we check if the item
      * is equippable or consumable and remove it from the inventory. If we click a bank

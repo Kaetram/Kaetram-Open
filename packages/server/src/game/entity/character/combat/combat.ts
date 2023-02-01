@@ -3,6 +3,7 @@ import Hit from './hit';
 import Formulas from '../../../../info/formulas';
 import { Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
+import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Character from '../character';
@@ -83,6 +84,9 @@ export default class Combat {
      */
 
     public attack(target: Character): void {
+        // Cannot attack non-character targets. This is for extra safety.
+        if (!target.isCharacter()) return log.warning(`Invalid target for ${this.character.key}`);
+
         // Already started, let the loop handle it.
         this.character.setTarget(target);
 
