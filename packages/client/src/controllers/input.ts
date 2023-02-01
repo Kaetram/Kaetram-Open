@@ -421,10 +421,11 @@ export default class InputController {
                 if (this.isAttackable(this.entity))
                     (this.entity as Character).addAttacker(this.player);
 
-                this.game.socket.send(Packets.Target, [
-                    Opcodes.Target.Attack,
-                    this.entity.instance
-                ]);
+                if (this.player.isRanged())
+                    this.game.socket.send(Packets.Target, [
+                        Opcodes.Target.Attack,
+                        this.entity.instance
+                    ]);
                 return;
             }
         }

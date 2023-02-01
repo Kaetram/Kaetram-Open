@@ -576,6 +576,49 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Used for validating the attack request from the client. The primary purpose is to validate
+     * or restrict attacking actions depending on certain contexts. If we're attacking a mob then
+     * all is good. If we're dealing with attacking mobs in the tutorial, we need to ensure that
+     * we are allowed to do so. If we're attacking another player, we must check the conditionals
+     * for the PvP status and prevent cheaters from attacking/being attacked by other players.
+     * @param target The target character instance that we are attempting to attack.
+     */
+
+    protected canAttack(target: Character): boolean {
+        if (target.isMob()) {
+            // Restrict the mobs in tutorial from being attacked by the player.
+            if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
+                this.notify('You have no reason to attack these creatures.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // If either of the entities are not players, we don't want to handle this.
+        if (!this.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            this.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (this.isCheater()) {
+            this.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        // TODO - Separate team conditional into its own thing.
+        return this.pvp && target.pvp && this.team !== target.team;
+    }
+
+    /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
      * @param x The new x grid position.
