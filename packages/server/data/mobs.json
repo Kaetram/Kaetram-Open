@@ -1852,8 +1852,8 @@
     "movementSpeed": 450,
     "respawnDelay": 95000
   },
-
-  "dragon": {
+   
+  "forestdragon": {
     "name": "Forest Dragon",
     "description": "I am the baby of Keros the Almighty! Weep at my feet you noob!",
     "drops": {"dragonarmor": 75, "bamboospear": 75, "justicebow": 115, "forestbow": 10},
