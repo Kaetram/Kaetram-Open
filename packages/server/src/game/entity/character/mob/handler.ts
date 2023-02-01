@@ -78,18 +78,13 @@ export default class Handler {
             if (!entity?.isPlayer()) return;
 
             // Kill callback is sent to the player who dealt most amount of damage.
-            if (index === 0) entity.killCallback?.(this.mob);
-            else entity.handleExperience(experience);
+            if (index === 0) {
+                entity.killCallback?.(this.mob);
+
+                // Drop the mob's loot and pass the owner's username.
+                this.mob.drop(entity.username);
+            } else entity.handleExperience(experience);
         });
-
-        // Spawn item drops.
-        let drops = this.mob.getDrops();
-
-        if (drops.length > 0)
-            _.each(drops, (drop) =>
-                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
-            );
-
         // Stop the combat.
         this.mob.combat.stop();
 

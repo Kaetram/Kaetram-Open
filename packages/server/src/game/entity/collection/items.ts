@@ -27,6 +27,7 @@ export default class ItemCollection extends Collection<Item> {
         dropped?: boolean;
         count?: number;
         enchantments?: Enchantments;
+        owner?: string;
     }): Item {
         return this.createItem(
             params.key,
@@ -34,7 +35,8 @@ export default class ItemCollection extends Collection<Item> {
             params.y,
             params.dropped,
             params.count,
-            params.enchantments
+            params.enchantments,
+            params.owner
         );
     }
 
@@ -45,9 +47,10 @@ export default class ItemCollection extends Collection<Item> {
         y: number,
         dropped = false,
         count = 1,
-        enchantments: Enchantments = {}
+        enchantments: Enchantments = {},
+        owner = ''
     ): Item {
-        return new Item(key, x, y, dropped, count, enchantments);
+        return new Item(key, x, y, dropped, count, enchantments, owner);
     }
 
     public override onAdd(entity: Item): void {

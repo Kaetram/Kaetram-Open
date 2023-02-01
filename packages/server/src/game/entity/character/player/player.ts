@@ -834,7 +834,15 @@ export default class Player extends Character {
         this.setOrientation(orientation);
 
         // Player has stopped on top of an item.
-        if (entity?.isItem()) this.inventory.add(entity);
+        if (entity?.isItem()) {
+            // Prevent picking up dropped items that belong to other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(
+                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                );
+
+            this.inventory.add(entity);
+        }
 
         // Update the player's position.
         if (!this.isInvalidMovement()) this.setPosition(x, y);
