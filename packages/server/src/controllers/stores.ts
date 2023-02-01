@@ -168,6 +168,9 @@ export default class Stores {
         let store = this.stores[storeKey],
             item = store.items[index];
 
+        // Prevent cheaters from buying any of the items.
+        if (player.isCheater()) return player.notify(StoreEn.CHEATER);
+
         // First and foremost check the user has enough space.
         if (!player.inventory.hasSpace() && !player.inventory.hasItem(item.key))
             return player.notify(StoreEn.NOT_ENOUGH_SPACE);

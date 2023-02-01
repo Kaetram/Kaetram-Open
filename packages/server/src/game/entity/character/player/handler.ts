@@ -434,7 +434,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                data: this.player.inventory.serialize()
+                data: this.player.inventory.serialize(true)
             })
         );
     }
@@ -477,7 +477,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -543,7 +543,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -629,7 +629,7 @@ export default class Handler {
 
         switch (npc.role) {
             case 'banker': {
-                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
                 return;
             }
             case 'enchanter': {
