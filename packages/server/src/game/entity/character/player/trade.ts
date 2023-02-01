@@ -67,6 +67,9 @@ export default class Trade {
         // Ensure the item exists.
         if (!item) return;
 
+        // Undroppable items are special items that cannot be traded.
+        if (item.undroppable) return this.player.notify(`You cannot trade this item.`, '', 'TRADE');
+
         // Sync the count of the item in the inventory with the count of the item in the trade.
         item.count = count === -1 ? slot.count : count;
 
@@ -169,6 +172,13 @@ export default class Trade {
     public request(target: Player): void {
         // Player is too far away to start trading.
         if (this.player.getDistance(target) > 1) return;
+
+        // Prevent cheaters from trading.
+        if (this.player.isCheater())
+            return this.player.notify('Sorry but cheaters are not allowed to trade.');
+
+        if (target.isCheater())
+            return this.player.notify('That player is a cheater, he might sell you contraband!');
 
         if (target.trade.lastRequest === this.player.instance) return this.open(target);
 
