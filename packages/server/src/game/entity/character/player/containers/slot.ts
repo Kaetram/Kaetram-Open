@@ -135,36 +135,29 @@ export default class Slot {
 
     /**
      * Returns the data in the slot in the form of a SlotData object.
+     * @param clientInfo Whether or not to send the client information.
      * @returns SlotData interface object.
      */
 
-    public serialize(): SlotData {
-        let {
-            index,
-            key,
-            count,
-            enchantments,
-            edible,
-            equippable,
-            name,
-            description,
-            attackStats,
-            defenseStats,
-            bonuses
-        } = this;
-
-        return {
-            index,
-            key,
-            count,
-            enchantments,
-            edible,
-            equippable,
-            name,
-            description,
-            attackStats,
-            defenseStats,
-            bonuses
+    public serialize(clientInfo = false): SlotData {
+        // Base data that is always sent to the client.
+        let data: SlotData = {
+            index: this.index,
+            key: this.key,
+            count: this.count,
+            enchantments: this.enchantments
         };
+
+        if (clientInfo) {
+            data.name = this.name;
+            data.description = this.description;
+            data.edible = this.edible;
+            data.equippable = this.equippable;
+            data.attackStats = this.attackStats;
+            data.defenseStats = this.defenseStats;
+            data.bonuses = this.bonuses;
+        }
+
+        return data;
     }
 }

@@ -56,6 +56,9 @@ export default class Console {
                         player.connection.reject('updated');
                     });
 
+                    // No connections allowed for the remaining instance of the server.
+                    this.world.allowConnections = false;
+
                     break;
                 }
 
@@ -139,6 +142,10 @@ export default class Console {
                 case 'save': {
                     log.info(`Saving all players.`);
                     return this.world.save();
+                }
+
+                case 'cleandupes': {
+                    return this.database.cleanDupes();
                 }
             }
         });
