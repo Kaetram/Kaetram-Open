@@ -335,6 +335,22 @@ export default abstract class Quest {
     }
 
     /**
+     * @returns Whether or not the current stage is a kill task.
+     */
+
+    public isKillTask(): boolean {
+        return this.stageData.task === 'kill';
+    }
+
+    /**
+     * @returns Whether or not the current stage is a cut tree task.
+     */
+
+    public isCutTreeTask(): boolean {
+        return this.stageData.task === 'tree';
+    }
+
+    /**
      * Returns a StageData object about the current stage. It contains information about
      * what NPC the player must interact with to progress, or how many mobs to kill to
      * progress.

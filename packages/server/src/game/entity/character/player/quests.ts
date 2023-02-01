@@ -188,6 +188,31 @@ export default class Quests {
     }
 
     /**
+     * Used for checking whether the player can attack within the tutorial. Due to people
+     * farming the tutorial area, we need to limit the times they are allowed to attack.
+     * They can only kill mobs within the tutorial if that is the current task.
+     * @returns Whether or not the tutorial task is that of a kill task.
+     */
+
+    public canAttackInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isKillTask();
+    }
+
+    /**
+     * Similar to `canAttackInTutorial` but for cutting trees. We want to prevent
+     * people from sitting in the tutorial area and continuously cutting trees.
+     * @returns Whether or not the tutorial task is that of a cut tree task.
+     */
+
+    public canCutTreesInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isCutTreeTask();
+    }
+
+    /**
      * Iterates through all the quests and serializes them (saving the
      * key and progress of each one) and returns a SerializedQuest object.
      * @returns SerializedQuest object containing array of quest data.
