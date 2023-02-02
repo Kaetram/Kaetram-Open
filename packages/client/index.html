@@ -181,11 +181,13 @@
         <title>Kaetram</title>
 
         <script type="module" src="./src/main.ts"></script>
-         <!-- Google tag (gtag.js) -->
+        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-SLX5NNTBX4"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() { dataLayer.push(arguments); }
+            function gtag() {
+                dataLayer.push(arguments);
+            }
             gtag('js', new Date());
             gtag('config', 'G-SLX5NNTBX4');
         </script>
@@ -774,13 +776,32 @@
                     </div>
                 </div>
 
-                <div id="trade">
+                <div id="trade-container">
                     <div id="close-trade" class="close"></div>
                     <div id="trade-player-name" class="stroke"></div>
                     <div id="trade-oplayer-name" class="stroke"></div>
                     <div id="trade-status"></div>
 
-                    <div id="trade-inventory-slots"><ul></ul></div>
+                    <div id="trade-inventory-slots">
+                        <ul></ul>
+
+                        <dialog id="trade-count">
+                            <div class="dialog-title">Input Buy Amount</div>
+
+                            <input
+                                title="Count"
+                                type="number"
+                                class="dialog-count"
+                                size="6"
+                                maxlength="11"
+                            />
+
+                            <div class="dialog-buttons">
+                                <div class="confirm dialog-accept"></div>
+                                <div class="cancel dialog-cancel"></div>
+                            </div>
+                        </dialog>
+                    </div>
                     <div id="trade-player-slots"><ul></ul></div>
                     <div id="trade-oplayer-slots"><ul></ul></div>
 
@@ -828,7 +849,7 @@
                         <div class="dialog-title">Input Buy Amount</div>
 
                         <input
-                            title="dialog-count"
+                            title="Count"
                             type="number"
                             class="dialog-count"
                             size="6"
@@ -948,7 +969,7 @@
                         <div class="dialog-title">Input Drop Amount</div>
 
                         <input
-                            title="dialog-count"
+                            title="Count"
                             type="number"
                             class="dialog-count"
                             size="6"
