@@ -39,7 +39,7 @@ export default class Actions extends Menu {
      * Handles the click event for the drop dialog.
      */
 
-    private handleDrop(): void {
+    public handleDrop(): void {
         let count = this.dropCount.valueAsNumber;
 
         // Reset the input field value
@@ -155,7 +155,7 @@ export default class Actions extends Menu {
      * Hides the drop dialog and brings back the description info.
      */
 
-    private hideDropDialog(): void {
+    public hideDropDialog(): void {
         Util.fadeOut(this.dropDialog);
         Util.fadeIn(this.description);
 

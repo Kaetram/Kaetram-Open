@@ -418,11 +418,11 @@ export default class Handler {
 
     /**
      * Relays a message to the client that the trade has been accepted by one of the players.
-     * @param instance Who accepted the trade, determines what message to display.
+     * @param message The message to display in the trade status window.
      */
 
-    private handleTradeAccept(instance: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Accept, { instance }));
+    private handleTradeAccept(message?: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
     }
 
     /**
