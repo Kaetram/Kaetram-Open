@@ -11,7 +11,8 @@ interface PlayerSlot extends HTMLElement {
     inventoryIndex?: number;
 }
 
-type SelectCallback = (type: Modules.ContainerType, index: number) => void;
+type SelectCallback = (type: Modules.ContainerType, index: number, count?: number) => void;
+
 export default class Trade extends Menu {
     public override hideOnShow = false;
 
@@ -31,6 +32,12 @@ export default class Trade extends Menu {
 
     private acceptButton: HTMLButtonElement = document.querySelector('#trade-accept')!;
 
+    // Trade count dialog elements
+    public tradeDialog: HTMLElement = document.querySelector('#trade-count')!;
+    private tradeCount: HTMLInputElement = document.querySelector('#trade-count .dialog-count')!;
+    private tradeAccept: HTMLElement = document.querySelector('#trade-count .dialog-accept')!;
+    private tradeCancel: HTMLElement = document.querySelector('#trade-count .dialog-cancel')!;
+
     private inventoryIndex = -1; // Index of the inventory slot that was last selected.
     private totalItems = 0; // Total items that are in the trade
 
@@ -39,24 +46,34 @@ export default class Trade extends Menu {
     private closeCallback?: () => void;
 
     public constructor(private inventory: Inventory) {
-        super('#trade', undefined, '#close-trade');
+        super('#trade-container', undefined, '#close-trade');
 
         this.load();
 
         // Send the accept callback when the accept button is clicked.
         this.acceptButton.addEventListener('click', () => this.acceptCallback?.());
+
+        // Send the trade count when the accept button is clicked.
+        this.tradeAccept.addEventListener('click', () => this.sendTradeAmount());
+        // Close the trade count dialog when the cancel button is clicked.
+        this.tradeCancel.addEventListener('click', () => this.hideTradeAmountDialog());
     }
 
     /**
      * Loads the empty inventory slots based on the size of the inventory.
-     * Creates an event listener for each slot that direts to `select()`.
+     * Creates an event listener for each slot that directs to `select()`.
      */
 
     public load(): void {
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
             // Inventory slots
             this.inventoryList.append(
-                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+                Util.createSlot(
+                    Modules.ContainerType.Inventory,
+                    i,
+                    this.select.bind(this),
+                    this.showTradeAmountDialog.bind(this)
+                )
             );
 
             // Player slots
@@ -145,14 +162,24 @@ export default class Trade extends Menu {
         slotCount.innerHTML = count > 1 ? count.toString() : '';
 
         if (!otherPlayer) {
+            let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
+                    '.inventory-item-count'
+                )!,
+                countDifference = parseInt(itemCount.innerHTML) - count;
+
+            console.log({ itemCount, countDifference });
+
+            if (countDifference > 0)
+                // Update the count of the item in the inventory.
+                itemCount.innerHTML = countDifference.toString();
             // Remove the item from the inventory.
-            this.clearSlot(this.inventoryIndex);
+            else this.clearSlot(this.inventoryIndex);
 
             // Store the inventory slot into the trade slot if it is the current player adding the item.
             (slot as PlayerSlot).inventoryIndex = this.inventoryIndex;
         }
 
-        this.totalItems++;
+        this.totalItems += count;
         this.tradeStatus.innerHTML = '';
 
         this.updateAcceptButton();
@@ -164,7 +191,7 @@ export default class Trade extends Menu {
      * @param otherPlayer Whether we are removing from the other player's trade menu.
      */
 
-    public override remove(index: number, otherPlayer = false): void {
+    public override remove(index: number, count: number, otherPlayer = false): void {
         let slot = otherPlayer
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],
@@ -173,20 +200,52 @@ export default class Trade extends Menu {
 
         // Add the item back into the inventory.
         if (!otherPlayer)
-            this.setSlot(
-                (slot as PlayerSlot).inventoryIndex!,
-                image.style.backgroundImage,
-                slotCount.innerHTML
-            );
+            this.setSlot((slot as PlayerSlot).inventoryIndex!, image.style.backgroundImage, count);
 
         // Clear the image and count of the slot.
         image.style.backgroundImage = '';
         slotCount.innerHTML = '';
 
-        this.totalItems--;
+        this.totalItems -= count;
         this.tradeStatus.innerHTML = '';
 
         this.updateAcceptButton();
+    }
+
+    public sendTradeAmount(): void {
+        let count = this.tradeCount.valueAsNumber;
+
+        if (count < 1) return;
+
+        this.select(Modules.ContainerType.Inventory, this.inventoryIndex, count);
+
+        this.hideTradeAmountDialog();
+    }
+
+    /**
+     * Hides the description and shows the trade count dialog. Also
+     * focuses on the input field for the trade count dialog.
+     */
+
+    public showTradeAmountDialog(_type: Modules.ContainerType, index: number): void {
+        this.inventoryIndex = index;
+
+        Util.fadeIn(this.tradeDialog);
+
+        this.inventoryList.classList.add('dimmed');
+
+        this.tradeCount.value = '1';
+        this.tradeCount.focus();
+    }
+
+    /**
+     * Hides the drop dialog and brings back the description info.
+     */
+
+    private hideTradeAmountDialog(): void {
+        Util.fadeOut(this.tradeDialog);
+
+        this.inventoryList.classList.remove('dimmed');
     }
 
     /**
@@ -209,10 +268,10 @@ export default class Trade extends Menu {
      * @param index The index of the item being acted on.
      */
 
-    private select(type: Modules.ContainerType, index: number): void {
+    private select(type: Modules.ContainerType, index: number, count?: number): void {
         this.inventoryIndex = index;
 
-        this.selectCallback?.(type, index);
+        this.selectCallback?.(type, index, count);
     }
 
     /**
@@ -294,13 +353,13 @@ export default class Trade extends Menu {
      * @param count The count of the item that we are setting.
      */
 
-    private setSlot(index: number, image: string, count: string): void {
+    private setSlot(index: number, image: string, count: number): void {
         let slot = this.getElement(index),
             slotImage = slot.querySelector<HTMLElement>('.item-image')!,
             slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
 
         slotImage.style.backgroundImage = image;
-        slotCount.innerHTML = count;
+        slotCount.innerHTML = count.toString();
     }
 
     /**

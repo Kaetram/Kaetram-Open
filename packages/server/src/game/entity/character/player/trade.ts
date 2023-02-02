@@ -49,7 +49,9 @@ export default class Trade {
      * @param count The amount of items we are offering to trade.
      */
 
-    public add(index: number, count = -1): void {
+    public add(index: number, count?: number): void {
+        if (this.isAdded(index, count)) return;
+
         let offerIndex = this.getEmptySlot();
 
         if (offerIndex === -1)
@@ -71,7 +73,7 @@ export default class Trade {
         if (item.undroppable) return this.player.notify(`You cannot trade this item.`, '', 'TRADE');
 
         // Sync the count of the item in the inventory with the count of the item in the trade.
-        item.count = count === -1 ? slot.count : count;
+        item.count = count ?? slot.count;
 
         // Add the item to the items offered array.
         this.itemsOffered[offerIndex] = {
@@ -98,7 +100,7 @@ export default class Trade {
      * @param index The index in the itemsOffered array that we are removing.
      */
 
-    public remove(index: number): void {
+    public remove(index: number, count?: number): void {
         this.itemsOffered[index] = undefined;
 
         // Any addition or removal of an item resets the trade acceptance.
@@ -290,6 +292,19 @@ export default class Trade {
 
     public getActiveTrade(): Trade | undefined {
         return this.activeTrade?.trade;
+    }
+
+    /**
+     * Checks if the item is already added to the trade.
+     */
+
+    private isAdded(index: number, count?: number) {
+        return _.some(
+            this.itemsOffered,
+            (offered) =>
+                offered?.inventoryIndex === index &&
+                offered.item.count + (count || 0) < offered.item.maxCount
+        );
     }
 
     /**
