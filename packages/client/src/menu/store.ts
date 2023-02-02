@@ -281,7 +281,7 @@ export default class Store extends Menu {
         // Set the text HTML values for the children elements.
         if (item.count !== -1) count.textContent = `x${item.count.toString()}`;
         name.textContent = item.name;
-        price.textContent = `${item.price.toString()}g`;
+        price.textContent = `${item.price.toString()}${this.currency[0]}`;
 
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);

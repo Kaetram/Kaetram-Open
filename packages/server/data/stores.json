@@ -19,7 +19,7 @@
             {
                 "key": "burger",
                 "count": 100,
-                "price": 500
+                "price": 1500
             },
             {
                 "key": "bigflask",
@@ -29,7 +29,7 @@
             {
                 "key": "bigmanaflask",
                 "count": 100,
-                "price": 550
+                "price": 1550
             },
             {
                 "key": "axe",
@@ -168,5 +168,81 @@
         ],
         "refresh": 600000,
         "currency": "gold"
+    },
+    "cosmetics": {
+        "items": [
+            {
+                "key": "taekwondo",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "huniarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "damboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "bluedamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "greendamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "reddamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "robotarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "dinosaurarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "rainbowapro",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "radisharmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "frankensteinarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "pickle",
+                "count": 5,
+                "price": 30
+            },
+            {
+                "key": "catarmor",
+                "count": 5,
+                "price": 45
+            },
+            {
+                "key": "burgerarmor",
+                "count": 5,
+                "price": 90
+            }
+        ],
+        "refresh": 600000,
+        "currency": "token"
     }
 }

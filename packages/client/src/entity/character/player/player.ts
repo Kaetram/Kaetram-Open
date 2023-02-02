@@ -87,11 +87,11 @@ export default class Player extends Character {
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
-        this.rank = data.rank!;
         this.attackRange = data.attackRange!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
+        this.setRank(data.rank);
         this.setOrientation(data.orientation);
 
         if (!sync) this.setGridPosition(data.x, data.y);
@@ -342,8 +342,77 @@ export default class Player extends Character {
                 return 'goldmedal';
             }
 
+            case Modules.Medals.Tier1: {
+                return 'crown-tier1';
+            }
+
+            case Modules.Medals.Tier2: {
+                return 'crown-tier2';
+            }
+
+            case Modules.Medals.Tier3: {
+                return 'crown-tier3';
+            }
+
+            case Modules.Medals.Tier4: {
+                return 'crown-tier4';
+            }
+
+            case Modules.Medals.Tier5: {
+                return 'crown-tier5';
+            }
+
+            case Modules.Medals.Tier6: {
+                return 'crown-tier6';
+            }
+
+            case Modules.Medals.Tier7: {
+                return 'crown-tier7';
+            }
+
             default: {
                 return '';
+            }
+        }
+    }
+
+    /**
+     * Returns a medal based on the player's rank.
+     * @returns The medal type for the player's rank.
+     */
+
+    private getRankMedal(): Modules.Medals {
+        switch (this.rank) {
+            case Modules.Ranks.TierOne: {
+                return Modules.Medals.Tier1;
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return Modules.Medals.Tier2;
+            }
+
+            case Modules.Ranks.TierThree: {
+                return Modules.Medals.Tier3;
+            }
+
+            case Modules.Ranks.TierFour: {
+                return Modules.Medals.Tier4;
+            }
+
+            case Modules.Ranks.TierFive: {
+                return Modules.Medals.Tier5;
+            }
+
+            case Modules.Ranks.TierSix: {
+                return Modules.Medals.Tier6;
+            }
+
+            case Modules.Ranks.TierSeven: {
+                return Modules.Medals.Tier7;
+            }
+
+            default: {
+                return Modules.Medals.None;
             }
         }
     }
@@ -442,6 +511,16 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the player's rank and synchronizes the medals.
+     * @param rank The new rank of the player.
+     */
+
+    public setRank(rank: Modules.Ranks): void {
+        this.rank = rank;
+        this.medal = this.getRankMedal();
+    }
+
+    /**
      * Updates the active status of an ability.
      * @param key The key of the ability we are updating.
      */
@@ -464,6 +543,14 @@ export default class Player extends Character {
 
     public isMagic(): boolean {
         return this.getWeapon().bonuses.magic > 0 && this.isRanged();
+    }
+
+    /**
+     * @returns Whether or not the rank has a crown to display above the player.
+     */
+
+    public isCrownRank(): boolean {
+        return this.rank > Modules.Ranks.TierOne;
     }
 
     /**
