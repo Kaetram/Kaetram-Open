@@ -40,14 +40,15 @@ export default {
      * and index are parameters that are passed to the callback.
      * @param type The type of slot we are creating (used for callback as well).
      * @param index Index of the slot we are creating (for identification).
-     * @param callback Optional paramater that creates a callback when the element
+     * @param clickCallback Optional parameter that creates a callback when the element
      * is clicked and passes the type of the slot and the respective index.
      */
 
     createSlot(
         type: Modules.ContainerType,
         index: number,
-        callback?: (type: Modules.ContainerType, index: number) => void
+        clickCallback?: (type: Modules.ContainerType, index: number) => void,
+        contextMenuCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
@@ -70,7 +71,13 @@ export default {
         slot.append(image);
         slot.append(count);
 
-        if (callback) slot.addEventListener('click', () => callback(type, index));
+        if (clickCallback) slot.addEventListener('click', () => clickCallback(type, index));
+        if (contextMenuCallback)
+            slot.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+
+                contextMenuCallback(type, index);
+            });
 
         // Appends the bank slot onto the list element.
         listElement.append(slot);
