@@ -2040,7 +2040,7 @@
     "offsetY": -21
   },
   {
-    "id": "bridalmask",
+    "id": "samuraiarmor",
     "width": 32,
     "height": 32,
     "animations": {
@@ -6322,6 +6322,48 @@
   },
 
   {
+    "id": "crown-tier1",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier2",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier3",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier4",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier5",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier6",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier7",
+    "width": 17,
+    "height": 16
+  },
+
+  {
     "id": "pointer",
     "width": 32,
     "height": 32
@@ -8403,7 +8445,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-bridalmask",
+    "id": "item-samuraiarmor",
     "animations": {
       "idle": {
         "length": 6,
@@ -8926,6 +8968,17 @@
     "animations": {
       "idle": {
         "length": 7,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-token",
+    "animations": {
+      "idle": {
+        "length": 4,
         "row": 0
       }
     },
@@ -10173,7 +10226,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-robocoparmor",
+    "id": "item-robotarmor",
     "animations": {
       "idle": {
         "length": 6,
@@ -15240,6 +15293,32 @@
     "offsetY": -8
   },
   {
+    "id": "purplestoremannpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "bluestoremannpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
     "id": "redsword",
     "width": 48,
     "height": 48,
@@ -15568,7 +15647,7 @@
     "offsetY": -12
   },
   {
-    "id": "robocoparmor",
+    "id": "robotarmor",
     "width": 32,
     "height": 32,
     "animations": {

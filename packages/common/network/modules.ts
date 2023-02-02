@@ -178,7 +178,14 @@ export enum Effects {
 export enum Medals {
     None,
     Silver,
-    Gold
+    Gold,
+    Tier1,
+    Tier2,
+    Tier3,
+    Tier4,
+    Tier5,
+    Tier6,
+    Tier7
 }
 
 export enum Ranks {
@@ -188,7 +195,14 @@ export enum Ranks {
     Veteran,
     Patron,
     Artist,
-    Cheater
+    Cheater,
+    TierOne, // Patron tiers
+    TierTwo,
+    TierThree,
+    TierFour,
+    TierFive,
+    TierSix,
+    TierSeven
 }
 
 export let RankColours = {
@@ -198,7 +212,31 @@ export let RankColours = {
     [Ranks.Veteran]: '#d84343',
     [Ranks.Patron]: '#db753c',
     [Ranks.Artist]: '#b552f7',
-    [Ranks.Cheater]: '#ffffff'
+    [Ranks.Cheater]: '#ffffff',
+    [Ranks.TierOne]: '#db963c',
+    [Ranks.TierTwo]: '#e6c843',
+    [Ranks.TierThree]: '#d6e34b',
+    [Ranks.TierFour]: '#a9e03a',
+    [Ranks.TierFive]: '#7beb65',
+    [Ranks.TierSix]: '#77e691',
+    [Ranks.TierSeven]: '#77e691'
+};
+
+export let RankTitles = {
+    [Ranks.None]: '',
+    [Ranks.Moderator]: 'Moderator',
+    [Ranks.Admin]: 'Administrator',
+    [Ranks.Veteran]: 'Veteran',
+    [Ranks.Patron]: 'Patron',
+    [Ranks.Artist]: 'Artist',
+    [Ranks.Cheater]: 'Cheater',
+    [Ranks.TierOne]: 'T1 Patron',
+    [Ranks.TierTwo]: 'T2 Patron',
+    [Ranks.TierThree]: 'T3 Patron',
+    [Ranks.TierFour]: 'T4 Patron',
+    [Ranks.TierFive]: 'T5 Patron',
+    [Ranks.TierSix]: 'T6 Patron',
+    [Ranks.TierSeven]: 'T7 Patron'
 };
 
 export interface Colours {

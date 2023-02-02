@@ -596,7 +596,7 @@ export default class Connection {
 
         let { name, rank, x, y } = entity;
 
-        if (rank !== Modules.Ranks.None) name = `[${Modules.Ranks[rank]}] ${name}`;
+        if (rank !== Modules.Ranks.None) name = `[${Modules.RankTitles[rank]}] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -1404,7 +1404,7 @@ export default class Connection {
      */
 
     private handleRank(rank: Modules.Ranks): void {
-        this.game.player.rank = rank;
+        this.game.player.setRank(rank);
     }
 
     /**
