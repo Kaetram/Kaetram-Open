@@ -1,6 +1,6 @@
 @use '../../abstracts/media';
 
-#trade {
+#trade-container {
     cursor: url('/img/3/hand.png'), auto;
 
     position: absolute;
@@ -48,7 +48,7 @@
 
 @each $size, $i in media.$sizes {
     @media ($size) {
-        #trade {
+        #trade-container {
             width: 379px * $i;
             height: 170px * $i;
             background: url('/img/#{$i}/trade.png') 0 0 no-repeat;
@@ -135,11 +135,10 @@
         #trade-oplayer-name {
             left: 263px * $i;
         }
-        
+
         #trade-accept {
             right: 77px * $i;
             bottom: 5px * $i;
         }
     }
 }
-
