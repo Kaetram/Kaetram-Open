@@ -58,6 +58,24 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Handles pressing down a key while the dialogue is open. We redirect any keys
+     * from the keyboard into this class when the dialogue is open.
+     * @param key The key that was pressed.
+     */
+
+    public keyDown(key: string): void {
+        switch (key) {
+            case 'Escape': {
+                return this.actions.hideDropDialog();
+            }
+
+            case 'Enter': {
+                return this.actions.handleDrop();
+            }
+        }
+    }
+
+    /**
      * Creates a select callback using the action parameter specified.
      * @param menuAction Which type of action is being performed.
      */
@@ -451,6 +469,16 @@ export default class Inventory extends Menu {
 
     private getElement(index: number): SlotElement {
         return this.list.children[index].querySelector('div') as HTMLElement;
+    }
+
+    /**
+     * Returns the number value of the count at a specified index.
+     * @param index The index at which we are grabbing the count.
+     * @returns The number value of the count or 0 if it is not found.
+     */
+
+    public getCount(index: number): number {
+        return this.getElement(index)?.count || 0;
     }
 
     /**

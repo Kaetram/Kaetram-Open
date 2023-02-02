@@ -448,7 +448,7 @@ export default class Incoming {
             }
 
             case Opcodes.Trade.Remove: {
-                return this.player.trade.remove(packet.index!, packet.count);
+                return this.player.trade.remove(packet.index!);
             }
         }
     }

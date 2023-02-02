@@ -72,7 +72,7 @@ export default abstract class Menu {
      * @param _data Unknown data that may contain information to remove an item.
      */
 
-    public remove(_data: unknown, _count: number): void {
+    public remove(_data: unknown, _data1?: unknown): void {
         log.debug(`Unimplemented menu remove() function.`);
     }
 
