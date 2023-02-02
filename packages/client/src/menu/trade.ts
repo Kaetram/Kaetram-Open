@@ -11,7 +11,7 @@ interface PlayerSlot extends HTMLElement {
     inventoryIndex?: number;
 }
 
-type SelectCallback = (type: Modules.ContainerType, index: number, count: number) => void;
+type SelectCallback = (type: Modules.ContainerType, index: number, count?: number) => void;
 
 export default class Trade extends Menu {
     public override hideOnShow = false;
@@ -61,7 +61,7 @@ export default class Trade extends Menu {
 
     /**
      * Loads the empty inventory slots based on the size of the inventory.
-     * Creates an event listener for each slot that direts to `select()`.
+     * Creates an event listener for each slot that directs to `select()`.
      */
 
     public load(): void {
@@ -162,14 +162,24 @@ export default class Trade extends Menu {
         slotCount.innerHTML = count > 1 ? count.toString() : '';
 
         if (!otherPlayer) {
+            let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
+                    '.inventory-item-count'
+                )!,
+                countDifference = parseInt(itemCount.innerHTML) - count;
+
+            console.log({ itemCount, countDifference });
+
+            if (countDifference > 0)
+                // Update the count of the item in the inventory.
+                itemCount.innerHTML = countDifference.toString();
             // Remove the item from the inventory.
-            this.clearSlot(this.inventoryIndex);
+            else this.clearSlot(this.inventoryIndex);
 
             // Store the inventory slot into the trade slot if it is the current player adding the item.
             (slot as PlayerSlot).inventoryIndex = this.inventoryIndex;
         }
 
-        this.totalItems++;
+        this.totalItems += count;
         this.tradeStatus.innerHTML = '';
 
         this.updateAcceptButton();
@@ -258,7 +268,7 @@ export default class Trade extends Menu {
      * @param index The index of the item being acted on.
      */
 
-    private select(type: Modules.ContainerType, index: number, count = 1): void {
+    private select(type: Modules.ContainerType, index: number, count?: number): void {
         this.inventoryIndex = index;
 
         this.selectCallback?.(type, index, count);
