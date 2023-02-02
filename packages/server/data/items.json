@@ -4104,7 +4104,7 @@
 
   "rudolfarmor": {
     "type": "armour",
-    "name": "Rudolf Armour"
+    "name": "Reindeer Armour"
   },
 
   "christmasarmor": {
@@ -4112,9 +4112,9 @@
     "name": "Christmas Armour"
   },
 
-  "robocoparmor": {
+  "robotarmor": {
     "type": "armour",
-    "name": "Robocop Armour"
+    "name": "Robot Armour"
   },
 
   "pinkcockroacharmor": {
@@ -4361,9 +4361,9 @@
     "name": "Devil Kazya Armour"
   },
 
-  "bridalmask": {
+  "samuraiarmor": {
     "type": "armour",
-    "name": "Bridal Mask"
+    "name": "Samurai Armour"
   },
 
   "blackspiderarmor": {
@@ -4592,6 +4592,13 @@
     "name": "Gold",
     "stackable": true,
     "description": "A very useful shiny metal that for some reason people like to exchange for goods."
+  },
+
+  "token": {
+    "type": "object",
+    "name": "Token",
+    "stackable": true,
+    "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
   "leafcommon": {

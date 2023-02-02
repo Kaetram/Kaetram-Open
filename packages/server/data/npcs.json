@@ -221,6 +221,11 @@
     "role": "banker"
   },
 
+  "purplestoremannpc": {
+    "name": "Kosmetics Vendor",
+    "store": "cosmetics"
+  },
+
   "bluestoremannpc": {
     "name": "Clerk",
     "store": "startshop"
