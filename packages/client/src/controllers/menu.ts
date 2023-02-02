@@ -347,19 +347,21 @@ export default class MenuController {
      * @param index The index in the container that the action is performed on.
      */
 
-    private handleTradeSelect(type: Modules.ContainerType, index: number): void {
+    private handleTradeSelect(type: Modules.ContainerType, index: number, count: number): void {
         switch (type) {
             case Modules.ContainerType.Inventory: {
                 return this.game.socket.send(Packets.Trade, {
                     opcode: Opcodes.Trade.Add,
-                    index
+                    index,
+                    count
                 });
             }
 
             case Modules.ContainerType.Trade: {
                 return this.game.socket.send(Packets.Trade, {
                     opcode: Opcodes.Trade.Remove,
-                    index
+                    index,
+                    count
                 });
             }
         }
