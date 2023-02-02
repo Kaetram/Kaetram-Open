@@ -18,6 +18,7 @@ import type Game from '../game';
 import type Camera from '../renderer/camera';
 import type App from '../app';
 import type Map from '../map/map';
+import type Trade from '../menu/trade';
 
 interface TargetData {
     sprite: Sprite;
@@ -39,6 +40,7 @@ export default class InputController {
     private friends: Friends;
     private interact: Interact;
     private inventory: Inventory;
+    private trade: Trade;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -76,6 +78,7 @@ export default class InputController {
         this.friends = game.menu.getFriends();
         this.inventory = game.menu.getInventory();
         this.interact = game.menu.getInteract();
+        this.trade = game.menu.getTrade();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -173,10 +176,13 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
-        // Prevent actions if the inventory drop input is visible.
-        if (this.inventory.isDropDialogVisible()) return;
+        // Redirect input to the trade handler if the trade input is visible.
+        if (this.trade.isInputDialogueVisible()) return this.trade.keyDown(event.key);
 
-        // Popups are UI elements that are displayed on top of the game.
+        // Redirect input to the inventory handler if the inventory is visible.
+        if (this.inventory.isDropDialogVisible()) return this.inventory.keyDown(event.key);
+
+        // Redirect input to the friends handler if the friends input is visible.
         if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 
         // Redirect input to the chat handler if the chat input is visible.

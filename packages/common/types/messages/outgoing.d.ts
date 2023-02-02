@@ -253,6 +253,7 @@ export interface TradePacket {
     index?: number;
     count?: number;
     key?: string;
+    message?: string;
 }
 
 export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;

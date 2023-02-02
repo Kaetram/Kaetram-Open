@@ -35,11 +35,10 @@ export default class Trade extends Menu {
     // Trade count dialog elements
     public tradeDialog: HTMLElement = document.querySelector('#trade-count')!;
     private tradeCount: HTMLInputElement = document.querySelector('#trade-count .dialog-count')!;
-    private tradeAccept: HTMLElement = document.querySelector('#trade-count .dialog-accept')!;
-    private tradeCancel: HTMLElement = document.querySelector('#trade-count .dialog-cancel')!;
+    private tradeCountAccept: HTMLElement = document.querySelector('#trade-count .dialog-accept')!;
+    private tradeCountCancel: HTMLElement = document.querySelector('#trade-count .dialog-cancel')!;
 
     private inventoryIndex = -1; // Index of the inventory slot that was last selected.
-    private totalItems = 0; // Total items that are in the trade
 
     private selectCallback?: SelectCallback;
     private acceptCallback?: () => void;
@@ -54,9 +53,10 @@ export default class Trade extends Menu {
         this.acceptButton.addEventListener('click', () => this.acceptCallback?.());
 
         // Send the trade count when the accept button is clicked.
-        this.tradeAccept.addEventListener('click', () => this.sendTradeAmount());
+        this.tradeCountAccept.addEventListener('click', () => this.sendTradeAmount());
+
         // Close the trade count dialog when the cancel button is clicked.
-        this.tradeCancel.addEventListener('click', () => this.hideTradeAmountDialog());
+        this.tradeCountCancel.addEventListener('click', () => this.hideTradeAmountDialog());
     }
 
     /**
@@ -83,6 +83,24 @@ export default class Trade extends Menu {
 
             // Other player slots
             this.otherPlayerSlots.append(Util.createSlot(Modules.ContainerType.Trade, i));
+        }
+    }
+
+    /**
+     * Handles pressing down a key while the dialogue is open. We redirect any keys
+     * from the keyboard into this class when the dialogue is open.
+     * @param key The key that was pressed.
+     */
+
+    public keyDown(key: string): void {
+        switch (key) {
+            case 'Escape': {
+                return this.hideTradeAmountDialog();
+            }
+
+            case 'Enter': {
+                return this.sendTradeAmount();
+            }
         }
     }
 
@@ -135,7 +153,6 @@ export default class Trade extends Menu {
         this.clearAll();
 
         this.inventoryIndex = -1;
-        this.totalItems = 0;
         this.tradeStatus.innerHTML = '';
     }
 
@@ -159,30 +176,25 @@ export default class Trade extends Menu {
             : this.getElementImage(this.inventoryIndex);
 
         // Update the count of the item that is being added.
-        slotCount.innerHTML = count > 1 ? count.toString() : '';
+        slotCount.innerHTML = count > 1 ? Util.getCount(count) : '';
 
         if (!otherPlayer) {
             let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
                     '.inventory-item-count'
                 )!,
-                countDifference = parseInt(itemCount.innerHTML) - count;
-
-            console.log({ itemCount, countDifference });
-
-            if (countDifference > 0)
-                // Update the count of the item in the inventory.
-                itemCount.innerHTML = countDifference.toString();
-            // Remove the item from the inventory.
-            else this.clearSlot(this.inventoryIndex);
+                actualCount = this.inventory.getCount(this.inventoryIndex) - count;
 
             // Store the inventory slot into the trade slot if it is the current player adding the item.
             (slot as PlayerSlot).inventoryIndex = this.inventoryIndex;
+
+            // Remove the item if the count is lesser than 0 (we moved everything to the trade menu).
+            if (isNaN(actualCount) || actualCount < 1) return this.clearSlot(this.inventoryIndex);
+
+            // Update the remaining count of the item in the inventory.
+            itemCount.innerHTML = Util.getCount(actualCount);
         }
 
-        this.totalItems += count;
         this.tradeStatus.innerHTML = '';
-
-        this.updateAcceptButton();
     }
 
     /**
@@ -191,7 +203,7 @@ export default class Trade extends Menu {
      * @param otherPlayer Whether we are removing from the other player's trade menu.
      */
 
-    public override remove(index: number, count: number, otherPlayer = false): void {
+    public override remove(index: number, otherPlayer = false): void {
         let slot = otherPlayer
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],
@@ -199,18 +211,29 @@ export default class Trade extends Menu {
             slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
 
         // Add the item back into the inventory.
-        if (!otherPlayer)
-            this.setSlot((slot as PlayerSlot).inventoryIndex!, image.style.backgroundImage, count);
+        if (!otherPlayer) {
+            let inventoryIndex = (slot as PlayerSlot).inventoryIndex!;
+
+            this.setSlot(
+                inventoryIndex,
+                image.style.backgroundImage,
+                this.inventory.getCount(inventoryIndex)
+            );
+        }
 
         // Clear the image and count of the slot.
         image.style.backgroundImage = '';
         slotCount.innerHTML = '';
 
-        this.totalItems -= count;
         this.tradeStatus.innerHTML = '';
 
-        this.updateAcceptButton();
+        this.inventoryIndex = -1;
     }
+
+    /**
+     * Handles clicking the accept in the trade count dialog popup. Ensures the trade count
+     * is valid (client-sided) and then sends the trade amount to the server by creating a callback.
+     */
 
     public sendTradeAmount(): void {
         let count = this.tradeCount.valueAsNumber;
@@ -249,16 +272,12 @@ export default class Trade extends Menu {
     }
 
     /**
-     * Visually updates the text information in the trade for when the current player
-     * or the other player has put in a request to accept the trade.
+     * Visually updates the text information in the trade with
+     * the information received from the server.
      */
 
-    public accept(otherPlayer = false): void {
-        let text = otherPlayer
-            ? 'The other player has accepted the trade.'
-            : 'You have accepted the trade.';
-
-        this.tradeStatus.innerHTML = text;
+    public accept(message?: string): void {
+        this.tradeStatus.innerHTML = message || '';
     }
 
     /**
@@ -299,12 +318,11 @@ export default class Trade extends Menu {
     }
 
     /**
-     * Updates the disabled status of the accept button depending on how many items there are.
+     * @returns Whether or not the actions menu has the drop dialog visible.
      */
 
-    private updateAcceptButton(): void {
-        if (this.totalItems > 0) this.acceptButton.classList.remove('disabled');
-        else this.acceptButton.classList.add('disabled');
+    public isInputDialogueVisible(): boolean {
+        return this.tradeDialog.style.display === 'block';
     }
 
     /**
@@ -359,7 +377,7 @@ export default class Trade extends Menu {
             slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
 
         slotImage.style.backgroundImage = image;
-        slotCount.innerHTML = count.toString();
+        slotCount.innerHTML = Util.getCount(count);
     }
 
     /**
