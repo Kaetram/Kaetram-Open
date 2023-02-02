@@ -1047,11 +1047,11 @@ export default class Connection {
             case Opcodes.Trade.Remove: {
                 return this.menu
                     .getTrade()
-                    .remove(info.index!, info.count!, info.instance !== this.game.player.instance);
+                    .remove(info.index!, info.instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Accept: {
-                return this.menu.getTrade().accept(info.instance !== this.game.player.instance);
+                return this.menu.getTrade().accept(info.message);
             }
         }
     }
