@@ -23,6 +23,8 @@ export default class Bank extends Menu {
     private selectedContainer: Modules.ContainerType = Modules.ContainerType.Bank;
     private selectedSlot = -1;
 
+    private isTouchDragging = false;
+    private touchDragTimeout?: number;
     private dragClone: HTMLElement | undefined;
 
     private selectCallback?: SelectCallback;
@@ -92,6 +94,12 @@ export default class Bank extends Menu {
         slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
         slot.addEventListener('touchcancel', () => this.touchCancel(item));
         slot.addEventListener('touchend', (event) => this.touchEnd(event, container, index, item));
+        slot.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.isTouchDragging = true;
+        });
 
         return slot;
     }
@@ -290,6 +298,10 @@ export default class Bank extends Menu {
 
         this.selectedSlot = index;
         this.selectedContainer = container;
+
+        this.touchDragTimeout = window.setTimeout(() => {
+            this.isTouchDragging = true;
+        }, 250);
     }
 
     /**
@@ -299,7 +311,8 @@ export default class Bank extends Menu {
      */
 
     private touchMove(event: TouchEvent, item: HTMLDivElement) {
-        if (this.selectedSlot === -1) return;
+        if (this.touchDragTimeout) clearTimeout(this.touchDragTimeout);
+        if (!this.isTouchDragging || this.selectedSlot === -1) return;
 
         let [touch] = event.touches;
 
@@ -321,6 +334,9 @@ export default class Bank extends Menu {
      */
 
     private touchCancel(item: HTMLDivElement) {
+        if (this.touchDragTimeout) clearTimeout(this.touchDragTimeout);
+        this.isTouchDragging = false;
+
         this.dragClone?.remove();
         this.dragClone = undefined;
 
@@ -341,6 +357,7 @@ export default class Bank extends Menu {
         fromIndex: number,
         item: HTMLDivElement
     ) {
+        if (!this.isTouchDragging) return;
         this.touchCancel(item);
 
         let [touch] = event.changedTouches,
