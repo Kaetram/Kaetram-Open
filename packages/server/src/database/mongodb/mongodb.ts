@@ -238,7 +238,7 @@ export default class MongoDB {
             // eslint-disable-next-line unicorn/consistent-function-scoping
             searchSlot = (username: string, slot: SlotData) => {
                 switch (slot?.key) {
-                    case 'gold': {
+                    case 'token': {
                         if (slot.count > 2_000_000) {
                             log.notice(
                                 `Player ${username} had ${slot.count} gold in their inventory.`
