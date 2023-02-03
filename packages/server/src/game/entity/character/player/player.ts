@@ -1495,7 +1495,7 @@ export default class Player extends Character {
         let name = Utils.formatName(this.username);
 
         if (this.rank !== Modules.Ranks.None) {
-            name = `[${Modules.Ranks[this.rank]}] ${name}`;
+            name = `[${Modules.RankTitles[this.rank]}] ${name}`;
             colour = global ? '' : Modules.RankColours[this.rank];
         }
 
