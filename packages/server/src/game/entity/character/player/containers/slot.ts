@@ -35,9 +35,7 @@ export default class Slot {
     public update(item: Item, ignoreMaxStackSize = false): void {
         this.key = item.key;
         this.count =
-            (item.count > item.maxStackSize && !ignoreMaxStackSize
-                ? item.maxStackSize
-                : item.count) || 0;
+            item.count > item.maxStackSize && !ignoreMaxStackSize ? item.maxStackSize : item.count;
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
@@ -48,6 +46,8 @@ export default class Slot {
         this.attackStats = item.attackStats;
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
+
+        if (this.count < 1) this.count = 1;
 
         if (!ignoreMaxStackSize) this.maxStackSize = item.maxStackSize;
 
