@@ -206,6 +206,18 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Swaps the currently selected slot with the target slot.
+     * @param index The index of the slot we are swapping with.
+     */
+
+    public swap(index: number) {
+        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
+
+        // Reset the selected slot after.
+        this.selectedSlot = -1;
+    }
+
+    /**
      * Event handler for when a slot begins the dragging and dropping
      * process. We update the current index of the slot that is being
      * selected for later use.
@@ -239,11 +251,7 @@ export default class Inventory extends Menu {
 
         if (this.selectedSlot === -1) return;
 
-        // Create a callback used when we swap an item from `selectedSlot` to index.
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
-
-        // Reset the selected slot after.
-        this.selectedSlot = -1;
+        this.swap(index);
     }
 
     /**
@@ -305,6 +313,7 @@ export default class Inventory extends Menu {
 
         document.querySelector('#game-container')?.append(this.touchClone);
     }
+
     /**
      * Event handler for when a slot touch is being cancelled.
      * @param item The item being cancelled.
@@ -332,11 +341,7 @@ export default class Inventory extends Menu {
 
         if (!index || this.selectedSlot === -1) return;
 
-        // Create a callback used when we swap an item from `selectedSlot` to index.
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, parseInt(index));
-
-        // Reset the selected slot after.
-        this.selectedSlot = -1;
+        this.swap(parseInt(index));
     }
 
     /**
@@ -464,7 +469,7 @@ export default class Inventory extends Menu {
      * @returns Whether or not the background image style is an empty string or not.
      */
 
-    private isEmpty(element: SlotElement): boolean {
+    public isEmpty(element: SlotElement): boolean {
         let image: HTMLElement = element.querySelector('.item-image')!;
 
         return !image || image.style.backgroundImage === '';
@@ -484,7 +489,7 @@ export default class Inventory extends Menu {
      * @returns An HTMLElement for the slot.
      */
 
-    private getElement(index: number): SlotElement {
+    public getElement(index: number): SlotElement {
         return this.list.children[index].querySelector('div') as HTMLElement;
     }
 
