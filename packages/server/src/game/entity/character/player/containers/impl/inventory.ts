@@ -27,6 +27,9 @@ export default class Inventory extends Container {
      */
 
     public override remove(index: number, count = 1, drop = false): SlotData | undefined {
+        // Ensure the index is within the bounds of the inventory.
+        if (index < 0 || index >= this.size) return;
+
         let item = this.getItem(this.slots[index]);
 
         if (item.undroppable && drop) {

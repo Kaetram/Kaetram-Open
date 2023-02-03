@@ -66,7 +66,8 @@ export enum Ability {
     Add,
     Update,
     Use,
-    QuickSlot
+    QuickSlot,
+    Toggle
 }
 
 export enum Quest {

@@ -63,7 +63,12 @@ export default class Ability {
         player.mana.decrement(mana);
 
         // Ability will deactivate and create a callback after `duration` milliseconds.
-        setTimeout(() => this.deactivateCallback?.(player), duration);
+        setTimeout(() => {
+            this.deactivateCallback?.(player);
+
+            // Send a packet to the client to untoggle the ability.
+            player.abilities.toggleCallback?.(this.key);
+        }, duration);
 
         // Update the date of the last time the ability was activated.
         this.lastActivated = Date.now();
