@@ -231,6 +231,9 @@ export default class Stores {
     public sell(player: Player, key: string, index: number, count = 1): void {
         if (!this.verifyStore(player, key)) return;
 
+        // Ensure the count is correct.
+        if (count < 1) return player.notify(StoreEn.INVALID_ITEM_COUNT);
+
         let slot = player.inventory.get(index);
 
         // Ensure the item in the slot exists.
@@ -269,8 +272,8 @@ export default class Stores {
 
         // Increment the item count or add to store only if the player isn't a cheater :)
         if (!player.isCheater())
-            if (storeItem?.count && storeItem?.count !== -1) storeItem.count += count;
-            else store.items.push(item);
+            if (!storeItem?.count) store.items.push(item);
+            else if (storeItem?.count !== -1) storeItem.count += count;
 
         // Sync up new store data to all players.
         this.updatePlayers(key);
