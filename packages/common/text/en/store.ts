@@ -11,5 +11,6 @@ export default {
     CANNOT_SELL_ITEM: 'You cannot sell this item.',
     ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.',
     CHEATER: 'You have been flagged for cheating. You cannot purchase anything.',
-    RESTRICTED_STORE: 'Sorry but sales are final and you cannot sell this item.'
+    RESTRICTED_STORE: 'Sorry but sales are final and you cannot sell this item.',
+    INVALID_ITEM_COUNT: 'You have entered an invalid amount of items.'
 };
