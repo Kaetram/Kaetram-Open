@@ -9,5 +9,6 @@ export default {
     NOT_ENOUGH_CURRENCY: 'You do not have enough currency to buy this item.',
     NOT_ENOUGH_SPACE: 'You do not have enough space in your inventory.',
     CANNOT_SELL_ITEM: 'You cannot sell this item.',
-    ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.'
+    ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.',
+    CHEATER: 'You have been flagged for cheating. You cannot purchase anything.'
 };

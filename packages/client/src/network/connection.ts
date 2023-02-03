@@ -58,7 +58,8 @@ import type {
     MinigamePacket,
     EffectPacket,
     FriendsPacket,
-    ListPacket
+    ListPacket,
+    TradePacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -139,6 +140,7 @@ export default class Connection {
         this.messages.onMusic(this.handleMusic.bind(this));
         this.messages.onNPC(this.handleNPC.bind(this));
         this.messages.onRespawn(this.handleRespawn.bind(this));
+        this.messages.onTrade(this.handleTrade.bind(this));
         this.messages.onEnchant(this.handleEnchant.bind(this));
         this.messages.onGuild(this.handleGuild.bind(this));
         this.messages.onPointer(this.handlePointer.bind(this));
@@ -594,7 +596,7 @@ export default class Connection {
 
         let { name, rank, x, y } = entity;
 
-        if (rank !== Modules.Ranks.None) name = `[${Modules.Ranks[rank]}] ${name}`;
+        if (rank !== Modules.Ranks.None) name = `[${Modules.RankTitles[rank]}] ${name}`;
 
         // Add to the chatbox, if global, we prefix it to the entity's name.
         this.input.chatHandler.add(name, info.message, info.colour);
@@ -801,7 +803,12 @@ export default class Connection {
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
-                return this.input.chatHandler.add('WORLD', info.message, info.colour, true);
+                return this.input.chatHandler.add(
+                    info.source || 'WORLD',
+                    info.message,
+                    info.colour,
+                    true
+                );
             }
 
             case Opcodes.Notification.Popup: {
@@ -1003,6 +1010,50 @@ export default class Connection {
 
         this.game.player.dead = false;
         this.game.player.teleporting = false;
+    }
+
+    /**
+     * Handles the logic for trading between two players. Contains information
+     * about what is going on and what to do with the interface.
+     * @param opcode The type of trade action to perform.
+     * @param info Information about the trade.
+     */
+
+    private handleTrade(opcode: Opcodes.Trade, info: TradePacket): void {
+        switch (opcode) {
+            case Opcodes.Trade.Open: {
+                let otherPlayer = this.entities.get<Player>(info.instance!);
+
+                if (!otherPlayer) return;
+
+                return this.menu.getTrade().show(this.game.player, otherPlayer);
+            }
+
+            case Opcodes.Trade.Close: {
+                return this.menu.getTrade().hide(true);
+            }
+
+            case Opcodes.Trade.Add: {
+                return this.menu
+                    .getTrade()
+                    .add(
+                        info.index!,
+                        info.count!,
+                        info.key!,
+                        info.instance !== this.game.player.instance
+                    );
+            }
+
+            case Opcodes.Trade.Remove: {
+                return this.menu
+                    .getTrade()
+                    .remove(info.index!, info.instance !== this.game.player.instance);
+            }
+
+            case Opcodes.Trade.Accept: {
+                return this.menu.getTrade().accept(info.message);
+            }
+        }
     }
 
     /**
@@ -1353,7 +1404,7 @@ export default class Connection {
      */
 
     private handleRank(rank: Modules.Ranks): void {
-        this.game.player.rank = rank;
+        this.game.player.setRank(rank);
     }
 
     /**

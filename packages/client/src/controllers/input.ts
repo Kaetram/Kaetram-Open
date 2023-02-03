@@ -10,6 +10,7 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Interact from '../menu/interact';
 import type Friends from '../menu/friends';
+import type Inventory from '../menu/inventory';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
@@ -17,6 +18,7 @@ import type Game from '../game';
 import type Camera from '../renderer/camera';
 import type App from '../app';
 import type Map from '../map/map';
+import type Trade from '../menu/trade';
 
 interface TargetData {
     sprite: Sprite;
@@ -37,6 +39,8 @@ export default class InputController {
     public player: Player;
     private friends: Friends;
     private interact: Interact;
+    private inventory: Inventory;
+    private trade: Trade;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -72,7 +76,9 @@ export default class InputController {
         this.camera = game.camera;
         this.player = game.player;
         this.friends = game.menu.getFriends();
+        this.inventory = game.menu.getInventory();
         this.interact = game.menu.getInteract();
+        this.trade = game.menu.getTrade();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -170,7 +176,13 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
-        // Popups are UI elements that are displayed on top of the game.
+        // Redirect input to the trade handler if the trade input is visible.
+        if (this.trade.isInputDialogueVisible()) return this.trade.keyDown(event.key);
+
+        // Redirect input to the inventory handler if the inventory is visible.
+        if (this.inventory.isDropDialogVisible()) return this.inventory.keyDown(event.key);
+
+        // Redirect input to the friends handler if the friends input is visible.
         if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 
         // Redirect input to the chat handler if the chat input is visible.
@@ -328,6 +340,7 @@ export default class InputController {
             }
 
             case Modules.MenuActions.Trade: {
+                this.game.player.trade(this.interactEntity);
                 break;
             }
 
@@ -414,10 +427,11 @@ export default class InputController {
                 if (this.isAttackable(this.entity))
                     (this.entity as Character).addAttacker(this.player);
 
-                this.game.socket.send(Packets.Target, [
-                    Opcodes.Target.Attack,
-                    this.entity.instance
-                ]);
+                if (this.player.isRanged())
+                    this.game.socket.send(Packets.Target, [
+                        Opcodes.Target.Attack,
+                        this.entity.instance
+                    ]);
                 return;
             }
         }

@@ -143,11 +143,13 @@ export default class Equipments extends Menu {
             attackStats.crush += equipment.attackStats.crush;
             attackStats.slash += equipment.attackStats.slash;
             attackStats.stab += equipment.attackStats.stab;
+            attackStats.archery += equipment.attackStats.archery;
             attackStats.magic += equipment.attackStats.magic;
 
             defenseStats.crush += equipment.defenseStats.crush;
             defenseStats.slash += equipment.defenseStats.slash;
             defenseStats.stab += equipment.defenseStats.stab;
+            defenseStats.archery += equipment.defenseStats.archery;
             defenseStats.magic += equipment.defenseStats.magic;
 
             bonuses.accuracy += equipment.bonuses.accuracy;
@@ -156,7 +158,7 @@ export default class Equipments extends Menu {
             bonuses.magic += equipment.bonuses.magic;
         });
 
-        let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
+        let stats = ['Crush', 'Slash', 'Stab', 'Archery', 'Magic'],
             bonsuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
 
         _.each(stats, (stat: string) => {

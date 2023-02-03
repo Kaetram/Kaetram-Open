@@ -3,8 +3,8 @@ import Slot from './slot';
 import Item from '../../../objects/item';
 
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
-import type { Modules } from '@kaetram/common/network';
 import type { ContainerItem } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
 
@@ -15,7 +15,9 @@ interface SerializedContainer {
 export default abstract class Container {
     protected slots: Slot[] = [];
 
-    private loadCallback?: () => void;
+    protected ignoreMaxStackSize = false;
+
+    private loadCallback?: (isBankLoad?: boolean) => void;
 
     protected addCallback?: (slot: Slot) => void;
     protected removeCallback?: (
@@ -26,7 +28,7 @@ export default abstract class Container {
     ) => void;
     protected notifyCallback?: (message: string) => void;
 
-    public constructor(public type: Modules.ContainerType, protected size: number) {
+    public constructor(public type: Modules.ContainerType, public size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
     }
@@ -41,10 +43,10 @@ export default abstract class Container {
             // Create a new item instance so that the item's data is created.
             if (!item.key) return;
 
-            this.slots[item.index].update(this.getItem(item));
+            this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
         });
 
-        this.loadCallback?.();
+        this.loadCallback?.(this.type === Modules.ContainerType.Bank);
     }
 
     /**
@@ -62,35 +64,39 @@ export default abstract class Container {
      * @returns Whether or not adding was successful.
      */
 
-    public add(item: Item): boolean {
+    public add(item: Item): Slot | undefined {
         // Return whether or not the adding was successful.
         let added = false,
             slot: Slot | undefined;
 
         // Item is stackable and we already have it.
-        if (item.stackable && this.canHold(item)) {
+        if ((item.stackable && this.canHold(item)) || this.ignoreMaxStackSize) {
             slot = this.find(item)!;
 
             added = !!slot?.add(item.count);
         }
 
-        // All slots are taken.
-        if (!this.hasSpace()) return false;
-
         // Update the next empty slot.
         if (!added) {
+            // All slots are taken and nothing was stacked, stop here.
             slot = this.getEmptySlot();
 
             if (slot) {
-                slot.update(item);
+                slot.update(item, this.ignoreMaxStackSize);
+
+                // Recursively add items until we exhaust the count.
+                if (item.count > item.maxStackSize) {
+                    item.count -= item.maxStackSize;
+                    this.add(item);
+                }
 
                 added = true;
-            }
+            } else return;
         }
 
         if (added) this.addCallback?.(slot!);
 
-        return added;
+        return slot;
     }
 
     /**
@@ -163,16 +169,25 @@ export default abstract class Container {
     /**
      * Moves an item from the `container` parameter into the current
      * container instance.
-     * @param container Container instance we are removing data from.
+     * @param toContainer Container instance we are removing data from.
      * @param index Index in the container we are grabbing data from.
      */
 
-    public move(container: Container, index: number): void {
-        if (container.get(index).isEmpty()) return;
+    public move(fromIndex: number, toContainer: Container, toIndex?: number): void {
+        if (this.get(fromIndex).isEmpty()) return;
 
-        let item = container.getItem(container.get(index));
+        let item = this.getItem(this.get(fromIndex));
 
-        if (this.add(item)) container.remove(index, item.count);
+        // Prevent an item from being moved if it exceeds the max stack size.
+        if (item.count > item.maxStackSize) item.count = item.maxStackSize;
+
+        let slot = toContainer.add(item);
+
+        if (slot) {
+            this.remove(fromIndex, item.count);
+
+            if (toIndex) toContainer.swap(slot.index, toIndex);
+        }
     }
 
     /**
@@ -259,7 +274,7 @@ export default abstract class Container {
     /**
      * Checks if the container contains an item (and a count). If it's not stackable,
      * we must count the amount of items in the container.
-     * @param key The key of the item we are looking fsor.
+     * @param key The key of the item we are looking for.
      * @param count Optional amount of items we are looking for.
      */
 
@@ -295,6 +310,14 @@ export default abstract class Container {
     }
 
     /**
+     * @returns The total amount of empty slots.
+     */
+
+    public getEmptySlots(): number {
+        return this.slots.filter((slot) => !slot.key).length;
+    }
+
+    /**
      * Iterates through the slots and returns each one.
      * @param callback Slot currently being iterated.
      */
@@ -305,13 +328,14 @@ export default abstract class Container {
 
     /**
      * Iterates through each slot and serializes it.
+     * @param clientInfo Whether or not we are sending this data to the client.
      * @returns An array of serialized slot data.
      */
 
-    public serialize(): SerializedContainer {
+    public serialize(clientInfo = false): SerializedContainer {
         let slots: SlotData[] = [];
 
-        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize()));
+        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize(clientInfo)));
 
         return { slots };
     }

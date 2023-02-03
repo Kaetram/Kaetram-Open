@@ -185,7 +185,7 @@ export default class Commands {
 
             case 'kick':
             case 'forcekick': {
-                let username = blocks.shift()!;
+                let username = blocks.join(' ');
 
                 if (!username)
                     return this.player.notify(`Malformed command, expected /kick username`);
@@ -243,11 +243,9 @@ export default class Commands {
 
                 if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 
-                if (item.stackable) {
-                    item.count = count;
+                item.count = count;
 
-                    this.player.inventory.add(item);
-                } else for (let i = 0; i < count; i++) this.player.inventory.add(item);
+                this.player.inventory.add(item);
 
                 return;
             }
@@ -421,11 +419,14 @@ export default class Commands {
             }
 
             case 'setlevel': {
-                username = blocks.shift()!;
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
+                username = blocks.join(' ');
 
-                if (!username || !key || !x) return this.player.notify('Invalid command.');
+                if (!username || !key || !x)
+                    return this.player.notify(
+                        'Malformed command, expected /setlevel [skill] [level] [username]'
+                    );
 
                 player = this.world.getPlayerByName(username);
 
@@ -588,7 +589,7 @@ export default class Commands {
             }
 
             case 'kill': {
-                username = blocks.shift()!;
+                username = blocks.join(' ');
 
                 if (!username)
                     return this.player.notify(
@@ -827,9 +828,9 @@ export default class Commands {
             }
 
             case 'setrank': {
-                username = blocks.shift()!;
-
                 let rankText = blocks.shift()!;
+
+                username = blocks.join(' ');
 
                 if (!username || !rankText)
                     return this.player.notify(`Malformed command, expected /setrank username rank`);
@@ -837,11 +838,14 @@ export default class Commands {
                 player = this.world.getPlayerByName(username);
 
                 if (!player)
-                    return this.player.notify(`Could not find player with name: ${username}`);
+                    return this.world.database.setRank(
+                        username,
+                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+                    );
 
                 let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
 
-                if (!rank) return this.player.notify(`Invalid rank: ${rankText}`);
+                if (isNaN(rank)) return this.player.notify(`Invalid rank: ${rankText}`);
 
                 player.setRank(rank);
                 player.sync();

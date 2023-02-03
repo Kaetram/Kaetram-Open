@@ -54,7 +54,7 @@ class Main {
      * @param connection The new connection we received from the WebSocket.
      */
     private handleConnection(connection: Connection): void {
-        if (!this.ready) {
+        if (!this.ready || !this.world?.allowConnections) {
             connection.reject('disallowed');
             return;
         }

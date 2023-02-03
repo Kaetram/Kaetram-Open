@@ -76,7 +76,7 @@ export default abstract class Quest {
      */
 
     public loaded(): void {
-        log.debug(`[${this.key}] Uninitialized loaded();`);
+        //log.debug(`[${this.key}] Uninitialized loaded();`);
     }
 
     /**
@@ -332,6 +332,22 @@ export default abstract class Quest {
 
     public isHiddenNPC(key: string): boolean {
         return this.hideNPCs.includes(key);
+    }
+
+    /**
+     * @returns Whether or not the current stage is a kill task.
+     */
+
+    public isKillTask(): boolean {
+        return this.stageData.task === 'kill';
+    }
+
+    /**
+     * @returns Whether or not the current stage is a cut tree task.
+     */
+
+    public isCutTreeTask(): boolean {
+        return this.stageData.task === 'tree';
     }
 
     /**

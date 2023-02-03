@@ -11,7 +11,8 @@ import {
     Points,
     Poison as PoisonPacket,
     Quest,
-    Skill
+    Skill,
+    Trade
 } from '../../../../network/packets';
 
 import config from '@kaetram/common/config';
@@ -29,7 +30,6 @@ import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
-import type Mob from '../mob/mob';
 import type Player from './player';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
@@ -67,6 +67,7 @@ export default class Handler {
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.bank.onLoaded(this.handleBank.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
         this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
@@ -95,6 +96,12 @@ export default class Handler {
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
         this.player.abilities.onToggle(this.handleAbilityToggle.bind(this));
+
+        // Trade callbacks
+        this.player.trade.onOpen(this.handleTradeOpen.bind(this));
+        this.player.trade.onAdd(this.handleTradeAdd.bind(this));
+        this.player.trade.onRemove(this.handleTradeRemove.bind(this));
+        this.player.trade.onAccept(this.handleTradeAccept.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -140,6 +147,8 @@ export default class Handler {
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
+        this.player.trade.close();
+
         this.player.combat.stop();
 
         this.player.skills.stop();
@@ -183,6 +192,9 @@ export default class Handler {
             true
         );
 
+        // Clear the player's target.
+        this.player.damageTable = {};
+
         // Remove the poison status.
         this.player.setPoison();
 
@@ -220,11 +232,9 @@ export default class Handler {
                 return this.player.notify('You are low on mana, your attacks will be weaker.');
 
             this.player.mana.decrement(manaCost);
-
-            return;
         }
 
-        if (this.player.isRanged()) {
+        if (this.player.isArcher()) {
             if (!this.player.hasArrows())
                 return this.player.notify('You do not have any arrows to shoot.');
 
@@ -378,6 +388,45 @@ export default class Handler {
     }
 
     /**
+     * Callback for when the trade is opened. Relays a message to the player.
+     * @param instance The instance of the player we are trading with.
+     */
+
+    private handleTradeOpen(instance: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Open, { instance }));
+    }
+
+    /**
+     * Callback for when an item is added to the trade.
+     * @param instance The instance of the player who is adding the item.
+     * @param index The index of the item (in the inventory) that we are adding.
+     * @param count The amount of the item we are adding.
+     */
+
+    private handleTradeAdd(instance: string, index: number, count: number, key: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Add, { instance, index, count, key }));
+    }
+
+    /**
+     * Removes an item from the trade.
+     * @param instance The instance of the player who is removing the item.
+     * @param index The index of the item in the trade screen that we are removing.
+     */
+
+    private handleTradeRemove(instance: string, index: number): void {
+        this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
+    }
+
+    /**
+     * Relays a message to the client that the trade has been accepted by one of the players.
+     * @param message The message to display in the trade status window.
+     */
+
+    private handleTradeAccept(message?: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
+    }
+
+    /**
      * Callback for when the inventory is loaded. Relay message to the client.
      */
 
@@ -386,7 +435,26 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                data: this.player.inventory.serialize()
+                data: this.player.inventory.serialize(true)
+            })
+        );
+    }
+
+    /**
+     * Callback for when the bank is loaded. Relay message to the client.
+     * @param isBankLoad Parameter used to skip sending container data when we first
+     * load the bank from the database. Bank information is sent on-demand, we need
+     * this parameter for when we swap container slots.
+     */
+
+    private handleBank(isBankLoad = false): void {
+        if (isBankLoad) return;
+
+        // Send Batch packet to the client.
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Bank,
+                data: this.player.bank.serialize(true)
             })
         );
     }
@@ -429,7 +497,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -495,7 +563,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -581,7 +649,7 @@ export default class Handler {
 
         switch (npc.role) {
             case 'banker': {
-                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
                 return;
             }
             case 'enchanter': {
