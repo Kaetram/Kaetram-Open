@@ -224,8 +224,8 @@ export let RankColours = {
 
 export let RankTitles = {
     [Ranks.None]: '',
-    [Ranks.Moderator]: 'Moderator',
-    [Ranks.Admin]: 'Administrator',
+    [Ranks.Moderator]: 'Mod',
+    [Ranks.Admin]: 'Admin',
     [Ranks.Veteran]: 'Veteran',
     [Ranks.Patron]: 'Patron',
     [Ranks.Artist]: 'Artist',
