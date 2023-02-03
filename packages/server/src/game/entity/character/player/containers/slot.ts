@@ -21,7 +21,7 @@ export default class Slot {
     public constructor(
         public index: number,
         public key = '',
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
