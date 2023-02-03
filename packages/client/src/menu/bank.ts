@@ -2,6 +2,7 @@ import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
+import { onDragDrop } from '../utils/press';
 
 import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
@@ -19,13 +20,6 @@ type SelectCallback = (
 export default class Bank extends Menu {
     private bankList: HTMLUListElement = document.querySelector('#bank-slot > ul')!;
     private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots > ul')!;
-
-    private selectedContainer: Modules.ContainerType = Modules.ContainerType.Bank;
-    private selectedSlot = -1;
-
-    private isTouchDragging = false;
-    private touchDragTimeout?: number;
-    private dragClone: HTMLElement | undefined;
 
     private selectCallback?: SelectCallback;
 
@@ -85,17 +79,27 @@ export default class Bank extends Menu {
             ),
             item = slot.querySelector<HTMLDivElement>('.item-slot')!;
 
-        slot.addEventListener('dragstart', (event) => this.dragStart(event, index, container));
-        slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event));
-        slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
-        slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
-
-        slot.addEventListener('touchstart', () => this.touchStart(index, container));
-        slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
-        slot.addEventListener('touchcancel', () => this.touchCancel(item));
-        slot.addEventListener('touchend', (event) => this.touchEnd(event, container, index, item));
+        onDragDrop(item, this.handleHold.bind(this), () =>
+            this.inventory.isEmpty(this.getElement(index, container))
+        );
 
         return slot;
+    }
+
+    private handleHold(clone: HTMLElement, target: HTMLElement): void {
+        let fromContainer = clone?.dataset?.type,
+            fromIndex = clone?.dataset?.index,
+            toContainer = target?.dataset?.type,
+            toIndex = target?.dataset?.index;
+
+        if (!fromContainer || !fromIndex || !toContainer || !toIndex) return;
+
+        this.select(
+            parseInt(fromContainer),
+            parseInt(fromIndex),
+            parseInt(toContainer),
+            parseInt(toIndex)
+        );
     }
 
     /**
@@ -206,162 +210,6 @@ export default class Bank extends Menu {
 
     public override hide(): void {
         super.hide();
-    }
-
-    /**
-     * Event handler for when a slot begins the dragging and dropping
-     * process. We update the current index of the slot that is being
-     * selected for later use.
-     * @param index The index of the slot being dragged.
-     */
-
-    private dragStart(event: Event, index: number, container: Modules.ContainerType): void {
-        if (this.inventory.isEmpty(this.getElement(index, container))) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            return;
-        }
-
-        this.selectedSlot = index;
-        this.selectedContainer = container;
-    }
-
-    /**
-     * The drop event within the drag and drop actions. The target represents
-     * the slot that the item is being dropped into.
-     * @param event Contains event data about the target.
-     */
-
-    private dragDrop(event: DragEvent): void {
-        let element = event.target as HTMLElement,
-            toContainer = element?.dataset?.type,
-            toIndex = element?.dataset?.index;
-
-        if (!element) return;
-
-        // Remove the selected slot class property.
-        element.classList.remove('item-slot-focused');
-
-        if (this.selectedSlot === -1) return;
-
-        this.select(
-            this.selectedContainer,
-            this.selectedSlot,
-            parseInt(toContainer!),
-            parseInt(toIndex!)
-        );
-
-        // Reset the selected slot after.
-        this.selectedSlot = -1;
-    }
-
-    /**
-     * Event handler for when a slot is being dragged over (but not dropped).
-     * We use this to give the user feedback on which slot they are hovering.
-     * @param event Contains event data and the slot element that is being hovered.
-     */
-
-    private dragOver(event: DragEvent): void {
-        // Check that a target exists firstly.
-        if (!event.target || !(event.target as HTMLElement).draggable) return;
-
-        event.preventDefault();
-
-        // Add the slot focused class property.
-        (event.target as HTMLElement).classList.add('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when an item being dragged exits a valid slot area.
-     * @param event Contains the target slot that is exited.
-     */
-
-    private dragLeave(event: DragEvent): void {
-        // Remove the slot focused class.
-        (event.target as HTMLElement).classList.remove('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when a slot begins being touched on a mobile device.
-     * @param index Index of the slot being touched.
-     */
-
-    private touchStart(index: number, container: Modules.ContainerType): void {
-        if (this.inventory.isEmpty(this.getElement(index, container))) return;
-
-        this.selectedSlot = index;
-        this.selectedContainer = container;
-
-        this.touchDragTimeout = window.setTimeout(() => {
-            this.isTouchDragging = true;
-        }, 250);
-    }
-
-    /**
-     * Event handler for when a slot is being moved on a mobile device.
-     * @param event Contains event data about the slot being moved.
-     * @param item The item being moved.
-     */
-
-    private touchMove(event: TouchEvent, item: HTMLDivElement) {
-        if (this.touchDragTimeout) clearTimeout(this.touchDragTimeout);
-        if (!this.isTouchDragging || this.selectedSlot === -1) return;
-
-        let [touch] = event.touches;
-
-        item.classList.add('item-slot-focused');
-
-        this.dragClone ??= item.cloneNode(true) as HTMLElement;
-
-        this.dragClone.style.position = 'absolute';
-        this.dragClone.style.top = `${touch.clientY - item.clientHeight / 2}px`;
-        this.dragClone.style.left = `${touch.clientX - item.clientWidth / 2}px`;
-        this.dragClone.style.opacity = '0.75';
-
-        document.querySelector('#game-container')?.append(this.dragClone);
-    }
-
-    /**
-     * Event handler for when a slot touch is being cancelled.
-     * @param item The item being cancelled.
-     */
-
-    private touchCancel(item: HTMLDivElement) {
-        if (this.touchDragTimeout) clearTimeout(this.touchDragTimeout);
-        this.isTouchDragging = false;
-
-        this.dragClone?.remove();
-        this.dragClone = undefined;
-
-        item.classList.remove('item-slot-focused');
-
-        this.selectedSlot = -1;
-    }
-
-    /**
-     * Event handler for when a slot touch is being ended.
-     * @param event Contains event data about the slot being ended.
-     * @param item The item being ended.
-     */
-
-    private touchEnd(
-        event: TouchEvent,
-        fromContainer: Modules.ContainerType,
-        fromIndex: number,
-        item: HTMLDivElement
-    ) {
-        if (!this.isTouchDragging) return;
-        this.touchCancel(item);
-
-        let [touch] = event.changedTouches,
-            element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement | null,
-            toContainer = element?.dataset?.type,
-            toIndex = element?.dataset?.index;
-
-        if (!element || !toContainer || !toIndex) return;
-
-        this.select(fromContainer, fromIndex, parseInt(toContainer), parseInt(toIndex));
     }
 
     private getElement(index: number, container: Modules.ContainerType): HTMLElement {
