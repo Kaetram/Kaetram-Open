@@ -947,10 +947,14 @@ export default class Player extends Character {
 
     public getMovementSpeed(): number {
         let speed = Modules.Defaults.MOVEMENT_SPEED, // Start with default.
-            armour = this.equipment.getArmour();
+            armour = this.equipment.getArmour(),
+            boots = this.equipment.getBoots();
 
         // Update the movement speed with that of the armour currently wielded.
-        if (armour.hasMovementModifier()) speed = armour.movementSpeed;
+        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
+
+        // Check the boots for movement modifiers
+        if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
         // Apply a 10% speed boost if the player running effect is present.
         if (this.running) speed = Math.floor(speed * 0.9);
@@ -1720,7 +1724,7 @@ export default class Player extends Character {
 
     public override getProjectileName(): string {
         // Use the projectile name of the arrows if the player is using ranged weapons.
-        if (this.isRanged()) return this.equipment.getArrows().projectileName;
+        if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
     }
