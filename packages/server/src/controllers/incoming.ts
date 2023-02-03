@@ -284,7 +284,7 @@ export default class Incoming {
                     playerX!,
                     playerY!,
                     targetInstance!,
-                    orientation
+                    orientation!
                 );
             }
 
@@ -392,17 +392,27 @@ export default class Incoming {
             case Opcodes.Container.Select: {
                 return this.player.handleContainerSelect(
                     packet.type,
-                    packet.index!,
-                    packet.subType
+                    packet.fromContainer,
+                    packet.fromIndex!,
+                    packet.toContainer!,
+                    packet.toIndex
                 );
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerRemove(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerSwap(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
         }
     }
