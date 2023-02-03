@@ -578,25 +578,27 @@ export default class Player extends Character {
 
     public handleContainerSelect(
         type: Modules.ContainerType,
-        index: number,
-        subType?: Modules.ContainerType
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
     ): void {
         let item: Item;
 
         switch (type) {
             case Modules.ContainerType.Inventory: {
-                item = this.inventory.getItem(this.inventory.get(index));
+                item = this.inventory.getItem(this.inventory.get(fromIndex));
 
                 if (!item) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
-                    this.inventory.remove(index, 1);
+                    this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(index, item.count);
+                    this.inventory.remove(fromIndex, item.count);
                     this.equipment.equip(item);
                 }
 
@@ -604,9 +606,14 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
-                if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
-                else if (subType === Modules.ContainerType.Inventory)
-                    this.bank.move(this.inventory, index);
+                // TODO: FAFO
+                if (toContainer === Modules.ContainerType.Inventory && toIndex) return;
+
+                let from =
+                        fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
+                    to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
+
+                from.move(fromIndex, to, toIndex);
 
                 break;
             }
