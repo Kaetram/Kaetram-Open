@@ -371,7 +371,7 @@ export default class Inventory extends Menu {
         // Add the item stats and name
         slotElement.name = slot.name!;
         slotElement.count = slot.count!;
-        slotElement.description = slot.description!;
+        slotElement.description = this.formatDescription(slot.name!, slot.count, slot.description!);
         slotElement.attackStats = slot.attackStats!;
         slotElement.defenseStats = slot.defenseStats!;
         slotElement.bonuses = slot.bonuses!;
@@ -438,6 +438,23 @@ export default class Inventory extends Menu {
         this.selectedSlot = -1;
 
         this.actions.hide();
+    }
+
+    /**
+     * Incldues the exact count in the description of an item. Applies for things like
+     * gold, tokens, or large stackable items.
+     * @param name The name of the item
+     * @param count The count of the item
+     * @param description The original description of the item.
+     * @returns String containing the formatted description.
+     */
+
+    private formatDescription(name: string, count: number, description: string): string {
+        return count < 1000
+            ? description
+            : `${description} You have a stack of ${count.toLocaleString(
+                  'en-US'
+              )} ${name.toLowerCase()}. `;
     }
 
     /**
