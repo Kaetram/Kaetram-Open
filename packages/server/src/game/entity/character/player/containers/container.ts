@@ -186,7 +186,7 @@ export default abstract class Container {
         if (slot) {
             this.remove(fromIndex, item.count);
 
-            if (toIndex) toContainer.swap(slot.index, toIndex);
+            if (toIndex !== undefined) toContainer.swap(slot.index, toIndex);
         }
     }
 
