@@ -47,8 +47,7 @@ export default {
     createSlot(
         type: Modules.ContainerType,
         index: number,
-        clickCallback?: (type: Modules.ContainerType, index: number) => void,
-        contextMenuCallback?: (type: Modules.ContainerType, index: number) => void
+        clickCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
@@ -57,8 +56,6 @@ export default {
 
         slot.dataset.type = `${type}`;
         slot.dataset.index = `${index}`;
-
-        slot.draggable = true;
 
         // Sets the class of the bank slot.
         slot.classList.add('item-slot');
@@ -77,12 +74,6 @@ export default {
         slot.append(count);
 
         if (clickCallback) slot.addEventListener('click', () => clickCallback(type, index));
-        if (contextMenuCallback)
-            slot.addEventListener('contextmenu', (event) => {
-                event.preventDefault();
-
-                contextMenuCallback(type, index);
-            });
 
         // Appends the bank slot onto the list element.
         listElement.append(slot);
