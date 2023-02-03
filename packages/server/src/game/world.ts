@@ -52,6 +52,8 @@ export default class World {
 
     private maxPlayers = config.maxPlayers;
 
+    public allowConnections = true;
+
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {

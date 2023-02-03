@@ -61,6 +61,9 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
+        // Temporarily add a limit until the formula is improved.
+        if (accuracy > 3.5) accuracy = 3.5;
+
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
 
@@ -191,7 +194,7 @@ export default {
      */
 
     getMaxMana(level: number): number {
-        return 10 + level * 8;
+        return 20 + level * 24;
     },
 
     /**

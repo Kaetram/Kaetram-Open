@@ -1,3 +1,5 @@
+@use '../../abstracts/media';
+
 #buttons {
     cursor: url('/img/3/hand.png'), auto;
 
@@ -148,5 +150,32 @@
 
     &.active, &:active {
         background-position-x: -1176px;
+    }
+}
+
+// Big buttons with text on them
+.accept-button {
+    position: absolute;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        .accept-button {
+            width: 96px * $i;
+            height: 27px * $i;
+            background: url('/img/#{$i}/buttons.png') -480px * $i 0 no-repeat;
+
+            &:hover {
+                background-position-y: -27px * $i;
+            }
+
+            &.active, &:active {
+                background-position-y: -54px * $i;
+            }
+
+            &.disabled {
+                background-position-y: -81px * $i;
+            }
+        }
     }
 }

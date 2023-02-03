@@ -24,7 +24,8 @@ import type {
     ReadyPacket,
     StorePacket,
     WarpPacket,
-    FriendsPacket
+    FriendsPacket,
+    TradePacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -283,7 +284,7 @@ export default class Incoming {
                     playerX!,
                     playerY!,
                     targetInstance!,
-                    orientation
+                    orientation!
                 );
             }
 
@@ -320,21 +321,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                let target = this.entities.get(instance) as Character;
-
-                if (!target || target.dead || !this.canAttack(this.player, target)) return;
-
-                this.player.cheatScore = 0;
-
-                this.player.combat.attack(target);
-
-                break;
-            }
-
-            case Opcodes.Target.None: {
-                // Nothing do to here.
-
-                break;
+                return this.player.handleTargetAttack(instance);
             }
 
             case Opcodes.Target.Object: {
@@ -405,17 +392,27 @@ export default class Incoming {
             case Opcodes.Container.Select: {
                 return this.player.handleContainerSelect(
                     packet.type,
-                    packet.index!,
-                    packet.subType
+                    packet.fromContainer,
+                    packet.fromIndex!,
+                    packet.toContainer!,
+                    packet.toIndex
                 );
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerRemove(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.index!, packet.value!);
+                return this.player.handleContainerSwap(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
         }
     }
@@ -438,27 +435,30 @@ export default class Incoming {
         }
     }
 
-    private handleTrade(message: [Opcodes.Trade, string]): void {
-        let [opcode] = message,
-            oPlayer = this.entities.get(message[1]);
-
-        if (!oPlayer) return;
-
-        switch (opcode) {
+    private handleTrade(packet: TradePacket): void {
+        switch (packet.opcode) {
             case Opcodes.Trade.Request: {
-                break;
+                let oPlayer = this.entities.get(packet.instance!);
+
+                if (!oPlayer?.isPlayer()) return;
+
+                return this.player.trade.request(oPlayer);
             }
 
             case Opcodes.Trade.Accept: {
-                break;
-            }
-
-            case Opcodes.Trade.Decline: {
-                break;
+                return this.player.trade.accept();
             }
 
             case Opcodes.Trade.Close: {
-                break;
+                return this.player.trade.close();
+            }
+
+            case Opcodes.Trade.Add: {
+                return this.player.trade.add(packet.index!, packet.count);
+            }
+
+            case Opcodes.Trade.Remove: {
+                return this.player.trade.remove(packet.index!);
             }
         }
     }
@@ -556,35 +556,6 @@ export default class Incoming {
 
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
-        this.player.notify(entity.description);
-    }
-
-    /**
-     * Used to prevent client-sided manipulation. The client will send the packet to start combat
-     * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
-     */
-    private canAttack(attacker: Character, target: Character): boolean {
-        if (attacker.isMob() || target.isMob()) return true;
-
-        // If either of the entities are not players, we don't want to handle this.
-        if (!attacker.isPlayer() || !target.isPlayer()) return false;
-
-        // Prevent cheaters from being targeted by other players.
-        if (target.isCheater()) {
-            attacker.notify(`That player is a cheater, you don't wanna attack someone like that!`);
-
-            return false;
-        }
-
-        // Prevent cheaters from starting a fight with other players.
-        if (attacker.isCheater()) {
-            attacker.notify(
-                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
-            );
-
-            return false;
-        }
-
-        return attacker.pvp && target.pvp && attacker.team !== target.team;
+        this.player.notify(entity.getDescription());
     }
 }

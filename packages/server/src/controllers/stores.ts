@@ -62,18 +62,19 @@ export default class Stores {
             items: Item[] = [];
 
         _.each(store.items, (item: StoreItem) => {
-            // Skip if an item already exists with the same key.
-            if (_.some(items, { key: item.key }))
-                return log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+            let { key, count, price, stockAmount } = item;
 
-            let storeItem = new Item(item.key, -1, -1, false, item.count);
+            // Skip if an item already exists with the same key.
+            if (_.some(items, { key })) return log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+
+            let storeItem = new Item(key, -1, -1, false, count);
 
             // Assign price if provided, otherwise use default item price.
-            if (item.price) storeItem.price = item.price;
+            if (price) storeItem.price = price;
 
             // Stocking amount and max amount of the item in store.
-            storeItem.stockAmount = item.stockAmount || 1;
-            storeItem.maxCount = item.count;
+            storeItem.stockAmount = stockAmount || 1;
+            storeItem.maxCount = count;
 
             items.push(storeItem);
         });
@@ -109,10 +110,10 @@ export default class Stores {
 
     private stockItems(store: StoreInfo): void {
         _.each(store.items, (item: Item) => {
-            if (item.count >= item.maxCount) return;
+            if (item.count === -1 || item.count >= item.maxCount) return;
 
             // If an alternate optional stock count is provided, increment by that amount.
-            item.count += item.stockAmount;
+            if (item.stockAmount) item.count += item.stockAmount;
         });
     }
 
@@ -164,20 +165,26 @@ export default class Stores {
     public purchase(player: Player, storeKey: string, index: number, count = 1): void {
         if (!this.verifyStore(player, storeKey)) return;
 
-        // First and foremost check the user has enough space.
-        if (!player.inventory.hasSpace()) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
-
         let store = this.stores[storeKey],
             item = store.items[index];
+
+        // Prevent cheaters from buying any of the items.
+        if (player.isCheater()) return player.notify(StoreEn.CHEATER);
+
+        // First and foremost check the user has enough space.
+        if (!player.inventory.hasSpace() && !player.inventory.hasItem(item.key))
+            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Check if item exists
         if (!item)
             return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
-        if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
+        if (item.count !== -1) {
+            if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
 
-        // Prevent buying more than store has stock. Default to max stock.
-        count = item.count < count ? item.count : count;
+            // Prevent buying more than store has stock. Default to max stock.
+            count = item.count < count ? item.count : count;
+        }
 
         // Find total price of item by multiplying count against price.
         let currency = player.inventory.getIndex(store.currency, item.price * count);
@@ -190,16 +197,18 @@ export default class Stores {
         itemToAdd.count = count;
 
         // Add the item to the player's inventory.
-        if (!player.inventory.add(itemToAdd)) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+        if (!player.inventory.add(itemToAdd)) return;
 
-        // Decrement the item count by the amount we are buying.
-        item.count -= count;
+        if (item.count !== -1) {
+            // Decrement the item count by the amount we are buying.
+            item.count -= count;
 
-        // Remove item from store if it is out of stock and not original to the store.
-        if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
-            store.items = _.filter(store.items, (storeItem) => {
-                return storeItem.key !== item.key;
-            });
+            // Remove item from store if it is out of stock and not original to the store.
+            if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
+                store.items = _.filter(store.items, (storeItem) => {
+                    return storeItem.key !== item.key;
+                });
+        }
 
         player.inventory.remove(currency, item.price * count);
 
@@ -255,7 +264,7 @@ export default class Stores {
 
         // Increment the item count or add to store only if the player isn't a cheater :)
         if (!player.isCheater())
-            if (storeItem) storeItem.count += count;
+            if (storeItem?.count) storeItem.count += count;
             else store.items.push(item);
 
         // Sync up new store data to all players.

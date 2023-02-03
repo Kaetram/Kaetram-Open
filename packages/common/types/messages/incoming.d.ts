@@ -1,4 +1,4 @@
-import type { Modules, Opcodes } from '../network';
+import type { Modules, Opcodes } from '../../network';
 
 /**
  * Packet interfaces of data being sent from the client to the server.
@@ -45,15 +45,24 @@ export interface ProjectilePacket {
 export interface ContainerPacket {
     opcode: Opcodes.Container; // The action we're performing.
     type: Modules.ContainerType; // Container the action is taking place in.
-    subType: Modules.ContainerType; // Used by the bank to determine container actions.
-    index?: number;
-    value?: number;
+    fromContainer: Modules.ContainerType; // Container the item is coming from.
+    fromIndex?: number;
+    toContainer?: Modules.ContainerType; // Container the item is going to.
+    toIndex?: number;
+    value?: number; // Can be either the count or the index of the item.
 }
 
 export interface AbilityPacket {
     opcode: Opcodes.Ability;
     key: string;
     index?: number;
+}
+
+export interface TradePacket {
+    opcode: Opcodes.Trade;
+    instance?: string;
+    index?: number;
+    count?: number;
 }
 
 export interface WarpPacket {
@@ -64,7 +73,7 @@ export interface StorePacket {
     opcode: Opcodes.Store;
     key: string; // The shop's key.
     index: number; // Index of the item we are working with.
-    count?: number; // How many of the item we are trying to buy/sell
+    count: number; // How many of the item we are trying to buy/sell
 }
 
 export interface FriendsPacket {

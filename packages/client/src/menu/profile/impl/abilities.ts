@@ -1,5 +1,6 @@
 import log from '../../../lib/log';
 import Menu from '../../menu';
+import QuickSlots from '../../quickslots';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash';
@@ -21,9 +22,11 @@ export default class Abilities extends Menu {
 
     private draggedElement = '';
 
+    private quickSlots: QuickSlots;
+
     private selectCallback?: SelectCallback;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#abilities-page');
 
         // Loads the event listeners for when we click on an ability.
@@ -39,6 +42,14 @@ export default class Abilities extends Menu {
             element.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
             element.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, i));
         }
+
+        // Load the quickslots.
+        this.quickSlots = new QuickSlots(this.player);
+
+        // Redirect the quick slots select callback through this class' select callback.
+        this.quickSlots.onSelect((type: Opcodes.Ability, key: string) =>
+            this.selectCallback?.(type, key)
+        );
     }
 
     /**
@@ -209,6 +220,8 @@ export default class Abilities extends Menu {
         // Toggle the ability if it has been activated.
         if (active) icon.classList.add('active');
         else icon.classList.remove('active');
+
+        this.quickSlots.toggleAbility(key, active);
     }
 
     /**

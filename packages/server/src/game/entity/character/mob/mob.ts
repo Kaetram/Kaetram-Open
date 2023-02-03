@@ -37,7 +37,7 @@ export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
-    public description = '';
+    public description: string | string[] = '';
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
@@ -59,7 +59,7 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = ['ordinary', 'unusual']; // Default drop table for all mobs.
+    private dropTables: string[] = ['ordinary', 'arrows', 'unusual']; // Default drop table for all mobs.
 
     public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
@@ -191,6 +191,7 @@ export default class Mob extends Character {
             crush: this.attackLevel,
             stab: this.attackLevel,
             slash: this.attackLevel,
+            archery: this.attackLevel,
             magic: this.attackLevel
         };
 
@@ -198,6 +199,7 @@ export default class Mob extends Character {
             crush: this.defenseLevel,
             stab: this.defenseLevel,
             slash: this.defenseLevel,
+            archery: this.defenseLevel,
             magic: this.defenseLevel
         };
 
@@ -242,6 +244,7 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
+        this.damageTable = {};
 
         this.combat.stop();
 
@@ -260,6 +263,22 @@ export default class Mob extends Character {
         this.combat.stop();
 
         this.world.entities.removeMob(this);
+    }
+
+    /**
+     * Handles the dropping of items from the mob.
+     * @param owner The leading attacker in the mob's death. Only they will be able
+     * to pick up the drop for a certain period of time.
+     */
+
+    public drop(owner = ''): void {
+        let drops = this.getDrops();
+
+        if (drops.length === 0) return;
+
+        _.each(drops, (drop) =>
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner)
+        );
     }
 
     /**
@@ -356,7 +375,29 @@ export default class Mob extends Character {
 
         let key = keys[Utils.randomInt(0, keys.length - 1)],
             drop = items[key],
-            count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+            count = 1;
+
+        switch (key) {
+            case 'gold': {
+                count = Utils.randomInt(this.level, this.level * 10);
+                break;
+            }
+
+            case 'flask': {
+                count = Utils.randomInt(1, 3);
+                break;
+            }
+
+            case 'arrow': {
+                count = Utils.randomInt(1, this.level);
+                break;
+            }
+
+            case 'firearrow': {
+                count = Utils.randomInt(1, Math.ceil(this.level / 2));
+                break;
+            }
+        }
 
         // Something went wrong when trying to get the item drop.
         if (!drop) {
@@ -367,6 +408,35 @@ export default class Mob extends Character {
         return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
             ? { key, count }
             : undefined;
+    }
+
+    /**
+     * Sorts the damage table by the amount of damage done from highest to lowest.
+     * @returns An array of the damage table sorted by the amount of damage done.
+     * The first element is the instance, the is the damage percentage.
+     */
+
+    public getExperienceTable(): [string, number][] {
+        let sortedTable = Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
+
+        /**
+         * We iterate through each damage amount and extract a percentage of the damage done
+         * to the total health points of the mob. We multiply by the experience to gain a percentage
+         * amount of experience to give to the player. The player with most damage receives all
+         * of the mob's experience. The rest receive fractions.
+         */
+
+        _.each(sortedTable, (entry: [string, number], index: number) => {
+            entry[1] =
+                index === 0
+                    ? this.experience
+                    : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
+
+            // Prevent getting more experience than the mob has (if mob heals and whatnot).
+            if (entry[1] > this.experience) entry[1] = this.experience;
+        });
+
+        return sortedTable;
     }
 
     /**
@@ -485,6 +555,19 @@ export default class Mob extends Character {
         if (this.miniboss) displayInfo.scale = Modules.EntityScale[SpecialEntityTypes.Miniboss];
 
         return displayInfo;
+    }
+
+    /**
+     * Returns the description if it's just a string, otherwise it picks a random description
+     * from the array.
+     * @returns A string containing the description for the mob.
+     */
+
+    public getDescription(): string {
+        if (_.isArray(this.description))
+            return this.description[Utils.randomInt(0, this.description.length - 1)];
+
+        return this.description;
     }
 
     /**

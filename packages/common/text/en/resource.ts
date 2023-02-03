@@ -46,5 +46,6 @@ export default {
                 return 'UNABLE_TO_INTERACT() NOT IMPLEMENTED';
             }
         }
-    }
+    },
+    NO_REASON: 'There is no reason for you to cut this tree.'
 };

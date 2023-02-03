@@ -34,8 +34,26 @@
     }
 }
 
+#store-help {
+    margin: 90% auto;
+    font-family: AdvoCut, sans-serif;
+    text-align: center;
+}
+
 #store-inventory-slots {
-    left: 14%;
+    position: absolute;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+            float: left;
+        }
+    }
 }
 
 #store-sell-slot-return-text,
@@ -51,16 +69,16 @@
 }
 
 .store-item-image {
-    position: relative;
     width: 32px;
     height: 32px;
+    margin-bottom: 4px;
     background-size: cover;
 }
 
 .store-item-name,
 .store-item-count,
 .store-item-price {
-    position: relative;
+    flex: 1;
     font-family: AdvoCut, sans-serif;
     font-size: 12px;
     color: #fff;
@@ -68,11 +86,12 @@
 
 .store-item-name {
     float: left;
+    flex: 4;
 }
 
 .store-item-count,
 .store-item-price {
-    float: right;
+    text-align: right;
 }
 
 @each $size, $i in media.$sizes {
@@ -86,12 +105,39 @@
         #store-container {
             width: 146px * $i;
             height: 134px * $i;
+
+            ul {
+                li {
+                    .item-slot {
+                        margin-bottom: 4px * $i;
+                    }
+                }
+            }
+        }
+
+        #store-help {
+            font-size: 10px * $i;
         }
 
         #store-inventory-container {
             width: 129px * $i;
             height: 155px * $i;
             background: url('/img/#{$i}/containers.png') 0 0;
+        }
+
+        #store-inventory-slots {
+            top: 16px * $i;
+            left: 20px * $i;
+            width: 96px * $i;
+            height: 92px * $i;
+
+            ul {
+                li {
+                    .item-slot {
+                        margin-bottom: 4px * $i;
+                    }
+                }
+            }
         }
 
         #store-sell-slot,
@@ -114,9 +160,17 @@
         }
 
         .store-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            box-sizing: border-box;
             width: 136px * $i;
             height: 22px * $i;
             margin-left: 4px * $i;
+            padding-left: 1em;
+
             background: url('/img/#{$i}/containers.png') -352px * $i -112px * $i;
 
             &:hover {
@@ -131,52 +185,32 @@
         .store-item-name,
         .store-item-count,
         .store-item-price {
-            bottom: 2px * $i;
             font-size: 18px;
         }
 
         .store-item-name {
-            left: 28px * $i;
+            padding-left: 1.5em;
         }
 
-        .store-item-count {
-            right: 38px * $i;
-        }
-
+        .store-item-count,
         .store-item-price {
-            right: 1px * $i;
+            padding-right: 1em;
         }
-
-        .store-item-image {
-            top: 5px * $i;
-            left: 5px * $i;
-        }
-    }
-
-        
-    @media (--lg) {
-        // .store-item-name,
-        // .store-item-count,
-        // .store-item-price {
-        //     font-size: 14px;
-        // }
-
-        // .store-item-image {
-        //     transform: scale(1.5);
-        // }
     }
 
     @media (--md) {
-        .store-item-image {
-            top: 6px;
-            left: 6px;
+        .store-item {
+            padding-left: 5px;
         }
 
         .store-item-name,
         .store-item-count,
         .store-item-price {
-            bottom: 16px;
             font-size: 14px;
+        }
+
+        .store-item-name {
+            padding-left: 1em;
         }
     }
 
@@ -187,19 +221,32 @@
             transform: scale(1.7);
         }
 
-        .store-item-image {
-            top: 3px;
-            left: 3px;
-            width: 16px;
-            height: 16px;
+        #store-inventory-slots {
+            left: 11px;
+            width: 106px;
+    
+            ul {
+                li {
+                    .item-slot {
+                        margin-bottom: 8px
+                    }
+                }
+            }
+        }
+
+        .store-item {
+            padding-left: 3px;
         }
 
         .store-item-name,
         .store-item-count,
         .store-item-price {
-            bottom: 8px;
             font-size: 7px;
         }
-    }
 
+        .store-item-image {
+            width: 16px;
+            height: 16px;
+        }
+    }
 }

@@ -1,177 +1,248 @@
 {
-  "startshop": {
-    "items": [
-      {
-        "key": "flask",
-        "count": 100,
-        "price": 100
-      },
-      {
-        "key": "manaflask",
-        "count": 100,
-        "price": 125
-      },
-      {
-        "key": "burger",
-        "count": 45,
-        "price": 500
-      },
-      {
-        "key": "bigflask",
-        "count": 45,
-        "price": 600
-      },
-      {
-        "key": "bigmanaflask",
-        "count": 45,
-        "price": 550
-      },
-      {
-        "key": "arrow",
-        "count": 10000,
-        "price": 20
-      },
-      {
-        "key": "axe",
-        "count": 20,
-        "price": 75
-      },
-      {
-        "key": "pickaxe",
-        "count": 5,
-        "price": 25000
-      },
-      {
-        "key": "sword2",
-        "count": 5,
-        "price": 100
-      },
-      {
-        "key": "bluesword",
-        "count": 3,
-        "price": 200
-      },
-      {
-        "key": "woodenbow",
-        "count": 5,
-        "price": 100
-      },
-      {
-        "key": "plasticbow",
-        "count": 3,
-        "price": 200
-      },
-      {
-        "key": "mailarcherarmor",
-        "count": 1,
-        "price": 1000
-      },
-      {
-        "key": "pendant1",
-        "count": 1,
-        "price": 50000
-      },
-      {
-        "key": "ring1",
-        "count": 1,
-        "price": 50000
-      }
-    ],
-    "refresh": 30000,
-    "currency": "gold"
-  },
-
-  "forester": {
-    "items": [
-      {
-        "key": "rustedaxe",
-        "count": 15
-      },
-      {
-        "key": "fireaxe",
-        "count": 5
-      },
-      {
-        "key": "poisonaxe",
-        "count": 5
-      },
-      {
-        "key": "cactusaxe",
-        "count": 3
-      },
-      {
-        "key": "goldaxe",
-        "count": 3
-      },
-      {
-        "key": "carnelianaxe",
-        "count": 1
-      }
-    ],
-    "refresh": 120000,
-    "currency": "gold"
-  },
-
-  "sorcerer": {
-    "items": [
-      {
-        "key": "staff",
-        "count": 5
-      },
-      {
-        "key": "lightningstaff",
-        "count": 3
-      },
-      {
-        "key": "naturestaff",
-        "count": 3
-      },
-      {
-        "key": "firestaff",
-        "count": 3
-      },
-      {
-        "key": "icestaff",
-        "count": 3
-      }
-    ],
-    "refresh": 180000,
-    "currency": "gold"
-  },
-
-  "miner": {
-    "items": [
-      {
-        "key": "pickaxe",
-        "count": 5
-      },
-      {
-        "key": "nisocore",
-        "count": 1,
-        "price": 220
-      },
-      {
-        "key": "cinnabarore",
-        "count": 0,
-        "price": 460
-      },
-      {
-        "key": "pytharore",
-        "count": 0,
-        "price": 670
-      },
-      {
-        "key": "goldore",
-        "count": 0,
-        "price": 850
-      },
-      {
-        "key": "iboore",
-        "count": 0,
-        "price": 1250
-      }
-    ],
-    "refresh": 600000,
-    "currency": "gold"
-  }
+    "startshop": {
+        "items": [
+            {
+                "key": "arrow",
+                "price": 5,
+                "count": -1
+            },
+            {
+                "key": "flask",
+                "count": 500,
+                "price": 100
+            },
+            {
+                "key": "manaflask",
+                "count": 500,
+                "price": 125
+            },
+            {
+                "key": "burger",
+                "count": 100,
+                "price": 1500
+            },
+            {
+                "key": "bigflask",
+                "count": 100,
+                "price": 600
+            },
+            {
+                "key": "bigmanaflask",
+                "count": 100,
+                "price": 1550
+            },
+            {
+                "key": "axe",
+                "count": 20,
+                "price": 75
+            },
+            {
+                "key": "pickaxe",
+                "count": 5,
+                "price": 25000
+            },
+            {
+                "key": "sword2",
+                "count": 5,
+                "price": 100
+            },
+            {
+                "key": "bluesword",
+                "count": 3,
+                "price": 200
+            },
+            {
+                "key": "woodenbow",
+                "count": 5,
+                "price": 100
+            },
+            {
+                "key": "plasticbow",
+                "count": 3,
+                "price": 200
+            },
+            {
+                "key": "mailarcherarmor",
+                "count": 1,
+                "price": 1000
+            },
+            {
+                "key": "pendant1",
+                "count": 1
+            },
+            {
+                "key": "ring1",
+                "count": 1
+            }
+        ],
+        "refresh": 30000,
+        "currency": "gold"
+    },
+    "forester": {
+        "items": [
+            {
+                "key": "rustedaxe",
+                "count": 15
+            },
+            {
+                "key": "fireaxe",
+                "count": 5
+            },
+            {
+                "key": "poisonaxe",
+                "count": 5
+            },
+            {
+                "key": "cactusaxe",
+                "count": 3
+            },
+            {
+                "key": "goldaxe",
+                "count": 3
+            },
+            {
+                "key": "carnelianaxe",
+                "count": 1
+            }
+        ],
+        "refresh": 120000,
+        "currency": "gold"
+    },
+    "sorcerer": {
+        "items": [
+            {
+                "key": "staff",
+                "count": 5
+            },
+            {
+                "key": "lightningstaff",
+                "count": 3
+            },
+            {
+                "key": "naturestaff",
+                "count": 3
+            },
+            {
+                "key": "firestaff",
+                "count": 3
+            },
+            {
+                "key": "icestaff",
+                "count": 3
+            }
+        ],
+        "refresh": 180000,
+        "currency": "gold"
+    },
+    "miner": {
+        "items": [
+            {
+                "key": "pickaxe",
+                "count": 5
+            },
+            {
+                "key": "nisocore",
+                "count": 1,
+                "price": 220
+            },
+            {
+                "key": "cinnabarore",
+                "count": 0,
+                "price": 460
+            },
+            {
+                "key": "pytharore",
+                "count": 0,
+                "price": 670
+            },
+            {
+                "key": "goldore",
+                "count": 0,
+                "price": 850
+            },
+            {
+                "key": "iboore",
+                "count": 0,
+                "price": 1250
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
+    },
+    "cosmetics": {
+        "items": [
+            {
+                "key": "taekwondo",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "huniarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "damboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "bluedamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "greendamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "reddamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "robotarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "dinosaurarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "rainbowapro",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "radisharmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "frankensteinarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "pickle",
+                "count": 5,
+                "price": 30
+            },
+            {
+                "key": "catarmor",
+                "count": 5,
+                "price": 45
+            },
+            {
+                "key": "burgerarmor",
+                "count": 5,
+                "price": 90
+            }
+        ],
+        "refresh": 600000,
+        "currency": "token"
+    }
 }

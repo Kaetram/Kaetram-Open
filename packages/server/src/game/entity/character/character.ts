@@ -41,8 +41,11 @@ export default abstract class Character extends Entity {
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
+
     // List of entities attacking this character.
     public attackers: Character[] = []; // Used by combat to determine which character to target.
+
+    public damageTable: { [instance: string]: number } = {};
 
     public stunned = false;
     public moving = false;
@@ -53,7 +56,7 @@ export default abstract class Character extends Entity {
     public teleporting = false;
     public aoe = 0;
 
-    public projectileName = 'projectile-pinearrow';
+    public projectileName = 'projectile-arrow';
 
     public lastStep = -1;
     public lastMovement = -1;
@@ -256,6 +259,9 @@ export default abstract class Character extends Entity {
     public hit(damage: number, attacker?: Character, aoe = 0): void {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.invincible) return;
+
+        // Add an entry to the damage table.
+        if (attacker?.isPlayer()) this.addToDamageTable(attacker, damage);
 
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
@@ -502,6 +508,9 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * `isRanged` is a general function that checks if the character is using
+     * any form of ranged attack. This can be either a bow or magic spells. It is
+     * up to the rest of the logic to establish which is which and what to do.
      * @returns If the `attackRange` is greater than 1.
      */
 
@@ -567,6 +576,49 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Used for validating the attack request from the client. The primary purpose is to validate
+     * or restrict attacking actions depending on certain contexts. If we're attacking a mob then
+     * all is good. If we're dealing with attacking mobs in the tutorial, we need to ensure that
+     * we are allowed to do so. If we're attacking another player, we must check the conditionals
+     * for the PvP status and prevent cheaters from attacking/being attacked by other players.
+     * @param target The target character instance that we are attempting to attack.
+     */
+
+    protected canAttack(target: Character): boolean {
+        if (target.isMob()) {
+            // Restrict the mobs in tutorial from being attacked by the player.
+            if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
+                this.notify('You have no reason to attack these creatures.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // If either of the entities are not players, we don't want to handle this.
+        if (!this.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            this.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (this.isCheater()) {
+            this.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        // TODO - Separate team conditional into its own thing.
+        return this.pvp && target.pvp && this.team !== target.team;
+    }
+
+    /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
      * @param x The new x grid position.
@@ -596,6 +648,23 @@ export default abstract class Character extends Entity {
 
     public addAttacker(attacker: Character): void {
         this.attackers.push(attacker);
+    }
+
+    /**
+     * Adds or creates an entry in the damage table for the attacker.
+     * @param attacker The attacker we are adding to the damage table.
+     * @param damage The damage we are adding to the damage table.
+     */
+
+    public addToDamageTable(attacker: Character, damage: number): void {
+        // Max out the damage to the remaining hit points.
+        if (damage >= this.hitPoints.getHitPoints()) damage = this.hitPoints.getHitPoints();
+
+        // Add a new entry to the damage table if it doesn't exist.
+        if (!(attacker.instance in this.damageTable)) this.damageTable[attacker.instance] = damage;
+
+        // Otherwise, add the damage to the existing entry.
+        this.damageTable[attacker.instance] += damage;
     }
 
     /**

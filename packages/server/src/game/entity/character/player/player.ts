@@ -8,6 +8,7 @@ import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
+import Trade from './trade';
 
 import Mana from '../points/mana';
 import Character from '../character';
@@ -95,6 +96,7 @@ export default class Player extends Character {
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
     public friends: Friends = new Friends(this);
+    public trade: Trade = new Trade(this);
 
     public handler: Handler = new Handler(this);
 
@@ -354,7 +356,7 @@ export default class Player extends Character {
         let population = this.world.getPopulation();
 
         if (population > 1)
-            this.notify(`There are currently ${population} players online.`, '', true);
+            this.notify(`There are currently ${population} players online.`, '', '', true);
     }
 
     /**
@@ -544,6 +546,28 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the action of attacking a target. We receive a packet from the client
+     * with the instance of the target and perform checks prior to initiating combat.
+     * @param instance The instance of the target we are attacking.
+     */
+
+    public handleTargetAttack(instance: string): void {
+        let target = this.entities.get(instance);
+
+        // Ignore if the target is not a character that can actually be attacked.
+        if (!target?.isCharacter() || target.dead) return;
+
+        // Ensure that the player can actually attack the target.
+        if (!this.canAttack(target)) return;
+
+        // Clear the cheat score
+        this.cheatScore = 0;
+
+        // Start combat with the target.
+        this.combat.attack(target);
+    }
+
+    /**
      * Handler for when a container slot is selected at a specified index. Depending
      * on the type, we act accordingly. If we click an inventory, we check if the item
      * is equippable or consumable and remove it from the inventory. If we click a bank
@@ -554,25 +578,27 @@ export default class Player extends Character {
 
     public handleContainerSelect(
         type: Modules.ContainerType,
-        index: number,
-        subType?: Modules.ContainerType
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
     ): void {
         let item: Item;
 
         switch (type) {
             case Modules.ContainerType.Inventory: {
-                item = this.inventory.getItem(this.inventory.get(index));
+                item = this.inventory.getItem(this.inventory.get(fromIndex));
 
                 if (!item) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
-                    this.inventory.remove(index, 1);
+                    this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(index, item.count);
+                    this.inventory.remove(fromIndex, item.count);
                     this.equipment.equip(item);
                 }
 
@@ -580,9 +606,14 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
-                if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
-                else if (subType === Modules.ContainerType.Inventory)
-                    this.bank.move(this.inventory, index);
+                // TODO: FAFO
+                if (toContainer === Modules.ContainerType.Inventory && toIndex) return;
+
+                let from =
+                        fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
+                    to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
+
+                from.move(fromIndex, to, toIndex);
 
                 break;
             }
@@ -595,15 +626,18 @@ export default class Player extends Character {
      * of a door.
      * @param type The type of container we are working with.
      * @param index The index at which we are removing the item.
+     * @param count The amount of items we are removing.
      */
 
-    public handleContainerRemove(type: Modules.ContainerType, index: number, value: number): void {
+    public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
+        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
             return this.notify('You cannot drop items while standing in a door.');
 
-        container.remove(index, value, true);
+        container.remove(index, count, true);
     }
 
     /**
@@ -614,6 +648,9 @@ export default class Player extends Character {
      */
 
     public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
+        if (isNaN(index) || isNaN(value) || index < 0 || value < 0)
+            return log.warning(`[${this.username}] Invalid container swap [${index}, ${value}}]`);
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         container.swap(index, value);
@@ -700,7 +737,7 @@ export default class Player extends Character {
             return this.skills.get(Modules.Skills.Magic).addExperience(experience);
 
         // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (this.isRanged())
+        if (weapon.isArcher())
             return this.skills.get(Modules.Skills.Archery).addExperience(experience);
 
         /**
@@ -804,7 +841,15 @@ export default class Player extends Character {
         this.setOrientation(orientation);
 
         // Player has stopped on top of an item.
-        if (entity?.isItem()) this.inventory.add(entity);
+        if (entity?.isItem()) {
+            // Prevent picking up dropped items that belong to other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(
+                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                );
+
+            this.inventory.add(entity);
+        }
 
         // Update the player's position.
         if (!this.isInvalidMovement()) this.setPosition(x, y);
@@ -1126,6 +1171,8 @@ export default class Player extends Character {
      */
 
     public override hasArrows(): boolean {
+        if (!this.quests.isTutorialFinished()) return true;
+
         return this.equipment.getArrows().count > 0;
     }
 
@@ -1302,6 +1349,14 @@ export default class Player extends Character {
 
     private isInvalidMovement(): boolean {
         return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
+    }
+
+    /**
+     * @returns Whether or not the player is using archery-based weapons.
+     */
+
+    public isArcher(): boolean {
+        return this.equipment.getWeapon().isArcher();
     }
 
     /**
@@ -1497,7 +1552,7 @@ export default class Player extends Character {
      * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour = '', bypass = false): void {
+    public notify(message: string, colour = '', source = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
@@ -1508,7 +1563,8 @@ export default class Player extends Character {
         this.send(
             new Notification(Opcodes.Notification.Text, {
                 message,
-                colour
+                colour,
+                source
             })
         );
 
@@ -1685,7 +1741,7 @@ export default class Player extends Character {
         }
 
         // Return the archery bonus if using ranged weapons.
-        if (this.isRanged()) return this.getBonuses().archery;
+        if (this.isArcher()) return this.getBonuses().archery;
 
         return this.getBonuses().strength;
     }
@@ -1697,8 +1753,8 @@ export default class Player extends Character {
      */
 
     public override getSkillDamageLevel(): number {
-        if (this.equipment.getWeapon().isMagic()) return this.getMagicLevel();
-        if (this.isRanged()) return this.getArcheryLevel();
+        if (this.isMagic()) return this.getMagicLevel();
+        if (this.isArcher()) return this.getArcheryLevel();
 
         return this.getStrengthLevel();
     }
@@ -1723,8 +1779,11 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
+        // Use `Character` default `projectileName` in tutorial.
+        if (!this.quests.isTutorialFinished()) return this.projectileName;
+
         // Use the projectile name of the arrows if the player is using ranged weapons.
-        if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
+        if (this.isArcher()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
     }

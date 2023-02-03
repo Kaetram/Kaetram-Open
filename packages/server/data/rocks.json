@@ -32,5 +32,12 @@
         "experience": 210,
         "difficulty": 160,
         "item": "iboore"
+    },
+
+    "moonrock": {
+        "levelRequirement": 40,
+        "experience": 300,
+        "difficulty": 220,
+        "item": "moonrockore"
     }
 }

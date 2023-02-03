@@ -13,6 +13,7 @@ import { MongoClient } from 'mongodb';
 import type { Db } from 'mongodb';
 import type Player from '../../game/entity/character/player/player';
 import type { PlayerInfo } from './creator';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -216,6 +217,140 @@ export default class MongoDB {
                         );
                     });
                 });
+            });
+    }
+
+    /**
+     * People have this amazing ability to abuse dupes without saying anything, despite the
+     * entire purpose of the alpha being finding bugs and glitches followed by a reset when
+     * moving onto the beta stage. I just cannot see the purpose of hiding dupes. Regardless,
+     * this function will look for anyone who has an excessive amount of an item and remove it
+     * from their inventory and bank. This is a hardcoded function that will be re-purposed
+     * or removed in the future.
+     */
+
+    public cleanDupes(): void {
+        if (!this.hasDatabase()) return;
+
+        let inventoryCollection = this.database.collection('player_inventory'),
+            bankCollection = this.database.collection('player_bank'),
+            staffCount = 0, // how many ice staves we found.
+            // eslint-disable-next-line unicorn/consistent-function-scoping
+            searchSlot = (username: string, slot: SlotData) => {
+                switch (slot?.key) {
+                    case 'gold': {
+                        if (slot.count > 2_000_000) {
+                            log.notice(
+                                `Player ${username} had ${slot.count} gold in their inventory.`
+                            );
+
+                            slot.key = '';
+                            slot.count = 0;
+
+                            this.setRank(username, Modules.Ranks.Cheater);
+                        }
+                        break;
+                    }
+
+                    case 'icestaff': {
+                        if (slot.count > 2) {
+                            log.notice(
+                                `Player ${username} had ${slot.count} ice staves in their bank.`
+                            );
+
+                            slot.key = '';
+                            slot.count = 0;
+
+                            this.setRank(username, Modules.Ranks.Cheater);
+                        }
+
+                        // Inventory non-stacking case
+                        if (staffCount > 0) {
+                            slot.key = '';
+                            slot.count = 0;
+                        }
+
+                        staffCount++;
+                    }
+                }
+            };
+
+        // Check inventory first
+        inventoryCollection
+            .find({})
+            .toArray()
+            .then((inventories) => {
+                _.each(inventories, (info) => {
+                    let { username, slots } = info;
+
+                    _.each(slots, (slot) => searchSlot(username, slot));
+
+                    // update
+                    inventoryCollection.updateOne(
+                        { username },
+                        {
+                            $set: {
+                                slots
+                            }
+                        },
+                        { upsert: true }
+                    );
+
+                    staffCount = 0;
+                });
+            });
+
+        // Check bank second
+        bankCollection
+            .find({})
+            .toArray()
+            .then((banks) => {
+                _.each(banks, (info) => {
+                    let { username, slots } = info;
+
+                    _.each(slots, (slot) => searchSlot(username, slot));
+
+                    // update
+                    bankCollection.updateOne(
+                        { username },
+                        {
+                            $set: {
+                                slots
+                            }
+                        },
+                        { upsert: true }
+                    );
+                });
+            });
+    }
+
+    /**
+     * Sets a rank of a player in the database. For use when the player is offline.
+     * @param username The username of the player.
+     * @param rankId The rank id of the player (relative to the Modules enum).
+     */
+
+    public setRank(username: string, rankId: number): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('player_info');
+
+        collection
+            .find({ username })
+            .toArray()
+            .then((info) => {
+                if (info.length === 0)
+                    return log.warning(`No player found with the username ${username}.`);
+
+                collection.updateOne(
+                    { username },
+                    {
+                        $set: {
+                            rank: rankId
+                        }
+                    },
+                    { upsert: true }
+                );
             });
     }
 

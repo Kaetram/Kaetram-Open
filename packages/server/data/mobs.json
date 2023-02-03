@@ -19,6 +19,7 @@
 
   "bat": {
     "name": "Batterfly",
+    "drops": {"leatherboots": 100},
     "description": "A bat that is also a butterfly, what a strange creature.",
     "hitPoints": 45,
     "defenseLevel": 6,
@@ -36,10 +37,11 @@
 
   "crab": {
     "name": "Crab",
+    "drops": {"bead": 5},
     "description": "I wonder if I can eat this.",
     "hitPoints": 15,
     "defenseLevel": 1,
-    "attackLevel": 2,
+    "attackLevel": 1,
     "experience": 52,
     "level": 1,
     "aggroRange": 1,
@@ -91,6 +93,7 @@
   "skeleton": {
     "name": "Spooky Skeleton",
     "description": "I wonder if this skeleton is made out of bones.",
+    "drops": {"sword2": 100},
     "hitPoints": 110,
     "defenseLevel": 6,
     "attackLevel": 4,
@@ -143,7 +146,7 @@
 
   "snek": {
     "name": "Snek",
-    "description": "Snek.",
+    "description": "Snek, where you going? Snek, stahp!",
     "drops": {"morningstar": 75, "platearmor": 75, "steelboots": 45},
     "hitPoints": 85,
     "defenseLevel": 5,
@@ -180,7 +183,7 @@
 
   "eye": {
     "name": "Eye",
-    "description": "Must have really poor depth perception when you think about it.",
+    "description": ["Must have really poor depth perception when you think about it.", "Eye really can't seem to figure out how that thing works."],
     "drops": {"redarcherarmor": 60},
     "hitPoints": 160,
     "defenseLevel": 3,
@@ -236,6 +239,7 @@
   "ant": {
     "name": "Worker Ant",
     "description": "A hardworking small itty bitty ant!",
+    "drops": {"pickaxe": 15},
     "hitPoints": 300,
     "defenseLevel": 30,
     "attackLevel": 8,
@@ -253,10 +257,11 @@
   "babyspider": {
     "name": "Baby Spooder",
     "description": "It's cute now but give it a while...",
+    "drops": {"redsword": 25},
     "hitPoints": 400,
     "defenseLevel": 3,
     "attackLevel": 7,
-    "experience": 242,
+    "experience": 150,
     "level": 34,
     "aggroRange": 1,
     "attackRange": 1,
@@ -269,6 +274,8 @@
 
   "beetle": {
     "name": "Beetle",
+    "description": "Ever heard of a Dung Beetle, well I'm better!",
+    "drops": {"sproutring": 10},
     "hitPoints": 600,
     "defenseLevel": 5,
     "attackLevel": 10,
@@ -286,6 +293,7 @@
   "blackpirateskeleton": {
     "name": "Pirate Skeleton",
     "description": "Isn't this just a skeleton but wearing a pirate hat?",
+    "drops": {"piratearmor": 25},
     "hitPoints": 625,
     "defenseLevel": 14,
     "attackLevel": 18,
@@ -339,11 +347,11 @@
   "blazespider": {
     "name": "Blaze Spooder",
     "description": "I wonder how high this spider is...",
-    "drops": {"blackspiderarmor": 20},
+    "drops": {"blackspiderarmor": 20, "topazring": 5},
     "hitPoints": 1350,
     "defenseLevel": 0,
     "attackLevel": 3,
-    "experience": 1150,
+    "experience": 526,
     "level": 77,
     "aggroRange": 1,
     "attackRange": 1,
@@ -356,7 +364,7 @@
 
   "greencockroach": {
     "name": "Blue Cockroach",
-    "description": "Ew.",
+    "description": "Ew, a cockroach.",
     "drops": {"cockroachsuit": 30, "sickle": 45},
     "hitPoints": 785,
     "defenseLevel": 5,
@@ -427,6 +435,7 @@
 
   "clam": {
     "name": "Clam",
+    "description": "Now this would make a good stew!",
     "drops": {"spear": 75},
     "hitPoints": 450,
     "defenseLevel": 6,
@@ -509,6 +518,7 @@
 
   "darkogre": {
     "name": "Dark Ogre",
+    "description": "It didn't get to see much sun...",
     "drops": {"ring1": 75, "skylightbow": 150},
     "hitPoints": 130,
     "defenseLevel": 5,
@@ -559,6 +569,7 @@
 
   "desertscorpion": {
     "name": "Desert Scorpion",
+    "drops": {"steelboots": 75},
     "hitPoints": 124,
     "defenseLevel": 1,
     "attackLevel": 16,
@@ -591,6 +602,7 @@
 
   "earthworm": {
     "name": "Earth Worm",
+    "description": "This is one big flappy thing, flap, flap,",
     "hitPoints": 315,
     "defenseLevel": 5,
     "attackLevel": 5,
@@ -607,11 +619,12 @@
 
   "firespider": {
     "name": "Fire Spooder",
+    "description": "Damn, that is one hot spider.",
     "drops": {"blackspiderarmor": 25},
     "hitPoints": 850,
     "defenseLevel": 3,
     "attackLevel": 4,
-    "experience": 900,
+    "experience": 436,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
@@ -640,6 +653,7 @@
 
   "frog": {
     "name": "Frog",
+    "description": "Just look at it hop around and things and stuff.",
     "drops": {"frogarmor": 75},
     "hitPoints": 788,
     "defenseLevel": 7,
@@ -713,7 +727,7 @@
     "hitPoints": 200,
     "defenseLevel": 1,
     "attackLevel": 1,
-    "experience": 50,
+    "experience": 230,
     "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
@@ -726,11 +740,12 @@
 
   "hellspider": {
     "name": "Hell Spooder",
-    "drops": {"blackspiderarmor": 75},
+    "description": "Aren't all spiders technically from hell?",
+    "drops": {"blackspiderarmor": 75, "essentialrage": 5},
     "hitPoints": 780,
     "defenseLevel": 10,
     "attackLevel": 15,
-    "experience": 840,
+    "experience": 410,
     "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
@@ -760,7 +775,7 @@
 
   "hobgoblin": {
     "name": "Hobgoblin",
-    "drops": {"mailarmor": 125, "platearmor": 75, "platearcherarmor": 75, "mailarcherarmor": 125, "steelboots": 65},
+    "drops": {"mailarmor": 150, "platearmor": 105, "platearcherarmor": 105, "mailarcherarmor": 150, "steelboots": 125},
     "hitPoints": 260,
     "defenseLevel": 8,
     "attackLevel": 8,
@@ -978,6 +993,7 @@
 
   "oldogre": {
     "name": "Old Ogre",
+    "description": "He's old, and balding, but still dangerous.",
     "drops": {"pendant1": 35, "skylightbow": 115},
     "hitPoints": 256,
     "defenseLevel": 5,
@@ -1077,11 +1093,12 @@
 
   "poisonspider": {
     "name": "Poison Spooder",
+    "description": "I swear this thing is gonna poison me as soon as I engage it.",
     "drops": {"blackspiderarmor": 30},
     "hitPoints": 990,
     "defenseLevel": 30,
     "attackLevel": 15,
-    "experience": 625,
+    "experience": 348,
     "level": 49,
     "aggroRange": 1,
     "attackRange": 1,
@@ -1178,7 +1195,7 @@
 
   "guardsword": {
     "name": "Guard",
-    "drops": {"guardarmor": 75},
+    "drops": {"guardarmor": 75, "leatherboots": 35},
     "hitPoints": 225,
     "defenseLevel": 27,
     "attackLevel": 14,
@@ -1321,7 +1338,7 @@
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawDelay": 35000
   },
 
   "skyelf": {
@@ -1342,6 +1359,8 @@
 
   "slime": {
     "name": "Slime",
+    "drops": {"platearcherarmor": 55, "swiftboots": 1},
+    "description": "Slimes.. hmmm. im in every game huh..",
     "hitPoints": 694,
     "defenseLevel": 42,
     "attackLevel": 10,
@@ -1424,6 +1443,7 @@
 
   "snowwolf": {
     "name": "Snow Wolf",
+    "description": "I really expected the wolf to be made out of snow :(",
     "drops": {"icerose": 35, "wolfarmor": 45},
     "hitPoints": 1185,
     "defenseLevel": 8,
@@ -1492,7 +1512,7 @@
     "hitPoints": 650,
     "defenseLevel": 45,
     "attackLevel": 1,
-    "experience": 700,
+    "experience": 210,
     "level": 47,
     "aggroRange": 1,
     "attackRange": 1,
@@ -1687,6 +1707,7 @@
 
   "zombie": {
     "name": "Zombie",
+    "drops": {"pickaxe": 15},
     "hitPoints": 1250,
     "defenseLevel": 1,
     "attackLevel": 1,
@@ -1703,6 +1724,7 @@
 
   "skeletonking": {
     "name": "Skeleton King",
+    "description": "Here he is, the chad of r/neverbrokeabone.",
     "drops": {"goldensword": 95, "goldenbow": 95, "greenpendant": 35, "sproutring": 35, "goldboots": 85},
     "hitPoints": 1850,
     "defenseLevel": 25,
@@ -1724,7 +1746,8 @@
 
   "ogrelord": {
     "name": "Ogre Lord",
-    "drops": {"sidesword": 100, "goldensword": 125, "pearlpendant": 50, "pearlring": 50},
+    "description": "I better keep a distance before this thing turns me into a stew!",
+    "drops": {"sidesword": 75, "goldensword": 100, "pearlpendant": 50, "pearlring": 50},
     "hitPoints": 2850,
     "defenseLevel": 40,
     "attackLevel": 4,
@@ -1745,6 +1768,7 @@
 
   "windguardian": {
     "name": "Wind Guardian",
+    "drops": {"icesword": 30},
     "hitPoints": 15000,
     "defenseLevel": 40,
     "attackLevel": 1,
@@ -1762,7 +1786,7 @@
 
   "lightningguardian": {
     "name": "Lightning Guardian",
-    "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "bridalmask": 50},
+    "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "samuraiarmor": 50},
     "hitPoints": 4500,
     "defenseLevel": 25,
     "attackLevel": 35,
@@ -1812,6 +1836,7 @@
 
   "miniseadragon": {
     "name": "Mini Sea Dragon",
+    "description": "Aww it's a little version of something that's gonna stomp me later!",
     "drops": {"daywalker": 300},
     "hitPoints": 1200,
     "defenseLevel": 22,
@@ -1826,10 +1851,11 @@
     "movementSpeed": 450,
     "respawnDelay": 95000
   },
-
+   
   "forestdragon": {
     "name": "Forest Dragon",
-    "drops": {"dragonarmor": 45, "bamboospear": 45, "justicebow": 75, "forestbow": 4},
+    "description": "Keros' favourite pet!",
+    "drops": {"dragonarmor": 75, "bamboospear": 75, "justicebow": 115, "forestbow": 10},
     "hitPoints": 6942,
     "defenseLevel": 10,
     "attackLevel": 80,
@@ -1849,7 +1875,7 @@
 
   "enel": {
     "name": "Lucendi",
-    "drops": {"redenelbow": 25, "enelarmor": 25, "eneltrident": 50, "marblependant": 100},
+    "drops": {"redenelbow": 60, "enelarmor": 60, "eneltrident": 60, "marblependant": 125},
     "hitPoints": 25000,
     "defenseLevel": 150,
     "attackLevel": 120,
@@ -1883,6 +1909,7 @@
 
   "minidragon": {
     "name": "Mini Dragon",
+    "drops": {"carnelianaxe": 10},
     "hitPoints": 380,
     "defenseLevel": 5,
     "attackLevel": 15,

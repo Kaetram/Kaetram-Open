@@ -21,7 +21,7 @@ Then(
         context.findElementViaTitle(slot).should('have.attr', 'data-key').and('eq', itemKey);
         context.findElementViaTitle(slot).should('have.attr', 'data-count').and('eq', `${amount}`);
         context.findElementViaTitle(slot).within(() => {
-            cy.get('div.inventory-item-count')
+            cy.get('div.item-count')
                 .invoke('text')
                 .then((text) => {
                     cy.log(`amount: ${amount}, text: ${text}`);

@@ -8,7 +8,6 @@ import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
-import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
 import Quests from '../menu/quests';
@@ -21,7 +20,6 @@ import _ from 'lodash-es';
 
 import type Game from '../game';
 import type Menu from '../menu/menu';
-import type Entity from '../entity/entity';
 
 export default class MenuController {
     private actions: Actions = new Actions();
@@ -59,7 +57,7 @@ export default class MenuController {
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
-        this.trade = new Trade();
+        this.trade = new Trade(this.inventory);
 
         this.menus = {
             inventory: this.inventory,
@@ -90,6 +88,8 @@ export default class MenuController {
 
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
+        this.trade.onSelect(this.handleTradeSelect.bind(this));
+        this.trade.onAccept(this.handleTradeAccept.bind(this));
         this.trade.onClose(this.handleTradeClose.bind(this));
 
         this.load();
@@ -101,8 +101,6 @@ export default class MenuController {
      */
 
     private load(): void {
-        new QuickSlots(this.game.player);
-
         this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
 
@@ -112,7 +110,10 @@ export default class MenuController {
      */
 
     public hide(): void {
-        this.forEachMenu((menu: Menu) => menu.hide());
+        this.forEachMenu((menu: Menu) => {
+            // Hide only if the menu is visible to prevent unnecessary calls to subclass `hide`.
+            if (menu.isVisible()) menu.hide();
+        });
     }
 
     /**
@@ -225,17 +226,29 @@ export default class MenuController {
     }
 
     /**
-     * Callback handler for when an item in the inventory is selected.
-     * @param index Index of the item selected.
-     * @param opcode Opcode identifying the type of action performed on the item.
-     * @param value Optional parameter passed when we specify a selected slot to swap with.
+     * @returns The trade menu object.
      */
 
-    private handleInventorySelect(index: number, opcode: Opcodes.Container, value?: number): void {
+    public getTrade(): Trade {
+        return this.trade;
+    }
+
+    /**
+     * Callback handler for when an item in the inventory is selected.
+     * @param fromIndex Index of the item selected.
+     * @param opcode Opcode identifying the type of action performed on the item.
+     * @param value Optional parameter that is used either for count (drop packet) or index (swap packet).
+     */
+
+    private handleInventorySelect(
+        fromIndex: number,
+        opcode: Opcodes.Container,
+        value?: number
+    ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
-            index,
+            fromIndex,
             value
         });
     }
@@ -246,12 +259,19 @@ export default class MenuController {
      * @param index The index within that container.
      */
 
-    private handleBankSelect(type: Modules.ContainerType, index: number): void {
+    private handleBankSelect(
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
+    ): void {
         this.game.socket.send(Packets.Container, {
             opcode: Opcodes.Container.Select,
             type: Modules.ContainerType.Bank,
-            subType: type,
-            index
+            fromContainer,
+            fromIndex,
+            toContainer,
+            toIndex
         });
     }
 
@@ -330,11 +350,53 @@ export default class MenuController {
     }
 
     /**
+     * Handles the select action for the trade interface. When the player clicks an
+     * item in the inventory we send a packet to the server that we are adding an item
+     * to the trade session. When the player clicks an item in the trade window we send
+     * a packet to the server that we are removing an item from the trade session.
+     * @param type The type of container the action is performed in, determines the add/remove opcode.
+     * @param index The index in the container that the action is performed on.
+     */
+
+    private handleTradeSelect(type: Modules.ContainerType, index: number, count?: number): void {
+        switch (type) {
+            case Modules.ContainerType.Inventory: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Add,
+                    index,
+                    count
+                });
+            }
+
+            case Modules.ContainerType.Trade: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Remove,
+                    index,
+                    count
+                });
+            }
+        }
+    }
+
+    /**
+     * Handles the clicking of the accept button. Both players must accept to the trade
+     * in order to complete it.
+     */
+
+    private handleTradeAccept(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Accept
+        });
+    }
+
+    /**
      * Sends a tade packet to the server indicating that the session has been closed.
      */
 
     private handleTradeClose(): void {
-        this.game.socket.send(Packets.Trade, [Opcodes.Trade.Close]);
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Close
+        });
     }
 
     /**
