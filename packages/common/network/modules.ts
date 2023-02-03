@@ -179,6 +179,7 @@ export enum Medals {
     None,
     Silver,
     Gold,
+    Artist,
     Tier1,
     Tier2,
     Tier3,
