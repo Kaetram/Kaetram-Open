@@ -21,6 +21,7 @@ export default class Character extends Entity {
     public following = false;
     public stunned = false;
     public forced = false;
+    public trading = false;
 
     private interrupted = false;
 
@@ -210,6 +211,17 @@ export default class Character extends Entity {
         this.stop();
 
         this.orientation = Modules.Orientation.Down;
+    }
+
+    /**
+     * Follows the player then requests a trade with them.
+     * @param entity The entity we are trying to trade with.
+     */
+
+    public trade(entity: Entity): void {
+        this.trading = true;
+
+        this.follow(entity);
     }
 
     /**

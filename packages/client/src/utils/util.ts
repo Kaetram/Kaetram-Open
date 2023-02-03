@@ -40,28 +40,34 @@ export default {
      * and index are parameters that are passed to the callback.
      * @param type The type of slot we are creating (used for callback as well).
      * @param index Index of the slot we are creating (for identification).
-     * @param callback Optional paramater that creates a callback when the element
+     * @param clickCallback Optional parameter that creates a callback when the element
      * is clicked and passes the type of the slot and the respective index.
      */
 
     createSlot(
         type: Modules.ContainerType,
         index: number,
-        callback?: (type: Modules.ContainerType, index: number) => void
+        clickCallback?: (type: Modules.ContainerType, index: number) => void,
+        contextMenuCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
             image = document.createElement('div'),
             count = document.createElement('div');
 
+        slot.dataset.type = `${type}`;
+        slot.dataset.index = `${index}`;
+
+        slot.draggable = true;
+
         // Sets the class of the bank slot.
-        slot.classList.add('bank-slot');
+        slot.classList.add('item-slot');
 
         // Sets the class of the image.
-        image.classList.add('bank-image');
+        image.classList.add('item-image');
 
         // Sets the class of the count.
-        count.classList.add('item-count');
+        count.classList.add('inventory-item-count');
 
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
@@ -70,7 +76,13 @@ export default {
         slot.append(image);
         slot.append(count);
 
-        if (callback) slot.addEventListener('click', () => callback(type, index));
+        if (clickCallback) slot.addEventListener('click', () => clickCallback(type, index));
+        if (contextMenuCallback)
+            slot.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+
+                contextMenuCallback(type, index);
+            });
 
         // Appends the bank slot onto the list element.
         listElement.append(slot);
@@ -88,6 +100,21 @@ export default {
         if (key === '') return '';
 
         return `url("/img/sprites/item-${key}.png")`;
+    },
+
+    /**
+     * Takes any name (or string as a matter of fact) and capitalizes
+     * every first letter after a space.
+     * Example: 'tHiS Is a usErName' -> 'This Is A Username'
+     * @param name The raw username string defaulting to '' if not specified.
+     * @returns The formatted name string.
+     */
+
+    formatName(name = ''): string {
+        return name.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
     },
 
     /**
@@ -128,7 +155,7 @@ export default {
                 return Opcodes.Container.Select;
             }
 
-            case Modules.MenuActions.Drop: {
+            case Modules.MenuActions.DropOne: {
                 return Opcodes.Container.Remove;
             }
 
@@ -178,6 +205,7 @@ export default {
             crush: 0,
             slash: 0,
             stab: 0,
+            archery: 0,
             magic: 0
         };
     },

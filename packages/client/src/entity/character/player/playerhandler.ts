@@ -108,6 +108,12 @@ export default class PlayerHandler {
                 orientation: player.orientation
             });
 
+            if (player.trading)
+                socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Request,
+                    instance: player.target?.instance
+                });
+
             socket.send(Packets.Target, [
                 this.getTargetType(),
                 player.target ? player.target.instance : ''
@@ -128,6 +134,7 @@ export default class PlayerHandler {
             if (!player.hasKeyboardMovement()) game.renderer.resetAnimatedTiles();
 
             player.moving = false;
+            player.trading = false;
         });
 
         player.onBeforeStep(() => entities.unregisterPosition(player));

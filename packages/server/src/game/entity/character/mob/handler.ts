@@ -70,20 +70,21 @@ export default class Handler {
      */
 
     protected handleDeath(attacker?: Character): void {
-        // Stops the attacker's combat if the character is dead.
-        if (attacker) attacker.combat.stop();
+        // Handle the experience table relative to how much damage the attacker dealt.
+        _.each(this.mob.getExperienceTable(), (element: [string, number], index: number) => {
+            let [instance, experience] = element,
+                entity = this.world.entities.get(instance);
 
-        // Add exo to the attacker if it's a player.
-        if (attacker?.isPlayer()) attacker.killCallback?.(this.mob);
+            if (!entity?.isPlayer()) return;
 
-        // Spawn item drops.
-        let drops = this.mob.getDrops();
+            // Kill callback is sent to the player who dealt most amount of damage.
+            if (index === 0) {
+                entity.killCallback?.(this.mob);
 
-        if (drops.length > 0)
-            _.each(drops, (drop) =>
-                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
-            );
-
+                // Drop the mob's loot and pass the owner's username.
+                this.mob.drop(entity.username);
+            } else entity.handleExperience(experience);
+        });
         // Stop the combat.
         this.mob.combat.stop();
 

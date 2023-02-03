@@ -11,8 +11,10 @@ import type Friend from '../entity/character/player/friend';
 type ConfirmCallback = (username: string, remove?: boolean) => void;
 
 export default class Friends extends Menu {
+    private page: HTMLDivElement = document.querySelector('#friends-page')!;
+
     // List where we store all the friends.
-    private list: HTMLUListElement = document.querySelector('#friends-container > ul')!;
+    private list: HTMLUListElement = document.querySelector('#friends-page > ul')!;
 
     // Primary buttons (for adding and removing friends).
     private addButton: HTMLButtonElement = document.querySelector('#add-friend')!;
@@ -35,7 +37,7 @@ export default class Friends extends Menu {
     private removeActive = false;
 
     public constructor(private player: Player) {
-        super('#friends-page', undefined, '#friends-button');
+        super('#friends-container', undefined, '#friends-button');
 
         this.addButton.addEventListener('click', () => this.showPopup());
         this.removeButton.addEventListener('click', () => this.showPopup(true));
@@ -127,7 +129,7 @@ export default class Friends extends Menu {
 
         Util.fadeIn(this.popup);
 
-        document.querySelector('#friends-container')?.classList.add('dimmed');
+        this.page.classList.add('dimmed');
 
         this.input.focus();
     }
@@ -142,7 +144,7 @@ export default class Friends extends Menu {
 
         Util.fadeOut(this.popup);
 
-        document.querySelector('#friends-container')?.classList.remove('dimmed');
+        this.page.classList.remove('dimmed');
     }
 
     /**
@@ -164,7 +166,7 @@ export default class Friends extends Menu {
         if (online) name.classList.add('green');
 
         // Set the name of the friend.
-        name.innerHTML = username;
+        name.innerHTML = Util.formatName(username);
 
         // Add the name element to the friend slot element.
         element.append(name);
