@@ -55,6 +55,11 @@ export default {
             image = document.createElement('div'),
             count = document.createElement('div');
 
+        slot.dataset.type = `${type}`;
+        slot.dataset.index = `${index}`;
+
+        slot.draggable = true;
+
         // Sets the class of the bank slot.
         slot.classList.add('item-slot');
 
