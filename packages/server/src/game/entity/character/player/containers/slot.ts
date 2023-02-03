@@ -21,7 +21,7 @@ export default class Slot {
     public constructor(
         public index: number,
         public key = '',
-        public count = 0,
+        public count = 1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -46,6 +46,8 @@ export default class Slot {
         this.attackStats = item.attackStats;
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
+
+        if (this.count < 1) this.count = 1;
 
         if (!ignoreMaxStackSize) this.maxStackSize = item.maxStackSize;
 
