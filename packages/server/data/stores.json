@@ -243,6 +243,7 @@
             }
         ],
         "refresh": 600000,
+        "restricted": true,
         "currency": "token"
     }
 }
