@@ -606,9 +606,6 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
-                // TODO: FAFO
-                if (toContainer === Modules.ContainerType.Inventory && toIndex) return;
-
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
