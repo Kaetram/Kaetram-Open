@@ -236,7 +236,7 @@ export default abstract class Quest {
      */
 
     private givePlayerItem(player: Player, key: string, count = 1): boolean {
-        return player.inventory.add(new Item(key, -1, -1, false, count));
+        return !!player.inventory.add(new Item(key, -1, -1, false, count));
     }
 
     /**
