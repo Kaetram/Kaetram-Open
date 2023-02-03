@@ -10,5 +10,6 @@ export default {
     NOT_ENOUGH_SPACE: 'You do not have enough space in your inventory.',
     CANNOT_SELL_ITEM: 'You cannot sell this item.',
     ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.',
-    CHEATER: 'You have been flagged for cheating. You cannot purchase anything.'
+    CHEATER: 'You have been flagged for cheating. You cannot purchase anything.',
+    RESTRICTED_STORE: 'Sorry but sales are final and you cannot sell this item.'
 };
