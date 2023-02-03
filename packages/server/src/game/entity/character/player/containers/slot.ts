@@ -21,7 +21,7 @@ export default class Slot {
     public constructor(
         public index: number,
         public key = '',
-        public count = 0,
+        public count = 1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -35,7 +35,9 @@ export default class Slot {
     public update(item: Item, ignoreMaxStackSize = false): void {
         this.key = item.key;
         this.count =
-            item.count > item.maxStackSize && !ignoreMaxStackSize ? item.maxStackSize : item.count;
+            (item.count > item.maxStackSize && !ignoreMaxStackSize
+                ? item.maxStackSize
+                : item.count) || 0;
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
