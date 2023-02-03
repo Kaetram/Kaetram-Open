@@ -14,22 +14,22 @@
             {
                 "key": "manaflask",
                 "count": 500,
-                "price": 125
+                "price": 85
             },
             {
                 "key": "burger",
                 "count": 100,
-                "price": 1500
+                "price": 450
             },
             {
                 "key": "bigflask",
                 "count": 100,
-                "price": 600
+                "price": 550
             },
             {
                 "key": "bigmanaflask",
                 "count": 100,
-                "price": 1550
+                "price": 500
             },
             {
                 "key": "axe",
