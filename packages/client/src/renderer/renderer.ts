@@ -130,6 +130,7 @@ export default class Renderer {
     private sparksSprite!: Sprite;
     private silverMedal!: Sprite;
     private goldMedal!: Sprite;
+    private crownArtist!: Sprite;
     private crownTier1!: Sprite;
     private crownTier2!: Sprite;
     private crownTier3!: Sprite;
@@ -228,6 +229,10 @@ export default class Renderer {
         this.goldMedal = this.game.sprites.get('goldmedal')!;
 
         if (!this.goldMedal.loaded) this.goldMedal.load();
+
+        this.crownArtist = this.game.sprites.get('crown-artist')!;
+
+        if (!this.crownArtist.loaded) this.crownArtist.load();
 
         this.crownTier1 = this.game.sprites.get('crown-tier1')!;
 
@@ -922,7 +927,7 @@ export default class Renderer {
             0,
             medal.width,
             medal.height,
-            (x - 6) * this.camera.zoomFactor,
+            (x - 5) * this.camera.zoomFactor,
             (y - 17) * this.camera.zoomFactor,
             medal.width * 2,
             medal.height * 2
@@ -1528,6 +1533,10 @@ export default class Renderer {
 
             case 'silvermedal': {
                 return this.silverMedal;
+            }
+
+            case 'crown-artist': {
+                return this.crownArtist;
             }
 
             case 'crown-tier1': {

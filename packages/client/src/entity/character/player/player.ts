@@ -342,6 +342,10 @@ export default class Player extends Character {
                 return 'goldmedal';
             }
 
+            case Modules.Medals.Artist: {
+                return 'crown-artist';
+            }
+
             case Modules.Medals.Tier1: {
                 return 'crown-tier1';
             }
@@ -383,6 +387,10 @@ export default class Player extends Character {
 
     private getRankMedal(): Modules.Medals {
         switch (this.rank) {
+            case Modules.Ranks.Artist: {
+                return Modules.Medals.Artist;
+            }
+
             case Modules.Ranks.TierOne: {
                 return Modules.Medals.Tier1;
             }
@@ -543,14 +551,6 @@ export default class Player extends Character {
 
     public isMagic(): boolean {
         return this.getWeapon().bonuses.magic > 0 && this.isRanged();
-    }
-
-    /**
-     * @returns Whether or not the rank has a crown to display above the player.
-     */
-
-    public isCrownRank(): boolean {
-        return this.rank > Modules.Ranks.TierOne;
     }
 
     /**
