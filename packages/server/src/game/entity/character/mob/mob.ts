@@ -427,15 +427,13 @@ export default class Mob extends Character {
          */
 
         _.each(sortedTable, (entry: [string, number], index: number) => {
-            let exp =
+            entry[1] =
                 index === 0
                     ? this.experience
                     : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
 
             // Prevent getting more experience than the mob has (if mob heals and whatnot).
-            if (exp > this.experience) exp = this.experience;
-
-            entry[index] = exp;
+            if (entry[1] > this.experience) entry[1] = this.experience;
         });
 
         return sortedTable;
