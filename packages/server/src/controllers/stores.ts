@@ -22,6 +22,7 @@ interface StoreInfo {
     items: Item[];
     refresh: number;
     currency: string;
+    restricted?: boolean;
     lastUpdate?: number;
 }
 
@@ -58,7 +59,7 @@ export default class Stores {
      */
 
     private load(store: StoreData, key: string): void {
-        let { refresh, currency } = store,
+        let { refresh, currency, restricted } = store,
             items: Item[] = [];
 
         _.each(store.items, (item: StoreItem) => {
@@ -83,6 +84,7 @@ export default class Stores {
             items,
             refresh,
             currency,
+            restricted,
             lastUpdate: Date.now()
         };
     }
@@ -236,6 +238,9 @@ export default class Stores {
             return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
         let store = this.stores[key];
+
+        // Disable selling in restricted stores.
+        if (store.restricted) return player.notify(StoreEn.RESTRICTED_STORE);
 
         /**
          * Although a lot of these checks are similar to `select()` they are necessary
