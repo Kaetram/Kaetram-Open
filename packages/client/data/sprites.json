@@ -6322,6 +6322,12 @@
   },
 
   {
+    "id": "crown-artist",
+    "width": 16,
+    "height": 16
+  },
+
+  {
     "id": "crown-tier1",
     "width": 16,
     "height": 16
