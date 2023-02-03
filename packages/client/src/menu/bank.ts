@@ -62,6 +62,8 @@ export default class Bank extends Menu {
 
             this.inventoryList.append(slot);
         }
+
+        this.inventory.onBatch(this.synchronize.bind(this));
     }
 
     /**
