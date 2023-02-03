@@ -151,11 +151,11 @@ export default class InputController {
      * A right click is called a ContextMenuEvent. Here we determine
      * the coordinates of the click, and use that to activate the
      * action menu at that location.
-     * @param event DOM event containing click position information.
+     * @param position The position of the press.
      */
 
-    private handleRightClick(event: PointerEvent): void {
-        this.setCoords(event);
+    private handleRightClick(pos: { x: number; y: number }): void {
+        this.setCoords(pos);
 
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);
@@ -569,12 +569,12 @@ export default class InputController {
      * @param event The event object containing the mouse's position.
      */
 
-    public setCoords(event: MouseEvent | PointerEvent): void {
+    public setCoords(position: { x: number; y: number }): void {
         let { width, height } = this.game.renderer.background;
 
         // Set the mouse position to the x and y coordinates within the event.
-        this.mouse.x = event.pageX;
-        this.mouse.y = event.pageY;
+        this.mouse.x = position.x;
+        this.mouse.y = position.y;
 
         // Add horizontal boundaries to the mouse.
         if (this.mouse.x >= width) this.mouse.x = width - 1;
