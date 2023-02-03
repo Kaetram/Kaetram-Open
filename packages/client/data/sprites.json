@@ -8014,17 +8014,6 @@
     "offsetY": 0
   },
   {
-    "id": "item-logs",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
     "id": "item-nisocore",
     "animations": {
       "idle": {
@@ -8091,10 +8080,21 @@
     "offsetY": 0
   },
   {
+    "id": "item-logs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-palmlogs",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 4,
         "row": 0
       }
     },
@@ -8105,7 +8105,40 @@
     "id": "item-icelogs",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-pinelogs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icepinelogs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-willowlogs",
+    "animations": {
+      "idle": {
+        "length": 8,
         "row": 0
       }
     },

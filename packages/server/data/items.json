@@ -4991,18 +4991,40 @@
     "price": 25
   },
 
+  "pinelogs": {
+    "type": "object",
+    "name": "Pine Logs",
+    "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
+    "price": 65
+  },
+
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
     "price": 35,
     "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
+  
 
   "icepalmlogs": {
     "type": "object",
     "name": "Ice Palm Logs",
     "price": 50,
     "description": "These logs are made out of ice and palm wood. They're very cold to the touch."
+  },
+
+  "icepinelogs": {
+    "type": "object",
+    "name": "Ice Pine Logs",
+    "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
+    "price": 85
+  },
+
+  "willowlogs": {
+    "type": "object",
+    "name": "Willow Logs",
+    "price": 125,
+    "description": "Classic type of wood. It's hard, it's strong, you can use it for a lot of things. But for now I guess I can sell it."
   },
 
   "bloodwoodlogs": {
