@@ -94,6 +94,7 @@ export default class Handler {
 
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
+        this.player.abilities.onToggle(this.handleAbilityToggle.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -212,13 +213,6 @@ export default class Handler {
      */
 
     private handleAttack(): void {
-        if (this.player.isRanged()) {
-            if (!this.player.hasArrows())
-                return this.player.notify('You do not have any arrows to shoot.');
-
-            this.player.equipment.decrementArrows();
-        }
-
         if (this.player.isMagic()) {
             let { manaCost } = this.player.equipment.getWeapon();
 
@@ -226,6 +220,15 @@ export default class Handler {
                 return this.player.notify('You are low on mana, your attacks will be weaker.');
 
             this.player.mana.decrement(manaCost);
+
+            return;
+        }
+
+        if (this.player.isRanged()) {
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
+
+            this.player.equipment.decrementArrows();
         }
     }
 
@@ -363,6 +366,15 @@ export default class Handler {
 
     private handleAbilityAdd(ability: Ability): void {
         this.player.send(new AbilityPacket(Opcodes.Ability.Add, ability.serialize(true)));
+    }
+
+    /**
+     * Sends a message to the client to toggle the ability status.
+     * @param key The key of the ability we are toggling.
+     */
+
+    private handleAbilityToggle(key: string): void {
+        this.player.send(new AbilityPacket(Opcodes.Ability.Toggle, { key, level: -1 }));
     }
 
     /**

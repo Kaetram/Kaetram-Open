@@ -442,6 +442,15 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the active status of an ability.
+     * @param key The key of the ability we are updating.
+     */
+
+    public toggleAbility(key: string): void {
+        this.abilities[key]?.toggle();
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 

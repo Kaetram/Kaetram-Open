@@ -16,5 +16,7 @@ export default class Boots extends Equipment {
 
     public override update(item: Item): void {
         super.update(item);
+
+        this.movementModifier = item.movementModifier;
     }
 }
