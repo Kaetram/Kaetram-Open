@@ -67,6 +67,7 @@ export default class Handler {
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.bank.onLoaded(this.handleBank.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
         this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
@@ -435,6 +436,25 @@ export default class Handler {
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
                 data: this.player.inventory.serialize(true)
+            })
+        );
+    }
+
+    /**
+     * Callback for when the bank is loaded. Relay message to the client.
+     * @param isBankLoad Parameter used to skip sending container data when we first
+     * load the bank from the database. Bank information is sent on-demand, we need
+     * this parameter for when we swap container slots.
+     */
+
+    private handleBank(isBankLoad = false): void {
+        if (isBankLoad) return;
+
+        // Send Batch packet to the client.
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Bank,
+                data: this.player.bank.serialize(true)
             })
         );
     }

@@ -3,8 +3,8 @@ import Slot from './slot';
 import Item from '../../../objects/item';
 
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
-import type { Modules } from '@kaetram/common/network';
 import type { ContainerItem } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
 
@@ -17,7 +17,7 @@ export default abstract class Container {
 
     protected ignoreMaxStackSize = false;
 
-    private loadCallback?: () => void;
+    private loadCallback?: (isBankLoad?: boolean) => void;
 
     protected addCallback?: (slot: Slot) => void;
     protected removeCallback?: (
@@ -46,7 +46,7 @@ export default abstract class Container {
             this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
         });
 
-        this.loadCallback?.();
+        this.loadCallback?.(this.type === Modules.ContainerType.Bank);
     }
 
     /**
@@ -64,7 +64,7 @@ export default abstract class Container {
      * @returns Whether or not adding was successful.
      */
 
-    public add(item: Item): boolean {
+    public add(item: Item): Slot | undefined {
         // Return whether or not the adding was successful.
         let added = false,
             slot: Slot | undefined;
@@ -91,12 +91,12 @@ export default abstract class Container {
                 }
 
                 added = true;
-            } else return false;
+            } else return;
         }
 
         if (added) this.addCallback?.(slot!);
 
-        return added;
+        return slot;
     }
 
     /**
@@ -169,19 +169,25 @@ export default abstract class Container {
     /**
      * Moves an item from the `container` parameter into the current
      * container instance.
-     * @param container Container instance we are removing data from.
+     * @param toContainer Container instance we are removing data from.
      * @param index Index in the container we are grabbing data from.
      */
 
-    public move(container: Container, index: number): void {
-        if (container.get(index).isEmpty()) return;
+    public move(fromIndex: number, toContainer: Container, toIndex?: number): void {
+        if (this.get(fromIndex).isEmpty()) return;
 
-        let item = container.getItem(container.get(index));
+        let item = this.getItem(this.get(fromIndex));
 
         // Prevent an item from being moved if it exceeds the max stack size.
         if (item.count > item.maxStackSize) item.count = item.maxStackSize;
 
-        if (this.add(item)) container.remove(index, item.count);
+        let slot = toContainer.add(item);
+
+        if (slot) {
+            this.remove(fromIndex, item.count);
+
+            if (toIndex) toContainer.swap(slot.index, toIndex);
+        }
     }
 
     /**
