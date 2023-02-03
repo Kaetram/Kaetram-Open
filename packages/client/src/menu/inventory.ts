@@ -11,6 +11,7 @@ import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
+type BatchCallback = () => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
@@ -31,6 +32,7 @@ export default class Inventory extends Menu {
     private selectedSlot = -1;
 
     private selectCallback?: SelectCallback;
+    private batchCallback?: BatchCallback;
 
     private touchClone: HTMLElement | undefined;
 
@@ -111,6 +113,8 @@ export default class Inventory extends Menu {
 
             this.setSlot(slot);
         });
+
+        this.batchCallback?.();
     }
 
     /**
@@ -536,5 +540,13 @@ export default class Inventory extends Menu {
 
     public onSelect(callback: SelectCallback): void {
         this.selectCallback = callback;
+    }
+
+    /**
+     * Callback for when a batch is loaded
+     */
+
+    public onBatch(callback: BatchCallback): void {
+        this.batchCallback = callback;
     }
 }
