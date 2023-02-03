@@ -269,7 +269,7 @@ export default class Stores {
 
         // Increment the item count or add to store only if the player isn't a cheater :)
         if (!player.isCheater())
-            if (storeItem?.count) storeItem.count += count;
+            if (storeItem?.count && storeItem?.count !== -1) storeItem.count += count;
             else store.items.push(item);
 
         // Sync up new store data to all players.
