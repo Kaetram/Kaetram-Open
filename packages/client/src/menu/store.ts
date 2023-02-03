@@ -3,6 +3,7 @@ import Menu from './menu';
 import log from '../lib/log';
 import Util from '../utils/util';
 import { isMobile } from '../utils/detect';
+import { onSecondaryPress } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
@@ -287,9 +288,7 @@ export default class Store extends Menu {
         image.style.backgroundImage = Util.getImageURL(item.key);
 
         listElement.addEventListener('click', () => this.buy(index));
-        listElement.addEventListener('contextmenu', (event) => {
-            event.preventDefault();
-
+        onSecondaryPress(listElement, () => {
             this.selectedBuyIndex = index;
 
             this.showBuyDialog();
