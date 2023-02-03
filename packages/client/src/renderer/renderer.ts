@@ -927,7 +927,7 @@ export default class Renderer {
             0,
             medal.width,
             medal.height,
-            (x - 6) * this.camera.zoomFactor,
+            (x - 5) * this.camera.zoomFactor,
             (y - 17) * this.camera.zoomFactor,
             medal.width * 2,
             medal.height * 2
