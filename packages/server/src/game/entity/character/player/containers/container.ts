@@ -3,8 +3,8 @@ import Slot from './slot';
 import Item from '../../../objects/item';
 
 import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
 
+import type { Modules } from '@kaetram/common/network';
 import type { ContainerItem } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
 
@@ -17,7 +17,7 @@ export default abstract class Container {
 
     protected ignoreMaxStackSize = false;
 
-    private loadCallback?: (isBankLoad?: boolean) => void;
+    private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
     protected removeCallback?: (
@@ -46,7 +46,7 @@ export default abstract class Container {
             this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
         });
 
-        this.loadCallback?.(this.type === Modules.ContainerType.Bank);
+        this.loadCallback?.();
     }
 
     /**
@@ -198,16 +198,16 @@ export default abstract class Container {
 
     public swap(fromIndex: number, toIndex: number): void {
         let fromSlot = this.get(fromIndex),
-            toSlot = this.get(toIndex),
             fromItem = this.getItem(fromSlot),
+            toSlot = this.get(toIndex),
             toItem;
 
         if (toSlot.isEmpty()) this.remove(fromIndex, fromItem.count);
         else toItem = this.getItem(toSlot);
 
-        toSlot.update(fromItem);
+        toSlot.update(fromItem, this.ignoreMaxStackSize);
 
-        if (toItem) fromSlot.update(toItem);
+        if (toItem) fromSlot.update(toItem, this.ignoreMaxStackSize);
 
         this.loadCallback?.();
     }

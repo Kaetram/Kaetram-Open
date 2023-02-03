@@ -442,14 +442,9 @@ export default class Handler {
 
     /**
      * Callback for when the bank is loaded. Relay message to the client.
-     * @param isBankLoad Parameter used to skip sending container data when we first
-     * load the bank from the database. Bank information is sent on-demand, we need
-     * this parameter for when we swap container slots.
      */
 
-    private handleBank(isBankLoad = false): void {
-        if (isBankLoad) return;
-
+    private handleBank(): void {
         // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
