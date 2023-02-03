@@ -1,3 +1,5 @@
+import { onSecondaryPress } from './press';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -36,18 +38,19 @@ export default {
     /**
      * Creates a new slot element based using the bank-slot class. This creates
      * an empty skeleton that we can then place items in. A callback event listener
-     * is also created alongside the slot. Whenever a slot is clicked, its type
+     * is also created alongside the slot. Whenever a slot is pressed, its type
      * and index are parameters that are passed to the callback.
      * @param type The type of slot we are creating (used for callback as well).
      * @param index Index of the slot we are creating (for identification).
-     * @param clickCallback Optional parameter that creates a callback when the element
-     * is clicked and passes the type of the slot and the respective index.
+     * @param primaryCallback The callback function for the primary pressed.
+     * @param secondaryCallback The callback function for the secondary pressed.
      */
 
     createSlot(
         type: Modules.ContainerType,
         index: number,
-        clickCallback?: (type: Modules.ContainerType, index: number) => void
+        primaryCallback?: (type: Modules.ContainerType, index: number) => void,
+        secondaryCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
@@ -73,7 +76,8 @@ export default {
         slot.append(image);
         slot.append(count);
 
-        if (clickCallback) slot.addEventListener('click', () => clickCallback(type, index));
+        if (primaryCallback) slot.addEventListener('click', () => primaryCallback(type, index));
+        if (secondaryCallback) onSecondaryPress(slot, () => secondaryCallback(type, index));
 
         // Appends the bank slot onto the list element.
         listElement.append(slot);
