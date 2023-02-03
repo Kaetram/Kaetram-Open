@@ -22,6 +22,7 @@ interface StoreInfo {
     items: Item[];
     refresh: number;
     currency: string;
+    restricted?: boolean;
     lastUpdate?: number;
 }
 
@@ -58,7 +59,7 @@ export default class Stores {
      */
 
     private load(store: StoreData, key: string): void {
-        let { refresh, currency } = store,
+        let { refresh, currency, restricted } = store,
             items: Item[] = [];
 
         _.each(store.items, (item: StoreItem) => {
@@ -83,6 +84,7 @@ export default class Stores {
             items,
             refresh,
             currency,
+            restricted,
             lastUpdate: Date.now()
         };
     }
@@ -229,6 +231,9 @@ export default class Stores {
     public sell(player: Player, key: string, index: number, count = 1): void {
         if (!this.verifyStore(player, key)) return;
 
+        // Ensure the count is correct.
+        if (count < 1) return player.notify(StoreEn.INVALID_ITEM_COUNT);
+
         let slot = player.inventory.get(index);
 
         // Ensure the item in the slot exists.
@@ -236,6 +241,9 @@ export default class Stores {
             return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
         let store = this.stores[key];
+
+        // Disable selling in restricted stores.
+        if (store.restricted) return player.notify(StoreEn.RESTRICTED_STORE);
 
         /**
          * Although a lot of these checks are similar to `select()` they are necessary
@@ -264,8 +272,8 @@ export default class Stores {
 
         // Increment the item count or add to store only if the player isn't a cheater :)
         if (!player.isCheater())
-            if (storeItem?.count) storeItem.count += count;
-            else store.items.push(item);
+            if (!storeItem?.count) store.items.push(item);
+            else if (storeItem?.count !== -1) storeItem.count += count;
 
         // Sync up new store data to all players.
         this.updatePlayers(key);
