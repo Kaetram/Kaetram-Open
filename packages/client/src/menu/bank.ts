@@ -94,12 +94,6 @@ export default class Bank extends Menu {
         slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
         slot.addEventListener('touchcancel', () => this.touchCancel(item));
         slot.addEventListener('touchend', (event) => this.touchEnd(event, container, index, item));
-        slot.addEventListener('contextmenu', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            this.isTouchDragging = true;
-        });
 
         return slot;
     }
