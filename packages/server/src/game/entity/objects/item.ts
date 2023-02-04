@@ -80,7 +80,7 @@ export default class Item extends Entity {
         x: number,
         y: number,
         public dropped = false,
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {},
         public owner = ''
     ) {
@@ -89,7 +89,7 @@ export default class Item extends Entity {
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
-            log.error(`[Item] Could not find data for ${key}.`);
+            log.error(`[Item] Could not find data for ${key}.`, { key, x, y, count });
             this.exists = false;
             return;
         }

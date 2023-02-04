@@ -6322,6 +6322,12 @@
   },
 
   {
+    "id": "crown-artist",
+    "width": 16,
+    "height": 16
+  },
+
+  {
     "id": "crown-tier1",
     "width": 16,
     "height": 16
@@ -9000,7 +9006,7 @@
     "id": "item-gold",
     "animations": {
       "idle": {
-        "length": 7,
+        "length": 6,
         "row": 0
       }
     },
@@ -9011,7 +9017,7 @@
     "id": "item-token",
     "animations": {
       "idle": {
-        "length": 4,
+        "length": 6,
         "row": 0
       }
     },

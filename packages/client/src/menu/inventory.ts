@@ -2,6 +2,7 @@ import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
+import { onDragDrop } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import _ from 'lodash-es';
@@ -33,8 +34,6 @@ export default class Inventory extends Menu {
 
     private selectCallback?: SelectCallback;
     private batchCallback?: BatchCallback;
-
-    private touchClone: HTMLElement | undefined;
 
     public constructor(private actions: Actions) {
         super('#inventory', undefined, '#inventory-button');
@@ -85,7 +84,7 @@ export default class Inventory extends Menu {
     private handleAction(menuAction: Modules.MenuActions): void {
         if (menuAction === Modules.MenuActions.DropMany) return this.actions.showDropDialog();
 
-        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(menuAction), 1);
+        this.selectCallback?.(Util.getContainerAction(menuAction), this.selectedSlot, 1);
 
         this.actions.hide();
     }
@@ -96,7 +95,7 @@ export default class Inventory extends Menu {
      */
 
     private handleDrop(count: number): void {
-        return this.selectCallback?.(this.selectedSlot, Opcodes.Container.Remove, count);
+        return this.selectCallback?.(Opcodes.Container.Remove, this.selectedSlot, count);
     }
 
     /**
@@ -211,141 +210,15 @@ export default class Inventory extends Menu {
 
     /**
      * Swaps the currently selected slot with the target slot.
-     * @param index The index of the slot we are swapping with.
+     * @param fromIndex Index of the slot we are swapping from.
+     * @param toIndex Index of the slot we are swapping to.
      */
 
-    public swap(index: number) {
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
+    public swap(fromIndex: number, toIndex: number): void {
+        this.selectCallback?.(Opcodes.Container.Swap, fromIndex, toIndex);
 
         // Reset the selected slot after.
         this.selectedSlot = -1;
-    }
-
-    /**
-     * Event handler for when a slot begins the dragging and dropping
-     * process. We update the current index of the slot that is being
-     * selected for later use.
-     * @param index The index of the slot being dragged.
-     */
-
-    private dragStart(event: Event, index: number): void {
-        if (this.isEmpty(this.getElement(index))) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            return;
-        }
-
-        this.selectedSlot = index;
-    }
-
-    /**
-     * The drop event within the drag and drop actions. The target represents
-     * the slot that the item is being dropped into.
-     * @param event Contains event data about the target.
-     */
-
-    private dragDrop(event: DragEvent, index: number): void {
-        let element = event.target as HTMLElement;
-
-        if (!element) return;
-
-        // Remove the selected slot class property.
-        element.classList.remove('item-slot-focused');
-
-        if (this.selectedSlot === -1) return;
-
-        this.swap(index);
-    }
-
-    /**
-     * Event handler for when a slot is being dragged over (but not dropped).
-     * We use this to give the user feedback on which slot they are hovering.
-     * @param event Contains event data and the slot element that is being hovered.
-     */
-
-    private dragOver(event: DragEvent): void {
-        // Check that a target exists firstly.
-        if (!event.target || !(event.target as HTMLElement).draggable) return;
-
-        event.preventDefault();
-
-        // Add the slot focused class property.
-        (event.target as HTMLElement).classList.add('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when an item being dragged exits a valid slot area.
-     * @param event Contains the target slot that is exited.
-     */
-
-    private dragLeave(event: DragEvent): void {
-        // Remove the slot focused class.
-        (event.target as HTMLElement).classList.remove('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when a slot begins being touched on a mobile device.
-     * @param index Index of the slot being touched.
-     */
-
-    private touchStart(index: number): void {
-        if (this.isEmpty(this.getElement(index))) return;
-
-        this.selectedSlot = index;
-    }
-
-    /**
-     * Event handler for when a slot is being moved on a mobile device.
-     * @param event Contains event data about the slot being moved.
-     * @param item The item being moved.
-     */
-
-    private touchMove(event: TouchEvent, item: HTMLDivElement) {
-        if (this.selectedSlot === -1) return;
-
-        let [touch] = event.touches;
-
-        item.classList.add('item-slot-focused');
-
-        this.touchClone ??= item.cloneNode(true) as HTMLElement;
-
-        this.touchClone.style.position = 'absolute';
-        this.touchClone.style.top = `${touch.clientY - item.clientHeight / 2}px`;
-        this.touchClone.style.left = `${touch.clientX - item.clientWidth / 2}px`;
-        this.touchClone.style.opacity = '0.75';
-
-        document.querySelector('#game-container')?.append(this.touchClone);
-    }
-
-    /**
-     * Event handler for when a slot touch is being cancelled.
-     * @param item The item being cancelled.
-     */
-
-    private touchCancel(item: HTMLDivElement) {
-        this.touchClone?.remove();
-        this.touchClone = undefined;
-
-        item.classList.remove('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when a slot touch is being ended.
-     * @param event Contains event data about the slot being ended.
-     * @param item The item being ended.
-     */
-
-    private touchEnd(event: TouchEvent, item: HTMLDivElement) {
-        this.touchCancel(item);
-
-        let [touch] = event.changedTouches,
-            element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement | null,
-            index = element?.dataset?.index;
-
-        if (!index || this.selectedSlot === -1) return;
-
-        this.swap(parseInt(index));
     }
 
     /**
@@ -400,8 +273,6 @@ export default class Inventory extends Menu {
 
         item.dataset.index = `${index}`;
 
-        // Assign the class to the slot and make it draggable.
-        item.draggable = true;
         item.classList.add('item-slot');
 
         // Add the item image element onto the slot.
@@ -422,17 +293,19 @@ export default class Inventory extends Menu {
         // Add the click event listeners to the slot.
         slot.addEventListener('click', () => this.select(index));
         slot.addEventListener('dblclick', () => this.select(index, true));
-        slot.addEventListener('dragstart', (event) => this.dragStart(event, index));
-        slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, index));
-        slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
-        slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
 
-        slot.addEventListener('touchstart', () => this.touchStart(index));
-        slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
-        slot.addEventListener('touchcancel', () => this.touchCancel(item));
-        slot.addEventListener('touchend', (event) => this.touchEnd(event, item));
+        onDragDrop(item, this.handleHold.bind(this), () => this.isEmpty(this.getElement(index)));
 
         return slot;
+    }
+
+    private handleHold(clone: HTMLElement, target: HTMLElement): void {
+        let fromIndex = clone?.dataset?.index,
+            toIndex = target?.dataset?.index;
+
+        if (!fromIndex || !toIndex) return;
+
+        this.swap(parseInt(fromIndex), parseInt(toIndex));
     }
 
     /**
@@ -450,7 +323,7 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * Incldues the exact count in the description of an item. Applies for things like
+     * Includes the exact count in the description of an item. Applies for things like
      * gold, tokens, or large stackable items.
      * @param name The name of the item
      * @param count The count of the item
