@@ -198,7 +198,8 @@ export default abstract class Container {
 
         this.remove(fromIndex, fromItem.count);
 
-        if (toIndex) {
+        if (toIndex === undefined) toContainer.add(fromItem);
+        else {
             let toSlot = toContainer.get(toIndex);
 
             if (!toSlot.isEmpty()) {
@@ -208,7 +209,7 @@ export default abstract class Container {
             }
 
             toSlot.update(fromItem, this.ignoreMaxStackSize);
-        } else toContainer.add(fromItem);
+        }
 
         this.loadCallback?.();
         toContainer.loadCallback?.();
