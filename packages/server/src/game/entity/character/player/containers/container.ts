@@ -64,10 +64,11 @@ export default abstract class Container {
      * @returns Whether or not adding was successful.
      */
 
-    public add(item: Item): Slot | undefined {
+    public add(item: Item): number | undefined {
         // Return whether or not the adding was successful.
         let added = false,
-            slot: Slot | undefined;
+            slot: Slot | undefined,
+            amount = 0;
 
         // Item is stackable and we already have it.
         if ((item.stackable && this.canHold(item)) || this.ignoreMaxStackSize) {
@@ -87,7 +88,7 @@ export default abstract class Container {
                 // Recursively add items until we exhaust the count.
                 if (item.count > item.maxStackSize) {
                     item.count -= item.maxStackSize;
-                    this.add(item);
+                    amount += this.add(item) || 0;
                 }
 
                 added = true;
@@ -96,7 +97,9 @@ export default abstract class Container {
 
         if (added) this.addCallback?.(slot!);
 
-        return slot;
+        amount += slot!.count;
+
+        return amount;
     }
 
     /**
@@ -194,12 +197,20 @@ export default abstract class Container {
 
     public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
         let fromSlot = this.get(fromIndex),
-            fromItem = this.getItem(fromSlot);
+            fromItem = this.getItem(fromSlot),
+            { count } = fromItem;
 
-        this.remove(fromIndex, fromItem.count);
+        this.remove(fromIndex, count);
 
         if (toIndex === undefined) {
-            if (!toContainer.add(fromItem)) fromSlot.update(fromItem, this.ignoreMaxStackSize);
+            let amount = toContainer.add(fromItem);
+
+            if (amount) {
+                fromItem.count = count - amount;
+
+                // eslint-disable-next-line unicorn/consistent-destructuring
+                if (fromItem.count > 0) fromSlot.update(fromItem, this.ignoreMaxStackSize);
+            }
         } else {
             let toSlot = toContainer.get(toIndex);
 
@@ -209,7 +220,7 @@ export default abstract class Container {
                 fromSlot.update(toItem, this.ignoreMaxStackSize);
             }
 
-            toSlot.update(fromItem, this.ignoreMaxStackSize);
+            toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
         }
 
         this.loadCallback?.();
