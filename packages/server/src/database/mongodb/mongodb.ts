@@ -244,7 +244,7 @@ export default class MongoDB {
                         );
 
                         slot.key = '';
-                        slot.count = 0;
+                        slot.count = -1;
                         break;
                     }
 
@@ -263,7 +263,7 @@ export default class MongoDB {
                     case 'catarmor':
                     case 'burgerarmor': {
                         slot.key = '';
-                        slot.count = 0;
+                        slot.count = -1;
                     }
                 }
             };
