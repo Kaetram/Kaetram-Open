@@ -1,6 +1,4 @@
-let isHolding = false,
-    holdTimeout: number | undefined,
-    dragClone: HTMLElement | undefined;
+let holdTimeout: number | undefined;
 
 // A touch is considered a hold if it lasts longer than 200ms.
 const HOLD_TIME = 200;
@@ -73,7 +71,9 @@ export function onDragDrop(
     dropCallback: (clone: HTMLElement, target: HTMLElement) => void,
     exception?: () => boolean
 ) {
-    let gameContainer = document.querySelector<HTMLElement>('#game-container')!;
+    let isHolding = false,
+        dragClone: HTMLElement | undefined,
+        gameContainer = document.querySelector<HTMLElement>('#game-container')!;
 
     // Add the event listeners for the mouse events
     element.addEventListener('mousedown', () => startHold());
