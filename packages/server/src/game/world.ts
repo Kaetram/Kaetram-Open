@@ -67,22 +67,19 @@ export default class World {
     }
 
     /**
-     * A `tick` is a call that occurs every `config.updateTime` milliseconds.
-     * This function underlines how fast (or how slow) we parse through packets.
+     * Starts the server packet parsing and region updating loop. Every `config.updateTime`
+     * we send all the packets in the queue to the players and update the regions.
      */
 
-    private async tick(): Promise<void> {
-        let setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
-            fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+    private tick(): void {
+        if (config.hubEnabled) setInterval(() => this.api.pingHub(), config.hubPing);
 
-        setIntervalAsync(async () => {
+        setInterval(() => {
             this.network.parse();
             this.map.regions.parse();
-        }, 1000 / config.updateTime);
+        }, config.updateTime);
 
-        if (config.hubEnabled) setIntervalAsync(async () => this.api.pingHub(), config.hubPing);
-
-        setIntervalAsync(async () => this.save(), config.saveInterval);
+        setInterval(() => this.save(), config.saveInterval);
     }
 
     /**

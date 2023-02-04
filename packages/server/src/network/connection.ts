@@ -10,6 +10,11 @@ export default class Connection {
     private messageCallback?: MessageCallback;
     private closeCallback?: () => void;
 
+    // Used for filtering duplicate messages.
+    private lastMessage = '';
+    private lastMessageTime = Date.now();
+    private messageDifference = 100; // Prevent duplicate messages coming in faster than 100ms.
+
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
@@ -69,8 +74,14 @@ export default class Connection {
      */
 
     private handleMessage(message: string): void {
+        // Skip duplicates in a certain timeframe.
+        if (this.isDuplicate(message)) return;
+
         try {
             this.messageCallback?.(JSON.parse(message));
+
+            this.lastMessage = message;
+            this.lastMessageTime = Date.now();
         } catch (error) {
             log.error(`Message could not be parsed: ${message}.`);
             log.error(error);
@@ -114,6 +125,23 @@ export default class Connection {
 
         clearTimeout(this.disconnectTimeout);
         this.disconnectTimeout = null;
+    }
+
+    /**
+     * A player may be able to spam the server with the packets that are
+     * the same. We want to ensure duplicate packets are only parsed once
+     * every `messageDifference` milliseconds. There may be cases
+     * where duplicate messages are needed, such as when a player is repeatedly
+     * clicking a store or button.
+     * @param message String message to be checked.
+     * @returns Whether or not the message is a duplicate and should be ignored.
+     */
+
+    public isDuplicate(message: string): boolean {
+        return (
+            message === this.lastMessage &&
+            Date.now() - this.lastMessageTime < this.messageDifference
+        );
     }
 
     /**
