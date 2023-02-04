@@ -1,6 +1,4 @@
-let isHolding = false,
-    holdTimeout: number | undefined,
-    dragClone: HTMLElement | undefined;
+let holdTimeout: number | undefined;
 
 // A touch is considered a hold if it lasts longer than 200ms.
 const HOLD_TIME = 200;
@@ -32,7 +30,6 @@ export function onSecondaryPress(
     // Get the game container element.
     let gameContainer = document.querySelector<HTMLElement>('#game-container')!;
 
-    // Detect a mouse right click.
     element.addEventListener('contextmenu', (event) => {
         // Prevent the default browser context menu.
         event.preventDefault();
@@ -47,7 +44,6 @@ export function onSecondaryPress(
     // Prevent the default browser context menu on the game container.
     gameContainer.addEventListener('contextmenu', (event) => event.preventDefault());
 
-    // Detect a touch hold.
     element.addEventListener('touchstart', (event) => {
         // Get the first touch.
         let [touch] = event.touches;
@@ -75,7 +71,9 @@ export function onDragDrop(
     dropCallback: (clone: HTMLElement, target: HTMLElement) => void,
     exception?: () => boolean
 ) {
-    let gameContainer = document.querySelector<HTMLElement>('#game-container')!;
+    let isHolding = false,
+        dragClone: HTMLElement | undefined,
+        gameContainer = document.querySelector<HTMLElement>('#game-container')!;
 
     // Add the event listeners for the mouse events
     element.addEventListener('mousedown', () => startHold());
@@ -106,13 +104,13 @@ export function onDragDrop(
             // If the exception function returns true, cancel the hold.
             if (exception?.()) return;
 
+            cancelHold();
             // The user is holding the item.
             isHolding = true;
 
             // Create a clone of the item element.
             dragClone = element.cloneNode(true) as HTMLElement;
 
-            // Set the clone's style properties to make it look like the original item.
             dragClone.style.position = 'absolute';
             dragClone.style.opacity = '0.75';
             dragClone.style.top = `${-element.clientHeight}px`;
@@ -145,7 +143,6 @@ export function onDragDrop(
 
         // Save the clone element in a variable.
         let clone = dragClone;
-        // Cancel the hold.
         cancelHold();
 
         // Get the element at the specified coordinates.
@@ -162,12 +159,10 @@ export function onDragDrop(
     function cancelHold() {
         // Reset the hold timeout.
         resetTimeout();
-        // Set the holding state to false.
         isHolding = false;
 
         // Remove the clone from the game container.
         dragClone?.remove();
-        // Set the clone to undefined.
         dragClone = undefined;
 
         // Remove the focused class from the item element.

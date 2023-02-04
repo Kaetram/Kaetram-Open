@@ -100,7 +100,7 @@ export default class Slot {
 
     public clear(): void {
         this.key = '';
-        this.count = 0;
+        this.count = -1;
         this.enchantments = {};
 
         this.edible = false;
