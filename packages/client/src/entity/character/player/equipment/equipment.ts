@@ -10,7 +10,7 @@ export default abstract class Equipment {
     public constructor(
         public key = '',
         public name = '',
-        public count = 0,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -30,7 +30,7 @@ export default abstract class Equipment {
     public update(
         key = '',
         name = '',
-        count = 0,
+        count = -1,
         enchantments: Enchantments = {},
         attackStats?: Stats,
         defenseStats?: Stats,

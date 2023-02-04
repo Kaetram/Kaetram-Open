@@ -640,17 +640,23 @@ export default class Player extends Character {
     /**
      * Handles the swap action of a container. This is when we want to move items around.
      * @param type The type of container we are working with.
-     * @param index The index at which we are swapping the item.
-     * @param value The index at which we are swapping the item with.
+     * @param fromIndex The index at which we are swapping the item.
+     * @param toIndex The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
-        if (isNaN(index) || isNaN(value) || index < 0 || value < 0)
-            return log.warning(`[${this.username}] Invalid container swap [${index}, ${value}}]`);
+    public handleContainerSwap(
+        type: Modules.ContainerType,
+        fromIndex: number,
+        toIndex: number
+    ): void {
+        if (isNaN(fromIndex) || isNaN(toIndex) || fromIndex < 0 || toIndex < 0)
+            return log.warning(
+                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
+            );
 
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
-        container.swap(index, value);
+        container.swap(fromIndex, container, toIndex);
     }
 
     /**
@@ -1495,7 +1501,7 @@ export default class Player extends Character {
         let name = Utils.formatName(this.username);
 
         if (this.rank !== Modules.Ranks.None) {
-            name = `[${Modules.Ranks[this.rank]}] ${name}`;
+            name = `[${Modules.RankTitles[this.rank]}] ${name}`;
             colour = global ? '' : Modules.RankColours[this.rank];
         }
 

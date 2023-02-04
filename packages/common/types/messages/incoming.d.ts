@@ -48,7 +48,6 @@ export interface ContainerPacket {
     fromContainer: Modules.ContainerType; // Container the item is coming from.
     fromIndex?: number;
     toContainer?: Modules.ContainerType; // Container the item is going to.
-    toIndex?: number;
     value?: number; // Can be either the count or the index of the item.
 }
 
