@@ -18,12 +18,12 @@ export default class Bank extends Container {
      * @returns Whether or not the item was successfully added.
      */
 
-    public override add(item: Item): number | undefined {
+    public override add(item: Item): number {
         let amount = super.add(item);
 
-        if (!amount) {
+        if (amount === -1) {
             this.notifyCallback?.(BankEn.NOT_ENOUGH_SPACE);
-            return;
+            return amount;
         }
 
         return amount;
