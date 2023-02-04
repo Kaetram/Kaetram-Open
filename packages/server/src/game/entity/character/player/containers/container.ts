@@ -203,8 +203,7 @@ export default abstract class Container {
         } else {
             let toSlot = toContainer.get(toIndex);
 
-            if (toSlot.isEmpty()) fromSlot.update(fromItem, this.ignoreMaxStackSize);
-            else {
+            if (!toSlot.isEmpty()) {
                 let toItem = toContainer.getItem(toSlot);
 
                 fromSlot.update(toItem, this.ignoreMaxStackSize);
