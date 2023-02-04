@@ -129,10 +129,9 @@ export default class App {
         window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
-        onSecondaryPress(document.querySelector('#canvas')!, (position) => {
-            console.log({ position });
-            this.rightClickCallback?.(position);
-        });
+        onSecondaryPress(document.querySelector('#canvas')!, (position) =>
+            this.rightClickCallback?.(position)
+        );
     }
 
     /**

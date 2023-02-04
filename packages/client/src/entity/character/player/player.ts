@@ -226,7 +226,7 @@ export default class Player extends Character {
      * @param count Optional parameter to remove a certain amount of items.
      */
 
-    public unequip(type: Modules.Equipment, count = 0): void {
+    public unequip(type: Modules.Equipment, count = -1): void {
         // Decrement count if provided, otherwise reset the equipment slot.
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
