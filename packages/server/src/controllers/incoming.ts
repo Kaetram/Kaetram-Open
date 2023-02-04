@@ -395,7 +395,7 @@ export default class Incoming {
                     packet.fromContainer,
                     packet.fromIndex!,
                     packet.toContainer!,
-                    packet.toIndex
+                    packet.value
                 );
             }
 

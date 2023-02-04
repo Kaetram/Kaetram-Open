@@ -30,7 +30,7 @@ export default abstract class Equipment {
     public update(
         key = '',
         name = '',
-        count = 0,
+        count = -1,
         enchantments: Enchantments = {},
         attackStats?: Stats,
         defenseStats?: Stats,
