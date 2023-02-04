@@ -181,35 +181,37 @@ export default abstract class Container {
         // Prevent an item from being moved if it exceeds the max stack size.
         if (item.count > item.maxStackSize) item.count = item.maxStackSize;
 
-        let slot = toContainer.add(item);
-
-        if (slot) {
-            this.remove(fromIndex, item.count);
-
-            if (toIndex !== undefined) toContainer.swap(slot.index, toIndex);
-        }
+        this.swap(fromIndex, toContainer, toIndex);
     }
 
     /**
-     * Swaps an item from one slot to another slot.
-     * @param fromIndex Index of the slot we are swapping from.
-     * @param toIndex Index of the slot we are swapping with.
+     * Swaps an item from the current container instance into the `container`
+     * parameter.
+     * @param fromIndex Index in the current container instance we are grabbing data from.
+     * @param toContainer Container instance we are removing data from.
+     * @param toIndex Index in the container we are grabbing data from.
      */
 
-    public swap(fromIndex: number, toIndex: number): void {
+    public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
         let fromSlot = this.get(fromIndex),
-            fromItem = this.getItem(fromSlot),
-            toSlot = this.get(toIndex),
-            toItem;
+            fromItem = this.getItem(fromSlot);
 
-        if (toSlot.isEmpty()) this.remove(fromIndex, fromItem.count);
-        else toItem = this.getItem(toSlot);
+        this.remove(fromIndex, fromItem.count);
 
-        toSlot.update(fromItem, this.ignoreMaxStackSize);
+        if (toIndex) {
+            let toSlot = toContainer.get(toIndex);
 
-        if (toItem) fromSlot.update(toItem, this.ignoreMaxStackSize);
+            if (!toSlot.isEmpty()) {
+                let toItem = toContainer.getItem(toSlot);
+
+                fromSlot.update(toItem, this.ignoreMaxStackSize);
+            }
+
+            toSlot.update(fromItem, this.ignoreMaxStackSize);
+        } else toContainer.add(fromItem);
 
         this.loadCallback?.();
+        toContainer.loadCallback?.();
     }
 
     /**
