@@ -151,7 +151,10 @@ export default class Commands {
                     if (command === 'ban' && duration > 72) duration = 72;
                 }
 
-                let timeFrame = Date.now() + duration * 60 * 60;
+                // Convert hours to milliseconds.
+                duration *= 60 * 60 * 1000;
+
+                let timeFrame = Date.now() + duration;
 
                 if (command === 'mute') {
                     user.mute = timeFrame;
@@ -174,11 +177,13 @@ export default class Commands {
                 let uTargetName = blocks.join(' '),
                     uUser = this.world.getPlayerByName(uTargetName);
 
-                if (!uTargetName) return;
+                if (!uTargetName) return this.player.notify(`Player ${uTargetName} not found.`);
 
                 uUser.mute = Date.now() - 3600;
 
                 uUser.save();
+
+                this.player.notify(`${uUser.username} has been unmuted.`);
 
                 return;
             }

@@ -56,7 +56,7 @@ export default class EntityHandler {
             game.teleport(this.entity, x, y);
         });
 
-        this.entity.onStopPathing(() => this.sendMovement());
+        //this.entity.onStopPathing();
 
         this.entity.ready = true;
     }

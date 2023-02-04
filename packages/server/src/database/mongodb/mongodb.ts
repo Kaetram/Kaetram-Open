@@ -234,43 +234,36 @@ export default class MongoDB {
 
         let inventoryCollection = this.database.collection('player_inventory'),
             bankCollection = this.database.collection('player_bank'),
-            staffCount = 0, // how many ice staves we found.
+            equipmentCollection = this.database.collection('player_equipment'),
             // eslint-disable-next-line unicorn/consistent-function-scoping
             searchSlot = (username: string, slot: SlotData) => {
                 switch (slot?.key) {
                     case 'token': {
-                        if (slot.count > 2_000_000) {
-                            log.notice(
-                                `Player ${username} had ${slot.count} gold in their inventory.`
-                            );
+                        log.notice(
+                            `Player ${username} had ${slot.count} tokens in their inventory.`
+                        );
 
-                            slot.key = '';
-                            slot.count = 0;
-
-                            this.setRank(username, Modules.Ranks.Cheater);
-                        }
+                        slot.key = '';
+                        slot.count = -1;
                         break;
                     }
 
-                    case 'icestaff': {
-                        if (slot.count > 2) {
-                            log.notice(
-                                `Player ${username} had ${slot.count} ice staves in their bank.`
-                            );
-
-                            slot.key = '';
-                            slot.count = 0;
-
-                            this.setRank(username, Modules.Ranks.Cheater);
-                        }
-
-                        // Inventory non-stacking case
-                        if (staffCount > 0) {
-                            slot.key = '';
-                            slot.count = 0;
-                        }
-
-                        staffCount++;
+                    case 'taekwondo':
+                    case 'huniarmor':
+                    case 'damboarmor':
+                    case 'bluedamboarmor':
+                    case 'greendamboarmor':
+                    case 'reddamboarmor':
+                    case 'robotarmor':
+                    case 'dinosaurarmor':
+                    case 'rainbowapro':
+                    case 'radisharmor':
+                    case 'frankensteinarmor':
+                    case 'pickle':
+                    case 'catarmor':
+                    case 'burgerarmor': {
+                        slot.key = '';
+                        slot.count = -1;
                     }
                 }
             };
@@ -295,8 +288,6 @@ export default class MongoDB {
                         },
                         { upsert: true }
                     );
-
-                    staffCount = 0;
                 });
             });
 
@@ -316,6 +307,29 @@ export default class MongoDB {
                         {
                             $set: {
                                 slots
+                            }
+                        },
+                        { upsert: true }
+                    );
+                });
+            });
+
+        // Check equipment third
+        equipmentCollection
+            .find({})
+            .toArray()
+            .then((equipments) => {
+                _.each(equipments, (info) => {
+                    let { username, equipments } = info;
+
+                    _.each(equipments, (slot) => searchSlot(username, slot));
+
+                    // update
+                    equipmentCollection.updateOne(
+                        { username },
+                        {
+                            $set: {
+                                equipments
                             }
                         },
                         { upsert: true }

@@ -2,6 +2,7 @@ import install from './lib/pwa';
 import { isMobile } from './utils/detect';
 import Storage from './utils/storage';
 import Util from './utils/util';
+import { onSecondaryPress } from './utils/press';
 
 import Updates from '@kaetram/common/text/en/updates.json';
 
@@ -12,7 +13,7 @@ type KeyDownCallback = (e: KeyboardEvent) => void;
 type KeyUpCallback = (e: KeyboardEvent) => void;
 type LoginCallback = (server?: SerializedServer) => void;
 type LeftClickCallback = (e: MouseEvent) => void;
-type RightClickCallback = (e: PointerEvent) => void;
+type RightClickCallback = (position: { x: number; y: number }) => void;
 type MouseMoveCallback = (e: MouseEvent) => void;
 
 type ValidationType = 'status' | 'validation-error' | 'validation-warning';
@@ -128,9 +129,9 @@ export default class App {
         window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
-        document
-            .querySelector('#canvas')!
-            .addEventListener('contextmenu', this.handleRightClick.bind(this));
+        onSecondaryPress(document.querySelector('#canvas')!, (position) =>
+            this.rightClickCallback?.(position)
+        );
     }
 
     /**
@@ -169,21 +170,6 @@ export default class App {
         if (this.isMenuHidden()) return this.keyDownCallback?.(e);
 
         if (e.key === 'Enter') this.login();
-    }
-
-    /**
-     * Handles the left click action onto the canvas and
-     * returns false so that it cancels the default action.
-     * @param e Event containing click information.
-     * @returns False to cancel default action.
-     */
-
-    public handleRightClick(e: Event): boolean {
-        this.rightClickCallback?.(e as PointerEvent);
-
-        e.preventDefault();
-
-        return false;
     }
 
     /**
