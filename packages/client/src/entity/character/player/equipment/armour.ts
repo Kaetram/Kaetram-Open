@@ -6,7 +6,7 @@ export default class Armour extends Equipment {
     public constructor(
         key = 'clotharmor',
         name = 'Cloth Armor',
-        count = 1,
+        count = -1,
         enchantments: Enchantments = {}
     ) {
         super(key, name, count, enchantments);
@@ -22,7 +22,7 @@ export default class Armour extends Equipment {
     public override update(
         key = 'clotharmor',
         name = 'Cloth Armor',
-        count = 0,
+        count = -1,
         enchantments: Enchantments = {},
         attackStats?: Stats,
         defenseStats?: Stats,

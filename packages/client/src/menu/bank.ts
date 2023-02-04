@@ -65,22 +65,23 @@ export default class Bank extends Menu {
     /**
      * Creates a draggable slot for the bank interface.
      * @param index The index of the slot.
-     * @param container The type of container the slot is in.
+     * @param fromContainer The type of container the slot is from.
+     * @param defaultContainer The default type of container the slot is going.
      * @returns The slot element.
      */
 
     private draggableSlot(
         index: number,
-        container: Modules.ContainerType,
+        fromContainer: Modules.ContainerType,
         defaultContainer: Modules.ContainerType
     ): HTMLLIElement {
-        let slot = Util.createSlot(container, index, () =>
-                this.select(container, index, defaultContainer)
+        let slot = Util.createSlot(fromContainer, index, () =>
+                this.select(fromContainer, index, defaultContainer)
             ),
             item = slot.querySelector<HTMLDivElement>('.item-slot')!;
 
         onDragDrop(item, this.handleHold.bind(this), () =>
-            this.inventory.isEmpty(this.getElement(index, container))
+            this.inventory.isEmpty(this.getElement(index, fromContainer))
         );
 
         return slot;
@@ -145,11 +146,9 @@ export default class Bank extends Menu {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getInventoryElement(index).querySelector<HTMLElement>('.item-image')!,
-                count =
-                    this.getInventoryElement(index).querySelector<HTMLElement>(
-                        '.inventory-item-count'
-                    )!,
+            let element = this.getInventoryElement(index),
+                image = element.querySelector<HTMLElement>('.item-image')!,
+                count = element.querySelector<HTMLElement>('.inventory-item-count')!,
                 slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
             if (!slotImage) return;
