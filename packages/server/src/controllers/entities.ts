@@ -83,7 +83,7 @@ export default class Entities {
         x: number,
         y: number,
         dropped = false,
-        count = 1,
+        count = -1,
         enchantments: Enchantments = {},
         owner = ''
     ): Item {
