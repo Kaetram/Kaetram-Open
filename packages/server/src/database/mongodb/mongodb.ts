@@ -227,9 +227,10 @@ export default class MongoDB {
      * this function will look for anyone who has an excessive amount of an item and remove it
      * from their inventory and bank. This is a hardcoded function that will be re-purposed
      * or removed in the future.
+     * @param logOnly If to only display the items we found and not remove them.
      */
 
-    public cleanDupes(): void {
+    public parsePotentialDupes(logOnly = true): void {
         if (!this.hasDatabase()) return;
 
         let inventoryCollection = this.database.collection('player_inventory'),
@@ -240,23 +241,28 @@ export default class MongoDB {
                 switch (slot?.key) {
                     case 'token': {
                         log.notice(
-                            `Player ${username} had ${slot.count} tokens in their inventory.`
+                            `Found ${username} had ${slot.count} tokens in their inventory.`
                         );
 
-                        slot.key = '';
-                        slot.count = -1;
+                        if (!logOnly) {
+                            slot.key = '';
+                            slot.count = -1;
+                        }
                         break;
                     }
 
                     case 'gold': {
                         if (slot.count > 4_000_000) {
                             log.notice(
-                                `Player ${username} had ${slot.count} gold in their inventory.`
+                                `Found ${username} had ${slot.count} gold in their inventory.`
                             );
 
-                            slot.key = '';
-                            slot.count = -1;
+                            if (!logOnly) {
+                                slot.key = '';
+                                slot.count = -1;
+                            }
                         }
+                        break;
                     }
 
                     case 'taekwondo':
@@ -273,10 +279,14 @@ export default class MongoDB {
                     case 'pickle':
                     case 'catarmor':
                     case 'burgerarmor': {
-                        log.notice(`Removed x${slot.count} ${slot.key} from ${username}`);
+                        log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
 
-                        slot.key = '';
-                        slot.count = -1;
+                        if (!logOnly) {
+                            slot.key = '';
+                            slot.count = -1;
+                        }
+
+                        break;
                     }
 
                     default: {
@@ -290,12 +300,17 @@ export default class MongoDB {
                         )
                             break;
 
-                        if (slot?.count > 100) {
-                            log.notice(`Removed x${slot.count} ${slot.key} from ${username}`);
+                        if (slot?.count > 500) {
+                            log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
 
-                            slot.key = '';
-                            slot.count = -1;
+                            console.log(`huh: ${slot?.key === 'gold'}`);
+
+                            if (!logOnly) {
+                                slot.key = '';
+                                slot.count = -1;
+                            }
                         }
+                        break;
                     }
                 }
             };
