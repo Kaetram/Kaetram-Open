@@ -64,7 +64,7 @@ export default abstract class Container {
      * @returns Whether or not adding was successful.
      */
 
-    public add(item: Item): number | undefined {
+    public add(item: Item): number {
         // Return whether or not the adding was successful.
         let added = false,
             slot: Slot | undefined,
@@ -92,7 +92,7 @@ export default abstract class Container {
                 }
 
                 added = true;
-            } else return;
+            } else return -1;
         }
 
         if (added) this.addCallback?.(slot!);
