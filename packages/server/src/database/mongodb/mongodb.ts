@@ -248,6 +248,17 @@ export default class MongoDB {
                         break;
                     }
 
+                    case 'gold': {
+                        if (slot.count > 4_000_000) {
+                            log.notice(
+                                `Player ${username} had ${slot.count} gold in their inventory.`
+                            );
+
+                            slot.key = '';
+                            slot.count = -1;
+                        }
+                    }
+
                     case 'taekwondo':
                     case 'huniarmor':
                     case 'damboarmor':
@@ -262,8 +273,29 @@ export default class MongoDB {
                     case 'pickle':
                     case 'catarmor':
                     case 'burgerarmor': {
+                        log.notice(`Removed x${slot.count} ${slot.key} from ${username}`);
+
                         slot.key = '';
                         slot.count = -1;
+                    }
+
+                    default: {
+                        if (
+                            slot?.key === 'gold' ||
+                            slot?.key === 'token' ||
+                            slot?.key === 'flask' ||
+                            slot?.key === 'arrow' ||
+                            slot?.key === 'shardt1' ||
+                            slot?.key === 'shardt2'
+                        )
+                            break;
+
+                        if (slot?.count > 100) {
+                            log.notice(`Removed x${slot.count} ${slot.key} from ${username}`);
+
+                            slot.key = '';
+                            slot.count = -1;
+                        }
                     }
                 }
             };
