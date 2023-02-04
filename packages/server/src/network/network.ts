@@ -5,7 +5,6 @@ import Player from '../game/entity/character/player/player';
 import config from '@kaetram/common/config';
 import _ from 'lodash-es';
 
-import type Entities from '../controllers/entities';
 import type MongoDB from '../database/mongodb/mongodb';
 import type Regions from '../game/map/regions';
 import type World from '../game/world';
@@ -14,7 +13,6 @@ import type Packet from './packet';
 import type SocketHandler from './sockethandler';
 
 export default class Network {
-    private entities: Entities;
     private database: MongoDB;
     private socketHandler: SocketHandler;
 
@@ -24,7 +22,6 @@ export default class Network {
     private packets: { [id: string]: unknown[] } = {};
 
     public constructor(private world: World) {
-        this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
 
