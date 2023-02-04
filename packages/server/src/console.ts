@@ -144,8 +144,10 @@ export default class Console {
                     return this.world.save();
                 }
 
-                case 'cleandupes': {
-                    return this.database.cleanDupes();
+                case 'searchdupes': {
+                    console.log(`logOnly: ${!blocks.shift()}`);
+
+                    return this.database.parsePotentialDupes(!blocks.shift());
                 }
             }
         });
