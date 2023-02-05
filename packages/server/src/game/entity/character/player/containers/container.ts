@@ -222,9 +222,19 @@ export default abstract class Container {
 
             if (!isEmpty) toItem = toContainer.getItem(toSlot);
 
-            // If the target slot is empty or the target slot contains the same
-            // item as the source slot
+            // Prevent multiple non-stackable from being moved around for safety.
+            if (
+                toItem &&
+                // Check if the source item is not stackable and the count is greater than 1
+                ((!fromItem.stackable && fromItem.count > 1) ||
+                    // Check if the target item is not stackable and the count is greater than 1
+                    (!toItem.stackable && toItem.count > 1))
+            )
+                return;
+
             if (isEmpty || (toItem && fromItem.key === toItem.key)) {
+                // If the target slot is empty or the target slot contains the same
+                // item as the source slot
                 // Get the count of the item in the target slot
                 let toCount = isEmpty ? 0 : toItem!.count;
 
@@ -250,6 +260,7 @@ export default abstract class Container {
                     // Remove the count of the item in the target slot from the
                     // source slot
                     this.remove(fromIndex, toSlot.count);
+
                     // Add the item in the target slot to the container
                     this.add(toItem!);
                 } else fromSlot.update(toItem!, this.ignoreMaxStackSize);
