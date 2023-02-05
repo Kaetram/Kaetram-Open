@@ -212,7 +212,7 @@
     "type": "weapon",
     "name": "Trident Of The Seas",
     "level": 40,
-    "price": 2500,
+    "price": 500,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -2814,7 +2814,7 @@
     "name": "Seahorse Bow",
     "skill": "archery",
     "level": 35,
-    "price": 1550,
+    "price": 550,
     "attackStats": {
       "crush": 2,
       "slash": 3,
