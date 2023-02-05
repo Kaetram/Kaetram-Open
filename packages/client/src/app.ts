@@ -112,7 +112,7 @@ export default class App {
 
         this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
 
-        this.gameVersion.textContent = `${this.config.version}`;
+        this.gameVersion.textContent = `${this.config.version}${this.config.minor}`;
 
         // Document callbacks such as clicks and keystrokes.
         document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
