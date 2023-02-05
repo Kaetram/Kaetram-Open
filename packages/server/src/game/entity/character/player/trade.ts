@@ -124,6 +124,7 @@ export default class Trade {
 
         // Any addition or removal of an item resets the trade acceptance.
         this.accepted = false;
+        this.getActiveTrade()!.accepted = false;
 
         // Callbacks for both instances of the trade.
         this.signalAdd(this.player.instance, trueIndex, item.count, item.key);
@@ -155,6 +156,7 @@ export default class Trade {
 
         // Any addition or removal of an item resets the trade acceptance.
         this.accepted = false;
+        this.getActiveTrade()!.accepted = false;
 
         // Send the callback to both trade instances.
         this.removeCallback?.(this.player.instance, index);
