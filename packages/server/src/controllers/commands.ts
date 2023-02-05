@@ -749,11 +749,15 @@ export default class Commands {
             }
 
             case 'nuke': {
+                let all = !!blocks.shift();
+
                 region = this.world.map.regions.get(this.player.region);
 
                 region.forEachEntity((entity: Entity) => {
                     if (!(entity instanceof Character)) return;
                     if (entity.instance === this.player.instance) return;
+
+                    if (!all && entity.isPlayer()) return;
 
                     entity.deathCallback?.();
                 });
