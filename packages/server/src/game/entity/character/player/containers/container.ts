@@ -202,12 +202,12 @@ export default abstract class Container {
         // If the target slot is undefined, move the item to the next available slot
         // in the container
         if (toIndex === undefined) {
+            fromItem.count = 1;
             // Attempt to add the item to the container
             let amount = toContainer.add(fromItem);
 
-            // If the item was not fully added, remove the amount that was added
-            // from the source container
-            if (amount > 0) this.remove(fromIndex, amount);
+            // If the item was added, remove one from the source container
+            if (amount > 0) this.remove(fromIndex, 1);
         } else {
             // If the source and target containers are the same and the source
             // and target slots are the same, exit this function
