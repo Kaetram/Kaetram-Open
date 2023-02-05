@@ -198,36 +198,49 @@ export default abstract class Container {
      */
 
     public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
+        // Get the item stack from the source slot
         let fromSlot = this.get(fromIndex),
             fromItem = this.getItem(fromSlot),
+            // Get the count of the item stack
             { count } = fromItem;
 
+        // Remove the item stack from the source slot
         this.remove(fromIndex, count);
 
+        // If the destination slot is not defined
         if (toIndex === undefined) {
+            // Add the item stack to the destination container
             let amount = toContainer.add(fromItem);
 
-            console.log({ count, amount });
-
+            // If the amount of items that could not be added is greater than 0
             if (amount > 0) {
+                // Set the count of the item stack to the amount of items that could not be added
                 fromItem.count = count - amount;
 
+                // If the count of the item stack is greater than 0
                 // eslint-disable-next-line unicorn/consistent-destructuring
                 if (fromItem.count > 0) fromSlot.update(fromItem, this.ignoreMaxStackSize);
             } else fromSlot.update(fromItem, this.ignoreMaxStackSize);
         } else {
+            // Get the slot in the destination container
             let toSlot = toContainer.get(toIndex);
 
+            // If the destination slot is not empty
             if (!toSlot.isEmpty()) {
+                // Get the item stack from the destination slot
                 let toItem = toContainer.getItem(toSlot);
 
+                // Update the source slot with the item stack from the destination slot
                 fromSlot.update(toItem, this.ignoreMaxStackSize);
             }
 
+            // Update the destination slot with the item stack from the source slot
             toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
         }
 
+        // Call the load callback for this container
         this.loadCallback?.();
+        // Call the load callback for the destination container
         toContainer.loadCallback?.();
     }
 
