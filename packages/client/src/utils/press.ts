@@ -76,7 +76,7 @@ export function onDragDrop(
         gameContainer = document.querySelector<HTMLElement>('#game-container')!;
 
     // Add the event listeners for the mouse events
-    element.addEventListener('mousedown', () => startHold());
+    element.addEventListener('mousedown', () => startHold(HOLD_TIME / 10));
     gameContainer.addEventListener('mousemove', (event) => moveHold(event.clientX, event.clientY));
     gameContainer.addEventListener('mouseup', (event) => endHold(event.clientX, event.clientY));
 
