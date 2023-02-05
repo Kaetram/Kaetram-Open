@@ -44,6 +44,7 @@ export interface Config {
     maxPlayers: number;
     updateTime: number;
     gver: string;
+    minor: string;
     regionCache: boolean;
     saveInterval: number;
 
