@@ -234,7 +234,7 @@ export default class Inventory extends Menu {
         if (!slotElement) return log.error(`Could not find slot element at: ${slot.index}`);
 
         let imageElement: HTMLElement = slotElement.querySelector('.item-image')!,
-            countElement = slotElement.querySelector('.inventory-item-count');
+            countElement = slotElement.querySelector('.item-count');
 
         if (!imageElement) return log.error(`Could not find image element at: ${slot.index}`);
 
@@ -279,7 +279,7 @@ export default class Inventory extends Menu {
         image.classList.add('item-image');
 
         // Add the class element onto the count.
-        count.classList.add('inventory-item-count');
+        count.classList.add('item-count');
 
         // Append the image onto the item slot.
         item.append(image);
