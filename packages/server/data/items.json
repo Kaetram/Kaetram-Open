@@ -3,7 +3,7 @@
     "type": "weapon",
     "name": "Heavy Sword",
     "level": 2,
-    "price": 50,
+    "price": 500,
     "attackStats": {
       "crush": 2,
       "slash": 6,
@@ -24,7 +24,7 @@
     "name": "Axe",
     "lumberjacking": 1,
     "level": 1,
-     "price":50,
+     "price":250,
     "attackStats": {
       "crush": 4,
       "slash": 2,
@@ -65,7 +65,7 @@
     "type": "weapon",
     "name": "Morning Star",
     "level": 6,
-    "price": 100,
+    "price": 1000,
     "attackStats": {
       "crush": 14,
       "slash": 6,
@@ -85,7 +85,7 @@
     "type": "weapon",
     "name": "Water Sword",
     "level": 10,
-    "price": 100,
+    "price": 1500,
     "attackStats": {
       "crush": 4,
       "slash": 16,
@@ -105,7 +105,7 @@
     "type": "weapon",
     "name": "Fire Sword",
     "level": 14,
-    "price": 125,
+    "price": 5000,
     "attackStats": {
       "crush": 4,
       "slash": 15,
@@ -125,7 +125,7 @@
     "type": "weapon",
     "name": "Golden Sword",
     "level": 22,
-    "price": 175,
+    "price": 3500,
     "attackStats": {
       "crush": 6,
       "slash": 24,
@@ -145,7 +145,7 @@
     "type": "weapon",
     "name": "Side Sword",
     "level": 24,
-    "price": 125,
+    "price": 1250,
     "attackStats": {
       "crush": 12,
       "slash": 24,
@@ -165,7 +165,7 @@
     "type": "weapon",
     "name": "Silly Spear",
     "level": 28,
-    "price": 425,
+    "price": 1100,
     "attackStats": {
       "crush": 16,
       "slash": 12,
@@ -192,7 +192,7 @@
     "type": "weapon",
     "name": "Pirate's Scimitar",
     "level": 30,
-    "price": 1000,
+    "price": 3000,
     "attackStats": {
       "crush": 6,
       "slash": 41,
@@ -212,7 +212,7 @@
     "type": "weapon",
     "name": "Trident Of The Seas",
     "level": 40,
-    "price": 1275,
+    "price": 10000,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -239,7 +239,7 @@
     "type": "weapon",
     "name": "Blue Scimitar",
     "level": 46,
-    "price": 1200,
+    "price": 2200,
     "attackStats": {
       "crush": 18,
       "slash": 14,
@@ -259,7 +259,7 @@
     "type": "weapon",
     "name": "Hammer",
     "level": 50,
-    "price": 200,
+    "price": 2000,
     "attackStats": {
       "crush": 40,
       "slash": 4,
@@ -278,7 +278,7 @@
   "greenlightsaber": {
     "type": "weapon",
     "name": "Green Light Saber",
-    "price": 1550,
+    "price": 4850,
     "level": 56,
     "attackStats": {
       "crush": 0,
@@ -360,7 +360,7 @@
   "redmetalsword": {
     "type": "weapon",
     "name": "Red Metal Sword",
-    "attackRate": 1450,
+    "attackRate": 4550,
     "skill": "strength",
     "level": 42,
     "price": 5050,
@@ -383,7 +383,7 @@
     "type": "weapon",
     "name": "Justice Hammer",
     "skill": "strength",
-    "level": 50,
+    "level": 5000,
     "price": 250,
     "attackStats": {
       "crush": 50,
@@ -424,7 +424,7 @@
     "type": "weapon",
     "name": "Ice Rose",
     "level": 86,
-    "price": 350,
+    "price": 3500,
     "attackStats": {
       "crush": 38,
       "slash": 0,
@@ -444,7 +444,7 @@
     "type": "weapon",
     "name": "Halberd",
     "level": 90,
-    "price": 222,
+    "price": 2228,
     "attackStats": {
       "crush": 12,
       "slash": 44,
@@ -465,7 +465,7 @@
     "name": "Whip",
     "skill": "accuracy",
     "level": 60,
-    "price": 250,
+    "price": 2500,
     "attackStats": {
       "crush": 14,
       "slash": 68,
@@ -485,7 +485,7 @@
     "type": "weapon",
     "name": "Forest Guardian Sword",
     "level": 106,
-    "price": 410,
+    "price": 4100,
     "attackStats": {
       "crush": 2,
       "slash": 40,
@@ -505,7 +505,7 @@
     "type": "weapon",
     "name": "Sickle",
     "level": 110,
-    "price": 325,
+    "price": 3125,
     "attackStats": {
       "crush": 0,
       "slash": 48,
@@ -565,7 +565,7 @@
     "type": "weapon",
     "name": "Day Walker",
     "level": 140,
-    "price": 5550,
+    "price": 10000,
     "attackStats": {
       "crush": 8,
       "slash": 60,
@@ -665,7 +665,7 @@
     "type": "weapon",
     "name": "Rainbow Sword",
     "level": 110,
-    "price": 200,
+    "price": 2000,
     "attackStats": {
       "crush": 40,
       "slash": 20,
@@ -1156,7 +1156,7 @@
   "bamboospear": {
     "type": "weapon",
     "name": "Bamboo Spear",
-    "price": 30000,
+    "price": 50000,
     "level": 256,
     "attackStats": {
       "crush": 10,
@@ -1351,7 +1351,7 @@
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
-    "price": 8650,
+    "price": 10050,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -1467,7 +1467,7 @@
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
-    "price": 6400,
+    "price": 9800,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -1493,7 +1493,7 @@
   "spiritring": {
     "type": "ring",
     "name": "Spirit Ring",
-    "price": 7850,
+    "price": 10050,
     "attackStats": {
       "crush": 12,
       "slash": 10,
@@ -1519,7 +1519,7 @@
   "essentialrage": {
     "type": "ring",
     "name": "Essential Rage",
-    "price": 12500,
+    "price": 15500,
     "attackStats": {
       "crush": 22,
       "slash": 34,
@@ -1547,7 +1547,7 @@
     "name": "Ruby Ring",
     "skill": "magic",
     "level": 10,
-    "price": 4500,
+    "price": 12500,
     "attackStats": {
       "crush": 6,
       "slash": 6,
@@ -1767,7 +1767,7 @@
     "type": "armourarcher",
     "name": "Leather Archer Armour",
     "level": 2,
-    "price": 10,
+    "price": 1000,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -1794,7 +1794,7 @@
     "type": "armourarcher",
     "name": "Mail Archer Armour",
     "level": 6,
-    "price": 12,
+    "price": 1200,
     "attackStats": {
       "crush": 1,
       "slash": 1,
@@ -1822,7 +1822,7 @@
     "name": "Plate Archer Armour",
     "skill": "archery",
     "level": 10,
-    "price": 20,
+    "price": 2000,
     "attackStats": {
       "crush": 3,
       "slash": 8,
@@ -1850,7 +1850,7 @@
     "name": "Red Archer Armour",
     "skill": "archery",
     "level": 15,
-    "price": 22,
+    "price": 2200,
     "attackStats": {
       "crush": 3,
       "slash": 8,
@@ -1878,7 +1878,7 @@
     "name": "Golden Archer Armour",
     "skill": "archery",
     "level": 17,
-    "price": 23,
+    "price": 2300,
     "attackStats": {
       "crush": 4,
       "slash": 7,
@@ -1906,7 +1906,7 @@
     "name": "Green Archer Armour",
     "skill": "archery",
     "level": 18,
-    "price": 26,
+    "price": 2600,
     "attackStats": {
       "crush": 8,
       "slash": 8,
@@ -1934,7 +1934,7 @@
     "name": "Green Wing Archer Armour",
     "skill": "archery",
     "level": 20,
-    "price": 30,
+    "price": 3000,
     "attackStats": {
       "crush": 9,
       "slash": 10,
@@ -1962,7 +1962,7 @@
     "name": "Guard Archer Armour",
     "skill": "archery",
     "level": 24,
-    "price": 30,
+    "price": 3000,
     "attackStats": {
       "crush": 12,
       "slash": 16,
@@ -1989,7 +1989,7 @@
     "type": "armourarcher",
     "name": "Red Guard Archer Armour",
     "skill": "archery",
-    "price": 31,
+    "price": 3001,
     "level": 28,
     "attackStats": {
       "crush": 12,
@@ -2018,7 +2018,7 @@
     "name": "White Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 33,
+    "price": 3300,
     "attackStats": {
       "crush": 12,
       "slash": 20,
@@ -2046,7 +2046,7 @@
     "name": "Rat Archer Armour",
     "skill": "archery",
     "level": 32,
-    "price": 35,  
+    "price": 3500,  
     "attackStats": {
       "crush": 12,
       "slash": 22,
@@ -2074,7 +2074,7 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 42,
+    "price": 4200,
     "attackStats": {
       "crush": 10,
       "slash": 22,
@@ -2102,7 +2102,7 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 42,
+    "price": 4200,
     "attackStats": {
       "crush": 10,
       "slash": 22,
@@ -2130,7 +2130,7 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 45,
+    "price": 4005,
     "attackStats": {
       "crush": 10,
       "slash": 22,
@@ -2158,7 +2158,7 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 47,
+    "price": 4700,
     "attackStats": {
       "crush": 10,
       "slash": 22,
@@ -2186,7 +2186,7 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
-    "price": 45,
+    "price": 4500,
     "attackStats": {
       "crush": 10,
       "slash": 22,
@@ -2214,7 +2214,7 @@
     "name": "Cheolia Archer Armour",
     "skill": "archery",
     "level": 34,
-    "price": 45,
+    "price": 4500,
     "attackStats": {
       "crush": 12,
       "slash": 20,
@@ -2242,7 +2242,7 @@
     "name": "Dovakina Archer Armour",
     "skill": "archery",
     "level": 38,
-    "price": 48,
+    "price": 10000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -2270,7 +2270,7 @@
     "name": "GbwingarcherArmour",
     "skill": "archery",
     "level": 38,
-    "price": 50,
+    "price": 500,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -2298,7 +2298,7 @@
     "name": "Red Wing Archer Armour",
     "skill": "archery",
     "level": 40,
-    "price": 50,
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -2326,7 +2326,7 @@
     "name": "Snow Fox Archer Armour",
     "skill": "archery",
     "level": 44,
-    "price": 50,
+    "price": 5000,
     "attackStats": {
       "crush": 28,
       "slash": 28,
@@ -2354,7 +2354,7 @@
     "name": "Wolf Archer Armour",
     "skill": "archery",
     "level": 44,
-    "price": 52,
+    "price": 5200,
     "attackStats": {
       "crush": 28,
       "slash": 30,
@@ -2382,7 +2382,7 @@
     "name": "Blue Wing Archer Armour",
     "skill": "archery",
     "level": 46,
-    "price": 52,
+    "price": 5250,
     "attackStats": {
       "crush": 28,
       "slash": 36,
@@ -2410,7 +2410,7 @@
     "name": "Fallen Archer Armour",
     "skill": "archery",
     "level": 50,
-    "price": 53,
+    "price": 5300,
     "attackStats": {
       "crush": 28,
       "slash": 40,
@@ -2438,7 +2438,7 @@
     "name": "Crystal Archer Armour",
     "skill": "archery",
     "level": 54,
-    "price": 55,
+    "price": 5550,
     "attackStats": {
       "crush": 21,
       "slash": 20,
@@ -2466,7 +2466,7 @@
     "name": "Legolas Armour",
     "skill": "archery",
     "level": 58,
-    "price": 55,
+    "price": 5005,
     "attackStats": {
       "crush": 21,
       "slash": 20,
@@ -2494,7 +2494,7 @@
     "name": "Adherer Archer Armour",
     "skill": "archery",
     "level": 64,
-    "price": 55,
+    "price": 5025,
     "attackStats": {
       "crush": 21,
       "slash": 20,
@@ -2522,7 +2522,7 @@
     "name": "Archer School Uniform",
     "skill": "archery",
     "level": 20,
-    "price": 15,
+    "price": 1500,
     "attackStats": {
       "crush": 11,
       "slash": 10,
@@ -2550,7 +2550,7 @@
     "name": "Combat Uniform",
     "skill": "archery",
     "level": 40,
-    "price": 55,
+    "price": 5500,
     "attackStats": {
       "crush": 11,
       "slash": 15,
@@ -2583,7 +2583,7 @@
     "name": "Wooden Bow",
     "skill": "archery",
     "level": 1,
-    "price": 10,
+    "price": 100,
     "attackStats": {
       "crush": 5,
       "slash": 4,
@@ -2604,7 +2604,7 @@
     "name": "Plastic Bow",
     "skill": "archery",
     "level": 3,
-    "price": 12,
+    "price": 500,
     "attackStats": {
       "crush": 4,
       "slash": 6,
@@ -2625,7 +2625,7 @@
     "name": "Iron Bow",
     "skill": "archery",
     "level": 7,
-    "price": 10,
+    "price": 3000,
     "attackStats": {
       "crush": 3,
       "slash": 4,
@@ -2646,7 +2646,7 @@
     "name": "Red Bow",
     "skill": "archery",
     "level": 11,
-    "price": 15,
+    "price": 3500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2667,7 +2667,7 @@
     "name": "Violet Bow",
     "skill": "archery",
     "level": 14,
-    "price": 21,
+    "price": 2231,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -2688,7 +2688,7 @@
     "name": "Death Bow",
     "skill": "archery",
     "level": 18,
-    "price": 32,
+    "price": 3268,
     "attackStats": {
       "crush": 5,
       "slash": 4,
@@ -2709,7 +2709,7 @@
     "name": "Golden Bow",
     "skill": "archery",
     "level": 22,
-    "price": 35,
+    "price": 5000,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2730,7 +2730,7 @@
     "name": "Watermelon Bow",
     "skill": "archery",
     "level": 26,
-    "price": 41,
+    "price": 4100,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2751,7 +2751,7 @@
     "name": "Greenbow",
     "skill": "archery",
     "level": 29,
-    "price": 50,
+    "price": 7500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2772,7 +2772,7 @@
     "name": "Redenel Bow",
     "skill": "archery",
     "level": 33,
-    "price": 50,
+    "price": 5050,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -2793,7 +2793,7 @@
     "name": "Mermaid Bow",
     "skill": "archery",
     "level": 35,
-    "price": 52,
+    "price": 10000,
     "attackStats": {
       "crush": 4,
       "slash": 9,
@@ -2814,7 +2814,7 @@
     "name": "Seahorse Bow",
     "skill": "archery",
     "level": 35,
-    "price": 150,
+    "price": 9850,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2835,7 +2835,7 @@
     "name": "Hunter Bow",
     "skill": "archery",
     "level": 37,
-    "price": 115,
+    "price": 6200,
     "attackStats": {
       "crush": 4,
       "slash": 7,
@@ -2856,7 +2856,7 @@
     "name": "Green Light Bow",
     "skill": "archery",
     "level": 39,
-    "price": 117,
+    "price": 1170,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2877,7 +2877,7 @@
     "name": "Sky Light Bow",
     "skill": "archery",
     "level": 42,
-    "price": 120,
+    "price": 6500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -2898,7 +2898,7 @@
     "name": "Red Light Bow",
     "skill": "archery",
     "level": 41,
-    "price": 175,
+    "price": 9200,
     "attackStats": {
       "crush": 6,
       "slash": 4,
@@ -2919,7 +2919,7 @@
     "name": "Captain Bow",
     "skill": "archery",
     "level": 44,
-    "price": 125,
+    "price": 7150,
     "attackStats": {
       "crush": 4,
       "slash": 7,
@@ -2941,7 +2941,7 @@
     "attackRate": 1500,
     "skill": "archery",
     "level": 45,
-    "price": 200,
+    "price": 7150,
     "attackStats": {
       "crush": 10,
       "slash": 4,
@@ -2962,7 +2962,7 @@
     "name": "Justice Bow",
     "skill": "archery",
     "level": 45,
-    "price": 210,
+    "price": 2100,
     "attackStats": {
       "crush": 2,
       "slash": 6,
@@ -2983,7 +2983,7 @@
     "name": "Rose Bow",
     "skill": "archery",
     "level": 50,
-    "price": 215,
+    "price": 2150,
     "attackStats": {
       "crush": 10,
       "slash": 6,
@@ -3004,7 +3004,7 @@
     "name": "Marine Bow",
     "skill": "archery",
     "level": 52,
-    "price": 221,
+    "price": 2210,
     "attackStats": {
       "crush": 0,
       "slash": 0,
@@ -3025,7 +3025,7 @@
     "name": "Crystal Bow",
     "skill": "archery",
     "level": 53,
-    "price": 225,
+    "price": 2250,
     "attackStats": {
       "crush": 2,
       "slash": 6,
@@ -3046,7 +3046,7 @@
     "name": "Gay Bow",
     "skill": "archery",
     "level": 54,
-    "price": 250,
+    "price": 25000,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -3067,7 +3067,7 @@
     "name": "Forest Bow",
     "skill": "archery",
     "level": 55,
-    "price": 255,
+    "price": 12500,
     "attackStats": {
       "crush": 10,
       "slash": 4,
@@ -3088,7 +3088,7 @@
     "name": "Sickle Bow",
     "skill": "archery",
     "level": 56,
-    "price": 300,
+    "price": 30000,
     "attackStats": {
       "crush": 10,
       "slash": 8,
@@ -3109,7 +3109,7 @@
     "name": "Blood Bow",
     "skill": "archery",
     "level": 58,
-    "price": 311,
+    "price": 12201,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -3130,7 +3130,7 @@
     "name": "Red Sickle Bow",
     "skill": "archery",
     "level": 66,
-    "price": 315,
+    "price": 13150,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -3154,7 +3154,7 @@
   "leatherarmor": {
     "type": "armour",
     "name": "Leather Armour",
-    "price": 200,
+    "price": 2000,
     "level": 2,
     "attackStats": {
       "crush": 2,
@@ -3181,7 +3181,7 @@
   "mailarmor": {
     "type": "armour",
     "name": "Chain Mail",
-    "price": 320,
+    "price": 3202,
     "level": 6,
     "attackStats": {
       "crush": 4,
@@ -3208,7 +3208,7 @@
   "platearmor": {
     "type": "armour",
     "name": "Steel Armour",
-    "price": 500,
+    "price": 5000,
     "level": 12,
     "attackStats": {
       "crush": 2,
@@ -3343,7 +3343,7 @@
   "guardarmor": {
     "type": "armour",
     "name": "Guard Armour",
-    "price": 2500,
+    "price": 5000,
     "level": 36,
     "attackStats": {
       "crush": 10,
@@ -3451,7 +3451,7 @@
   "piratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
@@ -3478,7 +3478,7 @@
   "greenpiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
@@ -3505,7 +3505,7 @@
   "purplepiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
@@ -3532,7 +3532,7 @@
   "redpiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
@@ -3586,7 +3586,7 @@
   "dovakinarmor": {
     "type": "armour",
     "name": "Dovakin Armour",
-    "price": 4500,
+    "price": 10500,
     "level": 58,
     "attackStats": {
       "crush": 13,
@@ -3694,7 +3694,7 @@
   "wolfarmor": {
     "type": "armour",
     "name": "Wolf Armour",
-    "price": 5000,
+    "price": 10000,
     "level": 80,
     "attackStats": {
       "crush": 11,
@@ -3802,7 +3802,7 @@
   "dragonarmor": {
     "type": "armour",
     "name": "Dragon Armour",
-    "price": 6500,
+    "price": 12500,
     "level": 90,
     "attackStats": {
       "crush": 12,
@@ -4543,6 +4543,7 @@
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
+     "price": 250,
     "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
     "edible": true
   },
@@ -4569,6 +4570,7 @@
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
+    "price": 25
     "description": "A magical potion received by some weird monument. It temporarily prevents the player from taking damage from the cold.",
     "stackable": true,
     "respawnDelay": 120000
@@ -4582,6 +4584,7 @@
   "blackpotion": {
     "type": "object",
     "name": "Black Potion",
+    "price": 100
     "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
     "plugin": "blackpotion",
     "edible": true
@@ -4857,7 +4860,7 @@
     "type": "weapon",
     "name": "Best In-Slot Sword",
     "level": 1,
-    "price": 50000,
+    "price": 100000,
     "attackStats": {
       "crush": -69,
       "slash": -69,
@@ -4899,6 +4902,7 @@
 
   "shardt1": {
     "type": "object",
+    "price": 1500,
     "name": "Shard - Tier 1",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4906,6 +4910,7 @@
 
   "shardt2": {
     "type": "object",
+    "price": 3000,
     "name": "Shard - Tier 2",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4913,6 +4918,7 @@
 
   "shardt3": {
     "type": "object",
+    "price": 4500,
     "name": "Shard - Tier 3",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4920,6 +4926,7 @@
 
   "shardt4": {
     "type": "object",
+    "price": 6000,
     "name": "Shard - Tier 4",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4927,6 +4934,7 @@
 
   "shardt5": {
     "type": "object",
+    "price": 7500,
     "name": "Shard - Tier 5",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4964,7 +4972,7 @@
       "archery": 0,
       "magic": 0
     },
-    "price": 1000
+    "price": 1000,
   },
 
   "platinumsword": {
@@ -4981,27 +4989,27 @@
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 20
+    "price": 50,
   },
 
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
     "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
-    "price": 25
+    "price": 75,
   },
 
   "pinelogs": {
     "type": "object",
     "name": "Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
-    "price": 65
+    "price": 88,
   },
 
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
-    "price": 35,
+    "price": 65,
     "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
   
@@ -5017,20 +5025,20 @@
     "type": "object",
     "name": "Ice Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
-    "price": 85
+    "price": 85,
   },
 
   "willowlogs": {
     "type": "object",
     "name": "Willow Logs",
-    "price": 125,
+    "price": 350,
     "description": "Classic type of wood. It's hard, it's strong, you can use it for a lot of things. But for now I guess I can sell it."
   },
 
   "bloodwoodlogs": {
     "type": "object",
     "name": "Bloodwood Logs",
-    "price": 150,
+    "price": 400,
     "description": "It almost looks like they're crying blood."
   },
 
@@ -5038,42 +5046,42 @@
     "type": "object",
     "name": "Nisoc Ore",
     "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
-    "price": 150
+    "price": 250,
   },
 
   "cinnabarore": {
     "type": "object",
     "name": "Cinnabar Ore",
     "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
-    "price": 250
+    "price": 350,
   },
 
   "pytharore": {
     "type": "object",
     "name": "Pythar Ore",
     "description": "A purple crystal with magical properties.",
-    "price": 400
+    "price": 500,
   },
 
   "goldore": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
-    "price": 550
+    "price": 650,
   },
 
   "iboore": {
     "type": "object",
     "name": "Ibo Ore",
     "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
-    "price": 700
+    "price": 800,
   },
       
   "moonrockore": {
     "type": "object",
     "name": "Space Rock",
     "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
-    "price": 1200
+    "price": 2400,
   },
       
   "bead": {
@@ -5112,13 +5120,14 @@
   "stick": {
     "type": "object",
     "name": "Stick",
+    "price": 150,
     "description": "A stick. It's a stick. What else do you want me to say about it?"
   },
 
   "leatherboots": {
     "type": "boots",
     "name": "Leather Boots",
-    "price": 10,
+    "price": 150,
     "attackStats": {
       "crush": 1,
       "slash": 2,
@@ -5144,7 +5153,7 @@
   "steelboots": {
     "type": "boots",
     "name": "Steel Boots",
-    "price": 100,
+    "price": 3500,
     "attackStats": {
       "crush": 6,
       "slash": 7,
@@ -5170,7 +5179,7 @@
   "goldboots": {
     "type": "boots",
     "name": "Golden Boots",
-    "price": 125,
+    "price": 12500,
     "attackStats": {
       "crush": 0,
       "slash": 0,
@@ -5196,6 +5205,7 @@
   "swiftboots": {
     "type": "boots",
     "name": "Swift Boots",
+    "price": 7500,
     "movementModifier": 0.95,
     "attackStats": {
       "crush": 1,
@@ -5222,7 +5232,7 @@
   "lavaboots": {
     "type": "boots",
     "name": "Lava Boots",
-    "price": 215,
+    "price": 21500,
     "attackStats": {
       "crush": 9,
       "slash": 12,
