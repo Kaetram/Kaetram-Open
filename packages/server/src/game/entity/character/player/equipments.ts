@@ -108,7 +108,7 @@ export default class Equipments {
             item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
 
         // We stop here if the item cannot be added to the inventory.
-        if (!this.player.inventory.add(item)) return;
+        if (this.player.inventory.add(item) < 1) return;
 
         equipment.empty();
 
