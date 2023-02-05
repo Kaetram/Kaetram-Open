@@ -68,7 +68,7 @@ export default abstract class Container {
         // Return whether or not the adding was successful.
         let added = false,
             slot: Slot | undefined,
-            amount = 0;
+            total = 0;
 
         // Item is stackable and we already have it.
         if ((item.stackable && this.canHold(item)) || this.ignoreMaxStackSize) {
@@ -88,7 +88,9 @@ export default abstract class Container {
                 // Recursively add items until we exhaust the count.
                 if (item.count > item.maxStackSize) {
                     item.count -= item.maxStackSize;
-                    amount += this.add(item) || 0;
+
+                    let amount = this.add(item);
+                    if (amount > 0) total += amount;
                 }
 
                 added = true;
@@ -97,9 +99,9 @@ export default abstract class Container {
 
         if (added) this.addCallback?.(slot!);
 
-        amount += slot!.count;
+        total += slot!.count;
 
-        return amount;
+        return total;
     }
 
     /**
@@ -205,12 +207,14 @@ export default abstract class Container {
         if (toIndex === undefined) {
             let amount = toContainer.add(fromItem);
 
-            if (amount) {
+            console.log({ count, amount });
+
+            if (amount > 0) {
                 fromItem.count = count - amount;
 
                 // eslint-disable-next-line unicorn/consistent-destructuring
                 if (fromItem.count > 0) fromSlot.update(fromItem, this.ignoreMaxStackSize);
-            }
+            } else fromSlot.update(fromItem, this.ignoreMaxStackSize);
         } else {
             let toSlot = toContainer.get(toIndex);
 
