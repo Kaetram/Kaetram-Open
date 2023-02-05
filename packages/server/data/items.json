@@ -4180,6 +4180,7 @@
   "wizardrobe": {
     "type": "armour",
     "name": "Wizard Robe",
+    "price": 1000,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -4207,7 +4208,7 @@
     "name": "Lightning Robe",
     "skill": "magic",
     "level": 12,
-    "price": 20,
+    "price": 1500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -4234,7 +4235,7 @@
     "type": "armour",
     "name": "Nature Robe",
     "skill": "magic",
-    "price": 25,
+    "price": 4000,
     "level": 21,
     "attackStats": {
       "crush": 4,
@@ -4263,7 +4264,7 @@
     "name": "Dark Robe",
     "skill": "magic",
     "level": 30,
-    "price": 50,
+    "price": 5000,
     "attackStats": {
       "crush": 6,
       "slash": 10,
@@ -4291,7 +4292,7 @@
     "name": "Ice Robe",
     "skill": "magic",
     "level": 40,
-    "price": 200,
+    "price": 5200,
     "attackStats": {
       "crush": 8,
       "slash": 12,
@@ -4396,6 +4397,7 @@
   "frogarmor": {
     "type": "armour",
     "name": "Frog Armour"
+    "price": 7500,
   },
 
   "bearseonbiarmor": {
