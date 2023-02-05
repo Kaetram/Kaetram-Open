@@ -138,3 +138,33 @@
         }
     }
 }
+
+
+@media (--sm) {
+    #trade-inventory-slots {
+        top: 16px;
+        left: 10px;
+        width: 106px;
+        height: 90px;
+    }
+
+    #trade-player-slots,
+    #trade-oplayer-slots {
+        top: 40px;
+    }
+
+    #trade-player-slots {
+        left: 140px;
+    }
+
+    #trade-oplayer-slots {
+        left: 260px;
+    }
+
+    #trade-player-slots,
+    #trade-oplayer-slots {
+        width: 106px;
+        height: 92px;
+    }
+
+}
