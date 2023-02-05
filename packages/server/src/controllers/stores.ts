@@ -199,7 +199,7 @@ export default class Stores {
         itemToAdd.count = count;
 
         // Add the item to the player's inventory.
-        if (!player.inventory.add(itemToAdd)) return;
+        if (player.inventory.add(itemToAdd) < 1) return;
 
         if (item.count !== -1) {
             // Decrement the item count by the amount we are buying.
@@ -267,7 +267,7 @@ export default class Stores {
         player.inventory.remove(index, count);
 
         // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
-        if (!player.inventory.add(this.getCurrency(store.currency, price)))
+        if (player.inventory.add(this.getCurrency(store.currency, price)) < 1)
             return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Increment the item count or add to store only if the player isn't a cheater :)

@@ -67,7 +67,7 @@ export default {
         image.classList.add('item-image');
 
         // Sets the class of the count.
-        count.classList.add('inventory-item-count');
+        count.classList.add('item-count');
 
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
@@ -245,7 +245,7 @@ export default {
      * @param element The element to fade out.
      * @param speed (Optional) The speed at which to fade out.
      */
-    fadeOut(element: HTMLElement, speed = 0.1): void {
+    fadeOut(element: HTMLElement, speed = 0.2): void {
         element.style.opacity ||= '1';
 
         let fade = () => {
