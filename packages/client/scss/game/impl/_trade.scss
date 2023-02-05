@@ -42,10 +42,6 @@
     text-align: center;
 }
 
-#trade-status {
-    color: brown;
-}
-
 @each $size, $i in media.$sizes {
     @media ($size) {
         #trade-container {
@@ -138,7 +134,7 @@
 
         #trade-accept {
             right: 77px * $i;
-            bottom: 5px * $i;
+            bottom: 7px * $i;
         }
     }
 }
