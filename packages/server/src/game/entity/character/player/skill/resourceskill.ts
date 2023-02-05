@@ -122,7 +122,7 @@ export default class ResourceSkill extends Skill {
      */
 
     private getItem(key: string): Item {
-        return new Item(key, -1, -1);
+        return new Item(key, -1, -1, false, 1);
     }
 
     /**
