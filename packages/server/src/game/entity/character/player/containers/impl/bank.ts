@@ -3,7 +3,6 @@ import Container from '../container';
 import { Modules } from '@kaetram/common/network';
 import BankEn from '@kaetram/common/text/en/bank';
 
-import type Slot from '../slot';
 import type Item from '../../../../objects/item';
 
 export default class Bank extends Container {
@@ -19,14 +18,14 @@ export default class Bank extends Container {
      * @returns Whether or not the item was successfully added.
      */
 
-    public override add(item: Item): Slot | undefined {
-        let slot = super.add(item);
+    public override add(item: Item): number {
+        let amount = super.add(item);
 
-        if (!slot) {
+        if (amount < 1) {
             this.notifyCallback?.(BankEn.NOT_ENOUGH_SPACE);
-            return;
+            return amount;
         }
 
-        return slot;
+        return amount;
     }
 }

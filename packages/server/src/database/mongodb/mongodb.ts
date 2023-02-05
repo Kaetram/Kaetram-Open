@@ -227,9 +227,10 @@ export default class MongoDB {
      * this function will look for anyone who has an excessive amount of an item and remove it
      * from their inventory and bank. This is a hardcoded function that will be re-purposed
      * or removed in the future.
+     * @param logOnly If to only display the items we found and not remove them.
      */
 
-    public cleanDupes(): void {
+    public parsePotentialDupes(logOnly = true): void {
         if (!this.hasDatabase()) return;
 
         let inventoryCollection = this.database.collection('player_inventory'),
@@ -240,11 +241,27 @@ export default class MongoDB {
                 switch (slot?.key) {
                     case 'token': {
                         log.notice(
-                            `Player ${username} had ${slot.count} tokens in their inventory.`
+                            `Found ${username} had ${slot.count} tokens in their inventory.`
                         );
 
-                        slot.key = '';
-                        slot.count = -1;
+                        if (!logOnly) {
+                            slot.key = '';
+                            slot.count = -1;
+                        }
+                        break;
+                    }
+
+                    case 'gold': {
+                        if (slot.count > 4_000_000) {
+                            log.notice(
+                                `Found ${username} had ${slot.count} gold in their inventory.`
+                            );
+
+                            if (!logOnly) {
+                                slot.key = '';
+                                slot.count = -1;
+                            }
+                        }
                         break;
                     }
 
@@ -262,8 +279,38 @@ export default class MongoDB {
                     case 'pickle':
                     case 'catarmor':
                     case 'burgerarmor': {
-                        slot.key = '';
-                        slot.count = -1;
+                        log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
+
+                        if (!logOnly) {
+                            slot.key = '';
+                            slot.count = -1;
+                        }
+
+                        break;
+                    }
+
+                    default: {
+                        if (
+                            slot?.key === 'gold' ||
+                            slot?.key === 'token' ||
+                            slot?.key === 'flask' ||
+                            slot?.key === 'arrow' ||
+                            slot?.key === 'shardt1' ||
+                            slot?.key === 'shardt2'
+                        )
+                            break;
+
+                        if (slot?.count > 500) {
+                            log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
+
+                            console.log(`huh: ${slot?.key === 'gold'}`);
+
+                            if (!logOnly) {
+                                slot.key = '';
+                                slot.count = -1;
+                            }
+                        }
+                        break;
                     }
                 }
             };

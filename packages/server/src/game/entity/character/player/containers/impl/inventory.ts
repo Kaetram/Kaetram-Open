@@ -3,7 +3,6 @@ import Container from '../container';
 import { Modules } from '@kaetram/common/network';
 import InventoryEn from '@kaetram/common/text/en/inventory';
 
-import type Slot from '../slot';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type Item from '../../../../objects/item';
 
@@ -18,17 +17,17 @@ export default class Inventory extends Container {
      * @returns Whether or not the item was successfully added.
      */
 
-    public override add(item: Item): Slot | undefined {
-        let slot = super.add(item);
+    public override add(item: Item): number {
+        let amount = super.add(item);
 
-        if (!slot) {
+        if (amount < 1) {
             this.notifyCallback?.(InventoryEn.NOT_ENOUGH_SPACE);
-            return;
+            return 0;
         }
 
         item.despawn(true);
 
-        return slot;
+        return amount;
     }
 
     /**

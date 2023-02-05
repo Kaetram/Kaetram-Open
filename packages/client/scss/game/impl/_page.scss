@@ -20,7 +20,7 @@
 }
 
 .item-count,
-.inventory-item-count {
+.item-count {
     font-family: AdvoCut, sans-serif;
     color: rgb(255 255 255 / 100%);
 }
@@ -31,10 +31,10 @@
     left: 92%;
 }
 
-.ok, .ok-check {
+.ok,
+.ok-check {
     position: absolute;
 }
-
 
 @each $size, $i in media.$sizes {
     @media ($size) {
@@ -58,7 +58,8 @@
             margin-top: 19px * $i;
         }
 
-        .ok, .ok-check {
+        .ok,
+        .ok-check {
             background-image: url('/img/#{$i}/containers.png');
         }
 
@@ -98,7 +99,7 @@
             &:hover {
                 background-position-x: -48px * $i;
             }
-            
+
             &:active {
                 background-position-x: -64px * $i;
             }
@@ -110,7 +111,6 @@
     .item-count {
         font-size: 14px;
     }
-
 }
 
 @media (--md) {
