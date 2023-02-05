@@ -113,7 +113,7 @@ export default class Trade extends Menu {
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
-                count = this.getElement(index).querySelector<HTMLElement>('.inventory-item-count')!,
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
                 slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
             if (!slotImage) return;
@@ -168,8 +168,10 @@ export default class Trade extends Menu {
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],
             image = slot.querySelector<HTMLElement>('.item-image')!,
-            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+            slotCount = slot.querySelector<HTMLElement>('.item-count')!;
 
+        // Reset the trade status when an update occurs
+        this.tradeStatus.innerHTML = '';
         // Update the icon of the item that is being added.
         image.style.backgroundImage = otherPlayer
             ? Util.getImageURL(key)
@@ -180,7 +182,7 @@ export default class Trade extends Menu {
 
         if (!otherPlayer) {
             let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
-                    '.inventory-item-count'
+                    '.item-count'
                 )!,
                 actualCount = this.inventory.getCount(this.inventoryIndex) - count;
 
@@ -193,8 +195,6 @@ export default class Trade extends Menu {
             // Update the remaining count of the item in the inventory.
             itemCount.innerHTML = Util.getCount(actualCount);
         }
-
-        this.tradeStatus.innerHTML = '';
     }
 
     /**
@@ -208,7 +208,7 @@ export default class Trade extends Menu {
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],
             image = slot.querySelector<HTMLElement>('.item-image')!,
-            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+            slotCount = slot.querySelector<HTMLElement>('.item-count')!;
 
         // Add the item back into the inventory.
         if (!otherPlayer) {
@@ -333,7 +333,7 @@ export default class Trade extends Menu {
     private clearSlot(index: number): void {
         let slot = this.getElement(index),
             image = slot.querySelector<HTMLElement>('.item-image')!,
-            count = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+            count = slot.querySelector<HTMLElement>('.item-count')!;
 
         image.style.backgroundImage = '';
         count.innerHTML = '';
@@ -348,7 +348,7 @@ export default class Trade extends Menu {
         // Clear the player's slots.
         for (let i of this.playerSlots.children) {
             let image = i.querySelector<HTMLElement>('.item-image')!,
-                count = i.querySelector<HTMLElement>('.inventory-item-count')!;
+                count = i.querySelector<HTMLElement>('.item-count')!;
 
             image.style.backgroundImage = '';
             count.innerHTML = '';
@@ -357,7 +357,7 @@ export default class Trade extends Menu {
         // Clear the other player's slots.
         for (let i of this.otherPlayerSlots.children) {
             let image = i.querySelector<HTMLElement>('.item-image')!,
-                count = i.querySelector<HTMLElement>('.inventory-item-count')!;
+                count = i.querySelector<HTMLElement>('.item-count')!;
 
             image.style.backgroundImage = '';
             count.innerHTML = '';
@@ -374,7 +374,7 @@ export default class Trade extends Menu {
     private setSlot(index: number, image: string, count: number): void {
         let slot = this.getElement(index),
             slotImage = slot.querySelector<HTMLElement>('.item-image')!,
-            slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
+            slotCount = slot.querySelector<HTMLElement>('.item-count')!;
 
         slotImage.style.backgroundImage = image;
         slotCount.innerHTML = Util.getCount(count);

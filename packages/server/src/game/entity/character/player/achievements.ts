@@ -76,7 +76,7 @@ export default class Achievements {
             let item = new Item(itemKey, -1, -1, true, itemCount);
 
             // Check if we can add to the inventory, then the bank, and if both fail just drop the item.
-            if (!this.player.inventory.add(item) && !this.player.bank.add(item))
+            if (this.player.inventory.add(item) < 1 && this.player.bank.add(item) < 1)
                 this.player.world.entities.spawnItem(
                     itemKey,
                     this.player.x,
@@ -153,7 +153,7 @@ export default class Achievements {
         this.forEachAchievement((a: Achievement) => {
             if (a.isFinished()) return;
             if (entity.isNPC() && !a.hasNPC(entity)) return;
-            if (entity.isMob() && (!a.hasMob(entity as Mob) || !a.isStarted())) return;
+            if (entity.isMob() && (!a.hasMob(entity) || !a.isStarted())) return;
 
             achievement = a;
         });
