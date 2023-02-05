@@ -4396,8 +4396,8 @@
 
   "frogarmor": {
     "type": "armour",
-    "name": "Frog Armour"
-    "price": 7500,
+    "name": "Frog Armour",
+    "price": 7500
   },
 
   "bearseonbiarmor": {
@@ -4572,7 +4572,7 @@
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
-    "price": 25
+    "price": 25,
     "description": "A magical potion received by some weird monument. It temporarily prevents the player from taking damage from the cold.",
     "stackable": true,
     "respawnDelay": 120000
@@ -4586,7 +4586,7 @@
   "blackpotion": {
     "type": "object",
     "name": "Black Potion",
-    "price": 100
+    "price": 100,
     "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
     "plugin": "blackpotion",
     "edible": true
@@ -4974,7 +4974,7 @@
       "archery": 0,
       "magic": 0
     },
-    "price": 1000,
+    "price": 1000
   },
 
   "platinumsword": {
@@ -4991,21 +4991,21 @@
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 50,
+    "price": 50
   },
 
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
     "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
-    "price": 75,
+    "price": 75
   },
 
   "pinelogs": {
     "type": "object",
     "name": "Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
-    "price": 88,
+    "price": 88
   },
 
   "icelogs": {
@@ -5027,7 +5027,7 @@
     "type": "object",
     "name": "Ice Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
-    "price": 85,
+    "price": 85
   },
 
   "willowlogs": {
@@ -5048,42 +5048,42 @@
     "type": "object",
     "name": "Nisoc Ore",
     "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
-    "price": 250,
+    "price": 250
   },
 
   "cinnabarore": {
     "type": "object",
     "name": "Cinnabar Ore",
     "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
-    "price": 350,
+    "price": 350
   },
 
   "pytharore": {
     "type": "object",
     "name": "Pythar Ore",
     "description": "A purple crystal with magical properties.",
-    "price": 500,
+    "price": 500
   },
 
   "goldore": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
-    "price": 650,
+    "price": 650
   },
 
   "iboore": {
     "type": "object",
     "name": "Ibo Ore",
     "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
-    "price": 800,
+    "price": 800
   },
       
   "moonrockore": {
     "type": "object",
     "name": "Space Rock",
     "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
-    "price": 2400,
+    "price": 2400
   },
       
   "bead": {
