@@ -14,6 +14,7 @@ let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 interface ExposedConfig extends Pick<Config, typeof expose[number]> {
     debug: boolean;
     version: string;
+    minor: string;
     port: number;
     hub: string | false;
 }
@@ -28,6 +29,7 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     let env = {} as ExposedConfig,
         {
             gver,
+            minor,
             clientRemoteHost,
             clientRemotePort,
             hubEnabled,
@@ -47,6 +49,7 @@ function loadEnv(isProduction: boolean): ExposedConfig {
     return Object.assign(env, {
         debug: !isProduction,
         version: gver,
+        minor,
         host: clientHost,
         port: clientPort,
         hub: hubEnabled && hub
