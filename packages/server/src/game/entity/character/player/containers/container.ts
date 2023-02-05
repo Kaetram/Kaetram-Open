@@ -66,25 +66,39 @@ export default abstract class Container {
 
     public add(item: Item): number {
         let { count } = item,
+            /** The slot where the item should be added */
             slot = this.find(item),
+            /** The total amount of items added */
             total = 0;
 
+        // If the slot exists...
         if (slot) {
+            // Add the items in the slot to the item to be added
             if (slot.count > 0) item.count += slot.count;
+
+            // Update the slot with the new item count
             slot.update(item, this.ignoreMaxStackSize);
 
+            // Set the total to the new item count
             total += slot.count;
 
+            // If the total count is less than the count of the item to be added...
             if (total < count) {
+                // Subtract the total from the item count
                 item.count -= total;
 
+                // Add the item to the slot, and store the amount added
                 let amount = this.add(item);
+
+                // Add the amount to the total
                 if (amount > 0) total += amount;
             }
         }
 
+        // Call the add callback with the slot
         if (total > 0) this.addCallback?.(slot!);
 
+        // Return the total amount
         return total;
     }
 
@@ -185,32 +199,58 @@ export default abstract class Container {
         let fromSlot = this.get(fromIndex),
             fromItem = this.getItem(fromSlot);
 
+        // If the target slot is undefined, move the item to the next available slot
+        // in the container
         if (toIndex === undefined) {
+            // Attempt to add the item to the container
             let amount = toContainer.add(fromItem);
 
+            // If the item was not fully added, remove the amount that was added
+            // from the source container
             if (amount > 0) this.remove(fromIndex, amount);
         } else {
+            // If the source and target containers are the same and the source
+            // and target slots are the same, exit this function
             if (this.type === toContainer.type && fromIndex === toIndex) return;
 
+            // Get the target slot
             let toSlot = toContainer.get(toIndex),
+                // Check if the target slot is empty
                 isEmpty = toSlot.isEmpty(),
+                // If the target slot is not empty, get the item in the target slot
                 toItem: Item | undefined;
 
             if (!isEmpty) toItem = toContainer.getItem(toSlot);
 
+            // If the target slot is empty or the target slot contains the same
+            // item as the source slot
             if (isEmpty || (toItem && fromItem.key === toItem.key)) {
+                // Get the count of the item in the target slot
                 let toCount = isEmpty ? 0 : toItem!.count;
 
+                // Add the count of the item in the target slot to the count of
+                // the item in the source slot
                 fromItem.count += toCount;
+                // Update the item in the target slot with the item in the source
+                // slot
                 toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
 
+                // If the count of the item in the target slot is greater than zero,
+                // remove the difference in count from the source slot
                 if (toSlot.count > 0) this.remove(fromIndex, toSlot.count - toCount);
                 // else fromItem.count -= toCount;
             } else {
+                // Update the item in the target slot with the item in the source
+                // slot
                 toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
 
+                // If the count of the item in the target slot is less than the
+                // count of the item in the source slot
                 if (toSlot.count < fromItem.count) {
+                    // Remove the count of the item in the target slot from the
+                    // source slot
                     this.remove(fromIndex, toSlot.count);
+                    // Add the item in the target slot to the container
                     this.add(toItem!);
                 } else fromSlot.update(toItem!, this.ignoreMaxStackSize);
             }
