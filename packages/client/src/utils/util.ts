@@ -67,7 +67,7 @@ export default {
         image.classList.add('item-image');
 
         // Sets the class of the count.
-        count.classList.add('inventory-item-count');
+        count.classList.add('item-count');
 
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
