@@ -170,6 +170,8 @@ export default class Trade extends Menu {
             image = slot.querySelector<HTMLElement>('.item-image')!,
             slotCount = slot.querySelector<HTMLElement>('.inventory-item-count')!;
 
+        // Reset the trade status when an update occurs
+        this.tradeStatus.innerHTML = '';
         // Update the icon of the item that is being added.
         image.style.backgroundImage = otherPlayer
             ? Util.getImageURL(key)
@@ -193,8 +195,6 @@ export default class Trade extends Menu {
             // Update the remaining count of the item in the inventory.
             itemCount.innerHTML = Util.getCount(actualCount);
         }
-
-        this.tradeStatus.innerHTML = '';
     }
 
     /**
