@@ -357,6 +357,8 @@ export default class Player extends Character {
 
         if (population > 1)
             this.notify(`There are currently ${population} players online.`, '', '', true);
+
+        this.notify(`Double drop rates are currently active!`, '', '', true);
     }
 
     /**
