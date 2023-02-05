@@ -40,15 +40,9 @@ export default class PlayerHandler {
             this;
 
         player.onRequestPath((x, y) => {
-            console.log('hi?');
-
             if (player.dead || player.frozen) return null;
 
-            console.log('hi?');
-
             if (player.canAttackTarget() && !player.trading) return null;
-
-            console.log('hi?');
 
             /**
              * If the position is the same as the player's current position
