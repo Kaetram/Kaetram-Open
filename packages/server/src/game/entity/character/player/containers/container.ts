@@ -43,6 +43,8 @@ export default abstract class Container {
             // Create a new item instance so that the item's data is created.
             if (!item.key) return;
 
+            if (item.count < 1) item.count = 1;
+
             this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
         });
 
