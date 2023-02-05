@@ -11,7 +11,6 @@ export default {
     sideLength: -1,
     thirdTile: -1,
     tileAndAQuarter: -1,
-    fading: false,
 
     /**
      * Creates a unique ID for a given time.
@@ -226,10 +225,6 @@ export default {
      * @param speed (Optional) The speed at which to fade in.
      */
     fadeIn(element: HTMLElement, speed = 0.1): void {
-        if (this.fading) return;
-
-        this.fading = true;
-
         element.style.opacity ||= '0';
         element.style.display = 'block';
 
@@ -239,7 +234,7 @@ export default {
             if (opacity <= 1) {
                 element.style.opacity = opacity.toString();
                 requestAnimationFrame(fade);
-            } else this.fading = false;
+            }
         };
 
         requestAnimationFrame(fade);
@@ -250,11 +245,7 @@ export default {
      * @param element The element to fade out.
      * @param speed (Optional) The speed at which to fade out.
      */
-    fadeOut(element: HTMLElement, speed = 0.1): void {
-        if (this.fading) return;
-
-        this.fading = true;
-
+    fadeOut(element: HTMLElement, speed = 0.2): void {
         element.style.opacity ||= '1';
 
         let fade = () => {
@@ -263,10 +254,7 @@ export default {
             if (opacity >= 0) {
                 element.style.opacity = opacity.toString();
                 requestAnimationFrame(fade);
-            } else {
-                element.style.display = 'none';
-                this.fading = false;
-            }
+            } else element.style.display = 'none';
         };
 
         requestAnimationFrame(fade);
