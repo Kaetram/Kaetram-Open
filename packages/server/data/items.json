@@ -212,7 +212,7 @@
     "type": "weapon",
     "name": "Trident Of The Seas",
     "level": 40,
-    "price": 10000,
+    "price": 2500,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -565,7 +565,7 @@
     "type": "weapon",
     "name": "Day Walker",
     "level": 140,
-    "price": 10000,
+    "price": 7500,
     "attackStats": {
       "crush": 8,
       "slash": 60,
@@ -605,7 +605,7 @@
     "type": "weapon",
     "name": "Sea rage",
     "level": 160,
-    "price": 15000,
+    "price": 2500,
     "attackStats": {
       "crush": 48,
       "slash": 20,
@@ -2814,7 +2814,7 @@
     "name": "Seahorse Bow",
     "skill": "archery",
     "level": 35,
-    "price": 9850,
+    "price": 1550,
     "attackStats": {
       "crush": 2,
       "slash": 3,
