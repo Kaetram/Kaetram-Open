@@ -371,7 +371,7 @@ export default abstract class Quest {
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
             itemKey: stage.itemKey! || '',
-            itemCount: stage.itemCount! || 0,
+            itemCount: stage.itemCount! || 1,
             tree: stage.tree! || '',
             treeCount: stage.treeCount! || 0,
             skill: stage.skill! || '',
