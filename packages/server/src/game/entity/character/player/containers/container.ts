@@ -61,45 +61,29 @@ export default abstract class Container {
      * Takes an item object and updates it into the slot if it exists,
      * otherwise it adds it to an empty slot.
      * @param item Item object in the world.
-     * @returns Whether or not adding was successful.
+     * @returns The amount of items added.
      */
 
     public add(item: Item): number {
-        // Return whether or not the adding was successful.
-        let added = false,
-            slot: Slot | undefined,
+        let { count } = item,
+            slot = this.find(item),
             total = 0;
 
-        // Item is stackable and we already have it.
-        if ((item.stackable && this.canHold(item)) || this.ignoreMaxStackSize) {
-            slot = this.find(item)!;
+        if (slot) {
+            if (slot.count > 0) item.count += slot.count;
+            slot.update(item, this.ignoreMaxStackSize);
 
-            added = !!slot?.add(item.count);
+            total += slot.count;
+
+            if (total < count) {
+                item.count -= total;
+
+                let amount = this.add(item);
+                if (amount > 0) total += amount;
+            }
         }
 
-        // Update the next empty slot.
-        if (!added) {
-            // All slots are taken and nothing was stacked, stop here.
-            slot = this.getEmptySlot();
-
-            if (slot) {
-                slot.update(item, this.ignoreMaxStackSize);
-
-                // Recursively add items until we exhaust the count.
-                if (item.count > item.maxStackSize) {
-                    item.count -= item.maxStackSize;
-
-                    let amount = this.add(item);
-                    if (amount > 0) total += amount;
-                }
-
-                added = true;
-            } else return -1;
-        }
-
-        if (added) this.addCallback?.(slot!);
-
-        total += slot!.count;
+        if (total > 0) this.addCallback?.(slot!);
 
         return total;
     }
@@ -198,44 +182,38 @@ export default abstract class Container {
      */
 
     public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
-        // Get the item stack from the source slot
         let fromSlot = this.get(fromIndex),
-            fromItem = this.getItem(fromSlot),
-            // Get the count of the item stack
-            { count } = fromItem;
+            fromItem = this.getItem(fromSlot);
 
-        // Remove the item stack from the source slot
-        this.remove(fromIndex, count);
-
-        // If the destination slot is not defined
         if (toIndex === undefined) {
-            // Add the item stack to the destination container
             let amount = toContainer.add(fromItem);
 
-            // If the amount of items that could not be added is greater than 0
-            if (amount > 0) {
-                // Set the count of the item stack to the amount of items that could not be added
-                fromItem.count = count - amount;
-
-                // If the count of the item stack is greater than 0
-                // eslint-disable-next-line unicorn/consistent-destructuring
-                if (fromItem.count > 0) fromSlot.update(fromItem, this.ignoreMaxStackSize);
-            } else fromSlot.update(fromItem, this.ignoreMaxStackSize);
+            if (amount > 0) this.remove(fromIndex, amount);
         } else {
-            // Get the slot in the destination container
-            let toSlot = toContainer.get(toIndex);
+            if (this.type === toContainer.type && fromIndex === toIndex) return;
 
-            // If the destination slot is not empty
-            if (!toSlot.isEmpty()) {
-                // Get the item stack from the destination slot
-                let toItem = toContainer.getItem(toSlot);
+            let toSlot = toContainer.get(toIndex),
+                isEmpty = toSlot.isEmpty(),
+                toItem: Item | undefined;
 
-                // Update the source slot with the item stack from the destination slot
-                fromSlot.update(toItem, this.ignoreMaxStackSize);
+            if (!isEmpty) toItem = toContainer.getItem(toSlot);
+
+            if (isEmpty || (toItem && fromItem.key === toItem.key)) {
+                let toCount = isEmpty ? 0 : toItem!.count;
+
+                fromItem.count += toCount;
+                toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
+
+                if (toSlot.count > 0) this.remove(fromIndex, toSlot.count - toCount);
+                // else fromItem.count -= toCount;
+            } else {
+                toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
+
+                if (toSlot.count < fromItem.count) {
+                    this.remove(fromIndex, toSlot.count);
+                    this.add(toItem!);
+                } else fromSlot.update(toItem!, this.ignoreMaxStackSize);
             }
-
-            // Update the destination slot with the item stack from the source slot
-            toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
         }
 
         // Call the load callback for this container
@@ -282,16 +260,11 @@ export default abstract class Container {
      */
 
     public find(item: Item): Slot | undefined {
-        return this.slots.find((slot) => slot.canHold(item));
-    }
-
-    /**
-     * Checks if an item can be held in the container.
-     * @param item Item to check.
-     */
-
-    public canHold(item: Item): boolean {
-        return this.slots.some((slot) => slot.canHold(item));
+        return this.slots.find(
+            (slot) =>
+                slot.canHoldSome(item) &&
+                (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
+        );
     }
 
     /**
