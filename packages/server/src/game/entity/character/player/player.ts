@@ -351,7 +351,7 @@ export default class Player extends Character {
     public welcome(): void {
         if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
 
-        this.notify(`Welcome back to ${config.name}, double drops are currently active!`);
+        this.notify(`Welcome back to ${config.name}, double drop rates are currently active!`);
 
         let population = this.world.getPopulation();
 
