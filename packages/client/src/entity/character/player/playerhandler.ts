@@ -9,6 +9,10 @@ import type Camera from '../../../renderer/camera';
 import type Renderer from '../../../renderer/renderer';
 import type Player from './player';
 
+/**
+ * THIS WHOLE CLASS IS GONNA BE REFACTORED
+ */
+
 export default class PlayerHandler {
     private lastStepX = -1;
     private lastStepY = -1;
@@ -36,9 +40,15 @@ export default class PlayerHandler {
             this;
 
         player.onRequestPath((x, y) => {
+            console.log('hi?');
+
             if (player.dead || player.frozen) return null;
 
-            if (player.canAttackTarget()) return null;
+            console.log('hi?');
+
+            if (player.canAttackTarget() && !player.trading) return null;
+
+            console.log('hi?');
 
             /**
              * If the position is the same as the player's current position
@@ -160,7 +170,7 @@ export default class PlayerHandler {
             lastStepX = player.gridX;
             lastStepY = player.gridY;
 
-            if (player.canAttackTarget()) player.stop(true);
+            if (player.canAttackTarget() && !player.trading) player.stop(true);
         });
 
         // Refresh animated tiles every second step.
