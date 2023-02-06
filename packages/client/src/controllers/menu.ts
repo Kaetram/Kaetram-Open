@@ -23,7 +23,6 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
-    private interact: Interact = new Interact();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -38,6 +37,7 @@ export default class MenuController {
     private quests: Quests;
     private friends: Friends;
     private trade: Trade;
+    private interact: Interact;
 
     public header: Header;
 
@@ -58,6 +58,7 @@ export default class MenuController {
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
         this.trade = new Trade(this.inventory);
+        this.interact = new Interact(game.player);
 
         this.menus = {
             inventory: this.inventory,
