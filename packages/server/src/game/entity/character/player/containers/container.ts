@@ -307,7 +307,7 @@ export default abstract class Container {
 
     /**
      * Finds a slot with the same item or an empty slot.
-     * @param item - The item to find a slot for.
+     * @param item The item to find a slot for.
      * @returns Either a slot with the same item or an empty slot.
      */
 
@@ -315,7 +315,10 @@ export default abstract class Container {
         // Find a slot with the same item.
         let sameItemSlot = this.slots.find(
             (slot) =>
-                slot.key === item.key && (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
+                // If the slot's key matches the item's key
+                slot.key === item.key &&
+                // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
+                (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
         );
 
         // If there's no slot with the same item, find an empty slot.
