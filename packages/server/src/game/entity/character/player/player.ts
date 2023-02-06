@@ -110,6 +110,7 @@ export default class Player extends Character {
 
     // Special status
     public running = false;
+    public hotSauce = false;
     public dualistsMark = false;
     public thickSkin = false;
 
@@ -1007,6 +1008,9 @@ export default class Player extends Character {
         // Apply a 10% speed boost if the player running effect is present.
         if (this.running) speed = Math.floor(speed * 0.9);
 
+        // Apply a 20% speed boost if the player is using the hot sauce.
+        if (this.hotSauce) speed = Math.floor(speed * 0.8);
+
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
 
@@ -1037,9 +1041,11 @@ export default class Player extends Character {
      * @param running Whether or not the player is running.
      */
 
-    public setRunning(running: boolean): void {
+    public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
+        // Update the hot sauce status.
+        this.hotSauce = hotSauce;
         this.running = running;
 
         this.sendToRegions(
@@ -1716,6 +1722,14 @@ export default class Player extends Character {
 
     public override getArcheryLevel(): number {
         return this.skills.get(Modules.Skills.Archery).level;
+    }
+
+    /**
+     * @returns The player's defense level from the skills controller.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.skills.get(Modules.Skills.Defense).level;
     }
 
     /**

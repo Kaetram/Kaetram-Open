@@ -4479,6 +4479,15 @@
     "healAmount": 100
   },
 
+  "hotsauce": {
+    "type": "object",
+    "name": "Hot Sauce",
+    "description": "It's really weird why random mobs would be carrying this item. Like what could they possibly use this for?",
+    "price": 150,
+    "edible": true,
+    "plugin": "hotsauce"
+  },
+
   "cure": {
     "type": "object",
     "name": "Antidote",

@@ -142,7 +142,8 @@ export enum Skills {
     Health,
     Magic,
     Mining,
-    Strength
+    Strength,
+    Defense
 }
 
 export enum Enchantment {
@@ -176,12 +177,13 @@ export enum Effects {
     Boulder
 }
 
-export enum Stats {
+export enum DamageStyle {
     None,
     Crush,
     Slash,
     Stab,
-    Range
+    Magic,
+    Archery
 }
 
 export enum Medals {
@@ -339,6 +341,11 @@ export let SkillExpColours = {
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
         stroke: 'rgb(189, 172, 151)'
+    },
+
+    [Skills.Defense]: {
+        fill: 'rgb(110, 158, 255)',
+        stroke: 'rgb(7, 63, 176)'
     }
 };
 
