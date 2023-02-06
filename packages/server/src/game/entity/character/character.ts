@@ -394,6 +394,14 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * @returns The character's current defense level.
+     */
+
+    public getDefenseLevel(): number {
+        return 1;
+    }
+
+    /**
      * Picks the bonus from the total bonuses as either archery bonus or strength bonus
      * depending on whether the character is using a ranged weapon or not.
      * @returns The bonus value for either archery or strength.
