@@ -138,6 +138,23 @@ export default class Item extends Entity {
     }
 
     /**
+     * Copies an item and returns a clone of it.
+     * @returns A copy of the item and all its properties
+     */
+
+    public copy(): this {
+        return new Item(
+            this.key,
+            this.x,
+            this.y,
+            this.dropped,
+            this.count,
+            this.enchantments,
+            this.owner
+        ) as this;
+    }
+
+    /**
      * Clears all the timeouts and attempts
      * to respawn the item if it's static.
      */
