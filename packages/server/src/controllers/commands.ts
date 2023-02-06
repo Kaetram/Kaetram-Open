@@ -255,6 +255,85 @@ export default class Commands {
                 return;
             }
 
+            case 'take': {
+                let index = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!index || !username)
+                    return this.player.notify(
+                        'Invalid command, usage /take [index] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank,
+                    slot = containerType.get(index);
+
+                if (!slot.key)
+                    return this.player.notify(`Player ${username} has no item at index ${index}.`);
+
+                containerType.remove(index, slot.count);
+
+                this.player.notify(`Took ${slot.count}x ${slot.key} from ${username}.`);
+
+                return;
+            }
+
+            case 'takeitem': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!key || !username || (container !== 'inventory' && container !== 'bank'))
+                    return this.player.notify(
+                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank;
+
+                containerType.removeItem(key, count);
+
+                this.player.notify(`Took ${count}x ${key} from ${username}.`);
+
+                return;
+            }
+
+            case 'copybank':
+            case 'copyinventory': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify('Invalid command, usage /copybank [username]');
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} is not online.`);
+
+                if (command === 'copybank') {
+                    this.player.bank.empty();
+
+                    player.bank.forEachSlot((slot) =>
+                        this.player.bank.add(this.player.bank.getItem(slot))
+                    );
+                } else {
+                    this.player.inventory.empty();
+
+                    player.inventory.forEachSlot((slot) =>
+                        this.player.inventory.add(this.player.inventory.getItem(slot))
+                    );
+                }
+
+                this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
+            }
+
             case 'drop': {
                 let key = blocks.shift(),
                     count = parseInt(blocks.shift()!);
