@@ -41,7 +41,7 @@ export default class Profile extends Menu {
         this.pages.push(this.abilities);
 
         // Used to initialize the navigation buttons.
-        this.handleNavigation();
+        this.update();
 
         // Navigation event listeners.
         this.previous.addEventListener('click', () => this.handleNavigation('previous'));
@@ -61,7 +61,7 @@ export default class Profile extends Menu {
      * @param direction Which way we are navigating, defaults to previous.
      */
 
-    private handleNavigation(direction: 'previous' | 'next' = 'previous'): void {
+    private handleNavigation(direction: 'previous' | 'next'): void {
         // Prevent actions on disabled buttons.
         if (this.isDisabled(direction)) return;
 
@@ -75,6 +75,16 @@ export default class Profile extends Menu {
         // Modify the currently active page based on the direction.
         this.activePage += direction === 'previous' ? -1 : 1;
 
+        // Update the status of the buttons.
+        this.update();
+    }
+
+    /**
+     * Updates the status of the buttons depending on whether or not we are
+     * on the first or last page.
+     */
+
+    private update() {
         // Reaching the first page navigating backwards.
         if (this.activePage <= 0) {
             this.activePage = 0;
