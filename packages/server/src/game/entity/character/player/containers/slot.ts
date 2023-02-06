@@ -68,16 +68,6 @@ export default class Slot {
     }
 
     /**
-     * Checks if the current slot can hold the item.
-     * @param item The item to check.
-     * @returns Whether or not the item can be held.
-     */
-
-    public canHoldSome(item: Item): boolean {
-        return this.key === item.key || this.isEmpty();
-    }
-
-    /**
      * Removes an amount from the count in the slot.
      * @param amount Amount we are removing from the slot.
      * @returns The amount of the item we removed.
