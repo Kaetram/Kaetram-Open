@@ -354,6 +354,14 @@ export default class InputController {
                 this.game.socket.send(Packets.Examine, [this.interactEntity.instance]);
                 break;
             }
+
+            case Modules.MenuActions.AddFriend: {
+                this.game.socket.send(Packets.Friends, {
+                    opcode: Opcodes.Friends.Add,
+                    username: this.interactEntity.name
+                });
+                break;
+            }
         }
 
         this.interact.hide();
