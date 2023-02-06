@@ -579,6 +579,15 @@ export default class Player extends Character {
     }
 
     /**
+     * @param username The username of the friend we are checking.
+     * @returns Whether or not the player has a friend with the given username.
+     */
+
+    public hasFriend(username: string): boolean {
+        return username.toLowerCase() in this.friends;
+    }
+
+    /**
      * Callback for when the poison status undergoes a change.
      * @param callback Contains information about the current poison status.
      */

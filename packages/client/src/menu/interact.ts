@@ -3,6 +3,7 @@ import Menu from './menu';
 import _ from 'lodash';
 import { Modules } from '@kaetram/common/network';
 
+import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 
 export default class Interact extends Menu {
@@ -12,7 +13,7 @@ export default class Interact extends Menu {
     private buttonCallback?: (menuAction: Modules.MenuActions) => void;
     private closeCallback?: () => void;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#interact');
     }
 
@@ -36,8 +37,11 @@ export default class Interact extends Menu {
         // Add the trade and follow interactions to all player entities.
         if (entity.isPlayer()) {
             if (pvp) actions.push(Modules.MenuActions.Attack);
+            else actions.push(Modules.MenuActions.Follow);
 
-            actions.push(Modules.MenuActions.Follow, Modules.MenuActions.Trade);
+            actions.push(Modules.MenuActions.Trade);
+
+            if (!this.player.hasFriend(entity.name)) actions.push(Modules.MenuActions.AddFriend);
         }
 
         // Add all the actions to the list.

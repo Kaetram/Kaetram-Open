@@ -83,7 +83,7 @@ export default class Friends {
      */
 
     public remove(player: Player | string): void {
-        let username = typeof player === 'string' ? player : player.username;
+        let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // No username was found in the list.
         if (!this.hasFriend(username))
