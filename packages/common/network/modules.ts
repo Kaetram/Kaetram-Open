@@ -77,7 +77,8 @@ export enum MenuActions {
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
-    Examine = 'examine'
+    Examine = 'examine',
+    AddFriend = 'addfriend'
 }
 
 export enum InteractActions {}
@@ -173,6 +174,14 @@ export enum Effects {
     Freezing,
     Poisonball,
     Boulder
+}
+
+export enum Stats {
+    None,
+    Crush,
+    Slash,
+    Stab,
+    Range
 }
 
 export enum Medals {
