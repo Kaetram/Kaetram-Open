@@ -19,7 +19,7 @@ export default class Bank extends Container {
      */
 
     public override add(item: Item): number {
-        let amount = super.add(item);
+        let amount = super.add(item.copy());
 
         if (amount < 1) {
             this.notifyCallback?.(BankEn.NOT_ENOUGH_SPACE);
