@@ -90,6 +90,10 @@
             background: url('/img/#{$i}/main.png') -400px * $i -512px * $i no-repeat;
         }
 
+        .action-addfriend {
+            background: url('/img/#{$i}/main.png') -400px * $i -528px * $i no-repeat;
+        }
+
         .action-button {
             width: 16px * $i;
             height: 16px * $i;
