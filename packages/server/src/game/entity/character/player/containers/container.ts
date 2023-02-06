@@ -306,18 +306,20 @@ export default abstract class Container {
     }
 
     /**
-     * Iterates through the slots and returns the slot that contains
-     * the `item` parameter.
-     * @param item The item we are trying to find.
-     * @returns The slot containing the key we are trying to find.
+     * Finds a slot with the same item or an empty slot.
+     * @param item - The item to find a slot for.
+     * @returns Either a slot with the same item or an empty slot.
      */
 
     public find(item: Item): Slot | undefined {
-        return this.slots.find(
+        // Find a slot with the same item.
+        let sameItemSlot = this.slots.find(
             (slot) =>
-                slot.canHoldSome(item) &&
-                (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
+                slot.key === item.key && (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
         );
+
+        // If there's no slot with the same item, find an empty slot.
+        return sameItemSlot || this.getEmptySlot();
     }
 
     /**
