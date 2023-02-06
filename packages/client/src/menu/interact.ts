@@ -36,11 +36,14 @@ export default class Interact extends Menu {
 
         // Add the trade and follow interactions to all player entities.
         if (entity.isPlayer()) {
+            // Use attack if player is in PvP
             if (pvp) actions.push(Modules.MenuActions.Attack);
             else actions.push(Modules.MenuActions.Follow);
 
+            // Add the trade action
             actions.push(Modules.MenuActions.Trade);
 
+            // If we don't have the player added then add the add friend action.
             if (!this.player.hasFriend(entity.name)) actions.push(Modules.MenuActions.AddFriend);
         }
 
