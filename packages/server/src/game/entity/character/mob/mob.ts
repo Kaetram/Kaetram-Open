@@ -700,6 +700,16 @@ export default class Mob extends Character {
     }
 
     /**
+     * Subclass implementation for grabbing the defense level. For a mob
+     * the defense level is specified in the mob data object.
+     * @returns The defense level of the mob.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.defenseLevel;
+    }
+
+    /**
      * Callback for when the mob respawns.
      */
 

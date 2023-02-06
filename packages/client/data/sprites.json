@@ -11589,6 +11589,18 @@
   },
 
   {
+    "id": "item-hotsauce",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
     "id": "item-shardt1",
     "animations": {
       "idle": {
