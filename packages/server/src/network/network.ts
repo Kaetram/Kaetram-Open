@@ -18,7 +18,7 @@ export default class Network {
 
     private regions: Regions;
 
-    private timeoutThreshold = 4000;
+    private timeoutThreshold = 5000;
     private packets: { [id: string]: unknown[] } = {};
 
     public constructor(private world: World) {
@@ -59,8 +59,16 @@ export default class Network {
         let player = new Player(this.world, this.database, connection),
             timeDifference = Date.now() - this.getLastConnection(connection);
 
-        if (!config.debugging && timeDifference < this.timeoutThreshold)
-            return connection.reject('toofast');
+        if (!config.debugging) {
+            // Check that the connections aren't coming too fast.
+            if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
+
+            // Ensure that we don't have too many connections from the same IP address.
+            if (this.socketHandler.isMaxConnections(connection.address))
+                return connection.reject('toomany');
+        }
+
+        this.socketHandler.updateLastTime(connection.address);
 
         this.createPacketQueue(player);
 
@@ -177,6 +185,6 @@ export default class Network {
      */
 
     private getLastConnection(connection: Connection): number {
-        return this.socketHandler.addressTimes[connection.address];
+        return this.socketHandler.addresses[connection.address].lastTime;
     }
 }

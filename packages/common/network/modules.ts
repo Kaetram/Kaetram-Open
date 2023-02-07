@@ -408,7 +408,8 @@ export const Constants = {
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
-    ARCHER_ATTACK_RANGE: 8 // Default attack range for bows if no other range is specified.
+    ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
+    MAX_CONNECTIONS: 16 // Maximum number of connections per IP address.
 };
 
 export enum MinigameConstants {
