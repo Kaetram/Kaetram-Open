@@ -596,7 +596,7 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.setMovementSpeed(movementSpeed);
+                this.player.overrideMovementSpeed = movementSpeed;
 
                 break;
             }
