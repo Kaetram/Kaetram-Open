@@ -1922,7 +1922,7 @@
     "attackRate": 1500,
     "movementSpeed": 600,
     "respawnDelay": 95000,
-    "projectile": "projectile-fireball"
+    "projectileName": "projectile-fireball"
   },
 
   "piratecaptain": {
@@ -2049,7 +2049,7 @@
     "attackRate": 1100,
     "movementSpeed": 500,
     "respawnDelay": 180000,
-    "projectile": "projectile-gift",
+    "projectileName": "projectile-gift",
     "plugin": "santa",
     "roamingDistance": 16
   },
