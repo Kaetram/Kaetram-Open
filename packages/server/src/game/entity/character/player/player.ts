@@ -104,9 +104,11 @@ export default class Player extends Character {
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
+    public jailed = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
     public invalidMovement = 0;
+    public overrideMovementSpeed = -1;
 
     // Special status
     public running = false;
@@ -995,7 +997,10 @@ export default class Player extends Character {
      */
 
     public getMovementSpeed(): number {
-        let speed = Modules.Defaults.MOVEMENT_SPEED, // Start with default.
+        let speed =
+                this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
+                    ? Modules.Defaults.MOVEMENT_SPEED
+                    : this.overrideMovementSpeed, // Start with default.
             armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
 
