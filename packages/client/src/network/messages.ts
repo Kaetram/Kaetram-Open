@@ -263,6 +263,11 @@ export default class Messages {
                 break;
             }
 
+            case 'toomany': {
+                this.app.sendError('Too many devices from your IP address are connected.');
+                break;
+            }
+
             default: {
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
