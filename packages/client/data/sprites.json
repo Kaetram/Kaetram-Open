@@ -2731,6 +2731,17 @@
     "offsetY": 0
   },
   {
+    "id": "seachest",
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "christmasarmor",
     "width": 32,
     "height": 32,
