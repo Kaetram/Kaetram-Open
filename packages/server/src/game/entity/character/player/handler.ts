@@ -677,6 +677,9 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
+        // Add the mob kill to the player's statistics.
+        this.player.statistics.addMobKill(character.key);
+
         // Handle the experience upon killing a mob.
         this.player.handleExperience(character.experience);
 
