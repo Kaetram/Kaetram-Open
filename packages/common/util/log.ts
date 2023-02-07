@@ -3,6 +3,8 @@ import path from 'node:path';
 
 import config from '../config';
 
+import { floor } from 'lodash-es';
+
 type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 
 /**
@@ -17,23 +19,30 @@ class Log {
     private streamPath = path.resolve('../../', 'runtime.log');
     private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
-    private chatStreamPath = path.resolve('../server/logs', 'chat.log');
-    private dropsStreamPath = path.resolve('../server/logs', 'drops.log');
-    private generalStreamPath = path.resolve('../server/logs', 'general.log');
-    private tradesStreamPath = path.resolve('../server/logs', 'trades.log');
-    private storesStreamPath = path.resolve('../server/logs', 'stores.log');
 
-    // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null; // Write to a different stream
+    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
     private logStream = fs.createWriteStream(this.logStreamPath);
     private bugStream = fs.createWriteStream(this.bugStreamPath);
-    private chatStream = fs.createWriteStream(this.chatStreamPath);
-    private dropsStream = fs.createWriteStream(this.dropsStreamPath);
-    private generalStream = fs.createWriteStream(this.generalStreamPath);
-    private storesStream = fs.createWriteStream(this.storesStreamPath);
-    private tradesStream = fs.createWriteStream(this.tradesStreamPath);
+
+    private logFolderPath = '../logs';
+
+    private chatStream = this.createLogStream('chat');
+    private dropsStream = this.createLogStream('drops');
+    private generalStream = this.createLogStream('general');
+    private storesStream = this.createLogStream('stores');
+    private tradesStream = this.createLogStream('trades');
 
     private debugging = config.debugging;
+
+    public constructor() {
+        if (!fs.existsSync(this.logFolderPath)) fs.mkdirSync(this.logFolderPath);
+    }
+
+    private createLogStream(name: string) {
+        let log = path.resolve(this.logFolderPath, `${name}.log`);
+
+        return fs.createWriteStream(log, { flags: 'a' });
+    }
 
     public info(...data: unknown[]): void {
         this.send('info', data);
