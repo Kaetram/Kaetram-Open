@@ -3,6 +3,7 @@ import Slot from './slot';
 import Item from '../../../objects/item';
 
 import _ from 'lodash-es';
+import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';
 import type { ContainerItem } from '@kaetram/common/types/item';
@@ -67,7 +68,7 @@ export default abstract class Container {
      */
 
     public add(item: Item): number {
-        let { count } = item,
+        let itemCount = item.count,
             /** The slot where the item should be added */
             slot = this.find(item),
             /** The total amount of items added */
@@ -75,22 +76,27 @@ export default abstract class Container {
 
         // If the slot exists...
         if (slot) {
+            let itemCopy = item.copy(),
+                slotCount = slot.count;
+
             // Add the items in the slot to the item to be added
-            if (slot.count > 0) item.count += slot.count;
+            if (slot.count > 0) itemCopy.count += slot.count;
 
             // Update the slot with the new item count
-            slot.update(item, this.ignoreMaxStackSize);
+            slot.update(itemCopy, this.ignoreMaxStackSize);
 
             // Set the total to the new item count
             total += slot.count;
 
+            if (slotCount > 0) total -= slotCount;
+
             // If the total count is less than the count of the item to be added...
-            if (total < count) {
+            if (total < itemCount) {
                 // Subtract the total from the item count
-                item.count -= total;
+                itemCopy.count -= total;
 
                 // Add the item to the slot, and store the amount added
-                let amount = this.add(item);
+                let amount = this.add(itemCopy);
 
                 // Add the amount to the total
                 if (amount > 0) total += amount;
@@ -134,7 +140,7 @@ export default abstract class Container {
      * remove `count` amount. For example, if we have 5 swords, and we want to remove
      * 4, we first check if we can find a slot with a sword and count of 4, since a sword
      * is  not stackable, we jump to the next condition, we iterate each slot, remove the item
-     * in each slot and increment the amount of slots we've removd until we've removed `count` amount.
+     * in each slot and increment the amount of slots we've removed until we've removed `count` amount.
      * @param key The key of the item we are removing.
      * @param count The amount of the item we are removing.
      */
@@ -198,74 +204,65 @@ export default abstract class Container {
      */
 
     public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
-        let fromSlot = this.get(fromIndex),
-            fromItem = this.getItem(fromSlot);
+        // Return if the source and target containers are the same and the index is the same.
+        if (this.type === toContainer.type && fromIndex === toIndex) return;
 
-        // If the target slot is undefined, move the item to the next available slot
-        // in the container
+        let fromSlot = this.get(fromIndex);
+        if (fromSlot.isEmpty()) return;
+
+        let fromItem = this.getItem(fromSlot);
+
+        // If the target slot is undefined, move the item to the next available slot in the container.
         if (toIndex === undefined) {
             fromItem.count = 1;
             // Attempt to add the item to the container
             let amount = toContainer.add(fromItem);
 
-            // If the item was added, remove one from the source container
+            // Remove the item from the source container if the item was added.
             if (amount > 0) this.remove(fromIndex, 1);
         } else {
-            // If the source and target containers are the same and the source
-            // and target slots are the same, exit this function
-            if (this.type === toContainer.type && fromIndex === toIndex) return;
-
-            // Get the target slot
+            // Get the target slot.
             let toSlot = toContainer.get(toIndex),
-                // Check if the target slot is empty
-                isEmpty = toSlot.isEmpty(),
-                // If the target slot is not empty, get the item in the target slot
-                toItem: Item | undefined;
+                // Check if the target slot is empty.
+                toEmpty = toSlot.isEmpty(),
+                // If the target slot is not empty, get the item in the target slot.
+                toItem!: Item;
 
-            if (!isEmpty) toItem = toContainer.getItem(toSlot);
+            if (!toEmpty) {
+                toItem = toContainer.getItem(toSlot);
 
-            // Prevent multiple non-stackable from being moved around for safety.
-            if (
-                toItem &&
-                // Check if the source item is not stackable and the count is greater than 1
-                ((!fromItem.stackable && fromItem.count > 1) ||
-                    // Check if the target item is not stackable and the count is greater than 1
-                    (!toItem.stackable && toItem.count > 1))
-            )
-                return;
+                if (
+                    !(fromItem.stackable || fromItem.count <= 1 || this.ignoreMaxStackSize) ||
+                    !(toItem.stackable || toItem.count <= 1 || toContainer.ignoreMaxStackSize)
+                )
+                    return;
+            }
 
-            if (isEmpty || (toItem && fromItem.key === toItem.key)) {
-                // If the target slot is empty or the target slot contains the same
-                // item as the source slot
-                // Get the count of the item in the target slot
-                let toCount = isEmpty ? 0 : toItem!.count;
+            if (toEmpty || fromItem.key === toItem.key) {
+                // Get the count of the item in the target slot.
+                let toCount = toEmpty ? 0 : toItem.count;
 
-                // Add the count of the item in the target slot to the count of
-                // the item in the source slot
+                // Add the count of the item in the target slot to the count of the item in the source slot.
                 fromItem.count += toCount;
-                // Update the item in the target slot with the item in the source
-                // slot
+                // Update the item in the target slot with the item in the source slot.
                 toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
 
-                // If the count of the item in the target slot is greater than zero,
-                // remove the difference in count from the source slot
+                // Remove the item in the source slot from the container.
                 if (toSlot.count > 0) this.remove(fromIndex, toSlot.count - toCount);
-                // else fromItem.count -= toCount;
-            } else {
-                // Update the item in the target slot with the item in the source
-                // slot
+            } else if (
+                fromItem.count <= fromItem.maxStackSize &&
+                toItem.count <= toItem.maxStackSize
+            ) {
+                // Update the item in the target slot with the item in the source slot.
                 toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
 
-                // If the count of the item in the target slot is less than the
-                // count of the item in the source slot
-                if (toSlot.count < fromItem.count) {
-                    // Remove the count of the item in the target slot from the
-                    // source slot
-                    this.remove(fromIndex, toSlot.count);
+                if (toSlot.count < fromSlot.count) log.critical('WHY HAVE YOU FORSAKEN ME');
+                else {
+                    fromSlot.update(toItem, this.ignoreMaxStackSize);
 
-                    // Add the item in the target slot to the container
-                    this.add(toItem!);
-                } else fromSlot.update(toItem!, this.ignoreMaxStackSize);
+                    toItem.count -= fromSlot.count;
+                    if (toItem.count > 0) this.add(toItem);
+                }
             }
         }
 
