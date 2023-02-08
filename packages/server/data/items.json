@@ -124,18 +124,25 @@
   "goldensword": {
     "type": "weapon",
     "name": "Golden Sword",
-    "level": 22,
+    "level": 48,
     "price": 3500,
     "attackStats": {
-      "crush": 6,
-      "slash": 24,
-      "stab": 12,
+      "crush": 12,
+      "slash": 34,
+      "stab": 18,
       "archery": 0,
       "magic": 0
     },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "archery": 0,
+      "magic": -2
+    },
     "bonuses": {
       "accuracy": 13,
-      "strength": 7,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -144,18 +151,18 @@
   "sidesword": {
     "type": "weapon",
     "name": "Side Sword",
-    "level": 24,
+    "level": 64,
     "price": 1250,
     "attackStats": {
-      "crush": 12,
-      "slash": 24,
-      "stab": 8,
+      "crush": 18,
+      "slash": 38,
+      "stab": 14,
       "archery": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 17,
-      "strength": 4,
+      "accuracy": 24,
+      "strength": 2,
       "archery": 0,
       "magic": 0
     }
@@ -464,18 +471,18 @@
     "type": "weapon",
     "name": "Whip",
     "skill": "accuracy",
-    "level": 60,
+    "level": 50,
     "price": 2500,
     "attackStats": {
-      "crush": 14,
-      "slash": 68,
+      "crush": 2,
+      "slash": 84,
       "stab": 2,
       "archery": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 26,
-      "strength": 14,
+      "accuracy": 10,
+      "strength": 44,
       "archery": 0,
       "magic": 0
     }
@@ -2713,8 +2720,8 @@
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 45,
-      "archery": 0,
+      "stab": 26,
+      "archery": 34,
       "magic": 0
     },
     "bonuses": {
@@ -3008,8 +3015,8 @@
     "attackStats": {
       "crush": 0,
       "slash": 0,
-      "stab": 48,
-      "archery": 0,
+      "stab": 0,
+      "archery": 54,
       "magic": 0
     },
     "bonuses": {
@@ -5134,6 +5141,14 @@
     "price": 150,
     "description": "A stick. It's a stick. What else do you want me to say about it?"
   },
+
+  "candykey": {
+    "type": "object",
+    "name": "Candy Key",
+    "price": 50,
+    "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
+  },
+
 
   "leatherboots": {
     "type": "boots",

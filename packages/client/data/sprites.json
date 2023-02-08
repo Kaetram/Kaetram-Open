@@ -2879,6 +2879,52 @@
   },
 
   {
+    "id": "picklemob",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+
+  {
     "id": "clotharmor",
     "width": 32,
     "height": 32,
@@ -7605,6 +7651,45 @@
     "offsetY": -8
   },
   {
+    "id": "guildnpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "picklenpc",
+    "width": 16,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -2,
+    "offsetY": -8
+  },
+  {
+    "id": "santaelfnpc",
+    "width": 16,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -2,
+    "offsetY": -8
+  },
+  {
     "id": "icegolem",
     "width": 32,
     "height": 32,
@@ -8564,6 +8649,17 @@
   },
   {
     "id": "item-candybar",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-candykey",
     "animations": {
       "idle": {
         "length": 6,
@@ -18345,6 +18441,19 @@
   },
   {
     "id": "villagegirl",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "villagegirl2",
     "width": 24,
     "height": 24,
     "animations": {
