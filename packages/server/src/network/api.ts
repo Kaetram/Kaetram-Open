@@ -251,7 +251,7 @@ export default class API {
                 return;
             }
 
-            source.notify(`[To ${Utils.formatName(target)}]: ${text}`, 'aquamarine');
+            source.notify(text, 'aquamarine', `[To ${Utils.formatName(target)}]`);
         }
     }
 
