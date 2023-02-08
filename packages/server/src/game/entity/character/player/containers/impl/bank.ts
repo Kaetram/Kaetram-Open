@@ -6,7 +6,7 @@ import BankEn from '@kaetram/common/text/en/bank';
 import type Item from '../../../../objects/item';
 
 export default class Bank extends Container {
-    protected override ignoreMaxStackSize = true;
+    protected override stackSize = Modules.Constants.MAX_STACK;
 
     public constructor(size: number) {
         super(Modules.ContainerType.Bank, size);
@@ -19,7 +19,7 @@ export default class Bank extends Container {
      */
 
     public override add(item: Item): number {
-        let amount = super.add(item.copy());
+        let amount = super.add(item);
 
         if (amount < 1) {
             this.notifyCallback?.(BankEn.NOT_ENOUGH_SPACE);
