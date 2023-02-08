@@ -915,6 +915,21 @@ export default class Commands {
                 break;
             }
 
+            case 'openbank': {
+                let username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /openbank username`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Could not find player: ${username}`);
+
+                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+
+                break;
+            }
+
             case 'setrank': {
                 let rankText = blocks.shift()!;
 
