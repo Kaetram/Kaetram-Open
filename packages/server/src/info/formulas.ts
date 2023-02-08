@@ -3,7 +3,6 @@ import Utils from '@kaetram/common/util/utils';
 
 import type { Stats } from '@kaetram/common/types/item';
 import type Character from '../game/entity/character/character';
-import type Player from '../game/entity/character/player/player';
 
 export default {
     LevelExp: [] as number[],
@@ -33,21 +32,46 @@ export default {
             accuracy: number = Modules.Constants.MAX_ACCURACY;
 
         /**
-         * Take for example the following mock-up values used to calculate accuracy:
-         * accuracyBonus = +13
-         * accuracyLevel = 35
-         * accuracy = 0.45 // MAX_ACCURACY
+         * The damage output is calculated by taking the attacker's maximum damage output
+         * and comparing against the accuracy calculated relative to the target's stats,
+         * defense level, as well as the attacker's accuracy level, bonus, and stats.
+         * We use four modifiers to output the final damage, and a weighted randomInt
+         * distribution (think graphs skewed to the right or left depending on the accuracy).
+         * The maximum damage takes in consideration tha player's strength level, their
+         * weapon bonuses, (or their magic/archery if that's what they're using).
          *
-         * accuracy += (1 / accuracyBonus) * 0.8
-         * If the maximum attainable bonus is 100, then accuracy is only disrupted by 0.008
-         * otherwise if the player has 1 accuracy bonus (0 defaults to 1), then the formula
-         * disrupts the accuracy by 0.8. A 0.45 accuracy has a chance of 2.45% of attaining
-         * max damage, whereas an accuracy of 1.25 has merely a chance of 0.62%.
+         * The accuracy works backwards, 0.45 being the most accurate, and any number heigher
+         * skews the graph towards the lower-end (higher likelihood of hitting lower damage).
          *
-         * The same principle applies to the accuracy level. The defense and offense stats
-         * are used to calculate a discrepancy in a similar fashion. If the taget's defense
-         * is overwhelmed by the attacker's attack, then the amount added to the accuracy
-         * modifier is smaller.
+         * The accuracy consists of four parts, the accuracy bonus, the accuracy level,
+         * the defense level of the target, and the accuracy modifier.
+         *
+         * The accuracy bonus is the bonus given by the attacker's equipment. We picked a maximum
+         * of 55 since that is currently the maximum acquirable bonus from equipments the best
+         * equipments. It's a linear scaling from 0-1, with highest bonus giving us the highest
+         * accuracy. Note that this is subject to changes in the nearby future, and we do not
+         * intend to keep it entirely linear.
+         *
+         * The next is the linear scaling of the accuracy level against the maximum level. The
+         * higher your accuracy level, the higher the accuracy. This modifier has an absolute lowest
+         * value of 0.01 (most accurate at maximum level) and highest value of 1.35
+         * (lowest accuracy at level 1 accuracy).
+         *
+         * The next is a linear scale of the target's defense level. The higher their defense level the
+         * more it will affect our accuracy. The way this was calculated was by considering the maximum
+         * level a player will be able to reach (135). If we attack a player with maximum defense, our
+         * accuracy will be throttled by 1.015. If we attack a player with level 1 defense, our accuracy
+         * will be affected by 0.0075 (giving us more accuracy).
+         *
+         * Lastly this is the accuracy modifier of the attack stats. The attack stats are compared against
+         * the target's defense stats and take into considering the primary attack style of the attacker
+         * versus the primary defense style. For example, if we use slash against a target with a high defense
+         * in slash, then our accuracy is lower than if we use slash against a target with a low defense in slash.
+         * In order to minimize the accuracy of an attacker, your defense style must be the attacker's attack style.
+         * If our attack stats are negative due to the target's extremely high defense stats, we append a 1.5
+         * reduction in accuracy by default.
+         *
+         * All of these modifiers added together determine how much we stray away from the highest accuracy - 0.45.
          */
 
         // Linearly increase accuracy based on accuracy bonus, prevent from going over 50.
@@ -57,16 +81,13 @@ export default {
         accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
 
         // Append the defense level of the target to the accuracy modifier.
-        accuracy += defenseLevel * 0.01;
+        accuracy += defenseLevel * 0.0075;
 
         // We use the scalar difference of the stats to append onto the accuracy.
         accuracy += accuracyModifier < 0 ? 1.5 : -(Math.sqrt(accuracyModifier) / 22.36) + 1;
 
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
-
-        // Temporarily add a limit until the formula is improved.
-        if (accuracy > 3.5) accuracy = 3.5;
 
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
