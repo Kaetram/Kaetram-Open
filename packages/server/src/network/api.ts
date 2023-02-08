@@ -92,7 +92,7 @@ export default class API {
         if (target) {
             let player = this.world.getPlayerByName(target);
 
-            if (!player) return;
+            if (!player) return log.warning(`[handleChat] Player ${target} not found.`);
 
             player.sendMessage(target, text, source);
         } else this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
