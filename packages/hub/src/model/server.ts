@@ -7,12 +7,14 @@ export default class Server {
     private updateCallback?: () => void;
 
     public constructor(
+        public id: number,
         public name: string,
         public host: string,
         public port: number,
         public apiPort: number,
         public accessToken: string,
         public remoteServerHost: string,
+        public apiHost: string,
         public players: string[],
         public maxPlayers: number
     ) {}
@@ -64,6 +66,7 @@ export default class Server {
         return {
             name: this.name,
             host: this.remoteServerHost,
+            apiHost: this.apiHost,
             port: this.port,
             players: this.players.length,
             maxPlayers: this.maxPlayers

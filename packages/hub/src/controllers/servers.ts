@@ -17,6 +17,7 @@ export interface ServerData {
     apiPort: number;
     accessToken: string;
     remoteServerHost: string;
+    remoteApiHost: string;
     maxPlayers: number; // Max players in the world.
     players: string[]; // String array of usernames
 }
@@ -65,12 +66,14 @@ export default class Servers {
         if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
 
         this.servers[data.serverId] = new Server(
+            data.serverId,
             `${config.name} ${data.serverId}`,
             data.host,
             data.port,
             data.apiPort,
             data.accessToken,
             data.remoteServerHost,
+            data.remoteApiHost,
             data.players,
             data.maxPlayers
         );
@@ -136,9 +139,10 @@ export default class Servers {
      */
 
     public findPlayer(username: string): Server | undefined {
-        return _.find(this.servers, (server: Server) => {
-            return _.includes(server.players, username);
-        });
+        for (let key in this.servers)
+            if (this.servers[key].players.includes(username)) return this.servers[key];
+
+        return undefined;
     }
 
     /**
