@@ -622,8 +622,19 @@ export default abstract class Character extends Entity {
             return false;
         }
 
-        // TODO - Separate team conditional into its own thing.
-        return this.pvp && target.pvp && this.team !== target.team;
+        // Use minigame logic to determine if the players can attack each other.
+        if (this.inMinigame() && target.inMinigame()) return this.team !== target.team;
+
+        // Prevent attacking in non-pvp areas.
+        if (!this.pvp && !target.pvp) return false;
+
+        // Prevent attacking when level difference is too great.
+        if (Math.abs(this.level - target.level) > 30) {
+            this.notify('You cannot attack someone more than 30 levels above or below you.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
