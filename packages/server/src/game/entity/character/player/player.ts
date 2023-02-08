@@ -354,7 +354,7 @@ export default class Player extends Character {
     public welcome(): void {
         if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
 
-        this.notify(`Welcome back to ${config.name}, double drop rates are currently active!`);
+        this.notify(`Welcome back to ${config.name}!`);
 
         let population = this.world.getPopulation();
 
@@ -1570,7 +1570,7 @@ export default class Player extends Character {
         if (!message) return;
 
         // Prevent notify spams
-        if (bypass && Date.now() - this.lastNotify < 250) return;
+        if (!bypass && Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
