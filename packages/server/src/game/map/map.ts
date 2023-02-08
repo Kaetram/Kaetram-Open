@@ -112,6 +112,8 @@ export default class Map {
                 achievement: door.achievement || '',
                 reqAchievement: door.reqAchievement || '',
                 reqQuest: door.reqQuest || '',
+                reqItem: door.reqItem || '',
+                reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
                 level: door.level || 0
             };
