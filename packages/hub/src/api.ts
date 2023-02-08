@@ -56,6 +56,8 @@ export default class API {
      */
 
     private handleRoot(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
         response.json({ status: `${config.name} hub is online and functional.` });
     }
 
@@ -68,6 +70,8 @@ export default class API {
      */
 
     private handleServer(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
         if (!this.servers.hasEmpty()) {
             response.json({ status: 'error' });
             return;
@@ -85,6 +89,8 @@ export default class API {
      */
 
     private handleAll(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
         response.json(this.servers.getAll());
     }
 
@@ -388,5 +394,18 @@ export default class API {
         if (!hubAccessToken || !serverId) return false;
 
         return hubAccessToken === config.hubAccessToken;
+    }
+
+    /**
+     * Sets CORS headers on the response to prevent errors.
+     * @param response Response to set headers on.
+     */
+
+    private setHeaders(response: Response): void {
+        response.header('Access-Control-Allow-Origin', '*');
+        response.header(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept'
+        );
     }
 }
