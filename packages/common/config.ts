@@ -21,6 +21,7 @@ export interface Config {
     hubPing: number;
     hubAccessToken: string;
     remoteServerHost: string;
+    remoteApiHost: string;
 
     clientRemoteHost: string;
     clientRemotePort: number;
