@@ -16,7 +16,7 @@ interface SerializedContainer {
 export default abstract class Container {
     protected slots: Slot[] = [];
 
-    protected ignoreMaxStackSize = false;
+    protected stackSize?: number;
 
     private loadCallback?: () => void;
 
@@ -46,7 +46,7 @@ export default abstract class Container {
 
             if (item.count < 1) item.count = 1;
 
-            this.slots[item.index].update(this.getItem(item), this.ignoreMaxStackSize);
+            this.slots[item.index].update(this.getItem(item), this.stackSize);
         });
 
         this.loadCallback?.();
@@ -83,7 +83,7 @@ export default abstract class Container {
             if (slot.count > 0) itemCopy.count += slot.count;
 
             // Update the slot with the new item count
-            slot.update(itemCopy, this.ignoreMaxStackSize);
+            slot.update(itemCopy, this.stackSize);
 
             // Set the total to the new item count
             total += slot.count;
@@ -187,10 +187,11 @@ export default abstract class Container {
     public move(fromIndex: number, toContainer: Container, toIndex?: number): void {
         if (this.get(fromIndex).isEmpty()) return;
 
-        let item = this.getItem(this.get(fromIndex));
+        let item = this.getItem(this.get(fromIndex)),
+            stackSize = this.stackSize || item.maxStackSize;
 
         // Prevent an item from being moved if it exceeds the max stack size.
-        if (item.count > item.maxStackSize) item.count = item.maxStackSize;
+        if (item.count > stackSize) item.count = stackSize;
 
         this.swap(fromIndex, toContainer, toIndex);
     }
@@ -210,7 +211,8 @@ export default abstract class Container {
         let fromSlot = this.get(fromIndex);
         if (fromSlot.isEmpty()) return;
 
-        let fromItem = this.getItem(fromSlot);
+        let fromItem = this.getItem(fromSlot),
+            fromStackSize = this.stackSize || fromItem.maxStackSize;
 
         // If the target slot is undefined, move the item to the next available slot in the container.
         if (toIndex === undefined) {
@@ -226,14 +228,16 @@ export default abstract class Container {
                 // Check if the target slot is empty.
                 toEmpty = toSlot.isEmpty(),
                 // If the target slot is not empty, get the item in the target slot.
-                toItem!: Item;
+                toItem!: Item,
+                toStackSize!: number;
 
             if (!toEmpty) {
                 toItem = toContainer.getItem(toSlot);
+                toStackSize = toContainer.stackSize || toItem.maxStackSize;
 
                 if (
-                    !(fromItem.stackable || fromItem.count <= 1 || this.ignoreMaxStackSize) ||
-                    !(toItem.stackable || toItem.count <= 1 || toContainer.ignoreMaxStackSize)
+                    fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
+                    toItem.count > (this.stackSize || toItem.maxStackSize)
                 )
                     return;
             }
@@ -245,23 +249,20 @@ export default abstract class Container {
                 // Add the count of the item in the target slot to the count of the item in the source slot.
                 fromItem.count += toCount;
                 // Update the item in the target slot with the item in the source slot.
-                toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
+                toSlot.update(fromItem, toContainer.stackSize);
 
                 // Remove the item in the source slot from the container.
                 if (toSlot.count > 0) this.remove(fromIndex, toSlot.count - toCount);
-            } else if (
-                fromItem.count <= fromItem.maxStackSize &&
-                toItem.count <= toItem.maxStackSize
-            ) {
+            } else if (fromItem.count <= fromStackSize && toItem.count <= toStackSize) {
                 // Update the item in the target slot with the item in the source slot.
-                toSlot.update(fromItem, toContainer.ignoreMaxStackSize);
+                toSlot.update(fromItem, toContainer.stackSize);
 
                 if (toSlot.count < fromSlot.count) log.critical('WHY HAVE YOU FORSAKEN ME');
                 else {
-                    fromSlot.update(toItem, this.ignoreMaxStackSize);
+                    fromSlot.update(toItem, this.stackSize);
 
                     toItem.count -= fromSlot.count;
-                    if (toItem.count > 0) this.add(toItem);
+                    if (toItem.count > 0) log.critical("WHAT IS THIS I DON'T EVEN");
                 }
             }
         }
@@ -309,14 +310,15 @@ export default abstract class Container {
      */
 
     public find(item: Item): Slot | undefined {
-        // Find a slot with the same item.
-        let sameItemSlot = this.slots.find(
-            (slot) =>
-                // If the slot's key matches the item's key
-                slot.key === item.key &&
-                // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
-                (slot.count < item.maxStackSize || this.ignoreMaxStackSize)
-        );
+        let stackSize = this.stackSize || item.maxStackSize,
+            // Find a slot with the same item.
+            sameItemSlot = this.slots.find(
+                (slot) =>
+                    // If the slot's key matches the item's key
+                    slot.key === item.key &&
+                    // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
+                    slot.count < stackSize
+            );
 
         // If there's no slot with the same item, find an empty slot.
         return sameItemSlot || this.getEmptySlot();
