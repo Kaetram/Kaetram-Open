@@ -18,7 +18,7 @@ export default class Inventory extends Container {
      */
 
     public override add(item: Item): number {
-        let amount = super.add(item.copy());
+        let amount = super.add(item);
 
         if (amount < 1) {
             this.notifyCallback?.(InventoryEn.NOT_ENOUGH_SPACE);

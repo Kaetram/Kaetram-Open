@@ -104,15 +104,24 @@ export default class Equipments {
      */
 
     public unequip(type: Modules.Equipment): void {
-        let equipment = this.get(type),
-            item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
+        let equipment = this.get(type);
+
+        if (!equipment.key) return;
+
+        let item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments),
+            count = this.player.inventory.add(item);
 
         // We stop here if the item cannot be added to the inventory.
-        if (this.player.inventory.add(item) < 1) return;
+        if (count < 1) return;
 
-        equipment.empty();
+        equipment.count -= count;
+        if (equipment.count < 1) equipment.empty();
+        else {
+            item.count = equipment.count;
+            equipment.update(item);
+        }
 
-        this.unequipCallback?.(type);
+        this.unequipCallback?.(type, equipment.count);
 
         this.calculateStats();
     }
