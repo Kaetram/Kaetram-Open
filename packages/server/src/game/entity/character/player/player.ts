@@ -1471,10 +1471,10 @@ export default class Player extends Character {
             oFormattedName = Utils.formatName(playerName), // Formated username of the player receiving the message.
             formattedName = Utils.formatName(source || this.username); // Formatted username of the source
 
-        if (source) this.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
-        else otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        if (source) this.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
+        else otherPlayer.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
 
-        if (!source) this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
+        if (!source) this.notify(message, 'aquamarine', `[To ${oFormattedName}]`, true);
     }
 
     /**
