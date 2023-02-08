@@ -272,6 +272,20 @@ export default class Handler {
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
+        // Handle door requiring an item to proceed (and remove the item from the player's inventory).
+        if (door.reqItem) {
+            let count = door.reqItemCount || 1;
+
+            if (!this.player.inventory.hasItem(door.reqItem, count))
+                return this.player.notify(
+                    'You do not have the required item to pass through this door.'
+                );
+
+            this.player.inventory.removeItem(door.reqItem, count);
+
+            this.player.notify(`The key crumbles to dust as you pass through the door.`);
+        }
+
         this.player.teleport(door.x, door.y);
 
         log.debug(`[${this.player.username}] Going through door: ${door.x} - ${door.y}`);
