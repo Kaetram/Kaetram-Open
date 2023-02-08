@@ -33,10 +33,9 @@ export default class Slot {
      * @param item An item object that we extract data from.
      */
 
-    public update(item: Item, ignoreMaxStackSize = false): void {
+    public update(item: Item, stackSize = item.maxStackSize): void {
         this.key = item.key;
-        this.count =
-            item.count > item.maxStackSize && !ignoreMaxStackSize ? item.maxStackSize : item.count;
+        this.count = Math.min(item.count, stackSize);
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
@@ -48,9 +47,9 @@ export default class Slot {
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
 
-        if (this.count < 1) log.error('Updating slot with count less than 1:', item.key);
+        this.maxStackSize = stackSize;
 
-        if (!ignoreMaxStackSize) this.maxStackSize = item.maxStackSize;
+        if (this.count < 1) log.error('Updating slot with count less than 1:', item.key);
 
         item.despawn(true); // Despawn signal towards the item once we update the slot.
     }
