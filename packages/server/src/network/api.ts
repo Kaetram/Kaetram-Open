@@ -170,6 +170,7 @@ export default class API {
                 port: config.port,
                 apiPort: config.apiPort,
                 remoteServerHost: config.remoteServerHost,
+                remoteApiHost: config.remoteApiHost || config.remoteServerHost,
                 maxPlayers: config.maxPlayers,
                 players: this.world.entities.getPlayerUsernames()
             },
