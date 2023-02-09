@@ -87,7 +87,6 @@
 .skill-experience {
     background: linear-gradient(to left, #4F4, #080);
     transition: .5s width ease;
-    transition: .5s width ease;
 }
 
 #arrows-count {
@@ -343,6 +342,14 @@
 
         .skill-image-strength {
             background: url('/img/#{$i}/skills/strength.png');
+        }
+
+        .skill-image-defense {
+            background: url('/img/#{$i}/skills/defense.png');
+        }
+
+        .skill-image-fishing {
+            background: url('/img/#{$i}/skills/fishing.png');
         }
 
         #achievement-count,
