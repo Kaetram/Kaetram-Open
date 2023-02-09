@@ -1,6 +1,7 @@
 import Menu from '../../menu';
 
 import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../../entity/character/player/player';
 import type Skill from '../../../entity/character/player/skill';
@@ -29,24 +30,30 @@ export default class Skills extends Menu {
      */
 
     private createElement(skill: Skill): HTMLLIElement {
-        let listElement = document.createElement('li'),
-            skillElement = document.createElement('div'),
+        let element = document.createElement('li'),
             name = document.createElement('div'),
-            info = document.createElement('p');
+            image = document.createElement('div'),
+            experience = document.createElement('div');
 
-        // Append the class to the elements.
-        skillElement.classList.add('profession-item');
-        name.classList.add('profession-name');
+        // Add the skill class to the base element.
+        element.classList.add('skill');
 
-        // Update the skill element data.
-        name.textContent = skill.name;
-        info.textContent = `Level ${skill.level} | ${skill.percentage.toFixed(1)}%`;
+        // Update the skill level
+        name.classList.add('skill-level', 'stroke');
+        name.innerHTML = `${skill.level}/${Modules.Constants.MAX_LEVEL}`;
 
-        // Append children elements.
-        name.append(info);
-        skillElement.append(name);
-        listElement.append(skillElement);
+        // Load the image based on the skill name.
+        image.classList.add('skill-image', `skill-image-${skill.name.toLowerCase()}`);
 
-        return listElement;
+        // Load up the experience bar.
+        experience.classList.add('skill-experience');
+
+        // Set the experience bar's width.
+        experience.style.width = `${experience.offsetWidth * skill.percentage}px`;
+
+        // Add the image to the element.
+        element.append(name, experience, image);
+
+        return element;
     }
 }
