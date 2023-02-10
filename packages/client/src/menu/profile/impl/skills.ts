@@ -18,7 +18,7 @@ export default class Skills extends Menu {
 
     private loaded = false;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#skills-page');
     }
 
@@ -27,8 +27,8 @@ export default class Skills extends Menu {
      * @param player The player object used to grab skill data from.
      */
 
-    public override synchronize(player: Player): void {
-        _.each(player.skills, (skill: Skill) => {
+    public override synchronize(): void {
+        _.each(this.player.skills, (skill: Skill) => {
             let element = this.get(skill.name);
 
             // Update the element if found.
@@ -39,19 +39,32 @@ export default class Skills extends Menu {
 
                 // Append the element to the list.
                 this.list.append(element);
+
+                // Update the element with the latest data.
+                this.update(element, skill);
             }
         });
+    }
 
-        /**
-         * This is a hack but if I spend anymore time trying to get the
-         * stupid `offsetWidth` to have a value I will go insane. Someone
-         * else please find a better solution.
-         */
+    /**
+     * Override for the show function. Due to the nature of the HTML DOM we must
+     * re-synchronize data when we first show the page. This is because the skills
+     * experience bar does not have a width until it is first shown on the page.
+     * This function just checks if we have already loaded the page, if not, we
+     * synchronize again since we just created the elements, the `synchronize` function
+     * will grab the existing elements in the list and update their experience bar
+     * widths accordingly.
+     */
 
-        if (!this.loaded) {
-            this.loaded = true;
-            setTimeout(() => this.synchronize(player), 2000);
-        }
+    public override show(): void {
+        super.show();
+
+        // Only synchronize upon first showing the page.
+        if (this.loaded) return;
+
+        this.loaded = true;
+
+        this.synchronize();
     }
 
     /**
@@ -115,10 +128,13 @@ export default class Skills extends Menu {
         // Update the skill level
         level.innerHTML = `${skill.level}/${Modules.Constants.MAX_LEVEL}`;
 
-        if (experience.offsetWidth === 0) return;
+        //if (experience.offsetWidth === 0) return;
 
         // Store the original width of the experience bar.
-        if (!element.originalWidth) element.originalWidth = experience.offsetWidth;
+        if (!element.originalWidth && experience.offsetWidth !== 0)
+            element.originalWidth = experience.offsetWidth;
+
+        if (!element.originalWidth) return;
 
         // Set the experience bar's width.
         experience.style.width = `${element.originalWidth * skill.percentage}px`;
