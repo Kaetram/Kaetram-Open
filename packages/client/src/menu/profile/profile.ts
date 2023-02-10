@@ -15,11 +15,11 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
     private state: State = new State();
-    private skills: Skills = new Skills();
+    private skills: Skills;
     private abilities: Abilities;
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state, this.skills];
+    private pages: Menu[] = [this.state];
 
     // Current page we are on.
     private activePage = 0;
@@ -34,11 +34,14 @@ export default class Profile extends Menu {
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
 
+        // Initialize the skills page.
+        this.skills = new Skills(this.player);
+
         // Initialize the abilities page.
         this.abilities = new Abilities(this.player);
 
-        // Add the abilities page to the pages array.
-        this.pages.push(this.abilities);
+        // Add the abilities and skills page to the pages array.
+        this.pages.push(this.skills, this.abilities);
 
         // Used to initialize the navigation buttons.
         this.update();
