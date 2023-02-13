@@ -6,6 +6,7 @@ import path from 'node:path';
 import Parser from './parser';
 
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),

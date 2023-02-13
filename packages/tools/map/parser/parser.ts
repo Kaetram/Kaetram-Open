@@ -2,6 +2,7 @@ import zlib from 'node:zlib';
 
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import type {
     ProcessedAnimation,

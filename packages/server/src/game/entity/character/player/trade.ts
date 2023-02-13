@@ -1,5 +1,6 @@
 import { Trade as TradePacket } from '../../../../network/packets';
 
+import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';

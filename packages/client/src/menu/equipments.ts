@@ -3,6 +3,7 @@ import Menu from './menu';
 import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
+import _ from 'lodash';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type SpritesController from '../controllers/sprites';
@@ -136,7 +137,7 @@ export default class Equipments extends Menu {
             bonuses: Bonuses = Util.getEmptyBonuses();
 
         // iterate through all the equipments and add up the stats.
-        for (let equipment of Object.values(this.player.equipments)) {
+        _.each(this.player.equipments, (equipment: Equipment) => {
             if (!equipment.exists()) return;
 
             attackStats.crush += equipment.attackStats.crush;
@@ -155,12 +156,12 @@ export default class Equipments extends Menu {
             bonuses.strength += equipment.bonuses.strength;
             bonuses.archery += equipment.bonuses.archery;
             bonuses.magic += equipment.bonuses.magic;
-        }
+        });
 
         let stats = ['Crush', 'Slash', 'Stab', 'Archery', 'Magic'],
-            statBonuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
+            bonsuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
 
-        for (let stat of stats) {
+        _.each(stats, (stat: string) => {
             let lStat = stat.toLowerCase(),
                 attackElement = this.attackStats.querySelector(`.${lStat.toLowerCase()}`)!,
                 defenseElement = this.defenseStats.querySelector(`.${lStat.toLowerCase()}`)!,
@@ -169,15 +170,15 @@ export default class Equipments extends Menu {
 
             attackElement.textContent = `${stat}: ${attackStat > 0 ? '+' : ''}${attackStat}`;
             defenseElement.textContent = `${stat}: ${defenseStat > 0 ? '+' : ''}${defenseStat}`;
-        }
+        });
 
-        for (let bonus of statBonuses) {
+        _.each(bonsuses, (bonus: string) => {
             let lBonus = bonus.toLowerCase(),
                 bonusElement = this.bonuses.querySelector(`.${lBonus.toLowerCase()}`)!,
                 bonusStat = bonuses[lBonus as keyof Bonuses];
 
             bonusElement.textContent = `${bonus}: ${bonusStat > 0 ? '+' : ''}${bonusStat}`;
-        }
+        });
     }
 
     /**

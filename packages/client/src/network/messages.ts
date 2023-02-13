@@ -1,3 +1,4 @@
+import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
 
 import type {
@@ -162,8 +163,7 @@ export default class Messages {
         let packet = data.shift()!,
             message = this.messages[packet]();
 
-        if (message && typeof message === 'function')
-            message.call(this, ...(data as unknown[] as never[]));
+        if (message && _.isFunction(message)) message.call(this, ...data);
     }
 
     /**
@@ -173,7 +173,7 @@ export default class Messages {
      */
 
     public handleBulkData(data: never[]): void {
-        for (let info of data) this.handleData(info);
+        _.each(data, this.handleData.bind(this));
     }
 
     /**

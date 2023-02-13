@@ -10,6 +10,8 @@ import log from './log';
 import config from '../config';
 import { Modules, Packets } from '../network';
 
+import _ from 'lodash-es';
+
 import type { Bonuses, Stats } from '../types/item';
 
 export default {
@@ -141,10 +143,11 @@ export default {
                 return messageBlocks.join(' ');
             }
 
-            for (let index in messageBlocks)
-                if (parseInt(index) % 2 !== 0)
+            _.each(messageBlocks, (_block: string, index: number) => {
+                if (index % 2 !== 0)
                     // we hit a colour code.
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+            });
 
             let codeCount = messageBlocks.length / 2 - 1;
 

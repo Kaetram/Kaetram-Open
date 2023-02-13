@@ -2,6 +2,7 @@ import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import Utils, { isInt } from '../utils/util';
 
+import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type {
@@ -103,8 +104,9 @@ export default class Map {
      */
 
     public loadRegions(regionData: RegionData): void {
-        for (let [region, data] of Object.entries(regionData))
-            this.loadRegion(data, parseInt(region));
+        _.each(regionData, (data: RegionTileData[], region) =>
+            this.loadRegion(data, parseInt(region))
+        );
 
         // Save data after we finish parsing it.
         this.saveMapData();
@@ -118,6 +120,7 @@ export default class Map {
      */
 
     public loadRegion(data: RegionTileData[], region: number): void {
+        // For loop is faster than _.each in this case.
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
                 objectIndex = this.objects.indexOf(index);
@@ -158,14 +161,14 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        for (let [key, firstGID] of Object.entries(this.rawTilesets))
+        _.each(this.rawTilesets, (firstGID: number, key: string) => {
             this.loadTileset(firstGID, parseInt(key), (tileset: TilesetInfo) => {
                 this.tilesets[key] = tileset;
 
                 // If we've loaded all the tilesets, map is now allowed to be marked as ready.
-                if (Object.keys(this.tilesets).length === Object.keys(this.rawTilesets).length)
-                    this.tilesetsLoaded = true;
+                if (_.size(this.tilesets) === _.size(this.rawTilesets)) this.tilesetsLoaded = true;
             });
+        });
     }
 
     /**

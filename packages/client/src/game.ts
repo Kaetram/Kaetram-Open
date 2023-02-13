@@ -21,6 +21,7 @@ import Updater from './renderer/updater';
 import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 
+import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
@@ -203,7 +204,7 @@ export default class Game {
 
         if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
 
-        if (ignores) for (let entity of ignores) this.pathfinder.addIgnore(entity);
+        if (ignores) _.each(ignores, (entity) => this.pathfinder.addIgnore(entity));
 
         path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
 
@@ -248,7 +249,7 @@ export default class Game {
         if (!this.entities) return;
 
         let entities = this.entities.grids.renderingGrid[y][x],
-            keys = Object.keys(entities),
+            keys = _.keys(entities),
             index = keys.indexOf(this.player.instance);
 
         // Remove player instance from the keys of entities.
