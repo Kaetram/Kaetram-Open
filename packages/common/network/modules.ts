@@ -105,6 +105,29 @@ export enum Equipment {
     Arrows
 }
 
+export enum AttackStyle {
+    None,
+
+    // Melee
+    Stab, // Accuracy experience
+    Slash, // Strength experience
+    Defensive, // Defense experience
+    Crush, // Accuracy + Strength experience
+    Shared, // Accuracy + Strength + Defense experience
+    Hack, // Strength + Defense experience
+    Chop, // Accuracy + Defense experience
+
+    // Archery
+    Accurate, // Higher accuracy but slower
+    Fast, // Faster but lower accuracy
+
+    // Magic
+    Focused, // Slower but higher damage
+
+    // Archery and Magic
+    LongRange // Increased attack range and less accurate
+}
+
 export enum Hovering {
     Colliding,
     Mob,
@@ -409,7 +432,8 @@ export const Constants = {
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
-    MAX_CONNECTIONS: 16 // Maximum number of connections per IP address.
+    MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
+    EXPERIENCE_PER_HIT: 4 // Amount of experinece received per 1 damage dealt.
 };
 
 export enum MinigameConstants {

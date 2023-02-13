@@ -36,7 +36,7 @@ import {
 } from '@kaetram/server/src/network/packets';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
+import { AttackStyle, PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
 import { Team } from '@kaetram/common/api/minigame';
@@ -122,6 +122,9 @@ export default class Player extends Character {
     public userAgent = '';
 
     public rank: Modules.Ranks = Modules.Ranks.None;
+
+    // Stores the last attack style for each type of weapon.
+    public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Warps
     public lastWarp = 0;
@@ -717,48 +720,102 @@ export default class Player extends Character {
     }
 
     /**
-     * Handles experience received from killing a mob. Here we check the type of
-     * damage the player was dealing, whether or not he was using magic, ranged, or
-     * melee, and what kind of melee weapon he was using. We then add the experience
-     * to the appropriate skill.
-     * @param experience The amount of experience we are adding.
+     * Handles the experience gained from hitting a mob. Experience is determined by the attack
+     * style the player currently has selected. Weapons have varying attack styles and the player
+     * selects them depending on the skill they wish to train.
+     * @param damage The amount of damage the player dealt.
      */
 
-    public handleExperience(experience: number): void {
-        let weapon = this.equipment.getWeapon();
+    public handleExperience(damage: number): void {
+        // Ignore invalid damage values.
+        if (damage < 1) return;
+
+        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+            weapon = this.equipment.getWeapon();
 
         /**
-         * Health experience is a third of the total experience the mob rewards. This is
-         * because the player is being rewarded experience for the other skills. Health
-         * experience is always granted regardless of the damage type.
+         * Since there are four combat skills, we evenly distribute the experience between them.
+         * Depending on the attack style, we add a different amount of experience to each skill.
          */
 
-        this.skills.get(Modules.Skills.Health).addExperience(Math.floor(experience / 3));
-
-        // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
-        experience = Math.ceil(experience - experience / 3);
-
-        // Magic based damage, weapons that are entirely magic based have their experience added to the magic skill.
-        if (weapon.isMagic())
-            return this.skills.get(Modules.Skills.Magic).addExperience(experience);
-
-        // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (weapon.isArcher())
-            return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+        this.skills.get(Modules.Skills.Health).addExperience(Math.ceil(experience / 4), false);
 
         /**
-         * If the weapon is both a strength and accuracy weapon, then we evenly distribute
-         * the remaining experience to both the strength and accuracy skills. Otherwise
-         * we add the remaining experience to the skill that the weapon is based on. Default
-         * is accuracy if the weapon is not based on any skill.
+         * The rest of the experiences are distributed according to the attack style selected.
          */
 
-        if (weapon.isStrength() && weapon.isAccuracy()) {
-            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(experience / 2));
-            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience / 2));
-        } else if (weapon.isStrength())
-            this.skills.get(Modules.Skills.Strength).addExperience(experience);
-        else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
+        switch (weapon.attackStyle) {
+            // Stab gives the remaining accuracy experience.
+            case Modules.AttackStyle.Stab: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Slash gives the remaining strength experience.
+            case Modules.AttackStyle.Slash: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Defense gives the remaining defence experience.
+            case Modules.AttackStyle.Defensive: {
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Crush gives accuracy + strength experience.
+            case Modules.AttackStyle.Crush: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Shared experience evenly distributes the experience between all skills.
+            case Modules.AttackStyle.Shared: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                break;
+            }
+
+            // Axe hacking attack style gives strength + defence experience.
+            case Modules.AttackStyle.Hack: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Axe chop gives accuracy + defence experience.
+            case Modules.AttackStyle.Chop: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                break;
+            }
+        }
     }
 
     /**
@@ -1743,6 +1800,16 @@ export default class Player extends Character {
 
     private getMagicLevel(): number {
         return this.skills.get(Modules.Skills.Magic).level;
+    }
+
+    /**
+     * @param weaponType The weapon type we are checking for.
+     * @returns The player's last attack style. Will return undefined and then a default
+     * value will be used.
+     */
+
+    public getLastAttackStyle(weaponType: string): Modules.AttackStyle {
+        return this.lastStyles[weaponType];
     }
 
     /**

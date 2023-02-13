@@ -121,6 +121,7 @@ export default class Skills {
      * Handles skill-based experience gain.
      * @param type The skill that gained experience.
      * @param name The name of the skill.
+     * @param withINfo Whether or not to display the experience popup on the client.
      * @param experience The amount of experience the skill has.
      * @param level The amount of levels the skill has.
      * @param newLevel Whether the player has gained a new level.
@@ -129,9 +130,10 @@ export default class Skills {
     private handleExperience(
         type: Modules.Skills,
         name: string,
+        withInfo: boolean,
         experience: number,
         level: number,
-        newLevel?: boolean
+        newLevel = false
     ): void {
         if (newLevel) {
             this.player.popup(
@@ -148,13 +150,14 @@ export default class Skills {
             this.sync();
         }
 
-        this.player.send(
-            new Experience(Opcodes.Experience.Skill, {
-                instance: this.player.instance,
-                amount: experience,
-                skill: type
-            })
-        );
+        if (withInfo)
+            this.player.send(
+                new Experience(Opcodes.Experience.Skill, {
+                    instance: this.player.instance,
+                    amount: experience,
+                    skill: type
+                })
+            );
 
         this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
     }

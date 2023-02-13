@@ -362,7 +362,7 @@ export default class Handler {
     private handleEquip(equipment: Equipment): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Equip, {
-                data: equipment
+                data: equipment.serialize(true)
             })
         );
 
@@ -693,9 +693,6 @@ export default class Handler {
 
         // Add the mob kill to the player's statistics.
         this.player.statistics.addMobKill(character.key);
-
-        // Handle the experience upon killing a mob.
-        this.player.handleExperience(character.experience);
 
         /**
          * Special mobs (such as minibosses and bosses) have achievements
