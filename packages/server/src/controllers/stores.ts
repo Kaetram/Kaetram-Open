@@ -181,29 +181,28 @@ export default class Stores {
         if (!item)
             return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
-        if (item.count !== -1) {
-            if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
+        if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
 
-            // Prevent buying more than store has stock. Default to max stock.
-            count = item.count < count ? item.count : count;
-        }
+        // Prevent buying more than store has stock. Default to max stock.
+        count = item.count < count ? item.count : count;
 
         // Find total price of item by multiplying count against price.
         let currency = player.inventory.getIndex(store.currency, item.price * count);
 
-        if (currency === -1) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
+        if (currency < 1) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Clone the item we are adding
-        let itemToAdd = _.clone(item);
+        let itemToAdd = item.copy();
 
         itemToAdd.count = count;
 
+        let amount = player.inventory.add(itemToAdd);
         // Add the item to the player's inventory.
-        if (player.inventory.add(itemToAdd) < 1) return;
+        if (amount < 1) return;
 
-        if (item.count !== -1) {
+        if (item.count > 0) {
             // Decrement the item count by the amount we are buying.
-            item.count -= count;
+            item.count -= amount;
 
             // Remove item from store if it is out of stock and not original to the store.
             if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
@@ -212,7 +211,7 @@ export default class Stores {
                 });
         }
 
-        player.inventory.remove(currency, item.price * count);
+        player.inventory.remove(currency, item.price * amount);
 
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
