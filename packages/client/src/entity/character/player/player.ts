@@ -12,7 +12,6 @@ import Arrows from './equipment/arrows';
 import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
 
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
@@ -100,7 +99,7 @@ export default class Player extends Character {
 
         this.setMana(data.mana!, data.maxMana);
 
-        if (data.equipments) _.each(data.equipments, this.equip.bind(this));
+        if (data.equipments) for (let equipment of data.equipments) this.equip(equipment);
     }
 
     /**
@@ -110,7 +109,7 @@ export default class Player extends Character {
      */
 
     public loadSkills(skills: SkillData[]): void {
-        _.each(skills, (skill: SkillData) => this.setSkill(skill));
+        for (let skill of skills) this.setSkill(skill);
     }
 
     /**
@@ -155,9 +154,8 @@ export default class Player extends Character {
      */
 
     public loadAbilities(abilities: AbilityData[]): void {
-        _.each(abilities, (ability: AbilityData) =>
-            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
-        );
+        for (let ability of abilities)
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot);
     }
 
     /**
@@ -168,11 +166,11 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        _.each(friends, (info: FriendInfo, username: string) => {
+        for (let [username, info] of Object.entries(friends)) {
             this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
-        });
+        }
     }
 
     /**
@@ -216,7 +214,12 @@ export default class Player extends Character {
      */
 
     public addFriend(username: string, status: boolean, serverId: number): void {
-        this.friends[username] = new Friend(_.size(this.friends), username, status, serverId);
+        this.friends[username] = new Friend(
+            Object.keys(this.friends).length,
+            username,
+            status,
+            serverId
+        );
     }
 
     /**
@@ -321,9 +324,7 @@ export default class Player extends Character {
     public getTotalExperience(): number {
         let total = 0;
 
-        _.each(this.skills, (skill: Skill) => {
-            total += skill.experience;
-        });
+        for (let skill of Object.values(this.skills)) total += skill.experience;
 
         return total;
     }
