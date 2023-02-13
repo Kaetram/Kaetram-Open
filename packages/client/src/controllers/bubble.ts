@@ -1,6 +1,7 @@
 import Blob from '../renderer/bubbles/blob';
 
 import $ from 'jquery';
+import _ from 'lodash-es';
 
 import type Game from '../game';
 
@@ -67,7 +68,7 @@ export default class BubbleController {
      */
 
     public update(time: number): void {
-        for (let bubble of Object.values(this.bubbles)) {
+        _.each(this.bubbles, (bubble: Blob) => {
             let entity = this.game.entities.get(bubble.instance);
 
             // If there is an entity, we set the bubble to its position.
@@ -78,7 +79,7 @@ export default class BubbleController {
 
             // Destroy once the timer runs out.
             if (bubble.isOver(time)) this.destroy(bubble);
-        }
+        });
     }
 
     /**
@@ -106,7 +107,7 @@ export default class BubbleController {
      */
 
     public clean(): void {
-        for (let bubble of Object.values(this.bubbles)) bubble.destroy();
+        _.each(this.bubbles, (bubble) => bubble.destroy());
 
         this.bubbles = {};
     }

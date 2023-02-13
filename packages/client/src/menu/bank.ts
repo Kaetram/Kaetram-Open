@@ -4,6 +4,7 @@ import log from '../lib/log';
 import Util from '../utils/util';
 import { onDragDrop } from '../utils/press';
 
+import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -166,11 +167,11 @@ export default class Bank extends Menu {
      */
 
     public override batch(slots: SlotData[]): void {
-        for (let slot of slots) {
+        _.each(slots, (slot: SlotData) => {
             if (!slot.key) return;
 
             this.setSlot(slot);
-        }
+        });
     }
 
     /**
@@ -199,7 +200,7 @@ export default class Bank extends Menu {
         this.synchronize();
 
         // Set all slots to the new data.
-        for (let slot of slots) this.setSlot(slot);
+        _.each(slots, (slot: SlotData) => this.setSlot(slot));
     }
 
     /**

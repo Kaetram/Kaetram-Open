@@ -1,6 +1,7 @@
 import Resources from './resources';
 
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import type World from '../world';
 

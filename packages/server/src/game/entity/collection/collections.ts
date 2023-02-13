@@ -6,6 +6,7 @@ import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
 import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
 import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
 import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
+import _ from 'lodash-es';
 
 import type Collection from '@kaetram/server/src/game/entity/collection/collection';
 import type World from '@kaetram/server/src/game/world';

@@ -1,6 +1,7 @@
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import { Despawn } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Collections from '@kaetram/server/src/game/entity/collection/collections';

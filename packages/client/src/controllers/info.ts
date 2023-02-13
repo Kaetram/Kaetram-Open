@@ -1,6 +1,8 @@
 import Splat from '../renderer/infos/splat';
 import Utils from '../utils/util';
 
+import _ from 'lodash-es';
+
 import type { Modules } from '@kaetram/common/network';
 
 export default class InfoController {
@@ -52,7 +54,7 @@ export default class InfoController {
      */
 
     public isEmpty(): boolean {
-        return Object.keys(this.infos).length === 0;
+        return _.size(this.infos) === 0;
     }
 
     /**
@@ -70,6 +72,6 @@ export default class InfoController {
      */
 
     public forEachInfo(callback: (info: Splat) => void): void {
-        for (let info in Object.values(this.infos)) callback(this.infos[info]);
+        _.each(this.infos, callback);
     }
 }

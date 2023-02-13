@@ -2,6 +2,7 @@ import Arrow from '../renderer/pointers/arrow';
 
 import { Opcodes } from '@kaetram/common/network';
 import $ from 'jquery';
+import _ from 'lodash-es';
 
 import type Entity from '../entity/entity';
 import type Game from '../game';
@@ -45,7 +46,7 @@ export default class PointerController {
     }
 
     public resize(): void {
-        for (let { type, x, y, element } of Object.values(this.pointers))
+        _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Opcodes.Pointer.Relative: {
                     let scale = this.getZoom(),
@@ -60,6 +61,7 @@ export default class PointerController {
                     break;
                 }
             }
+        });
     }
 
     private setSize(element: JQuery): void {
@@ -76,7 +78,7 @@ export default class PointerController {
     }
 
     public clean(): void {
-        for (let pointer of Object.values(this.pointers)) pointer.destroy();
+        _.each(this.pointers, (pointer) => pointer.destroy());
 
         this.pointers = {};
     }
@@ -183,7 +185,7 @@ export default class PointerController {
     }
 
     public update(): void {
-        for (let pointer of Object.values(this.pointers))
+        _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Opcodes.Pointer.Entity: {
                     let entity = this.game.entities.get(pointer.id);
@@ -201,6 +203,7 @@ export default class PointerController {
                     break;
                 }
             }
+        });
     }
 
     private get(id: string): Arrow | null {

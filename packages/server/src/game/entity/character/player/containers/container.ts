@@ -2,6 +2,7 @@ import Slot from './slot';
 
 import Item from '../../../objects/item';
 
+import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';

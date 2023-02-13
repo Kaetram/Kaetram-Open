@@ -11,6 +11,7 @@ import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import _ from 'lodash-es';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';

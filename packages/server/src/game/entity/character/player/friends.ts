@@ -1,4 +1,5 @@
 import config from '@kaetram/common/config';
+import _ from 'lodash';
 
 import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
 import type Player from './player';
