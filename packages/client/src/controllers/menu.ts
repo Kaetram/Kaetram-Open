@@ -16,6 +16,7 @@ import Trade from '../menu/trade';
 import Interact from '../menu/interact';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import _ from 'lodash-es';
 
 import type Game from '../game';
 import type Menu from '../menu/menu';
@@ -390,7 +391,7 @@ export default class MenuController {
     }
 
     /**
-     * Sends a trade packet to the server indicating that the session has been closed.
+     * Sends a tade packet to the server indicating that the session has been closed.
      */
 
     private handleTradeClose(): void {
@@ -405,6 +406,6 @@ export default class MenuController {
      */
 
     private forEachMenu(callback: (menu: Menu) => void): void {
-        for (let menu of Object.values(this.menus)) callback(menu);
+        _.each(this.menus, callback);
     }
 }

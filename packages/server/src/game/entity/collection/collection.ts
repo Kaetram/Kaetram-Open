@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import _ from 'lodash-es';
 
 import type Collections from '@kaetram/server/src/game/entity/collection/collections';
 import type Grids from '@kaetram/server/src/game/map/grids';

@@ -3,6 +3,7 @@ import Tile from './tile';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
+import _ from 'lodash-es';
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 import { Modules } from '@kaetram/common/network';
 
@@ -712,8 +713,9 @@ export default class Renderer {
     private drawPathing(): void {
         if (!this.game.player.hasPath()) return;
 
-        for (let path of this.game.player.path!)
-            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
+        _.each(this.game.player.path, (path) =>
+            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
+        );
     }
 
     /**
@@ -1319,7 +1321,9 @@ export default class Renderer {
      */
 
     public resetAnimatedTiles(): void {
-        for (let tile of Object.values(this.animatedTiles)) tile.animationIndex = 0;
+        _.each(this.animatedTiles, (tile: Tile) => {
+            tile.animationIndex = 0;
+        });
     }
 
     private drawCellRect(x: number, y: number, colour: string): void {
@@ -1389,11 +1393,12 @@ export default class Renderer {
     }
 
     public removeNonRelativeLights(): void {
-        for (let [index, lighting] of this.lightings.entries())
+        _.each(this.lightings, (lighting, index) => {
             if (!lighting.light.relative) {
                 this.lightings.splice(index, 1);
                 this.darkMask.lights.splice(index, 1);
             }
+        });
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
@@ -1671,7 +1676,7 @@ export default class Renderer {
      */
 
     private forAllContexts(callback: ContextCallback): void {
-        for (let context of Object.values(this.allContexts)) callback(context);
+        _.each(this.allContexts, callback);
     }
 
     /**
@@ -1680,7 +1685,7 @@ export default class Renderer {
      */
 
     private forEachContext(callback: ContextCallback): void {
-        for (let context of Object.values(this.contexts)) callback(context);
+        _.each(this.contexts, callback);
     }
 
     /**
@@ -1689,7 +1694,7 @@ export default class Renderer {
      */
 
     private forEachDrawingContext(callback: ContextCallback): void {
-        for (let context of Object.values(this.drawingContexts)) callback(context);
+        _.each(this.drawingContexts, callback);
     }
 
     /**
@@ -1699,7 +1704,7 @@ export default class Renderer {
      */
 
     private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        for (let canvas of Object.values(this.canvases)) callback(canvas);
+        _.each(this.canvases, callback);
     }
 
     /**
@@ -1708,7 +1713,7 @@ export default class Renderer {
      */
 
     private forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        for (let lighting of Object.values(this.lightings)) callback(lighting);
+        _.each(this.lightings, callback);
     }
 
     /**
@@ -1717,7 +1722,7 @@ export default class Renderer {
      */
 
     private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile of Object.values(this.animatedTiles)) callback(tile);
+        _.each(this.animatedTiles, callback);
     }
 
     /**
@@ -1767,7 +1772,7 @@ export default class Renderer {
 
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
+                _.each(grids.renderingGrid[y][x], (entity: Entity) => callback(entity));
         });
     }
 }

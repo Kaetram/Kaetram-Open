@@ -3,6 +3,7 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
+import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
@@ -125,7 +126,7 @@ export default class Character extends Entity {
 
     private loadAnimations(): void {
         // Iterate through all the effects and load default speed and end callback events.
-        for (let effect of Object.values(this.effects)) {
+        _.each(this.effects, (effect: EffectInfo) => {
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
 
@@ -136,7 +137,7 @@ export default class Character extends Entity {
                 effect.animation.reset();
                 effect.animation.count = 1;
             });
-        }
+        });
     }
 
     /**
@@ -677,7 +678,7 @@ export default class Character extends Entity {
      */
 
     public forEachAttacker(callback: (attacker: Character) => void): void {
-        for (let attacker of Object.values(this.attackers)) callback(attacker);
+        _.each(this.attackers, (attacker) => callback(attacker));
     }
 
     /**
@@ -686,7 +687,7 @@ export default class Character extends Entity {
      */
 
     public forEachFollower(callback: (follower: Character) => void): void {
-        for (let follower of Object.values(this.followers)) callback(follower);
+        _.each(this.followers, (follower) => callback(follower));
     }
 
     public override hasShadow(): boolean {
