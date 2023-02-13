@@ -8,7 +8,6 @@ import Projectile from '../entity/objects/projectile';
 import log from '../lib/log';
 import Grids from '../renderer/grids';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type { EntityData } from '@kaetram/common/types/entity';
@@ -370,12 +369,12 @@ export default class EntitiesController {
     public clean(): void {
         if (this.decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => {
-            // Prevent cleaning an entity that may have been removed from a differnet packet.
-            if (!entity) return;
+        for (let entity of this.decrepit) {
+            // Prevent cleaning an entity that may have been removed from a different packet.
+            if (!entity) continue;
 
             this.removeEntity(entity);
-        });
+        }
     }
 
     /**
@@ -386,10 +385,10 @@ export default class EntitiesController {
      */
 
     public cleanDisplayInfo(): void {
-        _.each(this.entities, (entity: Entity) => {
+        for (let entity of Object.values(this.entities)) {
             entity.nameColour = '';
             entity.customScale = 0;
-        });
+        }
     }
 
     /**
@@ -398,10 +397,9 @@ export default class EntitiesController {
      */
 
     public clearPlayers(exception: Player): void {
-        _.each(this.entities, (entity) => {
+        for (let entity of Object.values(this.entities))
             if (entity.isPlayer() && entity.instance !== exception.instance)
                 this.removeEntity(entity);
-        });
     }
 
     /**
@@ -420,6 +418,6 @@ export default class EntitiesController {
      */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
     }
 }
