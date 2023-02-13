@@ -6,6 +6,7 @@ import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { each, isArray } from 'lodash-es';
 import { io } from 'socket.io-client';
 
 import type { Socket } from 'socket.io-client';
@@ -32,11 +33,11 @@ export default class Bot {
         }, 100);
 
         setInterval(() => {
-            for (let bot of this.#bots) {
+            each(this.#bots, (bot) => {
                 this.move(bot);
 
                 if (Utils.randomInt(0, 50) === 10) this.talk(bot);
-            }
+            });
         }, 2000);
     }
 
@@ -64,7 +65,10 @@ export default class Bot {
             if (message.startsWith('[')) {
                 let data = JSON.parse(message);
 
-                if (data.length > 1) for (let msg of data) this.handlePackets(connection, msg);
+                if (data.length > 1)
+                    each(data, (msg) => {
+                        this.handlePackets(connection, msg);
+                    });
                 else this.handlePackets(connection, JSON.parse(message).shift());
             } else this.handlePackets(connection, message as never, 'utf8');
         });
@@ -73,7 +77,7 @@ export default class Bot {
     }
 
     private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
-        if (type === 'utf8' || !Array.isArray(message)) {
+        if (type === 'utf8' || !isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
 
             return;
