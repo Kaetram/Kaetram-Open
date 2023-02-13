@@ -90,7 +90,9 @@ export default class Equipments {
                 new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
             );
 
-        equipment.update(item);
+        if (equipment instanceof Weapon)
+            equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
+        else equipment.update(item);
 
         this.equipCallback?.(equipment);
 
@@ -142,6 +144,15 @@ export default class Equipments {
         if (arrows.count < 1) arrows.empty();
 
         this.unequipCallback?.(Modules.Equipment.Arrows, arrows.count);
+    }
+
+    /**
+     * Updates the attack style of a weapon.
+     * @param style The new attack style of the weapon.
+     */
+
+    public updateAttackStyle(style: Modules.AttackStyle): void {
+        this.getWeapon().attackStyle = style;
     }
 
     /**

@@ -1,6 +1,7 @@
 {
   "sword2": {
     "type": "weapon",
+    "weaponType": "sword",
     "name": "Heavy Sword",
     "level": 2,
     "price": 500,
@@ -22,9 +23,10 @@
   "axe": {
     "type": "weapon",
     "name": "Axe",
+    "weaponType": "axe",
     "lumberjacking": 1,
     "level": 1,
-     "price":250,
+    "price":250,
     "attackStats": {
       "crush": 4,
       "slash": 2,
@@ -43,6 +45,7 @@
   "pickaxe": {
     "type": "weapon",
     "name": "Pickaxe",
+    "weaponType": "pickaxe",
     "mining": 1,
     "level": 1,
     "price": 10000,
@@ -64,6 +67,7 @@
   "morningstar": {
     "type": "weapon",
     "name": "Morning Star",
+    "weaponType": "club",
     "level": 6,
     "price": 1000,
     "attackStats": {
@@ -84,6 +88,7 @@
   "bluesword": {
     "type": "weapon",
     "name": "Water Sword",
+    "weaponType": "sword",
     "level": 10,
     "price": 1500,
     "attackStats": {
@@ -104,6 +109,7 @@
   "redsword": {
     "type": "weapon",
     "name": "Fire Sword",
+    "weaponType": "sword",
     "level": 14,
     "price": 5000,
     "attackStats": {
@@ -124,6 +130,7 @@
   "goldensword": {
     "type": "weapon",
     "name": "Golden Sword",
+    "weaponType": "sword",
     "level": 48,
     "price": 3500,
     "attackStats": {
@@ -151,6 +158,7 @@
   "sidesword": {
     "type": "weapon",
     "name": "Side Sword",
+    "weaponType": "sword",
     "level": 64,
     "price": 1250,
     "attackStats": {
@@ -171,6 +179,7 @@
   "spear": {
     "type": "weapon",
     "name": "Silly Spear",
+    "weaponType": "spear",
     "level": 28,
     "price": 1100,
     "attackStats": {
@@ -198,6 +207,7 @@
   "scimitar": {
     "type": "weapon",
     "name": "Pirate's Scimitar",
+    "weaponType": "sword",
     "level": 30,
     "price": 3000,
     "attackStats": {
@@ -218,6 +228,7 @@
   "trident": {
     "type": "weapon",
     "name": "Trident Of The Seas",
+    "weaponType": "spear",
     "level": 40,
     "price": 500,
     "attackStats": {
@@ -245,6 +256,7 @@
   "bluescimitar": {
     "type": "weapon",
     "name": "Blue Scimitar",
+    "weaponType": "sword",
     "level": 46,
     "price": 2200,
     "attackStats": {
@@ -265,6 +277,7 @@
   "hammer": {
     "type": "weapon",
     "name": "Hammer",
+    "weaponType": "blunt",
     "level": 50,
     "price": 2000,
     "attackStats": {
@@ -285,6 +298,7 @@
   "greenlightsaber": {
     "type": "weapon",
     "name": "Green Light Saber",
+    "weaponType": "sword",
     "price": 4850,
     "level": 56,
     "attackStats": {
@@ -305,6 +319,7 @@
   "skylightsaber": {
     "type": "weapon",
     "name": "Sky Light Saber",
+    "weaponType": "sword",
     "price": 1600,
     "level": 57,
     "attackStats": {
@@ -325,6 +340,7 @@
   "redlightsaber": {
     "type": "weapon",
     "name": "Red Light Saber",
+    "weaponType": "sword",
     "level": 56,
     "price": 1575,
     "attackStats": {
@@ -345,6 +361,7 @@
   "bastardsword": {
     "type": "weapon",
     "name": "Heavy Sword",
+    "weaponType": "bigsword",
     "attackRate": 1350,
     "skill": "strength",
     "level": 40,
@@ -367,6 +384,7 @@
   "redmetalsword": {
     "type": "weapon",
     "name": "Red Metal Sword",
+    "weaponType": "bigsword",
     "attackRate": 4550,
     "skill": "strength",
     "level": 42,
@@ -389,6 +407,7 @@
   "justicehammer": {
     "type": "weapon",
     "name": "Justice Hammer",
+    "weaponType": "blunt",
     "skill": "strength",
     "level": 5000,
     "price": 250,
@@ -410,6 +429,7 @@
   "rose": {
     "type": "weapon",
     "name": "Rose",
+    "weaponType": "blunt",
     "level": 36,
     "price": 500,
     "attackStats": {
@@ -430,6 +450,7 @@
   "icerose": {
     "type": "weapon",
     "name": "Ice Rose",
+    "weaponType": "blunt",
     "level": 86,
     "price": 3500,
     "attackStats": {
@@ -450,6 +471,7 @@
   "halberd": {
     "type": "weapon",
     "name": "Halberd",
+    "weaponType": "axe",
     "level": 90,
     "price": 2228,
     "attackStats": {
@@ -470,6 +492,7 @@
   "whip": {
     "type": "weapon",
     "name": "Whip",
+    "weaponType": "whip",
     "skill": "accuracy",
     "level": 50,
     "price": 2500,
@@ -491,6 +514,7 @@
   "forestguardiansword": {
     "type": "weapon",
     "name": "Forest Guardian Sword",
+    "weaponType": "sword",
     "level": 106,
     "price": 4100,
     "attackStats": {
@@ -511,6 +535,7 @@
   "sickle": {
     "type": "weapon",
     "name": "Sickle",
+    "weaponType": "sword",
     "level": 110,
     "price": 3125,
     "attackStats": {
@@ -531,6 +556,7 @@
   "plunger": {
     "type": "weapon",
     "name": "Plunger",
+    "weaponType": "blunt",
     "level": 98,
     "price": 310,
     "attackStats": {
@@ -551,6 +577,7 @@
   "redsickle": {
     "type": "weapon",
     "name": "Red Sickle",
+    "weaponType": "sword",
     "level": 116,
     "price": 411,
     "attackStats": {
@@ -571,6 +598,7 @@
   "daywalker": {
     "type": "weapon",
     "name": "Day Walker",
+    "weaponType": "axe",
     "level": 140,
     "price": 7500,
     "attackStats": {
@@ -591,6 +619,7 @@
   "purplecloudkallege": {
     "type": "weapon",
     "name": "Purple Cloud Kallege",
+    "weaponType": "axe",
     "level": 160,
     "price": 5000,
     "attackStats": {
@@ -611,6 +640,7 @@
   "searage": {
     "type": "weapon",
     "name": "Sea rage",
+    "weaponType": "bigsword",
     "level": 160,
     "price": 2500,
     "attackStats": {
@@ -631,6 +661,7 @@
   "breaker": {
     "type": "weapon",
     "name": "Breaker",
+    "weaponType": "axe",
     "level": 176,
     "price": 3500,
     "attackStats": {
@@ -651,6 +682,7 @@
   "eneltrident": {
     "type": "weapon",
     "name": "Enel Trident",
+    "weaponType": "spear",
     "price": 30000,
     "level": 200,
     "attackStats": {
@@ -671,6 +703,7 @@
   "rainbowsword": {
     "type": "weapon",
     "name": "Rainbow Sword",
+    "weaponType": "sword",
     "level": 110,
     "price": 2000,
     "attackStats": {
@@ -691,6 +724,7 @@
   "typhoon": {
     "type": "weapon",
     "name": "Typhoon",
+    "weaponType": "axe",
     "level": 106,
     "price": 2500,
     "attackStats": {
@@ -711,6 +745,7 @@
   "memme": {
     "type": "weapon",
     "name": "Memme",
+    "weaponType": "sword",
     "price": 30000,
     "level": 216,
     "attackStats": {
@@ -731,6 +766,7 @@
   "candybar": {
     "type": "weapon",
     "name": "Candy Bar",
+    "weaponType": "blunt",
     "level": 148,
     "price": 1000,
     "attackStats": {
@@ -751,6 +787,7 @@
   "butcherknife": {
     "type": "weapon",
     "name": "Butcher Knife",
+    "weaponType": "sword",
     "price": 30000,
     "level": 138,
     "attackStats": {
@@ -771,6 +808,7 @@
   "fireshot": {
     "type": "weapon",
     "name": "Fire Shot",
+    "weaponType": "sword",
     "price": 30000,
     "level": 216,
     "attackStats": {
@@ -791,6 +829,7 @@
   "comb": {
     "type": "weapon",
     "name": "Comb",
+    "weaponType": "sword",
     "price": 30000,
     "level": 226,
     "attackStats": {
@@ -811,6 +850,7 @@
   "squeakyhammer": {
     "type": "weapon",
     "name": "Squeaky Hammer",
+    "weaponType": "blunt",
     "skill": "strength",
     "level": 66,
     "price": 10000,
@@ -832,6 +872,7 @@
   "fireplay": {
     "type": "weapon",
     "name": "Fire Play",
+    "weaponType": "sword",
     "price": 30000,
     "level": 300,
     "attackStats": {
@@ -852,6 +893,7 @@
   "staff": {
     "type": "weaponmagic",
     "name": "Magic Staff",
+    "weaponType": "staff",
     "price": 1500,
     "manaCost": 2,
     "attackStats": {
@@ -874,6 +916,7 @@
   "lightningstaff": {
     "type": "weaponmagic",
     "name": "Lightning Staff",
+    "weaponType": "staff",
     "skill": "magic",
     "price": 7500,
     "manaCost": 4,
@@ -898,6 +941,7 @@
   "naturestaff": {
     "type": "weaponmagic",
     "name": "Nature Staff",
+    "weaponType": "staff",
     "skill": "magic",
     "price": 12500,
     "manaCost": 6,
@@ -922,6 +966,7 @@
   "firestaff": {
     "type": "weaponmagic",
     "name": "Fire Staff",
+    "weaponType": "staff",
     "skill": "magic",
     "price": 22500,
     "manaCost": 7,
@@ -946,6 +991,7 @@
   "icestaff": {
     "type": "weaponmagic",
     "name": "Ice Staff",
+    "weaponType": "staff",
     "skill": "magic",
     "price": 40000,
     "manaCost": 9,
@@ -970,6 +1016,7 @@
   "pinksword": {
     "type": "weapon",
     "name": "Pink Sword",
+    "weaponType": "sword",
     "price": 30000,
     "level": 256,
     "attackStats": {
@@ -990,6 +1037,7 @@
   "conferencecall": {
     "type": "weapon",
     "name": "Stick",
+    "weaponType": "axe",
     "price": 30000,
     "level": 342,
     "attackStats": {
@@ -1010,6 +1058,7 @@
   "rustedaxe": {
     "type": "weapon",
     "name": "Rusted Axe",
+    "weaponType": "axe",
     "price": 5000,
     "lumberjacking": 2,
     "level": 5,
@@ -1032,6 +1081,7 @@
   "fireaxe": {
     "type": "weapon",
     "name": "Fire Axe",
+    "weaponType": "axe",
     "price": 7500,
     "lumberjacking": 3,
     "skill": "strength",
@@ -1054,6 +1104,7 @@
   "poisonaxe": {
     "type": "weapon",
     "name": "Poison Axe",
+    "weaponType": "axe",
     "price": 10000,
     "poisonous": true,
     "lumberjacking": 4,
@@ -1077,6 +1128,7 @@
   "cactusaxe": {
     "type": "weapon",
     "name": "Cactus Axe",
+    "weaponType": "axe",
     "price": 15000,
     "lumberjacking": 6,
     "skill": "strength",
@@ -1099,6 +1151,7 @@
   "goldaxe": {
     "type": "weapon",
     "name": "Gold Axe",
+    "weaponType": "axe",
     "price": 25000,
     "lumberjacking": 7,
     "skill": "strength",
@@ -1121,6 +1174,7 @@
   "carnelianaxe": {
     "type": "weapon",
     "name": "Carnelian Axe",
+    "weaponType": "axe",
     "price": 50000,
     "lumberjacking": 8,
     "skill": "strength",
@@ -1143,6 +1197,7 @@
   "devilkazyasword": {
     "type": "weapon",
     "name": "Devil Kazya Sword",
+    "weaponType": "sword",
     "price": 30000,
     "level": 240,
     "attackStats": {
@@ -1163,6 +1218,7 @@
   "bamboospear": {
     "type": "weapon",
     "name": "Bamboo Spear",
+    "weaponType": "spear",
     "price": 50000,
     "level": 256,
     "attackStats": {
@@ -1183,6 +1239,7 @@
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
+    "weaponType": "sword",
     "price": 30000,
     "level": 400,
     "attackStats": {
@@ -1203,6 +1260,7 @@
   "magicspear": {
     "type": "weapon",
     "name": "Magic Spear",
+    "weaponType": "spear",
     "price": 30000,
     "level": 400,
     "attackStats": {
@@ -1222,7 +1280,8 @@
 
   "firesword": {
     "type": "weapon",
-    "name": "Fire Sword"
+    "name": "Fire Sword",
+    "weaponType": "staff"
   },
 
   "pendant1": {
@@ -2588,6 +2647,7 @@
   "woodenbow": {
     "type": "weaponarcher",
     "name": "Wooden Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 1,
     "price": 100,
@@ -2609,6 +2669,7 @@
   "plasticbow": {
     "type": "weaponarcher",
     "name": "Plastic Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 3,
     "price": 500,
@@ -2630,6 +2691,7 @@
   "ironbow": {
     "type": "weaponarcher",
     "name": "Iron Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 7,
     "price": 3000,
@@ -2651,6 +2713,7 @@
   "redbow": {
     "type": "weaponarcher",
     "name": "Red Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 11,
     "price": 3500,
@@ -2672,6 +2735,7 @@
   "violetbow": {
     "type": "weaponarcher",
     "name": "Violet Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 14,
     "price": 2231,
@@ -2693,6 +2757,7 @@
   "deathbow": {
     "type": "weaponarcher",
     "name": "Death Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 18,
     "price": 3268,
@@ -2714,6 +2779,7 @@
   "goldenbow": {
     "type": "weaponarcher",
     "name": "Golden Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 22,
     "price": 5000,
@@ -2735,6 +2801,7 @@
   "watermelonbow": {
     "type": "weaponarcher",
     "name": "Watermelon Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 26,
     "price": 4100,
@@ -2755,7 +2822,8 @@
 
   "greenbow": {
     "type": "weaponarcher",
-    "name": "Greenbow",
+    "name": "GreenBow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 29,
     "price": 7500,
@@ -2777,6 +2845,7 @@
   "redenelbow": {
     "type": "weaponarcher",
     "name": "Redenel Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 33,
     "price": 5050,
@@ -2798,6 +2867,7 @@
   "mermaidbow": {
     "type": "weaponarcher",
     "name": "Mermaid Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 35,
     "price": 10000,
@@ -2819,6 +2889,7 @@
   "seahorsebow": {
     "type": "weaponarcher",
     "name": "Seahorse Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 35,
     "price": 550,
@@ -2840,6 +2911,7 @@
   "hunterbow": {
     "type": "weaponarcher",
     "name": "Hunter Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 37,
     "price": 6200,
@@ -2861,6 +2933,7 @@
   "greenlightbow": {
     "type": "weaponarcher",
     "name": "Green Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 39,
     "price": 1170,
@@ -2882,6 +2955,7 @@
   "skylightbow": {
     "type": "weaponarcher",
     "name": "Sky Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 42,
     "price": 6500,
@@ -2903,6 +2977,7 @@
   "redlightbow": {
     "type": "weaponarcher",
     "name": "Red Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 41,
     "price": 9200,
@@ -2924,6 +2999,7 @@
   "captainbow": {
     "type": "weaponarcher",
     "name": "Captain Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 44,
     "price": 7150,
@@ -2945,6 +3021,7 @@
   "redmetalbow": {
     "type": "weaponarcher",
     "name": "Red Metal Bow",
+    "weaponType": "bow",
     "attackRate": 1500,
     "skill": "archery",
     "level": 45,
@@ -2967,6 +3044,7 @@
   "justicebow": {
     "type": "weaponarcher",
     "name": "Justice Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 45,
     "price": 2100,
@@ -2988,6 +3066,7 @@
   "rosebow": {
     "type": "weaponarcher",
     "name": "Rose Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 50,
     "price": 2150,
@@ -3009,6 +3088,7 @@
   "marinebow": {
     "type": "weaponarcher",
     "name": "Marine Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 52,
     "price": 2210,
@@ -3030,6 +3110,7 @@
   "crystalbow": {
     "type": "weaponarcher",
     "name": "Crystal Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 53,
     "price": 2250,
@@ -3051,6 +3132,7 @@
   "gaybow": {
     "type": "weaponarcher",
     "name": "Gay Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 54,
     "price": 25000,
@@ -3072,6 +3154,7 @@
   "forestbow": {
     "type": "weaponarcher",
     "name": "Forest Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 55,
     "price": 12500,
@@ -3093,6 +3176,7 @@
   "sicklebow": {
     "type": "weaponarcher",
     "name": "Sickle Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 56,
     "price": 30000,
@@ -3114,6 +3198,7 @@
   "bloodbow": {
     "type": "weaponarcher",
     "name": "Blood Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 58,
     "price": 12201,
@@ -3135,6 +3220,7 @@
   "redsicklebow": {
     "type": "weaponarcher",
     "name": "Red Sickle Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 66,
     "price": 13150,
@@ -4877,6 +4963,7 @@
   "sword1": {
     "type": "weapon",
     "name": "Best In-Slot Sword",
+    "weaponType": "sword",
     "level": 1,
     "price": 100000,
     "attackStats": {
@@ -4976,6 +5063,7 @@
   "icesword": {
     "type": "weapon",
     "name": "Ice Sword",
+    "weaponType": "sword",
     "level": 94,
     "attackStats": {
       "crush": 8,

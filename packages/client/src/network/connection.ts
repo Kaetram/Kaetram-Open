@@ -260,6 +260,11 @@ export default class Connection {
                 this.game.player.unequip(info.type!, info.count);
                 break;
             }
+
+            case Opcodes.Equipment.Style: {
+                this.game.player.setAttackStyle(info.attackStyle!, info.attackStyles!);
+                break;
+            }
         }
 
         this.game.player.sync();
