@@ -1,6 +1,7 @@
 import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 

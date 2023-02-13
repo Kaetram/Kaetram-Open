@@ -2,6 +2,8 @@ import Menu from './menu';
 
 import log from '../lib/log';
 
+import _ from 'lodash-es';
+
 import type Socket from '../network/socket';
 
 export default class Warp extends Menu {
@@ -12,8 +14,9 @@ export default class Warp extends Menu {
     public constructor(private socket: Socket) {
         super('#map-frame', '#close-map-frame', '#warp-button');
 
-        for (let element of this.list)
-            element.addEventListener('click', () => this.handleWarp(element));
+        _.each(this.list, (element: HTMLElement) =>
+            element.addEventListener('click', () => this.handleWarp(element))
+        );
     }
 
     /**

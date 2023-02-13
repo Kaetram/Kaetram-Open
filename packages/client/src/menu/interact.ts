@@ -1,5 +1,6 @@
 import Menu from './menu';
 
+import _ from 'lodash';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
@@ -47,7 +48,7 @@ export default class Interact extends Menu {
         }
 
         // Add all the actions to the list.
-        for (let action of actions) this.add(action);
+        _.each(actions, (action: Modules.MenuActions) => this.add(action));
 
         // Display only if there's enough actions.
         if (actions.length > 0) {

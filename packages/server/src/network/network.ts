@@ -3,6 +3,7 @@ import { Handshake } from './packets';
 import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
+import _ from 'lodash-es';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Regions from '../game/map/regions';

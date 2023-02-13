@@ -1,6 +1,7 @@
 import Sign from './impl/sign';
 
 import log from '@kaetram/common/util/log';
+import _ from 'lodash';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Map from '../map/map';

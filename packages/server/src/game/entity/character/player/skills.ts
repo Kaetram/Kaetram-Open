@@ -9,6 +9,7 @@ import Defense from './skill/impl/defense';
 
 import Formulas from '../../../../info/formulas';
 
+import _ from 'lodash-es';
 import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
