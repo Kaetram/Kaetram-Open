@@ -2,6 +2,8 @@ import Menu from './menu';
 
 import Util from '../utils/util';
 
+import _ from 'lodash-es';
+
 import type { Modules } from '@kaetram/common/network';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
@@ -73,7 +75,7 @@ export default class Actions extends Menu {
     ): void {
         this.clear();
 
-        for (let action of actions) this.add(action);
+        _.each(actions, (action: Modules.MenuActions) => this.add(action));
 
         // Update the name of the selected item.
         this.name.innerHTML = name;

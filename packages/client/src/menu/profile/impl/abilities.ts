@@ -3,6 +3,7 @@ import Menu from '../../menu';
 import QuickSlots from '../../quickslots';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
+import _ from 'lodash';
 
 import type Ability from '../../../entity/character/player/ability';
 import type Player from '../../../entity/character/player/player';
@@ -68,7 +69,7 @@ export default class Abilities extends Menu {
          * the adequate index and add it to the appropriate list.
          */
 
-        for (let ability of Object.values(player.abilities))
+        _.each(player.abilities, (ability: Ability) => {
             switch (ability.type) {
                 case Modules.AbilityType.Active: {
                     this.setActiveAbility(activeIndex, ability.key, ability.level, ability.active);
@@ -82,6 +83,7 @@ export default class Abilities extends Menu {
                     break;
                 }
             }
+        });
     }
 
     /**

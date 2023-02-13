@@ -5,6 +5,7 @@ import { Store as StorePacket } from '../network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import StoreEn from '@kaetram/common/text/en/store';
 import log from '@kaetram/common/util/log';
+import _ from 'lodash-es';
 
 import type {
     RawStore,

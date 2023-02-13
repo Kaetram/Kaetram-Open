@@ -1,5 +1,6 @@
 import Menu from './menu';
 
+import _ from 'lodash';
 import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
@@ -22,8 +23,7 @@ export default class Achievements extends Menu {
     public handle(opcode: Opcodes.Achievement, key?: string): void {
         // Handle achievement batch creation.
         if (opcode === Opcodes.Achievement.Batch) {
-            for (let task of Object.values(this.player.achievements)) this.createAchievement(task);
-
+            _.each(this.player.achievements, (task: Task) => this.createAchievement(task));
             return;
         }
 
