@@ -72,12 +72,12 @@ export default class ProcessMap {
     private parseTilesets(): void {
         let { tilesets } = this.data;
 
-        if (!_.isArray(tilesets)) {
+        if (!Array.isArray(tilesets)) {
             log.error('Could not parse tilesets, corrupted format.');
             return;
         }
 
-        _.each(tilesets, (tileset: Tileset) => {
+        for (let tileset of tilesets) {
             /**
              * All the tilesets follow the format of `tilesheet_NUMBER`.
              * We extrac the number in this process, which allows us to properly
@@ -90,7 +90,7 @@ export default class ProcessMap {
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
-        });
+        }
 
         // As the last step of the tileset processing, we parse the resources and add them to the map.
         this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
@@ -102,7 +102,7 @@ export default class ProcessMap {
      */
 
     private parseLayers(): void {
-        _.each(this.data.layers, (layer: Layer) => {
+        for (let layer of this.data.layers)
             switch (layer.type) {
                 case 'tilelayer': {
                     this.parseTileLayer(layer);
@@ -114,7 +114,6 @@ export default class ProcessMap {
                     break;
                 }
             }
-        });
     }
 
     /**
@@ -126,16 +125,15 @@ export default class ProcessMap {
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
-        _.each(tiles, (tile: Tile) => {
+        for (let tile of tiles) {
             let tileId = this.getTileId(tileset, tile);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
-            _.each(tile.properties, (property: Property) => {
+            for (let property of tile.properties)
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
-            });
-        });
+        }
     }
 
     /**
@@ -149,12 +147,11 @@ export default class ProcessMap {
         // Temporary storage for animation data.
         let data: ProcessedAnimation[] = [];
 
-        _.each(animations, (animation: Animation) => {
+        for (let animation of animations)
             data.push({
                 duration: animation.duration,
                 tileId: this.getId(firstgid, animation.tileid, -1)
             });
-        });
 
         this.map.animations![tileId] = data;
     }
@@ -254,11 +251,11 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        _.each(mapData, (value: number, index: number) => {
+        for (let [index, value] of mapData.entries()) {
             if (value < 1) return;
 
             if (!data[index]) data[index] = value;
-            else if (_.isArray(data[index])) (data[index] as number[]).push(value);
+            else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
             // Remove flip flags for the sake of calculating collisions.
@@ -266,7 +263,7 @@ export default class ProcessMap {
 
             // Add collision indexes to the map.
             if (value in this.collisionTiles) collisions.push(index);
-        });
+        }
     }
 
     /**
@@ -279,11 +276,11 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        _.each(layer.data, (value: number, index: number) => {
+        for (let [index, value] of layer.data.entries()) {
             if (value < 1) return;
 
             this.map.collisions.push(index);
-        });
+        }
     }
 
     /**
@@ -297,11 +294,11 @@ export default class ProcessMap {
     private parseEntities(layer: Layer): void {
         let { entities } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
+        for (let [index, value] of layer.data.entries()) {
             if (value < 1) return;
 
             if (value in this.tilesetEntities) entities[index] = this.tilesetEntities[value];
-        });
+        }
     }
 
     /**
@@ -315,14 +312,14 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
+        for (let [index, value] of layer.data.entries()) {
             if (value < 1) return;
 
             // We skip collisions
             if (collisions.includes(value)) return;
 
             plateau[index] = level;
-        });
+        }
     }
 
     /**
@@ -339,9 +336,7 @@ export default class ProcessMap {
 
         if (!(name in areas)) areas[name] = [];
 
-        _.each(objects, (info) => {
-            this.parseObject(name, info);
-        });
+        for (let object of objects) this.parseObject(name, object);
     }
 
     /**
@@ -363,12 +358,12 @@ export default class ProcessMap {
             polygon: this.extractPolygon(object)
         });
 
-        _.each(properties, (property) => {
+        for (let property of properties) {
             let index = this.map.areas[areaName].length - 1, // grab the last object (one we just added)
                 { name, value } = property;
 
             this.map.areas[areaName][index][name as never] = value;
-        });
+        }
     }
 
     /**
@@ -424,13 +419,13 @@ export default class ProcessMap {
         resources: Resources,
         callback: (resource: ProcessedResource) => void
     ): void {
-        _.each(resources, (resource: ProcessedResource) => {
+        for (let resource of Object.values(resources)) {
             // Determine whether the normal and exhausted resource match lengths, otherwise skip.
             if (resource.base.length !== resource.depleted.length)
                 return log.error(`${resource.type} has a base and depleted length mismatch.`);
 
             callback(resource);
-        });
+        }
     }
 
     /**
@@ -447,12 +442,11 @@ export default class ProcessMap {
         let polygon: Position[] = [],
             { tileSize } = this.map;
 
-        _.each(info.polygon, (point) => {
+        for (let point of info.polygon)
             polygon.push({
                 x: (info.x + point.x) / tileSize,
                 y: (info.y + point.y) / tileSize
             });
-        });
 
         return polygon;
     }
@@ -470,9 +464,7 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        _.each(this.map.data, (value, index) => {
-            if (!value) this.map.data[index] = 0;
-        });
+        for (let [index, value] of this.map.data.entries()) if (!value) this.map.data[index] = 0;
     }
 
     /**
@@ -507,7 +499,7 @@ export default class ProcessMap {
      */
 
     private getLayerData(data: number[], type: string): number[] {
-        if (_.isArray(data)) return data;
+        if (Array.isArray(data)) return data;
 
         let dataBuffer = Buffer.from(data, 'base64'),
             inflatedData: Buffer;
