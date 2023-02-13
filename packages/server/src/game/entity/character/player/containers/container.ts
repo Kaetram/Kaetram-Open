@@ -229,20 +229,23 @@ export default abstract class Container {
                 toEmpty = toSlot.isEmpty(),
                 // If the target slot is not empty, get the item in the target slot.
                 toItem!: Item,
-                toStackSize!: number;
+                toStackSize!: number,
+                isSameItem = false;
 
             if (!toEmpty) {
                 toItem = toContainer.getItem(toSlot);
                 toStackSize = toContainer.stackSize || toItem.maxStackSize;
+                isSameItem = fromItem.key === toItem.key;
 
                 if (
-                    fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
-                    toItem.count > (this.stackSize || toItem.maxStackSize)
+                    (fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
+                        toItem.count > (this.stackSize || toItem.maxStackSize)) &&
+                    !isSameItem
                 )
                     return;
             }
 
-            if (toEmpty || fromItem.key === toItem.key) {
+            if (toEmpty || isSameItem) {
                 // Get the count of the item in the target slot.
                 let toCount = toEmpty ? 0 : toItem.count;
 
