@@ -98,7 +98,7 @@ export default class Servers {
      */
 
     public getAll(): SerializedServer[] {
-        return Object.values(this.servers).map((server) => {
+        return _.map(this.servers, (server: Server) => {
             return server.serialize();
         });
     }
@@ -110,7 +110,7 @@ export default class Servers {
      */
 
     public hasEmpty(): boolean {
-        return Object.values(this.servers).some((server: Server) => {
+        return !!_.some(this.servers, (server: Server) => {
             return server.players.length < server.maxPlayers - 1;
         });
     }
@@ -172,7 +172,7 @@ export default class Servers {
     public getTotalPlayers(): number {
         let totalPlayers = 0;
 
-        for (let server of Object.values(this.servers)) totalPlayers += server.players.length;
+        _.each(this.servers, (server: Server) => (totalPlayers += server.players.length));
 
         return totalPlayers;
     }
@@ -183,7 +183,7 @@ export default class Servers {
      */
 
     public forEachServer(callback: (server: Server, key: string) => void): void {
-        for (let [key, server] of Object.entries(this.servers)) callback(server, key);
+        _.each(this.servers, callback);
     }
 
     /**
