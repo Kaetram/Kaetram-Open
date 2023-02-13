@@ -45,6 +45,7 @@ export default class Item extends Entity {
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
+    public weaponType = '';
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -119,6 +120,7 @@ export default class Item extends Entity {
         this.projectileName = this.data.projectileName || this.projectileName;
         this.description = this.data.description || this.description;
         this.manaCost = this.data.manaCost || this.manaCost;
+        this.weaponType = this.data.weaponType || this.weaponType;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -333,6 +335,75 @@ export default class Item extends Entity {
     }
 
     /**
+     * Depending on the weapon attack type, we determine
+     * which attack styles apply to the item.
+     * @return A list of attack styles that apply to the item.
+     */
+
+    public getAttackStyles(): Modules.AttackStyle[] {
+        // Why would you want to attack with a non-weapon?
+        if (!this.isWeapon()) return [];
+
+        // If the item has a specified attack style, we use that.
+        switch (this.weaponType) {
+            case 'sword': {
+                return [
+                    Modules.AttackStyle.Stab,
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'bigsword': {
+                return [
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'axe': {
+                return [
+                    Modules.AttackStyle.Hack,
+                    Modules.AttackStyle.Chop,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'pickaxe': {
+                return [Modules.AttackStyle.Stab, Modules.AttackStyle.Defensive];
+            }
+
+            case 'club': {
+                return [Modules.AttackStyle.Crush, Modules.AttackStyle.Defensive];
+            }
+
+            case 'spear': {
+                return [
+                    Modules.AttackStyle.Stab,
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'bow': {
+                return [
+                    Modules.AttackStyle.Accurate,
+                    Modules.AttackStyle.Fast,
+                    Modules.AttackStyle.LongRange
+                ];
+            }
+
+            case 'staff': {
+                return [Modules.AttackStyle.Focused, Modules.AttackStyle.LongRange];
+            }
+        }
+
+        return [];
+    }
+
+    /**
      * @param id The enchantment id we are checking for.
      * @returns Whether or not the item has the enchantment.
      */
@@ -374,6 +445,14 @@ export default class Item extends Entity {
             this.itemType === 'ring' ||
             this.itemType === 'arrow'
         );
+    }
+
+    /**
+     * @returns Whether or not the item is a weapon.
+     */
+
+    public isWeapon(): boolean {
+        return this.itemType.includes('weapon');
     }
 
     /**

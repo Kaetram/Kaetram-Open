@@ -6,20 +6,15 @@
 
 import Utils from '@kaetram/common/util/utils';
 
+import type Item from '../../../objects/item';
 import type { Modules } from '@kaetram/common/network';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
-import type Item from '../../../objects/item';
 
 export default class Equipment {
     // Properties
     public name = '';
-
-    public attackRange = 1;
-    public lumberjacking = -1;
-    public mining = -1;
     public poisonous = false;
-
     public movementModifier = -1;
 
     // Stats
@@ -47,11 +42,7 @@ export default class Equipment {
         this.name = item.name;
         this.count = item.count;
         this.enchantments = item.enchantments;
-
-        this.lumberjacking = item.lumberjacking;
-        this.mining = item.mining;
         this.poisonous = item.poisonous;
-
         this.attackStats = item.attackStats;
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
@@ -71,9 +62,6 @@ export default class Equipment {
 
         this.name = '';
 
-        this.attackRange = 1;
-        this.lumberjacking = -1;
-        this.mining = -1;
         this.poisonous = false;
         this.movementModifier = -1;
 
@@ -89,25 +77,6 @@ export default class Equipment {
 
     public isEmpty(): boolean {
         return !this.key;
-    }
-
-    /**
-     * Checks if the item is a lumberjacking item. Lumberjacking items are
-     * defined by equipments that have a lumberjacking value greater than 0.
-     * @returns If the lumberjacking attribute is greater than 0.
-     */
-
-    public isLumberjacking(): boolean {
-        return this.lumberjacking > 0;
-    }
-
-    /**
-     * Whether or not this weapon can be used for mining.
-     * @returns Whether the mining weapon level is greater than 0.
-     */
-
-    public isMining(): boolean {
-        return this.mining > 0;
     }
 
     /**
@@ -136,7 +105,6 @@ export default class Equipment {
         // Includes information only relevant to the client.
         if (clientInfo) {
             data.name = this.name;
-            data.attackRange = this.attackRange;
             data.poisonous = this.poisonous;
 
             data.attackStats = this.attackStats;
