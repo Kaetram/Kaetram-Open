@@ -1,6 +1,5 @@
 import Default from './default';
 
-import _ from 'lodash';
 import Utils from '@kaetram/common/util/utils';
 import { Teleport } from '@kaetram/server/src/network/packets';
 

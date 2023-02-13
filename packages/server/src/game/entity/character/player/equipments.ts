@@ -7,7 +7,6 @@ import Arrows from './equipment/impl/arrows';
 
 import Item from '../../objects/item';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
