@@ -10,7 +10,6 @@ import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { PacketType } from '@kaetram/common/network/modules';

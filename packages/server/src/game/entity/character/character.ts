@@ -7,7 +7,6 @@ import Entity from '../entity';
 import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
 import Formulas from '../../../info/formulas';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';

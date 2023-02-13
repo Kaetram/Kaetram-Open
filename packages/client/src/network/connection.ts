@@ -1,6 +1,5 @@
 import log from '../lib/log';
 
-import _ from 'lodash-es';
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
@@ -245,9 +244,9 @@ export default class Connection {
     private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacket): void {
         switch (opcode) {
             case Opcodes.Equipment.Batch: {
-                _.each((info.data as SerializedEquipment).equipments, (equipment: EquipmentData) =>
-                    this.game.player.equip(equipment)
-                );
+                for (let equipment of (info.data as SerializedEquipment).equipments)
+                    this.game.player.equip(equipment);
+
                 break;
             }
 
@@ -275,16 +274,19 @@ export default class Connection {
     private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
         switch (opcode) {
             case Opcodes.List.Spawns: {
-                let ids = _.map(this.entities.getAll(), 'instance'),
-                    known = _.intersection(ids, info.entities),
-                    newIds = _.difference(info.entities, known);
+                let ids = new Set(
+                        Object.values(this.entities.getAll()).map((entity) => entity.instance)
+                    ),
+                    known = new Set(info.entities!.filter((id) => ids.has(id))),
+                    newIds = info.entities!.filter((id) => known.has(id));
 
                 // Prepare the entities ready for despawning.
-                this.entities.decrepit = _.reject(
-                    this.entities.getAll(),
+                this.entities.decrepit = Object.values(this.entities.getAll()).filter(
                     (entity) =>
-                        _.includes(known, entity.instance) ||
-                        entity.instance === this.game.player.instance
+                        !(
+                            known.has(entity.instance) ||
+                            entity.instance === this.game.player.instance
+                        )
                 );
 
                 // Clear the entities in the decrepit queue.
@@ -297,7 +299,7 @@ export default class Connection {
 
             case Opcodes.List.Positions: {
                 // Look through all the positions of the entities and their instances.
-                _.each(info.positions, (position: Position, instance: string) => {
+                for (let [instance, position] of Object.entries(info.positions!)) {
                     let entity = this.entities.get<Character>(instance);
 
                     // No entity found, just skip.
@@ -310,7 +312,7 @@ export default class Connection {
 
                     if (entity.gridX !== position.x || entity.gridY !== position.y)
                         this.game.teleport(entity, position.x, position.y);
-                });
+                }
             }
         }
     }
@@ -1281,14 +1283,14 @@ export default class Connection {
     private handleUpdate(info: EntityDisplayInfo[]): void {
         this.entities.cleanDisplayInfo();
 
-        _.each(info, (update: EntityDisplayInfo) => {
+        for (let update of info) {
             let entity = this.entities.get(update.instance);
 
             if (!entity) return;
 
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;
-        });
+        }
     }
 
     /**
