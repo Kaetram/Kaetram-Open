@@ -1,6 +1,5 @@
 import Menu from '../../menu';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type Skill from '../../../entity/character/player/skill';
@@ -28,7 +27,7 @@ export default class Skills extends Menu {
      */
 
     public override synchronize(): void {
-        _.each(this.player.skills, (skill: Skill) => {
+        for (let skill of Object.values(this.player.skills)) {
             let element = this.get(skill.name);
 
             // Update the element if found.
@@ -43,7 +42,7 @@ export default class Skills extends Menu {
                 // Update the element with the latest data.
                 this.update(element, skill);
             }
-        });
+        }
     }
 
     /**

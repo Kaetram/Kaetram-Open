@@ -4,7 +4,6 @@ import Regions from './regions';
 
 import mapData from '../../../data/map/world.json';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type {

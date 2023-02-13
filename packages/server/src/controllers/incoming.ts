@@ -3,7 +3,6 @@ import Commands from './commands';
 import Creator from '../database/mongodb/creator';
 import { Spawn } from '../network/packets';
 
-import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';

@@ -1,7 +1,6 @@
 import Light from './impl/light';
 
 import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Map from '../map/map';
