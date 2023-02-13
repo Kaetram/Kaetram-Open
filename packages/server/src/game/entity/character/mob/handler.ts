@@ -63,6 +63,8 @@ export default class Handler {
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
         if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
+
+        if (attacker.isPlayer()) attacker.handleExperience(damage);
     }
 
     /**
@@ -83,7 +85,7 @@ export default class Handler {
 
                 // Drop the mob's loot and pass the owner's username.
                 this.mob.drop(entity.username);
-            } else entity.handleExperience(experience);
+            }
         });
         // Stop the combat.
         this.mob.combat.stop();
