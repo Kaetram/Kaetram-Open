@@ -12,7 +12,8 @@ export enum List {
 export enum Equipment {
     Batch,
     Equip,
-    Unequip
+    Unequip,
+    Style
 }
 
 export enum Movement {
