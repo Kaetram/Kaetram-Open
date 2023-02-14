@@ -28,8 +28,9 @@ export default class Skills extends Menu {
      */
 
     public override synchronize(): void {
-        _.each(this.player.skills, (skill: Skill) => {
-            let element = this.get(skill.name);
+        _.each(Modules.SkillsOrder, (id: Modules.Skills) => {
+            let skill = this.player.skills[id],
+                element = this.get(skill.name);
 
             // Update the element if found.
             if (element) this.update(element, skill);
