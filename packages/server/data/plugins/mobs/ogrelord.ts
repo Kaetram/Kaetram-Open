@@ -9,7 +9,8 @@ import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 export default class OgreLord extends Default {
     private dialogues: string[] = [
         'The great ogre lord will trample over you!',
-        'No, do not touch my onions!'
+        'No, do not touch my onions!',
+        'Me smash you!'
     ];
 
     private positions: Position[] = [
