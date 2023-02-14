@@ -72,7 +72,12 @@ export default class Network {
 
         this.createPacketQueue(player);
 
-        this.send(player, new Handshake());
+        this.send(
+            player,
+            new Handshake({
+                serverId: config.serverId
+            })
+        );
     }
 
     /**

@@ -36,7 +36,7 @@ import {
 } from '@kaetram/server/src/network/packets';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
-import { AttackStyle, PacketType } from '@kaetram/common/network/modules';
+import { PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
 import { Team } from '@kaetram/common/api/minigame';

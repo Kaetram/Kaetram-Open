@@ -15,6 +15,16 @@
     margin: auto;
 
     font-family: AdvoCut, sans-serif;
+
+    li {
+        p:first-child {
+            color: #fff;
+        }
+
+        p:last-child {
+            float: right;
+        }
+    }
 }
 
 #popup-container {
@@ -74,9 +84,19 @@
             height: 172px * $i;
             margin-top: 14px * $i;
             padding-left: 2px * $i;
+
+            li {
+                p:first-child {
+                    padding-left: 6px * $i;
+                }
+
+                p:last-child {
+                    padding-right: 6px * $i;
+                }
+            }
         }
 
-        #friends-list > ul > li:last-child {
+        #friends-list > li:last-child {
             margin-bottom: 1px * $i;
         }
 
@@ -162,6 +182,10 @@
         #popup-friend-input {
             top: 12px;
         }
+
+        #friends-page > ul > li > p {
+            font-size: 20px;
+        }
     }
 
     @media (--sm) {
@@ -177,7 +201,7 @@
         }
 
         #friends-page > ul > li > p {
-            font-size: 12px;
+            font-size: 10px;
         }
     }
 }
