@@ -169,6 +169,18 @@ export enum Skills {
     Defense
 }
 
+// It's easier to define and swap order around here.
+export let SkillsOrder = [
+    Skills.Health,
+    Skills.Accuracy,
+    Skills.Strength,
+    Skills.Defense,
+    Skills.Archery,
+    Skills.Magic,
+    Skills.Lumberjacking,
+    Skills.Mining
+];
+
 export enum Enchantment {
     Bloodsucking,
     Critical,
