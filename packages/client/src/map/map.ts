@@ -193,8 +193,6 @@ export default class Map {
         tileset.src = path;
         tileset.firstGID = firstGID;
 
-        tileset.loaded = true;
-
         // Listener for when the image has finished loading. Equivalent of `image.onload`
         tileset.addEventListener('load', () => {
             // Prevent uneven tilemaps from loading.
@@ -204,12 +202,32 @@ export default class Map {
             // Equivalent of firstGID + (tileset.width / this.tileSize) * (tileset.height / this.tileSize)
             tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
 
+            // Mark tileset as loaded.
+            tileset.loaded = true;
+
             callback(tileset);
         });
 
         tileset.addEventListener('error', () => {
             throw new Error(`Could not find tile set: ${tileset.path}`);
         });
+
+        /**
+         * A fallback timeout in case the tileset image refuses to load. For some reason
+         * when we try to load tilesets, the callback is not initialzied properly. This
+         * causes the game to hang on the loading screen. Where it gets weirder is that
+         * as long as a `console.log` is present, the callback is initialized properly.
+         * This is a safety net that checks every 500ms if the tileset has loaded.
+         */
+
+        setTimeout(() => {
+            if (!tileset.loaded) {
+                // Recursively call this function until the tileset is loaded.
+                this.loadTileset(firstGID, tilesetId, callback);
+
+                log.debug(`Retrying to load tileset: ${tileset.path}`);
+            }
+        }, 500);
     }
 
     /**
