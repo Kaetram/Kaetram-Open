@@ -5,6 +5,7 @@ import desertquest from './desertquest';
 import seaactivities from './seaactivities';
 import ancientlands from './ancientlands';
 import minersquest from './minersquest';
+import evilsanta from './evilsanta';
 
 export default {
     tutorial,
@@ -13,5 +14,6 @@ export default {
     seaactivities,
     ancientlands,
     sorcery,
-    minersquest
+    minersquest,
+    evilsanta
 };
