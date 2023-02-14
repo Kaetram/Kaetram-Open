@@ -251,6 +251,10 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
+        // Prevent the player from entering if the player's level is too low.
+        if (this.player.level < door.level)
+            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
@@ -258,9 +262,8 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+        // If the door has an achievement associated with it, it gets completed here.
+        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
         // Do not pass through doors that require an achievement which hasn't been completed.
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
@@ -269,16 +272,13 @@ export default class Handler {
         // Ensure quest requirement is fullfilled before passing through the door.
         if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
 
-        // If the door has an achievement associated with it, it gets completed here.
-        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
-
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
         if (door.reqItem) {
             let count = door.reqItemCount || 1;
 
             if (!this.player.inventory.hasItem(door.reqItem, count))
                 return this.player.notify(
-                    'You do not have the required item to pass through this door.'
+                    'You do not have the required key to pass through this door.'
                 );
 
             this.player.inventory.removeItem(door.reqItem, count);
