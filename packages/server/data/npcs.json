@@ -249,6 +249,7 @@
   },
 
   "santaelfnpc": {
-    "name": "Santa's Helper"
+    "name": "Santa's Helper",
+    "text": ["What do you want? I'm busy being overworked."]
   }
 }
