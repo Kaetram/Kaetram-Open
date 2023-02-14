@@ -32,7 +32,7 @@ export default abstract class Quest {
     private description = '';
     private rewards: string[] = [];
     private hideNPCs: string[] = []; // NPCs to hide after quest.
-    private stage = 0; // How far along in the quest we are.
+    protected stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     protected stageCount = 0; // How long the quest is.
 
@@ -130,14 +130,15 @@ export default abstract class Quest {
      * @param player The player instance that we send actions to.
      */
 
-    private handleDoor(door: ProcessedDoor, player: Player): void {
+    protected handleDoor(door: ProcessedDoor, player: Player): void {
         log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
 
         if (this.stage < door.stage) return player.notify('You cannot pass through this door.');
 
         player.teleport(door.x, door.y);
 
-        this.progress();
+        // Progress only if the door is a task.
+        if (this.isDoorTask()) this.progress();
     }
 
     /**
@@ -332,6 +333,14 @@ export default abstract class Quest {
 
     public isHiddenNPC(key: string): boolean {
         return this.hideNPCs.includes(key);
+    }
+
+    /**
+     * @returns Whether or not the current task is to walk through a door.
+     */
+
+    private isDoorTask(): boolean {
+        return this.stageData.task === 'door';
     }
 
     /**
