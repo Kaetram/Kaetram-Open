@@ -1236,6 +1236,48 @@
     }
   },
 
+  "wolfsword": {
+    "type": "weapon",
+    "name": "Wolf Sword",
+    "weaponType": "sword",
+    "price": 50000,
+    "level": 256,
+    "attackStats": {
+      "crush": 10,
+      "slash": 120,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 45,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "deathflail": {
+    "type": "weapon",
+    "name": "Flail of Death",
+    "weaponType": "blunt",
+    "price": 50000,
+    "level": 256,
+    "attackStats": {
+      "crush": 150,
+      "slash": 20,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 64,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
@@ -3014,6 +3056,28 @@
       "accuracy": 30,
       "strength": 0,
       "archery": 30,
+      "magic": 0
+    }
+  },
+
+  "candybow": {
+    "type": "weaponarcher",
+    "name": "Candy Bow",
+    "weaponType": "bow",
+    "skill": "archery",
+    "level": 200,
+    "price": 11150,
+    "attackStats": {
+      "crush": 4,
+      "slash": 7,
+      "stab": 0,
+      "archery": 80,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 0,
+      "archery": 50,
       "magic": 0
     }
   },
@@ -5236,7 +5300,6 @@
     "price": 50,
     "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
   },
-
 
   "leatherboots": {
     "type": "boots",
