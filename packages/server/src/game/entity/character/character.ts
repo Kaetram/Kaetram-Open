@@ -158,6 +158,12 @@ export default abstract class Character extends Entity {
 
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
+            // Ignore mob-on-mob AoE damage.
+            if (character.isMob() && this.isMob()) return;
+
+            // Ignore player-on-player AoE damage unless PvP is enabled.
+            if (character.isPlayer() && this.isPlayer() && !this.pvp && !character.pvp) return;
+
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
                     Modules.Hits.Damage,

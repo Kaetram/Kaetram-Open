@@ -55,6 +55,11 @@ export default class Projectile extends Entity {
         return (Date.now() - this.lastUpdate) / 1000;
     }
 
+    /**
+     * Impact effect is a special effect that is played when the projectile despawns.
+     * @returns The effect that is played when the projectile impacts the target.
+     */
+
     public getImpactEffect(): Modules.Effects {
         switch (this.sprite.name) {
             case 'projectile-boulder': {
@@ -65,7 +70,8 @@ export default class Projectile extends Entity {
                 return Modules.Effects.Poisonball;
             }
 
-            case 'projectile-fireball': {
+            case 'projectile-fireball':
+            case 'projectile-gift6': {
                 return Modules.Effects.Fireball;
             }
 
