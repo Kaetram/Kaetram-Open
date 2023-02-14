@@ -433,7 +433,7 @@ export const Constants = {
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
-    EXPERIENCE_PER_HIT: 4 // Amount of experinece received per 1 damage dealt.
+    EXPERIENCE_PER_HIT: 2 // Amount of experinece received per 1 damage dealt.
 };
 
 export enum MinigameConstants {
@@ -463,7 +463,6 @@ export enum ItemDefaults {
 
 // Defaults that apply specifically to mobs
 export enum MobDefaults {
-    EXPERIENCE = 1, // Default 1 exp granted if not specified
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
