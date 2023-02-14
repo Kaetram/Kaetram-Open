@@ -61,7 +61,6 @@ export default class Mob extends Character {
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     private dropTables: string[] = ['ordinary', 'arrows', 'unusual']; // Default drop table for all mobs.
 
-    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
@@ -101,8 +100,6 @@ export default class Mob extends Character {
      */
 
     private loadData(data: MobData): void {
-        this.experience = data.experience || this.experience;
-
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
@@ -411,32 +408,13 @@ export default class Mob extends Character {
     }
 
     /**
-     * Sorts the damage table by the amount of damage done from highest to lowest.
-     * @returns An array of the damage table sorted by the amount of damage done.
-     * The first element is the instance, the is the damage percentage.
+     * Sorts the damage table from highest to lowest. The highest damage dealing player
+     * will receive priority over the drops the mob has.
+     * @returns Sorted damage table from highest to lowest.
      */
 
-    public getExperienceTable(): [string, number][] {
-        let sortedTable = Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
-
-        /**
-         * We iterate through each damage amount and extract a percentage of the damage done
-         * to the total health points of the mob. We multiply by the experience to gain a percentage
-         * amount of experience to give to the player. The player with most damage receives all
-         * of the mob's experience. The rest receive fractions.
-         */
-
-        _.each(sortedTable, (entry: [string, number], index: number) => {
-            entry[1] =
-                index === 0
-                    ? this.experience
-                    : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
-
-            // Prevent getting more experience than the mob has (if mob heals and whatnot).
-            if (entry[1] > this.experience) entry[1] = this.experience;
-        });
-
-        return sortedTable;
+    public getDamageTable(): [string, number][] {
+        return Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
     }
 
     /**
