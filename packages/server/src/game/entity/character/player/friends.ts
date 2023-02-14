@@ -4,7 +4,7 @@ import _ from 'lodash';
 import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
 import type Player from './player';
 
-type SyncCallback = (username: string, status: boolean) => void;
+type SyncCallback = (username: string, status: boolean, serverId: number) => void;
 
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
@@ -73,7 +73,7 @@ export default class Friends {
             if (!online) this.player.world.linkFriends(this.player, false);
 
             // Add the friend to the list and pass on the online status to the client.
-            this.addCallback?.(username, this.list[username].online);
+            this.addCallback?.(username, this.list[username].online, this.list[username].serverId);
         });
     }
 
@@ -127,10 +127,14 @@ export default class Friends {
      */
 
     public setStatus(username: string, status: boolean, serverId: number): void {
-        this.list[username].online = status;
-        this.list[username].serverId = status ? serverId : -1;
+        let friend = this.list[username];
 
-        this.statusCallback?.(username, status);
+        if (!friend) return;
+
+        friend.online = status;
+        friend.serverId = status ? serverId : -1;
+
+        this.statusCallback?.(username, status, friend.serverId);
     }
 
     /**
