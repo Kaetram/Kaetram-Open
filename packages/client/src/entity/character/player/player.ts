@@ -30,6 +30,8 @@ export default class Player extends Character {
     public rank: Modules.Ranks = Modules.Ranks.None;
     public wanted = false;
 
+    public serverId = -1;
+
     public pvpKills = -1;
     public pvpDeaths = -1;
 
@@ -518,10 +520,12 @@ export default class Player extends Character {
      * Updates the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend.
+     * @param serverId The server id of the friend.
      */
 
-    public setFriendStatus(username: string, status: boolean): void {
+    public setFriendStatus(username: string, status: boolean, serverId: number): void {
         this.friends[username].online = status;
+        this.friends[username].serverId = serverId;
     }
 
     /**

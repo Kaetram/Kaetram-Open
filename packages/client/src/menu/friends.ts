@@ -1,6 +1,7 @@
 import Menu from './menu';
 
 import Util from '../utils/util';
+import { isLargeScreen } from '../utils/detect';
 
 import _ from 'lodash';
 import { Opcodes } from '@kaetram/common/network';
@@ -46,24 +47,40 @@ export default class Friends extends Menu {
         this.cancel.addEventListener('click', this.hidePopup.bind(this));
     }
 
+    public override resize(): void {
+        for (let key in this.player.friends) {
+            let friend = this.player.friends[key],
+                element = this.list.children[friend.id];
+
+            if (!element) return;
+
+            let name = element.children[0] as HTMLElement,
+                maxLength = this.getMaxLength();
+
+            if (friend.username.length > maxLength)
+                name.innerHTML = `${friend.username.slice(0, maxLength)}...`;
+        }
+    }
+
     /**
      * Function is called whenever we receive the initial friend list or subsequent
      * updates from the server regarding adding, removing, or status changes.
      * @param opcode The type of action we are handling.
      * @param username (Only for add/remove/update) The username of the friend we are handling.
+     * @param status (Only for add/update) The world that the friend is in.
      */
 
-    public handle(opcode: Opcodes.Friends, username = '', status = false): void {
+    public handle(opcode: Opcodes.Friends, username = '', status = false, serverId = -1): void {
         switch (opcode) {
             case Opcodes.Friends.List: {
                 _.each(this.player.friends, (friend: Friend) =>
-                    this.createElement(friend.username, friend.online)
+                    this.createElement(friend.username, friend.online, friend.serverId)
                 );
                 break;
             }
 
             case Opcodes.Friends.Add: {
-                return this.createElement(username, status);
+                return this.createElement(username, status, serverId);
             }
 
             case Opcodes.Friends.Remove: {
@@ -71,7 +88,7 @@ export default class Friends extends Menu {
             }
 
             case Opcodes.Friends.Status: {
-                return this.updateStatus(username, status);
+                return this.updateStatus(username, status, serverId);
             }
         }
     }
@@ -152,24 +169,35 @@ export default class Friends extends Menu {
      * @param username The username of the friend.
      */
 
-    private createElement(username: string, online = false): void {
+    private createElement(username: string, online = false, serverId = -1): void {
         let element = document.createElement('li'),
-            name = document.createElement('p');
+            name = document.createElement('p'),
+            world = document.createElement('p');
 
         // Add styling to the friend slot element.
         element.classList.add('container-slot');
 
         // Add styling to the friend name element.
-        name.classList.add('stroke');
+        name.classList.add('stroke', 'left');
+
+        // Add styling to the world element.
+        world.classList.add('stroke', 'right');
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) name.classList.add('green');
+        if (online) world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
 
         // Set the name of the friend.
+        let maxLength = this.getMaxLength();
+
+        if (username.length > maxLength) username = `${username.slice(0, maxLength)}...`;
+
         name.innerHTML = Util.formatName(username);
 
+        // Update the world information.
+        world.innerHTML = online ? `World ${serverId}` : 'Offline';
+
         // Add the name element to the friend slot element.
-        element.append(name);
+        element.append(name, world);
 
         // Add the friend slot element to the friend list.
         this.list.append(element);
@@ -199,20 +227,26 @@ export default class Friends extends Menu {
      * Grabs the friend from the list of friends and updates the status.
      * @param username Username of the friend we are updating.
      * @param online The online status of the friend.
+     * @param serverId The world id that the friend is on.
      */
 
-    private updateStatus(username: string, online: boolean): void {
+    private updateStatus(username: string, online: boolean, serverId: number): void {
         let friend = this.player.friends[username];
 
         // No friend has been found.
         if (!friend) return;
 
         // Grab the friend's name element.
-        let name = this.list.children[friend.id].children[0] as HTMLParagraphElement;
+        let world = this.list.children[friend.id].children[1] as HTMLParagraphElement;
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) name.classList.add('green');
-        else name.classList.remove('green');
+        if (online) {
+            world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
+            world.innerHTML = `World ${friend.serverId}`;
+        } else {
+            world.classList.remove('green');
+            world.innerHTML = 'Offline';
+        }
     }
 
     /**
@@ -221,6 +255,15 @@ export default class Friends extends Menu {
 
     public isPopupActive(): boolean {
         return this.popupActive;
+    }
+
+    /**
+     * Large devices can fit more text so we truncate less of the username string.
+     * @returns The maximum length of the username based on the screen size.
+     */
+
+    private getMaxLength(): number {
+        return isLargeScreen() ? 16 : 10;
     }
 
     /**

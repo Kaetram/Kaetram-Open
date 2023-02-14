@@ -597,13 +597,15 @@ export default class Handler {
      * Callback for when a friend is added to the friends list.
      * @param username The username of the friend we just added.
      * @param status The online status of the friend we just added.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsAdd(username: string, status: boolean): void {
+    private handleFriendsAdd(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Add, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }
@@ -624,13 +626,15 @@ export default class Handler {
      * Synchronizes with the client the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend we are updating.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsStatus(username: string, status: boolean): void {
+    private handleFriendsStatus(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Status, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }

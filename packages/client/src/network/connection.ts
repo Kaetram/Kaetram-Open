@@ -59,7 +59,8 @@ import type {
     EffectPacket,
     FriendsPacket,
     ListPacket,
-    TradePacket
+    TradePacket,
+    HandshakePacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -164,8 +165,11 @@ export default class Connection {
      * must send the login packet (guest, registering, or login).
      */
 
-    private handleHandshake(): void {
+    private handleHandshake(data: HandshakePacket): void {
         this.app.updateLoader('Connecting to server');
+
+        // Set the server id and send the login packet.
+        this.game.player.serverId = data.serverId;
 
         // Guest login doesn't require any credentials, send the packet right away.
         if (this.app.isGuest())
@@ -1395,12 +1399,12 @@ export default class Connection {
             }
 
             case Opcodes.Friends.Status: {
-                this.game.player.setFriendStatus(info.username!, info.status!);
+                this.game.player.setFriendStatus(info.username!, info.status!, info.serverId!);
                 break;
             }
         }
 
-        this.menu.getFriends().handle(opcode, info.username, info.status);
+        this.menu.getFriends().handle(opcode, info.username, info.status, info.serverId);
     }
 
     /**
