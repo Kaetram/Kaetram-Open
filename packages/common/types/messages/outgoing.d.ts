@@ -17,7 +17,11 @@ import type { SerializedStoreItem } from '../stores';
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type HandshakeCallback = () => void;
+export interface HandshakePacket {
+    serverId: number;
+}
+
+export type HandshakeCallback = (data: HandshakePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
