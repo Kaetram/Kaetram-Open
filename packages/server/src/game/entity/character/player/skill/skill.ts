@@ -17,6 +17,7 @@ export default abstract class Skill {
     public name = '';
     public level = 1;
     public experience = 0;
+    public nextExperience = 0;
 
     public combat = false;
 
@@ -42,6 +43,9 @@ export default abstract class Skill {
         let prevExperience = Formulas.prevExp(this.experience),
             nextExperience = Formulas.nextExp(this.experience),
             percentage = (this.experience - prevExperience) / (nextExperience - prevExperience);
+
+        // Update the next experience for the skill.
+        this.nextExperience = nextExperience;
 
         return percentage < 0 ? 0 : percentage;
     }
@@ -96,6 +100,7 @@ export default abstract class Skill {
         if (includeLevel) {
             data.level = this.level;
             data.percentage = this.getPercentage();
+            data.nextExperience = this.nextExperience;
             data.combat = this.combat;
         }
 
