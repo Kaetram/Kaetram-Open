@@ -1,4 +1,3 @@
-import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
 
 import type {
@@ -43,6 +42,7 @@ import type {
     StoreCallback,
     SyncCallback,
     TeleportCallback,
+    TradeCallback,
     UpdateCallback,
     WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
@@ -79,6 +79,7 @@ export default class Messages {
     private musicCallback?: MusicCallback;
     private npcCallback?: NPCCallback;
     private respawnCallback?: RespawnCallback;
+    private tradeCallback?: TradeCallback;
     private enchantCallback?: EnchantCallback;
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
@@ -133,6 +134,7 @@ export default class Messages {
         this.messages[Packets.Music] = () => this.musicCallback;
         this.messages[Packets.NPC] = () => this.npcCallback;
         this.messages[Packets.Respawn] = () => this.respawnCallback;
+        this.messages[Packets.Trade] = () => this.tradeCallback;
         this.messages[Packets.Enchant] = () => this.enchantCallback;
         this.messages[Packets.Guild] = () => this.guildCallback;
         this.messages[Packets.Pointer] = () => this.pointerCallback;
@@ -160,7 +162,8 @@ export default class Messages {
         let packet = data.shift()!,
             message = this.messages[packet]();
 
-        if (message && _.isFunction(message)) message.call(this, ...data);
+        if (message && typeof message === 'function')
+            message.call(this, ...(data as unknown[] as never[]));
     }
 
     /**
@@ -169,8 +172,8 @@ export default class Messages {
      * @param data Packet data array.
      */
 
-    public handleBulkData(data: never[]): void {
-        _.each(data, this.handleData.bind(this));
+    public handleBulkData(data: [Packets, ...never[]][]): void {
+        for (let info of data) this.handleData(info);
     }
 
     /**
@@ -257,6 +260,11 @@ export default class Messages {
 
             case 'lost': {
                 this.app.sendError('The connection to the server has been lost.');
+                break;
+            }
+
+            case 'toomany': {
+                this.app.sendError('Too many devices from your IP address are connected.');
                 break;
             }
 
@@ -377,6 +385,10 @@ export default class Messages {
 
     public onRespawn(callback: RespawnCallback): void {
         this.respawnCallback = callback;
+    }
+
+    public onTrade(callback: TradeCallback): void {
+        this.tradeCallback = callback;
     }
 
     public onEnchant(callback: EnchantCallback): void {

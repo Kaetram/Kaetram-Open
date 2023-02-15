@@ -37,6 +37,8 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 ![Demo 5](https://i.imgur.com/L0MN6LO.png 'Demo 5')
 
+![Demo 6](https://i.imgur.com/aFXdmpv.png 'Demo 6')
+
 ## Technologies
 
 BQ was initially written as an HTML5 experiment showcasing the capabilities of web technologies
@@ -48,10 +50,11 @@ readability, performance, and compatibility. Some of the many features are as fo
 - Region/chunking system (client caches and saves data from the server as needed).
     - Dynamic tiles (tiles that change depending on player's progress in achievements/quests/etc).
     - Global objects (tiles such as trees (and more in the future) that the player can interact with).
+- Trading between players
 - Quest and achievement system.
 - Minigame system for special in-game events.
 - Plugin-based mob behaviour (used for special mobs such as bosses).
-- Plugin-based item interaction
+- Plugin-based item interaction.
 - RESTful API for cross-server communication
 - Discord server integration (in-game and discord server can communicate with eachother).
 - Cross-server private messaging and interactions.
@@ -229,7 +232,6 @@ See also the [open issues][issues] for a list of proposed features (and known is
 
 ### TODO
 
-- Add player trading
 - Add special attacks to weapons
 - Add functionality to the special abilities
 - Add player-owned guilds and/or parties

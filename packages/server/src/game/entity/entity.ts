@@ -1,3 +1,5 @@
+import Character from './character/character';
+
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
@@ -196,6 +198,15 @@ abstract class Entity {
 
         // Check if quest is completed and check if NPC is hidden.
         return !(quest.isFinished() && quest.isHiddenNPC(this.key));
+    }
+
+    /**
+     * Used to check whether the entity is a character that can move and perform combat.
+     * @returns Whether the entity is a character.
+     */
+
+    public isCharacter(): this is Character {
+        return this instanceof Character;
     }
 
     /**

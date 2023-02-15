@@ -17,7 +17,11 @@ import type { SerializedStoreItem } from '../stores';
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type HandshakeCallback = () => void;
+export interface HandshakePacket {
+    serverId: number;
+}
+
+export type HandshakeCallback = (data: HandshakePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +37,8 @@ export interface EquipmentPacket {
     data?: SerializedEquipment | EquipmentData;
     type?: Modules.Equipment; // Specified when equipping a specific item
     count?: number;
+    attackStyle?: Modules.AttackStyle;
+    attackStyles?: Modules.AttackStyle[];
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
@@ -189,6 +195,7 @@ export interface NotificationPacket {
     title?: string; // Title when displaying a popup.
     message: string; // String message to display.
     colour?: string; // Colour of the message.
+    source?: string;
 }
 
 export type NotificationCallback = (opcode: Opcodes.Notification, info: NotificationPacket) => void;
@@ -244,6 +251,18 @@ export interface RespawnPacket {
 }
 
 export type RespawnCallback = (opcode: Opcodes.Respawn, info: RespawnPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface TradePacket {
+    instance?: string;
+    index?: number;
+    count?: number;
+    key?: string;
+    message?: string;
+}
+
+export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 

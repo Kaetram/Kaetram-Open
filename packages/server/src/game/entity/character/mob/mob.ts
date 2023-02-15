@@ -11,7 +11,6 @@ import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -37,7 +36,7 @@ export default class Mob extends Character {
     public spawnX: number = this.x;
     public spawnY: number = this.y;
 
-    public description = '';
+    public description: string | string[] = '';
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
@@ -59,9 +58,8 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = ['ordinary', 'unusual']; // Default drop table for all mobs.
+    private dropTables: string[] = ['ordinary', 'arrows', 'unusual']; // Default drop table for all mobs.
 
-    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
@@ -101,8 +99,6 @@ export default class Mob extends Character {
      */
 
     private loadData(data: MobData): void {
-        this.experience = data.experience || this.experience;
-
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
@@ -191,6 +187,7 @@ export default class Mob extends Character {
             crush: this.attackLevel,
             stab: this.attackLevel,
             slash: this.attackLevel,
+            archery: this.attackLevel,
             magic: this.attackLevel
         };
 
@@ -198,6 +195,7 @@ export default class Mob extends Character {
             crush: this.defenseLevel,
             stab: this.defenseLevel,
             slash: this.defenseLevel,
+            archery: this.defenseLevel,
             magic: this.defenseLevel
         };
 
@@ -242,6 +240,7 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
+        this.damageTable = {};
 
         this.combat.stop();
 
@@ -260,6 +259,21 @@ export default class Mob extends Character {
         this.combat.stop();
 
         this.world.entities.removeMob(this);
+    }
+
+    /**
+     * Handles the dropping of items from the mob.
+     * @param owner The leading attacker in the mob's death. Only they will be able
+     * to pick up the drop for a certain period of time.
+     */
+
+    public drop(owner = ''): void {
+        let drops = this.getDrops();
+
+        if (drops.length === 0) return;
+
+        for (let drop of drops)
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
     }
 
     /**
@@ -325,17 +339,17 @@ export default class Mob extends Character {
     private getDropTableItems(): ItemDrop[] {
         let drops: ItemDrop[] = [];
 
-        _.each(this.dropTables, (key: string) => {
+        for (let key of Object.values(this.dropTables)) {
             let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
 
             // Something went wrong.
-            if (!table) return log.warning(`Mob ${this.key} has an invalid drop table.`);
+            if (table) {
+                let randomItem = this.getRandomItem(table);
 
-            let randomItem = this.getRandomItem(table);
-
-            // Add a random item from the table.
-            if (randomItem) drops.push(randomItem);
-        });
+                // Add a random item from the table.
+                if (randomItem) drops.push(randomItem);
+            } else log.warning(`Mob ${this.key} has an invalid drop table.`);
+        }
 
         return drops;
     }
@@ -356,7 +370,29 @@ export default class Mob extends Character {
 
         let key = keys[Utils.randomInt(0, keys.length - 1)],
             drop = items[key],
-            count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+            count = 1;
+
+        switch (key) {
+            case 'gold': {
+                count = Utils.randomInt(this.level, this.level * 10);
+                break;
+            }
+
+            case 'flask': {
+                count = Utils.randomInt(1, 3);
+                break;
+            }
+
+            case 'arrow': {
+                count = Utils.randomInt(1, this.level);
+                break;
+            }
+
+            case 'firearrow': {
+                count = Utils.randomInt(1, Math.ceil(this.level / 2));
+                break;
+            }
+        }
 
         // Something went wrong when trying to get the item drop.
         if (!drop) {
@@ -367,6 +403,16 @@ export default class Mob extends Character {
         return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
             ? { key, count }
             : undefined;
+    }
+
+    /**
+     * Sorts the damage table from highest to lowest. The highest damage dealing player
+     * will receive priority over the drops the mob has.
+     * @returns Sorted damage table from highest to lowest.
+     */
+
+    public getDamageTable(): [string, number][] {
+        return Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
     }
 
     /**
@@ -485,6 +531,19 @@ export default class Mob extends Character {
         if (this.miniboss) displayInfo.scale = Modules.EntityScale[SpecialEntityTypes.Miniboss];
 
         return displayInfo;
+    }
+
+    /**
+     * Returns the description if it's just a string, otherwise it picks a random description
+     * from the array.
+     * @returns A string containing the description for the mob.
+     */
+
+    public getDescription(): string {
+        if (Array.isArray(this.description))
+            return this.description[Utils.randomInt(0, this.description.length - 1)];
+
+        return this.description;
     }
 
     /**
@@ -614,6 +673,16 @@ export default class Mob extends Character {
 
     public override getArcheryLevel(): number {
         return this.attackLevel;
+    }
+
+    /**
+     * Subclass implementation for grabbing the defense level. For a mob
+     * the defense level is specified in the mob data object.
+     * @returns The defense level of the mob.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.defenseLevel;
     }
 
     /**

@@ -1,6 +1,5 @@
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
-import { camelCase } from 'lodash-es';
 
 import type { DatabaseTypes } from './types/database';
 
@@ -21,6 +20,7 @@ export interface Config {
     hubPing: number;
     hubAccessToken: string;
     remoteServerHost: string;
+    remoteApiHost: string;
 
     clientRemoteHost: string;
     clientRemotePort: number;
@@ -44,6 +44,7 @@ export interface Config {
     maxPlayers: number;
     updateTime: number;
     gver: string;
+    minor: string;
     regionCache: boolean;
     saveInterval: number;
 
@@ -58,6 +59,12 @@ export interface Config {
 
 console.debug(`Loading env values from [.env] with fallback to [.env.defaults]`);
 
+function camelCase(str: string): string {
+    return str
+        .toLowerCase()
+        .replace(/([_-][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
+}
+
 let { NODE_ENV } = process.env,
     env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
 
@@ -70,7 +77,7 @@ if (NODE_ENV) {
 let envConfig = dotenvParseVariables(env),
     config = {} as Config;
 
-for (let key of Object.keys(envConfig)) {
+for (let key in envConfig) {
     let camelCaseKey = camelCase(key) as keyof Config;
 
     config[camelCaseKey] = envConfig[key] as never;

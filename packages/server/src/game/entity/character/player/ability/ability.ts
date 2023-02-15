@@ -59,6 +59,8 @@ export default class Ability {
             return false;
         }
 
+        player.abilities.toggleCallback?.(this.key);
+
         // Remove the ability mana cost from the player.
         player.mana.decrement(mana);
 

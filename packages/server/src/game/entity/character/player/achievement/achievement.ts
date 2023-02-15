@@ -1,6 +1,5 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
 import type { AchievementData, RawAchievement } from '@kaetram/common/types/achievement';
@@ -230,7 +229,7 @@ export default class Achievement {
      */
 
     public hasMob(mob: Mob): boolean {
-        return _.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
+        return Array.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
     }
 
     /**

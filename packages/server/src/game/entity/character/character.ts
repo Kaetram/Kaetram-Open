@@ -7,7 +7,6 @@ import Entity from '../entity';
 import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
 import Formulas from '../../../info/formulas';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -41,8 +40,11 @@ export default abstract class Character extends Entity {
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
+
     // List of entities attacking this character.
     public attackers: Character[] = []; // Used by combat to determine which character to target.
+
+    public damageTable: { [instance: string]: number } = {};
 
     public stunned = false;
     public moving = false;
@@ -53,7 +55,7 @@ export default abstract class Character extends Entity {
     public teleporting = false;
     public aoe = 0;
 
-    public projectileName = 'projectile-pinearrow';
+    public projectileName = 'projectile-arrow';
 
     public lastStep = -1;
     public lastMovement = -1;
@@ -129,7 +131,7 @@ export default abstract class Character extends Entity {
         if (this.poison.expired()) return this.setPoison();
 
         // Create a hit object for poison damage and serialize it.
-        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, true).serialize();
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -155,11 +157,16 @@ export default abstract class Character extends Entity {
 
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
+            // Ignore mob-on-mob AoE damage.
+            if (character.isMob() && this.isMob()) return;
+
+            // Ignore player-on-player AoE damage unless PvP is enabled.
+            if (character.isPlayer() && this.isPlayer() && !this.pvp && !character.pvp) return;
+
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
                     Modules.Hits.Damage,
                     Math.floor(damage / distance),
-                    false,
                     false,
                     distance
                 ).serialize();
@@ -176,6 +183,32 @@ export default abstract class Character extends Entity {
             // Apply the damage to the character.
             character.hit(hit.damage, attacker);
         }, range);
+    }
+
+    /**
+     * Cold damage occurs when the player is in a mountainous area. This effect
+     * persists for as long as the player doesn't have the appropriate gear, or
+     * a snow potion.
+     */
+
+    public handleColdDamage(): void {
+        // Only players that are in a damage-based overlay area can be affected.
+        if (!this.isPlayer() || !this.overlayArea || this.snowPotion) return;
+
+        // Create a hit object for cold damage and serialize it.
+        let hit = new Hit(Modules.Hits.Cold, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(Modules.Constants.COLD_EFFECT_DAMAGE);
     }
 
     /**
@@ -257,17 +290,20 @@ export default abstract class Character extends Entity {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.invincible) return;
 
+        // Add an entry to the damage table.
+        if (attacker?.isPlayer()) this.addToDamageTable(attacker, damage);
+
         // Decrement health by the damage amount.
         this.hitPoints.decrement(damage);
 
         // If this is an AoE attack, we will damage all nearby characters.
         if (aoe) this.handleAoE(damage, attacker, aoe);
 
-        // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) return this.deathCallback?.(attacker);
-
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        // Call the death callback if the character reaches 0 hitpoints.
+        if (this.isDead()) return this.deathCallback?.(attacker);
 
         // Poison only occurs when we land a hit and attacker has a poisonous weapon.
         if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
@@ -321,7 +357,7 @@ export default abstract class Character extends Entity {
      */
 
     public getAttackerCount(): number {
-        return _.size(this.attackers);
+        return this.attackers.length;
     }
 
     /**
@@ -384,6 +420,14 @@ export default abstract class Character extends Entity {
      */
 
     public getArcheryLevel(): number {
+        return 1;
+    }
+
+    /**
+     * @returns The character's current defense level.
+     */
+
+    public getDefenseLevel(): number {
         return 1;
     }
 
@@ -502,6 +546,9 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * `isRanged` is a general function that checks if the character is using
+     * any form of ranged attack. This can be either a bow or magic spells. It is
+     * up to the rest of the logic to establish which is which and what to do.
      * @returns If the `attackRange` is greater than 1.
      */
 
@@ -567,6 +614,60 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Used for validating the attack request from the client. The primary purpose is to validate
+     * or restrict attacking actions depending on certain contexts. If we're attacking a mob then
+     * all is good. If we're dealing with attacking mobs in the tutorial, we need to ensure that
+     * we are allowed to do so. If we're attacking another player, we must check the conditionals
+     * for the PvP status and prevent cheaters from attacking/being attacked by other players.
+     * @param target The target character instance that we are attempting to attack.
+     */
+
+    protected canAttack(target: Character): boolean {
+        if (target.isMob()) {
+            // Restrict the mobs in tutorial from being attacked by the player.
+            if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
+                this.notify('You have no reason to attack these creatures.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // If either of the entities are not players, we don't want to handle this.
+        if (!this.isPlayer() || !target.isPlayer()) return false;
+
+        // Prevent cheaters from being targeted by other players.
+        if (target.isCheater()) {
+            this.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+
+            return false;
+        }
+
+        // Prevent cheaters from starting a fight with other players.
+        if (this.isCheater()) {
+            this.notify(
+                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
+            );
+
+            return false;
+        }
+
+        // Use minigame logic to determine if the players can attack each other.
+        if (this.inMinigame() && target.inMinigame()) return this.team !== target.team;
+
+        // Prevent attacking in non-pvp areas.
+        if (!this.pvp && !target.pvp) return false;
+
+        // Prevent attacking when level difference is too great.
+        if (Math.abs(this.level - target.level) > 30) {
+            this.notify('You cannot attack someone more than 30 levels above or below you.');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
      * @param x The new x grid position.
@@ -596,6 +697,23 @@ export default abstract class Character extends Entity {
 
     public addAttacker(attacker: Character): void {
         this.attackers.push(attacker);
+    }
+
+    /**
+     * Adds or creates an entry in the damage table for the attacker.
+     * @param attacker The attacker we are adding to the damage table.
+     * @param damage The damage we are adding to the damage table.
+     */
+
+    public addToDamageTable(attacker: Character, damage: number): void {
+        // Max out the damage to the remaining hit points.
+        if (damage >= this.hitPoints.getHitPoints()) damage = this.hitPoints.getHitPoints();
+
+        // Add a new entry to the damage table if it doesn't exist.
+        if (!(attacker.instance in this.damageTable)) this.damageTable[attacker.instance] = damage;
+
+        // Otherwise, add the damage to the existing entry.
+        this.damageTable[attacker.instance] += damage;
     }
 
     /**
