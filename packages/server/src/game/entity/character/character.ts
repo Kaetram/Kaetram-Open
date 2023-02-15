@@ -131,7 +131,7 @@ export default abstract class Character extends Entity {
         if (this.poison.expired()) return this.setPoison();
 
         // Create a hit object for poison damage and serialize it.
-        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, true).serialize();
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -168,7 +168,6 @@ export default abstract class Character extends Entity {
                     Modules.Hits.Damage,
                     Math.floor(damage / distance),
                     false,
-                    false,
                     distance
                 ).serialize();
 
@@ -184,6 +183,32 @@ export default abstract class Character extends Entity {
             // Apply the damage to the character.
             character.hit(hit.damage, attacker);
         }, range);
+    }
+
+    /**
+     * Cold damage occurs when the player is in a mountainous area. This effect
+     * persists for as long as the player doesn't have the appropriate gear, or
+     * a snow potion.
+     */
+
+    public handleColdDamage(): void {
+        // Only players that are in a damage-based overlay area can be affected.
+        if (!this.isPlayer() || !this.overlayArea || this.snowPotion) return;
+
+        // Create a hit object for cold damage and serialize it.
+        let hit = new Hit(Modules.Hits.Cold, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(Modules.Constants.COLD_EFFECT_DAMAGE);
     }
 
     /**
