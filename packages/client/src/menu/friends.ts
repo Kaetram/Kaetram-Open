@@ -244,7 +244,7 @@ export default class Friends extends Menu {
             world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
             world.innerHTML = `World ${friend.serverId}`;
         } else {
-            world.classList.remove('green');
+            world.classList.remove('green', 'yellow');
             world.innerHTML = 'Offline';
         }
     }
