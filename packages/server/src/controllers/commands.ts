@@ -88,7 +88,7 @@ export default class Commands {
 
                 let message = blocks.slice(username.split(' ').length).join(' ');
 
-                this.player.sendPrivateMessage(username, message);
+                this.player.sendPrivateMessage(username.toLowerCase(), message);
 
                 break;
             }
@@ -253,6 +253,85 @@ export default class Commands {
                 this.player.inventory.add(item);
 
                 return;
+            }
+
+            case 'take': {
+                let index = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!index || !username)
+                    return this.player.notify(
+                        'Invalid command, usage /take [index] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank,
+                    slot = containerType.get(index);
+
+                if (!slot.key)
+                    return this.player.notify(`Player ${username} has no item at index ${index}.`);
+
+                containerType.remove(index, slot.count);
+
+                this.player.notify(`Took ${slot.count}x ${slot.key} from ${username}.`);
+
+                return;
+            }
+
+            case 'takeitem': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!key || !username || (container !== 'inventory' && container !== 'bank'))
+                    return this.player.notify(
+                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank;
+
+                containerType.removeItem(key, count);
+
+                this.player.notify(`Took ${count}x ${key} from ${username}.`);
+
+                return;
+            }
+
+            case 'copybank':
+            case 'copyinventory': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify('Invalid command, usage /copybank [username]');
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} is not online.`);
+
+                if (command === 'copybank') {
+                    this.player.bank.empty();
+
+                    player.bank.forEachSlot((slot) =>
+                        this.player.bank.add(this.player.bank.getItem(slot))
+                    );
+                } else {
+                    this.player.inventory.empty();
+
+                    player.inventory.forEachSlot((slot) =>
+                        this.player.inventory.add(this.player.inventory.getItem(slot))
+                    );
+                }
+
+                this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
             }
 
             case 'drop': {
@@ -517,7 +596,7 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.setMovementSpeed(movementSpeed);
+                this.player.overrideMovementSpeed = movementSpeed;
 
                 break;
             }
@@ -749,11 +828,15 @@ export default class Commands {
             }
 
             case 'nuke': {
+                let all = !!blocks.shift();
+
                 region = this.world.map.regions.get(this.player.region);
 
                 region.forEachEntity((entity: Entity) => {
                     if (!(entity instanceof Character)) return;
                     if (entity.instance === this.player.instance) return;
+
+                    if (!all && entity.isPlayer()) return;
 
                     entity.deathCallback?.();
                 });
@@ -829,6 +912,21 @@ export default class Commands {
 
             case 'bank': {
                 this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                break;
+            }
+
+            case 'openbank': {
+                let username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /openbank username`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Could not find player: ${username}`);
+
+                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+
                 break;
             }
 

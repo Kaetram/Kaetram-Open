@@ -1,4 +1,3 @@
-import _ from 'lodash-es';
 import { Packets } from '@kaetram/common/network';
 
 import type {
@@ -163,7 +162,8 @@ export default class Messages {
         let packet = data.shift()!,
             message = this.messages[packet]();
 
-        if (message && _.isFunction(message)) message.call(this, ...data);
+        if (message && typeof message === 'function')
+            message.call(this, ...(data as unknown[] as never[]));
     }
 
     /**
@@ -172,8 +172,8 @@ export default class Messages {
      * @param data Packet data array.
      */
 
-    public handleBulkData(data: never[]): void {
-        _.each(data, this.handleData.bind(this));
+    public handleBulkData(data: [Packets, ...never[]][]): void {
+        for (let info of data) this.handleData(info);
     }
 
     /**
@@ -260,6 +260,11 @@ export default class Messages {
 
             case 'lost': {
                 this.app.sendError('The connection to the server has been lost.');
+                break;
+            }
+
+            case 'toomany': {
+                this.app.sendError('Too many devices from your IP address are connected.');
                 break;
             }
 

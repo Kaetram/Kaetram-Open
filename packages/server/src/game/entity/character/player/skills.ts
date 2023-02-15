@@ -5,10 +5,10 @@ import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
 import Mining from './skill/impl/mining';
+import Defense from './skill/impl/defense';
 
 import Formulas from '../../../../info/formulas';
 
-import _ from 'lodash-es';
 import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
@@ -26,6 +26,7 @@ export default class Skills {
     private magic: Magic = new Magic();
     private strength: Strength = new Strength();
     private mining: Mining = new Mining();
+    private defense: Defense = new Defense();
 
     private skills: { [key: string]: Skill } = {
         [Modules.Skills.Accuracy]: this.accuracy,
@@ -34,7 +35,8 @@ export default class Skills {
         [Modules.Skills.Lumberjacking]: this.lumberjacking,
         [Modules.Skills.Magic]: this.magic,
         [Modules.Skills.Strength]: this.strength,
-        [Modules.Skills.Mining]: this.mining
+        [Modules.Skills.Mining]: this.mining,
+        [Modules.Skills.Defense]: this.defense
     };
 
     private loadCallback?: () => void;
@@ -50,11 +52,11 @@ export default class Skills {
 
     public load(data: SkillData[]): void {
         // Load each skill from the database (empty if new player).
-        _.each(data, (skillData: SkillData) => {
+        for (let skillData of data) {
             let skill = this.get(skillData.type);
 
             if (skill) skill.setExperience(skillData.experience);
-        });
+        }
 
         // Create a callback that links to `handleExperience` for every skill.
         this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
@@ -118,6 +120,7 @@ export default class Skills {
      * Handles skill-based experience gain.
      * @param type The skill that gained experience.
      * @param name The name of the skill.
+     * @param withINfo Whether or not to display the experience popup on the client.
      * @param experience The amount of experience the skill has.
      * @param level The amount of levels the skill has.
      * @param newLevel Whether the player has gained a new level.
@@ -126,9 +129,10 @@ export default class Skills {
     private handleExperience(
         type: Modules.Skills,
         name: string,
+        withInfo: boolean,
         experience: number,
         level: number,
-        newLevel?: boolean
+        newLevel = false
     ): void {
         if (newLevel) {
             this.player.popup(
@@ -145,13 +149,14 @@ export default class Skills {
             this.sync();
         }
 
-        this.player.send(
-            new Experience(Opcodes.Experience.Skill, {
-                instance: this.player.instance,
-                amount: experience,
-                skill: type
-            })
-        );
+        if (withInfo)
+            this.player.send(
+                new Experience(Opcodes.Experience.Skill, {
+                    instance: this.player.instance,
+                    amount: experience,
+                    skill: type
+                })
+            );
 
         this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
     }
@@ -172,7 +177,7 @@ export default class Skills {
      */
 
     public getCombatSkills(): Skill[] {
-        return _.filter(this.skills, (skill: Skill) => skill.combat);
+        return Object.values(this.skills).filter((skill: Skill) => skill.combat);
     }
 
     /**
@@ -202,7 +207,6 @@ export default class Skills {
         let level = 1,
             skills = this.getCombatSkills();
 
-        // Faster than using lodash.
         for (let skill of skills) level += skill.level - 1;
 
         return level;
@@ -231,7 +235,7 @@ export default class Skills {
      */
 
     public forEachSkill(callback: (skill: Skill) => void): void {
-        _.each(this.skills, callback);
+        for (let skill of Object.values(this.skills)) callback(skill);
     }
 
     /**

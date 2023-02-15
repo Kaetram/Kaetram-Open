@@ -7,7 +7,6 @@ import Arrows from './equipment/impl/arrows';
 
 import Item from '../../objects/item';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -53,14 +52,14 @@ export default class Equipments {
      */
 
     public load(equipmentInfo: EquipmentData[]): void {
-        _.each(equipmentInfo, (info: EquipmentData) => {
+        for (let info of equipmentInfo) {
             let equipment = this.get(info.type);
 
-            if (!equipment) return;
-            if (!info.key) return; // Skip if the item is already null
+            if (!equipment) continue;
+            if (!info.key) continue; // Skip if the item is already null
 
             equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
-        });
+        }
 
         this.loadCallback?.();
 
@@ -87,10 +86,12 @@ export default class Equipments {
 
         if (!equipment.isEmpty())
             this.player.inventory.add(
-                new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
+                new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
             );
 
-        equipment.update(item);
+        if (equipment instanceof Weapon)
+            equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
+        else equipment.update(item);
 
         this.equipCallback?.(equipment);
 
@@ -104,15 +105,24 @@ export default class Equipments {
      */
 
     public unequip(type: Modules.Equipment): void {
-        let equipment = this.get(type),
-            item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments);
+        let equipment = this.get(type);
+
+        if (!equipment.key) return;
+
+        let item = new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments),
+            count = this.player.inventory.add(item);
 
         // We stop here if the item cannot be added to the inventory.
-        if (this.player.inventory.add(item) < 1) return;
+        if (count < 1) return;
 
-        equipment.empty();
+        equipment.count -= count;
+        if (equipment.count < 1) equipment.empty();
+        else {
+            item.count = equipment.count;
+            equipment.update(item);
+        }
 
-        this.unequipCallback?.(type);
+        this.unequipCallback?.(type, equipment.count);
 
         this.calculateStats();
     }
@@ -133,6 +143,15 @@ export default class Equipments {
         if (arrows.count < 1) arrows.empty();
 
         this.unequipCallback?.(Modules.Equipment.Arrows, arrows.count);
+    }
+
+    /**
+     * Updates the attack style of a weapon.
+     * @param style The new attack style of the weapon.
+     */
+
+    public updateAttackStyle(style: Modules.AttackStyle): void {
+        this.getWeapon().attackStyle = style;
     }
 
     /**
@@ -268,7 +287,7 @@ export default class Equipments {
      */
 
     public forEachEquipment(callback: (equipment: Equipment) => void): void {
-        _.each(this.equipments, callback);
+        for (let equipment of this.equipments) callback(equipment);
     }
 
     /**

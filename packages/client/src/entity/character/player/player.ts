@@ -12,7 +12,6 @@ import Arrows from './equipment/arrows';
 import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
 
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
@@ -20,7 +19,7 @@ import type { PlayerData } from '@kaetram/common/types/player';
 import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType, FriendInfo } from '@kaetram/common/types/friends';
+import type { Friend as FriendType } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -29,6 +28,8 @@ type ManaCallback = (mana: number, maxMana: number) => void;
 export default class Player extends Character {
     public rank: Modules.Ranks = Modules.Ranks.None;
     public wanted = false;
+
+    public serverId = -1;
 
     public pvpKills = -1;
     public pvpDeaths = -1;
@@ -100,7 +101,7 @@ export default class Player extends Character {
 
         this.setMana(data.mana!, data.maxMana);
 
-        if (data.equipments) _.each(data.equipments, this.equip.bind(this));
+        if (data.equipments) for (let equipment of data.equipments) this.equip(equipment);
     }
 
     /**
@@ -110,7 +111,7 @@ export default class Player extends Character {
      */
 
     public loadSkills(skills: SkillData[]): void {
-        _.each(skills, (skill: SkillData) => this.setSkill(skill));
+        for (let skill of skills) this.setSkill(skill);
     }
 
     /**
@@ -139,14 +140,17 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        for (let [i, achievement] of achievements.entries())
+        for (let i in achievements) {
+            let achievement = achievements[i];
+
             this.achievements[achievement.key] = new Task(
-                i,
+                parseInt(i),
                 achievement.name!,
                 achievement.description!,
                 achievement.stage,
                 achievement.stageCount!
             );
+        }
     }
 
     /**
@@ -155,9 +159,8 @@ export default class Player extends Character {
      */
 
     public loadAbilities(abilities: AbilityData[]): void {
-        _.each(abilities, (ability: AbilityData) =>
-            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
-        );
+        for (let ability of abilities)
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot);
     }
 
     /**
@@ -168,11 +171,13 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        _.each(friends, (info: FriendInfo, username: string) => {
+        for (let username in friends) {
+            let info = friends[username];
+
             this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
-        });
+        }
     }
 
     /**
@@ -191,12 +196,12 @@ export default class Player extends Character {
             attackRange,
             attackStats,
             defenseStats,
-            bonuses
+            bonuses,
+            attackStyle,
+            attackStyles
         } = equipment;
 
         if (!key) return this.unequip(type);
-
-        if (type === Modules.Equipment.Weapon) this.attackRange = attackRange || 1;
 
         this.equipments[type].update(
             key,
@@ -207,6 +212,12 @@ export default class Player extends Character {
             defenseStats,
             bonuses
         );
+
+        // Updates the weapon attack range and attack style.
+        if (type === Modules.Equipment.Weapon) {
+            this.attackRange = attackRange || 1;
+            this.setAttackStyle(attackStyle!, attackStyles!);
+        }
     }
 
     /**
@@ -216,7 +227,12 @@ export default class Player extends Character {
      */
 
     public addFriend(username: string, status: boolean, serverId: number): void {
-        this.friends[username] = new Friend(_.size(this.friends), username, status, serverId);
+        this.friends[username] = new Friend(
+            Object.keys(this.friends).length,
+            username,
+            status,
+            serverId
+        );
     }
 
     /**
@@ -321,9 +337,7 @@ export default class Player extends Character {
     public getTotalExperience(): number {
         let total = 0;
 
-        _.each(this.skills, (skill: Skill) => {
-            total += skill.experience;
-        });
+        for (let skill of Object.values(this.skills)) total += skill.experience;
 
         return total;
     }
@@ -444,10 +458,15 @@ export default class Player extends Character {
      * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
-    public setSkill({ type, experience, level, percentage }: SkillData): void {
+    public setSkill({ type, experience, level, percentage, nextExperience }: SkillData): void {
         if (!this.skills[type]) this.skills[type] = new Skill(type);
 
-        this.skills[type as Modules.Skills].update(experience, level!, percentage!);
+        this.skills[type as Modules.Skills].update(
+            experience,
+            nextExperience!,
+            level!,
+            percentage!
+        );
     }
 
     /**
@@ -512,10 +531,24 @@ export default class Player extends Character {
      * Updates the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend.
+     * @param serverId The server id of the friend.
      */
 
-    public setFriendStatus(username: string, status: boolean): void {
+    public setFriendStatus(username: string, status: boolean, serverId: number): void {
         this.friends[username].online = status;
+        this.friends[username].serverId = serverId;
+    }
+
+    /**
+     * Updates the attack styles of the weapon. This occurs when a player already has a weapon
+     * equipped and they change their attack style.
+     * @param style The active attack style of the weapon.
+     * @param styles The list of potenetial attack styles of the weapon.
+     */
+
+    public setAttackStyle(style: Modules.AttackStyle, styles: Modules.AttackStyle[]): void {
+        this.getWeapon().attackStyle = style;
+        this.getWeapon().attackStyles = styles;
     }
 
     /**
@@ -576,6 +609,15 @@ export default class Player extends Character {
 
     public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+    }
+
+    /**
+     * @param username The username of the friend we are checking.
+     * @returns Whether or not the player has a friend with the given username.
+     */
+
+    public hasFriend(username: string): boolean {
+        return username.toLowerCase() in this.friends;
     }
 
     /**

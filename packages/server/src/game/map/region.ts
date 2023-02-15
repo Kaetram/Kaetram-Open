@@ -1,5 +1,3 @@
-import _ from 'lodash-es';
-
 import type { RegionTileData } from '@kaetram/common/types/map';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -39,8 +37,8 @@ export default class Region {
      */
 
     public removePlayer(player: Player): void {
-        this.players = _.reject(this.players, (instance: string) => {
-            return instance === player.instance;
+        this.players = this.players.filter((instance: string) => {
+            return instance !== player.instance;
         });
     }
 
@@ -134,16 +132,16 @@ export default class Region {
     public getEntities(player: Player, reject?: Entity): string[] {
         let entities: string[] = [];
 
-        _.each(this.entities, (entity: Entity, instance: string) => {
+        for (let instance in this.entities) {
             // Ignore if a reject is present.
-            if (reject && reject.instance === instance) return;
+            if (reject && reject.instance === instance) continue;
 
             // Check if the entity is visible to the player.
-            if (!entity.isVisible(player)) return;
+            if (!this.entities[instance].isVisible(player)) continue;
 
             // Append our instance to the list.
             entities.push(instance);
-        });
+        }
 
         return entities;
     }
@@ -215,7 +213,7 @@ export default class Region {
      */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
     }
 
     /**
@@ -224,7 +222,7 @@ export default class Region {
      */
 
     public forEachResource(callback: (resource: Resource) => void): void {
-        _.each(this.resources, callback);
+        for (let resource of this.resources) callback(resource);
     }
 
     /**
@@ -233,7 +231,7 @@ export default class Region {
      */
 
     public forEachLight(callback: (light: Light) => void): void {
-        _.each(this.lights, callback);
+        for (let light of this.lights) callback(light);
     }
 
     /**
@@ -242,9 +240,8 @@ export default class Region {
      */
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        _.each(this.players, (instance: string) => {
+        for (let instance of this.players)
             if (instance in this.entities) callback(this.entities[instance] as Player);
-        });
     }
 
     /**
@@ -252,6 +249,6 @@ export default class Region {
      */
 
     public forEachJoining(callback: (entity: Entity) => void): void {
-        _.each(this.joining, callback);
+        for (let entity of this.joining) callback(entity);
     }
 }

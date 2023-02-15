@@ -70,10 +70,21 @@
     margin: auto;
 }
 
+.container-slot.flex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .container-slot > p {
     font-size: 20px;
     color: rgb(168 16 5);
     text-align: center;
+}
+
+.container-slot > p.left {
+    float: left;
+    text-align: left;
 }
 
 .container-slot > p.yellow {

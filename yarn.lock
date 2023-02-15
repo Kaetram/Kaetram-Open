@@ -3254,7 +3254,6 @@ __metadata:
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/html-minifier-terser": ^7.0.0
     "@types/jquery": ^3.5.16
-    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.6.3
     "@types/pako": ^2.0.0
     "@types/workbox-build": ^5.0.1
@@ -3266,7 +3265,6 @@ __metadata:
     illuminated: ^1.3.0
     internal-ip: ^7.0.0
     jquery: ^3.6.3
-    lodash-es: ^4.17.21
     pako: ^2.1.0
     postcss: ^8.4.20
     postcss-custom-media: ^9.0.1
@@ -3291,12 +3289,10 @@ __metadata:
   resolution: "@kaetram/common@workspace:packages/common"
   dependencies:
     "@types/dotenv-parse-variables": ^2.0.1
-    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.6.3
     discord.js: ^14.3.0
     dotenv-extended: ^2.9.0
     dotenv-parse-variables: ^2.0.0
-    lodash-es: ^4.17.21
   languageName: unknown
   linkType: soft
 
@@ -3324,14 +3320,12 @@ __metadata:
     "@kaetram/common": "workspace:*"
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/express": ^4.17.13
-    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.6.3
     axios: ^1.2.3
     discord.js: ^14.3.0
     dotenv-extended: ^2.9.0
     dotenv-parse-variables: ^2.0.0
     express: ^4.18.2
-    lodash-es: ^4.17.21
     mongodb: ^4.8.1
     nodemon: ^2.0.19
     tsx: ^3.8.0
@@ -3348,7 +3342,6 @@ __metadata:
     "@types/bcryptjs": ^2.4.2
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/express": ^4.17.13
-    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.6.3
     "@types/sanitizer": ^0.0.28
     "@types/ws": ^8.5.3
@@ -3358,7 +3351,6 @@ __metadata:
     dotenv-extended: ^2.9.0
     dotenv-parse-variables: ^2.0.0
     express: ^4.18.2
-    lodash-es: ^4.17.21
     mongodb: ^4.8.1
     nodemon: ^2.0.19
     sanitizer: ^0.1.3
@@ -3375,9 +3367,7 @@ __metadata:
   dependencies:
     "@kaetram/common": "workspace:*"
     "@kaetram/server": "workspace:*"
-    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.6.3
-    lodash-es: ^4.17.21
     socket.io-client: ^4.5.4
     tsx: ^3.8.0
     typescript: ^4.7.4
@@ -3561,9 +3551,9 @@ __metadata:
   linkType: hard
 
 "@sideway/formula@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@sideway/formula@npm:3.0.0"
-  checksum: 8ae26a0ed6bc84f7310be6aae6eb9d81e97f382619fc69025d346871a707eaab0fa38b8c857e3f0c35a19923de129f42d35c50b8010c928d64aab41578580ec4
+  version: 3.0.1
+  resolution: "@sideway/formula@npm:3.0.1"
+  checksum: e4beeebc9dbe2ff4ef0def15cec0165e00d1612e3d7cea0bc9ce5175c3263fc2c818b679bd558957f49400ee7be9d4e5ac90487e1625b4932e15c4aa7919c57a
   languageName: node
   linkType: hard
 
@@ -3753,22 +3743,6 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
-  languageName: node
-  linkType: hard
-
-"@types/lodash-es@npm:^4.17.6":
-  version: 4.17.6
-  resolution: "@types/lodash-es@npm:4.17.6"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 9bd239dd525086e278821949ce12fbdd4f100a060fed9323fc7ad5661113e1641f28a7ebab617230ed3474680d8f4de705c1928b48252bb684be6ec9eed715db
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*":
-  version: 4.14.182
-  resolution: "@types/lodash@npm:4.14.182"
-  checksum: 7dd137aa9dbabd632408bd37009d984655164fa1ecc3f2b6eb94afe35bf0a5852cbab6183148d883e9c73a958b7fec9a9bcf7c8e45d41195add6a18c34958209
   languageName: node
   linkType: hard
 
@@ -7868,9 +7842,9 @@ __metadata:
   linkType: hard
 
 "http-cache-semantics@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "http-cache-semantics@npm:4.1.0"
-  checksum: 974de94a81c5474be07f269f9fd8383e92ebb5a448208223bfb39e172a9dbc26feff250192ecc23b9593b3f92098e010406b0f24bd4d588d631f80214648ed42
+  version: 4.1.1
+  resolution: "http-cache-semantics@npm:4.1.1"
+  checksum: 83ac0bc60b17a3a36f9953e7be55e5c8f41acc61b22583060e8dedc9dd5e3607c823a88d0926f9150e571f90946835c7fe150732801010845c72cd8bbff1a236
   languageName: node
   linkType: hard
 
@@ -8931,13 +8905,6 @@ __metadata:
   dependencies:
     p-locate: "npm:^5.0.0"
   checksum: 72eb661788a0368c099a184c59d2fee760b3831c9c1c33955e8a19ae4a21b4116e53fa736dc086cdeb9fce9f7cc508f2f92d2d3aae516f133e16a2bb59a39f5a
-  languageName: node
-  linkType: hard
-
-"lodash-es@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash-es@npm:4.17.21"
-  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
   languageName: node
   linkType: hard
 

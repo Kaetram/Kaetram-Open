@@ -1,11 +1,16 @@
 import Util from '../../../../utils/util';
 
+import { Modules } from '@kaetram/common/network';
+
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default abstract class Equipment {
     public attackStats: Stats = Util.getEmptyStats();
     public defenseStats: Stats = Util.getEmptyStats();
     public bonuses: Bonuses = Util.getEmptyBonuses();
+
+    public attackStyle: Modules.AttackStyle = Modules.AttackStyle.None;
+    public attackStyles: Modules.AttackStyle[] = [];
 
     public constructor(
         public key = '',
@@ -25,6 +30,8 @@ export default abstract class Equipment {
      * @param attackStats The attack stats of the item.
      * @param defenseStats The defense stats of the item.
      * @param bonuses The bonuses of the item.
+     * @param attackStyle The attack style the weapon is using.
+     * @param attackStyles The list of attack styles the weapon is using.
      */
 
     public update(
@@ -34,7 +41,9 @@ export default abstract class Equipment {
         enchantments: Enchantments = {},
         attackStats?: Stats,
         defenseStats?: Stats,
-        bonuses?: Bonuses
+        bonuses?: Bonuses,
+        attackStyle = Modules.AttackStyle.None,
+        attackStyles: Modules.AttackStyle[] = []
     ): void {
         this.key = key;
         this.name = name;
@@ -45,6 +54,10 @@ export default abstract class Equipment {
         this.attackStats = attackStats || Util.getEmptyStats();
         this.defenseStats = defenseStats || Util.getEmptyStats();
         this.bonuses = bonuses || Util.getEmptyBonuses();
+
+        // Attack styles are optional parameters for the weapon.
+        this.attackStyle = attackStyle;
+        this.attackStyles = attackStyles;
     }
 
     /**
