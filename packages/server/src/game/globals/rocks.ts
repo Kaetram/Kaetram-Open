@@ -1,6 +1,5 @@
 import Resources from './resources';
 
-import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 
 import type World from '../world';
@@ -18,7 +17,7 @@ export default class Rocks extends Resources {
     protected override load(): void {
         super.load();
 
-        let amount = _.size(this.resources);
+        let amount = Object.keys(this.resources).length;
 
         log.info(`Loaded ${amount} rock${amount > 1 ? 's' : ''}.`);
     }
