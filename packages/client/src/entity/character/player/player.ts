@@ -19,7 +19,7 @@ import type { PlayerData } from '@kaetram/common/types/player';
 import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType, FriendInfo } from '@kaetram/common/types/friends';
+import type { Friend as FriendType } from '@kaetram/common/types/friends';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -216,7 +216,7 @@ export default class Player extends Character {
         // Updates the weapon attack range and attack style.
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
-            this.setAttackStyle(attackStyle, attackStyles);
+            this.setAttackStyle(attackStyle!, attackStyles!);
         }
     }
 
