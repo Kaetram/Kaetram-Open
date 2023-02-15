@@ -92,7 +92,7 @@ export default abstract class Container {
             // If the total count is less than the count of the item to be added...
             if (total < itemCount) {
                 // Subtract the total from the item count
-                itemCopy.count -= total;
+                itemCopy.count = itemCount - total;
 
                 // Add the item to the slot, and store the amount added
                 let amount = this.add(itemCopy);
