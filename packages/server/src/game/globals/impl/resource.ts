@@ -36,7 +36,6 @@ export default class Resource {
     public load(info: ProcessedResource): void {
         // Iterate through all the tile and its indexes in the resource.
         for (let [key, tile] of Object.entries(this.data)) {
-            // Whacky conversion because of lodash-es.
             let index = parseInt(key),
                 flatTile = [tile].flat();
 
