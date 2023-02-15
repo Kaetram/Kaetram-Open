@@ -142,8 +142,11 @@ export default class Friends {
      */
 
     public setActiveFriends(list: Friend): void {
-        for (let [username, friend] of Object.entries(list))
+        for (let username in list) {
+            let friend = list[username];
+
             this.setStatus(username, friend.online, friend.serverId);
+        }
     }
 
     /**

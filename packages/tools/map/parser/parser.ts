@@ -251,7 +251,9 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        for (let [i, value] of Object.entries(mapData)) {
+        for (let i in mapData) {
+            let value = mapData[i];
+
             if (value < 1) continue;
 
             let index = parseInt(i);
@@ -278,8 +280,8 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        for (let [index, value] of Object.entries(layer.data)) {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            if (layer.data[index] < 1) return;
 
             this.map.collisions.push(parseInt(index));
         }
@@ -296,7 +298,9 @@ export default class ProcessMap {
     private parseEntities(layer: Layer): void {
         let { entities } = this.map;
 
-        for (let [index, value] of Object.entries(layer.data)) {
+        for (let index in layer.data) {
+            let value = layer.data[index];
+
             if (value < 1) continue;
 
             if (value in this.tilesetEntities)
@@ -315,7 +319,9 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        for (let [index, value] of Object.entries(layer.data)) {
+        for (let index in layer.data) {
+            let value = layer.data[index];
+
             if (value < 1) continue;
 
             // We skip collisions
@@ -467,8 +473,7 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        for (let [index, value] of Object.entries(this.map.data))
-            if (!value) this.map.data[parseInt(index)] = 0;
+        for (let index in this.map.data) if (!this.map.data[index]) this.map.data[index] = 0;
     }
 
     /**
