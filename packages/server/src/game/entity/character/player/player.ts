@@ -734,11 +734,29 @@ export default class Player extends Character {
             weapon = this.equipment.getWeapon();
 
         /**
+         * If the player doesn't have enough mana then we halve the experience gain.
+         */
+
+        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
+
+        /**
          * Since there are four combat skills, we evenly distribute the experience between them.
          * Depending on the attack style, we add a different amount of experience to each skill.
          */
 
         this.skills.get(Modules.Skills.Health).addExperience(Math.ceil(experience / 4), false);
+
+        // Archery directs experience to the archery skill.
+        if (this.isArcher())
+            return this.skills
+                .get(Modules.Skills.Archery)
+                .addExperience(Math.ceil(experience * 0.75), false);
+
+        // Magic directs experience to the magic skill.
+        if (this.isMagic())
+            return this.skills
+                .get(Modules.Skills.Magic)
+                .addExperience(Math.ceil(experience * 0.75), false);
 
         /**
          * The rest of the experiences are distributed according to the attack style selected.
@@ -813,6 +831,14 @@ export default class Player extends Character {
                 this.skills
                     .get(Modules.Skills.Defense)
                     .addExperience(Math.floor(experience * 0.375), false);
+                break;
+            }
+
+            // Default (unarmed)
+            default: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
                 break;
             }
         }
@@ -1766,6 +1792,7 @@ export default class Player extends Character {
     public override getAccuracyLevel(): number {
         // We use magic level for accuracy when the player is using a magic weapon.
         if (this.isMagic()) return this.skills.get(Modules.Skills.Magic).level;
+        if (this.isArcher()) return this.skills.get(Modules.Skills.Archery).level;
 
         return this.skills.get(Modules.Skills.Accuracy).level;
     }

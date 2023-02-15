@@ -458,10 +458,15 @@ export default class Player extends Character {
      * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
-    public setSkill({ type, experience, level, percentage }: SkillData): void {
+    public setSkill({ type, experience, level, percentage, nextExperience }: SkillData): void {
         if (!this.skills[type]) this.skills[type] = new Skill(type);
 
-        this.skills[type as Modules.Skills].update(experience, level!, percentage!);
+        this.skills[type as Modules.Skills].update(
+            experience,
+            nextExperience!,
+            level!,
+            percentage!
+        );
     }
 
     /**
