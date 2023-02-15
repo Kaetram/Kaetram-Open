@@ -181,10 +181,10 @@ export default class World {
      * @param logout The status we are updating the user to.
      */
 
-    public syncFriendsList(username: string, logout = false): void {
+    public syncFriendsList(username: string, logout = false, serverId = config.serverId): void {
         this.entities.forEachPlayer((player: Player) => {
             if (player.friends.hasFriend(username))
-                player.friends.setStatus(username, !logout, config.serverId);
+                player.friends.setStatus(username, !logout, serverId);
         });
     }
 

@@ -129,9 +129,9 @@ export default class API {
     private handleLogin(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
 
-        let { username } = request.body;
+        let { username, serverId } = request.body;
 
-        this.world.syncFriendsList(username, false);
+        this.world.syncFriendsList(username, false, serverId);
 
         response.json({ status: 'success' });
     }
