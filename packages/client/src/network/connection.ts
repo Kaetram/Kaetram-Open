@@ -287,15 +287,12 @@ export default class Connection {
                         Object.values(this.entities.getAll()).map((entity) => entity.instance)
                     ),
                     known = new Set(info.entities!.filter((id) => ids.has(id))),
-                    newIds = info.entities!.filter((id) => known.has(id));
+                    newIds = info.entities!.filter((id) => !known.has(id));
 
                 // Prepare the entities ready for despawning.
                 this.entities.decrepit = Object.values(this.entities.getAll()).filter(
                     (entity) =>
-                        !(
-                            known.has(entity.instance) ||
-                            entity.instance === this.game.player.instance
-                        )
+                        !known.has(entity.instance) && entity.instance !== this.game.player.instance
                 );
 
                 // Clear the entities in the decrepit queue.
@@ -699,7 +696,8 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Container.Batch: {
-                return container.batch(info.data!.slots);
+                container.batch(info.data!.slots);
+                break;
             }
 
             case Opcodes.Container.Add: {
@@ -1295,7 +1293,7 @@ export default class Connection {
         for (let update of info) {
             let entity = this.entities.get(update.instance);
 
-            if (!entity) return;
+            if (!entity) continue;
 
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;

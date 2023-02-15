@@ -52,14 +52,14 @@ export default class Equipments {
      */
 
     public load(equipmentInfo: EquipmentData[]): void {
-        _.each(equipmentInfo, (info: EquipmentData) => {
+        for (let info of equipmentInfo) {
             let equipment = this.get(info.type);
 
-            if (!equipment) return;
-            if (!info.key) return; // Skip if the item is already null
+            if (!equipment) continue;
+            if (!info.key) continue; // Skip if the item is already null
 
             equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
-        });
+        }
 
         this.loadCallback?.();
 
@@ -287,7 +287,7 @@ export default class Equipments {
      */
 
     public forEachEquipment(callback: (equipment: Equipment) => void): void {
-        _.each(this.equipments, callback);
+        for (let equipment of this.equipments) callback(equipment);
     }
 
     /**
