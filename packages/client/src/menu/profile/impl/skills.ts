@@ -20,6 +20,9 @@ export default class Skills extends Menu {
     // Skill info side-menu
     private info: HTMLElement = document.querySelector('#profile-info')!;
 
+    // Skill we have info menu open for.
+    private selectedSkill!: Skill;
+
     private loaded = false;
 
     public constructor(private player: Player) {
@@ -28,11 +31,13 @@ export default class Skills extends Menu {
 
     /**
      * Synchronizes the player's skill data into the user interface.
-     * @param player The player object used to grab skill data from.
+     * @param resize Whether we need to re-calculate the experience bar widths.
      */
 
-    public override synchronize(): void {
+    public override synchronize(resize = false): void {
         if (Object.keys(this.player.skills).length === 0) return;
+
+        if (resize) this.list.innerHTML = '';
 
         _.each(Modules.SkillsOrder, (id: Modules.Skills) => {
             let skill = this.player.skills[id],
@@ -51,6 +56,8 @@ export default class Skills extends Menu {
                 this.update(element, skill);
             }
         });
+
+        if (this.isInfoVisible()) this.showInfo();
     }
 
     /**
@@ -135,7 +142,7 @@ export default class Skills extends Menu {
      * @param skill The skill that we are showing information for.
      */
 
-    private showInfo(skill: Skill): void {
+    private showInfo(skill = this.selectedSkill): void {
         Util.fadeIn(this.info);
 
         let image = this.info.querySelector('.profile-info-skill-image')!,
@@ -152,8 +159,12 @@ export default class Skills extends Menu {
             <br>
             <p><span>Exp:</span> ${skill.experience}</p>
             <br>
+            <p><span>Next Exp:</span> ${skill.nextExperience}</p>
+            <br>
             <p><span>Percent:</span> ${(skill.percentage * 100).toFixed(3)}%</p>
         `;
+
+        this.selectedSkill = skill;
     }
 
     /**
@@ -169,8 +180,6 @@ export default class Skills extends Menu {
 
         // Update the skill level
         level.innerHTML = `${skill.level}/${Modules.Constants.MAX_LEVEL}`;
-
-        //if (experience.offsetWidth === 0) return;
 
         // Store the original width of the experience bar.
         if (!element.originalWidth && experience.offsetWidth !== 0)
