@@ -4,7 +4,6 @@ import achievements from '../../../../../data/achievements.json';
 import { Achievement as AchievementPacket } from '../../../../network/packets';
 import Item from '../../objects/item';
 
-import _ from 'lodash-es';
 import { Opcodes } from '@kaetram/common/network';
 
 import type { Modules } from '@kaetram/common/network';
@@ -25,7 +24,7 @@ export default class Achievements {
 
     public constructor(private player: Player) {
         // Iterates through the raw achievement information from the JSON.
-        _.each(achievements, (rawAchievement: RawAchievement, key: string) => {
+        for (let [key, rawAchievement] of Object.entries(achievements)) {
             let achievement = new Achievement(key, rawAchievement);
 
             this.achievements[key] = achievement;
@@ -33,7 +32,7 @@ export default class Achievements {
             achievement.onFinish(this.handleFinish.bind(this));
             achievement.onProgress(this.handleProgress.bind(this));
             achievement.onPopup(this.handlePopup.bind(this));
-        });
+        }
     }
 
     /**
@@ -44,12 +43,12 @@ export default class Achievements {
 
     public load(achievementInfo: AchievementData[]): void {
         // Iterates through the achievement information and updates data.
-        _.each(achievementInfo, (info: AchievementData) => {
+        for (let info of achievementInfo) {
             let achievement = this.get(info.key);
 
             // Update stage if achievement exists.
             if (achievement) achievement.setStage(info.stage, true);
-        });
+        }
 
         this.loadCallback?.();
     }
@@ -168,7 +167,7 @@ export default class Achievements {
      */
 
     public forEachAchievement(callback: (achievement: Achievement) => void): void {
-        _.each(this.achievements, callback);
+        for (let achievement of Object.values(this.achievements)) callback(achievement);
     }
 
     /**
