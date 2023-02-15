@@ -1,7 +1,6 @@
 export interface MobData {
     name: string;
-    description?: string;
-    experience?: number;
+    description?: string | string[];
     hitPoints?: number;
     drops?: { [itemKey: string]: number };
     dropTables?: string[];

@@ -1,6 +1,5 @@
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -58,7 +57,12 @@ export default class Handler {
      */
 
     protected handleHit(damage: number, attacker?: Character): void {
-        if (this.mob.dead || !attacker) return;
+        if (!attacker) return;
+
+        if (attacker.isPlayer()) attacker.handleExperience(damage);
+
+        // This may get called simulatneously with the death callback, so we check here.
+        if (this.mob.isDead()) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
@@ -70,19 +74,26 @@ export default class Handler {
      */
 
     protected handleDeath(attacker?: Character): void {
-        // Stops the attacker's combat if the character is dead.
-        if (attacker) attacker.combat.stop();
+        // The damage table is used to calculate who should receive priority over the mob's drop.
+        let damageTable = this.mob.getDamageTable();
 
-        // Add exo to the attacker if it's a player.
-        if (attacker?.isPlayer()) attacker.killCallback?.(this.mob);
+        for (let index in damageTable) {
+            let element = damageTable[index],
+                [instance] = element,
+                entity = this.world.entities.get(instance);
 
-        // Spawn item drops.
-        let drops = this.mob.getDrops();
+            // Ignore non-player entities.
+            if (!entity?.isPlayer()) continue;
 
-        if (drops.length > 0)
-            _.each(drops, (drop) =>
-                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
-            );
+            // Kill callback is sent to the player who dealt most amount of damage.
+            if (parseInt(index) === 0) {
+                // Register the kill as belonging to the player who dealt most amount of damage.
+                entity.killCallback?.(this.mob);
+
+                // Drop the mob's loot and pass the owner's username.
+                this.mob.drop(entity.username);
+            }
+        }
 
         // Stop the combat.
         this.mob.combat.stop();

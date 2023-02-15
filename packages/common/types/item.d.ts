@@ -17,6 +17,7 @@ export interface Stats {
     crush: number;
     slash: number;
     stab: number;
+    archery: number;
     magic: number;
 }
 
@@ -58,4 +59,5 @@ export interface ItemData {
     projectileName?: string;
     description?: string;
     manaCost?: number;
+    weaponType?: string;
 }

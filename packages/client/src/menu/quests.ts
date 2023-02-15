@@ -1,6 +1,5 @@
 import Menu from './menu';
 
-import _ from 'lodash';
 import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
@@ -29,7 +28,8 @@ export default class Quests extends Menu {
     public handle(opcode: Opcodes.Quest, key = ''): void {
         switch (opcode) {
             case Opcodes.Quest.Batch: {
-                _.each(this.player.quests, (quest: Task) => this.createElement(quest));
+                for (let quest of Object.values(this.player.quests)) this.createElement(quest);
+
                 break;
             }
 

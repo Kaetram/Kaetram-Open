@@ -50,8 +50,8 @@
         "@typescript-eslint/no-redundant-type-constituents": "warn",
         // REVIEW: Consider if we need certain undefined/null checks
         "@typescript-eslint/no-unnecessary-condition": "off",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
         "@typescript-eslint/no-unnecessary-qualifier": "warn",
-        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
         "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 
         "import/no-unresolved": "off",

@@ -1,10 +1,9 @@
 import config from '@kaetram/common/config';
-import _ from 'lodash';
 
 import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
 import type Player from './player';
 
-type SyncCallback = (username: string, status: boolean) => void;
+type SyncCallback = (username: string, status: boolean, serverId: number) => void;
 
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
@@ -26,14 +25,14 @@ export default class Friends {
         // Nothing to load.
         if (friends.length === 0) return;
 
-        _.each(friends, (username: string) => {
+        for (let username of friends) {
             let online = this.player.world.isOnline(username);
 
             this.list[username] = {
                 online,
                 serverId: online ? config.serverId : -1
             };
-        });
+        }
 
         this.loadCallback?.();
     }
@@ -73,7 +72,7 @@ export default class Friends {
             if (!online) this.player.world.linkFriends(this.player, false);
 
             // Add the friend to the list and pass on the online status to the client.
-            this.addCallback?.(username, this.list[username].online);
+            this.addCallback?.(username, this.list[username].online, this.list[username].serverId);
         });
     }
 
@@ -83,7 +82,7 @@ export default class Friends {
      */
 
     public remove(player: Player | string): void {
-        let username = typeof player === 'string' ? player : player.username;
+        let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // No username was found in the list.
         if (!this.hasFriend(username))
@@ -127,10 +126,14 @@ export default class Friends {
      */
 
     public setStatus(username: string, status: boolean, serverId: number): void {
-        this.list[username].online = status;
-        this.list[username].serverId = status ? serverId : -1;
+        let friend = this.list[username];
 
-        this.statusCallback?.(username, status);
+        if (!friend) return;
+
+        friend.online = status;
+        friend.serverId = status ? serverId : -1;
+
+        this.statusCallback?.(username, status, friend.serverId);
     }
 
     /**
@@ -139,9 +142,11 @@ export default class Friends {
      */
 
     public setActiveFriends(list: Friend): void {
-        _.each(list, (friend: FriendInfo, username: string) =>
-            this.setStatus(username, friend.online, friend.serverId)
-        );
+        for (let username in list) {
+            let friend = list[username];
+
+            this.setStatus(username, friend.online, friend.serverId);
+        }
     }
 
     /**

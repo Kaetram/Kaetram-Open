@@ -1,0 +1,126 @@
+@use '../../abstracts/media';
+
+#profile-dialog,
+#settings-page {
+    position: absolute;
+    right: 0;
+    bottom: 45px;
+    display: none;
+}
+
+#bank-inventory-container,
+#enchant-container {
+    float: left;
+}
+
+.inventory-slots {
+    position: absolute;
+    top: 13%;
+    left: 6%;
+}
+
+.item-count,
+.item-count {
+    font-family: AdvoCut, sans-serif;
+    color: rgb(255 255 255 / 100%);
+}
+
+.close {
+    position: absolute;
+    top: -3%;
+    left: 92%;
+}
+
+.ok,
+.ok-check {
+    position: absolute;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #bank-inventory-container,
+        #enchant-container {
+            width: 129px * $i;
+            height: 127px * $i;
+            background-position: 0 0;
+        }
+
+        .item-count {
+            width: 16px * $i;
+            height: 7px * $i;
+            margin-left: $i;
+            text-align: center;
+        }
+
+        #store-sell-slot-return-text,
+        #store-sell-slot-text,
+        #shards-count {
+            margin-top: 19px * $i;
+        }
+
+        .ok,
+        .ok-check {
+            background-image: url('/img/#{$i}/containers.png');
+        }
+
+        .ok {
+            width: 28px * $i;
+            height: 14px * $i;
+            background-position: -341px * $i -79px * $i;
+
+            &:hover {
+                background-position-y: -65px * $i;
+            }
+        }
+
+        .ok-check {
+            width: 14px * $i;
+            height: 14px * $i;
+            background-position: -387px * $i -79px * $i;
+
+            &:hover {
+                background-position-y: -65px * $i;
+            }
+
+            &:active {
+                background-position-y: -93px * $i;
+            }
+        }
+    }
+}
+
+@each $size, $i in media.$bsizes {
+    @media ($size) {
+        .close {
+            width: 16px * $i;
+            height: 16px * $i;
+            background: url('/img/#{$i}/containers.png') -32px * $i -166px * $i;
+
+            &:hover {
+                background-position-x: -48px * $i;
+            }
+
+            &:active {
+                background-position-x: -64px * $i;
+            }
+        }
+    }
+}
+
+@media (--lg) {
+    .item-count {
+        font-size: 14px;
+    }
+}
+
+@media (--md) {
+    .item-count {
+        font-size: 11px;
+    }
+}
+
+@media (--sm) {
+    .item-count {
+        font-size: 8px;
+    }
+}

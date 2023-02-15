@@ -1,3 +1,5 @@
+import { onSecondaryPress } from './press';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -36,29 +38,33 @@ export default {
     /**
      * Creates a new slot element based using the bank-slot class. This creates
      * an empty skeleton that we can then place items in. A callback event listener
-     * is also created alongside the slot. Whenever a slot is clicked, its type
+     * is also created alongside the slot. Whenever a slot is pressed, its type
      * and index are parameters that are passed to the callback.
      * @param type The type of slot we are creating (used for callback as well).
      * @param index Index of the slot we are creating (for identification).
-     * @param callback Optional paramater that creates a callback when the element
-     * is clicked and passes the type of the slot and the respective index.
+     * @param primaryCallback The callback function for the primary pressed.
+     * @param secondaryCallback The callback function for the secondary pressed.
      */
 
     createSlot(
         type: Modules.ContainerType,
         index: number,
-        callback?: (type: Modules.ContainerType, index: number) => void
+        primaryCallback?: (type: Modules.ContainerType, index: number) => void,
+        secondaryCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
             image = document.createElement('div'),
             count = document.createElement('div');
 
+        slot.dataset.type = `${type}`;
+        slot.dataset.index = `${index}`;
+
         // Sets the class of the bank slot.
-        slot.classList.add('bank-slot');
+        slot.classList.add('item-slot');
 
         // Sets the class of the image.
-        image.classList.add('bank-image');
+        image.classList.add('item-image');
 
         // Sets the class of the count.
         count.classList.add('item-count');
@@ -70,7 +76,8 @@ export default {
         slot.append(image);
         slot.append(count);
 
-        if (callback) slot.addEventListener('click', () => callback(type, index));
+        if (primaryCallback) slot.addEventListener('click', () => primaryCallback(type, index));
+        if (secondaryCallback) onSecondaryPress(slot, () => secondaryCallback(type, index));
 
         // Appends the bank slot onto the list element.
         listElement.append(slot);
@@ -88,6 +95,21 @@ export default {
         if (key === '') return '';
 
         return `url("/img/sprites/item-${key}.png")`;
+    },
+
+    /**
+     * Takes any name (or string as a matter of fact) and capitalizes
+     * every first letter after a space.
+     * Example: 'tHiS Is a usErName' -> 'This Is A Username'
+     * @param name The raw username string defaulting to '' if not specified.
+     * @returns The formatted name string.
+     */
+
+    formatName(name = ''): string {
+        return name.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
     },
 
     /**
@@ -128,7 +150,7 @@ export default {
                 return Opcodes.Container.Select;
             }
 
-            case Modules.MenuActions.Drop: {
+            case Modules.MenuActions.DropOne: {
                 return Opcodes.Container.Remove;
             }
 
@@ -178,6 +200,7 @@ export default {
             crush: 0,
             slash: 0,
             stab: 0,
+            archery: 0,
             magic: 0
         };
     },
@@ -201,6 +224,7 @@ export default {
      * @param element The element to fade in.
      * @param speed (Optional) The speed at which to fade in.
      */
+
     fadeIn(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '0';
         element.style.display = 'block';
@@ -222,7 +246,8 @@ export default {
      * @param element The element to fade out.
      * @param speed (Optional) The speed at which to fade out.
      */
-    fadeOut(element: HTMLElement, speed = 0.1): void {
+
+    fadeOut(element: HTMLElement, speed = 0.2): void {
         element.style.opacity ||= '1';
 
         let fade = () => {

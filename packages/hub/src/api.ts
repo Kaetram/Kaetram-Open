@@ -164,7 +164,7 @@ export default class API {
             return;
         }
 
-        let { source, target, text, serverId } = request.body,
+        let { source, target, text } = request.body,
             server = this.servers.findPlayer(target);
 
         if (!server) {
@@ -172,7 +172,7 @@ export default class API {
             return;
         }
 
-        this.sendChat(server, `${serverId}`, source, text, 'aquamarine', target);
+        this.sendChat(server, source, text, 'aquamarine', target);
 
         response.json({ status: 'success' });
     }
@@ -198,24 +198,24 @@ export default class API {
             activeFriends: Friend = {};
 
         // Iterate through the servers and find the friends that are online.
-        this.servers.forEachServer((server: Server, key: string) => {
+        this.servers.forEachServer((server: Server) => {
             // Ignore the server we received the request from.
-            if (parseInt(key) === serverId) return;
+            if (server.id === serverId) return;
 
             // Skip servers where there are no players.
             if (server.players.length === 0) return;
 
             // If it's a logout request, send the logout request to all the servers.
-            if (logout) return this.sendLogout(server, key, username);
+            if (logout) return this.sendLogout(server, username);
 
-            this.sendLogin(server, key, username);
+            this.sendLogin(server, username, serverId);
 
             // Find all the friends online on the server and add them to the `activeFriends` object.
             for (let friend of inactiveFriends)
                 if (server.players.includes(friend))
                     activeFriends[friend] = {
                         online: true,
-                        serverId: parseInt(key)
+                        serverId: server.id
                     };
         });
 
@@ -229,7 +229,7 @@ export default class API {
     /**
      * Adds a player to the server list when they log in.
      * @param request Contains the serverId and username of the player.
-     * @param response Generic response.\
+     * @param response Generic response.
      */
 
     private handleLogin(request: Request, response: Response): void {
@@ -282,8 +282,8 @@ export default class API {
             online = false;
 
         // Look through all the servers and see if the player is online.
-        this.servers.forEachServer((server, key) => {
-            if (parseInt(key) === serverId) return;
+        this.servers.forEachServer((server: Server) => {
+            if (server.id === serverId) return;
 
             if (server.players.includes(username)) online = true;
         });
@@ -303,8 +303,8 @@ export default class API {
      */
 
     public broadcastChat(source: string, text: string, colour: string): void {
-        this.servers.forEachServer((server, key) => {
-            this.sendChat(server, key, source, text, colour);
+        this.servers.forEachServer((server) => {
+            this.sendChat(server, source, text, colour);
         });
     }
 
@@ -318,13 +318,12 @@ export default class API {
 
     private sendChat(
         server: Server,
-        key: string,
         source: string,
         text: string,
         colour: string,
         target = ''
     ): void {
-        let url = Utils.getUrl(server.host, server.apiPort, 'chat', true),
+        let url = Utils.getUrl(server.apiHost, server.apiPort, 'chat', true),
             data = {
                 accessToken: server.accessToken,
                 text,
@@ -334,7 +333,7 @@ export default class API {
             };
 
         axios.post(url, data).catch((error) => {
-            log.error(`Could not send chat to ${config.name} ${key}`);
+            log.error(`Could not send chat from ${config.name} ${server.id}.`);
             log.error(error);
         });
     }
@@ -344,17 +343,19 @@ export default class API {
      * @param server The server we are sending the login to.
      * @param key The key of the server we are sending the login to.
      * @param username The username of the player that is logging in.
+     * @param serverId The id of the server the player is logging in from.
      */
 
-    private sendLogin(server: Server, key: string, username: string): void {
-        let url = Utils.getUrl(server.host, server.apiPort, 'login', true),
+    private sendLogin(server: Server, username: string, serverId: number): void {
+        let url = Utils.getUrl(server.apiHost, server.apiPort, 'login', true),
             data = {
                 accessToken: server.accessToken,
-                username
+                username,
+                serverId
             };
 
         axios.post(url, data).catch((error) => {
-            log.error(`Could not send login to ${config.name} ${key}`);
+            log.error(`Could not send login to ${config.name} ${server.id}`);
             log.error(error);
         });
     }
@@ -366,15 +367,15 @@ export default class API {
      * @param username The username of the player that is logging out.
      */
 
-    private sendLogout(server: Server, key: string, username: string): void {
-        let url = Utils.getUrl(server.host, server.apiPort, 'logout', true),
+    private sendLogout(server: Server, username: string): void {
+        let url = Utils.getUrl(server.apiHost, server.apiPort, 'logout', true),
             data = {
                 accessToken: server.accessToken,
                 username
             };
 
         axios.post(url, data).catch((error) => {
-            log.error(`Could not send logout to ${config.name} ${key}`);
+            log.error(`Could not send logout to ${config.name} ${server.id}`);
             log.error(error);
         });
     }

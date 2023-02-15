@@ -16,8 +16,6 @@
         "mob": ["rat", "icerat"],
         "mobCount": 20,
 
-        "rewardItem": "axe",
-
         "rewardSkill": "strength",
         "rewardExperience": 369
     },
@@ -79,6 +77,12 @@
     "waterguardian": {
         "name": "Water Guardian",
         "description": "Defeat the Water Guardian!",
+        "hidden": true
+    },
+
+    "mermaidguard": {
+        "name": "Mermaid Guard",
+        "description": "Defeat the mermaid guarding the Sea Cucumber!",
         "hidden": true
     },
 

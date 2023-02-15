@@ -27,8 +27,6 @@ class Main {
         this.database.onFail(this.handleFail.bind(this));
 
         process.on('SIGINT', this.handleSignalInterrupt.bind(this));
-        process.on('SIGQUIT', this.handleSignalInterrupt.bind(this));
-        process.on('SIGTERM', this.handleSignalInterrupt.bind(this));
 
         new Loader();
     }
@@ -54,7 +52,7 @@ class Main {
      * @param connection The new connection we received from the WebSocket.
      */
     private handleConnection(connection: Connection): void {
-        if (!this.ready) {
+        if (!this.ready || !this.world?.allowConnections) {
             connection.reject('disallowed');
             return;
         }

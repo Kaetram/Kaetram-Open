@@ -10,7 +10,6 @@ import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -52,6 +51,8 @@ export default class World {
 
     private maxPlayers = config.maxPlayers;
 
+    public allowConnections = true;
+
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
@@ -65,22 +66,19 @@ export default class World {
     }
 
     /**
-     * A `tick` is a call that occurs every `config.updateTime` milliseconds.
-     * This function underlines how fast (or how slow) we parse through packets.
+     * Starts the server packet parsing and region updating loop. Every `config.updateTime`
+     * we send all the packets in the queue to the players and update the regions.
      */
 
-    private async tick(): Promise<void> {
-        let setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
-            fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+    private tick(): void {
+        if (config.hubEnabled) setInterval(() => this.api.pingHub(), config.hubPing);
 
-        setIntervalAsync(async () => {
+        setInterval(() => {
             this.network.parse();
             this.map.regions.parse();
-        }, 1000 / config.updateTime);
+        }, config.updateTime);
 
-        if (config.hubEnabled) setIntervalAsync(async () => this.api.pingHub(), config.hubPing);
-
-        setIntervalAsync(async () => this.save(), config.saveInterval);
+        setInterval(() => this.save(), config.saveInterval);
     }
 
     /**
@@ -182,10 +180,10 @@ export default class World {
      * @param logout The status we are updating the user to.
      */
 
-    public syncFriendsList(username: string, logout = false): void {
+    public syncFriendsList(username: string, logout = false, serverId = config.serverId): void {
         this.entities.forEachPlayer((player: Player) => {
             if (player.friends.hasFriend(username))
-                player.friends.setStatus(username, !logout, config.serverId);
+                player.friends.setStatus(username, !logout, serverId);
         });
     }
 
@@ -243,7 +241,7 @@ export default class World {
      */
 
     public getPopulation(): number {
-        return _.size(this.entities.listOfPlayers);
+        return Object.keys(this.entities.listOfPlayers).length;
     }
 
     /**

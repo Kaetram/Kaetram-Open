@@ -10,6 +10,7 @@ import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Interact from '../menu/interact';
 import type Friends from '../menu/friends';
+import type Inventory from '../menu/inventory';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
@@ -17,6 +18,7 @@ import type Game from '../game';
 import type Camera from '../renderer/camera';
 import type App from '../app';
 import type Map from '../map/map';
+import type Trade from '../menu/trade';
 
 interface TargetData {
     sprite: Sprite;
@@ -37,6 +39,8 @@ export default class InputController {
     public player: Player;
     private friends: Friends;
     private interact: Interact;
+    private inventory: Inventory;
+    private trade: Trade;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -72,7 +76,9 @@ export default class InputController {
         this.camera = game.camera;
         this.player = game.player;
         this.friends = game.menu.getFriends();
+        this.inventory = game.menu.getInventory();
         this.interact = game.menu.getInteract();
+        this.trade = game.menu.getTrade();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -145,11 +151,11 @@ export default class InputController {
      * A right click is called a ContextMenuEvent. Here we determine
      * the coordinates of the click, and use that to activate the
      * action menu at that location.
-     * @param event DOM event containing click position information.
+     * @param position The position of the press.
      */
 
-    private handleRightClick(event: PointerEvent): void {
-        this.setCoords(event);
+    private handleRightClick(pos: { x: number; y: number }): void {
+        this.setCoords(pos);
 
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);
@@ -170,7 +176,13 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
-        // Popups are UI elements that are displayed on top of the game.
+        // Redirect input to the trade handler if the trade input is visible.
+        if (this.trade.isInputDialogueVisible()) return this.trade.keyDown(event.key);
+
+        // Redirect input to the inventory handler if the inventory is visible.
+        if (this.inventory.isDropDialogVisible()) return this.inventory.keyDown(event.key);
+
+        // Redirect input to the friends handler if the friends input is visible.
         if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 
         // Redirect input to the chat handler if the chat input is visible.
@@ -328,6 +340,7 @@ export default class InputController {
             }
 
             case Modules.MenuActions.Trade: {
+                this.game.player.trade(this.interactEntity);
                 break;
             }
 
@@ -339,6 +352,14 @@ export default class InputController {
 
             case Modules.MenuActions.Examine: {
                 this.game.socket.send(Packets.Examine, [this.interactEntity.instance]);
+                break;
+            }
+
+            case Modules.MenuActions.AddFriend: {
+                this.game.socket.send(Packets.Friends, {
+                    opcode: Opcodes.Friends.Add,
+                    username: this.interactEntity.name
+                });
                 break;
             }
         }
@@ -414,10 +435,11 @@ export default class InputController {
                 if (this.isAttackable(this.entity))
                     (this.entity as Character).addAttacker(this.player);
 
-                this.game.socket.send(Packets.Target, [
-                    Opcodes.Target.Attack,
-                    this.entity.instance
-                ]);
+                if (this.player.isRanged())
+                    this.game.socket.send(Packets.Target, [
+                        Opcodes.Target.Attack,
+                        this.entity.instance
+                    ]);
                 return;
             }
         }
@@ -555,12 +577,12 @@ export default class InputController {
      * @param event The event object containing the mouse's position.
      */
 
-    public setCoords(event: MouseEvent | PointerEvent): void {
+    public setCoords(position: { x: number; y: number }): void {
         let { width, height } = this.game.renderer.background;
 
         // Set the mouse position to the x and y coordinates within the event.
-        this.mouse.x = event.pageX;
-        this.mouse.y = event.pageY;
+        this.mouse.x = position.x;
+        this.mouse.y = position.y;
 
         // Add horizontal boundaries to the mouse.
         if (this.mouse.x >= width) this.mouse.x = width - 1;

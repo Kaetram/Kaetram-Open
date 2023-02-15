@@ -3,7 +3,6 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
@@ -21,6 +20,7 @@ export default class Character extends Entity {
     public following = false;
     public stunned = false;
     public forced = false;
+    public trading = false;
 
     private interrupted = false;
 
@@ -125,7 +125,7 @@ export default class Character extends Entity {
 
     private loadAnimations(): void {
         // Iterate through all the effects and load default speed and end callback events.
-        _.each(this.effects, (effect: EffectInfo) => {
+        for (let effect of Object.values(this.effects)) {
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
 
@@ -136,7 +136,7 @@ export default class Character extends Entity {
                 effect.animation.reset();
                 effect.animation.count = 1;
             });
-        });
+        }
     }
 
     /**
@@ -210,6 +210,17 @@ export default class Character extends Entity {
         this.stop();
 
         this.orientation = Modules.Orientation.Down;
+    }
+
+    /**
+     * Follows the player then requests a trade with them.
+     * @param entity The entity we are trying to trade with.
+     */
+
+    public trade(entity: Entity): void {
+        this.trading = true;
+
+        this.follow(entity);
     }
 
     /**
@@ -666,7 +677,7 @@ export default class Character extends Entity {
      */
 
     public forEachAttacker(callback: (attacker: Character) => void): void {
-        _.each(this.attackers, (attacker) => callback(attacker));
+        for (let attacker of Object.values(this.attackers)) callback(attacker);
     }
 
     /**
@@ -675,7 +686,7 @@ export default class Character extends Entity {
      */
 
     public forEachFollower(callback: (follower: Character) => void): void {
-        _.each(this.followers, (follower) => callback(follower));
+        for (let follower of Object.values(this.followers)) callback(follower);
     }
 
     public override hasShadow(): boolean {

@@ -14,8 +14,6 @@
 
 #skills-list {
     position: absolute;
-    top: 6%;
-    left: 8%;
     overflow: auto;
 }
 
@@ -76,11 +74,38 @@
     left: 37%;
 }
 
+.skill-level,
+.skill-experience {
+    position: absolute;
+}
+
+.skill-level {
+    font-family: AdvoCut, sans-serif;
+    color: white;
+}
+
+.skill-experience {
+    background: linear-gradient(to left, #4F4, #080);
+    transition: .5s width ease;
+}
+
 #arrows-count {
     position: absolute;
     font-family: AdvoCut, sans-serif;
     color: white;
     text-align: center;
+}
+
+#profile-info {
+    position: absolute;
+    display: none;
+}
+
+.profile-info-title,
+.profile-info-details {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: #fff;
 }
 
 @each $size, $i in media.$sizes {
@@ -262,8 +287,81 @@
         }
 
         #skills-list {
+            top: 16px * $i;
+            left: 12px * $i;
             width: 106px * $i;
-            height: 179px * $i;
+            height: 170px * $i;
+        }
+
+        .skill {
+            width: 102px * $i;
+            height: 31px * $i;
+            padding-top: 3px * $i;
+            background: url('/img/#{$i}/characterdialogsheet.png') -32px * $i -353px * $i;
+
+            &:hover {
+                background-position: -144px * $i -353px * $i;
+            }
+            
+            &:active {
+                background-position: -144px * $i -400px * $i;
+            }
+        }
+
+        .skill-experience {
+            width: 64px * $i;
+            height: 1px * $i;
+            margin-top: 20px * $i;
+            margin-left: 28px * $i;
+        }
+
+        .skill-level {
+            margin-top: 6px * $i;
+            margin-left: 48px * $i;
+            font-size: 10px * $i;
+        }
+
+        .skill-image {
+            width: 16px * $i;
+            height: 16px * $i;
+            margin-top: 5px * $i;
+            margin-left: 8px * $i;
+        }
+
+        .skill-image-accuracy {
+            background: url('/img/#{$i}/skills/accuracy.png');
+        }
+
+        .skill-image-archery {
+            background: url('/img/#{$i}/skills/archery.png');
+        }
+
+        .skill-image-health {
+            background: url('/img/#{$i}/skills/health.png');
+        }
+
+        .skill-image-lumberjacking {
+            background: url('/img/#{$i}/skills/lumberjacking.png');
+        }
+
+        .skill-image-magic {
+            background: url('/img/#{$i}/skills/magic.png');
+        }
+
+        .skill-image-mining {
+            background: url('/img/#{$i}/skills/mining.png');
+        }
+
+        .skill-image-strength {
+            background: url('/img/#{$i}/skills/strength.png');
+        }
+
+        .skill-image-defense {
+            background: url('/img/#{$i}/skills/defense.png');
+        }
+
+        .skill-image-fishing {
+            background: url('/img/#{$i}/skills/fishing.png');
         }
 
         #achievement-count,
@@ -450,6 +548,40 @@
         #passiveability8 {
             top: 172px * $i;
             left: 70px * $i;
+        }
+
+        #profile-info {
+            top: 20px * $i;
+            right: 124px * $i;
+
+            width: 92px * $i;
+            height: 130px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -528px * $i -304px * $i;
+        }
+
+        .profile-info-skill-image {
+            width: 16px * $i;
+            height: 16px * $i;
+            margin-top: 10px * $i;
+            margin-left: 10px * $i;
+        }
+
+        .profile-info-title {
+            top: 14px * $i;
+            left: 32px * $i;
+            font-size: 10px * $i;
+        }
+
+        .profile-info-details {
+            bottom: 6px * $i;
+            left: 6px * $i;
+
+            width: 84px * $i;
+            height: 72px * $i;
+
+            font-size: 10px * $i;
+            text-align: center;
         }
     }
 }
