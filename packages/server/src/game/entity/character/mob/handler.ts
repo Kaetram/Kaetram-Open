@@ -1,6 +1,5 @@
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';

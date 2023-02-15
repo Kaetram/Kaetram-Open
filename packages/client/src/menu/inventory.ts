@@ -5,7 +5,6 @@ import Util from '../utils/util';
 import { onDragDrop } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import _ from 'lodash-es';
 
 import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -107,11 +106,11 @@ export default class Inventory extends Menu {
      */
 
     public override batch(slots: SlotData[]): void {
-        _.each(slots, (slot: SlotData) => {
+        for (let slot of slots) {
             if (!slot.key) return;
 
             this.setSlot(slot);
-        });
+        }
 
         this.batchCallback?.();
     }

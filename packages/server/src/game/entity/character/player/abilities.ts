@@ -4,7 +4,6 @@ import { Ability as AbilityPacket } from '../../../../network/packets';
 
 import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash';
 
 import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
 import type Ability from './ability/ability';
