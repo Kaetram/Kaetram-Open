@@ -58,6 +58,16 @@ export default class Profile extends Menu {
     }
 
     /**
+     * Override for the `hide` function to include hiding the side menu panel.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        this.skills.hideInfo();
+    }
+
+    /**
      * We are modifying the currently active page and updating the status of
      * the previous and next buttons depending on whether or not we're on
      * the last or first page.
