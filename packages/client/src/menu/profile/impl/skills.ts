@@ -1,5 +1,5 @@
 import Menu from '../../menu';
-import log from '../../../lib/log';
+import Util from '../../../utils/util';
 
 import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
@@ -16,6 +16,9 @@ interface SkillElement extends HTMLLIElement {
 
 export default class Skills extends Menu {
     private list: HTMLUListElement = document.querySelector('#skills-list > ul')!;
+
+    // Skill info side-menu
+    private info: HTMLElement = document.querySelector('#profile-info')!;
 
     private loaded = false;
 
@@ -72,6 +75,25 @@ export default class Skills extends Menu {
     }
 
     /**
+     * Override for the superclass `hide` function to also hide
+     * the profile info side-menu.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        this.hideInfo();
+    }
+
+    /**
+     * Hides the info side-menu.
+     */
+
+    public hideInfo(): void {
+        Util.fadeOut(this.info);
+    }
+
+    /**
      * Creates a new skill element that will be appended to the list.
      * @param skill Contains skill data to create the element with.
      */
@@ -102,20 +124,36 @@ export default class Skills extends Menu {
         element.level = skill.level;
         element.percentage = skill.percentage;
 
+        // Add the click event to the element.
+        element.addEventListener('click', () => this.showInfo(skill));
+
         return element;
     }
 
     /**
-     * Finds an HTML skill element extension based on the name of the skill.
-     * @param name The name of the skill we are looking for.
-     * @returns A skill element extension if found, otherwise undefined.
+     * When we click on a skill we want to show some more information.
+     * @param skill The skill that we are showing information for.
      */
 
-    private get(name: string): SkillElement | undefined {
-        for (let element of this.list.children)
-            if ((element as SkillElement).name === name) return element as SkillElement;
+    private showInfo(skill: Skill): void {
+        Util.fadeIn(this.info);
 
-        return undefined;
+        let image = this.info.querySelector('.profile-info-skill-image')!,
+            title = this.info.querySelector('.profile-info-title')!,
+            details = this.info.querySelector('.profile-info-details')!;
+
+        // Update the image and title of the skill.
+        image.className = `profile-info-skill-image skill-image-${skill.name.toLowerCase()}`;
+        title.innerHTML = skill.name;
+
+        // Update the details of the skill.
+        details.innerHTML = `
+            <p><span>Level:</span> ${skill.level}</p>
+            <br>
+            <p><span>Exp:</span> ${skill.experience}</p>
+            <br>
+            <p><span>Percent:</span> ${(skill.percentage * 100).toFixed(3)}%</p>
+        `;
     }
 
     /**
@@ -146,5 +184,26 @@ export default class Skills extends Menu {
         // Update the properties of the element.
         element.level = skill.level;
         element.percentage = skill.percentage;
+    }
+
+    /**
+     * Finds an HTML skill element extension based on the name of the skill.
+     * @param name The name of the skill we are looking for.
+     * @returns A skill element extension if found, otherwise undefined.
+     */
+
+    private get(name: string): SkillElement | undefined {
+        for (let element of this.list.children)
+            if ((element as SkillElement).name === name) return element as SkillElement;
+
+        return undefined;
+    }
+
+    /**
+     * @returns Whether or not the profile info side-menu is visible.
+     */
+
+    public isInfoVisible(): boolean {
+        return this.info.style.display === 'block';
     }
 }
