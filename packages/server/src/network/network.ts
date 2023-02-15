@@ -104,9 +104,7 @@ export default class Network {
      */
 
     public broadcast(packet: Packet): void {
-        _.each(this.packets, (queue: unknown[]) => {
-            queue.push(packet.serialize());
-        });
+        for (let queue of Object.values(this.packets)) queue.push(packet.serialize());
     }
 
     /**
@@ -128,7 +126,7 @@ export default class Network {
      */
 
     public sendToPlayers(players: Player[], packet: Packet): void {
-        _.each(players, (player: Player) => this.send(player, packet));
+        for (let player of players) this.send(player, packet);
     }
 
     /**
@@ -173,9 +171,7 @@ export default class Network {
      */
 
     public sendToRegionList(list: number[], packet: Packet, ignore?: string): void {
-        _.each(list, (region: number) => {
-            this.sendToRegion(region, packet, ignore);
-        });
+        for (let region of list) this.sendToRegion(region, packet, ignore);
     }
 
     /**

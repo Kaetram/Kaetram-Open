@@ -137,7 +137,7 @@ export default class Equipments extends Menu {
 
         // iterate through all the equipments and add up the stats.
         for (let equipment of Object.values(this.player.equipments)) {
-            if (!equipment.exists()) return;
+            if (!equipment.exists()) continue;
 
             attackStats.crush += equipment.attackStats.crush;
             attackStats.slash += equipment.attackStats.slash;

@@ -26,10 +26,10 @@ export default class Dynamic extends Areas {
      */
 
     private link(): void {
-        _.each(this.areas, (area: Area) => {
-            if (!area.mapping) return;
+        for (let area of this.areas) {
+            if (!area.mapping) continue;
 
             area.mappedArea = this.get(area.mapping);
-        });
+        }
     }
 }
