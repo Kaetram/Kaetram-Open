@@ -197,7 +197,6 @@ export default class Combat {
             Modules.Hits.Damage,
             Formulas.getDamage(this.character, this.character.target!),
             this.character.isRanged(),
-            false,
             this.character.getAoE()
         );
     }
