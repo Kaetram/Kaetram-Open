@@ -275,11 +275,11 @@ export default abstract class Character extends Entity {
         // If this is an AoE attack, we will damage all nearby characters.
         if (aoe) this.handleAoE(damage, attacker, aoe);
 
-        // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) return this.deathCallback?.(attacker);
-
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        // Call the death callback if the character reaches 0 hitpoints.
+        if (this.isDead()) return this.deathCallback?.(attacker);
 
         // Poison only occurs when we land a hit and attacker has a poisonous weapon.
         if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
