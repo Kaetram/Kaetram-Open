@@ -445,7 +445,7 @@ export const Constants = {
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
-    EXPERIENCE_PER_HIT: 2 // Amount of experinece received per 1 damage dealt.
+    EXPERIENCE_PER_HIT: 4 // Amount of experinece received per 1 damage dealt.
 };
 
 export enum MinigameConstants {
