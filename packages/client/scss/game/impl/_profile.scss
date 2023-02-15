@@ -96,6 +96,18 @@
     text-align: center;
 }
 
+#profile-info {
+    position: absolute;
+    display: none;
+}
+
+.profile-info-title,
+.profile-info-details {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: #fff;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         #state-page,
@@ -536,6 +548,40 @@
         #passiveability8 {
             top: 172px * $i;
             left: 70px * $i;
+        }
+
+        #profile-info {
+            top: 20px * $i;
+            right: 124px * $i;
+
+            width: 92px * $i;
+            height: 130px * $i;
+
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -528px * $i -304px * $i;
+        }
+
+        .profile-info-skill-image {
+            width: 16px * $i;
+            height: 16px * $i;
+            margin-top: 10px * $i;
+            margin-left: 10px * $i;
+        }
+
+        .profile-info-title {
+            top: 14px * $i;
+            left: 32px * $i;
+            font-size: 10px * $i;
+        }
+
+        .profile-info-details {
+            bottom: 6px * $i;
+            left: 6px * $i;
+
+            width: 84px * $i;
+            height: 72px * $i;
+
+            font-size: 10px * $i;
+            text-align: center;
         }
     }
 }

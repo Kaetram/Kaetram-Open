@@ -224,6 +224,7 @@ export default {
      * @param element The element to fade in.
      * @param speed (Optional) The speed at which to fade in.
      */
+
     fadeIn(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '0';
         element.style.display = 'block';
@@ -245,6 +246,7 @@ export default {
      * @param element The element to fade out.
      * @param speed (Optional) The speed at which to fade out.
      */
+
     fadeOut(element: HTMLElement, speed = 0.2): void {
         element.style.opacity ||= '1';
 
