@@ -42,7 +42,7 @@ export default class Stores {
 
     public constructor(private world: World) {
         // Load stores from the JSON.
-        for (let [key, store] of Object.entries(storeData)) this.load(store, key);
+        for (let key in storeData) this.load(storeData[key as keyof typeof storeData], key);
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
@@ -101,7 +101,9 @@ export default class Stores {
      */
 
     private update(): void {
-        for (let [key, store] of Object.entries(this.stores)) {
+        for (let key in this.stores) {
+            let store = this.stores[key];
+
             if (!this.canRefresh(store)) continue;
 
             this.stockItems(store);

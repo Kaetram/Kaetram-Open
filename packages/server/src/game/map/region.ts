@@ -132,12 +132,12 @@ export default class Region {
     public getEntities(player: Player, reject?: Entity): string[] {
         let entities: string[] = [];
 
-        for (let [instance, entity] of Object.entries(this.entities)) {
+        for (let instance in this.entities) {
             // Ignore if a reject is present.
             if (reject && reject.instance === instance) continue;
 
             // Check if the entity is visible to the player.
-            if (!entity.isVisible(player)) continue;
+            if (!this.entities[instance].isVisible(player)) continue;
 
             // Append our instance to the list.
             entities.push(instance);
