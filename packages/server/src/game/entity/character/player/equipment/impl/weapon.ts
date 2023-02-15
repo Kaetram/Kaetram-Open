@@ -142,7 +142,7 @@ export default class Weapon extends Equipment {
      */
 
     public override serialize(clientInfo = false): EquipmentData {
-        let data = super.serialize();
+        let data = super.serialize(clientInfo);
 
         // Include additional properties to be sent to the client.
         if (clientInfo) {

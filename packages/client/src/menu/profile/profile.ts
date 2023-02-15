@@ -14,12 +14,12 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
-    private state: State = new State();
+    private state: State;
     private skills: Skills;
     private abilities: Abilities;
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state];
+    private pages: Menu[] = [];
 
     // Current page we are on.
     private activePage = 0;
@@ -34,6 +34,9 @@ export default class Profile extends Menu {
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
 
+        // Initialize the state page.
+        this.state = new State(this.player);
+
         // Initialize the skills page.
         this.skills = new Skills(this.player);
 
@@ -41,7 +44,7 @@ export default class Profile extends Menu {
         this.abilities = new Abilities(this.player);
 
         // Add the abilities and skills page to the pages array.
-        this.pages.push(this.skills, this.abilities);
+        this.pages.push(this.state, this.skills, this.abilities);
 
         // Used to initialize the navigation buttons.
         this.update();
@@ -115,15 +118,22 @@ export default class Profile extends Menu {
     }
 
     /**
-     * Called whenever we want to update the profile with new
-     * information about the player (e.g. the player equips a
-     * new item, or the player acquires some experience).
-     * This is one of the only UI menus that we update
-     * irregardless of whether it is visible or not.
+     * Iterates through all the pages in the profile and synchronizes them. This
+     * is called every time the player undergoes a change, whether it be equipping/unequipping,
+     * experience gain, or when a new ability is unlocked.
      */
 
     public override synchronize(): void {
-        this.forEachPage((page: Menu) => page.synchronize(this.player));
+        this.forEachPage((page: Menu) => page.synchronize());
+    }
+
+    /**
+     * Synchronizes the skills interface upon resizing. This is because the experience
+     * bars are drawn according to the UI size, so we need to redraw them.
+     */
+
+    public override resize(): void {
+        this.skills.synchronize(true);
     }
 
     /**

@@ -23,7 +23,7 @@ export default class State extends Menu {
 
     private selectCallback?: SelectCallback;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#state-page');
 
         this.weapon.addEventListener('click', () =>
@@ -44,25 +44,24 @@ export default class State extends Menu {
      * Synchronizes the player data into its respective slots. Takes
      * the player's name, level, experience, and equipment and updates
      * the user interface accordingly.
-     * @param player Player object we are synching to.
      */
 
-    public override synchronize(player: Player): void {
+    public override synchronize(): void {
         // Synchronize the player's general information
-        this.name.textContent = player.name;
-        this.level.textContent = `Level ${player.level}`;
-        this.experience.textContent = `${player.getTotalExperience()}`;
+        this.name.textContent = this.player.name;
+        this.level.textContent = `Level ${this.player.level}`;
+        this.experience.textContent = `${this.player.getTotalExperience()}`;
 
         // Synchronize equipment data
-        this.weapon.style.backgroundImage = Util.getImageURL(player.getWeapon().key);
+        this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
         // Cloth armour shouldn't be displayed in the UI.
         this.armour.style.backgroundImage = Util.getImageURL(
-            player.getArmour().key === 'clotharmor' ? '' : player.getArmour().key
+            this.player.getArmour().key === 'clotharmor' ? '' : this.player.getArmour().key
         );
-        this.pendant.style.backgroundImage = Util.getImageURL(player.getPendant().key);
-        this.ring.style.backgroundImage = Util.getImageURL(player.getRing().key);
-        this.boots.style.backgroundImage = Util.getImageURL(player.getBoots().key);
-        this.arrow.style.backgroundImage = Util.getImageURL(player.getArrows().key);
+        this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
+        this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
+        this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
+        this.arrow.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
     }
 
     /**
