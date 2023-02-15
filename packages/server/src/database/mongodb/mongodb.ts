@@ -302,8 +302,6 @@ export default class MongoDB {
                         if (slot?.count > 500) {
                             log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
 
-                            console.log(`huh: ${slot?.key === 'gold'}`);
-
                             if (!logOnly) {
                                 slot.key = '';
                                 slot.count = -1;
