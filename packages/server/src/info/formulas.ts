@@ -92,7 +92,14 @@ export default {
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
 
-        return Utils.randomWeightedInt(0, maxDamage, accuracy);
+        // We use the weighted randomInt distribution to determine the damage.
+        let randomDamage = Utils.randomWeightedInt(0, maxDamage, accuracy);
+
+        // Limit the damage to the target's remaining health.
+        if (randomDamage > target.hitPoints.getHitPoints())
+            randomDamage = target.hitPoints.getHitPoints();
+
+        return randomDamage;
     },
 
     /**

@@ -254,7 +254,7 @@ export default class Incoming {
             } = data,
             entity: Entity;
 
-        if (this.player.dead) return;
+        if (this.player.isDead()) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request: {
