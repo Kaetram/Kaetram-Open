@@ -25,6 +25,8 @@ export default class Lumberjacking extends ResourceSkill {
         // Player's weapon is not a valid lumberjacking weapon.
         if (!weapon.isLumberjacking()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
 
+        if (!player.quests.canCutTreesInTutorial()) return player.notify(ResourceEn.NO_REASON);
+
         this.interact(player, tree, weapon.lumberjacking);
     }
 }

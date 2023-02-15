@@ -11,6 +11,7 @@ export interface StoreData {
     items: StoreItem[]; // The items in the store.
     refresh: number; // How often the store refreshes.
     currency: string; // The currency used to buy items.
+    restricted?: boolean;
 }
 
 export interface RawStore {

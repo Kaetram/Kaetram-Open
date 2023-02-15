@@ -51,6 +51,7 @@ export default class ChatController {
      * @param source Who is sending the message (username).
      * @param message The contents of the message being sent.
      * @param colour Optional parameter for the colour of the message.
+     * @param notify Optional parameter for whether to bold the message.
      */
 
     public add(source: string, message: string, colour = '', notify = false): void {

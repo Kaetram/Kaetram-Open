@@ -2040,7 +2040,7 @@
     "offsetY": -21
   },
   {
-    "id": "bridalmask",
+    "id": "samuraiarmor",
     "width": 32,
     "height": 32,
     "animations": {
@@ -2450,7 +2450,142 @@
     "offsetY": -28
   },
   {
+    "id": "wolfsword",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -17,
+    "offsetY": -21
+  },
+  {
+    "id": "deathflail",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -17,
+    "offsetY": -21
+  },
+  {
     "id": "candybar",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -17,
+    "offsetY": -21
+  },
+  {
+    "id": "candybow",
     "width": 48,
     "height": 48,
     "animations": {
@@ -2731,6 +2866,17 @@
     "offsetY": 0
   },
   {
+    "id": "seachest",
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "christmasarmor",
     "width": 32,
     "height": 32,
@@ -2823,6 +2969,52 @@
 
   {
     "id": "pickle",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+
+  {
+    "id": "picklemob",
     "width": 32,
     "height": 32,
     "animations": {
@@ -6322,6 +6514,54 @@
   },
 
   {
+    "id": "crown-artist",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier1",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier2",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier3",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier4",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier5",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier6",
+    "width": 16,
+    "height": 16
+  },
+
+  {
+    "id": "crown-tier7",
+    "width": 17,
+    "height": 16
+  },
+
+  {
     "id": "pointer",
     "width": 32,
     "height": 32
@@ -7546,6 +7786,45 @@
     "offsetY": -8
   },
   {
+    "id": "guildnpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "picklenpc",
+    "width": 16,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -2,
+    "offsetY": -8
+  },
+  {
+    "id": "santaelfnpc",
+    "width": 16,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": -10
+  },
+  {
     "id": "icegolem",
     "width": 32,
     "height": 32,
@@ -7972,17 +8251,6 @@
     "offsetY": 0
   },
   {
-    "id": "item-logs",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
     "id": "item-nisocore",
     "animations": {
       "idle": {
@@ -8038,10 +8306,32 @@
     "offsetY": 0
   },
   {
+    "id": "item-moonrockore",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-logs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-palmlogs",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 4,
         "row": 0
       }
     },
@@ -8052,7 +8342,40 @@
     "id": "item-icelogs",
     "animations": {
       "idle": {
-        "length": 6,
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-pinelogs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icepinelogs",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-willowlogs",
+    "animations": {
+      "idle": {
+        "length": 8,
         "row": 0
       }
     },
@@ -8392,7 +8715,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-bridalmask",
+    "id": "item-samuraiarmor",
     "animations": {
       "idle": {
         "length": 6,
@@ -8461,6 +8784,50 @@
   },
   {
     "id": "item-candybar",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-wolfsword",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-deathflail",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-candybow",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-candykey",
     "animations": {
       "idle": {
         "length": 6,
@@ -8900,7 +9267,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-manabigflask",
+    "id": "item-bigmanaflask",
     "animations": {
       "idle": {
         "length": 6,
@@ -8914,7 +9281,18 @@
     "id": "item-gold",
     "animations": {
       "idle": {
-        "length": 7,
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-token",
+    "animations": {
+      "idle": {
+        "length": 6,
         "row": 0
       }
     },
@@ -10162,7 +10540,18 @@
     "offsetY": 0
   },
   {
-    "id": "item-robocoparmor",
+    "id": "item-frostring",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-robotarmor",
     "animations": {
       "idle": {
         "length": 6,
@@ -11475,6 +11864,18 @@
 
   {
     "id": "item-flask",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-hotsauce",
     "animations": {
       "idle": {
         "length": 6,
@@ -15229,6 +15630,32 @@
     "offsetY": -8
   },
   {
+    "id": "purplestoremannpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "bluestoremannpc",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
     "id": "redsword",
     "width": 48,
     "height": 48,
@@ -15557,7 +15984,7 @@
     "offsetY": -12
   },
   {
-    "id": "robocoparmor",
+    "id": "robotarmor",
     "width": 32,
     "height": 32,
     "animations": {
@@ -18205,6 +18632,19 @@
     "offsetY": -8
   },
   {
+    "id": "villagegirl2",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
     "id": "villager",
     "width": 24,
     "height": 24,
@@ -19007,6 +19447,51 @@
     "id": "darkwizardrobe",
     "width": 32,
     "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "darkwolf",
+    "width": 42,
+    "height": 42,
     "animations": {
       "atk_right": {
         "length": 5,
@@ -19975,8 +20460,8 @@
         "row": 0
       }
     },
-    "offsetX": -12,
-    "offsetY": -16,
+    "offsetX": 0,
+    "offsetY": 0,
     "offsetAngle": 180
   },
   {
@@ -19990,8 +20475,8 @@
         "row": 0
       }
     },
-    "offsetX": -12,
-    "offsetY": -18,
+    "offsetX": 0,
+    "offsetY": 0,
     "offsetAngle": 180
   },
   {
@@ -20005,8 +20490,8 @@
         "row": 0
       }
     },
-    "offsetX": -12,
-    "offsetY": -18,
+    "offsetX": 0,
+    "offsetY": 0,
     "offsetAngle": 180
   },
   {
@@ -20020,8 +20505,8 @@
         "row": 0
       }
     },
-    "offsetX": -12,
-    "offsetY": -18,
+    "offsetX": 0,
+    "offsetY": 0,
     "offsetAngle": 180
   },
   {
@@ -20035,8 +20520,8 @@
         "row": 0
       }
     },
-    "offsetX": -12,
-    "offsetY": -18,
+    "offsetX": 0,
+    "offsetY": 0,
     "offsetAngle": 180
   },
   {

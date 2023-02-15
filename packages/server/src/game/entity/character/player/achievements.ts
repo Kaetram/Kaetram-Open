@@ -4,7 +4,6 @@ import achievements from '../../../../../data/achievements.json';
 import { Achievement as AchievementPacket } from '../../../../network/packets';
 import Item from '../../objects/item';
 
-import _ from 'lodash-es';
 import { Opcodes } from '@kaetram/common/network';
 
 import type { Modules } from '@kaetram/common/network';
@@ -25,15 +24,15 @@ export default class Achievements {
 
     public constructor(private player: Player) {
         // Iterates through the raw achievement information from the JSON.
-        _.each(achievements, (rawAchievement: RawAchievement, key: string) => {
-            let achievement = new Achievement(key, rawAchievement);
+        for (let key in achievements) {
+            let achievement = new Achievement(key, achievements[key as keyof typeof achievements]);
 
             this.achievements[key] = achievement;
 
             achievement.onFinish(this.handleFinish.bind(this));
             achievement.onProgress(this.handleProgress.bind(this));
             achievement.onPopup(this.handlePopup.bind(this));
-        });
+        }
     }
 
     /**
@@ -44,12 +43,12 @@ export default class Achievements {
 
     public load(achievementInfo: AchievementData[]): void {
         // Iterates through the achievement information and updates data.
-        _.each(achievementInfo, (info: AchievementData) => {
+        for (let info of achievementInfo) {
             let achievement = this.get(info.key);
 
             // Update stage if achievement exists.
             if (achievement) achievement.setStage(info.stage, true);
-        });
+        }
 
         this.loadCallback?.();
     }
@@ -76,7 +75,7 @@ export default class Achievements {
             let item = new Item(itemKey, -1, -1, true, itemCount);
 
             // Check if we can add to the inventory, then the bank, and if both fail just drop the item.
-            if (!this.player.inventory.add(item) && !this.player.bank.add(item))
+            if (this.player.inventory.add(item) < 1 && this.player.bank.add(item) < 1)
                 this.player.world.entities.spawnItem(
                     itemKey,
                     this.player.x,
@@ -153,7 +152,7 @@ export default class Achievements {
         this.forEachAchievement((a: Achievement) => {
             if (a.isFinished()) return;
             if (entity.isNPC() && !a.hasNPC(entity)) return;
-            if (entity.isMob() && (!a.hasMob(entity as Mob) || !a.isStarted())) return;
+            if (entity.isMob() && (!a.hasMob(entity) || !a.isStarted())) return;
 
             achievement = a;
         });
@@ -168,7 +167,7 @@ export default class Achievements {
      */
 
     public forEachAchievement(callback: (achievement: Achievement) => void): void {
-        _.each(this.achievements, callback);
+        for (let achievement of Object.values(this.achievements)) callback(achievement);
     }
 
     /**

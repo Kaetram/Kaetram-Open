@@ -181,6 +181,16 @@
         <title>Kaetram</title>
 
         <script type="module" src="./src/main.ts"></script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SLX5NNTBX4"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'G-SLX5NNTBX4');
+        </script>
     </head>
     <body class="intro">
         <noscript>
@@ -578,21 +588,6 @@
                     <div id="ability-quickslot4" class="ability-quickslot"></div>
                 </div>
 
-                <div id="drop-dialog">
-                    <div id="drop-title">Input drop count.</div>
-                    <div align="center">
-                        <input
-                            title="drop-count"
-                            type="number"
-                            id="drop-count"
-                            size="6"
-                            maxlength="11"
-                        />
-                        <span id="drop-accept">&nbsp;Accept&nbsp;</span>
-                        <span id="drop-cancel">&nbsp;Cancel&nbsp;</span>
-                    </div>
-                </div>
-
                 <div id="profile-dialog">
                     <div id="state-page" class="page">
                         <div id="profile-name" class="profile-info"></div>
@@ -610,6 +605,11 @@
                     </div>
 
                     <div id="skills-page" class="page">
+                        <div id="profile-info">
+                            <div class="profile-info-skill-image"></div>
+                            <div class="profile-info-title stroke"></div>
+                            <div class="profile-info-details stroke"></div>
+                        </div>
                         <div id="skills-list"><ul></ul></div>
                     </div>
 
@@ -721,8 +721,8 @@
                     </div>
                 </div>
 
-                <div id="friends-page" class="page">
-                    <div id="friends-container">
+                <div id="friends-container" class="page">
+                    <div id="friends-page">
                         <ul id="friends-list"></ul>
 
                         <div id="add-friend" class="add"></div>
@@ -775,16 +775,42 @@
                         <div id="bank-slot"><ul></ul></div>
                     </div>
                     <div id="bank-inventory-container">
-                        <div id="bank-inventory-slots" class="inventory-slots">
+                        <div id="bank-inventory-slots">
                             <ul></ul>
                         </div>
                     </div>
                 </div>
 
-                <div id="trade">
+                <div id="trade-container">
                     <div id="close-trade" class="close"></div>
-                    <div id="trade-player-container"></div>
-                    <div id="trade-o-player-container"></div>
+                    <div id="trade-player-name" class="stroke"></div>
+                    <div id="trade-oplayer-name" class="stroke"></div>
+                    <div id="trade-status"></div>
+
+                    <div id="trade-inventory-slots">
+                        <ul></ul>
+
+                        <dialog id="trade-count">
+                            <div class="dialog-title">Input Amount</div>
+
+                            <input
+                                title="Count"
+                                type="number"
+                                class="dialog-count"
+                                size="6"
+                                maxlength="11"
+                            />
+
+                            <div class="dialog-buttons">
+                                <div class="confirm dialog-accept"></div>
+                                <div class="cancel dialog-cancel"></div>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div id="trade-player-slots"><ul></ul></div>
+                    <div id="trade-oplayer-slots"><ul></ul></div>
+
+                    <div id="trade-accept" class="accept-button"></div>
                 </div>
 
                 <div id="enchant">
@@ -803,9 +829,14 @@
 
                 <div id="store">
                     <div id="close-store" class="close"></div>
-                    <div id="store-container"><ul></ul></div>
+                    <div id="store-container">
+                        <ul></ul>
+                    </div>
+
+                    <div id="store-help"></div>
+
                     <div id="store-inventory-container">
-                        <div id="store-inventory-slots" class="inventory-slots">
+                        <div id="store-inventory-slots">
                             <ul></ul>
                         </div>
 
@@ -818,6 +849,23 @@
 
                         <div id="confirm-sell" class="ok-check"></div>
                     </div>
+
+                    <dialog id="store-buy">
+                        <div class="dialog-title">Input Buy Amount</div>
+
+                        <input
+                            title="Count"
+                            type="number"
+                            class="dialog-count"
+                            size="6"
+                            maxlength="11"
+                        />
+
+                        <div class="dialog-buttons">
+                            <div class="confirm dialog-accept"></div>
+                            <div class="cancel dialog-cancel"></div>
+                        </div>
+                    </dialog>
                 </div>
 
                 <div id="equipments" class="container">
@@ -848,6 +896,7 @@
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
+                        <p class="archery">Archery:</p>
                         <p class="magic">Magic:</p>
                     </div>
                     <div id="defense-stats">
@@ -856,6 +905,7 @@
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
+                        <p class="archery">Archery:</p>
                         <p class="magic">Magic:</p>
                     </div>
                     <div id="bonuses">
@@ -912,10 +962,30 @@
                 </div>
 
                 <div id="action-container">
-                    <div class="action-item-name stroke"></div>
-                    <div class="action-item-description"></div>
+                    <div id="action-page">
+                        <div class="action-item-name stroke"></div>
 
-                    <ul></ul>
+                        <div class="action-item-description"></div>
+
+                        <ul></ul>
+                    </div>
+
+                    <dialog id="action-drop">
+                        <div class="dialog-title">Input Drop Amount</div>
+
+                        <input
+                            title="Count"
+                            type="number"
+                            class="dialog-count"
+                            size="6"
+                            maxlength="11"
+                        />
+
+                        <div class="dialog-buttons">
+                            <div class="confirm dialog-accept"></div>
+                            <div class="cancel dialog-cancel"></div>
+                        </div>
+                    </dialog>
                 </div>
 
                 <div id="interact">

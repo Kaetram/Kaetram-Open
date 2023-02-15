@@ -8,6 +8,7 @@ import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
+import Trade from './trade';
 
 import Mana from '../points/mana';
 import Character from '../character';
@@ -95,6 +96,7 @@ export default class Player extends Character {
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
     public statistics: Statistics = new Statistics();
     public friends: Friends = new Friends(this);
+    public trade: Trade = new Trade(this);
 
     public handler: Handler = new Handler(this);
 
@@ -102,14 +104,18 @@ export default class Player extends Character {
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
+    public jailed = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
     public invalidMovement = 0;
+    public overrideMovementSpeed = -1;
 
     // Special status
     public running = false;
+    public hotSauce = false;
     public dualistsMark = false;
     public thickSkin = false;
+    public snowPotion = false;
 
     // Player info
     public password = '';
@@ -117,6 +123,9 @@ export default class Player extends Character {
     public userAgent = '';
 
     public rank: Modules.Ranks = Modules.Ranks.None;
+
+    // Stores the last attack style for each type of weapon.
+    public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Warps
     public lastWarp = 0;
@@ -155,7 +164,9 @@ export default class Player extends Character {
     public storeOpen = '';
 
     private cameraArea: Area | undefined;
-    private overlayArea: Area | undefined;
+    public overlayArea: Area | undefined;
+
+    private snowPotionTimeout: NodeJS.Timeout | null = null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
@@ -306,13 +317,13 @@ export default class Player extends Character {
 
         /**
          * Send player data to client here
-         */
-
-        this.setPosition(this.x, this.y); // Set coords we loaded in `load`
+         */ // Set coords we loaded in `load`
 
         this.entities.addPlayer(this);
 
         this.send(new Welcome(this.serialize(false, true, true)));
+
+        this.setPosition(this.x, this.y);
     }
 
     /**
@@ -354,7 +365,7 @@ export default class Player extends Character {
         let population = this.world.getPopulation();
 
         if (population > 1)
-            this.notify(`There are currently ${population} players online.`, '', true);
+            this.notify(`There are currently ${population} players online.`, '', '', true);
     }
 
     /**
@@ -544,6 +555,28 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles the action of attacking a target. We receive a packet from the client
+     * with the instance of the target and perform checks prior to initiating combat.
+     * @param instance The instance of the target we are attacking.
+     */
+
+    public handleTargetAttack(instance: string): void {
+        let target = this.entities.get(instance);
+
+        // Ignore if the target is not a character that can actually be attacked.
+        if (!target?.isCharacter() || target.dead) return;
+
+        // Ensure that the player can actually attack the target.
+        if (!this.canAttack(target)) return;
+
+        // Clear the cheat score
+        this.cheatScore = 0;
+
+        // Start combat with the target.
+        this.combat.attack(target);
+    }
+
+    /**
      * Handler for when a container slot is selected at a specified index. Depending
      * on the type, we act accordingly. If we click an inventory, we check if the item
      * is equippable or consumable and remove it from the inventory. If we click a bank
@@ -554,25 +587,27 @@ export default class Player extends Character {
 
     public handleContainerSelect(
         type: Modules.ContainerType,
-        index: number,
-        subType?: Modules.ContainerType
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
     ): void {
         let item: Item;
 
         switch (type) {
             case Modules.ContainerType.Inventory: {
-                item = this.inventory.getItem(this.inventory.get(index));
+                item = this.inventory.getItem(this.inventory.get(fromIndex));
 
                 if (!item) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
-                    this.inventory.remove(index, 1);
+                    this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(index, item.count);
+                    this.inventory.remove(fromIndex, item.count);
                     this.equipment.equip(item);
                 }
 
@@ -580,9 +615,11 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
-                if (subType === Modules.ContainerType.Bank) this.inventory.move(this.bank, index);
-                else if (subType === Modules.ContainerType.Inventory)
-                    this.bank.move(this.inventory, index);
+                let from =
+                        fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
+                    to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
+
+                from.move(fromIndex, to, toIndex);
 
                 break;
             }
@@ -595,28 +632,40 @@ export default class Player extends Character {
      * of a door.
      * @param type The type of container we are working with.
      * @param index The index at which we are removing the item.
+     * @param count The amount of items we are removing.
      */
 
-    public handleContainerRemove(type: Modules.ContainerType, index: number, value: number): void {
+    public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
+        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
             return this.notify('You cannot drop items while standing in a door.');
 
-        container.remove(index, value, true);
+        container.remove(index, count, true);
     }
 
     /**
      * Handles the swap action of a container. This is when we want to move items around.
      * @param type The type of container we are working with.
-     * @param index The index at which we are swapping the item.
-     * @param value The index at which we are swapping the item with.
+     * @param fromIndex The index at which we are swapping the item.
+     * @param toIndex The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, index: number, value: number): void {
+    public handleContainerSwap(
+        type: Modules.ContainerType,
+        fromIndex: number,
+        toIndex: number
+    ): void {
+        if (isNaN(fromIndex) || isNaN(toIndex) || fromIndex < 0 || toIndex < 0)
+            return log.warning(
+                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
+            );
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
-        container.swap(index, value);
+        container.swap(fromIndex, container, toIndex);
     }
 
     /**
@@ -674,48 +723,128 @@ export default class Player extends Character {
     }
 
     /**
-     * Handles experience received from killing a mob. Here we check the type of
-     * damage the player was dealing, whether or not he was using magic, ranged, or
-     * melee, and what kind of melee weapon he was using. We then add the experience
-     * to the appropriate skill.
-     * @param experience The amount of experience we are adding.
+     * Handles the experience gained from hitting a mob. Experience is determined by the attack
+     * style the player currently has selected. Weapons have varying attack styles and the player
+     * selects them depending on the skill they wish to train.
+     * @param damage The amount of damage the player dealt.
      */
 
-    public handleExperience(experience: number): void {
-        let weapon = this.equipment.getWeapon();
+    public handleExperience(damage: number): void {
+        // Ignore invalid damage values.
+        if (damage < 1) return;
+
+        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+            weapon = this.equipment.getWeapon();
 
         /**
-         * Health experience is a third of the total experience the mob rewards. This is
-         * because the player is being rewarded experience for the other skills. Health
-         * experience is always granted regardless of the damage type.
+         * If the player doesn't have enough mana then we halve the experience gain.
          */
 
-        this.skills.get(Modules.Skills.Health).addExperience(Math.floor(experience / 3));
-
-        // Once a third of the exp is added to health, we distribute remaining experience to the other skills.
-        experience = Math.ceil(experience - experience / 3);
-
-        // Magic based damage, weapons that are entirely magic based have their experience added to the magic skill.
-        if (weapon.isMagic())
-            return this.skills.get(Modules.Skills.Magic).addExperience(experience);
-
-        // Ranged/archery based damage, we add remaining experience to the archery skill.
-        if (this.isRanged())
-            return this.skills.get(Modules.Skills.Archery).addExperience(experience);
+        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
 
         /**
-         * If the weapon is both a strength and accuracy weapon, then we evenly distribute
-         * the remaining experience to both the strength and accuracy skills. Otherwise
-         * we add the remaining experience to the skill that the weapon is based on. Default
-         * is accuracy if the weapon is not based on any skill.
+         * Since there are four combat skills, we evenly distribute the experience between them.
+         * Depending on the attack style, we add a different amount of experience to each skill.
          */
 
-        if (weapon.isStrength() && weapon.isAccuracy()) {
-            this.skills.get(Modules.Skills.Strength).addExperience(Math.floor(experience / 2));
-            this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience / 2));
-        } else if (weapon.isStrength())
-            this.skills.get(Modules.Skills.Strength).addExperience(experience);
-        else this.skills.get(Modules.Skills.Accuracy).addExperience(experience);
+        this.skills.get(Modules.Skills.Health).addExperience(Math.ceil(experience / 4), false);
+
+        // Archery directs experience to the archery skill.
+        if (this.isArcher())
+            return this.skills
+                .get(Modules.Skills.Archery)
+                .addExperience(Math.ceil(experience * 0.75), false);
+
+        // Magic directs experience to the magic skill.
+        if (this.isMagic())
+            return this.skills
+                .get(Modules.Skills.Magic)
+                .addExperience(Math.ceil(experience * 0.75), false);
+
+        /**
+         * The rest of the experiences are distributed according to the attack style selected.
+         */
+
+        switch (weapon.attackStyle) {
+            // Stab gives the remaining accuracy experience.
+            case Modules.AttackStyle.Stab: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Slash gives the remaining strength experience.
+            case Modules.AttackStyle.Slash: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Defense gives the remaining defence experience.
+            case Modules.AttackStyle.Defensive: {
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Crush gives accuracy + strength experience.
+            case Modules.AttackStyle.Crush: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Shared experience evenly distributes the experience between all skills.
+            case Modules.AttackStyle.Shared: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                break;
+            }
+
+            // Axe hacking attack style gives strength + defence experience.
+            case Modules.AttackStyle.Hack: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Axe chop gives accuracy + defence experience.
+            case Modules.AttackStyle.Chop: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                break;
+            }
+
+            // Default (unarmed)
+            default: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+        }
     }
 
     /**
@@ -804,7 +933,15 @@ export default class Player extends Character {
         this.setOrientation(orientation);
 
         // Player has stopped on top of an item.
-        if (entity?.isItem()) this.inventory.add(entity);
+        if (entity?.isItem()) {
+            // Prevent picking up dropped items that belong to other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(
+                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                );
+
+            this.inventory.add(entity);
+        }
 
         // Update the player's position.
         if (!this.isInvalidMovement()) this.setPosition(x, y);
@@ -946,7 +1083,10 @@ export default class Player extends Character {
      */
 
     public getMovementSpeed(): number {
-        let speed = Modules.Defaults.MOVEMENT_SPEED, // Start with default.
+        let speed =
+                this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
+                    ? Modules.Defaults.MOVEMENT_SPEED
+                    : this.overrideMovementSpeed, // Start with default.
             armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
 
@@ -958,6 +1098,9 @@ export default class Player extends Character {
 
         // Apply a 10% speed boost if the player running effect is present.
         if (this.running) speed = Math.floor(speed * 0.9);
+
+        // Apply a 20% speed boost if the player is using the hot sauce.
+        if (this.hotSauce) speed = Math.floor(speed * 0.8);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
@@ -989,9 +1132,11 @@ export default class Player extends Character {
      * @param running Whether or not the player is running.
      */
 
-    public setRunning(running: boolean): void {
+    public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
+        // Update the hot sauce status.
+        this.hotSauce = hotSauce;
         this.running = running;
 
         this.sendToRegions(
@@ -1000,6 +1145,16 @@ export default class Player extends Character {
                 movementSpeed: this.getMovementSpeed()
             })
         );
+    }
+
+    /**
+     * Applies a visual effect onto a player. This can also be used to remove
+     * an effect by passing in the `Opcodes.Effect.None` opcode.
+     * @param opcode The opcode of the effect we want to apply.
+     */
+
+    public setEffect(opcode: Opcodes.Effect): void {
+        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
 
     /**
@@ -1012,6 +1167,42 @@ export default class Player extends Character {
         this.dualistsMark = dualistsMark;
 
         this.combat.updateLoop();
+    }
+
+    /**
+     * Sets the cold resistance snow potion status and creates a (or updates an existing) timeout.
+     * The effect is removed after a set amount of time specified in the game `Constants`.
+     */
+
+    public setSnowPotionEffect(): void {
+        // If we already have an active effect then we restart the timer.
+        if (this.snowPotion) {
+            clearTimeout(this.snowPotionTimeout!);
+            this.snowPotionTimeout = null;
+        }
+
+        this.snowPotion = true;
+
+        // Remove the freezing special effect if the potion is active.
+        this.setEffect(Opcodes.Effect.None);
+
+        this.notify(
+            `You are now immune to freezing effects for ${
+                Modules.Constants.SNOW_POTION_DURATION / 1000
+            } seconds.`
+        );
+
+        // Set a timeout to remove the effect.
+        this.snowPotionTimeout = setTimeout(() => {
+            // If the player is still in a freezing area, reapply the effect
+            if (this.overlayArea && this.overlayArea.type === 'damage')
+                this.setEffect(Opcodes.Effect.Freeze);
+
+            this.snowPotion = false;
+            this.snowPotionTimeout = null;
+
+            this.notify('Your immunity to freezing effects has worn off.');
+        }, Modules.Constants.SNOW_POTION_DURATION);
     }
 
     /**
@@ -1126,6 +1317,8 @@ export default class Player extends Character {
      */
 
     public override hasArrows(): boolean {
+        if (!this.quests.isTutorialFinished()) return true;
+
         return this.equipment.getArrows().count > 0;
     }
 
@@ -1305,6 +1498,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player is using archery-based weapons.
+     */
+
+    public isArcher(): boolean {
+        return this.equipment.getWeapon().isArcher();
+    }
+
+    /**
      * Players obtain their poisoning abilities from their weapon. Certain
      * weapons may be imbued with a poison effect. This checks if that status
      * is active.
@@ -1402,10 +1603,10 @@ export default class Player extends Character {
             oFormattedName = Utils.formatName(playerName), // Formated username of the player receiving the message.
             formattedName = Utils.formatName(source || this.username); // Formatted username of the source
 
-        if (source) this.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
-        else otherPlayer.notify(`[From ${formattedName}]: ${message}`, 'aquamarine');
+        if (source) this.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
+        else otherPlayer.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
 
-        if (!source) this.notify(`[To ${oFormattedName}]: ${message}`, 'aquamarine');
+        if (!source) this.notify(message, 'aquamarine', `[To ${oFormattedName}]`, true);
     }
 
     /**
@@ -1443,7 +1644,7 @@ export default class Player extends Character {
         let name = Utils.formatName(this.username);
 
         if (this.rank !== Modules.Ranks.None) {
-            name = `[${Modules.Ranks[this.rank]}] ${name}`;
+            name = `[${Modules.RankTitles[this.rank]}] ${name}`;
             colour = global ? '' : Modules.RankColours[this.rank];
         }
 
@@ -1497,18 +1698,19 @@ export default class Player extends Character {
      * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour = '', bypass = false): void {
+    public notify(message: string, colour = '', source = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
-        if (bypass && Date.now() - this.lastNotify < 250) return;
+        if (!bypass && Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
         this.send(
             new Notification(Opcodes.Notification.Text, {
                 message,
-                colour
+                colour,
+                source
             })
         );
 
@@ -1639,6 +1841,7 @@ export default class Player extends Character {
     public override getAccuracyLevel(): number {
         // We use magic level for accuracy when the player is using a magic weapon.
         if (this.isMagic()) return this.skills.get(Modules.Skills.Magic).level;
+        if (this.isArcher()) return this.skills.get(Modules.Skills.Archery).level;
 
         return this.skills.get(Modules.Skills.Accuracy).level;
     }
@@ -1660,11 +1863,29 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The player's defense level from the skills controller.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.skills.get(Modules.Skills.Defense).level;
+    }
+
+    /**
      * @returns The player's magic level from the skills controller.
      */
 
     private getMagicLevel(): number {
         return this.skills.get(Modules.Skills.Magic).level;
+    }
+
+    /**
+     * @param weaponType The weapon type we are checking for.
+     * @returns The player's last attack style. Will return undefined and then a default
+     * value will be used.
+     */
+
+    public getLastAttackStyle(weaponType: string): Modules.AttackStyle {
+        return this.lastStyles[weaponType];
     }
 
     /**
@@ -1685,7 +1906,7 @@ export default class Player extends Character {
         }
 
         // Return the archery bonus if using ranged weapons.
-        if (this.isRanged()) return this.getBonuses().archery;
+        if (this.isArcher()) return this.getBonuses().archery;
 
         return this.getBonuses().strength;
     }
@@ -1697,8 +1918,8 @@ export default class Player extends Character {
      */
 
     public override getSkillDamageLevel(): number {
-        if (this.equipment.getWeapon().isMagic()) return this.getMagicLevel();
-        if (this.isRanged()) return this.getArcheryLevel();
+        if (this.isMagic()) return this.getMagicLevel();
+        if (this.isArcher()) return this.getArcheryLevel();
 
         return this.getStrengthLevel();
     }
@@ -1723,8 +1944,11 @@ export default class Player extends Character {
      */
 
     public override getProjectileName(): string {
+        // Use `Character` default `projectileName` in tutorial.
+        if (!this.quests.isTutorialFinished()) return this.projectileName;
+
         // Use the projectile name of the arrows if the player is using ranged weapons.
-        if (this.isRanged() && !this.isMagic()) return this.equipment.getArrows().projectileName;
+        if (this.isArcher()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
     }

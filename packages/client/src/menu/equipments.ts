@@ -3,7 +3,6 @@ import Menu from './menu';
 import Util from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
-import _ from 'lodash';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type SpritesController from '../controllers/sprites';
@@ -137,29 +136,31 @@ export default class Equipments extends Menu {
             bonuses: Bonuses = Util.getEmptyBonuses();
 
         // iterate through all the equipments and add up the stats.
-        _.each(this.player.equipments, (equipment: Equipment) => {
-            if (!equipment.exists()) return;
+        for (let equipment of Object.values(this.player.equipments)) {
+            if (!equipment.exists()) continue;
 
             attackStats.crush += equipment.attackStats.crush;
             attackStats.slash += equipment.attackStats.slash;
             attackStats.stab += equipment.attackStats.stab;
+            attackStats.archery += equipment.attackStats.archery;
             attackStats.magic += equipment.attackStats.magic;
 
             defenseStats.crush += equipment.defenseStats.crush;
             defenseStats.slash += equipment.defenseStats.slash;
             defenseStats.stab += equipment.defenseStats.stab;
+            defenseStats.archery += equipment.defenseStats.archery;
             defenseStats.magic += equipment.defenseStats.magic;
 
             bonuses.accuracy += equipment.bonuses.accuracy;
             bonuses.strength += equipment.bonuses.strength;
             bonuses.archery += equipment.bonuses.archery;
             bonuses.magic += equipment.bonuses.magic;
-        });
+        }
 
-        let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
-            bonsuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
+        let stats = ['Crush', 'Slash', 'Stab', 'Archery', 'Magic'],
+            statBonuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
 
-        _.each(stats, (stat: string) => {
+        for (let stat of stats) {
             let lStat = stat.toLowerCase(),
                 attackElement = this.attackStats.querySelector(`.${lStat.toLowerCase()}`)!,
                 defenseElement = this.defenseStats.querySelector(`.${lStat.toLowerCase()}`)!,
@@ -168,15 +169,15 @@ export default class Equipments extends Menu {
 
             attackElement.textContent = `${stat}: ${attackStat > 0 ? '+' : ''}${attackStat}`;
             defenseElement.textContent = `${stat}: ${defenseStat > 0 ? '+' : ''}${defenseStat}`;
-        });
+        }
 
-        _.each(bonsuses, (bonus: string) => {
+        for (let bonus of statBonuses) {
             let lBonus = bonus.toLowerCase(),
                 bonusElement = this.bonuses.querySelector(`.${lBonus.toLowerCase()}`)!,
                 bonusStat = bonuses[lBonus as keyof Bonuses];
 
             bonusElement.textContent = `${bonus}: ${bonusStat > 0 ? '+' : ''}${bonusStat}`;
-        });
+        }
     }
 
     /**

@@ -3,7 +3,6 @@ import QuestIndex from './quest/impl';
 import quests from '../../../../../data/quests.json';
 import { Quest as QuestPacket } from '../../../../network/packets';
 
-import _ from 'lodash-es';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { PointerData } from '@kaetram/common/types/pointer';
@@ -28,19 +27,22 @@ export default class Quests {
 
     public constructor(private player: Player) {
         // Iterates through the raw quests in the JSON and creates an instance of them
-        _.each(quests, (rawQuest: RawQuest, key: string) => {
+        for (let key in quests) {
             // Checks if the JSON quest exists in our implementation.
-            if (!(key in QuestIndex)) return;
+            if (!(key in QuestIndex)) continue;
 
             // Create an instance and pass the quest data along.
-            let quest = new QuestIndex[key as keyof typeof QuestIndex](key, rawQuest);
+            let quest = new QuestIndex[key as keyof typeof QuestIndex](
+                key,
+                quests[key as keyof typeof quests]
+            );
 
             this.quests[key] = quest;
 
             quest.onProgress(this.handleProgress.bind(this));
             quest.onPointer(this.handlePointer.bind(this));
             quest.onPopup(this.handlePopup.bind(this));
-        });
+        }
     }
 
     /**
@@ -50,12 +52,12 @@ export default class Quests {
      */
 
     public load(questInfo: QuestData[]): void {
-        _.each(questInfo, (info: QuestData) => {
+        for (let info of questInfo) {
             let quest = this.get(info.key);
 
             // Set quest stage data without making a progress callback if it exists.
             if (quest) quest.setStage(info.stage, info.subStage, false);
-        });
+        }
 
         // Trigger `loaded()` when we have no database information.
         if (questInfo.length === 0) this.forEachQuest((quest: Quest) => quest.loaded());
@@ -188,6 +190,31 @@ export default class Quests {
     }
 
     /**
+     * Used for checking whether the player can attack within the tutorial. Due to people
+     * farming the tutorial area, we need to limit the times they are allowed to attack.
+     * They can only kill mobs within the tutorial if that is the current task.
+     * @returns Whether or not the tutorial task is that of a kill task.
+     */
+
+    public canAttackInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isKillTask();
+    }
+
+    /**
+     * Similar to `canAttackInTutorial` but for cutting trees. We want to prevent
+     * people from sitting in the tutorial area and continuously cutting trees.
+     * @returns Whether or not the tutorial task is that of a cut tree task.
+     */
+
+    public canCutTreesInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isCutTreeTask();
+    }
+
+    /**
      * Iterates through all the quests and serializes them (saving the
      * key and progress of each one) and returns a SerializedQuest object.
      * @returns SerializedQuest object containing array of quest data.
@@ -209,7 +236,7 @@ export default class Quests {
      */
 
     public forEachQuest(callback: (quest: Quest) => void): void {
-        _.each(this.quests, callback);
+        for (let key in this.quests) callback(this.quests[key]);
     }
 
     /**

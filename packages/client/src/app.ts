@@ -2,6 +2,7 @@ import install from './lib/pwa';
 import { isMobile } from './utils/detect';
 import Storage from './utils/storage';
 import Util from './utils/util';
+import { onSecondaryPress } from './utils/press';
 
 import Updates from '@kaetram/common/text/en/updates.json';
 
@@ -12,7 +13,7 @@ type KeyDownCallback = (e: KeyboardEvent) => void;
 type KeyUpCallback = (e: KeyboardEvent) => void;
 type LoginCallback = (server?: SerializedServer) => void;
 type LeftClickCallback = (e: MouseEvent) => void;
-type RightClickCallback = (e: PointerEvent) => void;
+type RightClickCallback = (position: { x: number; y: number }) => void;
 type MouseMoveCallback = (e: MouseEvent) => void;
 
 type ValidationType = 'status' | 'validation-error' | 'validation-warning';
@@ -65,7 +66,6 @@ export default class App {
     public statusMessage = '';
 
     private selectedServer?: SerializedServer;
-    private showWorldSelect = false;
 
     public keyDownCallback?: KeyDownCallback;
     public keyUpCallback?: KeyUpCallback;
@@ -112,7 +112,7 @@ export default class App {
 
         this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
 
-        this.gameVersion.textContent = `${this.config.version}`;
+        this.gameVersion.textContent = `${this.config.version}${this.config.minor}`;
 
         // Document callbacks such as clicks and keystrokes.
         document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
@@ -129,9 +129,9 @@ export default class App {
         window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
-        document
-            .querySelector('#canvas')!
-            .addEventListener('contextmenu', this.handleRightClick.bind(this));
+        onSecondaryPress(document.querySelector('#canvas')!, (position) =>
+            this.rightClickCallback?.(position)
+        );
     }
 
     /**
@@ -170,21 +170,6 @@ export default class App {
         if (this.isMenuHidden()) return this.keyDownCallback?.(e);
 
         if (e.key === 'Enter') this.login();
-    }
-
-    /**
-     * Handles the left click action onto the canvas and
-     * returns false so that it cancels the default action.
-     * @param e Event containing click information.
-     * @returns False to cancel default action.
-     */
-
-    public handleRightClick(e: Event): boolean {
-        this.rightClickCallback?.(e as PointerEvent);
-
-        e.preventDefault();
-
-        return false;
     }
 
     /**
@@ -731,17 +716,17 @@ export default class App {
         // If there is only one server, then hide the world select button
         if (servers.length < 2) return;
 
-        this.showWorldSelect = true;
         this.worldSelectButton.hidden = false;
 
-        for (let [i, server] of Object.entries(servers)) {
-            // Create a new <li> element for each server
-            let li = document.createElement('li'),
+        for (let i in servers) {
+            let server = servers[i],
+                // Create a new <li> element for each server
+                li = document.createElement('li'),
                 name = document.createElement('strong'),
                 players = document.createElement('span');
 
             // If this is the first server in the list, select it and mark it as active
-            if (i === '0') li.classList.add('active');
+            if (parseInt(i) === 0) li.classList.add('active');
 
             name.textContent = server.name;
 

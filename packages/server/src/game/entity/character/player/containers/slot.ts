@@ -1,4 +1,6 @@
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import type Item from '../../../objects/item';
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -15,12 +17,12 @@ export default class Slot {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
-    private maxStackSize = 1;
+    private maxStackSize = Modules.Constants.MAX_STACK;
 
     public constructor(
         public index: number,
         public key = '',
-        public count = 0,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -31,9 +33,9 @@ export default class Slot {
      * @param item An item object that we extract data from.
      */
 
-    public update(item: Item): void {
+    public update(item: Item, stackSize = item.maxStackSize): void {
         this.key = item.key;
-        this.count = item.count;
+        this.count = Math.min(item.count, stackSize);
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
@@ -45,34 +47,23 @@ export default class Slot {
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
 
-        if (item.stackable) this.maxStackSize = item.maxStackSize;
+        this.maxStackSize = stackSize;
+
+        if (this.count < 1) log.error('Updating slot with count less than 1:', item.key);
 
         item.despawn(true); // Despawn signal towards the item once we update the slot.
     }
 
     /**
-     * Tries to add an amount to the current count in the slot. If successful
-     * we return true, otherwise we return false.
+     * Tries to add an amount to the current count in the slot.
      * @param amount The amount of an item to add.
-     * @returns Whether or not adding to the slot is successful.
+     * @returns The amount of the item we added.
      */
 
-    public add(amount: number): boolean {
-        if (this.isFull(this.count + amount)) return false;
+    public add(amount: number): number {
+        this.count = Math.min((this.count > 0 ? this.count : 0) + amount, this.maxStackSize);
 
-        this.count += amount;
-
-        return true;
-    }
-
-    /**
-     * Checks if the current slot can hold the item.
-     * @param item The item to check.
-     * @returns Whether or not the item can be held.
-     */
-
-    public canHold(item: Item): boolean {
-        return this.key === item.key && !this.isFull(this.count + item.count);
+        return this.count;
     }
 
     /**
@@ -96,12 +87,12 @@ export default class Slot {
 
     public clear(): void {
         this.key = '';
-        this.count = 0;
+        this.count = -1;
         this.enchantments = {};
 
         this.edible = false;
         this.equippable = false;
-        this.maxStackSize = 1;
+        this.maxStackSize = Modules.Constants.MAX_STACK;
 
         this.name = '';
         this.description = '';
@@ -128,41 +119,34 @@ export default class Slot {
      */
 
     public isEmpty(count = this.count): boolean {
-        return count <= 0;
+        return count < 1;
     }
 
     /**
      * Returns the data in the slot in the form of a SlotData object.
+     * @param clientInfo Whether or not to send the client information.
      * @returns SlotData interface object.
      */
 
-    public serialize(): SlotData {
-        let {
-            index,
-            key,
-            count,
-            enchantments,
-            edible,
-            equippable,
-            name,
-            description,
-            attackStats,
-            defenseStats,
-            bonuses
-        } = this;
-
-        return {
-            index,
-            key,
-            count,
-            enchantments,
-            edible,
-            equippable,
-            name,
-            description,
-            attackStats,
-            defenseStats,
-            bonuses
+    public serialize(clientInfo = false): SlotData {
+        // Base data that is always sent to the client.
+        let data: SlotData = {
+            index: this.index,
+            key: this.key,
+            count: this.count,
+            enchantments: this.enchantments
         };
+
+        if (clientInfo) {
+            data.name = this.name;
+            data.description = this.description;
+            data.edible = this.edible;
+            data.equippable = this.equippable;
+            data.attackStats = this.attackStats;
+            data.defenseStats = this.defenseStats;
+            data.bonuses = this.bonuses;
+        }
+
+        return data;
     }
 }

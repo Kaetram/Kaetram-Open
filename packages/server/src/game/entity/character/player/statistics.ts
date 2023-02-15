@@ -3,6 +3,7 @@ import type { StatisticsData } from '@kaetram/common/types/statistics';
 export default class Statistics {
     public pvpKills = 0;
     public pvpDeaths = 0;
+    public mobKills: { [key: string]: number } = {};
 
     public creationTime = Date.now(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
@@ -21,11 +22,25 @@ export default class Statistics {
     public load(data: StatisticsData): void {
         this.pvpKills = data.pvpKills || this.pvpKills;
         this.pvpDeaths = data.pvpDeaths || this.pvpDeaths;
+        this.mobKills = data.mobKills || this.mobKills;
+
         this.creationTime = data.creationTime || this.creationTime;
         this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
         this.averageTimePlayed = data.averageTimePlayed || this.averageTimePlayed;
         this.lastLogin = data.lastLogin || this.lastLogin;
         this.loginCount = data.loginCount + 1 || this.loginCount;
+    }
+
+    /**
+     * Appends a mob kill onto the statistics. A mob is killed by a player
+     * when they deal the primary amount of damage on the damage table.
+     * @param key The key of the mob that was killed.
+     */
+
+    public addMobKill(key: string): void {
+        if (!(key in this.mobKills)) this.mobKills[key] = 0;
+
+        this.mobKills[key]++;
     }
 
     /**
@@ -62,6 +77,7 @@ export default class Statistics {
         return {
             pvpKills: this.pvpKills,
             pvpDeaths: this.pvpDeaths,
+            mobKills: this.mobKills,
             creationTime: this.creationTime,
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,

@@ -6,7 +6,6 @@ import path from 'node:path';
 import Parser from './parser';
 
 import log from '@kaetram/common/util/log';
-import _ from 'lodash';
 
 let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),
@@ -64,7 +63,7 @@ export default class Exporter {
         });
 
         // Copy tilesets from the map to the client.
-        _.each(tilesets, (_id: number, key: string) => {
+        for (let key in tilesets) {
             let name = `tilesheet-${parseInt(key) + 1}.png`;
 
             fs.copyFile(
@@ -77,7 +76,7 @@ export default class Exporter {
                         });
                 }
             );
-        });
+        }
     }
 
     /**
