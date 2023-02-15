@@ -122,7 +122,7 @@ export default abstract class Collection<EntityType extends Entity> {
      */
 
     public get(username: string): Entity | undefined {
-        return _.find(this.entities, (entity: EntityType) => {
+        return Object.values(this.entities).find((entity: EntityType) => {
             return entity.username.toLowerCase() === username.toLowerCase();
         });
     }
@@ -141,7 +141,7 @@ export default abstract class Collection<EntityType extends Entity> {
      */
 
     public getUsernames(): string[] {
-        return _.map(this.entities, (entity: EntityType) => entity.username);
+        return Object.values(this.entities).map((entity: EntityType) => entity.username);
     }
 
     /**
@@ -149,7 +149,7 @@ export default abstract class Collection<EntityType extends Entity> {
      */
 
     public forEachEntity(callback: (entity: EntityType) => void) {
-        _.each(this.entities, callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
     }
 
     /**

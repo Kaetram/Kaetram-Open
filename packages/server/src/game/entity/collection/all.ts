@@ -87,7 +87,7 @@ export default class AllCollection {
      */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
     }
 
     /**
