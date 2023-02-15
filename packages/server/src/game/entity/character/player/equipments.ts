@@ -86,7 +86,7 @@ export default class Equipments {
 
         if (!equipment.isEmpty())
             this.player.inventory.add(
-                new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments)
+                new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
             );
 
         if (equipment instanceof Weapon)
@@ -109,7 +109,7 @@ export default class Equipments {
 
         if (!equipment.key) return;
 
-        let item = new Item(equipment.key, -1, -1, true, equipment.count, equipment.enchantments),
+        let item = new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments),
             count = this.player.inventory.add(item);
 
         // We stop here if the item cannot be added to the inventory.
