@@ -1,3 +1,5 @@
+import { Opcodes } from '@kaetram/common/network';
+
 import type { OverlayType } from '@kaetram/common/types/map';
 import type Character from '../../entity/character/character';
 import type Mob from '../../entity/character/mob/mob';
@@ -85,6 +87,9 @@ export default class Area {
         if (player.instance in this.players) return;
 
         this.players[player.instance] = player;
+
+        // TODO - Expand this to support different kinds of effects
+        if (!player.snowPotion) player.setEffect(Opcodes.Effect.Freeze);
     }
 
     /**
@@ -108,6 +113,8 @@ export default class Area {
 
     public removePlayer(player: Player) {
         delete this.players[player.instance];
+
+        player.setEffect(Opcodes.Effect.None);
     }
 
     /**
