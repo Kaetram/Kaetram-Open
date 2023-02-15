@@ -64,7 +64,7 @@ export default class Exporter {
         });
 
         // Copy tilesets from the map to the client.
-        _.each(tilesets, (_id: number, key: string) => {
+        for (let key in tilesets) {
             let name = `tilesheet-${parseInt(key) + 1}.png`;
 
             fs.copyFile(
@@ -77,7 +77,7 @@ export default class Exporter {
                         });
                 }
             );
-        });
+        }
     }
 
     /**
