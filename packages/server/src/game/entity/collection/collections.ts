@@ -6,7 +6,6 @@ import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
 import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
 import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
 import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
-import _ from 'lodash-es';
 
 import type Collection from '@kaetram/server/src/game/entity/collection/collection';
 import type World from '@kaetram/server/src/game/world';
@@ -53,9 +52,9 @@ export default class Collections {
     }
 
     /**
-     * Iterates through each colleciton and returns a callback for it.
+     * Iterates through each collection and returns a callback for it.
      */
     public forEachCollection(callback: (collection: Collection<Entity>) => void): void {
-        _.each(this.all, callback);
+        for (let collection of this.all) callback(collection);
     }
 }

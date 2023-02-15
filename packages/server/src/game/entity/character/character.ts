@@ -7,7 +7,6 @@ import Entity from '../entity';
 import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
 import Formulas from '../../../info/formulas';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -132,7 +131,7 @@ export default abstract class Character extends Entity {
         if (this.poison.expired()) return this.setPoison();
 
         // Create a hit object for poison damage and serialize it.
-        let hit = new Hit(Modules.Hits.Poison, this.poison.damage, false, true).serialize();
+        let hit = new Hit(Modules.Hits.Poison, this.poison.damage).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -158,11 +157,16 @@ export default abstract class Character extends Entity {
 
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
+            // Ignore mob-on-mob AoE damage.
+            if (character.isMob() && this.isMob()) return;
+
+            // Ignore player-on-player AoE damage unless PvP is enabled.
+            if (character.isPlayer() && this.isPlayer() && !this.pvp && !character.pvp) return;
+
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
                     Modules.Hits.Damage,
                     Math.floor(damage / distance),
-                    false,
                     false,
                     distance
                 ).serialize();
@@ -179,6 +183,32 @@ export default abstract class Character extends Entity {
             // Apply the damage to the character.
             character.hit(hit.damage, attacker);
         }, range);
+    }
+
+    /**
+     * Cold damage occurs when the player is in a mountainous area. This effect
+     * persists for as long as the player doesn't have the appropriate gear, or
+     * a snow potion.
+     */
+
+    public handleColdDamage(): void {
+        // Only players that are in a damage-based overlay area can be affected.
+        if (!this.isPlayer() || !this.overlayArea || this.snowPotion) return;
+
+        // Create a hit object for cold damage and serialize it.
+        let hit = new Hit(Modules.Hits.Cold, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(Modules.Constants.COLD_EFFECT_DAMAGE);
     }
 
     /**
@@ -269,11 +299,11 @@ export default abstract class Character extends Entity {
         // If this is an AoE attack, we will damage all nearby characters.
         if (aoe) this.handleAoE(damage, attacker, aoe);
 
-        // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) return this.deathCallback?.(attacker);
-
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        // Call the death callback if the character reaches 0 hitpoints.
+        if (this.isDead()) return this.deathCallback?.(attacker);
 
         // Poison only occurs when we land a hit and attacker has a poisonous weapon.
         if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
@@ -327,7 +357,7 @@ export default abstract class Character extends Entity {
      */
 
     public getAttackerCount(): number {
-        return _.size(this.attackers);
+        return this.attackers.length;
     }
 
     /**
@@ -390,6 +420,14 @@ export default abstract class Character extends Entity {
      */
 
     public getArcheryLevel(): number {
+        return 1;
+    }
+
+    /**
+     * @returns The character's current defense level.
+     */
+
+    public getDefenseLevel(): number {
         return 1;
     }
 
@@ -614,8 +652,19 @@ export default abstract class Character extends Entity {
             return false;
         }
 
-        // TODO - Separate team conditional into its own thing.
-        return this.pvp && target.pvp && this.team !== target.team;
+        // Use minigame logic to determine if the players can attack each other.
+        if (this.inMinigame() && target.inMinigame()) return this.team !== target.team;
+
+        // Prevent attacking in non-pvp areas.
+        if (!this.pvp && !target.pvp) return false;
+
+        // Prevent attacking when level difference is too great.
+        if (Math.abs(this.level - target.level) > 30) {
+            this.notify('You cannot attack someone more than 30 levels above or below you.');
+            return false;
+        }
+
+        return true;
     }
 
     /**

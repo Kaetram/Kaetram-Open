@@ -6,8 +6,12 @@
 
   "villagegirl": {
     "name": "Wife",
-    "text": [
-      "Please, call me Azaria."]
+    "text": ["Please, call me Azaria."]
+  },
+
+  "villagegirl2": {
+    "name": "Village Girl",
+    "text": ["Hope you're having a good day!"]
   },
 
   "villager": {
@@ -234,5 +238,18 @@
   "royalguard": {
     "name": "Royal Guard",
     "text": ["There shall be no trespassing!"]
+  },
+
+  "picklenpc": {
+    "name": "Sea Cucumber"
+  },
+
+  "guildnpc": {
+    "name": "Guild Master"
+  },
+
+  "santaelfnpc": {
+    "name": "Santa's Helper",
+    "text": ["What do you want? I'm busy being overworked."]
   }
 }

@@ -10,7 +10,6 @@ import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
 
-import _ from 'lodash-es';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -181,10 +180,10 @@ export default class World {
      * @param logout The status we are updating the user to.
      */
 
-    public syncFriendsList(username: string, logout = false): void {
+    public syncFriendsList(username: string, logout = false, serverId = config.serverId): void {
         this.entities.forEachPlayer((player: Player) => {
             if (player.friends.hasFriend(username))
-                player.friends.setStatus(username, !logout, config.serverId);
+                player.friends.setStatus(username, !logout, serverId);
         });
     }
 
@@ -242,7 +241,7 @@ export default class World {
      */
 
     public getPopulation(): number {
-        return _.size(this.entities.listOfPlayers);
+        return Object.keys(this.entities.listOfPlayers).length;
     }
 
     /**

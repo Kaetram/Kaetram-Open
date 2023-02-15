@@ -3,7 +3,6 @@ import Commands from './commands';
 import Creator from '../database/mongodb/creator';
 import { Spawn } from '../network/packets';
 
-import _ from 'lodash-es';
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -214,16 +213,16 @@ export default class Incoming {
      */
 
     private handleWho(message: string[]): void {
-        _.each(message, (instance: string) => {
+        for (let instance of message) {
             let entity = this.entities.get(instance);
 
-            if (!entity || entity.dead) return;
+            if (!entity || entity.dead) continue;
 
             /* We handle player-specific entity statuses here. */
             this.player.send(
                 new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
             );
-        });
+        }
     }
 
     /**
@@ -254,7 +253,7 @@ export default class Incoming {
             } = data,
             entity: Entity;
 
-        if (this.player.dead) return;
+        if (this.player.isDead()) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request: {

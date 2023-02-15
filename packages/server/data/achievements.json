@@ -80,6 +80,12 @@
         "hidden": true
     },
 
+    "mermaidguard": {
+        "name": "Mermaid Guard",
+        "description": "Defeat the mermaid guarding the Sea Cucumber!",
+        "hidden": true
+    },
+
     "pirates": {
         "name": "Pirates",
         "description": "There's skeleton pirates under the sea?",

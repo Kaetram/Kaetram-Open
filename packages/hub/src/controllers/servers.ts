@@ -1,7 +1,6 @@
 import Server from '../model/server';
 
 import config from '@kaetram/common/config';
-import _ from 'lodash-es';
 
 import type { SerializedServer } from '@kaetram/common/types/api';
 
@@ -17,6 +16,7 @@ export interface ServerData {
     apiPort: number;
     accessToken: string;
     remoteServerHost: string;
+    remoteApiHost: string;
     maxPlayers: number; // Max players in the world.
     players: string[]; // String array of usernames
 }
@@ -65,12 +65,14 @@ export default class Servers {
         if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
 
         this.servers[data.serverId] = new Server(
+            data.serverId,
             `${config.name} ${data.serverId}`,
             data.host,
             data.port,
             data.apiPort,
             data.accessToken,
             data.remoteServerHost,
+            data.remoteApiHost,
             data.players,
             data.maxPlayers
         );
@@ -96,7 +98,7 @@ export default class Servers {
      */
 
     public getAll(): SerializedServer[] {
-        return _.map(this.servers, (server: Server) => {
+        return Object.values(this.servers).map((server) => {
             return server.serialize();
         });
     }
@@ -108,7 +110,7 @@ export default class Servers {
      */
 
     public hasEmpty(): boolean {
-        return !!_.some(this.servers, (server: Server) => {
+        return Object.values(this.servers).some((server: Server) => {
             return server.players.length < server.maxPlayers - 1;
         });
     }
@@ -136,9 +138,10 @@ export default class Servers {
      */
 
     public findPlayer(username: string): Server | undefined {
-        return _.find(this.servers, (server: Server) => {
-            return _.includes(server.players, username);
-        });
+        for (let key in this.servers)
+            if (this.servers[key].players.includes(username)) return this.servers[key];
+
+        return undefined;
     }
 
     /**
@@ -169,7 +172,7 @@ export default class Servers {
     public getTotalPlayers(): number {
         let totalPlayers = 0;
 
-        _.each(this.servers, (server: Server) => (totalPlayers += server.players.length));
+        for (let server of Object.values(this.servers)) totalPlayers += server.players.length;
 
         return totalPlayers;
     }
@@ -180,7 +183,7 @@ export default class Servers {
      */
 
     public forEachServer(callback: (server: Server, key: string) => void): void {
-        _.each(this.servers, callback);
+        for (let key in this.servers) callback(this.servers[key], key);
     }
 
     /**

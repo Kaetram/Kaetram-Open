@@ -12,7 +12,8 @@ export enum List {
 export enum Equipment {
     Batch,
     Equip,
-    Unequip
+    Unequip,
+    Style
 }
 
 export enum Movement {
@@ -184,6 +185,7 @@ export enum Bubble {
 }
 
 export enum Effect {
+    None,
     Speed,
     Critical,
     Freeze,

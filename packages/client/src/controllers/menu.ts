@@ -16,14 +16,12 @@ import Trade from '../menu/trade';
 import Interact from '../menu/interact';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-import _ from 'lodash-es';
 
 import type Game from '../game';
 import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
-    private interact: Interact = new Interact();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -38,6 +36,7 @@ export default class MenuController {
     private quests: Quests;
     private friends: Friends;
     private trade: Trade;
+    private interact: Interact;
 
     public header: Header;
 
@@ -58,6 +57,7 @@ export default class MenuController {
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
         this.trade = new Trade(this.inventory);
+        this.interact = new Interact(game.player);
 
         this.menus = {
             inventory: this.inventory,
@@ -390,7 +390,7 @@ export default class MenuController {
     }
 
     /**
-     * Sends a tade packet to the server indicating that the session has been closed.
+     * Sends a trade packet to the server indicating that the session has been closed.
      */
 
     private handleTradeClose(): void {
@@ -405,6 +405,6 @@ export default class MenuController {
      */
 
     private forEachMenu(callback: (menu: Menu) => void): void {
-        _.each(this.menus, callback);
+        for (let menu of Object.values(this.menus)) callback(menu);
     }
 }

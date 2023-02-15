@@ -18,12 +18,29 @@ class Log {
     private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
 
-    // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null; // Write to a different stream
+    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
     private logStream = fs.createWriteStream(this.logStreamPath);
     private bugStream = fs.createWriteStream(this.bugStreamPath);
 
+    private logFolderPath = '../logs';
+
+    private chatStream = this.createLogStream('chat');
+    private dropsStream = this.createLogStream('drops');
+    private generalStream = this.createLogStream('general');
+    private storesStream = this.createLogStream('stores');
+    private tradesStream = this.createLogStream('trades');
+
     private debugging = config.debugging;
+
+    public constructor() {
+        if (!fs.existsSync(this.logFolderPath)) fs.mkdirSync(this.logFolderPath);
+    }
+
+    private createLogStream(name: string) {
+        let log = path.resolve(this.logFolderPath, `${name}.log`);
+
+        return fs.createWriteStream(log, { flags: 'a' });
+    }
 
     public info(...data: unknown[]): void {
         this.send('info', data);
@@ -61,6 +78,27 @@ class Log {
 
     public log(...data: unknown[]): void {
         this.write(new Date(), '[LOG]', data, this.logStream);
+    }
+
+    // Game-specific loggers
+    public chat(...data: unknown[]): void {
+        this.write(new Date(), '[CHAT]', data, this.chatStream);
+    }
+
+    public drop(...data: unknown[]): void {
+        this.write(new Date(), '[DROP]', data, this.dropsStream);
+    }
+
+    public general(...data: unknown[]): void {
+        this.write(new Date(), '[GENERAL]', data, this.generalStream);
+    }
+
+    public stores(...data: unknown[]): void {
+        this.write(new Date(), '[STORES]', data, this.storesStream);
+    }
+
+    public trade(...data: unknown[]): void {
+        this.write(new Date(), '[TRADE]', data, this.tradesStream);
     }
 
     /**

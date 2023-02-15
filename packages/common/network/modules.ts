@@ -77,7 +77,8 @@ export enum MenuActions {
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
-    Examine = 'examine'
+    Examine = 'examine',
+    AddFriend = 'addfriend'
 }
 
 export enum InteractActions {}
@@ -91,8 +92,9 @@ export enum Hits {
     LevelUp,
     Critical,
     Stun,
-    Explosive,
-    Profession
+    Profession,
+    Cold,
+    Terror
 }
 
 export enum Equipment {
@@ -102,6 +104,29 @@ export enum Equipment {
     Ring,
     Weapon,
     Arrows
+}
+
+export enum AttackStyle {
+    None,
+
+    // Melee
+    Stab, // Accuracy experience
+    Slash, // Strength experience
+    Defensive, // Defense experience
+    Crush, // Accuracy + Strength experience
+    Shared, // Accuracy + Strength + Defense experience
+    Hack, // Strength + Defense experience
+    Chop, // Accuracy + Defense experience
+
+    // Archery
+    Accurate, // Higher accuracy but slower
+    Fast, // Faster but lower accuracy
+
+    // Magic
+    Focused, // Slower but higher damage
+
+    // Archery and Magic
+    LongRange // Increased attack range and less accurate
 }
 
 export enum Hovering {
@@ -141,8 +166,21 @@ export enum Skills {
     Health,
     Magic,
     Mining,
-    Strength
+    Strength,
+    Defense
 }
+
+// It's easier to define and swap order around here.
+export let SkillsOrder = [
+    Skills.Health,
+    Skills.Accuracy,
+    Skills.Strength,
+    Skills.Defense,
+    Skills.Archery,
+    Skills.Magic,
+    Skills.Lumberjacking,
+    Skills.Mining
+];
 
 export enum Enchantment {
     Bloodsucking,
@@ -173,6 +211,15 @@ export enum Effects {
     Freezing,
     Poisonball,
     Boulder
+}
+
+export enum DamageStyle {
+    None,
+    Crush,
+    Slash,
+    Stab,
+    Magic,
+    Archery
 }
 
 export enum Medals {
@@ -293,6 +340,11 @@ export let DamageColours = {
     [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
+    },
+
+    [Hits.Cold]: {
+        fill: 'rgb(52, 195, 235)',
+        stroke: 'rgb(14, 138, 227)'
     }
 };
 
@@ -330,6 +382,11 @@ export let SkillExpColours = {
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
         stroke: 'rgb(189, 172, 151)'
+    },
+
+    [Skills.Defense]: {
+        fill: 'rgb(110, 158, 255)',
+        stroke: 'rgb(7, 63, 176)'
     }
 };
 
@@ -348,9 +405,9 @@ export let EntityScale = {
 export let PoisonInfo = {
     [PoisonTypes.Venom]: {
         name: 'Venom',
-        damage: 2,
+        damage: 5,
         duration: 30,
-        rate: 3 // every second
+        rate: 3 // every 3 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -377,7 +434,7 @@ export const Constants = {
     MAX_LEVEL: 135, // Maximum attainable level.
     INVENTORY_SIZE: 20, // Maximum inventory size
     BANK_SIZE: 69, // Maximum bank size
-    DROP_PROBABILITY: 1250, // 1 in 2500
+    DROP_PROBABILITY: 10_000, // 1 in 10000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
@@ -392,7 +449,11 @@ export const Constants = {
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
-    ARCHER_ATTACK_RANGE: 8 // Default attack range for bows if no other range is specified.
+    ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
+    MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
+    EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
+    SNOW_POTION_DURATION: 60_000, // 60 seconds
+    COLD_EFFECT_DAMAGE: 6
 };
 
 export enum MinigameConstants {
@@ -422,7 +483,6 @@ export enum ItemDefaults {
 
 // Defaults that apply specifically to mobs
 export enum MobDefaults {
-    EXPERIENCE = 1, // Default 1 exp granted if not specified
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
