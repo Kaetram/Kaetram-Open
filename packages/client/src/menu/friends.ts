@@ -3,11 +3,9 @@ import Menu from './menu';
 import Util from '../utils/util';
 import { isLargeScreen } from '../utils/detect';
 
-import _ from 'lodash';
 import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
-import type Friend from '../entity/character/player/friend';
 
 type ConfirmCallback = (username: string, remove?: boolean) => void;
 
@@ -73,9 +71,9 @@ export default class Friends extends Menu {
     public handle(opcode: Opcodes.Friends, username = '', status = false, serverId = -1): void {
         switch (opcode) {
             case Opcodes.Friends.List: {
-                _.each(this.player.friends, (friend: Friend) =>
-                    this.createElement(friend.username, friend.online, friend.serverId)
-                );
+                for (let friend of Object.values(this.player.friends))
+                    this.createElement(friend.username, friend.online, friend.serverId);
+
                 break;
             }
 
