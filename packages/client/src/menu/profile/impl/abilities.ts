@@ -57,7 +57,7 @@ export default class Abilities extends Menu {
      * @param player The player object we are synchronizing abilities from.
      */
 
-    public override synchronize(player: Player): void {
+    public override synchronize(): void {
         // Hide all abilities and start from scratch.
         this.hideAll();
 
@@ -69,7 +69,7 @@ export default class Abilities extends Menu {
          * the adequate index and add it to the appropriate list.
          */
 
-        _.each(player.abilities, (ability: Ability) => {
+        _.each(this.player.abilities, (ability: Ability) => {
             switch (ability.type) {
                 case Modules.AbilityType.Active: {
                     this.setActiveAbility(activeIndex, ability.key, ability.level, ability.active);
