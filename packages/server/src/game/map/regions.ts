@@ -224,7 +224,7 @@ export default class Regions {
                 newRegions = this.enter(entity, region);
 
             // Update the recently left regions to the entity.
-            entity.setRecentRegions(_.difference(oldRegions, newRegions));
+            entity.setRecentRegions(oldRegions.filter((region) => !newRegions.includes(region)));
         }
 
         return isNewRegion;
@@ -477,7 +477,7 @@ export default class Regions {
      */
 
     public getRegion(x: number, y: number): number {
-        let region = _.findIndex(this.regions, (region: Region) => {
+        let region = this.regions.findIndex((region: Region) => {
             return region.inRegion(x, y);
         });
 
@@ -720,7 +720,7 @@ export default class Regions {
      */
 
     public forEachSurroundingRegion(region: number, callback: RegionCallback): void {
-        _.each(this.getSurroundingRegions(region), callback);
+        for (let surrounding of this.getSurroundingRegions(region)) callback(surrounding);
     }
 
     /**
@@ -729,7 +729,7 @@ export default class Regions {
      */
 
     public forEachRegion(callback: (region: Region, index: number) => void): void {
-        _.each(this.regions, callback);
+        for (let [index, region] of Object.entries(this.regions)) callback(region, parseInt(index));
     }
 
     /**

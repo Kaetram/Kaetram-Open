@@ -229,7 +229,7 @@ export default class Achievement {
      */
 
     public hasMob(mob: Mob): boolean {
-        return _.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
+        return Array.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
     }
 
     /**

@@ -70,6 +70,6 @@ export default class InfoController {
      */
 
     public forEachInfo(callback: (info: Splat) => void): void {
-        for (let info in Object.values(this.infos)) callback(this.infos[info]);
+        for (let info of Object.values(this.infos)) callback(info);
     }
 }

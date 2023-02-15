@@ -27,9 +27,9 @@ export default class Quests {
 
     public constructor(private player: Player) {
         // Iterates through the raw quests in the JSON and creates an instance of them
-        _.each(quests, (rawQuest: RawQuest, key: string) => {
+        for (let [key, rawQuest] of Object.entries(quests)) {
             // Checks if the JSON quest exists in our implementation.
-            if (!(key in QuestIndex)) return;
+            if (!(key in QuestIndex)) continue;
 
             // Create an instance and pass the quest data along.
             let quest = new QuestIndex[key as keyof typeof QuestIndex](key, rawQuest);
@@ -39,7 +39,7 @@ export default class Quests {
             quest.onProgress(this.handleProgress.bind(this));
             quest.onPointer(this.handlePointer.bind(this));
             quest.onPopup(this.handlePopup.bind(this));
-        });
+        }
     }
 
     /**
@@ -49,12 +49,12 @@ export default class Quests {
      */
 
     public load(questInfo: QuestData[]): void {
-        _.each(questInfo, (info: QuestData) => {
+        for (let info of questInfo) {
             let quest = this.get(info.key);
 
             // Set quest stage data without making a progress callback if it exists.
             if (quest) quest.setStage(info.stage, info.subStage, false);
-        });
+        }
 
         // Trigger `loaded()` when we have no database information.
         if (questInfo.length === 0) this.forEachQuest((quest: Quest) => quest.loaded());
@@ -233,7 +233,7 @@ export default class Quests {
      */
 
     public forEachQuest(callback: (quest: Quest) => void): void {
-        _.each(this.quests, callback);
+        for (let key in this.quests) callback(this.quests[key]);
     }
 
     /**

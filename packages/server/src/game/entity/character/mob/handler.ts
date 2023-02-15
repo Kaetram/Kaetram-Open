@@ -70,20 +70,21 @@ export default class Handler {
 
     protected handleDeath(attacker?: Character): void {
         // Handle the experience table relative to how much damage the attacker dealt.
-        _.each(this.mob.getExperienceTable(), (element: [string, number], index: number) => {
+        for (let [index, element] of Object.entries(this.mob.getExperienceTable())) {
             let [instance, experience] = element,
                 entity = this.world.entities.get(instance);
 
-            if (!entity?.isPlayer()) return;
+            if (!entity?.isPlayer()) continue;
 
             // Kill callback is sent to the player who dealt most amount of damage.
-            if (index === 0) {
+            if (parseInt(index) === 0) {
                 entity.killCallback?.(this.mob);
 
                 // Drop the mob's loot and pass the owner's username.
                 this.mob.drop(entity.username);
             } else entity.handleExperience(experience);
-        });
+        }
+
         // Stop the combat.
         this.mob.combat.stop();
 
