@@ -80,7 +80,7 @@ export default class ProcessMap {
         for (let tileset of tilesets) {
             /**
              * All the tilesets follow the format of `tilesheet_NUMBER`.
-             * We extrac the number in this process, which allows us to properly
+             * We extract the number in this process, which allows us to properly
              * organize them. Alongside that, we also store the first tileId
              * of each tileset (firstGID) as the key's value.
              */
@@ -251,8 +251,10 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        for (let [index, value] of mapData.entries()) {
-            if (value < 1) return;
+        for (let [i, value] of Object.entries(mapData)) {
+            if (value < 1) continue;
+
+            let index = parseInt(i);
 
             if (!data[index]) data[index] = value;
             else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
@@ -276,10 +278,10 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        for (let [index, value] of layer.data.entries()) {
+        for (let [index, value] of Object.entries(layer.data)) {
             if (value < 1) return;
 
-            this.map.collisions.push(index);
+            this.map.collisions.push(parseInt(index));
         }
     }
 
@@ -294,10 +296,11 @@ export default class ProcessMap {
     private parseEntities(layer: Layer): void {
         let { entities } = this.map;
 
-        for (let [index, value] of layer.data.entries()) {
-            if (value < 1) return;
+        for (let [index, value] of Object.entries(layer.data)) {
+            if (value < 1) continue;
 
-            if (value in this.tilesetEntities) entities[index] = this.tilesetEntities[value];
+            if (value in this.tilesetEntities)
+                entities[parseInt(index)] = this.tilesetEntities[value];
         }
     }
 
@@ -312,13 +315,13 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        for (let [index, value] of layer.data.entries()) {
-            if (value < 1) return;
+        for (let [index, value] of Object.entries(layer.data)) {
+            if (value < 1) continue;
 
             // We skip collisions
-            if (collisions.includes(value)) return;
+            if (collisions.includes(value)) continue;
 
-            plateau[index] = level;
+            plateau[parseInt(index)] = level;
         }
     }
 
@@ -464,7 +467,8 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        for (let [index, value] of this.map.data.entries()) if (!value) this.map.data[index] = 0;
+        for (let [index, value] of Object.entries(this.map.data))
+            if (!value) this.map.data[parseInt(index)] = 0;
     }
 
     /**

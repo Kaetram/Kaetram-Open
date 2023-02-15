@@ -55,7 +55,7 @@ export default abstract class Quest {
         this.description = rawData.description;
         this.rewards = rawData.rewards || [];
         this.hideNPCs = rawData.hideNPCs || [];
-        this.stageCount = _.size(rawData.stages);
+        this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
 
@@ -86,9 +86,8 @@ export default abstract class Quest {
 
     private loadNPCs(): void {
         // Iterate through the stages and extract the NPCs
-        _.each(this.stages, (stage: RawStage) => {
+        for (let stage of Object.values(this.stages))
             if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
-        });
     }
 
     /**
