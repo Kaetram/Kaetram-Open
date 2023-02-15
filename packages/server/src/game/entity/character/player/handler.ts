@@ -215,7 +215,7 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (!attacker) return;
+        if (!attacker || this.player.isDead()) return;
 
         if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
     }
