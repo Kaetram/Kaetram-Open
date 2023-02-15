@@ -208,7 +208,7 @@ export default class API {
             // If it's a logout request, send the logout request to all the servers.
             if (logout) return this.sendLogout(server, username);
 
-            this.sendLogin(server, username);
+            this.sendLogin(server, username, serverId);
 
             // Find all the friends online on the server and add them to the `activeFriends` object.
             for (let friend of inactiveFriends)
@@ -343,14 +343,15 @@ export default class API {
      * @param server The server we are sending the login to.
      * @param key The key of the server we are sending the login to.
      * @param username The username of the player that is logging in.
+     * @param serverId The id of the server the player is logging in from.
      */
 
-    private sendLogin(server: Server, username: string): void {
+    private sendLogin(server: Server, username: string, serverId: number): void {
         let url = Utils.getUrl(server.apiHost, server.apiPort, 'login', true),
             data = {
                 accessToken: server.accessToken,
                 username,
-                serverId: server.id
+                serverId
             };
 
         axios.post(url, data).catch((error) => {
