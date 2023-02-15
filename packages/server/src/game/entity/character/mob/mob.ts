@@ -11,7 +11,6 @@ import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -61,7 +60,6 @@ export default class Mob extends Character {
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     private dropTables: string[] = ['ordinary', 'arrows', 'unusual']; // Default drop table for all mobs.
 
-    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
@@ -101,8 +99,6 @@ export default class Mob extends Character {
      */
 
     private loadData(data: MobData): void {
-        this.experience = data.experience || this.experience;
-
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
@@ -276,9 +272,8 @@ export default class Mob extends Character {
 
         if (drops.length === 0) return;
 
-        _.each(drops, (drop) =>
-            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner)
-        );
+        for (let drop of drops)
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
     }
 
     /**
@@ -344,17 +339,17 @@ export default class Mob extends Character {
     private getDropTableItems(): ItemDrop[] {
         let drops: ItemDrop[] = [];
 
-        _.each(this.dropTables, (key: string) => {
+        for (let key of Object.values(this.dropTables)) {
             let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
 
             // Something went wrong.
-            if (!table) return log.warning(`Mob ${this.key} has an invalid drop table.`);
+            if (table) {
+                let randomItem = this.getRandomItem(table);
 
-            let randomItem = this.getRandomItem(table);
-
-            // Add a random item from the table.
-            if (randomItem) drops.push(randomItem);
-        });
+                // Add a random item from the table.
+                if (randomItem) drops.push(randomItem);
+            } else log.warning(`Mob ${this.key} has an invalid drop table.`);
+        }
 
         return drops;
     }
@@ -411,32 +406,13 @@ export default class Mob extends Character {
     }
 
     /**
-     * Sorts the damage table by the amount of damage done from highest to lowest.
-     * @returns An array of the damage table sorted by the amount of damage done.
-     * The first element is the instance, the is the damage percentage.
+     * Sorts the damage table from highest to lowest. The highest damage dealing player
+     * will receive priority over the drops the mob has.
+     * @returns Sorted damage table from highest to lowest.
      */
 
-    public getExperienceTable(): [string, number][] {
-        let sortedTable = Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
-
-        /**
-         * We iterate through each damage amount and extract a percentage of the damage done
-         * to the total health points of the mob. We multiply by the experience to gain a percentage
-         * amount of experience to give to the player. The player with most damage receives all
-         * of the mob's experience. The rest receive fractions.
-         */
-
-        _.each(sortedTable, (entry: [string, number], index: number) => {
-            entry[1] =
-                index === 0
-                    ? this.experience
-                    : Math.floor((entry[1] / this.hitPoints.getMaxHitPoints()) * this.experience);
-
-            // Prevent getting more experience than the mob has (if mob heals and whatnot).
-            if (entry[1] > this.experience) entry[1] = this.experience;
-        });
-
-        return sortedTable;
+    public getDamageTable(): [string, number][] {
+        return Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
     }
 
     /**
@@ -564,7 +540,7 @@ export default class Mob extends Character {
      */
 
     public getDescription(): string {
-        if (_.isArray(this.description))
+        if (Array.isArray(this.description))
             return this.description[Utils.randomInt(0, this.description.length - 1)];
 
         return this.description;
@@ -697,6 +673,16 @@ export default class Mob extends Character {
 
     public override getArcheryLevel(): number {
         return this.attackLevel;
+    }
+
+    /**
+     * Subclass implementation for grabbing the defense level. For a mob
+     * the defense level is specified in the mob data object.
+     * @returns The defense level of the mob.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.defenseLevel;
     }
 
     /**

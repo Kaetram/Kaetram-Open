@@ -7,10 +7,10 @@ import { Modules } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
 import log from '@kaetram/common/util/log';
 import bcryptjs from 'bcryptjs';
-import _ from 'lodash';
 import { MongoClient } from 'mongodb';
 
 import type { Db } from 'mongodb';
+import type { QuestData } from '@kaetram/common/types/quest';
 import type Player from '../../game/entity/character/player/player';
 import type { PlayerInfo } from './creator';
 import type { SlotData } from '@kaetram/common/types/slot';
@@ -178,7 +178,7 @@ export default class MongoDB {
             .find({})
             .toArray()
             .then((playerInfo) => {
-                _.each(playerInfo, (info) => {
+                for (let info of playerInfo)
                     questsCollection.findOne({ username: info.username }).then((questInfo) => {
                         if (!questInfo || info.username !== questInfo.username) return;
 
@@ -188,7 +188,7 @@ export default class MongoDB {
                          */
 
                         let { quests } = questInfo,
-                            tutorial = _.find(quests, { key: 'tutorial' }),
+                            tutorial = quests.find((quest: QuestData) => quest.key === 'tutorial'),
                             inTutorial = !tutorial || tutorial.stage < tutorialLength,
                             location = (
                                 inTutorial
@@ -216,7 +216,6 @@ export default class MongoDB {
                             { upsert: true }
                         );
                     });
-                });
             });
     }
 
@@ -303,8 +302,6 @@ export default class MongoDB {
                         if (slot?.count > 500) {
                             log.notice(`Found x${slot.count} ${slot.key} from ${username}`);
 
-                            console.log(`huh: ${slot?.key === 'gold'}`);
-
                             if (!logOnly) {
                                 slot.key = '';
                                 slot.count = -1;
@@ -320,10 +317,10 @@ export default class MongoDB {
             .find({})
             .toArray()
             .then((inventories) => {
-                _.each(inventories, (info) => {
+                for (let info of inventories) {
                     let { username, slots } = info;
 
-                    _.each(slots, (slot) => searchSlot(username, slot));
+                    for (let slot of slots) searchSlot(username, slot);
 
                     // update
                     inventoryCollection.updateOne(
@@ -335,7 +332,7 @@ export default class MongoDB {
                         },
                         { upsert: true }
                     );
-                });
+                }
             });
 
         // Check bank second
@@ -343,10 +340,10 @@ export default class MongoDB {
             .find({})
             .toArray()
             .then((banks) => {
-                _.each(banks, (info) => {
+                for (let info of banks) {
                     let { username, slots } = info;
 
-                    _.each(slots, (slot) => searchSlot(username, slot));
+                    for (let slot of slots) searchSlot(username, slot);
 
                     // update
                     bankCollection.updateOne(
@@ -358,7 +355,7 @@ export default class MongoDB {
                         },
                         { upsert: true }
                     );
-                });
+                }
             });
 
         // Check equipment third
@@ -366,10 +363,10 @@ export default class MongoDB {
             .find({})
             .toArray()
             .then((equipments) => {
-                _.each(equipments, (info) => {
+                for (let info of equipments) {
                     let { username, equipments } = info;
 
-                    _.each(equipments, (slot) => searchSlot(username, slot));
+                    for (let slot of equipments) searchSlot(username, slot);
 
                     // update
                     equipmentCollection.updateOne(
@@ -381,7 +378,7 @@ export default class MongoDB {
                         },
                         { upsert: true }
                     );
-                });
+                }
             });
     }
 

@@ -718,14 +718,15 @@ export default class App {
 
         this.worldSelectButton.hidden = false;
 
-        for (let [i, server] of Object.entries(servers)) {
-            // Create a new <li> element for each server
-            let li = document.createElement('li'),
+        for (let i in servers) {
+            let server = servers[i],
+                // Create a new <li> element for each server
+                li = document.createElement('li'),
                 name = document.createElement('strong'),
                 players = document.createElement('span');
 
             // If this is the first server in the list, select it and mark it as active
-            if (i === '0') li.classList.add('active');
+            if (parseInt(i) === 0) li.classList.add('active');
 
             name.textContent = server.name;
 

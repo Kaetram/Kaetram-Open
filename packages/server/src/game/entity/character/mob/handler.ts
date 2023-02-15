@@ -1,6 +1,5 @@
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -58,7 +57,12 @@ export default class Handler {
      */
 
     protected handleHit(damage: number, attacker?: Character): void {
-        if (this.mob.dead || !attacker) return;
+        if (!attacker) return;
+
+        if (attacker.isPlayer()) attacker.handleExperience(damage);
+
+        // This may get called simulatneously with the death callback, so we check here.
+        if (this.mob.isDead()) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
@@ -70,21 +74,27 @@ export default class Handler {
      */
 
     protected handleDeath(attacker?: Character): void {
-        // Handle the experience table relative to how much damage the attacker dealt.
-        _.each(this.mob.getExperienceTable(), (element: [string, number], index: number) => {
-            let [instance, experience] = element,
+        // The damage table is used to calculate who should receive priority over the mob's drop.
+        let damageTable = this.mob.getDamageTable();
+
+        for (let index in damageTable) {
+            let element = damageTable[index],
+                [instance] = element,
                 entity = this.world.entities.get(instance);
 
-            if (!entity?.isPlayer()) return;
+            // Ignore non-player entities.
+            if (!entity?.isPlayer()) continue;
 
             // Kill callback is sent to the player who dealt most amount of damage.
-            if (index === 0) {
+            if (parseInt(index) === 0) {
+                // Register the kill as belonging to the player who dealt most amount of damage.
                 entity.killCallback?.(this.mob);
 
                 // Drop the mob's loot and pass the owner's username.
                 this.mob.drop(entity.username);
-            } else entity.handleExperience(experience);
-        });
+            }
+        }
+
         // Stop the combat.
         this.mob.combat.stop();
 

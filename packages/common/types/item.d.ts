@@ -59,4 +59,5 @@ export interface ItemData {
     projectileName?: string;
     description?: string;
     manaCost?: number;
+    weaponType?: string;
 }

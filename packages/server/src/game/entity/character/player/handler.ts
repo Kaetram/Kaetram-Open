@@ -215,7 +215,7 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (!attacker) return;
+        if (!attacker || this.player.isDead()) return;
 
         if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
     }
@@ -251,6 +251,10 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
+        // Prevent the player from entering if the player's level is too low.
+        if (this.player.level < door.level)
+            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
@@ -258,9 +262,8 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+        // If the door has an achievement associated with it, it gets completed here.
+        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
         // Do not pass through doors that require an achievement which hasn't been completed.
         if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
@@ -269,8 +272,19 @@ export default class Handler {
         // Ensure quest requirement is fullfilled before passing through the door.
         if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
 
-        // If the door has an achievement associated with it, it gets completed here.
-        if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
+        // Handle door requiring an item to proceed (and remove the item from the player's inventory).
+        if (door.reqItem) {
+            let count = door.reqItemCount || 1;
+
+            if (!this.player.inventory.hasItem(door.reqItem, count))
+                return this.player.notify(
+                    'You do not have the required key to pass through this door.'
+                );
+
+            this.player.inventory.removeItem(door.reqItem, count);
+
+            this.player.notify(`The key crumbles to dust as you pass through the door.`);
+        }
 
         this.player.teleport(door.x, door.y);
 
@@ -348,7 +362,7 @@ export default class Handler {
     private handleEquip(equipment: Equipment): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Equip, {
-                data: equipment
+                data: equipment.serialize(true)
             })
         );
 
@@ -479,7 +493,7 @@ export default class Handler {
 
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
-        if (drop && !this.player.isCheater())
+        if (drop && !this.player.isCheater()) {
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
@@ -488,6 +502,10 @@ export default class Handler {
                 count, // Note this is the amount we are dropping.
                 slot.enchantments
             );
+            log.drop(
+                `Player at position (${this.player.x}, ${this.player.y}) dropped ${count} ${key}.`
+            );
+        }
 
         this.player.send(
             new Container(Opcodes.Container.Remove, {
@@ -579,13 +597,15 @@ export default class Handler {
      * Callback for when a friend is added to the friends list.
      * @param username The username of the friend we just added.
      * @param status The online status of the friend we just added.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsAdd(username: string, status: boolean): void {
+    private handleFriendsAdd(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Add, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }
@@ -606,13 +626,15 @@ export default class Handler {
      * Synchronizes with the client the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend we are updating.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsStatus(username: string, status: boolean): void {
+    private handleFriendsStatus(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Status, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }
@@ -673,8 +695,8 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
-        // Handle the experience upon killing a mob.
-        this.player.handleExperience(character.experience);
+        // Add the mob kill to the player's statistics.
+        this.player.statistics.addMobKill(character.key);
 
         /**
          * Special mobs (such as minibosses and bosses) have achievements
@@ -747,7 +769,12 @@ export default class Handler {
 
     private handleUpdate(): void {
         if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(10)) this.player.cheatScore = 0;
+        if (this.isTickInterval(16)) {
+            this.player.cheatScore = 0;
+
+            // Cold damage is applied every 16 ticks.
+            this.player.handleColdDamage();
+        }
 
         this.updateTicks++;
     }

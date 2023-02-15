@@ -1,29 +1,32 @@
 {
     "ordinary": {
-        "gold": 400,
-        "flask": 225,
-        "bigflask": 130,
-        "manaflask": 220,
-        "bigmanaflask": 100,
-        "burger": 120
+        "gold": 1600,
+        "flask": 900,
+        "bigflask": 520,
+        "manaflask": 660,
+        "bigmanaflask": 400,
+        "burger": 480
     },
 
     "arrows": {
-        "arrow": 400,
-        "firearrow": 150,
-        "poisonarrow": 125,
-        "lightningarrow": 85,
-        "icearrow": 50
+        "arrow": 1600,
+        "firearrow": 450,
+        "poisonarrow": 500,
+        "lightningarrow": 350,
+        "icearrow": 400
     },
 
     "unusual": {
-        "blackpotion": 50,
-        "shardt1": 25,
-        "logs": 25,
-        "stick": 50
+        "blackpotion": 200,
+        "hotsauce": 200,
+        "poisoncure": 200,
+        "shardt1": 100,
+        "logs": 100,
+        "stick": 400,
+        "bead": 200
     },
 
     "warriorcrab": {
-        "bead": 1250
+        "bead": 10000
     }
 }
