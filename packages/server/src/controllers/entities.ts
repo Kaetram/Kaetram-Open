@@ -2,7 +2,6 @@ import Character from '../game/entity/character/character';
 
 import log from '@kaetram/common/util/log';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type { Enchantments } from '@kaetram/common/types/item';
@@ -46,7 +45,7 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chest, (info: ProcessedArea) => {
+        for (let info of this.map.chest)
             this.spawnChest(
                 info.items?.split(',') || [],
                 info.x,
@@ -55,7 +54,6 @@ export default class Entities {
                 info.achievement,
                 info.mimic
             );
-        });
 
         log.info(`Spawned ${this.collections.chests.length} static chests!`);
 

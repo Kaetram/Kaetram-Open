@@ -1,7 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
 
 import type { ProcessedResource, RegionTile } from '@kaetram/common/types/map';
 
@@ -36,18 +35,17 @@ export default class Resource {
 
     public load(info: ProcessedResource): void {
         // Iterate through all the tile and its indexes in the resource.
-        _.each(this.data, (tile: RegionTile, key: string) => {
-            // Whacky conversion because of lodash-es.
+        for (let [key, tile] of Object.entries(this.data)) {
             let index = parseInt(key),
                 flatTile = [tile].flat();
 
             // Why would you put a resource in the void? How are you even near the resource?
-            if (!_.isArray(flatTile))
+            if (!Array.isArray(flatTile))
                 return log.warning(`[${index}] Could not parse tile data for tree.`);
 
             // Find if the tile contains data or base data.
-            let dataIntersect = _.intersection(flatTile, info.data),
-                stumpIntersect = _.intersection(flatTile, info.base);
+            let dataIntersect = flatTile.filter((tile) => info.data.includes(tile)),
+                stumpIntersect = flatTile.filter((tile) => info.base.includes(tile));
 
             // Tile contains data that is also a stump.
             if (dataIntersect.length > 0 && stumpIntersect.length > 0) {
@@ -59,7 +57,7 @@ export default class Resource {
 
                 let baseIndex = info.base.indexOf(stumpIntersect[0]),
                     dataBaseIndex = flatTile.indexOf(stumpIntersect[0]),
-                    cloneTile = _.clone(flatTile);
+                    cloneTile = structuredClone(flatTile);
 
                 // Replace the stump with the cut stump.
                 cloneTile[dataBaseIndex] = info.depleted[baseIndex];
@@ -68,11 +66,13 @@ export default class Resource {
                 this.depleted[index] = cloneTile as RegionTile;
             } else if (dataIntersect.length > 0)
                 // Remove tree data.
-                this.depleted[index] = _.difference(flatTile, dataIntersect) as RegionTile;
+                this.depleted[index] = flatTile.filter(
+                    (tile) => !dataIntersect.includes(tile)
+                ) as RegionTile;
 
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.depleted[index]].flat().length === 0) this.depleted[index] = 0;
-        });
+        }
     }
 
     /**
@@ -133,7 +133,7 @@ export default class Resource {
         // Data depends on the state of the resource.
         let data = this.isDepleted() ? this.depleted : this.data;
 
-        _.each(data, (tile: RegionTile, index: string) => callback(tile, parseInt(index)));
+        for (let [index, tile] of Object.entries(data)) callback(tile, parseInt(index));
     }
 
     /**

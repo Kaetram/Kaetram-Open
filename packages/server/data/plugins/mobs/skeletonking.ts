@@ -1,7 +1,6 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -45,7 +44,7 @@ export default class SkeletonKing extends Default {
         super.handleDeath(attacker);
 
         // Clear all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         // Reset minion spawn count.
         this.minionsSpawned = 0;

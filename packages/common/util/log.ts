@@ -3,8 +3,6 @@ import path from 'node:path';
 
 import config from '../config';
 
-import { floor } from 'lodash-es';
-
 type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 
 /**
