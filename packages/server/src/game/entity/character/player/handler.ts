@@ -769,7 +769,12 @@ export default class Handler {
 
     private handleUpdate(): void {
         if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(10)) this.player.cheatScore = 0;
+        if (this.isTickInterval(16)) {
+            this.player.cheatScore = 0;
+
+            // Cold damage is applied every 16 ticks.
+            this.player.handleColdDamage();
+        }
 
         this.updateTicks++;
     }

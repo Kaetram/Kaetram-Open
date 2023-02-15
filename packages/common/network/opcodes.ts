@@ -185,6 +185,7 @@ export enum Bubble {
 }
 
 export enum Effect {
+    None,
     Speed,
     Critical,
     Freeze,

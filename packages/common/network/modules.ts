@@ -92,8 +92,9 @@ export enum Hits {
     LevelUp,
     Critical,
     Stun,
-    Explosive,
-    Profession
+    Profession,
+    Cold,
+    Terror
 }
 
 export enum Equipment {
@@ -339,6 +340,11 @@ export let DamageColours = {
     [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
+    },
+
+    [Hits.Cold]: {
+        fill: 'rgb(52, 195, 235)',
+        stroke: 'rgb(14, 138, 227)'
     }
 };
 
@@ -399,9 +405,9 @@ export let EntityScale = {
 export let PoisonInfo = {
     [PoisonTypes.Venom]: {
         name: 'Venom',
-        damage: 2,
+        damage: 5,
         duration: 30,
-        rate: 3 // every second
+        rate: 3 // every 3 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -445,7 +451,9 @@ export const Constants = {
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
-    EXPERIENCE_PER_HIT: 4 // Amount of experinece received per 1 damage dealt.
+    EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
+    SNOW_POTION_DURATION: 60_000, // 60 seconds
+    COLD_EFFECT_DAMAGE: 6
 };
 
 export enum MinigameConstants {
