@@ -204,6 +204,8 @@ export default class Connection {
     private handleWelcome(data: PlayerData): void {
         this.game.player.load(data);
 
+        console.log('loaded player');
+
         this.game.start();
         this.game.postLoad();
     }
@@ -511,17 +513,20 @@ export default class Connection {
 
         // Check if our client's player is the target or the attacker.
         let currentPlayerTarget = target.instance === this.game.player.instance,
-            currentPlayerAttacker = attacker.instance === this.game.player.instance;
+            currentPlayerAttacker = attacker.instance === this.game.player.instance,
+            isPoison = info.hit.type === Modules.Hits.Poison,
+            isTerror = info.hit.type === Modules.Hits.Terror,
+            isCold = info.hit.type === Modules.Hits.Cold;
 
         // Set the terror effect onto the target.
-        if (info.hit.terror) target.setEffect(Modules.Effects.Terror);
-        if (info.hit.poison) target.setEffect(Modules.Effects.Poisonball);
+        if (isTerror) target.setEffect(Modules.Effects.Terror);
+        if (isPoison) target.setEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
         if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
-        if (!info.hit.aoe && !info.hit.poison) {
+        if (!info.hit.aoe && !isPoison && !isCold) {
             attacker.lookAt(target);
             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         }
@@ -1355,6 +1360,8 @@ export default class Connection {
                 ? this.game.player
                 : this.entities.get<Character>(info.instance);
 
+        console.log(`Effect: ${opcode} - ${info.instance}`);
+
         if (!entity) return;
 
         switch (opcode) {
@@ -1375,6 +1382,11 @@ export default class Connection {
 
             case Opcodes.Effect.Burn: {
                 entity.setEffect(Modules.Effects.Burning);
+                break;
+            }
+
+            case Opcodes.Effect.None: {
+                entity.setEffect(Modules.Effects.None);
                 break;
             }
         }

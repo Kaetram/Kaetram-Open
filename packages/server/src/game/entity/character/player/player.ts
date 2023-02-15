@@ -115,6 +115,7 @@ export default class Player extends Character {
     public hotSauce = false;
     public dualistsMark = false;
     public thickSkin = false;
+    public snowPotion = false;
 
     // Player info
     public password = '';
@@ -163,7 +164,9 @@ export default class Player extends Character {
     public storeOpen = '';
 
     private cameraArea: Area | undefined;
-    private overlayArea: Area | undefined;
+    public overlayArea: Area | undefined;
+
+    private snowPotionTimeout: NodeJS.Timeout | null = null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
@@ -314,13 +317,13 @@ export default class Player extends Character {
 
         /**
          * Send player data to client here
-         */
-
-        this.setPosition(this.x, this.y); // Set coords we loaded in `load`
+         */ // Set coords we loaded in `load`
 
         this.entities.addPlayer(this);
 
         this.send(new Welcome(this.serialize(false, true, true)));
+
+        this.setPosition(this.x, this.y);
     }
 
     /**
@@ -1145,6 +1148,16 @@ export default class Player extends Character {
     }
 
     /**
+     * Applies a visual effect onto a player. This can also be used to remove
+     * an effect by passing in the `Opcodes.Effect.None` opcode.
+     * @param opcode The opcode of the effect we want to apply.
+     */
+
+    public setEffect(opcode: Opcodes.Effect): void {
+        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
+    }
+
+    /**
      * Sets the status of the dualists mark effect and updates
      * the combat loop to represent the new attack rate.
      * @param dualistsMark Effect status of the dualists mark.
@@ -1154,6 +1167,42 @@ export default class Player extends Character {
         this.dualistsMark = dualistsMark;
 
         this.combat.updateLoop();
+    }
+
+    /**
+     * Sets the cold resistance snow potion status and creates a (or updates an existing) timeout.
+     * The effect is removed after a set amount of time specified in the game `Constants`.
+     */
+
+    public setSnowPotionEffect(): void {
+        // If we already have an active effect then we restart the timer.
+        if (this.snowPotion) {
+            clearTimeout(this.snowPotionTimeout!);
+            this.snowPotionTimeout = null;
+        }
+
+        this.snowPotion = true;
+
+        // Remove the freezing special effect if the potion is active.
+        this.setEffect(Opcodes.Effect.None);
+
+        this.notify(
+            `You are now immune to freezing effects for ${
+                Modules.Constants.SNOW_POTION_DURATION / 1000
+            } seconds.`
+        );
+
+        // Set a timeout to remove the effect.
+        this.snowPotionTimeout = setTimeout(() => {
+            // If the player is still in a freezing area, reapply the effect
+            if (this.overlayArea && this.overlayArea.type === 'damage')
+                this.setEffect(Opcodes.Effect.Freeze);
+
+            this.snowPotion = false;
+            this.snowPotionTimeout = null;
+
+            this.notify('Your immunity to freezing effects has worn off.');
+        }, Modules.Constants.SNOW_POTION_DURATION);
     }
 
     /**
