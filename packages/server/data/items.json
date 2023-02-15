@@ -1,12 +1,15 @@
 {
   "sword2": {
     "type": "weapon",
+    "weaponType": "sword",
     "name": "Heavy Sword",
     "level": 2,
+    "price": 500,
     "attackStats": {
       "crush": 2,
       "slash": 6,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -20,12 +23,15 @@
   "axe": {
     "type": "weapon",
     "name": "Axe",
+    "weaponType": "axe",
     "lumberjacking": 1,
     "level": 1,
+    "price":250,
     "attackStats": {
       "crush": 4,
       "slash": 2,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -39,6 +45,7 @@
   "pickaxe": {
     "type": "weapon",
     "name": "Pickaxe",
+    "weaponType": "pickaxe",
     "mining": 1,
     "level": 1,
     "price": 10000,
@@ -46,6 +53,7 @@
       "crush": 4,
       "slash": 0,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -59,11 +67,14 @@
   "morningstar": {
     "type": "weapon",
     "name": "Morning Star",
+    "weaponType": "club",
     "level": 6,
+    "price": 1000,
     "attackStats": {
       "crush": 14,
       "slash": 6,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -77,11 +88,14 @@
   "bluesword": {
     "type": "weapon",
     "name": "Water Sword",
+    "weaponType": "sword",
     "level": 10,
+    "price": 1500,
     "attackStats": {
       "crush": 4,
       "slash": 16,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -95,11 +109,14 @@
   "redsword": {
     "type": "weapon",
     "name": "Fire Sword",
+    "weaponType": "sword",
     "level": 14,
+    "price": 5000,
     "attackStats": {
       "crush": 4,
       "slash": 15,
       "stab": 14,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -113,16 +130,26 @@
   "goldensword": {
     "type": "weapon",
     "name": "Golden Sword",
-    "level": 22,
+    "weaponType": "sword",
+    "level": 48,
+    "price": 3500,
     "attackStats": {
-      "crush": 6,
-      "slash": 24,
-      "stab": 12,
+      "crush": 12,
+      "slash": 34,
+      "stab": 18,
+      "archery": 0,
       "magic": 0
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 8,
+      "stab": 4,
+      "archery": 0,
+      "magic": -2
     },
     "bonuses": {
       "accuracy": 13,
-      "strength": 7,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -131,16 +158,19 @@
   "sidesword": {
     "type": "weapon",
     "name": "Side Sword",
-    "level": 24,
+    "weaponType": "sword",
+    "level": 64,
+    "price": 1250,
     "attackStats": {
-      "crush": 12,
-      "slash": 24,
-      "stab": 8,
+      "crush": 18,
+      "slash": 38,
+      "stab": 14,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 17,
-      "strength": 4,
+      "accuracy": 24,
+      "strength": 2,
       "archery": 0,
       "magic": 0
     }
@@ -149,17 +179,21 @@
   "spear": {
     "type": "weapon",
     "name": "Silly Spear",
+    "weaponType": "spear",
     "level": 28,
+    "price": 1100,
     "attackStats": {
       "crush": 16,
       "slash": 12,
       "stab": 30,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 4,
       "slash": 8,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -173,11 +207,14 @@
   "scimitar": {
     "type": "weapon",
     "name": "Pirate's Scimitar",
+    "weaponType": "sword",
     "level": 30,
+    "price": 3000,
     "attackStats": {
       "crush": 6,
       "slash": 41,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -191,17 +228,21 @@
   "trident": {
     "type": "weapon",
     "name": "Trident Of The Seas",
+    "weaponType": "spear",
     "level": 40,
+    "price": 500,
     "attackStats": {
       "crush": 4,
       "slash": 42,
       "stab": 22,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 18,
       "slash": 18,
       "stab": 2,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -215,11 +256,14 @@
   "bluescimitar": {
     "type": "weapon",
     "name": "Blue Scimitar",
+    "weaponType": "sword",
     "level": 46,
+    "price": 2200,
     "attackStats": {
       "crush": 18,
       "slash": 14,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -233,11 +277,14 @@
   "hammer": {
     "type": "weapon",
     "name": "Hammer",
+    "weaponType": "blunt",
     "level": 50,
+    "price": 2000,
     "attackStats": {
       "crush": 40,
       "slash": 4,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -251,11 +298,14 @@
   "greenlightsaber": {
     "type": "weapon",
     "name": "Green Light Saber",
+    "weaponType": "sword",
+    "price": 4850,
     "level": 56,
     "attackStats": {
       "crush": 0,
       "slash": 42,
       "stab": 22,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -269,11 +319,14 @@
   "skylightsaber": {
     "type": "weapon",
     "name": "Sky Light Saber",
+    "weaponType": "sword",
+    "price": 1600,
     "level": 57,
     "attackStats": {
       "crush": 0,
       "slash": 40,
       "stab": 26,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -287,11 +340,14 @@
   "redlightsaber": {
     "type": "weapon",
     "name": "Red Light Saber",
+    "weaponType": "sword",
     "level": 56,
+    "price": 1575,
     "attackStats": {
       "crush": 0,
       "slash": 36,
       "stab": 16,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -305,13 +361,16 @@
   "bastardsword": {
     "type": "weapon",
     "name": "Heavy Sword",
+    "weaponType": "bigsword",
     "attackRate": 1350,
     "skill": "strength",
     "level": 40,
+    "price": 1250,
     "attackStats": {
       "crush": 35,
       "slash": 50,
       "stab": 6,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -325,13 +384,16 @@
   "redmetalsword": {
     "type": "weapon",
     "name": "Red Metal Sword",
-    "attackRate": 1450,
+    "weaponType": "bigsword",
+    "attackRate": 4550,
     "skill": "strength",
     "level": 42,
+    "price": 5050,
     "attackStats": {
       "crush": 28,
       "slash": 60,
       "stab": 4,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -345,12 +407,15 @@
   "justicehammer": {
     "type": "weapon",
     "name": "Justice Hammer",
+    "weaponType": "blunt",
     "skill": "strength",
-    "level": 50,
+    "level": 5000,
+    "price": 250,
     "attackStats": {
       "crush": 50,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -364,11 +429,14 @@
   "rose": {
     "type": "weapon",
     "name": "Rose",
+    "weaponType": "blunt",
     "level": 36,
+    "price": 500,
     "attackStats": {
       "crush": 36,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -382,11 +450,14 @@
   "icerose": {
     "type": "weapon",
     "name": "Ice Rose",
+    "weaponType": "blunt",
     "level": 86,
+    "price": 3500,
     "attackStats": {
       "crush": 38,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -400,16 +471,19 @@
   "halberd": {
     "type": "weapon",
     "name": "Halberd",
+    "weaponType": "axe",
     "level": 90,
+    "price": 2228,
     "attackStats": {
-      "crush": 10,
+      "crush": 12,
       "slash": 44,
       "stab": 24,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 8,
-      "strength": 20,
+      "strength": 23,
       "archery": 0,
       "magic": 0
     }
@@ -418,17 +492,20 @@
   "whip": {
     "type": "weapon",
     "name": "Whip",
+    "weaponType": "whip",
     "skill": "accuracy",
-    "level": 60,
+    "level": 50,
+    "price": 2500,
     "attackStats": {
-      "crush": 14,
-      "slash": 68,
+      "crush": 2,
+      "slash": 84,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 24,
-      "strength": 12,
+      "accuracy": 10,
+      "strength": 44,
       "archery": 0,
       "magic": 0
     }
@@ -437,11 +514,14 @@
   "forestguardiansword": {
     "type": "weapon",
     "name": "Forest Guardian Sword",
+    "weaponType": "sword",
     "level": 106,
+    "price": 4100,
     "attackStats": {
       "crush": 2,
       "slash": 40,
       "stab": 16,
+      "archery": 0,
       "magic": 20
     },
     "bonuses": {
@@ -455,11 +535,14 @@
   "sickle": {
     "type": "weapon",
     "name": "Sickle",
+    "weaponType": "sword",
     "level": 110,
+    "price": 3125,
     "attackStats": {
       "crush": 0,
       "slash": 48,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -473,11 +556,14 @@
   "plunger": {
     "type": "weapon",
     "name": "Plunger",
+    "weaponType": "blunt",
     "level": 98,
+    "price": 310,
     "attackStats": {
       "crush": 0,
       "slash": 0,
       "stab": 30,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -491,11 +577,14 @@
   "redsickle": {
     "type": "weapon",
     "name": "Red Sickle",
+    "weaponType": "sword",
     "level": 116,
+    "price": 411,
     "attackStats": {
       "crush": 0,
       "slash": 52,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -509,11 +598,14 @@
   "daywalker": {
     "type": "weapon",
     "name": "Day Walker",
+    "weaponType": "axe",
     "level": 140,
+    "price": 7500,
     "attackStats": {
       "crush": 8,
       "slash": 60,
       "stab": 8,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -527,11 +619,14 @@
   "purplecloudkallege": {
     "type": "weapon",
     "name": "Purple Cloud Kallege",
+    "weaponType": "axe",
     "level": 160,
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 60,
       "stab": 18,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -545,16 +640,19 @@
   "searage": {
     "type": "weapon",
     "name": "Sea rage",
+    "weaponType": "bigsword",
     "level": 160,
+    "price": 2500,
     "attackStats": {
-      "crush": 46,
+      "crush": 48,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
       "accuracy": 2,
-      "strength": 34,
+      "strength": 36,
       "archery": 0,
       "magic": 0
     }
@@ -563,11 +661,14 @@
   "breaker": {
     "type": "weapon",
     "name": "Breaker",
+    "weaponType": "axe",
     "level": 176,
+    "price": 3500,
     "attackStats": {
       "crush": 50,
       "slash": 30,
       "stab": 20,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -581,12 +682,14 @@
   "eneltrident": {
     "type": "weapon",
     "name": "Enel Trident",
+    "weaponType": "spear",
     "price": 30000,
     "level": 200,
     "attackStats": {
       "crush": 56,
       "slash": 30,
       "stab": 10,
+      "archery": 0,
       "magic": 60
     },
     "bonuses": {
@@ -600,11 +703,14 @@
   "rainbowsword": {
     "type": "weapon",
     "name": "Rainbow Sword",
+    "weaponType": "sword",
     "level": 110,
+    "price": 2000,
     "attackStats": {
       "crush": 40,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -618,11 +724,14 @@
   "typhoon": {
     "type": "weapon",
     "name": "Typhoon",
+    "weaponType": "axe",
     "level": 106,
+    "price": 2500,
     "attackStats": {
       "crush": 20,
       "slash": 40,
       "stab": 10,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -636,12 +745,14 @@
   "memme": {
     "type": "weapon",
     "name": "Memme",
+    "weaponType": "sword",
     "price": 30000,
     "level": 216,
     "attackStats": {
       "crush": 50,
       "slash": 36,
       "stab": 20,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -655,11 +766,14 @@
   "candybar": {
     "type": "weapon",
     "name": "Candy Bar",
+    "weaponType": "blunt",
     "level": 148,
+    "price": 1000,
     "attackStats": {
       "crush": 50,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -673,12 +787,14 @@
   "butcherknife": {
     "type": "weapon",
     "name": "Butcher Knife",
+    "weaponType": "sword",
     "price": 30000,
     "level": 138,
     "attackStats": {
       "crush": 20,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -692,12 +808,14 @@
   "fireshot": {
     "type": "weapon",
     "name": "Fire Shot",
+    "weaponType": "sword",
     "price": 30000,
     "level": 216,
     "attackStats": {
       "crush": 30,
       "slash": 50,
       "stab": 20,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -711,12 +829,14 @@
   "comb": {
     "type": "weapon",
     "name": "Comb",
+    "weaponType": "sword",
     "price": 30000,
     "level": 226,
     "attackStats": {
       "crush": 10,
       "slash": 40,
       "stab": 10,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -730,12 +850,15 @@
   "squeakyhammer": {
     "type": "weapon",
     "name": "Squeaky Hammer",
+    "weaponType": "blunt",
     "skill": "strength",
     "level": 66,
+    "price": 10000,
     "attackStats": {
       "crush": 84,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -749,12 +872,14 @@
   "fireplay": {
     "type": "weapon",
     "name": "Fire Play",
+    "weaponType": "sword",
     "price": 30000,
     "level": 300,
     "attackStats": {
       "crush": 30,
       "slash": 54,
       "stab": 20,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -766,14 +891,16 @@
   },
 
   "staff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Magic Staff",
+    "weaponType": "staff",
     "price": 1500,
     "manaCost": 2,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -787,16 +914,18 @@
   },
 
   "lightningstaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Lightning Staff",
+    "weaponType": "staff",
     "skill": "magic",
-    "price": 25000,
+    "price": 7500,
     "manaCost": 4,
     "level": 10,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -810,16 +939,18 @@
   },
 
   "naturestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Nature Staff",
+    "weaponType": "staff",
     "skill": "magic",
-    "price": 45000,
+    "price": 12500,
     "manaCost": 6,
     "level": 17,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -833,16 +964,18 @@
   },
 
   "firestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Fire Staff",
+    "weaponType": "staff",
     "skill": "magic",
-    "price": 75000,
+    "price": 22500,
     "manaCost": 7,
     "level": 25,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 24
     },
     "bonuses": {
@@ -856,16 +989,18 @@
   },
 
   "icestaff": {
-    "type": "weapon",
+    "type": "weaponmagic",
     "name": "Ice Staff",
+    "weaponType": "staff",
     "skill": "magic",
-    "price": 420069,
+    "price": 40000,
     "manaCost": 9,
     "level": 35,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -881,12 +1016,14 @@
   "pinksword": {
     "type": "weapon",
     "name": "Pink Sword",
+    "weaponType": "sword",
     "price": 30000,
     "level": 256,
     "attackStats": {
       "crush": 50,
       "slash": 70,
       "stab": 30,
+      "archery": 0,
       "magic": 20
     },
     "bonuses": {
@@ -900,12 +1037,14 @@
   "conferencecall": {
     "type": "weapon",
     "name": "Stick",
+    "weaponType": "axe",
     "price": 30000,
     "level": 342,
     "attackStats": {
       "crush": 60,
       "slash": 80,
       "stab": 40,
+      "archery": 0,
       "magic": 30
     },
     "bonuses": {
@@ -919,6 +1058,7 @@
   "rustedaxe": {
     "type": "weapon",
     "name": "Rusted Axe",
+    "weaponType": "axe",
     "price": 5000,
     "lumberjacking": 2,
     "level": 5,
@@ -927,6 +1067,7 @@
       "crush": 4,
       "slash": 4,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -940,6 +1081,7 @@
   "fireaxe": {
     "type": "weapon",
     "name": "Fire Axe",
+    "weaponType": "axe",
     "price": 7500,
     "lumberjacking": 3,
     "skill": "strength",
@@ -948,6 +1090,7 @@
       "crush": 4,
       "slash": 8,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -961,6 +1104,7 @@
   "poisonaxe": {
     "type": "weapon",
     "name": "Poison Axe",
+    "weaponType": "axe",
     "price": 10000,
     "poisonous": true,
     "lumberjacking": 4,
@@ -970,6 +1114,7 @@
       "crush": 4,
       "slash": 24,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -983,6 +1128,7 @@
   "cactusaxe": {
     "type": "weapon",
     "name": "Cactus Axe",
+    "weaponType": "axe",
     "price": 15000,
     "lumberjacking": 6,
     "skill": "strength",
@@ -991,6 +1137,7 @@
       "crush": 8,
       "slash": 31,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1004,6 +1151,7 @@
   "goldaxe": {
     "type": "weapon",
     "name": "Gold Axe",
+    "weaponType": "axe",
     "price": 25000,
     "lumberjacking": 7,
     "skill": "strength",
@@ -1012,6 +1160,7 @@
       "crush": 24,
       "slash": 32,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1025,6 +1174,7 @@
   "carnelianaxe": {
     "type": "weapon",
     "name": "Carnelian Axe",
+    "weaponType": "axe",
     "price": 50000,
     "lumberjacking": 8,
     "skill": "strength",
@@ -1033,6 +1183,7 @@
       "crush": 30,
       "slash": 45,
       "stab": 2,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1046,12 +1197,14 @@
   "devilkazyasword": {
     "type": "weapon",
     "name": "Devil Kazya Sword",
+    "weaponType": "sword",
     "price": 30000,
     "level": 240,
     "attackStats": {
       "crush": 40,
       "slash": 100,
       "stab": 50,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -1065,12 +1218,14 @@
   "bamboospear": {
     "type": "weapon",
     "name": "Bamboo Spear",
-    "price": 30000,
+    "weaponType": "spear",
+    "price": 50000,
     "level": 256,
     "attackStats": {
       "crush": 10,
       "slash": 20,
       "stab": 100,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1081,15 +1236,59 @@
     }
   },
 
+  "wolfsword": {
+    "type": "weapon",
+    "name": "Wolf Sword",
+    "weaponType": "sword",
+    "price": 50000,
+    "level": 256,
+    "attackStats": {
+      "crush": 10,
+      "slash": 120,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 45,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "deathflail": {
+    "type": "weapon",
+    "name": "Flail of Death",
+    "weaponType": "blunt",
+    "price": 50000,
+    "level": 256,
+    "attackStats": {
+      "crush": 150,
+      "slash": 20,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 64,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
+    "weaponType": "sword",
     "price": 30000,
     "level": 400,
     "attackStats": {
       "crush": 19,
       "slash": 124,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1103,12 +1302,14 @@
   "magicspear": {
     "type": "weapon",
     "name": "Magic Spear",
+    "weaponType": "spear",
     "price": 30000,
     "level": 400,
     "attackStats": {
       "crush": 10,
       "slash": 20,
       "stab": 120,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1121,23 +1322,26 @@
 
   "firesword": {
     "type": "weapon",
-    "name": "Fire Sword"
+    "name": "Fire Sword",
+    "weaponType": "staff"
   },
 
   "pendant1": {
     "type": "pendant",
     "name": "Pendant",
-    "price": 5000,
+    "price": 1650,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 5,
       "slash": 5,
       "stab": 5,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1151,17 +1355,19 @@
   "greenpendant": {
     "type": "pendant",
     "name": "Jade Pendant",
-    "price": 5000,
+    "price": 2500,
     "attackStats": {
       "crush": 11,
       "slash": 12,
       "stab": 10,
+      "archery": 0,
       "magic": 7
     },
     "defenseStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1175,17 +1381,19 @@
   "pearlpendant": {
     "type": "pendant",
     "name": "Pearl Pendant",
-    "price": 5000,
+    "price": 4450,
     "attackStats": {
       "crush": 16,
       "slash": 16,
       "stab": 16,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 15,
       "slash": 15,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1199,17 +1407,19 @@
   "marblependant": {
     "type": "pendant",
     "name": "Diamond Pendant",
-    "price": 5000,
+    "price": 16500,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1223,17 +1433,19 @@
   "rubypendant": {
     "type": "pendant",
     "name": "Ruby Pendant",
-    "price": 5000,
+    "price": 4500,
     "attackStats": {
       "crush": 3,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": 7
     },
     "defenseStats": {
       "crush": 2,
       "slash": 2,
       "stab": 4,
+      "archery": 0,
       "magic": 14
     },
     "bonuses": {
@@ -1247,17 +1459,19 @@
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
-    "price": 5000,
+    "price": 10050,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 2,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 0,
       "slash": 3,
       "stab": 7,
+      "archery": 0,
       "magic": 23
     },
     "bonuses": {
@@ -1283,17 +1497,19 @@
   "ring1": {
     "type": "ring",
     "name": "Emerald Ring",
-    "price": 5000,
+    "price": 1500,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 5,
       "slash": 5,
       "stab": 5,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1307,17 +1523,19 @@
   "sproutring": {
     "type": "ring",
     "name": "Sprout Ring",
-    "price": 5000,
+    "price": 2350,
     "attackStats": {
       "crush": 10,
       "slash": 10,
       "stab": 10,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 7,
       "slash": 8,
       "stab": 7,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1331,17 +1549,19 @@
   "pearlring": {
     "type": "ring",
     "name": "Pearl Ring",
-    "price": 5000,
+    "price": 3600,
     "attackStats": {
       "crush": 16,
       "slash": 16,
       "stab": 16,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 15,
       "slash": 15,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1355,17 +1575,19 @@
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
-    "price": 5000,
+    "price": 9800,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1379,17 +1601,19 @@
   "spiritring": {
     "type": "ring",
     "name": "Spirit Ring",
-    "price": 5000,
+    "price": 10050,
     "attackStats": {
       "crush": 12,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 12,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 28
     },
     "bonuses": {
@@ -1403,17 +1627,19 @@
   "essentialrage": {
     "type": "ring",
     "name": "Essential Rage",
-    "price": 5000,
+    "price": 15500,
     "attackStats": {
       "crush": 22,
       "slash": 34,
       "stab": 18,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 20,
       "slash": 30,
       "stab": 16,
+      "archery": 0,
       "magic": 13
     },
     "bonuses": {
@@ -1429,17 +1655,19 @@
     "name": "Ruby Ring",
     "skill": "magic",
     "level": 10,
-    "price": 5000,
+    "price": 12500,
     "attackStats": {
       "crush": 6,
       "slash": 6,
       "stab": 6,
+      "archery": 0,
       "magic": 18
     },
     "defenseStats": {
       "crush": 4,
       "slash": 4,
       "stab": 8,
+      "archery": 0,
       "magic": 22
     },
     "bonuses": {
@@ -1455,17 +1683,19 @@
     "name": "Sapphire Ring",
     "skill": "magic",
     "level": 20,
-    "price": 5000,
+    "price": 8650,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 22
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 22
     },
     "bonuses": {
@@ -1481,17 +1711,19 @@
     "name": "Emerald Ring",
     "skill": "magic",
     "level": 30,
-    "price": 5000,
+    "price": 8650,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 33
     },
     "bonuses": {
@@ -1507,17 +1739,19 @@
     "name": "Fragmented Ring",
     "skill": "magic",
     "level": 40,
-    "price": 5000,
+    "price": 11000,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 10
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -1533,17 +1767,19 @@
     "name": "Diamond Ring",
     "skill": "magic",
     "level": 50,
-    "price": 5000,
+    "price": 16500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 17
     },
     "defenseStats": {
       "crush": 1,
       "slash": 7,
       "stab": 11,
+      "archery": 0,
       "magic": 33
     },
     "bonuses": {
@@ -1559,17 +1795,19 @@
     "name": "Pythar Ring",
     "skill": "strength",
     "level": 50,
-    "price": 5000,
+    "price": 7500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 7,
       "stab": 5,
+      "archery": 0,
       "magic": 7
     },
     "bonuses": {
@@ -1585,17 +1823,19 @@
     "name": "Nisoc Ring",
     "skill": "accuracy",
     "level": 41,
-    "price": 5000,
+    "price": 7800,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 7,
       "stab": 5,
+      "archery": 0,
       "magic": 7
     },
     "bonuses": {
@@ -1613,12 +1853,14 @@
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -1633,16 +1875,19 @@
     "type": "armourarcher",
     "name": "Leather Archer Armour",
     "level": 2,
+    "price": 1000,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": -1
     },
     "defenseStats": {
       "crush": 6,
       "slash": 10,
       "stab": 2,
+      "archery": 0,
       "magic": -3
     },
     "bonuses": {
@@ -1657,16 +1902,19 @@
     "type": "armourarcher",
     "name": "Mail Archer Armour",
     "level": 6,
+    "price": 1200,
     "attackStats": {
       "crush": 1,
       "slash": 1,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 7,
       "slash": 14,
       "stab": 3,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1682,16 +1930,19 @@
     "name": "Plate Archer Armour",
     "skill": "archery",
     "level": 10,
+    "price": 2000,
     "attackStats": {
       "crush": 3,
       "slash": 8,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 11,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1707,16 +1958,19 @@
     "name": "Red Archer Armour",
     "skill": "archery",
     "level": 15,
+    "price": 2200,
     "attackStats": {
       "crush": 3,
       "slash": 8,
       "stab": 5,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 10,
       "slash": 16,
       "stab": 10,
+      "archery": 0,
       "magic": 1
     },
     "bonuses": {
@@ -1732,16 +1986,19 @@
     "name": "Golden Archer Armour",
     "skill": "archery",
     "level": 17,
+    "price": 2300,
     "attackStats": {
       "crush": 4,
       "slash": 7,
       "stab": 6,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 10,
       "slash": 20,
       "stab": 10,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -1757,16 +2014,19 @@
     "name": "Green Archer Armour",
     "skill": "archery",
     "level": 18,
+    "price": 2600,
     "attackStats": {
       "crush": 8,
       "slash": 8,
       "stab": 8,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 16,
       "stab": 6,
+      "archery": 0,
       "magic": 3
     },
     "bonuses": {
@@ -1782,16 +2042,19 @@
     "name": "Green Wing Archer Armour",
     "skill": "archery",
     "level": 20,
+    "price": 3000,
     "attackStats": {
       "crush": 9,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 9,
       "slash": 18,
       "stab": 9,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1807,16 +2070,19 @@
     "name": "Guard Archer Armour",
     "skill": "archery",
     "level": 24,
+    "price": 3000,
     "attackStats": {
       "crush": 12,
       "slash": 16,
       "stab": 10,
+      "archery": 0,
       "magic": 5
     },
     "defenseStats": {
       "crush": 12,
       "slash": 21,
       "stab": 13,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -1831,17 +2097,20 @@
     "type": "armourarcher",
     "name": "Red Guard Archer Armour",
     "skill": "archery",
+    "price": 3001,
     "level": 28,
     "attackStats": {
       "crush": 12,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": 5
     },
     "defenseStats": {
       "crush": 12,
       "slash": 24,
       "stab": 15,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -1857,16 +2126,19 @@
     "name": "White Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 3300,
     "attackStats": {
       "crush": 12,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 28,
       "stab": 17,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -1882,16 +2154,19 @@
     "name": "Rat Archer Armour",
     "skill": "archery",
     "level": 32,
+    "price": 3500,  
     "attackStats": {
       "crush": 12,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 30,
       "stab": 11,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -1907,16 +2182,19 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 4200,
     "attackStats": {
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1932,16 +2210,19 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 4200,
     "attackStats": {
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1957,16 +2238,19 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 4005,
     "attackStats": {
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -1982,16 +2266,19 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 4700,
     "attackStats": {
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -2007,16 +2294,19 @@
     "name": "Pirate Archer Armour",
     "skill": "archery",
     "level": 30,
+    "price": 4500,
     "attackStats": {
       "crush": 10,
       "slash": 22,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 10,
       "slash": 30,
       "stab": 14,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -2032,16 +2322,19 @@
     "name": "Cheolia Archer Armour",
     "skill": "archery",
     "level": 34,
+    "price": 4500,
     "attackStats": {
       "crush": 12,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "defenseStats": {
       "crush": 14,
       "slash": 24,
       "stab": 22,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2057,16 +2350,19 @@
     "name": "Dovakina Archer Armour",
     "skill": "archery",
     "level": 38,
+    "price": 10000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 10,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 10,
       "slash": 20,
       "stab": 14,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2082,16 +2378,19 @@
     "name": "GbwingarcherArmour",
     "skill": "archery",
     "level": 38,
+    "price": 500,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 10,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 22,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2107,16 +2406,19 @@
     "name": "Red Wing Archer Armour",
     "skill": "archery",
     "level": 40,
+    "price": 5000,
     "attackStats": {
       "crush": 18,
       "slash": 28,
       "stab": 14,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 26,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2132,16 +2434,19 @@
     "name": "Snow Fox Archer Armour",
     "skill": "archery",
     "level": 44,
+    "price": 5000,
     "attackStats": {
       "crush": 28,
       "slash": 28,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 32,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2157,16 +2462,19 @@
     "name": "Wolf Archer Armour",
     "skill": "archery",
     "level": 44,
+    "price": 5200,
     "attackStats": {
       "crush": 28,
       "slash": 30,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 34,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2182,16 +2490,19 @@
     "name": "Blue Wing Archer Armour",
     "skill": "archery",
     "level": 46,
+    "price": 5250,
     "attackStats": {
       "crush": 28,
       "slash": 36,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 38,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2207,16 +2518,19 @@
     "name": "Fallen Archer Armour",
     "skill": "archery",
     "level": 50,
+    "price": 5300,
     "attackStats": {
       "crush": 28,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 12,
       "slash": 46,
       "stab": 6,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2232,16 +2546,19 @@
     "name": "Crystal Archer Armour",
     "skill": "archery",
     "level": 54,
+    "price": 5550,
     "attackStats": {
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 6,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2257,16 +2574,19 @@
     "name": "Legolas Armour",
     "skill": "archery",
     "level": 58,
+    "price": 5005,
     "attackStats": {
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 10
     },
     "defenseStats": {
       "crush": 6,
       "slash": 28,
       "stab": 18,
+      "archery": 0,
       "magic": 14
     },
     "bonuses": {
@@ -2282,16 +2602,19 @@
     "name": "Adherer Archer Armour",
     "skill": "archery",
     "level": 64,
+    "price": 5025,
     "attackStats": {
       "crush": 21,
       "slash": 20,
       "stab": 35,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 6,
       "slash": 38,
       "stab": 18,
+      "archery": 0,
       "magic": 16
     },
     "bonuses": {
@@ -2307,16 +2630,19 @@
     "name": "Archer School Uniform",
     "skill": "archery",
     "level": 20,
+    "price": 1500,
     "attackStats": {
       "crush": 11,
       "slash": 10,
       "stab": 15,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": 6
     },
     "bonuses": {
@@ -2332,16 +2658,19 @@
     "name": "Combat Uniform",
     "skill": "archery",
     "level": 40,
+    "price": 5500,
     "attackStats": {
       "crush": 11,
       "slash": 15,
       "stab": 25,
+      "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 6,
       "slash": 18,
       "stab": 18,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2360,12 +2689,15 @@
   "woodenbow": {
     "type": "weaponarcher",
     "name": "Wooden Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 1,
+    "price": 100,
     "attackStats": {
       "crush": 5,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2379,12 +2711,15 @@
   "plasticbow": {
     "type": "weaponarcher",
     "name": "Plastic Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 3,
+    "price": 500,
     "attackStats": {
       "crush": 4,
       "slash": 6,
       "stab": 16,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2398,12 +2733,15 @@
   "ironbow": {
     "type": "weaponarcher",
     "name": "Iron Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 7,
+    "price": 3000,
     "attackStats": {
       "crush": 3,
       "slash": 4,
       "stab": 21,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2417,12 +2755,15 @@
   "redbow": {
     "type": "weaponarcher",
     "name": "Red Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 11,
+    "price": 3500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 25,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2436,12 +2777,15 @@
   "violetbow": {
     "type": "weaponarcher",
     "name": "Violet Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 14,
+    "price": 2231,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 31,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2455,12 +2799,15 @@
   "deathbow": {
     "type": "weaponarcher",
     "name": "Death Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 18,
+    "price": 3268,
     "attackStats": {
       "crush": 5,
       "slash": 4,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2474,12 +2821,15 @@
   "goldenbow": {
     "type": "weaponarcher",
     "name": "Golden Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 22,
+    "price": 5000,
     "attackStats": {
       "crush": 2,
       "slash": 3,
-      "stab": 45,
+      "stab": 26,
+      "archery": 34,
       "magic": 0
     },
     "bonuses": {
@@ -2493,12 +2843,15 @@
   "watermelonbow": {
     "type": "weaponarcher",
     "name": "Watermelon Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 26,
+    "price": 4100,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 41,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2511,13 +2864,16 @@
 
   "greenbow": {
     "type": "weaponarcher",
-    "name": "Greenbow",
+    "name": "GreenBow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 29,
+    "price": 7500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 37,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2531,12 +2887,15 @@
   "redenelbow": {
     "type": "weaponarcher",
     "name": "Redenel Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 33,
+    "price": 5050,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 34,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2550,12 +2909,15 @@
   "mermaidbow": {
     "type": "weaponarcher",
     "name": "Mermaid Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 35,
+    "price": 10000,
     "attackStats": {
       "crush": 4,
       "slash": 9,
       "stab": 35,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2569,12 +2931,15 @@
   "seahorsebow": {
     "type": "weaponarcher",
     "name": "Seahorse Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 35,
+    "price": 550,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 33,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2588,12 +2953,15 @@
   "hunterbow": {
     "type": "weaponarcher",
     "name": "Hunter Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 37,
+    "price": 6200,
     "attackStats": {
       "crush": 4,
       "slash": 7,
       "stab": 40,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2607,12 +2975,15 @@
   "greenlightbow": {
     "type": "weaponarcher",
     "name": "Green Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 39,
+    "price": 1170,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 38,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2626,12 +2997,15 @@
   "skylightbow": {
     "type": "weaponarcher",
     "name": "Sky Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 42,
+    "price": 6500,
     "attackStats": {
       "crush": 2,
       "slash": 3,
       "stab": 43,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2645,12 +3019,15 @@
   "redlightbow": {
     "type": "weaponarcher",
     "name": "Red Light Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 41,
+    "price": 9200,
     "attackStats": {
       "crush": 6,
       "slash": 4,
       "stab": 52,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2664,12 +3041,15 @@
   "captainbow": {
     "type": "weaponarcher",
     "name": "Captain Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 44,
+    "price": 7150,
     "attackStats": {
       "crush": 4,
       "slash": 7,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2680,16 +3060,41 @@
     }
   },
 
+  "candybow": {
+    "type": "weaponarcher",
+    "name": "Candy Bow",
+    "weaponType": "bow",
+    "skill": "archery",
+    "level": 69,
+    "price": 11150,
+    "attackStats": {
+      "crush": 4,
+      "slash": 7,
+      "stab": 0,
+      "archery": 80,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 0,
+      "archery": 50,
+      "magic": 0
+    }
+  },
+
   "redmetalbow": {
     "type": "weaponarcher",
     "name": "Red Metal Bow",
+    "weaponType": "bow",
     "attackRate": 1500,
     "skill": "archery",
     "level": 45,
+    "price": 7150,
     "attackStats": {
       "crush": 10,
       "slash": 4,
       "stab": 68,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2703,12 +3108,15 @@
   "justicebow": {
     "type": "weaponarcher",
     "name": "Justice Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 45,
+    "price": 2100,
     "attackStats": {
       "crush": 2,
       "slash": 6,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2722,12 +3130,15 @@
   "rosebow": {
     "type": "weaponarcher",
     "name": "Rose Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 50,
+    "price": 2150,
     "attackStats": {
       "crush": 10,
       "slash": 6,
       "stab": 55,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2741,12 +3152,15 @@
   "marinebow": {
     "type": "weaponarcher",
     "name": "Marine Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 52,
+    "price": 2210,
     "attackStats": {
       "crush": 0,
       "slash": 0,
-      "stab": 48,
+      "stab": 0,
+      "archery": 54,
       "magic": 0
     },
     "bonuses": {
@@ -2760,12 +3174,15 @@
   "crystalbow": {
     "type": "weaponarcher",
     "name": "Crystal Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 53,
+    "price": 2250,
     "attackStats": {
       "crush": 2,
       "slash": 6,
       "stab": 60,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2779,12 +3196,15 @@
   "gaybow": {
     "type": "weaponarcher",
     "name": "Gay Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 54,
+    "price": 25000,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 62,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2798,12 +3218,15 @@
   "forestbow": {
     "type": "weaponarcher",
     "name": "Forest Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 55,
+    "price": 12500,
     "attackStats": {
       "crush": 10,
       "slash": 4,
       "stab": 70,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2817,12 +3240,15 @@
   "sicklebow": {
     "type": "weaponarcher",
     "name": "Sickle Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 56,
+    "price": 30000,
     "attackStats": {
       "crush": 10,
       "slash": 8,
       "stab": 75,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2836,12 +3262,15 @@
   "bloodbow": {
     "type": "weaponarcher",
     "name": "Blood Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 58,
+    "price": 12201,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 70,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2855,12 +3284,15 @@
   "redsicklebow": {
     "type": "weaponarcher",
     "name": "Red Sickle Bow",
+    "weaponType": "bow",
     "skill": "archery",
     "level": 66,
+    "price": 13150,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 85,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -2879,18 +3311,20 @@
   "leatherarmor": {
     "type": "armour",
     "name": "Leather Armour",
-    "price": 200,
+    "price": 2000,
     "level": 2,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 12,
       "stab": 3,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2904,18 +3338,20 @@
   "mailarmor": {
     "type": "armour",
     "name": "Chain Mail",
-    "price": 320,
+    "price": 3202,
     "level": 6,
     "attackStats": {
       "crush": 4,
       "slash": 6,
       "stab": 5,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 10,
       "slash": 14,
       "stab": 5,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2929,18 +3365,20 @@
   "platearmor": {
     "type": "armour",
     "name": "Steel Armour",
-    "price": 500,
+    "price": 5000,
     "level": 12,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 4,
+      "archery": 0,
       "magic": -3
     },
     "defenseStats": {
       "crush": 8,
       "slash": 12,
       "stab": 9,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2960,12 +3398,14 @@
       "crush": 4,
       "slash": 8,
       "stab": 3,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 12,
       "slash": 20,
       "stab": 12,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -2985,12 +3425,14 @@
       "crush": 6,
       "slash": 12,
       "stab": 5,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 14,
       "slash": 24,
       "stab": 14,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3010,12 +3452,14 @@
       "crush": 7,
       "slash": 14,
       "stab": 8,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 22,
       "slash": 20,
       "stab": 16,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3035,12 +3479,14 @@
       "crush": 7,
       "slash": 14,
       "stab": 8,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 24,
       "slash": 23,
       "stab": 18,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3054,18 +3500,20 @@
   "guardarmor": {
     "type": "armour",
     "name": "Guard Armour",
-    "price": 2500,
+    "price": 5000,
     "level": 36,
     "attackStats": {
       "crush": 10,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 28,
       "slash": 24,
       "stab": 20,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3085,12 +3533,14 @@
       "crush": 10,
       "slash": 18,
       "stab": 12,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 28,
       "slash": 28,
       "stab": 22,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3110,12 +3560,14 @@
       "crush": 12,
       "slash": 24,
       "stab": 14,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 32,
       "slash": 32,
       "stab": 22,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3135,12 +3587,14 @@
       "crush": 12,
       "slash": 24,
       "stab": 13,
+      "archery": 0,
       "magic": -2
     },
     "defenseStats": {
       "crush": 34,
       "slash": 30,
       "stab": 26,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -3154,18 +3608,20 @@
   "piratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3179,18 +3635,20 @@
   "greenpiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3204,18 +3662,20 @@
   "purplepiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3229,18 +3689,20 @@
   "redpiratearmor": {
     "type": "armour",
     "name": "Pirate Armour",
-    "price": 3500,
+    "price": 7500,
     "level": 55,
     "attackStats": {
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 36,
       "slash": 36,
       "stab": 30,
+      "archery": 0,
       "magic": 2
     },
     "bonuses": {
@@ -3260,12 +3722,14 @@
       "crush": 13,
       "slash": 25,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 38,
       "slash": 40,
       "stab": 33,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -3279,18 +3743,20 @@
   "dovakinarmor": {
     "type": "armour",
     "name": "Dovakin Armour",
-    "price": 4500,
+    "price": 10500,
     "level": 58,
     "attackStats": {
       "crush": 13,
       "slash": 30,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 46,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3310,12 +3776,14 @@
       "crush": 13,
       "slash": 32,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 46,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3335,12 +3803,14 @@
       "crush": 13,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 50,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3360,12 +3830,14 @@
       "crush": 13,
       "slash": 40,
       "stab": 15,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3379,18 +3851,20 @@
   "wolfarmor": {
     "type": "armour",
     "name": "Wolf Armour",
-    "price": 5000,
+    "price": 10000,
     "level": 80,
     "attackStats": {
       "crush": 11,
       "slash": 38,
       "stab": 13,
+      "archery": 0,
       "magic": -5
     },
     "defenseStats": {
       "crush": 30,
       "slash": 40,
       "stab": 28,
+      "archery": 0,
       "magic": -10
     },
     "bonuses": {
@@ -3410,12 +3884,14 @@
       "crush": 13,
       "slash": 48,
       "stab": 15,
+      "archery": 0,
       "magic": -8
     },
     "defenseStats": {
       "crush": 34,
       "slash": 42,
       "stab": 20,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -3435,12 +3911,14 @@
       "crush": 13,
       "slash": 48,
       "stab": 24,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 20,
       "slash": 32,
       "stab": 16,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -3460,12 +3938,14 @@
       "crush": 15,
       "slash": 50,
       "stab": 24,
+      "archery": 0,
       "magic": 2
     },
     "defenseStats": {
       "crush": 20,
       "slash": 32,
       "stab": 16,
+      "archery": 0,
       "magic": 5
     },
     "bonuses": {
@@ -3479,18 +3959,20 @@
   "dragonarmor": {
     "type": "armour",
     "name": "Dragon Armour",
-    "price": 6500,
+    "price": 12500,
     "level": 90,
     "attackStats": {
       "crush": 12,
       "slash": 40,
       "stab": 24,
+      "archery": 0,
       "magic": 14
     },
     "defenseStats": {
       "crush": 24,
       "slash": 32,
       "stab": 28,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -3510,12 +3992,14 @@
       "crush": 28,
       "slash": 34,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 20,
       "slash": 20,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -3535,12 +4019,14 @@
       "crush": 28,
       "slash": 36,
       "stab": 32,
+      "archery": 0,
       "magic": 8
     },
     "defenseStats": {
       "crush": 18,
       "slash": 24,
       "stab": 30,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -3560,12 +4046,14 @@
       "crush": 58,
       "slash": 76,
       "stab": 42,
+      "archery": 0,
       "magic": 22
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 40
     },
     "bonuses": {
@@ -3586,12 +4074,14 @@
       "crush": 32,
       "slash": 20,
       "stab": 28,
+      "archery": 0,
       "magic": 40
     },
     "defenseStats": {
       "crush": 8,
       "slash": 4,
       "stab": 10,
+      "archery": 0,
       "magic": 65
     },
     "bonuses": {
@@ -3611,12 +4101,14 @@
       "crush": 38,
       "slash": 56,
       "stab": 22,
+      "archery": 0,
       "magic": 26
     },
     "defenseStats": {
       "crush": 24,
       "slash": 16,
       "stab": 14,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -3641,7 +4133,7 @@
     "type": "armour",
     "name": "Beautiful Life"
   },
-
+    
   "regionarmor": {
     "type": "armour",
     "name": "Region Armour",
@@ -3651,12 +4143,14 @@
       "crush": 38,
       "slash": 26,
       "stab": 32,
+      "archery": 0,
       "magic": 16
     },
     "defenseStats": {
       "crush": 124,
       "slash": 86,
       "stab": 64,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -3687,12 +4181,14 @@
       "crush": 15,
       "slash": 30,
       "stab": 20,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 36,
       "slash": 26,
       "stab": 16,
+      "archery": 0,
       "magic": 12
     },
     "bonuses": {
@@ -3765,7 +4261,7 @@
 
   "rudolfarmor": {
     "type": "armour",
-    "name": "Rudolf Armour"
+    "name": "Reindeer Armour"
   },
 
   "christmasarmor": {
@@ -3773,9 +4269,9 @@
     "name": "Christmas Armour"
   },
 
-  "robocoparmor": {
+  "robotarmor": {
     "type": "armour",
-    "name": "Robocop Armour"
+    "name": "Robot Armour"
   },
 
   "pinkcockroacharmor": {
@@ -3790,13 +4286,15 @@
       "crush": 5,
       "slash": 6,
       "stab": 7,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
-      "crush": 68,
-      "slash": 55,
-      "stab": 60,
-      "magic": 45
+      "crush": 38,
+      "slash": 35,
+      "stab": 35,
+      "archery": 25,
+      "magic": 0
     },
     "bonuses": {
       "accuracy": 3,
@@ -3839,16 +4337,19 @@
   "wizardrobe": {
     "type": "armour",
     "name": "Wizard Robe",
+    "price": 1000,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 14
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 10
     },
     "bonuses": {
@@ -3864,16 +4365,19 @@
     "name": "Lightning Robe",
     "skill": "magic",
     "level": 12,
+    "price": 1500,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 21
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 18
     },
     "bonuses": {
@@ -3888,17 +4392,20 @@
     "type": "armour",
     "name": "Nature Robe",
     "skill": "magic",
+    "price": 4000,
     "level": 21,
     "attackStats": {
       "crush": 4,
       "slash": 8,
       "stab": 4,
+      "archery": 0,
       "magic": 28
     },
     "defenseStats": {
       "crush": 2,
       "slash": 1,
       "stab": 0,
+      "archery": 0,
       "magic": 21
     },
     "bonuses": {
@@ -3914,16 +4421,19 @@
     "name": "Dark Robe",
     "skill": "magic",
     "level": 30,
+    "price": 5000,
     "attackStats": {
       "crush": 6,
       "slash": 10,
       "stab": 8,
+      "archery": 0,
       "magic": 36
     },
     "defenseStats": {
       "crush": 4,
       "slash": 3,
       "stab": 3,
+      "archery": 0,
       "magic": 28
     },
     "bonuses": {
@@ -3939,16 +4449,19 @@
     "name": "Ice Robe",
     "skill": "magic",
     "level": 40,
+    "price": 5200,
     "attackStats": {
       "crush": 8,
       "slash": 12,
       "stab": 11,
+      "archery": 0,
       "magic": 45
     },
     "defenseStats": {
       "crush": -4,
       "slash": -8,
       "stab": -1,
+      "archery": 0,
       "magic": 37
     },
     "bonuses": {
@@ -3968,12 +4481,14 @@
       "crush": 38,
       "slash": 56,
       "stab": 26,
+      "archery": 0,
       "magic": 26
     },
     "defenseStats": {
       "crush": 54,
       "slash": 46,
       "stab": 34,
+      "archery": 0,
       "magic": 36
     },
     "bonuses": {
@@ -4004,9 +4519,9 @@
     "name": "Devil Kazya Armour"
   },
 
-  "bridalmask": {
+  "samuraiarmor": {
     "type": "armour",
-    "name": "Bridal Mask"
+    "name": "Samurai Armour"
   },
 
   "blackspiderarmor": {
@@ -4018,12 +4533,14 @@
       "crush": 20,
       "slash": 20,
       "stab": 20,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 20,
       "slash": 34,
       "stab": 18,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -4036,7 +4553,8 @@
 
   "frogarmor": {
     "type": "armour",
-    "name": "Frog Armour"
+    "name": "Frog Armour",
+    "price": 7500
   },
 
   "bearseonbiarmor": {
@@ -4087,12 +4605,14 @@
       "crush": 88,
       "slash": 130,
       "stab": 78,
+      "archery": 0,
       "magic": 50
     },
     "defenseStats": {
       "crush": 160,
       "slash": 198,
       "stab": 146,
+      "archery": 0,
       "magic": 68
     },
     "bonuses": {
@@ -4111,15 +4631,24 @@
     "price": 40,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 5,
+    "maxStackSize": 25,
     "plugin": "healthflask",
     "healAmount": 100
+  },
+
+  "hotsauce": {
+    "type": "object",
+    "name": "Hot Sauce",
+    "description": "It's really weird why random mobs would be carrying this item. Like what could they possibly use this for?",
+    "price": 150,
+    "edible": true,
+    "plugin": "hotsauce"
   },
 
   "cure": {
     "type": "object",
     "name": "Antidote",
-    "description": "Are you poisoned? Have you been involved in a fight with a poisonous snake? Well this is the cure for you!",
+    "description": "Are you poisoned? Have you been involved in a fight with a poisonous snake or venomous spider? Well this is the cure for you!",
     "storeCount": 10,
     "price": 150,
     "stackable": false,
@@ -4135,7 +4664,7 @@
     "price": 200,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 5,
+    "maxStackSize": 30,
     "plugin": "healthflask",
     "manaAmount": 35
   },
@@ -4148,7 +4677,7 @@
     "price": 350,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 3,
+    "maxStackSize": 7,
     "plugin": "healthflask",
     "healAmount": 200
   },
@@ -4161,7 +4690,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 2,
+    "maxStackSize": 5,
     "plugin": "healthflask",
     "healAmount": 250
   },
@@ -4174,7 +4703,7 @@
     "price": 600,
     "stackable": true,
     "edible": true,
-    "maxStackSize": 2,
+    "maxStackSize": 10,
     "plugin": "healthflask",
     "manaAmount": 95
   },
@@ -4182,6 +4711,7 @@
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
+     "price": 250,
     "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
     "edible": true
   },
@@ -4201,16 +4731,20 @@
   "cd": {
     "type": "object",
     "name": "CD [Quest]",
-    "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
+    "description": "A CD received by some dying soldier Private Ryan. Contains his last mixtape. I should probably get this to his Sexy wife or something.",
     "undroppable": true
   },
-
+       
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
+    "price": 25,
     "description": "A magical potion received by some weird monument. It temporarily prevents the player from taking damage from the cold.",
     "stackable": true,
-    "respawnDelay": 120000
+    "maxStackSize": 3,
+    "respawnDelay": 120000,
+    "edible": true,
+    "plugin": "snowpotion"
   },
 
   "royalazalea": {
@@ -4221,6 +4755,7 @@
   "blackpotion": {
     "type": "object",
     "name": "Black Potion",
+    "price": 100,
     "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
     "plugin": "blackpotion",
     "edible": true
@@ -4231,6 +4766,13 @@
     "name": "Gold",
     "stackable": true,
     "description": "A very useful shiny metal that for some reason people like to exchange for goods."
+  },
+
+  "token": {
+    "type": "object",
+    "name": "Token",
+    "stackable": true,
+    "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
   "leafcommon": {
@@ -4488,11 +5030,14 @@
   "sword1": {
     "type": "weapon",
     "name": "Best In-Slot Sword",
+    "weaponType": "sword",
     "level": 1,
+    "price": 100000,
     "attackStats": {
       "crush": -69,
       "slash": -69,
       "stab": -69,
+      "archery": -69,
       "magic": -420
     },
     "bonuses": {
@@ -4529,6 +5074,7 @@
 
   "shardt1": {
     "type": "object",
+    "price": 1500,
     "name": "Shard - Tier 1",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4536,6 +5082,7 @@
 
   "shardt2": {
     "type": "object",
+    "price": 3000,
     "name": "Shard - Tier 2",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4543,6 +5090,7 @@
 
   "shardt3": {
     "type": "object",
+    "price": 4500,
     "name": "Shard - Tier 3",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4550,6 +5098,7 @@
 
   "shardt4": {
     "type": "object",
+    "price": 6000,
     "name": "Shard - Tier 4",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4557,6 +5106,7 @@
 
   "shardt5": {
     "type": "object",
+    "price": 7500,
     "name": "Shard - Tier 5",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
@@ -4580,11 +5130,13 @@
   "icesword": {
     "type": "weapon",
     "name": "Ice Sword",
+    "weaponType": "sword",
     "level": 94,
     "attackStats": {
       "crush": 8,
       "slash": 22,
       "stab": 12,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -4610,22 +5162,30 @@
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 20
+    "price": 50
   },
 
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
     "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
-    "price": 25
+    "price": 75
+  },
+
+  "pinelogs": {
+    "type": "object",
+    "name": "Pine Logs",
+    "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
+    "price": 88
   },
 
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
-    "price": 35,
+    "price": 65,
     "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
+  
 
   "icepalmlogs": {
     "type": "object",
@@ -4634,51 +5194,75 @@
     "description": "These logs are made out of ice and palm wood. They're very cold to the touch."
   },
 
+  "icepinelogs": {
+    "type": "object",
+    "name": "Ice Pine Logs",
+    "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
+    "price": 85
+  },
+
+  "willowlogs": {
+    "type": "object",
+    "name": "Willow Logs",
+    "price": 350,
+    "description": "Classic type of wood. It's hard, it's strong, you can use it for a lot of things. But for now I guess I can sell it."
+  },
+
   "bloodwoodlogs": {
     "type": "object",
     "name": "Bloodwood Logs",
-    "price": 150,
-    "description": "It almost looks like they're bleeding."
+    "price": 400,
+    "description": "It almost looks like they're crying blood."
   },
 
   "nisocore": {
     "type": "object",
     "name": "Nisoc Ore",
     "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
-    "price": 150
+    "price": 250
   },
 
   "cinnabarore": {
     "type": "object",
     "name": "Cinnabar Ore",
     "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
-    "price": 250
+    "price": 350
   },
 
   "pytharore": {
     "type": "object",
     "name": "Pythar Ore",
     "description": "A purple crystal with magical properties.",
-    "price": 400
+    "price": 500
   },
 
   "goldore": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
-    "price": 550
+    "price": 650
   },
 
   "iboore": {
     "type": "object",
     "name": "Ibo Ore",
     "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
-    "price": 700
+    "price": 800
   },
-
+      
+  "moonrockore": {
+    "type": "object",
+    "name": "Space Rock",
+    "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
+    "price": 2400
+  },
+      
   "bead": {
     "type": "object",
     "name": "Magic Bead",
+    "price": 10,
+    "stackable": true,
+    "maxStackSize": 3,
     "description": "A bead that emanates magical properties. Can be used in conjunction with other items to create magical items."
   },
 
@@ -4709,22 +5293,33 @@
   "stick": {
     "type": "object",
     "name": "Stick",
+    "price": 150,
     "description": "A stick. It's a stick. What else do you want me to say about it?"
+  },
+
+  "candykey": {
+    "type": "object",
+    "name": "Candy Key",
+    "price": 50,
+    "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
   },
 
   "leatherboots": {
     "type": "boots",
     "name": "Leather Boots",
+    "price": 150,
     "attackStats": {
       "crush": 1,
       "slash": 2,
       "stab": 1,
+      "archery": 0,
       "magic": -4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 3,
       "stab": 1,
+      "archery": 0,
       "magic": -4
     },
     "bonuses": {
@@ -4738,16 +5333,19 @@
   "steelboots": {
     "type": "boots",
     "name": "Steel Boots",
+    "price": 3500,
     "attackStats": {
       "crush": 6,
       "slash": 7,
       "stab": 4,
+      "archery": 0,
       "magic": -6
     },
     "defenseStats": {
       "crush": 7,
       "slash": 12,
       "stab": 6,
+      "archery": 0,
       "magic": -5
     },
     "bonuses": {
@@ -4761,16 +5359,19 @@
   "goldboots": {
     "type": "boots",
     "name": "Golden Boots",
+    "price": 12500,
     "attackStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 12
     },
     "defenseStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
+      "archery": 0,
       "magic": 8
     },
     "bonuses": {
@@ -4784,17 +5385,20 @@
   "swiftboots": {
     "type": "boots",
     "name": "Swift Boots",
+    "price": 7500,
     "movementModifier": 0.95,
     "attackStats": {
       "crush": 1,
       "slash": 2,
       "stab": 1,
+      "archery": 0,
       "magic": 4
     },
     "defenseStats": {
       "crush": 2,
       "slash": 3,
       "stab": 1,
+      "archery": 0,
       "magic": 4
     },
     "bonuses": {
@@ -4808,16 +5412,19 @@
   "lavaboots": {
     "type": "boots",
     "name": "Lava Boots",
+    "price": 21500,
     "attackStats": {
       "crush": 9,
       "slash": 12,
       "stab": 10,
+      "archery": 0,
       "magic": 3
     },
     "defenseStats": {
       "crush": 12,
       "slash": 12,
       "stab": 12,
+      "archery": 0,
       "magic": 0
     },
     "bonuses": {
@@ -4832,7 +5439,7 @@
     "type": "arrow",
     "name": "Arrow",
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4845,8 +5452,9 @@
   "firearrow": {
     "type": "arrow",
     "name": "Fire Arrow",
+    "price": 2,
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4859,8 +5467,9 @@
   "poisonarrow": {
     "type": "arrow",
     "name": "Poison Arrow",
+    "price": 2,
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "poisonous": true,
     "bonuses": {
       "accuracy": 0,
@@ -4874,8 +5483,9 @@
   "lightningarrow": {
     "type": "arrow",
     "name": "Lightning Arrow",
+    "price": 2,
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -4888,8 +5498,9 @@
   "icearrow": {
     "type": "arrow",
     "name": "Ice Arrow",
+    "price": 2,
     "stackable": true,
-    "maxStackSize": 99,
+    "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,

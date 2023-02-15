@@ -1,7 +1,6 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -22,22 +21,6 @@ export default class SkeletonKing extends Default {
     }
 
     /**
-     * Override for the handle death callback. The skeleton king must remove
-     * all of its minions upon death.
-     * @param attacker The attacker that killed the skeleton king.
-     */
-
-    protected override handleDeath(attacker?: Character): void {
-        super.handleDeath(attacker);
-
-        // Clear all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
-
-        // Reset minion spawn count.
-        this.minionsSpawned = 0;
-    }
-
-    /**
      * Override for the hit handler callback. We spawn minions whenever the skeleton
      * king is hit by a character.
      * @param damage The amount of damage that was dealt.
@@ -49,6 +32,22 @@ export default class SkeletonKing extends Default {
 
         // Add a random chance (1/4) to spawn a minion.
         if (Utils.randomInt(1, 4) === 2) this.spawnMob();
+    }
+
+    /**
+     * Override for the handle death callback. The skeleton king must remove
+     * all of its minions upon death.
+     * @param attacker The attacker that killed the skeleton king.
+     */
+
+    protected override handleDeath(attacker?: Character): void {
+        super.handleDeath(attacker);
+
+        // Clear all the minions from the list.
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
+
+        // Reset minion spawn count.
+        this.minionsSpawned = 0;
     }
 
     /**

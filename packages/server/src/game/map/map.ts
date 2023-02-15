@@ -4,7 +4,6 @@ import Regions from './regions';
 
 import mapData from '../../../data/map/world.json';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type {
@@ -68,11 +67,14 @@ export default class Map {
      */
 
     private loadAreas(): void {
-        _.each(map.areas, (area, key: string) => {
-            if (!(key in AreasIndex)) return;
+        for (let key in map.areas) {
+            if (!(key in AreasIndex)) continue;
 
-            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](area, this.world);
-        });
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](
+                map.areas[key],
+                this.world
+            );
+        }
     }
 
     /**
@@ -87,21 +89,20 @@ export default class Map {
      */
 
     private loadDoors(): void {
-        // Duplicate doors using `_.cloneDeep`
-        let doorsClone = _.cloneDeep(map.areas.doors);
+        let doorsClone = structuredClone(map.areas.doors);
 
         // Iterate through the doors in the map.
-        _.each(map.areas.doors, (door: ProcessedArea) => {
+        for (let door of map.areas.doors) {
             // Skip if the door does not have a destination.
-            if (!door.destination) return;
+            if (!door.destination) continue;
 
             // Find destination door in the clone list of doors.
             let index = this.coordToIndex(door.x, door.y),
-                destination = _.find(doorsClone, (cloneDoor) => {
+                destination = doorsClone.find((cloneDoor) => {
                     return door.destination === cloneDoor.id;
                 });
 
-            if (!destination) return;
+            if (!destination) continue;
 
             // Assign destination door information to the door we are parsing.
             this.doors[index] = {
@@ -112,10 +113,12 @@ export default class Map {
                 achievement: door.achievement || '',
                 reqAchievement: door.reqAchievement || '',
                 reqQuest: door.reqQuest || '',
+                reqItem: door.reqItem || '',
+                reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
                 level: door.level || 0
             };
-        });
+        }
     }
 
     /**
@@ -402,16 +405,16 @@ export default class Map {
      * Specifically used in the player's handler, it is used to check
      * various activities within the areas.
      * @param callback Returns an areas group (i.e. chest areas) and the key of the group.
-     * @param list Optional paramaeter used for iterating through specified areas. Prevents iterating
+     * @param list Optional parameter used for iterating through specified areas. Prevents iterating
      * through unnecessary areas.
      */
 
     public forEachAreas(callback: (areas: Areas, key: string) => void, list: string[] = []): void {
-        _.each(this.areas, (a: Areas, name: string) => {
-            if (list.length > 0 && !list.includes(name)) return;
+        for (let name in this.areas) {
+            if (list.length > 0 && !list.includes(name)) continue;
 
-            callback(a, name);
-        });
+            callback(this.areas[name], name);
+        }
     }
 
     /**
@@ -421,7 +424,7 @@ export default class Map {
      */
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
-        if (_.isArray(data)) _.each(data, callback);
+        if (Array.isArray(data)) for (let index in data) callback(data[index], parseInt(index));
         else callback(data);
     }
 
@@ -431,10 +434,10 @@ export default class Map {
      */
 
     public forEachEntity(callback: (position: Position, key: string) => void): void {
-        _.each(this.entities, (key: string, tileId: string) => {
+        for (let tileId in this.entities) {
             let position = this.indexToCoord(parseInt(tileId));
 
-            callback(position, key);
-        });
+            callback(position, this.entities[tileId]);
+        }
     }
 }

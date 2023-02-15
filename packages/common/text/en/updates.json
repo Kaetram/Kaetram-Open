@@ -119,5 +119,19 @@
             "- Fixes and improvements to the user interface",
             "- Fixes WASD interaction with NPCs/mobs"    
         ]
+    },
+    "alpha-2.3.5": {
+        "title": "Kaetram alpha-2.3.5",
+        "content": [
+            "- Added player trading",
+            "- Added shared exp (based on damage contributions to mob)",
+            "- Added priority drops (whoever does most damage has priority to an item)",
+            "- Polished bank/store containers",
+            "- Tweaked item prices, drop rates, stats, and descriptions",
+            "- Bank is now stackable for all items",
+            "- Graphical rehaul on many sprites",
+            "- Buy/drop/etc X amount",
+            "- Various bug fixes and backend improvements"
+        ]
     }
 }

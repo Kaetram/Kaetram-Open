@@ -57,6 +57,6 @@ export default class Ant extends Default {
         // Heal only if the target is near.
         if (!this.mob.isNearTarget()) return;
 
-        (this.mob.target as Mob).heal(35, 'hitpoints');
+        this.mob.target.heal(35, 'hitpoints');
     }
 }

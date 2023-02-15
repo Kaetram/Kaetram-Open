@@ -12,7 +12,8 @@ export enum List {
 export enum Equipment {
     Batch,
     Equip,
-    Unequip
+    Unequip,
+    Style
 }
 
 export enum Movement {
@@ -103,9 +104,11 @@ export enum NPC {
 
 export enum Trade {
     Request,
+    Add,
+    Remove,
     Accept,
-    Decline,
-    Close
+    Close,
+    Open
 }
 
 export enum Enchant {
@@ -182,6 +185,7 @@ export enum Bubble {
 }
 
 export enum Effect {
+    None,
     Speed,
     Critical,
     Freeze,

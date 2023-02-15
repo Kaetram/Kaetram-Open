@@ -1,5 +1,7 @@
 export let agent = navigator.userAgent.toLowerCase();
 
+export let isLargeScreen = (): boolean => window.innerWidth >= 1500;
+
 export let isIPad = (): boolean => agent.includes('ipad');
 
 export let isSafari = (): boolean => agent.includes('safari') && !agent.includes('chrome');

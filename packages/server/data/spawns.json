@@ -178,5 +178,13 @@
     "miniboss": true,
     "achievement": "webdeveloper",
     "level": 45
+  },
+
+  "658-267": {
+    "name": "Mermaid",
+    "miniboss": true,
+    "achievement": "mermaidguard",
+    "defenseLevel": 28,
+    "level": 55
   }
 }

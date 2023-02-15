@@ -8,7 +8,6 @@
 @use 'impl/chat';
 @use 'impl/container';
 @use 'impl/dialog';
-@use 'impl/drop';
 @use 'impl/enchant';
 @use 'impl/equipments';
 @use 'impl/friends';
@@ -16,6 +15,7 @@
 @use 'impl/inventory';
 @use 'impl/map';
 @use 'impl/notifications';
+@use 'impl/page';
 @use 'impl/player';
 @use 'impl/profile';
 @use 'impl/quests';
