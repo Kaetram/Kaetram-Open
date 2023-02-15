@@ -31,7 +31,7 @@ export default class QueenAnt extends Default {
     protected override handleMovement(): void {
         super.handleMovement();
 
-        _.each(this.minions, (minion: Mob) => minion.follow(this.mob));
+        for (let minion of Object.values(this.minions)) minion.follow(this.mob);
     }
 
     /**
@@ -46,7 +46,7 @@ export default class QueenAnt extends Default {
         if (!this.isHalfHealth() || this.minionsSpawned) return;
 
         // Spawn minions using the positions surrounding the Queen Ant.
-        _.each(this.positions, (position: Position) => {
+        for (let position of this.positions) {
             let minion = super.spawn('ant', position.x, position.y, true);
 
             // Prevent minion from roaming.
@@ -57,7 +57,7 @@ export default class QueenAnt extends Default {
 
             // Minions immediately start following the Queen Ant.
             minion.follow(this.mob);
-        });
+        }
 
         this.minionsSpawned = true;
     }
@@ -71,7 +71,7 @@ export default class QueenAnt extends Default {
         super.handleDeath(attacker);
 
         // Removes all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = false;
     }

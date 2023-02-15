@@ -167,7 +167,7 @@ export default class Bank extends Menu {
 
     public override batch(slots: SlotData[]): void {
         for (let slot of slots) {
-            if (!slot.key) return;
+            if (!slot.key) continue;
 
             this.setSlot(slot);
         }

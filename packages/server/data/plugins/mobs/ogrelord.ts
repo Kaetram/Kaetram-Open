@@ -54,7 +54,7 @@ export default class OgreLord extends Default {
         super.handleDeath(attacker);
 
         // Removes all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         // Clear all boss properties.
         this.firstWaveMinions = false;
@@ -80,13 +80,13 @@ export default class OgreLord extends Default {
         let key = this.minionKeys[wave];
 
         // Iterate through the positions and spawn a mob at each one.
-        _.each(this.positions, (position: Position) => {
+        for (let position of this.positions) {
             let minion = super.spawn(key, position.x, position.y),
                 target = super.getTarget();
 
             // Have the minions attack one of the boss' attackers.
             if (target) minion.combat.attack(target);
-        });
+        }
 
         // Prevent the boss from spawning more minions afterwards.
         if (wave === 0) this.firstWaveMinions = true;

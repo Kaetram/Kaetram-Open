@@ -138,9 +138,9 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        for (let [i, achievement] of achievements.entries())
+        for (let [i, achievement] of Object.entries(achievements))
             this.achievements[achievement.key] = new Task(
-                i,
+                parseInt(i),
                 achievement.name!,
                 achievement.description!,
                 achievement.stage,

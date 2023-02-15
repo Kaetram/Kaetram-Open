@@ -52,9 +52,9 @@ export default class Collections {
     }
 
     /**
-     * Iterates through each colleciton and returns a callback for it.
+     * Iterates through each collection and returns a callback for it.
      */
     public forEachCollection(callback: (collection: Collection<Entity>) => void): void {
-        _.each(this.all, callback);
+        for (let collection of this.all) callback(collection);
     }
 }

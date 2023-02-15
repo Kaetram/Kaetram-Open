@@ -45,7 +45,7 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chest, (info: ProcessedArea) => {
+        for (let info of this.map.chest)
             this.spawnChest(
                 info.items?.split(',') || [],
                 info.x,
@@ -54,7 +54,6 @@ export default class Entities {
                 info.achievement,
                 info.mimic
             );
-        });
 
         log.info(`Spawned ${this.collections.chests.length} static chests!`);
 
