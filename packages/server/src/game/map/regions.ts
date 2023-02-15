@@ -8,7 +8,6 @@ import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type {

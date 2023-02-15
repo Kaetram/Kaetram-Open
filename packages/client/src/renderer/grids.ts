@@ -1,7 +1,5 @@
 import log from '../lib/log';
 
-import _ from 'lodash';
-
 import type Entity from '../entity/entity';
 import type Map from '../map/map';
 
@@ -63,7 +61,7 @@ export default class Grids {
         for (let i = gridY - radius; i < gridY + radius; i++)
             for (let j = gridX - radius; j < gridX + radius; j++)
                 if (this.map.isOutOfBounds(j, i)) continue;
-                else entities = [...entities, ..._.values(this.renderingGrid[i][j])];
+                else entities = [...entities, ...Object.values(this.renderingGrid[i][j])];
 
         return entities;
     }
