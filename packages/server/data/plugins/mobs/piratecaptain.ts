@@ -40,7 +40,7 @@ export default class PirateCaptain extends Default {
     public override handleDeath(attacker?: Character): void {
         super.handleDeath(attacker);
 
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = 0;
     }

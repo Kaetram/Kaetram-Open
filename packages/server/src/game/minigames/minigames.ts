@@ -21,15 +21,12 @@ export default class Minigames {
         this.areas = this.world.map.getMinigameAreas();
 
         // Iterate through the minigame keys in the index and initialize them.
-        _.each(
-            Object.keys(Index),
-            (key: string) =>
-                (this.minigames[key] = new Index[key as keyof typeof Index](this.world))
-        );
+        for (let key in Index)
+            this.minigames[key] = new Index[key as keyof typeof Index](this.world);
 
         log.info(
-            `Finished loading ${_.size(this.minigames)} minigame${
-                _.size(this.minigames) > 1 ? 's' : ''
+            `Finished loading ${Object.keys(this.minigames).length} minigame${
+                Object.keys(this.minigames).length > 1 ? 's' : ''
             }.`
         );
 

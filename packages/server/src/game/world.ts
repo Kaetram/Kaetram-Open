@@ -241,7 +241,7 @@ export default class World {
      */
 
     public getPopulation(): number {
-        return _.size(this.entities.listOfPlayers);
+        return Object.keys(this.entities.listOfPlayers).length;
     }
 
     /**
