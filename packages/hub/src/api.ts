@@ -229,7 +229,7 @@ export default class API {
     /**
      * Adds a player to the server list when they log in.
      * @param request Contains the serverId and username of the player.
-     * @param response Generic response.\
+     * @param response Generic response.
      */
 
     private handleLogin(request: Request, response: Response): void {

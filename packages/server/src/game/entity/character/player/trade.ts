@@ -1,6 +1,5 @@
 import { Trade as TradePacket } from '../../../../network/packets';
 
-import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
@@ -485,8 +484,7 @@ export default class Trade {
      */
 
     private isAdded(index: number): boolean {
-        return _.some(
-            this.itemsOffered,
+        return Object.values(this.itemsOffered).some(
             (offer) => offer?.inventoryIndex === index && offer.item.count === offer.maxCount
         );
     }
@@ -498,9 +496,8 @@ export default class Trade {
      */
 
     private forEachOfferedItem(callback: (item: Item, inventoryIndex: number) => void): void {
-        _.each(this.itemsOffered, (offeredItem: OfferedItem | undefined) => {
+        for (let offeredItem of Object.values(this.itemsOffered))
             if (offeredItem?.item) callback(offeredItem.item, offeredItem.inventoryIndex);
-        });
     }
 
     /**

@@ -1,7 +1,6 @@
 import Menu from '../../menu';
 import Util from '../../../utils/util';
 
-import _ from 'lodash-es';
 import { Modules } from '@kaetram/common/network';
 
 import type Skill from '../../../entity/character/player/skill';
@@ -39,7 +38,7 @@ export default class Skills extends Menu {
 
         if (resize) this.list.innerHTML = '';
 
-        _.each(Modules.SkillsOrder, (id: Modules.Skills) => {
+        for (let id of Modules.SkillsOrder) {
             let skill = this.player.skills[id],
                 element = this.get(skill.name);
 
@@ -55,7 +54,7 @@ export default class Skills extends Menu {
                 // Update the element with the latest data.
                 this.update(element, skill);
             }
-        });
+        }
 
         if (this.isInfoVisible()) this.showInfo();
     }
