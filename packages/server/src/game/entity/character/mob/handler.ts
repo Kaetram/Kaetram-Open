@@ -58,13 +58,16 @@ export default class Handler {
      */
 
     protected handleHit(damage: number, attacker?: Character): void {
-        if (this.mob.dead || !attacker) return;
+        if (!attacker) return;
+
+        if (attacker.isPlayer()) attacker.handleExperience(damage);
+
+        // This may get called simulatneously with the death callback, so we check here.
+        if (this.mob.isDead()) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
         if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
-
-        if (attacker.isPlayer()) attacker.handleExperience(damage);
     }
 
     /**
