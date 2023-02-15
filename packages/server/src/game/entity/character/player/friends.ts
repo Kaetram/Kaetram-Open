@@ -25,14 +25,14 @@ export default class Friends {
         // Nothing to load.
         if (friends.length === 0) return;
 
-        _.each(friends, (username: string) => {
+        for (let username of friends) {
             let online = this.player.world.isOnline(username);
 
             this.list[username] = {
                 online,
                 serverId: online ? config.serverId : -1
             };
-        });
+        }
 
         this.loadCallback?.();
     }
@@ -138,9 +138,8 @@ export default class Friends {
      */
 
     public setActiveFriends(list: Friend): void {
-        _.each(list, (friend: FriendInfo, username: string) =>
-            this.setStatus(username, friend.online, friend.serverId)
-        );
+        for (let [username, friend] of Object.entries(list))
+            this.setStatus(username, friend.online, friend.serverId);
     }
 
     /**
