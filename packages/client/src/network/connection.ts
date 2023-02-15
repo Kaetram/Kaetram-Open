@@ -204,8 +204,6 @@ export default class Connection {
     private handleWelcome(data: PlayerData): void {
         this.game.player.load(data);
 
-        console.log('loaded player');
-
         this.game.start();
         this.game.postLoad();
     }
@@ -1359,8 +1357,6 @@ export default class Connection {
             info.instance === this.game.player.instance
                 ? this.game.player
                 : this.entities.get<Character>(info.instance);
-
-        console.log(`Effect: ${opcode} - ${info.instance}`);
 
         if (!entity) return;
 
