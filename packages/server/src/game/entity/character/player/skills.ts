@@ -52,11 +52,11 @@ export default class Skills {
 
     public load(data: SkillData[]): void {
         // Load each skill from the database (empty if new player).
-        _.each(data, (skillData: SkillData) => {
+        for (let skillData of data) {
             let skill = this.get(skillData.type);
 
             if (skill) skill.setExperience(skillData.experience);
-        });
+        }
 
         // Create a callback that links to `handleExperience` for every skill.
         this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
@@ -174,7 +174,7 @@ export default class Skills {
      */
 
     public getCombatSkills(): Skill[] {
-        return _.filter(this.skills, (skill: Skill) => skill.combat);
+        return Object.values(this.skills).filter((skill: Skill) => skill.combat);
     }
 
     /**
@@ -204,7 +204,6 @@ export default class Skills {
         let level = 1,
             skills = this.getCombatSkills();
 
-        // Faster than using lodash.
         for (let skill of skills) level += skill.level - 1;
 
         return level;
@@ -233,7 +232,7 @@ export default class Skills {
      */
 
     public forEachSkill(callback: (skill: Skill) => void): void {
-        _.each(this.skills, callback);
+        for (let skill of Object.values(this.skills)) callback(skill);
     }
 
     /**

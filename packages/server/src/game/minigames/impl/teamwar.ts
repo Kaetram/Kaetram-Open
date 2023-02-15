@@ -156,21 +156,40 @@ export default class TeamWar extends Minigame {
     }
 
     /**
+     * Shuffles the players in the lobby.
+     * @returns Returns the shuffled players in the lobby.
+     */
+
+    private shuffleLobby(): Player[] {
+        let lobby = this.playersLobby;
+
+        for (let x = lobby.length - 1; x > 0; x--) {
+            let y = Math.floor(Math.random() * x),
+                temp = lobby[x];
+
+            lobby[x] = lobby[y];
+            lobby[y] = temp;
+        }
+
+        return lobby;
+    }
+
+    /**
      * Finds all the players in the lobby and splits them into two teams,
      * then we send packets to both teams to assign teams.
      */
 
     private start(): void {
-        let redTeam = _.shuffle(this.playersLobby);
+        let redTeam = this.shuffleLobby();
 
         // Not enough players, we're not starting the game.
         if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) {
             // Notify all players there aren't enough players in the lobby.
-            _.each(redTeam, (player: Player) =>
+            for (let player of redTeam)
                 player.notify(
                     `There must be at least ${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS} players to start the game.`
-                )
-            );
+                );
+
             return;
         }
 
@@ -179,20 +198,20 @@ export default class TeamWar extends Minigame {
         let blueTeam = redTeam.splice(0, redTeam.length / 2);
 
         // Assign each player in each team their respective team.
-        _.each(redTeam, (player: Player) => (player.team = Team.Red));
-        _.each(blueTeam, (player: Player) => (player.team = Team.Blue));
+        for (let player of redTeam) player.team = Team.Red;
+        for (let player of blueTeam) player.team = Team.Blue;
 
         // Concatenate all the players into one array for later.
         this.players = [...redTeam, ...blueTeam];
 
         // Teleport every player to the lobby.
-        _.each(this.players, (player: Player) => {
+        for (let player of this.players) {
             player.minigame = Opcodes.Minigame.TeamWar;
 
             let position = this.getRespawnPoint(player.team);
 
             player.teleport(position.x, position.y, false, true);
-        });
+        }
     }
 
     /**
@@ -207,13 +226,13 @@ export default class TeamWar extends Minigame {
         });
 
         // Teleport all the players back to the lobby.
-        _.each(this.players, (player: Player) => {
+        for (let player of this.players) {
             player.minigame = -1;
 
             let position = this.getLobbyPosition();
 
             player.teleport(position.x, position.y, false, true);
-        });
+        }
 
         // Clear all the team dictionaries and in-game player arrays.
         this.players = [];
