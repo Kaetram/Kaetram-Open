@@ -108,7 +108,7 @@ export default class Discord {
         try {
             let channel = this.getChannel();
 
-            if (channel) channel.send(message).catch((error) => console.log(error));
+            if (channel) channel.send(message).catch((error) => console.error(error));
         } catch {
             log.error('An error has occurred while sending a message to the Discord server.');
         }

@@ -9,6 +9,10 @@ import type Camera from '../../../renderer/camera';
 import type Renderer from '../../../renderer/renderer';
 import type Player from './player';
 
+/**
+ * THIS WHOLE CLASS IS GONNA BE REFACTORED
+ */
+
 export default class PlayerHandler {
     private lastStepX = -1;
     private lastStepY = -1;
@@ -38,7 +42,7 @@ export default class PlayerHandler {
         player.onRequestPath((x, y) => {
             if (player.dead || player.frozen) return null;
 
-            if (player.canAttackTarget()) return null;
+            if (player.canAttackTarget() && !player.trading) return null;
 
             /**
              * If the position is the same as the player's current position
@@ -108,6 +112,12 @@ export default class PlayerHandler {
                 orientation: player.orientation
             });
 
+            if (player.trading)
+                socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Request,
+                    instance: player.target?.instance
+                });
+
             socket.send(Packets.Target, [
                 this.getTargetType(),
                 player.target ? player.target.instance : ''
@@ -128,6 +138,7 @@ export default class PlayerHandler {
             if (!player.hasKeyboardMovement()) game.renderer.resetAnimatedTiles();
 
             player.moving = false;
+            player.trading = false;
         });
 
         player.onBeforeStep(() => entities.unregisterPosition(player));
@@ -153,7 +164,7 @@ export default class PlayerHandler {
             lastStepX = player.gridX;
             lastStepY = player.gridY;
 
-            if (player.canAttackTarget()) player.stop(true);
+            if (player.canAttackTarget() && !player.trading) player.stop(true);
         });
 
         // Refresh animated tiles every second step.

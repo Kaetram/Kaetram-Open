@@ -7,6 +7,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 type ExperienceCallback = (
     type: Modules.Skills,
     name: string,
+    withInfo: boolean,
     experience: number,
     level: number,
     newLevel?: boolean
@@ -16,6 +17,7 @@ export default abstract class Skill {
     public name = '';
     public level = 1;
     public experience = 0;
+    public nextExperience = 0;
 
     public combat = false;
 
@@ -40,8 +42,10 @@ export default abstract class Skill {
     public getPercentage(): number {
         let prevExperience = Formulas.prevExp(this.experience),
             nextExperience = Formulas.nextExp(this.experience),
-            percentage =
-                ((this.experience - prevExperience) / (nextExperience - prevExperience)) * 100;
+            percentage = (this.experience - prevExperience) / (nextExperience - prevExperience);
+
+        // Update the next experience for the skill.
+        this.nextExperience = nextExperience;
 
         return percentage < 0 ? 0 : percentage;
     }
@@ -52,9 +56,10 @@ export default abstract class Skill {
      * current level after adding experience, and whether the
      * experience added resulted in a level-up.
      * @param experience How much exp we are adding to the skill.
+     * @param withInfo Whether to disable the experience info.
      */
 
-    public addExperience(experience: number): void {
+    public addExperience(experience: number, withInfo = true): void {
         let previousLevel = this.level;
 
         this.setExperience(this.experience + experience);
@@ -62,6 +67,7 @@ export default abstract class Skill {
         this.experienceCallback?.(
             this.type,
             this.name,
+            withInfo,
             experience,
             this.level,
             this.level !== previousLevel
@@ -94,6 +100,7 @@ export default abstract class Skill {
         if (includeLevel) {
             data.level = this.level;
             data.percentage = this.getPercentage();
+            data.nextExperience = this.nextExperience;
             data.combat = this.combat;
         }
 

@@ -46,6 +46,8 @@ export interface ProcessedArea {
     achievement?: string;
     reqAchievement?: string;
     reqQuest?: string;
+    reqItem?: string;
+    reqItemCount?: number;
     mimic?: boolean;
 
     // Area
@@ -108,6 +110,8 @@ export interface ProcessedDoor {
     achievement: string;
     reqAchievement: string; // Achievement requirement to pass through.
     reqQuest: string;
+    reqItem: string;
+    reqItemCount: number;
     stage: number;
     level: number;
 }

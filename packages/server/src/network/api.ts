@@ -92,7 +92,7 @@ export default class API {
         if (target) {
             let player = this.world.getPlayerByName(target);
 
-            if (!player) return;
+            if (!player) return log.warning(`[handleChat] Player ${target} not found.`);
 
             player.sendMessage(target, text, source);
         } else this.world.globalMessage(source, Utils.parseMessage(text), colour, true);
@@ -129,9 +129,9 @@ export default class API {
     private handleLogin(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(response, request.body.accessToken)) return;
 
-        let { username } = request.body;
+        let { username, serverId } = request.body;
 
-        this.world.syncFriendsList(username, false);
+        this.world.syncFriendsList(username, false, serverId);
 
         response.json({ status: 'success' });
     }
@@ -170,6 +170,7 @@ export default class API {
                 port: config.port,
                 apiPort: config.apiPort,
                 remoteServerHost: config.remoteServerHost,
+                remoteApiHost: config.remoteApiHost || config.remoteServerHost,
                 maxPlayers: config.maxPlayers,
                 players: this.world.entities.getPlayerUsernames()
             },
@@ -250,7 +251,7 @@ export default class API {
                 return;
             }
 
-            source.notify(`[To ${Utils.formatName(target)}]: ${text}`, 'aquamarine');
+            source.notify(text, 'aquamarine', `[To ${Utils.formatName(target)}]`);
         }
     }
 

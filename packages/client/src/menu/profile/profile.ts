@@ -4,8 +4,6 @@ import Skills from './impl/skills';
 
 import Menu from '../menu';
 
-import _ from 'lodash-es';
-
 import type Player from '../../entity/character/player/player';
 import type { Modules, Opcodes } from '@kaetram/common/network';
 import type { SelectCallback } from './impl/abilities';
@@ -14,12 +12,12 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
-    private state: State = new State();
-    private skills: Skills = new Skills();
-    private abilities: Abilities = new Abilities();
+    private state: State;
+    private skills: Skills;
+    private abilities: Abilities;
 
     // Initialize all pages here.
-    private pages: Menu[] = [this.state, this.skills, this.abilities];
+    private pages: Menu[] = [];
 
     // Current page we are on.
     private activePage = 0;
@@ -34,8 +32,20 @@ export default class Profile extends Menu {
     public constructor(private player: Player) {
         super('#profile-dialog', undefined, '#profile-button');
 
+        // Initialize the state page.
+        this.state = new State(this.player);
+
+        // Initialize the skills page.
+        this.skills = new Skills(this.player);
+
+        // Initialize the abilities page.
+        this.abilities = new Abilities(this.player);
+
+        // Add the abilities and skills page to the pages array.
+        this.pages.push(this.state, this.skills, this.abilities);
+
         // Used to initialize the navigation buttons.
-        this.handleNavigation();
+        this.update();
 
         // Navigation event listeners.
         this.previous.addEventListener('click', () => this.handleNavigation('previous'));
@@ -49,13 +59,23 @@ export default class Profile extends Menu {
     }
 
     /**
+     * Override for the `hide` function to include hiding the side menu panel.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        this.skills.hideInfo();
+    }
+
+    /**
      * We are modifying the currently active page and updating the status of
      * the previous and next buttons depending on whether or not we're on
      * the last or first page.
      * @param direction Which way we are navigating, defaults to previous.
      */
 
-    private handleNavigation(direction: 'previous' | 'next' = 'previous'): void {
+    private handleNavigation(direction: 'previous' | 'next'): void {
         // Prevent actions on disabled buttons.
         if (this.isDisabled(direction)) return;
 
@@ -69,6 +89,16 @@ export default class Profile extends Menu {
         // Modify the currently active page based on the direction.
         this.activePage += direction === 'previous' ? -1 : 1;
 
+        // Update the status of the buttons.
+        this.update();
+    }
+
+    /**
+     * Updates the status of the buttons depending on whether or not we are
+     * on the first or last page.
+     */
+
+    private update() {
         // Reaching the first page navigating backwards.
         if (this.activePage <= 0) {
             this.activePage = 0;
@@ -86,15 +116,22 @@ export default class Profile extends Menu {
     }
 
     /**
-     * Called whenever we want to update the profile with new
-     * information about the player (e.g. the player equips a
-     * new item, or the player acquires some experience).
-     * This is one of the only UI menus that we update
-     * irregardless of whether it is visible or not.
+     * Iterates through all the pages in the profile and synchronizes them. This
+     * is called every time the player undergoes a change, whether it be equipping/unequipping,
+     * experience gain, or when a new ability is unlocked.
      */
 
     public override synchronize(): void {
-        this.forEachPage((page: Menu) => page.synchronize(this.player));
+        this.forEachPage((page: Menu) => page.synchronize());
+    }
+
+    /**
+     * Synchronizes the skills interface upon resizing. This is because the experience
+     * bars are drawn according to the UI size, so we need to redraw them.
+     */
+
+    public override resize(): void {
+        this.skills.synchronize(true);
     }
 
     /**
@@ -118,7 +155,7 @@ export default class Profile extends Menu {
      */
 
     private forEachPage(callback: (page: Menu) => void): void {
-        _.each(this.pages, callback);
+        for (let page of this.pages) callback(page);
     }
 
     /**

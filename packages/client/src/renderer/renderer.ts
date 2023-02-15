@@ -3,7 +3,6 @@ import Tile from './tile';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import _ from 'lodash-es';
 import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 import { Modules } from '@kaetram/common/network';
 
@@ -130,6 +129,14 @@ export default class Renderer {
     private sparksSprite!: Sprite;
     private silverMedal!: Sprite;
     private goldMedal!: Sprite;
+    private crownArtist!: Sprite;
+    private crownTier1!: Sprite;
+    private crownTier2!: Sprite;
+    private crownTier3!: Sprite;
+    private crownTier4!: Sprite;
+    private crownTier5!: Sprite;
+    private crownTier6!: Sprite;
+    private crownTier7!: Sprite;
 
     public constructor(private game: Game) {
         this.map = game.map;
@@ -221,6 +228,38 @@ export default class Renderer {
         this.goldMedal = this.game.sprites.get('goldmedal')!;
 
         if (!this.goldMedal.loaded) this.goldMedal.load();
+
+        this.crownArtist = this.game.sprites.get('crown-artist')!;
+
+        if (!this.crownArtist.loaded) this.crownArtist.load();
+
+        this.crownTier1 = this.game.sprites.get('crown-tier1')!;
+
+        if (!this.crownTier1.loaded) this.crownTier1.load();
+
+        this.crownTier2 = this.game.sprites.get('crown-tier2')!;
+
+        if (!this.crownTier2.loaded) this.crownTier2.load();
+
+        this.crownTier3 = this.game.sprites.get('crown-tier3')!;
+
+        if (!this.crownTier3.loaded) this.crownTier3.load();
+
+        this.crownTier4 = this.game.sprites.get('crown-tier4')!;
+
+        if (!this.crownTier4.loaded) this.crownTier4.load();
+
+        this.crownTier5 = this.game.sprites.get('crown-tier5')!;
+
+        if (!this.crownTier5.loaded) this.crownTier5.load();
+
+        this.crownTier6 = this.game.sprites.get('crown-tier6')!;
+
+        if (!this.crownTier6.loaded) this.crownTier6.load();
+
+        this.crownTier7 = this.game.sprites.get('crown-tier7')!;
+
+        if (!this.crownTier7.loaded) this.crownTier7.load();
     }
 
     /**
@@ -673,9 +712,8 @@ export default class Renderer {
     private drawPathing(): void {
         if (!this.game.player.hasPath()) return;
 
-        _.each(this.game.player.path, (path) =>
-            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
-        );
+        for (let path of this.game.player.path!)
+            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
     }
 
     /**
@@ -869,8 +907,15 @@ export default class Renderer {
         );
     }
 
+    /**
+     * Draws a special medal above the player's name.
+     * @param key The key of the medal we are drawing.
+     * @param x The x coordinate on the screen we are drawing at.
+     * @param y The y coordinate on the screen we are drawing at.
+     */
+
     private drawMedal(key: string, x: number, y: number): void {
-        let medal = key === 'goldmedal' ? this.goldMedal : this.silverMedal;
+        let medal = this.getMedal(key);
 
         if (!medal) return;
 
@@ -880,10 +925,10 @@ export default class Renderer {
             0,
             medal.width,
             medal.height,
-            (x - 2) * this.camera.zoomFactor,
-            (y + 1) * this.camera.zoomFactor,
-            medal.width,
-            medal.height
+            (x - 5) * this.camera.zoomFactor,
+            (y - 17) * this.camera.zoomFactor,
+            medal.width * 2,
+            medal.height * 2
         );
     }
 
@@ -962,7 +1007,7 @@ export default class Renderer {
                 y = entity.y - Math.floor(entity.sprite.height / 5);
 
             if (this.drawNames && entity instanceof Character) {
-                let nameY = this.drawLevels && !entity.isNPC() ? y - 10 : y - 4;
+                let nameY = this.drawLevels && !entity.isNPC() ? y - 7 : y - 4;
 
                 this.drawText(entity.name, x, nameY, true, colour, 'rbga(0, 0, 0, 1)');
 
@@ -1274,9 +1319,7 @@ export default class Renderer {
      */
 
     public resetAnimatedTiles(): void {
-        _.each(this.animatedTiles, (tile: Tile) => {
-            tile.animationIndex = 0;
-        });
+        for (let tile of Object.values(this.animatedTiles)) tile.animationIndex = 0;
     }
 
     private drawCellRect(x: number, y: number, colour: string): void {
@@ -1346,12 +1389,13 @@ export default class Renderer {
     }
 
     public removeNonRelativeLights(): void {
-        _.each(this.lightings, (lighting, index) => {
-            if (!lighting.light.relative) {
+        for (let i in this.lightings)
+            if (!this.lightings[i].light.relative) {
+                let index = parseInt(i);
+
                 this.lightings.splice(index, 1);
                 this.darkMask.lights.splice(index, 1);
             }
-        });
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
@@ -1478,6 +1522,50 @@ export default class Renderer {
         return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
+    private getMedal(key: string): Sprite | undefined {
+        switch (key) {
+            case 'goldmedal': {
+                return this.goldMedal;
+            }
+
+            case 'silvermedal': {
+                return this.silverMedal;
+            }
+
+            case 'crown-artist': {
+                return this.crownArtist;
+            }
+
+            case 'crown-tier1': {
+                return this.crownTier1;
+            }
+
+            case 'crown-tier2': {
+                return this.crownTier2;
+            }
+
+            case 'crown-tier3': {
+                return this.crownTier3;
+            }
+
+            case 'crown-tier4': {
+                return this.crownTier4;
+            }
+
+            case 'crown-tier5': {
+                return this.crownTier5;
+            }
+
+            case 'crown-tier6': {
+                return this.crownTier6;
+            }
+
+            case 'crown-tier7': {
+                return this.crownTier7;
+            }
+        }
+    }
+
     /**
      * A flipped tile is any tile that contains a flip
      * flag or transpose flag.
@@ -1585,7 +1673,7 @@ export default class Renderer {
      */
 
     private forAllContexts(callback: ContextCallback): void {
-        _.each(this.allContexts, callback);
+        for (let context of Object.values(this.allContexts)) callback(context);
     }
 
     /**
@@ -1594,7 +1682,7 @@ export default class Renderer {
      */
 
     private forEachContext(callback: ContextCallback): void {
-        _.each(this.contexts, callback);
+        for (let context of Object.values(this.contexts)) callback(context);
     }
 
     /**
@@ -1603,7 +1691,7 @@ export default class Renderer {
      */
 
     private forEachDrawingContext(callback: ContextCallback): void {
-        _.each(this.drawingContexts, callback);
+        for (let context of Object.values(this.drawingContexts)) callback(context);
     }
 
     /**
@@ -1613,7 +1701,7 @@ export default class Renderer {
      */
 
     private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        _.each(this.canvases, callback);
+        for (let canvas of Object.values(this.canvases)) callback(canvas);
     }
 
     /**
@@ -1622,7 +1710,7 @@ export default class Renderer {
      */
 
     private forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        _.each(this.lightings, callback);
+        for (let lighting of Object.values(this.lightings)) callback(lighting);
     }
 
     /**
@@ -1631,7 +1719,7 @@ export default class Renderer {
      */
 
     private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        _.each(this.animatedTiles, callback);
+        for (let tile of Object.values(this.animatedTiles)) callback(tile);
     }
 
     /**
@@ -1681,7 +1769,7 @@ export default class Renderer {
 
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                _.each(grids.renderingGrid[y][x], (entity: Entity) => callback(entity));
+                for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
         });
     }
 }
