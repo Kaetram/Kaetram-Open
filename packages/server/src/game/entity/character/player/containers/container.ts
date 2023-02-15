@@ -2,7 +2,6 @@ import Slot from './slot';
 
 import Item from '../../../objects/item';
 
-import _ from 'lodash-es';
 import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';
@@ -40,14 +39,14 @@ export default abstract class Container {
      */
 
     public load(items: ContainerItem[]): void {
-        _.each(items, (item: ContainerItem) => {
+        for (let item of items) {
             // Create a new item instance so that the item's data is created.
-            if (!item.key) return;
+            if (!item.key) continue;
 
             if (item.count < 1) item.count = 1;
 
             this.slots[item.index].update(this.getItem(item), this.stackSize);
-        });
+        }
 
         this.loadCallback?.();
     }
@@ -388,7 +387,7 @@ export default abstract class Container {
      */
 
     public forEachSlot(callback: (slot: Slot) => void): void {
-        _.each(this.slots, callback);
+        for (let slot of this.slots) callback(slot);
     }
 
     /**
@@ -400,7 +399,7 @@ export default abstract class Container {
     public serialize(clientInfo = false): SerializedContainer {
         let slots: SlotData[] = [];
 
-        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize(clientInfo)));
+        for (let slot of this.slots) slots.push(slot.serialize(clientInfo));
 
         return { slots };
     }
