@@ -77,7 +77,7 @@ if (NODE_ENV) {
 let envConfig = dotenvParseVariables(env),
     config = {} as Config;
 
-for (let key of Object.keys(envConfig)) {
+for (let key in envConfig) {
     let camelCaseKey = camelCase(key) as keyof Config;
 
     config[camelCaseKey] = envConfig[key] as never;

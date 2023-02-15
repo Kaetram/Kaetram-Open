@@ -1,5 +1,3 @@
-import _ from 'lodash-es';
-
 import type { RegionTileData } from '@kaetram/common/types/map';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
