@@ -183,7 +183,7 @@ export default class Servers {
      */
 
     public forEachServer(callback: (server: Server, key: string) => void): void {
-        for (let [key, server] of Object.entries(this.servers)) callback(server, key);
+        for (let key in this.servers) callback(this.servers[key], key);
     }
 
     /**

@@ -24,8 +24,8 @@ export default class Achievements {
 
     public constructor(private player: Player) {
         // Iterates through the raw achievement information from the JSON.
-        for (let [key, rawAchievement] of Object.entries(achievements)) {
-            let achievement = new Achievement(key, rawAchievement);
+        for (let key in achievements) {
+            let achievement = new Achievement(key, achievements[key as keyof typeof achievements]);
 
             this.achievements[key] = achievement;
 

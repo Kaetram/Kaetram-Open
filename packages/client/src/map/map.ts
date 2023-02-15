@@ -103,8 +103,7 @@ export default class Map {
      */
 
     public loadRegions(regionData: RegionData): void {
-        for (let [region, data] of Object.entries(regionData))
-            this.loadRegion(data, parseInt(region));
+        for (let region in regionData) this.loadRegion(regionData[region], parseInt(region));
 
         // Save data after we finish parsing it.
         this.saveMapData();
@@ -158,8 +157,8 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        for (let [key, firstGID] of Object.entries(this.rawTilesets))
-            this.loadTileset(firstGID, parseInt(key), (tileset: TilesetInfo) => {
+        for (let key in this.rawTilesets)
+            this.loadTileset(this.rawTilesets[key], parseInt(key), (tileset: TilesetInfo) => {
                 this.tilesets[key] = tileset;
 
                 // If we've loaded all the tilesets, map is now allowed to be marked as ready.
