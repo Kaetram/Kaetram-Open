@@ -145,8 +145,6 @@ export default class Console {
                 }
 
                 case 'searchdupes': {
-                    console.log(`logOnly: ${!blocks.shift()}`);
-
                     return this.database.parsePotentialDupes(!blocks.shift());
                 }
             }
