@@ -198,9 +198,9 @@ export default class API {
             activeFriends: Friend = {};
 
         // Iterate through the servers and find the friends that are online.
-        this.servers.forEachServer((server: Server, key: string) => {
+        this.servers.forEachServer((server: Server) => {
             // Ignore the server we received the request from.
-            if (parseInt(key) === serverId) return;
+            if (server.id === serverId) return;
 
             // Skip servers where there are no players.
             if (server.players.length === 0) return;
@@ -215,7 +215,7 @@ export default class API {
                 if (server.players.includes(friend))
                     activeFriends[friend] = {
                         online: true,
-                        serverId: parseInt(key)
+                        serverId: server.id
                     };
         });
 
@@ -282,8 +282,8 @@ export default class API {
             online = false;
 
         // Look through all the servers and see if the player is online.
-        this.servers.forEachServer((server, key) => {
-            if (parseInt(key) === serverId) return;
+        this.servers.forEachServer((server: Server) => {
+            if (server.id === serverId) return;
 
             if (server.players.includes(username)) online = true;
         });
@@ -349,7 +349,8 @@ export default class API {
         let url = Utils.getUrl(server.apiHost, server.apiPort, 'login', true),
             data = {
                 accessToken: server.accessToken,
-                username
+                username,
+                serverId: server.id
             };
 
         axios.post(url, data).catch((error) => {
