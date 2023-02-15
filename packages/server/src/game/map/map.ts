@@ -67,10 +67,13 @@ export default class Map {
      */
 
     private loadAreas(): void {
-        for (let [key, area] of Object.entries(map.areas)) {
+        for (let key in map.areas) {
             if (!(key in AreasIndex)) continue;
 
-            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](area, this.world);
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](
+                map.areas[key],
+                this.world
+            );
         }
     }
 
@@ -407,10 +410,10 @@ export default class Map {
      */
 
     public forEachAreas(callback: (areas: Areas, key: string) => void, list: string[] = []): void {
-        for (let [name, a] of Object.entries(this.areas)) {
+        for (let name in this.areas) {
             if (list.length > 0 && !list.includes(name)) continue;
 
-            callback(a, name);
+            callback(this.areas[name], name);
         }
     }
 
@@ -421,8 +424,7 @@ export default class Map {
      */
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
-        if (Array.isArray(data))
-            for (let [index, tileId] of Object.entries(data)) callback(tileId, parseInt(index));
+        if (Array.isArray(data)) for (let index in data) callback(data[index], parseInt(index));
         else callback(data);
     }
 
@@ -432,10 +434,10 @@ export default class Map {
      */
 
     public forEachEntity(callback: (position: Position, key: string) => void): void {
-        for (let [tileId, key] of Object.entries(this.entities)) {
+        for (let tileId in this.entities) {
             let position = this.indexToCoord(parseInt(tileId));
 
-            callback(position, key);
+            callback(position, this.entities[tileId]);
         }
     }
 }

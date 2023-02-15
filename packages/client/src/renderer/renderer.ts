@@ -1389,8 +1389,8 @@ export default class Renderer {
     }
 
     public removeNonRelativeLights(): void {
-        for (let [i, lighting] of Object.entries(this.lightings))
-            if (!lighting.light.relative) {
+        for (let i in this.lightings)
+            if (!this.lightings[i].light.relative) {
                 let index = parseInt(i);
 
                 this.lightings.splice(index, 1);

@@ -140,7 +140,9 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        for (let [i, achievement] of Object.entries(achievements))
+        for (let i in achievements) {
+            let achievement = achievements[i];
+
             this.achievements[achievement.key] = new Task(
                 parseInt(i),
                 achievement.name!,
@@ -148,6 +150,7 @@ export default class Player extends Character {
                 achievement.stage,
                 achievement.stageCount!
             );
+        }
     }
 
     /**
@@ -168,7 +171,9 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        for (let [username, info] of Object.entries(friends)) {
+        for (let username in friends) {
+            let info = friends[username];
+
             this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
@@ -211,7 +216,7 @@ export default class Player extends Character {
         // Updates the weapon attack range and attack style.
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
-            this.setAttackStyle(attackStyle!, attackStyles!);
+            this.setAttackStyle(attackStyle, attackStyles);
         }
     }
 

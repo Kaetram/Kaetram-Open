@@ -729,7 +729,7 @@ export default class Regions {
      */
 
     public forEachRegion(callback: (region: Region, index: number) => void): void {
-        for (let [index, region] of Object.entries(this.regions)) callback(region, parseInt(index));
+        for (let index in this.regions) callback(this.regions[index], parseInt(index));
     }
 
     /**

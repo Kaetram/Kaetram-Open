@@ -35,9 +35,9 @@ export default class Resource {
 
     public load(info: ProcessedResource): void {
         // Iterate through all the tile and its indexes in the resource.
-        for (let [key, tile] of Object.entries(this.data)) {
+        for (let key in this.data) {
             let index = parseInt(key),
-                flatTile = [tile].flat();
+                flatTile = [this.data[key]].flat();
 
             // Why would you put a resource in the void? How are you even near the resource?
             if (!Array.isArray(flatTile))
@@ -133,7 +133,7 @@ export default class Resource {
         // Data depends on the state of the resource.
         let data = this.isDepleted() ? this.depleted : this.data;
 
-        for (let [index, tile] of Object.entries(data)) callback(tile, parseInt(index));
+        for (let index in data) callback(data[index], parseInt(index));
     }
 
     /**

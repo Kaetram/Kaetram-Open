@@ -75,8 +75,11 @@ export default class Handler {
 
     protected handleDeath(attacker?: Character): void {
         // The damage table is used to calculate who should receive priority over the mob's drop.
-        for (let [index, element] of Object.entries(this.mob.getDamageTable())) {
-            let [instance] = element,
+        let damageTable = this.mob.getDamageTable();
+
+        for (let index in damageTable) {
+            let element = damageTable[index],
+                [instance] = element,
                 entity = this.world.entities.get(instance);
 
             // Ignore non-player entities.
