@@ -75,21 +75,22 @@ export default class Handler {
 
     protected handleDeath(attacker?: Character): void {
         // The damage table is used to calculate who should receive priority over the mob's drop.
-        _.each(this.mob.getDamageTable(), (element: [string, number], index: number) => {
+        for (let [index, element] of Object.entries(this.mob.getDamageTable())) {
             let [instance] = element,
                 entity = this.world.entities.get(instance);
 
             // Ignore non-player entities.
-            if (!entity?.isPlayer()) return;
+            if (!entity?.isPlayer()) continue;
 
-            if (index === 0) {
+            // Kill callback is sent to the player who dealt most amount of damage.
+            if (parseInt(index) === 0) {
                 // Register the kill as belonging to the player who dealt most amount of damage.
                 entity.killCallback?.(this.mob);
 
                 // Drop the mob's loot and pass the owner's username.
                 this.mob.drop(entity.username);
             }
-        });
+        }
 
         // Stop the combat.
         this.mob.combat.stop();

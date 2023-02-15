@@ -17,7 +17,7 @@ export default class Rocks extends Resources {
     protected override load(): void {
         super.load();
 
-        let amount = _.size(this.resources);
+        let amount = Object.keys(this.resources).length;
 
         log.info(`Loaded ${amount} rock${amount > 1 ? 's' : ''}.`);
     }

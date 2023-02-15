@@ -272,9 +272,8 @@ export default class Mob extends Character {
 
         if (drops.length === 0) return;
 
-        _.each(drops, (drop) =>
-            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner)
-        );
+        for (let drop of drops)
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
     }
 
     /**
@@ -340,17 +339,17 @@ export default class Mob extends Character {
     private getDropTableItems(): ItemDrop[] {
         let drops: ItemDrop[] = [];
 
-        _.each(this.dropTables, (key: string) => {
+        for (let key of Object.values(this.dropTables)) {
             let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
 
             // Something went wrong.
-            if (!table) return log.warning(`Mob ${this.key} has an invalid drop table.`);
+            if (table) {
+                let randomItem = this.getRandomItem(table);
 
-            let randomItem = this.getRandomItem(table);
-
-            // Add a random item from the table.
-            if (randomItem) drops.push(randomItem);
-        });
+                // Add a random item from the table.
+                if (randomItem) drops.push(randomItem);
+            } else log.warning(`Mob ${this.key} has an invalid drop table.`);
+        }
 
         return drops;
     }
@@ -541,7 +540,7 @@ export default class Mob extends Character {
      */
 
     public getDescription(): string {
-        if (_.isArray(this.description))
+        if (Array.isArray(this.description))
             return this.description[Utils.randomInt(0, this.description.length - 1)];
 
         return this.description;

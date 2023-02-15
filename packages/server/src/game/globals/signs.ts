@@ -2,20 +2,23 @@ import Sign from './impl/sign';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Map from '../map/map';
 
 export default class Signs {
     private signs: { [coordinate: string]: Sign } = {};
 
     public constructor(private map: Map) {
-        _.each(this.map.signs, (sign: ProcessedArea) => {
+        for (let sign of this.map.signs) {
             let coordinate = `${sign.x}-${sign.y}`;
 
-            if (!sign.text) return log.warning(`Sign at ${coordinate} has no text.`);
+            if (!sign.text) {
+                log.warning(`Sign at ${coordinate} has no text.`);
+
+                continue;
+            }
 
             this.signs[coordinate] = new Sign(sign.x, sign.y, sign.text.split(','));
-        });
+        }
 
         log.info(`Loaded ${this.map.signs.length} sign${this.map.signs.length > 1 ? 's' : ''}.`);
     }

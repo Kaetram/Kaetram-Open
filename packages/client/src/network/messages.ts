@@ -172,7 +172,7 @@ export default class Messages {
      * @param data Packet data array.
      */
 
-    public handleBulkData(data: never[]): void {
+    public handleBulkData(data: [Packets, ...never[]][]): void {
         for (let info of data) this.handleData(info);
     }
 

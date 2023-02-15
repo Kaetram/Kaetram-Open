@@ -332,7 +332,7 @@ export default abstract class Character extends Entity {
      */
 
     public getAttackerCount(): number {
-        return _.size(this.attackers);
+        return this.attackers.length;
     }
 
     /**

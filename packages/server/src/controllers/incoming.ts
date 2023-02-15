@@ -213,16 +213,16 @@ export default class Incoming {
      */
 
     private handleWho(message: string[]): void {
-        _.each(message, (instance: string) => {
+        for (let instance of message) {
             let entity = this.entities.get(instance);
 
-            if (!entity || entity.dead) return;
+            if (!entity || entity.dead) continue;
 
             /* We handle player-specific entity statuses here. */
             this.player.send(
                 new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
             );
-        });
+        }
     }
 
     /**
