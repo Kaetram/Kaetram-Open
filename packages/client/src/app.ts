@@ -725,7 +725,7 @@ export default class App {
                 players = document.createElement('span');
 
             // If this is the first server in the list, select it and mark it as active
-            if (i === '0') li.classList.add('active');
+            if (parseInt(i) === 0) li.classList.add('active');
 
             name.textContent = server.name;
 

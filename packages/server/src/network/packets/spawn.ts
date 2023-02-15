@@ -22,7 +22,7 @@ export default class Spawn extends Packet {
             entity.isPlayer()
                 ? entity.serialize(true)
                 : entity.isMob()
-                ? (entity as Mob).serialize(player)
+                ? entity.serialize(player)
                 : entity.serialize()
         );
     }

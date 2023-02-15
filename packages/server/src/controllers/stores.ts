@@ -5,7 +5,6 @@ import { Store as StorePacket } from '../network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import StoreEn from '@kaetram/common/text/en/store';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
 
 import type {
     RawStore,
@@ -43,12 +42,16 @@ export default class Stores {
 
     public constructor(private world: World) {
         // Load stores from the JSON.
-        _.each(storeData, this.load.bind(this));
+        for (let [key, store] of Object.entries(storeData)) this.load(store, key);
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
 
-        log.info(`Loaded ${_.size(this.stores)} shop${_.size(this.stores) > 1 ? 's' : ''}.`);
+        log.info(
+            `Loaded ${Object.keys(this.stores).length} shop${
+                Object.keys(this.stores).length > 1 ? 's' : ''
+            }.`
+        );
     }
 
     /**
@@ -62,11 +65,15 @@ export default class Stores {
         let { refresh, currency, restricted } = store,
             items: Item[] = [];
 
-        _.each(store.items, (item: StoreItem) => {
+        for (let item of store.items) {
             let { key, count, price, stockAmount } = item;
 
             // Skip if an item already exists with the same key.
-            if (_.some(items, { key })) return log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+            if (items.some(({ key: itemKey }) => itemKey === key)) {
+                log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+
+                continue;
+            }
 
             let storeItem = new Item(key, -1, -1, false, count);
 
@@ -78,7 +85,7 @@ export default class Stores {
             storeItem.maxCount = count;
 
             items.push(storeItem);
-        });
+        }
 
         this.stores[key] = {
             items,
@@ -94,14 +101,14 @@ export default class Stores {
      */
 
     private update(): void {
-        _.each(this.stores, (store: StoreInfo, key: string) => {
-            if (!this.canRefresh(store)) return;
+        for (let [key, store] of Object.entries(this.stores)) {
+            if (!this.canRefresh(store)) continue;
 
             this.stockItems(store);
             this.updatePlayers(key);
 
             store.lastUpdate = Date.now();
-        });
+        }
     }
 
     /**
@@ -111,12 +118,12 @@ export default class Stores {
      */
 
     private stockItems(store: StoreInfo): void {
-        _.each(store.items, (item: Item) => {
-            if (item.count === -1 || item.count >= item.maxCount) return;
+        for (let item of store.items) {
+            if (item.count === -1 || item.count >= item.maxCount) continue;
 
             // If an alternate optional stock count is provided, increment by that amount.
             if (item.stockAmount) item.count += item.stockAmount;
-        });
+        }
     }
 
     /**
@@ -206,7 +213,7 @@ export default class Stores {
 
             // Remove item from store if it is out of stock and not original to the store.
             if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
-                store.items = _.filter(store.items, (storeItem) => {
+                store.items = store.items.filter((storeItem) => {
                     return storeItem.key !== item.key;
                 });
         }
@@ -257,7 +264,7 @@ export default class Stores {
 
         // Find the item in the store if it exists.
         let item = player.inventory.getItem(slot),
-            storeItem = _.find(store.items, { key: slot.key }),
+            storeItem = store.items.find((item) => item.key === slot.key),
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         // Items without prices (quest items) cannot be sold.
@@ -308,7 +315,7 @@ export default class Stores {
 
         // Create an instance of an item and try to check if that item exists in the store.
         let item = player.inventory.getItem(slot),
-            storeItem = _.find(store.items, { key: slot.key }),
+            storeItem = store.items.find((item) => item.key === slot.key),
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         // Items without prices (quest items) cannot be sold.
@@ -388,7 +395,7 @@ export default class Stores {
         // This should absolutely not happen.
         if (!store) return -1;
 
-        let item = _.find(store.items, { key: itemKey });
+        let item = store.items.find((item) => item.key === itemKey);
 
         if (!item) return 1;
 
@@ -430,7 +437,7 @@ export default class Stores {
         if (!store) return false;
 
         // Return if the itemKey exists in the store's original stock.
-        return !_.some(store.items, { key: itemKey });
+        return !store.items.some((item) => item.key === itemKey);
     }
 
     /**
@@ -446,14 +453,13 @@ export default class Stores {
             items: SerializedStoreItem[] = [];
 
         // Extract all the items from the store.
-        _.each(store.items, (item: Item) =>
+        for (let item of store.items)
             items.push({
                 key: item.key,
                 name: item.name,
                 count: item.count,
                 price: item.price
-            })
-        );
+            });
 
         return {
             key,

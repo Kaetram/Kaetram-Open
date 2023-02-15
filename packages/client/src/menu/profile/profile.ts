@@ -4,8 +4,6 @@ import Skills from './impl/skills';
 
 import Menu from '../menu';
 
-import _ from 'lodash-es';
-
 import type Player from '../../entity/character/player/player';
 import type { Modules, Opcodes } from '@kaetram/common/network';
 import type { SelectCallback } from './impl/abilities';
@@ -157,7 +155,7 @@ export default class Profile extends Menu {
      */
 
     private forEachPage(callback: (page: Menu) => void): void {
-        _.each(this.pages, callback);
+        for (let page of this.pages) callback(page);
     }
 
     /**
