@@ -305,8 +305,9 @@ export default class Connection {
 
             case Opcodes.List.Positions: {
                 // Look through all the positions of the entities and their instances.
-                for (let [instance, position] of Object.entries(info.positions!)) {
-                    let entity = this.entities.get<Character>(instance);
+                for (let instance in info.positions!) {
+                    let position = info.positions[instance],
+                        entity = this.entities.get<Character>(instance);
 
                     // No entity found, just skip.
                     if (!entity || entity.moving || entity.hasPath()) return;
