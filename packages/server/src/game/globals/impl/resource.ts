@@ -57,7 +57,7 @@ export default class Resource {
 
                 let baseIndex = info.base.indexOf(stumpIntersect[0]),
                     dataBaseIndex = flatTile.indexOf(stumpIntersect[0]),
-                    cloneTile = structuredClone(flatTile);
+                    cloneTile = [...flatTile];
 
                 // Replace the stump with the cut stump.
                 cloneTile[dataBaseIndex] = info.depleted[baseIndex];
