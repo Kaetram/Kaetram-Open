@@ -167,7 +167,8 @@ export default class Connection {
     private handleHandshake(data: HandshakePacket): void {
         this.app.updateLoader('Connecting to server');
 
-        // Set the server id and send the login packet.
+        // Set the server id and instance
+        this.game.player.instance = data.instance;
         this.game.player.serverId = data.serverId;
 
         // Guest login doesn't require any credentials, send the packet right away.
