@@ -18,6 +18,7 @@ import type { SerializedStoreItem } from '../stores';
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface HandshakePacket {
+    instance: string; // Player's instance.
     serverId: number;
 }
 
