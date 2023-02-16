@@ -1,11 +1,10 @@
 import Character from '../game/entity/character/character';
+import Collections from '../game/entity/collection/collections';
 
 import log from '@kaetram/common/util/log';
-import Collections from '@kaetram/server/src/game/entity/collection/collections';
 import { Modules } from '@kaetram/common/network';
 
 import type { Enchantments } from '@kaetram/common/types/item';
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Hit from '../game/entity/character/combat/hit';
 import type Mob from '../game/entity/character/mob/mob';
 import type Player from '../game/entity/character/player/player';
