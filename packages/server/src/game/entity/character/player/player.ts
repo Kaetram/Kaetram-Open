@@ -319,15 +319,11 @@ export default class Player extends Character {
             if (!this.ready) this.connection.reject('error', true);
         }, 10_000);
 
-        /**
-         * Send player data to client here
-         */ // Set coords we loaded in `load`
+        this.setPosition(this.x, this.y);
 
         this.entities.addPlayer(this);
 
         this.send(new Welcome(this.serialize(false, true, true)));
-
-        this.setPosition(this.x, this.y);
     }
 
     /**
