@@ -35,7 +35,8 @@ export enum EntityType {
     Mob,
     Chest,
     Projectile,
-    Object
+    Object,
+    Pet
 }
 
 export enum AbilityType {

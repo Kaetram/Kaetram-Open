@@ -308,6 +308,9 @@ export default class Handler {
 
         this.player.storeOpen = '';
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
+
+        // Make the pet follow the player with every movement.
+        this.player.pet?.follow(this.player);
     }
 
     /**

@@ -10,6 +10,7 @@ import Equipments from './equipments';
 import Statistics from './statistics';
 import Trade from './trade';
 
+import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Formulas from '../../../../info/formulas';
@@ -126,6 +127,9 @@ export default class Player extends Character {
 
     // Stores the last attack style for each type of weapon.
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
+
+    // Pet information
+    public pet!: Pet;
 
     // Warps
     public lastWarp = 0;
@@ -1279,6 +1283,19 @@ export default class Player extends Character {
 
     public setLastWarp(lastWarp: number = Date.now()): void {
         this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
+    }
+
+    /**
+     * Creates an instance of a pet based on the key provided. The pet then
+     * starts following the player.
+     * @param key The key of t he pet we want to create.
+     */
+
+    public setPet(key: string): void {
+        if (this.pet) return this.notify(`You already have a pet!`);
+
+        // Create a new pet instance based on the key.
+        this.pet = new Pet(this, key, this.x, this.y);
     }
 
     /**

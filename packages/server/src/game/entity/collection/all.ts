@@ -1,13 +1,13 @@
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
 import { Despawn } from '@kaetram/server/src/network/packets';
 
-import type Character from '@kaetram/server/src/game/entity/character/character';
-import type Collections from '@kaetram/server/src/game/entity/collection/collections';
-import type Grids from '@kaetram/server/src/game/map/grids';
-import type Map from '@kaetram/server/src/game/map/map';
-import type Regions from '@kaetram/server/src/game/map/regions';
-import type World from '@kaetram/server/src/game/world';
+import type Character from '../../entity/character/character';
+import type Collections from '../../entity/collection/collections';
+import type Grids from '../../map/grids';
+import type Map from '../../map/map';
+import type Regions from '../../map/regions';
+import type World from '../../world';
 import type Entity from '../entity';
 
 /**
@@ -33,6 +33,7 @@ export default class AllCollection {
      * npc, item, chest, etc. we keep track of them in the list of entities.
      * @param entity The entity we are adding into region/grid system.
      */
+
     public add(entity: Entity): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
