@@ -955,6 +955,14 @@ export default class Commands {
 
                 break;
             }
+
+            case 'setpet': {
+                let key = blocks.shift()!;
+
+                if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
+
+                this.player.setPet(key);
+            }
         }
     }
 }

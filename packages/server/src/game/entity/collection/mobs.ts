@@ -1,8 +1,9 @@
-import mobData from '@kaetram/server/data/mobs.json';
-import Mob from '@kaetram/server/src/game/entity/character/mob/mob';
-import Collection from '@kaetram/server/src/game/entity/collection/collection';
+import Collection from './collection';
 
-import type World from '@kaetram/server/src/game/world';
+import Mob from '../../entity/character/mob/mob';
+import mobData from '../../../../data/mobs.json';
+
+import type World from '../../world';
 
 /**
  * A class for collections of entities of a certain type in the game.
