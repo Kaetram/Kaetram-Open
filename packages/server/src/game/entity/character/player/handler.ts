@@ -161,6 +161,8 @@ export default class Handler {
 
         this.world.linkFriends(this.player, true);
 
+        this.player.save();
+
         this.world.entities.removePlayer(this.player);
         this.world.api.sendLogout(this.player.username);
     }
