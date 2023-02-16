@@ -18,7 +18,7 @@ export default class Network {
     private regions: Regions;
 
     private timeoutThreshold = 5000;
-    private packets: { [id: string]: unknown[] } = {};
+    private packets: { [instance: string]: unknown[] } = {};
 
     public constructor(private world: World) {
         this.database = world.database;
@@ -35,15 +35,15 @@ export default class Network {
      */
 
     public parse(): void {
-        for (let id in this.packets)
-            if (this.packets[id].length > 0) {
-                let connection = this.socketHandler.get(id);
+        for (let instance in this.packets)
+            if (this.packets[instance].length > 0) {
+                let connection = this.socketHandler.get(instance);
 
                 if (connection) {
-                    connection.send(this.packets[id]);
+                    connection.send(this.packets[instance]);
 
-                    this.packets[id] = [];
-                } else this.socketHandler.remove(id);
+                    this.packets[instance] = [];
+                } else this.socketHandler.remove(instance);
             }
     }
 
