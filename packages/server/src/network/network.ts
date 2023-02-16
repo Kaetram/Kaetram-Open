@@ -74,6 +74,7 @@ export default class Network {
         this.send(
             player,
             new Handshake({
+                instance: player.instance,
                 serverId: config.serverId
             })
         );
