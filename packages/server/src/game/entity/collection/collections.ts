@@ -1,14 +1,16 @@
-import log from '@kaetram/common/util/log';
-import AllCollection from '@kaetram/server/src/game/entity/collection/all';
-import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
-import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
-import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
-import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
-import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
-import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
+import AllCollection from './all';
+import ChestCollection from './chests';
+import ItemCollection from './items';
+import MobCollection from './mobs';
+import NpcCollection from './npcs';
+import PlayerCollection from './players';
+import ProjectileCollection from './projectiles';
+import PetsCollection from './pets';
 
-import type Collection from '@kaetram/server/src/game/entity/collection/collection';
-import type World from '@kaetram/server/src/game/world';
+import log from '@kaetram/common/util/log';
+
+import type Collection from './collection';
+import type World from '../../world';
 import type Entity from '../entity';
 
 /**
@@ -22,6 +24,7 @@ export default class Collections {
     public readonly chests: ChestCollection;
     public readonly npcs: NpcCollection;
     public readonly projectiles: ProjectileCollection;
+    public readonly pets: PetsCollection;
     private readonly all: Collection<Entity>[] = [];
 
     public constructor(public world: World) {
@@ -32,28 +35,26 @@ export default class Collections {
         this.chests = new ChestCollection(this);
         this.npcs = new NpcCollection(this);
         this.projectiles = new ProjectileCollection(this);
+        this.pets = new PetsCollection(this);
     }
 
     /**
-     * Register a collection for easy iteration.
+     * Registers a collection of entities that we later use for iterating.
      */
+
     public register<T extends Collection<Entity>>(collection: T): T {
         log.debug(`Registering entity collection of type ${collection.constructor.name}`);
-        if (!this.all.includes(collection)) {
-            if (this !== collection.collections) {
-                log.warning(
-                    'Collections reference does not match. Registering is skipped. Check your implementation!'
-                );
-                return collection;
-            }
-            this.all.push(collection);
-        }
+
+        // Collection hasn't been registered yet.
+        if (!this.all.includes(collection)) this.all.push(collection);
+
         return collection;
     }
 
     /**
      * Iterates through each collection and returns a callback for it.
      */
+
     public forEachCollection(callback: (collection: Collection<Entity>) => void): void {
         for (let collection of this.all) callback(collection);
     }

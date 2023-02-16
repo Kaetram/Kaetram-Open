@@ -1,8 +1,9 @@
-import Collection from '@kaetram/server/src/game/entity/collection/collection';
-import Projectile from '@kaetram/server/src/game/entity/objects/projectile';
+import Collection from './collection';
 
-import type Character from '@kaetram/server/src/game/entity/character/character';
-import type Hit from '@kaetram/server/src/game/entity/character/combat/hit';
+import Projectile from '../../entity/objects/projectile';
+
+import type Character from '../../entity/character/character';
+import type Hit from '../../entity/character/combat/hit';
 
 /**
  * A class for collections of entities of a certain type in the game.

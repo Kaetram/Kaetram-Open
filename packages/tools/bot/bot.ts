@@ -42,6 +42,7 @@ export default class Bot {
 
     private connect(): void {
         let connection = io('ws://127.0.0.1:9001', {
+            transports: ['websocket'],
             forceNew: true,
             reconnection: false
         });
@@ -51,8 +52,7 @@ export default class Bot {
 
             connection.emit('client', {
                 gVer: config.gver,
-                cType: 'HTML5',
-                bot: true
+                cType: 'HTML5'
             });
         });
 
