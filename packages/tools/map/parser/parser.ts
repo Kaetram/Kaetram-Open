@@ -283,7 +283,7 @@ export default class ProcessMap {
 
     private parseBlocking(layer: Layer): void {
         for (let index in layer.data) {
-            if (layer.data[index] < 1) return;
+            if (layer.data[index] < 1) continue;
 
             this.map.collisions.push(parseInt(index));
         }
