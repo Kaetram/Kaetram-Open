@@ -198,7 +198,8 @@ export default class Stores {
         // Find total price of item by multiplying count against price.
         let currency = player.inventory.getIndex(store.currency, item.price * count);
 
-        if (currency < 1) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
+        // If no inventory slot index with currency is found, stop the purchase.
+        if (currency < 0) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Clone the item we are adding
         let itemToAdd = item.copy();
@@ -207,6 +208,7 @@ export default class Stores {
 
         // Add the item to the player's inventory.
         let amount = player.inventory.add(itemToAdd);
+
         if (amount < 1) return;
 
         if (item.count > 0) {
