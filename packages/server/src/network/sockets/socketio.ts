@@ -23,16 +23,15 @@ export default class SocketIO extends WebSocket {
     }
 
     private handleConnection(socket: Socket): void {
-        let remoteAddress = (socket.handshake.headers['cf-connecting-ip'] as string) || '127.0.0.1';
+        let remoteAddress = (socket.handshake.headers['cf-connecting-ip'] as string) || '127.0.0.1',
+            connection = new Connection(
+                Utils.createInstance(Modules.EntityType.Player),
+                remoteAddress,
+                socket,
+                this.socketHandler
+            );
 
         log.info(`Received connection from: ${remoteAddress}.`);
-
-        let connection = new Connection(
-            Utils.createInstance(Modules.EntityType.Player),
-            remoteAddress,
-            socket,
-            this.socketHandler
-        );
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         socket.on('client', (data: any) => {

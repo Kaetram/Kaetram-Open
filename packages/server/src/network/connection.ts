@@ -19,7 +19,7 @@ export default class Connection {
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
     public constructor(
-        public id: string,
+        public instance: string,
         public address: string,
         private socket: Socket,
         private socketHandler: SocketHandler
@@ -95,7 +95,7 @@ export default class Connection {
     private handleClose(): void {
         log.info(`Closed socket: ${this.address}.`);
 
-        this.socketHandler.remove(this.id);
+        this.socketHandler.remove(this.instance);
 
         this.closeCallback?.();
 
