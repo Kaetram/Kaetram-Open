@@ -267,12 +267,25 @@ export default class Handler {
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
-        // Do not pass through doors that require an achievement which hasn't been completed.
-        if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
-            return;
+        // Some doors may require players to complete achievements before they can pass through.
+        if (door.reqAchievement) {
+            let achievement = this.player.achievements.get(door.reqAchievement);
+
+            if (!achievement?.isFinished())
+                return this.player.notify(
+                    `You need to complete the achievement ${achievement?.name} to pass through this door.`
+                );
+        }
 
         // Ensure quest requirement is fullfilled before passing through the door.
-        if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
+        if (door.reqQuest) {
+            let quest = this.player.quests.get(door.reqQuest);
+
+            if (!quest?.isFinished())
+                return this.player.notify(
+                    `You need to complete the quest ${quest?.name} to pass through this door.`
+                );
+        }
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
         if (door.reqItem) {
