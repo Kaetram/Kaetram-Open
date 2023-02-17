@@ -181,7 +181,7 @@ export default class Player extends Character {
     private cheatScoreCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
-        super(connection.id, world, '', -1, -1);
+        super(connection.instance, world, '', -1, -1);
     }
 
     /**
