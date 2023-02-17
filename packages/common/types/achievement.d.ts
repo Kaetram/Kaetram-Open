@@ -6,6 +6,7 @@ export interface RawAchievement {
     name: string;
     description?: string;
     hidden?: boolean; // Whether or not to display description and achievement title.
+    secret?: boolean; // Secret achievements are only displayed when completed.
 
     npc?: string; // NPC handing out the achievement.
     dialogueHidden?: string[]; // Dialogue to display before the achievement is discovered.
@@ -41,6 +42,7 @@ export interface AchievementData {
     description?: string;
     stage: number;
     stageCount?: number;
+    secret?: boolean;
 }
 
 export interface SerializedAchievement {
