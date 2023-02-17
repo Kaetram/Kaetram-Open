@@ -141,15 +141,19 @@ export default class Player extends Character {
 
     public loadAchievements(achievements: AchievementData[]): void {
         for (let i in achievements) {
-            let achievement = achievements[i];
+            let achievement = achievements[i],
+                task = new Task(
+                    parseInt(i),
+                    achievement.name!,
+                    achievement.description!,
+                    achievement.stage,
+                    achievement.stageCount!
+                );
 
-            this.achievements[achievement.key] = new Task(
-                parseInt(i),
-                achievement.name!,
-                achievement.description!,
-                achievement.stage,
-                achievement.stageCount!
-            );
+            // Secret tasks are displayed slightly different.
+            if (achievement.secret) task.secret = true;
+
+            this.achievements[achievement.key] = task;
         }
     }
 
@@ -490,6 +494,18 @@ export default class Player extends Character {
      */
 
     public setAchievement(key: string, stage: number, name: string, description: string): void {
+        // Secret achievements that are not loaded initially.
+        if (!(key in this.achievements)) {
+            let task = new Task(Object.keys(this.achievements).length - 1, name, description);
+
+            // Only secret achievements are created this way.
+            task.secret = true;
+
+            this.achievements[key] = task;
+
+            return;
+        }
+
         this.achievements[key]?.update(stage, undefined, name, description);
     }
 

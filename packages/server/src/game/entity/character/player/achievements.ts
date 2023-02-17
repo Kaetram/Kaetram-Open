@@ -7,11 +7,7 @@ import Item from '../../objects/item';
 import { Opcodes } from '@kaetram/common/network';
 
 import type { Modules } from '@kaetram/common/network';
-import type {
-    AchievementData,
-    RawAchievement,
-    SerializedAchievement
-} from '@kaetram/common/types/achievement';
+import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
@@ -183,9 +179,12 @@ export default class Achievements {
     public serialize(withInfo = false): SerializedAchievement {
         let achievements: AchievementData[] = [];
 
-        this.forEachAchievement((achievement: Achievement) =>
-            achievements.push(achievement.serialize(withInfo))
-        );
+        this.forEachAchievement((achievement: Achievement) => {
+            // Skip secret achievements that are not finished.
+            if (achievement.secret && !achievement.isFinished()) return;
+
+            achievements.push(achievement.serialize(withInfo));
+        });
 
         return {
             achievements
