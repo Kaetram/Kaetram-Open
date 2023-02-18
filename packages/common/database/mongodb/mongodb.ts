@@ -219,7 +219,8 @@ export default class MongoDB {
             .aggregate([
                 { $unwind: '$skills' }, // Unwinds (transforms into multiple objects for each skill).
                 { $group: { _id: '$username', totalExperience: { $sum: '$skills.experience' } } },
-                { $sort: { totalExperience: -1 } }
+                { $sort: { totalExperience: -1 } },
+                { $limit: 100 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
