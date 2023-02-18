@@ -1,6 +1,5 @@
 import Commands from './commands';
 
-import Creator from '../database/mongodb/creator';
 import { Spawn } from '../network/packets';
 
 import sanitizer from 'sanitizer';
@@ -8,9 +7,10 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
+import Creator from '@kaetram/common/database/mongodb/creator';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
-import type MongoDB from '../database/mongodb/mongodb';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type Entities from './entities';
 import type World from '../game/world';
 import type Connection from '../network/connection';
