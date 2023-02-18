@@ -4,17 +4,19 @@ import Utils from '@kaetram/common/util/utils';
 import axios from 'axios';
 import express, { Router } from 'express';
 
+import type { TotalExperience } from '@kaetram/common/types/leaderboards';
+import type Cache from './cache';
+import type Server from './model/server';
+import type Servers from './controllers/servers';
 import type Discord from '@kaetram/common/api/discord';
 import type { Friend } from '@kaetram/common/types/friends';
 import type { Request, Response } from 'express';
-import type Servers from './controllers/servers';
-import type Server from './model/server';
 
 /**
  * We use the API format from `@kaetram/server`.
  */
 export default class API {
-    public constructor(private servers: Servers, private discord: Discord) {
+    public constructor(private servers: Servers, private discord: Discord, private cache: Cache) {
         let app = express();
 
         app.use(express.urlencoded({ extended: true }));
@@ -37,6 +39,7 @@ export default class API {
         router.get('/', this.handleRoot.bind(this));
         router.get('/server', this.handleServer.bind(this));
         router.get('/all', this.handleAll.bind(this));
+        router.get('/leaderboards', this.handleLeaderboards.bind(this));
 
         // POST requests
         router.post('/ping', this.handlePing.bind(this));
@@ -291,6 +294,23 @@ export default class API {
         response.json({
             status: 'success',
             online
+        });
+    }
+
+    /**
+     * A GET response handing out total experience for the leaderboards. The cache prevents
+     * us from having to query the database every time we need to update the leaderboards.
+     * @param response The response we are sending to the client.
+     */
+
+    private handleLeaderboards(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
+        this.cache.getTotalExperience((data: TotalExperience[]) => {
+            response.json({
+                status: 'success',
+                list: data
+            });
         });
     }
 
