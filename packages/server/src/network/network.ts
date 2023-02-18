@@ -4,12 +4,12 @@ import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
 
-import type MongoDB from '../database/mongodb/mongodb';
-import type Regions from '../game/map/regions';
+import type Packet from './packet';
 import type World from '../game/world';
 import type Connection from './connection';
-import type Packet from './packet';
+import type Regions from '../game/map/regions';
 import type SocketHandler from './sockethandler';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export default class Network {
     private database: MongoDB;

@@ -1,20 +1,21 @@
 import { exit } from 'node:process';
 
 import Console from './console';
-import Database from './database/database';
 import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
+import Database from '@kaetram/common/database/database';
 
 import type Connection from './network/connection';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 class Main {
     private world?: World;
-    private socketHandler = new SocketHandler();
-    private database = new Database(config.database).getDatabase()!;
+    private socketHandler: SocketHandler = new SocketHandler();
+    private database: MongoDB = new Database(config.database).getDatabase()!;
 
     private ready = false;
 
