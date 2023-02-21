@@ -5,13 +5,16 @@ import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../../entity/character/player/player';
 
-type SelectCallback = (type: Modules.Equipment) => void;
+type UnequipCallback = (type: Modules.Equipment) => void;
+type StyleCallback = (style: Modules.AttackStyle) => void;
 
 export default class State extends Menu {
     // General player information.
-    private name: HTMLElement = document.querySelector('#profile-name')!;
     private level: HTMLElement = document.querySelector('#profile-level')!;
     private experience: HTMLElement = document.querySelector('#profile-experience')!;
+
+    // Attack style element
+    private attackStyleList: HTMLUListElement = document.querySelector('#attack-style-list')!;
 
     // Equipment information
     private weapon: HTMLElement = document.querySelector('#state-page > .weapon-slot')!;
@@ -21,23 +24,26 @@ export default class State extends Menu {
     private boots: HTMLElement = document.querySelector('#state-page > .boots-slot')!;
     private arrow: HTMLElement = document.querySelector('#state-page > .arrows-slot')!;
 
-    private selectCallback?: SelectCallback;
+    private unequipCallback?: UnequipCallback;
+    private styleCallback?: StyleCallback;
 
     public constructor(private player: Player) {
         super('#state-page');
 
         this.weapon.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Weapon)
+            this.unequipCallback?.(Modules.Equipment.Weapon)
         );
         this.armour.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Armour)
+            this.unequipCallback?.(Modules.Equipment.Armour)
         );
         this.pendant.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Pendant)
+            this.unequipCallback?.(Modules.Equipment.Pendant)
         );
-        this.ring.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Ring));
-        this.boots.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Boots));
-        this.arrow.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Arrows));
+        this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
+        this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
+        this.arrow.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Arrows)
+        );
     }
 
     /**
@@ -48,7 +54,6 @@ export default class State extends Menu {
 
     public override synchronize(): void {
         // Synchronize the player's general information
-        this.name.textContent = this.player.name;
         this.level.textContent = `Level ${this.player.level}`;
         this.experience.textContent = `${this.player.getTotalExperience()}`;
 
@@ -62,6 +67,57 @@ export default class State extends Menu {
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
         this.arrow.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
+
+        // Synchronize the attack styles
+        this.loadAttackStyles();
+    }
+
+    /**
+     * Iterates through all the attack styles currently present on the player's weapon
+     * and creates the HTML element for each one of them. The element is then appended
+     * onto the attack style list.
+     */
+
+    private loadAttackStyles(): void {
+        // Clear the attack style list.
+        this.attackStyleList.innerHTML = '';
+
+        // Iterate through all the attack styles and create the HTML element for each one.
+        for (let style of this.player.getWeapon().attackStyles)
+            this.attackStyleList.append(this.createStyle(style));
+    }
+
+    /**
+     * Creates an attack style list element that is appended onto the
+     * attack style list. Each attack style has a different image and
+     * that is determined based on the style parameter provided.
+     * @param style The attack style we are creating.
+     * @returns A list element that contains the attack style image.
+     */
+
+    private createStyle(style: Modules.AttackStyle): HTMLLIElement {
+        let element = document.createElement('li'),
+            image = document.createElement('div');
+
+        // Append the default box onto the list element.
+        element.classList.add('attack-style-box');
+
+        // Add the attack style image.
+        image.classList.add(
+            'attack-style',
+            `attack-style-${Modules.AttackStyle[style].toLowerCase()}`
+        );
+
+        // If the style is the same as the player's current style, we add the active class.
+        if (style === this.player.getWeapon().attackStyle) image.classList.add('active');
+
+        // Append the image onto the list element.
+        element.append(image);
+
+        // Add the click event listener to the element.
+        element.addEventListener('click', () => this.styleCallback?.(style));
+
+        return element;
     }
 
     /**
@@ -69,7 +125,16 @@ export default class State extends Menu {
      * @param callback Contains the slot type we are selecting.
      */
 
-    public onSelect(callback: SelectCallback): void {
-        this.selectCallback = callback;
+    public onUnequip(callback: UnequipCallback): void {
+        this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when we click on an attack style.
+     * @param callback Contains the attack style we are selecting.
+     */
+
+    public onStyle(callback: StyleCallback): void {
+        this.styleCallback = callback;
     }
 }

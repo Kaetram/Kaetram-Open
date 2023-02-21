@@ -92,6 +92,7 @@ export default class Handler {
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
         this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+        this.player.equipment.onAttackStyle(this.handleAttackStyle.bind(this));
 
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
@@ -399,6 +400,15 @@ export default class Handler {
 
         // Sync to nearby players.
         this.player.sync();
+    }
+
+    /**
+     * Callback for when the attack style is changed and needs to be relayed to the client.
+     * @param attackStyle The new attack style that the player has selected.
+     */
+
+    private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Style, { attackStyle }));
     }
 
     /**
