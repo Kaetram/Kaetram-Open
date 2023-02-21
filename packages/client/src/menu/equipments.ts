@@ -17,7 +17,9 @@ export default class Equipments extends Menu {
 
     // Equipment slots elements
     private weapon: HTMLElement = document.querySelector('.equip-weapon-slot')!;
+    private weaponSkin: HTMLElement = document.querySelector('.equip-weapon-skin-slot')!;
     private armour: HTMLElement = document.querySelector('.equip-armour-slot')!;
+    private armourSkin: HTMLElement = document.querySelector('.equip-armour-skin-slot')!;
     private pendant: HTMLElement = document.querySelector('.equip-pendant-slot')!;
     private ring: HTMLElement = document.querySelector('.equip-ring-slot')!;
     private boots: HTMLElement = document.querySelector('.equip-boots-slot')!;
@@ -51,8 +53,14 @@ export default class Equipments extends Menu {
         this.weapon.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Weapon)
         );
+        this.weaponSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
+        );
         this.armour.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Armour)
+        );
+        this.armourSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
         this.pendant.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Pendant)
@@ -74,10 +82,12 @@ export default class Equipments extends Menu {
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
+        this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         // Cloth armour shouldn't be displayed in the UI.
         this.armour.style.backgroundImage = Util.getImageURL(
             this.player.getArmour().key === 'clotharmor' ? '' : this.player.getArmour().key
         );
+        this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
