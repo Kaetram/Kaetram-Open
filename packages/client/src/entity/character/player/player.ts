@@ -3,10 +3,12 @@ import Skill from './skill';
 import Ability from './ability';
 import Friend from './friend';
 import Armour from './equipment/armour';
+import ArmourSkin from './equipment/armourskin';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import WeaponSkin from './equipment/weaponskin';
 import Arrows from './equipment/arrows';
 
 import Character from '../character';
@@ -53,10 +55,12 @@ export default class Player extends Character {
     // Mapping of all equipments to their type.
     public equipments = {
         [Modules.Equipment.Armour]: new Armour(),
+        [Modules.Equipment.ArmourSkin]: new ArmourSkin(),
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
         [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.WeaponSkin]: new WeaponSkin(),
         [Modules.Equipment.Arrows]: new Arrows()
     };
 
@@ -266,7 +270,23 @@ export default class Player extends Character {
      */
 
     public getSpriteName(): string {
+        // Use the armour skin if it exists.
+        if (this.equipments[Modules.Equipment.ArmourSkin].key)
+            return this.equipments[Modules.Equipment.ArmourSkin].key;
+
         return this.equipments[Modules.Equipment.Armour].key;
+    }
+
+    /**
+     * @returns The key of the currently equipped weapon.
+     */
+
+    public getWeaponSpriteName(): string {
+        // Use the weapon skin if it exists.
+        if (this.equipments[Modules.Equipment.WeaponSkin].key)
+            return this.equipments[Modules.Equipment.WeaponSkin].key;
+
+        return this.equipments[Modules.Equipment.Weapon].key;
     }
 
     /**
@@ -275,6 +295,14 @@ export default class Player extends Character {
 
     public getArmour(): Armour {
         return this.equipments[Modules.Equipment.Armour];
+    }
+
+    /**
+     * @returns The armour skin object of the player.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.equipments[Modules.Equipment.ArmourSkin];
     }
 
     /**
@@ -315,6 +343,14 @@ export default class Player extends Character {
 
     public getWeapon(): Weapon {
         return this.equipments[Modules.Equipment.Weapon];
+    }
+
+    /**
+     * @returns The weapon skin object of the player.
+     */
+
+    public getWeaponSkin(): WeaponSkin {
+        return this.equipments[Modules.Equipment.WeaponSkin];
     }
 
     /**

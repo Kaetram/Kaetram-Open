@@ -210,9 +210,19 @@
             left: 4px * $i;
         }
 
+        .weapon-skin-slot {
+            top: 128px * $i;
+            left: 28px * $i;
+        }
+
         .armour-slot {
             top: 128px * $i;
             left: 104px * $i;
+        }
+
+        .armour-skin-slot {
+            top: 128px * $i;
+            left: 81px * $i;
         }
 
         .pendant-slot {
