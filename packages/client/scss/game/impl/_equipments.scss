@@ -81,9 +81,19 @@
             left: 2px * $i;
         }
 
+        .equip-weapon-skin-slot {
+            top: 118px * $i;
+            left: 26px * $i;
+        }
+
         .equip-armour-slot {
             top: 118px * $i;
             left: 102px * $i;
+        }
+
+        .equip-armour-skin-slot {
+            top: 118px * $i;
+            left: 79px * $i;
         }
 
         .equip-pendant-slot {
