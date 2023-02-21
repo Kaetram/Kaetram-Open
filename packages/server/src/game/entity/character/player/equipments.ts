@@ -42,6 +42,7 @@ export default class Equipments {
     private loadCallback?: () => void;
     private equipCallback?: (equipment: Equipment) => void;
     private unequipCallback?: (type: Modules.Equipment, count?: number) => void;
+    private attackStyleCallback?: (style: Modules.AttackStyle) => void;
 
     public constructor(private player: Player) {}
 
@@ -151,7 +152,16 @@ export default class Equipments {
      */
 
     public updateAttackStyle(style: Modules.AttackStyle): void {
-        this.getWeapon().attackStyle = style;
+        let weapon = this.getWeapon();
+
+        // Ensure the weapon has the attack style.
+        if (!weapon.hasAttackStyle(style))
+            return log.warning(`[${this.player.username}] Invalid attack style.`);
+
+        this.getWeapon().updateAttackStyle(style);
+
+        // Callback with the new attack style.
+        this.attackStyleCallback?.(style);
     }
 
     /**
@@ -314,5 +324,14 @@ export default class Equipments {
 
     public onUnequip(callback: (type: Modules.Equipment) => void): void {
         this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when the attack style is updated.
+     * @param callback The new attack style.
+     */
+
+    public onAttackStyle(callback: (style: Modules.AttackStyle) => void): void {
+        this.attackStyleCallback = callback;
     }
 }
