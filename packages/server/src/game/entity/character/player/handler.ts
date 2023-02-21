@@ -456,6 +456,7 @@ export default class Handler {
 
     private handleTradeAccept(message?: string): void {
         this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
+        log.trade(`${message}`);
     }
 
     /**
@@ -520,9 +521,7 @@ export default class Handler {
                 count, // Note this is the amount we are dropping.
                 slot.enchantments
             );
-            log.drop(
-                `Player at position (${this.player.x}, ${this.player.y}) dropped ${count} ${key}.`
-            );
+            log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 
         this.player.send(
