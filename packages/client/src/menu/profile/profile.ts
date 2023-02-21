@@ -9,6 +9,7 @@ import type { Modules, Opcodes } from '@kaetram/common/network';
 import type { SelectCallback } from './impl/abilities';
 
 type UnequipCallback = (type: Modules.Equipment) => void;
+type AttackStyleCallback = (style: Modules.AttackStyle) => void;
 
 export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
@@ -27,6 +28,7 @@ export default class Profile extends Menu {
     private next: HTMLElement = document.querySelector('#profile-navigator > .next')!;
 
     private unequipCallback?: UnequipCallback;
+    private attackStyleCallback?: AttackStyleCallback;
     private abilityCallback?: SelectCallback;
 
     public constructor(private player: Player) {
@@ -52,7 +54,9 @@ export default class Profile extends Menu {
         this.next.addEventListener('click', () => this.handleNavigation('next'));
 
         // Initialize callbacks for pages.
-        this.state.onSelect((type: Modules.Equipment) => this.unequipCallback?.(type));
+        this.state.onUnequip((type: Modules.Equipment) => this.unequipCallback?.(type));
+        this.state.onStyle((style: Modules.AttackStyle) => this.attackStyleCallback?.(style));
+
         this.abilities.onSelect((type: Opcodes.Ability, key: string, index?: number) =>
             this.abilityCallback?.(type, key, index)
         );
@@ -165,6 +169,15 @@ export default class Profile extends Menu {
 
     public onUnequip(callback: UnequipCallback): void {
         this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when an attack style is being changed.
+     * @param callback Contains the new attack style.
+     */
+
+    public onAttackStyle(callback: AttackStyleCallback): void {
+        this.attackStyleCallback = callback;
     }
 
     /**
