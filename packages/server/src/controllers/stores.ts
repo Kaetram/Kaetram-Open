@@ -224,6 +224,11 @@ export default class Stores {
 
         player.inventory.remove(currency, item.price * amount);
 
+        log.stores(
+            `Player ${player.username} pruchased ${amount} ${item.key} for ${item.price * amount} ${
+                store.currency
+            }.`
+        );
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
     }
@@ -327,6 +332,12 @@ export default class Stores {
 
         // Invalid price, this shouldn't happen.
         if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
+
+        log.stores(
+            `Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${
+                store.currency
+            }.`
+        );
 
         // Create the select packet for the client to process and move the item into the slot.
         player.send(
