@@ -559,12 +559,14 @@ export default class Player extends Character {
      * Updates the attack styles of the weapon. This occurs when a player already has a weapon
      * equipped and they change their attack style.
      * @param style The active attack style of the weapon.
-     * @param styles The list of potenetial attack styles of the weapon.
+     * @param styles (Optional) The list of all attack styles of the weapon.
      */
 
-    public setAttackStyle(style: Modules.AttackStyle, styles: Modules.AttackStyle[]): void {
+    public setAttackStyle(style: Modules.AttackStyle, styles?: Modules.AttackStyle[]): void {
         this.getWeapon().attackStyle = style;
-        this.getWeapon().attackStyles = styles;
+
+        // May be null when we're swapping attack styles.
+        if (styles) this.getWeapon().attackStyles = styles;
     }
 
     /**

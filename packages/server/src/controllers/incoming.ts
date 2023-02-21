@@ -233,7 +233,11 @@ export default class Incoming {
     private handleEquipment(data: EquipmentPacket): void {
         switch (data.opcode) {
             case Opcodes.Equipment.Unequip: {
-                return this.player.equipment.unequip(data.type);
+                return this.player.equipment.unequip(data.type!);
+            }
+
+            case Opcodes.Equipment.Style: {
+                return this.player.equipment.updateAttackStyle(data.style!);
             }
         }
     }

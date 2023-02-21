@@ -266,7 +266,7 @@ export default class Connection {
             }
 
             case Opcodes.Equipment.Style: {
-                this.game.player.setAttackStyle(info.attackStyle!, info.attackStyles!);
+                this.game.player.setAttackStyle(info.attackStyle!);
                 break;
             }
         }
