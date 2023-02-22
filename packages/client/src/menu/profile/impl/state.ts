@@ -119,7 +119,7 @@ export default class State extends Menu {
         );
 
         // If the style is the same as the player's current style, we add the active class.
-        if (style === this.player.getWeapon().attackStyle) image.classList.add('active');
+        if (style === this.player.getWeapon().attackStyle) element.classList.add('active');
 
         // Append the image onto the list element.
         element.append(image);
