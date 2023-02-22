@@ -205,6 +205,11 @@
             background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
         }
 
+        .slot-background {
+            z-index: -1;
+            background: url('/img/#{$i}/characterdialogsheet.png') -464px * $i -256px * $i;
+        }
+
         .weapon-slot {
             top: 128px * $i;
             left: 4px * $i;
@@ -596,57 +601,73 @@
         }
 
         #attack-style-list {
-            margin-top: 48px * $i;
+            margin-top: 46px * $i;
         }
 
         .attack-style-box {
-            width: 18px * $i;
-            height: 19px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -483px * $i -219px * $i; 
-        }
+            width: 23px * $i;
+            height: 31px * $i;
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -409px * $i -256px * $i; 
 
-        .attack-style {
-            width: 16px * $i;
-            height: 16px * $i;
-            margin-top: 1px * $i;
-            margin-left: 1px * $i;
-        }
-
-        .attack-style-stab {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -375px * $i -239px * $i;
-        }
-
-        .attack-style-slash {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -393px * $i -239px * $i;
-        }
-
-        .attack-style-defensive,
-        .attack-style-shared {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -411px * $i -239px * $i;
-        }
-
-        .attack-style-hack {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -429px * $i -239px * $i;
-        }
-
-        .attack-style-chop {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -447px * $i -239px * $i;
-        }
-
-        .attack-style-stab,
-        .attack-style-slash,
-        .attack-style-defensive,
-        .attack-style-hack,
-        .attack-style-chop {
             &:hover {
-                background-position-y: -258px * $i;
+                background-position-x: -384px * $i;
             }
 
             &:active, &.active {
-                background-position-y: -219px * $i;
+                background-position-x: -434px * $i;
             }
         }
 
+        .attack-style {
+            width: 17px * $i;
+            height: 17px * $i;
+            margin-top: 9px * $i;
+            margin-left: 3px * $i;
+        }
+
+        .attack-style-stab {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -384px * $i -224px * $i;
+        }
+
+        .attack-style-slash {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -403px * $i -224px * $i;
+        }
+
+        .attack-style-defensive {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -422px * $i -224px * $i;
+        }
+
+        .attack-style-crush {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -441px * $i -224px * $i;
+        }
+
+        .attack-style-shared {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -460px * $i -224px * $i;
+        }
+
+        .attack-style-hack {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -479px * $i -224px * $i;
+        }
+
+        .attack-style-chop {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -498px * $i -224px * $i;
+        }
+
+        .attack-style-accurate {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -517px * $i -224px * $i;
+        }
+
+        .attack-style-fast {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -536px * $i -224px * $i;
+        }
+
+        .attack-style-focused {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -555px * $i -224px * $i;
+        }
+
+        .attack-style-longrange {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -574px * $i -224px * $i;
+        }
     }
 }
 
