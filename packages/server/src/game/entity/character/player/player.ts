@@ -1678,6 +1678,8 @@ export default class Player extends Character {
             colour
         });
 
+        log.chat(`${this.username}: ${message}`);
+
         this.sendToRegions(packet);
     }
 
