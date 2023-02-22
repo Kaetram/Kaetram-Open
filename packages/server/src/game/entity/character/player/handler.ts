@@ -466,7 +466,6 @@ export default class Handler {
 
     private handleTradeAccept(message?: string): void {
         this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
-        log.trade(`${message}`);
     }
 
     /**
