@@ -346,12 +346,12 @@ export default class Trade {
             let offeredItems: unknown[] = [],
                 receivedItems: unknown[] = [];
 
-            // Remove the offered items from our player's inventory
+            // Store our player's item offers()) to an array
             this.forEachOfferedItem((item: Item) => {
                 offeredItems.push(item.name);
             });
 
-            // Remove the offered items from the other player's inventory.
+            // Store other player's item offer(s) to an array
             this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
                 receivedItems.push(item.name);
             });
