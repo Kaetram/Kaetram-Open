@@ -13,7 +13,8 @@ export interface LoginPacket {
 
 export interface EquipmentPacket {
     opcode: Opcodes.Equipment;
-    type: Modules.Equipment;
+    type?: Modules.Equipment;
+    style?: Modules.AttackStyle;
 }
 
 export interface ReadyPacket {

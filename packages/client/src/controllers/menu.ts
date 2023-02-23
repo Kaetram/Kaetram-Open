@@ -79,9 +79,10 @@ export default class MenuController {
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));
-        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
+        this.equipments.onUnequip(this.handleProfileUnequip.bind(this));
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+        this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
 
         this.warp.onSelect(this.handleWarp.bind(this));
@@ -304,6 +305,19 @@ export default class MenuController {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Unequip,
             type
+        });
+    }
+
+    /**
+     * Sends a packet to the server when a player selects a different
+     * attack style.
+     * @param style The new attack style we are selecting.
+     */
+
+    private handleProfileAttackStyle(style: Modules.AttackStyle): void {
+        this.game.socket.send(Packets.Equipment, {
+            opcode: Opcodes.Equipment.Style,
+            style
         });
     }
 

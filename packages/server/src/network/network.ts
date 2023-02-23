@@ -4,12 +4,12 @@ import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
 
-import type MongoDB from '../database/mongodb/mongodb';
-import type Regions from '../game/map/regions';
+import type Packet from './packet';
 import type World from '../game/world';
 import type Connection from './connection';
-import type Packet from './packet';
+import type Regions from '../game/map/regions';
 import type SocketHandler from './sockethandler';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export default class Network {
     private database: MongoDB;
@@ -18,7 +18,7 @@ export default class Network {
     private regions: Regions;
 
     private timeoutThreshold = 5000;
-    private packets: { [id: string]: unknown[] } = {};
+    private packets: { [instance: string]: unknown[] } = {};
 
     public constructor(private world: World) {
         this.database = world.database;
@@ -35,15 +35,15 @@ export default class Network {
      */
 
     public parse(): void {
-        for (let id in this.packets)
-            if (this.packets[id].length > 0) {
-                let connection = this.socketHandler.get(id);
+        for (let instance in this.packets)
+            if (this.packets[instance].length > 0) {
+                let connection = this.socketHandler.get(instance);
 
                 if (connection) {
-                    connection.send(this.packets[id]);
+                    connection.send(this.packets[instance]);
 
-                    this.packets[id] = [];
-                } else this.socketHandler.remove(id);
+                    this.packets[instance] = [];
+                } else this.socketHandler.remove(instance);
             }
     }
 
@@ -74,6 +74,7 @@ export default class Network {
         this.send(
             player,
             new Handshake({
+                instance: player.instance,
                 serverId: config.serverId
             })
         );

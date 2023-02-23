@@ -22,7 +22,8 @@ export default class Achievements extends Menu {
     public handle(opcode: Opcodes.Achievement, key?: string): void {
         // Handle achievement batch creation.
         if (opcode === Opcodes.Achievement.Batch) {
-            for (let task of Object.values(this.player.achievements)) this.createAchievement(task);
+            for (let key in this.player.achievements)
+                this.createAchievement(this.player.achievements[key], key);
 
             return;
         }
@@ -33,6 +34,9 @@ export default class Achievements extends Menu {
         // No task found.
         if (!task) return;
 
+        // Secret tasks don't exist until they are discovered.
+        if (task.secret) return this.createAchievement(task, key!);
+
         // Update the achievement element.
         this.update(this.list.children[task.id] as HTMLLIElement, task);
     }
@@ -41,10 +45,11 @@ export default class Achievements extends Menu {
      * Creates an achievement based on the task object provided. A task object is used
      * for either quests or achievements. In this case we are only using it for achievements.
      * @param task Contains information about the achievement we are creating.
+     * @param key The key of the achievement we are creating.
      * @returns A list element containing the achievement information.
      */
 
-    private createAchievement(task: Task): void {
+    private createAchievement(task: Task, key: string): void {
         let element = document.createElement('li'),
             coin = document.createElement('div'),
             title = document.createElement('p'),
@@ -78,8 +83,7 @@ export default class Achievements extends Menu {
             title.style.color = '#fcda1d';
 
             // Styling for the coin element.
-            coin.classList.add('coin');
-            coin.classList.add('coin-default');
+            coin.classList.add('coin', task.secret ? `coin-${key}` : 'coin-default');
 
             // Add the coin element.
             element.prepend(coin);
