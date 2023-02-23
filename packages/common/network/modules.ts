@@ -35,7 +35,8 @@ export enum EntityType {
     Mob,
     Chest,
     Projectile,
-    Object
+    Object,
+    Pet
 }
 
 export enum AbilityType {
@@ -103,7 +104,9 @@ export enum Equipment {
     Pendant,
     Ring,
     Weapon,
-    Arrows
+    Arrows,
+    WeaponSkin,
+    ArmourSkin
 }
 
 export enum AttackStyle {

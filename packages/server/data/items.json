@@ -4167,7 +4167,7 @@
   },
 
   "taekwondo": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Taekwondo"
   },
 
@@ -4235,12 +4235,12 @@
   },
 
   "huniarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Huni Armour"
   },
 
   "damboarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Dambo Armour"
   },
 
@@ -4255,7 +4255,7 @@
   },
 
   "bluedamboarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Blue Dambo Armour"
   },
 
@@ -4270,7 +4270,7 @@
   },
 
   "robotarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Robot Armour"
   },
 
@@ -4305,12 +4305,12 @@
   },
 
   "dinosaurarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Dinosaur Armour"
   },
 
   "catarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Cat Armour"
   },
 
@@ -4505,12 +4505,12 @@
   },
 
   "greendamboarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Green Dambo Armour"
   },
 
   "reddamboarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Red Dambo Armour"
   },
 
@@ -4563,37 +4563,37 @@
   },
 
   "rainbowapro": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Rainbow A Pro"
   },
 
   "cokearmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Coke Armour"
   },
 
   "friedpotatoarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Fried Potato Armour"
   },
 
   "burgerarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Burger Armour"
   },
 
   "radisharmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Radish Armour"
   },
 
   "halloweenjkarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Halloween JK Armour"
   },
 
   "frankensteinarmor": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Frankenstein Armour"
   },
 
@@ -5118,7 +5118,7 @@
   },
 
   "pickle": {
-    "type": "armour",
+    "type": "armourskin",
     "name": "Pickle Armour"
   },
 
@@ -5149,7 +5149,7 @@
   },
 
   "platinumsword": {
-    "type": "weapon",
+    "type": "weaponskin",
     "name": "Platinum Sword"
   },
 

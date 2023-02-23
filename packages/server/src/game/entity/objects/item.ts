@@ -269,10 +269,18 @@ export default class Item extends Entity {
                 return Modules.Equipment.Armour;
             }
 
+            case 'armourskin': {
+                return Modules.Equipment.ArmourSkin;
+            }
+
             case 'weapon':
             case 'weaponarcher':
             case 'weaponmagic': {
                 return Modules.Equipment.Weapon;
+            }
+
+            case 'weaponskin': {
+                return Modules.Equipment.WeaponSkin;
             }
 
             case 'pendant': {
@@ -437,9 +445,11 @@ export default class Item extends Entity {
         return (
             this.itemType === 'armour' ||
             this.itemType === 'armourarcher' ||
+            this.itemType === 'armourskin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||
+            this.itemType === 'weaponskin' ||
             this.itemType === 'pendant' ||
             this.itemType === 'boots' ||
             this.itemType === 'ring' ||

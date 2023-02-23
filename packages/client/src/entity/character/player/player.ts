@@ -3,10 +3,12 @@ import Skill from './skill';
 import Ability from './ability';
 import Friend from './friend';
 import Armour from './equipment/armour';
+import ArmourSkin from './equipment/armourskin';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import WeaponSkin from './equipment/weaponskin';
 import Arrows from './equipment/arrows';
 
 import Character from '../character';
@@ -53,10 +55,12 @@ export default class Player extends Character {
     // Mapping of all equipments to their type.
     public equipments = {
         [Modules.Equipment.Armour]: new Armour(),
+        [Modules.Equipment.ArmourSkin]: new ArmourSkin(),
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
         [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.WeaponSkin]: new WeaponSkin(),
         [Modules.Equipment.Arrows]: new Arrows()
     };
 
@@ -141,15 +145,19 @@ export default class Player extends Character {
 
     public loadAchievements(achievements: AchievementData[]): void {
         for (let i in achievements) {
-            let achievement = achievements[i];
+            let achievement = achievements[i],
+                task = new Task(
+                    parseInt(i),
+                    achievement.name!,
+                    achievement.description!,
+                    achievement.stage,
+                    achievement.stageCount!
+                );
 
-            this.achievements[achievement.key] = new Task(
-                parseInt(i),
-                achievement.name!,
-                achievement.description!,
-                achievement.stage,
-                achievement.stageCount!
-            );
+            // Secret tasks are displayed slightly different.
+            if (achievement.secret) task.secret = true;
+
+            this.achievements[achievement.key] = task;
         }
     }
 
@@ -262,7 +270,23 @@ export default class Player extends Character {
      */
 
     public getSpriteName(): string {
+        // Use the armour skin if it exists.
+        if (this.equipments[Modules.Equipment.ArmourSkin].key)
+            return this.equipments[Modules.Equipment.ArmourSkin].key;
+
         return this.equipments[Modules.Equipment.Armour].key;
+    }
+
+    /**
+     * @returns The key of the currently equipped weapon.
+     */
+
+    public getWeaponSpriteName(): string {
+        // Use the weapon skin if it exists.
+        if (this.equipments[Modules.Equipment.WeaponSkin].key)
+            return this.equipments[Modules.Equipment.WeaponSkin].key;
+
+        return this.equipments[Modules.Equipment.Weapon].key;
     }
 
     /**
@@ -271,6 +295,14 @@ export default class Player extends Character {
 
     public getArmour(): Armour {
         return this.equipments[Modules.Equipment.Armour];
+    }
+
+    /**
+     * @returns The armour skin object of the player.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.equipments[Modules.Equipment.ArmourSkin];
     }
 
     /**
@@ -311,6 +343,14 @@ export default class Player extends Character {
 
     public getWeapon(): Weapon {
         return this.equipments[Modules.Equipment.Weapon];
+    }
+
+    /**
+     * @returns The weapon skin object of the player.
+     */
+
+    public getWeaponSkin(): WeaponSkin {
+        return this.equipments[Modules.Equipment.WeaponSkin];
     }
 
     /**
@@ -490,6 +530,18 @@ export default class Player extends Character {
      */
 
     public setAchievement(key: string, stage: number, name: string, description: string): void {
+        // Secret achievements that are not loaded initially.
+        if (!(key in this.achievements)) {
+            let task = new Task(Object.keys(this.achievements).length - 1, name, description);
+
+            // Only secret achievements are created this way.
+            task.secret = true;
+
+            this.achievements[key] = task;
+
+            return;
+        }
+
         this.achievements[key]?.update(stage, undefined, name, description);
     }
 
@@ -543,12 +595,14 @@ export default class Player extends Character {
      * Updates the attack styles of the weapon. This occurs when a player already has a weapon
      * equipped and they change their attack style.
      * @param style The active attack style of the weapon.
-     * @param styles The list of potenetial attack styles of the weapon.
+     * @param styles (Optional) The list of all attack styles of the weapon.
      */
 
-    public setAttackStyle(style: Modules.AttackStyle, styles: Modules.AttackStyle[]): void {
+    public setAttackStyle(style: Modules.AttackStyle, styles?: Modules.AttackStyle[]): void {
         this.getWeapon().attackStyle = style;
-        this.getWeapon().attackStyles = styles;
+
+        // May be null when we're swapping attack styles.
+        if (styles) this.getWeapon().attackStyles = styles;
     }
 
     /**

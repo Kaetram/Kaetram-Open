@@ -18,6 +18,7 @@ import type { SerializedStoreItem } from '../stores';
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface HandshakePacket {
+    instance: string; // Player's instance.
     serverId: number;
 }
 
@@ -38,7 +39,6 @@ export interface EquipmentPacket {
     type?: Modules.Equipment; // Specified when equipping a specific item
     count?: number;
     attackStyle?: Modules.AttackStyle;
-    attackStyles?: Modules.AttackStyle[];
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
