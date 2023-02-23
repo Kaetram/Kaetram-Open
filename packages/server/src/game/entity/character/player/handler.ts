@@ -408,7 +408,12 @@ export default class Handler {
      */
 
     private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Style, { attackStyle }));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Style, {
+                attackStyle,
+                attackRange: this.player.attackRange
+            })
+        );
     }
 
     /**
