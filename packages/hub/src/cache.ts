@@ -48,6 +48,8 @@ export default class Cache {
         if (!this.canAggregateData()) return callback(this.totalExperience);
 
         this.database.getTotalExperienceAggregate((data: TotalExperience[]) => {
+            for (let info of data) if (!info.cheater) delete info.cheater;
+
             callback((this.totalExperience = data));
 
             // Update the last aggregate time.

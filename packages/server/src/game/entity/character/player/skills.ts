@@ -225,7 +225,8 @@ export default class Skills {
         this.forEachSkill((skill: Skill) => skills.push(skill.serialize(includeLevel)));
 
         return {
-            skills
+            skills,
+            cheater: this.player.rank === Modules.Ranks.Cheater
         };
     }
 
