@@ -138,7 +138,7 @@ export default class Incoming {
 
         if (username) {
             // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-            this.player.username = username.toLowerCase().slice(0, 32).trim();
+            this.player.username = Filter.clean(username.toLowerCase().slice(0, 32).trim());
 
             if (password) this.player.password = password.slice(0, 32);
             if (email) this.player.email = email;
