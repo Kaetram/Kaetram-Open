@@ -133,5 +133,18 @@
             "- Buy/drop/etc X amount",
             "- Various bug fixes and backend improvements"
         ]
+    },
+    "alpha-2.4.0": {
+        "title": "Kaetram alpha-2.4.0",
+        "content": [
+            "- Added Defense skill, attack styles, and secret achievements",
+            "- Added freezing effect and snow potion functionality",
+            "- Added PVP areas, new quests, and new areas",
+            "- Experience gain is now on a per-hit basis",
+            "- New interfaces for profile, skills, and friends list",
+            "- Fix bank/inventory/store-related bugs",
+            "- Fix cross-server private messaging",
+            "- Loads of backend improvements and optimizations"
+        ]
     }
 }
