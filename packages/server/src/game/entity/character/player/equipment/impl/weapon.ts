@@ -15,6 +15,10 @@ export default class Weapon extends Equipment {
     public mining = -1;
     public manaCost = 0;
 
+    // Default values for resetting variables when changing attack styles.
+    public defaultAttackRange = 1;
+    public defaultAttackRate: number = Modules.Defaults.ATTACK_RATE;
+
     // Weapon type
     private archer = false;
     private magic = false;
@@ -34,6 +38,7 @@ export default class Weapon extends Equipment {
         super.update(item);
 
         this.attackRange = item.attackRange;
+        this.defaultAttackRange = item.attackRange;
         this.attackRate = item.attackRate;
         this.attackStyles = item.getAttackStyles();
         this.lumberjacking = item.lumberjacking;
@@ -80,6 +85,21 @@ export default class Weapon extends Equipment {
 
     public updateAttackStyle(attackStyle: Modules.AttackStyle): void {
         this.attackStyle = attackStyle;
+
+        // Rapid attack style boosts attack speed by 15%
+        this.attackRate =
+            attackStyle === Modules.AttackStyle.Fast
+                ? this.defaultAttackRate * 0.85
+                : this.defaultAttackRate;
+
+        // Not applicable for ranged weapons.
+        if (!this.archer && !this.magic) return;
+
+        // Long range boosts attack range by 2 for bows and magic weapons
+        this.attackRange =
+            attackStyle === Modules.AttackStyle.LongRange
+                ? this.defaultAttackRange + 2
+                : this.defaultAttackRange;
     }
 
     /**
@@ -137,6 +157,16 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * Checks whether the weapon contains the attack style.
+     * @param attackStyle The attack style to check for.
+     * @returns Whether or not the attack style is included in the weapon's attack styles.
+     */
+
+    public hasAttackStyle(attackStyle: Modules.AttackStyle): boolean {
+        return this.attackStyles.includes(attackStyle);
+    }
+
+    /**
      * Override for the superclass where we add the attack styles.
      * @param clientInfo Whether or not to send the client information.
      */
@@ -144,10 +174,11 @@ export default class Weapon extends Equipment {
     public override serialize(clientInfo = false): EquipmentData {
         let data = super.serialize(clientInfo);
 
+        data.attackStyle = this.attackStyle;
+
         // Include additional properties to be sent to the client.
         if (clientInfo) {
             data.attackRange = this.attackRange;
-            data.attackStyle = this.attackStyle;
             data.attackStyles = this.attackStyles;
         }
 

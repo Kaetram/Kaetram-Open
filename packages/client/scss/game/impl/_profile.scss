@@ -108,6 +108,17 @@
     color: #fff;
 }
 
+.attack-style {
+    position: absolute;
+}
+
+#attack-style-list {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
 @each $size, $i in media.$sizes {
     @media ($size) {
         #state-page,
@@ -150,9 +161,13 @@
 
         .profile-slot {
             position: absolute;
+
             width: 16px * $i;
             height: 15px * $i;
+            margin-top: -2px * $i;
+
             background-position: 0 0;
+            background-size: cover;
         }
 
         .profile-info {
@@ -172,7 +187,7 @@
 
         #equipment-button {
             position: absolute;
-            top: 55%;
+            top: 59%;
             right: 51px * $i;
 
             width: 21px * $i;
@@ -190,14 +205,9 @@
             background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
         }
 
-        .weapon-slot,
-        .armour-slot,
-        .pendant-slot,
-        .ring-slot,
-        .boots-slot,
-        .arrows-slot {
-            margin-top: -2px * $i;
-            background-size: cover;
+        .slot-background {
+            z-index: -1;
+            background: url('/img/#{$i}/characterdialogsheet.png') -464px * $i -256px * $i;
         }
 
         .weapon-slot {
@@ -205,46 +215,52 @@
             left: 4px * $i;
         }
 
+        .weapon-skin-slot {
+            top: 128px * $i;
+            left: 28px * $i;
+        }
+
         .armour-slot {
-            top: 130px * $i;
+            top: 128px * $i;
             left: 104px * $i;
         }
 
+        .armour-skin-slot {
+            top: 128px * $i;
+            left: 81px * $i;
+        }
+
         .pendant-slot {
-            top: 88px * $i;
-            left: 26px * $i;
+            top: 86px * $i;
+            left: 28px * $i;
         }
 
         .ring-slot {
-            top: 172px * $i;
+            top: 174px * $i;
             left: 27px * $i;
         }
 
         .boots-slot {
-            top: 173px * $i;
-            left: 82px * $i;
+            top: 174px * $i;
+            left: 80px * $i;
         }
         
         .arrows-slot {
-            top: 87px * $i;
-            left: 81px * $i;
+            top: 86px * $i;
+            left: 79px * $i;
         }
 
         #arrows-count {
-            top: 18px * $i;
+            top: 19px * $i;
             left: 2px * $i;
         }
 
-        #profile-name {
+        #profile-level {
             top: 8px * $i;
         }
 
-        #profile-level {
-            top: 29px * $i;
-        }
-
         #profile-experience {
-            top: 50px * $i;
+            top: 29px * $i;
         }
 
         .navigator {
@@ -583,6 +599,75 @@
             font-size: 10px * $i;
             text-align: center;
         }
+
+        #attack-style-list {
+            margin-top: 46px * $i;
+        }
+
+        .attack-style-box {
+            width: 23px * $i;
+            height: 31px * $i;
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -409px * $i -256px * $i; 
+
+            &:hover {
+                background-position-x: -384px * $i;
+            }
+
+            &:active, &.active {
+                background-position-x: -434px * $i;
+            }
+        }
+
+        .attack-style {
+            width: 17px * $i;
+            height: 17px * $i;
+            margin-top: 9px * $i;
+            margin-left: 3px * $i;
+        }
+
+        .attack-style-stab {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -384px * $i -224px * $i;
+        }
+
+        .attack-style-slash {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -403px * $i -224px * $i;
+        }
+
+        .attack-style-defensive {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -422px * $i -224px * $i;
+        }
+
+        .attack-style-crush {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -441px * $i -224px * $i;
+        }
+
+        .attack-style-shared {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -460px * $i -224px * $i;
+        }
+
+        .attack-style-hack {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -479px * $i -224px * $i;
+        }
+
+        .attack-style-chop {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -498px * $i -224px * $i;
+        }
+
+        .attack-style-accurate {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -517px * $i -224px * $i;
+        }
+
+        .attack-style-fast {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -536px * $i -224px * $i;
+        }
+
+        .attack-style-focused {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -555px * $i -224px * $i;
+        }
+
+        .attack-style-longrange {
+            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -574px * $i -224px * $i;
+        }
     }
 }
 
@@ -632,5 +717,9 @@
         font-size: 10px;
         border: 1px solid #373737;
         border-radius: 4px;
+    }
+
+    #arrows-count {
+        font-size: 8px;
     }
 }

@@ -5,12 +5,14 @@
  */
 
 export default class Task {
+    public secret = false; // Whether or not the task is a secret task.
+
     public constructor(
         public id: number,
         public name: string,
         public description: string,
-        public stage: number,
-        public stageCount: number,
+        public stage = 1,
+        public stageCount = 1,
         public subStage?: number,
         public rewards?: string[]
     ) {}

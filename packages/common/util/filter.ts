@@ -30,6 +30,11 @@ export default {
         for (let profanity of Profanities)
             message = message.replace(new RegExp(profanity, 'gi'), '*'.repeat(profanity.length));
 
-        return message;
+        return decodeURIComponent(
+            encodeURIComponent(message)
+                .replace(/%CC(%[\dA-Z]{2})+%20/g, ' ')
+                .replace(/%CC(%[\dA-Z]{2})+(\w)/g, '$2')
+                .replace(/%CC(%[\dA-Z]{2})+$/g, '')
+        );
     }
 };
