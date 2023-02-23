@@ -67,7 +67,7 @@
   "morningstar": {
     "type": "weapon",
     "name": "Morning Star",
-    "weaponType": "club",
+    "weaponType": "blunt",
     "level": 6,
     "price": 1000,
     "attackStats": {
