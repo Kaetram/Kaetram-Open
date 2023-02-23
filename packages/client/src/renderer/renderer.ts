@@ -819,7 +819,7 @@ export default class Renderer {
     private drawWeapon(player: Player): void {
         if (!player.hasWeapon() || player.dead || player.teleporting) return;
 
-        let weapon = this.game.sprites.get(player.getWeapon().key);
+        let weapon = this.game.sprites.get(player.getWeaponSpriteName());
 
         if (!weapon) return;
 

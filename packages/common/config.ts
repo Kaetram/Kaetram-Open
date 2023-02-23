@@ -38,6 +38,7 @@ export interface Config {
     mongodbDatabase: string;
     mongodbSrv: boolean;
     mongodbTls: boolean;
+    aggregateThreshold: number;
 
     tutorialEnabled: boolean;
     overrideAuth: boolean;

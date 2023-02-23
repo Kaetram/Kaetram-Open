@@ -342,6 +342,23 @@ export default class Trade {
             // Notify both that the trade is complete.
             this.player.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
             this.activeTrade?.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
+
+            let offeredItems: unknown[] = [],
+                receivedItems: unknown[] = [];
+
+            // Store our player's item offers()) to an array
+            this.forEachOfferedItem((item: Item) => {
+                offeredItems.push(item.name);
+            });
+
+            // Store other player's item offer(s) to an array
+            this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
+                receivedItems.push(item.name);
+            });
+
+            log.trade(
+                `Player ${this.player.username} traded [${offeredItems}] for [${receivedItems}] with player ${this.activeTrade?.username}`
+            );
         }
 
         this.close();

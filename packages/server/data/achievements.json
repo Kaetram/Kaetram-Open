@@ -202,5 +202,17 @@
 
         "rewardSkill": "health",
         "rewardExperience": 52600
+    },
+
+    "gravemystery": {
+        "name": "Grave Mystery",
+        "description": "Discovered a cryptic set of gravestones.",
+        "secret": true
+    },
+
+    "kaetramdungeon": {
+        "name": "Kaetram's Dungeon",
+        "description": "Discovered the secret ladder to enter Kaetram's dungeon!",
+        "secret": true
     }
 }

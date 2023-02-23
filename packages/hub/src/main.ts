@@ -1,12 +1,14 @@
 import API from './api';
+import Cache from './cache';
 import Console from './console';
 import Servers from './controllers/servers';
 
-import Discord from '@kaetram/common/api/discord';
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 
 export default class Main {
+    private cache: Cache = new Cache();
     private discord: Discord = new Discord();
     private servers: Servers = new Servers();
 
@@ -15,7 +17,7 @@ export default class Main {
     public constructor() {
         log.notice(`Initializing ${config.name} Hub ${config.gver}.`);
 
-        this.api = new API(this.servers, this.discord);
+        this.api = new API(this.servers, this.discord, this.cache);
 
         this.discord.onMessage(this.api.broadcastChat.bind(this.api));
 

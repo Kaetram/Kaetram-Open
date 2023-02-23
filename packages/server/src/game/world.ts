@@ -17,13 +17,13 @@ import { Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 
-import type MongoDB from '../database/mongodb/mongodb';
-import type Connection from '../network/connection';
+import type Grids from './map/grids';
 import type Packet from '../network/packet';
+import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Character from './entity/character/character';
 import type Player from './entity/character/player/player';
-import type Grids from './map/grids';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export interface PacketData {
     packet: Packet;
@@ -241,7 +241,7 @@ export default class World {
      */
 
     public getPopulation(): number {
-        return Object.keys(this.entities.listOfPlayers).length;
+        return Object.keys(this.entities.players).length;
     }
 
     /**
