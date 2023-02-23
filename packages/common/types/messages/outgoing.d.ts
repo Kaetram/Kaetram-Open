@@ -39,6 +39,7 @@ export interface EquipmentPacket {
     type?: Modules.Equipment; // Specified when equipping a specific item
     count?: number;
     attackStyle?: Modules.AttackStyle;
+    attackRange?: number; // Passed with attack style to update the player's attack range.
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
