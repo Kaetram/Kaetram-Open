@@ -4382,13 +4382,13 @@
 
   "santa": {
     "name": "Santa",
-    "drops": {"candybar": 75},
+    "drops": {"candybar": 75, "candybow": 25},
     "hitPoints": 7500,
-    "defenseLevel": 40,
-    "attackLevel": 65,
+    "defenseLevel": 80,
+    "attackLevel": 105,
     "level": 240,
-    "aggroRange": 12,
-    "attackRange": 9,
+    "aggroRange": 18,
+    "attackRange": 16,
     "aggressive": true,
     "roaming": true,
     "attackRate": 1100,

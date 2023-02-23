@@ -770,15 +770,15 @@
     "level": 148,
     "price": 1000,
     "attackStats": {
-      "crush": 50,
+      "crush": 60,
       "slash": 10,
       "stab": 10,
       "archery": 0,
-      "magic": 30
+      "magic": 10
     },
     "bonuses": {
-      "accuracy": 12,
-      "strength": 22,
+      "accuracy": 22,
+      "strength": 42,
       "archery": 0,
       "magic": 0
     }
