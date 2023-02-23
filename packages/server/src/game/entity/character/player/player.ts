@@ -10,6 +10,7 @@ import Equipments from './equipments';
 import Statistics from './statistics';
 import Trade from './trade';
 
+import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Formulas from '../../../../info/formulas';
@@ -41,6 +42,16 @@ import { Opcodes, Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
 import { Team } from '@kaetram/common/api/minigame';
 
+import type NPC from '../../npc/npc';
+import type Skill from './skill/skill';
+import type Map from '../../../map/map';
+import type World from '../../../world';
+import type Item from '../../objects/item';
+import type Area from '../../../map/areas/area';
+import type Regions from '../../../map/regions';
+import type Connection from '../../../../network/connection';
+import type Resource from '../../../globals/impl/resource';
+import type Minigame from '../../../minigames/minigame';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
@@ -48,18 +59,8 @@ import type { PlayerData } from '@kaetram/common/types/player';
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type Entities from '@kaetram/server/src/controllers/entities';
 import type Packet from '@kaetram/server/src/network/packet';
-import type { PlayerInfo } from '../../../../database/mongodb/creator';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Connection from '../../../../network/connection';
-import type Resource from '../../../globals/impl/resource';
-import type Area from '../../../map/areas/area';
-import type Map from '../../../map/map';
-import type Regions from '../../../map/regions';
-import type Minigame from '../../../minigames/minigame';
-import type World from '../../../world';
-import type NPC from '../../npc/npc';
-import type Item from '../../objects/item';
-import type Skill from './skill/skill';
+import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -127,6 +128,9 @@ export default class Player extends Character {
     // Stores the last attack style for each type of weapon.
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
+    // Pet information
+    public pet!: Pet;
+
     // Warps
     public lastWarp = 0;
 
@@ -177,7 +181,7 @@ export default class Player extends Character {
     private cheatScoreCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
-        super(connection.id, world, '', -1, -1);
+        super(connection.instance, world, '', -1, -1);
     }
 
     /**
@@ -315,15 +319,11 @@ export default class Player extends Character {
             if (!this.ready) this.connection.reject('error', true);
         }, 10_000);
 
-        /**
-         * Send player data to client here
-         */ // Set coords we loaded in `load`
+        this.setPosition(this.x, this.y);
 
         this.entities.addPlayer(this);
 
         this.send(new Welcome(this.serialize(false, true, true)));
-
-        this.setPosition(this.x, this.y);
     }
 
     /**
@@ -947,7 +947,7 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && (!target || entity.isPlayer())) {
+        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer())) {
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
@@ -1279,6 +1279,19 @@ export default class Player extends Character {
 
     public setLastWarp(lastWarp: number = Date.now()): void {
         this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
+    }
+
+    /**
+     * Creates an instance of a pet based on the key provided. The pet then
+     * starts following the player.
+     * @param key The key of t he pet we want to create.
+     */
+
+    public setPet(key: string): void {
+        if (this.pet) return this.notify(`You already have a pet!`);
+
+        // Create a new pet instance based on the key.
+        this.pet = new Pet(this, key, this.x, this.y);
     }
 
     /**
@@ -1664,6 +1677,8 @@ export default class Player extends Character {
             withBubble,
             colour
         });
+
+        log.chat(`${this.username}: ${message}`);
 
         this.sendToRegions(packet);
     }
