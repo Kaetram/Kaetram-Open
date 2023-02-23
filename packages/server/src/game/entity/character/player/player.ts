@@ -1951,7 +1951,23 @@ export default class Player extends Character {
         // Thick skin increases damage reduction by 20%.
         if (this.thickSkin) reduction -= 0.2;
 
+        // Attack style defensive boosts defence by 10%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
+
+        // Shared attack style defensive boosts defence by 4%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Shared) reduction -= 0.04;
+
         return reduction;
+    }
+
+    /**
+     * Gets the player's currently selected attack style for the weapon
+     * they are wielding. We use this to determine combat bonuses and whatnot.
+     * @returns The attack style the weapon currently has selected.
+     */
+
+    public override getAttackStyle(): Modules.AttackStyle {
+        return this.equipment.getWeapon().attackStyle;
     }
 
     /**
