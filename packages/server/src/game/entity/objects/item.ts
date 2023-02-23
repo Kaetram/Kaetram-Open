@@ -383,8 +383,12 @@ export default class Item extends Entity {
                 return [Modules.AttackStyle.Stab, Modules.AttackStyle.Defensive];
             }
 
-            case 'club': {
-                return [Modules.AttackStyle.Crush, Modules.AttackStyle.Defensive];
+            case 'blunt': {
+                return [
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
+                    Modules.AttackStyle.Defensive
+                ];
             }
 
             case 'spear': {
