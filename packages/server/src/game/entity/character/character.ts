@@ -463,6 +463,16 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Default implementation for the character's attack style. This is used
+     * by the player subclass when the player changes their attack style.
+     * @returns The attack style of the character.
+     */
+
+    public getAttackStyle(): Modules.AttackStyle {
+        return Modules.AttackStyle.None;
+    }
+
+    /**
      * @returns Default probability for poison to be inflicted.
      */
 
