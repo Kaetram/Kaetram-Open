@@ -81,7 +81,7 @@ export default {
         accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
 
         // Append the defense level of the target to the accuracy modifier.
-        accuracy += defenseLevel * 0.0075;
+        accuracy += defenseLevel * 0.0175;
 
         // We use the scalar difference of the stats to append onto the accuracy.
         accuracy += accuracyModifier < 0 ? 1.5 : -(Math.sqrt(accuracyModifier) / 22.36) + 1;
