@@ -71,6 +71,14 @@
         .coin-default {
             background-position: -72px * $i -26px * $i;
         }
+
+        .coin-gravemystery {
+            background-position: -216px * $i 0;
+        }
+
+        .coin-kaetramdungeon {
+            background-position: -120px * $i 0;
+        }
     }
 
     @media(--md) {

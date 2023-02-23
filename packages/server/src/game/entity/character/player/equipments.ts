@@ -1,8 +1,10 @@
 import Armour from './equipment/impl/armour';
+import ArmourSkin from './equipment/impl/armourskin';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
 import Weapon from './equipment/impl/weapon';
+import WeaponSkin from './equipment/impl/weaponskin';
 import Arrows from './equipment/impl/arrows';
 
 import Item from '../../objects/item';
@@ -18,10 +20,12 @@ import type Player from './player';
 
 export default class Equipments {
     private armour: Armour = new Armour();
+    private armourSkin: ArmourSkin = new ArmourSkin();
     private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
     private ring: Ring = new Ring();
     private weapon: Weapon = new Weapon();
+    private weaponSkin: WeaponSkin = new WeaponSkin();
     private arrows: Arrows = new Arrows();
 
     // Store all equipments for parsing.
@@ -32,7 +36,9 @@ export default class Equipments {
         this.pendant,
         this.ring,
         this.weapon,
-        this.arrows
+        this.arrows,
+        this.weaponSkin,
+        this.armourSkin
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -42,6 +48,7 @@ export default class Equipments {
     private loadCallback?: () => void;
     private equipCallback?: (equipment: Equipment) => void;
     private unequipCallback?: (type: Modules.Equipment, count?: number) => void;
+    private attackStyleCallback?: (style: Modules.AttackStyle) => void;
 
     public constructor(private player: Player) {}
 
@@ -59,6 +66,9 @@ export default class Equipments {
             if (!info.key) continue; // Skip if the item is already null
 
             equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
+
+            // Only weapons have attack styles, so we update the last selected one.
+            if (info.attackStyle) this.updateAttackStyle(info.attackStyle);
         }
 
         this.loadCallback?.();
@@ -151,7 +161,20 @@ export default class Equipments {
      */
 
     public updateAttackStyle(style: Modules.AttackStyle): void {
-        this.getWeapon().attackStyle = style;
+        let weapon = this.getWeapon();
+
+        // Ensure the weapon has the attack style.
+        if (!weapon.hasAttackStyle(style))
+            return log.warning(`[${this.player.username}] Invalid attack style.`);
+
+        // Set new attack style.
+        this.getWeapon().updateAttackStyle(style);
+
+        // Sync the player for everyone else and update data.
+        this.player.sync();
+
+        // Callback with the new attack style.
+        this.attackStyleCallback?.(style);
     }
 
     /**
@@ -314,5 +337,14 @@ export default class Equipments {
 
     public onUnequip(callback: (type: Modules.Equipment) => void): void {
         this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when the attack style is updated.
+     * @param callback The new attack style.
+     */
+
+    public onAttackStyle(callback: (style: Modules.AttackStyle) => void): void {
+        this.attackStyleCallback = callback;
     }
 }

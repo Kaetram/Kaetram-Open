@@ -193,7 +193,7 @@ export default abstract class Character extends Entity {
 
     public handleColdDamage(): void {
         // Only players that are in a damage-based overlay area can be affected.
-        if (!this.isPlayer() || !this.overlayArea || this.snowPotion) return;
+        if (!this.isPlayer() || this.overlayArea?.type !== 'damage' || this.snowPotion) return;
 
         // Create a hit object for cold damage and serialize it.
         let hit = new Hit(Modules.Hits.Cold, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
@@ -460,6 +460,16 @@ export default abstract class Character extends Entity {
 
     public getDamageReduction(): number {
         return 1;
+    }
+
+    /**
+     * Default implementation for the character's attack style. This is used
+     * by the player subclass when the player changes their attack style.
+     * @returns The attack style of the character.
+     */
+
+    public getAttackStyle(): Modules.AttackStyle {
+        return Modules.AttackStyle.None;
     }
 
     /**
