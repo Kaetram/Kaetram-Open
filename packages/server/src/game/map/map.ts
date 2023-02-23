@@ -89,7 +89,7 @@ export default class Map {
      */
 
     private loadDoors(): void {
-        let doorsClone = structuredClone(map.areas.doors);
+        let doorsClone = map.areas.doors.map((door) => ({ ...door }));
 
         // Iterate through the doors in the map.
         for (let door of map.areas.doors) {

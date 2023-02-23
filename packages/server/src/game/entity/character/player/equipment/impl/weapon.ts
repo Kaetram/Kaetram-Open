@@ -137,6 +137,16 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * Checks whether the weapon contains the attack style.
+     * @param attackStyle The attack style to check for.
+     * @returns Whether or not the attack style is included in the weapon's attack styles.
+     */
+
+    public hasAttackStyle(attackStyle: Modules.AttackStyle): boolean {
+        return this.attackStyles.includes(attackStyle);
+    }
+
+    /**
      * Override for the superclass where we add the attack styles.
      * @param clientInfo Whether or not to send the client information.
      */

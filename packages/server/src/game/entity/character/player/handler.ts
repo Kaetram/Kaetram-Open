@@ -92,6 +92,7 @@ export default class Handler {
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
         this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+        this.player.equipment.onAttackStyle(this.handleAttackStyle.bind(this));
 
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
@@ -160,6 +161,8 @@ export default class Handler {
         this.world.cleanCombat(this.player);
 
         this.world.linkFriends(this.player, true);
+
+        this.player.save();
 
         this.world.entities.removePlayer(this.player);
         this.world.api.sendLogout(this.player.username);
@@ -265,12 +268,25 @@ export default class Handler {
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
-        // Do not pass through doors that require an achievement which hasn't been completed.
-        if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
-            return;
+        // Some doors may require players to complete achievements before they can pass through.
+        if (door.reqAchievement) {
+            let achievement = this.player.achievements.get(door.reqAchievement);
+
+            if (!achievement?.isFinished())
+                return this.player.notify(
+                    `You need to complete the achievement ${achievement?.name} to pass through this door.`
+                );
+        }
 
         // Ensure quest requirement is fullfilled before passing through the door.
-        if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
+        if (door.reqQuest) {
+            let quest = this.player.quests.get(door.reqQuest);
+
+            if (!quest?.isFinished())
+                return this.player.notify(
+                    `You need to complete the quest ${quest?.name} to pass through this door.`
+                );
+        }
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
         if (door.reqItem) {
@@ -308,6 +324,9 @@ export default class Handler {
 
         this.player.storeOpen = '';
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
+
+        // Make the pet follow the player with every movement.
+        this.player.pet?.follow(this.player);
     }
 
     /**
@@ -381,6 +400,15 @@ export default class Handler {
 
         // Sync to nearby players.
         this.player.sync();
+    }
+
+    /**
+     * Callback for when the attack style is changed and needs to be relayed to the client.
+     * @param attackStyle The new attack style that the player has selected.
+     */
+
+    private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Style, { attackStyle }));
     }
 
     /**
@@ -502,9 +530,7 @@ export default class Handler {
                 count, // Note this is the amount we are dropping.
                 slot.enchantments
             );
-            log.drop(
-                `Player at position (${this.player.x}, ${this.player.y}) dropped ${count} ${key}.`
-            );
+            log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 
         this.player.send(
