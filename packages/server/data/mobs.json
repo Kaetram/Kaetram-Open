@@ -2755,7 +2755,7 @@
 
   "santaelf": {
     "name": "Santa's Elf",
-    "drops": {"candkey": 500},
+    "drops": {"candykey": 500},
     "hitPoints": 610,
     "defenseLevel": 15,
     "attackLevel": 35,
