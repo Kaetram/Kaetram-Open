@@ -75,7 +75,7 @@ export default {
          */
 
         // Linearly increase accuracy based on accuracy bonus, prevent from going over 50.
-        accuracy += accuracyBonus > 50 ? 0.01 : 1 - accuracyBonus / 55;
+        accuracy += accuracyBonus > 50 ? 0.01 : 1 - accuracyBonus / 50;
 
         // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
         accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
@@ -99,21 +99,21 @@ export default {
             }
 
             case Modules.AttackStyle.Stab: {
-                // Rapid attack style increases accuracy by a factor of 0.05;
-                accuracy -= 0.07;
+                // Rapid attack style increases accuracy by a factor of 0.11;
+                accuracy -= 0.11;
                 break;
             }
 
             case Modules.AttackStyle.Crush:
             case Modules.AttackStyle.Chop: {
-                // Rapid attack style increases accuracy by a factor of 0.04
-                accuracy -= 0.04;
+                // Rapid attack style increases accuracy by a factor of 0.07
+                accuracy -= 0.07;
                 break;
             }
 
             case Modules.AttackStyle.Shared: {
-                // Shared attack style increases accuracy by a factor of 0.03
-                accuracy -= 0.03;
+                // Shared attack style increases accuracy by a factor of 0.05
+                accuracy -= 0.05;
                 break;
             }
         }
