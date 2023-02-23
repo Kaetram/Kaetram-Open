@@ -14,7 +14,7 @@
     },
     "bonuses": {
       "accuracy": 2,
-      "strength": 0,
+      "strength": 2,
       "archery": 0,
       "magic": 0
     }
@@ -35,7 +35,7 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 3,
+      "accuracy": 1,
       "strength": 2,
       "archery": 0,
       "magic": 0
@@ -52,13 +52,13 @@
     "attackStats": {
       "crush": 4,
       "slash": 0,
-      "stab": 5,
+      "stab": 10,
       "archery": 0,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 2,
-      "strength": 3,
+      "strength": 6,
       "archery": 0,
       "magic": 0
     }
@@ -71,15 +71,15 @@
     "level": 6,
     "price": 1000,
     "attackStats": {
-      "crush": 14,
+      "crush": 18,
       "slash": 6,
       "stab": 2,
       "archery": 0,
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 2,
-      "strength": 8,
+      "accuracy": 3,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -92,7 +92,7 @@
     "level": 10,
     "price": 1500,
     "attackStats": {
-      "crush": 4,
+      "crush": 5,
       "slash": 16,
       "stab": 12,
       "archery": 0,
@@ -100,7 +100,7 @@
     },
     "bonuses": {
       "accuracy": 12,
-      "strength": 2,
+      "strength": 6,
       "archery": 0,
       "magic": 0
     }
@@ -113,15 +113,15 @@
     "level": 14,
     "price": 5000,
     "attackStats": {
-      "crush": 4,
-      "slash": 15,
-      "stab": 14,
+      "crush": 8,
+      "slash": 17,
+      "stab": 19,
       "archery": 0,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 10,
-      "strength": 3,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -134,7 +134,7 @@
     "level": 48,
     "price": 3500,
     "attackStats": {
-      "crush": 12,
+      "crush": 14,
       "slash": 34,
       "stab": 18,
       "archery": 0,
@@ -149,7 +149,7 @@
     },
     "bonuses": {
       "accuracy": 13,
-      "strength": 10,
+      "strength": 14,
       "archery": 0,
       "magic": 0
     }
@@ -901,13 +901,13 @@
       "slash": 4,
       "stab": 4,
       "archery": 0,
-      "magic": 12
+      "magic": 21
     },
     "bonuses": {
-      "accuracy": 2,
+      "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 5
+      "magic": 12
     },
     "attackRange": 9,
     "projectileName": "projectile-purplebolt"
@@ -926,13 +926,13 @@
       "slash": 4,
       "stab": 4,
       "archery": 0,
-      "magic": 18
+      "magic": 28
     },
     "bonuses": {
       "accuracy": 5,
       "strength": 0,
       "archery": 0,
-      "magic": 12
+      "magic": 19
     },
     "attackRange": 9,
     "projectileName": "projectile-yellowlightning"
@@ -951,13 +951,13 @@
       "slash": 4,
       "stab": 4,
       "archery": 0,
-      "magic": 18
+      "magic": 36
     },
     "bonuses": {
       "accuracy": 9,
       "strength": 0,
       "archery": 0,
-      "magic": 18
+      "magic": 26
     },
     "attackRange": 9,
     "projectileName": "projectile-greenbolt"
@@ -976,13 +976,13 @@
       "slash": 4,
       "stab": 4,
       "archery": 0,
-      "magic": 24
+      "magic": 44
     },
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 26
+      "magic": 38
     },
     "attackRange": 9,
     "projectileName": "projectile-fireball"
@@ -1001,13 +1001,13 @@
       "slash": 4,
       "stab": 4,
       "archery": 0,
-      "magic": 30
+      "magic": 51
     },
     "bonuses": {
       "accuracy": 10,
       "strength": 0,
       "archery": 0,
-      "magic": 40
+      "magic": 48
     },
     "attackRange": 9,
     "projectileName": "projectile-iceball"
@@ -4427,20 +4427,20 @@
       "slash": 10,
       "stab": 8,
       "archery": 0,
-      "magic": 36
+      "magic": 46
     },
     "defenseStats": {
       "crush": 4,
       "slash": 3,
       "stab": 3,
       "archery": 0,
-      "magic": 28
+      "magic": 36
     },
     "bonuses": {
       "accuracy": 4,
       "strength": 3,
       "archery": -6,
-      "magic": 13
+      "magic": 17
     }
   },
 
@@ -4455,20 +4455,20 @@
       "slash": 12,
       "stab": 11,
       "archery": 0,
-      "magic": 45
+      "magic": 55
     },
     "defenseStats": {
       "crush": -4,
       "slash": -8,
       "stab": -1,
       "archery": 0,
-      "magic": 37
+      "magic": 49
     },
     "bonuses": {
       "accuracy": 5,
       "strength": 5,
       "archery": -7,
-      "magic": 20
+      "magic": 29
     }
   },
 
@@ -5443,7 +5443,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 4,
+      "archery": 7,
       "magic": 0
     },
     "projectileName": "projectile-arrow"
@@ -5458,7 +5458,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 6,
+      "archery": 12,
       "magic": 0
     },
     "projectileName": "projectile-firearrow"
@@ -5474,7 +5474,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 8,
+      "archery": 18,
       "magic": 0
     },
     "projectileName": "projectile-poisonarrow"
@@ -5489,7 +5489,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 14,
+      "archery": 20,
       "magic": 0
     },
     "projectileName": "projectile-lightningarrow"
@@ -5504,7 +5504,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 11,
+      "archery": 24,
       "magic": 0
     },
     "projectileName": "projectile-icearrow"
