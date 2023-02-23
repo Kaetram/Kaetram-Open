@@ -133,19 +133,9 @@ export default class Console {
                     break;
                 }
 
-                case 'resetpositions': {
-                    log.info(`Resetting all player positions.`);
-
-                    return this.database.resetPositions();
-                }
-
                 case 'save': {
                     log.info(`Saving all players.`);
                     return this.world.save();
-                }
-
-                case 'searchdupes': {
-                    return this.database.parsePotentialDupes(!blocks.shift());
                 }
             }
         });
