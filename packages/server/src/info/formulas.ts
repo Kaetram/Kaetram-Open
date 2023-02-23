@@ -89,6 +89,7 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
+        // Apply the attack style modifiers.
         switch (attacker.getAttackStyle()) {
             case Modules.AttackStyle.Fast:
             case Modules.AttackStyle.LongRange: {

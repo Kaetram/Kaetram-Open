@@ -113,13 +113,13 @@ export enum AttackStyle {
     None,
 
     // Melee
-    Stab, // Accuracy experience
-    Slash, // Strength experience
-    Defensive, // Defense experience
-    Crush, // Accuracy + Strength experience
-    Shared, // Accuracy + Strength + Defense experience
-    Hack, // Strength + Defense experience
-    Chop, // Accuracy + Defense experience
+    Stab, // Accuracy experience and boosts accuracy
+    Slash, // Strength experience and boosts maximum damage
+    Defensive, // Defense experience and boosts damage absorbed
+    Crush, // Accuracy + Strength experience and boosts accuracy/damage
+    Shared, // Accuracy + Strength + Defense experience and boosts all
+    Hack, // Strength + Defense experience boosts damage and absorbs damage
+    Chop, // Accuracy + Defense experience boosts accuracy and absorbs damage
 
     // Archery
     Accurate, // Higher accuracy but slower
