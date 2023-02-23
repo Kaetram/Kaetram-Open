@@ -130,6 +130,8 @@ export default class ProcessMap {
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
+            if (!tile.properties) continue;
+
             for (let property of tile.properties)
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
@@ -281,7 +283,7 @@ export default class ProcessMap {
 
     private parseBlocking(layer: Layer): void {
         for (let index in layer.data) {
-            if (layer.data[index] < 1) return;
+            if (layer.data[index] < 1) continue;
 
             this.map.collisions.push(parseInt(index));
         }
@@ -366,6 +368,9 @@ export default class ProcessMap {
             height: height / this.map.tileSize,
             polygon: this.extractPolygon(object)
         });
+
+        // Some objects may not have properties.
+        if (!properties) return;
 
         for (let property of properties) {
             let index = this.map.areas[areaName].length - 1, // grab the last object (one we just added)

@@ -1,6 +1,7 @@
 import SocketIO from './sockets/socketio';
 
 import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import type Connection from './connection';
 
@@ -15,7 +16,7 @@ export default class SocketHandler {
     private socketIO: SocketIO;
 
     public addresses: Addresses = {}; // Keeps track of addresses, their counts, and their last connection time.
-    public connections: { [id: string]: Connection } = {}; // List of all connections to the server.
+    public connections: { [instance: string]: Connection } = {}; // List of all connections to the server.
 
     private connectionCallback?: (connection: Connection) => void;
 
@@ -28,14 +29,14 @@ export default class SocketHandler {
     /**
      * We add a connection to our dictionary of connections.
      *
-     * Key: The connection id.
+     * Key: The connection instance identifier.
      * Value: The connection itself.
      *
      * @param connection The connection we are adding.
      */
 
     private add(connection: Connection): void {
-        this.connections[connection.id] = connection;
+        this.connections[connection.instance] = connection;
 
         this.addAddress(connection.address);
 
@@ -57,14 +58,17 @@ export default class SocketHandler {
 
     /**
      * Used to remove connections from our dictionary of connections.
-     *
-     * @param id The connection id we are removing.
+     * @param instance The identifier (relates to player's object instance) of the
+     * connection that we are removing from our dictionaries.
      */
 
-    public remove(id: string): void {
-        this.removeAddress(this.connections[id].address);
+    public remove(instance: string): void {
+        // In the event the connection disconnects before it is added to the dictionaries.
+        if (!(instance in this.connections)) return;
 
-        delete this.connections[id];
+        this.removeAddress(this.connections[instance].address);
+
+        delete this.connections[instance];
     }
 
     /**
@@ -83,12 +87,12 @@ export default class SocketHandler {
     /**
      * Finds and returns a connection in our dictionary of connections.
      *
-     * @param id The id of the connection we are trying to get.
+     * @param instance The instance of the connection we are trying to get.
      * @returns The connection element or null.
      */
 
-    public get(id: string): Connection {
-        return this.connections[id];
+    public get(instance: string): Connection {
+        return this.connections[instance];
     }
 
     /**

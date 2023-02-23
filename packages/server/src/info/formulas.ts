@@ -89,6 +89,35 @@ export default {
         // Critical damage boosts accuracy by a factor of 0.05;
         if (critical) accuracy -= 0.05;
 
+        // Apply the attack style modifiers.
+        switch (attacker.getAttackStyle()) {
+            case Modules.AttackStyle.Fast:
+            case Modules.AttackStyle.LongRange: {
+                // Rapid attack style decreases accuracy by a factor of 0.05;
+                accuracy += 0.07;
+                break;
+            }
+
+            case Modules.AttackStyle.Stab: {
+                // Rapid attack style increases accuracy by a factor of 0.05;
+                accuracy -= 0.07;
+                break;
+            }
+
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Chop: {
+                // Rapid attack style increases accuracy by a factor of 0.04
+                accuracy -= 0.04;
+                break;
+            }
+
+            case Modules.AttackStyle.Shared: {
+                // Shared attack style increases accuracy by a factor of 0.03
+                accuracy -= 0.03;
+                break;
+            }
+        }
+
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
 
@@ -118,6 +147,29 @@ export default {
 
         // Player characters get a boost of 5 damage.
         if (character.isPlayer()) damage += 5;
+
+        // Different attack styles give different bonuses.
+        switch (character.getAttackStyle()) {
+            // Focused attack style boosts maximum damage by 10%
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Slash: {
+                damage *= 1.1;
+                break;
+            }
+
+            // Crush gives a 5% boost.
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Hack: {
+                damage *= 1.05;
+                break;
+            }
+
+            // Shared attack style gives a 3% boost.
+            case Modules.AttackStyle.Shared: {
+                damage *= 1.03;
+                break;
+            }
+        }
 
         // Ensure the damage is not negative.
         if (damage < 0) damage = 0;

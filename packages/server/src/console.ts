@@ -1,9 +1,9 @@
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type MongoDB from './database/mongodb/mongodb';
-import type Player from './game/entity/character/player/player';
 import type World from './game/world';
+import type Player from './game/entity/character/player/player';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 /**
  * The console lives on top of the server. It allows an admin to directly
@@ -44,7 +44,7 @@ export default class Console {
                 }
 
                 case 'total': {
-                    this.database.registeredCount((count) => {
+                    this.database.registeredCount((count: number) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
@@ -133,19 +133,9 @@ export default class Console {
                     break;
                 }
 
-                case 'resetpositions': {
-                    log.info(`Resetting all player positions.`);
-
-                    return this.database.resetPositions();
-                }
-
                 case 'save': {
                     log.info(`Saving all players.`);
                     return this.world.save();
-                }
-
-                case 'searchdupes': {
-                    return this.database.parsePotentialDupes(!blocks.shift());
                 }
             }
         });
