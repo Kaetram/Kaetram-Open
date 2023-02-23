@@ -11,4 +11,5 @@ export interface SkillData {
 
 export interface SerializedSkills {
     skills: SkillData[];
+    cheater: boolean;
 }

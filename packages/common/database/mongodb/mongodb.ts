@@ -212,13 +212,19 @@ export default class MongoDB {
     ): void {
         if (!this.hasDatabase()) return;
 
-        let collection = this.database.collection('player_skills');
+        let skills = this.database.collection('player_skills');
 
         // Unwinds array, groups by total experience, sorts in descending order.
-        collection
+        skills
             .aggregate([
                 { $unwind: '$skills' }, // Unwinds (transforms into multiple objects for each skill).
-                { $group: { _id: '$username', totalExperience: { $sum: '$skills.experience' } } },
+                {
+                    $group: {
+                        _id: '$username',
+                        totalExperience: { $sum: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
                 { $sort: { totalExperience: -1 } },
                 { $limit: 100 }
             ])
