@@ -192,10 +192,10 @@ export default class Mob extends Character {
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel * 1.5,
-            stab: this.defenseLevel * 1.5,
-            slash: this.defenseLevel * 1.5,
-            archery: this.defenseLevel * 1.5,
+            crush: this.defenseLevel,
+            stab: this.defenseLevel,
+            slash: this.defenseLevel,
+            archery: this.defenseLevel,
             magic: this.defenseLevel
         };
 
