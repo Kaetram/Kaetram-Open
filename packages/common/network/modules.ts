@@ -126,7 +126,7 @@ export enum AttackStyle {
     Fast, // Faster but lower accuracy
 
     // Magic
-    Focused, // Slower but higher damage
+    Focused, // Slower but higher damage/accuracy
 
     // Archery and Magic
     LongRange // Increased attack range and less accurate
