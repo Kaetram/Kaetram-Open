@@ -80,7 +80,7 @@ export default class Character extends Entity {
         },
         [Modules.Effects.Burning]: {
             key: 'effect-burn',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 150
         },
