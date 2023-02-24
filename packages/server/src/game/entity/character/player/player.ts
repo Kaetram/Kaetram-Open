@@ -1853,6 +1853,19 @@ export default class Player extends Character {
     }
 
     /**
+     * Subclass implementation that uses the appropriate type of weapon
+     * to determine the player's accuracy bonus.
+     * @returns The player's accuracy bonus based on their weapon type.
+     */
+
+    public override getAccuracyBonus(): number {
+        if (this.isArcher()) return this.getBonuses().archery;
+        if (this.isMagic()) return this.getBonuses().magic;
+
+        return this.getBonuses().accuracy;
+    }
+
+    /**
      * @returns The player's current accuracy level from the skills controller.
      */
 
