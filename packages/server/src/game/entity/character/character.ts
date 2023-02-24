@@ -397,6 +397,16 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Implementation that is used by subclasses to alternate which bonus
+     * is used to determine the accuracy bonus.
+     * @returns The character's current accuracy bonus.
+     */
+
+    public getAccuracyBonus(): number {
+        return this.getBonuses().accuracy;
+    }
+
+    /**
      * Default implementation for the character's accuracy level.
      * @returns Placeholder value for accuracy of 1.
      */

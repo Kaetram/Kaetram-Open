@@ -24,7 +24,7 @@ export default {
      */
 
     getDamage(attacker: Character, target: Character, critical = false): number {
-        let accuracyBonus = attacker.getBonuses().accuracy,
+        let accuracyBonus = attacker.getAccuracyBonus(),
             accuracyLevel = attacker.getAccuracyLevel(),
             accuracyModifier = this.getAccuracyWeight(attacker, target),
             defenseLevel = target.getDefenseLevel(),
@@ -75,7 +75,7 @@ export default {
          */
 
         // Linearly increase accuracy based on accuracy bonus, prevent from going over 50.
-        accuracy += accuracyBonus > 50 ? 0.01 : 1 - accuracyBonus / 50;
+        accuracy += accuracyBonus > 70 ? 0 : 1 - accuracyBonus / 70;
 
         // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
         accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
