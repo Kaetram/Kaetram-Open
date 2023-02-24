@@ -94,11 +94,13 @@ export default {
             case Modules.AttackStyle.Fast:
             case Modules.AttackStyle.LongRange: {
                 // Rapid attack style decreases accuracy by a factor of 0.05;
-                accuracy += 0.07;
+                accuracy += 0.05;
                 break;
             }
 
-            case Modules.AttackStyle.Stab: {
+            case Modules.AttackStyle.Stab:
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Accurate: {
                 // Rapid attack style increases accuracy by a factor of 0.11;
                 accuracy -= 0.11;
                 break;
