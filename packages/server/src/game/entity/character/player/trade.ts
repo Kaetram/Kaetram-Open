@@ -355,32 +355,32 @@ export default class Trade {
      * items(with their counts) that were traded.
      */
     private produceTradeLog(): string {
-        let offeredItems: string[] = [],
-            receivedItems: string[] = [],
-            offeredItems1: { [key: string]: number } = {},
-            receivedItems1: { [key: string]: number } = {};
+        let offeredItemsArry: string[] = [],
+            receivedItemsArry: string[] = [],
+            offeredItemsDict: { [key: string]: number } = {},
+            receivedItemsDict: { [key: string]: number } = {};
 
         // Store our player's item offers()) to an array
         this.forEachOfferedItem((item: Item) => {
-            offeredItems1[item.key] = item.stackable
-                ? (offeredItems1[item.key] || 0) + item.count
-                : (offeredItems1[item.key] || 0) + 1;
+            offeredItemsDict[item.key] = item.stackable
+                ? (offeredItemsDict[item.key] || 0) + item.count
+                : (offeredItemsDict[item.key] || 0) + 1;
         });
 
-        for (let [key, value] of Object.entries(offeredItems1))
-            offeredItems.push(` ${value} ${key}(s)`);
+        for (let [key, value] of Object.entries(offeredItemsDict))
+            offeredItemsArry.push(` ${value} ${key}(s)`);
 
         // Store other player's item offer(s) to an array
-        this.forEachOfferedItem((item: Item) => {
-            receivedItems1[item.key] = item.stackable
-                ? (receivedItems1[item.key] || 0) + item.count
-                : (receivedItems1[item.key] || 0) + 1;
+        this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
+            receivedItemsDict[item.key] = item.stackable
+                ? (receivedItemsDict[item.key] || 0) + item.count
+                : (receivedItemsDict[item.key] || 0) + 1;
         });
 
-        for (let [key, value] of Object.entries(receivedItems1))
-            receivedItems.push(` ${value} ${key}(s)`);
+        for (let [key, value] of Object.entries(receivedItemsDict))
+            receivedItemsArry.push(` ${value} ${key}(s)`);
 
-        return `Player ${this.player.username} traded${offeredItems} for${receivedItems} with player ${this.activeTrade?.username}`;
+        return `Player ${this.player.username} traded${offeredItemsArry} for${receivedItemsArry} with player ${this.activeTrade?.username}`;
     }
 
     /**
