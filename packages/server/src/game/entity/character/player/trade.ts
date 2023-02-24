@@ -343,25 +343,44 @@ export default class Trade {
             this.player.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
             this.activeTrade?.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
 
-            let offeredItems: unknown[] = [],
-                receivedItems: unknown[] = [];
-
-            // Store our player's item offers()) to an array
-            this.forEachOfferedItem((item: Item) => {
-                offeredItems.push(item.name);
-            });
-
-            // Store other player's item offer(s) to an array
-            this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
-                receivedItems.push(item.name);
-            });
-
-            log.trade(
-                `Player ${this.player.username} traded [${offeredItems}] for [${receivedItems}] with player ${this.activeTrade?.username}`
-            );
+            log.trade(this.produceTradeLog());
         }
 
         this.close();
+    }
+
+    /**
+     * Trade logger helper method. Produces the line of string containing information regarding
+     * the trade between two players. The string includes the two players usernames, and all the
+     * items(with their counts) that were traded.
+     */
+    private produceTradeLog(): string {
+        let offeredItems: string[] = [],
+            receivedItems: string[] = [],
+            offeredItems1: { [key: string]: number } = {},
+            receivedItems1: { [key: string]: number } = {};
+
+        // Store our player's item offers()) to an array
+        this.forEachOfferedItem((item: Item) => {
+            offeredItems1[item.key] = item.stackable
+                ? (offeredItems1[item.key] || 0) + item.count
+                : (offeredItems1[item.key] || 0) + 1;
+        });
+
+        for (let [key, value] of Object.entries(offeredItems1))
+            offeredItems.push(` ${value} ${key}(s)`);
+
+        // Store other player's item offer(s) to an array
+        this.forEachOfferedItem((item: Item) => {
+            receivedItems1[item.key] = item.stackable
+                ? (receivedItems1[item.key] || 0) + item.count
+                : (receivedItems1[item.key] || 0) + 1;
+        });
+
+        for (let [key, value] of Object.entries(receivedItems1))
+            receivedItems.push(` ${value} ${key}(s)`);
+
+        return `Player ${this.player.username} traded${offeredItems} for${receivedItems} with player ${this.activeTrade?.username}`;
     }
 
     /**
