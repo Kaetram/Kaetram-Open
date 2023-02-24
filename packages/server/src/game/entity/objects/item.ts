@@ -358,7 +358,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
                     Modules.AttackStyle.Defensive
                 ];
             }
