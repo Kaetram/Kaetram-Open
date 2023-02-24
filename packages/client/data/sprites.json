@@ -20687,16 +20687,16 @@
   },
   {
     "id": "effect-burn",
-    "width": 16,
-    "height": 16,
+    "width": 32,
+    "height": 32,
     "animations": {
       "effect": {
-        "length": 4,
+        "length": 5,
         "row": 0
       }
     },
-    "offsetX": 0,
-    "offsetY": 0
+    "offsetX": -8,
+    "offsetY": -16
   },
   {
     "id": "effect-freeze",
