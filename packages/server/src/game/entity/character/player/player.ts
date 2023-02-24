@@ -561,6 +561,9 @@ export default class Player extends Character {
      */
 
     public handleTargetAttack(instance: string): void {
+        // Prevent targetting yourself.
+        if (instance === this.instance) return;
+
         let target = this.entities.get(instance);
 
         // Ignore if the target is not a character that can actually be attacked.
