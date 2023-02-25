@@ -4459,7 +4459,7 @@
 
   "picklemob": {
     "name": "Sea Cucumber",
-    "hitPoints": 5000,
+    "hitPoints": 1250,
     "defenseLevel": 24,
     "attackLevel": 34,
     "level": 88,
