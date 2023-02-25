@@ -198,7 +198,7 @@ export default class Player extends Character {
      * @param data PlayerInfo object containing all data.
      */
 
-    public load(data: PlayerInfo): void {
+    public async load(data: PlayerInfo): Promise<void> {
         // Store coords for when we're done loading.
         this.x = data.x;
         this.y = data.y;
@@ -219,18 +219,18 @@ export default class Player extends Character {
 
         this.friends.load(data.friends);
 
-        // Being the loading process.
         this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
         this.loadBank();
-        this.loadQuests();
-        this.loadAchievements();
         this.loadStatistics();
         this.loadAbilities();
-        this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> abilities -> intro
+        // Quests and achievements have to be loaded prior to introducing the player.
+        await this.loadQuests();
+        await this.loadAchievements();
+
+        this.intro();
     }
 
     /**
@@ -261,19 +261,16 @@ export default class Player extends Character {
      * Loads the quest data from the database.
      */
 
-    public loadQuests(): void {
-        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    public async loadQuests(): Promise<void> {
+        this.quests.load(await this.database.loader?.loadQuests(this));
     }
 
     /**
      * Loads the achievement data from the database.
      */
 
-    public loadAchievements(): void {
-        this.database.loader?.loadAchievements(
-            this,
-            this.achievements.load.bind(this.achievements)
-        );
+    public async loadAchievements(): Promise<void> {
+        this.achievements.load(await this.database.loader?.loadAchievements(this));
     }
 
     /**
