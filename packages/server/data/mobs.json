@@ -151,7 +151,7 @@
   "goblin": {
     "name": "Goblin",
     "description": "Didn't I see this same style of goblin in RuneScape?",
-    "drops": {"leatherarmor": 600, "plasticbow": 600, "leatherboots": 300},
+    "drops": {"leatherarmor": 700, "plasticbow": 600, "leatherboots": 300},
     "hitPoints": 90,
     "defenseLevel": 4,
     "attackLevel": 4,
@@ -188,7 +188,7 @@
   "skeleton": {
     "name": "Spooky Skeleton",
     "description": "I wonder if this skeleton is made out of bones.",
-    "drops": {"sword2": 400},
+    "drops": {"sword2": 700},
     "hitPoints": 140,
     "defenseLevel": 6,
     "attackLevel": 6,
@@ -225,7 +225,7 @@
   "ogre": {
     "name": "Ogre",
     "description": "I really feel like the developers had to include generic fantasy creatures.",
-    "drops": {"axe": 300, "bluesword": 260, "mailarmor": 500, "ironbow": 260, "mailarcherarmor": 300},
+    "drops": {"axe": 650, "bluesword": 560, "mailarmor": 620, "ironbow": 360, "mailarcherarmor": 540},
     "hitPoints": 150,
     "defenseLevel": 9,
     "attackLevel": 9,
@@ -262,7 +262,7 @@
   "skeleton2": {
     "name": "Scary Skeleton",
     "description": "Ah yes, it's not spooky, this one is scary.",
-    "drops": {"axe": 480, "morningstar": 240, "platearmor": 180, "platearcherarmor": 180, "steelboots": 140},
+    "drops": {"axe": 780, "morningstar": 440, "platearmor": 380, "platearcherarmor": 320, "steelboots": 120},
     "hitPoints": 375,
     "defenseLevel": 10,
     "attackLevel": 10,
@@ -299,7 +299,7 @@
   "snek": {
     "name": "Snek",
     "description": "Snek, where you going? Snek, stahp!",
-    "drops": {"morningstar": 300, "platearmor": 300, "steelboots": 180},
+    "drops": {"morningstar": 600, "platearmor": 400, "steelboots": 140},
     "hitPoints": 85,
     "defenseLevel": 7,
     "attackLevel": 12,
@@ -337,7 +337,7 @@
   "spectre": {
     "name": "Spectre",
     "description": "Has a scythe and looks like it's floating.",
-    "drops": {"redarmor": 240, "axe": 460, "bluesword": 400},
+    "drops": {"redarmor": 440, "fireaxe": 660, "redsword": 400},
     "hitPoints": 270,
     "defenseLevel": 18,
     "attackLevel": 12,
@@ -374,7 +374,7 @@
   "eye": {
     "name": "Eye",
     "description": ["Must have really poor depth perception when you think about it.", "Eye really can't seem to figure out how that thing works."],
-    "drops": {"redarcherarmor": 240},
+    "drops": {"redarcherarmor": 440},
     "hitPoints": 160,
     "defenseLevel": 8,
     "attackLevel": 20,
@@ -411,7 +411,7 @@
   "deathknight": {
     "name": "Death Knight",
     "description": "Seriously, who comes up with the names for these things?",
-    "drops": {"redsword": 220, "redarmor": 240, "morningstar": 320},
+    "drops": {"redsword": 520, "redarmor": 340, "morningstar": 750},
     "hitPoints": 185,
     "defenseLevel": 19,
     "attackLevel": 12,
@@ -448,7 +448,7 @@
   "adherer": {
     "name": "Dark Mage",
     "description": "I heard that these things drop roses that I can then use to hit things with.",
-    "drops": {"rose": 240, "redlightbow": 200, "redmetalsword": 200, "adhererarcherarmor": 200, "adhererrobe": 200},
+    "drops": {"rose": 340, "redlightbow": 300, "redmetalsword": 300, "adhererarcherarmor": 300, "adhererrobe": 300},
     "hitPoints": 200,
     "defenseLevel": 18,
     "attackLevel": 31,
@@ -486,7 +486,7 @@
   "ant": {
     "name": "Worker Ant",
     "description": "A hardworking small itty bitty ant!",
-    "drops": {"pickaxe": 60},
+    "drops": {"pickaxe": 100},
     "hitPoints": 300,
     "defenseLevel": 30,
     "attackLevel": 14,
@@ -523,7 +523,7 @@
   "babyspider": {
     "name": "Baby Spooder",
     "description": "It's cute now but give it a while...",
-    "drops": {"redsword": 100},
+    "drops": {"redsword": 400},
     "hitPoints": 400,
     "defenseLevel": 44,
     "attackLevel": 34,
@@ -560,7 +560,7 @@
   "beetle": {
     "name": "Beetle",
     "description": "Ever heard of a Dung Beetle, well I'm better!",
-    "drops": {"sproutring": 40},
+    "drops": {"sproutring": 100},
     "hitPoints": 600,
     "defenseLevel": 5,
     "attackLevel": 10,
@@ -597,7 +597,7 @@
   "blackpirateskeleton": {
     "name": "Pirate Skeleton",
     "description": "Isn't this just a skeleton but wearing a pirate hat?",
-    "drops": {"piratearmor": 100},
+    "drops": {"piratearmor": 200},
     "hitPoints": 625,
     "defenseLevel": 14,
     "attackLevel": 18,
@@ -818,7 +818,7 @@
   "cactus": {
     "name": "Cactus",
     "description": "So it's like, a cactus, that can move?",
-    "drops": {"cactusaxe": 180},
+    "drops": {"cactusaxe": 280},
     "hitPoints": 160,
     "defenseLevel": 34,
     "attackLevel": 10,
@@ -855,7 +855,7 @@
 
   "cat": {
     "name": "Cat",
-    "drops": {"catarmor": 200},
+    "drops": {},
     "hitPoints": 600,
     "defenseLevel": 1,
     "attackLevel": 4,
@@ -1430,7 +1430,7 @@
 
   "goldgolem": {
     "name": "Golden Golem",
-    "drops": {"goldaxe": 260},
+    "drops": {"goldaxe": 460},
     "hitPoints": 1200,
     "defenseLevel": 10,
     "attackLevel": 15,
@@ -1682,7 +1682,7 @@
 
   "icegolem": {
     "name": "Ice Golem",
-    "drops": {"bluesword": 400, "crystalarmor": 160, "crystalarcherarmor": 160},
+    "drops": {"bluesword": 700, "crystalarmor": 160, "crystalarcherarmor": 160},
     "hitPoints": 700,
     "defenseLevel": 9,
     "attackLevel": 5,
@@ -1968,7 +1968,7 @@
 
   "mimic": {
     "name": "Mimic",
-    "drops": {"bluescimitar": 140},
+    "drops": {"bluescimitar": 240},
     "hitPoints": 1200,
     "defenseLevel": 12,
     "attackLevel": 8,
@@ -2113,7 +2113,7 @@
 
   "orc": {
     "name": "Orc",
-    "drops": {"redsword": 380, "violetbow": 250, "redarcherarmor": 250, "spear": 240},
+    "drops": {"redsword": 480, "violetbow": 250, "redarcherarmor": 250, "spear": 340},
     "hitPoints": 75,
     "defenseLevel": 5,
     "attackLevel": 4,
@@ -2506,7 +2506,7 @@
 
   "guardsword": {
     "name": "Guard",
-    "drops": {"guardarmor": 300, "leatherboots": 140},
+    "drops": {"guardarmor": 300, "leatherboots": 240},
     "hitPoints": 625,
     "defenseLevel": 30,
     "attackLevel": 25,
@@ -2578,7 +2578,7 @@
 
   "redguard": {
     "name": "Bandit",
-    "drops": {"redguardarmor": 120, "redguardarcherarmor": 120, "ring1": 200, "scimitar": 200, "watermelonbow": 200},
+    "drops": {"redguardarmor": 220, "redguardarcherarmor": 220, "ring1": 200, "scimitar": 200, "watermelonbow": 200},
     "hitPoints": 135,
     "defenseLevel": 10,
     "attackLevel": 5,
@@ -2861,7 +2861,7 @@
 
   "slime": {
     "name": "Slime",
-    "drops": {"platearcherarmor": 250, "swiftboots": 10},
+    "drops": {"platearcherarmor": 450, "swiftboots": 10},
     "description": "Why does every game have a slime in it?",
     "hitPoints": 694,
     "defenseLevel": 42,
@@ -3004,7 +3004,7 @@
 
   "snowrabbit": {
     "name": "Snow Rabbit",
-    "drops": {"rabbitarmor": 140, "swiftboots": 100},
+    "drops": {"rabbitarmor": 100, "swiftboots": 100},
     "hitPoints": 295,
     "defenseLevel": 4,
     "attackLevel": 1,
@@ -3041,7 +3041,7 @@
   "snowwolf": {
     "name": "Snow Wolf",
     "description": "I really expected the wolf to be made out of snow :(",
-    "drops": {"icerose": 140, "wolfarmor": 180},
+    "drops": {"icerose": 140, "wolfarmor": 280},
     "hitPoints": 1185,
     "defenseLevel": 8,
     "attackLevel": 3,
@@ -3396,7 +3396,7 @@
 
   "wolf": {
     "name": "Wolf",
-    "drops": {"wolfarmor": 140, "wolfarcherarmor": 140},
+    "drops": {"wolfarmor": 170, "wolfarcherarmor": 170},
     "hitPoints": 300,
     "defenseLevel": 3,
     "attackLevel": 12,
@@ -3654,7 +3654,7 @@
   "skeletonking": {
     "name": "Skeleton King",
     "description": "Here he is, the chad of r/neverbrokeabone.",
-    "drops": {"goldensword": 180, "goldenbow": 180, "greenpendant": 115, "sproutring": 115, "goldboots": 125},
+    "drops": {"goldensword": 280, "goldenbow": 280, "greenpendant": 115, "sproutring": 115, "goldboots": 125},
     "hitPoints": 1850,
     "defenseLevel": 35,
     "attackLevel": 27,
@@ -3741,7 +3741,6 @@
     "hitPoints": 15000,
     "defenseLevel": 40,
     "attackLevel": 100,
-    
     "projectileName": "projectile-iceball",
     "level": 195,
     "aggroRange": 3,
@@ -4039,7 +4038,7 @@
 
   "minidragon": {
     "name": "Mini Dragon",
-    "drops": {"carnelianaxe": 40},
+    "drops": {"carnelianaxe": 60},
     "hitPoints": 380,
     "defenseLevel": 5,
     "attackLevel": 15,
@@ -4117,7 +4116,7 @@
 
   "pirateskeleton": {
     "name": "Pirate Skeleton",
-    "drops": {"morningstar": 400, "redbow": 200},
+    "drops": {"morningstar": 600, "redbow": 300},
     "hitPoints": 460,
     "defenseLevel": 18,
     "attackLevel": 22,
@@ -4154,9 +4153,9 @@
 
   "queenant": {
     "name": "Queen Ant",
-    "drops": {"ironknightarmor": 200, "justicebow": 200, "whip": 200},
+    "drops": {"ironknightarmor": 300, "justicebow": 300, "whip": 300},
     "hitPoints": 4200,
-    "defenseLevel": 75,
+    "defenseLevel": 85,
     "attackLevel": 70,
     "level": 94,
     "aggroRange": 12,
@@ -4384,7 +4383,7 @@
     "name": "Santa",
     "drops": {"candybar": 75, "candybow": 25},
     "hitPoints": 7500,
-    "defenseLevel": 80,
+    "defenseLevel": 95,
     "attackLevel": 105,
     "level": 240,
     "aggroRange": 18,
@@ -4422,7 +4421,7 @@
 
   "brownmouse": {
     "name": "Brown Mouse",
-    "drops": {"ratarcherarmor": 120, "ratarmor": 120},
+    "drops": {"ratarcherarmor": 220, "ratarmor": 220},
     "hitPoints": 140,
     "defenseLevel": 1,
     "attackLevel": 1,
@@ -4460,8 +4459,8 @@
   "picklemob": {
     "name": "Sea Cucumber",
     "hitPoints": 1250,
-    "defenseLevel": 24,
-    "attackLevel": 34,
+    "defenseLevel": 34,
+    "attackLevel": 35,
     "level": 88,
     "aggroRange": 4,
     "attackRange": 10,
