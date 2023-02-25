@@ -460,13 +460,13 @@
 
       "4": {
         "task": "kill",
-        "mob": ["pickle"],
+        "mob": ["picklemob"],
         "mobCountRequirement": 1
       },
 
       "5": {
         "task": "talk",
-        "npc": "pickle",
+        "npc": "picklenpc",
         "text": [
           "All right all right. You win, I'll give that stupid sponge his gold.",
           "Here, now get out of here and leave me alone."
@@ -488,10 +488,10 @@
         ],
         "itemRequirement": "gold",
         "itemKey": "gold",
-        "itemCount": 1000,
+        "itemCount": 10000,
         "popup": {
           "title": "Quest completed!",
-          "text": "@green@You have just finished @crimson@Sea Activities@green@. You have gained 1000 gold!",
+          "text": "@green@You have just finished @crimson@Sea Activities@green@. You have gained 10000 gold!",
           "colour": "#33cc33"
         }
       }
