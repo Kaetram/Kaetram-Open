@@ -555,6 +555,8 @@ export default class Incoming {
     private handleExamine(instance: string): void {
         let entity = this.entities.get(instance);
 
+        if (!entity) return;
+
         if (!entity.isMob() && !entity.isItem()) return;
 
         if (!entity.description) return this.player.notify('I have no idea what that is.');
