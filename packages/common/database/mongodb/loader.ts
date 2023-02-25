@@ -104,13 +104,15 @@ export default class Loader {
      * @param callback The quest data in an array format of type QuestData.
      */
 
-    public loadQuests(player: Player, callback: (questData: QuestData[]) => void): void {
-        this.load(player.username, 'player_quests', (info: unknown) => {
-            if (!info) return callback([]);
+    public loadQuests(player: Player): Promise<QuestData[]> {
+        return new Promise((resolve) => {
+            this.load(player.username, 'player_quests', (info: unknown) => {
+                if (!info) return resolve([]);
 
-            let [{ quests }] = info as SerializedQuest[];
+                let [{ quests }] = info as SerializedQuest[];
 
-            callback(quests);
+                resolve(quests);
+            });
         });
     }
 
@@ -122,16 +124,15 @@ export default class Loader {
      * @param callback Contains an array of achievement objects.
      */
 
-    public loadAchievements(
-        player: Player,
-        callback: (achievements: AchievementData[]) => void
-    ): void {
-        this.load(player.username, 'player_achievements', (info: unknown) => {
-            if (!info) return callback([]);
+    public loadAchievements(player: Player): Promise<AchievementData[]> {
+        return new Promise((resolve) => {
+            this.load(player.username, 'player_achievements', (info: unknown) => {
+                if (!info) return resolve([]);
 
-            let [{ achievements }] = info as SerializedAchievement[];
+                let [{ achievements }] = info as SerializedAchievement[];
 
-            callback(achievements);
+                resolve(achievements);
+            });
         });
     }
 
