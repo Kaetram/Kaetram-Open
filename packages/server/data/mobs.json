@@ -1790,9 +1790,9 @@
 
   "infectedguard": {
     "name": "Infected Guard",
-    "hitPoints": 2000,
-    "defenseLevel": 8,
-    "attackLevel": 4,
+    "hitPoints": 750,
+    "defenseLevel": 18,
+    "attackLevel": 30,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
