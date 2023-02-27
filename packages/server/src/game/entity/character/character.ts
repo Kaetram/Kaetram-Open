@@ -1,7 +1,8 @@
 import Combat from './combat/combat';
 import Hit from './combat/hit';
 import HitPoints from './points/hitpoints';
-import Poison from './poison';
+import Poison from './effect/poison';
+import Status from './effect/status';
 
 import Entity from '../entity';
 import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
@@ -37,6 +38,7 @@ export default abstract class Character extends Entity {
 
     /* States */
     public poison?: Poison | undefined;
+    public status: Status = new Status();
 
     // Character that is currently being targeted.
     public target?: Character | undefined;
@@ -116,6 +118,7 @@ export default abstract class Character extends Entity {
             })
         );
     }
+    y;
 
     /**
      * Function when we want to apply damage to the character.
@@ -192,12 +195,12 @@ export default abstract class Character extends Entity {
 
     public handleColdDamage(): void {
         // Only players that do not have the snow potion can be affected.
-        if (!this.isPlayer() || this.hasStatusEffect(Modules.StatusEffect.SnowPotion)) return;
+        if (!this.isPlayer() || this.status.has(Modules.StatusEffect.SnowPotion)) return;
 
         // Cold or freezing damage effect must be applied to the character.
         if (
-            !this.hasStatusEffect(Modules.StatusEffect.Cold) &&
-            !this.hasStatusEffect(Modules.StatusEffect.Freezing)
+            !this.status.has(Modules.StatusEffect.Cold) &&
+            !this.status.has(Modules.StatusEffect.Freezing)
         )
             return;
 
@@ -251,10 +254,10 @@ export default abstract class Character extends Entity {
 
         // Certain status effects prevent the character from healing.
         if (
-            this.hasStatusEffect(Modules.StatusEffect.Freezing) ||
-            this.hasStatusEffect(Modules.StatusEffect.Cold) ||
-            this.hasStatusEffect(Modules.StatusEffect.Burning) ||
-            this.hasStatusEffect(Modules.StatusEffect.Terror)
+            this.status.has(Modules.StatusEffect.Freezing) ||
+            this.status.has(Modules.StatusEffect.Cold) ||
+            this.status.has(Modules.StatusEffect.Burning) ||
+            this.status.has(Modules.StatusEffect.Terror)
         )
             return;
 
@@ -303,7 +306,7 @@ export default abstract class Character extends Entity {
 
     public hit(damage: number, attacker?: Character, aoe = 0): void {
         // Stop hitting if entity is dead.
-        if (this.isDead() || this.hasStatusEffect(Modules.StatusEffect.Invincible)) return;
+        if (this.isDead() || this.status.has(Modules.StatusEffect.Invincible)) return;
 
         // Add an entry to the damage table.
         if (attacker?.isPlayer()) this.addToDamageTable(attacker, damage);
@@ -356,15 +359,6 @@ export default abstract class Character extends Entity {
 
     public clearAttackers(): void {
         this.attackers = [];
-    }
-
-    /**
-     * Removes a status effect from the character's list of effects.
-     * @param effect The status effect we are trying to remove.
-     */
-
-    public removeStatusEffect(effect: Modules.StatusEffect): void {
-        this.statusEffects = this.statusEffects.filter((e: Modules.StatusEffect) => e !== effect);
     }
 
     /**
@@ -556,16 +550,6 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Checks the array of status effects to see if the character has the status effect.
-     * @param statusEffect The status effect we are checking the existence of.
-     * @returns Whether or not the character has the status effect in the array of effects.
-     */
-
-    public hasStatusEffect(statusEffect: Modules.StatusEffect): boolean {
-        return this.statusEffects.includes(statusEffect);
-    }
-
-    /**
      * Checks if an attacker exists within our list of attackers.
      * @param attacker The attacker we are checking the existence of.
      * @returns Boolean value of whether the attacker exists or not.
@@ -745,21 +729,6 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Adds a status effect to the character's list of effects if it has not
-     * already been added. Effects can only be applied once.
-     * @param statusEffect The new status effect we are adding.
-     */
-
-    public addStatusEffect(...statusEffect: Modules.StatusEffect[]): void {
-        for (let status of statusEffect) {
-            // Don't add the effect if it already exists.
-            if (this.hasStatusEffect(status)) return;
-
-            this.statusEffects.push(status);
-        }
-    }
-
-    /**
      * Adds an attacker to our list of attackers.
      * @param attacker The attacker we are adding to the list.
      */
@@ -824,7 +793,7 @@ export default abstract class Character extends Entity {
      */
 
     public setStun(stun: boolean): void {
-        this.addStatusEffect(Modules.StatusEffect.Stun);
+        this.status.add(Modules.StatusEffect.Stun);
 
         this.stunCallback?.(stun);
     }
