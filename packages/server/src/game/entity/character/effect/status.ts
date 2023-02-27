@@ -14,7 +14,7 @@ export default class {
     public add(...statusEffect: Modules.StatusEffect[]): void {
         for (let status of statusEffect) {
             // Don't add the effect if it already exists.
-            if (this.has(status)) return;
+            if (this.has(status)) continue;
 
             this.effects.push(status);
         }
