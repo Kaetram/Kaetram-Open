@@ -1,12 +1,16 @@
 import Ability from '../ability';
 
+import { Modules } from '@kaetram/common/network';
+
 import type Player from '../../player';
 
 export default class ThickSkin extends Ability {
     public constructor(level: number, quickSlot = -1) {
         super('thickskin', level, quickSlot);
 
-        this.onDeactivate((player: Player) => (player.thickSkin = false));
+        this.onDeactivate((player: Player) =>
+            player.removeStatusEffect(Modules.StatusEffect.ThickSkin)
+        );
     }
 
     /**
@@ -16,7 +20,7 @@ export default class ThickSkin extends Ability {
      */
 
     public override activate(player: Player): boolean {
-        if (super.activate(player)) player.thickSkin = true;
+        if (super.activate(player)) player.addStatusEffect(Modules.StatusEffect.ThickSkin);
 
         return false;
     }

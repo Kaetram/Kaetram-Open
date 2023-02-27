@@ -202,6 +202,7 @@ export enum AoEType {
     Mob
 }
 
+// Client sided special effects.
 export enum Effects {
     None,
     Critical,
@@ -214,6 +215,21 @@ export enum Effects {
     Freezing,
     Poisonball,
     Boulder
+}
+
+export enum StatusEffect {
+    None,
+    Running,
+    HotSauce,
+    DualistsMark,
+    ThickSkin,
+    SnowPotion,
+    Burning,
+    Freezing, // Area based cold damage
+    Cold, // Inflicted cold damage
+    Stun,
+    Invincible,
+    Terror
 }
 
 export enum DamageStyle {
@@ -410,7 +426,7 @@ export let PoisonInfo = {
         name: 'Venom',
         damage: 5,
         duration: 30,
-        rate: 3 // every 3 seconds
+        rate: 2 // every 2 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -456,7 +472,7 @@ export const Constants = {
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
     EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
-    COLD_EFFECT_DAMAGE: 6
+    COLD_EFFECT_DAMAGE: 11
 };
 
 export enum MinigameConstants {
