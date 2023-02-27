@@ -4711,7 +4711,7 @@
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
-     "price": 250,
+    "price": 250,
     "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
     "edible": true
   },
