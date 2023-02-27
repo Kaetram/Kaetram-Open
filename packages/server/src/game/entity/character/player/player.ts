@@ -898,7 +898,7 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.hasStatusEffect(Modules.StatusEffect.Stun) || this.isInvalidMovement()) return;
+        if (this.status.has(Modules.StatusEffect.Stun) || this.isInvalidMovement()) return;
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -1090,10 +1090,10 @@ export default class Player extends Character {
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (this.hasStatusEffect(Modules.StatusEffect.Running)) speed = Math.floor(speed * 0.9);
+        if (this.status.has(Modules.StatusEffect.Running)) speed = Math.floor(speed * 0.9);
 
         // Apply a 20% speed boost if the player is using the hot sauce.
-        if (this.hasStatusEffect(Modules.StatusEffect.HotSauce)) speed = Math.floor(speed * 0.8);
+        if (this.status.has(Modules.StatusEffect.HotSauce)) speed = Math.floor(speed * 0.8);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
@@ -1133,11 +1133,11 @@ export default class Player extends Character {
     public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
-        if (running) this.addStatusEffect(Modules.StatusEffect.Running);
-        else this.removeStatusEffect(Modules.StatusEffect.Running);
+        if (running) this.status.add(Modules.StatusEffect.Running);
+        else this.status.remove(Modules.StatusEffect.Running);
 
-        if (hotSauce) this.addStatusEffect(Modules.StatusEffect.HotSauce);
-        else this.removeStatusEffect(Modules.StatusEffect.HotSauce);
+        if (hotSauce) this.status.add(Modules.StatusEffect.HotSauce);
+        else this.status.remove(Modules.StatusEffect.HotSauce);
 
         this.sendToRegions(
             new Effect(Opcodes.Effect.Speed, {
@@ -1156,7 +1156,7 @@ export default class Player extends Character {
 
     public setEffect(opcode: Opcodes.Effect, statusEffect?: Modules.StatusEffect): void {
         // If we have a status effect, we add it to the player.
-        if (statusEffect) this.addStatusEffect(statusEffect);
+        if (statusEffect) this.status.add(statusEffect);
 
         this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
@@ -1168,8 +1168,8 @@ export default class Player extends Character {
      */
 
     public setDualistsMark(dualistsMark: boolean): void {
-        if (dualistsMark) this.addStatusEffect(Modules.StatusEffect.DualistsMark);
-        else this.removeStatusEffect(Modules.StatusEffect.DualistsMark);
+        if (dualistsMark) this.status.add(Modules.StatusEffect.DualistsMark);
+        else this.status.remove(Modules.StatusEffect.DualistsMark);
 
         this.combat.updateLoop();
     }
@@ -1180,13 +1180,17 @@ export default class Player extends Character {
      */
 
     public setSnowPotionEffect(): void {
-        // If we already have an active effect then we restart the timer.
-        if (this.hasStatusEffect(Modules.StatusEffect.SnowPotion)) {
-            clearTimeout(this.snowPotionTimeout!);
-            this.snowPotionTimeout = null;
-        }
+        this.status.addWithTimeout(
+            Modules.StatusEffect.SnowPotion,
+            () => {
+                // If the player is still in a freezing area, reapply the effect
+                if (this.overlayArea && this.overlayArea.type === 'damage')
+                    this.setEffect(Opcodes.Effect.Freeze);
 
-        this.addStatusEffect(Modules.StatusEffect.SnowPotion);
+                this.notify('Your immunity to freezing effects has worn off.');
+            },
+            Modules.Constants.SNOW_POTION_DURATION
+        );
 
         // Remove the freezing special effect if the potion is active.
         this.setEffect(Opcodes.Effect.None);
@@ -1196,18 +1200,6 @@ export default class Player extends Character {
                 Modules.Constants.SNOW_POTION_DURATION / 1000
             } seconds.`
         );
-
-        // Set a timeout to remove the effect.
-        this.snowPotionTimeout = setTimeout(() => {
-            // If the player is still in a freezing area, reapply the effect
-            if (this.overlayArea && this.overlayArea.type === 'damage')
-                this.setEffect(Opcodes.Effect.Freeze);
-
-            this.removeStatusEffect(Modules.StatusEffect.SnowPotion);
-            this.snowPotionTimeout = null;
-
-            this.notify('Your immunity to freezing effects has worn off.');
-        }, Modules.Constants.SNOW_POTION_DURATION);
     }
 
     /**
@@ -1967,7 +1959,7 @@ export default class Player extends Character {
         let reduction = 1;
 
         // Thick skin increases damage reduction by 20%.
-        if (this.hasStatusEffect(Modules.StatusEffect.ThickSkin)) reduction -= 0.2;
+        if (this.status.has(Modules.StatusEffect.ThickSkin)) reduction -= 0.2;
 
         // Attack style defensive boosts defence by 10%.
         if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
@@ -2012,7 +2004,7 @@ export default class Player extends Character {
 
     public override getAttackRate(): number {
         // Dualists mark status effect boosts attack speed by 200 milliseconds.
-        if (this.hasStatusEffect(Modules.StatusEffect.DualistsMark))
+        if (this.status.has(Modules.StatusEffect.DualistsMark))
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
