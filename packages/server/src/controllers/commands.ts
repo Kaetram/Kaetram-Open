@@ -396,11 +396,15 @@ export default class Commands {
 
             case 'nohit':
             case 'invincible': {
-                this.player.invincible = !this.player.invincible;
+                if (this.player.hasStatusEffect(Modules.StatusEffect.Invincible)) {
+                    this.player.removeStatusEffect(Modules.StatusEffect.Invincible);
 
-                if (this.player.invincible) this.player.notify('You are now invincible.');
-                else this.player.notify('You are no longer invincible.');
+                    this.player.notify('You are no longer invincible.');
+                } else {
+                    this.player.addStatusEffect(Modules.StatusEffect.Invincible);
 
+                    this.player.notify('You are now invincible.');
+                }
                 return;
             }
 
