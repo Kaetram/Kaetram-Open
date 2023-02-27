@@ -1,4 +1,4 @@
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { OverlayType } from '@kaetram/common/types/map';
 import type Character from '../../entity/character/character';
@@ -88,8 +88,9 @@ export default class Area {
 
         this.players[player.instance] = player;
 
-        // TODO - Expand this to support different kinds of effects
-        if (!player.snowPotion) player.setEffect(Opcodes.Effect.Freeze);
+        // Apply cold status to players in the snow area.
+        if (!player.hasStatusEffect(Modules.StatusEffect.SnowPotion))
+            player.setEffect(Opcodes.Effect.Freeze, Modules.StatusEffect.Freezing);
     }
 
     /**
