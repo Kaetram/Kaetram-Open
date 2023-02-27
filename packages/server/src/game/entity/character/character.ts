@@ -801,6 +801,15 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Grabs a random attacker from the list of attackers.
+     * @return A random character from the list of attackers.
+     */
+
+    public getRandomAttacker(): Character {
+        return this.attackers[Utils.randomInt(0, this.attackers.length - 1)];
+    }
+
+    /**
      * Set `hitPoints` function shortcut.
      * @param hitPoints The new hitPoints we are setting.
      */
@@ -929,6 +938,15 @@ export default abstract class Character extends Entity {
             },
             range
         );
+    }
+
+    /**
+     * Iterates through all the attackers and returns them.
+     * @param callback The attacker character object in the list.
+     */
+
+    public forEachAttacker(callback: (character: Character) => void): void {
+        for (let attacker of this.attackers) callback(attacker);
     }
 
     /**
