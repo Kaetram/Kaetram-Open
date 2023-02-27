@@ -68,6 +68,8 @@ export default class Mob extends Character {
 
     private handler?: MobHandler | DefaultPlugin;
 
+    private lastChangedTarget = 0;
+
     private respawnCallback?: () => void;
 
     public talkCallback?: (message: string) => void;
@@ -583,6 +585,15 @@ export default class Mob extends Character {
 
     public override isPoisonous(): boolean {
         return this.poisonous;
+    }
+
+    /**
+     * We restrict how many times a mob can change targets in a short period of time.
+     * @returns Whether or not the last target change was more than 13 seconds ago.
+     */
+
+    public canChangeTarget(): boolean {
+        return Date.now() - this.lastChangedTarget > 13_000;
     }
 
     /**
