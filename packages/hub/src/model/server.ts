@@ -66,7 +66,6 @@ export default class Server {
         return {
             name: this.name,
             host: this.remoteServerHost,
-            apiHost: this.apiHost,
             port: this.port,
             players: this.players.length,
             maxPlayers: this.maxPlayers
