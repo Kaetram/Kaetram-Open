@@ -1,9 +1,11 @@
+import { Modules } from '@kaetram/common/network';
+
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 import type { Plugin } from '.';
 
 export default class HotSauce implements Plugin {
     public onUse(player: Player): boolean {
-        if (player.hotSauce) {
+        if (player.hasStatusEffect(Modules.StatusEffect.HotSauce)) {
             player.notify(`I really shouldn't be drinking multiple of these...`);
             return false;
         }
