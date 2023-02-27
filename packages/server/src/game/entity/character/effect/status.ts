@@ -5,6 +5,9 @@ export default class {
 
     private timeouts: { [key: number]: NodeJS.Timeout } = {};
 
+    private addCallback?: (status: Modules.StatusEffect) => void;
+    private removeCallback?: (status: Modules.StatusEffect) => void;
+
     /**
      * Adds a status effect to the character's list of effects if it has not
      * already been added. Effects can only be applied once.
@@ -17,6 +20,8 @@ export default class {
             if (this.has(status)) continue;
 
             this.effects.push(status);
+
+            this.addCallback?.(status);
         }
     }
 
@@ -53,8 +58,11 @@ export default class {
      */
 
     public remove(...statusEffect: Modules.StatusEffect[]): void {
-        for (let status of statusEffect)
+        for (let status of statusEffect) {
             this.effects = this.effects.filter((effect) => effect !== status);
+
+            this.removeCallback?.(status);
+        }
     }
 
     /**
@@ -65,5 +73,23 @@ export default class {
 
     public has(status: Modules.StatusEffect): boolean {
         return this.effects.includes(status);
+    }
+
+    /**
+     * Callback for when a status effect is added onto the player.
+     * @param callback The status effect we are adding.
+     */
+
+    public onAdd(callback: (status: Modules.StatusEffect) => void): void {
+        this.addCallback = callback;
+    }
+
+    /**
+     * Callback for when a status effect is removed from the player.
+     * @param callback The status effect we are removing.
+     */
+
+    public onRemove(callback: (status: Modules.StatusEffect) => void): void {
+        this.removeCallback = callback;
     }
 }
