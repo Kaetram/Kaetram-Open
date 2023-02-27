@@ -1,10 +1,10 @@
 import { Modules } from '@kaetram/common/network';
 
 export default class Poison {
-    public name;
-    public damage;
-    public duration;
-    public rate;
+    public name: string;
+    public damage: number;
+    public duration: number;
+    public rate: number;
 
     /**
      * Initializes an object of poison that can be stored in a character.
