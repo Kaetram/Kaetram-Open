@@ -219,6 +219,22 @@ export default class Handler {
      */
 
     protected handleCombatLoop(): void {
-        //
+        // Parses through the attackers and removes them if they are too far away.
+        this.mob.forEachAttacker((attacker: Character) => {
+            if (this.mob.getDistance(attacker) > this.mob.roamDistance * 2)
+                this.mob.removeAttacker(attacker);
+        });
+
+        // Ignore if we have only one attacker.
+        if (this.mob.getAttackerCount() < 2 || !this.mob.canChangeTarget()) return;
+
+        // Alternate targets if another one is nearby.
+        let newTarget = this.mob.getRandomAttacker();
+
+        // New target is too far away, so we ignore it.
+        if (this.mob.getDistance(newTarget) >= this.mob.attackRange) return;
+
+        // We have a new target, so we attack it.
+        this.mob.combat.attack(newTarget);
     }
 }
