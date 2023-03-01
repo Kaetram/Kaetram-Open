@@ -8,7 +8,7 @@ export default class ThickSkin extends Ability {
     public constructor(level: number, quickSlot = -1) {
         super('thickskin', level, quickSlot);
 
-        this.onDeactivate((player: Player) => player.status.remove(Modules.StatusEffect.ThickSkin));
+        this.onDeactivate((player: Player) => player.status.remove(Modules.Effects.ThickSkin));
     }
 
     /**
@@ -18,7 +18,7 @@ export default class ThickSkin extends Ability {
      */
 
     public override activate(player: Player): boolean {
-        if (super.activate(player)) player.status.add(Modules.StatusEffect.ThickSkin);
+        if (super.activate(player)) player.status.add(Modules.Effects.ThickSkin);
 
         return false;
     }
