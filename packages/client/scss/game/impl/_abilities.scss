@@ -23,10 +23,10 @@
     }
 }
 
-@each $size, $i in media.$bsizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         .ability-quickslot {
-            cursor: url('/img/3/hand.png'), auto;
+            cursor: url('/img/sprites/hand.png'), auto;
             position: absolute;
             width: 16px * $i;
             height: 16px * $i;
@@ -54,57 +54,66 @@
     }
 }
 
-@each $size, $i in media.$ssizes {
+@each $size, $i in media.$s-sizes {
     @media ($size) {
         #ability-shortcut {
-            cursor: url('/img/3/hand.png'), auto;
+            cursor: url('/img/sprites/hand.png'), auto;
 
             bottom: 5px;
 
             width: 200px * $i;
             height: 40px * $i;
 
-            background-image: url('/img/#{$i}/skillslots.png');
+            background-image: url('/img/interface/skillslots.png');
+            background-size: calc(width('skillslots.png') * $i);
         }
 
         .quickslot-icon-intimidate {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: 0 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-run {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -16px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-awareness {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -32px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-dualistsmark {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -48px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-hotshot {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -64px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-thickskin {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -80px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-precognition {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -96px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-secretcalling {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -112px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .quickslot-icon-intimidate,
@@ -119,7 +128,8 @@
                 background-position-y: -15px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-y: -30px * $i;
             }
         }
