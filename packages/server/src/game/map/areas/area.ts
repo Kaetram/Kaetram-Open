@@ -1,4 +1,4 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 
 import type { OverlayType } from '@kaetram/common/types/map';
 import type Character from '../../entity/character/character';

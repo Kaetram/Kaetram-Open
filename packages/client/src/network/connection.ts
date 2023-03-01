@@ -1038,7 +1038,7 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, _info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
                 //this.menu.enchant.add(info.type!, info.index!);
@@ -1185,7 +1185,7 @@ export default class Connection {
      * @param opcode The type of action we are performing with the camera.
      */
 
-    private handleCamera(opcode: Opcodes.Camera): void {
+    private handleCamera(_opcode: Opcodes.Camera): void {
         //
     }
 
