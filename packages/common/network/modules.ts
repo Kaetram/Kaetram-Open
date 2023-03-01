@@ -467,6 +467,7 @@ export const Constants = {
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
     EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
+    FIRE_POTION_DURATION: 60_000, // 60 seconds
     FREEZING_DURATION: 60_000, // 60 seconds
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
