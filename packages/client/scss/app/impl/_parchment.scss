@@ -269,7 +269,6 @@
 
             background-image: url('/img/interface/spritesheet.png');
             background-size: calc(width('spritesheet.png') * $i);
-            background-size: 422px * $i auto;
         }
 
         .left-ornament {
