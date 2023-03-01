@@ -1,16 +1,22 @@
+import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 import axios from 'axios';
 import express, { Router } from 'express';
 
-import type { TotalExperience } from '@kaetram/common/types/leaderboards';
 import type Cache from './cache';
 import type Server from './model/server';
 import type Servers from './controllers/servers';
 import type Discord from '@kaetram/common/api/discord';
 import type { Friend } from '@kaetram/common/types/friends';
 import type { Request, Response } from 'express';
+import type {
+    MobAggregate,
+    SkillExperience,
+    TotalExperience
+} from '@kaetram/common/types/leaderboards';
 
 /**
  * We use the API format from `@kaetram/server`.
@@ -300,11 +306,53 @@ export default class API {
     /**
      * A GET response handing out total experience for the leaderboards. The cache prevents
      * us from having to query the database every time we need to update the leaderboards.
+     * @param request Contains information about the type of data we are trying to extract.
      * @param response The response we are sending to the client.
      */
 
-    private handleLeaderboards(_request: Request, response: Response): void {
+    private handleLeaderboards(request: Request, response: Response): void {
         this.setHeaders(response);
+
+        if (request.query.skill) {
+            let skillId = parseInt(request.query.skill as string);
+
+            // Ensure the validity of the skill id we are trying to get.
+            if (isNaN(skillId) || skillId < 0 || skillId > Object.keys(Modules.Skills).length / 2) {
+                response.json({ error: 'invalid' });
+                return;
+            }
+
+            // Get the skill experience from the cache.
+            this.cache.getSkillsExperience(skillId, (data: SkillExperience[]) => {
+                response.json({
+                    status: 'success',
+                    list: data
+                });
+            });
+
+            return;
+        }
+
+        // Handles mob kills aggregation.
+        if (request.query.mob) {
+            let mobKey = request.query.mob as string;
+
+            // Ensure that we are not being spammed with invalid mob keys.
+            if (!mobKey || !(mobKey in mobs)) {
+                response.json({ error: 'invalid' });
+                return;
+            }
+
+            // Get the mob kills from the cache.
+            this.cache.getMobKills(mobKey, (data: MobAggregate[]) => {
+                response.json({
+                    status: 'success',
+                    list: data
+                });
+            });
+
+            return;
+        }
 
         this.cache.getTotalExperience((data: TotalExperience[]) => {
             response.json({
