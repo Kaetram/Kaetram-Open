@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #inventory {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
 
     position: absolute;
     right: 10px;
@@ -37,12 +37,13 @@
 
 // 144 x 108
 
-@each $size, $i in media.$bsizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         #inventory {
             width: 96px * $i;
             height: 108px * $i;
-            background: url('/img/#{$i}/main.png') -288px * $i -352px * $i no-repeat;
+            background: url('/img/interface/main.png') -288px * $i -352px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
         }
 
         #inventory-container {
@@ -62,7 +63,9 @@
             margin-top: 2px * $i;
             margin-bottom: 7px * $i;
             margin-left: 1.5px * $i;
-            background: url('/img/#{$i}/main.png') -400px * $i -352px * $i no-repeat;
+
+            background: url('/img/interface/main.png') -400px * $i -352px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
 
             &:hover {
                 background-position-x: -416px * $i;

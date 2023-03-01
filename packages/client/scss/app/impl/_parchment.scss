@@ -236,8 +236,8 @@
         .parchment-middle,
         .parchment-right,
         #respawn {
-            background-image: url('/img/#{$i}/spritesheet.png');
-            background-size: 422px * $i auto;
+            background-image: url('/img/interface/spritesheet.png');
+            background-size: calc(width('spritesheet.png') * $i);
         }
 
         .parchment-left {
@@ -267,8 +267,8 @@
             height: 12px * $i;
             margin: 0 5px * $i + 5px;
 
-            background-image: url('/img/#{$i}/spritesheet.png');
-            background-size: 422px * $i auto;
+            background-image: url('/img/interface/spritesheet.png');
+            background-size: calc(width('spritesheet.png') * $i);
         }
 
         .left-ornament {
