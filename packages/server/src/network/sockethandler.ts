@@ -1,7 +1,6 @@
 import SocketIO from './sockets/socketio';
 
 import { Modules } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
 
 import type Connection from './connection';
 

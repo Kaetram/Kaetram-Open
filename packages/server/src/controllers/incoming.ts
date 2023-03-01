@@ -470,7 +470,7 @@ export default class Incoming {
         }
     }
 
-    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
+    private handleEnchant(_message: [Opcodes.Enchant, unknown]): void {
         // let [opcode] = message;
         // switch (opcode) {
         //     case Opcodes.Enchant.Select: {

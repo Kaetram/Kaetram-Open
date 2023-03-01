@@ -12,7 +12,6 @@ import Handler from './entity/character/player/handler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
-import Utils from './utils/util';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
