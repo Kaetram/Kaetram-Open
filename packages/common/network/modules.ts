@@ -85,7 +85,7 @@ export enum MenuActions {
 export enum InteractActions {}
 
 export enum Hits {
-    Damage,
+    Normal,
     Poison,
     Heal,
     Mana,
@@ -94,7 +94,8 @@ export enum Hits {
     Critical,
     Stun,
     Profession,
-    Cold,
+    Freezing,
+    Burning,
     Terror
 }
 
@@ -206,30 +207,23 @@ export enum AoEType {
 export enum Effects {
     None,
     Critical,
-    Terror,
+    Terror, // Initial terror effect.
+    TerrorStatus, // The terror effect that persists
     Stun,
     Healing,
     Fireball,
     Iceball,
-    Burning,
-    Freezing,
     Poisonball,
-    Boulder
-}
-
-export enum StatusEffect {
-    None,
+    Boulder,
     Running,
     HotSauce,
     DualistsMark,
     ThickSkin,
     SnowPotion,
+    FirePotion,
     Burning,
-    Freezing, // Area based cold damage
-    Cold, // Inflicted cold damage
-    Stun,
-    Invincible,
-    Terror
+    Freezing,
+    Invincible
 }
 
 export enum DamageStyle {
@@ -313,7 +307,7 @@ export interface Colours {
 
 export let DamageColours = {
     // Received damage
-    [Hits.Damage]: {
+    [Hits.Normal]: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
@@ -361,7 +355,7 @@ export let DamageColours = {
         stroke: 'rgb(112, 17, 112)'
     },
 
-    [Hits.Cold]: {
+    [Hits.Freezing]: {
         fill: 'rgb(52, 195, 235)',
         stroke: 'rgb(14, 138, 227)'
     }
@@ -456,6 +450,7 @@ export const Constants = {
     DROP_PROBABILITY: 10_000, // 1 in 10000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
+    EFFECT_RATE: 10_000, // effects every 10 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
     SPAWN_POINT: '405,27', // Default starting point outside the tutorial
@@ -472,6 +467,9 @@ export const Constants = {
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
     EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
+    FREEZING_DURATION: 60_000, // 60 seconds
+    BURNING_DURATION: 60_000, // 60 seconds
+    TERROR_DURATION: 60_000, // 60 seconds
     COLD_EFFECT_DAMAGE: 11
 };
 
