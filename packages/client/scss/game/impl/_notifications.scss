@@ -94,7 +94,15 @@
             width: 216px * $i;
             height: 34px * $i;
             margin-left: -108px * $i;
-            background: url('/img/#{$i}/spritesheet.png') no-repeat;
+
+            background: url('/img/interface/spritesheet.png') no-repeat;
+            background-size: calc(width('spritesheet.png') * $i);
+        }
+
+        #notify,
+        #confirm {
+            background-image: url('/img/interface/containers.png');
+            background-size: calc(width('containers.png') * $i);
         }
 
         #question,
@@ -106,16 +114,23 @@
         }
 
         #question {
-            background: url('/img/#{$i}/containers.png') -349px * $i -47px * $i;
+            background: url('/img/interface/containers.png') -349px * $i -47px * $i;
+            background-size: calc(width('containers.png') * $i);
         }
 
         #exclamation {
-            background: url('/img/#{$i}/containers.png') -334px * $i -47px * $i;
+            background: url('/img/interface/containers.png') -334px * $i -47px * $i;
+            background-size: calc(width('containers.png') * $i);
         }
 
         #message {
             width: 120px * $i;
             height: 23px * $i;
+        }
+
+        #cancel {
+            background: url('/img/interface/containers.png');
+            background-size: calc(width('containers.png') * $i);
         }
     }
 }
@@ -131,7 +146,7 @@
     #confirm {
         width: 333px;
         height: 94px;
-        background: url('/img/2/containers.png') -601px 0;
+        background-position: -601px 0;
     }
 
     #notification-text-title {
@@ -145,7 +160,7 @@
     #cancel {
         width: 40px;
         height: 14px;
-        background: url('/img/2/containers.png') -601px -108px;
+        background-position: -601px -108px;
 
         &:hover,
         &:focus {
@@ -164,14 +179,13 @@
         width: 432px;
         height: 68px;
         margin-left: -216px;
-        background: url('/img/2/spritesheet.png') no-repeat;
     }
 
     #notify,
     #confirm {
         width: 166px;
         height: 47px;
-        background: url('/img/1/containers.png') -300px 0;
+        background: url('/img/interface/containers.png') -300px 0;
     }
 
     #cancel {
@@ -181,7 +195,7 @@
         width: 14px;
         height: 14px;
 
-        background: url('/img/1/containers.png') -371px -79px;
+        background: url('/img/interface/containers.png') -371px -79px;
 
         &:hover,
         &:focus {
