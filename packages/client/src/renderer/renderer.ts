@@ -860,6 +860,14 @@ export default class Renderer {
 
     private drawEffects(character: Character): void {
         for (let key of character.statusEffects) {
+            // Do not draw the freezing effect if the character has a snow potion effect.
+            if (key === Modules.Effects.Freezing && character.hasEffect(Modules.Effects.SnowPotion))
+                continue;
+
+            // Do not draw the burning effect if the character has a fire potion effect.
+            if (key === Modules.Effects.Burning && character.hasEffect(Modules.Effects.FirePotion))
+                continue;
+
             let effect = character.getEffect(key);
 
             if (!effect) continue;

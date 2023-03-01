@@ -1167,11 +1167,11 @@ export default class Player extends Character {
     }
 
     /**
-     * Sets the cold resistance snow potion status and creates a (or updates an existing) timeout.
-     * The effect is removed after a set amount of time specified in the game `Constants`.
+     * Adds a temporary status effect for the snow potion. This prevents the player
+     * from taking cold-based damage and also protects them against freezing effects.
      */
 
-    public setSnowPotionEffect(): void {
+    public setSnowPotion(): void {
         this.status.addWithTimeout(
             Modules.Effects.SnowPotion,
             Modules.Constants.SNOW_POTION_DURATION,
@@ -1183,6 +1183,27 @@ export default class Player extends Character {
         this.notify(
             `You are now immune to freezing effects for ${
                 Modules.Constants.SNOW_POTION_DURATION / 1000
+            } seconds.`
+        );
+    }
+
+    /**
+     * Adds a temporary status effect for the fire potion. This prevents the player
+     * from repeatedly taking fire damage as result of the burn effect.
+     */
+
+    public setFirePotion(): void {
+        this.status.addWithTimeout(
+            Modules.Effects.FirePotion,
+            Modules.Constants.FIRE_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to fire effects has worn off.');
+            }
+        );
+
+        this.notify(
+            `You are now immune to fire effects for ${
+                Modules.Constants.FIRE_POTION_DURATION / 1000
             } seconds.`
         );
     }
