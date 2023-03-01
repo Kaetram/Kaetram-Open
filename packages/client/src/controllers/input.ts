@@ -461,7 +461,7 @@ export default class InputController {
         let position = this.getCoords();
 
         // The entity we are currently hovering over.
-        this.entity = this.game.searchForEntityAt(position);
+        this.entity = this.game.getEntityAt(position.gridX, position.gridY);
 
         // Update the overlay with entity information.
         this.hud.update(this.entity);

@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #store {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
 
     position: absolute;
     top: 17%;
@@ -14,6 +14,22 @@
     position: absolute;
     top: 0;
     right: 100%;
+}
+
+#store-inventory-slots {
+    position: absolute;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+            float: left;
+        }
+    }
 }
 
 #store-container {
@@ -38,22 +54,6 @@
     margin: 90% auto;
     font-family: AdvoCut, sans-serif;
     text-align: center;
-}
-
-#store-inventory-slots {
-    position: absolute;
-    overflow: hidden;
-    overflow-y: scroll;
-
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-
-        li {
-            float: left;
-        }
-    }
 }
 
 #store-sell-slot-return-text,
@@ -99,7 +99,8 @@
         #store {
             width: 170px * $i;
             height: 168px * $i;
-            background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
+            background: url('/img/interface/containers.png') -129px * $i -22px * $i;
+            background-size: calc(width('containers.png') * $i);
         }
 
         #store-container {
@@ -122,7 +123,8 @@
         #store-inventory-container {
             width: 129px * $i;
             height: 155px * $i;
-            background: url('/img/#{$i}/containers.png') 0 0;
+            background: url('/img/interface/containers.png') 0 0;
+            background-size: calc(width('containers.png') * $i);
         }
 
         #store-inventory-slots {
@@ -171,7 +173,8 @@
             margin-left: 4px * $i;
             padding-left: 1em;
 
-            background: url('/img/#{$i}/containers.png') -352px * $i -112px * $i;
+            background: url('/img/interface/containers.png') -352px * $i -112px * $i;
+            background-size: calc(width('containers.png') * $i);
 
             &:hover {
                 background-position-y: -134px * $i;
@@ -224,11 +227,11 @@
         #store-inventory-slots {
             left: 11px;
             width: 106px;
-    
+
             ul {
                 li {
                     .item-slot {
-                        margin-bottom: 8px
+                        margin-bottom: 8px;
                     }
                 }
             }

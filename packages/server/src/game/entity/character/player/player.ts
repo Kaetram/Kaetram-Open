@@ -19,7 +19,6 @@ import Incoming from '../../../../controllers/incoming';
 import {
     Camera,
     Chat,
-    Effect,
     Heal,
     Movement,
     Music,
@@ -898,7 +897,7 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.status.has(Modules.StatusEffect.Stun) || this.isInvalidMovement()) return;
+        if (this.status.has(Modules.Effects.Stun) || this.isInvalidMovement()) return;
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -1002,7 +1001,7 @@ export default class Player extends Character {
             })
         );
 
-        if (overlay.type === 'damage') overlay.addPlayer(this);
+        if (overlay.isStatusArea()) overlay.addPlayer(this);
     }
 
     /**
@@ -1090,10 +1089,17 @@ export default class Player extends Character {
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (this.status.has(Modules.StatusEffect.Running)) speed = Math.floor(speed * 0.9);
+        if (this.status.has(Modules.Effects.Running)) speed = Math.floor(speed * 0.9);
 
         // Apply a 20% speed boost if the player is using the hot sauce.
-        if (this.status.has(Modules.StatusEffect.HotSauce)) speed = Math.floor(speed * 0.8);
+        if (this.status.has(Modules.Effects.HotSauce)) speed = Math.floor(speed * 0.8);
+
+        // Apply freezing movement speed effect, make the player move 25% slower.
+        if (
+            this.status.has(Modules.Effects.Freezing) &&
+            !this.status.has(Modules.Effects.SnowPotion)
+        )
+            speed = Math.floor(speed * 1.25);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
@@ -1115,7 +1121,7 @@ export default class Player extends Character {
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1133,32 +1139,18 @@ export default class Player extends Character {
     public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
-        if (running) this.status.add(Modules.StatusEffect.Running);
-        else this.status.remove(Modules.StatusEffect.Running);
+        if (running) this.status.add(Modules.Effects.Running);
+        else this.status.remove(Modules.Effects.Running);
 
-        if (hotSauce) this.status.add(Modules.StatusEffect.HotSauce);
-        else this.status.remove(Modules.StatusEffect.HotSauce);
+        if (hotSauce) this.status.add(Modules.Effects.HotSauce);
+        else this.status.remove(Modules.Effects.HotSauce);
 
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
         );
-    }
-
-    /**
-     * Applies a visual effect onto a player. This can also be used to remove
-     * an effect by passing in the `Opcodes.Effect.None` opcode.
-     * @param opcode The opcode of the effect we want to apply.
-     * @param statusEffect (Optional) Status that is applied to the player.
-     */
-
-    public setEffect(opcode: Opcodes.Effect, statusEffect?: Modules.StatusEffect): void {
-        // If we have a status effect, we add it to the player.
-        if (statusEffect) this.status.add(statusEffect);
-
-        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
 
     /**
@@ -1168,8 +1160,8 @@ export default class Player extends Character {
      */
 
     public setDualistsMark(dualistsMark: boolean): void {
-        if (dualistsMark) this.status.add(Modules.StatusEffect.DualistsMark);
-        else this.status.remove(Modules.StatusEffect.DualistsMark);
+        if (dualistsMark) this.status.add(Modules.Effects.DualistsMark);
+        else this.status.remove(Modules.Effects.DualistsMark);
 
         this.combat.updateLoop();
     }
@@ -1181,19 +1173,12 @@ export default class Player extends Character {
 
     public setSnowPotionEffect(): void {
         this.status.addWithTimeout(
-            Modules.StatusEffect.SnowPotion,
+            Modules.Effects.SnowPotion,
+            Modules.Constants.SNOW_POTION_DURATION,
             () => {
-                // If the player is still in a freezing area, reapply the effect
-                if (this.overlayArea && this.overlayArea.type === 'damage')
-                    this.setEffect(Opcodes.Effect.Freeze);
-
                 this.notify('Your immunity to freezing effects has worn off.');
-            },
-            Modules.Constants.SNOW_POTION_DURATION
+            }
         );
-
-        // Remove the freezing special effect if the potion is active.
-        this.setEffect(Opcodes.Effect.None);
 
         this.notify(
             `You are now immune to freezing effects for ${
@@ -1426,8 +1411,9 @@ export default class Player extends Character {
      */
 
     public clearAreas(): void {
-        if (this.overlayArea && this.overlayArea.type === 'damage')
-            this.overlayArea.removePlayer(this);
+        if (!this.inFreezingArea()) return;
+
+        this.overlayArea!.removePlayer(this);
     }
 
     /**
@@ -1523,6 +1509,9 @@ export default class Player extends Character {
      */
 
     public override isPoisonous(): boolean {
+        // If the player is an archer, we use the arrows to determine the poisonous status.
+        if (this.isArcher()) return this.equipment.getArrows().poisonous;
+
         return this.equipment.getWeapon().poisonous;
     }
 
@@ -1532,6 +1521,16 @@ export default class Player extends Character {
 
     public override isMagic(): boolean {
         return this.equipment.getWeapon().isMagic();
+    }
+
+    /**
+     * Checks whether or not the player is in a freezing area. This is used
+     * to determine stacking of freezing effect (e.g. from ice arrows).
+     * @returns Whether or not the player is in a freezing area.
+     */
+
+    public inFreezingArea(): boolean {
+        return !!this.overlayArea?.isStatusArea();
     }
 
     /**
@@ -1959,7 +1958,7 @@ export default class Player extends Character {
         let reduction = 1;
 
         // Thick skin increases damage reduction by 20%.
-        if (this.status.has(Modules.StatusEffect.ThickSkin)) reduction -= 0.2;
+        if (this.status.has(Modules.Effects.ThickSkin)) reduction -= 0.2;
 
         // Attack style defensive boosts defence by 10%.
         if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
@@ -1978,6 +1977,27 @@ export default class Player extends Character {
 
     public override getAttackStyle(): Modules.AttackStyle {
         return this.equipment.getWeapon().attackStyle;
+    }
+
+    /**
+     * Subclass implementation for player's damage type. The damage hit type is selected
+     * based on the arrows or the weapon the player has equipped.
+     * @returns The damage type of the player's current weapon.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        let equipment = this.isArcher() ? this.equipment.getArrows() : this.equipment.getWeapon();
+
+        /**
+         * Depending on the type of weapon the player is using, we will either use
+         * the burning/freezing effect of the arrows or the weapon itself.
+         */
+
+        if (equipment.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+        if (equipment.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+        // Default case for damage.
+        return Modules.Hits.Normal;
     }
 
     /**
@@ -2004,7 +2024,7 @@ export default class Player extends Character {
 
     public override getAttackRate(): number {
         // Dualists mark status effect boosts attack speed by 200 milliseconds.
-        if (this.status.has(Modules.StatusEffect.DualistsMark))
+        if (this.status.has(Modules.Effects.DualistsMark))
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;

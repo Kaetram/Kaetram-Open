@@ -1,7 +1,7 @@
 import { Modules } from '@kaetram/common/network';
 import $ from 'jquery';
 
-import type Player from '../entity/character/player/player';
+import type Character from '../entity/character/character';
 
 const MAXIMUM_ZOOM = 6,
     DEFAULT_ZOOM = 3,
@@ -157,14 +157,14 @@ export default class Camera {
      * The camera is centered about the specified player character. This
      * is generally the main character playing the game (unless cutscenes)
      * will be implemented later.
-     * @param player The player entity we are centering the camera on.
+     * @param character The player entity we are centering the camera on.
      */
 
-    public centreOn(player: Player): void {
+    public centreOn(character: Character): void {
         let width = Math.floor(this.gridWidth / 2),
             height = Math.floor(this.gridHeight / 2),
-            nextX = player.x - width * this.tileSize,
-            nextY = player.y - height * this.tileSize;
+            nextX = character.x - width * this.tileSize,
+            nextY = character.y - height * this.tileSize;
 
         /**
          * We check whether the x and y coordinates that are about
@@ -175,12 +175,12 @@ export default class Camera {
 
         if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
             this.x = nextX;
-            this.gridX = Math.round(player.x / this.tileSize) - width;
+            this.gridX = Math.round(character.x / this.tileSize) - width;
         } else this.offsetX(nextX); // Bind to the x edge.
 
         if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
             this.y = nextY;
-            this.gridY = Math.round(player.y / this.tileSize) - height;
+            this.gridY = Math.round(character.y / this.tileSize) - height;
         } else this.offsetY(nextY); // Bind to the y edge.
     }
 

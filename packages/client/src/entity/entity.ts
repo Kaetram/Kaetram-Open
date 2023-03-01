@@ -11,6 +11,13 @@ export default abstract class Entity {
     public y = 0;
     public gridX = 0;
     public gridY = 0;
+    public nextGridX = -1;
+    public nextGridY = -1;
+
+    public movementSpeed = -1;
+    public attackRange = -1;
+    public frozen = false;
+    public dead = false;
 
     public name = '';
 
@@ -44,7 +51,7 @@ export default abstract class Entity {
     public counter = 0;
     public fadingDuration = 1000;
 
-    public orientation!: Modules.Orientation;
+    public orientation: Modules.Orientation = Modules.Orientation.Down;
 
     public fadingTime!: number;
     private blinking!: number;
@@ -56,22 +63,16 @@ export default abstract class Entity {
 
     private readyCallback?(): void;
 
-    public attackRange = 1;
     public hitPoints = 0;
     public maxHitPoints = 0;
     public mana = 0;
     public maxMana = 0;
     public level = 1;
     public experience = 0;
-    public movementSpeed = 250;
-    public frozen = false;
     public teleporting = false;
-    public dead = false;
     public pvp = false;
     public nameColour!: string;
     public customScale!: number;
-    public nextGridX!: number;
-    public nextGridY!: number;
     public fadingAlpha!: number;
     public lastUpdate = Date.now();
 
