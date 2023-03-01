@@ -5,7 +5,7 @@ import type { Plugin } from '.';
 
 export default class HotSauce implements Plugin {
     public onUse(player: Player): boolean {
-        if (player.status.has(Modules.StatusEffect.HotSauce)) {
+        if (player.status.has(Modules.Effects.HotSauce)) {
             player.notify(`I really shouldn't be drinking multiple of these...`);
             return false;
         }

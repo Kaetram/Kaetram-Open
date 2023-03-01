@@ -520,18 +520,16 @@ export default class Connection {
         let currentPlayerTarget = target.instance === this.game.player.instance,
             currentPlayerAttacker = attacker.instance === this.game.player.instance,
             isPoison = info.hit.type === Modules.Hits.Poison,
-            isTerror = info.hit.type === Modules.Hits.Terror,
-            isCold = info.hit.type === Modules.Hits.Cold;
+            isFreezing = info.hit.type === Modules.Hits.Freezing;
 
         // Set the terror effect onto the target.
-        if (isTerror) target.setEffect(Modules.Effects.Terror);
-        if (isPoison) target.setEffect(Modules.Effects.Poisonball);
+        if (isPoison) target.addEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
-        if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
+        if (info.hit.type === Modules.Hits.Critical) target.addEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
-        if (!info.hit.aoe && !isPoison && !isCold) {
+        if (!info.hit.aoe && !isPoison && !isFreezing) {
             attacker.lookAt(target);
             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         }
@@ -637,58 +635,13 @@ export default class Connection {
      */
 
     private handleCommand(info: CommandPacket): void {
-        if (info.command.includes('toggle') && this.game.player.hasEffect())
-            return this.game.player.removeEffect();
+        if (info.command.includes('toggle') && this.game.player.hasActiveEffect())
+            return this.game.player.removeAllEffects();
 
         switch (info.command) {
             case 'debug': {
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
-            }
-
-            case 'toggleheal': {
-                this.game.player.setEffect(Modules.Effects.Healing);
-                break;
-            }
-
-            case 'toggleterror': {
-                this.game.player.setEffect(Modules.Effects.Terror);
-                break;
-            }
-
-            case 'togglefireball': {
-                this.game.player.setEffect(Modules.Effects.Fireball);
-                break;
-            }
-
-            case 'toggleiceball': {
-                this.game.player.setEffect(Modules.Effects.Iceball);
-                break;
-            }
-
-            case 'togglefire': {
-                this.game.player.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case 'togglefreeze': {
-                this.game.player.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case 'togglestun': {
-                this.game.player.setEffect(Modules.Effects.Stun);
-                break;
-            }
-
-            case 'togglepoison': {
-                this.game.player.setEffect(Modules.Effects.Poisonball);
-                break;
-            }
-
-            case 'toggleboulder': {
-                this.game.player.setEffect(Modules.Effects.Boulder);
-                break;
             }
         }
     }
@@ -865,7 +818,7 @@ export default class Connection {
             case 'hitpoints': {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                character.setEffect(Modules.Effects.Healing);
+                character.addEffect(Modules.Effects.Healing);
                 break;
             }
 
@@ -941,6 +894,9 @@ export default class Connection {
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
         this.game.player.setMana(0);
+
+        // Clear all the statuses.
+        this.game.player.removeAllEffects();
 
         // Stop the music playing.
         this.audio.stopMusic();
@@ -1369,11 +1325,11 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Effect.Add: {
-                return entity.addStatusEffect(info.effect);
+                return entity.addEffect(info.effect);
             }
 
             case Opcodes.Effect.Remove: {
-                return entity.removeStatusEffect(info.effect);
+                return entity.removeEffect(info.effect);
             }
         }
     }

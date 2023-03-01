@@ -365,7 +365,7 @@ export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) 
 
 export interface EffectPacket {
     instance: string;
-    effect: Modules.StatusEffect;
+    effect: Modules.Effects;
 }
 
 export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
