@@ -3267,6 +3267,7 @@ __metadata:
     jquery: ^3.6.3
     pako: ^2.1.0
     postcss: ^8.4.20
+    postcss-assets: ^6.0.0
     postcss-custom-media: ^9.0.1
     postcss-preset-env: ^7.8.3
     sass: ^1.57.1
@@ -4419,10 +4420,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"assets@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "assets@npm:3.0.1"
+  dependencies:
+    async: ^2.5.0
+    bluebird: ^3.4.6
+    calipers: ^2.0.0
+    calipers-gif: ^2.0.0
+    calipers-jpeg: ^2.0.0
+    calipers-png: ^2.0.0
+    calipers-svg: ^2.0.0
+    calipers-webp: ^2.0.0
+    glob: ^7.0.6
+    lodash: ^4.15.0
+    mime: ^2.4.0
+  checksum: 4ef7ccd4b255a88ba49a1455f0a489db4e5c99e809ede94043789eb066ae1ca8e8ebd89dc43734248c8d2bfeb9a2957403d6af52c40acb2b324886e904d79bb8
+  languageName: node
+  linkType: hard
+
 "astral-regex@npm:^2.0.0":
   version: 2.0.0
   resolution: "astral-regex@npm:2.0.0"
   checksum: 876231688c66400473ba505731df37ea436e574dd524520294cc3bbc54ea40334865e01fa0d074d74d036ee874ee7e62f486ea38bc421ee8e6a871c06f011766
+  languageName: node
+  linkType: hard
+
+"async@npm:^2.5.0":
+  version: 2.6.4
+  resolution: "async@npm:2.6.4"
+  dependencies:
+    lodash: ^4.17.14
+  checksum: a52083fb32e1ebe1d63e5c5624038bb30be68ff07a6c8d7dfe35e47c93fc144bd8652cbec869e0ac07d57dde387aa5f1386be3559cdee799cb1f789678d88e19
   languageName: node
   linkType: hard
 
@@ -4647,7 +4676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:3.7.2, bluebird@npm:^3.7.2":
+"bluebird@npm:3.7.2, bluebird@npm:3.x.x, bluebird@npm:^3.4.6, bluebird@npm:^3.7.2":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
@@ -4828,6 +4857,66 @@ __metadata:
   version: 2.3.0
   resolution: "cachedir@npm:2.3.0"
   checksum: ec90cb0f2e6336e266aa748dbadf3da9e0b20e843e43f1591acab7a3f1451337dc2f26cb9dd833ae8cfefeffeeb43ef5b5ff62782a685f4e3c2305dd98482fcb
+  languageName: node
+  linkType: hard
+
+"calipers-gif@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "calipers-gif@npm:2.0.0"
+  dependencies:
+    bluebird: 3.x.x
+  peerDependencies:
+    calipers: 2.x.x
+  checksum: 9e81fa57bc60f1e6d35cddb7b0ea2a1c4199a6404ea4f1c7902a7040069da7b57b28682f6c37518a8677983ead77e74b2d89e09168da497aae07647906bf0bf9
+  languageName: node
+  linkType: hard
+
+"calipers-jpeg@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "calipers-jpeg@npm:2.0.0"
+  dependencies:
+    bluebird: 3.x.x
+  peerDependencies:
+    calipers: 2.x.x
+  checksum: 8f3a791c30d5adf4de897ed5e0b8d03fc67878ddd6bcb45b396daa2029a26b1ddd4fdd86cbb0a472c9f37af0dcdf896f0dbb9c45d373f98e29f41a1c224cda4b
+  languageName: node
+  linkType: hard
+
+"calipers-png@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "calipers-png@npm:2.0.0"
+  dependencies:
+    bluebird: 3.x.x
+  peerDependencies:
+    calipers: 2.x.x
+  checksum: 814141145a6478c877b147b5e90f3081a9c3680782f99430d9a1c6c9ff0d5f8c422912cb9ef4c79226b2bf5a3afdefb348ca165879712f22826e63727b05752b
+  languageName: node
+  linkType: hard
+
+"calipers-svg@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "calipers-svg@npm:2.0.1"
+  dependencies:
+    bluebird: 3.x.x
+  checksum: 6340bd2a7ee58e637224a42a417560ffefb15cfb11a98ccb67ad56f9b893bdcd149507b14fe32b03f3e8064322dee522f7eb06ba5173b341b227bbc7042f9e8a
+  languageName: node
+  linkType: hard
+
+"calipers-webp@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "calipers-webp@npm:2.0.0"
+  dependencies:
+    bluebird: 3.x.x
+  checksum: cb12fa47483b7839b0c6629086f005a7f46ec3c81d7cf4abbbfe6a903f02dc2c358558411f34efb6f95a43b98401a56530b5078e415297ad03232ec1158013ad
+  languageName: node
+  linkType: hard
+
+"calipers@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "calipers@npm:2.0.1"
+  dependencies:
+    bluebird: 3.x.x
+  checksum: fb585634c14a2245683af867e6402eeb6389d1903708efd04d3f879e66718834c8179b4cd981bbf875a85aaa21391e3cf7e4f0a1458dd24f90d48fbcdd303c17
   languageName: node
   linkType: hard
 
@@ -7592,6 +7681,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:^7.0.6, glob@npm:^7.2.0":
+  version: 7.2.3
+  resolution: "glob@npm:7.2.3"
+  dependencies:
+    fs.realpath: "npm:^1.0.0"
+    inflight: "npm:^1.0.4"
+    inherits: "npm:2"
+    minimatch: "npm:^3.1.1"
+    once: "npm:^1.3.0"
+    path-is-absolute: "npm:^1.0.0"
+  checksum: 29452e97b38fa704dabb1d1045350fb2467cf0277e155aa9ff7077e90ad81d1ea9d53d3ee63bd37c05b09a065e90f16aec4a65f5b8de401d1dac40bc5605d133
+  languageName: node
+  linkType: hard
+
 "glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
   version: 7.1.7
   resolution: "glob@npm:7.1.7"
@@ -7603,20 +7706,6 @@ __metadata:
     once: "npm:^1.3.0"
     path-is-absolute: "npm:^1.0.0"
   checksum: b61f48973bbdcf5159997b0874a2165db572b368b931135832599875919c237fc05c12984e38fe828e69aa8a921eb0e8a4997266211c517c9cfaae8a93988bb8
-  languageName: node
-  linkType: hard
-
-"glob@npm:^7.2.0":
-  version: 7.2.3
-  resolution: "glob@npm:7.2.3"
-  dependencies:
-    fs.realpath: "npm:^1.0.0"
-    inflight: "npm:^1.0.4"
-    inherits: "npm:2"
-    minimatch: "npm:^3.1.1"
-    once: "npm:^1.3.0"
-    path-is-absolute: "npm:^1.0.0"
-  checksum: 29452e97b38fa704dabb1d1045350fb2467cf0277e155aa9ff7077e90ad81d1ea9d53d3ee63bd37c05b09a065e90f16aec4a65f5b8de401d1dac40bc5605d133
   languageName: node
   linkType: hard
 
@@ -8761,6 +8850,7 @@ __metadata:
     husky: ^8.0.3
     lint-staged: ^13.1.0
     postcss: ^8.4.20
+    postcss-assets: ^6.0.0
     postcss-value-parser: ^4.2.0
     prettier: ^2.8.1
     stylelint: ^14.16.1
@@ -9022,7 +9112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
+"lodash@npm:^4.15.0, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -9293,6 +9383,15 @@ __metadata:
   bin:
     mime: cli.js
   checksum: fef25e39263e6d207580bdc629f8872a3f9772c923c7f8c7e793175cee22777bbe8bba95e5d509a40aaa292d8974514ce634ae35769faa45f22d17edda5e8557
+  languageName: node
+  linkType: hard
+
+"mime@npm:^2.4.0":
+  version: 2.6.0
+  resolution: "mime@npm:2.6.0"
+  bin:
+    mime: cli.js
+  checksum: 1497ba7b9f6960694268a557eae24b743fd2923da46ec392b042469f4b901721ba0adcf8b0d3c2677839d0e243b209d76e5edcbd09cfdeffa2dfb6bb4df4b862
   languageName: node
   linkType: hard
 
@@ -10078,6 +10177,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-assets@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "postcss-assets@npm:6.0.0"
+  dependencies:
+    assets: ^3.0.0
+    postcss-functions: ^4.0.2
+  peerDependencies:
+    postcss: ^8.2.15
+  checksum: 7df91fd857aa9a2a0361c786182c16e75cc98cf689c280cdd71860d27606678909399d5a0f8865d7c490c697b7aab505113fe58f2d49720e579d2cc901a1ef8f
+  languageName: node
+  linkType: hard
+
 "postcss-attribute-case-insensitive@npm:^5.0.2":
   version: 5.0.2
   resolution: "postcss-attribute-case-insensitive@npm:5.0.2"
@@ -10241,6 +10352,17 @@ __metadata:
   peerDependencies:
     postcss: ^8.1.0
   checksum: a19286589261c2bc3e20470486e1ee3b4daf34271c5020167f30856c9b30c26f23264307cb97a184d503814e1b8c5d8a1f9f64a14fd4fd9551c173dca9424695
+  languageName: node
+  linkType: hard
+
+"postcss-functions@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "postcss-functions@npm:4.0.2"
+  dependencies:
+    postcss-value-parser: ^4.0.0
+  peerDependencies:
+    postcss: ^8.0.0
+  checksum: de837e5b0fd57f323a7f08482f0c9291982ce850cdbac6a93327176eabca40f085fa8fb40b20e5c1c877bcb740fdfc567ae6509e09f6ade9e79ecedb9c02eed0
   languageName: node
   linkType: hard
 
@@ -10514,17 +10636,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-value-parser@npm:^4.0.0, postcss-value-parser@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "postcss-value-parser@npm:4.2.0"
+  checksum: 819ffab0c9d51cf0acbabf8996dffbfafbafa57afc0e4c98db88b67f2094cb44488758f06e5da95d7036f19556a4a732525e84289a425f4f6fd8e412a9d7442f
+  languageName: node
+  linkType: hard
+
 "postcss-value-parser@npm:^4.1.0":
   version: 4.1.0
   resolution: "postcss-value-parser@npm:4.1.0"
   checksum: 68a9ea27c780fa3cc350be37b47cc46385c61dd9627990909230e0e9c3debf6d5beb49006bd743a2e506cdd6fa7d07637f2d9504a394f67cc3011d1ff0134886
-  languageName: node
-  linkType: hard
-
-"postcss-value-parser@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "postcss-value-parser@npm:4.2.0"
-  checksum: 819ffab0c9d51cf0acbabf8996dffbfafbafa57afc0e4c98db88b67f2094cb44488758f06e5da95d7036f19556a4a732525e84289a425f4f6fd8e412a9d7442f
   languageName: node
   linkType: hard
 
