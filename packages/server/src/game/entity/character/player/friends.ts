@@ -1,6 +1,6 @@
 import config from '@kaetram/common/config';
 
-import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
+import type { Friend } from '@kaetram/common/types/friends';
 import type Player from './player';
 
 type SyncCallback = (username: string, status: boolean, serverId: number) => void;
