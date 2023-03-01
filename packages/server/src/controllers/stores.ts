@@ -10,8 +10,7 @@ import type {
     RawStore,
     SerializedStoreInfo,
     SerializedStoreItem,
-    StoreData,
-    StoreItem
+    StoreData
 } from '@kaetram/common/types/stores';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';

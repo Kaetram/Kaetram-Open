@@ -51,15 +51,15 @@ import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
 import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
+import type Entities from '../../../../controllers/entities';
+import type Packet from '@kaetram/server/src/network/packet';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PointerData } from '@kaetram/common/types/pointer';
-import type Entities from '@kaetram/server/src/controllers/entities';
-import type Packet from '@kaetram/server/src/network/packet';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
-import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -161,8 +161,6 @@ export default class Player extends Character {
 
     private cameraArea: Area | undefined;
     public overlayArea: Area | undefined;
-
-    private snowPotionTimeout: NodeJS.Timeout | null = null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;

@@ -1,6 +1,5 @@
 import config from '@kaetram/common/config';
 import { Modules } from '@kaetram/common/network';
-import { FriendInfo } from '@kaetram/common/types/friends';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import axios from 'axios';
