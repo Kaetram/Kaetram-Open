@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #bank {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/sprites/hand.png'), auto;
 
     position: absolute;
     inset: 0;
@@ -63,7 +63,8 @@
 
         #bank-container,
         #bank-inventory-container {
-            background-image: url('/img/#{$i}/bank.png');
+            background-image: url('/img/interface/bank.png');
+            background-size: calc(width('bank.png') * $i);
         }
 
         #bank-inventory-slots {
@@ -127,7 +128,7 @@
         ul {
             li {
                 .item-slot {
-                    margin-bottom: 8px
+                    margin-bottom: 8px;
                 }
             }
         }

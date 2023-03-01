@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #interact {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/sprites/hand.png'), auto;
     position: absolute;
     display: none;
 
@@ -13,12 +13,13 @@
     }
 }
 
-@each $size, $i in media.$bsizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         #interact {
             width: 64px * $i;
             height: 30px * $i;
-            background: url('/img/#{$i}/main.png') -336px * $i -464px * $i no-repeat;
+            background: url('/img/interface/main.png') -336px * $i -464px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
 
             ul {
                 top: 6px * $i;
@@ -31,4 +32,3 @@
         }
     }
 }
-

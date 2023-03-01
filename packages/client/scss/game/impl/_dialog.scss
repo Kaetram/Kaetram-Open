@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 dialog {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/sprites/hand.png'), auto;
 
     position: absolute;
     inset: 0;
@@ -37,7 +37,7 @@ dialog {
 .dialog-accept,
 .dialog-cancel {
     cursor: pointer;
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/sprites/hand.png'), auto;
 }
 
 .dialog-buttons {
@@ -46,12 +46,13 @@ dialog {
     padding: 0 10px;
 }
 
-@each $size, $i in media.$bsizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         dialog {
             width: 53px * $i;
             height: 40px * $i;
-            background: url('/img/#{$i}/main.png') -347px * $i -496px * $i no-repeat;
+            background: url('/img/interface/main.png') -347px * $i -496px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
         }
 
         .dialog-count {
