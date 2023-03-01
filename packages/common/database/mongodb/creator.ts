@@ -31,6 +31,7 @@ export interface PlayerInfo {
     regionsLoaded: number[];
     friends: string[];
     lastServerId: number;
+    lastAddress: string;
 }
 
 /**
@@ -265,7 +266,8 @@ export default class Creator {
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,
             friends: player.friends.serialize(),
-            lastServerId: config.serverId
+            lastServerId: config.serverId,
+            lastAddress: player.connection.address
         };
     }
 }
