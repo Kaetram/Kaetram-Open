@@ -111,11 +111,44 @@ export default class Commands {
 
         switch (command) {
             case 'toggle': {
-                let key = blocks.shift()!;
+                let key = blocks.shift()!,
+                    effect: Modules.Effects = Modules.Effects.None;
 
-                if (!key) return this.player.notify('No key specified.');
+                switch (key) {
+                    case 'cold':
+                    case 'freeze':
+                    case 'freezing': {
+                        if (this.player.status.has(Modules.Effects.Freezing))
+                            return this.player.status.remove(Modules.Effects.Freezing);
 
-                return this.player.send(new Command({ command: `toggle${key}` }));
+                        effect = Modules.Effects.Freezing;
+                        break;
+                    }
+
+                    case 'fire':
+                    case 'burn':
+                    case 'burning': {
+                        if (this.player.status.has(Modules.Effects.Burning))
+                            return this.player.status.remove(Modules.Effects.Burning);
+
+                        effect = Modules.Effects.Burning;
+                        break;
+                    }
+
+                    case 'terror': {
+                        if (this.player.status.has(Modules.Effects.Terror))
+                            return this.player.status.remove(Modules.Effects.Terror);
+
+                        effect = Modules.Effects.Terror;
+                        break;
+                    }
+
+                    default: {
+                        return this.player.status.clear();
+                    }
+                }
+
+                return this.player.status.add(effect);
             }
         }
     }
@@ -396,12 +429,12 @@ export default class Commands {
 
             case 'nohit':
             case 'invincible': {
-                if (this.player.status.has(Modules.StatusEffect.Invincible)) {
-                    this.player.status.remove(Modules.StatusEffect.Invincible);
+                if (this.player.status.has(Modules.Effects.Invincible)) {
+                    this.player.status.remove(Modules.Effects.Invincible);
 
                     this.player.notify('You are no longer invincible.');
                 } else {
-                    this.player.status.add(Modules.StatusEffect.Invincible);
+                    this.player.status.add(Modules.Effects.Invincible);
 
                     this.player.notify('You are now invincible.');
                 }
