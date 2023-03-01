@@ -806,7 +806,7 @@ export default class Renderer {
         if (!(entity instanceof Character)) return;
 
         if (entity.isPlayer()) this.drawWeapon(entity as Player);
-        if (entity.hasEffect()) this.drawEffect(entity);
+        if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
 
     /**
@@ -854,35 +854,39 @@ export default class Renderer {
     }
 
     /**
-     * Draws a special effect on top of the character.
+     * Goes through all the status effects and draws them on top of the character.
      * @param character The character we are drawing the effect of.
      */
 
-    private drawEffect(character: Character): void {
-        let sprite = this.game.sprites.get(character.getActiveEffect());
+    private drawEffects(character: Character): void {
+        for (let key of character.statusEffects) {
+            let effect = character.getEffect(key);
 
-        if (!sprite) return;
+            if (!effect) continue;
 
-        if (!sprite.loaded) sprite.load();
+            let sprite = this.game.sprites.get(effect.key);
 
-        let animation = character.getEffectAnimation()!,
-            { index } = animation.frame,
-            x = sprite.width * index,
-            y = sprite.height * animation.row;
+            if (!sprite.loaded) sprite.load();
 
-        this.entitiesContext.drawImage(
-            sprite.image,
-            x,
-            y,
-            sprite.width,
-            sprite.height,
-            sprite.offsetX,
-            sprite.offsetY,
-            sprite.width,
-            sprite.height
-        );
+            let { animation } = effect,
+                { index } = animation.frame,
+                x = sprite.width * index,
+                y = sprite.height * animation.row;
 
-        animation.update(this.game.time);
+            this.entitiesContext.drawImage(
+                sprite.image,
+                x,
+                y,
+                sprite.width,
+                sprite.height,
+                sprite.offsetX,
+                sprite.offsetY,
+                sprite.width,
+                sprite.height
+            );
+
+            animation.update(this.game.time);
+        }
     }
 
     /**
