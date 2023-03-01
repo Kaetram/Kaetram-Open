@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #enchant {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/sprites/hand.png'), auto;
 
     position: absolute;
     inset: 0;
@@ -35,7 +35,8 @@
         #enchant {
             width: 129px * $i;
             height: 155px * $i;
-            background: url('/img/#{$i}/containers.png') 0 0;
+            background: url('/img/interface/containers.png') 0 0;
+            background-size: calc(width('containers.png') * $i);
         }
 
         #enchant-selected-item,
@@ -45,7 +46,8 @@
         }
 
         #enchant-container {
-            background-image: url('/img/#{$i}/containers.png');
+            background-image: url('/img/interface/containers.png');
+            background-size: calc(width('containers.png') * $i);
         }
 
         .inventory-slots {
