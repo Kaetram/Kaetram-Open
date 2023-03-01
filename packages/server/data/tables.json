@@ -1,19 +1,19 @@
 {
     "ordinary": {
-        "gold": 2600,
+        "gold": 3000,
         "flask": 1200,
-        "bigflask": 620,
+        "bigflask": 720,
         "manaflask": 760,
         "bigmanaflask": 500,
         "burger": 680
     },
 
     "arrows": {
-        "arrow": 2000,
-        "firearrow": 550,
-        "poisonarrow": 600,
-        "lightningarrow": 450,
-        "icearrow": 300
+        "arrow": 2400,
+        "firearrow": 750,
+        "poisonarrow": 700,
+        "lightningarrow": 650,
+        "icearrow": 400
     },
 
     "unusual": {
