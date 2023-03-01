@@ -3,7 +3,7 @@ import type { Plugin } from '.';
 
 export default class SnowPotion implements Plugin {
     public onUse(player: Player): boolean {
-        player.setSnowPotionEffect();
+        player.setSnowPotion();
 
         return true;
     }
