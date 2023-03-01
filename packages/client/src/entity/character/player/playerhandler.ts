@@ -200,11 +200,6 @@ export default class PlayerHandler {
 
             camera.zone(direction);
 
-            socket.send(Packets.Movement, {
-                opcode: Opcodes.Movement.Zone,
-                direction
-            });
-
             renderer.updateAnimatedTiles();
 
             zoning.reset();
