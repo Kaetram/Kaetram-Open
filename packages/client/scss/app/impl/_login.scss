@@ -105,7 +105,8 @@ input[type='range'] {
             height: $button-height;
 
             background-color: transparent;
-            background-image: url('/img/#{$i}/buttons.png');
+            background-image: url('/img/interface/buttons.png');
+            background-size: calc(width('buttons.png') * $i);
             border: none;
 
             &:hover,
