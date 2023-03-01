@@ -1,9 +1,16 @@
+import Handler from './handler';
+
 import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
-import EntityHandler from '../entityhandler';
 
 import { Modules } from '@kaetram/common/network';
+
+import type Game from '../../game';
+
+type RequestPathingCallback = (x: number, y: number) => number[][];
+type StartPathingCallback = (path: number[][]) => void;
+type StopPathingCallback = (gridX: number, gridY: number, forced: boolean) => void;
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;
@@ -36,6 +43,7 @@ export default class Character extends Entity {
     private followers: { [id: string]: Character } = {};
 
     public movement = new Transition();
+    public handler: Handler;
 
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 120;
@@ -101,22 +109,23 @@ export default class Character extends Entity {
         }
     };
 
-    private secondStepCallback?(): void;
-    private beforeStepCallback?(): void;
-    private stepCallback?(): void;
-    private stopPathingCallback?(gridX: number, gridY: number, forced: boolean): void;
-    private startPathingCallback?(path: number[][]): void;
-    private moveCallback?(): void;
-    private requestPathCallback?(x: number, y: number): number[][] | null;
+    private requestPathCallback?: RequestPathingCallback;
+    private startPathingCallback?: StartPathingCallback;
+    private beforeStepCallback?: () => void;
+    private stepCallback?: () => void;
+    private secondStepCallback?: () => void;
+    private stopPathingCallback?: StopPathingCallback;
+    private moveCallback?: () => void;
+
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
 
-    public handler: EntityHandler = new EntityHandler(this);
-
-    public constructor(instance: string, type: Modules.EntityType) {
+    public constructor(instance: string, type: Modules.EntityType, public game: Game) {
         super(instance, type);
 
         this.loadAnimations();
+
+        this.handler = new Handler(this);
     }
 
     /**
@@ -624,6 +633,11 @@ export default class Character extends Entity {
         this.nextStep();
     }
 
+    /**
+     * Stops the character's movement and resets the pathing variables.
+     * @param force Whether or not to stop movement without finishing the current step.
+     */
+
     public stop(force = false): void {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
@@ -691,24 +705,6 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
-    /**
-     * Iterates through all the attackers in the list and returns them.
-     * @param callback The attacker currently being iterated.
-     */
-
-    public forEachAttacker(callback: (attacker: Character) => void): void {
-        for (let attacker of Object.values(this.attackers)) callback(attacker);
-    }
-
-    /**
-     * Iterates through all the followers in the list and returns them.
-     * @param callback The follower currently being iterated.
-     */
-
-    public forEachFollower(callback: (follower: Character) => void): void {
-        for (let follower of Object.values(this.followers)) callback(follower);
-    }
-
     public override hasShadow(): boolean {
         return true;
     }
@@ -725,12 +721,12 @@ export default class Character extends Entity {
         return !!this.newDestination;
     }
 
+    /**
+     * Removes the current target from the character.
+     */
+
     public removeTarget(): void {
         this.target = null;
-    }
-
-    public forget(): void {
-        this.attackers = {};
     }
 
     public moved(): void {
@@ -765,7 +761,8 @@ export default class Character extends Entity {
 
         let character = new Character(
             `${position.gridX}-${position.gridY}`,
-            Modules.EntityType.Object
+            Modules.EntityType.Object,
+            this.game
         );
         character.setGridPosition(position.gridX, position.gridY);
 
@@ -806,11 +803,29 @@ export default class Character extends Entity {
     }
 
     /**
+     * Iterates through all the attackers in the list and returns them.
+     * @param callback The attacker currently being iterated.
+     */
+
+    public forEachAttacker(callback: (attacker: Character) => void): void {
+        for (let attacker of Object.values(this.attackers)) callback(attacker);
+    }
+
+    /**
+     * Iterates through all the followers in the list and returns them.
+     * @param callback The follower currently being iterated.
+     */
+
+    public forEachFollower(callback: (follower: Character) => void): void {
+        for (let follower of Object.values(this.followers)) callback(follower);
+    }
+
+    /**
      * Initial action where we request a new position for the character to move to.
      * @param callback Contains the x and y grid coordinates of the position requested.
      */
 
-    public onRequestPath(callback: (x: number, y: number) => number[][] | null): void {
+    public onRequestPath(callback: RequestPathingCallback): void {
         this.requestPathCallback = callback;
     }
 
@@ -819,7 +834,7 @@ export default class Character extends Entity {
      * @param callback Contains the path to follow.
      */
 
-    public onStartPathing(callback: (path: number[][]) => void): void {
+    public onStartPathing(callback: StartPathingCallback): void {
         this.startPathingCallback = callback;
     }
 
@@ -828,7 +843,7 @@ export default class Character extends Entity {
      * @param callback The grid x and y coordinates the player stopped pathing at.
      */
 
-    public onStopPathing(callback: (gridX: number, gridY: number) => void): void {
+    public onStopPathing(callback: StopPathingCallback): void {
         this.stopPathingCallback = callback;
     }
 
