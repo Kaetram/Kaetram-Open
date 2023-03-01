@@ -120,6 +120,9 @@ export default {
             }
         }
 
+        // Terror decreases overall accuracy, so we increase it by 1.
+        if (attacker.status.has(Modules.Effects.Terror)) accuracy += 1;
+
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
 
@@ -369,5 +372,13 @@ export default {
     getPoisonChance(level: number): number {
         // Chance is per 235 - level, each level increases the chance in poisioning.
         return Utils.randomInt(0, 235 - level);
+    },
+
+    /**
+     * @returns Whether or not the effect chance was successful.
+     */
+
+    getEffectChance(): boolean {
+        return Utils.randomInt(0, 100) < 5;
     }
 };

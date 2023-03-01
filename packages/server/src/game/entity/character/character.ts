@@ -17,7 +17,6 @@ import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type Packet from '../../../network/packet';
 import type World from '../../world';
 
-type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number, exists: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
 type DeathCallback = (attacker?: Character) => void;
@@ -32,9 +31,9 @@ export default abstract class Character extends Entity {
     public healRate: number = Modules.Constants.HEAL_RATE;
     public movementSpeed: number = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
-    public healingRate: number = Modules.Constants.HEAL_RATE;
     public orientation: number = Modules.Orientation.Down;
     public aoeType: number = Modules.AoEType.Character;
+    public damageType: Modules.Hits = Modules.Hits.Normal;
 
     /* States */
     public poison?: Poison | undefined;
@@ -54,7 +53,7 @@ export default abstract class Character extends Entity {
     public aoe = 0;
 
     // Effects applied onto the character.
-    public statusEffects: Modules.StatusEffect[] = [];
+    public statusEffects: Modules.Effects[] = [];
 
     public projectileName = 'projectile-arrow';
 
@@ -63,11 +62,10 @@ export default abstract class Character extends Entity {
     public lastRegionChange = -1;
     public lastAttacker?: Character | undefined;
 
-    public stunTimeout?: NodeJS.Timeout | undefined;
     private healingInterval?: NodeJS.Timeout | undefined;
+    private effectInterval?: NodeJS.Timeout | undefined;
     private poisonInterval?: NodeJS.Timeout | undefined;
 
-    private stunCallback?: StunCallback;
     private poisonCallback?: PoisonCallback;
 
     public hitCallback?: HitCallback;
@@ -87,20 +85,13 @@ export default abstract class Character extends Entity {
 
         this.hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
-        this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
 
-        this.healingInterval = setInterval(this.heal.bind(this), this.healRate);
-    }
+        this.status.onAdd(this.handleStatusEffectAdd.bind(this));
+        this.status.onRemove(this.handleStatusEffectRemove.bind(this));
 
-    /**
-     * Receives changes about the state of the entity when stunned and
-     * pushes that message to the nearby regions.
-     * @param state The current stun state for the character.
-     */
-
-    private handleStun(state: boolean): void {
-        this.sendToRegions(new Effect(Opcodes.Effect.Stun, { instance: this.instance, state }));
+        this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
+        this.effectInterval = setInterval(this.effects.bind(this), Modules.Constants.EFFECT_RATE);
     }
 
     /**
@@ -118,7 +109,38 @@ export default abstract class Character extends Entity {
             })
         );
     }
-    y;
+
+    /**
+     * Handler for when a status effect is added onto the character. We relay
+     * a message to the nearby regions to display the effect.
+     * @param effect The new effect that has been added.
+     */
+
+    private handleStatusEffectAdd(effect: Modules.Effects): void {
+        // Synchronize the movement speed of the player when freezing applies.
+        if (this.isPlayer() && effect === Modules.Effects.Freezing) this.sync();
+
+        this.sendToRegions(new Effect(Opcodes.Effect.Add, { instance: this.instance, effect }));
+    }
+
+    /**
+     * Handler for when a status effect is removed from the character. We relay
+     * a message to the nearby regions to remove the effect.
+     * @param effect The effect that we are removing.
+     */
+
+    private handleStatusEffectRemove(effect: Modules.Effects): void {
+        // Synchronize the movement speed of the player when freezing is removed.
+        if (this.isPlayer() && effect === Modules.Effects.Freezing) {
+            // Synchronize the movement speed of the player.
+            this.sync();
+
+            // Cannot remove freezing effect if the player is in a freezing area.
+            if (this.inFreezingArea()) return this.status.add(Modules.Effects.Freezing);
+        }
+
+        this.sendToRegions(new Effect(Opcodes.Effect.Remove, { instance: this.instance, effect }));
+    }
 
     /**
      * Function when we want to apply damage to the character.
@@ -167,7 +189,7 @@ export default abstract class Character extends Entity {
 
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
-                    Modules.Hits.Damage,
+                    Modules.Hits.Normal,
                     Math.floor(damage / distance),
                     false,
                     distance
@@ -195,17 +217,10 @@ export default abstract class Character extends Entity {
 
     public handleColdDamage(): void {
         // Only players that do not have the snow potion can be affected.
-        if (!this.isPlayer() || this.status.has(Modules.StatusEffect.SnowPotion)) return;
-
-        // Cold or freezing damage effect must be applied to the character.
-        if (
-            !this.status.has(Modules.StatusEffect.Cold) &&
-            !this.status.has(Modules.StatusEffect.Freezing)
-        )
-            return;
+        if (this.status.has(Modules.Effects.SnowPotion)) return;
 
         // Create a hit object for cold damage and serialize it.
-        let hit = new Hit(Modules.Hits.Cold, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
+        let hit = new Hit(Modules.Hits.Freezing, Modules.Constants.COLD_EFFECT_DAMAGE).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -254,14 +269,28 @@ export default abstract class Character extends Entity {
 
         // Certain status effects prevent the character from healing.
         if (
-            this.status.has(Modules.StatusEffect.Freezing) ||
-            this.status.has(Modules.StatusEffect.Cold) ||
-            this.status.has(Modules.StatusEffect.Burning) ||
-            this.status.has(Modules.StatusEffect.Terror)
+            this.status.has(Modules.Effects.Freezing) ||
+            this.status.has(Modules.Effects.Burning) ||
+            this.status.has(Modules.Effects.Terror)
         )
             return;
 
         this.hitPoints.increment(amount);
+    }
+
+    /**
+     * This function is called at a fixed interval to check the effect statuses
+     * of the character and apply the appropriate effects.
+     */
+
+    public effects(): void {
+        this.status.forEachEffect((effect: Modules.Effects) => {
+            switch (effect) {
+                case Modules.Effects.Freezing: {
+                    return this.handleColdDamage();
+                }
+            }
+        });
     }
 
     /**
@@ -290,8 +319,12 @@ export default abstract class Character extends Entity {
      * Cleans the healing interval to clear the memory.
      */
 
-    public stopHealing(): void {
+    public stop(): void {
         clearInterval(this.healingInterval);
+        clearInterval(this.effectInterval);
+
+        this.healingInterval = undefined;
+        this.effectInterval = undefined;
     }
 
     /**
@@ -306,7 +339,7 @@ export default abstract class Character extends Entity {
 
     public hit(damage: number, attacker?: Character, aoe = 0): void {
         // Stop hitting if entity is dead.
-        if (this.isDead() || this.status.has(Modules.StatusEffect.Invincible)) return;
+        if (this.isDead() || this.status.has(Modules.Effects.Invincible)) return;
 
         // Add an entry to the damage table.
         if (attacker?.isPlayer()) this.addToDamageTable(attacker, damage);
@@ -501,11 +534,30 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Used in special circumstances to determine the damage type of a character.
+     * This can be updated by subclasses to change the damage type.
+     * @returns The damage type of the character.
+     */
+
+    public getDamageType(): Modules.Hits {
+        return this.damageType;
+    }
+
+    /**
      * @returns Default probability for poison to be inflicted.
      */
 
     public getPoisonChance(): number {
         return Modules.Defaults.POISON_CHANCE;
+    }
+
+    /**
+     * Grabs a random attacker from the list of attackers.
+     * @return A random character from the list of attackers.
+     */
+
+    public getRandomAttacker(): Character {
+        return this.attackers[Utils.randomInt(0, this.attackers.length - 1)];
     }
 
     /**
@@ -758,6 +810,43 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Adds a status effect to the character based on the hit type. We
+     * call this function whenever a hit commences.
+     * @param hit The hit we are adding the status effect from.
+     */
+
+    public addStatusEffect(hit: Hit): void {
+        if (hit.type === Modules.Hits.Normal) return;
+
+        switch (hit.type) {
+            case Modules.Hits.Terror: {
+                return this.status.addWithTimeout(
+                    Modules.Effects.Terror,
+                    Modules.Constants.TERROR_DURATION
+                );
+            }
+
+            case Modules.Hits.Freezing: {
+                if (this.status.has(Modules.Effects.SnowPotion)) return;
+
+                return this.status.addWithTimeout(
+                    Modules.Effects.Freezing,
+                    Modules.Constants.FREEZING_DURATION
+                );
+            }
+
+            case Modules.Hits.Burning: {
+                if (this.status.has(Modules.Effects.FirePotion)) return;
+
+                return this.status.addWithTimeout(
+                    Modules.Effects.Burning,
+                    Modules.Constants.BURNING_DURATION
+                );
+            }
+        }
+    }
+
+    /**
      * Finds a character to target within the list of attackers.
      * @return A character object within the list of attackers.
      */
@@ -770,32 +859,12 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Grabs a random attacker from the list of attackers.
-     * @return A random character from the list of attackers.
-     */
-
-    public getRandomAttacker(): Character {
-        return this.attackers[Utils.randomInt(0, this.attackers.length - 1)];
-    }
-
-    /**
      * Set `hitPoints` function shortcut.
      * @param hitPoints The new hitPoints we are setting.
      */
 
     public setHitPoints(hitPoints: number): void {
         this.hitPoints.setHitPoints(hitPoints);
-    }
-
-    /**
-     * Sets the stun status and makes a callback.
-     * @param stun The new stun status we are setting.
-     */
-
-    public setStun(stun: boolean): void {
-        this.status.add(Modules.StatusEffect.Stun);
-
-        this.stunCallback?.(stun);
     }
 
     /**
@@ -930,15 +999,6 @@ export default abstract class Character extends Entity {
         data.orientation = this.orientation;
 
         return data;
-    }
-
-    /**
-     * Callback for when the stun status changes.
-     * @param callback Contains the boolean value of the stun status.
-     */
-
-    public onStunned(callback: StunCallback): void {
-        this.stunCallback = callback;
     }
 
     /**

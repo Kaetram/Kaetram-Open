@@ -5,8 +5,6 @@
     left: 40%;
     display: none;
 
-    //background-color: rgb(0 0 0 / 50%);
-
     .name,
     .health {
         position: absolute;
@@ -41,6 +39,7 @@
     @media ($size) {
         #attack-info {
             top: 0;
+
             width: 100px * $i;
             height: 32px * $i;
 
@@ -48,7 +47,8 @@
             // border-bottom-right-radius: 8px * $i;
             // border-bottom-left-radius: 8px * $i;
 
-            background: url('/img/#{$i}/main.png') -224px * $i -464px * $i no-repeat;
+            background: url('/img/interface/main.png') -224px * $i -464px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
 
             .name {
                 margin-top: 3px * $i;

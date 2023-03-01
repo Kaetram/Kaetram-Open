@@ -45,6 +45,8 @@ export default class Item extends Entity {
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public weaponType = '';
 
     // Stats
@@ -111,6 +113,8 @@ export default class Item extends Entity {
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.poisonous = this.data.poisonous || this.poisonous;
+        this.freezing = this.data.freezing || this.freezing;
+        this.burning = this.data.burning || this.burning;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;

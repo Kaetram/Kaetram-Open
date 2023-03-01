@@ -1,6 +1,7 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -96,7 +97,7 @@ export default class QueenAnt extends Default {
 
         // Queen ant attacks with range and inflicts terror.
         this.mob.attackRange = 6;
-        this.mob.projectileName = 'projectile-terror';
+        this.mob.damageType = Modules.Hits.Terror;
 
         this.specialAttack = true;
     }
@@ -115,6 +116,8 @@ export default class QueenAnt extends Default {
             this.mob.getDistance(this.mob.target!) > 1 ||
             this.mob.target!.isRanged() ||
             this.mob.target!.moving;
+
+        this.mob.damageType = Modules.Hits.Normal;
 
         // Update the mob's range distance.
         this.mob.attackRange = useRanged ? 10 : 1;
