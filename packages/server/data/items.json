@@ -5051,19 +5051,28 @@
   "banana": {
     "type": "object",
     "name": "Banana",
-    "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber."
+    "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 500
   },
 
   "watermelon": {
     "type": "object",
     "name": "Watermelon",
-    "description": "A watermelon, I should probably cut this up before eating it."
+    "description": "A watermelon, I should probably cut this up before eating it.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 600
   },
 
   "apple": {
     "type": "object",
     "name": "Apple",
-    "description": "An apple, an excellent source of energy!"
+    "description": "An apple, an excellent source of energy!",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 350
   },
 
   "orange": {
@@ -5302,6 +5311,126 @@
     "name": "Candy Key",
     "price": 50,
     "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
+  },
+
+  "accuracypotion": {
+    "type": "object",
+    "name": "Accuracy Potion",
+    "price": 1000,
+    "description": "If there's one thing I know is that potions in this world are always sketchy and do something else from what their name implies. I hope that's not the case here.",
+    "edible": true,
+    "plugin": "accuracypotion"
+  },
+
+  "boostpotion": {
+    "type": "object",
+    "name": "Boost Potion",
+    "price": 2500,
+    "description": "Drinking this will probably speed up your attack rate for a short period of time. I think.",
+    "edible": true,
+    "plugin": "boostpotion"
+  },
+  
+  "defencepotion": {
+    "type": "object",
+    "name": "Defence Potion",
+    "price": 1000,
+    "description": "Drinking this will make give you some serious defense for a short period of time.",
+    "edible": true,
+    "plugin": "defencepotion"
+  },
+
+  "strengthpotion": {
+    "type": "object",
+    "name": "Strength Potion",
+    "price": 1000,
+    "description": "Do you wanna partake in maximum damage contests? This potion is probably your best friend.",
+    "edible": true,
+    "plugin": "strengthpotion"
+  },
+
+  "beermug": {
+    "type": "object",
+    "name": "Beer",
+    "price": 1000,
+    "description": "Nothing is quite as refreshing as a beer, though this may potentially inhibit your accuracy for a wee bit.",
+    "edible": true,
+    "plugin": "beermug"
+  },
+
+  "clam": {
+    "type": "object",
+    "name": "Clam",
+    "price": 100,
+    "description": "It has a hard outer shell but I bet it's yummy inside."
+  },
+
+  "clamchowder": {
+    "type": "object",
+    "name": "Clam Chowder",
+    "price": 1000,
+    "description": "A delicious soup made from clams. It's a bit salty though.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 750
+  },
+
+  "rawshrimp": {
+    "type": "object",
+    "name": "Raw Shrimp",
+    "price": 100,
+    "description": "Maybe if I cook this it'll become something actually edible."
+  },
+
+  "cookedshrimp": {
+    "type": "object",
+    "name": "Cooked Shrimp",
+    "price": 200,
+    "description": "A singular cooked shrimp, alone and dead. But still delicious.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 450
+  },
+
+  "jellyfish": {
+    "type": "object",
+    "name": "Jellyfish",
+    "price": 100,
+    "description": "Did you know that jellyfish don't actually have a brain. So don't feel so bad about yourself!"
+  },
+
+  "jellyfishsmoothie": {
+    "type": "object",
+    "name": "Jellyfish Smoothie",
+    "price": 1000,
+    "description": "I can't believe someone would actually think up to create something like this.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 750
+  },
+
+  "kelp": {
+    "type": "object",
+    "name": "Kelp",
+    "price": 100,
+    "description": "Kelp is a type of seaweed that grows in the ocean. It's pretty tasty when combined with other stuff."
+  },
+
+  "tuna": {
+    "type": "object",
+    "name": "Tuna",
+    "price": 100,
+    "description": "A fish that is commonly found in the ocean. It's pretty tasty when cooked."
+  },
+
+  "tunasushi": {
+    "type": "object",
+    "name": "Tuna Sushi",
+    "price": 1000,
+    "description": "A delicious sushi made from tuna. Probably the best in-game food at the moment, or not, who knows, I'm just a piece of text.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 850
   },
 
   "leatherboots": {

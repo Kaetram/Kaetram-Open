@@ -23,7 +23,10 @@
         "shardt1": 200,
         "logs": 200,
         "stick": 500,
-        "bead": 300
+        "bead": 300,
+        "banana": 300,
+        "watermelon": 300,
+        "apple": 300
     },
 
     "warriorcrab": {
