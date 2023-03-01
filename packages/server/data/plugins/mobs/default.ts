@@ -34,6 +34,12 @@ export default class Default extends Handler {
         // Prevent minion from respawning after death.
         minion.respawnable = false;
 
+        // Apply the same aggro range as the boss.
+        minion.aggroRange = this.mob.aggroRange;
+
+        // Make minions always aggressive
+        minion.alwaysAggressive = true;
+
         // Remove the minion from the list when it dies.
         minion.onDeathImpl(() => delete this.minions[minion.instance]);
 
@@ -53,7 +59,7 @@ export default class Default extends Handler {
         if (this.mob.attackers.length === 0) return;
 
         // Find an attacker out of the list of attackers.
-        let target = this.mob.attackers[Utils.randomInt(0, this.mob.attackers.length - 1)];
+        let target = this.mob.getRandomAttacker();
 
         return target;
     }
