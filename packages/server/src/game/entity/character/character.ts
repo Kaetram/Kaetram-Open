@@ -17,7 +17,6 @@ import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type Packet from '../../../network/packet';
 import type World from '../../world';
 
-type StunCallback = (stun: boolean) => void;
 type PoisonCallback = (type: number, exists: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
 type DeathCallback = (attacker?: Character) => void;
@@ -63,11 +62,9 @@ export default abstract class Character extends Entity {
     public lastRegionChange = -1;
     public lastAttacker?: Character | undefined;
 
-    public stunTimeout?: NodeJS.Timeout | undefined;
     private healingInterval?: NodeJS.Timeout | undefined;
     private poisonInterval?: NodeJS.Timeout | undefined;
 
-    private stunCallback?: StunCallback;
     private poisonCallback?: PoisonCallback;
 
     public hitCallback?: HitCallback;
@@ -87,20 +84,12 @@ export default abstract class Character extends Entity {
 
         this.hitPoints = new HitPoints(Formulas.getMaxHitPoints(this.level));
 
-        this.onStunned(this.handleStun.bind(this));
         this.hitPoints.onHitPoints(this.handleHitPoints.bind(this));
 
+        this.status.onAdd(this.handleStatusEffectAdd.bind(this));
+        this.status.onRemove(this.handleStatusEffectRemove.bind(this));
+
         this.healingInterval = setInterval(this.heal.bind(this), this.healRate);
-    }
-
-    /**
-     * Receives changes about the state of the entity when stunned and
-     * pushes that message to the nearby regions.
-     * @param state The current stun state for the character.
-     */
-
-    private handleStun(state: boolean): void {
-        this.sendToRegions(new Effect(Opcodes.Effect.Stun, { instance: this.instance, state }));
     }
 
     /**
@@ -118,7 +107,26 @@ export default abstract class Character extends Entity {
             })
         );
     }
-    y;
+
+    /**
+     * Handler for when a status effect is added onto the character. We relay
+     * a message to the nearby regions to display the effect.
+     * @param effect The new effect that has been added.
+     */
+
+    private handleStatusEffectAdd(effect: Modules.StatusEffect): void {
+        this.sendToRegions(new Effect(Opcodes.Effect.Add, { instance: this.instance, effect }));
+    }
+
+    /**
+     * Handler for when a status effect is removed from the character. We relay
+     * a message to the nearby regions to remove the effect.
+     * @param effect The effect that we are removing.
+     */
+
+    private handleStatusEffectRemove(effect: Modules.StatusEffect): void {
+        this.sendToRegions(new Effect(Opcodes.Effect.Remove, { instance: this.instance, effect }));
+    }
 
     /**
      * Function when we want to apply damage to the character.
@@ -788,17 +796,6 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Sets the stun status and makes a callback.
-     * @param stun The new stun status we are setting.
-     */
-
-    public setStun(stun: boolean): void {
-        this.status.add(Modules.StatusEffect.Stun);
-
-        this.stunCallback?.(stun);
-    }
-
-    /**
      * Sets the poison status and makes a callback. If
      * no type is specified, we remove the poison.
      * @param type The type of poison we are adding.
@@ -930,15 +927,6 @@ export default abstract class Character extends Entity {
         data.orientation = this.orientation;
 
         return data;
-    }
-
-    /**
-     * Callback for when the stun status changes.
-     * @param callback Contains the boolean value of the stun status.
-     */
-
-    public onStunned(callback: StunCallback): void {
-        this.stunCallback = callback;
     }
 
     /**

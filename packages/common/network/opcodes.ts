@@ -24,7 +24,7 @@ export enum Movement {
     Move,
     Follow,
     Entity,
-    Zone
+    Speed
 }
 
 export enum Target {
@@ -185,12 +185,8 @@ export enum Bubble {
 }
 
 export enum Effect {
-    None,
-    Speed,
-    Critical,
-    Freeze,
-    Stun,
-    Burn
+    Add,
+    Remove
 }
 
 export enum Friends {
