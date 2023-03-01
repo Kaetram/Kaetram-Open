@@ -230,7 +230,7 @@
     "name": "Trident Of The Seas",
     "weaponType": "spear",
     "level": 40,
-    "price": 500,
+    "price": 4000,
     "attackStats": {
       "crush": 4,
       "slash": 42,
@@ -2912,7 +2912,7 @@
     "weaponType": "bow",
     "skill": "archery",
     "level": 35,
-    "price": 10000,
+    "price": 7500,
     "attackStats": {
       "crush": 4,
       "slash": 9,
@@ -3851,7 +3851,7 @@
   "wolfarmor": {
     "type": "armour",
     "name": "Wolf Armour",
-    "price": 10000,
+    "price": 7500,
     "level": 80,
     "attackStats": {
       "crush": 11,
@@ -5568,7 +5568,7 @@
     "type": "arrow",
     "name": "Arrow",
     "stackable": true,
-    "maxStackSize": 999,
+    "maxStackSize": 9999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5584,7 +5584,7 @@
     "price": 2,
     "stackable": true,
     "burning": true,
-    "maxStackSize": 999,
+    "maxStackSize": 9999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5599,7 +5599,7 @@
     "name": "Poison Arrow",
     "price": 2,
     "stackable": true,
-    "maxStackSize": 999,
+    "maxStackSize": 9999,
     "poisonous": true,
     "bonuses": {
       "accuracy": 0,
@@ -5615,7 +5615,7 @@
     "name": "Lightning Arrow",
     "price": 2,
     "stackable": true,
-    "maxStackSize": 999,
+    "maxStackSize": 9999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5631,7 +5631,7 @@
     "price": 2,
     "stackable": true,
     "freezing": true,
-    "maxStackSize": 999,
+    "maxStackSize": 9999,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
