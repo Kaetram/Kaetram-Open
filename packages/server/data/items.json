@@ -5454,6 +5454,7 @@
     "name": "Fire Arrow",
     "price": 2,
     "stackable": true,
+    "burning": true,
     "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,
@@ -5500,6 +5501,7 @@
     "name": "Ice Arrow",
     "price": 2,
     "stackable": true,
+    "freezing": true,
     "maxStackSize": 999,
     "bonuses": {
       "accuracy": 0,

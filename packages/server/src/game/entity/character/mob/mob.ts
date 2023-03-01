@@ -4,6 +4,7 @@ import rawData from '../../../../../data/mobs.json';
 import dropTables from '../../../../../data/tables.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
+import Formulas from '../../../../info/formulas';
 import Character from '../character';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -48,6 +49,8 @@ export default class Mob extends Character {
     public miniboss = false;
     public roaming = false;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public aggressive = false;
     public alwaysAggressive = false;
     private hiddenName = false;
@@ -120,6 +123,8 @@ export default class Mob extends Character {
         this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
         this.poisonous = data.poisonous || this.poisonous;
+        this.freezing = data.freezing || this.freezing;
+        this.burning = data.burning || this.burning;
         this.hiddenName = data.hiddenName || this.hiddenName;
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
@@ -694,6 +699,19 @@ export default class Mob extends Character {
 
     public override getDefenseLevel(): number {
         return this.defenseLevel;
+    }
+
+    /**
+     * Subclass implementation for damage type. Special mobs may have a freezing,
+     * burning or other damage types that apply a special effect on the target.
+     * @returns The damage type of the mob.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        if (this.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+        if (this.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+        return this.damageType;
     }
 
     /**

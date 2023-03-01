@@ -1,12 +1,12 @@
 import type { Modules } from '@kaetram/common/network';
 
 export default class {
-    private effects: Modules.StatusEffect[] = [];
+    private effects: Modules.Effects[] = [];
 
     private timeouts: { [key: number]: NodeJS.Timeout } = {};
 
-    private addCallback?: (status: Modules.StatusEffect) => void;
-    private removeCallback?: (status: Modules.StatusEffect) => void;
+    private addCallback?: (status: Modules.Effects) => void;
+    private removeCallback?: (status: Modules.Effects) => void;
 
     /**
      * Adds a status effect to the character's list of effects if it has not
@@ -14,7 +14,7 @@ export default class {
      * @param statusEffect The new status(es) effect we are adding.
      */
 
-    public add(...statusEffect: Modules.StatusEffect[]): void {
+    public add(...statusEffect: Modules.Effects[]): void {
         for (let status of statusEffect) {
             // Don't add the effect if it already exists.
             if (this.has(status)) continue;
@@ -35,20 +35,23 @@ export default class {
      */
 
     public addWithTimeout(
-        statusEffect: Modules.StatusEffect,
-        callback: () => void,
-        duration: number
+        statusEffect: Modules.Effects,
+        duration: number,
+        callback?: () => void
     ): void {
         this.add(statusEffect);
 
         // Clear existing timeouts.
-        if (this.timeouts[statusEffect]) clearTimeout(this.timeouts[statusEffect]);
+        if (this.timeouts[statusEffect]) {
+            clearTimeout(this.timeouts[statusEffect]);
+            delete this.timeouts[statusEffect];
+        }
 
         // Start a new timeout.
         this.timeouts[statusEffect] = setTimeout(() => {
             this.remove(statusEffect);
 
-            callback();
+            callback?.();
         }, duration);
     }
 
@@ -57,7 +60,7 @@ export default class {
      * @param statusEffect The status effect(s) we are removing.
      */
 
-    public remove(...statusEffect: Modules.StatusEffect[]): void {
+    public remove(...statusEffect: Modules.Effects[]): void {
         for (let status of statusEffect) {
             this.effects = this.effects.filter((effect) => effect !== status);
 
@@ -66,13 +69,30 @@ export default class {
     }
 
     /**
+     * Removes all the effects from the character's list of effects.
+     */
+
+    public clear(): void {
+        this.effects = [];
+    }
+
+    /**
      * Checks the array of status effects to see if the character has the status effect.
      * @param statusEffect The status effect we are checking the existence of.
      * @returns Whether or not the character has the status effect in the array of effects.
      */
 
-    public has(status: Modules.StatusEffect): boolean {
+    public has(status: Modules.Effects): boolean {
         return this.effects.includes(status);
+    }
+
+    /**
+     * Iterates through all the active status effects and executes the callback function.
+     * @param callback Contains the status effect we are iterating through currently.
+     */
+
+    public forEachEffect(callback: (status: Modules.Effects) => void): void {
+        for (let status of this.effects) callback(status);
     }
 
     /**
@@ -80,7 +100,7 @@ export default class {
      * @param callback The status effect we are adding.
      */
 
-    public onAdd(callback: (status: Modules.StatusEffect) => void): void {
+    public onAdd(callback: (status: Modules.Effects) => void): void {
         this.addCallback = callback;
     }
 
@@ -89,7 +109,7 @@ export default class {
      * @param callback The status effect we are removing.
      */
 
-    public onRemove(callback: (status: Modules.StatusEffect) => void): void {
+    public onRemove(callback: (status: Modules.Effects) => void): void {
         this.removeCallback = callback;
     }
 }
