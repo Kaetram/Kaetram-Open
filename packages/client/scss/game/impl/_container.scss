@@ -40,7 +40,7 @@
     user-select: none;
 
     @media (--sm) {
-        cursor: url('/img/sprites/hand.png'), auto;
+        cursor: url('/img/hand.png'), auto;
     }
 }
 
@@ -98,7 +98,7 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         .container {
-            cursor: url('/img/sprites/hand.png'), auto;
+            cursor: url('/img/hand.png'), auto;
 
             position: absolute;
             inset: 0;

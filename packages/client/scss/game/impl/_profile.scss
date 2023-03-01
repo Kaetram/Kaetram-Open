@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 .page {
-    cursor: url('/img/sprites/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
     user-select: none;
 }
 
@@ -297,7 +297,7 @@
             background-position: 0 -240px * $i;
 
             &.disabled {
-                cursor: url('/img/sprites/hand.png'), auto;
+                cursor: url('/img/hand.png'), auto;
                 background-position: 0 -223px * $i;
             }
         }
@@ -308,7 +308,7 @@
             background-position: -21px * $i -223px * $i;
 
             &.disabled {
-                cursor: url('/img/sprites/hand.png'), auto;
+                cursor: url('/img/hand.png'), auto;
                 background-position: -21px * $i -240px * $i;
             }
         }
@@ -605,8 +605,7 @@
             width: 92px * $i;
             height: 130px * $i;
 
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -528px * $i -304px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -528px * $i -304px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
@@ -641,8 +640,7 @@
         .attack-style-box {
             width: 23px * $i;
             height: 31px * $i;
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -409px * $i -256px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -409px * $i -256px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
@@ -663,68 +661,57 @@
         }
 
         .attack-style-stab {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -384px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -384px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-slash {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -403px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -403px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-defensive {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -422px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -422px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-crush {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -441px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -441px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-shared {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -460px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -460px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-hack {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -479px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -479px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-chop {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -498px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -498px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-accurate {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -517px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -517px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-fast {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -536px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -536px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-focused {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -555px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -555px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-longrange {
-            background: url('/img/interface/characterdialogsheet.png') no-repeat -574px * $i -224px *
-                $i;
+            background: url('/img/interface/characterdialogsheet.png') -574px * $i -224px * $i;
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
     }
