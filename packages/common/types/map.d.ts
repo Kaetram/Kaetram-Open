@@ -34,7 +34,7 @@ export interface RegionCache {
 }
 
 // Map data information
-export type OverlayType = 'none' | 'inside' | 'damage' | 'lockX' | 'lockY' | 'player';
+export type OverlayType = 'none' | 'inside' | 'freezing' | 'lockX' | 'lockY' | 'player';
 
 export interface ProcessedArea {
     // Common

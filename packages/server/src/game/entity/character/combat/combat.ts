@@ -163,6 +163,9 @@ export default class Combat {
 
         // Handle combat damage here since melee is instant.
         this.character.target?.hit(hit.getDamage(), this.character, hit.aoe);
+
+        // Apply effects based on hit types.
+        this.character.target?.addStatusEffect(hit);
     }
 
     /**
@@ -194,7 +197,7 @@ export default class Combat {
 
     private createHit(): Hit {
         return new Hit(
-            Modules.Hits.Damage,
+            this.character.getDamageType(),
             Formulas.getDamage(this.character, this.character.target!),
             this.character.isRanged(),
             this.character.getAoE()
