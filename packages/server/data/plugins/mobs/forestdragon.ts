@@ -1,6 +1,7 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 
@@ -23,12 +24,12 @@ export default class ForestDragon extends Default {
         // Ignore the special attack if one is already active.
         if (this.specialAttack) return this.resetSpecialAttack();
 
-        // 1 in 3 chance to trigger a special attack.
-        if (Utils.randomInt(1, 3) !== 2) return;
+        // 1 in 6 chance to trigger a special attack.
+        if (Utils.randomInt(1, 6) !== 2) return;
 
         // Inflict terror on the target.
         this.mob.attackRange = 9;
-        this.mob.projectileName = 'projectile-terror';
+        this.mob.damageType = Modules.Hits.Terror;
 
         this.specialAttack = true;
     }
@@ -47,6 +48,8 @@ export default class ForestDragon extends Default {
             this.mob.getDistance(this.mob.target!) > 1 ||
             this.mob.target!.isRanged() ||
             this.mob.target!.moving;
+
+        this.mob.damageType = Modules.Hits.Normal;
 
         // Update the mob's range distance.
         this.mob.attackRange = useRanged ? 10 : 1;

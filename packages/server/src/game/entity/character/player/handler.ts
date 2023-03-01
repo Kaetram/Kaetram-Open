@@ -134,7 +134,8 @@ export default class Handler {
      */
 
     private handleClose(): void {
-        this.player.stopHealing();
+        // Stops character based intervals.
+        this.player.stop();
 
         this.clear();
 
@@ -204,6 +205,7 @@ export default class Handler {
         this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
+        this.player.status.clear();
 
         this.player.save();
 
@@ -800,12 +802,7 @@ export default class Handler {
 
     private handleUpdate(): void {
         if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(16)) {
-            this.player.cheatScore = 0;
-
-            // Cold damage is applied every 16 ticks.
-            this.player.handleColdDamage();
-        }
+        if (this.isTickInterval(16)) this.player.cheatScore = 0;
 
         this.updateTicks++;
     }

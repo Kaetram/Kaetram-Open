@@ -15,6 +15,7 @@ import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Game from '../../../game';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
@@ -75,8 +76,8 @@ export default class Player extends Character {
     private abilityCallback?: AbilityCallback;
     private manaCallback?: ManaCallback;
 
-    public constructor(instance: string) {
-        super(instance, Modules.EntityType.Player);
+    public constructor(instance: string, game: Game) {
+        super(instance, Modules.EntityType.Player, game);
     }
 
     /**
