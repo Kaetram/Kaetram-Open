@@ -29,6 +29,8 @@ export default class Character extends Entity {
 
     public lastTarget = '';
 
+    public statusEffects: Modules.StatusEffect[] = [];
+
     private attackers: { [id: string]: Character } = {};
     private followers: { [id: string]: Character } = {};
 
@@ -265,6 +267,17 @@ export default class Character extends Entity {
     }
 
     /**
+     * Add a status effect to the character if it doesn't already have it.
+     * @param statusEffect The status effect we are trying to add.
+     */
+
+    public addStatusEffect(statusEffect: Modules.StatusEffect): void {
+        if (this.hasStatusEffect(statusEffect)) return;
+
+        this.statusEffects.push(statusEffect);
+    }
+
+    /**
      * Adds an attacker to the dictionary of attackers.
      * @param character Character we are adding to the dictionary.
      */
@@ -283,6 +296,15 @@ export default class Character extends Entity {
     }
 
     /**
+     * Removes a status effect from the character.
+     * @param statusEffect The status effect we are trying to remove.
+     */
+
+    public removeStatusEffect(statusEffect: Modules.StatusEffect): void {
+        this.statusEffects = this.statusEffects.filter((effect) => effect !== statusEffect);
+    }
+
+    /**
      * Removes a character from the list of attackers.
      * @param character The character we are trying to remove.
      */
@@ -298,6 +320,16 @@ export default class Character extends Entity {
 
     public removeFollower(character: Character): void {
         delete this.followers[character.instance];
+    }
+
+    /**
+     * Whether or not the character has a status effect.
+     * @param statusEffect The status effect we are checking for.
+     * @returns If the status effect is included in the array of status effects or not.
+     */
+
+    public hasStatusEffect(statusEffect: Modules.StatusEffect): boolean {
+        return this.statusEffects.includes(statusEffect);
     }
 
     /**

@@ -88,9 +88,8 @@ export default class Area {
 
         this.players[player.instance] = player;
 
-        // Apply cold status to players in the snow area.
-        if (!player.status.has(Modules.StatusEffect.SnowPotion))
-            player.setEffect(Opcodes.Effect.Freeze, Modules.StatusEffect.Freezing);
+        // Adds a freezing effect to the player if the area is cold.
+        player.status.add(Modules.StatusEffect.Freezing);
     }
 
     /**
@@ -115,7 +114,8 @@ export default class Area {
     public removePlayer(player: Player) {
         delete this.players[player.instance];
 
-        player.setEffect(Opcodes.Effect.None);
+        // Removes the freezing effect from the player if the area is no longer cold.
+        player.status.remove(Modules.StatusEffect.Freezing);
     }
 
     /**
