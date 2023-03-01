@@ -29,7 +29,8 @@ export default class Character extends Entity {
 
     public lastTarget = '';
 
-    public statusEffects: Modules.StatusEffect[] = [];
+    // List of active status effects currently applied on the player.
+    public statusEffects: Modules.Effects[] = [];
 
     private attackers: { [id: string]: Character } = {};
     private followers: { [id: string]: Character } = {};
@@ -39,22 +40,13 @@ export default class Character extends Entity {
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 120;
 
-    public override nextGridX = -1;
-    public override nextGridY = -1;
-    public override movementSpeed = -1;
-    public override attackRange = 1;
-    public override frozen = false;
-    public override dead = false;
-
-    public override orientation = Modules.Orientation.Down;
-
     public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
     private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
 
-    private effects: { [id: string]: EffectInfo } = {
+    private effects: { [id: number]: EffectInfo } = {
         [Modules.Effects.Critical]: {
             key: 'effect-critical',
             animation: new Animation('effect', 10, 0, 48, 48)
@@ -62,6 +54,12 @@ export default class Character extends Entity {
         [Modules.Effects.Terror]: {
             key: 'effect-terror',
             animation: new Animation('effect', 8, 0, 64, 64)
+        },
+        [Modules.Effects.TerrorStatus]: {
+            key: 'effect-terror2',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
         },
         [Modules.Effects.Stun]: {
             key: 'effect-stun',
@@ -127,13 +125,20 @@ export default class Character extends Entity {
 
     private loadAnimations(): void {
         // Iterate through all the effects and load default speed and end callback events.
-        for (let effect of Object.values(this.effects)) {
+        for (let key in this.effects) {
+            let effect = this.effects[key],
+                keyValue = parseInt(key);
+
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
 
             // Remove effect once it has finished playing.
             effect.animation.setCount(1, () => {
-                if (!effect.perpetual) this.removeEffect();
+                if (!effect.perpetual) this.removeEffect(keyValue);
+
+                // Terror effect has a secondary effect that is added to the character.
+                if (keyValue === Modules.Effects.Terror)
+                    this.addEffect(Modules.Effects.TerrorStatus);
 
                 effect.animation.reset();
                 effect.animation.count = 1;
@@ -268,13 +273,13 @@ export default class Character extends Entity {
 
     /**
      * Add a status effect to the character if it doesn't already have it.
-     * @param statusEffect The status effect we are trying to add.
+     * @param effect The status effect we are trying to add.
      */
 
-    public addStatusEffect(statusEffect: Modules.StatusEffect): void {
-        if (this.hasStatusEffect(statusEffect)) return;
+    public addEffect(effect: Modules.Effects): void {
+        if (this.hasEffect(effect)) return;
 
-        this.statusEffects.push(statusEffect);
+        this.statusEffects.push(effect);
     }
 
     /**
@@ -297,11 +302,22 @@ export default class Character extends Entity {
 
     /**
      * Removes a status effect from the character.
-     * @param statusEffect The status effect we are trying to remove.
+     * @param effect The status effect we are trying to remove.
      */
 
-    public removeStatusEffect(statusEffect: Modules.StatusEffect): void {
-        this.statusEffects = this.statusEffects.filter((effect) => effect !== statusEffect);
+    public removeEffect(effect: Modules.Effects): void {
+        // We also want to make sure we remove the terror status effect alongside the terror.
+        if (effect === Modules.Effects.Terror) this.removeEffect(Modules.Effects.TerrorStatus);
+
+        this.statusEffects = this.statusEffects.filter((e) => e !== effect);
+    }
+
+    /**
+     * Clears the list of status effects.
+     */
+
+    public removeAllEffects(): void {
+        this.statusEffects = [];
     }
 
     /**
@@ -324,12 +340,21 @@ export default class Character extends Entity {
 
     /**
      * Whether or not the character has a status effect.
-     * @param statusEffect The status effect we are checking for.
+     * @param effect The status effect we are checking for.
      * @returns If the status effect is included in the array of status effects or not.
      */
 
-    public hasStatusEffect(statusEffect: Modules.StatusEffect): boolean {
-        return this.statusEffects.includes(statusEffect);
+    public hasEffect(effect: Modules.Effects): boolean {
+        return this.statusEffects.includes(effect);
+    }
+
+    /**
+     * Whether or not the character has at least one status effect.
+     * @returns Whether the status effects array is empty or not.
+     */
+
+    public hasActiveEffect(): boolean {
+        return this.statusEffects.length > 0;
     }
 
     /**
@@ -613,36 +638,6 @@ export default class Character extends Entity {
     }
 
     /**
-     * @returns Whether or not the character has an active effect.
-     */
-
-    public hasEffect(): boolean {
-        return this.effect !== Modules.Effects.None;
-    }
-
-    /**
-     * Resets the currently active effect for the character.
-     */
-
-    public removeEffect(): void {
-        this.effect = Modules.Effects.None;
-    }
-
-    /**
-     * Updates the value of the currently active effect.
-     * @param effect The effect we add to the character.
-     */
-
-    public setEffect(effect: Modules.Effects): void {
-        this.effect = effect;
-
-        if (this.effect === Modules.Effects.None) return;
-
-        // Reset the animation when we change effects.
-        this.effects[effect].animation.reset();
-    }
-
-    /**
      * Whether or not the player can attack its target given its position.
      * @returns True if the player is within the attack range of its target.
      */
@@ -658,20 +653,13 @@ export default class Character extends Entity {
     }
 
     /**
-     * @returns The animation object of the currently active effect (or undefined).
+     * Returns an effect object from the effects list.
+     * @param effect The effect we are looking for.
+     * @returns The effect object.
      */
 
-    public getEffectAnimation(): Animation {
-        return this.effects[this.effect]?.animation;
-    }
-
-    /**
-     * Returns the key of the currently active effect or an empty string if none.
-     * @returns The current key of the effect.
-     */
-
-    public getActiveEffect(): string {
-        return this.effects[this.effect]?.key || '';
+    public getEffect(effect: Modules.Effects): EffectInfo {
+        return this.effects[effect];
     }
 
     /**
