@@ -1115,7 +1115,7 @@ export default class Player extends Character {
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1140,25 +1140,11 @@ export default class Player extends Character {
         else this.status.remove(Modules.StatusEffect.HotSauce);
 
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
         );
-    }
-
-    /**
-     * Applies a visual effect onto a player. This can also be used to remove
-     * an effect by passing in the `Opcodes.Effect.None` opcode.
-     * @param opcode The opcode of the effect we want to apply.
-     * @param statusEffect (Optional) Status that is applied to the player.
-     */
-
-    public setEffect(opcode: Opcodes.Effect, statusEffect?: Modules.StatusEffect): void {
-        // If we have a status effect, we add it to the player.
-        if (statusEffect) this.status.add(statusEffect);
-
-        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
 
     /**
@@ -1183,17 +1169,10 @@ export default class Player extends Character {
         this.status.addWithTimeout(
             Modules.StatusEffect.SnowPotion,
             () => {
-                // If the player is still in a freezing area, reapply the effect
-                if (this.overlayArea && this.overlayArea.type === 'damage')
-                    this.setEffect(Opcodes.Effect.Freeze);
-
                 this.notify('Your immunity to freezing effects has worn off.');
             },
             Modules.Constants.SNOW_POTION_DURATION
         );
-
-        // Remove the freezing special effect if the potion is active.
-        this.setEffect(Opcodes.Effect.None);
 
         this.notify(
             `You are now immune to freezing effects for ${
