@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #trade-container {
-    cursor: url('/img/sprites/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
 
     position: absolute;
     inset: 0;
@@ -66,12 +66,28 @@
         #trade-oplayer-slots {
             top: 40px * $i;
             left: 268px * $i;
+
+            ul {
+                li {
+                    .item-slot {
+                        pointer-events: none;
+                    }
+                }
+            }
         }
 
         #trade-player-slots,
         #trade-oplayer-slots {
             width: 102px * $i;
             height: 92px * $i;
+
+            ul {
+                li {
+                    .item-slot {
+                        margin-bottom: 4px * $i;
+                    }
+                }
+            }
         }
 
         #trade-inventory-slots,
@@ -81,27 +97,6 @@
                 li {
                     .item-slot {
                         margin-bottom: 4px * $i;
-                    }
-                }
-            }
-        }
-
-        #trade-player-slots,
-        #trade-oplayer-slots {
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
-                }
-            }
-        }
-
-        #trade-oplayer-slots {
-            ul {
-                li {
-                    .item-slot {
-                        pointer-events: none;
                     }
                 }
             }
@@ -151,6 +146,8 @@
     #trade-player-slots,
     #trade-oplayer-slots {
         top: 40px;
+        width: 106px;
+        height: 92px;
     }
 
     #trade-player-slots {
@@ -159,11 +156,5 @@
 
     #trade-oplayer-slots {
         left: 260px;
-    }
-
-    #trade-player-slots,
-    #trade-oplayer-slots {
-        width: 106px;
-        height: 92px;
     }
 }
