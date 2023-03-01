@@ -401,6 +401,11 @@ export default class Connection {
                 if (info.forced) entity.stop(true);
                 break;
             }
+
+            case Opcodes.Movement.Speed: {
+                entity.movementSpeed = info.movementSpeed!;
+                break;
+            }
         }
     }
 
@@ -1363,29 +1368,12 @@ export default class Connection {
         if (!entity) return;
 
         switch (opcode) {
-            case Opcodes.Effect.Speed: {
-                entity.movementSpeed = info.movementSpeed!;
-                break;
+            case Opcodes.Effect.Add: {
+                return entity.addStatusEffect(info.effect);
             }
 
-            case Opcodes.Effect.Stun: {
-                entity.stunned = !!info.state;
-                break;
-            }
-
-            case Opcodes.Effect.Freeze: {
-                entity.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case Opcodes.Effect.Burn: {
-                entity.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case Opcodes.Effect.None: {
-                entity.setEffect(Modules.Effects.None);
-                break;
+            case Opcodes.Effect.Remove: {
+                return entity.removeStatusEffect(info.effect);
             }
         }
     }
