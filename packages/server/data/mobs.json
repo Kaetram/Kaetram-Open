@@ -1145,7 +1145,7 @@
     "hitPoints": 300,
     "defenseLevel": 15,
     "attackLevel": 12,
-    "level": 26,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1154,22 +1154,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 8,
-      "slash": 12,
-      "stab": 12,
+      "crush": 18,
+      "slash": 32,
+      "stab": 14,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 6,
-      "slash": 14,
-      "stab": 15,
-      "archery": 15,
-      "magic": 9
+      "crush": 16,
+      "slash": 34,
+      "stab": 25,
+      "archery": 35,
+      "magic": -10
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 8,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -1205,7 +1205,7 @@
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
@@ -1371,22 +1371,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 15,
-      "slash": 10,
+      "crush": 25,
+      "slash": 18,
       "stab": 8,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 7,
-      "slash": 3,
-      "stab": 2,
-      "archery": 3,
-      "magic": 3
+      "crush": 17,
+      "slash": 13,
+      "stab": 12,
+      "archery": 6,
+      "magic": 6
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -1469,7 +1469,7 @@
     "hitPoints": 350,
     "defenseLevel": 25,
     "attackLevel": 15,
-    "level": 18,
+    "level": 38,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1621,24 +1621,24 @@
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000,
+    "respawnDelay": 55000,
     "attackStats": {
-      "crush": 8,
-      "slash": 8,
-      "stab": 8,
+      "crush": 12,
+      "slash": 28,
+      "stab": 19,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 8,
-      "slash": 8,
-      "stab": 8,
-      "archery": 4,
+      "crush": 18,
+      "slash": 28,
+      "stab": 18,
+      "archery": 14,
       "magic": 3
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 4,
+      "strength": 6,
       "archery": 0,
       "magic": 0
     }
@@ -1696,24 +1696,24 @@
     "projectileName": "projectile-iceball",
     "freezing": true,
     "attackStats": {
-      "crush": 2,
-      "slash": 2,
-      "stab": 2,
+      "crush": 10,
+      "slash": 5,
+      "stab": 6,
       "archery": 0,
-      "magic": 5
+      "magic": 35
     },
     "defenseStats": {
-      "crush": 3,
-      "slash": 7,
-      "stab": 8,
-      "archery": 8,
-      "magic": 9
+      "crush": 13,
+      "slash": 27,
+      "stab": 18,
+      "archery": 18,
+      "magic": 39
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 2
+      "magic": 9
     }
   },
 
@@ -1845,15 +1845,15 @@
       "magic": 0
     },
     "defenseStats": {
-      "crush": 5,
-      "slash": 4,
-      "stab": 3,
-      "archery": 4,
-      "magic": 2
+      "crush": 15,
+      "slash": 24,
+      "stab": 13,
+      "archery": 24,
+      "magic": -4
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 1,
+      "accuracy": 6,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -2114,10 +2114,10 @@
   "orc": {
     "name": "Orc",
     "drops": {"redsword": 480, "violetbow": 250, "redarcherarmor": 250, "spear": 340},
-    "hitPoints": 75,
+    "hitPoints": 275,
     "defenseLevel": 5,
     "attackLevel": 4,
-    "level": 13,
+    "level": 47,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -2126,22 +2126,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 4,
-      "slash": 4,
-      "stab": 4,
+      "crush": 14,
+      "slash": 18,
+      "stab": 20,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 5,
-      "slash": 5,
-      "stab": 4,
-      "archery": 4,
-      "magic": 2
+      "crush": 15,
+      "slash": 25,
+      "stab": 14,
+      "archery": 24,
+      "magic": -6
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 2,
+      "accuracy": 4,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -2579,10 +2579,10 @@
   "redguard": {
     "name": "Bandit",
     "drops": {"redguardarmor": 220, "redguardarcherarmor": 220, "ring1": 200, "scimitar": 200, "watermelonbow": 200},
-    "hitPoints": 135,
+    "hitPoints": 335,
     "defenseLevel": 10,
     "attackLevel": 5,
-    "level": 14,
+    "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -2591,22 +2591,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 19,
+      "slash": 28,
+      "stab": 17,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 20,
+      "slash": 40,
+      "stab": 9,
+      "archery": 12,
+      "magic": -4
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 4,
+      "strength": 12,
       "archery": 0,
       "magic": 0
     }
@@ -2874,25 +2874,26 @@
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000,
+    "poisonous": true,
     "projectileName": "projectile-poisonball",
     "attackStats": {
       "crush": 0,
       "slash": 0,
       "stab": 0,
-      "archery": 0,
+      "archery": 46,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 24,
+      "slash": 30,
+      "stab": 19,
+      "archery": 30,
+      "magic": -12
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 0,
+      "archery": 10,
       "magic": 0
     }
   },
@@ -3397,10 +3398,10 @@
   "wolf": {
     "name": "Wolf",
     "drops": {"wolfarmor": 170, "wolfarcherarmor": 170},
-    "hitPoints": 300,
+    "hitPoints": 350,
     "defenseLevel": 3,
     "attackLevel": 12,
-    "level": 26,
+    "level": 55,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -3409,22 +3410,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 14,
+      "slash": 28,
+      "stab": 12,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 18,
+      "slash": 10,
+      "stab": 29,
+      "archery": 14,
+      "magic": 6
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 4,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -3620,7 +3621,7 @@
     "hitPoints": 1250,
     "defenseLevel": 1,
     "attackLevel": 1,
-    "level": 44,
+    "level": 69,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -3629,22 +3630,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 43,
+      "slash": 14,
+      "stab": 18,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 38,
+      "slash": 30,
+      "stab": 14,
+      "archery": 10,
+      "magic": -10
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 8,
+      "strength": 18,
       "archery": 0,
       "magic": 0
     }
@@ -3701,7 +3702,7 @@
     "defenseLevel": 40,
     "attackLevel": 38,
     "level": 44,
-    "aggroRange": 5,
+    "aggroRange": 12,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
