@@ -1,19 +1,20 @@
 import Creator from './creator';
 import Loader from './loader';
 
-import Quests from '@kaetram/server/data/quests.json';
-import { Modules } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
 import log from '@kaetram/common/util/log';
 import bcryptjs from 'bcryptjs';
 import { MongoClient } from 'mongodb';
 
-import type { TotalExperience } from '@kaetram/common/types/leaderboards';
 import type { Db } from 'mongodb';
-import type { QuestData } from '@kaetram/common/types/quest';
 import type { PlayerInfo } from './creator';
-import type { SlotData } from '@kaetram/common/types/slot';
+import type { Modules } from '@kaetram/common/network';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type {
+    MobAggregate,
+    SkillExperience,
+    TotalExperience
+} from '@kaetram/common/types/leaderboards';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -226,10 +227,56 @@ export default class MongoDB {
                     }
                 },
                 { $sort: { totalExperience: -1 } },
-                { $limit: 100 }
+                { $limit: 250 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
+    }
+
+    /**
+     * Aggregates data for a specific skill. The data is then sorted in descending order.
+     * @param skill The skill to aggregate data for.
+     * @param callback Contains a list of players and their experience for the skill.
+     */
+
+    public getSkillAggregate(
+        skill: Modules.Skills,
+        callback: (experience: SkillExperience[]) => void
+    ): void {
+        if (!this.hasDatabase()) return;
+
+        let skills = this.database.collection('player_skills');
+
+        // Unwind the array, match the skill, sort in descending order, limit to 250.
+        skills
+            .aggregate([
+                { $unwind: '$skills' },
+                { $match: { 'skills.type': skill } },
+                { $sort: { 'skills.experience': -1 } },
+                { $limit: 250 }
+            ])
+            .toArray()
+            .then((data) => callback(data as SkillExperience[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the mob specified.
+     * @param key The mob key to gather data for.
+     * @param callback Contains aggregate data for the mob.
+     */
+
+    public getMobAggregate(key: string, callback: (data: MobAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let mobs = this.database.collection('player_statistics');
+
+        mobs.aggregate([
+            { $group: { _id: '$username', kills: { $sum: `$mobKills.${key}` } } },
+            { $sort: { kills: -1 } },
+            { $limit: 250 }
+        ])
+            .toArray()
+            .then((data) => callback(data as MobAggregate[]));
     }
 
     /**
