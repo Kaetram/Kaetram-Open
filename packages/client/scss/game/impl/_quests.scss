@@ -20,7 +20,8 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         #quests {
-            background: url('/img/#{$i}/quests.png') 0 0 no-repeat;
+            background: url('/img/interface/quests.png') 0 0 no-repeat;
+            background-size: calc(width('quests.png') * $i);
         }
 
         #quests-container {
@@ -41,9 +42,6 @@
             margin-top: 4px * $i;
             margin-left: 4px * $i;
         }
-    }
-
-    @media (--md) {
     }
 
     @media (--sm) {

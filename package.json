@@ -41,6 +41,7 @@
         "husky": "^8.0.3",
         "lint-staged": "^13.1.0",
         "postcss": "^8.4.20",
+        "postcss-assets": "^6.0.0",
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.8.1",
         "stylelint": "^14.16.1",

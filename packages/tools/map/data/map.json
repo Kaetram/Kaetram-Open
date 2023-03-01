@@ -5595,7 +5595,7 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"damage"
+                         "value":"freezing"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -5605,7 +5605,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -6141,7 +6141,7 @@
  "nextobjectid":558,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.9.2",
+ "tiledversion":"1.9.0",
  "tileheight":16,
  "tilesets":[
         {
