@@ -217,10 +217,10 @@ export default class EntitiesController {
 
             let impactEffect = projectile.getImpactEffect();
 
-            if (impactEffect !== Modules.Effects.None) target.setEffect(impactEffect);
+            if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                Modules.Hits.Damage,
+                Modules.Hits.Normal,
                 info.damage!,
                 target.x,
                 target.y,

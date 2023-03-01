@@ -20782,7 +20782,6 @@
       }
     }
   },
-
   {
     "id": "effect-terror",
     "width": 64,
@@ -20795,6 +20794,19 @@
     },
     "offsetX": -24,
     "offsetY": -32
+  },
+  {
+    "id": "effect-terror2",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "effect": {
+        "length": 5,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
   },
   {
     "id": "icegoblin",
