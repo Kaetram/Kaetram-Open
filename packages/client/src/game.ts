@@ -8,7 +8,7 @@ import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
 import Player from './entity/character/player/player';
-import PlayerHandler from './entity/character/player/playerhandler';
+import Handler from './entity/character/player/handler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
@@ -29,12 +29,11 @@ import type Entity from './entity/entity';
 import type Storage from './utils/storage';
 
 export default class Game {
+    public player: Player;
     public storage: Storage;
 
     public map: Map = new Map(this);
     public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
-
-    public player: Player = new Player('');
 
     public zoning: Zoning = new Zoning();
     public overlays: Overlays = new Overlays();
@@ -68,6 +67,7 @@ export default class Game {
     public constructor(public app: App) {
         this.storage = app.storage;
 
+        this.player = new Player('', this);
         this.renderer = new Renderer(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
@@ -166,7 +166,7 @@ export default class Game {
 
         this.camera.centreOn(this.player);
 
-        new PlayerHandler(this, this.player);
+        this.player.handler = new Handler(this.player);
 
         this.renderer.updateAnimatedTiles();
 
@@ -210,6 +210,43 @@ export default class Game {
         if (ignores) this.pathfinder.clearIgnores(this.map.grid);
 
         return path;
+    }
+
+    /**
+     * Used for when the player has selected low power mode and we do not
+     * actively centre the camera on the character. We check the boundaries
+     * of the camera and if the character approaches them we move the camera
+     * in the next quadrant.
+     */
+
+    public updateCameraBounds(): void {
+        // We are not using non-centred camera, so skip.
+        if (!this.zoning) return;
+
+        // Difference between the player and the camera, indicates which boundary we are approaching.
+        let x = this.player.gridX - this.camera.gridX,
+            y = this.player.gridY - this.camera.gridY;
+
+        // Left boundary
+        if (x === 0) this.zoning.setLeft();
+        // Right boundary
+        else if (x === this.camera.gridWidth - 2) this.zoning.setRight();
+        // Top boundary
+        else if (y === 0) this.zoning.setUp();
+        // Bottom boundary
+        else if (y === this.camera.gridHeight - 2) this.zoning.setDown();
+
+        // No zoning has occured, so stop here.
+        if (this.zoning.direction === null) return;
+
+        // Synchronize the camera and reset the zoning directions.
+        this.camera.zone(this.zoning.getDirection());
+
+        // Update the animated tiles.
+        this.renderer.updateAnimatedTiles();
+
+        // Reset the zoning directions.
+        this.zoning.reset();
     }
 
     /**
@@ -280,16 +317,15 @@ export default class Game {
          */
 
         for (let entity of entities) {
-            let spriteStartX = entity.x - Utils.thirdTile,
-                spriteStartY = entity.y - Utils.thirdTile,
-                spriteEndX = entity.x + Utils.tileAndAQuarter,
-                spriteEndY = entity.y + Utils.tileAndAQuarter;
+            let startX = entity.x + entity.sprite.offsetX,
+                startY = entity.y + entity.sprite.offsetY;
 
+            // Check about the radius of the position if our mouse is within the entity's boundaries.
             if (
-                position.x >= spriteStartX &&
-                position.x <= spriteEndX &&
-                position.y >= spriteStartY &&
-                position.y <= spriteEndY
+                position.x >= startX - radius &&
+                position.x <= startX + entity.sprite.width + radius &&
+                position.y >= startY - radius &&
+                position.y <= startY + entity.sprite.height + radius
             )
                 return entity;
         }
