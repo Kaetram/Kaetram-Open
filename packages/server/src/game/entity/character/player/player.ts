@@ -1170,6 +1170,10 @@ export default class Player extends Character {
      */
 
     public setSnowPotion(): void {
+        // Remove freezing effect if it has been caused by a timeout (attack).
+        if (this.status.hasTimeout(Modules.Effects.Freezing))
+            this.status.remove(Modules.Effects.Freezing);
+
         this.status.addWithTimeout(
             Modules.Effects.SnowPotion,
             Modules.Constants.SNOW_POTION_DURATION,
@@ -1191,6 +1195,9 @@ export default class Player extends Character {
      */
 
     public setFirePotion(): void {
+        // Remove burning effect if present
+        if (this.status.has(Modules.Effects.Burning)) this.status.remove(Modules.Effects.Burning);
+
         this.status.addWithTimeout(
             Modules.Effects.FirePotion,
             Modules.Constants.FIRE_POTION_DURATION,

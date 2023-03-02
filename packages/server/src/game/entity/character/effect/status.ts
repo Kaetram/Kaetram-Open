@@ -1,4 +1,4 @@
-import type { Modules } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 
 export default class {
     private effects: Modules.Effects[] = [];
@@ -39,6 +39,9 @@ export default class {
         duration: number,
         callback?: () => void
     ): void {
+        // A temporary freezing effect cannot be added if the player has a permanent one.
+        if (statusEffect === Modules.Effects.Freezing && this.hasPermanentFreezing()) return;
+
         this.add(statusEffect);
 
         // Clear existing timeouts.
@@ -84,6 +87,27 @@ export default class {
 
     public has(status: Modules.Effects): boolean {
         return this.effects.includes(status);
+    }
+
+    /**
+     * Checks whether or not the character has a status effect with a timeout.
+     * @param status The status effect we are checking the existence of.
+     * @returns Whether or not there is an existent timeout for the status effect.
+     */
+
+    public hasTimeout(status: Modules.Effects): boolean {
+        return !!this.timeouts[status];
+    }
+
+    /**
+     * Permanent freezing is applied when in an area with freezing effect. This one does not
+     * have a timeout and can only be removed by leaving the area (or temporarily prevented
+     * by using a snow potion).
+     * @returns Whether we have the freezing effect and no timeout associated with it.
+     */
+
+    private hasPermanentFreezing(): boolean {
+        return this.has(Modules.Effects.Freezing) && !this.hasTimeout(Modules.Effects.Freezing);
     }
 
     /**
