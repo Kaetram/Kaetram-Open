@@ -236,6 +236,33 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Handles the burning damage effect and sending a hit packet to the client.
+     */
+
+    public handleBurningDamage(): void {
+        // Only players that do not have the fire potion can be affected.
+        if (this.status.has(Modules.Effects.FirePotion)) return;
+
+        // Create a hit object for burning damage and serialize it.
+        let hit = new Hit(
+            Modules.Hits.Burning,
+            Modules.Constants.BURNING_EFFECT_DAMAGE
+        ).serialize();
+
+        // Send a hit packet to display the info to the client.
+        this.sendToRegions(
+            new CombatPacket(Opcodes.Combat.Hit, {
+                instance: this.instance,
+                target: this.instance,
+                hit
+            })
+        );
+
+        // Do the actual damage to the character.
+        this.hit(Modules.Constants.BURNING_EFFECT_DAMAGE);
+    }
+
+    /**
      * Handles the logic for when an attacker is trying to poison
      * the current character instance.
      */
@@ -288,6 +315,10 @@ export default abstract class Character extends Entity {
             switch (effect) {
                 case Modules.Effects.Freezing: {
                     return this.handleColdDamage();
+                }
+
+                case Modules.Effects.Burning: {
+                    return this.handleBurningDamage();
                 }
             }
         });
