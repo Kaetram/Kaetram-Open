@@ -4712,8 +4712,10 @@
     "type": "object",
     "name": "Fire Potion",
     "price": 250,
+    "maxStackSize": 3,
     "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
-    "edible": true
+    "edible": true,
+    "plugin": "firepotion"
   },
 
   "cake": {
