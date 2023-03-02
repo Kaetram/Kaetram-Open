@@ -520,7 +520,8 @@ export default class Connection {
         let currentPlayerTarget = target.instance === this.game.player.instance,
             currentPlayerAttacker = attacker.instance === this.game.player.instance,
             isPoison = info.hit.type === Modules.Hits.Poison,
-            isFreezing = info.hit.type === Modules.Hits.Freezing;
+            isFreezing = info.hit.type === Modules.Hits.Freezing,
+            isBurning = info.hit.type === Modules.Hits.Burning;
 
         // Set the terror effect onto the target.
         if (isPoison) target.addEffect(Modules.Effects.Poisonball);
@@ -529,7 +530,7 @@ export default class Connection {
         if (info.hit.type === Modules.Hits.Critical) target.addEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
-        if (!info.hit.aoe && !isPoison && !isFreezing) {
+        if (!info.hit.aoe && !isPoison && !isFreezing && !isBurning) {
             attacker.lookAt(target);
             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         }
