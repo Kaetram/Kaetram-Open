@@ -14,3 +14,8 @@ export interface MobAggregate {
     username: string;
     kills: number;
 }
+
+export interface PvpAggregate {
+    username: string;
+    pvpKills: number;
+}

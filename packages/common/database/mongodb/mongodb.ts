@@ -12,6 +12,7 @@ import type { Modules } from '@kaetram/common/network';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 import type {
     MobAggregate,
+    PvpAggregate,
     SkillExperience,
     TotalExperience
 } from '@kaetram/common/types/leaderboards';
@@ -277,6 +278,24 @@ export default class MongoDB {
         ])
             .toArray()
             .then((data) => callback(data as MobAggregate[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the pvp kills.
+     * @param callback Contains aggregate data for the pvp kills.
+     */
+
+    public getPvpAggregate(callback: (data: PvpAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let pvp = this.database.collection('player_statistics');
+
+        pvp.aggregate([
+            { $group: { _id: '$username', pvpKills: { $sum: '$pvpKills' } } },
+            { $sort: { pvpKills: -1 } }
+        ])
+            .toArray()
+            .then((data) => callback(data as PvpAggregate[]));
     }
 
     /**
