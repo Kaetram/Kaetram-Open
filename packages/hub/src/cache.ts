@@ -8,6 +8,7 @@ import type { Modules } from '@kaetram/common/network';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type {
     MobAggregate,
+    PvpAggregate,
     SkillExperience,
     TotalExperience
 } from '@kaetram/common/types/leaderboards';
@@ -20,6 +21,7 @@ export default class Cache {
      */
     private database: MongoDB = new Database(config.database).getDatabase()!;
 
+    private pvpAggregate: PvpAggregate[] = [];
     private totalExperience: TotalExperience[] = [];
     private skillsExperience: { [key: number]: SkillExperience[] } = {};
     private mobAggregates: { [key: string]: MobAggregate[] } = {};
@@ -44,6 +46,22 @@ export default class Cache {
 
         // Exit the process.
         exit(1);
+    }
+
+    /**
+     * Gathers the aggregate data for pvp kills. The data is ordered in descending order.
+     * @param callback Contains an array of top pvp stats.
+     */
+
+    public getPvpData(callback: (pvpAggregate: PvpAggregate[]) => void): void {
+        if (!this.canAggregateData(this.lastAggregates.pvp)) return callback(this.pvpAggregate);
+
+        this.database.getPvpAggregate((data: PvpAggregate[]) => {
+            callback((this.pvpAggregate = data));
+
+            // Update the last aggregate time.
+            this.lastAggregates.pvp = Date.now();
+        });
     }
 
     /**
