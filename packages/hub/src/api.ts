@@ -14,6 +14,7 @@ import type { Friend } from '@kaetram/common/types/friends';
 import type { Request, Response } from 'express';
 import type {
     MobAggregate,
+    PvpAggregate,
     SkillExperience,
     TotalExperience
 } from '@kaetram/common/types/leaderboards';
@@ -345,6 +346,18 @@ export default class API {
 
             // Get the mob kills from the cache.
             this.cache.getMobKills(mobKey, (data: MobAggregate[]) => {
+                response.json({
+                    status: 'success',
+                    list: data
+                });
+            });
+
+            return;
+        }
+
+        // Handles pvp kills aggregation.
+        if (request.query.pvp) {
+            this.cache.getPvpData((data: PvpAggregate[]) => {
                 response.json({
                     status: 'success',
                     list: data
