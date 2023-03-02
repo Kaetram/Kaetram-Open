@@ -185,7 +185,7 @@ export default {
     /**
      * Calculates the accuracy modifier for a character given their attack and defense stats.
      * The accuracy modifier is used to determine the likelihood of attaining maximum damage
-     * in a hit. The higher the accuracy modifier, the less likely to attain maximum damage.
+     * in a hit. The higher the accuracy modifier, the more likely to attain maximum damage.
      * @param attacker The attacking character.
      * @param target The defending character.
      * @returns A float of the accuracy modifier (to be used for calculating likelihood of attaining max damage).
