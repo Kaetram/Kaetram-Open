@@ -358,6 +358,11 @@ export let DamageColours = {
     [Hits.Freezing]: {
         fill: 'rgb(52, 195, 235)',
         stroke: 'rgb(14, 138, 227)'
+    },
+
+    [Hits.Burning]: {
+        fill: 'rgb(227, 170, 14)',
+        stroke: 'rgb(235, 135, 52)'
     }
 };
 
@@ -471,7 +476,8 @@ export const Constants = {
     FREEZING_DURATION: 60_000, // 60 seconds
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
-    COLD_EFFECT_DAMAGE: 11
+    COLD_EFFECT_DAMAGE: 10,
+    BURNING_EFFECT_DAMAGE: 20
 };
 
 export enum MinigameConstants {
