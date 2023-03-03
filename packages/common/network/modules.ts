@@ -447,6 +447,17 @@ export enum NPCRole {
     Clerk
 }
 
+export enum GuildRank {
+    Fledgling,
+    Emergent,
+    Established,
+    Adept,
+    Veteran,
+    Elite,
+    Master,
+    Landlord
+}
+
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL: 135, // Maximum attainable level.
