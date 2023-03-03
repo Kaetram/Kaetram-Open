@@ -6,6 +6,7 @@ import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Warps from '../controllers/warps';
+import Guilds from '../controllers/guilds';
 import API from '../network/api';
 import Network from '../network/network';
 import { Chat } from '../network/packets';
@@ -46,6 +47,7 @@ export default class World {
     public network: Network = new Network(this);
     public minigames: Minigames = new Minigames(this);
     public enchanter: Enchanter = new Enchanter(this);
+    public guilds: Guilds = new Guilds(this);
 
     public discord: Discord = new Discord(config.hubEnabled);
 
