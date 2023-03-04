@@ -16,7 +16,9 @@ export default class SocketIO extends WebSocket {
         super.loadServer();
 
         this.server = new Server(this.httpServer, {
-            cors: { origin: '*' }
+            cors: { origin: '*' },
+            pingInterval: 10_000,
+            pingTimeout: 5000
         });
 
         this.server.on('connection', this.handleConnection.bind(this));
