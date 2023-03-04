@@ -159,12 +159,7 @@
     "miniboss": true,
     "level": 62,
     "attackLevel": 14,
-    "drops": {"gold": 300, "icesword": 125}
-  },
-
-  "785-451": {
-    "name": "Queen Ant",
-    "achievement": "queenant"
+    "drops": {"gold": 300, "icesword": 1000}
   },
 
   "804-76": {
