@@ -488,7 +488,8 @@ export const Constants = {
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
     COLD_EFFECT_DAMAGE: 10,
-    BURNING_EFFECT_DAMAGE: 20
+    BURNING_EFFECT_DAMAGE: 20,
+    ATTACKER_TIMEOUT: 20_000 // 20 seconds
 };
 
 export enum MinigameConstants {
