@@ -19,7 +19,7 @@ export default class Combat {
     private startCallback?: () => void;
     private stopCallback?: () => void;
     private attackCallback?: () => void;
-    private loopCallback?: () => void;
+    private loopCallback?: (lastAttack: number) => void;
 
     public constructor(private character: Character) {}
 
@@ -117,7 +117,7 @@ export default class Combat {
         // Do not attack while teleporting.
         if (this.character.teleporting) return;
 
-        this.loopCallback?.();
+        this.loopCallback?.(this.lastAttack);
 
         this.checkTargetPosition();
 
