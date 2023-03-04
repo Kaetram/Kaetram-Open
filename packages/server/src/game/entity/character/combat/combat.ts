@@ -11,7 +11,7 @@ import type Character from '../character';
 export default class Combat {
     public started = false;
 
-    private lastAttack = 0;
+    public lastAttack = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;

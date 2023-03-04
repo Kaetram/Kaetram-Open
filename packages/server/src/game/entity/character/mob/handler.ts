@@ -1,3 +1,4 @@
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
@@ -65,7 +66,7 @@ export default class Handler {
         // This may get called simulatneously with the death callback, so we check here.
         if (this.mob.isDead()) return;
 
-        if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
+        this.mob.addAttacker(attacker);
 
         if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
     }
@@ -228,7 +229,18 @@ export default class Handler {
 
         // Parses through the attackers and removes them if they are too far away.
         this.mob.forEachAttacker((attacker: Character) => {
-            if (this.mob.getDistance(attacker) > this.mob.roamDistance * 2)
+            /**
+             * If an attacker goes too far away from the mob then we remove him as
+             * an attacker. If he has not attacked the mob for a certain amount of
+             * time and he is not within the mob's attack range, then we remove him
+             * as an attacker.
+             */
+
+            if (
+                this.mob.getDistance(attacker) > this.mob.roamDistance * 2 ||
+                (!this.mob.isNearTarget() &&
+                    attacker.getLastAttack() > Modules.Constants.ATTACKER_TIMEOUT)
+            )
                 this.mob.removeAttacker(attacker);
         });
 
