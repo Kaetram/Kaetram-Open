@@ -1,3 +1,4 @@
+import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Bubble } from '@kaetram/server/src/network/packets';
 
@@ -219,6 +220,12 @@ export default class Handler {
      */
 
     protected handleCombatLoop(): void {
+        if (this.mob.instance === this.mob.target?.instance) {
+            log.general(`Mob ${this.mob.key} is attacking itself.`);
+
+            return this.mob.combat.stop();
+        }
+
         // Parses through the attackers and removes them if they are too far away.
         this.mob.forEachAttacker((attacker: Character) => {
             if (this.mob.getDistance(attacker) > this.mob.roamDistance * 2)
