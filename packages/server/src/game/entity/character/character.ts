@@ -616,6 +616,15 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Returns the time differential for when the last attack was made.
+     * @returns Difference between the last attack and the current time.
+     */
+
+    public getLastAttack(): number {
+        return Date.now() - this.combat.lastAttack;
+    }
+
+    /**
      * Unimplemented special attack function for the superclass.
      * @returns Always false if not implemented.
      */
@@ -818,7 +827,7 @@ export default abstract class Character extends Entity {
 
     public addAttacker(attacker: Character): void {
         // Prevent adding yourself as an attacker.
-        if (attacker.instance === this.instance) return;
+        if (attacker.instance === this.instance || this.hasAttacker(attacker)) return;
 
         this.attackers.push(attacker);
     }

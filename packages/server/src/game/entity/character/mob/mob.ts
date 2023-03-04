@@ -448,7 +448,15 @@ export default class Mob extends Character {
 
     public canAggro(player: Player): boolean {
         // Skip if mob has a target or the player targeted isn't fully loaded yet.
-        if (this.target || !player.ready) return false;
+        if (!player.ready) return false;
+
+        // Prevent aggro if we already have a target.
+        if (this.target) {
+            // However, for bosses, we want to add the player to the list of attackers.
+            if (this.boss) this.addAttacker(player);
+
+            return false;
+        }
 
         // Check for aggressive properties of the mob.
         if (!this.aggressive && !this.alwaysAggressive) return false;
