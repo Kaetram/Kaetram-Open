@@ -224,7 +224,7 @@ export default class Stores {
         player.inventory.remove(currency, item.price * amount);
 
         log.stores(
-            `Player ${player.username} pruchased ${amount} ${item.key} for ${item.price * amount} ${
+            `Player ${player.username} purchased ${amount} ${item.key} for ${item.price * amount} ${
                 store.currency
             }.`
         );

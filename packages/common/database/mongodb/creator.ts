@@ -35,9 +35,9 @@ export interface PlayerInfo {
 }
 
 /**
- * Side-note. This version of the creator is a lot more compact and optimized.
- * The data that we are serializing ALWAYS exists. Because of this alone there
- * should be nearly no crashes since we are always working with non-null variables.
+ * The creator database class is responsible for serializing information and storing
+ * it into MongoDB. The primary idea is to store only the necessary data when serializing
+ * and avoiding redundancies.
  */
 
 export default class Creator {
