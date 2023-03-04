@@ -411,6 +411,10 @@ export default class Item extends Entity {
                 ];
             }
 
+            case 'whip': {
+                return [Modules.AttackStyle.Slash, Modules.AttackStyle.Defensive];
+            }
+
             case 'staff': {
                 return [Modules.AttackStyle.Focused, Modules.AttackStyle.LongRange];
             }
