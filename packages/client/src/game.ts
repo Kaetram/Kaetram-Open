@@ -315,19 +315,15 @@ export default class Game {
          * entity we are looking for.
          */
 
-        for (let entity of entities) {
-            let startX = entity.x + entity.sprite.offsetX,
-                startY = entity.y + entity.sprite.offsetY;
-
-            // Check about the radius of the position if our mouse is within the entity's boundaries.
+        // Check about the radius of the position if our mouse is within the entity's boundaries.
+        for (let entity of entities)
             if (
-                position.x >= startX - radius &&
-                position.x <= startX + entity.sprite.width + radius &&
-                position.y >= startY - radius &&
-                position.y <= startY + entity.sprite.height + radius
+                position.x >= entity.x - entity.sprite.offsetX - this.map.tileSize &&
+                position.x <= entity.x - entity.sprite.offsetX + this.map.tileSize &&
+                position.y >= entity.y - entity.sprite.offsetY - this.map.tileSize &&
+                position.y <= entity.y - entity.sprite.offsetY + this.map.tileSize
             )
                 return entity;
-        }
 
         return undefined;
     }
