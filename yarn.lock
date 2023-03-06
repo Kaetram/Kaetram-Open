@@ -12083,7 +12083,7 @@ __metadata:
 "uws@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28":
   version: 20.19.0
   resolution: "uws@https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
-  checksum: df798f6f99b724d2cc36e594fbee2bce10769b75c87682c2b955b6402f76b6916fcc65e33e321bb5abdad5fb0b7ee480818b6b3814bddebd5c7355081fec4033
+  checksum: 48df1e301e2d75b433de9089efc19198a7677a6a125f9debb3cda48cf99d592ef5661b9c956ec33e14f5eb30bc4185d8636b6faeba4b88a40c672fc9a72f6359
   languageName: node
   linkType: hard
 
