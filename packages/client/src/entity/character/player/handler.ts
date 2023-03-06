@@ -80,7 +80,7 @@ export default class Handler extends CharacterHandler {
 
     protected override handleStartPathing(path: number[][]): void {
         // The selected tile is the last tile in the path.
-        [this.game.input.selectedX, this.game.input.selectedY] = path.at(-1)!;
+        [this.game.input.selectedX, this.game.input.selectedY] = path[path.length - 1];
 
         this.character.moving = true;
         this.game.input.selectedCellVisible = true;
