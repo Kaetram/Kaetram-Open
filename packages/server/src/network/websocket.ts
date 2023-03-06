@@ -1,6 +1,6 @@
 import type Connection from './connection';
 import type SocketHandler from './sockethandler';
-import type { HttpRequest, HttpResponse } from 'uWebSockets.js';
+import type { HttpRequest, HttpResponse } from 'uws';
 
 export default abstract class WebSocket {
     public addCallback?: (connection: Connection) => void;
