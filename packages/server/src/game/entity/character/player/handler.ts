@@ -911,5 +911,8 @@ export default class Handler {
     private clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
+
+        clearInterval(this.player.readyTimeout!);
+        this.player.readyTimeout = null;
     }
 }
