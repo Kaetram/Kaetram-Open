@@ -5,7 +5,7 @@ import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
-import { App, DEDICATED_COMPRESSOR_3KB } from 'uws';
+import { App } from 'uws';
 
 import type SocketHandler from '../sockethandler';
 import type { WebSocket as WS } from 'uws';
@@ -18,7 +18,6 @@ export default class UWS extends WebSocket {
         App({})
             .get('/*', this.httpResponse.bind(this))
             .ws('/*', {
-                compression: DEDICATED_COMPRESSOR_3KB,
                 idleTimeout: 10,
                 maxPayloadLength: 32 * 1024 * 1024,
 
