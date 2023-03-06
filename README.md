@@ -10,7 +10,7 @@
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
 [![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
 [![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
-[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&style=flat)][discord]
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=5865f2&labelColor=fff&style=flat)][discord]
 [![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UC0atP4sQbb4LJd6y4jijOHg 'YouTube')
 [![Twitter](https://img.shields.io/twitter/follow/kaetramofficial?style=social)](https://twitter.com/kaetramofficial 'Twitter')
 [![Reddit](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social)](https://reddit.com/r/kaetram 'Reddit')
@@ -20,7 +20,7 @@ We aim to provide a collaborative gaming experience as well as a game-engine for
 own version. The game is still in early development stages and all help, suggestions, and bug reports are welcome.
 All of the assets are licensed under CC-BY-SA3.0 and we aim to hold onto the original BQ assets as well as expand
 upon them. The entire code-base has been re-written from scratch, optimized, and documented. Please see the GitHub
-wiki for information regarding development. Kaetram first started development in 2015 under the name of 
+wiki for information regarding development. Kaetram first started development in 2015 under the name of
 Tap Tap Adventure (TTA). In 2017, Kaetram was started as a complete re-write of the code which was formerly BQ-based.
 
 Live Version &ndash; <https://kaetram.com>
@@ -45,11 +45,11 @@ BQ was initially written as an HTML5 experiment showcasing the capabilities of w
 back in 2012. Kaetram builds on top of the idea and uses modern standards to help facilitate
 readability, performance, and compatibility. Some of the many features are as follows:
 
-- Multiplayer using [Socket.IO](https://socket.io).
+- Multiplayer using µWebSockets.
 - Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles).
 - Region/chunking system (client caches and saves data from the server as needed).
-    - Dynamic tiles (tiles that change depending on player's progress in achievements/quests/etc).
-    - Global objects (tiles such as trees (and more in the future) that the player can interact with).
+  - Dynamic tiles (tiles that change depending on player's progress in achievements/quests/etc).
+  - Global objects (tiles such as trees (and more in the future) that the player can interact with).
 - Trading between players
 - Quest and achievement system.
 - Minigame system for special in-game events.
@@ -72,7 +72,7 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `14.19.0`, following the
+> You need to use a Node.js version greater than or equal to `v14.19.0`, following the
 > [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
 > current dependencies and package manager.
@@ -87,14 +87,9 @@ the server.
 
 #### Yarn
 
-You will also need to enable Yarn to manage your dependencies.
+You will also need to enable [Yarn](https://yarnpkg.com) through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), to manage our dependencies.
 
-> The preferred way to manage Yarn is through
-> [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html)
->
-> <https://yarnpkg.com/getting-started/install>
-
-Starting from Node.js `14.19.0`, Corepack is included by default with, but is currently opt-in.
+Starting from Node.js `v14.19.0`, [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html) is included by default, but is currently opt-in.
 
 To enable it, run
 
