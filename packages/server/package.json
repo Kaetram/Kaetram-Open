@@ -19,7 +19,7 @@
         "sanitizer": "^0.1.3",
         "tslib": "^2.4.0",
         "tsx": "^3.8.0",
-        "uWebSockets.js": "uNetworking/uWebSockets.js#v20.19.0"
+        "uws": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
     },
     "devDependencies": {
         "@kaetram/tools": "workspace:*",
