@@ -24,7 +24,8 @@ import type {
     StorePacket,
     WarpPacket,
     FriendsPacket,
-    TradePacket
+    TradePacket,
+    HandshakePacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -59,6 +60,9 @@ export default class Incoming {
             // Prevent server from crashing due to a packet malfunction.
             try {
                 switch (packet) {
+                    case Packets.Handshake: {
+                        return this.handleHandshake(message);
+                    }
                     case Packets.Login: {
                         return this.handleLogin(message);
                     }
@@ -124,6 +128,16 @@ export default class Incoming {
                 log.error(error);
             }
         });
+    }
+
+    /**
+     * The handshake is responsible for verifying the integrity of the client initially. We ensure
+     * that the client is on the right version and reject it if it is not.
+     * @param data Contains the version of the client.
+     */
+
+    private handleHandshake(data: HandshakePacket): void {
+        if (data.gVer !== config.gver) this.connection.reject('updated');
     }
 
     /**
