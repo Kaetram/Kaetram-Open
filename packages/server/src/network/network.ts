@@ -110,7 +110,9 @@ export default class Network {
      */
 
     public broadcast(packet: Packet): void {
-        for (let queue of Object.values(this.packets)) queue.push(packet.serialize());
+        let serializedPacket = packet.serialize();
+
+        for (let queue of Object.values(this.packets)) queue.push(serializedPacket);
     }
 
     /**
