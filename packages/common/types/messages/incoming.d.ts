@@ -4,6 +4,10 @@ import type { Modules, Opcodes } from '../../network';
  * Packet interfaces of data being sent from the client to the server.
  */
 
+export interface HandshakePacket {
+    gVer: string;
+}
+
 export interface LoginPacket {
     opcode: Opcodes.Login;
     username?: string;
