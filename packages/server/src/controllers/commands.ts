@@ -179,10 +179,7 @@ export default class Commands {
                 if (!player)
                     return this.player.notify(`Could not find player with name: ${username}`);
 
-                player.connection.close(
-                    `${this.player.username} kicked ${username}`,
-                    command === 'forcekick'
-                );
+                player.connection.close(`${this.player.username} kicked ${username}`);
 
                 break;
             }
@@ -554,7 +551,7 @@ export default class Commands {
             }
 
             case 'timeout': {
-                this.player.connection.reject('timeout', true);
+                this.player.connection.reject('timeout');
 
                 break;
             }
