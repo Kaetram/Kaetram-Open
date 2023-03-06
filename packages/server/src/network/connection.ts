@@ -12,8 +12,6 @@ export default class Connection {
 
     public messageCallback?: MessageCallback;
 
-    private closeCallback?: () => void;
-
     // Used for filtering duplicate messages.
     private lastMessage = '';
     private lastMessageTime = Date.now();
@@ -21,6 +19,8 @@ export default class Connection {
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+
+    private closeCallback?: () => void;
 
     public constructor(public instance: string, private socket: uWebSocket<ConnectionInfo>) {
         // Convert the IP address hex string to a readable IP address.
@@ -33,12 +33,11 @@ export default class Connection {
      * Sends a UTF8 message to the client for closing the connection,
      * then closes the connection (duh).
      * @param reason UTF8 reason for why the connection was closed.
-     * @param withCallback Whether or not to call the close callback.
      */
 
-    public reject(reason: string, withCallback = false): void {
+    public reject(reason: string): void {
         this.sendUTF8(reason);
-        this.close(reason, withCallback);
+        this.close(reason);
     }
 
     /**
@@ -46,16 +45,12 @@ export default class Connection {
      * Depending on the type of socket currently present, a different function is used
      * for closing the connection.
      * @param details Optional parameter for debugging why connection was closed.
-     * @param withCallback Whether or not to call the close callback.
      */
 
-    public close(details?: string, withCallback = true): void {
-        this.socket.close();
+    public close(details?: string): void {
+        this.socket.end();
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
-
-        // REVIEW: Test if this is still needed.
-        if (withCallback) this.closeCallback?.();
     }
 
     /**
@@ -63,7 +58,7 @@ export default class Connection {
      */
 
     public handleClose(): void {
-        log.info(`Closed socket: ${this.address}.`);
+        log.info(`Closing socket connection to: ${this.address}.`);
 
         this.closeCallback?.();
         this.clearTimeout();
@@ -80,7 +75,7 @@ export default class Connection {
         this.clearTimeout();
 
         // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.reject('timeout', true), duration);
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout'), duration);
     }
 
     /**

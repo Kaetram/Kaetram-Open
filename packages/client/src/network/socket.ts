@@ -60,7 +60,10 @@ export default class Socket {
         this.connection.addEventListener('error', () => this.handleConnectionError(host, port));
 
         // Handler for when a disconnection occurs.
-        this.connection.addEventListener('close', () => this.game.handleDisconnection());
+        this.connection.addEventListener('close', (data) => {
+            console.log(data);
+            this.game.handleDisconnection();
+        });
 
         /**
          * The audio controller can only be properly initialized when the player interacts
