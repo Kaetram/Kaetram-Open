@@ -1,13 +1,17 @@
 import log from '@kaetram/common/util/log';
+import ipaddr from 'ipaddr.js';
 
-import type { Socket } from 'socket.io';
 import type { Packets } from '@kaetram/common/network';
-import type SocketHandler from './sockethandler';
+import type { ConnectionInfo } from '@kaetram/common/types/network';
+import type { WebSocket as uWebSocket } from 'uWebSockets.js';
 
 type MessageCallback = (message: [Packets, never]) => void;
 
 export default class Connection {
-    private messageCallback?: MessageCallback;
+    public address = '';
+
+    public messageCallback?: MessageCallback;
+
     private closeCallback?: () => void;
 
     // Used for filtering duplicate messages.
@@ -18,14 +22,11 @@ export default class Connection {
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
-    public constructor(
-        public instance: string,
-        public address: string,
-        private socket: Socket,
-        private socketHandler: SocketHandler
-    ) {
-        this.socket.once('disconnect', this.handleClose.bind(this));
-        this.socket.on('message', this.handleMessage.bind(this));
+    public constructor(public instance: string, private socket: uWebSocket<ConnectionInfo>) {
+        // Convert the IP address hex string to a readable IP address.
+        this.address = ipaddr
+            .process(new TextDecoder().decode(socket.getRemoteAddressAsText()))
+            .toString();
     }
 
     /**
@@ -49,7 +50,7 @@ export default class Connection {
      */
 
     public close(details?: string, withCallback = true): void {
-        this.socket.disconnect(true);
+        this.socket.close();
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
 
@@ -68,37 +69,13 @@ export default class Connection {
     }
 
     /**
-     * Attempts to parse the string and convert it to a JSON.
-     * An error is caught if the JSON fails to properly parse.
-     * @param message JSON message string to be parsed.
-     */
-
-    private handleMessage(message: string): void {
-        // Skip duplicates in a certain timeframe.
-        if (this.isDuplicate(message)) return;
-
-        try {
-            this.messageCallback?.(JSON.parse(message));
-
-            this.lastMessage = message;
-            this.lastMessageTime = Date.now();
-        } catch (error) {
-            log.error(`Message could not be parsed: ${message}.`);
-            log.error(error);
-        }
-    }
-
-    /**
      * Receives the close signal and ends the connection with the socket.
      */
 
-    private handleClose(): void {
+    public handleClose(): void {
         log.info(`Closed socket: ${this.address}.`);
 
-        this.socketHandler.remove(this.instance);
-
         this.closeCallback?.();
-
         this.clearTimeout();
     }
 

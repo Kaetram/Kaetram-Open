@@ -1,4 +1,4 @@
-import SocketIO from './sockets/socketio';
+import UWS from './sockets/uws';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -12,17 +12,13 @@ interface Addresses {
 }
 
 export default class SocketHandler {
-    private socketIO: SocketIO;
-
     public addresses: Addresses = {}; // Keeps track of addresses, their counts, and their last connection time.
     public connections: { [instance: string]: Connection } = {}; // List of all connections to the server.
 
     private connectionCallback?: (connection: Connection) => void;
 
     public constructor() {
-        this.socketIO = new SocketIO(this);
-
-        this.socketIO.onAdd(this.add.bind(this));
+        new UWS(this).onAdd(this.add.bind(this));
     }
 
     /**
@@ -102,6 +98,15 @@ export default class SocketHandler {
 
     public isMaxConnections(address: string): boolean {
         return this.addresses[address].count > Modules.Constants.MAX_CONNECTIONS;
+    }
+
+    /**
+     * Checks whether or not we have anyone currently connected to the server.
+     * @returns Whether the number of connections is greater than 0.
+     */
+
+    public hasConnections(): boolean {
+        return Object.keys(this.connections).length > 0;
     }
 
     /**
