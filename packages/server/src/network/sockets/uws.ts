@@ -5,10 +5,10 @@ import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
-import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from 'uWebSockets.js';
+import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from 'uws';
 
 import type SocketHandler from '../sockethandler';
-import type { WebSocket as WS } from 'uWebSockets.js';
+import type { WebSocket as WS } from 'uws';
 import type { ConnectionInfo } from '@kaetram/common/types/network';
 
 export default class UWS extends WebSocket {
