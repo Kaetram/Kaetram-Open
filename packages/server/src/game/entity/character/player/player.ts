@@ -41,6 +41,7 @@ import { Opcodes, Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
 import { Team } from '@kaetram/common/api/minigame';
 
+import type Guild from './guild';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -99,6 +100,8 @@ export default class Player extends Character {
     public trade: Trade = new Trade(this);
 
     public handler: Handler = new Handler(this);
+
+    public guild: Guild | undefined;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -2056,6 +2059,15 @@ export default class Player extends Character {
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
+    }
+
+    /**
+     * Obtains the player's current guild identifier. Otherwise returns an empty string.
+     * @returns The lowercase name of the guild (identifier) or empty string if not in a guild.
+     */
+
+    public getGuildIdentifier(): string {
+        return this.guild?.name.toLowerCase() || '';
     }
 
     /**
