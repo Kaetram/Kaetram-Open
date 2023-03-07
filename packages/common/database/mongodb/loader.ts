@@ -4,6 +4,7 @@ import log from '@kaetram/common/util/log';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 import type { Db } from 'mongodb';
 import type { SerializedAbility } from '@kaetram/common/types/ability';
+import type { GuildData } from '@kaetram/common/types/guild';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
@@ -188,6 +189,27 @@ export default class Loader {
             let [abilities] = info as SerializedAbility[];
 
             callback(abilities);
+        });
+    }
+
+    /**
+     * Searches for a guild in the database and returns it.
+     * @param identifier The string identifier of the guild.
+     */
+
+    public loadGuild(identifier: string, callback: (guild?: GuildData) => void): void {
+        if (!this.database || config.skipDatabase) return callback();
+
+        let cursor = this.database.collection('guilds').find({ identifier });
+
+        cursor.toArray().then((info: unknown[]) => {
+            if (info.length > 1) log.warning(`[Guilds] Duplicate entry for ${identifier}.`);
+
+            // Return empty array if we can't find any data.
+            if (info.length === 0) return callback();
+
+            // Return the raw data from the database.
+            callback(info[0] as GuildData);
         });
     }
 }
