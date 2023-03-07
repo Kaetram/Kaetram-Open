@@ -32,6 +32,7 @@ export interface PlayerInfo {
     friends: string[];
     lastServerId: number;
     lastAddress: string;
+    guild: string;
 }
 
 /**
@@ -167,6 +168,27 @@ export default class Creator {
     }
 
     /**
+     * Saves the guild to the guild collection.
+     * @param player The player whose guild we are saving.
+     */
+
+    public saveGuild(player: Player): void {
+        let collection = this.database.collection('guilds');
+
+        collection.updateOne(
+            { identifier: player.getGuildIdentifier() },
+            { $set: player.guild.serialize() },
+            { upsert: true },
+            (error, result) => {
+                if (error)
+                    log.error(`An error occurred while saving guild for ${player.username}.`);
+
+                if (!result) log.error(`Unable to save guild for ${player.username}.`);
+            }
+        );
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
@@ -267,7 +289,8 @@ export default class Creator {
             regionsLoaded: player.regionsLoaded,
             friends: player.friends.serialize(),
             lastServerId: config.serverId,
-            lastAddress: player.connection.address
+            lastAddress: player.connection.address,
+            guild: player.getGuildIdentifier()
         };
     }
 }
