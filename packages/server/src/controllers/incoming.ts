@@ -1,3 +1,4 @@
+import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
 import type World from '../game/world';
@@ -48,11 +49,32 @@ export default class Incoming {
             }
 
             case Opcodes.Player.Chat: {
-                if (!data.chat?.target) return;
+                if (!data.chat) return;
 
-                let target = this.world.getPlayerByName(data.chat.target);
+                // Not found occurs when the hub could not find the player anywhere.
+                if (data.chat.notFound) {
+                    let player = this.world.getPlayerByName(data.chat.source!);
 
-                return target?.sendMessage(data.chat.target, data.chat.message, data.chat.source!);
+                    return player.notify(
+                        `Player @aquamarine@${data.chat.target}@white@ is not online.`
+                    );
+                }
+
+                // Success is an event sent from the hub when the message was successfully delivered.
+                if (data.chat.success) {
+                    let player = this.world.getPlayerByName(data.chat.source!);
+
+                    return player.notify(
+                        data.chat.message,
+                        'aquamarine',
+                        `[To ${Utils.formatName(data.chat.target!)}]`,
+                        true
+                    );
+                }
+
+                let target = this.world.getPlayerByName(data.chat.target!);
+
+                return target?.sendMessage(data.chat.target!, data.chat.message, data.chat.source!);
             }
 
             // Synchronizes the active friends the hub found in other servers.
