@@ -22,9 +22,7 @@ import type { connection as Connection, Message } from 'websocket';
  */
 
 export default class Client {
-    private address = config.ssl
-        ? `wss://${config.hubHost}`
-        : `ws://${config.hubHost}:${config.hubWsPort}`;
+    private address = `ws://${config.hubWsHost}:${config.hubWsPort}`;
 
     private webSocket!: WebSocket.client;
     private connection!: Connection;
