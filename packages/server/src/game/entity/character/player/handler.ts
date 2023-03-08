@@ -620,6 +620,13 @@ export default class Handler {
                 list: this.player.friends?.getFriendsList()
             })
         );
+
+        // Synchronize friends list cross-server by sending inactive friends to hub.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Friends, {
+                inactiveFriends: this.player.friends?.getInactiveFriends()
+            })
+        );
     }
 
     /**
