@@ -41,12 +41,27 @@ export default class Servers {
             // Could not find the player, relay a message that the player is not online.
             if (!targetServer)
                 return server.send(
-                    new Packet(Packets.Player, Opcodes.Player.Chat, { chatError: 'notfound' })
+                    new Packet(Packets.Player, Opcodes.Player.Chat, {
+                        chat: {
+                            source,
+                            target,
+                            notFound: true
+                        }
+                    })
                 );
 
             // Send the private message to the target player's server.
             targetServer.send(
-                new Packet(Packets.Player, Opcodes.Player.Chat, { source, message, target })
+                new Packet(Packets.Player, Opcodes.Player.Chat, {
+                    chat: { source, message, target }
+                })
+            );
+
+            // Send a confirmation message to the original server.
+            server.send(
+                new Packet(Packets.Player, Opcodes.Player.Chat, {
+                    chat: { source, message, target, success: true }
+                })
             );
         });
 

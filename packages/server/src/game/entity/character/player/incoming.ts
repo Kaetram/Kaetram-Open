@@ -174,11 +174,6 @@ export default class Incoming {
                 return this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
                     if (online) return this.connection.reject('loggedin');
 
-                    // Synchronize the login immediately with the hub.
-                    this.world.client.send(
-                        new PlayerPacket(Opcodes.Player.Login, { username: this.player.username })
-                    );
-
                     this.database.login(this.player);
                 });
             }
