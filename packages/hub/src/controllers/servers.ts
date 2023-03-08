@@ -58,7 +58,8 @@ export default class Servers {
                 let targetServer = this.findPlayer(friend);
 
                 // If the player is online, add them to the active friends list.
-                if (targetServer) activeFriends[friend] = { online: true, serverId: server.id };
+                if (targetServer)
+                    activeFriends[friend] = { online: true, serverId: targetServer.id };
             }
 
             // Send the active friends back to the server.
