@@ -8,6 +8,7 @@ import {
     Friends,
     NPC as NPCPacket,
     Overlay,
+    Player as PlayerPacket,
     Points,
     Poison as PoisonPacket,
     Quest,
@@ -15,9 +16,7 @@ import {
     Trade
 } from '../../../../network/packets';
 
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Light from '../../../globals/impl/light';
@@ -139,13 +138,11 @@ export default class Handler {
 
         this.clear();
 
-        if (this.player.ready) {
-            if (config.discordEnabled)
-                this.world.discord.sendMessage(this.player.username, 'has logged out!');
+        this.world.discord.sendMessage(this.player.username, 'has logged out!');
 
-            if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
-        }
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Logout, { username: this.player.username })
+        );
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
@@ -161,12 +158,11 @@ export default class Handler {
 
         this.world.cleanCombat(this.player);
 
-        this.world.linkFriends(this.player, true);
+        this.world.syncFriendsList(this.player.username, true);
 
         this.player.save();
 
         this.world.entities.removePlayer(this.player);
-        this.world.api.sendLogout(this.player.username);
     }
 
     /**

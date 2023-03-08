@@ -195,3 +195,9 @@ export enum Friends {
     Remove,
     Status
 }
+
+export enum Player {
+    Login,
+    Logout,
+    Chat
+}

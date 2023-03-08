@@ -6,6 +6,15 @@ import type { Modules, Opcodes } from '../../network';
 
 export interface HandshakePacket {
     gVer: string;
+
+    // Hub related handshake data.
+    name?: string;
+    serverId?: number;
+    accessToken?: string; // Denied if mismatches
+    remoteHost?: string; // Relayed to game clients as the server's IP.
+    port?: number;
+    players?: string[];
+    maxPlayers?: number;
 }
 
 export interface LoginPacket {

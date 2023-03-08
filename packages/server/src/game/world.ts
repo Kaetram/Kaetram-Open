@@ -9,6 +9,7 @@ import Warps from '../controllers/warps';
 import Guilds from '../controllers/guilds';
 import API from '../network/api';
 import Network from '../network/network';
+import Client from '../network/client';
 import { Chat } from '../network/packets';
 
 import Utils from '@kaetram/common/util/utils';
@@ -48,6 +49,7 @@ export default class World {
     public minigames: Minigames = new Minigames(this);
     public enchanter: Enchanter = new Enchanter(this);
     public guilds: Guilds = new Guilds(this);
+    public client: Client = new Client(this);
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -73,8 +75,6 @@ export default class World {
      */
 
     private tick(): void {
-        if (config.hubEnabled) setInterval(() => this.api.pingHub(), config.hubPing);
-
         setInterval(() => {
             this.network.parse();
             this.map.regions.parse();
@@ -156,21 +156,6 @@ export default class World {
 
             character.clearTarget();
         });
-    }
-
-    /**
-     * Updates the status of `lPlayer` in the friends list of all players that
-     * are currently logged in and have `lPlayer` in their friends list.
-     * @param lPlayer The player that we are updating the status of relative to others.
-     * @param logout Whether the `lPlayer` is logging out or not.
-     */
-
-    public linkFriends(lPlayer: Player, logout = false): void {
-        // Parse the local friends first.
-        this.syncFriendsList(lPlayer.username, logout);
-
-        // If the hub is enabled, we request the hub to link friends across servers.
-        if (config.hubEnabled) this.api.linkFriends(lPlayer, logout);
     }
 
     /**
