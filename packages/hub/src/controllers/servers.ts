@@ -4,6 +4,7 @@ import Packet from '../network/packet';
 import log from '@kaetram/common/util/log';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
+import type { Friend } from '@kaetram/common/types/friends';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
@@ -46,6 +47,23 @@ export default class Servers {
             // Send the private message to the target player's server.
             targetServer.send(
                 new Packet(Packets.Player, Opcodes.Player.Chat, { source, message, target })
+            );
+        });
+
+        server.onFriends((username: string, inactiveFriends: string[]) => {
+            let activeFriends: Friend = {};
+
+            // Look through all the inactive friends and try to find them on a server.
+            for (let friend of inactiveFriends) {
+                let targetServer = this.findPlayer(friend);
+
+                // If the player is online, add them to the active friends list.
+                if (targetServer) activeFriends[friend] = { online: true, serverId: server.id };
+            }
+
+            // Send the active friends back to the server.
+            server.send(
+                new Packet(Packets.Player, Opcodes.Player.Friends, { username, activeFriends })
             );
         });
     }

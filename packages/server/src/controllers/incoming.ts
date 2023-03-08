@@ -54,6 +54,15 @@ export default class Incoming {
 
                 return target?.sendMessage(data.chat.target, data.chat.message, data.chat.source!);
             }
+
+            // Synchronizes the active friends the hub found in other servers.
+            case Opcodes.Player.Friends: {
+                if (!data.activeFriends) return;
+
+                let player = this.world.getPlayerByName(data.username!);
+
+                return player?.friends.setActiveFriends(data.activeFriends);
+            }
         }
     }
 }

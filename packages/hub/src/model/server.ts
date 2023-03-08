@@ -10,6 +10,7 @@ import type { HandshakePacket } from '@kaetram/common/types/messages/incoming';
 
 type BroadcastCallback = (packet: Packet) => void;
 type MessageCallback = (source: string, message: string, target: string) => void;
+type FriendsCallback = (username: string, inactiveFriends: string[]) => void;
 export default class Server {
     public id = -1;
     public name = '';
@@ -24,6 +25,7 @@ export default class Server {
     public readyCallback?: () => void;
     public broadcastCallback?: BroadcastCallback;
     public messageCallback?: MessageCallback;
+    public friendsCallback?: FriendsCallback;
 
     public constructor(public instance: string, public connection: Connection) {
         this.address = Utils.bufferToAddress(this.connection.socket.getRemoteAddressAsText());
@@ -109,6 +111,15 @@ export default class Server {
 
     public onMessage(callback: MessageCallback): void {
         this.messageCallback = callback;
+    }
+
+    /**
+     * Callback to extract all of the active friends from the servers connected.
+     * @param callback Contains list of inactive friends from one player logging in.
+     */
+
+    public onFriends(callback: FriendsCallback): void {
+        this.friendsCallback = callback;
     }
 
     /**
