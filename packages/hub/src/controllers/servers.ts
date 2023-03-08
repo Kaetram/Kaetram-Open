@@ -169,7 +169,11 @@ export default class Servers {
      */
 
     public serialize(): SerializedServer[] {
-        return Object.values(this.servers).map((server: Server) => server.serialize());
+        return Object.values(this.servers)
+            .map((server: Server) => server.serialize())
+            .sort((a, b) => {
+                return a.id - b.id;
+            });
     }
 
     /**
