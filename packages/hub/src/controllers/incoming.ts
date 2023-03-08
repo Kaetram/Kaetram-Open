@@ -82,9 +82,9 @@ export default class Incoming {
             }
 
             case Opcodes.Player.Friends: {
-                if (!info.inactiveFriends) return;
+                if (!info.username || !info.inactiveFriends) return;
 
-                return this.server.friendsCallback?.(info.username!, info.inactiveFriends);
+                return this.server.friendsCallback?.(info.username, info.inactiveFriends);
             }
         }
     }
