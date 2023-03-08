@@ -683,7 +683,7 @@ export default class App {
         this.selectedServer = server;
 
         let name = this.worldSelectButton.querySelector('strong')!;
-        name.textContent = `${server.name}`;
+        name.textContent = `${server.name} ${server.id}`;
 
         let players = this.worldSelectButton.querySelector('span')!;
         players.textContent = `(${server.players}/${server.maxPlayers} players)`;
