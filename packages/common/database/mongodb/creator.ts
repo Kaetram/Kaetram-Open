@@ -177,7 +177,7 @@ export default class Creator {
 
         collection.updateOne(
             { identifier: player.getGuildIdentifier() },
-            { $set: player.guild.serialize() },
+            { $set: player.guild!.serialize() },
             { upsert: true },
             (error, result) => {
                 if (error)

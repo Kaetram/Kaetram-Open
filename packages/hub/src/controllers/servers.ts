@@ -1,117 +1,122 @@
 import Server from '../model/server';
+import Packet from '../network/packet';
 
-import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
-import type { SerializedServer } from '@kaetram/common/types/api';
+import type Connection from '../network/connection';
+import type { SerializedServer } from '@kaetram/common/types/network';
 
-type AddCallback = (id: number) => void;
-type RemoveCallback = (key: string) => void;
-
-// Raw server data received from the server itself.
-export interface ServerData {
-    lastPing: number;
-    serverId: number;
-    host: string;
-    port: number;
-    apiPort: number;
-    accessToken: string;
-    remoteServerHost: string;
-    remoteApiHost: string;
-    maxPlayers: number; // Max players in the world.
-    players: string[]; // String array of usernames
-}
-
-/**
- * We keep track of the servers that are connected to the hub.
- * When a server goes online, it pings the hub (if hub config is enabled)
- * and it will ping the hub at a set interval. We keep track of those
- * pings here. If a server does not ping for a certain period of time,
- * we just remove it to preserve resources.
- */
+type ServerCallback = (id: number, name: string) => void;
 export default class Servers {
-    private servers: { [key: string]: Server } = {};
+    private servers: { [instance: string]: Server } = {};
 
-    private addCallback?: AddCallback;
-    private removeCallback?: RemoveCallback;
+    private addCallback?: ServerCallback;
+    private removeCallback?: ServerCallback;
     private updateCallback?: () => void;
 
-    public constructor() {
-        // Create the cleaning interval.
-        setInterval(this.handleCleanUp.bind(this), config.cleanupTime);
-    }
-
     /**
-     * Handles cleaning and deletion of servers that have not
-     * responded in a while. Also updates the total amount of players.
+     * Handles the creation of a new server object upon initial connection. This creates
+     * the object and adds it to our list of servers after the handshake has completed.
+     * @param instance The instance of the server we are connecting to.
+     * @param connection The websocket connection to the server.
      */
 
-    private handleCleanUp(): void {
-        this.forEachServer((server, key) => {
-            if (!this.isServerTimedOut(server)) return;
+    public connect(instance: string, connection: Connection): void {
+        let server = new Server(instance, connection);
 
-            this.removeCallback?.(key);
+        // Callback for when the server finishes the handshake.
+        server.onReady(() => this.add(server));
+        server.onBroadcast((packet: Packet) => {
+            // Servers send broadcasts for population changes, so it's best to do an update here.
+            this.updateCallback?.();
 
-            delete this.servers[key];
+            this.broadcast(packet, server.instance);
+        });
+
+        server.onMessage((source: string, message: string, target: string) => {
+            let targetServer = this.findPlayer(target);
+
+            // Could not find the player, relay a message that the player is not online.
+            if (!targetServer)
+                return server.send(
+                    new Packet(Packets.Player, Opcodes.Player.Chat, { chatError: 'notfound' })
+                );
+
+            // Send the private message to the target player's server.
+            targetServer.send(
+                new Packet(Packets.Player, Opcodes.Player.Chat, { source, message, target })
+            );
         });
     }
 
     /**
-     * Adds a new server to our dictionary of servers. If the server already
-     * exists, then we just update the last pinged time instead.
-     * @param data Raw server data information obtained during server pinging.
+     * Handles adding a server to our list of servers.
+     * @param server The server object we are adding.
      */
 
-    public add(data: ServerData): void {
-        if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
+    private add(server: Server): void {
+        if (server.instance in this.servers)
+            return log.error(`Server ${server.instance} already exists.`);
 
-        this.servers[data.serverId] = new Server(
-            data.serverId,
-            `${config.name} ${data.serverId}`,
-            data.host,
-            data.port,
-            data.apiPort,
-            data.accessToken,
-            data.remoteServerHost,
-            data.remoteApiHost,
-            data.players,
-            data.maxPlayers
+        this.servers[server.instance] = server;
+
+        this.addCallback?.(server.id, server.name);
+    }
+
+    /**
+     * Handles removing a server from our list of servers.
+     * @param instance The instance of the server we are removing.
+     */
+
+    public remove(instance: string): void {
+        // Prevent crashes from removing non-existent servers.
+        if (!(instance in this.servers)) return log.warning(`Server ${instance} does not exist.`);
+
+        this.removeCallback?.(this.servers[instance].id, this.servers[instance].name);
+
+        delete this.servers[instance];
+    }
+
+    /**
+     * Broadcasts a message to all servers. Optionally we can exclude a server.
+     * @param packet The packet object that we want to send to the server.
+     * @param exclude The server we are excluding from the broadcast.
+     */
+
+    public broadcast(packet: Packet, exclude = ''): void {
+        for (let server in this.servers) {
+            if (server === exclude) continue;
+
+            this.servers[server].send(packet);
+        }
+    }
+
+    /**
+     * Relays a global chat message to all the servers connected to the hub.
+     * @param source Who is sending the message (generally someone on Discord).
+     * @param message The string contents of the message.
+     * @param colour Colour of the text we are sending.
+     */
+
+    public global(source: string, message: string, colour: string): void {
+        this.broadcast(
+            new Packet(Packets.Player, Opcodes.Player.Chat, {
+                source,
+                message,
+                colour
+            })
         );
-
-        this.addCallback?.(data.serverId);
-
-        this.servers[data.serverId].onUpdate(() => this.updateCallback?.());
     }
 
     /**
-     * Grabs a server from our list based on its id.
-     * @param id The id of the server we are trying to grab.
-     * @returns A server object.
+     * Checks that there is at least one server with space for a new player.
+     * @returns Whether or not some of the servers have more player spaces than amount of players.
      */
 
-    public get(id: string): Server {
-        return this.servers[id];
-    }
-
-    /**
-     * Serialize all servers and store them in an array of Server
-     * objects. This is used for the hub to send to the client.
-     */
-
-    public getAll(): SerializedServer[] {
-        return Object.values(this.servers).map((server) => {
-            return server.serialize();
-        });
-    }
-
-    /**
-     * Checks the servers to see whether or not we
-     * have at least one server with space in it.
-     * @returns Boolean if we have at least one server with space.
-     */
-
-    public hasEmpty(): boolean {
+    public hasSpace(): boolean {
         return Object.values(this.servers).some((server: Server) => {
-            return server.players.length < server.maxPlayers - 1;
+            return server.players.length < server.maxPlayers;
         });
     }
 
@@ -145,67 +150,57 @@ export default class Servers {
     }
 
     /**
-     * Checks if the last time we pinged a server is greater than the
-     * threshold for cleaning up and removing the server.
-     * @param server The server we are checking.
-     * @returns True if the difference between the last ping and the current time is greater than the threshold.
-     */
-
-    private isServerTimedOut(server: Server): boolean {
-        return Date.now() - server.lastPing > config.cleanupThreshold;
-    }
-
-    /**
-     * Total amount of servers that are in our list.
-     * @returns Length of the keys of the dictionary of servers.
-     */
-
-    public getServerCount(): number {
-        return Object.keys(this.servers).length;
-    }
-
-    /**
-     * Goes through all the servers and obtains the total amount of players.
-     * @returns Number indicating the total amount of players.
+     * Looks through all the servers and adds the amount of players currently online.
+     * @returns Number of total players spanning all servers.
      */
 
     public getTotalPlayers(): number {
-        let totalPlayers = 0;
+        let total = 0;
 
-        for (let server of Object.values(this.servers)) totalPlayers += server.players.length;
+        // Iterate through all the servers and add the amount of players.
+        this.forEachServer((server: Server) => (total += server.players.length));
 
-        return totalPlayers;
+        return total;
     }
 
     /**
-     * Iterates through each server in our list and creates a callback.
-     * @param callback Callback containing the server object and server key.
+     * Iterates through all the servers and serializes them into an array.
+     * @returns Contains an array of serialized server information.
      */
 
-    public forEachServer(callback: (server: Server, key: string) => void): void {
-        for (let key in this.servers) callback(this.servers[key], key);
+    public serialize(): SerializedServer[] {
+        return Object.values(this.servers).map((server: Server) => server.serialize());
     }
 
     /**
-     * Callback for when we are adding a new server to our list.
-     * @param callback The server id and the server object we are adding.
+     * Iterates through all the server objects.
+     * @param callback Contains the server object that we are iterating through currently.
      */
 
-    public onAdd(callback: AddCallback): void {
+    public forEachServer(callback: (server: Server) => void): void {
+        for (let server in this.servers) callback(this.servers[server]);
+    }
+
+    /**
+     * Callback handler for when a new server is added.
+     * @param callback Contains the name and id of the server added.
+     */
+
+    public onAdd(callback: ServerCallback): void {
         this.addCallback = callback;
     }
 
     /**
-     * Callback for when we remove a server from our list.
-     * @param callback The server key and object that we are removing.
+     * Callback handler for when a server is removed from our list.
+     * @param callback Contains the name and id of the server removed.
      */
 
-    public onRemove(callback: RemoveCallback): void {
+    public onRemove(callback: ServerCallback): void {
         this.removeCallback = callback;
     }
 
     /**
-     * Callback for when one of the servers has updated.
+     * Callback for when we want to update the population of the servers.
      */
 
     public onUpdate(callback: () => void): void {
