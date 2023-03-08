@@ -118,7 +118,8 @@ export default class Server {
 
     public serialize(): SerializedServer {
         return {
-            name: `${this.name} ${this.id}`,
+            id: this.id,
+            name: this.name,
             host: this.address,
             port: this.port,
             players: this.players.length,
