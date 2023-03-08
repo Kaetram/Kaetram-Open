@@ -160,11 +160,6 @@ export default class Incoming {
             if (this.world.isOnline(this.player.username))
                 return this.connection.reject('loggedin');
 
-            // Synchronize the login immediately with the hub.
-            this.world.client.send(
-                new PlayerPacket(Opcodes.Player.Login, { username: this.player.username })
-            );
-
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) {
                 this.player.load(Creator.serializePlayer(this.player));
@@ -178,6 +173,11 @@ export default class Incoming {
                 // Check the player in other servers first (defaults to false if hub is not present).
                 return this.world.api.isPlayerOnline(this.player.username, (online: boolean) => {
                     if (online) return this.connection.reject('loggedin');
+
+                    // Synchronize the login immediately with the hub.
+                    this.world.client.send(
+                        new PlayerPacket(Opcodes.Player.Login, { username: this.player.username })
+                    );
 
                     this.database.login(this.player);
                 });
