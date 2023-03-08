@@ -403,12 +403,13 @@ export interface ChatInfo {
     source: string;
     message: string;
     target?: string;
+    notFound?: boolean;
+    success?: boolean;
 }
 export interface PlayerPacket {
     username?: string;
     serverId?: number;
     chat?: ChatInfo;
-    chatError?: string;
     inactiveFriends?: string[];
     activeFriends?: Friend;
 }

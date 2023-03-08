@@ -222,6 +222,9 @@ export default class Player extends Character {
         this.loadStatistics();
         this.loadAbilities();
 
+        // Synchronize login with the hub's server list.
+        this.world.client.send(new PlayerPacket(Opcodes.Player.Login, { username: this.username }));
+
         // Quests and achievements have to be loaded prior to introducing the player.
         await this.loadQuests();
         await this.loadAchievements();
