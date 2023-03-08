@@ -120,7 +120,7 @@ export default class Server {
         return {
             id: this.id,
             name: this.name,
-            host: this.address,
+            host: this.host,
             port: this.port,
             players: this.players.length,
             maxPlayers: this.maxPlayers
