@@ -213,6 +213,14 @@ export default class Incoming {
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
         this.world.syncFriendsList(this.player.username);
 
+        // Synchronize friends list cross-server by sending inactive friends to hub.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Friends, {
+                username: this.player.username,
+                inactiveFriends: this.player.friends?.getInactiveFriends()
+            })
+        );
+
         if (this.player.isDead()) this.player.deathCallback?.();
 
         this.player.welcome();
