@@ -199,5 +199,6 @@ export enum Friends {
 export enum Player {
     Login,
     Logout,
-    Chat
+    Chat,
+    Friends
 }
