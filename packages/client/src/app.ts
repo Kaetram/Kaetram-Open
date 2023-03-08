@@ -728,7 +728,7 @@ export default class App {
             // If this is the first server in the list, select it and mark it as active
             if (parseInt(i) === 0) li.classList.add('active');
 
-            name.textContent = server.name;
+            name.textContent = `${server.name} ${server.id}`;
 
             players.textContent = `${server.players}/${server.maxPlayers} players`;
 
