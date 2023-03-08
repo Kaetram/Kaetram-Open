@@ -1,15 +1,15 @@
-import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
-import type { Modules, Opcodes } from '../../network';
-import type { AbilityData, SerializedAbility } from '../ability';
-import type { EntityData, EntityDisplayInfo } from '../entity';
-import type { EquipmentData, SerializedEquipment } from '../equipment';
 import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
 import type { PlayerData } from '../player';
 import type { QuestData } from '../quest';
-import type { SerializedSkills, SkillData } from '../skills';
+import type { Modules, Opcodes } from '../../network';
 import type { SerializedStoreItem } from '../stores';
+import type { EntityData, EntityDisplayInfo } from '../entity';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import type { SerializedSkills, SkillData } from '../skills';
+import type { AbilityData, SerializedAbility } from '../ability';
+import type { EquipmentData, SerializedEquipment } from '../equipment';
 
 /**
  * Packet interfaces of data being sent from the server to the client.
@@ -409,6 +409,8 @@ export interface PlayerPacket {
     serverId?: number;
     chat?: ChatInfo;
     chatError?: string;
+    inactiveFriends?: string[];
+    activeFriends?: Friend;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
