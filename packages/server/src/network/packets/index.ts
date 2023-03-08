@@ -41,3 +41,4 @@ export { default as Teleport } from './teleport';
 export { default as Update } from './update';
 export { default as Welcome } from './welcome';
 export { default as Rank } from './rank';
+export { default as Player } from './player';

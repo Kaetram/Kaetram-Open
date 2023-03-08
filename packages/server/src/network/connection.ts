@@ -1,11 +1,8 @@
 import log from '@kaetram/common/util/log';
-import ipaddr from 'ipaddr.js';
+import Utils from '@kaetram/common/util/utils';
 
-import type { Packets } from '@kaetram/common/network';
-import type { ConnectionInfo } from '@kaetram/common/types/network';
-import type { WebSocket as uWebSocket } from 'uws';
-
-type MessageCallback = (message: [Packets, never]) => void;
+import type { WebSocket } from 'uws';
+import type { ConnectionInfo, MessageCallback } from '@kaetram/common/types/network';
 
 export default class Connection {
     public address = '';
@@ -22,11 +19,9 @@ export default class Connection {
 
     private closeCallback?: () => void;
 
-    public constructor(public instance: string, private socket: uWebSocket<ConnectionInfo>) {
+    public constructor(public instance: string, private socket: WebSocket<ConnectionInfo>) {
         // Convert the IP address hex string to a readable IP address.
-        this.address = ipaddr
-            .process(new TextDecoder().decode(socket.getRemoteAddressAsText()))
-            .toString();
+        this.address = Utils.bufferToAddress(socket.getRemoteAddressAsText());
     }
 
     /**

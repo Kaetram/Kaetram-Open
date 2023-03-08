@@ -9,12 +9,12 @@ import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
 import Trade from './trade';
+import Incoming from './incoming';
 
 import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Formulas from '../../../../info/formulas';
-import Incoming from '../../../../controllers/incoming';
 
 import {
     Camera,
@@ -25,6 +25,7 @@ import {
     Network,
     Notification,
     Overlay,
+    Player as PlayerPacket,
     Pointer,
     PVP,
     Rank,
@@ -1622,7 +1623,11 @@ export default class Player extends Character {
 
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
+            this.world.client.send(
+                new PlayerPacket(Opcodes.Player.Chat, {
+                    chat: { source: this.username, message, target: playerName }
+                })
+            );
             return;
         }
 
@@ -1690,11 +1695,13 @@ export default class Player extends Character {
 
         let source = `${global ? '[Global]' : ''} ${name}`;
 
-        // Relay the message to the discord channel.
-        if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
+        // Relay the message to the discord channel if it is enabled.
+        this.world.discord.sendMessage(source, message, undefined, true);
 
-        // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(source, message);
+        // Relay the hub so that it can handle the discord relay.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Chat, { chat: { source, message } })
+        );
 
         if (global) return this.world.globalMessage(name, message, colour);
 
