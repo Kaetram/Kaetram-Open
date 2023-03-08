@@ -89,9 +89,8 @@ export default class Client {
 
         let data = JSON.parse(info);
 
-        // Handle bulk data through the same function of the incoming controller.
-        if (data.length > 1) for (let packet of data) this.incoming.handle(packet);
-        else this.incoming.handle(data);
+        // Handle incoming data from the hub.
+        this.incoming.handle(data);
     }
 
     /**
