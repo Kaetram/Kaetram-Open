@@ -71,7 +71,7 @@ export default class Servers {
 
     public remove(instance: string): void {
         // Prevent crashes from removing non-existent servers.
-        if (!(instance in this.servers)) return log.warning(`Server ${instance} does not exist.`);
+        if (!(instance in this.servers)) return;
 
         this.removeCallback?.(this.servers[instance].id, this.servers[instance].name);
 
