@@ -80,6 +80,12 @@ export default class Incoming {
                     info.chat.target!
                 );
             }
+
+            case Opcodes.Player.Friends: {
+                if (!info.inactiveFriends) return;
+
+                return this.server.friendsCallback?.(info.username!, info.inactiveFriends);
+            }
         }
     }
 }
