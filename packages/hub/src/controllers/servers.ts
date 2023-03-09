@@ -147,9 +147,11 @@ export default class Servers {
     public global(source: string, message: string, colour: string): void {
         this.broadcast(
             new Packet(Packets.Player, Opcodes.Player.Chat, {
-                source,
-                message,
-                colour
+                chat: {
+                    source,
+                    message,
+                    colour
+                }
             })
         );
     }
