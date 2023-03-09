@@ -28,7 +28,7 @@ jobs:
                   cache: 'yarn'
 
             - name: Install
-              run: yarn set version stable
+              run: yarn set version 4.0.0-rc.40
 
             - name: Install Dependencies
               run: yarn install
