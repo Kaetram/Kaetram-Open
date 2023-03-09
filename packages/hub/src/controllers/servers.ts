@@ -9,11 +9,18 @@ import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
 type ServerCallback = (id: number, name: string) => void;
+type MessageCallback = (
+    source: string,
+    message: string,
+    serverName?: string,
+    withArrow?: boolean
+) => void;
 export default class Servers {
     private servers: { [instance: string]: Server } = {};
 
     private addCallback?: ServerCallback;
     private removeCallback?: ServerCallback;
+    private messageCallback?: MessageCallback;
     private updateCallback?: () => void;
 
     /**
@@ -36,6 +43,10 @@ export default class Servers {
         });
 
         server.onMessage((source: string, message: string, target: string) => {
+            // Non-targeted messages get sent to the Discord chat.
+            if (!target)
+                return this.messageCallback?.(source, message, `${server.name} ${server.id}`, true);
+
             let targetServer = this.findPlayer(target);
 
             // Could not find the player, relay a message that the player is not online.
@@ -243,5 +254,15 @@ export default class Servers {
 
     public onUpdate(callback: () => void): void {
         this.updateCallback = callback;
+    }
+
+    /**
+     * Message for when anyone on any server sends a message. We send
+     * these messages to the Discord bot.
+     * @param callback Contains who sent the message and what was sent.
+     */
+
+    public onMessage(callback: MessageCallback): void {
+        this.messageCallback = callback;
     }
 }
