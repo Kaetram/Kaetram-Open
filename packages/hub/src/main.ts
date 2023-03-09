@@ -27,7 +27,7 @@ export default class Main {
         // Callbacks for the server handler.
         this.servers.onAdd(this.handleAdd.bind(this));
         this.servers.onRemove(this.handleRemove.bind(this));
-        this.servers.onMessage(this.discord.sendRawMessage.bind(this.discord));
+        this.servers.onMessage(this.discord.sendMessage.bind(this.discord));
 
         if (this.handler.ready) log.notice(`Hub is now listening on port: ${config.hubWsPort}.`);
 
