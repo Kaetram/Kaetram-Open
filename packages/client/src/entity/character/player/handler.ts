@@ -62,7 +62,7 @@ export default class Handler extends CharacterHandler {
         let ignores = [];
 
         // Treats an object as a character so we can path towards it.
-        if (this.map.isObject(x, y))
+        if (isObject)
             ignores.push({
                 gridX: x,
                 gridY: y,
