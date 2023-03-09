@@ -22,7 +22,7 @@ jobs:
                   cache: 'yarn'
 
             - name: Install
-              run: yarn set version latest
+              run: yarn set version stable
 
             - name: Run Cypress
               uses: cypress-io/github-action@v4
