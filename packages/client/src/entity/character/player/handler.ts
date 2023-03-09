@@ -43,8 +43,10 @@ export default class Handler extends CharacterHandler {
         // Prevent calculating pathing when we target a mob that is within range.
         if (this.character.canAttackTarget() && !this.character.trading) return [];
 
-        // Ignore requests into colliding tiles.
-        if (this.map.isColliding(x, y)) return [];
+        let isObject = this.map.isObject(x, y);
+
+        // Ignore requests into colliding tiles but allow targetable objects.
+        if (this.map.isColliding(x, y) && !isObject) return [];
 
         // Sends the packet to the server with the request.
         this.game.socket.send(Packets.Movement, {
