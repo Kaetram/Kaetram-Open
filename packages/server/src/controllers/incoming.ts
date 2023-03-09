@@ -74,8 +74,6 @@ export default class Incoming {
      */
 
     private handleChat(chat: ChatInfo) {
-        if (!chat) return;
-
         // Not found occurs when the hub could not find the player anywhere.
         if (chat.notFound) {
             let player = this.world.getPlayerByName(chat.source!);
@@ -96,7 +94,13 @@ export default class Incoming {
         }
 
         // No target means that the message is globally sent.
-        if (!chat.target) return this.world.globalMessage(chat.source!, chat.message);
+        if (!chat.target)
+            return this.world.globalMessage(
+                chat.source!,
+                chat.message,
+                chat.colour || 'tomato',
+                true
+            );
 
         // Find who the message is targeted towards and attempt to send them a message.
         let target = this.world.getPlayerByName(chat.target!);

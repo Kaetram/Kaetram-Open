@@ -402,6 +402,7 @@ export type RankCallback = (rank: Modules.Ranks) => void;
 export interface ChatInfo {
     source: string;
     message: string;
+    colour?: string;
     target?: string;
     notFound?: boolean;
     success?: boolean;
