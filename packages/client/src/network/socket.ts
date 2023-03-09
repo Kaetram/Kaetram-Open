@@ -81,8 +81,6 @@ export default class Socket {
         if (message.startsWith('[')) {
             let data = JSON.parse(message);
 
-            console.log(data);
-
             if (data.length > 1) this.messages.handleBulkData(data);
             else this.messages.handleData(data.shift());
         } else this.messages.handleUTF8(message);
