@@ -55,7 +55,7 @@ export default class Incoming {
                 if (data.chat.notFound) {
                     let player = this.world.getPlayerByName(data.chat.source!);
 
-                    return player.notify(
+                    return player?.notify(
                         `Player @aquamarine@${data.chat.target}@white@ is not online.`
                     );
                 }
@@ -64,7 +64,7 @@ export default class Incoming {
                 if (data.chat.success) {
                     let player = this.world.getPlayerByName(data.chat.source!);
 
-                    return player.notify(
+                    return player?.notify(
                         data.chat.message,
                         'aquamarine',
                         `[To ${Utils.formatName(data.chat.target!)}]`,
