@@ -1693,7 +1693,7 @@ export default class Player extends Character {
 
         if (this.rank !== Modules.Ranks.None) {
             name = `[${Modules.RankTitles[this.rank]}] ${name}`;
-            colour = global ? '' : Modules.RankColours[this.rank];
+            colour = global ? 'rgba(191, 161, 63, 1.0)' : Modules.RankColours[this.rank];
         }
 
         let source = `${global ? '[Global]' : ''} ${name}`;
