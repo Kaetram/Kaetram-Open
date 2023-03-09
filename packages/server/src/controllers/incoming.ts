@@ -1,8 +1,9 @@
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import type World from '../game/world';
-import type { PlayerPacket } from '@kaetram/common/types/messages/outgoing';
+import type { ChatInfo, PlayerPacket } from '@kaetram/common/types/messages/outgoing';
 
 /**
  * This incoming is the global incoming controller. This is responsible for
@@ -49,32 +50,10 @@ export default class Incoming {
             }
 
             case Opcodes.Player.Chat: {
-                if (!data.chat) return;
+                // Malformed packet.
+                if (!data.chat) return log.warning(`Received an empty chat packet.`);
 
-                // Not found occurs when the hub could not find the player anywhere.
-                if (data.chat.notFound) {
-                    let player = this.world.getPlayerByName(data.chat.source!);
-
-                    return player?.notify(
-                        `Player @aquamarine@${data.chat.target}@white@ is not online.`
-                    );
-                }
-
-                // Success is an event sent from the hub when the message was successfully delivered.
-                if (data.chat.success) {
-                    let player = this.world.getPlayerByName(data.chat.source!);
-
-                    return player?.notify(
-                        data.chat.message,
-                        'aquamarine',
-                        `[To ${Utils.formatName(data.chat.target!)}]`,
-                        true
-                    );
-                }
-
-                let target = this.world.getPlayerByName(data.chat.target!);
-
-                return target?.sendMessage(data.chat.target!, data.chat.message, data.chat.source!);
+                return this.handleChat(data.chat);
             }
 
             // Synchronizes the active friends the hub found in other servers.
@@ -86,5 +65,42 @@ export default class Incoming {
                 return player?.friends.setActiveFriends(data.activeFriends);
             }
         }
+    }
+
+    /**
+     * Handles the event received from the hub about chat messages. This can be used
+     * for private messages or global messages (from the Discord bot).
+     * @param chat Contains information about the message.
+     */
+
+    private handleChat(chat: ChatInfo) {
+        if (!chat) return;
+
+        // Not found occurs when the hub could not find the player anywhere.
+        if (chat.notFound) {
+            let player = this.world.getPlayerByName(chat.source!);
+
+            return player?.notify(`Player @aquamarine@${chat.target}@white@ is not online.`);
+        }
+
+        // Success is an event sent from the hub when the message was successfully delivered.
+        if (chat.success) {
+            let player = this.world.getPlayerByName(chat.source!);
+
+            return player?.notify(
+                chat.message,
+                'aquamarine',
+                `[To ${Utils.formatName(chat.target!)}]`,
+                true
+            );
+        }
+
+        // No target means that the message is globally sent.
+        if (!chat.target) return this.world.globalMessage(chat.source!, chat.message);
+
+        // Find who the message is targeted towards and attempt to send them a message.
+        let target = this.world.getPlayerByName(chat.target!);
+
+        target?.sendMessage(chat.target!, chat.message, chat.source!);
     }
 }
