@@ -1,3 +1,4 @@
+import type { UpdateInfo } from '../guild';
 import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
@@ -288,7 +289,15 @@ export type EnchantCallback = (opcode: Opcodes.Enchant, info: EnchantPacket) => 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type GuildCallback = (opcode: Opcodes.Guild) => void;
+export interface GuildPacket {
+    identifier: string;
+    name?: string;
+    username?: string;
+    member?: Member;
+    members?: Member[];
+}
+
+export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -410,9 +419,10 @@ export interface ChatInfo {
 export interface PlayerPacket {
     username?: string;
     serverId?: number;
-    chat?: ChatInfo;
     inactiveFriends?: string[];
     activeFriends?: Friend;
+    chat?: ChatInfo;
+    guild?: UpdateInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
