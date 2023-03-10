@@ -1,13 +1,14 @@
 import Guild from '../game/entity/character/player/guild';
+import { Player as PlayerPacket } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { GuildData } from '@kaetram/common/types/guild';
+import type { GuildData, Member, UpdateInfo } from '@kaetram/common/types/guild';
 
 export default class Guilds {
     private database: MongoDB;
@@ -73,6 +74,12 @@ export default class Guilds {
 
             // Save the guild to the database.
             this.database.creator.saveGuild(player);
+
+            // Relay information to all the guild members.
+            this.updateGuild(guild.members, {
+                opcode: Opcodes.Guild.Join,
+                username: player.username
+            });
         });
     }
 
@@ -99,8 +106,47 @@ export default class Guilds {
             // Save the guild to the database.
             this.database.creator.saveGuild(player);
 
+            // We use this to relay the leaving packet to the player.
+            player.guild?.leaveCallback?.(player.username);
+
             // Remove the guild object from the player.
             player.guild = undefined;
+
+            // Update the guild for all the other players.
+            this.updateGuild(guild.members, {
+                opcode: Opcodes.Guild.Leave,
+                username: player.username
+            });
         });
+    }
+
+    /**
+     * Relays information to all the guild members about a player joining or leaving
+     * the guild. This can also be used to update ranks and other information.
+     * @param members List of all the members of the guild we want to update.
+     */
+
+    private updateGuild(members: Member[], data: UpdateInfo): void {
+        for (let member of members) {
+            // Member is offline.
+            if (member.serverId === -1) continue;
+
+            // Have the hub relay the packet to the other server.
+            if (member.serverId !== config.serverId) {
+                this.world.client.send(
+                    new PlayerPacket(Opcodes.Player.Guild, {
+                        serverId: member.serverId,
+                        guild: data
+                    })
+                );
+
+                continue;
+            }
+
+            let player = this.world.getPlayerByName(member.username);
+
+            // Update the member of the guild if they are online.
+            player?.guild?.update(data);
+        }
     }
 }

@@ -86,6 +86,12 @@ export default class Incoming {
 
                 return this.server.friendsCallback?.(info.username, info.inactiveFriends);
             }
+
+            case Opcodes.Player.Guild: {
+                console.log(info);
+
+                return;
+            }
         }
     }
 }
