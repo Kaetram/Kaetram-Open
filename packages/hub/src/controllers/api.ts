@@ -34,7 +34,7 @@ export default class API {
 
         // Listen with the hub port.
         app.listen(config.hubPort, () => {
-            log.notice(`${config.name} API is now listening on ${config.hubPort}.`);
+            log.notice(`${config.name} hub API is now listening on ${config.hubPort}.`);
         });
     }
 
