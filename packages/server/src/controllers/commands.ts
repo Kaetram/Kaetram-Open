@@ -1,12 +1,12 @@
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
 import Formulas from '../info/formulas';
-import { Command, Notification, NPC, Pointer, Store } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Command, Notification, NPC, Pointer, Store } from '@kaetram/common/network/impl';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';

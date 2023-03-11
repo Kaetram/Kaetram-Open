@@ -9,8 +9,8 @@ import Defense from './skill/impl/defense';
 
 import Formulas from '../../../../info/formulas';
 
-import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Experience, Points, Skill as SkillPacket } from '@kaetram/common/network/impl';
 
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type Player from './player';

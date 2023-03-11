@@ -1,3 +1,5 @@
+import log from '@kaetram/common/util/log';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -14,10 +16,7 @@ import {
     Quest,
     Skill,
     Trade
-} from '../../../../network/packets';
-
-import log from '@kaetram/common/util/log';
-import { Modules, Opcodes } from '@kaetram/common/network';
+} from '@kaetram/common/network/impl';
 
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';

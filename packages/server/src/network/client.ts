@@ -1,13 +1,12 @@
-import { Handshake } from './packets';
-
 import Incoming from '../controllers/incoming';
 
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
 import WebSocket from 'websocket';
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import { Handshake } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
-import type Packet from './packet';
+import type Packet from '@kaetram/common/network/packet';
 import type { connection as Connection, Message } from 'websocket';
 
 /**
