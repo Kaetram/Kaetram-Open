@@ -1,10 +1,10 @@
-import { Minigame as Packet } from '../../../network/packets';
 import Area from '../../map/areas/area';
 import Minigame from '../minigame';
 
+import Utils from '@kaetram/common/util/utils';
 import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import Utils from '@kaetram/common/util/utils';
+import { Minigame as Packet } from '@kaetram/common/network/impl';
 
 import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
 import type Player from '../../entity/character/player/player';

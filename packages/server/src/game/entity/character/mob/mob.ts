@@ -7,11 +7,11 @@ import Spawns from '../../../../../data/spawns.json';
 import Formulas from '../../../../info/formulas';
 import Character from '../character';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Heal, Movement } from '@kaetram/common/network/impl';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';

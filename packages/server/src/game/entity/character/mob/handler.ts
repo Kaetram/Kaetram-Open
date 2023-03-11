@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Bubble } from '@kaetram/server/src/network/packets';
+import { Modules } from '@kaetram/common/network';
+import { Bubble } from '@kaetram/common/network/impl';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';

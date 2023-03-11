@@ -1,5 +1,4 @@
 import Commands from '../../../../controllers/commands';
-import { Spawn, Player as PlayerPacket } from '../../../../network/packets';
 
 import sanitizer from 'sanitizer';
 import config from '@kaetram/common/config';
@@ -7,6 +6,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
+import { Spawn, Friends } from '@kaetram/common/network/impl';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
@@ -210,7 +210,7 @@ export default class Incoming {
 
         // Synchronize friends list cross-server by sending inactive friends to hub.
         this.world.client.send(
-            new PlayerPacket(Opcodes.Player.Friends, {
+            new Friends(undefined, {
                 username: this.player.username,
                 inactiveFriends: this.player.friends?.getInactiveFriends()
             })

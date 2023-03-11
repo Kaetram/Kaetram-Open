@@ -16,6 +16,12 @@ import Mana from '../points/mana';
 import Character from '../character';
 import Formulas from '../../../../info/formulas';
 
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import { Team } from '@kaetram/common/api/minigame';
 import {
     Camera,
     Chat,
@@ -34,13 +40,7 @@ import {
     Sync,
     Teleport,
     Welcome
-} from '@kaetram/server/src/network/packets';
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
-import { Opcodes, Modules } from '@kaetram/common/network';
-import config from '@kaetram/common/config';
-import { Team } from '@kaetram/common/api/minigame';
+} from '@kaetram/common/network/impl';
 
 import type Guild from './guild';
 import type NPC from '../../npc/npc';
@@ -54,7 +54,7 @@ import type Connection from '../../../../network/connection';
 import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
 import type Entities from '../../../../controllers/entities';
-import type Packet from '@kaetram/server/src/network/packet';
+import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -1627,9 +1627,7 @@ export default class Player extends Character {
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.client.send(
-                new PlayerPacket(Opcodes.Player.Chat, {
-                    chat: { source: this.username, message, target: playerName }
-                })
+                new Chat({ source: this.username, message, target: playerName })
             );
             return;
         }
@@ -1702,9 +1700,7 @@ export default class Player extends Character {
         this.world.discord.sendMessage(source, message, undefined, true);
 
         // Relay the hub so that it can handle the discord relay.
-        this.world.client.send(
-            new PlayerPacket(Opcodes.Player.Chat, { chat: { source, message } })
-        );
+        this.world.client.send(new Chat({ source, message }));
 
         if (global) return this.world.globalMessage(name, message, colour);
 

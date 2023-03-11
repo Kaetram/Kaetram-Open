@@ -4,16 +4,20 @@ import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
 import type Server from '../model/server';
-import type { HandshakePacket } from '@kaetram/common/types/messages/incoming';
-import type { PlayerPacket } from '@kaetram/common/types/messages/outgoing';
+import type {
+    ChatPacket,
+    FriendsPacket,
+    HandshakePacket,
+    PlayerPacket
+} from '@kaetram/common/types/messages/hub';
 
 export default class Incoming {
     public constructor(private server: Server) {
         // Callback for when the hub receives a message from the web socket.
-        this.server.connection.onMessage(([packet, message, info]) => {
+        this.server.connection.onMessage(([packet, opcode, info]) => {
             if (!Utils.validPacket(packet)) {
                 log.error(`Non-existent packet received: ${packet} data: `);
-                log.error(message);
+                log.error(info);
 
                 return;
             }
@@ -21,11 +25,19 @@ export default class Incoming {
             try {
                 switch (packet) {
                     case Packets.Handshake: {
-                        return this.handleHandshake(message);
+                        return this.handleHandshake(opcode);
+                    }
+
+                    case Packets.Chat: {
+                        return this.handleChat(info);
+                    }
+
+                    case Packets.Friends: {
+                        return this.handleFriends(info);
                     }
 
                     case Packets.Player: {
-                        return this.handlePlayer(message, info);
+                        return this.handlePlayer(opcode, info);
                     }
                 }
             } catch (error) {
@@ -54,11 +66,9 @@ export default class Incoming {
     }
 
     /**
-     * Contains events regarding a player. Things like logging in, logging out,
-     * chat packets (private messages). We use this information to broadcast
-     * to the other servers.
+     * Receives information about the player's login our logout activity.
      * @param opcode What type of player event we are handling.
-     * @param info Contains information about the event.
+     * @param info Contains the username of the player that is logging in or out.
      */
 
     private handlePlayer(opcode: Opcodes.Player, info: PlayerPacket): void {
@@ -70,22 +80,26 @@ export default class Incoming {
             case Opcodes.Player.Logout: {
                 return this.server.remove(info.username!);
             }
-
-            case Opcodes.Player.Chat: {
-                if (!info.chat) return;
-
-                return this.server.messageCallback?.(
-                    info.chat.source!,
-                    info.chat.message,
-                    info.chat.target!
-                );
-            }
-
-            case Opcodes.Player.Friends: {
-                if (!info.username || !info.inactiveFriends) return;
-
-                return this.server.friendsCallback?.(info.username, info.inactiveFriends);
-            }
         }
+    }
+
+    /**
+     * Sends a chat callback message to the server. Depending on the information received,
+     * we determine whether it's a private message or a normal message.
+     * @param info Contains information about the message, such as source, content, and optionally, a target.
+     */
+
+    private handleChat(info: ChatPacket): void {
+        return this.server.messageCallback?.(info.source, info.message!, info.target!);
+    }
+
+    /**
+     * Contains a list of inactive friends list for a given username. We relay this to the server
+     * controller so that we can check if any server has a player that is on the inactive list.
+     * @param info Contains the username and the list of inactive friends.
+     */
+
+    private handleFriends(info: FriendsPacket): void {
+        return this.server.friendsCallback?.(info.username, info.inactiveFriends!);
     }
 }
