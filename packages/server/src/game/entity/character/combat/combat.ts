@@ -1,10 +1,10 @@
 import Hit from './hit';
 
 import Formulas from '../../../../info/formulas';
-import { Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
 import { Opcodes } from '@kaetram/common/network';
+import { Combat as CombatPacket, Spawn } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
 

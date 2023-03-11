@@ -193,12 +193,11 @@ export enum Friends {
     List,
     Add,
     Remove,
-    Status
+    Status,
+    Sync
 }
 
 export enum Player {
     Login,
-    Logout,
-    Chat,
-    Friends
+    Logout
 }

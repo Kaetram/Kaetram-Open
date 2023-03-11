@@ -5,17 +5,17 @@ import Poison from './effect/poison';
 import Status from './effect/status';
 
 import Entity from '../entity';
-import { Combat as CombatPacket, Effect, Movement, Points } from '../../../network/packets';
 import Formulas from '../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Combat as CombatPacket, Effect, Movement, Points } from '@kaetram/common/network/impl';
 
+import type World from '../../world';
+import type Packet from '@kaetram/common/network/packet';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type Packet from '../../../network/packet';
-import type World from '../../world';
 
 type PoisonCallback = (type: number, exists: boolean) => void;
 type HitCallback = (damage: number, attacker?: Character) => void;
