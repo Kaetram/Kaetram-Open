@@ -123,8 +123,8 @@ export enum Guild {
     Join,
     Leave,
     Rank,
-    Loot,
-    Update
+    Update,
+    Experience
 }
 
 export enum Pointer {
@@ -199,5 +199,6 @@ export enum Friends {
 
 export enum Player {
     Login,
-    Logout
+    Logout,
+    Guild
 }

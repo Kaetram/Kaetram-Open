@@ -1,4 +1,4 @@
-import type { Modules } from '../network';
+import type { Modules, Opcodes } from '../network';
 
 export interface Member {
     username: string;
@@ -13,4 +13,12 @@ export interface GuildData {
     owner: string;
     inviteOnly: boolean;
     members: Member[];
+}
+
+// Used to relay update information to other players.
+export interface UpdateInfo {
+    opcode: Opcodes.Guild;
+    username: string;
+    serverId?: number;
+    rank?: Modules.GuildRank;
 }
