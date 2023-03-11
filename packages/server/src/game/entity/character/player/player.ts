@@ -375,12 +375,12 @@ export default class Player extends Character {
     public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
             case 'passive': {
-                if (!this.mana.isFull()) this.mana.increment(amount);
+                // Increment mana by 1% of the max mana.
+                if (!this.mana.isFull())
+                    this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
-                // Scale the heal rate by the maximum hitpoints.
-                amount += Math.floor(this.hitPoints.getMaxHitPoints() * 0.005);
-
-                super.heal(amount);
+                // Increment hitpoints by 0.5% of the max hitpoints.
+                super.heal(Math.floor(this.hitPoints.getMaxHitPoints() * 0.005));
 
                 break;
             }
