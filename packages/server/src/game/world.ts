@@ -10,21 +10,21 @@ import Guilds from '../controllers/guilds';
 import API from '../network/api';
 import Network from '../network/network';
 import Client from '../network/client';
-import { Chat } from '../network/packets';
 
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
-import { Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
+import { Chat } from '@kaetram/common/network/impl';
+import { Modules } from '@kaetram/common/network';
+import { PacketType } from '@kaetram/common/network/modules';
 
 import type Grids from './map/grids';
-import type Packet from '../network/packet';
 import type Connection from '../network/connection';
-import type SocketHandler from '../network/sockethandler';
 import type Character from './entity/character/character';
+import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
+import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export interface PacketData {

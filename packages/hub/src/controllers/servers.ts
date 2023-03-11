@@ -1,11 +1,12 @@
 import Server from '../model/server';
-import Packet from '../network/packet';
 
 import log from '@kaetram/common/util/log';
 import { Packets, Opcodes } from '@kaetram/common/network';
+import { Chat, Friends } from '@kaetram/common/network/impl';
 
-import type { Friend } from '@kaetram/common/types/friends';
+import type Packet from '@kaetram/common/network/packet';
 import type Connection from '../network/connection';
+import type { Friend } from '@kaetram/common/types/friends';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
 type ServerCallback = (id: number, name: string) => void;
@@ -50,30 +51,13 @@ export default class Servers {
             let targetServer = this.findPlayer(target);
 
             // Could not find the player, relay a message that the player is not online.
-            if (!targetServer)
-                return server.send(
-                    new Packet(Packets.Player, Opcodes.Player.Chat, {
-                        chat: {
-                            source,
-                            target,
-                            notFound: true
-                        }
-                    })
-                );
+            if (!targetServer) return server.send(new Chat({ source, target, notFound: true }));
 
             // Send the private message to the target player's server.
-            targetServer.send(
-                new Packet(Packets.Player, Opcodes.Player.Chat, {
-                    chat: { source, message, target }
-                })
-            );
+            targetServer.send(new Chat({ source, message, target }));
 
             // Send a confirmation message to the original server.
-            server.send(
-                new Packet(Packets.Player, Opcodes.Player.Chat, {
-                    chat: { source, message, target, success: true }
-                })
-            );
+            server.send(new Chat({ source, message, target, success: true }));
         });
 
         server.onFriends((username: string, inactiveFriends: string[]) => {
@@ -89,9 +73,7 @@ export default class Servers {
             }
 
             // Send the active friends back to the server.
-            server.send(
-                new Packet(Packets.Player, Opcodes.Player.Friends, { username, activeFriends })
-            );
+            server.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
         });
     }
 
@@ -145,15 +127,7 @@ export default class Servers {
      */
 
     public global(source: string, message: string, colour: string): void {
-        this.broadcast(
-            new Packet(Packets.Player, Opcodes.Player.Chat, {
-                chat: {
-                    source,
-                    message,
-                    colour
-                }
-            })
-        );
+        this.broadcast(new Chat({ source, message, colour }));
     }
 
     /**

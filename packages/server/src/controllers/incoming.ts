@@ -1,9 +1,8 @@
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
 
 import type World from '../game/world';
-import type { ChatInfo, PlayerPacket } from '@kaetram/common/types/messages/outgoing';
+import type { ChatPacket, FriendsPacket, PlayerPacket } from '@kaetram/common/types/messages/hub';
 
 /**
  * This incoming is the global incoming controller. This is responsible for
@@ -27,44 +26,31 @@ export default class Incoming {
             case Packets.Player: {
                 return this.handlePlayer(opcode, data as PlayerPacket);
             }
+
+            case Packets.Chat: {
+                return this.handleChat(data as ChatPacket);
+            }
+
+            case Packets.Friends: {
+                return this.handleFriends(data as FriendsPacket);
+            }
         }
     }
 
     /**
-     * Handles an incoming packet from the hub regarding the player. Generally we use
-     * this information to synchronize friends list across multiple servers.
-     * @param opcode The opcode of the data we are handling.
-     * @param data Information contained within the packet.
+     * Responsible for synchronizing the player's login or logout actions with the controllers
+     * in the server. This updates the friends list/guilds/etc of other players and notifies
+     * them that the player has logged in or out (if applicable).
+     * @param opcode What type of action the player is performing (logging in or out)
+     * @param data Contains the player's username and server id.
      */
 
     private handlePlayer(opcode: Opcodes.Player, data: PlayerPacket): void {
-        switch (opcode) {
-            // Synchronizes the friends list of a player.
-            case Opcodes.Player.Login:
-            case Opcodes.Player.Logout: {
-                return this.world.syncFriendsList(
-                    data.username!,
-                    opcode === Opcodes.Player.Logout,
-                    data.serverId!
-                );
-            }
-
-            case Opcodes.Player.Chat: {
-                // Malformed packet.
-                if (!data.chat) return log.warning(`Received an empty chat packet.`);
-
-                return this.handleChat(data.chat);
-            }
-
-            // Synchronizes the active friends the hub found in other servers.
-            case Opcodes.Player.Friends: {
-                if (!data.activeFriends) return;
-
-                let player = this.world.getPlayerByName(data.username!);
-
-                return player?.friends.setActiveFriends(data.activeFriends);
-            }
-        }
+        return this.world.syncFriendsList(
+            data.username,
+            opcode === Opcodes.Player.Logout,
+            data.serverId
+        );
     }
 
     /**
@@ -73,38 +59,52 @@ export default class Incoming {
      * @param chat Contains information about the message.
      */
 
-    private handleChat(chat: ChatInfo) {
+    private handleChat(data: ChatPacket) {
         // Not found occurs when the hub could not find the player anywhere.
-        if (chat.notFound) {
-            let player = this.world.getPlayerByName(chat.source!);
+        if (data.notFound) {
+            let player = this.world.getPlayerByName(data.source!);
 
-            return player?.notify(`Player @aquamarine@${chat.target}@white@ is not online.`);
+            return player?.notify(`Player @aquamarine@${data.target}@white@ is not online.`);
         }
 
         // Success is an event sent from the hub when the message was successfully delivered.
-        if (chat.success) {
-            let player = this.world.getPlayerByName(chat.source!);
+        if (data.success) {
+            let player = this.world.getPlayerByName(data.source!);
 
             return player?.notify(
-                chat.message,
+                data.message!,
                 'aquamarine',
-                `[To ${Utils.formatName(chat.target!)}]`,
+                `[To ${Utils.formatName(data.target!)}]`,
                 true
             );
         }
 
         // No target means that the message is globally sent.
-        if (!chat.target)
+        if (!data.target)
             return this.world.globalMessage(
-                chat.source!,
-                chat.message,
-                chat.colour || 'tomato',
+                data.source!,
+                data.message!,
+                data.colour || 'tomato',
                 true
             );
 
         // Find who the message is targeted towards and attempt to send them a message.
-        let target = this.world.getPlayerByName(chat.target!);
+        let target = this.world.getPlayerByName(data.target!);
 
-        target?.sendMessage(chat.target!, chat.message, chat.source!);
+        target?.sendMessage(data.target!, data.message!, data.source!);
+    }
+
+    /**
+     * Receives information from the server regarding a player's active friends. When a player first
+     * logs in, we check the server they're currently on for who is online. We then ask the hub to check
+     * remaining non-active friends on other servers. Here we receive the information from the hub and
+     * update the player's friends list.
+     * @param data Contains the player's username and their active friends (alongside their serverId).
+     */
+
+    private handleFriends(data: FriendsPacket): void {
+        let player = this.world.getPlayerByName(data.username!);
+
+        if (data.activeFriends) player?.friends.setActiveFriends(data.activeFriends);
     }
 }

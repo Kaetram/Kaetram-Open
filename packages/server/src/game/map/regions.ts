@@ -3,11 +3,11 @@ import fs from 'node:fs';
 import Region from './region';
 
 import Character from '../entity/character/character';
-import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
 
+import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
+import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type {
