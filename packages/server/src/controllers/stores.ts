@@ -1,10 +1,10 @@
 import storeData from '../../data/stores.json';
 import Item from '../game/entity/objects/item';
-import { Store as StorePacket } from '../network/packets';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
-import StoreEn from '@kaetram/common/text/en/store';
 import log from '@kaetram/common/util/log';
+import StoreEn from '@kaetram/common/text/en/store';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Store as StorePacket } from '@kaetram/common/network/impl';
 
 import type {
     RawStore,

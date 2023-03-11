@@ -21,16 +21,6 @@ export interface HandshakePacket {
     // Client-server related handshake data.
     instance?: string; // Player's instance.
     serverId?: number;
-
-    // Hub-server related handshake data.
-    gVer?: string; // Game version.
-    name?: string;
-    serverId?: number;
-    accessToken?: string; // Denied if mismatches
-    remoteHost?: string; // Relayed to game clients as the server's IP.
-    port?: number;
-    players?: string[];
-    maxPlayers?: number;
 }
 
 export type HandshakeCallback = (data: HandshakePacket) => void;
@@ -397,22 +387,3 @@ export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => 
 export type RankCallback = (rank: Modules.Ranks) => void;
 
 //////////////////////////////s//////////////////////////////////////////////////
-
-// Packet sent from the server to the hub.
-export interface ChatInfo {
-    source: string;
-    message: string;
-    colour?: string;
-    target?: string;
-    notFound?: boolean;
-    success?: boolean;
-}
-export interface PlayerPacket {
-    username?: string;
-    serverId?: number;
-    chat?: ChatInfo;
-    inactiveFriends?: string[];
-    activeFriends?: Friend;
-}
-
-////////////////////////////////////////////////////////////////////////////////

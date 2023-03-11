@@ -1,12 +1,12 @@
-import Packet from '../network/packet';
 import Incoming from '../controllers/incoming';
 
 import Utils from '@kaetram/common/util/utils';
+import Packet from '@kaetram/common/network/packet';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
-import type { HandshakePacket } from '@kaetram/common/types/messages/incoming';
+import type { HandshakePacket } from '@kaetram/common/types/messages/hub';
 
 type BroadcastCallback = (packet: Packet) => void;
 type MessageCallback = (source: string, message: string, target: string) => void;
@@ -39,12 +39,12 @@ export default class Server {
      */
 
     public load(data: HandshakePacket): void {
-        this.name = data.name!;
-        this.id = data.serverId!;
-        this.host = data.remoteHost!;
-        this.port = data.port!;
-        this.players = data.players!;
-        this.maxPlayers = data.maxPlayers!;
+        this.name = data.name;
+        this.id = data.serverId;
+        this.host = data.remoteHost;
+        this.port = data.port;
+        this.players = data.players;
+        this.maxPlayers = data.maxPlayers;
     }
 
     /**
