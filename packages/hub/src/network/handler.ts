@@ -26,7 +26,7 @@ export default class Handler {
         App({})
             .ws('/*', {
                 compression: DEDICATED_COMPRESSOR_3KB,
-                idleTimeout: 10,
+                idleTimeout: 0,
                 maxPayloadLength: 32 * 1024 * 1024,
 
                 open: this.handleConnection.bind(this),
