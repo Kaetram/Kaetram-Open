@@ -19,10 +19,11 @@ type MessageCallback = (
 export default class Servers {
     private servers: { [instance: string]: Server } = {};
 
+    public updateCallback?: () => void;
+    public messageCallback?: MessageCallback;
+
     private addCallback?: ServerCallback;
     private removeCallback?: ServerCallback;
-    private messageCallback?: MessageCallback;
-    private updateCallback?: () => void;
 
     /**
      * Handles the creation of a new server object upon initial connection. This creates
@@ -32,49 +33,10 @@ export default class Servers {
      */
 
     public connect(instance: string, connection: Connection): void {
-        let server = new Server(instance, connection);
+        let server = new Server(instance, this, connection);
 
         // Callback for when the server finishes the handshake.
         server.onReady(() => this.add(server));
-        server.onBroadcast((packet: Packet) => {
-            // Servers send broadcasts for population changes, so it's best to do an update here.
-            this.updateCallback?.();
-
-            this.broadcast(packet, server.instance);
-        });
-
-        server.onMessage((source: string, message: string, target: string) => {
-            // Non-targeted messages get sent to the Discord chat.
-            if (!target)
-                return this.messageCallback?.(source, message, `${server.name} ${server.id}`, true);
-
-            let targetServer = this.findPlayer(target);
-
-            // Could not find the player, relay a message that the player is not online.
-            if (!targetServer) return server.send(new Chat({ source, target, notFound: true }));
-
-            // Send the private message to the target player's server.
-            targetServer.send(new Chat({ source, message, target }));
-
-            // Send a confirmation message to the original server.
-            server.send(new Chat({ source, message, target, success: true }));
-        });
-
-        server.onFriends((username: string, inactiveFriends: string[]) => {
-            let activeFriends: Friend = {};
-
-            // Look through all the inactive friends and try to find them on a server.
-            for (let friend of inactiveFriends) {
-                let targetServer = this.findPlayer(friend);
-
-                // If the player is online, add them to the active friends list.
-                if (targetServer)
-                    activeFriends[friend] = { online: true, serverId: targetServer.id };
-            }
-
-            // Send the active friends back to the server.
-            server.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
-        });
     }
 
     /**
