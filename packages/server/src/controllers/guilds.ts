@@ -1,9 +1,9 @@
 import Guild from '../game/entity/character/player/guild';
-import { Player as PlayerPacket } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Guild as GuildPacket } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
@@ -91,7 +91,8 @@ export default class Guilds {
 
     public leave(player: Player): void {
         // No need to do anything if the player doesn't have a guild.
-        if (!player.guild) return;
+        if (!player.guild)
+            return log.warning(`${player.username} tried to leave a guild that they're not in.`);
 
         // Grab the guild from the database.
         this.database.loader.loadGuild(player.getGuildIdentifier(), (guild?: GuildData) => {
@@ -106,17 +107,18 @@ export default class Guilds {
             // Save the guild to the database.
             this.database.creator.saveGuild(player);
 
+            // Relay the leave request to all other members across all servers.
+            this.updateGuild(
+                guild.members,
+                { opcode: Opcodes.Guild.Leave, username: player.username },
+                player.username
+            );
+
             // We use this to relay the leaving packet to the player.
             player.guild?.leaveCallback?.(player.username);
 
             // Remove the guild object from the player.
             player.guild = undefined;
-
-            // Update the guild for all the other players.
-            this.updateGuild(guild.members, {
-                opcode: Opcodes.Guild.Leave,
-                username: player.username
-            });
         });
     }
 
@@ -126,18 +128,19 @@ export default class Guilds {
      * @param members List of all the members of the guild we want to update.
      */
 
-    private updateGuild(members: Member[], data: UpdateInfo): void {
+    private updateGuild(members: Member[], data: UpdateInfo, ignore = ''): void {
         for (let member of members) {
+            // Don't send the packet to the player that is being ignored.
+            if (member.username === ignore) continue;
+
             // Member is offline.
             if (member.serverId === -1) continue;
 
             // Have the hub relay the packet to the other server.
             if (member.serverId !== config.serverId) {
-                this.world.client.send(
-                    new PlayerPacket(Opcodes.Player.Guild, {
-                        serverId: member.serverId,
-                        guild: data
-                    })
+                this.world.client.relay(
+                    member.username,
+                    new GuildPacket(Opcodes.Guild.Update, { update: data })
                 );
 
                 continue;
