@@ -3,7 +3,7 @@ import Incoming from '../controllers/incoming';
 import WebSocket from 'websocket';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { Handshake } from '@kaetram/common/network/impl';
+import { Handshake, Relay } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
 import type Packet from '@kaetram/common/network/packet';
@@ -125,5 +125,17 @@ export default class Client {
         if (!this.connection?.connected) return;
 
         this.connection.send(JSON.stringify(packet.serialize()));
+    }
+
+    /**
+     * Relays a message to a player on another server (if they're online). Creates a relay packet,
+     * which prepends the username to the array of packet information. The hub then just routes
+     * this to the appropriate server.
+     * @param username The username of the player to relay the message to.
+     * @param packet The packet to relay to the player.
+     */
+
+    public relay(username: string, packet: Packet): void {
+        this.send(new Relay(username, packet));
     }
 }

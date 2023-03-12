@@ -280,9 +280,10 @@ export type EnchantCallback = (opcode: Opcodes.Enchant, info: EnchantPacket) => 
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface GuildPacket {
-    identifier: string;
+    identifier?: string;
     name?: string;
     username?: string;
+    update?: UpdateInfo;
     member?: Member;
     members?: Member[];
 }

@@ -37,3 +37,5 @@ export interface FriendsPacket {
     activeFriends?: Friend;
     inactiveFriends?: string[];
 }
+
+export type RelayPacket = [string, [number, never, never]];

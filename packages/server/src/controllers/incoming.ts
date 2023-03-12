@@ -1,8 +1,14 @@
+import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
 import type World from '../game/world';
-import type { ChatPacket, FriendsPacket, PlayerPacket } from '@kaetram/common/types/messages/hub';
+import type {
+    ChatPacket,
+    FriendsPacket,
+    PlayerPacket,
+    RelayPacket
+} from '@kaetram/common/types/messages/hub';
 
 /**
  * This incoming is the global incoming controller. This is responsible for
@@ -33,6 +39,10 @@ export default class Incoming {
 
             case Packets.Friends: {
                 return this.handleFriends(data as FriendsPacket);
+            }
+
+            case Packets.Relay: {
+                return this.handleRelay(data as RelayPacket);
             }
         }
     }
@@ -106,5 +116,23 @@ export default class Incoming {
         let player = this.world.getPlayerByName(data.username!);
 
         if (data.activeFriends) player?.friends.setActiveFriends(data.activeFriends);
+    }
+
+    /**
+     * Handles receiving a relay packet. This contains a username that we want to send the packet
+     * to across servers. The first elementin the RelayPacket array is the player's username,
+     * and the second is the packet that we want to send to them.
+     * @param data Contains the player's username and the packet we want to send to them.
+     */
+
+    private handleRelay(data: RelayPacket): void {
+        let [username, packet] = data,
+            player = this.world.getPlayerByName(username);
+
+        // Could hypothetically happen if the player is in the process of logging out.
+        if (!player) return log.debug(`Could not find player ${username} to relay packet.`);
+
+        // Relays the packet to the player's packet handler.
+        player.connection.messageCallback?.(packet);
     }
 }
