@@ -32,6 +32,10 @@ export default class Incoming {
                         return this.handleChat(info);
                     }
 
+                    case Packets.Guild: {
+                        return this.handleGuild(opcode, info);
+                    }
+
                     case Packets.Friends: {
                         return this.handleFriends(info);
                     }
@@ -96,7 +100,19 @@ export default class Incoming {
      */
 
     private handleChat(info: ChatPacket): void {
-        return this.server.messageCallback?.(info.source, info.message!, info.target!);
+        return this.server.message(info.source, info.message!, info.target!);
+    }
+
+    /**
+     * Handles incoming messages regarding a guild. Used to broadcast to other servers
+     * actions that are performed on a guild. Things like a player joining, a player's
+     * rank being changed, or someone leaving.
+     * @param opcode The type of action that is being performed.
+     * @param info unknown (for now).
+     */
+
+    public handleGuild(opcode: Opcodes.Guild, info: any): void {
+        console.log(opcode, info);
     }
 
     /**
@@ -106,6 +122,6 @@ export default class Incoming {
      */
 
     private handleFriends(info: FriendsPacket): void {
-        return this.server.friendsCallback?.(info.username, info.inactiveFriends!);
+        return this.server.handleFriends(info.username, info.inactiveFriends!);
     }
 }
