@@ -87,14 +87,12 @@ export default class Discord {
     public sendMessage(
         source: string,
         text: string,
-        serverName?: string,
-        withArrow?: boolean
+        serverName = config.name,
+        withArrow = true
     ): void {
         if (!source || !config.discordEnabled) return;
 
-        this.sendRawMessage(
-            `**[${serverName || config.name}]** ${source}${withArrow ? ' »' : ''} ${text}`
-        );
+        this.sendRawMessage(`**[${serverName}]** ${source}${withArrow ? ' »' : ''} ${text}`);
     }
 
     /**

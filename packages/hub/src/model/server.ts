@@ -2,15 +2,14 @@ import Incoming from '../controllers/incoming';
 
 import Utils from '@kaetram/common/util/utils';
 import Packet from '@kaetram/common/network/packet';
+import { Chat, Friends } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
+import type { Friend } from '@kaetram/common/types/friends';
+import type Servers from '../controllers/servers';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 import type { HandshakePacket } from '@kaetram/common/types/messages/hub';
-
-type BroadcastCallback = (packet: Packet) => void;
-type MessageCallback = (source: string, message: string, target: string) => void;
-type FriendsCallback = (username: string, inactiveFriends: string[]) => void;
 export default class Server {
     public id = -1;
     public name = '';
@@ -23,11 +22,12 @@ export default class Server {
     public maxPlayers = 2;
 
     public readyCallback?: () => void;
-    public broadcastCallback?: BroadcastCallback;
-    public messageCallback?: MessageCallback;
-    public friendsCallback?: FriendsCallback;
 
-    public constructor(public instance: string, public connection: Connection) {
+    public constructor(
+        public instance: string,
+        public controller: Servers,
+        public connection: Connection
+    ) {
         this.address = Utils.bufferToAddress(this.connection.socket.getRemoteAddressAsText());
 
         new Incoming(this);
@@ -57,6 +57,20 @@ export default class Server {
     }
 
     /**
+     * A broadcast message is sent to all the servers currently connected to the hub.
+     * We also want to relay an update to the Discord bot to update population
+     * if it's a login/logout-based packet.
+     * @param packet The packet that we want to broadcast to all servers.
+     */
+
+    public broadcast(packet: Packet): void {
+        this.controller.broadcast(packet, this.instance);
+
+        // If the player is logging in or out, we want to update the Discord bot population.
+        if (packet.id === Packets.Player) this.controller.updateCallback?.();
+    }
+
+    /**
      * Adds a player to the server's player list.
      * @param username The username of the player that we are adding.
      */
@@ -67,7 +81,7 @@ export default class Server {
 
         this.players.push(username);
 
-        this.broadcastCallback?.(
+        this.controller.broadcast(
             new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id })
         );
     }
@@ -80,9 +94,59 @@ export default class Server {
     public remove(username: string): void {
         this.players = this.players.filter((player) => player !== username);
 
-        this.broadcastCallback?.(
+        this.controller.broadcast(
             new Packet(Packets.Player, Opcodes.Player.Logout, { username, serverId: this.id })
         );
+    }
+
+    /**
+     * Handles sending a chat message between servers. THis can refer to a private message or
+     * redirecting an in-game chat to the Discord bot for logging.
+     * @param source The username of who is sending the message.
+     * @param message The contents of the message (filtered by the server).
+     * @param target (Optional) Who the message is directed towards, determines if it's a private message.
+     */
+
+    public message(source: string, message: string, target?: string): void {
+        // If we don't have a target then we just send the message to the Discord bot.
+        if (!target)
+            return this.controller.messageCallback?.(source, message, `${this.name} ${this.id}`);
+
+        // Attempt to find the target player on the server.
+        let targetServer = this.controller.findPlayer(target);
+
+        // No player could be found, so we tell the source server that the player is not online.
+        if (!targetServer) return this.send(new Chat({ source, target, notFound: true }));
+
+        // Send the private message to the target player's server.
+        targetServer.send(new Chat({ source, message, target }));
+
+        // Send a confirmation to the source server that the message was sent.
+        this.send(new Chat({ source, message, target, success: true }));
+    }
+
+    /**
+     * Searches through all the servers connected to the hub and tries to see which players
+     * among the inactive player list are online. For each player online we store them in
+     * an array. We send that array back to the source server (where the player logged in),
+     * and the source server will update the player's friend list.
+     * @param username The player that is logging in.
+     * @param inactiveFriends The list of friends that are not online on the source server.
+     */
+
+    public handleFriends(username: string, inactiveFriends: string[] = []): void {
+        let activeFriends: Friend = {};
+
+        // Look through all the inactive friends and try to find them on a server.
+        for (let friend of inactiveFriends) {
+            let targetServer = this.controller.findPlayer(friend);
+
+            // If the player is online, add them to the active friends list.
+            if (targetServer) activeFriends[friend] = { online: true, serverId: targetServer.id };
+        }
+
+        // Send the active friends back to the server.
+        this.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
     }
 
     /**
@@ -93,33 +157,6 @@ export default class Server {
 
     public onReady(callback: () => void): void {
         this.readyCallback = callback;
-    }
-
-    /**
-     * Callback for when we want to broadcast a message to all servers.
-     * @param callback Contains the packet that we want to broadcast.
-     */
-
-    public onBroadcast(callback: BroadcastCallback): void {
-        this.broadcastCallback = callback;
-    }
-
-    /**
-     * Callback for when we want to send a private message.
-     * @param callback Contains the source, message, and target of the message.
-     */
-
-    public onMessage(callback: MessageCallback): void {
-        this.messageCallback = callback;
-    }
-
-    /**
-     * Callback to extract all of the active friends from the servers connected.
-     * @param callback Contains list of inactive friends from one player logging in.
-     */
-
-    public onFriends(callback: FriendsCallback): void {
-        this.friendsCallback = callback;
     }
 
     /**
