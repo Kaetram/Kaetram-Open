@@ -41,7 +41,6 @@ export default class MongoDB {
             portInsert = port > 0 ? `:${port}` : '',
             authSourceInsert = authSource ? `?authSource=${authSource}` : '';
         this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}${authSourceInsert}`;
-        console.log(this.connectionUrl);
 
         // Attempt to connect to MongoDB.
         this.createConnection();
