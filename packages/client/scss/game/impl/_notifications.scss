@@ -88,7 +88,7 @@
     text-shadow: 2px 2px #0e0a00;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         #notification {
             width: 216px * $i;
@@ -175,12 +175,6 @@
 }
 
 @media (--sm) {
-    #notification {
-        width: 432px;
-        height: 68px;
-        margin-left: -216px;
-    }
-
     #notify,
     #confirm {
         width: 166px;
