@@ -424,6 +424,42 @@ export default class Item extends Entity {
     }
 
     /**
+     * Depending on the item type, they may have different enchantments available. We return
+     * a list of enchantments that we pick from based on the item type.
+     * @returns A list of enchantments that are available for the item or empty if not applicable.
+     */
+
+    public getAvailableEnchantments(): Modules.Enchantment[] {
+        switch (this.itemType) {
+            case 'weapon': {
+                return [
+                    Modules.Enchantment.Bloodsucking,
+                    Modules.Enchantment.Critical,
+                    Modules.Enchantment.DoubleEdged
+                ];
+            }
+
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return [Modules.Enchantment.Explosive, Modules.Enchantment.Stun];
+            }
+
+            case 'armour':
+            case 'armourarcher': {
+                return [
+                    Modules.Enchantment.Evasion,
+                    Modules.Enchantment.Thorns,
+                    Modules.Enchantment.AntiStun
+                ];
+            }
+
+            default: {
+                return [];
+            }
+        }
+    }
+
+    /**
      * @param id The enchantment id we are checking for.
      * @returns Whether or not the item has the enchantment.
      */
