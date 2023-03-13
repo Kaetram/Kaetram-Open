@@ -190,11 +190,12 @@ export enum Enchantment {
     Bloodsucking,
     Critical,
     Evasion,
-    Spike,
+    Thorns,
     Explosive,
     Stun,
     AntiStun,
-    Splash
+    Splash,
+    DoubleEdged
 }
 
 export enum AoEType {
