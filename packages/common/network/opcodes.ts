@@ -113,9 +113,7 @@ export enum Trade {
 
 export enum Enchant {
     Select,
-    Remove,
-    Enchant,
-    Update
+    Confirm
 }
 
 export enum Guild {
