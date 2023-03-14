@@ -977,6 +977,14 @@ export default class Commands {
                         break;
                     }
 
+                    case 'stun': {
+                        if (this.player.status.has(Modules.Effects.Stun))
+                            return this.player.status.remove(Modules.Effects.Stun);
+
+                        effect = Modules.Effects.Stun;
+                        break;
+                    }
+
                     default: {
                         return this.player.status.clear();
                     }

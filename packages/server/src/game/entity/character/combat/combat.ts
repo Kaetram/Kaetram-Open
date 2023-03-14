@@ -3,7 +3,7 @@ import Hit from './hit';
 import Formulas from '../../../../info/formulas';
 
 import log from '@kaetram/common/util/log';
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { Combat as CombatPacket, Spawn } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
@@ -196,9 +196,15 @@ export default class Combat {
      */
 
     private createHit(): Hit {
+        let damageType = this.character.getDamageType();
+
         return new Hit(
-            this.character.getDamageType(),
-            Formulas.getDamage(this.character, this.character.target!),
+            damageType,
+            Formulas.getDamage(
+                this.character,
+                this.character.target!,
+                damageType === Modules.Hits.Critical
+            ),
             this.character.isRanged(),
             this.character.getAoE()
         );

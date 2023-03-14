@@ -120,17 +120,15 @@ export default class Actions extends Menu {
                 Archery: ${bonuses.archery} <br>
                 Magic: ${bonuses.magic} <br>`;
 
+            // If the item has enchantments, apply them to the enchantments div.
             if (Object.keys(enchantments).length > 0) {
                 // Apply the enchantments to the enchantments div.
                 enchantmentsDiv.innerHTML = `<u>Enchantments:</u> <br>`;
 
                 for (let key in enchantments) {
-                    let enchantment = Modules.Enchantment[key],
-                        enchantmentName =
-                            enchantment.charAt(0).toUpperCase() +
-                            enchantment.slice(1).toLowerCase();
+                    let enchantment = Modules.Enchantment[key];
 
-                    enchantmentsDiv.innerHTML += `${enchantmentName}: ${enchantments[key].level} <br>`;
+                    enchantmentsDiv.innerHTML += `${enchantment}: ${enchantments[key].level} <br>`;
                 }
             }
 
