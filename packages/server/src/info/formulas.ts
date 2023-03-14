@@ -86,8 +86,8 @@ export default {
         // We use the scalar difference of the stats to append onto the accuracy.
         accuracy += accuracyModifier < 0 ? 1.5 : -(Math.sqrt(accuracyModifier) / 22.36) + 1;
 
-        // Critical damage boosts accuracy by a factor of 0.05;
-        if (critical) accuracy -= 0.05;
+        // Critical damage boosts accuracy by a factor of 0.15;
+        if (critical) accuracy -= 0.15;
 
         // Apply the attack style modifiers.
         switch (attacker.getAttackStyle()) {
@@ -147,7 +147,7 @@ export default {
             level = character.getSkillDamageLevel(),
             damage = (bonus + level) * 1.25;
 
-        // Apply the critical damage multiplier onto the damage.
+        // Apply a 50% max damage boost upon critical damage.
         if (critical) damage *= 1.5;
 
         // Player characters get a boost of 5 damage.
