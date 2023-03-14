@@ -1039,16 +1039,10 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, _info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
-                //this.menu.enchant.add(info.type!, info.index!);
-                break;
-            }
-
-            case Opcodes.Enchant.Remove: {
-                //this.menu.enchant.moveBack(info.type!, info.index);
-                break;
+                return this.menu.getEnchant().move(info.index, info.isShard);
             }
         }
     }

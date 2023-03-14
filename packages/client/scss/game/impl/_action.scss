@@ -21,6 +21,16 @@
     }
 }
 
+#action-description-attack,
+#action-description-defense,
+#action-description-bonuses,
+#action-description-enchantments {
+    position: absolute;
+    overflow: auto;
+    width: 45%;
+    height: 30%;
+}
+
 .action-item-name {
     text-align: center;
 }
@@ -128,6 +138,25 @@
         .action-item-description {
             margin-left: 3px * $i;
             font-size: 4px * $i;
+        }
+
+
+        #action-description-attack {
+            left: 4px * $i;
+        }
+
+        #action-description-defense {
+            right: 0
+        }
+
+        #action-description-bonuses {
+            bottom: 22px * $i;
+            left: 4px * $i;
+        }
+
+        #action-description-enchantments {
+            right: 0;
+            bottom: 22px * $i;
         }
     }
 }
