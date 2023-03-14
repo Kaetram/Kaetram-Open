@@ -33,12 +33,14 @@ export default class MongoDB {
         password: string,
         private databaseName: string,
         private tls: boolean,
-        srv: boolean
+        srv: boolean,
+        private authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
-            portInsert = port > 0 ? `:${port}` : '';
-        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
+            portInsert = port > 0 ? `:${port}` : '',
+            authSourceInsert = authSource ? `?authSource=${authSource}` : '';
+        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}${authSourceInsert}`;
 
         // Attempt to connect to MongoDB.
         this.createConnection();
