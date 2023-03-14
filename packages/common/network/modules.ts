@@ -488,6 +488,7 @@ export const Constants = {
     FREEZING_DURATION: 60_000, // 60 seconds
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
+    STUN_DURATION: 10_000, // 10 seconds
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,
     ATTACKER_TIMEOUT: 20_000 // 20 seconds
