@@ -18,17 +18,17 @@
 
 #store-inventory-slots {
     position: absolute;
+
     overflow: hidden;
     overflow-y: scroll;
 
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
+    margin: 0;
+    padding: 0;
 
-        li {
-            float: left;
-        }
+    list-style-type: none;
+
+    li {
+        float: left;
     }
 }
 
@@ -41,7 +41,7 @@
 
     font-family: AdvoCut, sans-serif;
 
-    ul li {
+    li {
         margin-bottom: 5px;
 
         &:first-child {
@@ -107,11 +107,9 @@
             width: 146px * $i;
             height: 134px * $i;
 
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
+            li {
+                .item-slot {
+                    margin-bottom: 4px * $i;
                 }
             }
         }
@@ -133,11 +131,9 @@
             width: 96px * $i;
             height: 92px * $i;
 
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
+            li {
+                .item-slot {
+                    margin-bottom: 4px * $i;
                 }
             }
         }
@@ -228,11 +224,9 @@
             left: 11px;
             width: 106px;
 
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 8px;
-                    }
+            li {
+                .item-slot {
+                    margin-bottom: 8px;
                 }
             }
         }

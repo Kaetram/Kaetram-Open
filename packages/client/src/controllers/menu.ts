@@ -47,7 +47,7 @@ export default class MenuController {
         this.bank = new Bank(this.inventory);
         this.store = new Store(this.inventory);
         this.profile = new Profile(game.player);
-        this.enchant = new Enchant();
+        this.enchant = new Enchant(this.inventory);
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
@@ -84,6 +84,9 @@ export default class MenuController {
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
+
+        this.enchant.onSelect(this.handleEnchantSelect.bind(this));
+        this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
 
         this.warp.onSelect(this.handleWarp.bind(this));
 
@@ -335,6 +338,36 @@ export default class MenuController {
             opcode: type,
             key,
             index
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the index of the inventory slot the
+     * player has selected. The server verifies the request and sends back a
+     * packet indicating we want to move the item.
+     * @param index The index of the item the player has selected.
+     */
+
+    private handleEnchantSelect(index: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Select,
+            index
+        });
+    }
+
+    /**
+     * Sends a request to the server that the player wants to enchant an item given
+     * some shards. The server double checks the validity of the request and proceeds
+     * accordingly.
+     * @param index The index of the item we want to enchant.
+     * @param shardIndex The index of the shards we want to use for enchanting.
+     */
+
+    private handleEnchantConfirm(index: number, shardIndex: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Confirm,
+            index,
+            shardIndex
         });
     }
 
