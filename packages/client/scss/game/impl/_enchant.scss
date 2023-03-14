@@ -12,7 +12,19 @@
 }
 
 #enchant-inventory-slots {
-    left: 13%;
+    position: absolute;
+
+    overflow: hidden;
+    overflow-y: scroll;
+
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    li {
+        float: left;
+    }
 }
 
 #enchant-selected-item,
@@ -57,6 +69,32 @@
 
         #shards-count {
             width: 16px * $i;
+        }
+
+        #enchant-inventory-slots {
+            top: 16px * $i;
+            left: 20px * $i;
+            width: 96px * $i;
+            height: 92px * $i;
+
+            li {
+                .item-slot {
+                    margin-bottom: 4px * $i;
+                }
+            }
+        }
+    }
+
+    @media (--sm) {
+        #enchant-inventory-slots {
+            left: 11px;
+            width: 106px;
+
+            li {
+                .item-slot {
+                    margin-bottom: 8px;
+                }
+            }
         }
     }
 }
