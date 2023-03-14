@@ -460,6 +460,17 @@ export default class Item extends Entity {
     }
 
     /**
+     * Grabs the enchantment level for an item based on the enchantment id. We
+     * assume that we already checked the item has the enchantment.
+     * @param enchantment The enchantment id we are checking for.
+     * @returns The level of the enchantment.
+     */
+
+    public getEnchantmentLevel(enchantment: number): number {
+        return this.enchantments[enchantment].level;
+    }
+
+    /**
      * @param id The enchantment id we are checking for.
      * @returns Whether or not the item has the enchantment.
      */
