@@ -287,6 +287,9 @@ export default abstract class Character extends Entity {
         // 5% of the damage dealt per level of bloodsucking is healed.
         let heal = Math.floor(damage * (0.05 * attacker.getBloodsuckingLevel()));
 
+        // Prevent healing if the amount is less than 1.
+        if (heal < 1) return;
+
         // Players heal non-passively (heal packet is sent).
         if (attacker.isPlayer()) attacker.heal(heal, 'hitpoints');
         else attacker.heal(heal);
@@ -895,6 +898,13 @@ export default abstract class Character extends Entity {
         if (hit.type === Modules.Hits.Normal) return;
 
         switch (hit.type) {
+            case Modules.Hits.Stun: {
+                return this.status.addWithTimeout(
+                    Modules.Effects.Stun,
+                    Modules.Constants.STUN_DURATION
+                );
+            }
+
             case Modules.Hits.Terror: {
                 return this.status.addWithTimeout(
                     Modules.Effects.Terror,

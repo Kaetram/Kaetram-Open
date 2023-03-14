@@ -167,6 +167,30 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * @returns Whether or not the weapon has the critical enchantment.
+     */
+
+    public isCritical(): boolean {
+        return Modules.Enchantment.Critical in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the double-edged enchantment.
+     */
+
+    public isDoubleEdged(): boolean {
+        return Modules.Enchantment.DoubleEdged in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the freezing enchantment.
+     */
+
+    public isStun(): boolean {
+        return Modules.Enchantment.Stun in this.enchantments;
+    }
+
+    /**
      * Checks whether the weapon contains the attack style.
      * @param attackStyle The attack style to check for.
      * @returns Whether or not the attack style is included in the weapon's attack styles.

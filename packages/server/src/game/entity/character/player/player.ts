@@ -2031,15 +2031,32 @@ export default class Player extends Character {
      */
 
     public override getDamageType(): Modules.Hits {
-        let equipment = this.isArcher() ? this.equipment.getArrows() : this.equipment.getWeapon();
+        // Attempt to apply the arrow effects if the player is using ranged weapons.
+        if (this.isArcher()) {
+            let arrows = this.equipment.getArrows();
 
-        /**
-         * Depending on the type of weapon the player is using, we will either use
-         * the burning/freezing effect of the arrows or the weapon itself.
-         */
+            /**
+             * Depending on the type of weapon the player is using, we will either use
+             * the burning/freezing effect of the arrows or the weapon itself.
+             */
 
-        if (equipment.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
-        if (equipment.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+            if (arrows.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+            if (arrows.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+            // We use the player's bow to determine the damage type if the arrows do not have any effects.
+            let weapon = this.equipment.getWeapon();
+
+            if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+        } else {
+            let weapon = this.equipment.getWeapon();
+
+            /**
+             * Weapon effects may vary. Here we do a roll against the weapon's enchantments
+             * and their level to determine which damage type we will use.
+             */
+
+            if (weapon.isCritical() && Formulas.getEffectChance()) return Modules.Hits.Critical;
+        }
 
         // Default case for damage.
         return Modules.Hits.Normal;
