@@ -380,5 +380,14 @@ export default {
 
     getEffectChance(): boolean {
         return Utils.randomInt(0, 100) < 5;
+    },
+
+    /**
+     * Calculates the chance of an item to be enchanted.
+     * @param tier The tier of the shards the player is using.
+     */
+
+    getEnchantChance(tier: number): boolean {
+        return Utils.randomInt(0, 100) < 8 * tier;
     }
 };

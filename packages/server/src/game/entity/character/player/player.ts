@@ -1353,6 +1353,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has a weapon with the bloodsucking enchantment.
+     */
+
+    public override hasBloodsucking(): boolean {
+        return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
      * Getters
      */
 
@@ -2049,6 +2057,18 @@ export default class Player extends Character {
         if (this.isArcher()) return this.equipment.getArrows().projectileName;
 
         return this.equipment.getWeapon().projectileName;
+    }
+
+    /**
+     * This function assumes that we already checked that the player has the bloodsucking
+     * enchantment.
+     * @returns The bloodsucking enchantment level the player currently has on his weapon.
+     */
+
+    public override getBloodsuckingLevel(): number {
+        return (
+            this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1
+        );
     }
 
     /**

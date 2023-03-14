@@ -159,6 +159,14 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * @returns Whether or not the weapon has the bloodsucking enchantment.
+     */
+
+    public isBloodsucking(): boolean {
+        return Modules.Enchantment.Bloodsucking in this.enchantments;
+    }
+
+    /**
      * Checks whether the weapon contains the attack style.
      * @param attackStyle The attack style to check for.
      * @returns Whether or not the attack style is included in the weapon's attack styles.

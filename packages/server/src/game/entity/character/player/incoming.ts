@@ -24,7 +24,8 @@ import type {
     WarpPacket,
     FriendsPacket,
     TradePacket,
-    HandshakePacket
+    HandshakePacket,
+    EnchantPacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../character';
 import type Player from './player';
@@ -487,25 +488,22 @@ export default class Incoming {
         }
     }
 
-    private handleEnchant(_message: [Opcodes.Enchant, unknown]): void {
-        // let [opcode] = message;
-        // switch (opcode) {
-        //     case Opcodes.Enchant.Select: {
-        //         let index = message[1] as number,
-        //             item = this.player.inventory.slots[index],
-        //             type: EnchantType = 'item';
-        //         if (item.id < 1) return;
-        //         if (Items.isShard(item.id)) type = 'shards';
-        //         this.player.enchant.add(type, item);
-        //         break;
-        //     }
-        //     case Opcodes.Enchant.Remove:
-        //         this.player.enchant.remove(message[1] as EnchantType);
-        //         break;
-        //     case Opcodes.Enchant.Enchant:
-        //         this.player.enchant.enchant();
-        //         break;
-        // }
+    /**
+     * Handles an incoming packet from the client regarding the enchantment table. Things like
+     * selecting the item or confirming the selection are sent to the enchantment controller.
+     * @param packet Contains the opcode and index of the item(s) selected.
+     */
+
+    private handleEnchant(packet: EnchantPacket): void {
+        switch (packet.opcode) {
+            case Opcodes.Enchant.Select: {
+                return this.world.enchanter.select(this.player, packet.index!);
+            }
+
+            case Opcodes.Enchant.Confirm: {
+                return this.world.enchanter.enchant(this.player, packet.index!, packet.shardIndex!);
+            }
+        }
     }
 
     /**
