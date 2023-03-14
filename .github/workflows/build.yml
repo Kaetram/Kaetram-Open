@@ -27,8 +27,8 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: 'yarn'
 
-            - name: Install
-              run: yarn set version 4.0.0-rc.40
+            - name: Enable Corepack
+              run: corepack enable
 
             - name: Install Dependencies
               run: yarn install
