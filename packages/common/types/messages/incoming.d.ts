@@ -78,6 +78,12 @@ export interface TradePacket {
     count?: number;
 }
 
+export interface EnchantPacket {
+    opcode: Opcodes.Enchant;
+    index?: number;
+    shardIndex?: number;
+}
+
 export interface WarpPacket {
     id: number;
 }

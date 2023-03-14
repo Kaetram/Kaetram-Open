@@ -47,7 +47,7 @@ export default class World {
     public entities: Entities = new Entities(this);
     public network: Network = new Network(this);
     public minigames: Minigames = new Minigames(this);
-    public enchanter: Enchanter = new Enchanter(this);
+    public enchanter: Enchanter = new Enchanter();
     public guilds: Guilds = new Guilds(this);
     public client: Client = new Client(this);
 

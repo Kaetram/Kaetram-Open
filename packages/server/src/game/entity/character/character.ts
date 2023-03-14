@@ -277,6 +277,22 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Handles the bloodsucking effect for players and characters. Players require the
+     * packet to be sent to display an effect, whereas characters do not.
+     * @param attacker Who is performing the attack/receiving the bloodsucking effect.
+     * @param damage The amount of damage being dealt (used to calculate the bloodsucking amount).
+     */
+
+    private handleBloodsucking(attacker: Character, damage: number): void {
+        // 5% of the damage dealt per level of bloodsucking is healed.
+        let heal = Math.floor(damage * (0.05 * attacker.getBloodsuckingLevel()));
+
+        // Players heal non-passively (heal packet is sent).
+        if (attacker.isPlayer()) attacker.heal(heal, 'hitpoints');
+        else attacker.heal(heal);
+    }
+
+    /**
      * Increments the hitpoints by the amount specified or 1 by default.
      * @param amount Healing amount, defaults to 1 if not specified.
      */
@@ -383,6 +399,9 @@ export default abstract class Character extends Entity {
 
         // Hit callback on each hit.
         this.hitCallback?.(damage, attacker);
+
+        // If the character has bloodsucking, we let the handler take care of it.
+        if (attacker?.hasBloodsucking()) this.handleBloodsucking(attacker!, damage);
 
         // Call the death callback if the character reaches 0 hitpoints.
         if (this.isDead()) return this.deathCallback?.(attacker);
@@ -625,6 +644,14 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * @returns Default implementation for bloodsucking level, defaults to 1 for all characters.
+     */
+
+    public getBloodsuckingLevel(): number {
+        return 1;
+    }
+
+    /**
      * Unimplemented special attack function for the superclass.
      * @returns Always false if not implemented.
      */
@@ -658,6 +685,15 @@ export default abstract class Character extends Entity {
 
     public hasArrows(): boolean {
         return true;
+    }
+
+    /**
+     * Default implementation for character bloodsucking ability.
+     * @returns Always false if not implemented.
+     */
+
+    public hasBloodsucking(): boolean {
+        return false;
     }
 
     /**

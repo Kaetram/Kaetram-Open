@@ -272,7 +272,7 @@ export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
 // TODO
 export interface EnchantPacket {
     index: number;
-    type: string;
+    isShard?: boolean;
 }
 
 export type EnchantCallback = (opcode: Opcodes.Enchant, info: EnchantPacket) => void;
