@@ -2,10 +2,12 @@ import { exit } from 'node:process';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
+import mobs from '@kaetram/server/data/mobs.json';
 import Database from '@kaetram/common/database/database';
 
-import type { Modules } from '@kaetram/common/network';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
+import type { RawData } from '@kaetram/common/types/mob';
+import type { Modules } from '@kaetram/common/network';
 import type {
     MobAggregate,
     PvpAggregate,
@@ -26,6 +28,9 @@ export default class Cache {
     private skillsExperience: { [key: number]: SkillExperience[] } = {};
     private mobAggregates: { [key: string]: MobAggregate[] } = {};
 
+    // List of all mobs that can be checked in the leaderboards
+    public availableMobs: { [key: string]: string } = {};
+
     // Last time we aggregated the total experience.
     private lastAggregates: { [key: string]: number } = {};
 
@@ -34,6 +39,9 @@ export default class Cache {
         if (config.skipDatabase) return;
 
         this.database.onFail(this.handleFail.bind(this));
+
+        // Initialize the available mobs.
+        for (let key in mobs) this.availableMobs[key] = (mobs as RawData)[key].name;
     }
 
     /**
@@ -53,11 +61,11 @@ export default class Cache {
      * @param callback Contains an array of top pvp stats.
      */
 
-    public getPvpData(callback: (pvpAggregate: PvpAggregate[]) => void): void {
-        if (!this.canAggregateData(this.lastAggregates.pvp)) return callback(this.pvpAggregate);
+    public getPvpData(callback?: (pvpAggregate: PvpAggregate[]) => void): void {
+        if (!this.canAggregateData(this.lastAggregates.pvp)) return callback?.(this.pvpAggregate);
 
         this.database.getPvpAggregate((data: PvpAggregate[]) => {
-            callback((this.pvpAggregate = data));
+            callback?.((this.pvpAggregate = data));
 
             // Update the last aggregate time.
             this.lastAggregates.pvp = Date.now();
@@ -69,14 +77,14 @@ export default class Cache {
      * cached data if we have not reached the threshold.
      */
 
-    public getTotalExperience(callback: (totalExperience: TotalExperience[]) => void): void {
+    public getTotalExperience(callback?: (totalExperience: TotalExperience[]) => void): void {
         if (!this.canAggregateData(this.lastAggregates.total))
-            return callback(this.totalExperience);
+            return callback?.(this.totalExperience);
 
         this.database.getTotalExperienceAggregate((data: TotalExperience[]) => {
             for (let info of data) if (!info.cheater) delete info.cheater;
 
-            callback((this.totalExperience = data));
+            callback?.((this.totalExperience = data));
 
             // Update the last aggregate time.
             this.lastAggregates.total = Date.now();
