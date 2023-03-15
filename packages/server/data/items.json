@@ -5056,7 +5056,7 @@
     "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber.",
     "edible": true,
     "plugin": "healthflask",
-    "healAmount": 500
+    "healAmount": 700
   },
 
   "watermelon": {
@@ -5065,7 +5065,7 @@
     "description": "A watermelon, I should probably cut this up before eating it.",
     "edible": true,
     "plugin": "healthflask",
-    "healAmount": 600
+    "healAmount": 800
   },
 
   "apple": {
@@ -5074,13 +5074,16 @@
     "description": "An apple, an excellent source of energy!",
     "edible": true,
     "plugin": "healthflask",
-    "healAmount": 350
+    "healAmount": 450
   },
 
   "orange": {
     "type": "object",
     "name": "Orange",
-    "description": "It's funny, the name of the fruit is the same as the colour and its colour."
+    "description": "It's funny, the name of the fruit is the same as the colour and its colour.",
+    "edible": true,
+    "plugin": "healthflask",
+    "healAmount": 750
   },
 
   "shardt1": {
