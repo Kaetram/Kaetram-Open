@@ -113,7 +113,7 @@ export default class State extends Menu {
         // Append the default box onto the list element.
         element.classList.add('attack-style-box');
 
-        attachTooltip(element, 'Click to select.');
+        attachTooltip(element, this.getTooltip(style));
 
         // Add the attack style image.
         image.classList.add(
@@ -131,6 +131,56 @@ export default class State extends Menu {
         element.addEventListener('click', () => this.styleCallback?.(style));
 
         return element;
+    }
+
+    private getTooltip(style: Modules.AttackStyle): string {
+        switch (style) {
+            case Modules.AttackStyle.Stab: {
+                return 'Stab (Accuracy EXP)';
+            }
+
+            case Modules.AttackStyle.Slash: {
+                return 'Slash (Strength EXP)';
+            }
+
+            case Modules.AttackStyle.Defensive: {
+                return 'Defensive (Defense EXP)';
+            }
+
+            case Modules.AttackStyle.Crush: {
+                return 'Crush (Accuracy + Strength EXP)';
+            }
+
+            case Modules.AttackStyle.Shared: {
+                return 'Shared (Accuracy + Strength + Defense EXP)';
+            }
+
+            case Modules.AttackStyle.Hack: {
+                return 'Hack (Strength + Defense EXP)';
+            }
+
+            case Modules.AttackStyle.Chop: {
+                return 'Chop (Accuracy + Defense EXP)';
+            }
+
+            case Modules.AttackStyle.Accurate: {
+                return 'Accurate (Increased Accuracy)';
+            }
+
+            case Modules.AttackStyle.Fast: {
+                return 'Fast (Increased Speed)';
+            }
+
+            case Modules.AttackStyle.Focused: {
+                return 'Focused (Increased Damage)';
+            }
+
+            case Modules.AttackStyle.LongRange: {
+                return 'Long Range';
+            }
+        }
+
+        return 'Report as bug if you see this :)';
     }
 
     /**
