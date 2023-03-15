@@ -2,6 +2,7 @@ import Util from '../../../utils/util';
 import Menu from '../../menu';
 
 import { Modules } from '@kaetram/common/network';
+import { attachTooltip } from '@kaetram/client/src/utils/tooltip';
 
 import type Player from '../../../entity/character/player/player';
 
@@ -111,6 +112,8 @@ export default class State extends Menu {
 
         // Append the default box onto the list element.
         element.classList.add('attack-style-box');
+
+        attachTooltip(element, 'Click to select.');
 
         // Add the attack style image.
         image.classList.add(
