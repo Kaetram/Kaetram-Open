@@ -249,6 +249,8 @@ export default class EntitiesController {
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
 
+        player.ready = true;
+
         return player;
     }
 
@@ -293,6 +295,9 @@ export default class EntitiesController {
      */
 
     public removeEntity(entity: Entity): void {
+        // Prevent any syncing from happening when the player is removed.
+        if (entity.isPlayer()) entity.ready = false;
+
         this.unregisterPosition(entity);
 
         delete this.entities[entity.instance];
