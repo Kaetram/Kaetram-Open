@@ -27,3 +27,7 @@ export interface MobData {
     roamDistance?: number;
     healRate?: number;
 }
+
+export interface RawData {
+    [key: string]: MobData;
+}
