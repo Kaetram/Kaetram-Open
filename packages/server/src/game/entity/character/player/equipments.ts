@@ -242,6 +242,15 @@ export default class Equipments {
     }
 
     /**
+     * Grabs the armour skin equipment of the player.
+     * @returns The armour skin equipment type.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
+    }
+
+    /**
      * Grabs the boots equipment of the player.
      * @returns Botos equipment type.
      */

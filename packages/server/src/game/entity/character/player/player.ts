@@ -1836,7 +1836,8 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key = this.equipment.getArmour().key || 'clotharmor';
+        data.key =
+            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
