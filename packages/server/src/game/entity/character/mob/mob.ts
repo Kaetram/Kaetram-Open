@@ -15,7 +15,7 @@ import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { MobData } from '@kaetram/common/types/mob';
+import type { RawData, MobData } from '@kaetram/common/types/mob';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
@@ -23,10 +23,6 @@ import type World from '../../../world';
 import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
-
-interface RawData {
-    [key: string]: MobData;
-}
 
 interface ItemDrop {
     key: string;
