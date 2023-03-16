@@ -23,6 +23,7 @@
 @use 'impl/store';
 @use 'impl/trade';
 @use 'impl/zoom';
+@use 'impl/leaderboards';
 
 body.game {
     background: #000;
