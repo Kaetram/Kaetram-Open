@@ -223,11 +223,11 @@ export default class MongoDB {
                 {
                     $group: {
                         _id: '$username',
-                        totalExperience: { $sum: '$skills.experience' },
+                        experience: { $sum: '$skills.experience' },
                         cheater: { $first: '$cheater' }
                     }
                 },
-                { $sort: { totalExperience: -1 } },
+                { $sort: { experience: -1 } },
                 { $limit: 250 }
             ])
             .toArray()
@@ -253,7 +253,14 @@ export default class MongoDB {
             .aggregate([
                 { $unwind: '$skills' },
                 { $match: { 'skills.type': skill } },
-                { $sort: { 'skills.experience': -1 } },
+                {
+                    $group: {
+                        _id: '$username',
+                        experience: { $first: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
+                { $sort: { experience: -1 } },
                 { $limit: 250 }
             ])
             .toArray()
@@ -272,7 +279,13 @@ export default class MongoDB {
         let mobs = this.database.collection('player_statistics');
 
         mobs.aggregate([
-            { $group: { _id: '$username', kills: { $sum: `$mobKills.${key}` } } },
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: `$mobKills.${key}` },
+                    cheater: { $first: '$cheater' }
+                }
+            },
             { $sort: { kills: -1 } },
             { $limit: 250 }
         ])
@@ -291,8 +304,14 @@ export default class MongoDB {
         let pvp = this.database.collection('player_statistics');
 
         pvp.aggregate([
-            { $group: { _id: '$username', pvpKills: { $sum: '$pvpKills' } } },
-            { $sort: { pvpKills: -1 } }
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: '$pvpKills' },
+                    cheater: { $first: '$cheater' }
+                }
+            },
+            { $sort: { kills: -1 } }
         ])
             .toArray()
             .then((data) => callback(data as PvpAggregate[]));
