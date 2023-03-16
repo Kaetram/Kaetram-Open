@@ -56,7 +56,9 @@ export default abstract class Container {
      */
 
     public empty(): void {
-        this.forEachSlot((slot: Slot) => this.remove(slot.index, slot.count));
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key) this.remove(slot.index, slot.count);
+        });
     }
 
     /**
