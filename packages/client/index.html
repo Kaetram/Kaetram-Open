@@ -569,6 +569,7 @@
                         <li><div id="achievements-button"></div></li>
                         <li><div id="quests-button"></div></li>
                         <li><div id="warp-button"></div></li>
+                        <li><div id="placeholder-button"></div></li>
                         <li><div id="profile-button"></div></li>
                         <li><div id="friends-button"></div></li>
                         <li><div id="chat-button"></div></li>
@@ -875,6 +876,24 @@
                             <div class="cancel dialog-cancel"></div>
                         </div>
                     </dialog>
+                </div>
+
+                <div id="leaderboards" class="container">
+                    <div id="close-leaderboards" class="close close-container"></div>
+
+                    <input 
+                        title="Enter a search term..."
+                        id="leaderboards-search-input"
+                        class="stroke"
+                        type="text"
+                        maxlength="32"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter a term to search...">
+                    </input>
+        
+                    <ul id="leaderboards-search"></ul>
+                    <ul id="leaderboards-results"></ul>
                 </div>
 
                 <div id="equipments" class="container">

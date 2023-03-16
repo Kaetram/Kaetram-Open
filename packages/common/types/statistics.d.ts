@@ -8,4 +8,6 @@ export interface StatisticsData {
     averageTimePlayed: number;
     lastLogin: number;
     loginCount: number;
+
+    cheater: boolean;
 }

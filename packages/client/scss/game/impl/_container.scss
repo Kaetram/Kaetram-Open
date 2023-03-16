@@ -58,33 +58,50 @@
     border: 0;
 }
 
-.container-slot {
+.container-slot,
+.container-slot-large {
     margin: auto;
 }
 
-.container-slot.flex {
+.container-slot.flex,
+.container-slot-large.flex {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.container-slot > p {
+.container-slot > p,
+.container-slot-large > p {
     font-size: 20px;
     color: rgb(168 16 5);
     text-align: center;
 }
 
-.container-slot > p.left {
+.container-slot > p.left,
+.container-slot-large > p.left {
     float: left;
     text-align: left;
 }
 
-.container-slot > p.yellow {
+.container-slot > p.right,
+.container-slot-large > p.right {
+    float: right;
+    text-align: right;
+}
+
+.container-slot > p.yellow,
+.container-slot-large > p.yellow {
     color: rgb(168 168 5);
 }
 
-.container-slot > p.green {
+.container-slot > p.green,
+.container-slot-large > p.green {
     color: rgb(16 168 5);
+}
+
+.container-slot > p.white,
+.container-slot-large > p.white {
+    color: rgb(255 255 255);
 }
 
 @each $size, $i in media.$sizes {
@@ -122,13 +139,32 @@
             }
         }
 
-        .container-slot > p {
+        .container-slot-large {
+            width: 166px * $i;
+            height: 15px * $i;
+            margin-top: 2px * $i;
+
+            background: url('/img/interface/leaderboards.png') 0 -160px * $i;
+            background-size: calc(width('leaderboards.png') * $i);
+
+            &:hover {
+                background-position-y: -176px * $i;
+            }
+
+            &:active {
+                background-position-y: -192px * $i;
+            }
+        }
+
+        .container-slot > p,
+        .container-slot-large > p {
             padding-top: 4px * $i;
         }
     }
 
     @media (--sm) {
-        .container-slot > p {
+        .container-slot > p,
+        .container-slot-large > p {
             padding-top: 2px;
             font-size: 10px;
         }
