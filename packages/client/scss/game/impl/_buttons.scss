@@ -48,7 +48,8 @@
         #audio-button,
         #achievements-button,
         #quests-button,
-        #friends-button {
+        #friends-button,
+        #placeholder-button {
             position: relative;
 
             width: 14px * $i;
@@ -173,6 +174,19 @@
             &.active,
             &:active {
                 background-position-x: -392px * $i;
+            }
+        }
+
+        #placeholder-button {
+            background-position: -400px * $i -336px * $i;
+
+            &:hover {
+                background-position-x: -416px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -432px * $i;
             }
         }
 

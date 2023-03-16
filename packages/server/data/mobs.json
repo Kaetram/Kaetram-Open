@@ -594,7 +594,7 @@
   },
 
   "greenpirateskeleton": {
-    "name": "Pirate Skeleton",
+    "name": "Green Pirate Skeleton",
     "description": "Isn't this just a skeleton but wearing a pirate hat?",
     "hitPoints": 585,
     "defenseLevel": 42,
@@ -630,7 +630,7 @@
   },
 
   "redpirateskeleton": {
-    "name": "Pirate Skeleton",
+    "name": "Red Pirate Skeleton",
     "hitPoints": 640,
     "defenseLevel": 13,
     "attackLevel": 18,
@@ -665,7 +665,7 @@
   },
 
   "blackpirateskeleton": {
-    "name": "Pirate Skeleton",
+    "name": "Blue Pirate Skeleton",
     "description": "Isn't this just a skeleton but wearing a pirate hat?",
     "drops": {"piratearmor": 200},
     "hitPoints": 625,
@@ -2542,7 +2542,7 @@
   },
 
   "purplepreta": {
-    "name": "Preta",
+    "name": "Purple Preta",
     "drops": {"bluescimitar": 220, "bluewingarcherarmor": 200, "bluewingarmor": 220},
     "hitPoints": 431,
     "defenseLevel": 1,
@@ -3653,7 +3653,7 @@
   },
 
   "yellowpreta": {
-    "name": "Preta",
+    "name": "Yellow Preta",
     "drops": {"bluescimitar": 450, "bluewingarcherarmor": 450, "bluewingarmor": 450},
     "hitPoints": 526,
     "defenseLevel": 4,
