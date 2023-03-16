@@ -1,8 +1,8 @@
+import express, { Router } from 'express';
 import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import express, { Router } from 'express';
 
 import type Cache from './cache';
 import type Server from '../model/server';
@@ -160,7 +160,8 @@ export default class API {
         this.cache.getTotalExperience((data: TotalExperience[]) => {
             response.json({
                 status: 'success',
-                list: data
+                list: data,
+                availableMobs: this.cache.availableMobs
             });
         });
     }
