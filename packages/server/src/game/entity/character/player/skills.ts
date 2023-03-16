@@ -226,7 +226,7 @@ export default class Skills {
 
         return {
             skills,
-            cheater: this.player.rank === Modules.Ranks.Cheater
+            cheater: this.player.isCheater()
         };
     }
 
