@@ -31,7 +31,7 @@ export default class Leaderboards extends Menu {
 
     // Search elements available (key is the search URL term, value is the name displayed).
     private searchElements: SearchElement[] = [
-        { name: 'Total Level', key: '', type: '' },
+        { name: 'Total Experience', key: '', type: '' },
         { name: 'PVP Kills', key: 'pvp', type: 'pvp' }
     ];
     private availableMobs: { [key: string]: string } = {};
@@ -114,6 +114,8 @@ export default class Leaderboards extends Menu {
 
         // If we have a search type then we append that onto the URL.
         if (searchElement.type) url += `?${searchElement.type}=${searchElement.key}`;
+
+        console.log(url);
 
         // Fetch the results from the hub.
         fetch(url)
@@ -212,7 +214,8 @@ export default class Leaderboards extends Menu {
         console.log(result);
 
         // Set the description of the element.
-        info.innerHTML = type === 'skill' ? `${result.experience}` : `${result.kills}`;
+        info.innerHTML =
+            type === 'skill' || type === '' ? `${result.experience}` : `${result.kills}`;
 
         // Add the name element to the element.
         element.append(name, info);
