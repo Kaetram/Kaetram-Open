@@ -83,6 +83,9 @@ export default class Leaderboards extends Menu {
 
         // Create a search element for each search element.
         for (let element of this.searchElements) this.createSearchElement(element);
+
+        // Select the first element in the list.
+        this.handleSearchElement(this.searchElements[0]);
     }
 
     /**
