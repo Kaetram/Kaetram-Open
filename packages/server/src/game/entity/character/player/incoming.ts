@@ -211,7 +211,7 @@ export default class Incoming {
 
         // Synchronize friends list cross-server by sending inactive friends to hub.
         this.world.client.send(
-            new Friends(undefined, {
+            new Friends(Opcodes.Friends.Sync, {
                 username: this.player.username,
                 inactiveFriends: this.player.friends?.getInactiveFriends()
             })
