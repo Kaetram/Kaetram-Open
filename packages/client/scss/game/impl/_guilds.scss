@@ -1,0 +1,217 @@
+@use '../../abstracts/media';
+
+#guilds {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    margin: auto;
+}
+
+#guilds-container {
+    position: absolute;
+
+    p {
+        font-family: AdvoCut, sans-serif;
+        text-align: center;
+    }
+}
+
+#guilds-decoration {
+    position: absolute;
+    inset: 0 0 auto 0;
+    margin: auto;
+
+    p {
+        font-family: AdvoCut, sans-serif;
+        color: #fff;
+        text-align: center;
+    }
+}
+
+#close-guilds {
+    position: absolute;
+    right: 1px;
+}
+
+.banner-outline {
+    position: relative;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #guilds {
+            width: 241px * $i;
+            height: 201px * $i;
+            background: url('/img/interface/guilds/frames.png') no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+        }
+
+        #guilds-container {
+            top: 32px * $i;
+            right: 18px * $i;
+
+            width: 140px * $i;
+            height: 158px * $i;
+
+            background: url('/img/interface/guilds/frames.png') -256px * $i -16px * $i no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+
+            p {
+                margin-top: 50%;
+            }
+        }
+
+        #guilds-decoration {
+            top: -12px * $i;
+
+            width: 78px * $i;
+            height: 6px * $i;
+
+            background: url('/img/interface/guilds/frames.png') -286px * $i -8px * $i no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+
+            p {
+                margin-top: -6px * $i;
+            }
+        }
+
+        #close-guilds {
+            width: 11px * $i;
+            height: 13px * $i;
+            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-x: -124px * $i;
+            }
+
+            &:active, &.active {
+                background-position-x: -136px * $i;
+            }
+        }
+
+        .banner {
+            width: 66px * $i;
+            height: 218px * $i;
+            margin-top: -1px * $i;
+            margin-left: 8px * $i;
+
+            background: url('/img/interface/guilds/banners.png') no-repeat;
+            background-size: calc(width('guilds/banners.png') * $i);
+        }
+
+        .banner-outline {
+            top: 1px * $i;
+
+            width: 56px * $i;
+            height: 211px * $i;
+            margin-left: 5px * $i;
+
+            background: url('/img/interface/guilds/banners-outline.png') no-repeat;
+            background-size: calc(width('guilds/banners-outline.png') * $i);
+        }
+
+        .banner-green {
+            background-position-x: 0;
+        }
+
+        .banner-blue {
+            background-position-x: -67px * $i;
+        }
+
+        .banner-red {
+            background-position-x: -134px * $i;
+        }
+
+        .banner-grey {
+            background-position-x: -201px * $i;
+        }
+
+        .banner-black {
+            background-position-x: -268px * $i;
+        }
+
+        .banner-tangerine {
+            background-position-x: -335px * $i;
+        }
+
+        .banner-yellow {
+            background-position-x: -402px * $i;
+        }
+
+        .banner-purple {
+            background-position-x: -469px * $i;
+        }
+
+        .banner-pink {
+            background-position-x: -536px * $i;
+        }
+
+        .banner-outline-green {
+            background-position-x: 0;
+        }
+
+        .banner-outline-blue {
+            background-position-x: -67px * $i;
+        }
+
+        .banner-outline-orange {
+            background-position-x: -134px * $i;
+        }
+
+        .banner-outline-white {
+            background-position-x: -201px * $i;
+        }
+
+        .banner-outline-grey {
+            background-position-x: -268px * $i;
+        }
+
+        .banner-outline-tangerine {
+            background-position-x: -335px * $i;
+        }
+
+        .banner-outline-yellow {
+            background-position-x: -402px * $i;
+        }
+
+        .banner-outline-purple {
+            background-position-x: -469px * $i;
+        }
+
+        .banner-outline-pink {
+            background-position-x: -536px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    #guilds-decoration {
+        p {
+            margin-top: -24px;
+            font-size: 28px;
+        }
+    }
+}
+
+@media (--md) {
+    #guilds-decoration {
+        p {
+            margin-top: -22px;
+            font-size: 24px;
+        }
+    }
+}
+
+@media (--sm) {
+    #guilds-decoration {
+        p {
+            margin-top: -15px;
+            font-size: 16px;
+        }
+    }
+}
