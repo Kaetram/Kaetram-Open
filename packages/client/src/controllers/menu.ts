@@ -15,6 +15,7 @@ import Friends from '../menu/friends';
 import Trade from '../menu/trade';
 import Interact from '../menu/interact';
 import Leaderboards from '../menu/leaderboards';
+import Guilds from '../menu/guilds';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -39,6 +40,7 @@ export default class MenuController {
     private trade: Trade;
     private interact: Interact;
     private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public header: Header;
 
@@ -61,6 +63,7 @@ export default class MenuController {
         this.trade = new Trade(this.inventory);
         this.interact = new Interact(game.player);
         this.leaderboards = new Leaderboards(game.app);
+        this.guilds = new Guilds();
 
         this.menus = {
             inventory: this.inventory,
@@ -77,7 +80,8 @@ export default class MenuController {
             friends: this.friends,
             trade: this.trade,
             interact: this.interact,
-            leaderboards: this.leaderboards
+            leaderboards: this.leaderboards,
+            guilds: this.guilds
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
