@@ -49,7 +49,7 @@
         #achievements-button,
         #quests-button,
         #friends-button,
-        #placeholder-button {
+        .placeholder-button {
             position: relative;
 
             width: 14px * $i;
@@ -177,7 +177,7 @@
             }
         }
 
-        #placeholder-button {
+        .placeholder-button {
             background-position: -400px * $i -336px * $i;
 
             &:hover {

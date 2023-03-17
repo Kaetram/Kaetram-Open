@@ -37,7 +37,7 @@ export default class Leaderboards extends Menu {
     private availableMobs: { [key: string]: string } = {};
 
     public constructor(private app: App) {
-        super('#leaderboards', '#close-leaderboards', '#placeholder-button');
+        super('#leaderboards', '#close-leaderboards', '#leaderboards-button');
 
         this.search.addEventListener('input', this.handleInput.bind(this));
 
