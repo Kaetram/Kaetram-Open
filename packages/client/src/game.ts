@@ -17,8 +17,8 @@ import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
+import { agent } from './utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
