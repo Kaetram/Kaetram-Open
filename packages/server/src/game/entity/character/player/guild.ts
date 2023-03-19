@@ -1,7 +1,7 @@
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type { Member, GuildData, UpdateInfo } from '@kaetram/common/types/guild';
+import type { Member, GuildData, UpdateInfo, Decoration } from '@kaetram/common/types/guild';
 
 type JoinCallback = (username: string, serverId: number) => void;
 type LeaveCallback = (username: string) => void;
@@ -14,6 +14,13 @@ export default class Guild {
 
     // Our current rank in the guild.
     public rank: Modules.GuildRank = Modules.GuildRank.Fledgling;
+
+    // Decorations for the guild.
+    public decoration: Decoration = {
+        banner: '',
+        outline: '',
+        crest: ''
+    };
 
     // Contains the members of the guild and their ranks/statuses.
     public members: Member[] = [];
@@ -98,6 +105,7 @@ export default class Guild {
             name: this.name,
             owner: this.owner,
             inviteOnly: this.inviteOnly,
+            decoration: this.decoration,
             members: this.members
         };
     }

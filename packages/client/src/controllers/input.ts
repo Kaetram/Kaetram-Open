@@ -20,6 +20,7 @@ import type App from '../app';
 import type Map from '../map/map';
 import type Trade from '../menu/trade';
 import type Leaderboards from '../menu/leaderboards';
+import type Guilds from '../menu/guilds';
 
 interface TargetData {
     sprite: Sprite;
@@ -43,6 +44,7 @@ export default class InputController {
     private inventory: Inventory;
     private trade: Trade;
     private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -82,6 +84,7 @@ export default class InputController {
         this.interact = game.menu.getInteract();
         this.trade = game.menu.getTrade();
         this.leaderboards = game.menu.getLeaderboards();
+        this.guilds = game.menu.getGuilds();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -179,6 +182,8 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        if (this.guilds.isVisible()) return;
+
         // Redirect input to the leaderboards handler if the leaderboards are visible.
         if (this.leaderboards.isVisible()) return this.leaderboards.keyDown(event.key);
 

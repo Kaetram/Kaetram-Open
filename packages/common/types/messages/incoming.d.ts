@@ -84,6 +84,12 @@ export interface EnchantPacket {
     shardIndex?: number;
 }
 
+export interface GuildPacket {
+    opcode: Opcodes.Guild;
+    from?: number;
+    to?: number;
+}
+
 export interface WarpPacket {
     id: number;
 }
