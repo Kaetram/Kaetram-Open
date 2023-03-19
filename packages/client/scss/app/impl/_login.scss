@@ -146,13 +146,6 @@ input[type='range'] {
                 border-radius: 2px * $i;
             }
         }
-
-        .stroke {
-            text-shadow: 1px * $i 1px * $i 0 #373737, 1px * $i -1px * $i 0 #373737,
-                0 1px * $i 0 #373737, 1px * $i 0 0 #373737, -1px * $i 1px * $i 0 #373737,
-                -1px * $i -1px * $i 0 #373737, 0 -1px * $i 0 #373737, 0 1px * $i 0 #373737,
-                -1px * $i 0 0 #373737;
-        }
     }
 }
 
@@ -187,6 +180,12 @@ input[type='range'] {
 
     input[type='range']::-webkit-slider-thumb {
         height: 15px;
+    }
+
+    .stroke {
+        text-shadow: 1px 1px 0 #373737, 1px -1px 0 #373737, 0 1px 0 #373737, 1px 0 0 #373737,
+            -1px 1px 0 #373737, -1px -1px 0 #373737, 0 -1px 0 #373737, 0 1px 0 #373737,
+            -1px 0 0 #373737;
     }
 }
 
