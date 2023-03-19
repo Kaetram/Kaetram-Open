@@ -108,7 +108,7 @@ export default class InputController {
 
         this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
 
-        this.targetAnimation.setSpeed(50);
+        this.targetAnimation.setSpeed(150);
     }
 
     /**
