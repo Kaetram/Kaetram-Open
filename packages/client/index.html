@@ -654,8 +654,6 @@
                         </ul>
                     </div>
 
-                    <div id="guild-page" class="page"></div>
-
                     <div id="profile-navigator" class="navigator">
                         <div class="previous"></div>
                         <div class="next"></div>
@@ -1025,12 +1023,34 @@
                         <div class="banner-crest"></div>
                     </div>
 
-                    <div id="guilds-container">
+                    <div id="guilds-list-container">
+                        <div id="create-guild" class="element-button-large"></div>
+                        
                         <div id="guilds-decoration">
                             <p class="stroke">Guilds</p>
                         </div>
 
-                        <p>There are no guilds available...</p>
+                        <ul></ul>
+
+                        <p id="guilds-info">There are no guilds available...</p>
+                    </div>
+
+                    <div id="guilds-create-container">
+                        <div class="guild-banner-decoration guild-banner-select"></div>
+                        <div class="guild-banner-decoration guild-outline-select"></div>
+
+                        <ul id="banner-colours"></ul>
+                        <ul id="banner-outline-colours"></ul>
+                        <ul id="banner-crests"></ul>
+
+                        <input
+                            id="guild-name-input"
+                            type="text"
+                            maxlength="16"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter a name..."
+                            class="guild-name-input-image stroke"></input>
                     </div>
                 </div>
 

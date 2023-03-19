@@ -63,7 +63,7 @@ export default class MenuController {
         this.trade = new Trade(this.inventory);
         this.interact = new Interact(game.player);
         this.leaderboards = new Leaderboards(game.app);
-        this.guilds = new Guilds();
+        this.guilds = new Guilds(game);
 
         this.menus = {
             inventory: this.inventory,
@@ -251,6 +251,14 @@ export default class MenuController {
 
     public getLeaderboards(): Leaderboards {
         return this.leaderboards;
+    }
+
+    /**
+     * @returns The guilds menu object.
+     */
+
+    public getGuilds(): Guilds {
+        return this.guilds;
     }
 
     /**

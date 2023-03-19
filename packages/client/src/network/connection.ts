@@ -59,7 +59,8 @@ import type {
     FriendsPacket,
     ListPacket,
     TradePacket,
-    HandshakePacket
+    HandshakePacket,
+    GuildPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -1051,8 +1052,10 @@ export default class Connection {
      * Unimplemented guild packet.
      */
 
-    private handleGuild(opcode: Opcodes.Guild): void {
+    private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
         log.debug(`Guild Opcode: ${opcode}`);
+
+        this.menu.getGuilds().handle(opcode, info);
     }
 
     /**

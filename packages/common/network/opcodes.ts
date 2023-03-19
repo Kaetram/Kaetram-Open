@@ -122,7 +122,9 @@ export enum Guild {
     Leave,
     Rank,
     Update,
-    Experience
+    Experience,
+    Banner,
+    List
 }
 
 export enum Pointer {
