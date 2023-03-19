@@ -1,4 +1,4 @@
-import type { UpdateInfo } from '../guild';
+import type { ListInfo, UpdateInfo } from '../guild';
 import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
@@ -286,6 +286,8 @@ export interface GuildPacket {
     update?: UpdateInfo;
     member?: Member;
     members?: Member[];
+    total?: number;
+    guilds?: ListInfo[];
 }
 
 export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;

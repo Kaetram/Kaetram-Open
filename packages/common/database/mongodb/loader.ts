@@ -212,4 +212,29 @@ export default class Loader {
             callback(info[0] as GuildData);
         });
     }
+
+    /**
+     * Loads the guilds within a specified range. Used for pagination on the client side
+     * when the player is viewing the guild list.
+     * @param from The index at which we want to start loading guilds.
+     * @param to The index at which we want to stop loading guilds.
+     * @param callback Contains the guilds that we found within that range and total amount.
+     */
+
+    public loadGuilds(
+        from: number,
+        to: number,
+        callback: (guilds: GuildData[], total: number) => void
+    ): void {
+        if (!this.database || config.skipDatabase) return callback([], 0);
+
+        let cursor = this.database.collection('guilds').find({});
+
+        cursor.toArray().then((info: unknown[]) => {
+            let total = info.length;
+
+            // Splice the array and return the guilds within the range.
+            callback(info.splice(from, to) as GuildData[], total);
+        });
+    }
 }

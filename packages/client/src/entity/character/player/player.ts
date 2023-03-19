@@ -23,6 +23,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
+import type { GuildData } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -46,6 +47,8 @@ export default class Player extends Character {
     public disableAction = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
+
+    public guild!: GuildData;
 
     public override hitPoints = 0;
     public override maxHitPoints = 0;

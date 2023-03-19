@@ -8,7 +8,7 @@ import { Guild as GuildPacket } from '@kaetram/common/network/impl';
 import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { GuildData, Member, UpdateInfo } from '@kaetram/common/types/guild';
+import type { GuildData, ListInfo, Member, UpdateInfo } from '@kaetram/common/types/guild';
 
 export default class Guilds {
     private database: MongoDB;
@@ -151,5 +151,26 @@ export default class Guilds {
             // Update the member of the guild if they are online.
             player?.guild?.update(data);
         }
+    }
+
+    /**
+     * Grabs a list of guilds from the database based on the specified range. We
+     * extract only the information that we need and send it to the player.
+     * @param player The player that is requesting the list.
+     * @param from The index at which we start grabbing guilds.
+     * @param to The index at which we stop grabbing guilds.
+     */
+
+    public get(player: Player, from: number, to: number): void {
+        this.database.loader.loadGuilds(from, to, (info: GuildData[], total: number) => {
+            // Extract the cruical information and store it in a ListInfo array.
+            let guilds: ListInfo[] = info.map((guild) => ({
+                name: guild.name,
+                members: guild.members.length,
+                decoration: guild.decoration
+            }));
+
+            player.send(new GuildPacket(Opcodes.Guild.List, { guilds, total }));
+        });
     }
 }
