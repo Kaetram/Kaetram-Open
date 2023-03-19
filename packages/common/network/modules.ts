@@ -459,6 +459,37 @@ export enum GuildRank {
     Landlord
 }
 
+export enum BannerColours {
+    Green = 'green',
+    Blue = 'blue',
+    Red = 'red',
+    Grey = 'grey',
+    Black = 'black',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerOutlineColours {
+    Green = 'green',
+    Blue = 'blue',
+    Orange = 'orange',
+    White = 'white',
+    Grey = 'grey',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerCrests {
+    None = 'none',
+    Star = 'star',
+    Hawk = 'hawk',
+    Phoenix = 'phoenix'
+}
+
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL: 135, // Maximum attainable level.

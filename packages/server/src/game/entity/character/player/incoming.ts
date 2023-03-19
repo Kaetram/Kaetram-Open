@@ -25,7 +25,8 @@ import type {
     FriendsPacket,
     TradePacket,
     HandshakePacket,
-    EnchantPacket
+    EnchantPacket,
+    GuildPacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../character';
 import type Player from './player';
@@ -107,6 +108,9 @@ export default class Incoming {
                     }
                     case Packets.Enchant: {
                         return this.handleEnchant(message);
+                    }
+                    case Packets.Guild: {
+                        return this.handleGuild(message);
                     }
                     case Packets.Warp: {
                         return this.handleWarp(message);
@@ -502,6 +506,19 @@ export default class Incoming {
 
             case Opcodes.Enchant.Confirm: {
                 return this.world.enchanter.enchant(this.player, packet.index!, packet.shardIndex!);
+            }
+        }
+    }
+
+    /**
+     * Receives a packet regarding a guild action from the client. We respond accordingly.
+     * @param packet Contains the opcode and information about the request.
+     */
+
+    private handleGuild(packet: GuildPacket): void {
+        switch (packet.opcode) {
+            case Opcodes.Guild.List: {
+                return this.world.guilds.get(this.player, packet.from!, packet.to!);
             }
         }
     }
