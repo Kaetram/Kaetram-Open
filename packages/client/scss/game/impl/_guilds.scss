@@ -99,7 +99,7 @@
 }
 
 .slot-element {
-    span.name, span.count {
+    span.name, span.count, span.server {
         position: relative;
         font-family: AdvoCut, sans-serif;
         color: white;
@@ -131,7 +131,7 @@
     position: relative;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         #guilds {
             width: 241px * $i;
@@ -256,6 +256,11 @@
             span.name {
                 top: 5px * $i;
                 left: 18px * $i;
+            }
+
+            span.server {
+                top: 4px * $i;
+                left: 68px * $i;
             }
 
             div.element-button-small {
@@ -637,7 +642,7 @@
     }
 
     .slot-element {
-        span.name, span.count {
+        span.name, span.count, span.server {
             font-size: 22px;
         }
     }
@@ -659,40 +664,13 @@
     .guilds-decoration {
         p {
             margin-top: -22px;
-            font-size: 24px;
+            font-size: 20px;
         }
     }
 
     .slot-element {
-        span.name, span.count {
+        span.name, span.count, span.server {
             font-size: 14px;
         }
-    }
-}
-
-@media (--sm) {
-    #guild-name-input { 
-        font-size: 10px;
-    }
-
-    .guilds-decoration {
-        p {
-            margin-top: -15px;
-            font-size: 16px;
-        }
-    }
-
-    .slot-element {
-        span.name, span.count {
-            font-size: 8px;
-        }
-    }
-
-    .element-button-small {
-        font-size: 7px;
-    }
-
-    .element-button-large {
-        font-size: 8px;
     }
 }
