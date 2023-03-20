@@ -82,7 +82,7 @@ export default class Incoming {
             }
 
             case Opcodes.Player.Logout: {
-                return this.server.remove(info.username!);
+                return this.server.remove(info.username!, info.guild!);
             }
 
             case Opcodes.Player.Guild: {

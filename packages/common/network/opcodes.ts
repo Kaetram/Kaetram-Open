@@ -118,13 +118,16 @@ export enum Enchant {
 
 export enum Guild {
     Create,
+    Login,
+    Logout,
     Join,
     Leave,
     Rank,
     Update,
     Experience,
     Banner,
-    List
+    List,
+    Error
 }
 
 export enum Pointer {

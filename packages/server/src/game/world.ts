@@ -15,8 +15,8 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
-import { Chat } from '@kaetram/common/network/impl';
-import { Modules } from '@kaetram/common/network';
+import { Chat, Guild } from '@kaetram/common/network/impl';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 
 import type Grids from './map/grids';
@@ -26,6 +26,7 @@ import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
 import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
+import type { GuildData } from '@kaetram/common/types/guild';
 
 export interface PacketData {
     packet: Packet;
@@ -169,6 +170,53 @@ export default class World {
         this.entities.forEachPlayer((player: Player) => {
             if (player.friends.hasFriend(username))
                 player.friends.setStatus(username, !logout, serverId);
+        });
+    }
+
+    /**
+     * Finds a guild based on an identifier and synchronizes the online status of the
+     * `username` member to the rest of the guild members. We use this method
+     * since it is more efficient to only look through the guild members of the player
+     * logging in/out rather than all the players in the world.
+     * @param identifier The guild identifier that we are searching for.
+     * @param username The username that we are updating the status of.
+     * @param logout Whether or not we received a logout packet.
+     * @param serverId The server id that the player is currently logged in to.
+     */
+
+    public syncGuildMembers(
+        identifier: string,
+        username: string,
+        logout = false,
+        serverId = config.serverId
+    ): void {
+        if (!identifier) return;
+
+        this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
+            if (!guild) return log.warning(`Attempted to sync guild members for ${identifier}.`);
+
+            // Iterate through the members in the guild.
+            for (let member of guild.members) {
+                // Skip if the member is the player we are updating.
+                if (member.username === username) continue;
+
+                let player = this.getPlayerByName(member.username);
+
+                // Skip if player doesn't exist.
+                if (!player) continue;
+
+                // If the player is online, send a packet with a new status.
+                player.send(
+                    new Guild(Opcodes.Guild.Update, {
+                        members: [
+                            {
+                                username,
+                                serverId: logout ? -1 : serverId
+                            }
+                        ]
+                    })
+                );
+            }
         });
     }
 

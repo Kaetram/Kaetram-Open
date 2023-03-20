@@ -86,8 +86,13 @@ export interface EnchantPacket {
 
 export interface GuildPacket {
     opcode: Opcodes.Guild;
+    identifier?: string;
     from?: number;
     to?: number;
+    name?: string;
+    colour?: Modules.BannerColour;
+    outline?: Modules.BannerOutline;
+    crest?: Modules.BannerCrest;
 }
 
 export interface WarpPacket {
