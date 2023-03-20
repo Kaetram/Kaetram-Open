@@ -2113,6 +2113,11 @@
                          "name":"destination",
                          "type":"object",
                          "value":337
+                        }, 
+                        {
+                         "name":"reqAchievement",
+                         "type":"string",
+                         "value":"waterguardian"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -5639,7 +5644,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
