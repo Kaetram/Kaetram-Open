@@ -202,6 +202,5 @@ export enum Friends {
 
 export enum Player {
     Login,
-    Logout,
-    Guild
+    Logout
 }
