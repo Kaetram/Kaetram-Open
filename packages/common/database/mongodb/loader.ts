@@ -237,4 +237,29 @@ export default class Loader {
             callback(info.splice(from, to) as GuildData[], total);
         });
     }
+
+    /**
+     * Finds a guild based on the owner. This is used when a player logs in, we check
+     * their guild in the database based on their username and return it to them.
+     * @param owner The owner of the guild (string of the username).
+     * @param callback Contains the guild data if we found it.
+     */
+
+    public findGuildByOwner(owner: string, callback: (guild?: GuildData) => void): void {
+        if (!this.database || config.skipDatabase) return callback();
+
+        let cursor = this.database.collection('guilds').find({ owner });
+
+        // Look through the array.
+        cursor.toArray().then((info: unknown[]) => {
+            // If we find more than one guild with the same owner, log a warning.
+            if (info.length > 1) log.warning(`[Guilds] Duplicate entry for ${owner}.`);
+
+            // Return empty array if we can't find any data.
+            if (info.length === 0) return callback();
+
+            // Return the raw data from the database.
+            callback(info[0] as GuildData);
+        });
+    }
 }

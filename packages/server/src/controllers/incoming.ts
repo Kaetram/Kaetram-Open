@@ -1,8 +1,10 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
+import { Guild } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type {
     ChatPacket,
     FriendsPacket,
@@ -37,6 +39,10 @@ export default class Incoming {
                 return this.handleChat(data as ChatPacket);
             }
 
+            case Packets.Guild: {
+                return this.handleGuild(opcode, data as GuildPacket);
+            }
+
             case Packets.Friends: {
                 return this.handleFriends(data as FriendsPacket);
             }
@@ -56,6 +62,16 @@ export default class Incoming {
      */
 
     private handlePlayer(opcode: Opcodes.Player, data: PlayerPacket): void {
+        // Synchronize the player's login or logout to the guild members.
+        if (data.guild)
+            this.world.syncGuildMembers(
+                data.guild,
+                data.username,
+                opcode === Opcodes.Player.Logout,
+                data.serverId
+            );
+
+        // Synchronize the player's login or logout to the friends list.
         return this.world.syncFriendsList(
             data.username,
             opcode === Opcodes.Player.Logout,
@@ -102,6 +118,29 @@ export default class Incoming {
         let target = this.world.getPlayerByName(data.target!);
 
         target?.sendMessage(data.target!, data.message!, data.source!);
+    }
+
+    /**
+     * Receives information from the hub regarding a guild. Generally this is used when a
+     * player logs in and requests to verify the online status of their guild's members.
+     * We receive a packet here and relay the list of members to the player's client.
+     * @param opcode The type of action that the hub is performing (update usually).
+     * @param data Contains information about the opcode.
+     */
+
+    private handleGuild(opcode: Opcodes.Guild, data: GuildPacket): void {
+        switch (opcode) {
+            case Opcodes.Guild.Update: {
+                if (!data.username || !data.members) return;
+
+                let player = this.world.getPlayerByName(data.username);
+
+                // Relay the packet to the player's client.
+                if (player) player.send(new Guild(Opcodes.Guild.Update, { members: data.members }));
+
+                return;
+            }
+        }
     }
 
     /**

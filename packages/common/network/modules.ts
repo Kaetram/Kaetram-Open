@@ -459,7 +459,7 @@ export enum GuildRank {
     Landlord
 }
 
-export enum BannerColours {
+export enum BannerColour {
     Green = 'green',
     Blue = 'blue',
     Red = 'red',
@@ -471,7 +471,7 @@ export enum BannerColours {
     Pink = 'pink'
 }
 
-export enum BannerOutlineColours {
+export enum BannerOutline {
     Green = 'green',
     Blue = 'blue',
     Orange = 'orange',
@@ -522,7 +522,8 @@ export const Constants = {
     STUN_DURATION: 10_000, // 10 seconds
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,
-    ATTACKER_TIMEOUT: 20_000 // 20 seconds
+    ATTACKER_TIMEOUT: 20_000, // 20 seconds
+    MAX_GUILD_MEMBERS: 40 // Maximum number of members in a guild
 };
 
 export enum MinigameConstants {
