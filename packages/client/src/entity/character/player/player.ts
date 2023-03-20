@@ -633,7 +633,7 @@ export default class Player extends Character {
 
         this.guild = {
             name: packet.name,
-            members: packet.members as Member[]
+            members: packet.members
         };
     }
 
