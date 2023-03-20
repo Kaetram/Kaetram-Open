@@ -147,6 +147,10 @@ export default class Guilds {
                     `Player ${player.username} tried to join a guild that doesn't exist.`
                 );
 
+            // Ensure the guild isn't full.
+            if (guild.members.length >= Modules.Constants.MAX_GUILD_MEMBERS)
+                return player.notify('This guild is already at maximum capacity.');
+
             // Append the player to the guild's member list.
             guild.members.push({
                 username: player.username,
