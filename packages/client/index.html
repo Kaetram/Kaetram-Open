@@ -1062,8 +1062,26 @@
                         <div id="guild-leave" class="element-button-small element-button-small-red stroke">Leave</div>
 
                         <div id="guild-name" class="guilds-decoration"></div>
+                        <div id="guild-chat-log"></div>
+                        <input
+                            id="guild-chat-input"
+                            type="text"
+                            maxlength="256"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter your message here..."
+                            class="guild-chat-input-image stroke">
+                        </input>
 
-                        <ul></ul>
+                        <ul id="member-list"></ul>
+                        <ul id="sidebar-list">
+                            <li id="sidebar-members" class="sidebar-element active">
+                                <div class="members-icon"></div>
+                            </li>
+                            <li id="sidebar-chat" class="sidebar-element">
+                                <div class="chat-icon"></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
