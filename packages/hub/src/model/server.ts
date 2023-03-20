@@ -5,6 +5,7 @@ import Packet from '@kaetram/common/network/packet';
 import { Chat, Friends, Guild, Relay } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
+import type { Member } from '@kaetram/common/types/guild';
 import type { Friend } from '@kaetram/common/types/friends';
 import type Servers from '../controllers/servers';
 import type Connection from '../network/connection';
@@ -155,12 +156,12 @@ export default class Server {
      */
 
     public handleGuild(username: string, inactiveMembers: string[] = []): void {
-        let activeMembers: Friend = {};
+        let activeMembers: Member[] = [];
 
         for (let member of inactiveMembers) {
             let targetServer = this.controller.findPlayer(member);
 
-            if (targetServer) activeMembers[member] = { online: true, serverId: targetServer.id };
+            if (targetServer) activeMembers.push({ username: member, serverId: targetServer.id });
         }
 
         // Send the list of active members back to the source server's player.
