@@ -232,7 +232,10 @@ export default class Guilds {
                 packet = new GuildPacket(opcode, data);
 
             // Attempt to relay the packet across servers.
-            if (!player) return this.world.client.relay(member.username, packet);
+            if (!player) {
+                this.world.client.relay(member.username, packet);
+                continue;
+            }
 
             player.send(packet);
         }
