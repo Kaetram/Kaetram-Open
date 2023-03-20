@@ -148,6 +148,9 @@ export default class Guilds extends Menu {
 
         // Display the default information.
         this.listContainer.style.display = 'block';
+
+        // Request the guilds list from the server.
+        this.requestList();
     }
 
     /**
