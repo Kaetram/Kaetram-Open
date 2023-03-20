@@ -770,8 +770,6 @@ export default class Renderer {
             );
         }
 
-        // // this.drawEntityBack(entity);
-
         this.entitiesContext.drawImage(
             entity.sprite.image,
             frame!.x,

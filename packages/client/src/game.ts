@@ -309,19 +309,13 @@ export default class Game {
             radius
         );
 
-        /**
-         * Create a slightly larger than a tile boundary around the entity and check
-         * if the position is within that boundary. If it is, then we have found the
-         * entity we are looking for.
-         */
-
-        // Check about the radius of the position if our mouse is within the entity's boundaries.
+        // Look through all the entities we found and determine which one is closest to the mouse.
         for (let entity of entities)
             if (
-                position.x >= entity.x - entity.sprite.offsetX - this.map.tileSize &&
-                position.x <= entity.x - entity.sprite.offsetX + this.map.tileSize &&
-                position.y >= entity.y - entity.sprite.offsetY - this.map.tileSize &&
-                position.y <= entity.y - entity.sprite.offsetY + this.map.tileSize
+                position.x >= entity.x + entity.sprite.offsetX &&
+                position.x <= entity.x + entity.sprite.offsetX + entity.sprite.width &&
+                position.y >= entity.y + entity.sprite.offsetY &&
+                position.y <= entity.y + entity.sprite.offsetY + entity.sprite.height
             )
                 return entity;
 
