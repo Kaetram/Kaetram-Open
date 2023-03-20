@@ -1019,14 +1019,14 @@
                     <div id="close-guilds"></div>
 
                     <div class="banner banner-grey">
-                        <div class="banner-outline banner-outline-green"></div>
+                        <div class="banner-outline"></div>
                         <div class="banner-crest"></div>
                     </div>
 
                     <div id="guilds-list-container">
-                        <div id="create-guild" class="element-button-large"></div>
+                        <div id="create-guild" class="element-button-large stroke">Create</div>
                         
-                        <div id="guilds-decoration">
+                        <div class="guilds-decoration">
                             <p class="stroke">Guilds</p>
                         </div>
 
@@ -1043,6 +1043,11 @@
                         <ul id="banner-outline-colours"></ul>
                         <ul id="banner-crests"></ul>
 
+                        <span id="create-error"></span>
+
+                        <div id="guild-back" class="element-button-small element-button-small-red stroke">Back</div>
+                        <div id="guild-create" class="element-button-small stroke">Create</div>
+
                         <input
                             id="guild-name-input"
                             type="text"
@@ -1051,6 +1056,14 @@
                             data-lpignore="true"
                             placeholder="Enter a name..."
                             class="guild-name-input-image stroke"></input>
+                    </div>
+
+                    <div id=guilds-info-container>
+                        <div id="guild-leave" class="element-button-small element-button-small-red stroke">Leave</div>
+
+                        <div id="guild-name" class="guilds-decoration"></div>
+
+                        <ul></ul>
                     </div>
                 </div>
 

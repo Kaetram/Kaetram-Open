@@ -180,6 +180,9 @@ export default class Connection {
             password = this.app.getPassword(),
             email = this.app.getEmail();
 
+        // Assign username to palyer object (will get overriden after login is completed).
+        this.game.player.name = username.toLowerCase();
+
         // Send register packet if the user is registering.
         if (this.app.isRegistering())
             return this.socket.send(Packets.Login, {
@@ -1053,7 +1056,17 @@ export default class Connection {
      */
 
     private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
-        log.debug(`Guild Opcode: ${opcode}`);
+        switch (opcode) {
+            case Opcodes.Guild.Login: {
+                this.game.player.setGuild(info);
+                break;
+            }
+
+            case Opcodes.Guild.Leave: {
+                this.game.player.setGuild();
+                break;
+            }
+        }
 
         this.menu.getGuilds().handle(opcode, info);
     }

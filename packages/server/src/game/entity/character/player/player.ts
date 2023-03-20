@@ -42,7 +42,6 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
-import type Guild from './guild';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -102,8 +101,6 @@ export default class Player extends Character {
 
     public handler: Handler = new Handler(this);
 
-    public guild: Guild | undefined;
-
     public ready = false; // indicates if login processed finished
     public isGuest = false;
     public canTalk = true;
@@ -118,6 +115,7 @@ export default class Player extends Character {
     public password = '';
     public email = '';
     public userAgent = '';
+    public guild = '';
 
     public rank: Modules.Ranks = Modules.Ranks.None;
 
@@ -199,6 +197,7 @@ export default class Player extends Character {
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
+        this.guild = data.guild;
         this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
@@ -215,6 +214,9 @@ export default class Player extends Character {
 
         this.friends.load(data.friends);
 
+        // Connect the player to their guild if they are in one.
+        if (this.guild) this.world.guilds.connect(this, this.guild);
+
         this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
@@ -223,7 +225,9 @@ export default class Player extends Character {
         this.loadAbilities();
 
         // Synchronize login with the hub's server list.
-        this.world.client.send(new PlayerPacket(Opcodes.Player.Login, { username: this.username }));
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+        );
 
         // Quests and achievements have to be loaded prior to introducing the player.
         await this.loadQuests();
@@ -2103,15 +2107,6 @@ export default class Player extends Character {
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
-    }
-
-    /**
-     * Obtains the player's current guild identifier. Otherwise returns an empty string.
-     * @returns The lowercase name of the guild (identifier) or empty string if not in a guild.
-     */
-
-    public getGuildIdentifier(): string {
-        return this.guild?.name.toLowerCase() || '';
     }
 
     /**
