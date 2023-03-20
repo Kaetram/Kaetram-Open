@@ -20,13 +20,20 @@
         "blackpotion": 300,
         "hotsauce": 300,
         "cure": 300,
-        "shardt1": 200,
         "logs": 200,
         "stick": 500,
         "bead": 300,
         "banana": 300,
         "watermelon": 300,
         "apple": 300
+    },
+
+    "shards": {
+        "shardt1": 200,
+        "shardt2": 150,
+        "shardt3": 100,
+        "shardt4": 50,
+        "shardt5": 20
     },
 
     "warriorcrab": {
