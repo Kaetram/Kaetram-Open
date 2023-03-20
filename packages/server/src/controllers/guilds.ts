@@ -33,6 +33,14 @@ export default class Guilds {
         // Ensure the player isn't already in a guild.
         if (player.guild) return player.notify('You are already in a guild.');
 
+        // Prevent players from creating a guild if they haven't finished the tutorial.
+        if (!player.quests.isTutorialFinished())
+            return player.guildNotify('You must finish the tutorial before creating a guild.');
+
+        // Ensure the player has enough gold to create a guild.
+        if (!player.inventory.hasItem('gold', 30_000))
+            return player.guildNotify('You need 30,000 gold in your inventory to create a guild.');
+
         /**
          * We use the lower case of the guild name as the identifier. That way
          * we allow players to have guilds with capital letters in their name.
@@ -42,12 +50,10 @@ export default class Guilds {
 
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
             // Ensure a guild doesn't already exist with that name.
-            if (guild)
-                return player.send(
-                    new GuildPacket(Opcodes.Guild.Error, {
-                        error: 'A guild with that name already exists.'
-                    })
-                );
+            if (guild) return player.guildNotify('A guild with that name already exists.');
+
+            // Remove the gold from the player's inventory.
+            player.inventory.removeItem('gold', 30_000);
 
             let data: GuildData = {
                 identifier,
@@ -106,10 +112,7 @@ export default class Guilds {
             if (!guild) {
                 // Erase the guild identifier from the player.
                 player.guild = '';
-
-                return log.error(
-                    `Player ${player.username} tried to connect to a guild that doesn't exist.`
-                );
+                return;
             }
 
             // Send the join packet to the player.
@@ -199,6 +202,17 @@ export default class Guilds {
                     `Player ${player.username} tried to leave a guild that doesn't exist.`
                 );
 
+            // Disband the guild if the player is the owner.
+            if (player.username === guild.owner) {
+                // Send the leave packet to all the members in the guild.
+                this.synchronize(guild.members, Opcodes.Guild.Leave);
+
+                // Disband the guild
+                this.database.deleteGuild(player.guild);
+
+                return;
+            }
+
             // Remove the player from the guild's member list.
             guild.members = guild.members.filter((member) => member.username !== player.username);
 
@@ -226,7 +240,11 @@ export default class Guilds {
      * @param data The data that we are sending to the client.
      */
 
-    private synchronize(members: Member[], opcode: Opcodes.Guild, data: OutgoingGuildPacket): void {
+    private synchronize(
+        members: Member[],
+        opcode: Opcodes.Guild,
+        data?: OutgoingGuildPacket
+    ): void {
         for (let member of members) {
             let player = this.world.getPlayerByName(member.username),
                 packet = new GuildPacket(opcode, data);

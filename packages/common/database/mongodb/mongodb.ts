@@ -160,6 +160,19 @@ export default class MongoDB {
     }
 
     /**
+     * Removes a guild from our database.
+     * @param identifier The identifier of the guild to remove.
+     */
+
+    public deleteGuild(identifier: string): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('guilds');
+
+        collection.deleteOne({ identifier });
+    }
+
+    /**
      * Sets a rank of a player in the database. For use when the player is offline.
      * @param username The username of the player.
      * @param rankId The rank id of the player (relative to the Modules enum).
