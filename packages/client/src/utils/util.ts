@@ -105,11 +105,15 @@ export default {
      * @returns The formatted name string.
      */
 
-    formatName(name = ''): string {
-        return name.replace(
+    formatName(name = '', trim = 0): string {
+        name = name.replace(
             /\w\S*/g,
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
+
+        if (trim > 0) name = `${name.slice(0, Math.max(0, trim))}...`;
+
+        return name;
     },
 
     /**
