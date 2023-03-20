@@ -210,6 +210,9 @@ export default class Guilds {
                 // Disband the guild
                 this.database.deleteGuild(player.guild);
 
+                // Remove the guild identifier from the player.
+                player.guild = '';
+
                 return;
             }
 
