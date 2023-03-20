@@ -2,7 +2,7 @@ import Incoming from '../controllers/incoming';
 
 import Utils from '@kaetram/common/util/utils';
 import Packet from '@kaetram/common/network/packet';
-import { Chat, Friends, Guild } from '@kaetram/common/network/impl';
+import { Chat, Friends, Guild, Relay } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type { Friend } from '@kaetram/common/types/friends';
@@ -68,6 +68,23 @@ export default class Server {
 
         // If the player is logging in or out, we want to update the Discord bot population.
         if (packet.id === Packets.Player) this.controller.updateCallback?.();
+    }
+
+    /**
+     * Relay is a packet that is sent across servers to another player. This is generally
+     * used by things like guilds when we want to synchronize the joining and leaving of
+     * a player across all servers.
+     * @param info Contains the username of the player as first element, and unknown
+     * packet data as the second element.
+     */
+
+    public relay(info: [string, [number, unknown, unknown]]): void {
+        let server = this.controller.findPlayer(info[0]);
+
+        if (!server) return;
+
+        // Create a new packet with the relay data and send it to the target server.
+        server.send(new Packet(Packets.Relay, undefined, info));
     }
 
     /**
