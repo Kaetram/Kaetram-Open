@@ -93,14 +93,14 @@ export default class Server {
      * @param username The username of the player that we are adding.
      */
 
-    public add(username: string): void {
+    public add(username: string, guild = ''): void {
         // Ensure the player is not already in the list.
         if (this.players.includes(username)) return;
 
         this.players.push(username);
 
         this.controller.broadcast(
-            new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id })
+            new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id, guild })
         );
     }
 

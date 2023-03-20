@@ -83,17 +83,11 @@ export default class Incoming {
     private handlePlayer(opcode: Opcodes.Player, info: PlayerPacket): void {
         switch (opcode) {
             case Opcodes.Player.Login: {
-                return this.server.add(info.username!);
+                return this.server.add(info.username!, info.guild!);
             }
 
             case Opcodes.Player.Logout: {
                 return this.server.remove(info.username!, info.guild!);
-            }
-
-            case Opcodes.Player.Guild: {
-                console.log(info);
-
-                return;
             }
         }
     }
