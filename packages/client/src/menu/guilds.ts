@@ -153,6 +153,12 @@ export default class Guilds extends Menu {
         // Clear all the errors.
         this.setError();
 
+        // Empty the members list.
+        this.memberList.innerHTML = '';
+
+        // Empty the chat log.
+        this.chatLog.innerHTML = '';
+
         // Hide other containers and show the default information.
         this.create.style.display = 'none';
         this.infoContainer.style.display = 'none';
