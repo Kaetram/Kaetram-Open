@@ -19,6 +19,7 @@ export interface HandshakePacket {
 export interface PlayerPacket {
     username: string;
     serverId?: number;
+    guild?: string;
 }
 
 export interface ChatPacket {

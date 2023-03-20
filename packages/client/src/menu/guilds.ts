@@ -1,32 +1,53 @@
 import Menu from './menu';
 
+import Util from '../utils/util';
+
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { ListInfo } from '@kaetram/common/types/guild';
+import type { ListInfo, Member } from '@kaetram/common/types/guild';
 import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+
+interface ListElement extends HTMLElement {
+    identifier?: string;
+}
 
 export default class Guilds extends Menu {
     // The banner is the banner of the guild that the player is currently in.
     private banner: HTMLElement = document.querySelector('#guilds > .banner')!;
 
     // The default container and elements for the guilds list, displayed prior to joining a guild.
-    private info: HTMLElement = document.querySelector('#guilds-list-container')!;
+    private listContainer: HTMLElement = document.querySelector('#guilds-list-container')!;
     private createButton: HTMLButtonElement = document.querySelector('#create-guild')!;
 
     // Container for creating a new guild.
     private create: HTMLElement = document.querySelector('#guilds-create-container')!;
+
+    private createError: HTMLElement = document.querySelector('#create-error')!;
+
+    private backButton: HTMLElement = document.querySelector('#guild-back')!;
+    private createConfirmButton: HTMLButtonElement = document.querySelector('#guild-create')!;
+
     private bannerColours: HTMLUListElement = document.querySelector('#banner-colours')!;
     private bannerOutlines: HTMLUListElement = document.querySelector('#banner-outline-colours')!;
     private bannerCrests: HTMLUListElement = document.querySelector('#banner-crests')!;
 
+    private nameInput: HTMLInputElement = document.querySelector('#guild-name-input')!;
+
     // Decorations for the guild interface banner (updated during creation or when guild data is received).
-    private bannerColour: Modules.BannerColours = Modules.BannerColours.Grey;
-    private bannerOutline: Modules.BannerOutlineColours | '' = '';
+    private bannerColour: Modules.BannerColour = Modules.BannerColour.Grey;
+    private bannerOutline: Modules.BannerOutline | '' = '';
     private bannerCrest: Modules.BannerCrests = Modules.BannerCrests.None;
 
+    // The guild information container (if the player is in a guild).
+    private infoContainer: HTMLElement = document.querySelector('#guilds-info-container')!;
+
+    private guildName: HTMLElement = document.querySelector('#guild-name')!;
+    private leaveButton: HTMLElement = document.querySelector('#guild-leave')!;
+
     // List where we store players/guilds list (depending on the context).
-    private list: HTMLUListElement = document.querySelector('#guilds-list-container > ul')!;
+    private guildList: HTMLUListElement = document.querySelector('#guilds-list-container > ul')!;
+    private memberList: HTMLUListElement = document.querySelector('#guilds-info-container > ul')!;
 
     // Indexing - default values, used for pagination.
     private from = 0;
@@ -36,6 +57,10 @@ export default class Guilds extends Menu {
         super('#guilds', '#close-guilds', '#guilds-button');
 
         this.createButton.addEventListener('click', this.handleCreate.bind(this));
+
+        this.backButton.addEventListener('click', this.handleBackButton.bind(this));
+        this.createConfirmButton.addEventListener('click', this.handleCreateConfirm.bind(this));
+        this.leaveButton.addEventListener('click', this.handleLeave.bind(this));
 
         this.loadDecorations();
     }
@@ -49,15 +74,17 @@ export default class Guilds extends Menu {
     public handle(opcode: Opcodes.Guild, info: GuildPacket): void {
         switch (opcode) {
             case Opcodes.Guild.Join: {
-                console.log(info);
+                return this.handleMemberJoin(info.username!, info.serverId!);
+            }
 
-                break;
+            case Opcodes.Guild.Login: {
+                return this.handleConnect(info);
             }
 
             case Opcodes.Guild.Leave: {
-                console.log(info);
+                if (info?.username) return this.handleMemberLeave(info.username);
 
-                break;
+                return this.handleBackButton();
             }
 
             case Opcodes.Guild.Rank: {
@@ -66,8 +93,7 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Update: {
-                console.log(info);
-                break;
+                return this.loadMembers((info.members as Member[])!);
             }
 
             case Opcodes.Guild.Experience: {
@@ -79,6 +105,10 @@ export default class Guilds extends Menu {
             case Opcodes.Guild.List: {
                 return this.loadList(info.guilds, info.total);
             }
+
+            case Opcodes.Guild.Error: {
+                return this.setError(info.error);
+            }
         }
     }
 
@@ -86,12 +116,158 @@ export default class Guilds extends Menu {
      * Handler for when the player clicks the create guild button.
      */
 
-    public handleCreate(): void {
+    private handleCreate(): void {
         // Hide the default information and show the create guild form.
-        this.info.style.display = 'none';
+        this.listContainer.style.display = 'none';
+        this.infoContainer.style.display = 'none';
 
         // Display the create guild form.
         this.create.style.display = 'block';
+    }
+
+    /**
+     * Handler for when the player wants to go back to the guilds list.
+     * Basically the opposite of `handleCreate`.
+     */
+
+    private handleBackButton(): void {
+        // Reset the banner decorations and update it.
+        this.bannerColour = Modules.BannerColour.Grey;
+        this.bannerOutline = '';
+        this.bannerCrest = Modules.BannerCrests.None;
+
+        this.updateBanner();
+        this.cleanSelectedCrests(true);
+
+        // Clear all the errors.
+        this.setError();
+
+        // Hide other containers and show the default information.
+        this.create.style.display = 'none';
+        this.infoContainer.style.display = 'none';
+
+        // Display the default information.
+        this.listContainer.style.display = 'block';
+    }
+
+    /**
+     * Handler for when we click the create confirm button.
+     * This will send the packet to the server with the information provided.
+     */
+
+    private handleCreateConfirm(): void {
+        // Clear the error message.
+        this.setError();
+
+        // Verify the values client-sided (server also verifies them).
+        if (this.bannerOutline === '') return this.setError('Please select an outline colour.');
+
+        // Ensure the guild name is valid.
+        if (this.nameInput.value.length < 3 || this.nameInput.value.length > 16)
+            return this.setError('Guild name must be between 3 and 15 characters.');
+
+        // Send the packet to the server with the information.
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Create,
+            name: this.nameInput.value,
+            colour: this.bannerColour,
+            outline: this.bannerOutline,
+            crest: this.bannerCrest
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the leave guild button.
+     */
+
+    private handleLeave(): void {
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Leave
+        });
+    }
+
+    /**
+     * Handles connection received from the server. We essentially
+     * clear all the other interfaces and focus on the guild interface.
+     * The player object contains all the guild information necessary.
+     * @param info Contains information about the guild, such as decorations.
+     */
+
+    private handleConnect(info: GuildPacket): void {
+        // Clear the error message.
+        this.setError();
+
+        // Hide the default information.
+        this.listContainer.style.display = 'none';
+
+        // Hide the create guild form just in case.
+        this.create.style.display = 'none';
+
+        // Display the guild information container.
+        this.infoContainer.style.display = 'block';
+
+        // Load the guild decorations.
+        this.bannerColour = info.decoration?.banner || Modules.BannerColour.Grey;
+        this.bannerOutline = info.decoration?.outline || '';
+        this.bannerCrest = info.decoration?.crest;
+
+        this.updateBanner();
+
+        // Clear the guild name and members list.
+        this.guildName.innerHTML = '';
+        this.memberList.innerHTML = '';
+
+        // Update the guild name
+        let name = document.createElement('p');
+
+        name.className = 'stroke';
+
+        name.innerHTML = info.name || 'Unknown';
+
+        this.guildName.append(name);
+
+        // Update the guild members list.
+        for (let member of (info.members as Member[])!)
+            this.createElement(this.memberList, member.rank!, member.username);
+    }
+
+    /**
+     * Creates a new element based on the username is that joining. Since the player
+     * is brand new, then the default rank is the lowest rank. Other inforamtion
+     * is not really necessary.
+     * @param username The username of the member that joined the guild.
+     * @param serverId The server id of the member that joined the guild.
+     */
+
+    private handleMemberJoin(username: string, serverId = -1): void {
+        this.createElement(this.memberList, Modules.GuildRank.Fledgling, username);
+
+        this.loadMembers([{ username, serverId }]);
+    }
+
+    /**
+     * Removes a child element from the member list based on the username.
+     * @param username The username of the member that left the guild.
+     */
+
+    private handleMemberLeave(username: string): void {
+        let element = this.getElement(this.memberList, username);
+
+        element?.remove();
+    }
+
+    /**
+     * Requests a list of guilds from the server.
+     */
+
+    private requestList(): void {
+        if (this.game.player.guild) return;
+
+        return this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.List,
+            from: this.from,
+            to: this.to
+        });
     }
 
     /**
@@ -104,13 +280,17 @@ export default class Guilds extends Menu {
         // Nothing to do if there are no guilds.
         if (total === 0) return;
 
+        // Clear the list of guilds.
+        this.guildList.innerHTML = '';
+
         // Remove the description for no guilds available.
-        let description = this.info.querySelector('#guilds-info')!;
+        let description = this.listContainer.querySelector('#guilds-info')!;
 
         description.innerHTML = '';
 
-        console.log(description);
-        console.log(guilds);
+        // Iterate through the guilds and create a list element for each one.
+        for (let guild of guilds)
+            this.createElement(this.guildList, 'guild', guild.name, guild.members);
     }
 
     /**
@@ -132,9 +312,9 @@ export default class Guilds extends Menu {
 
     private loadColours(): void {
         // Iterate through the banner colours and create a list element for each one.
-        for (let colour in Modules.BannerColours) {
+        for (let colour in Modules.BannerColour) {
             let element = document.createElement('li'),
-                colourName = Modules.BannerColours[colour as keyof typeof Modules.BannerColours];
+                colourName = Modules.BannerColour[colour as keyof typeof Modules.BannerColour];
 
             // Add the banner colour classes to the element.
             element.className = `banner-colour-button banner-colour-button-${colourName}`;
@@ -160,12 +340,9 @@ export default class Guilds extends Menu {
 
     private loadOutlines(): void {
         // Iterate through the banner outlines and create a list element for each one.
-        for (let colour in Modules.BannerOutlineColours) {
+        for (let colour in Modules.BannerOutline) {
             let element = document.createElement('li'),
-                outline =
-                    Modules.BannerOutlineColours[
-                        colour as keyof typeof Modules.BannerOutlineColours
-                    ];
+                outline = Modules.BannerOutline[colour as keyof typeof Modules.BannerOutline];
 
             // Add the banner outline classes to the element.
             element.className = `banner-outline-button banner-outline-button-${outline}`;
@@ -228,6 +405,30 @@ export default class Guilds extends Menu {
     }
 
     /**
+     * Loads a list of members (specifically their online status) for the guild interface.
+     * @param members Contains an array of guild members and their online status.
+     */
+
+    private loadMembers(members: Member[]): void {
+        for (let member of members) {
+            let element = this.getElement(this.memberList, member.username);
+
+            if (!element) continue;
+
+            let nameElement = element.querySelector('.name')!,
+                colour =
+                    member.serverId === -1
+                        ? 'red'
+                        : member.serverId === this.game.player.serverId
+                        ? 'green'
+                        : 'yellow';
+
+            // Update the colour based on the online status.
+            nameElement.className = `name ${colour}`;
+        }
+    }
+
+    /**
      * Override for the show function where we send a packet requesting
      * a list of active guilds if the player is not in a guild.
      */
@@ -236,23 +437,24 @@ export default class Guilds extends Menu {
         super.show();
 
         // No guild so we request a list of active guilds.
-        if (!this.game.player.guild)
-            return this.game.socket.send(Packets.Guild, {
-                opcode: Opcodes.Guild.List,
-                from: this.from,
-                to: this.to
-            });
+        this.requestList();
     }
 
     /**
      * Override for the hide function where we reset the pagination.
+     * We also make sure we hide the create interface if the player
+     * does not have a guild.
      */
 
     public override hide(): void {
         super.hide();
 
+        // Reset the pagination.
         this.from = 0;
         this.to = 10;
+
+        // Hide the create interface if the player is not in a guild.
+        if (!this.game.player.guild) this.handleBackButton();
     }
 
     /**
@@ -260,45 +462,83 @@ export default class Guilds extends Menu {
      * we are provided. Generally we have two types: guilds and ranks. When creating a rank
      * based element it's generally for players, whereas a guild one is for a list of
      * available guilds.
+     * @param list The list to append the element to.
      * @param type The type of element we are creating.
      * @param name The name to display in the element.
      */
 
-    private createElement(type: Modules.GuildRank | 'guild', name: string, count = 0): void {
-        let element = document.createElement('li'),
-            nameElement = document.createElement('span');
+    private createElement(
+        list: HTMLUListElement,
+        type: Modules.GuildRank | 'guild',
+        name: string,
+        count = 0
+    ): void {
+        let element = document.createElement('li') as ListElement,
+            nameElement = document.createElement('span'),
+            isGuild = type === 'guild',
+            slotType = type === 'guild' ? 'guild' : Modules.GuildRank[type].toLowerCase();
 
-        // Add the classes to the element
-        element.className = `slot-element slot-${type} stroke`;
+        // Assign the name as the identifier for the element
+        element.identifier = name;
 
-        // Add the class and inner HTML to the name element.
-        nameElement.classList.add('name');
-        nameElement.innerHTML = name;
+        // Add the classes to the element and name element.
+        element.className = `slot-element slot-${slotType} stroke`;
+        nameElement.className = `name${
+            isGuild ? '' : this.game.player.name.toLowerCase() === name ? ' green' : ' red'
+        }`;
 
-        // Append the name to the element.
-        element.append(nameElement);
+        // Set the name of the element, format it if it's a player name.
+        nameElement.innerHTML = isGuild ? name : Util.formatName(name);
 
-        // If we have a count and we are creating a guild element element, we do so here.
-        if (count > 0 && type === 'guild') {
-            let countElement = document.createElement('span');
+        // Conditional for dealing with guild element creation.
+        if (isGuild) {
+            if (count > 0) {
+                let countElement = document.createElement('span');
 
-            // Add the class and inner HTML to the count element.
-            countElement.classList.add('count');
-            countElement.innerHTML = `${count}`;
+                // Add the class and inner HTML to the count element.
+                countElement.classList.add('count');
+                countElement.innerHTML = `${count}/${Modules.Constants.MAX_GUILD_MEMBERS}`;
 
-            element.append(countElement);
+                element.append(countElement);
+            }
+
+            // Create the join button for the guild.
+            let joinButton = document.createElement('div');
+
+            // Add the class to the join button.
+            joinButton.className = 'element-button-small stroke';
+
+            // Add the inner HTML to the join button.
+            joinButton.innerHTML = 'Join';
+
+            // Add the event listener to the join button.
+            joinButton.addEventListener('click', () => {
+                this.game.socket.send(Packets.Guild, {
+                    opcode: Opcodes.Guild.Join,
+                    identifier: name.toLowerCase()
+                });
+            });
+
+            // Append name and join elements.
+            element.append(nameElement, joinButton);
         }
 
+        // Append just the name element.
+        if (!isGuild) element.append(nameElement);
+
         // Append the element to the list.
-        this.list.append(element);
+        list.append(element);
     }
 
     /**
      * Removes the active class from all the crest selection elements.
      */
 
-    private cleanSelectedCrests(): void {
+    private cleanSelectedCrests(selectEmpty = false): void {
         for (let crest of this.bannerCrests.children) crest.classList.remove('active');
+
+        // Select the empty crest if specified.
+        if (selectEmpty) this.bannerCrests.children[0].classList.add('active');
     }
 
     /**
@@ -313,10 +553,34 @@ export default class Guilds extends Menu {
         this.banner.className = `banner banner-${this.bannerColour}`;
 
         // Update the outline and crest if specified
-        if (this.bannerOutline)
-            outlineElement.className = `banner-outline banner-outline-${this.bannerOutline}`;
+        outlineElement.className = `banner-outline${
+            this.bannerOutline ? ` banner-outline-${this.bannerOutline}` : ''
+        }`;
 
         if (this.bannerCrest)
             crestElement.className = `banner-crest banner-crest-${this.bannerCrest}`;
+    }
+
+    /**
+     * Grabs a list element from the list based on the identifier.
+     * @param list The list we are searching through.
+     * @param identifier The identifier we are searching for.
+     * @returns A list element if found otherwise undefined.
+     */
+
+    private getElement(list: HTMLUListElement, identifier: string): ListElement | undefined {
+        for (let element of list.children)
+            if ((element as ListElement).identifier === identifier) return element as ListElement;
+
+        return undefined;
+    }
+
+    /**
+     * Updates the create error element with a message.
+     * @param text The message to display.
+     */
+
+    private setError(text = ''): void {
+        this.createError.innerHTML = text;
     }
 }

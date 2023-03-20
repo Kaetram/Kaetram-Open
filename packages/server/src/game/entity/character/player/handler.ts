@@ -140,7 +140,10 @@ export default class Handler {
         this.world.discord.sendMessage(this.player.username, 'has logged out!');
 
         this.world.client.send(
-            new PlayerPacket(Opcodes.Player.Logout, { username: this.player.username })
+            new PlayerPacket(Opcodes.Player.Logout, {
+                username: this.player.username,
+                guild: this.player.guild
+            })
         );
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
@@ -158,6 +161,7 @@ export default class Handler {
         this.world.cleanCombat(this.player);
 
         this.world.syncFriendsList(this.player.username, true);
+        this.world.syncGuildMembers(this.player.guild, this.player.username, true);
 
         this.player.save();
 

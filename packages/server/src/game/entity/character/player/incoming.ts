@@ -210,8 +210,10 @@ export default class Incoming {
         this.player.updateEntities();
         this.player.updateEntityList();
 
-        this.world.discord.sendMessage(this.player.username, 'has logged in!');
         this.world.syncFriendsList(this.player.username);
+        this.world.syncGuildMembers(this.player.guild, this.player.username);
+
+        this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
         // Synchronize friends list cross-server by sending inactive friends to hub.
         this.world.client.send(
@@ -517,6 +519,24 @@ export default class Incoming {
 
     private handleGuild(packet: GuildPacket): void {
         switch (packet.opcode) {
+            case Opcodes.Guild.Create: {
+                return this.world.guilds.create(
+                    this.player,
+                    packet.name!,
+                    packet.colour!,
+                    packet.outline!,
+                    packet.crest!
+                );
+            }
+
+            case Opcodes.Guild.Join: {
+                return this.world.guilds.join(this.player, packet.identifier!);
+            }
+
+            case Opcodes.Guild.Leave: {
+                return this.world.guilds.leave(this.player);
+            }
+
             case Opcodes.Guild.List: {
                 return this.world.guilds.get(this.player, packet.from!, packet.to!);
             }
