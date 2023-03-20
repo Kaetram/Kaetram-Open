@@ -193,7 +193,7 @@ export default class World {
         if (!identifier) return;
 
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
-            if (!guild) return log.warning(`Attempted to sync guild members for ${identifier}.`);
+            if (!guild) return;
 
             // Iterate through the members in the guild.
             for (let member of guild.members) {

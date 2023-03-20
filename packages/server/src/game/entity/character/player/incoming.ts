@@ -270,6 +270,12 @@ export default class Incoming {
         }
     }
 
+    /**
+     * Handles movement packets for the player. We use these to verify the player's
+     * position and implement a couple anti-cheating measures.
+     * @param data Contains the type of movement we are performing and information about it.
+     */
+
     private handleMovement(data: MovementPacket): void {
         let {
                 opcode,
@@ -539,6 +545,10 @@ export default class Incoming {
 
             case Opcodes.Guild.List: {
                 return this.world.guilds.get(this.player, packet.from!, packet.to!);
+            }
+
+            case Opcodes.Guild.Chat: {
+                return this.world.guilds.chat(this.player, packet.message!);
             }
         }
     }
