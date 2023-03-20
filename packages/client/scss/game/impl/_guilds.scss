@@ -57,7 +57,8 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
-#guild-name-input {
+#guild-name-input,
+#guild-chat-input {
     position: absolute;
 
     font-family: AdvoCut, sans-serif;
@@ -68,6 +69,25 @@
     border: none;
 }
 
+#guild-chat-input {
+    display: none;
+}
+
+#guild-chat-log {
+    position: absolute;
+
+    overflow: auto;
+    display: none;
+
+    font-family: AdvoCut, sans-serif;
+    color: #fff;
+
+    p {
+        text-align: left;
+        text-shadow: 2px 2px 2px black;
+    }
+}
+
 #create-error {
     position: absolute;
 
@@ -76,6 +96,14 @@
     color: #800;
     text-align: center;
     text-shadow: 2px 2px 2px #f66;
+}
+
+#sidebar-list {
+    li {
+        div.members-icon, div.chat-icon {
+            position: relative;
+        }
+    }
 }
 
 .guilds-decoration {
@@ -207,6 +235,18 @@
             right: 24px * $i;
         }
 
+        #guild-chat-input {
+            right: 13px * $i;
+            bottom: 6px * $i;
+        }
+
+        #guild-chat-log {
+            top: 10px * $i;
+            left: 16px * $i;
+            width: 108px * $i;
+            height: 120px * $i;
+        }
+
         #guild-back {
             right: 74px * $i;
             bottom: 14px * $i;
@@ -225,6 +265,20 @@
 
         #guild-leave {
             margin-top: -18px * $i;
+        }
+        
+        #sidebar-list {
+            left: 138px * $i !important;
+            width: 34px * $i;
+            height: 57px * $i;
+            
+            li {
+                margin-bottom: 2px * $i;
+            }
+        }
+
+        .guild-chat {
+            background-position: -528px * $i 0 * $i !important;
         }
 
         .guilds-decoration {
@@ -293,6 +347,13 @@
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
+        .chat-icon {
+            width: 15px * $i;
+            height: 12px * $i;
+            background: url('/img/interface/guilds/elements.png') -208px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
         .element-button-small,
         .element-button-small-red {
             width: 28px * $i;
@@ -355,10 +416,45 @@
             }
         }
 
+        .sidebar-element {
+            width: 34px * $i;
+            height: 19px * $i;
+            background: url('/img/interface/guilds/elements.png') 0 -84px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-y: -105px * $i;
+
+                div.members-icon, div.chat-icon {
+                    left: 7px * $i;
+                }
+            }
+
+            &:active, &.active {
+                background-position-y: -63px * $i;
+
+                div.members-icon, div.chat-icon {
+                    left: 5px * $i;
+                }
+            }
+
+            div.members-icon, div.chat-icon {
+                top: 4px * $i;
+                left: 5px * $i;
+            }
+        }
+
         .guild-name-input-image {
             width: 76px * $i;
             height: 17px * $i;
             background: url('/img/interface/guilds/elements.png') -126px * $i -17px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .guild-chat-input-image {
+            width: 112px * $i;
+            height: 17px * $i;
+            background: url('/img/interface/guilds/elements.png') -224px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
@@ -630,8 +726,9 @@
 }
 
 @media (--lg) {
-    #guild-name-input {
-        font-size: 22px;
+    #guild-name-input,
+    #guild-chat-input {
+        font-size: 20px;
     }
     
     .guilds-decoration {
@@ -657,8 +754,9 @@
 }
 
 @media (--md) {
-    #guild-name-input {
-        font-size: 18px;
+    #guild-name-input,
+    #guild-chat-input {
+        font-size: 14px;
     }
 
     .guilds-decoration {
@@ -676,8 +774,9 @@
 }
 
 @media (--sm) {
-    #guild-name-input { 
-        font-size: 10px;
+    #guild-name-input,
+    #guild-chat-input { 
+        font-size: 8px;
     }
 
     .guilds-decoration {
