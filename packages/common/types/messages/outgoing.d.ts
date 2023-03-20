@@ -289,7 +289,7 @@ export interface GuildPacket {
     members?: Member[];
     total?: number;
     guilds?: ListInfo[];
-    error?: string;
+    message?: string;
     owner?: string;
     decoration?: Decoration;
 }
