@@ -25,6 +25,7 @@ import { Team } from '@kaetram/common/api/minigame';
 import {
     Camera,
     Chat,
+    Guild,
     Heal,
     Movement,
     Music,
@@ -1775,6 +1776,15 @@ export default class Player extends Character {
         );
 
         this.lastNotify = Date.now();
+    }
+
+    /**
+     * Sends a message to the player's guild controller's interface.
+     * @param message The message we are sending to the player.
+     */
+
+    public guildNotify(message: string): void {
+        this.send(new Guild(Opcodes.Guild.Error, { error: message }));
     }
 
     /**
