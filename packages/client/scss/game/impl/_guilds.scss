@@ -131,7 +131,7 @@
     position: relative;
 }
 
-@each $size, $i in media.$b-sizes {
+@each $size, $i in media.$sizes {
     @media ($size) {
         #guilds {
             width: 241px * $i;
@@ -672,5 +672,53 @@
         span.name, span.count, span.server {
             font-size: 14px;
         }
+    }
+}
+
+@media (--sm) {
+    #guild-name-input { 
+        font-size: 10px;
+    }
+
+    .guilds-decoration {
+        p {
+            margin-top: -12px;
+            font-size: 10px;
+        }
+    }
+
+    .slot-element {
+        span.name, span.count, span.server {
+            font-size: 8px;
+        }
+
+        span.count {
+            top: -2px;
+            left: 5px;
+            width: 22px;
+        }
+
+        span.name {
+            top: -2px;
+            left: 18px;
+        }
+
+        span.server {
+            top: -2px;
+            left: 68px;
+        }
+
+        div.element-button-small {
+            top: -6px;
+            left: 97px;
+        }
+    }
+
+    .element-button-small {
+        font-size: 7px;
+    }
+
+    .element-button-large {
+        font-size: 8px;
     }
 }
