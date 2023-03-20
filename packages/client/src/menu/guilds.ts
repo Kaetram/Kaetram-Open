@@ -347,9 +347,7 @@ export default class Guilds extends Menu {
         console.log(packet);
 
         // Format the source of the message.
-        let source = `[${this.game.app.config.name} ${packet.serverId}] ${Util.formatName(
-                packet.username
-            )}`,
+        let source = `[W${packet.serverId}] ${Util.formatName(packet.username)}`,
             element = document.createElement('p');
 
         // Add the message to the chat log.

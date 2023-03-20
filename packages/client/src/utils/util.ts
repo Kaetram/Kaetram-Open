@@ -102,6 +102,7 @@ export default {
      * every first letter after a space.
      * Example: 'tHiS Is a usErName' -> 'This Is A Username'
      * @param name The raw username string defaulting to '' if not specified.
+     * @param trim The amount of characters to trim the name to.
      * @returns The formatted name string.
      */
 
@@ -111,7 +112,8 @@ export default {
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
 
-        if (trim > 0) name = `${name.slice(0, Math.max(0, trim))}...`;
+        // Trim the name if specified.
+        if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
 
         return name;
     },
