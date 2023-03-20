@@ -30,10 +30,10 @@ export default class Incoming {
      * we have whatever data the hub decided to send.
      */
 
-    public handle([packet, opcode, data]: [number, number, unknown]): void {
+    public handle([packet, opcode, data]: [number, unknown, unknown]): void {
         switch (packet) {
             case Packets.Player: {
-                return this.handlePlayer(opcode, data as PlayerPacket);
+                return this.handlePlayer(opcode as number, data as PlayerPacket);
             }
 
             case Packets.Chat: {
@@ -41,7 +41,7 @@ export default class Incoming {
             }
 
             case Packets.Guild: {
-                return this.handleGuild(opcode, data as GuildPacket);
+                return this.handleGuild(opcode as number, data as GuildPacket);
             }
 
             case Packets.Friends: {
@@ -49,7 +49,7 @@ export default class Incoming {
             }
 
             case Packets.Relay: {
-                return this.handleRelay(data as RelayPacket);
+                return this.handleRelay(opcode as RelayPacket);
             }
         }
     }
