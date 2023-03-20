@@ -1784,7 +1784,7 @@ export default class Player extends Character {
      */
 
     public guildNotify(message: string): void {
-        this.send(new Guild(Opcodes.Guild.Error, { error: message }));
+        this.send(new Guild(Opcodes.Guild.Error, { message }));
     }
 
     /**

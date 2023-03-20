@@ -41,17 +41,23 @@ export default class Guilds extends Menu {
 
     // The guild information container (if the player is in a guild).
     private infoContainer: HTMLElement = document.querySelector('#guilds-info-container')!;
+    private chatLog: HTMLUListElement = document.querySelector('#guild-chat-log')!;
+    private chatInput: HTMLInputElement = document.querySelector('#guild-chat-input')!;
 
     private guildName: HTMLElement = document.querySelector('#guild-name')!;
     private leaveButton: HTMLElement = document.querySelector('#guild-leave')!;
 
     // List where we store players/guilds list (depending on the context).
     private guildList: HTMLUListElement = document.querySelector('#guilds-list-container > ul')!;
-    private memberList: HTMLUListElement = document.querySelector('#guilds-info-container > ul')!;
+    private memberList: HTMLUListElement = document.querySelector('#member-list')!;
+    private sidebarList: HTMLUListElement = document.querySelector('#sidebar-list')!;
 
     // Indexing - default values, used for pagination.
     private from = 0;
     private to = 10;
+
+    // Sidebar we're currently naivgating.
+    private currentSidebar: 'sidebar-members' | 'sidebar-chat' = 'sidebar-members';
 
     public constructor(private game: Game) {
         super('#guilds', '#close-guilds', '#guilds-button');
@@ -62,6 +68,7 @@ export default class Guilds extends Menu {
         this.createConfirmButton.addEventListener('click', this.handleCreateConfirm.bind(this));
         this.leaveButton.addEventListener('click', this.handleLeave.bind(this));
 
+        this.loadSidebar();
         this.loadDecorations();
     }
 
@@ -107,7 +114,11 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Error: {
-                return this.setError(info.error);
+                return this.setError(info.message);
+            }
+
+            case Opcodes.Guild.Chat: {
+                return this.handleChat(info);
             }
         }
     }
@@ -264,6 +275,99 @@ export default class Guilds extends Menu {
     }
 
     /**
+     * Handles clicking on a side bar in a guild interface and updating
+     * the interface accordingly.
+     * @param menu The string identification of the menu we want to open.
+     */
+
+    private handleSidebar(menu: 'sidebar-members' | 'sidebar-chat'): void {
+        // Ignore if we don't have a guild.
+        if (!this.game.player.guild) return;
+
+        // Ignore if we're already on the menu.
+        if (this.currentSidebar === menu) return;
+
+        switch (menu) {
+            case 'sidebar-members': {
+                this.memberList.style.display = 'block';
+
+                // Remove the active class from the other sidebar.
+                this.infoContainer.className = '';
+
+                // Hide the chat input.
+                this.chatInput.style.display = 'none';
+
+                // Hide the chat log
+                this.chatLog.style.display = 'none';
+
+                break;
+            }
+
+            case 'sidebar-chat': {
+                // Hide the members list.
+                this.memberList.style.display = 'none';
+
+                // Add the chat class to the container.
+                this.infoContainer.className = 'guild-chat';
+
+                // Show the chat input.
+                this.chatInput.style.display = 'block';
+
+                // Show the chat log.
+                this.chatLog.style.display = 'block';
+
+                break;
+            }
+        }
+
+        // Update the current sidebar.
+        this.currentSidebar = menu;
+    }
+
+    /**
+     * Handles a message received from the server. We add the message
+     * to the chat log alongside information about who and from
+     * where the message was sent.
+     * @param packet Contains information about the message.
+     */
+
+    private handleChat(packet: GuildPacket): void {
+        // Ignore invalid packets (shouldn't happen).
+        if (!packet.username || !packet.serverId) return;
+
+        console.log(packet);
+
+        // Format the source of the message.
+        let source = `[${this.game.app.config.name} ${packet.serverId}] ${Util.formatName(
+                packet.username
+            )}`,
+            element = document.createElement('p');
+
+        // Add the message to the chat log.
+        element.innerHTML = `${source} » ${packet.message}`;
+
+        this.chatLog.append(element);
+    }
+
+    /**
+     * Handles the keydown event for the guild interface. Usually when the
+     * player is using the chat input, we want to re-route the enter key to
+     * send the message to the server.
+     * @param key The key that was pressed.
+     */
+
+    public keyDown(key: string): void {
+        // Ignore if we're not on the chat sidebar.
+        if (key !== 'Enter' || this.currentSidebar !== 'sidebar-chat') return;
+
+        // Ignore if the input is empty.
+        if (this.chatInput.value.length === 0) return;
+
+        // Send the message to the server.
+        this.sendChat();
+    }
+
+    /**
      * Requests a list of guilds from the server.
      */
 
@@ -275,6 +379,24 @@ export default class Guilds extends Menu {
             from: this.from,
             to: this.to
         });
+    }
+
+    /**
+     * Sends a chat message to the server.
+     */
+
+    private sendChat(): void {
+        // Ignore if the input is empty.
+        if (this.chatInput.value.length === 0) return;
+
+        // Send the message to the server.
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Chat,
+            message: this.chatInput.value
+        });
+
+        // Clear the input.
+        this.chatInput.value = '';
     }
 
     /**
@@ -298,6 +420,24 @@ export default class Guilds extends Menu {
         // Iterate through the guilds and create a list element for each one.
         for (let guild of guilds)
             this.createElement(this.guildList, 'guild', guild.name, guild.members);
+    }
+
+    /**
+     * Creates an event listener and action for each sidebar element.
+     */
+
+    private loadSidebar(): void {
+        for (let child of this.sidebarList.children)
+            child.addEventListener('click', () => {
+                // Deselect all the other elements.
+                this.cleanSidebar();
+
+                // Select the current element.
+                child.classList.add('active');
+
+                // Handle updating the interface.
+                this.handleSidebar(child.id as 'sidebar-members' | 'sidebar-chat');
+            });
     }
 
     /**
@@ -561,6 +701,14 @@ export default class Guilds extends Menu {
 
         // Select the empty crest if specified.
         if (selectEmpty) this.bannerCrests.children[0].classList.add('active');
+    }
+
+    /**
+     * Deselects all the sidebar elements by removing the active class.
+     */
+
+    private cleanSidebar(): void {
+        for (let element of this.sidebarList.children) element.classList.remove('active');
     }
 
     /**

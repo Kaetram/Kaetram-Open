@@ -182,7 +182,7 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
-        if (this.guilds.isVisible()) return;
+        if (this.guilds.isVisible()) return this.guilds.keyDown(event.key);
 
         // Redirect input to the leaderboards handler if the leaderboards are visible.
         if (this.leaderboards.isVisible()) return this.leaderboards.keyDown(event.key);

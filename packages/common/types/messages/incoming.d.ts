@@ -93,6 +93,7 @@ export interface GuildPacket {
     colour?: Modules.BannerColour;
     outline?: Modules.BannerOutline;
     crest?: Modules.BannerCrest;
+    message?: string;
 }
 
 export interface WarpPacket {

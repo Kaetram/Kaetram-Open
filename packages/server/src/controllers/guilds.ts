@@ -233,6 +233,30 @@ export default class Guilds {
     }
 
     /**
+     * Handles relaying a chat packet to all the members in the guild.
+     * @param player The player that is sending the chat message.
+     * @param message The message that the player is sending.
+     */
+
+    public chat(player: Player, message: string): void {
+        if (!player.guild)
+            return log.warning(`${player.username} tried to chat in a guild that they're not in.`);
+
+        this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
+            if (!guild)
+                return log.general(
+                    `Player ${player.username} tried to chat in a guild that doesn't exist.`
+                );
+
+            this.synchronize(guild.members, Opcodes.Guild.Chat, {
+                username: player.username,
+                serverId: config.serverId,
+                message
+            });
+        });
+    }
+
+    /**
      * Iterates through the members in the world that are active in the guild and
      * sends a packet. The remaining members are relayed through the hub.
      * @param members The members in the group that we are sending packets to.
