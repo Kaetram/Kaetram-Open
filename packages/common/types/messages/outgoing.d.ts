@@ -283,9 +283,10 @@ export interface GuildPacket {
     identifier?: string;
     name?: string;
     username?: string;
+    usernames?: string[];
     serverId?: number;
     member?: Member;
-    members?: Member[] | Friend | string[];
+    members?: Member[];
     total?: number;
     guilds?: ListInfo[];
     error?: string;

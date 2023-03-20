@@ -93,7 +93,7 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Update: {
-                return this.loadMembers((info.members as Member[])!);
+                return this.loadMembers(info.members!);
             }
 
             case Opcodes.Guild.Experience: {
@@ -227,7 +227,7 @@ export default class Guilds extends Menu {
         this.guildName.append(name);
 
         // Update the guild members list.
-        for (let member of (info.members as Member[])!)
+        for (let member of info.members!)
             this.createElement(this.memberList, member.rank!, member.username);
     }
 
