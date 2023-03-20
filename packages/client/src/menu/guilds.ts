@@ -264,6 +264,9 @@ export default class Guilds extends Menu {
      */
 
     private handleMemberJoin(username: string, serverId = -1): void {
+        // Ignore if we're the one joining.
+        if (username === this.game.player.name.toLowerCase()) return;
+
         this.createElement(this.memberList, Modules.GuildRank.Fledgling, username);
 
         this.loadMembers([{ username, serverId }]);
@@ -643,12 +646,10 @@ export default class Guilds extends Menu {
 
         // Add the classes to the element and name element.
         element.className = `slot-element slot-${slotType} stroke`;
-        nameElement.className = `name${
-            isGuild ? '' : this.game.player.name.toLowerCase() === name ? ' green' : ' red'
-        }`;
+        nameElement.className = `name`;
 
         // Set the name of the element, format it if it's a player name.
-        nameElement.innerHTML = isGuild ? name : Util.formatName(name);
+        nameElement.innerHTML = isGuild ? name : Util.formatName(name, 14);
 
         // Conditional for dealing with guild element creation.
         if (isGuild) {
@@ -689,7 +690,9 @@ export default class Guilds extends Menu {
 
             let serverElement = document.createElement('span');
 
-            serverElement.className = 'server';
+            serverElement.className = 'server red';
+
+            serverElement.innerHTML = 'Offline';
 
             element.append(serverElement);
         }
