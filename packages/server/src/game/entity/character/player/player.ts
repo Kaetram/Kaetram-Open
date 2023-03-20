@@ -214,9 +214,6 @@ export default class Player extends Character {
 
         this.friends.load(data.friends);
 
-        // Connect the player to their guild if they are in one.
-        if (this.guild) this.world.guilds.connect(this, this.guild);
-
         this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
@@ -234,6 +231,9 @@ export default class Player extends Character {
         await this.loadAchievements();
 
         this.intro();
+
+        // Connect the player to their guild if they are in one.
+        if (this.guild) this.world.guilds.connect(this, this.guild);
     }
 
     /**
