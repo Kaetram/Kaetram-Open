@@ -2,6 +2,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
 import { Guild } from '@kaetram/common/network/impl';
+import Packet from '@kaetram/common/network/packet';
 
 import type World from '../game/world';
 import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
@@ -135,7 +136,7 @@ export default class Incoming {
 
                 let player = this.world.getPlayerByName(data.username);
 
-                // Relay the packet to the player's client.
+                // Send the packet to the player's client.
                 if (player) player.send(new Guild(Opcodes.Guild.Update, { members: data.members }));
 
                 return;
@@ -165,13 +166,13 @@ export default class Incoming {
      */
 
     private handleRelay(data: RelayPacket): void {
-        let [username, packet] = data,
+        let [username, info] = data,
             player = this.world.getPlayerByName(username);
 
         // Could hypothetically happen if the player is in the process of logging out.
         if (!player) return log.debug(`Could not find player ${username} to relay packet.`);
 
         // Relays the packet to the player's packet handler.
-        player.connection.messageCallback?.(packet);
+        player.send(new Packet(info[0], info[1], info[2]));
     }
 }

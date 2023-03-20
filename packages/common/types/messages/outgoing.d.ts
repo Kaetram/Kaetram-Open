@@ -285,7 +285,7 @@ export interface GuildPacket {
     username?: string;
     serverId?: number;
     member?: Member;
-    members?: Member[] | Friend;
+    members?: Member[] | Friend | string[];
     total?: number;
     guilds?: ListInfo[];
     error?: string;

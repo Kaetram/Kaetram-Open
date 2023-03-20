@@ -1,12 +1,10 @@
 import Server from '../model/server';
 
 import log from '@kaetram/common/util/log';
-import { Packets, Opcodes } from '@kaetram/common/network';
-import { Chat, Friends } from '@kaetram/common/network/impl';
+import { Chat } from '@kaetram/common/network/impl';
 
 import type Packet from '@kaetram/common/network/packet';
 import type Connection from '../network/connection';
-import type { Friend } from '@kaetram/common/types/friends';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
 type ServerCallback = (id: number, name: string) => void;
