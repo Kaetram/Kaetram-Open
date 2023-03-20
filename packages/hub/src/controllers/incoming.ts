@@ -3,6 +3,7 @@ import config from '@kaetram/common/config';
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
 
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type Server from '../model/server';
 import type {
     ChatPacket,
@@ -42,6 +43,10 @@ export default class Incoming {
 
                     case Packets.Player: {
                         return this.handlePlayer(opcode, info);
+                    }
+
+                    case Packets.Relay: {
+                        return this.server.relay(opcode);
                     }
                 }
             } catch (error) {
@@ -111,8 +116,12 @@ export default class Incoming {
      * @param info unknown (for now).
      */
 
-    public handleGuild(opcode: Opcodes.Guild, info: any): void {
-        console.log(opcode, info);
+    public handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+        switch (opcode) {
+            case Opcodes.Guild.Update: {
+                return this.server.handleGuild(info.username!, (info.members as string[])!);
+            }
+        }
     }
 
     /**
