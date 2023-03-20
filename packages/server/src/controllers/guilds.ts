@@ -231,6 +231,7 @@ export default class Guilds {
             let player = this.world.getPlayerByName(member.username),
                 packet = new GuildPacket(opcode, data);
 
+            // Attempt to relay the packet across servers.
             if (!player) return this.world.client.relay(member.username, packet);
 
             player.send(packet);
