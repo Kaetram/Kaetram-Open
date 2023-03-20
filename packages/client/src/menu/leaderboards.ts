@@ -118,8 +118,6 @@ export default class Leaderboards extends Menu {
         // If we have a search type then we append that onto the URL.
         if (searchElement.type) url += `?${searchElement.type}=${searchElement.key}`;
 
-        console.log(url);
-
         // Fetch the results from the hub.
         fetch(url)
             .then((response: Response) => response.json())
@@ -213,8 +211,6 @@ export default class Leaderboards extends Menu {
 
         // Set the name of the element.
         name.innerHTML = result._id;
-
-        console.log(result);
 
         // Set the description of the element.
         info.innerHTML =
