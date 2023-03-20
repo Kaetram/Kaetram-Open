@@ -119,7 +119,7 @@ export default class Incoming {
     public handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
         switch (opcode) {
             case Opcodes.Guild.Update: {
-                return this.server.handleGuild(info.username!, (info.members as string[])!);
+                return this.server.handleGuild(info.username!, info.usernames!);
             }
         }
     }

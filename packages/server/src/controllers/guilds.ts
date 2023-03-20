@@ -266,7 +266,7 @@ export default class Guilds {
         this.world.client.send(
             new GuildPacket(Opcodes.Guild.Update, {
                 username: player.username,
-                members: offlineMembers
+                usernames: offlineMembers
             })
         );
     }
