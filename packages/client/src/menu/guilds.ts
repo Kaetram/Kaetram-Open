@@ -229,6 +229,10 @@ export default class Guilds extends Menu {
 
         this.guildName.append(name);
 
+        // Update the leave button to disband if we're the leader.
+        if (this.game.player.name.toLowerCase() === info.owner)
+            this.leaveButton.innerHTML = 'Disband';
+
         // Update the guild members list.
         for (let member of info.members!)
             this.createElement(this.memberList, member.rank!, member.username);
