@@ -162,12 +162,6 @@ export default class Guilds {
                 // Connect the player to the guild.
                 this.connect(player, identifier);
 
-                // Sync to all the members in the guild.
-                this.synchronize(guild.members, Opcodes.Guild.Join, {
-                    username: player.username,
-                    serverId: config.serverId
-                });
-
                 // Send the join packet to the player.
                 player.send(
                     new GuildPacket(Opcodes.Guild.Login, {
@@ -177,6 +171,12 @@ export default class Guilds {
                         decoration: guild.decoration
                     })
                 );
+
+                // Sync to all the members in the guild.
+                this.synchronize(guild.members, Opcodes.Guild.Join, {
+                    username: player.username,
+                    serverId: config.serverId
+                });
             });
         });
     }
@@ -205,16 +205,16 @@ export default class Guilds {
             // Save the guild to the database.
             this.database.creator.saveGuild(guild);
 
-            // Sync to all the members in the guild.
-            this.synchronize(guild.members, Opcodes.Guild.Leave, {
-                username: player.username
-            });
-
             // Remove the guild object from the player.
             player.guild = '';
 
             // Send the leave packet to the player.
             player.send(new GuildPacket(Opcodes.Guild.Leave));
+
+            // Sync to all the members in the guild.
+            this.synchronize(guild.members, Opcodes.Guild.Leave, {
+                username: player.username
+            });
         });
     }
 
