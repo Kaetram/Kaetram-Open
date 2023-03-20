@@ -134,6 +134,10 @@
         text-align: center;
     }
 
+    span.server {
+        float: right;
+    }
+
     span.red {
         color: #f00;
     }
@@ -314,7 +318,7 @@
 
             span.server {
                 top: 4px * $i;
-                left: 68px * $i;
+                left: -2px * $i;
             }
 
             div.element-button-small {
@@ -803,8 +807,8 @@
         }
 
         span.server {
-            top: -2px;
-            left: 68px;
+            top: 4px;
+            left: -3px;
         }
 
         div.element-button-small {
