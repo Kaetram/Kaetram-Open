@@ -419,6 +419,7 @@ export default class Guilds extends Menu {
             if (!element) continue;
 
             let nameElement = element.querySelector('.name')!,
+                serverElement = element.querySelector('.server')!,
                 colour =
                     member.serverId === -1
                         ? 'red'
@@ -427,7 +428,13 @@ export default class Guilds extends Menu {
                         : 'yellow';
 
             // Update the colour based on the online status.
-            nameElement.className = `name ${colour}`;
+            nameElement.className = `name`;
+            serverElement.className = `server ${colour}`;
+
+            serverElement.innerHTML =
+                member.serverId === -1
+                    ? 'Offline'
+                    : `${this.game.app.config.name} ${member.serverId}`;
         }
     }
 
@@ -527,7 +534,15 @@ export default class Guilds extends Menu {
         }
 
         // Append just the name element.
-        if (!isGuild) element.append(nameElement);
+        if (!isGuild) {
+            element.append(nameElement);
+
+            let serverElement = document.createElement('span');
+
+            serverElement.className = 'server';
+
+            element.append(serverElement);
+        }
 
         // Append the element to the list.
         list.append(element);
