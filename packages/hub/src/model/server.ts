@@ -2,7 +2,7 @@ import Incoming from '../controllers/incoming';
 
 import Utils from '@kaetram/common/util/utils';
 import Packet from '@kaetram/common/network/packet';
-import { Chat, Friends } from '@kaetram/common/network/impl';
+import { Chat, Friends, Guild } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type { Friend } from '@kaetram/common/types/friends';
@@ -91,11 +91,15 @@ export default class Server {
      * @param username The username of the player that we are removing.
      */
 
-    public remove(username: string): void {
+    public remove(username: string, guild = ''): void {
         this.players = this.players.filter((player) => player !== username);
 
         this.controller.broadcast(
-            new Packet(Packets.Player, Opcodes.Player.Logout, { username, serverId: this.id })
+            new Packet(Packets.Player, Opcodes.Player.Logout, {
+                username,
+                serverId: this.id,
+                guild
+            })
         );
     }
 
@@ -123,6 +127,27 @@ export default class Server {
 
         // Send a confirmation to the source server that the message was sent.
         this.send(new Chat({ source, message, target, success: true }));
+    }
+
+    /**
+     * Searches through all the game servers to see which players in the `inactiveMembers`
+     * list are online on another server. We create a dictionary of these players and
+     * pass it back to the player that is making the request.
+     * @param username The player that is making the request.
+     * @param inactiveMembers List of members to search for in other servers.
+     */
+
+    public handleGuild(username: string, inactiveMembers: string[] = []): void {
+        let activeMembers: Friend = {};
+
+        for (let member of inactiveMembers) {
+            let targetServer = this.controller.findPlayer(member);
+
+            if (targetServer) activeMembers[member] = { online: true, serverId: targetServer.id };
+        }
+
+        // Send the list of active members back to the source server's player.
+        this.send(new Guild(Opcodes.Guild.Update, { username, members: activeMembers }));
     }
 
     /**
