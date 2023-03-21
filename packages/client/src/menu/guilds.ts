@@ -686,11 +686,12 @@ export default class Guilds extends Menu {
         if (!isGuild) {
             element.append(nameElement);
 
-            let serverElement = document.createElement('span');
+            let serverElement = document.createElement('span'),
+                isPlayer = this.game.player.name.toLowerCase() === element.identifier;
 
-            serverElement.className = 'server red';
+            serverElement.className = `server ${isPlayer ? 'green' : 'red'}`;
 
-            serverElement.innerHTML = 'Offline';
+            serverElement.innerHTML = isPlayer ? 'Online' : 'Offline';
 
             element.append(serverElement);
         }
