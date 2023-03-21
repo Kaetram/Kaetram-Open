@@ -217,7 +217,11 @@
                 background-position-x: -432px * $i;
             }
         }
+    }
+}
 
+@each $size, $i in media.$sizes {
+    @media ($size) {
         .accept-button {
             width: 96px * $i;
             height: 27px * $i;
@@ -237,5 +241,5 @@
                 background-position-y: -81px * $i;
             }
         }
-    }
+    }   
 }
