@@ -7,10 +7,10 @@ import Chest from '../game/entity/objects/chest';
 import Mob from '../game/entity/character/mob/mob';
 import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
-import { Blink, Despawn } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
+import { Blink, Despawn } from '@kaetram/common/network/impl';
 
 import type { Enchantments } from '@kaetram/common/types/item';
 import type Hit from '../game/entity/character/combat/hit';
@@ -110,7 +110,7 @@ export default class Entities {
         x: number,
         y: number,
         dropped = false,
-        count = -1,
+        count = 1,
         enchantments: Enchantments = {},
         owner = ''
     ): void {

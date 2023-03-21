@@ -8,7 +8,6 @@ import type Character from '../character/character';
 import type Hit from '../character/combat/hit';
 
 export default class Projectile extends Entity {
-    public hitType = Modules.Hits.Damage;
     private impactCallback?: () => void;
 
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
@@ -18,6 +17,8 @@ export default class Projectile extends Entity {
             owner.x,
             owner.y
         );
+
+        if (this.hit.type === Modules.Hits.Terror) this.key = 'projectile-terror';
 
         /**
          * The rough speed of the projectile is 1 tile per 100ms, so we use that
@@ -35,6 +36,9 @@ export default class Projectile extends Entity {
     private handleImpact(): void {
         this.target?.hit(this.hit.getDamage(), this.owner, this.hit.aoe);
 
+        // Updates the status effect based on the hit type.
+        this.target?.addStatusEffect(this.hit);
+
         // Despawn callback.
         this.impactCallback?.();
     }
@@ -50,7 +54,7 @@ export default class Projectile extends Entity {
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
         data.damage = this.hit.getDamage() || 0;
-        data.hitType = this.hitType;
+        data.hitType = this.hit.type;
 
         return data;
     }

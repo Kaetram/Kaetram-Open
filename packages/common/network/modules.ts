@@ -85,7 +85,7 @@ export enum MenuActions {
 export enum InteractActions {}
 
 export enum Hits {
-    Damage,
+    Normal,
     Poison,
     Heal,
     Mana,
@@ -94,7 +94,8 @@ export enum Hits {
     Critical,
     Stun,
     Profession,
-    Cold,
+    Freezing,
+    Burning,
     Terror
 }
 
@@ -113,20 +114,20 @@ export enum AttackStyle {
     None,
 
     // Melee
-    Stab, // Accuracy experience
-    Slash, // Strength experience
-    Defensive, // Defense experience
-    Crush, // Accuracy + Strength experience
-    Shared, // Accuracy + Strength + Defense experience
-    Hack, // Strength + Defense experience
-    Chop, // Accuracy + Defense experience
+    Stab, // Accuracy experience and boosts accuracy
+    Slash, // Strength experience and boosts maximum damage
+    Defensive, // Defense experience and boosts damage absorbed
+    Crush, // Accuracy + Strength experience and boosts accuracy/damage
+    Shared, // Accuracy + Strength + Defense experience and boosts all
+    Hack, // Strength + Defense experience boosts damage and absorbs damage
+    Chop, // Accuracy + Defense experience boosts accuracy and absorbs damage
 
     // Archery
     Accurate, // Higher accuracy but slower
     Fast, // Faster but lower accuracy
 
     // Magic
-    Focused, // Slower but higher damage
+    Focused, // Slower but higher damage/accuracy
 
     // Archery and Magic
     LongRange // Increased attack range and less accurate
@@ -189,11 +190,12 @@ export enum Enchantment {
     Bloodsucking,
     Critical,
     Evasion,
-    Spike,
+    Thorns,
     Explosive,
     Stun,
     AntiStun,
-    Splash
+    Splash,
+    DoubleEdged
 }
 
 export enum AoEType {
@@ -202,18 +204,27 @@ export enum AoEType {
     Mob
 }
 
+// Client sided special effects.
 export enum Effects {
     None,
     Critical,
-    Terror,
+    Terror, // Initial terror effect.
+    TerrorStatus, // The terror effect that persists
     Stun,
     Healing,
     Fireball,
     Iceball,
+    Poisonball,
+    Boulder,
+    Running,
+    HotSauce,
+    DualistsMark,
+    ThickSkin,
+    SnowPotion,
+    FirePotion,
     Burning,
     Freezing,
-    Poisonball,
-    Boulder
+    Invincible
 }
 
 export enum DamageStyle {
@@ -297,7 +308,7 @@ export interface Colours {
 
 export let DamageColours = {
     // Received damage
-    [Hits.Damage]: {
+    [Hits.Normal]: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
@@ -345,9 +356,14 @@ export let DamageColours = {
         stroke: 'rgb(112, 17, 112)'
     },
 
-    [Hits.Cold]: {
+    [Hits.Freezing]: {
         fill: 'rgb(52, 195, 235)',
         stroke: 'rgb(14, 138, 227)'
+    },
+
+    [Hits.Burning]: {
+        fill: 'rgb(227, 170, 14)',
+        stroke: 'rgb(235, 135, 52)'
     }
 };
 
@@ -410,7 +426,7 @@ export let PoisonInfo = {
         name: 'Venom',
         damage: 5,
         duration: 30,
-        rate: 3 // every 3 seconds
+        rate: 2 // every 2 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -432,6 +448,48 @@ export enum NPCRole {
     Clerk
 }
 
+export enum GuildRank {
+    Fledgling,
+    Emergent,
+    Established,
+    Adept,
+    Veteran,
+    Elite,
+    Master,
+    Landlord
+}
+
+export enum BannerColour {
+    Green = 'green',
+    Blue = 'blue',
+    Red = 'red',
+    Grey = 'grey',
+    Black = 'black',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerOutline {
+    Green = 'green',
+    Blue = 'blue',
+    Orange = 'orange',
+    White = 'white',
+    Grey = 'grey',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerCrests {
+    None = 'none',
+    Star = 'star',
+    Hawk = 'hawk',
+    Phoenix = 'phoenix'
+}
+
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL: 135, // Maximum attainable level.
@@ -440,6 +498,7 @@ export const Constants = {
     DROP_PROBABILITY: 10_000, // 1 in 10000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
+    EFFECT_RATE: 10_000, // effects every 10 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
     SPAWN_POINT: '405,27', // Default starting point outside the tutorial
@@ -456,7 +515,15 @@ export const Constants = {
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
     EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
-    COLD_EFFECT_DAMAGE: 6
+    FIRE_POTION_DURATION: 60_000, // 60 seconds
+    FREEZING_DURATION: 60_000, // 60 seconds
+    BURNING_DURATION: 60_000, // 60 seconds
+    TERROR_DURATION: 60_000, // 60 seconds
+    STUN_DURATION: 10_000, // 10 seconds
+    COLD_EFFECT_DAMAGE: 10,
+    BURNING_EFFECT_DAMAGE: 20,
+    ATTACKER_TIMEOUT: 20_000, // 20 seconds
+    MAX_GUILD_MEMBERS: 40 // Maximum number of members in a guild
 };
 
 export enum MinigameConstants {

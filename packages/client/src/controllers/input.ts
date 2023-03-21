@@ -19,6 +19,8 @@ import type Camera from '../renderer/camera';
 import type App from '../app';
 import type Map from '../map/map';
 import type Trade from '../menu/trade';
+import type Leaderboards from '../menu/leaderboards';
+import type Guilds from '../menu/guilds';
 
 interface TargetData {
     sprite: Sprite;
@@ -41,6 +43,8 @@ export default class InputController {
     private interact: Interact;
     private inventory: Inventory;
     private trade: Trade;
+    private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -79,6 +83,8 @@ export default class InputController {
         this.inventory = game.menu.getInventory();
         this.interact = game.menu.getInteract();
         this.trade = game.menu.getTrade();
+        this.leaderboards = game.menu.getLeaderboards();
+        this.guilds = game.menu.getGuilds();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -102,7 +108,7 @@ export default class InputController {
 
         this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
 
-        this.targetAnimation.setSpeed(50);
+        this.targetAnimation.setSpeed(150);
     }
 
     /**
@@ -176,6 +182,11 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        if (this.guilds.isVisible()) return this.guilds.keyDown(event.key);
+
+        // Redirect input to the leaderboards handler if the leaderboards are visible.
+        if (this.leaderboards.isVisible()) return this.leaderboards.keyDown(event.key);
+
         // Redirect input to the trade handler if the trade input is visible.
         if (this.trade.isInputDialogueVisible()) return this.trade.keyDown(event.key);
 

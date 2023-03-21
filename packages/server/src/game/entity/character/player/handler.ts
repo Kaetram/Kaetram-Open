@@ -1,3 +1,5 @@
+import log from '@kaetram/common/util/log';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -8,17 +10,13 @@ import {
     Friends,
     NPC as NPCPacket,
     Overlay,
+    Player as PlayerPacket,
     Points,
     Poison as PoisonPacket,
     Quest,
     Skill,
     Trade
-} from '../../../../network/packets';
-
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
+} from '@kaetram/common/network/impl';
 
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
@@ -134,17 +132,19 @@ export default class Handler {
      */
 
     private handleClose(): void {
-        this.player.stopHealing();
+        // Stops character based intervals.
+        this.player.stop();
 
         this.clear();
 
-        if (this.player.ready) {
-            if (config.discordEnabled)
-                this.world.discord.sendMessage(this.player.username, 'has logged out!');
+        this.world.discord.sendMessage(this.player.username, 'has logged out!');
 
-            if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
-        }
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Logout, {
+                username: this.player.username,
+                guild: this.player.guild
+            })
+        );
 
         if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
 
@@ -160,12 +160,12 @@ export default class Handler {
 
         this.world.cleanCombat(this.player);
 
-        this.world.linkFriends(this.player, true);
+        this.world.syncFriendsList(this.player.username, true);
+        this.world.syncGuildMembers(this.player.guild, this.player.username, true);
 
         this.player.save();
 
         this.world.entities.removePlayer(this.player);
-        this.world.api.sendLogout(this.player.username);
     }
 
     /**
@@ -204,6 +204,7 @@ export default class Handler {
         this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
+        this.player.status.clear();
 
         this.player.save();
 
@@ -220,7 +221,7 @@ export default class Handler {
     private handleHit(damage: number, attacker?: Character): void {
         if (!attacker || this.player.isDead()) return;
 
-        if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
+        this.player.addAttacker(attacker);
     }
 
     /**
@@ -408,7 +409,12 @@ export default class Handler {
      */
 
     private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Style, { attackStyle }));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Style, {
+                attackStyle,
+                attackRange: this.player.attackRange
+            })
+        );
     }
 
     /**
@@ -795,12 +801,7 @@ export default class Handler {
 
     private handleUpdate(): void {
         if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(16)) {
-            this.player.cheatScore = 0;
-
-            // Cold damage is applied every 16 ticks.
-            this.player.handleColdDamage();
-        }
+        if (this.isTickInterval(16)) this.player.cheatScore = 0;
 
         this.updateTicks++;
     }
@@ -909,5 +910,8 @@ export default class Handler {
     private clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
+
+        clearInterval(this.player.readyTimeout!);
+        this.player.readyTimeout = null;
     }
 }

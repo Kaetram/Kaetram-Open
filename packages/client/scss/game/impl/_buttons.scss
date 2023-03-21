@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 #buttons {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
 
     position: absolute;
     right: 0;
@@ -27,149 +27,209 @@
     }
 }
 
-#chat-button,
-#inventory-button,
-#profile-button,
-#settings-button,
-#warp-button,
-#audio-button,
-#achievements-button,
-#quests-button,
-#friends-button {
-    position: relative;
-
-    width: 42px;
-    height: 45px;
-
-    background: url('/img/3/main.png') no-repeat;
-    background-position-y: -942px;
-}
-
-#chat-button {
-    background-position: -588px -987px;
-
-    &:hover {
-        background-position-x: -630px;
-    }
-
-    &.active, &:active {
-        background-position-x: -672px;
-    }
-}
-
-#inventory-button {
-    background-position-x: -588px;
-
-    &:hover {
-        background-position-x: -630px;
-    }
-
-    &.active, &:active {
-        background-position-x: -672px;
-    }
-}
-
-#profile-button {
-    background-position-x: -714px;
-
-    &:hover {
-        background-position-x: -756px;
-    }
-
-    &.active, &:active {
-        background-position-x: -798px;
-    }
-}
-
-#settings-button {
-    background-position-x: -1218px;
-
-    &:hover {
-        background-position-x: -1260px;
-    }
-
-    &.active, &:active {
-        background-position-x: -1302px;
-    }
-}
-
-#warp-button {
-    background-position-x: -966px;
-
-    &:hover {
-        background-position-x: -1008px;
-    }
-
-    &.active, &:active {
-        background-position-x: -1050px;
-    }
-}
-
-#audio-button {
-    background-position-x: -294px;
-
-    &:hover {
-        background-position-x: -378px;
-    }
-
-    &.active, &:active {
-        background-position-x: -336px;
-    }
-}
-
-#achievements-button {
-    background-position-x: -126px;
-
-    &:hover {
-        background-position-x: -168px;
-    }
-
-    &.active, &:active {
-        background-position-x: -210px;
-    }
-}
-
-#quests-button {
-    background-position-x: -840px;
-
-    &:hover {
-        background-position-x: -882px;
-    }
-
-    &.active, &:active {
-        background-position-x: -924px;
-    }
-}
-
-#friends-button {
-    background-position-x: -1092px;
-
-    &:hover {
-        background-position-x: -1134px;
-    }
-
-    &.active, &:active {
-        background-position-x: -1176px;
-    }
-}
-
 // Big buttons with text on them
 .accept-button {
     position: absolute;
 }
 
 @each $size, $i in media.$sizes {
+    @if $i == 3 {
+        $i: 3.75;
+    } @else {
+        $i: 3;
+    }
+
     @media ($size) {
+        #chat-button,
+        #inventory-button,
+        #profile-button,
+        #settings-button,
+        #warp-button,
+        #guilds-button,
+        #leaderboards-button,
+        #audio-button,
+        #achievements-button,
+        #quests-button,
+        #friends-button,
+        .placeholder-button {
+            position: relative;
+
+            width: 14px * $i;
+            height: 15px * $i;
+
+            background: url('/img/interface/main.png') no-repeat;
+            background-position-y: -314px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        #chat-button {
+            background-position: -196px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -210px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -224px * $i;
+            }
+        }
+
+        #inventory-button {
+            background-position-x: -196px * $i;
+
+            &:hover {
+                background-position-x: -210px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -224px * $i;
+            }
+        }
+
+        #profile-button {
+            background-position-x: -238px * $i;
+
+            &:hover {
+                background-position-x: -252px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -266px * $i;
+            }
+        }
+
+        #settings-button {
+            background-position-x: -406px * $i;
+
+            &:hover {
+                background-position-x: -420px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -434px * $i;
+            }
+        }
+
+        #warp-button {
+            background-position-x: -322px * $i;
+
+            &:hover {
+                background-position-x: -336px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -350px * $i;
+            }
+        }
+
+        #guilds-button {
+            background-position: -280px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -294px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -308px * $i;
+            }
+        }
+
+        #leaderboards-button {
+            background-position: -238px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -252px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -266px * $i;
+            }
+        }
+
+        #audio-button {
+            background-position-x: -98px * $i;
+
+            &:hover {
+                background-position-x: -126px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -112px * $i;
+            }
+        }
+
+        #achievements-button {
+            background-position-x: -42px * $i;
+
+            &:hover {
+                background-position-x: -56px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -70px * $i;
+            }
+        }
+
+        #quests-button {
+            background-position-x: -280px * $i;
+
+            &:hover {
+                background-position-x: -294px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -308px * $i;
+            }
+        }
+
+        #friends-button {
+            background-position-x: -364px * $i;
+
+            &:hover {
+                background-position-x: -378px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -392px * $i;
+            }
+        }
+
+        .placeholder-button {
+            background-position: -400px * $i -336px * $i;
+
+            &:hover {
+                background-position-x: -416px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -432px * $i;
+            }
+        }
+
         .accept-button {
             width: 96px * $i;
             height: 27px * $i;
-            background: url('/img/#{$i}/buttons.png') -480px * $i 0 no-repeat;
+            background: url('/img/interface/buttons.png') -480px * $i 0 no-repeat;
+            background-size: calc(width('buttons.png') * $i);
 
             &:hover {
                 background-position-y: -27px * $i;
             }
 
-            &.active, &:active {
+            &.active,
+            &:active {
                 background-position-y: -54px * $i;
             }
 

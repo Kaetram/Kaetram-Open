@@ -14,6 +14,8 @@ import Quests from '../menu/quests';
 import Friends from '../menu/friends';
 import Trade from '../menu/trade';
 import Interact from '../menu/interact';
+import Leaderboards from '../menu/leaderboards';
+import Guilds from '../menu/guilds';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -37,6 +39,8 @@ export default class MenuController {
     private friends: Friends;
     private trade: Trade;
     private interact: Interact;
+    private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public header: Header;
 
@@ -47,7 +51,7 @@ export default class MenuController {
         this.bank = new Bank(this.inventory);
         this.store = new Store(this.inventory);
         this.profile = new Profile(game.player);
-        this.enchant = new Enchant();
+        this.enchant = new Enchant(this.inventory);
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
@@ -58,6 +62,8 @@ export default class MenuController {
         this.friends = new Friends(game.player);
         this.trade = new Trade(this.inventory);
         this.interact = new Interact(game.player);
+        this.leaderboards = new Leaderboards(game.app);
+        this.guilds = new Guilds(game);
 
         this.menus = {
             inventory: this.inventory,
@@ -73,7 +79,9 @@ export default class MenuController {
             quests: this.quests,
             friends: this.friends,
             trade: this.trade,
-            interact: this.interact
+            interact: this.interact,
+            leaderboards: this.leaderboards,
+            guilds: this.guilds
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -84,6 +92,9 @@ export default class MenuController {
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
+
+        this.enchant.onSelect(this.handleEnchantSelect.bind(this));
+        this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
 
         this.warp.onSelect(this.handleWarp.bind(this));
 
@@ -235,6 +246,22 @@ export default class MenuController {
     }
 
     /**
+     * @returns The leaderboards menu object.
+     */
+
+    public getLeaderboards(): Leaderboards {
+        return this.leaderboards;
+    }
+
+    /**
+     * @returns The guilds menu object.
+     */
+
+    public getGuilds(): Guilds {
+        return this.guilds;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param fromIndex Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
@@ -335,6 +362,36 @@ export default class MenuController {
             opcode: type,
             key,
             index
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the index of the inventory slot the
+     * player has selected. The server verifies the request and sends back a
+     * packet indicating we want to move the item.
+     * @param index The index of the item the player has selected.
+     */
+
+    private handleEnchantSelect(index: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Select,
+            index
+        });
+    }
+
+    /**
+     * Sends a request to the server that the player wants to enchant an item given
+     * some shards. The server double checks the validity of the request and proceeds
+     * accordingly.
+     * @param index The index of the item we want to enchant.
+     * @param shardIndex The index of the shards we want to use for enchanting.
+     */
+
+    private handleEnchantConfirm(index: number, shardIndex: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Confirm,
+            index,
+            shardIndex
         });
     }
 

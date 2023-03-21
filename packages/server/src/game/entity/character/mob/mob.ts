@@ -4,17 +4,18 @@ import rawData from '../../../../../data/mobs.json';
 import dropTables from '../../../../../data/tables.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
+import Formulas from '../../../../info/formulas';
 import Character from '../character';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Heal, Movement } from '@kaetram/common/network/impl';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { MobData } from '@kaetram/common/types/mob';
+import type { RawData, MobData } from '@kaetram/common/types/mob';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
@@ -22,10 +23,6 @@ import type World from '../../../world';
 import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
-
-interface RawData {
-    [key: string]: MobData;
-}
 
 interface ItemDrop {
     key: string;
@@ -48,6 +45,8 @@ export default class Mob extends Character {
     public miniboss = false;
     public roaming = false;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public aggressive = false;
     public alwaysAggressive = false;
     private hiddenName = false;
@@ -58,7 +57,7 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = ['ordinary', 'arrows', 'unusual']; // Default drop table for all mobs.
+    private dropTables: string[] = ['ordinary', 'arrows', 'unusual', 'shards']; // Default drop table for all mobs.
 
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
@@ -67,6 +66,8 @@ export default class Mob extends Character {
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
     private handler?: MobHandler | DefaultPlugin;
+
+    private lastChangedTarget = 0;
 
     private respawnCallback?: () => void;
 
@@ -118,6 +119,8 @@ export default class Mob extends Character {
         this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
         this.poisonous = data.poisonous || this.poisonous;
+        this.freezing = data.freezing || this.freezing;
+        this.burning = data.burning || this.burning;
         this.hiddenName = data.hiddenName || this.hiddenName;
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
@@ -441,7 +444,15 @@ export default class Mob extends Character {
 
     public canAggro(player: Player): boolean {
         // Skip if mob has a target or the player targeted isn't fully loaded yet.
-        if (this.target || !player.ready) return false;
+        if (!player.ready) return false;
+
+        // Prevent aggro if we already have a target.
+        if (this.target) {
+            // However, for bosses, we want to add the player to the list of attackers.
+            if (this.boss) this.addAttacker(player);
+
+            return false;
+        }
 
         // Check for aggressive properties of the mob.
         if (!this.aggressive && !this.alwaysAggressive) return false;
@@ -586,6 +597,15 @@ export default class Mob extends Character {
     }
 
     /**
+     * We restrict how many times a mob can change targets in a short period of time.
+     * @returns Whether or not the last target change was more than 13 seconds ago.
+     */
+
+    public canChangeTarget(): boolean {
+        return Date.now() - this.lastChangedTarget > 13_000;
+    }
+
+    /**
      * Some entities are static (only spawned once during an event)
      * Meanwhile, other entities act as an illusion to another entity,
      * so the respawning script is handled elsewhere.
@@ -683,6 +703,19 @@ export default class Mob extends Character {
 
     public override getDefenseLevel(): number {
         return this.defenseLevel;
+    }
+
+    /**
+     * Subclass implementation for damage type. Special mobs may have a freezing,
+     * burning or other damage types that apply a special effect on the target.
+     * @returns The damage type of the mob.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        if (this.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+        if (this.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+        return this.damageType;
     }
 
     /**

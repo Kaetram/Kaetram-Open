@@ -15,6 +15,10 @@ export default class Weapon extends Equipment {
     public mining = -1;
     public manaCost = 0;
 
+    // Default values for resetting variables when changing attack styles.
+    public defaultAttackRange = 1;
+    public defaultAttackRate: number = Modules.Defaults.ATTACK_RATE;
+
     // Weapon type
     private archer = false;
     private magic = false;
@@ -34,11 +38,14 @@ export default class Weapon extends Equipment {
         super.update(item);
 
         this.attackRange = item.attackRange;
+        this.defaultAttackRange = item.attackRange;
         this.attackRate = item.attackRate;
         this.attackStyles = item.getAttackStyles();
         this.lumberjacking = item.lumberjacking;
         this.mining = item.mining;
         this.poisonous = item.poisonous;
+        this.freezing = item.freezing;
+        this.burning = item.burning;
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
@@ -80,6 +87,21 @@ export default class Weapon extends Equipment {
 
     public updateAttackStyle(attackStyle: Modules.AttackStyle): void {
         this.attackStyle = attackStyle;
+
+        // Rapid attack style boosts attack speed by 20%
+        this.attackRate =
+            attackStyle === Modules.AttackStyle.Fast
+                ? this.defaultAttackRate * 0.8
+                : this.defaultAttackRate;
+
+        // Not applicable for ranged weapons.
+        if (!this.archer && !this.magic) return;
+
+        // Long range boosts attack range by 2 for bows and magic weapons
+        this.attackRange =
+            attackStyle === Modules.AttackStyle.LongRange
+                ? this.defaultAttackRange + 2
+                : this.defaultAttackRange;
     }
 
     /**
@@ -137,6 +159,38 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * @returns Whether or not the weapon has the bloodsucking enchantment.
+     */
+
+    public isBloodsucking(): boolean {
+        return Modules.Enchantment.Bloodsucking in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the critical enchantment.
+     */
+
+    public isCritical(): boolean {
+        return Modules.Enchantment.Critical in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the double-edged enchantment.
+     */
+
+    public isDoubleEdged(): boolean {
+        return Modules.Enchantment.DoubleEdged in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the freezing enchantment.
+     */
+
+    public isStun(): boolean {
+        return Modules.Enchantment.Stun in this.enchantments;
+    }
+
+    /**
      * Checks whether the weapon contains the attack style.
      * @param attackStyle The attack style to check for.
      * @returns Whether or not the attack style is included in the weapon's attack styles.
@@ -154,10 +208,11 @@ export default class Weapon extends Equipment {
     public override serialize(clientInfo = false): EquipmentData {
         let data = super.serialize(clientInfo);
 
+        data.attackStyle = this.attackStyle;
+
         // Include additional properties to be sent to the client.
         if (clientInfo) {
             data.attackRange = this.attackRange;
-            data.attackStyle = this.attackStyle;
             data.attackStyles = this.attackStyles;
         }
 

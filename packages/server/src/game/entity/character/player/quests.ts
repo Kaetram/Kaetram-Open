@@ -1,13 +1,13 @@
 import QuestIndex from './quest/impl';
 
 import quests from '../../../../../data/quests.json';
-import { Quest as QuestPacket } from '../../../../network/packets';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Quest as QuestPacket } from '@kaetram/common/network/impl';
 
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
+import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type Player from './player';
 import type Quest from './quest/quest';
 import type NPC from '../../npc/npc';
