@@ -1,8 +1,8 @@
 {
     "name": "kaetram",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "private": true,
-    "packageManager": "yarn@3.2.0",
+    "packageManager": "yarn@4.0.0-rc.40",
     "author": "Veradictus",
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
@@ -41,6 +41,7 @@
         "husky": "^8.0.3",
         "lint-staged": "^13.1.0",
         "postcss": "^8.4.20",
+        "postcss-assets": "^6.0.0",
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.8.1",
         "stylelint": "^14.16.1",
@@ -50,7 +51,7 @@
         "packages/*"
     ],
     "engines": {
-        "node": "^14.19.0 || ^16.10.0 || ^18.0.0"
+        "node": "^14.19.0 || ^16.10.0 || ^18.0.0 || ^19.0.0"
     },
     "repository": "git+https://github.com/Kaetram/Kaetram-Open.git",
     "bugs": {

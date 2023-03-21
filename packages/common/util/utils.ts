@@ -10,6 +10,8 @@ import log from './log';
 import config from '../config';
 import { Modules, Packets } from '../network';
 
+import ipaddr from 'ipaddr.js';
+
 import type { Bonuses, Stats } from '../types/item';
 
 export default {
@@ -23,14 +25,6 @@ export default {
 
     createInstance(identifier = 0): string {
         return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
-    },
-
-    /**
-     * Extracts the type of entity by taking the last number of the instance.
-     */
-
-    getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
     },
 
     /**
@@ -69,19 +63,6 @@ export default {
 
     randomWeightedInt(min: number, max: number, weight: number): number {
         return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
-    },
-
-    /**
-     * Gets a distance between two points in the grid space.
-     * @param startX Starting point x grid space coordinate.
-     * @param startY Starting point y grid space coordinate.
-     * @param toX Ending point x grid space coordinate.
-     * @param toY Ending point y grid space coordinate.
-     * @returns An integer of the amount of tiles between the two points.
-     */
-
-    getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        return Math.abs(startX - toX) + Math.abs(startY - toY);
     },
 
     /**
@@ -167,6 +148,27 @@ export default {
     },
 
     /**
+     * Gets a distance between two points in the grid space.
+     * @param startX Starting point x grid space coordinate.
+     * @param startY Starting point y grid space coordinate.
+     * @param toX Ending point x grid space coordinate.
+     * @param toY Ending point y grid space coordinate.
+     * @returns An integer of the amount of tiles between the two points.
+     */
+
+    getDistance(startX: number, startY: number, toX: number, toY: number): number {
+        return Math.abs(startX - toX) + Math.abs(startY - toY);
+    },
+
+    /**
+     * Extracts the type of entity by taking the last number of the instance.
+     */
+
+    getEntityType(instance: string): number {
+        return parseInt(instance.slice(0, 1));
+    },
+
+    /**
      * Helper function to avoid repetitive instances of comparison between
      * the unix epoch minus an event. Cleans up the code a bit.
      *
@@ -191,6 +193,27 @@ export default {
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
             : zlib.deflateSync(data).toString('base64');
+    },
+
+    /**
+     * Verifies the email string against RegEx.
+     * @param email Email string to verify.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
+    },
+
+    /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
     },
 
     /**
@@ -220,24 +243,13 @@ export default {
     },
 
     /**
-     * Verifies the email string against RegEx.
-     * @param email Email string to verify.
+     * Converts an IP address buffer (from UWS) into an IPv4 address.
+     * @param buffer The address buffer.
+     * @returns An IPv4 address in string format.
      */
 
-    isEmail(email: string): boolean {
-        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email
-        );
-    },
-
-    /**
-     * Checks if the username is valid. Valid usersnames are latin
-     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
-     * @param text The text we are trying to validate.
-     */
-
-    isValidUsername(text: string): boolean {
-        return /^[\w ]+$/.test(text);
+    bufferToAddress(buffer: ArrayBuffer): string {
+        return ipaddr.process(new TextDecoder().decode(buffer)).toString();
     },
 
     /**

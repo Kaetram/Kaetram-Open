@@ -45,6 +45,8 @@ export default class Item extends Entity {
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public weaponType = '';
 
     // Stats
@@ -111,6 +113,8 @@ export default class Item extends Entity {
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.poisonous = this.data.poisonous || this.poisonous;
+        this.freezing = this.data.freezing || this.freezing;
+        this.burning = this.data.burning || this.burning;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
@@ -358,7 +362,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
                     Modules.AttackStyle.Defensive
                 ];
             }
@@ -383,8 +387,12 @@ export default class Item extends Entity {
                 return [Modules.AttackStyle.Stab, Modules.AttackStyle.Defensive];
             }
 
-            case 'club': {
-                return [Modules.AttackStyle.Crush, Modules.AttackStyle.Defensive];
+            case 'blunt': {
+                return [
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
+                    Modules.AttackStyle.Defensive
+                ];
             }
 
             case 'spear': {
@@ -403,12 +411,63 @@ export default class Item extends Entity {
                 ];
             }
 
+            case 'whip': {
+                return [Modules.AttackStyle.Slash, Modules.AttackStyle.Defensive];
+            }
+
             case 'staff': {
                 return [Modules.AttackStyle.Focused, Modules.AttackStyle.LongRange];
             }
         }
 
         return [];
+    }
+
+    /**
+     * Depending on the item type, they may have different enchantments available. We return
+     * a list of enchantments that we pick from based on the item type.
+     * @returns A list of enchantments that are available for the item or empty if not applicable.
+     */
+
+    public getAvailableEnchantments(): Modules.Enchantment[] {
+        switch (this.itemType) {
+            case 'weapon': {
+                return [
+                    Modules.Enchantment.Bloodsucking,
+                    Modules.Enchantment.Critical,
+                    Modules.Enchantment.DoubleEdged
+                ];
+            }
+
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return [Modules.Enchantment.Explosive, Modules.Enchantment.Stun];
+            }
+
+            case 'armour':
+            case 'armourarcher': {
+                return [
+                    Modules.Enchantment.Evasion,
+                    Modules.Enchantment.Thorns,
+                    Modules.Enchantment.AntiStun
+                ];
+            }
+
+            default: {
+                return [];
+            }
+        }
+    }
+
+    /**
+     * Grabs the enchantment level for an item based on the enchantment id. We
+     * assume that we already checked the item has the enchantment.
+     * @param enchantment The enchantment id we are checking for.
+     * @returns The level of the enchantment.
+     */
+
+    public getEnchantmentLevel(enchantment: number): number {
+        return this.enchantments[enchantment].level;
     }
 
     /**

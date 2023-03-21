@@ -27,6 +27,7 @@
         "dotenv-parse-variables": "^2.0.0",
         "internal-ip": "^7.0.0",
         "postcss": "^8.4.20",
+        "postcss-assets": "^6.0.0",
         "postcss-custom-media": "^9.0.1",
         "postcss-preset-env": "^7.8.3",
         "sass": "^1.57.1",

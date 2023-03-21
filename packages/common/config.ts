@@ -16,7 +16,9 @@ export interface Config {
 
     hubEnabled: boolean;
     hubHost: string;
-    hubPort: number;
+    hubWsHost: string;
+    hubPort: number; // API port for hub
+    hubWsPort: number; // Websocket port for hub
     hubPing: number;
     hubAccessToken: string;
     remoteServerHost: string;
@@ -85,6 +87,7 @@ for (let key in envConfig) {
 }
 
 config.hubHost = config.hubHost || config.host;
+config.hubWsHost = config.hubWsHost || config.hubHost;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(

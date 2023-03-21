@@ -20,5 +20,8 @@ export default class Arrows extends Equipment {
         super.update(item);
 
         this.projectileName = item.projectileName;
+        this.poisonous = item.poisonous;
+        this.freezing = item.freezing;
+        this.burning = item.burning;
     }
 }
