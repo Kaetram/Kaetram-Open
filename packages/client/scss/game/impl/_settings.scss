@@ -110,6 +110,12 @@
     }
 }
 
+@media (--lg) {
+    #settings-page {
+        bottom: 56px;
+    }
+}
+
 @media (--sm) {
     #settings-page {
         right: 31px;

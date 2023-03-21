@@ -66,6 +66,9 @@ export default class Equipments {
             if (!info.key) continue; // Skip if the item is already null
 
             equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
+
+            // Only weapons have attack styles, so we update the last selected one.
+            if (info.attackStyle) this.updateAttackStyle(info.attackStyle);
         }
 
         this.loadCallback?.();
@@ -164,7 +167,11 @@ export default class Equipments {
         if (!weapon.hasAttackStyle(style))
             return log.warning(`[${this.player.username}] Invalid attack style.`);
 
+        // Set new attack style.
         this.getWeapon().updateAttackStyle(style);
+
+        // Sync the player for everyone else and update data.
+        this.player.sync();
 
         // Callback with the new attack style.
         this.attackStyleCallback?.(style);
@@ -232,6 +239,15 @@ export default class Equipments {
 
     public getArmour(): Armour {
         return this.get(Modules.Equipment.Armour) as Armour;
+    }
+
+    /**
+     * Grabs the armour skin equipment of the player.
+     * @returns The armour skin equipment type.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
     }
 
     /**

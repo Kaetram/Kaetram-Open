@@ -9,23 +9,30 @@ import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
 import Trade from './trade';
+import Incoming from './incoming';
 
 import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Formulas from '../../../../info/formulas';
-import Incoming from '../../../../controllers/incoming';
 
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import { Team } from '@kaetram/common/api/minigame';
 import {
     Camera,
     Chat,
-    Effect,
+    Guild,
     Heal,
     Movement,
     Music,
     Network,
     Notification,
     Overlay,
+    Player as PlayerPacket,
     Pointer,
     PVP,
     Rank,
@@ -34,13 +41,7 @@ import {
     Sync,
     Teleport,
     Welcome
-} from '@kaetram/server/src/network/packets';
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
-import { Opcodes, Modules } from '@kaetram/common/network';
-import config from '@kaetram/common/config';
-import { Team } from '@kaetram/common/api/minigame';
+} from '@kaetram/common/network/impl';
 
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
@@ -52,15 +53,15 @@ import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
 import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
+import type Entities from '../../../../controllers/entities';
+import type Packet from '@kaetram/common/network/packet';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PointerData } from '@kaetram/common/types/pointer';
-import type Entities from '@kaetram/server/src/controllers/entities';
-import type Packet from '@kaetram/server/src/network/packet';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
-import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -95,7 +96,7 @@ export default class Player extends Character {
     public skills: Skills = new Skills(this);
     public equipment: Equipments = new Equipments(this);
     public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public statistics: Statistics = new Statistics();
+    public statistics: Statistics = new Statistics(this);
     public friends: Friends = new Friends(this);
     public trade: Trade = new Trade(this);
 
@@ -111,17 +112,11 @@ export default class Player extends Character {
     public invalidMovement = 0;
     public overrideMovementSpeed = -1;
 
-    // Special status
-    public running = false;
-    public hotSauce = false;
-    public dualistsMark = false;
-    public thickSkin = false;
-    public snowPotion = false;
-
     // Player info
     public password = '';
     public email = '';
     public userAgent = '';
+    public guild = '';
 
     public rank: Modules.Ranks = Modules.Ranks.None;
 
@@ -170,7 +165,7 @@ export default class Player extends Character {
     private cameraArea: Area | undefined;
     public overlayArea: Area | undefined;
 
-    private snowPotionTimeout: NodeJS.Timeout | null = null;
+    public readyTimeout!: NodeJS.Timeout | null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
@@ -198,11 +193,12 @@ export default class Player extends Character {
      * @param data PlayerInfo object containing all data.
      */
 
-    public load(data: PlayerInfo): void {
+    public async load(data: PlayerInfo): Promise<void> {
         // Store coords for when we're done loading.
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
+        this.guild = data.guild;
         this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
@@ -219,18 +215,26 @@ export default class Player extends Character {
 
         this.friends.load(data.friends);
 
-        // Being the loading process.
         this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
         this.loadBank();
-        this.loadQuests();
-        this.loadAchievements();
         this.loadStatistics();
         this.loadAbilities();
+
+        // Synchronize login with the hub's server list.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+        );
+
+        // Quests and achievements have to be loaded prior to introducing the player.
+        await this.loadQuests();
+        await this.loadAchievements();
+
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> abilities -> intro
+        // Connect the player to their guild if they are in one.
+        if (this.guild) this.world.guilds.connect(this, this.guild);
     }
 
     /**
@@ -261,19 +265,16 @@ export default class Player extends Character {
      * Loads the quest data from the database.
      */
 
-    public loadQuests(): void {
-        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    public async loadQuests(): Promise<void> {
+        this.quests.load(await this.database.loader?.loadQuests(this));
     }
 
     /**
      * Loads the achievement data from the database.
      */
 
-    public loadAchievements(): void {
-        this.database.loader?.loadAchievements(
-            this,
-            this.achievements.load.bind(this.achievements)
-        );
+    public async loadAchievements(): Promise<void> {
+        this.achievements.load(await this.database.loader?.loadAchievements(this));
     }
 
     /**
@@ -315,8 +316,8 @@ export default class Player extends Character {
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
         // Timeout the player if the ready packet is not received within 10 seconds.
-        setTimeout(() => {
-            if (!this.ready) this.connection.reject('error', true);
+        this.readyTimeout = setTimeout(() => {
+            if (!this.ready) this.connection.reject('error');
         }, 10_000);
 
         this.setPosition(this.x, this.y);
@@ -379,12 +380,12 @@ export default class Player extends Character {
     public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
             case 'passive': {
-                if (!this.mana.isFull()) this.mana.increment(amount);
+                // Increment mana by 1% of the max mana.
+                if (!this.mana.isFull())
+                    this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
-                // Scale the heal rate by the maximum hitpoints.
-                amount += Math.floor(this.hitPoints.getMaxHitPoints() * 0.005);
-
-                super.heal(amount);
+                // Increment hitpoints by 0.5% of the max hitpoints.
+                super.heal(Math.floor(this.hitPoints.getMaxHitPoints() * 0.005));
 
                 break;
             }
@@ -561,6 +562,9 @@ export default class Player extends Character {
      */
 
     public handleTargetAttack(instance: string): void {
+        // Prevent targetting yourself.
+        if (instance === this.instance) return;
+
         let target = this.entities.get(instance);
 
         // Ignore if the target is not a character that can actually be attacked.
@@ -905,7 +909,7 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.stunned || this.isInvalidMovement()) return;
+        if (this.status.has(Modules.Effects.Stun) || this.isInvalidMovement()) return;
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -1009,7 +1013,7 @@ export default class Player extends Character {
             })
         );
 
-        if (overlay.type === 'damage') overlay.addPlayer(this);
+        if (overlay.isStatusArea()) overlay.addPlayer(this);
     }
 
     /**
@@ -1097,10 +1101,17 @@ export default class Player extends Character {
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (this.running) speed = Math.floor(speed * 0.9);
+        if (this.status.has(Modules.Effects.Running)) speed = Math.floor(speed * 0.9);
 
         // Apply a 20% speed boost if the player is using the hot sauce.
-        if (this.hotSauce) speed = Math.floor(speed * 0.8);
+        if (this.status.has(Modules.Effects.HotSauce)) speed = Math.floor(speed * 0.8);
+
+        // Apply freezing movement speed effect, make the player move 25% slower.
+        if (
+            this.status.has(Modules.Effects.Freezing) &&
+            !this.status.has(Modules.Effects.SnowPotion)
+        )
+            speed = Math.floor(speed * 1.25);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
@@ -1112,12 +1123,17 @@ export default class Player extends Character {
      * Setters
      */
 
+    /**
+     * Updates the movement speed of the player.
+     * @param movementSpeed The new movement speed of the player.
+     */
+
     public setMovementSpeed(movementSpeed: number): void {
         this.movementSpeed = movementSpeed;
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1135,26 +1151,18 @@ export default class Player extends Character {
     public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
-        // Update the hot sauce status.
-        this.hotSauce = hotSauce;
-        this.running = running;
+        if (running) this.status.add(Modules.Effects.Running);
+        else this.status.remove(Modules.Effects.Running);
+
+        if (hotSauce) this.status.add(Modules.Effects.HotSauce);
+        else this.status.remove(Modules.Effects.HotSauce);
 
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
         );
-    }
-
-    /**
-     * Applies a visual effect onto a player. This can also be used to remove
-     * an effect by passing in the `Opcodes.Effect.None` opcode.
-     * @param opcode The opcode of the effect we want to apply.
-     */
-
-    public setEffect(opcode: Opcodes.Effect): void {
-        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
 
     /**
@@ -1164,45 +1172,59 @@ export default class Player extends Character {
      */
 
     public setDualistsMark(dualistsMark: boolean): void {
-        this.dualistsMark = dualistsMark;
+        if (dualistsMark) this.status.add(Modules.Effects.DualistsMark);
+        else this.status.remove(Modules.Effects.DualistsMark);
 
         this.combat.updateLoop();
     }
 
     /**
-     * Sets the cold resistance snow potion status and creates a (or updates an existing) timeout.
-     * The effect is removed after a set amount of time specified in the game `Constants`.
+     * Adds a temporary status effect for the snow potion. This prevents the player
+     * from taking cold-based damage and also protects them against freezing effects.
      */
 
-    public setSnowPotionEffect(): void {
-        // If we already have an active effect then we restart the timer.
-        if (this.snowPotion) {
-            clearTimeout(this.snowPotionTimeout!);
-            this.snowPotionTimeout = null;
-        }
+    public setSnowPotion(): void {
+        // Remove freezing effect if it has been caused by a timeout (attack).
+        if (this.status.hasTimeout(Modules.Effects.Freezing))
+            this.status.remove(Modules.Effects.Freezing);
 
-        this.snowPotion = true;
-
-        // Remove the freezing special effect if the potion is active.
-        this.setEffect(Opcodes.Effect.None);
+        this.status.addWithTimeout(
+            Modules.Effects.SnowPotion,
+            Modules.Constants.SNOW_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to freezing effects has worn off.');
+            }
+        );
 
         this.notify(
             `You are now immune to freezing effects for ${
                 Modules.Constants.SNOW_POTION_DURATION / 1000
             } seconds.`
         );
+    }
 
-        // Set a timeout to remove the effect.
-        this.snowPotionTimeout = setTimeout(() => {
-            // If the player is still in a freezing area, reapply the effect
-            if (this.overlayArea && this.overlayArea.type === 'damage')
-                this.setEffect(Opcodes.Effect.Freeze);
+    /**
+     * Adds a temporary status effect for the fire potion. This prevents the player
+     * from repeatedly taking fire damage as result of the burn effect.
+     */
 
-            this.snowPotion = false;
-            this.snowPotionTimeout = null;
+    public setFirePotion(): void {
+        // Remove burning effect if present
+        if (this.status.has(Modules.Effects.Burning)) this.status.remove(Modules.Effects.Burning);
 
-            this.notify('Your immunity to freezing effects has worn off.');
-        }, Modules.Constants.SNOW_POTION_DURATION);
+        this.status.addWithTimeout(
+            Modules.Effects.FirePotion,
+            Modules.Constants.FIRE_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to fire effects has worn off.');
+            }
+        );
+
+        this.notify(
+            `You are now immune to fire effects for ${
+                Modules.Constants.FIRE_POTION_DURATION / 1000
+            } seconds.`
+        );
     }
 
     /**
@@ -1336,6 +1358,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has a weapon with the bloodsucking enchantment.
+     */
+
+    public override hasBloodsucking(): boolean {
+        return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
      * Getters
      */
 
@@ -1429,8 +1459,9 @@ export default class Player extends Character {
      */
 
     public clearAreas(): void {
-        if (this.overlayArea && this.overlayArea.type === 'damage')
-            this.overlayArea.removePlayer(this);
+        if (!this.inFreezingArea()) return;
+
+        this.overlayArea!.removePlayer(this);
     }
 
     /**
@@ -1526,6 +1557,9 @@ export default class Player extends Character {
      */
 
     public override isPoisonous(): boolean {
+        // If the player is an archer, we use the arrows to determine the poisonous status.
+        if (this.isArcher()) return this.equipment.getArrows().poisonous;
+
         return this.equipment.getWeapon().poisonous;
     }
 
@@ -1535,6 +1569,16 @@ export default class Player extends Character {
 
     public override isMagic(): boolean {
         return this.equipment.getWeapon().isMagic();
+    }
+
+    /**
+     * Checks whether or not the player is in a freezing area. This is used
+     * to determine stacking of freezing effect (e.g. from ice arrows).
+     * @returns Whether or not the player is in a freezing area.
+     */
+
+    public inFreezingArea(): boolean {
+        return !!this.overlayArea?.isStatusArea();
     }
 
     /**
@@ -1595,7 +1639,9 @@ export default class Player extends Character {
 
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
+            this.world.client.send(
+                new Chat({ source: this.username, message, target: playerName })
+            );
             return;
         }
 
@@ -1658,16 +1704,16 @@ export default class Player extends Character {
 
         if (this.rank !== Modules.Ranks.None) {
             name = `[${Modules.RankTitles[this.rank]}] ${name}`;
-            colour = global ? '' : Modules.RankColours[this.rank];
+            colour = global ? 'rgba(191, 161, 63, 1.0)' : Modules.RankColours[this.rank];
         }
 
         let source = `${global ? '[Global]' : ''} ${name}`;
 
-        // Relay the message to the discord channel.
-        if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
+        // Relay the message to the discord channel if it is enabled.
+        this.world.discord.sendMessage(source, message, undefined, true);
 
-        // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(source, message);
+        // Relay the hub so that it can handle the discord relay.
+        this.world.client.send(new Chat({ source, message }));
 
         if (global) return this.world.globalMessage(name, message, colour);
 
@@ -1733,6 +1779,15 @@ export default class Player extends Character {
     }
 
     /**
+     * Sends a message to the player's guild controller's interface.
+     * @param message The message we are sending to the player.
+     */
+
+    public guildNotify(message: string): void {
+        this.send(new Guild(Opcodes.Guild.Error, { message }));
+    }
+
+    /**
      * Sends a pointer data packet to the player. Removes all
      * existing pointers first to prevent multiple pointers.
      * @param opcode The pointer opcode we are sending.
@@ -1795,7 +1850,8 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key = this.equipment.getArmour().key || 'clotharmor';
+        data.key =
+            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
@@ -1847,6 +1903,19 @@ export default class Player extends Character {
 
     public override getBonuses(): Bonuses {
         return this.equipment.totalBonuses;
+    }
+
+    /**
+     * Subclass implementation that uses the appropriate type of weapon
+     * to determine the player's accuracy bonus.
+     * @returns The player's accuracy bonus based on their weapon type.
+     */
+
+    public override getAccuracyBonus(): number {
+        if (this.isArcher()) return this.getBonuses().archery;
+        if (this.isMagic()) return this.getBonuses().magic;
+
+        return this.getBonuses().accuracy;
     }
 
     /**
@@ -1949,9 +2018,63 @@ export default class Player extends Character {
         let reduction = 1;
 
         // Thick skin increases damage reduction by 20%.
-        if (this.thickSkin) reduction -= 0.2;
+        if (this.status.has(Modules.Effects.ThickSkin)) reduction -= 0.2;
+
+        // Attack style defensive boosts defence by 10%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
+
+        // Shared attack style defensive boosts defence by 4%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Shared) reduction -= 0.04;
 
         return reduction;
+    }
+
+    /**
+     * Gets the player's currently selected attack style for the weapon
+     * they are wielding. We use this to determine combat bonuses and whatnot.
+     * @returns The attack style the weapon currently has selected.
+     */
+
+    public override getAttackStyle(): Modules.AttackStyle {
+        return this.equipment.getWeapon().attackStyle;
+    }
+
+    /**
+     * Subclass implementation for player's damage type. The damage hit type is selected
+     * based on the arrows or the weapon the player has equipped.
+     * @returns The damage type of the player's current weapon.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        // Attempt to apply the arrow effects if the player is using ranged weapons.
+        if (this.isArcher()) {
+            let arrows = this.equipment.getArrows();
+
+            /**
+             * Depending on the type of weapon the player is using, we will either use
+             * the burning/freezing effect of the arrows or the weapon itself.
+             */
+
+            if (arrows.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+            if (arrows.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+            // We use the player's bow to determine the damage type if the arrows do not have any effects.
+            let weapon = this.equipment.getWeapon();
+
+            if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+        } else {
+            let weapon = this.equipment.getWeapon();
+
+            /**
+             * Weapon effects may vary. Here we do a roll against the weapon's enchantments
+             * and their level to determine which damage type we will use.
+             */
+
+            if (weapon.isCritical() && Formulas.getEffectChance()) return Modules.Hits.Critical;
+        }
+
+        // Default case for damage.
+        return Modules.Hits.Normal;
     }
 
     /**
@@ -1969,6 +2092,18 @@ export default class Player extends Character {
     }
 
     /**
+     * This function assumes that we already checked that the player has the bloodsucking
+     * enchantment.
+     * @returns The bloodsucking enchantment level the player currently has on his weapon.
+     */
+
+    public override getBloodsuckingLevel(): number {
+        return (
+            this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1
+        );
+    }
+
+    /**
      * An override function for the player's attack rate since it
      * is dependent on their weapon at the moment. We may be doing
      * calculations from special equipments/effects in the future.
@@ -1978,7 +2113,8 @@ export default class Player extends Character {
 
     public override getAttackRate(): number {
         // Dualists mark status effect boosts attack speed by 200 milliseconds.
-        if (this.dualistsMark) return this.equipment.getWeapon().attackRate - 200;
+        if (this.status.has(Modules.Effects.DualistsMark))
+            return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
     }

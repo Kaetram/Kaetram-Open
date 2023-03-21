@@ -1,17 +1,17 @@
 import Hit from './hit';
 
 import Formulas from '../../../../info/formulas';
-import { Combat as CombatPacket, Spawn } from '../../../../network/packets';
 
 import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { Combat as CombatPacket, Spawn } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
 
 export default class Combat {
     public started = false;
 
-    private lastAttack = 0;
+    public lastAttack = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
@@ -19,7 +19,7 @@ export default class Combat {
     private startCallback?: () => void;
     private stopCallback?: () => void;
     private attackCallback?: () => void;
-    private loopCallback?: () => void;
+    private loopCallback?: (lastAttack: number) => void;
 
     public constructor(private character: Character) {}
 
@@ -117,7 +117,7 @@ export default class Combat {
         // Do not attack while teleporting.
         if (this.character.teleporting) return;
 
-        this.loopCallback?.();
+        this.loopCallback?.(this.lastAttack);
 
         this.checkTargetPosition();
 
@@ -163,6 +163,9 @@ export default class Combat {
 
         // Handle combat damage here since melee is instant.
         this.character.target?.hit(hit.getDamage(), this.character, hit.aoe);
+
+        // Apply effects based on hit types.
+        this.character.target?.addStatusEffect(hit);
     }
 
     /**
@@ -193,9 +196,15 @@ export default class Combat {
      */
 
     private createHit(): Hit {
+        let damageType = this.character.getDamageType();
+
         return new Hit(
-            Modules.Hits.Damage,
-            Formulas.getDamage(this.character, this.character.target!),
+            damageType,
+            Formulas.getDamage(
+                this.character,
+                this.character.target!,
+                damageType === Modules.Hits.Critical
+            ),
             this.character.isRanged(),
             this.character.getAoE()
         );

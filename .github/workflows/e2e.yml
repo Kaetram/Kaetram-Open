@@ -21,6 +21,9 @@ jobs:
                   node-version: 18.5.0
                   cache: 'yarn'
 
+            - name: Enable Corepack
+              run: corepack enable
+
             - name: Run Cypress
               uses: cypress-io/github-action@v4
               with:

@@ -15,6 +15,8 @@ import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
 
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type Game from '../../../game';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
@@ -22,6 +24,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
+import type { GuildData, Member } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -45,6 +48,8 @@ export default class Player extends Character {
     public disableAction = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
+
+    public guild!: Partial<GuildData> | undefined;
 
     public override hitPoints = 0;
     public override maxHitPoints = 0;
@@ -75,8 +80,8 @@ export default class Player extends Character {
     private abilityCallback?: AbilityCallback;
     private manaCallback?: ManaCallback;
 
-    public constructor(instance: string) {
-        super(instance, Modules.EntityType.Player);
+    public constructor(instance: string, game: Game) {
+        super(instance, Modules.EntityType.Player, game);
     }
 
     /**
@@ -613,6 +618,23 @@ export default class Player extends Character {
     public setRank(rank: Modules.Ranks): void {
         this.rank = rank;
         this.medal = this.getRankMedal();
+    }
+
+    /**
+     * Synchronizes the guild connect packet with the player's guild information.
+     * @param packet Contains information about the guild we are updating.
+     */
+
+    public setGuild(packet?: GuildPacket): void {
+        if (!packet) {
+            this.guild = undefined;
+            return;
+        }
+
+        this.guild = {
+            name: packet.name,
+            members: packet.members
+        };
     }
 
     /**

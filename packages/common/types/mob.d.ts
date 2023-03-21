@@ -15,6 +15,8 @@ export interface MobData {
     respawnDelay?: number;
     movementSpeed?: number;
     poisonous?: boolean;
+    freezing?: boolean;
+    burning?: boolean;
     hiddenName?: boolean;
     projectileName?: string;
     roaming?: boolean;
@@ -24,4 +26,8 @@ export interface MobData {
     miniboss?: boolean;
     roamDistance?: number;
     healRate?: number;
+}
+
+export interface RawData {
+    [key: string]: MobData;
 }

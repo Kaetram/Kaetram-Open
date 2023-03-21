@@ -2,8 +2,9 @@ import Menu from './menu';
 
 import Util from '../utils/util';
 
-import type { Modules } from '@kaetram/common/network';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import { Modules } from '@kaetram/common/network';
+
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Actions extends Menu {
     private page: HTMLElement = document.querySelector('#action-page')!;
@@ -69,6 +70,7 @@ export default class Actions extends Menu {
         attackStats: Stats,
         defenseStats: Stats,
         bonuses: Bonuses,
+        enchantments: Enchantments,
         itemDescription = ''
     ): void {
         this.clear();
@@ -78,21 +80,60 @@ export default class Actions extends Menu {
         // Update the name of the selected item.
         this.name.innerHTML = name;
 
-        let description =
-            itemDescription ||
-            `<u>Attack Stats:</u>&emsp;&emsp;<u>Defense Stats:</u> <br>
-             Crush: ${attackStats.crush}&emsp;&emsp;&emsp;&emsp; Crush: ${defenseStats.crush} <br>
-             Slash: ${attackStats.slash}&emsp;&emsp;&emsp;&emsp; Slash: ${defenseStats.slash} <br>
-             Stab: ${attackStats.stab}&emsp;&emsp;&emsp;&emsp;&ensp; Stab: ${defenseStats.stab} <br>
-             Archery: ${attackStats.archery}&emsp;&emsp;&emsp; Archery: ${defenseStats.archery} <br>
-             Magic: ${attackStats.magic}&emsp;&emsp;&emsp;&emsp; Magic: ${defenseStats.magic} <br><br>
-            <u>Bonuses</u>: <br>
-             Accuracy: ${bonuses.accuracy} <br>
-             Strength: ${bonuses.strength} <br>
-             Archery: ${bonuses.archery} <br>
-             Magic: ${bonuses.magic} <br>`;
+        // Determine whether the description is for objects or items.
+        if (itemDescription) this.description.innerHTML = itemDescription;
+        else {
+            // Clear the description.
+            this.description.innerHTML = '';
 
-        this.description.innerHTML = description;
+            let attack = document.createElement('div'),
+                defense = document.createElement('div'),
+                bonusesDiv = document.createElement('div'),
+                enchantmentsDiv = document.createElement('div');
+
+            // Set the id's of the divs.
+            attack.id = 'action-description-attack';
+            defense.id = 'action-description-defense';
+            bonusesDiv.id = 'action-description-bonuses';
+            enchantmentsDiv.id = 'action-description-enchantments';
+
+            // Apply the attack stats to the attack div.
+            attack.innerHTML = `<u>Attack Stats:</u> <br>
+                Crush: ${attackStats.crush} <br>
+                Slash: ${attackStats.slash} <br>
+                Stab: ${attackStats.stab} <br>
+                Archery: ${attackStats.archery} <br>
+                Magic: ${attackStats.magic} <br>`;
+
+            // Apply the defense stats to the defense div.
+            defense.innerHTML = `<u>Defense Stats:</u> <br>
+                Crush: ${defenseStats.crush} <br>
+                Slash: ${defenseStats.slash} <br>
+                Stab: ${defenseStats.stab} <br>
+                Archery: ${defenseStats.archery} <br>
+                Magic: ${defenseStats.magic} <br>`;
+
+            // Apply the bonuses to the bonuses div.
+            bonusesDiv.innerHTML = `<u>Bonuses:</u> <br>
+                Accuracy: ${bonuses.accuracy} <br>
+                Strength: ${bonuses.strength} <br>
+                Archery: ${bonuses.archery} <br>
+                Magic: ${bonuses.magic} <br>`;
+
+            // If the item has enchantments, apply them to the enchantments div.
+            if (Object.keys(enchantments).length > 0) {
+                // Apply the enchantments to the enchantments div.
+                enchantmentsDiv.innerHTML = `<u>Enchantments:</u> <br>`;
+
+                for (let key in enchantments) {
+                    let enchantment = Modules.Enchantment[key];
+
+                    enchantmentsDiv.innerHTML += `${enchantment}: ${enchantments[key].level} <br>`;
+                }
+            }
+
+            this.description.append(attack, defense, bonusesDiv, enchantmentsDiv);
+        }
 
         super.show();
     }

@@ -1,12 +1,12 @@
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
 import Formulas from '../info/formulas';
-import { Command, Notification, NPC, Pointer, Store } from '../network/packets';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Command, Notification, NPC, Pointer, Store } from '@kaetram/common/network/impl';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';
@@ -35,7 +35,6 @@ export default class Commands {
         let command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
-        this.handleArtistCommands(command, blocks);
         this.handleModeratorCommands(command, blocks);
         this.handleAdminCommands(command, blocks);
     }
@@ -96,26 +95,6 @@ export default class Commands {
             case 'ping': {
                 this.player.ping();
                 break;
-            }
-        }
-    }
-
-    /**
-     * Commands accessible only to artists and administrators.
-     * @param command The command that was entered.
-     * @param blocks The associated string blocks after the command.
-     */
-
-    private handleArtistCommands(command: string, blocks: string[]): void {
-        if (!this.player.isArtist() && !this.player.isAdmin()) return;
-
-        switch (command) {
-            case 'toggle': {
-                let key = blocks.shift()!;
-
-                if (!key) return this.player.notify('No key specified.');
-
-                return this.player.send(new Command({ command: `toggle${key}` }));
             }
         }
     }
@@ -200,10 +179,7 @@ export default class Commands {
                 if (!player)
                     return this.player.notify(`Could not find player with name: ${username}`);
 
-                player.connection.close(
-                    `${this.player.username} kicked ${username}`,
-                    command === 'forcekick'
-                );
+                player.connection.close(`${this.player.username} kicked ${username}`);
 
                 break;
             }
@@ -396,11 +372,15 @@ export default class Commands {
 
             case 'nohit':
             case 'invincible': {
-                this.player.invincible = !this.player.invincible;
+                if (this.player.status.has(Modules.Effects.Invincible)) {
+                    this.player.status.remove(Modules.Effects.Invincible);
 
-                if (this.player.invincible) this.player.notify('You are now invincible.');
-                else this.player.notify('You are no longer invincible.');
+                    this.player.notify('You are no longer invincible.');
+                } else {
+                    this.player.status.add(Modules.Effects.Invincible);
 
+                    this.player.notify('You are now invincible.');
+                }
                 return;
             }
 
@@ -571,7 +551,7 @@ export default class Commands {
             }
 
             case 'timeout': {
-                this.player.connection.reject('timeout', true);
+                this.player.connection.reject('timeout');
 
                 break;
             }
@@ -962,6 +942,55 @@ export default class Commands {
                 if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
 
                 this.player.setPet(key);
+            }
+
+            case 'toggle': {
+                let key = blocks.shift()!,
+                    effect: Modules.Effects = Modules.Effects.None;
+
+                switch (key) {
+                    case 'cold':
+                    case 'freeze':
+                    case 'freezing': {
+                        if (this.player.status.has(Modules.Effects.Freezing))
+                            return this.player.status.remove(Modules.Effects.Freezing);
+
+                        effect = Modules.Effects.Freezing;
+                        break;
+                    }
+
+                    case 'fire':
+                    case 'burn':
+                    case 'burning': {
+                        if (this.player.status.has(Modules.Effects.Burning))
+                            return this.player.status.remove(Modules.Effects.Burning);
+
+                        effect = Modules.Effects.Burning;
+                        break;
+                    }
+
+                    case 'terror': {
+                        if (this.player.status.has(Modules.Effects.Terror))
+                            return this.player.status.remove(Modules.Effects.Terror);
+
+                        effect = Modules.Effects.Terror;
+                        break;
+                    }
+
+                    case 'stun': {
+                        if (this.player.status.has(Modules.Effects.Stun))
+                            return this.player.status.remove(Modules.Effects.Stun);
+
+                        effect = Modules.Effects.Stun;
+                        break;
+                    }
+
+                    default: {
+                        return this.player.status.clear();
+                    }
+                }
+
+                return this.player.status.add(effect);
             }
         }
     }

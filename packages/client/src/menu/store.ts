@@ -7,9 +7,9 @@ import { onSecondaryPress } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
+import type Inventory from './inventory';
 import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
 import type { SerializedStoreItem } from '@kaetram/common/types/stores';
-import type Inventory from './inventory';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
@@ -37,10 +37,8 @@ export default class Store extends Menu {
     )!;
 
     // Lists
-    private storeList: HTMLUListElement = document.querySelector('#store-container > ul')!;
-    private inventoryList: HTMLUListElement = document.querySelector(
-        '#store-inventory-slots > ul'
-    )!;
+    private storeList: HTMLUListElement = document.querySelector('#store-container')!;
+    private inventoryList: HTMLUListElement = document.querySelector('#store-inventory-slots')!;
 
     // Buy dialog elements
     public buyDialog: HTMLElement = document.querySelector('#store-buy')!;
@@ -53,8 +51,6 @@ export default class Store extends Menu {
     public constructor(private inventory: Inventory) {
         super('#store', '#close-store');
 
-        this.load();
-
         this.resize();
 
         this.sellSlot.addEventListener('click', this.synchronize.bind(this));
@@ -62,24 +58,22 @@ export default class Store extends Menu {
 
         this.buyCancel.addEventListener('click', this.hideBuyDialog.bind(this));
         this.buyAccept.addEventListener('click', this.handleBuy.bind(this));
+
+        // Create the slot elements for the inventory container.
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+            this.inventoryList.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
     }
+
+    /**
+     * Updates the helper text when the user resizes the screen.
+     */
 
     public override resize(): void {
         let action = isMobile() ? 'Long tap' : 'Right click';
 
         this.storeHelp.textContent = `${action} to buy multiple items.`;
-    }
-
-    /**
-     * Loads the empty inventory slots based on the size of the inventory.
-     * Creates an event listener for each slot that direts to `select()`.
-     */
-
-    private load(): void {
-        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
-            this.inventoryList.append(
-                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
-            );
     }
 
     /**

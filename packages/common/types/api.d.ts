@@ -1,7 +1,7 @@
 export interface SerializedServer {
+    id: number;
     name: string;
     host: string;
-    apiHost: string;
     port: number;
     players: number;
     maxPlayers: number;

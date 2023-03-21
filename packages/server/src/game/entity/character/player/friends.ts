@@ -1,6 +1,6 @@
 import config from '@kaetram/common/config';
 
-import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
+import type { Friend } from '@kaetram/common/types/friends';
 import type Player from './player';
 
 type SyncCallback = (username: string, status: boolean, serverId: number) => void;
@@ -68,8 +68,6 @@ export default class Friends {
                 online,
                 serverId: online ? config.serverId : -1
             };
-
-            if (!online) this.player.world.linkFriends(this.player, false);
 
             // Add the friend to the list and pass on the online status to the client.
             this.addCallback?.(username, this.list[username].online, this.list[username].serverId);

@@ -1,6 +1,7 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -89,14 +90,13 @@ export default class QueenAnt extends Default {
         if (this.specialAttack) return this.resetSpecialAttack();
 
         // 1 in 3 chance to trigger a special attack.
-        if (Utils.randomInt(1, 3) !== 2) return;
+        if (Utils.randomInt(1, 6) !== 2) return;
 
         // 1 in 6 chance to trigger an AoE attack alongside special attack.
-        if (Utils.randomInt(1, 6) === 3) this.mob.aoe = 4;
+        if (Utils.randomInt(1, 12) === 3) this.mob.aoe = 4;
 
         // Queen ant attacks with range and inflicts terror.
-        this.mob.attackRange = 6;
-        this.mob.projectileName = 'projectile-terror';
+        this.attackAll(Modules.Hits.Terror);
 
         this.specialAttack = true;
     }
@@ -118,9 +118,6 @@ export default class QueenAnt extends Default {
 
         // Update the mob's range distance.
         this.mob.attackRange = useRanged ? 10 : 1;
-
-        // Updates the projectile per combat loop to reset the special attack.
-        if (useRanged) this.mob.projectileName = 'projectile-boulder';
     }
 
     /**
