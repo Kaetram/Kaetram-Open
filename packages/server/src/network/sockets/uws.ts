@@ -8,7 +8,8 @@ import { Modules } from '@kaetram/common/network';
 import { App, DISABLED } from 'uws';
 
 import type SocketHandler from '../sockethandler';
-import type { WebSocket as WS } from 'uws';
+import type { HeaderWebSocket } from '../connection';
+import type { WebSocket as WS, HttpRequest, HttpResponse, us_socket_context_t } from 'uws';
 import type { ConnectionInfo } from '@kaetram/common/types/network';
 
 export default class UWS extends WebSocket {
@@ -22,6 +23,7 @@ export default class UWS extends WebSocket {
                 idleTimeout: 10,
                 maxPayloadLength: 32 * 1024 * 1024,
 
+                upgrade: this.handleUpgrade.bind(this),
                 open: this.handleConnection.bind(this),
                 message: this.handleMessage.bind(this),
                 close: this.handleClose.bind(this)
@@ -34,6 +36,28 @@ export default class UWS extends WebSocket {
     }
 
     /**
+     * Upgrades the HTTP connection to a WebSocket connection. We use this
+     * to extract the reverse proxy IP address through the headers.
+     */
+
+    private handleUpgrade(
+        response: HttpResponse,
+        request: HttpRequest,
+        context: us_socket_context_t
+    ): void {
+        response.upgrade(
+            {
+                url: request.getUrl(),
+                remoteAddress: request.getHeader('cf-connecting-ip')
+            },
+            request.getHeader('sec-websocket-key'),
+            request.getHeader('sec-websocket-protocol'),
+            request.getHeader('sec-websocket-extensions'),
+            context
+        );
+    }
+
+    /**
      * Handles the creation and organizing of a socket. With UWS we store the instance
      * into the socket's user data so that we can identify the socket later on.
      * @param socket The socket that the connection will be created for.
@@ -41,7 +65,7 @@ export default class UWS extends WebSocket {
 
     private handleConnection(socket: WS<ConnectionInfo>): void {
         let instance = Utils.createInstance(Modules.EntityType.Player),
-            connection = new Connection(instance, socket);
+            connection = new Connection(instance, socket as HeaderWebSocket);
 
         socket.getUserData().instance = instance;
 

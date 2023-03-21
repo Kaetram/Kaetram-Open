@@ -19,7 +19,6 @@ export interface Config {
     hubWsHost: string;
     hubPort: number; // API port for hub
     hubWsPort: number; // Websocket port for hub
-    hubPing: number;
     hubAccessToken: string;
     remoteServerHost: string;
     remoteApiHost: string;
