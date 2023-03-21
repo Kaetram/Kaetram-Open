@@ -18,6 +18,7 @@ import {
     Trade
 } from '@kaetram/common/network/impl';
 
+import type { Enchantments } from '@kaetram/common/types/item';
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -522,10 +523,17 @@ export default class Handler {
      * @param slot The slot of the item we removed.
      * @param key The key of the slot we removed.
      * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
+     * @param enchantments The enchantments of the item we are dropping.
      * @param drop If the item should spawn in the world upon removal.
      */
 
-    private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
+    private handleInventoryRemove(
+        slot: Slot,
+        key: string,
+        count: number,
+        enchantments: Enchantments,
+        drop?: boolean
+    ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
         if (drop && !this.player.isCheater()) {
             this.world.entities.spawnItem(
@@ -534,7 +542,7 @@ export default class Handler {
                 this.player.y,
                 true,
                 count, // Note this is the amount we are dropping.
-                slot.enchantments
+                enchantments
             );
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
