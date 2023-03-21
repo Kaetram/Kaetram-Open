@@ -5,7 +5,7 @@ import Util from '../utils/util';
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { ListInfo, Member } from '@kaetram/common/types/guild';
+import type { ListInfo, Member, ChatLog } from '@kaetram/common/types/guild';
 import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 
 interface ListElement extends HTMLElement {
@@ -253,6 +253,11 @@ export default class Guilds extends Menu {
         // Update the guild members list.
         for (let member of info.members!)
             this.createElement(this.memberList, member.rank!, member.username);
+
+        if (info.chatLogs) {
+            for (let log of info.chatLogs) 
+                this.appendChatLog(log);
+        }
     }
 
     /**
@@ -325,12 +330,29 @@ export default class Guilds extends Menu {
                 // Show the chat log.
                 this.chatLog.style.display = 'block';
 
+                // !!
+                this.chatLog.scrollTop = this.chatLog.scrollHeight;
                 break;
             }
         }
 
         // Update the current sidebar.
         this.currentSidebar = menu;
+    }
+
+    private appendChatLog(log: ChatLog):void {
+        // console.log(msg);
+
+        // Format the source of the message.
+        let source = `[W${log.serverId}] ${Util.formatName(log.username)}`,
+            element = document.createElement('p');
+
+        // Add the message to the chat log.
+        element.innerHTML = `${source} » ${log.message}`;
+
+        this.chatLog.append(element);
+
+        this.chatLog.scrollTop = this.chatLog.scrollHeight;
     }
 
     /**
@@ -341,19 +363,12 @@ export default class Guilds extends Menu {
      */
 
     private handleChat(packet: GuildPacket): void {
+
         // Ignore invalid packets (shouldn't happen).
-        if (!packet.username || !packet.serverId) return;
+        //if (!packet.username || !packet.serverId) return;
+        if (!packet.chatLogs || packet.chatLogs.length === 0) return;
 
-        console.log(packet);
-
-        // Format the source of the message.
-        let source = `[W${packet.serverId}] ${Util.formatName(packet.username)}`,
-            element = document.createElement('p');
-
-        // Add the message to the chat log.
-        element.innerHTML = `${source} » ${packet.message}`;
-
-        this.chatLog.append(element);
+        this.appendChatLog(packet.chatLogs[0]);
     }
 
     /**

@@ -292,6 +292,7 @@ export interface GuildPacket {
     message?: string;
     owner?: string;
     decoration?: Decoration;
+    chatLogs?: ChatLog[];
 }
 
 export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;

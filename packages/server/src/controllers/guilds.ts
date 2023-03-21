@@ -7,7 +7,7 @@ import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { GuildPacket as OutgoingGuildPacket } from '@kaetram/common/types/messages/outgoing';
-import type { GuildData, ListInfo, Member } from '@kaetram/common/types/guild';
+import type { GuildData, ListInfo, Member, ChatLog } from '@kaetram/common/types/guild';
 
 export default class Guilds {
     private database: MongoDB;
@@ -121,7 +121,8 @@ export default class Guilds {
                     name: guild.name,
                     owner: guild.owner,
                     members: guild.members,
-                    decoration: guild.decoration
+                    decoration: guild.decoration,
+                    chatLogs: guild.chatLogs
                 })
             );
 
@@ -175,7 +176,8 @@ export default class Guilds {
                         name: guild.name,
                         owner: guild.owner,
                         members: guild.members,
-                        decoration: guild.decoration
+                        decoration: guild.decoration,
+                        chatLogs: guild.chatLogs
                     })
                 );
 
@@ -255,10 +257,33 @@ export default class Guilds {
                     `Player ${player.username} tried to chat in a guild that doesn't exist.`
                 );
 
-            this.synchronize(guild.members, Opcodes.Guild.Chat, {
+
+            let chatLogs: ChatLog[] = [];
+            // new ChatLog
+            let chatLog = {
                 username: player.username,
                 serverId: config.serverId,
+                logDate: Date.now(),
                 message
+            };
+
+            chatLogs.push(chatLog);  
+
+            if (guild.chatLogs) {
+                // latest 10
+                if (guild.chatLogs.length > 10) {
+                    guild.chatLogs.splice(0, 1);
+                }
+                guild.chatLogs.push(chatLog);
+            } else {
+                guild.chatLogs = chatLogs;
+            }
+
+            // Save the guild to the database.
+            this.database.creator.saveGuild(guild); 
+
+            this.synchronize(guild.members, Opcodes.Guild.Chat, {
+                chatLogs
             });
         });
     }

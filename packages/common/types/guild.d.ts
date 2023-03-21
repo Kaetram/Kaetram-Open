@@ -13,6 +13,13 @@ export interface Decoration {
     crest: Modules.BannerCrest;
 }
 
+export interface ChatLog {
+    username: string;
+    message: string
+    serverId?: number;
+    logDate?: number; 
+}
+
 export interface GuildData {
     identifier: string;
     name: string;
@@ -22,6 +29,8 @@ export interface GuildData {
     experience: number;
     decoration: Decoration;
     members: Member[];
+
+    chatLogs:ChatLog[]; // latest(10)
 }
 
 // Used to relay update information to other players.
