@@ -344,8 +344,6 @@ export default class Guilds extends Menu {
         // Ignore invalid packets (shouldn't happen).
         if (!packet.username || !packet.serverId) return;
 
-        console.log(packet);
-
         // Format the source of the message.
         let source = `[W${packet.serverId}] ${Util.formatName(packet.username)}`,
             element = document.createElement('p');
