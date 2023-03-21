@@ -4,6 +4,10 @@ import Utils from '@kaetram/common/util/utils';
 import type { WebSocket } from 'uws';
 import type { ConnectionInfo, MessageCallback } from '@kaetram/common/types/network';
 
+export interface HeaderWebSocket extends WebSocket<ConnectionInfo> {
+    remoteAddress: string;
+}
+
 export default class Connection {
     public address = '';
 
@@ -19,9 +23,10 @@ export default class Connection {
 
     private closeCallback?: () => void;
 
-    public constructor(public instance: string, private socket: WebSocket<ConnectionInfo>) {
+    public constructor(public instance: string, private socket: HeaderWebSocket) {
         // Convert the IP address hex string to a readable IP address.
-        this.address = Utils.bufferToAddress(socket.getRemoteAddressAsText());
+        this.address =
+            socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
     }
 
     /**
