@@ -100,6 +100,9 @@ export default class Handler {
         // Stop the combat.
         this.mob.combat.stop();
 
+        // Clear status effects.
+        this.mob.status.clear();
+
         // Remove entity from chest area.
         this.mob.area?.removeEntity(this.mob, attacker);
 
