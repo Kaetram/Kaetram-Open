@@ -11,12 +11,12 @@
         "@badeball/cypress-cucumber-preprocessor": "^12.0.0",
         "@bahmutov/cypress-esbuild-preprocessor": "^2.1.3",
         "@kaetram/common": "workspace:*",
-        "@types/node": "^18.6.3",
+        "@types/node": "^18.15.5",
         "cypress": "^10.4.0",
         "esbuild": "^0.14.53",
         "start-server-and-test": "^1.14.0",
-        "tsx": "^3.8.0",
-        "typescript": "^4.7.4"
+        "tsx": "^3.12.6",
+        "typescript": "^5.0.2"
     },
     "cypress-cucumber-preprocessor": {
         "stepDefinitions": [
