@@ -564,7 +564,7 @@ export default class Regions {
                  * will cause issues when trying to send resource data.
                  */
 
-                if (tile.data < 1) return;
+                if ((tile.data as number) < 1) return;
 
                 tileData.push(tile);
             });

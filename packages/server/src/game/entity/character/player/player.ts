@@ -156,8 +156,8 @@ export default class Player extends Character {
     public talkIndex = 0;
 
     // Minigame status of the player.
-    public minigame = -1; // Opcodes.Minigame
-    public team: Team = -1;
+    public minigame?: Opcodes.Minigame;
+    public team?: Team;
 
     // Currently open store of the player.
     public storeOpen = '';
@@ -1395,7 +1395,7 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()?.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -1417,7 +1417,7 @@ export default class Player extends Character {
      * @returns Finds and returns a minigame based on the player's minigame.
      */
 
-    public getMinigame(): Minigame {
+    public getMinigame(): Minigame | undefined {
         return this.world.minigames.get(this.minigame);
     }
 
@@ -1505,7 +1505,7 @@ export default class Player extends Character {
      */
 
     public inMinigame(): boolean {
-        return this.minigame !== -1;
+        return this.minigame !== undefined;
     }
 
     /**

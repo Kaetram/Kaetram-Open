@@ -56,7 +56,7 @@ export default class Minigames {
      * @returns The minigame object if found, otherwise undefined.
      */
 
-    public get(opcode: Opcodes.Minigame): Minigame {
+    public get(opcode: Opcodes.Minigame | undefined): Minigame | undefined {
         switch (opcode) {
             case Opcodes.Minigame.TeamWar: {
                 return this.minigames.teamwar;
