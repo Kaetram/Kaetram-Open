@@ -89,7 +89,7 @@ export default class Equipments {
                 `[${this.player.username}] Attempted to equip something mysterious.`
             );
 
-        let type = item.getEquipmentType(),
+        let type = item.getEquipmentType()!,
             equipment = this.get(type);
 
         if (!equipment) return;
@@ -239,6 +239,15 @@ export default class Equipments {
 
     public getArmour(): Armour {
         return this.get(Modules.Equipment.Armour) as Armour;
+    }
+
+    /**
+     * Grabs the armour skin equipment of the player.
+     * @returns The armour skin equipment type.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
     }
 
     /**

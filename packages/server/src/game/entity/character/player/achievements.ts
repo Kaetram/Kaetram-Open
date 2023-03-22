@@ -1,10 +1,10 @@
 import Achievement from './achievement/achievement';
 
 import achievements from '../../../../../data/achievements.json';
-import { Achievement as AchievementPacket } from '../../../../network/packets';
 import Item from '../../objects/item';
 
 import { Opcodes } from '@kaetram/common/network';
+import { Achievement as AchievementPacket } from '@kaetram/common/network/impl';
 
 import type { Modules } from '@kaetram/common/network';
 import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';

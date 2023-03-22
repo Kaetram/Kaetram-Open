@@ -1,19 +1,21 @@
 import Creator from './creator';
 import Loader from './loader';
 
-import Quests from '@kaetram/server/data/quests.json';
-import { Modules } from '@kaetram/common/network';
 import Filter from '@kaetram/common/util/filter';
 import log from '@kaetram/common/util/log';
 import bcryptjs from 'bcryptjs';
 import { MongoClient } from 'mongodb';
 
-import type { TotalExperience } from '@kaetram/common/types/leaderboards';
 import type { Db } from 'mongodb';
-import type { QuestData } from '@kaetram/common/types/quest';
 import type { PlayerInfo } from './creator';
-import type { SlotData } from '@kaetram/common/types/slot';
+import type { Modules } from '@kaetram/common/network';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type {
+    MobAggregate,
+    PvpAggregate,
+    SkillExperience,
+    TotalExperience
+} from '@kaetram/common/types/leaderboards';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -34,7 +36,7 @@ export default class MongoDB {
         private databaseName: string,
         private tls: boolean,
         srv: boolean,
-        private authSource: string
+        authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
@@ -160,6 +162,19 @@ export default class MongoDB {
     }
 
     /**
+     * Removes a guild from our database.
+     * @param identifier The identifier of the guild to remove.
+     */
+
+    public deleteGuild(identifier: string): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('guilds');
+
+        collection.deleteOne({ identifier });
+    }
+
+    /**
      * Sets a rank of a player in the database. For use when the player is offline.
      * @param username The username of the player.
      * @param rankId The rank id of the player (relative to the Modules enum).
@@ -214,18 +229,108 @@ export default class MongoDB {
     ): void {
         if (!this.hasDatabase()) return;
 
-        let collection = this.database.collection('player_skills');
+        let skills = this.database.collection('player_skills');
 
         // Unwinds array, groups by total experience, sorts in descending order.
-        collection
+        skills
             .aggregate([
                 { $unwind: '$skills' }, // Unwinds (transforms into multiple objects for each skill).
-                { $group: { _id: '$username', totalExperience: { $sum: '$skills.experience' } } },
-                { $sort: { totalExperience: -1 } },
-                { $limit: 100 }
+                {
+                    $group: {
+                        _id: '$username',
+                        experience: { $sum: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
+                { $sort: { experience: -1 } },
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
+    }
+
+    /**
+     * Aggregates data for a specific skill. The data is then sorted in descending order.
+     * @param skill The skill to aggregate data for.
+     * @param callback Contains a list of players and their experience for the skill.
+     */
+
+    public getSkillAggregate(
+        skill: Modules.Skills,
+        callback: (experience: SkillExperience[]) => void
+    ): void {
+        if (!this.hasDatabase()) return;
+
+        let skills = this.database.collection('player_skills');
+
+        // Unwind the array, match the skill, sort in descending order, limit to 250.
+        skills
+            .aggregate([
+                { $unwind: '$skills' },
+                { $match: { 'skills.type': skill } },
+                {
+                    $group: {
+                        _id: '$username',
+                        experience: { $first: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
+                { $sort: { experience: -1 } },
+                { $limit: 150 }
+            ])
+            .toArray()
+            .then((data) => callback(data as SkillExperience[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the mob specified.
+     * @param key The mob key to gather data for.
+     * @param callback Contains aggregate data for the mob.
+     */
+
+    public getMobAggregate(key: string, callback: (data: MobAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let mobs = this.database.collection('player_statistics');
+
+        mobs.aggregate([
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: `$mobKills.${key}` },
+                    cheater: { $first: '$cheater' }
+                }
+            },
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
+        ])
+            .toArray()
+            .then((data) => callback(data as MobAggregate[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the pvp kills.
+     * @param callback Contains aggregate data for the pvp kills.
+     */
+
+    public getPvpAggregate(callback: (data: PvpAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let pvp = this.database.collection('player_statistics');
+
+        pvp.aggregate([
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: '$pvpKills' },
+                    cheater: { $first: '$cheater' }
+                }
+            },
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
+        ])
+            .toArray()
+            .then((data) => callback(data as PvpAggregate[]));
     }
 
     /**

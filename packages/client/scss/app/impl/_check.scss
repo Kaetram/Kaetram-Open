@@ -41,7 +41,8 @@
             .checkmark {
                 width: 8px * $i;
                 height: 8px * $i;
-                background: url('/img/#{$i}/characterdialogsheet.png') -109px * $i -240px * $i;
+                background: url('/img/interface/characterdialogsheet.png') -109px * $i -240px * $i;
+                background-size: calc(width('characterdialogsheet.png') * $i);
             }
 
             &:hover input ~ .checkmark,

@@ -146,5 +146,18 @@
             "- Fix cross-server private messaging",
             "- Loads of backend improvements and optimizations"
         ]
+    },
+    "alpha-2.4.1": {
+        "title": "Kaetram alpha-2.4.1",
+        "content": [
+            "- Added guilds",
+            "- Added leaderboards",
+            "- Added special effects to arrows",
+            "- Added weapon enchanting",
+            "- Adjusted stats for mobs and items",
+            "- Enahanced mob attack logic",
+            "- Major improvements to the backend",
+            "- And many more bug fixes and improvements"
+        ]
     }
 }

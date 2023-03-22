@@ -3,6 +3,7 @@ import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 import bcryptjs from 'bcryptjs';
 
+import type { GuildData } from '@kaetram/common/types/guild';
 import type { Modules } from '@kaetram/common/network';
 import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
@@ -31,12 +32,14 @@ export interface PlayerInfo {
     regionsLoaded: number[];
     friends: string[];
     lastServerId: number;
+    lastAddress: string;
+    guild: string;
 }
 
 /**
- * Side-note. This version of the creator is a lot more compact and optimized.
- * The data that we are serializing ALWAYS exists. Because of this alone there
- * should be nearly no crashes since we are always working with non-null variables.
+ * The creator database class is responsible for serializing information and storing
+ * it into MongoDB. The primary idea is to store only the necessary data when serializing
+ * and avoiding redundancies.
  */
 
 export default class Creator {
@@ -166,6 +169,29 @@ export default class Creator {
     }
 
     /**
+     * Saves the guild to the guild collection.
+     * @param guild Contains the data about the guild we are saving.
+     * @param callback The callback function to execute after saving.
+     */
+
+    public saveGuild(guild: GuildData, callback?: () => void): void {
+        let collection = this.database.collection('guilds');
+
+        collection.updateOne(
+            { identifier: guild.identifier },
+            { $set: guild },
+            { upsert: true },
+            (error, result) => {
+                if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
+
+                if (!result) log.error(`Unable to save guild ${guild.name}.`);
+
+                callback?.();
+            }
+        );
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
@@ -265,7 +291,9 @@ export default class Creator {
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,
             friends: player.friends.serialize(),
-            lastServerId: config.serverId
+            lastServerId: config.serverId,
+            lastAddress: player.connection.address,
+            guild: player.guild
         };
     }
 }

@@ -24,7 +24,7 @@ export enum Movement {
     Move,
     Follow,
     Entity,
-    Zone
+    Speed
 }
 
 export enum Target {
@@ -113,18 +113,22 @@ export enum Trade {
 
 export enum Enchant {
     Select,
-    Remove,
-    Enchant,
-    Update
+    Confirm
 }
 
 export enum Guild {
     Create,
+    Login,
+    Logout,
     Join,
     Leave,
     Rank,
-    Loot,
-    Update
+    Update,
+    Experience,
+    Banner,
+    List,
+    Error,
+    Chat
 }
 
 export enum Pointer {
@@ -185,17 +189,19 @@ export enum Bubble {
 }
 
 export enum Effect {
-    None,
-    Speed,
-    Critical,
-    Freeze,
-    Stun,
-    Burn
+    Add,
+    Remove
 }
 
 export enum Friends {
     List,
     Add,
     Remove,
-    Status
+    Status,
+    Sync
+}
+
+export enum Player {
+    Login,
+    Logout
 }
