@@ -253,7 +253,7 @@ export default abstract class Quest {
      */
 
     private givePlayerExperience(player: Player): void {
-        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!));
+        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!)!);
 
         skill?.addExperience(this.stageData.experience!);
     }

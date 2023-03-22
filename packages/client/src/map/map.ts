@@ -295,7 +295,7 @@ export default class Map {
 
     public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return true;
-        if (this.data[this.coordToIndex(x, y)] < 1) return true;
+        if ((this.data[this.coordToIndex(x, y)] as number) < 1) return true;
 
         return this.grid[y][x] === 1;
     }
