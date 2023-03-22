@@ -10815,6 +10815,61 @@
     "offsetY": 0
   },
   {
+    "id": "item-accuracypotion",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-boostpotion",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-defencepotion",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-strengthpotion",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-beermug",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-spear",
     "animations": {
       "idle": {
@@ -11960,6 +12015,114 @@
 
   {
     "id": "item-watermelon",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-clam",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-clamchowder",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-cookedshrimp",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-jellyfish",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-jellyfishsmoothie",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-kelp",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-rawshrimp",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-tuna",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+
+  {
+    "id": "item-tunasushi",
     "animations": {
       "idle": {
         "length": 6,
@@ -20687,16 +20850,16 @@
   },
   {
     "id": "effect-burn",
-    "width": 16,
-    "height": 16,
+    "width": 32,
+    "height": 32,
     "animations": {
       "effect": {
-        "length": 4,
+        "length": 5,
         "row": 0
       }
     },
-    "offsetX": 0,
-    "offsetY": 0
+    "offsetX": -8,
+    "offsetY": -16
   },
   {
     "id": "effect-freeze",
@@ -20782,7 +20945,6 @@
       }
     }
   },
-
   {
     "id": "effect-terror",
     "width": 64,
@@ -20795,6 +20957,19 @@
     },
     "offsetX": -24,
     "offsetY": -32
+  },
+  {
+    "id": "effect-terror2",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "effect": {
+        "length": 5,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
   },
   {
     "id": "icegoblin",

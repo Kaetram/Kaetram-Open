@@ -8,7 +8,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
 type BatchCallback = () => void;
@@ -23,6 +23,7 @@ interface SlotElement extends HTMLElement {
     attackStats?: Stats;
     defenseStats?: Stats;
     bonuses?: Bonuses;
+    enchantments?: Enchantments;
 }
 
 export default class Inventory extends Menu {
@@ -83,7 +84,7 @@ export default class Inventory extends Menu {
     private handleAction(menuAction: Modules.MenuActions): void {
         if (menuAction === Modules.MenuActions.DropMany) return this.actions.showDropDialog();
 
-        this.selectCallback?.(Util.getContainerAction(menuAction), this.selectedSlot, 1);
+        this.selectCallback?.(Util.getContainerAction(menuAction)!, this.selectedSlot, 1);
 
         this.actions.hide();
     }
@@ -186,6 +187,7 @@ export default class Inventory extends Menu {
             element.attackStats!,
             element.defenseStats!,
             element.bonuses!,
+            element.enchantments!,
             element.description
         );
     }
@@ -256,6 +258,7 @@ export default class Inventory extends Menu {
         slotElement.attackStats = slot.attackStats!;
         slotElement.defenseStats = slot.defenseStats!;
         slotElement.bonuses = slot.bonuses!;
+        slotElement.enchantments = slot.enchantments!;
     }
 
     /**
