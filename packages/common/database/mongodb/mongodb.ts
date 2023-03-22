@@ -36,7 +36,7 @@ export default class MongoDB {
         private databaseName: string,
         private tls: boolean,
         srv: boolean,
-        private authSource: string
+        authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
@@ -243,7 +243,7 @@ export default class MongoDB {
                     }
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 250 }
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
@@ -276,7 +276,7 @@ export default class MongoDB {
                     }
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 250 }
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as SkillExperience[]));
@@ -302,7 +302,7 @@ export default class MongoDB {
                 }
             },
             { $sort: { kills: -1 } },
-            { $limit: 250 }
+            { $limit: 150 }
         ])
             .toArray()
             .then((data) => callback(data as MobAggregate[]));
@@ -326,7 +326,8 @@ export default class MongoDB {
                     cheater: { $first: '$cheater' }
                 }
             },
-            { $sort: { kills: -1 } }
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
         ])
             .toArray()
             .then((data) => callback(data as PvpAggregate[]));
