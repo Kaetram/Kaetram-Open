@@ -7,6 +7,7 @@ import Servers from './controllers/servers';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
+import Utils from '@kaetram/common/util/utils';
 
 export default class Main {
     private cache: Cache = new Cache();
@@ -73,12 +74,12 @@ export default class Main {
         logout: boolean,
         population: number
     ): void {
-        let message = logout
-            ? `:octagonal_sign: **${config.name} ${serverId} has gone offline!**`
-            : `:white_check_mark: **${config.name} ${serverId} is now online!**`;
-
-        // Send the raw message to the Discord bot.
-        this.discord.sendRawMessage(message);
+        this.discord.sendMessage(
+            Utils.formatName(username),
+            logout ? 'has logged out!' : 'has logged in!',
+            `${config.name} ${serverId}`,
+            false
+        );
 
         // Update the population of the Discord server.
         this.discord.setTopic(
