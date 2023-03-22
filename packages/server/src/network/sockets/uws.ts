@@ -111,6 +111,9 @@ export default class UWS extends WebSocket {
         if (!connection)
             return log.error(`No connection found closing ${socket.getUserData().instance}`);
 
+        // Mark the connection as closed to prevent any further messages from being sent.
+        connection.closed = true;
+
         this.socketHandler.remove(connection.instance);
 
         connection.handleClose();
