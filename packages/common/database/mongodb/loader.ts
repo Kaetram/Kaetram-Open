@@ -234,7 +234,7 @@ export default class Loader {
             let total = info.length;
 
             // Splice the array and return the guilds within the range.
-            callback(info.splice(from, to) as GuildData[], total);
+            callback(info as GuildData[], total);
         });
     }
 
