@@ -1,180 +1,229 @@
-import $ from 'jquery';
+import Menu from './menu';
 
-import log from '../lib/log';
+import Util from '../utils/util';
 
-import type MenuController from '../controllers/menu';
+import { Modules } from '@kaetram/common/network';
 
-interface ActionsData {
-    mouseX: number;
-    mouseY: number;
-    pvp: boolean;
-}
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
-export default class Actions {
-    private body = $('#action-container');
+export default class Actions extends Menu {
+    private page: HTMLElement = document.querySelector('#action-page')!;
 
-    private drop = $('#drop-dialog');
-    private dropInput = $('#drop-count');
+    // Contains the list of actions.
+    private list: HTMLUListElement = document.querySelector('#action-page > ul')!;
 
-    private activeClass: string | null = null;
-    private miscButton: JQuery | null = null;
+    // Info about the current action.
+    private name: HTMLElement = document.querySelector('#action-page > .action-item-name')!;
+    private description: HTMLElement = document.querySelector(
+        '#action-page > .action-item-description'
+    )!;
 
-    private trade!: JQuery;
-    private follow!: JQuery;
+    // Drop dialog elements
+    public dropDialog: HTMLElement = document.querySelector('#action-drop')!;
+    private dropCount: HTMLInputElement = document.querySelector('#action-drop .dialog-count')!;
+    private dropAccept: HTMLElement = document.querySelector('#action-drop .dialog-accept')!;
+    private dropCancel: HTMLElement = document.querySelector('#action-drop .dialog-cancel')!;
 
-    public constructor(private menu: MenuController) {
-        this.load();
+    private buttonCallback?: (menuAction: Modules.MenuActions) => void;
+    private dropCallback?: (count: number) => void;
+
+    public constructor() {
+        super('#action-container');
+
+        this.dropCancel.addEventListener('click', this.hideDropDialog.bind(this));
+        this.dropAccept.addEventListener('click', this.handleDrop.bind(this));
     }
 
-    private load(): void {
-        let dropAccept = $('#drop-accept'),
-            dropCancel = $('#drop-cancel');
+    /**
+     * Handles the click event for the drop dialog.
+     */
 
-        dropAccept.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
-        });
+    public handleDrop(): void {
+        let count = this.dropCount.valueAsNumber;
 
-        dropCancel.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
-        });
+        // Reset the input field value
+        this.dropCount.value = '';
+
+        // Hide the drop dialog.
+        this.hideDropDialog();
+
+        // Exit the actions menu dialog
+        this.hide();
+
+        // Send the callback to the inventory handler.
+        this.dropCallback?.(count);
     }
 
-    public loadDefaults(activeClass: string, data?: ActionsData): void {
-        this.reset();
-        this.activeClass = activeClass;
+    /**
+     * Opens the action menu with a specified array of actions. We first clear
+     * all the previous actions and load the new ones in.
+     * @param actions Array of actions to append to our list prior to displaying.
+     * @param name The name of the item that the actions are being performed on.
+     * @param attackStats The attack stats of the item.
+     * @param defenseStats The defense stats of the item.
+     * @param bonuses The bonuses of the item.
+     */
 
-        if (data)
-            this.body.css({
-                left: `${data.mouseX - this.body.width()! / 2}px`,
-                top: `${data.mouseY}${this.body.height()! / 2}px`
-            });
+    public override show(
+        actions: Modules.MenuActions[],
+        name: string,
+        attackStats: Stats,
+        defenseStats: Stats,
+        bonuses: Bonuses,
+        enchantments: Enchantments,
+        itemDescription = ''
+    ): void {
+        this.clear();
 
-        switch (this.activeClass) {
-            case 'inventory': {
-                this.body.css({
-                    bottom: '10%',
-                    left: '10%'
-                });
+        for (let action of actions) this.add(action);
 
-                let dropButton = $('<div id="drop" class="action-button">Drop</div>');
+        // Update the name of the selected item.
+        this.name.innerHTML = name;
 
-                this.add(dropButton);
+        // Determine whether the description is for objects or items.
+        if (itemDescription) this.description.innerHTML = itemDescription;
+        else {
+            // Clear the description.
+            this.description.innerHTML = '';
 
-                break;
+            let attack = document.createElement('div'),
+                defense = document.createElement('div'),
+                bonusesDiv = document.createElement('div'),
+                enchantmentsDiv = document.createElement('div');
+
+            // Set the id's of the divs.
+            attack.id = 'action-description-attack';
+            defense.id = 'action-description-defense';
+            bonusesDiv.id = 'action-description-bonuses';
+            enchantmentsDiv.id = 'action-description-enchantments';
+
+            // Apply the attack stats to the attack div.
+            attack.innerHTML = `<u>Attack Stats:</u> <br>
+                Crush: ${attackStats.crush} <br>
+                Slash: ${attackStats.slash} <br>
+                Stab: ${attackStats.stab} <br>
+                Archery: ${attackStats.archery} <br>
+                Magic: ${attackStats.magic} <br>`;
+
+            // Apply the defense stats to the defense div.
+            defense.innerHTML = `<u>Defense Stats:</u> <br>
+                Crush: ${defenseStats.crush} <br>
+                Slash: ${defenseStats.slash} <br>
+                Stab: ${defenseStats.stab} <br>
+                Archery: ${defenseStats.archery} <br>
+                Magic: ${defenseStats.magic} <br>`;
+
+            // Apply the bonuses to the bonuses div.
+            bonusesDiv.innerHTML = `<u>Bonuses:</u> <br>
+                Accuracy: ${bonuses.accuracy} <br>
+                Strength: ${bonuses.strength} <br>
+                Archery: ${bonuses.archery} <br>
+                Magic: ${bonuses.magic} <br>`;
+
+            // If the item has enchantments, apply them to the enchantments div.
+            if (Object.keys(enchantments).length > 0) {
+                // Apply the enchantments to the enchantments div.
+                enchantmentsDiv.innerHTML = `<u>Enchantments:</u> <br>`;
+
+                for (let key in enchantments) {
+                    let enchantment = Modules.Enchantment[key];
+
+                    enchantmentsDiv.innerHTML += `${enchantment}: ${enchantments[key].level} <br>`;
+                }
             }
 
-            case 'player': {
-                this.add(this.getFollowButton());
-
-                if (data!.pvp) this.add(this.getAttackButton());
-
-                break;
-            }
-
-            case 'mob': {
-                this.add(this.getFollowButton());
-                this.add(this.getAttackButton());
-
-                break;
-            }
-
-            case 'npc': {
-                this.add(this.getFollowButton());
-                this.add(this.getTalkButton());
-
-                break;
-            }
-
-            case 'object': {
-                log.info('[loadDefaults] object.');
-
-                break;
-            }
+            this.description.append(attack, defense, bonusesDiv, enchantmentsDiv);
         }
+
+        super.show();
     }
 
-    public add(button: JQuery, misc = false): void {
-        this.body.find('ul').prepend($('<li></li>').append(button));
+    /**
+     * Implementation of the `hide` superclass where we also hide the
+     * drop dialog upon exiting the actions menu.
+     */
 
-        button.on('click', (event) => {
-            if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
+    public override hide(): void {
+        super.hide();
+
+        // Hide the drop dialog.
+        this.hideDropDialog();
+    }
+
+    /**
+     * Appends an action element to the list of actions.
+     * @param menuAction Enumeration containing the string text of the action.
+     */
+
+    public override add(menuAction: Modules.MenuActions): void {
+        let element = document.querySelector(`.action-${menuAction}`);
+
+        if (!element) {
+            element = document.createElement('li');
+
+            // Set the type of action to the button element
+            element.classList.add('action-button', `action-${menuAction}`);
+
+            this.list.append(element);
+        }
+
+        // Assign an action when the element is clicked.
+        element.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            this.buttonCallback?.(menuAction);
         });
-
-        if (misc) this.miscButton = button;
     }
 
-    public removeMisc(): void {
-        this.miscButton?.remove();
-        this.miscButton = null;
+    /**
+     * Hides the description and shows the drop dialog. Also
+     * focuses on the input field for the drop dialog.
+     */
+
+    public showDropDialog(): void {
+        Util.fadeIn(this.dropDialog);
+        Util.fadeOut(this.description);
+
+        this.page.classList.add('dimmed');
+
+        this.dropCount.value = '1';
+        this.dropCount.focus();
     }
 
-    private reset(): void {
-        let buttons = this.getButtons();
+    /**
+     * Hides the drop dialog and brings back the description info.
+     */
 
-        for (let i = 0; i < buttons.length; i++) $(buttons[i]).remove();
+    public hideDropDialog(): void {
+        Util.fadeOut(this.dropDialog);
+        Util.fadeIn(this.description);
+
+        this.page.classList.remove('dimmed');
     }
 
-    public show(): void {
-        this.body.fadeIn('fast');
+    /**
+     * Removes all the `div` action elements from the list.
+     */
+
+    private clear(): void {
+        this.list.innerHTML = '';
     }
 
-    public hide(): void {
-        this.body.fadeOut('slow');
+    /**
+     * Callback handler for when an action button has been pressed.
+     * @param callback Contains the action that was pressed.
+     */
+
+    public onButton(callback: (menuAction: Modules.MenuActions) => void): void {
+        this.buttonCallback = callback;
     }
 
-    public clear(): void {
-        $('#drop-accept').off('click');
-        $('#drop-cancel').off('click');
+    /**
+     * Callback handler for when the drop dialog has been accepted.
+     * @param callback Contains the number of items to be dropped.
+     */
 
-        this.trade?.off('click');
-        this.follow?.off('click');
-    }
-
-    public displayDrop(activeClass: string): void {
-        this.activeClass = activeClass;
-
-        this.drop.fadeIn('fast');
-
-        this.dropInput.focus();
-        this.dropInput.select();
-    }
-
-    public hideDrop(): void {
-        this.drop.fadeOut('slow');
-
-        this.dropInput.blur();
-        this.dropInput.val('');
-    }
-
-    private getAttackButton(): JQuery {
-        return $('<div id="attack" class="action-button">Attack</div>');
-    }
-
-    private getFollowButton(): JQuery {
-        return $('<div id="follow" class="action-button">Follow</div>');
-    }
-
-    // getTradeButton(): JQuery {
-    //     return $('<div id="trade" class="action-button">Trade</div>');
-    // }
-
-    private getTalkButton(): JQuery {
-        return $('<div id="talk-button" class="action-button">Talk</div>');
-    }
-
-    private getButtons(): JQuery {
-        return this.body.find('ul').find('li');
-    }
-
-    // getGame(): Game {
-    //     return this.menu.game;
-    // }
-
-    // getPlayer(): Player {
-    //     return this.menu.game.player;
-    // }
-
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
+    public onDrop(callback: (count: number) => void): void {
+        this.dropCallback = callback;
     }
 }

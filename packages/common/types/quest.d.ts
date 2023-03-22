@@ -1,6 +1,8 @@
 import type { PointerData } from './pointer';
 import type { PopupData } from './popup';
 
+export type Actor = 'player' | 'npc';
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -18,8 +20,9 @@ export interface RawStage {
     itemCountRequirement?: number;
 
     /** Text for the NPC. */
-    text?: string[];
+    text?: DialogueItem[];
     completedText?: string[];
+    hasItemText?: string[]; // Text for if the player has a required item/count in the inventory.
 
     /** Pointer information */
     pointer?: PointerData;
@@ -30,11 +33,25 @@ export interface RawStage {
     /** If the stage grants the player an item. */
     itemKey?: string;
     itemCount?: number;
+
+    /** If the stage grants the user an ability. */
+    ability?: string;
+    abilityLevel?: number; // Sets an ability to a level.
+
+    /** If a tree must be cut. */
+    tree?: string;
+    treeCount?: number; // Amount of tress to be cut.
+
+    /** Skill experience rewards */
+    skill?: string;
+    experience?: number;
 }
 
 export interface RawQuest {
     name: string;
     description: string;
+    rewards?: string[];
+    hideNPCs?: string[]; // NPCs to hide after quest.-
     stages: { [id: number]: RawStage };
 }
 
@@ -51,20 +68,27 @@ export interface StageData {
     popup?: PopupData;
     itemKey?: string;
     itemCount?: number;
+    ability?: string;
+    abilityLevel?: number;
+    tree?: string;
+    treeCount?: number;
+    skill?: string;
+    experience?: number;
 }
 
 export interface QuestData {
     key: string;
     stage: number;
     subStage: number;
-    stageCount: number;
 
     name?: string;
     description?: string;
+    rewards?: string[];
+    stageCount?: number;
 }
 
 export interface SerializedQuest {
     quests: QuestData[];
 }
 
-export type TaskType = 'talk' | 'kill' | 'pickup';
+export type TaskType = 'talk' | 'kill' | 'pickup' | 'tree';

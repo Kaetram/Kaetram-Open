@@ -1,0 +1,205 @@
+{
+    "slots": [
+        {
+            "index": 0,
+            "key": "apple",
+            "count": 1,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": true
+        },
+        {
+            "index": 1,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 2,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 3,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 4,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 5,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 6,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 7,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 8,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 9,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 10,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 11,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 12,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 13,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 14,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 15,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 16,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 17,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 18,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 19,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        }
+    ],
+    "username": "test"
+}

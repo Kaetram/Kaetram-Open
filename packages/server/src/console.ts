@@ -1,8 +1,9 @@
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import MongoDB from './database/mongodb/mongodb';
-import Player from './game/entity/character/player/player';
-import World from './game/world';
+import type World from './game/world';
+import type Player from './game/entity/character/player/player';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 /**
  * The console lives on top of the server. It allows an admin to directly
@@ -32,7 +33,7 @@ export default class Console {
             let username: string, player: Player;
 
             switch (command) {
-                case 'players':
+                case 'players': {
                     log.info(
                         `There are a total of ${
                             this.world.entities.getPlayerUsernames().length
@@ -40,15 +41,28 @@ export default class Console {
                     );
 
                     break;
+                }
 
-                case 'total':
-                    this.database.registeredCount((count) => {
+                case 'total': {
+                    this.database.registeredCount((count: number) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
                     break;
+                }
 
-                case 'kill':
+                case 'update': {
+                    this.world.entities.forEachPlayer((player: Player) => {
+                        player.connection.reject('updated');
+                    });
+
+                    // No connections allowed for the remaining instance of the server.
+                    this.world.allowConnections = false;
+
+                    break;
+                }
+
+                case 'kill': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -60,9 +74,25 @@ export default class Console {
                     player.hit(player.hitPoints.getHitPoints());
 
                     break;
+                }
+
+                case 'kick':
+                case 'timeout': {
+                    username = blocks.join(' ');
+
+                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+
+                    player = this.world.getPlayerByName(username);
+
+                    if (!player) return log.info('An error has occurred.');
+
+                    player.connection.close();
+
+                    break;
+                }
 
                 case 'setadmin':
-                case 'setmod':
+                case 'setmod': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -71,16 +101,21 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'setadmin' ? 2 : 1;
+                    player.setRank(
+                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator
+                    );
+
+                    player.sync();
 
                     log.info(
                         `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
                     );
 
                     break;
+                }
 
                 case 'removeadmin':
-                case 'removemod':
+                case 'removemod': {
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
@@ -89,15 +124,19 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'removeadmin' ? 2 : 1;
+                    player.setRank();
 
-                    log.info(
-                        `${player.username} is now a ${
-                            command === 'removeadmin' ? 'admin' : 'mod'
-                        }!`
-                    );
+                    player.notify(`Your ranks have been stripped from you.`);
+
+                    player.sync();
 
                     break;
+                }
+
+                case 'save': {
+                    log.info(`Saving all players.`);
+                    return this.world.save();
+                }
             }
         });
     }

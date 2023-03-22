@@ -1,17 +1,25 @@
-import _ from 'lodash';
-
-import NPC from '../../../npc/npc';
-import Mob from '../../mob/mob';
-import Player from '../player';
+import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
-import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import Item from '../../../objects/item';
-import { PopupData } from '@kaetram/common/types/popup';
-import Modules from '@kaetram/common/network/modules';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import type NPC from '../../../npc/npc';
+import type Mob from '../../mob/mob';
+import type Player from '../player';
+
+type ProgressCallback = (key: string, stage: number, subStage: number) => void;
+type PointerCallback = (pointer: PointerData) => void;
+type PopupCallback = (popup: PopupData) => void;
+
+type TalkCallback = (npc: NPC, player: Player) => void;
+type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
+type KillCallback = (mob: Mob) => void;
+type ResourceCallback = (type: Modules.Skills, resourceType: string) => void;
 
 export default abstract class Quest {
     /**
@@ -19,9 +27,11 @@ export default abstract class Quest {
      * de-serializes its data into a quest object for later use.
      */
 
-    private name = '';
+    public name = '';
     private description = '';
-    private stage = 0; // How far along in the quest we are.
+    private rewards: string[] = [];
+    private hideNPCs: string[] = []; // NPCs to hide after quest.
+    protected stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     protected stageCount = 0; // How long the quest is.
 
@@ -31,17 +41,20 @@ export default abstract class Quest {
     // Store all NPCs involved in the quest.
     private npcs: string[] = [];
 
-    public talkCallback?: (npc: NPC, player: Player) => void;
-    public doorCallback?: (quest: ProcessedDoor, player: Player) => void;
-    public killCallback?: (mob: Mob) => void;
+    private progressCallback?: ProgressCallback;
+    private pointerCallback?: PointerCallback;
+    private popupCallback?: PopupCallback;
 
-    private progressCallback?: (key: string, stage: number, stageCount: number) => void;
-    private pointerCallback?: (pointerData: PointerData) => void;
-    private popupCallback?: (popupData: PopupData) => void;
+    public talkCallback?: TalkCallback;
+    public doorCallback?: DoorCallback;
+    public killCallback?: KillCallback;
+    public resourceCallback?: ResourceCallback;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
         this.description = rawData.description;
+        this.rewards = rawData.rewards || [];
+        this.hideNPCs = rawData.hideNPCs || [];
         this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
@@ -54,6 +67,7 @@ export default abstract class Quest {
         this.onTalk(this.handleTalk.bind(this));
         this.onDoor(this.handleDoor.bind(this));
         this.onKill(this.handleKill.bind(this));
+        this.onResource(this.handleResource.bind(this));
     }
 
     /**
@@ -61,7 +75,7 @@ export default abstract class Quest {
      */
 
     public loaded(): void {
-        log.debug(`[${this.key}] Uninitialized loaded();`);
+        //log.debug(`[${this.key}] Uninitialized loaded();`);
     }
 
     /**
@@ -72,9 +86,8 @@ export default abstract class Quest {
 
     private loadNPCs(): void {
         // Iterate through the stages and extract the NPCs
-        _.each(this.stages, (stage: RawStage) => {
+        for (let stage of Object.values(this.stages))
             if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
-        });
     }
 
     /**
@@ -84,29 +97,26 @@ export default abstract class Quest {
      */
 
     private handleTalk(npc: NPC, player: Player): void {
-        log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
+        //log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
-        let dialogue = this.getNPCDialogue(npc);
+        let dialogue = this.getNPCDialogue(npc, player);
+
+        if (!dialogue) return log.warning(`[${this.name}] No dialogue found for NPC: ${npc.key}.`);
 
         /**
          * Ends the conversation. If the player has the required item in the inventory
          * it will check for that first. If the stage requires the player be given an item
          * it must be given before the conversation ends and quest progresses.
          */
-        if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
-            if (!this.hasItemRequirement())
-                if (this.hasItemToGive()) {
-                    if (
-                        this.givePlayerItem(
-                            player,
-                            this.stageData.itemKey!,
-                            this.stageData.itemCount!
-                        )
-                    )
-                        this.progress();
-                } else this.progress();
-            else this.handleItemRequirement(player, this.stageData);
+        if (this.stageData.npc === npc.key && dialogue.length === player.talkIndex)
+            if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
+            else if (this.hasItemToGive()) {
+                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))
+                    this.progress();
+            } else if (this.hasAbility()) this.givePlayerAbility(player);
+            else if (this.hasExperience()) this.givePlayerExperience(player);
+            else this.progress();
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
@@ -118,14 +128,15 @@ export default abstract class Quest {
      * @param player The player instance that we send actions to.
      */
 
-    private handleDoor(door: ProcessedDoor, player: Player): void {
+    protected handleDoor(door: ProcessedDoor, player: Player): void {
         log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
 
-        if (this.stage < door.stage!) return player.notify('You cannot pass through this door.');
+        if (this.stage < door.stage) return player.notify('You cannot pass through this door.');
 
-        player.teleport(door.x, door.y, true);
+        player.teleport(door.x, door.y);
 
-        this.progress();
+        // Progress only if the door is a task.
+        if (this.isDoorTask()) this.progress();
     }
 
     /**
@@ -150,15 +161,30 @@ export default abstract class Quest {
     }
 
     /**
-     * Advances the quest to the next stage.
+     * Callback for when a resource is depleted. Contains the type of resource and the subType
+     * for the resource. For example, the type is the SkillType and the subType is the tree type.
+     * @param type The skill type of the resource.
+     * @param subType The type of resource that was mined (oak, palm, gold, etc.)
      */
 
-    private progress(subStage?: boolean): void {
-        log.debug(`${this.name} Quest progression.`);
+    private handleResource(type: Modules.Skills, subType: string): void {
+        // Stop if the quest has already been completed.
+        if (this.isFinished()) return;
 
-        // Progress substage only if the parameter is defined.
-        if (subStage) this.setStage(this.stage, this.subStage + 1);
-        else this.setStage(this.stage + 1);
+        // Stage data does not require a tree to be cut.
+        if (!this.stageData.tree) return;
+
+        // Don't progress if we are not cutting the tree specified.
+        if (this.stageData.tree !== subType) return;
+
+        // Progress the quest if no tree count is specified but a tree stage is present.
+        if (!this.stageData.treeCount) return this.progress();
+
+        // Progress substage.
+        this.progress(true);
+
+        // Progress to next stage if we fulfill the tree count requirement.
+        if (this.subStage >= this.stageData.treeCount) this.progress();
     }
 
     /**
@@ -169,16 +195,34 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemCountRequirement } = stageData,
-            index = player.inventory.getIndex(itemRequirement, itemCountRequirement);
+        let { itemRequirement, itemCountRequirement } = stageData;
 
-        // Cannot find the item in the inventory (or with correct count).
-        if (index === -1) return;
+        // Skip if the player does not have the required item and count in the inventory.
+        if (!player.inventory.hasItem(itemRequirement!, itemCountRequirement)) return;
 
-        // Remove `countRequirement` amount of an item at the index.
-        player.inventory.remove(index, itemCountRequirement);
+        // Remove the item and count from the invnetory.
+        player.inventory.removeItem(itemRequirement!, itemCountRequirement);
+
+        // If the stage contains item rewards, we give it to the player.
+        if (this.hasItemToGive())
+            this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
+
+        if (this.hasExperience()) this.givePlayerExperience(player);
+
+        // If the stage rewards an ability, we give it to the player.
+        if (this.hasAbility()) this.givePlayerAbility(player);
 
         this.progress();
+    }
+
+    /**
+     * Advances the quest to the next stage.
+     */
+
+    private progress(subStage?: boolean): void {
+        // Progress substage only if the parameter is defined.
+        if (subStage) this.setStage(this.stage, this.subStage + 1);
+        else this.setStage(this.stage + 1);
     }
 
     /**
@@ -191,7 +235,27 @@ export default abstract class Quest {
      */
 
     private givePlayerItem(player: Player, key: string, count = 1): boolean {
-        return player.inventory.add(new Item(key, -1, -1, false, count));
+        return player.inventory.add(new Item(key, -1, -1, false, count)) > 0;
+    }
+
+    /**
+     * Grants the player an ability and defaults to level 1 if no level is specified.
+     * @param player The player we are granting the ability to.
+     */
+
+    private givePlayerAbility(player: Player): void {
+        player.abilities.add(this.stageData.ability!, this.stageData.abilityLevel || 1);
+    }
+
+    /**
+     * Verifies the integrity of the skill and grants the player experience in that skill.
+     * @param player The player we are granting experience to.
+     */
+
+    private givePlayerExperience(player: Player): void {
+        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!)!);
+
+        skill?.addExperience(this.stageData.experience!);
     }
 
     /**
@@ -223,6 +287,24 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks whether or not the current stage has an ability to give to the player.
+     * @returns If the `ability` property exists in the current stage.
+     */
+
+    private hasAbility(): boolean {
+        return !!this.stageData.ability;
+    }
+
+    /**
+     * Whether or not the quest grants experience to a skill.
+     * @returns Whether the stage data has an experience property and skill which to grant towards.
+     */
+
+    private hasExperience(): boolean {
+        return !!this.stageData.experience && !!this.stageData.skill;
+    }
+
+    /**
      * A check if the quest is started or it has yet to be discovered.
      * @returns Whether the stage progress is above 0.
      */
@@ -241,6 +323,41 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks whether the key of the NPC is contained within the array of
+     * NPCs to hide after the quest is completed.
+     * @param key The key of the NPC we are checking.
+     * @returns Boolean value if the NPC is visibile or not.
+     */
+
+    public isHiddenNPC(key: string): boolean {
+        return this.hideNPCs.includes(key);
+    }
+
+    /**
+     * @returns Whether or not the current task is to walk through a door.
+     */
+
+    private isDoorTask(): boolean {
+        return this.stageData.task === 'door';
+    }
+
+    /**
+     * @returns Whether or not the current stage is a kill task.
+     */
+
+    public isKillTask(): boolean {
+        return this.stageData.task === 'kill';
+    }
+
+    /**
+     * @returns Whether or not the current stage is a cut tree task.
+     */
+
+    public isCutTreeTask(): boolean {
+        return this.stageData.task === 'tree';
+    }
+
+    /**
      * Returns a StageData object about the current stage. It contains information about
      * what NPC the player must interact with to progress, or how many mobs to kill to
      * progress.
@@ -251,17 +368,21 @@ export default abstract class Quest {
         let stage = this.stages[this.stage];
 
         return {
-            task: stage.task!,
+            task: stage.task,
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
             itemRequirement: stage.itemRequirement! || '',
-            itemCountRequirement: stage.itemCountRequirement! || 0,
+            itemCountRequirement: stage.itemCountRequirement! || 1,
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
             itemKey: stage.itemKey! || '',
-            itemCount: stage.itemCount! || 0
+            itemCount: stage.itemCount! || 1,
+            tree: stage.tree! || '',
+            treeCount: stage.treeCount! || 0,
+            skill: stage.skill! || '',
+            experience: stage.experience! || 0
         };
     }
 
@@ -277,7 +398,7 @@ export default abstract class Quest {
      * @returns An array of strings containing the dialogue.
      */
 
-    private getNPCDialogue(npc: NPC): string[] {
+    private getNPCDialogue(npc: NPC, player: Player): string[] {
         // Iterate backwards, last reference of the NPC is the text we grab.
         for (let i = this.stage; i > -1; i--) {
             // We do not count iterations of stages above stage we are currently on.
@@ -288,6 +409,16 @@ export default abstract class Quest {
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;
 
+            // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
+            if (stage.itemRequirement! && this.stage === i) {
+                // Verify that the player has the required items and return the dialogue for it.
+                if (player.inventory.hasItem(stage.itemRequirement, stage.itemCountRequirement))
+                    return stage.hasItemText!;
+
+                // Skip to next stage iteration.
+                continue;
+            }
+
             /**
              * If the stage we are currently on is not the same as the most
              * recent stage containing the NPC, then we use the dialogue
@@ -297,6 +428,9 @@ export default abstract class Quest {
 
             return stage.text!;
         }
+
+        // The default text witll be the `text` array of strings.
+        if (this.stageData.npc === npc.key) return this.stageData.text!;
 
         return [''];
     }
@@ -309,18 +443,20 @@ export default abstract class Quest {
      */
 
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
+        let isProgress = this.stage !== stage;
+
         // Send popup before setting the new stage.
         if (this.stageData.popup) this.popupCallback?.(this.stageData.popup);
 
         // Clear pointer preemptively if the current stage data contains it.
         if (this.stageData.pointer) this.pointerCallback?.(Modules.EmptyPointer);
 
-        // Progression to a new stage.
-        if (this.stage !== stage && progressCallback)
-            this.progressCallback?.(this.key, stage, this.stageCount);
-
         this.stage = stage;
         this.subStage = subStage;
+
+        // Progression to a new stage.
+        if (isProgress && progressCallback)
+            this.progressCallback?.(this.key, stage, this.stageCount);
 
         if (this.isFinished()) return;
 
@@ -341,13 +477,14 @@ export default abstract class Quest {
         let data: QuestData = {
             key: this.key,
             stage: this.stage,
-            subStage: this.subStage,
-            stageCount: this.stageCount
+            subStage: this.subStage
         };
 
         if (batch) {
             data.name = this.name;
             data.description = this.description;
+            data.rewards = this.rewards;
+            data.stageCount = this.stageCount;
         }
 
         return data;
@@ -358,7 +495,7 @@ export default abstract class Quest {
      * @param callback The quest's key and progress count;
      */
 
-    public onProgress(callback: (key: string, stage: number, subStage: number) => void): void {
+    public onProgress(callback: ProgressCallback): void {
         this.progressCallback = callback;
     }
 
@@ -367,7 +504,7 @@ export default abstract class Quest {
      * @param callback Pointer data to be displayed.
      */
 
-    public onPointer(callback: (pointerData: PointerData) => void): void {
+    public onPointer(callback: PointerCallback): void {
         this.pointerCallback = callback;
     }
 
@@ -376,7 +513,7 @@ export default abstract class Quest {
      * @param callback Popup data that will be displayed to the player.
      */
 
-    public onPopup(callback: (popupData: PopupData) => void): void {
+    public onPopup(callback: PopupCallback): void {
         this.popupCallback = callback;
     }
 
@@ -385,7 +522,7 @@ export default abstract class Quest {
      * @param callback The NPC the interaction happens with.
      */
 
-    public onTalk(callback: (npc: NPC, player: Player) => void): void {
+    public onTalk(callback: TalkCallback): void {
         this.talkCallback = callback;
     }
 
@@ -394,7 +531,7 @@ export default abstract class Quest {
      * @param callback Callback containing starting location and destination of the door.
      */
 
-    public onDoor(callback: (quest: ProcessedDoor, player: Player) => void): void {
+    public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
 
@@ -403,7 +540,16 @@ export default abstract class Quest {
      * @param callback The mob that is being killed.
      */
 
-    public onKill(callback: (mob: Mob) => void): void {
+    public onKill(callback: KillCallback): void {
         this.killCallback = callback;
+    }
+
+    /**
+     * Callback for when a resource has been exhausted
+     * @param callback Contains the resource type and identifier of the resource.
+     */
+
+    public onResource(callback: ResourceCallback): void {
+        this.resourceCallback = callback;
     }
 }

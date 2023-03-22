@@ -6,9 +6,7 @@ export default class Hit {
         public type: Modules.Hits,
         private damage = 0,
         private ranged = false,
-        private aoe = false,
-        private poison = false,
-        private terror = false
+        public aoe = 0
     ) {}
 
     /**
@@ -17,6 +15,14 @@ export default class Hit {
 
     public getDamage(): number {
         return this.damage;
+    }
+
+    /**
+     * @returns Whether or not the hit is an aoe.
+     */
+
+    public isAoE(): boolean {
+        return this.aoe > 0;
     }
 
     /**
@@ -29,9 +35,7 @@ export default class Hit {
             type: this.type,
             damage: this.damage,
             ranged: this.ranged,
-            aoe: this.aoe,
-            poison: this.poison,
-            terror: this.terror
+            aoe: this.aoe
         };
     }
 }

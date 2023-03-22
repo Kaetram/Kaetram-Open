@@ -1,11 +1,10 @@
-import { Modules } from '@kaetram/common/network';
 import Entity from '../entity';
 
-export default class Chest extends Entity {
-    public override readonly type = Modules.EntityType.Chest;
+import { Modules } from '@kaetram/common/network';
 
-    public constructor(id: string, kind: string) {
-        super(id, kind);
+export default class Chest extends Entity {
+    public constructor(instance: string) {
+        super(instance, Modules.EntityType.Chest);
     }
 
     public override idle(): void {

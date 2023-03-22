@@ -1,9 +1,6 @@
 .yarn/
-.yarnrc.yml
 
 *.md
 
 dist/
 data/**/*.json
-
-*.scss

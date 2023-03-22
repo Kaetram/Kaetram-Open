@@ -1,0 +1,21 @@
+{
+    "username": "Test",
+    "password": "$2a$10$C78OFhflOeBZOXhGo7XHQ.8d9FF5xAjRBrVjxDm.b6.WmgGLgghJG",
+    "email": "test@test.com",
+    "x": 56,
+    "y": 46,
+    "userAgent": null,
+    "experience": 0,
+    "rank": 0,
+    "poison": "",
+    "hitPoints": 69,
+    "mana": 18,
+    "pvpKills": 0,
+    "pvpDeaths": 0,
+    "orientation": 1,
+    "ban": 0,
+    "mute": 0,
+    "lastLogin": 0,
+    "lastWarp": 0,
+    "mapVersion": -1
+}

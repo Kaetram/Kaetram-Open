@@ -1,0 +1,31 @@
+@use 'impl/check';
+@use 'impl/parchment';
+@use 'impl/login';
+@use 'impl/intro';
+@use 'impl/worlds';
+
+#alert {
+    width: 100%;
+    height: 50px;
+
+    font-family: AdvoCut, arial, sans-serif;
+    font-size: 20px;
+    line-height: 50px;
+    color: #eee;
+    text-align: center;
+
+    background-color: #d83939;
+    border-bottom: 1px solid #000;
+}
+
+#game-version {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    padding: 3em;
+
+    font-family: AdvoCut, sans-serif, arial;
+    font-size: 24px;
+    color: #eee;
+}

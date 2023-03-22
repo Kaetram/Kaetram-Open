@@ -1,0 +1,176 @@
+@use '../../abstracts/media';
+
+#action-container {
+    position: absolute;
+    display: none;
+}
+
+#action-page {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    font-family: AdvoCut, sans-serif;
+
+    ul {
+        position: absolute;
+        display: inline-flex;
+    }
+}
+
+#action-description-attack,
+#action-description-defense,
+#action-description-bonuses,
+#action-description-enchantments {
+    position: absolute;
+    overflow: auto;
+    width: 45%;
+    height: 30%;
+}
+
+.action-item-name {
+    text-align: center;
+}
+
+.action-item-name,
+.action-item-description {
+    color: #fff;
+}
+
+@each $size, $i in media.$b-sizes {
+    @media ($size) {
+        #action-container {
+            right: 101px * $i;
+            bottom: 34px * $i;
+            width: 64px * $i;
+            height: 89px * $i;
+        }
+
+        #action-page {
+            background: url('/img/interface/main.png') -224px * $i -368px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+
+            ul {
+                bottom: 4px * $i;
+                left: 4px * $i;
+
+                li {
+                    margin-left: 3px * $i;
+                }
+            }
+        }
+
+        .action-wield,
+        .action-equip,
+        .action-attack {
+            background: url('/img/interface/main.png') -400px * $i -384px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-drop-one {
+            background: url('/img/interface/main.png') -400px * $i -400px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-drop-many {
+            background: url('/img/interface/main.png') -400px * $i -416px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-eat {
+            background: url('/img/interface/main.png') -400px * $i -432px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-eat2 {
+            background: url('/img/interface/main.png') -400px * $i -448px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-trade {
+            background: url('/img/interface/main.png') -400px * $i -464px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-potion {
+            background: url('/img/interface/main.png') -400px * $i -480px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-follow {
+            background: url('/img/interface/main.png') -400px * $i -496px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-examine {
+            background: url('/img/interface/main.png') -400px * $i -512px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-addfriend {
+            background: url('/img/interface/main.png') -400px * $i -528px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        .action-button {
+            width: 16px * $i;
+            height: 16px * $i;
+
+            &:hover {
+                background-position-x: -432px * $i;
+            }
+
+            &:active {
+                background-position-x: -416px * $i;
+            }
+        }
+
+        .action-item-name {
+            margin-top: 3px * $i;
+            margin-bottom: 2px * $i;
+            margin-left: 4px * $i;
+            font-size: 6px * $i;
+        }
+
+        .action-item-description {
+            margin-left: 3px * $i;
+            font-size: 4px * $i;
+        }
+
+
+        #action-description-attack {
+            left: 4px * $i;
+        }
+
+        #action-description-defense {
+            right: 0
+        }
+
+        #action-description-bonuses {
+            bottom: 22px * $i;
+            left: 4px * $i;
+        }
+
+        #action-description-enchantments {
+            right: 0;
+            bottom: 22px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    #action-container {
+        right: 298px;
+        bottom: 80px;
+    }
+}
+
+@media (--md) {
+    #action-container {
+        right: 202px;
+        bottom: 68px;
+    }
+}

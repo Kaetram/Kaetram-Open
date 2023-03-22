@@ -1,0 +1,138 @@
+@use '../../abstracts/media';
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #equipment-slots {
+            top: 20px * $i;
+            left: 55px * $i;
+
+            overflow: hidden;
+
+            width: 116px * $i;
+            height: 120px * $i;
+
+            background-position: -4px * $i -80px * $i;
+        }
+
+        #equipment-container {
+            position: absolute;
+            top: -70px * $i;
+            left: -2px * $i;
+        }
+
+        .player-image {
+            position: absolute;
+            top: 70px * $i;
+            left: 110px * $i;
+        }
+
+        #player-image-armour,
+        #player-image-weapon {
+            transform: scale($i);
+            scale: $i;
+
+            overflow: auto;
+
+            width: 32px;
+            height: 32px;
+        }
+
+        #player-image-navigator {
+            position: absolute;
+            top: 94px * $i;
+            left: 95px * $i;
+        }
+
+        .title {
+            font-size: 10px * $i;
+            text-decoration: underline;
+        }
+
+        #attack-stats,
+        #defense-stats,
+        #bonuses {
+            font-size: 8px * $i;
+            border-color: black;
+            border-radius: 1px;
+        }
+
+        #attack-stats,
+        #defense-stats {
+            top: 16px * $i;
+            width: 70px * $i;
+            height: 80px * $i;
+        }
+
+        #attack-stats {
+            left: 180px * $i;
+        }
+
+        #defense-stats {
+            left: 250px * $i;
+        }
+
+        #bonuses {
+            top: 90px * $i;
+            left: 180px * $i;
+        }
+
+        .equip-weapon-slot {
+            top: 118px * $i;
+            left: 2px * $i;
+        }
+
+        .equip-weapon-skin-slot {
+            top: 118px * $i;
+            left: 26px * $i;
+        }
+
+        .equip-armour-slot {
+            top: 118px * $i;
+            left: 102px * $i;
+        }
+
+        .equip-armour-skin-slot {
+            top: 118px * $i;
+            left: 79px * $i;
+        }
+
+        .equip-pendant-slot {
+            top: 76px * $i;
+            left: 26px * $i;
+        }
+
+        .equip-ring-slot {
+            top: 164px * $i;
+            left: 26px * $i;
+        }
+
+        .equip-boots-slot {
+            top: 164px * $i;
+            left: 78px * $i;
+        }
+        
+        .equip-arrows-slot {
+            top: 76px * $i;
+            left: 77px * $i;
+        }
+    }
+}
+
+@media (--sm) {
+    .player-image {
+        top: 60px;
+        left: 100px;
+    }
+}
+
+#attack-stats,
+#defense-stats,
+#bonuses {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+}
+
+#close-equipments {
+    top: -2%;
+    left: 96%;
+}

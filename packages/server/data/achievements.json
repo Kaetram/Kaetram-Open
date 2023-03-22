@@ -1,143 +1,218 @@
 {
-    "0": {
-        "id": 0,
+    "ratinfestation": {
         "name": "Rat Infestation",
-        "description": "Slay 25 rats.",
-        "type": 0,
-        "count": 26,
-        "npc": 2,
-        "mob": 128,
-        "rewardType": 1,
-        "reward": 115,
-        "text": [
-            "Hono dear adventurer!",
-            "Yiss, plz help.",
-            "Rets r al 'round here.",
-            "Plz kill, I hav gift en return."
-        ]
+        "description": "Bulk Bogan needs you to defeat 20 rats!",
+        "npc": "villager",
+        "dialogueHidden": [
+            "Hello there fellow adventurer!", 
+            "Please...", "Please help me with these rats!", 
+            "If you slay 20 of them, I'll su-",
+            "Reward you with something special!"],
+        "dialogueStarted": [
+            "Please, those rats are really annoying!",
+            "They won't let me be."
+        ],
+
+        "mob": ["rat", "icerat"],
+        "mobCount": 20,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 369
     },
 
-    "1": {
-        "id": 1,
-        "name": "Lost Watermelon",
-        "description": "Find the lost watermelon for Bulk Bogan.",
-        "type": 1,
-        "count": 2,
-        "mob": -1,
-        "npc": 2,
-        "item": 250,
-        "item-count": 1,
-        "rewardType": 2,
-        "reward": 400,
-        "text": [
-            "Hoho, hello agen.",
-            "I ned favur, but this lst time.",
-            "I lst watrmln, could u plez find?",
-            "I do'n't kno'w what do to."
-        ]
+    "ahiddenpath": {
+        "name": "Hidden Path",
+        "description": "Discover the hidden path in Mudwich."
     },
 
-    "2": {
-        "id": 2,
-        "name": "A Crab's Pinch",
-        "description": "Hunt the crabs to extinction.",
-        "type": 0,
-        "count": 41,
-        "npc": 3,
-        "mob": 2,
-        "rewardType": 1,
-        "reward": 750,
-        "text": [
-            "Ay!",
-            "I need some help.",
-            "I can't relax because of those darn crabs.",
-            "See, I know they respawn and stuff.",
-            "But can you kill forty of them?"
-        ]
+    "hiddenreward": {
+        "name": "Hidden Reward",
+        "description": "Kill some secret spooky skeletons somewhere."
     },
 
-    "3": {
-        "id": 3,
-        "name": "Maze Crawler",
-        "description": "Find the hidden treasure in the maze.",
-        "rewardType": 1,
-        "reward": 200
+    "wormholes": {
+        "name": "Wormholes",
+        "description": "Investigate the spooky occurrence in Mudwich.",
+        "hidden": true,
+        "rewardAbility": "precognition"
     },
 
-    "4": {
-        "id": 4,
-        "name": "Skeletal Pass",
-        "description": "",
-        "isDoorReward": true
+    "ancientwizard": {
+        "name": "Ancient Wizard",
+        "description": "Defeat the ancient wizard in Mudwich!"
     },
 
-    "5": {
-        "id": 5,
-        "name": "Golem",
-        "description": "",
-        "isDoorReward": true
+    "crabproblem": {
+        "name": "Crab Problem",
+        "description": "Help Bubba by defeating 10 crabs!",
+        "hidden": true,
+        "npc": "beachnpc",
+        "dialogueHidden": [
+            "Wassup man!",
+            "Listen, could you lend me a hand?",
+            "I see you're pretty good with the killing stuff.",
+            "Mind killing 10 crabs for me?"
+        ],
+        "dialogueStarted": [
+            "C'mon man, please kill me 10 crabs."
+        ],
+
+        "mob": ["crab", "hermitcrab"],
+        "mobCount": 10,
+
+        "rewardSkill": "accuracy",
+        "rewardExperience": 696
     },
 
-    "6": {
-        "id": 6,
-        "name": "Skeleton Boss",
-        "description": "Defeat the skeleton boss.",
-        "isDoorReward": true
+    "warriorcrab": {
+        "name": "Warrior Crab",
+        "description": "Defeat the Hermit Crab Warrior hidden on the beach."
     },
 
-    "7": {
-        "id": 7,
-        "name": "Spectre Passage",
-        "description": "",
-        "isDoorReward": true
+    "sandtreasure": {
+        "name": "Sand Treasure",
+        "description": "Find the treasure hidden somewhere on the beach."
     },
 
-    "8": {
-        "id": 8,
-        "name": "Quite a Mimic",
-        "isDoorReward": true
+    "waterguardian": {
+        "name": "Water Guardian",
+        "description": "Defeat the Water Guardian!",
+        "hidden": true
     },
 
-    "9": {
-        "id": 9,
-        "name": "Death Gate",
-        "isDoorReward": true
+    "mermaidguard": {
+        "name": "Mermaid Guard",
+        "description": "Defeat the mermaid guarding the Sea Cucumber!",
+        "hidden": true
     },
 
-    "10": {
-        "id": 10,
-        "name": "Elven Path",
-        "isDoorReward": true
+    "pirates": {
+        "name": "Pirates",
+        "description": "There's skeleton pirates under the sea?",
+        "hidden": true
     },
 
-    "11": {
-        "id": 11,
-        "name": "Frozen Knighthood",
-        "isDoorReward": true
+    "piratestreasure": {
+        "name": "Pirate's Treasure",
+        "description": "Find the treasure hidden in the pirate's ship.",
+        "hidden": true
     },
 
-    "12": {
-        "id": 12,
-        "name": "Hermit Lifestyle",
-        "isDoorReward": true
+    "babyseadragon": {
+        "name": "Baby Sea Dragon",
+        "description": "Defeat the baby sea dragon guardian!"  
     },
 
-    "13": {
-        "id": 13,
-        "name": "Frozen Beach",
-        "isDoorReward": true
+    "underwatertreasure": {
+        "name": "Water Chest",
+        "description": "Find the treasure hidden underwater."
     },
 
-    "14": {
-        "id": 14,
-        "name": "Gates of Hell",
-        "isDoorReward": true,
-        "rewardType": 1,
-        "reward": 2000
+    "patsow": {
+        "name": "Patsow Pleateau",
+        "description": "Arrive at Patsow plateau!",
+        "hidden": true
     },
 
-    "15": {
-        "id": 15,
-        "name": "Mudwich Path"
+    "ogreguardian": {
+        "name": "Ogre Guardian",
+        "description": "Defeat the Ogre Guardian!",
+        "rewardExperience": 1420
+    },
+
+    "pathofdeath": {
+        "name": "Path of Death",
+        "description": "Defeat the ogre defending the ogre lord." ,
+        "hidden": true
+    },
+
+    "treadcarefully": {
+        "name": "Tread Carefully",
+        "description": "I literally said to tread carefully.",
+        "hidden": true
+    },
+
+    "goldengolem": {
+        "name": "Golden Golem",
+        "description": "Defeat the Golden Golem!"
+    },
+
+    "skeletonking": {
+        "name": "Skeleton King",
+        "description": "Defeat the Skeleton King!",
+        "hidden": true,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 12560
+    },
+
+    "ogrelord": {
+        "name": "Ogre Lord",
+        "description": "Defeat the Ogre Lord!",
+        "hidden": true,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 12560
+    },
+
+    "queenant": {
+        "name": "Queen Ant",
+        "description": "Defeat the Queen Ant!",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 33560
+    },
+
+    "notwhatitseems": {
+        "name": "Spooky Look-alike",
+        "description": "Discover a mimic.",
+        "hidden": true,
+
+        "rewardSkill": "magic",
+        "rewardExperience": 85
+    },
+
+    "webdeveloper": {
+        "name": "Web Developer",
+        "description": "Spiders are developing webs left and right!"
+    },
+
+    "vulture": {
+        "name": "Vulture",
+        "description": "Defeat a vulture!",
+        "hidden": true
+    },
+
+    "ogresgateway": {
+        "name": "Ogre's Gateway",
+        "description": "Discover the secret portal after defeating ogres."
+    },
+
+    "frozentundra": {
+        "name": "Frozen Tundra",
+        "description": "Gain access to icelands by defeating the guardians.",
+        "hidden": true
+    },
+
+    "forestdragon": {
+        "name": "Forest Dragon",
+        "description": "Defeat the dragon laying dormant under Mudwich.",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 52600
+    },
+
+    "gravemystery": {
+        "name": "Grave Mystery",
+        "description": "Discovered a cryptic set of gravestones.",
+        "secret": true
+    },
+
+    "kaetramdungeon": {
+        "name": "Kaetram's Dungeon",
+        "description": "Discovered the secret ladder to enter Kaetram's dungeon!",
+        "secret": true
     }
 }

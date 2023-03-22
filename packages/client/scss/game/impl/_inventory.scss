@@ -1,0 +1,86 @@
+@use '../../abstracts/media';
+
+#inventory {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    right: 10px;
+    bottom: 56px;
+
+    display: none;
+
+    font-family: AdvoCut, sans-serif;
+
+    ul {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+            float: left;
+        }
+    }
+}
+
+#inventory-container {
+    position: absolute;
+}
+
+.item-image {
+    pointer-events: none;
+    background-size: cover;
+
+    // Safari filters so the images aren't blurry.
+    filter: opacity(100%);
+}
+
+// 144 x 108
+
+@each $size, $i in media.$b-sizes {
+    @media ($size) {
+        #inventory {
+            width: 96px * $i;
+            height: 108px * $i;
+            background: url('/img/interface/main.png') -288px * $i -352px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        #inventory-container {
+            top: 3px * $i;
+            right: 3px * $i;
+            width: 90px * $i;
+            height: 102px * $i;
+        }
+
+        .item-slot,
+        .item-image {
+            width: 16px * $i;
+            height: 16px * $i;
+        }
+
+        .item-slot {
+            margin-top: 2px * $i;
+            margin-bottom: 7px * $i;
+            margin-left: 1.5px * $i;
+
+            background: url('/img/interface/main.png') -400px * $i -352px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+
+            &:hover {
+                background-position-x: -416px * $i;
+            }
+
+            &:active {
+                background-position-x: -432px * $i;
+            }
+        }
+
+        .item-count {
+            width: 16px * $i;
+            height: 7px * $i;
+            font-size: 6px * $i;
+            text-align: center;
+        }
+    }
+}

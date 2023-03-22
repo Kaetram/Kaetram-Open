@@ -1,0 +1,29 @@
+{
+    "name": "@kaetram/e2e",
+    "type": "module",
+    "scripts": {
+        "test": "NODE_ENV=e2e server-test 'yarn workspace kaetram dev' 'http-get://127.0.0.1:9000|http-get://127.0.0.1:9001' 'NODE_ENV=e2e yarn tsx database/server' '3000/api/v1/health'",
+        "test:run": "yarn test 'yarn cypress run -e TAGS=\"not @ignore\"'",
+        "test:record": "yarn test 'yarn cypress run -e TAGS=\"not @ignore\" --record'",
+        "test:open": "yarn test 'yarn cypress open -e TAGS=\"not @ignore\"'"
+    },
+    "devDependencies": {
+        "@badeball/cypress-cucumber-preprocessor": "^12.0.0",
+        "@bahmutov/cypress-esbuild-preprocessor": "^2.1.3",
+        "@kaetram/common": "workspace:*",
+        "@types/node": "^18.15.5",
+        "cypress": "^10.4.0",
+        "esbuild": "^0.14.53",
+        "start-server-and-test": "^1.14.0",
+        "tsx": "^3.12.6",
+        "typescript": "^5.0.2"
+    },
+    "cypress-cucumber-preprocessor": {
+        "stepDefinitions": [
+            "cypress/e2e/[filepath]/**/*.{js,ts}",
+            "cypress/e2e/[filepath]/../*.{js,ts}",
+            "cypress/e2e/extensions/*/common/**/*.{js,ts}",
+            "cypress/e2e/common/**/*.{js,ts}"
+        ]
+    }
+}

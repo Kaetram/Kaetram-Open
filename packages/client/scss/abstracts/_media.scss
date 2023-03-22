@@ -1,0 +1,7 @@
+@custom-media --lg only screen and (min-width: 1501px);
+@custom-media --md only screen and (max-width: 1500px), only screen and (max-height: 870px);
+@custom-media --sm only screen and (max-width: 1000px);
+
+$sizes: --lg 3, --md 2, --sm 1;
+$b-sizes: --lg 3, --md 2;
+$s-sizes: --lg 2, --md 2, --sm 1;

@@ -1,0 +1,156 @@
+@use '../../abstracts/media';
+
+@keyframes flash {
+    0% {
+        background: #ffa2a2;
+    }
+
+    100% {
+        background: #e22525;
+    }
+}
+
+@keyframes flash-green {
+    0% {
+        background: #a2ffa2;
+    }
+
+    100% {
+        background: #25e225;
+    }
+}
+
+@keyframes flash-poison {
+    0% {
+        background: #42e373;
+    }
+
+    100% {
+        background: #146e2b;
+    }
+}
+
+#player-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#health-bar-text,
+#mana-bar-text {
+    font-family: AdvoCut, sans-serif;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#health,
+#health-info {
+    cursor: url('/img/hand.png'), auto;
+}
+
+#health {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to right, #f00, #ef5a5a);
+    transition: 0.5s width ease;
+}
+
+#mana {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to right, rgb(12 55 208), #257cd2);
+    transition: 0.5s width ease;
+}
+
+#exp {
+    /* Safari 5.1, Chrome 10+ */
+    background: linear-gradient(to left, #4f4, #080);
+    transition: 0.5s width ease;
+}
+
+#health.white {
+    animation: flash 0.5s linear infinite;
+}
+
+#health.green {
+    animation: flash-green 0.5s linear infinite;
+}
+
+#health.poison {
+    animation: flash-poison 0.5s linear infinite;
+}
+
+@each $size, $i in media.$sizes {
+    @if $i == 3 {
+        $i: 3.75;
+    } @else {
+        $i: 3;
+    }
+
+    @media ($size) {
+        #health,
+        #health-bar,
+        #mana,
+        #mana-bar {
+            position: absolute;
+
+            width: 77px * $i;
+            height: 10px * $i;
+            margin: 0;
+            padding: 0;
+
+            text-align: center;
+
+            border: 0;
+        }
+
+        #health,
+        #health-bar {
+            top: 2px * $i;
+            left: 10px * $i;
+        }
+
+        #health-info,
+        #mana-info {
+            position: absolute;
+
+            width: 88px * $i;
+            height: 13px * $i;
+            margin: 0;
+            padding: 0;
+
+            color: white;
+            text-align: center;
+
+            border: 0;
+        }
+
+        #mana,
+        #mana-bar {
+            top: 14px * $i;
+            left: 10px * $i;
+        }
+
+        #health-bar-text,
+        #mana-bar-text {
+            margin: 4px * $i 0 0 10px * $i;
+            font-size: 6px * $i;
+        }
+
+        #health-info {
+            top: 0;
+            left: 0;
+
+            background-image: url('/img/interface/main.png');
+            background-position: 0 -278px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+
+        #mana-info {
+            top: 13px * $i;
+            left: 0;
+
+            background-image: url('/img/interface/main.png');
+            background-position: -88px * $i -278px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+    }
+}

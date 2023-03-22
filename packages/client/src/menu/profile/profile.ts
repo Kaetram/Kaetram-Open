@@ -1,140 +1,191 @@
-import $ from 'jquery';
-import _ from 'lodash';
+import State from './impl/state';
+import Abilities from './impl/abilities';
+import Skills from './impl/skills';
 
-import { Packets } from '@kaetram/common/network';
+import Menu from '../menu';
 
-import Guild from './pages/guild';
-import Professions from './pages/professions';
-import Quest from './pages/quest';
-import Settings from './pages/settings';
-import State from './pages/state';
+import type Player from '../../entity/character/player/player';
+import type { Modules, Opcodes } from '@kaetram/common/network';
+import type { SelectCallback } from './impl/abilities';
 
-import type Game from '../../game';
-import type Page from './page';
+type UnequipCallback = (type: Modules.Equipment) => void;
+type AttackStyleCallback = (style: Modules.AttackStyle) => void;
 
-export default class Profile {
-    private body = $('#profile-dialog');
-    private button = $('#profile-button');
+export default class Profile extends Menu {
+    // Initialize the pages separately for callbacks sake.
+    private state: State;
+    private skills: Skills;
+    private abilities: Abilities;
 
-    private next = $('#next');
-    private previous = $('#previous');
+    // Initialize all pages here.
+    private pages: Menu[] = [];
 
-    private activePage!: State;
-    private activeIndex = 0;
-    private pages: Page[] = [];
+    // Current page we are on.
+    private activePage = 0;
 
-    private state!: State;
-    public professions!: Professions;
-    public settings!: Settings;
-    public quests!: Quest;
-    private guild!: Guild;
+    // Navigation buttons for the profile.
+    private previous: HTMLElement = document.querySelector('#profile-navigator > .previous')!;
+    private next: HTMLElement = document.querySelector('#profile-navigator > .next')!;
 
-    public constructor(private game: Game) {
-        this.load();
+    private unequipCallback?: UnequipCallback;
+    private attackStyleCallback?: AttackStyleCallback;
+    private abilityCallback?: SelectCallback;
+
+    public constructor(private player: Player) {
+        super('#profile-dialog', undefined, '#profile-button');
+
+        // Initialize the state page.
+        this.state = new State(this.player);
+
+        // Initialize the skills page.
+        this.skills = new Skills(this.player);
+
+        // Initialize the abilities page.
+        this.abilities = new Abilities(this.player);
+
+        // Add the abilities and skills page to the pages array.
+        this.pages.push(this.state, this.skills, this.abilities);
+
+        // Used to initialize the navigation buttons.
+        this.update();
+
+        // Navigation event listeners.
+        this.previous.addEventListener('click', () => this.handleNavigation('previous'));
+        this.next.addEventListener('click', () => this.handleNavigation('next'));
+
+        // Initialize callbacks for pages.
+        this.state.onUnequip((type: Modules.Equipment) => this.unequipCallback?.(type));
+        this.state.onStyle((style: Modules.AttackStyle) => this.attackStyleCallback?.(style));
+
+        this.abilities.onSelect((type: Opcodes.Ability, key: string, index?: number) =>
+            this.abilityCallback?.(type, key, index)
+        );
     }
 
-    private load(): void {
-        this.button.on('click', () => this.open());
+    /**
+     * Override for the `hide` function to include hiding the side menu panel.
+     */
 
-        this.next.on('click', () => {
-            if (this.activeIndex + 1 < this.pages.length) this.setPage(this.activeIndex + 1);
-            else this.next.removeClass('enabled');
-        });
+    public override hide(): void {
+        super.hide();
 
-        this.previous.on('click', () => {
-            if (this.activeIndex > 0) this.setPage(this.activeIndex - 1);
-            else this.previous.removeClass('enabled');
-        });
-
-        this.state = new State(this.game);
-        this.professions = new Professions();
-        // this.ability = new Ability();
-        this.settings = new Settings(this.game);
-        this.quests = new Quest();
-        this.guild = new Guild();
-
-        this.pages.push(this.state, this.professions, this.quests, this.guild);
-
-        this.activePage = this.state;
-
-        if (this.activeIndex === 0 && this.activeIndex !== this.pages.length)
-            this.next.addClass('enabled');
+        this.skills.hideInfo();
     }
 
-    public open(): void {
-        this.game.menu.hideAll();
-        this.settings.hide();
+    /**
+     * We are modifying the currently active page and updating the status of
+     * the previous and next buttons depending on whether or not we're on
+     * the last or first page.
+     * @param direction Which way we are navigating, defaults to previous.
+     */
 
-        if (this.isVisible()) {
-            this.hide();
-            this.button.removeClass('active');
-        } else {
-            this.show();
-            this.button.addClass('active');
+    private handleNavigation(direction: 'previous' | 'next'): void {
+        // Prevent actions on disabled buttons.
+        if (this.isDisabled(direction)) return;
+
+        // Reset the status of the buttons.
+        this.previous.classList.remove('disabled');
+        this.next.classList.remove('disabled');
+
+        // Hide the current page we are on.
+        this.pages[this.activePage]?.hide();
+
+        // Modify the currently active page based on the direction.
+        this.activePage += direction === 'previous' ? -1 : 1;
+
+        // Update the status of the buttons.
+        this.update();
+    }
+
+    /**
+     * Updates the status of the buttons depending on whether or not we are
+     * on the first or last page.
+     */
+
+    private update() {
+        // Reaching the first page navigating backwards.
+        if (this.activePage <= 0) {
+            this.activePage = 0;
+            this.previous.classList.add('disabled');
         }
 
-        if (!this.activePage.loaded) this.activePage.load();
-
-        this.game.socket.send(Packets.Click, ['profile', this.button.hasClass('active')]);
-    }
-
-    public update(): void {
-        _.each(this.pages as State[], (page) => {
-            page.update?.();
-        });
-    }
-
-    public resize(): void {
-        _.each(this.pages as State[], (page) => page?.resize());
-    }
-
-    public setPage(index: number): void {
-        let page = this.pages[index];
-
-        this.clear();
-
-        if (page.isVisible()) return;
-
-        this.activePage = page as State;
-        this.activeIndex = index;
-
-        if (this.activeIndex + 1 === this.pages.length) this.next.removeClass('enabled');
-        else if (this.activeIndex === 0) this.previous.removeClass('enabled');
-        else {
-            this.previous.addClass('enabled');
-            this.next.addClass('enabled');
+        // We are reaching the last page.
+        if (this.activePage >= this.pages.length - 1) {
+            this.activePage = this.pages.length - 1;
+            this.next.classList.add('disabled');
         }
 
-        page.show();
+        // Show the new page.
+        this.pages[this.activePage]?.show();
     }
 
-    private show(): void {
-        this.body.fadeIn('slow');
-        this.button.addClass('active');
+    /**
+     * Iterates through all the pages in the profile and synchronizes them. This
+     * is called every time the player undergoes a change, whether it be equipping/unequipping,
+     * experience gain, or when a new ability is unlocked.
+     */
+
+    public override synchronize(): void {
+        this.forEachPage((page: Menu) => page.synchronize());
     }
 
-    public hide(): void {
-        this.body.fadeOut('fast');
-        this.button.removeClass('active');
+    /**
+     * Synchronizes the skills interface upon resizing. This is because the experience
+     * bars are drawn according to the UI size, so we need to redraw them.
+     */
 
-        this.settings?.hide();
+    public override resize(): void {
+        this.skills.synchronize(true);
     }
 
-    public clean(): void {
-        this.button.off('click');
-        this.next.off('click');
-        this.previous.off('click');
+    /**
+     * Checks if the direction is valid by ensuring the button
+     * associated with it is not disabled.
+     * @param direction Which direction we are navigating.
+     * @returns Whether the direction and the button associated
+     * with it are disabled or not.
+     */
 
-        this.quests.clear();
-        this.settings.clear();
-        // this.state.clear();
+    private isDisabled(direction: 'previous' | 'next'): boolean {
+        return (
+            (direction === 'previous' && this.previous.classList.contains('disabled')) ||
+            (direction === 'next' && this.next.classList.contains('disabled'))
+        );
     }
 
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
+    /**
+     * Iterates through each page menu and creates a callback.
+     * @param callback Contains the current page menu being iterated.
+     */
+
+    private forEachPage(callback: (page: Menu) => void): void {
+        for (let page of this.pages) callback(page);
     }
 
-    private clear(): void {
-        this.activePage?.hide();
+    /**
+     * Callback for when an item is being unequipped.
+     * @param callback Contains the type of slot being unequipped.
+     */
+
+    public onUnequip(callback: UnequipCallback): void {
+        this.unequipCallback = callback;
+    }
+
+    /**
+     * Callback for when an attack style is being changed.
+     * @param callback Contains the new attack style.
+     */
+
+    public onAttackStyle(callback: AttackStyleCallback): void {
+        this.attackStyleCallback = callback;
+    }
+
+    /**
+     * Callback for when an ability action occurs.
+     * @param callback Contains data about the action.
+     */
+
+    public onAbility(callback: SelectCallback): void {
+        this.abilityCallback = callback;
     }
 }

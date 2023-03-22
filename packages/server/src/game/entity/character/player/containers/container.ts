@@ -1,37 +1,41 @@
-import _ from 'lodash';
-
-import { Modules } from '@kaetram/common/network';
-import { ContainerItem } from '@kaetram/common/types/item';
-import { SlotData } from '@kaetram/common/types/slot';
-
 import Slot from './slot';
+
 import Item from '../../../objects/item';
+
+import log from '@kaetram/common/util/log';
+
+import type { Modules } from '@kaetram/common/network';
+import type { ContainerItem, Enchantments } from '@kaetram/common/types/item';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 interface SerializedContainer {
     slots: SlotData[];
 }
 
-export default abstract class Container {
-    private slots: Slot[] = [];
+type AddCallback = (slot: Slot) => void;
+type RemoveCallback = (
+    slot: Slot,
+    key: string,
+    count: number,
+    enchantments: Enchantments,
+    drop?: boolean
+) => void;
+type NotifyCallback = (message: string) => void;
 
-    private emptySpaces = 0;
+export default abstract class Container {
+    protected slots: Slot[] = [];
+
+    protected stackSize?: number;
 
     private loadCallback?: () => void;
 
-    protected addCallback?: (slot: Slot) => void;
-    protected removeCallback?: (
-        slot: Slot,
-        key: string,
-        count: number,
-        drop?: boolean | undefined
-    ) => void;
-    protected notifyCallback?: (message: string) => void;
+    protected addCallback?: AddCallback;
+    protected removeCallback?: RemoveCallback;
+    protected notifyCallback?: NotifyCallback;
 
-    public constructor(public type: Modules.ContainerType, private size: number) {
+    public constructor(public type: Modules.ContainerType, public size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
-
-        this.emptySpaces = size;
     }
 
     /**
@@ -40,60 +44,76 @@ export default abstract class Container {
      */
 
     public load(items: ContainerItem[]): void {
-        _.each(items, (item: ContainerItem) => {
+        for (let item of items) {
             // Create a new item instance so that the item's data is created.
-            if (!item.key) return;
+            if (!item.key) continue;
 
-            this.slots[item.index].update(this.getItem(item));
+            if (item.count < 1) item.count = 1;
 
-            this.emptySpaces--;
-        });
+            this.slots[item.index].update(this.getItem(item), this.stackSize);
+        }
 
         this.loadCallback?.();
+    }
+
+    /**
+     * Removes all the items from the container.
+     */
+
+    public empty(): void {
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key) this.remove(slot.index, slot.count);
+        });
     }
 
     /**
      * Takes an item object and updates it into the slot if it exists,
      * otherwise it adds it to an empty slot.
      * @param item Item object in the world.
-     * @returns Whether or not adding was successful.
+     * @returns The amount of items added.
      */
 
-    public add(item: Item): boolean {
-        // Return whether or not the adding was successful.
-        let added = false,
-            slot: Slot | undefined;
+    public add(item: Item): number {
+        let itemCount = item.count,
+            /** The slot where the item should be added */
+            slot = this.find(item),
+            /** The total amount of items added */
+            total = 0;
 
-        // Item is stackable and we already have it.
-        if (item.stackable && this.canHold(item)) {
-            slot = this.find(item)!;
+        // If the slot exists...
+        if (slot) {
+            let itemCopy = item.copy(),
+                slotCount = slot.count;
 
-            added = !!slot?.add(item.count);
+            // Add the items in the slot to the item to be added
+            if (slot.count > 0) itemCopy.count += slot.count;
 
-            // If a new item was stacked, we don't lose an empty space.
-            if (added) this.emptySpaces++;
-        }
+            // Update the slot with the new item count
+            slot.update(itemCopy, this.stackSize);
 
-        // All slots are taken.
-        if (!this.hasSpace()) return false;
+            // Set the total to the new item count
+            total += slot.count;
 
-        // Update the next empty slot.
-        if (!added) {
-            slot = this.getEmptySlot();
+            if (slotCount > 0) total -= slotCount;
 
-            if (slot) {
-                slot.update(item);
+            // If the total count is less than the count of the item to be added...
+            if (total < itemCount) {
+                // Subtract the total from the item count
+                itemCopy.count = itemCount - total;
 
-                added = true;
+                // Add the item to the slot, and store the amount added
+                let amount = this.add(itemCopy);
+
+                // Add the amount to the total
+                if (amount > 0) total += amount;
             }
         }
 
-        if (added) {
-            this.emptySpaces--;
-            this.addCallback?.(slot!);
-        }
+        // Call the add callback with the slot
+        if (total > 0) this.addCallback?.(slot!);
 
-        return added;
+        // Return the total amount
+        return total;
     }
 
     /**
@@ -106,7 +126,7 @@ export default abstract class Container {
     public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
-        if (!slot || !slot.key) return;
+        if (!slot?.key) return;
 
         count = Math.min(count, slot.count);
 
@@ -115,25 +135,151 @@ export default abstract class Container {
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
-        this.emptySpaces++;
-        this.removeCallback?.(slot, serializedSlot.key, count, drop);
+        this.removeCallback?.(slot, serializedSlot.key, count, serializedSlot.enchantments, drop);
 
         return serializedSlot;
     }
 
     /**
+     * Remove an item based on its key and count. First we check if we can find
+     * a stackable key and count at an index, otherwise we go through each slot and
+     * remove `count` amount. For example, if we have 5 swords, and we want to remove
+     * 4, we first check if we can find a slot with a sword and count of 4, since a sword
+     * is  not stackable, we jump to the next condition, we iterate each slot, remove the item
+     * in each slot and increment the amount of slots we've removed until we've removed `count` amount.
+     * @param key The key of the item we are removing.
+     * @param count The amount of the item we are removing.
+     */
+
+    public removeItem(key: string, count = 1): void {
+        let index = this.getIndex(key, count);
+
+        if (index === -1) {
+            let removed = 0;
+
+            // Iterate through each slot and exhaust the count we are removing.
+            this.forEachSlot((slot: Slot) => {
+                // Skip slots if key doesn't match or we've exhausted the removal.
+                if (slot.key !== key || removed >= count) return;
+
+                /**
+                 * We iterate through each slot and remove maximum amount possible. We keep track of
+                 * every item we remove such that we remove counts rather than entire slots. Say slot 1
+                 * contains 5 flasks, and slot 2 contains 4 flasks. We want to remove 6 flasks (so we
+                 * would be left with 1 flask in slot 2). We iterate through slot 1, remove 5 flasks.
+                 * We increment the removed amount by 5, and ensure that from slot 2 we only remove
+                 * the difference between the original `count` and the removed amount.
+                 */
+
+                // Remove the maximum amount possible.
+                let removeCount = count - removed > slot.count ? slot.count : count - removed;
+
+                // Increment the removed amount.
+                removed += removeCount;
+
+                // Remove from the slot.
+                this.remove(slot.index, removeCount);
+            });
+        } else this.remove(index, count);
+    }
+
+    /**
      * Moves an item from the `container` parameter into the current
      * container instance.
-     * @param container Container instance we are removing data from.
+     * @param toContainer Container instance we are removing data from.
      * @param index Index in the container we are grabbing data from.
      */
 
-    public move(container: Container, index: number): void {
-        if (container.get(index).isEmpty()) return;
+    public move(fromIndex: number, toContainer: Container, toIndex?: number): void {
+        if (this.get(fromIndex).isEmpty()) return;
 
-        let item = container.getItem(container.get(index));
+        let item = this.getItem(this.get(fromIndex)),
+            stackSize = this.stackSize || item.maxStackSize;
 
-        if (this.add(item)) container.remove(index, item.count);
+        // Prevent an item from being moved if it exceeds the max stack size.
+        if (item.count > stackSize) item.count = stackSize;
+
+        this.swap(fromIndex, toContainer, toIndex);
+    }
+
+    /**
+     * Swaps an item from the current container instance into the `container`
+     * parameter.
+     * @param fromIndex Index in the current container instance we are grabbing data from.
+     * @param toContainer Container instance we are removing data from.
+     * @param toIndex Index in the container we are grabbing data from.
+     */
+
+    public swap(fromIndex: number, toContainer: Container, toIndex?: number) {
+        // Return if the source and target containers are the same and the index is the same.
+        if (this.type === toContainer.type && fromIndex === toIndex) return;
+
+        let fromSlot = this.get(fromIndex);
+        if (fromSlot.isEmpty()) return;
+
+        let fromItem = this.getItem(fromSlot),
+            fromStackSize = this.stackSize || fromItem.maxStackSize;
+
+        // If the target slot is undefined, move the item to the next available slot in the container.
+        if (toIndex === undefined) {
+            fromItem.count = 1;
+            // Attempt to add the item to the container
+            let amount = toContainer.add(fromItem);
+
+            // Remove the item from the source container if the item was added.
+            if (amount > 0) this.remove(fromIndex, 1);
+        } else {
+            // Get the target slot.
+            let toSlot = toContainer.get(toIndex),
+                // Check if the target slot is empty.
+                toEmpty = toSlot.isEmpty(),
+                // If the target slot is not empty, get the item in the target slot.
+                toItem!: Item,
+                toStackSize!: number,
+                isSameItem = false;
+
+            if (!toEmpty) {
+                toItem = toContainer.getItem(toSlot);
+                toStackSize = toContainer.stackSize || toItem.maxStackSize;
+                isSameItem = fromItem.key === toItem.key;
+
+                if (
+                    (fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
+                        toItem.count > (this.stackSize || toItem.maxStackSize)) &&
+                    !isSameItem
+                )
+                    return;
+            }
+
+            if (toEmpty || isSameItem) {
+                // Get the count of the item in the target slot.
+                let toCount = toEmpty ? 0 : toItem.count;
+
+                // Add the count of the item in the target slot to the count of the item in the source slot.
+                fromItem.count += toCount;
+                // Update the item in the target slot with the item in the source slot.
+                toSlot.update(fromItem, toContainer.stackSize);
+
+                // Remove the item in the source slot from the container.
+                if (toSlot.count > 0) this.remove(fromIndex, toSlot.count - toCount);
+            } else if (fromItem.count <= fromStackSize && toItem.count <= toStackSize) {
+                // Update the item in the target slot with the item in the source slot.
+                toSlot.update(fromItem, toContainer.stackSize);
+
+                if (toSlot.count < fromSlot.count) log.critical('WHY HAVE YOU FORSAKEN ME');
+                else {
+                    fromSlot.update(toItem, this.stackSize);
+
+                    toItem.count -= fromSlot.count;
+                    if (toItem.count > 0) log.critical("WHAT IS THIS I DON'T EVEN");
+                }
+            }
+        }
+
+        // Call the load callback for this container
+        this.loadCallback?.();
+        // Call the load callback for the destination container
+        toContainer.loadCallback?.();
     }
 
     /**
@@ -152,11 +298,11 @@ export default abstract class Container {
      */
 
     public getItem(slot: Slot | SlotData | ContainerItem): Item {
-        return new Item(slot.key, -1, -1, true, slot.count, slot.ability, slot.abilityLevel);
+        return new Item(slot.key, -1, -1, true, slot.count, slot.enchantments);
     }
 
     /**
-     * Checks the inventory if it contains an item and a count.
+     * Checks the container if it contains an item and a count.
      * @param key The key of the item we're trying to find.
      * @param count Default one but can be specified to check if `x` amount of an item is contained in the slot.
      * @returns The slot index of the item we're trying to find otherwise -1.
@@ -167,32 +313,61 @@ export default abstract class Container {
     }
 
     /**
-     * Iterates through the slots and returns the slot that contains
-     * the `item` parameter.
-     * @param item The item we are trying to find.
-     * @returns The slot containing the key we are trying to find.
+     * Finds a slot with the same item or an empty slot.
+     * @param item The item to find a slot for.
+     * @returns Either a slot with the same item or an empty slot.
      */
 
     public find(item: Item): Slot | undefined {
-        return this.slots.find((slot) => slot.canHold(item));
-    }
+        let stackSize = this.stackSize || item.maxStackSize,
+            // Find a slot with the same item.
+            sameItemSlot = this.slots.find(
+                (slot) =>
+                    // If the slot's key matches the item's key
+                    slot.key === item.key &&
+                    // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
+                    slot.count < stackSize
+            );
 
-    /**
-     * Checks if an item can be held in the container.
-     * @param item Item to check.
-     */
-
-    public canHold(item: Item): boolean {
-        return this.slots.some((slot) => slot.canHold(item));
+        // If there's no slot with the same item, find an empty slot.
+        return sameItemSlot || this.getEmptySlot();
     }
 
     /**
      * Checks if there are empty spaces in the container.
-     * @returns Whether the amount of empty spaces is greater than 0.
+     * @returns Whether or not we can find a slot that is empty.
      */
 
     public hasSpace(): boolean {
-        return this.emptySpaces > 0;
+        return !!this.getEmptySlot();
+    }
+
+    /**
+     * Checks if the container contains an item (and a count). If it's not stackable,
+     * we must count the amount of items in the container.
+     * @param key The key of the item we are looking for.
+     * @param count Optional amount of items we are looking for.
+     */
+
+    public hasItem(key: string, count = 1): boolean {
+        let contains = false;
+
+        // Check to see if the item is a stackable kind first.
+        if (this.getIndex(key, count) === -1) {
+            // Search through the slots to see if we can find `count` amount of occurrences.
+            let found = 0;
+
+            this.forEachSlot((slot: Slot) => {
+                if (slot.key !== key) return;
+
+                found += slot.count;
+            });
+
+            // We found `count` or more occurrences of an item.
+            if (found >= count) contains = true;
+        } else contains = true;
+
+        return contains;
     }
 
     /**
@@ -206,23 +381,32 @@ export default abstract class Container {
     }
 
     /**
+     * @returns The total amount of empty slots.
+     */
+
+    public getEmptySlots(): number {
+        return this.slots.filter((slot) => !slot.key).length;
+    }
+
+    /**
      * Iterates through the slots and returns each one.
      * @param callback Slot currently being iterated.
      */
 
     public forEachSlot(callback: (slot: Slot) => void): void {
-        _.each(this.slots, callback);
+        for (let slot of this.slots) callback(slot);
     }
 
     /**
      * Iterates through each slot and serializes it.
+     * @param clientInfo Whether or not we are sending this data to the client.
      * @returns An array of serialized slot data.
      */
 
-    public serialize(): SerializedContainer {
+    public serialize(clientInfo = false): SerializedContainer {
         let slots: SlotData[] = [];
 
-        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize()));
+        for (let slot of this.slots) slots.push(slot.serialize(clientInfo));
 
         return { slots };
     }
@@ -239,7 +423,7 @@ export default abstract class Container {
      * Signal for when an item is added.
      */
 
-    public onAdd(callback: (slot: Slot) => void): void {
+    public onAdd(callback: AddCallback): void {
         this.addCallback = callback;
     }
 
@@ -247,9 +431,7 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(
-        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
-    ): void {
+    public onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
     }
 
@@ -258,7 +440,7 @@ export default abstract class Container {
      * @param callback A callback containing the message to notify the player with.
      */
 
-    public onNotify(callback: (message: string) => void): void {
+    public onNotify(callback: NotifyCallback): void {
         this.notifyCallback = callback;
     }
 }

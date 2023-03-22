@@ -1,176 +1,199 @@
-import $ from 'jquery';
+import Menu from './menu';
 
-import { Packets, Opcodes } from '@kaetram/common/network';
+import Util from '../utils/util';
 
-import log from '../lib/log';
-import * as Detect from '../utils/detect';
+import { Modules } from '@kaetram/common/network';
 
-import type MenuController from '../controllers/menu';
-import type Game from '../game';
-import type Slot from './container/slot';
+import type Inventory from './inventory';
 
-export default class Enchant {
-    private body = $('#enchant');
-    // private container = $('#enchant-container');
-    private enchantSlots = $('#enchant-inventory-slots');
+type SelectCallback = (index: number) => void;
+type ConfirmCallback = (index: number, shardIndex: number) => void;
+export default class Enchant extends Menu {
+    private list: HTMLUListElement = document.querySelector('#enchant-inventory-slots')!;
 
-    private selectedItem = $('#enchant-selected-item');
-    private selectedShards = $('#enchant-shards');
-    private confirm = $('#confirm-enchant');
-    private shardsCount = $('#shards-count');
+    // Selected items for the enchanting process.
+    private selectedItem: HTMLElement = document.querySelector('#enchant-selected-item')!;
+    private selectedShards: HTMLElement = document.querySelector('#enchant-shards')!;
+    private selectedShardsCount: HTMLElement = document.querySelector('#shards-count')!;
 
-    private closeEnchant = $('#close-enchant');
+    // Confirm button
+    private confirmButton: HTMLElement = document.querySelector('#confirm-enchant')!;
 
-    public constructor(private game: Game, private menu: MenuController) {
-        this.confirm.on('click', () => this.enchant());
+    // Selected elements for packet data
+    private selectedSlot = -1; // Item slot
+    private selectedShard = -1; // Shard slot
 
-        this.closeEnchant.on('click', () => this.hide());
+    // Callbacks for the enchanting process.
+    private selectCallback?: SelectCallback;
+    private confirmCallback?: ConfirmCallback;
+
+    public constructor(private inventory: Inventory) {
+        super('#enchant', '#close-enchant');
+
+        // Event listeners for selected slots.
+        this.selectedItem.addEventListener('click', this.clear.bind(this));
+        this.selectedShards.addEventListener('click', this.clear.bind(this));
+        this.confirmButton.addEventListener('click', this.confirm.bind(this));
+
+        // Create an empty inventory slot list.
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
+            this.list.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
     }
 
-    public resize(): void {
-        this.load();
+    /**
+     * Synchronizes the slot data between the store and the inventory.
+     */
+
+    public override synchronize(): void {
+        if (!this.isVisible()) return;
+
+        this.clearSelections();
+
+        this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
+            let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.item-image')!;
+
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
+            count.textContent = slot.textContent;
+        });
     }
 
-    private load(): void {
-        let list = this.getSlots(),
-            inventoryList = this.menu.bank.getInventoryList();
+    /**
+     * Override for showing the enchantment menu. We ensure we synchronize with the
+     * inventory every time we open the menu.
+     */
 
-        list.empty();
+    public override show(): void {
+        super.show();
 
-        for (let i = 0; i < this.getInventorySize(); i++) {
-            let item = $(inventoryList[i]).clone(),
-                slot = item.find(`#bankInventorySlot${i}`);
+        this.synchronize();
+    }
 
-            slot.on('click', (event) => this.select(event));
+    /**
+     * Creates a callback for when an item is selected. Sends a packet to the
+     * server with the selected slot and selected shard slot (index).
+     */
 
-            list.append(item);
+    private confirm(): void {
+        // Client-sided prevention for sending an invalid packet.
+        if (this.selectedSlot === -1 || this.selectedShard === -1) return;
+
+        this.confirmCallback?.(this.selectedSlot, this.selectedShard);
+    }
+
+    /**
+     * Sends a packet to the server in order to verify the item that was selected. Depending on the
+     * type of item (normal or shard) we will assign it to the correct slot.
+     * @param _type (Unused) The type of container we are selecting from.
+     * @param index The index in the inventory container where we clicked.
+     */
+
+    private select(_type: Modules.ContainerType, index: number): void {
+        this.selectCallback?.(index);
+    }
+
+    /**
+     * Moves an item from the inventory to the enchantment menu. If the item is a shard, it will
+     * move all the shards to the shard slot.
+     * @param index The index of the item we are moving.
+     * @param isShard Whether the item is a shard or not (determined by the server).
+     */
+
+    public move(index: number, isShard = false): void {
+        let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
+            count = this.getElement(index).querySelector<HTMLElement>('.item-count')!;
+
+        // We already have an item selected, move it back to the inventory.
+        if (this.selectedSlot !== -1 && !isShard) {
+            let element = this.getElement(this.selectedSlot),
+                elementImage = element.querySelector<HTMLElement>('.item-image')!;
+
+            elementImage.style.backgroundImage = this.selectedItem.style.backgroundImage;
         }
 
-        this.selectedItem.on('click', () => this.remove('item'));
+        // We already have a shard selected, move it back to the inventory.
+        if (this.selectedShard !== -1 && isShard) {
+            let element = this.getElement(this.selectedShard),
+                elementImage = element.querySelector<HTMLElement>('.item-image')!,
+                elementCount = element.querySelector<HTMLElement>('.item-count')!;
 
-        this.selectedShards.on('click', () => this.remove('shards'));
-    }
-
-    public add(type: string, index: number): void {
-        let image = this.getSlot(index).find(`#inventoryImage${index}`);
-
-        switch (type) {
-            case 'item':
-                this.selectedItem.css('background-image', image.css('background-image'));
-
-                if (Detect.isMobile()) this.selectedItem.css('background-size', '600%');
-
-                break;
-
-            case 'shards': {
-                this.selectedShards.css('background-image', image.css('background-image'));
-
-                if (Detect.isMobile()) this.selectedShards.css('background-size', '600%');
-
-                let { count } = this.getItemSlot(index);
-
-                if (count > 1) this.shardsCount.text(count);
-
-                break;
-            }
+            elementImage.style.backgroundImage = this.selectedShards.style.backgroundImage;
+            elementCount.textContent = this.selectedShardsCount.textContent;
         }
 
-        image.css('background-image', '');
+        // If the item is a shard, we will move all the shards to the shard slot.
+        if (isShard) this.selectedShard = index;
+        else this.selectedSlot = index;
 
-        this.getSlot(index).find(`#inventory-item-count${index}`).text('');
+        // Update the slot depending on whether or not the item is a shard.
+        (isShard ? this.selectedShards : this.selectedItem).style.backgroundImage =
+            image.style.backgroundImage;
+
+        // Shards also have counts so we will update that as well.
+        if (isShard) this.selectedShardsCount.textContent = count.textContent;
+
+        // Remove the item from the inventory slot (and its count).
+        image.style.backgroundImage = '';
+        count.textContent = '';
     }
 
-    public moveBack(type: string, index: number): void {
-        let image = this.getSlot(index).find(`#inventoryImage${index}`),
-            itemCount = this.getSlot(index).find(`#inventory-item-count${index}`),
-            { count } = this.getItemSlot(index);
+    /**
+     * Cleans everything up and re-synchronizes the inventory with default values.
+     */
 
-        switch (type) {
-            case 'item':
-                if (count > 0)
-                    image.css('background-image', this.selectedItem.css('background-image'));
+    private clear(): void {
+        this.clearSelections();
 
-                if (count > 1) itemCount.text(count);
-
-                this.selectedItem.css('background-image', '');
-
-                break;
-
-            case 'shards':
-                if (count > 0)
-                    image.css('background-image', this.selectedShards.css('background-image'));
-
-                if (count > 1) itemCount.text(count);
-
-                this.selectedShards.css('background-image', '');
-
-                this.shardsCount.text('');
-
-                break;
-        }
+        this.synchronize();
     }
 
-    private enchant(): void {
-        this.game.socket.send(Packets.Enchant, [Opcodes.Enchant.Enchant]);
+    /**
+     * Clears all the selections from the user interface enchantment menu.
+     */
+
+    private clearSelections(): void {
+        this.selectedSlot = -1;
+        this.selectedShard = -1;
+
+        // Reset the slot images and text.
+        this.selectedItem.style.backgroundImage = '';
+        this.selectedShards.style.backgroundImage = '';
+        this.selectedShardsCount.textContent = '';
     }
 
-    private select(event: JQuery.ClickEvent): void {
-        this.game.socket.send(Packets.Enchant, [
-            Opcodes.Enchant.Select,
-            event.currentTarget.id.slice(17)
-        ]);
+    /**
+     * Grabs the HTMLElement at a specified index within the
+     * inventory slot list.
+     * @param index The index of the element to grab.
+     * @returns The HTMLElement at the specified index.
+     */
+
+    private getElement(index: number): HTMLElement {
+        return this.list.children[index].querySelector('div') as HTMLElement;
     }
 
-    private remove(type: string): void {
-        this.game.socket.send(Packets.Enchant, [Opcodes.Enchant.Remove, type]);
+    /**
+     * Callback for when an item in the inventory is selected. A packet
+     * is sent to the server.
+     * @param callback Contains the index of the item that was selected.
+     */
+
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 
-    private getInventorySize(): number {
-        return this.menu.inventory.getSize();
-    }
+    /**
+     * Callback for when the player confirms their selection and attempts
+     * to enchant an item using the shards.
+     * @param callback Contains the index of the item and the shard index.
+     */
 
-    private getItemSlot(index: number): Slot {
-        return this.menu.inventory.container.slots[index];
-    }
-
-    public display(): void {
-        log.info('Yes hello, I am displaying');
-
-        this.body.fadeIn('fast');
-        this.load();
-    }
-
-    public hide(): void {
-        this.remove('item');
-        this.remove('shards');
-
-        this.selectedItem.css('background-image', '');
-        this.selectedShards.css('background-image', '');
-        this.shardsCount.text('');
-
-        this.body.fadeOut('fast');
-    }
-
-    public clear(): void {
-        this.enchantSlots.find('ul').empty();
-
-        this.confirm.off('click');
-        this.closeEnchant.off('click');
-    }
-
-    // hasImage(image: JQuery): boolean {
-    //     return image.css('background-image') !== 'none';
-    // }
-
-    private getSlot(index: number): JQuery<HTMLLIElement> {
-        return $(this.getSlots().find('li')[index]);
-    }
-
-    private getSlots(): JQuery<HTMLUListElement> {
-        return this.enchantSlots.find('ul');
-    }
-
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
+    public onConfirm(callback: ConfirmCallback): void {
+        this.confirmCallback = callback;
     }
 }

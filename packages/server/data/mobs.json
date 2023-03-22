@@ -1,2050 +1,4600 @@
 {
   "rat": {
     "name": "Rat",
-    "id": 128,
-    "drops": {"flask": 10},
-    "hitPoints": 30,
-    "armour": 2,
-    "weapon": 1,
-    "experience": 6,
+    "description": "Ah yes, this rat is made out of rat.",
+    "drops": {"sword1": 1},
+    "hitPoints": 34,
+    "defenseLevel": 1,
+    "attackLevel": 1,
     "level": 1,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1400,
-    "movementSpeed": 500,
-    "respawnDelay": 10000
+    "movementSpeed": 450,
+    "respawnDelay": 10000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "bat": {
     "name": "Batterfly",
-    "id": 1,
-    "drops": {"flask": 50},
-    "hitPoints": 45,
-    "armour": 2,
-    "weapon": 2,
-    "experience": 7,
-    "level": 2,
+    "drops": {"leatherboots": 400},
+    "description": "A bat that is also a butterfly, what a strange creature.",
+    "hitPoints": 68,
+    "defenseLevel": 3,
+    "attackLevel": 2,
+    "level": 4,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
-    "movementSpeed": 350,
-    "respawnDelay": 20000
+    "movementSpeed": 420,
+    "respawnDelay": 20000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 3,
+      "archery": 3,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "crab": {
     "name": "Crab",
-    "id": 2,
-    "drops": {"flask": 100},
-    "hitPoints": 50,
-    "armour": 2,
-    "weapon": 3,
-    "experience": 8,
-    "level": 2,
+    "drops": {},
+    "description": "I wonder if I can eat this.",
+    "hitPoints": 15,
+    "defenseLevel": 1,
+    "attackLevel": 1,
+    "level": 1,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1200,
-    "movementSpeed": 300,
-    "respawnDelay": 20000
+    "movementSpeed": 420,
+    "respawnDelay": 20000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "wizard": {
     "name": "Wizard",
-    "id": 3,
-    "drops": {"axe": 10, "morningstar": 10, "woodenbow": 5, "sword2": 50},
-    "hitPoints": 100,
-    "armour": 4,
-    "weapon": 3,
-    "experience": 15,
-    "level": 7,
+    "description": "Why does every MMORPG have one of these things?",
+    "drops": {"axe": 400, "morningstar": 600, "woodenbow": 600, "sword2": 800},
+    "hitPoints": 130,
+    "defenseLevel": 3,
+    "attackLevel": 16,
+    "level": 11,
     "aggroRange": 3,
     "attackRange": 4,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
     "projectileName": "projectile-fireball",
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 16
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 2,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
   },
 
   "goblin": {
     "name": "Goblin",
-    "id": 4,
-    "drops": {"leatherarmor": 100, "plasticbow": 100, "gold": 500, "leatherarcherarmor": 100, "sword2": 100},
-    "hitPoints": 70,
-    "armour": 1,
-    "weapon": 3,
-    "experience": 15,
-    "level": 5,
+    "description": "Didn't I see this same style of goblin in RuneScape?",
+    "drops": {"leatherarmor": 700, "plasticbow": 600, "leatherboots": 300},
+    "hitPoints": 90,
+    "defenseLevel": 4,
+    "attackLevel": 4,
+    "level": 7,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1400,
     "movementSpeed": 300,
-    "respawnDelay": 55000
+    "respawnDelay": 55000,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 4,
+      "stab": 4,
+      "archery": 1,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "skeleton": {
     "name": "Spooky Skeleton",
-    "id": 5,
-    "drops": {"gold": 300, "flask": 200},
-    "hitPoints": 110,
-    "armour": 4,
-    "weapon": 4,
-    "experience": 17,
-    "level": 6,
+    "description": "I wonder if this skeleton is made out of bones.",
+    "drops": {"sword2": 700},
+    "hitPoints": 140,
+    "defenseLevel": 6,
+    "attackLevel": 6,
+    "level": 14,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "respawnDelay": 65000
+    "respawnDelay": 65000,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 5,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -5,
+      "slash": 6,
+      "stab": 6,
+      "archery": 6,
+      "magic": -3
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    } 
   },
 
   "ogre": {
     "name": "Ogre",
-    "id": 6,
-    "drops": {"axe": 10, "gold": 75, "bluesword": 5, "mailarmor": 20, "ironbow": 15, "mailarcherarmor": 20},
-    "hitPoints": 60,
-    "armour": 3,
-    "weapon": 2,
-    "experience": 25,
-    "level": 8,
+    "description": "I really feel like the developers had to include generic fantasy creatures.",
+    "drops": {"axe": 650, "bluesword": 560, "mailarmor": 620, "ironbow": 360, "mailarcherarmor": 540},
+    "hitPoints": 150,
+    "defenseLevel": 9,
+    "attackLevel": 9,
+    "level": 18,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1250,
     "movementSpeed": 300,
-    "respawnDelay": 45000
+    "respawnDelay": 45000,
+    "attackStats": {
+      "crush": 13,
+      "slash": 11,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 13,
+      "slash": 1,
+      "stab": -3,
+      "archery": 4,
+      "magic": 11
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 6,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "skeleton2": {
     "name": "Scary Skeleton",
-    "id": 7,
-    "drops": {"axe": 50, "morningstar": 20, "platearmor": 15, "platearcherarmor": 15},
-    "hitPoints": 350,
-    "armour": 5,
-    "weapon": 2,
-    "experience": 53,
-    "level": 25,
+    "description": "Ah yes, it's not spooky, this one is scary.",
+    "drops": {"axe": 780, "morningstar": 440, "platearmor": 380, "platearcherarmor": 320, "steelboots": 120},
+    "hitPoints": 375,
+    "defenseLevel": 10,
+    "attackLevel": 10,
+    "level": 30,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "respawnDelay": 60000
+    "respawnDelay": 60000,
+    "attackStats": {
+      "crush": 6,
+      "slash": 10,
+      "stab": 14,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 10,
+      "stab": 11,
+      "archery": 12,
+      "magic": -5
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "snek": {
     "name": "Snek",
-    "id": 8,
-    "drops": {"gold": 25, "morningstar": 5, "platearmor": 5},
+    "description": "Snek, where you going? Snek, stahp!",
+    "drops": {"morningstar": 600, "platearmor": 400, "steelboots": 140},
     "hitPoints": 85,
-    "armour": 6,
-    "weapon": 2,
-    "experience": 28,
-    "level": 8,
+    "defenseLevel": 7,
+    "attackLevel": 12,
+    "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "poisonous": true,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 13,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 6,
+      "stab": 9,
+      "archery": 10,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "spectre": {
     "name": "Spectre",
-    "id": 9,
-    "drops": {"redarmor": 30, "axe": 75, "bluesword": 20},
-    "hitPoints": 170,
-    "armour": 6,
-    "weapon": 2,
-    "experience": 63,
-    "level": 27,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1100,
-    "movementSpeed": 350,
-    "respawnDelay": 35000
-  },
-
-  "eye": {
-    "name": "Eye",
-    "id": 10,
-    "drops": {"redarcherarmor": 20, "gold": 100, "bluesword": 20},
-    "hitPoints": 160,
-    "armour": 3,
-    "weapon": 4,
-    "experience": 61,
-    "level": 26,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 1100,
-    "movementSpeed": 350,
-    "respawnDelay": 35000
-  },
-
-  "deathknight": {
-    "name": "Death Knight",
-    "id": 11,
-    "drops": {"redsword": 20, "redarmor": 20, "morningstar": 80},
-    "hitPoints": 145,
-    "armour": 8,
-    "weapon": 3,
-    "experience": 48,
-    "level": 21,
-    "aggroRange": 4,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1100,
-    "movementSpeed": 350,
-    "respawnDelay": 65000
-  },
-
-  "adherer": {
-    "name": "Dark Mage",
-    "id": 12,
-    "drops": {"rose": 20, "redlightbow": 10, "redmetalsword": 10, "adhererarcherarmor": 10, "adhererrobe": 10},
-    "hitPoints": 200,
-    "armour": 5,
-    "weapon": 1,
-    "experience": 96,
-    "level": 36,
-    "aggroRange": 6,
-    "attackRange": 4,
-    "aggressive": true,
-    "attackRate": 2000,
-    "movementSpeed": 750,
-    "projectileName": "projectile-fireball",
-    "respawnDelay": 35000
-  },
-
-  "ant": {
-    "name": "Worker Ant",
-    "id": 13,
-    "drops": {"gold": 50},
-    "hitPoints": 650,
-    "armour": 8,
-    "weapon": 1,
-    "experience": 50,
-    "level": 39,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1000,
-    "movementSpeed": 600,
-    "respawnDelay": 35000
-  },
-
-  "babyspider": {
-    "name": "Baby Spooder",
-    "id": 14,
-    "drops": {"gold": 50},
-    "hitPoints": 400,
-    "armour": 3,
-    "weapon": 7,
-    "experience": 50,
-    "level": 35,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-
-  },
-
-  "beetle": {
-    "name": "Beetle",
-    "id": 15,
-    "drops": {"gold": 50},
-    "hitPoints": 600,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 235,
-    "level": 45,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "blackpirateskeleton": {
-    "name": "Pirate Skeleton",
-    "id": 16,
-    "drops": {"gold": 200},
-    "hitPoints": 400,
-    "armour": 10,
-    "weapon": 3,
-    "experience": 76,
-    "level": 31,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1200,
-    "movementSpeed": 400,
-    "respawnDelay": 65000
-  },
-
-  "greenpirateskeleton": {
-    "name": "Pirate Skeleton",
-    "id": 16,
-    "drops": {"gold": 200},
-    "hitPoints": 410,
-    "armour": 8,
-    "weapon": 3,
-    "experience": 78,
+    "description": "Has a scythe and looks like it's floating.",
+    "drops": {"redarmor": 440, "fireaxe": 660, "redsword": 400},
+    "hitPoints": 270,
+    "defenseLevel": 18,
+    "attackLevel": 12,
     "level": 32,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 1200,
-    "movementSpeed": 400,
-    "respawnDelay": 65000
-  },
-
-  "blackwizard": {
-    "name": "Dark Wizard",
-    "id": 17,
-    "drops": {"bastardsword": 100, "wizardrobe": 100, "redlightbow": 125, "topazring": 15},
-    "hitPoints": 150,
-    "armour": 4,
-    "weapon": 10,
-    "experience": 50,
-    "level": 16,
-    "aggroRange": 4,
-    "attackRange": 5,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "projectileName": "projectile-fireball",
-    "respawnDelay": 35000
-  },
-
-  "blazespider": {
-    "name": "Blaze Spooder",
-    "id": 18,
-    "drops": {"gold": 50},
-    "hitPoints": 915,
-    "armour": 0,
-    "weapon": 3,
-    "experience": 115,
-    "level": 60,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "bluecockroach": {
-    "name": "Blue Cockroach",
-    "id": 19,
-    "drops": {"cockroachsuit": 40, "gayarcherarmor": 20, "sickle": 40},
-    "hitPoints": 785,
-    "armour": 5,
-    "weapon": 0,
-    "experience": 50,
-    "level": 55,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "bluePpeta": {
-    "name": "Blue Preta",
-    "id": 20,
-    "drops": {"bluescimitar": 20, "bluewingarcherarmor": 20, "bluewingarmor": 20, "gold": 40},
-    "hitPoints": 600,
-    "armour": 5,
-    "weapon": 8,
-    "experience": 55,
-    "level": 34,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "cactus": {
-    "name": "Cactus",
-    "id": 21,
-    "drops": {"gold": 50, "cactusaxe": 10},
-    "hitPoints": 160,
-    "armour": 14,
-    "weapon": 1,
-    "experience": 35,
-    "level": 16,
-    "aggroRange": 2,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1300,
-    "movementSpeed": 400,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 350,
     "respawnDelay": 35000,
-    "hiddenName": true
+    "attackStats": {
+      "crush": 9,
+      "slash": 16,
+      "stab": 13,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 16,
+      "stab": 18,
+      "archery": 12,
+      "magic": -15
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 5,
+      "archery": 0,
+      "magic": 6
+    }
   },
 
-  "cat": {
-    "name": "Cat",
-    "id": 22,
-    "drops": {"catarmor": 25},
-    "hitPoints": 600,
-    "armour": 1,
-    "weapon": 4,
-    "experience": 210,
-    "level": 35,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "clam": {
-    "name": "Clam",
-    "id": 23,
-    "drops": {"gold": 50, "spear": 40},
-    "hitPoints": 200,
-    "armour": 6,
-    "weapon": 1,
-    "experience": 45,
-    "level": 18,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "cobra": {
-    "name": "Cobra",
-    "id": 24,
-    "drops": {"gold": 50},
-    "hitPoints": 1150,
-    "armour": 3,
-    "weapon": 10,
-    "experience": 730,
-    "level": 91,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "crystalscolpion": {
-    "name": "Crystal Scorpion",
-    "id": 25,
-    "drops": {"gold": 50},
-    "hitPoints": 1450,
-    "armour": 15,
-    "weapon": 5,
-    "experience": 825,
-    "level": 105,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "cursedhahoemask": {
-    "name": "Cursed Hahoe Mask",
-    "id": 26,
-    "drops": {"gold": 50},
-    "hitPoints": 2100,
-    "armour": 25,
-    "weapon": 5,
-    "experience": 1325,
-    "level": 115,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "curseddjangseung": {
-    "name": "Cursed Djangseung",
-    "id": 27,
-    "drops": {"gold": 50},
-    "hitPoints": 1900,
-    "armour": 25,
-    "weapon": 10,
-    "experience": 1020,
-    "level": 110,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "darkogre": {
-    "name": "Dark Ogre",
-    "id": 28,
-    "drops": {"ring1": 50, "skylightbow": 400, "gold": 550},
-    "hitPoints": 130,
-    "armour": 5,
-    "weapon": 1,
-    "experience": 55,
-    "level": 25,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "darkscolpion": {
-    "name": "Dark Scorpion",
-    "id": 29,
-    "drops": {"gold": 50},
-    "hitPoints": 1450,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 840,
-    "level": 101,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "darkskeleton": {
-    "name": "Dark Skeleton",
-    "id": 30,
-    "drops": {"sproutring": 25, "hammer": 250, "hunterbow": 450, "gold": 275},
-    "hitPoints": 300,
-    "armour": 5,
-    "weapon": 2,
-    "experience": 55,
-    "level": 26,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "desertscolpion": {
-    "name": "Desert Scorpion",
-    "id": 31,
-    "drops": {"gold": 50},
-    "hitPoints": 1300,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 595,
-    "level": 90,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "devilkazya": {
-    "name": "Devil Blox",
-    "id": 32,
-    "drops": {"gold": 50},
-    "hitPoints": 2300,
-    "armour": 30,
-    "weapon": 25,
-    "experience": 2500,
-    "level": 135,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "earthworm": {
-    "name": "Earth Worm",
-    "id": 33,
-    "drops": {"gold": 50},
-    "hitPoints": 970,
-    "armour": 5,
-    "weapon": 5,
-    "experience": 550,
-    "level": 78,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "firespider": {
-    "name": "Fire Spooder",
-    "id": 34,
-    "drops": {"gold": 50},
-    "hitPoints": 1150,
-    "armour": 3,
-    "weapon": 4,
-    "experience": 765,
-    "level": 83,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "flaredanceknight": {
-    "name": "Cursed Knight",
-    "id": 35,
-    "drops": {"gold": 50},
-    "hitPoints": 1000,
-    "armour": 15,
-    "weapon": 10,
-    "experience": 450,
-    "level": 65,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "frog": {
-    "name": "Frog",
-    "id": 36,
-    "drops": {"gold": 50},
-    "hitPoints": 1850,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 830,
-    "level": 89,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "ghostrider": {
-    "name": "Skeleton Knight",
-    "id": 37,
-    "drops": {"gold": 50},
-    "hitPoints": 700,
-    "armour": 30,
-    "weapon": 15,
-    "experience": 45,
-    "level": 19,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "goldgolem": {
-    "name": "Golden Golem",
-    "id": 38,
-    "drops": {"gold": 50},
-    "hitPoints": 1150,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 200,
-    "level": 75,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "golem": {
-    "name": "Golem",
-    "id": 39,
-    "drops": {"deathbow": 5, "bluesword": 10, "gold": 50},
-    "hitPoints": 350,
-    "armour": 25,
-    "weapon": 15,
-    "experience": 75,
-    "level": 18,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 750,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "greenfish": {
-    "name": "Green Fesh",
-    "id": 40,
-    "drops": {"spear": 125, "pendant1": 25, "greenarcherarmor": 150, "gold": 700},
-    "hitPoints": 200,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 50,
-    "level": 29,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "hellspider": {
-    "name": "Hell Spooder",
-    "id": 41,
-    "drops": {"gold": 50},
-    "hitPoints": 2000,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 855,
-    "level": 91,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "hermitcrab": {
-    "name": "Hermit Crab",
-    "id": 42,
-    "drops": {"flask": 200, "gold": 200},
-    "hitPoints": 155,
-    "armour": 10,
-    "weapon": 4,
-    "experience": 65,
-    "level": 15,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "hobgoblin": {
-    "name": "Hobgoblin",
-    "id": 43,
-    "drops": {"mailarmor": 200, "platearmor": 400, "platearcherarmor": 200, "mailarcherarmor": 200},
-    "hitPoints": 130,
-    "armour": 6,
-    "weapon": 4,
-    "experience": 55,
-    "level": 20,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "hongcheol": {
-    "name": "Hong Chul",
-    "id": 44,
-    "drops": {"gold": 50},
-    "hitPoints": 1550,
-    "armour": 15,
-    "weapon": 15,
-    "experience": 315,
-    "level": 100,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "icegolem": {
-    "name": "Ice Golem",
-    "id": 45,
-    "drops": {"bluesword": 450, "crystalarmor": 20, "crystalarcherarmor": 20, "gold": 500},
-    "hitPoints": 700,
-    "armour": 9,
-    "weapon": 5,
-    "experience": 90,
-    "level": 46,
-    "aggroRange": 4,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "iceknight": {
-    "name": "Ice Knight",
-    "id": 46,
-    "drops": {"gold": 150, "icerose": 10},
-    "hitPoints": 550,
-    "armour": 12,
-    "weapon": 8,
-    "experience": 106,
+  "eye": {
+    "name": "Eye",
+    "description": ["Must have really poor depth perception when you think about it.", "Eye really can't seem to figure out how that thing works."],
+    "drops": {"redarcherarmor": 440},
+    "hitPoints": 160,
+    "defenseLevel": 8,
+    "attackLevel": 20,
     "level": 33,
     "aggroRange": 1,
     "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 350,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 16,
+      "slash": 12,
+      "stab": 8,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 12,
+      "slash": 9,
+      "stab": -10,
+      "archery": -8,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 6,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "icevulture": {
-    "name": "Ice Vulture",
-    "id": 47,
-    "drops": {"gold": 50},
-    "hitPoints": 300,
-    "armour": 1,
-    "weapon": 3,
-    "experience": 70,
+  "deathknight": {
+    "name": "Death Knight",
+    "description": "Seriously, who comes up with the names for these things?",
+    "drops": {"redsword": 520, "redarmor": 340, "morningstar": 750},
+    "hitPoints": 185,
+    "defenseLevel": 19,
+    "attackLevel": 12,
+    "level": 40,
+    "aggroRange": 4,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 350,
+    "respawnDelay": 65000,
+    "attackStats": {
+      "crush": 10,
+      "slash": 13,
+      "stab": 15,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 10,
+      "stab": 13,
+      "archery": 12,
+      "magic": -8
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "adherer": {
+    "name": "Dark Mage",
+    "description": "I heard that these things drop roses that I can then use to hit things with.",
+    "drops": {"rose": 340, "redlightbow": 300, "redmetalsword": 300, "adhererarcherarmor": 300, "adhererrobe": 300},
+    "hitPoints": 200,
+    "defenseLevel": 18,
+    "attackLevel": 31,
     "level": 38,
-    "aggroRange": 1,
-    "attackRange": 1,
+    "aggroRange": 6,
+    "attackRange": 4,
     "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 450,
+    "projectileName": "projectile-fireball",
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 31
+    },
+    "defenseStats": {
+      "crush": -5,
+      "slash": -8,
+      "stab": -9,
+      "archery": -6,
+      "magic": 32
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 0,
+      "archery": 0,
+      "magic": 16
+    }
   },
 
-  "infectedguard": {
-    "name": "Infected Guard",
-    "id": 48,
-    "drops": {"gold": 50},
-    "hitPoints": 2000,
-    "armour": 8,
-    "weapon": 4,
-    "experience": 105,
-    "level": 61,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "ironogre": {
-    "name": "Iron Ogre",
-    "id": 49,
-    "drops": {"bluescimitar": 400, "gold": 600},
+  "ant": {
+    "name": "Worker Ant",
+    "description": "A hardworking small itty bitty ant!",
+    "drops": {"pickaxe": 100},
     "hitPoints": 300,
-    "armour": 5,
-    "weapon": 4,
-    "experience": 55,
-    "level": 25,
+    "defenseLevel": 30,
+    "attackLevel": 14,
+    "level": 46,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
+    "roaming": true,
+    "attackRate": 1000,
+    "movementSpeed": 600,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 11,
+      "stab": 12,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 30,
+      "stab": 30,
+      "archery": 30,
+      "magic": 19
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "livingarmor": {
-    "name": "Living armor",
-    "id": 50,
-    "drops": {"whip": 10, "dovakinarcherarmor": 100, "dovakinarmor": 100, "skylightbow": 100, "gold": 690},
-    "hitPoints": 340,
-    "armour": 4,
-    "weapon": 1,
-    "experience": 125,
+  "beetle": {
+    "name": "Beetle",
+    "description": "Ever heard of a Dung Beetle, well I'm better!",
+    "drops": {"sproutring": 100},
+    "hitPoints": 600,
+    "defenseLevel": 5,
+    "attackLevel": 10,
     "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 1100,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "mantis": {
-    "name": "Praying Mantis",
-    "id": 51,
-    "drops": {"gold": 50},
-    "hitPoints": 2400,
-    "armour": 15,
-    "weapon": 10,
-    "experience": 950,
-    "level": 89,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "mermaid": {
-    "name": "Mermaid",
-    "id": 52,
-    "drops": {"gold": 600, "trident": 200, "mermaidbow": 200},
-    "hitPoints": 150,
-    "armour": 3,
-    "weapon": 1,
-    "experience": 131,
-    "level": 35,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "mimic": {
-    "name": "Mimic",
-    "id": 53,
-    "drops": {"gold": 20, "bluescimitar": 20, "flask": 100},
-    "hitPoints": 1200,
-    "armour": 2,
-    "weapon": 16,
-    "experience": 45,
-    "level": 44,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
     "respawnDelay": 35000,
-    "hiddenName": true
+    "attackStats": {
+      "crush": 20,
+      "slash": 13,
+      "stab": 16,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -11,
+      "slash": 19,
+      "stab": 18,
+      "archery": 23,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": -5,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+  
+  "pirateskeleton": {
+    "name": "Pirate Skeleton",
+    "drops": {"morningstar": 600, "redbow": 300},
+    "hitPoints": 460,
+    "defenseLevel": 18,
+    "attackLevel": 22,
+    "level": 54,
+    "aggroRange": 4,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 600,
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 13,
+      "slash": 22,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -15,
+      "slash": 20,
+      "stab": 19,
+      "archery": 21,
+      "magic": -11
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "miniiceknight": {
-    "name": "Mini Ice Knight",
-    "id": 54,
-    "drops": {"gold": 50},
-    "hitPoints": 100,
-    "armour": 4,
-    "weapon": 3,
-    "experience": 150,
-    "level": 24,
+  "greenpirateskeleton": {
+    "name": "Green Pirate Skeleton",
+    "description": "Isn't this just a skeleton but wearing a pirate hat?",
+    "hitPoints": 585,
+    "defenseLevel": 42,
+    "attackLevel": 24,
+    "level": 64,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 65000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 30,
+      "stab": 34,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -13,
+      "slash": 23,
+      "stab": 21,
+      "archery": 23,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 6,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "miniknight": {
-    "name": "Mini Knight",
-    "id": 55,
-    "drops": {"gold": 50},
-    "hitPoints": 1450,
-    "armour": 3,
-    "weapon": 5,
-    "experience": 110,
-    "level": 56,
+  "redpirateskeleton": {
+    "name": "Red Pirate Skeleton",
+    "hitPoints": 640,
+    "defenseLevel": 13,
+    "attackLevel": 18,
+    "level": 69,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 900,
+    "roaming": true,
+    "attackRate": 1200,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 65000,
+    "attackStats": {
+      "crush": 17,
+      "slash": 32,
+      "stab": 36,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -11,
+      "slash": 25,
+      "stab": 23,
+      "archery": 25,
+      "magic": -9
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "oldogre": {
-    "name": "Old Ogre",
-    "id": 56,
-    "drops": {"pendant1": 25, "skylightbow": 475, "gold": 500},
-    "hitPoints": 256,
-    "armour": 5,
-    "weapon": 1,
-    "experience": 45,
-    "level": 23,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "orc": {
-    "name": "Orc",
-    "id": 57,
-    "drops": {"redsword": 300, "violetbow": 300, "redarcherarmor": 400},
-    "hitPoints": 75,
-    "armour": 5,
-    "weapon": 4,
-    "experience": 60,
-    "level": 13,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "pain": {
-    "name": "Infected Villager",
-    "id": 58,
-    "drops": {"gold": 50},
-    "hitPoints": 1550,
-    "armour": 5,
-    "weapon": 1,
-    "experience": 750,
-    "level": 73,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "penguin": {
-    "name": "Penguin",
-    "id": 59,
-    "drops": {"bluewingarcherarmor": 200, "bluewingarmor": 200, "icerose": 200, "marinebow": 200, "gold": 200},
-    "hitPoints": 526,
-    "armour": 4,
-    "weapon": 1,
-    "experience": 325,
-    "level": 41,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "pierrot": {
-    "name": "Clown",
-    "id": 60,
-    "drops": {"gold": 50},
-    "hitPoints": 150,
-    "armour": 30,
-    "weapon": 15,
-    "experience": 75,
-    "level": 12,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "pinkelf": {
-    "name": "Pink Elf",
-    "id": 61,
-    "drops": {"gold": 50},
+  "blackpirateskeleton": {
+    "name": "Blue Pirate Skeleton",
+    "description": "Isn't this just a skeleton but wearing a pirate hat?",
+    "drops": {"piratearmor": 200},
     "hitPoints": 625,
-    "armour": 8,
-    "weapon": 4,
-    "experience": 315,
-    "level": 43,
+    "defenseLevel": 14,
+    "attackLevel": 18,
+    "level": 70,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 65000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 34,
+      "stab": 37,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -9,
+      "slash": 29,
+      "stab": 25,
+      "archery": 29,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 8,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "piratecaptain": {
+    "name": "Pirate Captain",
+    "drops": {"scimitar": 300, "rubyring": 300, "captainbow": 300},
+    "hitPoints": 4750,
+    "defenseLevel": 56,
+    "attackLevel": 64,
+    "level": 175,
+    "aggroRange": 10,
+    "attackRange": 1,
+    "aggressive": true,
+    "projectileName": "projectile-iceball",
+    "roaming": true,
+    "roamingDistance": 12,
+    "attackRate": 1100,
+    "movementSpeed": 350,
+    "respawnDelay": 70000,
+    "plugin": "piratecaptain",
+    "attackStats": {
+      "crush": 61,
+      "slash": 64,
+      "stab": 63,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 31,
+      "slash": 62,
+      "stab": 66,
+      "archery": 65,
+      "magic": 34
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 28,
+      "archery": 0,
+      "magic": 18
+    }
+  },
+
+  "blackwizard": {
+    "name": "Dark Wizard",
+    "description": "They don't look all that different from the other ones.",
+    "drops": {"bastardsword": 400, "wizardrobe": 400, "redlightbow": 500, "topazring": 80},
+    "hitPoints": 170,
+    "defenseLevel": 30,
+    "attackLevel": 46,
+    "level": 32,
+    "aggroRange": 6,
+    "attackRange": 7,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 400,
+    "projectileName": "projectile-terror",
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 46
+    },
+    "defenseStats": {
+      "crush": -5,
+      "slash": -9,
+      "stab": -10,
+      "archery": -7,
+      "magic": 37
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 16
+    }
+  },
+
+  "babyspider": {
+    "name": "Baby Spooder",
+    "description": "It's cute now but give it a while...",
+    "drops": {"redsword": 400},
+    "hitPoints": 400,
+    "defenseLevel": 44,
+    "attackLevel": 34,
+    "level": 34,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 23,
+      "stab": 29,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -15,
+      "slash": 30,
+      "stab": 33,
+      "archery": 27,
+      "magic": -13
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "spider": {
+    "name": "Spooder",
+    "hitPoints": 650,
+    "defenseLevel": 45,
+    "attackLevel": 26,
+    "level": 47,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "poisonous": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 22,
+      "slash": 24,
+      "stab": 31,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -13,
+      "slash": 32,
+      "stab": 38,
+      "archery": 30,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "poisonspider": {
-    "name": "Red Spider",
-    "id": 62,
-    "drops": {"gold": 50},
+    "name": "Poison Spooder",
+    "description": "I swear this thing is gonna poison me as soon as I engage it.",
+    "drops": {"blackspiderarmor": 100},
     "hitPoints": 990,
-    "armour": 30,
-    "weapon": 15,
-    "experience": 625,
+    "defenseLevel": 40,
+    "attackLevel": 63,
     "level": 49,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "poisonous": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 32,
+      "slash": 47,
+      "stab": 54,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -9,
+      "slash": 37,
+      "stab": 45,
+      "archery": 32,
+      "magic": -11
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "preta": {
-    "name": "Preta",
-    "id": 63,
-    "drops": {"greenpendant": 40, "bluewingarcherarmor": 200, "bluewingarmor": 360, "gold": 400},
-    "hitPoints": 495,
-    "armour": 1,
-    "weapon": 7,
-    "experience": 65,
-    "level": 36,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "purplepreta": {
-    "name": "Preta",
-    "id": 64,
-    "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
-    "hitPoints": 431,
-    "armour": 1,
-    "weapon": 6,
-    "experience": 65,
-    "level": 31,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "redcockroach": {
-    "name": "Red Cockroach",
-    "id": 65,
-    "drops": {"gold": 50},
-    "hitPoints": 1200,
-    "armour": 2,
-    "weapon": 4,
-    "experience": 165,
+  "firespider": {
+    "name": "Fire Spooder",
+    "description": "Damn, that is one hot spider.",
+    "drops": {"blackspiderarmor": 100},
+    "hitPoints": 850,
+    "defenseLevel": 50,
+    "attackLevel": 40,
     "level": 61,
     "aggroRange": 1,
     "attackRange": 1,
-    "aggressive": false,
+    "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 34,
+      "slash": 49,
+      "stab": 56,
+      "archery": 0,
+      "magic": 40
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 38,
+      "stab": 46,
+      "archery": 33,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 5,
+      "archery": 0,
+      "magic": 11
+    }
   },
 
-  "redelf": {
-    "name": "Red Elf",
-    "id": 66,
-    "drops": {"gold": 50},
-    "hitPoints": 1750,
-    "armour": 5,
-    "weapon": 5,
-    "experience": 235,
-    "level": 70,
+  "blazespider": {
+    "name": "Blaze Spooder",
+    "description": "I wonder how high this spider is...",
+    "drops": {"blackspiderarmor": 80, "topazring": 20},
+    "hitPoints": 1350,
+    "defenseLevel": 44,
+    "attackLevel": 50,
+    "level": 77,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 36,
+      "slash": 51,
+      "stab": 58,
+      "archery": 0,
+      "magic": 42
+    },
+    "defenseStats": {
+      "crush": -7,
+      "slash": 38,
+      "stab": 46,
+      "archery": 33,
+      "magic": -9
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 6,
+      "archery": 0,
+      "magic": 14
+    }
+  },
+
+  "hellspider": {
+    "name": "Hell Spooder",
+    "description": "Aren't all spiders technically from hell?",
+    "drops": {"blackspiderarmor": 100, "essentialrage": 15, "lavaboots": 30},
+    "hitPoints": 780,
+    "defenseLevel": 60,
+    "attackLevel": 28,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
+    "poisonous": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 38,
+      "slash": 55,
+      "stab": 59,
+      "archery": 0,
+      "magic": 45
+    },
+    "defenseStats": {
+      "crush": -5,
+      "slash": 42,
+      "stab": 47,
+      "archery": 35,
+      "magic": -7
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 7,
+      "archery": 0,
+      "magic": 15
+    }
   },
 
-  "redfish": {
-    "name": "Red Fesh",
-    "id": 67,
-    "drops": {"gold": 50},
-    "hitPoints": 100,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 55,
-    "level": 30,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "redguard": {
-    "name": "Bandit",
-    "id": 68,
-    "drops": {"redguardarmor": 300, "redguardarcherarmor": 325, "ring1": 25, "scimitar": 150, "watermelonbow": 200},
-    "hitPoints": 135,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 55,
-    "level": 18,
+  "bluepreta": {
+    "name": "Blue Preta",
+    "drops": {"bluescimitar": 100, "bluewingarcherarmor": 80, "bluewingarmor": 80},
+    "hitPoints": 600,
+    "defenseLevel": 50,
+    "attackLevel": 80,
+    "level": 85,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 28,
+      "slash": 25,
+      "stab": 19,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 25,
+      "slash": 22,
+      "stab": 27,
+      "archery": 15,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 10
+    }
   },
 
-  "redmouse": {
-    "name": "Red Mouse",
-    "id": 69,
-    "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
+  "cactus": {
+    "name": "Cactus",
+    "description": "So it's like, a cactus, that can move?",
+    "drops": {"cactusaxe": 280},
     "hitPoints": 160,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 55,
-    "level": 24,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "redpirateskeleton": {
-    "name": "Pirate Skeleton",
-    "id": 70,
-    "drops": {"gold": 300},
-    "hitPoints": 650,
-    "armour": 10,
-    "weapon": 4,
-    "experience": 89,
-    "level": 29,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1200,
-    "movementSpeed": 400,
-    "respawnDelay": 65000
-  },
-
-  "rhaphidophoridae": {
-    "name": "Cricket",
-    "id": 71,
-    "drops": {"gold": 50},
-    "hitPoints": 3500,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 400,
-    "level": 93,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "rudolf": {
-    "name": "Raindeer",
-    "id": 72,
-    "drops": {"gold": 50},
-    "hitPoints": 5550,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 2250,
-    "level": 129,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "santaelf": {
-    "name": "Santa's Elf",
-    "id": 73,
-    "drops": {"gold": 50},
-    "hitPoints": 6100,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 3250,
-    "level": 144,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "scorpion": {
-    "name": "Scorpion",
-    "id": 74,
-    "drops": {"gold": 50},
-    "hitPoints": 2700,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 225,
-    "level": 80,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "skyelf": {
-    "name": "Sky Elf",
-    "id": 75,
-    "drops": {"gold": 50},
-    "hitPoints": 2100,
-    "armour": 6,
-    "weapon": 6,
-    "experience": 280,
-    "level": 74,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "slime": {
-    "name": "Slime",
-    "id": 76,
-    "drops": {"gold": 50},
-    "hitPoints": 3055,
-    "armour": 5,
-    "weapon": 5,
-    "experience": 360,
-    "level": 88,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "smalldevil": {
-    "name": "Corrupted Bat",
-    "id": 77,
-    "drops": {"gold": 50},
-    "hitPoints": 100,
-    "armour": 3,
-    "weapon": 5,
-    "experience": 65,
-    "level": 10,
+    "defenseLevel": 34,
+    "attackLevel": 10,
+    "level": 16,
     "aggroRange": 2,
     "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
+    "alwaysAggressive": true,
+    "roaming": false,
+    "attackRate": 1300,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "hiddenName": true,
+    "attackStats": {
+      "crush": 0,
+      "slash": 8,
+      "stab": 14,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": -16,
+      "stab": -12,
+      "archery": -8,
+      "magic": 21
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "snowelf": {
-    "name": "Snow Elf",
-    "id": 78,
-    "drops": {"gold": 50},
-    "hitPoints": 3400,
-    "armour": 10,
-    "weapon": 15,
-    "experience": 650,
-    "level": 99,
+  "cat": {
+    "name": "Cat",
+    "drops": {},
+    "hitPoints": 600,
+    "defenseLevel": 1,
+    "attackLevel": 4,
+    "level": 35,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 4,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "snowman": {
-    "name": "Snowman",
-    "id": 79,
-    "drops": {"gold": 50},
-    "hitPoints": 750,
-    "armour": 3,
-    "weapon": 3,
-    "experience": 352,
-    "level": 43,
+  "clam": {
+    "name": "Clam",
+    "description": "Now this would make a good stew!",
+    "drops": {"spear": 300},
+    "hitPoints": 450,
+    "defenseLevel": 6,
+    "attackLevel": 1,
+    "level": 36,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -12,
+      "slash": 25,
+      "stab": 23,
+      "archery": 22,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "snowrabbit": {
-    "name": "Snow Rabbit",
-    "id": 80,
-    "drops": {"gold": 50},
-    "hitPoints": 295,
-    "armour": 4,
-    "weapon": 1,
-    "experience": 175,
-    "level": 29,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "snowwolf": {
-    "name": "Snow Wolf",
-    "id": 81,
-    "drops": {"gold": 850, "icerose": 50, "wolfarmor": 100},
-    "hitPoints": 1185,
-    "armour": 8,
-    "weapon": 3,
-    "experience": 135,
-    "level": 54,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "icegoblin": {
-    "name": "Frost Goblin",
-    "id": 82,
-    "drops": {"gold": 50},
-    "hitPoints": 475,
-    "armour": 3,
-    "weapon": 8,
-    "experience": 84,
-    "level": 28,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "soldierant": {
-    "name": "Soldier Ant",
-    "id": 83,
-    "drops": {"gold": 50},
-    "hitPoints": 890,
-    "armour": 6,
-    "weapon": 1,
-    "experience": 75,
-    "level": 43,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "soybeanbug": {
-    "name": "Soy Bean Bug",
-    "id": 84,
-    "drops": {"gold": 50},
-    "hitPoints": 3500,
-    "armour": 30,
-    "weapon": 15,
-    "experience": 950,
-    "level": 103,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "spider": {
-    "name": "Spooder",
-    "id": 85,
-    "drops": {"gold": 50},
-    "hitPoints": 2900,
-    "armour": 45,
-    "weapon": 1,
-    "experience": 750,
+  "cobra": {
+    "name": "Cobra",
+    "hitPoints": 1150,
+    "defenseLevel": 3,
+    "attackLevel": 10,
     "level": 91,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 37,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 26,
+      "stab": 29,
+      "archery": 20,
+      "magic": -2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "squirrel": {
-    "name": "Squirrel",
-    "id": 86,
-    "drops": {"gold": 50},
-    "hitPoints": 150,
-    "armour": 3,
-    "weapon": 7,
-    "experience": 100,
-    "level": 16,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "suicideghost": {
-    "name": "Ghost",
-    "id": 87,
-    "drops": {"gold": 50},
-    "hitPoints": 750,
-    "armour": 1,
-    "weapon": 5,
-    "experience": 70,
-    "level": 62,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "vulture": {
-    "name": "Vulture",
-    "id": 88,
-    "drops": {"gold": 50},
-    "hitPoints": 100,
-    "armour": 5,
-    "weapon": 1,
-    "experience": 44,
-    "level": 16,
+  "crystalscolpion": {
+    "name": "Crystal Scorpion",
+    "drops": {"crystalbow": 300},
+    "hitPoints": 1450,
+    "defenseLevel": 15,
+    "attackLevel": 5,
+    "level": 105,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 35,
+      "slash": 23,
+      "stab": 32,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 7,
+      "slash": 23,
+      "stab": 35,
+      "archery": 32,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 11,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "whitebear": {
-    "name": "Molar Bear",
-    "id": 89,
-    "drops": {"gold": 50},
-    "hitPoints": 1300,
-    "armour": 7,
-    "weapon": 10,
-    "experience": 750,
-    "level": 63,
+  "cursedhahoemask": {
+    "name": "Cursed Hahoe Mask",
+    "hitPoints": 2100,
+    "defenseLevel": 25,
+    "attackLevel": 5,
+    "level": 115,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 28
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 25,
+      "stab": 12,
+      "archery": 15,
+      "magic": 8
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 13
+    }
   },
 
-  "whitemouse": {
-    "name": "Mouse",
-    "id": 90,
-    "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
-    "hitPoints": 950,
-    "armour": 10,
-    "weapon": 3,
-    "experience": 55,
-    "level": 53,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
-    "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 35000
-  },
-
-  "whitetiger": {
-    "name": "Tiger",
-    "id": 91,
-    "drops": {"tigerarmor": 500, "gold": 500},
-    "hitPoints": 3350,
-    "armour": 1,
-    "weapon": 15,
-    "experience": 850,
-    "level": 98,
+  "curseddjangseung": {
+    "name": "Cursed Djangseung",
+    "hitPoints": 1900,
+    "defenseLevel": 25,
+    "attackLevel": 10,
+    "level": 110,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 27
+    },
+    "defenseStats": {
+      "crush": -12,
+      "slash": 22,
+      "stab": 24,
+      "archery": 23,
+      "magic": 25
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 12
+    }
   },
 
-  "wolf": {
-    "name": "Wolf",
-    "id": 92,
-    "drops": {"wolfarmor": 10, "wolfarcherarmor": 10, "gold": 700},
+  "darkogre": {
+    "name": "Dark Ogre",
+    "description": "It didn't get to see much sun...",
+    "drops": {"deathflail": 3, "skylightbow": 180, "rubypendant": 100},
+    "hitPoints": 900,
+    "defenseLevel": 89,
+    "attackLevel": 45,
+    "level": 68,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 32,
+      "slash": 28,
+      "stab": 26,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 34,
+      "slash": 12,
+      "stab": 28,
+      "archery": 26,
+      "magic": 15
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 14,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "darkscolpion": {
+    "name": "Dark Scorpion",
+    "hitPoints": 1450,
+    "defenseLevel": 10,
+    "attackLevel": 15,
+    "level": 101,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 10,
+      "stab": 15,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 10,
+      "stab": 8,
+      "archery": 9,
+      "magic": 5
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "darkskeleton": {
+    "name": "Dark Skeleton",
+    "drops": {"ring1": 300, "hammer": 600, "hunterbow": 400},
     "hitPoints": 300,
-    "armour": 3,
-    "weapon": 12,
-    "experience": 40,
-    "level": 26,
+    "defenseLevel": 15,
+    "attackLevel": 12,
+    "level": 56,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 1100,
+    "roaming": true,
+    "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 32,
+      "stab": 14,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 16,
+      "slash": 34,
+      "stab": 25,
+      "archery": 35,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "yellowbat": {
-    "name": "Mutated Bat",
-    "id": 93,
-    "drops": {"gold": 50},
-    "hitPoints": 350,
-    "armour": 30,
-    "weapon": 15,
-    "experience": 175,
-    "level": 16,
+  "desertscorpion": {
+    "name": "Desert Scorpion",
+    "drops": {"steelboots": 300},
+    "hitPoints": 124,
+    "defenseLevel": 16,
+    "attackLevel": 16,
+    "level": 24,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 320,
+    "respawnDelay": 55000,
+    "attackStats": {
+      "crush": 16,
+      "slash": 14,
+      "stab": 17,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -12,
+      "slash": 16,
+      "stab": 14,
+      "archery": 15,
+      "magic": -9
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "devilkazya": {
+    "name": "Devil Blox",
+    "hitPoints": 2300,
+    "defenseLevel": 30,
+    "attackLevel": 25,
+    "level": 135,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 25,
+      "slash": 11,
+      "stab": 6,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 30,
+      "stab": 30,
+      "archery": 30,
+      "magic": 30
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "earthworm": {
+    "name": "Earth Worm",
+    "description": "You know, it would make sense that earth worms are underground.",
+    "hitPoints": 815,
+    "defenseLevel": 88,
+    "attackLevel": 55,
+    "level": 74,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 55,
+      "slash": 30,
+      "stab": 12,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 34,
+      "slash": 36,
+      "stab": 45,
+      "archery": 45,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "flaredanceknight": {
+    "name": "Cursed Knight",
+    "hitPoints": 1000,
+    "defenseLevel": 15,
+    "attackLevel": 10,
+    "level": 65,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 8,
+      "slash": 10,
+      "stab": 10,
+      "archery": 0,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 15,
+      "stab": 15,
+      "archery": 8,
+      "magic": 7
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "frog": {
+    "name": "Frog",
+    "description": "Just look at it hop around and things and stuff.",
+    "drops": {"frogarmor": 300},
+    "hitPoints": 788,
+    "defenseLevel": 7,
+    "attackLevel": 15,
+    "level": 56,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "roamDistance": 5,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 25,
+      "slash": 18,
+      "stab": 8,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 17,
+      "slash": 13,
+      "stab": 12,
+      "archery": 6,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 8,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ghostrider": {
+    "name": "Skeleton Knight",
+    "hitPoints": 700,
+    "defenseLevel": 30,
+    "attackLevel": 15,
+    "level": 19,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 11,
+      "slash": 13,
+      "stab": 15,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 22,
+      "stab": 30,
+      "archery": 30,
+      "magic": 17
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 11,
+      "archery": 0,
+      "magic": 8
+    }
+  },
+
+  "goldgolem": {
+    "name": "Golden Golem",
+    "drops": {"goldaxe": 460},
+    "hitPoints": 1200,
+    "defenseLevel": 10,
+    "attackLevel": 15,
+    "level": 75,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 10,
+      "stab": 6,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 10,
+      "stab": 10,
+      "archery": 10,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "golem": {
+    "name": "Golem",
+    "drops": {"deathbow": 160, "bluesword": 240},
+    "hitPoints": 350,
+    "defenseLevel": 25,
+    "attackLevel": 15,
+    "level": 38,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 750,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 10,
+      "stab": 6,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 11,
+      "slash": 25,
+      "stab": 25,
+      "archery": 25,
+      "magic": 25
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "redfish": {
+    "name": "Red Fesh",
+    "hitPoints": 100,
+    "defenseLevel": 1,
+    "attackLevel": 1,
+    "level": 46,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 13,
+      "slash": 11,
+      "stab": 9,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 13,
+      "stab": -13,
+      "archery": -11,
+      "magic": 9
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "yellowfish": {
     "name": "Yellow Fesh",
-    "id": 94,
-    "drops": {"gold": 50},
     "hitPoints": 135,
-    "armour": 3,
-    "weapon": 1,
-    "experience": 55,
-    "level": 27,
+    "defenseLevel": 3,
+    "attackLevel": 1,
+    "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 13,
+      "slash": 11,
+      "stab": 9,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 13,
+      "stab": -13,
+      "archery": -11,
+      "magic": 9
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "yellowmouse": {
-    "name": "Yellow Mouse",
-    "id": 95,
-    "drops": {"ratarcherarmor": 300, "ratarmor": 300, "gold": 400},
-    "hitPoints": 750,
-    "armour": 3,
-    "weapon": 1,
-    "experience": 55,
-    "level": 39,
+  "greenfish": {
+    "name": "Green Fesh",
+    "drops": {"spear": 300, "pendant1": 160, "greenarcherarmor": 500},
+    "hitPoints": 200,
+    "defenseLevel": 1,
+    "attackLevel": 1,
+    "level": 45,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 13,
+      "stab": 11,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 17,
+      "slash": 15,
+      "stab": -12,
+      "archery": -10,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "yellowpreta": {
-    "name": "Preta",
-    "id": 96,
-    "drops": {"bluescimitar": 200, "bluewingarcherarmor": 200, "bluewingarmor": 200, "gold": 400},
-    "hitPoints": 526,
-    "armour": 4,
-    "weapon": 4,
-    "experience": 70,
-    "level": 39,
+  "hermitcrab": {
+    "name": "Hermit Crab",
+    "hitPoints": 155,
+    "defenseLevel": 12,
+    "attackLevel": 4,
+    "level": 15,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 4,
+      "slash": 2,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -6,
+      "slash": 15,
+      "stab": 13,
+      "archery": 12,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "hobgoblin": {
+    "name": "Hobgoblin",
+    "drops": {"mailarmor": 600, "platearmor": 420, "platearcherarmor": 420, "mailarcherarmor": 600, "steelboots": 300},
+    "hitPoints": 260,
+    "defenseLevel": 8,
+    "attackLevel": 8,
+    "level": 42,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 55000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 28,
+      "stab": 19,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 28,
+      "stab": 18,
+      "archery": 14,
+      "magic": 3
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 6,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
-  "zombie": {
-    "name": "Zombie",
-    "id": 97,
-    "drops": {"gold": 50},
-    "hitPoints": 1250,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 55,
+  "hongcheol": {
+    "name": "Hong Chul",
+    "hitPoints": 1550,
+    "defenseLevel": 15,
+    "attackLevel": 15,
+    "level": 100,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 15,
+      "slash": 12,
+      "stab": 11,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 15,
+      "stab": 15,
+      "archery": 15,
+      "magic": 15
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "icegolem": {
+    "name": "Ice Golem",
+    "drops": {"bluesword": 700, "crystalarmor": 160, "crystalarcherarmor": 160},
+    "hitPoints": 700,
+    "defenseLevel": 9,
+    "attackLevel": 5,
+    "level": 46,
+    "aggroRange": 5,
+    "attackRange": 7,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "projectileName": "projectile-iceball",
+    "freezing": true,
+    "attackStats": {
+      "crush": 10,
+      "slash": 5,
+      "stab": 6,
+      "archery": 0,
+      "magic": 35
+    },
+    "defenseStats": {
+      "crush": 13,
+      "slash": 27,
+      "stab": 18,
+      "archery": 18,
+      "magic": 39
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 9
+    }
+  },
+
+  "iceknight": {
+    "name": "Ice Knight",
+    "drops": {"icerose": 40},
+    "hitPoints": 550,
+    "defenseLevel": 12,
+    "attackLevel": 8,
+    "level": 37,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 25,
+      "slash": 38,
+      "stab": 33,
+      "archery": 0,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 9,
+      "slash": 22,
+      "stab": 30,
+      "archery": 28,
+      "magic": -15
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 11,
+      "archery": 0,
+      "magic": 8
+    }
+  },
+
+  "icevulture": {
+    "name": "Ice Vulture",
+    "hitPoints": 300,
+    "defenseLevel": 1,
+    "attackLevel": 3,
+    "level": 38,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 33,
+      "stab": 30,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 34,
+      "slash": 27,
+      "stab": 21,
+      "archery": -10,
+      "magic": -17
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 0,
+      "archery": 0,
+      "magic": 7
+    }
+  },
+
+  "infectedguard": {
+    "name": "Infected Guard",
+    "hitPoints": 750,
+    "defenseLevel": 18,
+    "attackLevel": 30,
+    "level": 61,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 34,
+      "stab": 32,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 16,
+      "slash": 20,
+      "stab": 22,
+      "archery": -9,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": -15,
+      "strength": 12,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ironogre": {
+    "name": "Iron Ogre",
+    "drops": {"redsword": 300},
+    "hitPoints": 300,
+    "defenseLevel": 5,
+    "attackLevel": 4,
+    "level": 20,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 10,
+      "stab": 9,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": 15,
+      "stab": 13,
+      "archery": 12,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 11,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "livingarmor": {
+    "name": "Living armor",
+    "drops": {"dovakinarcherarmor": 140, "dovakinarmor": 140, "skylightbow": 180},
+    "hitPoints": 340,
+    "defenseLevel": 4,
+    "attackLevel": 1,
+    "level": 45,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 30,
+      "slash": 34,
+      "stab": 31,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 24,
+      "stab": 27,
+      "archery": 25,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "mantis": {
+    "name": "Praying Mantis",
+    "hitPoints": 1000,
+    "defenseLevel": 7,
+    "attackLevel": 15,
+    "level": 56,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 350,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 6,
+      "slash": 15,
+      "stab": 11,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 7,
+      "stab": 6,
+      "archery": 7,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "mermaid": {
+    "name": "Mermaid",
+    "drops": {"trident": 220, "mermaidbow": 260},
+    "hitPoints": 150,
+    "defenseLevel": 12,
+    "attackLevel": 14,
+    "level": 40,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 115000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 20,
+      "stab": 22,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 22,
+      "slash": 17,
+      "stab": 5,
+      "archery": 19,
+      "magic": 10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "mimic": {
+    "name": "Mimic",
+    "drops": {"bluescimitar": 240},
+    "hitPoints": 1200,
+    "defenseLevel": 12,
+    "attackLevel": 8,
+    "level": 25,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "alwaysAggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "hiddenName": true,
+    "roamingDistance": 12,
+    "attackStats": {
+      "crush": 18,
+      "slash": 17,
+      "stab": 15,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 22,
+      "slash": 18,
+      "stab": 10,
+      "archery": -10,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniiceknight": {
+    "name": "Mini Ice Knight",
+    "hitPoints": 100,
+    "defenseLevel": 4,
+    "attackLevel": 3,
+    "level": 24,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 21,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -3,
+      "slash": 14,
+      "stab": 19,
+      "archery": 12,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
+  },
+
+  "miniknight": {
+    "name": "Mini Knight",
+    "hitPoints": 1450,
+    "defenseLevel": 3,
+    "attackLevel": 5,
+    "level": 56,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "oldogre": {
+    "name": "Old Ogre",
+    "description": "He's old, and balding, but still dangerous.",
+    "drops": {"pendant1": 140, "skylightbow": 460},
+    "hitPoints": 256,
+    "defenseLevel": 5,
+    "attackLevel": 1,
+    "level": 23,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 22,
+      "slash": 18,
+      "stab": 16,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 25,
+      "slash": 17,
+      "stab": -8,
+      "archery": -3,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": -3,
+      "strength": 10,
+      "archery": 0,
+      "magic": -5
+    }
+  },
+
+  "orc": {
+    "name": "Orc",
+    "drops": {"redsword": 480, "violetbow": 250, "redarcherarmor": 250, "spear": 340},
+    "hitPoints": 275,
+    "defenseLevel": 5,
+    "attackLevel": 4,
+    "level": 47,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 18,
+      "stab": 20,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 15,
+      "slash": 25,
+      "stab": 14,
+      "archery": 24,
+      "magic": -6
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 8,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "pain": {
+    "name": "Infected Villager",
+    "hitPoints": 1550,
+    "defenseLevel": 5,
+    "attackLevel": 1,
+    "level": 73,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 5,
+      "archery": 4,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "penguin": {
+    "name": "Penguin",
+    "drops": {"bluewingarcherarmor": 380, "bluewingarmor": 380, "icerose": 260},
+    "hitPoints": 526,
+    "defenseLevel": 4,
+    "attackLevel": 1,
+    "level": 41,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 2,
+      "archery": 3,
+      "magic": 4
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "pierrot": {
+    "name": "Clown",
+    "hitPoints": 150,
+    "defenseLevel": 30,
+    "attackLevel": 15,
+    "level": 12,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 8,
+      "slash": 11,
+      "stab": 12,
+      "archery": 0,
+      "magic": 15
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 30,
+      "stab": 30,
+      "archery": 26,
+      "magic": 14
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "pinkelf": {
+    "name": "Pink Elf",
+    "hitPoints": 625,
+    "defenseLevel": 8,
+    "attackLevel": 4,
+    "level": 43,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 1,
+      "slash": 3,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 7,
+      "stab": 8,
+      "archery": 7,
+      "magic": 5
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 1
+    }
+  },
+
+  "preta": {
+    "name": "Preta",
+    "drops": {"greenpendant": 180, "bluewingarcherarmor": 260, "bluewingarmor": 260},
+    "hitPoints": 495,
+    "defenseLevel": 1,
+    "attackLevel": 7,
+    "level": 36,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 21,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 12
+    },
+    "defenseStats": {
+      "crush": 17,
+      "slash": 19,
+      "stab": 21,
+      "archery": 18,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": -4,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "purplepreta": {
+    "name": "Purple Preta",
+    "drops": {"bluescimitar": 220, "bluewingarcherarmor": 200, "bluewingarmor": 220},
+    "hitPoints": 431,
+    "defenseLevel": 1,
+    "attackLevel": 6,
+    "level": 31,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 18,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 9
+    },
+    "defenseStats": {
+      "crush": 14,
+      "slash": 11,
+      "stab": 16,
+      "archery": 10,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": -5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "greencockroach": {
+    "name": "Blue Cockroach",
+    "description": "Ew, a cockroach.",
+    "drops": {"cockroachsuit": 120, "sickle": 180},
+    "hitPoints": 785,
+    "defenseLevel": 5,
+    "attackLevel": 0,
+    "level": 55,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 11,
+      "stab": 12,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -15,
+      "slash": 27,
+      "stab": 25,
+      "archery": 26,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 10,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "redcockroach": {
+    "name": "Red Cockroach",
+    "drops": {"cockroachsuit": 160, "sickle": 160},
+    "hitPoints": 669,
+    "defenseLevel": 10,
+    "attackLevel": 5,
+    "level": 44,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 300,
+    "respawnDelay": 45000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 9,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -17,
+      "slash": 25,
+      "stab": 22,
+      "archery": 23,
+      "magic": -15
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 8,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "redelf": {
+    "name": "Red Elf",
+    "hitPoints": 1750,
+    "defenseLevel": 5,
+    "attackLevel": 5,
+    "level": 70,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 3,
+      "slash": 5,
+      "stab": 5,
+      "archery": 0,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 5,
+      "stab": 5,
+      "archery": 5,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 1
+    }
+  },
+
+  "guardsword": {
+    "name": "Guard",
+    "drops": {"guardarmor": 300, "leatherboots": 240},
+    "hitPoints": 625,
+    "defenseLevel": 30,
+    "attackLevel": 25,
+    "level": 47,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 21,
+      "slash": 25,
+      "stab": 25,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 21,
+      "slash": 30,
+      "stab": 14,
+      "archery": 18,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "guardmace": {
+    "name": "Guard",
+    "drops": {"guardarmor": 300},
+    "hitPoints": 625,
+    "defenseLevel": 30,
+    "attackLevel": 28,
+    "level": 45,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 23,
+      "slash": 28,
+      "stab": 28,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 21,
+      "slash": 30,
+      "stab": 14,
+      "archery": 18,
+      "magic": 12
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "redguard": {
+    "name": "Bandit",
+    "drops": {"redguardarmor": 220, "redguardarcherarmor": 220, "ring1": 200, "scimitar": 200, "watermelonbow": 200},
+    "hitPoints": 335,
+    "defenseLevel": 10,
+    "attackLevel": 5,
     "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 19,
+      "slash": 28,
+      "stab": 17,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 20,
+      "slash": 40,
+      "stab": 9,
+      "archery": 12,
+      "magic": -4
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 12,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "redmouse": {
+    "name": "Red Mouse",
+    "drops": {"ratarcherarmor": 600, "ratarmor": 600},
+    "hitPoints": 160,
+    "defenseLevel": 1,
+    "attackLevel": 1,
+    "level": 24,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "rhaphidophoridae": {
+    "name": "Cricket",
+    "hitPoints": 3500,
+    "defenseLevel": 5,
+    "attackLevel": 10,
+    "level": 93,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "rudolf": {
+    "name": "Raindeer",
+    "hitPoints": 5550,
+    "defenseLevel": 10,
+    "attackLevel": 15,
+    "level": 129,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "santaelf": {
+    "name": "Santa's Elf",
+    "drops": {"candykey": 500},
+    "hitPoints": 610,
+    "defenseLevel": 15,
+    "attackLevel": 35,
+    "level": 136,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "alwaysAggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "scorpion": {
+    "name": "Scorpion",
+    "hitPoints": 2700,
+    "defenseLevel": 10,
+    "attackLevel": 15,
+    "level": 80,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "skyelf": {
+    "name": "Sky Elf",
+    "hitPoints": 2100,
+    "defenseLevel": 6,
+    "attackLevel": 6,
+    "level": 74,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "slime": {
+    "name": "Slime",
+    "drops": {"platearcherarmor": 450, "swiftboots": 10},
+    "description": "Why does every game have a slime in it?",
+    "hitPoints": 694,
+    "defenseLevel": 42,
+    "attackLevel": 10,
+    "level": 48,
+    "aggroRange": 3,
+    "attackRange": 6,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "poisonous": true,
+    "projectileName": "projectile-poisonball",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 46,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 24,
+      "slash": 30,
+      "stab": 19,
+      "archery": 30,
+      "magic": -12
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 10,
+      "magic": 0
+    }
+  },
+
+  "smalldevil": {
+    "name": "Corrupted Bat",
+    "hitPoints": 100,
+    "defenseLevel": 3,
+    "attackLevel": 5,
+    "level": 13,
+    "aggroRange": 2,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "snowelf": {
+    "name": "Snow Elf",
+    "hitPoints": 3400,
+    "defenseLevel": 10,
+    "attackLevel": 15,
+    "level": 99,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "snowman": {
+    "name": "Snowman",
+    "hitPoints": 750,
+    "defenseLevel": 3,
+    "attackLevel": 3,
+    "level": 43,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "snowrabbit": {
+    "name": "Snow Rabbit",
+    "drops": {"rabbitarmor": 100, "swiftboots": 100},
+    "hitPoints": 295,
+    "defenseLevel": 4,
+    "attackLevel": 1,
+    "level": 29,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "snowwolf": {
+    "name": "Snow Wolf",
+    "description": "I really expected the wolf to be made out of snow :(",
+    "drops": {"icerose": 140, "wolfarmor": 280},
+    "hitPoints": 1185,
+    "defenseLevel": 8,
+    "attackLevel": 3,
+    "level": 55,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "icegoblin": {
+    "name": "Frost Goblin",
+    "hitPoints": 475,
+    "defenseLevel": 3,
+    "attackLevel": 8,
+    "level": 28,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "soldierant": {
+    "name": "Soldier Ant",
+    "hitPoints": 526,
+    "defenseLevel": 42,
+    "attackLevel": 28,
+    "level": 60,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "soybeanbug": {
+    "name": "Soy Bean Bug",
+    "hitPoints": 3500,
+    "defenseLevel": 30,
+    "attackLevel": 15,
+    "level": 103,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "suicideghost": {
+    "name": "Ghost",
+    "hitPoints": 750,
+    "defenseLevel": 1,
+    "attackLevel": 5,
+    "level": 62,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "vulture": {
+    "name": "Vulture",
+    "hitPoints": 100,
+    "defenseLevel": 5,
+    "attackLevel": 1,
+    "level": 16,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "whitebear": {
+    "name": "Molar Bear",
+    "hitPoints": 1300,
+    "defenseLevel": 7,
+    "attackLevel": 10,
+    "level": 42,
+    "aggroRange": 2,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "whitemouse": {
+    "name": "Mouse",
+    "drops": {"ratarcherarmor": 240, "ratarmor": 240},
+    "hitPoints": 750,
+    "defenseLevel": 16,
+    "attackLevel": 3,
+    "level": 45,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "whitetiger": {
+    "name": "Tiger",
+    "drops": {"tigerarmor": 600},
+    "hitPoints": 3350,
+    "defenseLevel": 1,
+    "attackLevel": 15,
+    "level": 98,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "wolf": {
+    "name": "Wolf",
+    "drops": {"wolfarmor": 170, "wolfarcherarmor": 170},
+    "hitPoints": 350,
+    "defenseLevel": 3,
+    "attackLevel": 12,
+    "level": 55,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 28,
+      "stab": 12,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 18,
+      "slash": 10,
+      "stab": 29,
+      "archery": 14,
+      "magic": 6
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 8,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "darkwolf": {
+    "name": "Wolf",
+    "drops": {},
+    "hitPoints": 950,
+    "defenseLevel": 3,
+    "attackLevel": 45,
+    "level": 78,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 800,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "yellowbat": {
+    "name": "Mutated Bat",
+    "hitPoints": 350,
+    "defenseLevel": 30,
+    "attackLevel": 15,
+    "level": 16,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "yellowmouse": {
+    "name": "Yellow Mouse",
+    "drops": {"ratarcherarmor": 400, "ratarmor": 400},
+    "hitPoints": 750,
+    "defenseLevel": 3,
+    "attackLevel": 1,
+    "level": 39,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "yellowpreta": {
+    "name": "Yellow Preta",
+    "drops": {"bluescimitar": 450, "bluewingarcherarmor": 450, "bluewingarmor": 450},
+    "hitPoints": 526,
+    "defenseLevel": 4,
+    "attackLevel": 4,
+    "level": 39,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "zombie": {
+    "name": "Zombie",
+    "drops": {"pickaxe": 15},
+    "hitPoints": 1250,
+    "defenseLevel": 1,
+    "attackLevel": 1,
+    "level": 69,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 43,
+      "slash": 14,
+      "stab": 18,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 38,
+      "slash": 30,
+      "stab": 14,
+      "archery": 10,
+      "magic": -10
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 18,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "skeletonking": {
     "name": "Skeleton King",
-    "id": 99,
-    "drops": {"goldensword": 400, "bigflask": 100, "goldenbow": 400, "pearlpendant": 50, "pearlring": 50},
-    "hitPoints": 2650,
-    "armour": 15,
-    "weapon": 16,
-    "experience": 150,
-    "level": 23,
-    "aggroRange": 3,
+    "description": "Here he is, the chad of r/neverbrokeabone.",
+    "drops": {"goldensword": 280, "goldenbow": 280, "greenpendant": 115, "sproutring": 115, "goldboots": 125},
+    "hitPoints": 1850,
+    "defenseLevel": 35,
+    "attackLevel": 27,
+    "level": 32,
+    "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 900,
-    "movementSpeed": 400,
-    "respawnDelay": 50000
+    "movementSpeed": 420,
+    "respawnDelay": 80000,
+    "plugin": "skeletonking",
+    "boss": true,
+    "roamDistance": 16,
+    "achievement": "skeletonking",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "ogrelord": {
     "name": "Ogre Lord",
-    "id": 100,
-    "drops": {"sidesword": 300, "bigflask": 100, "goldensword": 500, "pearlpendant": 50, "pearlring": 50},
+    "description": "I better keep a distance before this thing turns me into a stew!",
+    "drops": {"sidesword": 180, "goldensword": 220, "pearlpendant": 180, "pearlring": 180},
     "hitPoints": 2850,
-    "armour": 50,
-    "weapon": 23,
-    "experience": 650,
-    "level": 35,
-    "aggroRange": 5,
+    "defenseLevel": 40,
+    "attackLevel": 38,
+    "level": 44,
+    "aggroRange": 12,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
-    "movementSpeed": 600,
-    "respawnDelay": 75000
+    "movementSpeed": 420,
+    "respawnDelay": 90000,
+    "roamingDistance": 16,
+    "plugin": "ogrelord",
+    "boss": true,
+    "achievement": "ogrelord",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "windguardian": {
     "name": "Wind Guardian",
-    "id": 101,
-    "drops": {"gold": 50},
+    "drops": {"icesword": 30},
     "hitPoints": 15000,
-    "armour": 40,
-    "weapon": 1,
-    "experience": 2000,
+    "defenseLevel": 40,
+    "attackLevel": 100,
     "projectileName": "projectile-iceball",
     "level": 195,
     "aggroRange": 3,
     "attackRange": 6,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 500,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "lightningguardian": {
     "name": "Lightning Guardian",
-    "id": 102,
-    "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "bridalmask": 50, "gold": 850},
+    "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "samuraiarmor": 50},
     "hitPoints": 4500,
-    "armour": 25,
-    "weapon": 35,
-    "experience": 1000,
+    "defenseLevel": 25,
+    "attackLevel": 35,
     "level": 64,
     "aggroRange": 6,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1750,
     "movementSpeed": 600,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "darkregion": {
     "name": "Tenebris",
-    "id": 104,
-    "drops": {"spiritring": 25, "regionarmor": 25, "paewoldo": 25, "gold": 925},
+    "drops": {"spiritring": 30, "regionarmor": 15, "paewoldo": 15},
     "hitPoints": 4000,
-    "armour": 20,
-    "weapon": 40,
-    "experience": 1000,
+    "defenseLevel": 20,
+    "attackLevel": 40,
     "level": 79,
     "aggroRange": 5,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "darkregionillusion": {
     "name": "Tenebris",
-    "id": 105,
     "hitPoints": 500,
-    "armour": 4,
-    "weapon": 5,
-    "experience": 10,
+    "defenseLevel": 4,
+    "attackLevel": 5,
     "level": 79,
     "aggroRange": 8,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 800,
-    "respawnDelay": -1
+    "respawnDelay": -1,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "miniseadragon": {
     "name": "Mini Sea Dragon",
-    "id": 106,
-    "drops": {"miniseadragonarmor": 300, "daywalker": 300, "gold": 400},
-    "hitPoints": 100,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 135,
-    "level": 11,
-    "aggroRange": 4,
+    "description": "Aww it's a little version of something that's gonna stomp me later!",
+    "drops": {"daywalker": 300},
+    "hitPoints": 1200,
+    "defenseLevel": 22,
+    "attackLevel": 15,
+    "level": 52,
+    "aggroRange": 6,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
-    "movementSpeed": 600,
-    "respawnDelay": 95000
+    "movementSpeed": 450,
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
-
+   
   "forestdragon": {
-    "name": "Gragon",
-    "id": 112,
-    "drops": {"dragonarmor": 25, "bamboospear": 25, "gold": 900, "marblependant": 25, "essentialrage": 25},
-    "hitPoints": 25000,
-    "armour": 300,
-    "weapon": 120,
-    "experience": 3000,
-    "level": 153,
-    "aggroRange": 2,
+    "name": "Forest Dragon",
+    "description": "Keros' favourite pet!",
+    "drops": {"dragonarmor": 225, "bamboospear": 225, "justicebow": 275, "forestbow": 40},
+    "hitPoints": 6942,
+    "defenseLevel": 80,
+    "attackLevel": 100,
+    "level": 258,
+    "aggroRange": 10,
     "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1100,
-    "movementSpeed": 800,
-    "respawnDelay": 95000
+    "alwaysAggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 600,
+    "respawnDelay": 180000,
+    "projectileName": "projectile-fireball",
+    "achievement": "forestdragon",
+    "plugin": "forestdragon",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "enel": {
     "name": "Lucendi",
-    "id": 114,
-    "drops": {"redenelbow": 25, "enelarmor": 25, "eneltrident": 50, "marblependant": 100, "gold": 800},
+    "drops": {"redenelbow": 60, "enelarmor": 60, "eneltrident": 60, "marblependant": 125},
     "hitPoints": 25000,
-    "armour": 150,
-    "weapon": 120,
-    "experience": 4500,
+    "defenseLevel": 150,
+    "attackLevel": 120,
     "level": 256,
     "aggroRange": 2,
     "attackRange": 2,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 800,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "seadragon": {
     "name": "Sea Dragon",
-    "id": 115,
-    "drops": {"seadragonarmor": 100, "seahorsebow": 300, "gold": 400},
+    "drops": {"seadragonarmor": 100, "seahorsebow": 120},
     "hitPoints": 100,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 135,
-    "level": 11,
+    "defenseLevel": 5,
+    "attackLevel": 10,
+    "level": 485,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "minidragon": {
     "name": "Mini Dragon",
-    "id": 116,
-    "drops": {"dragonarmor": 300, "spiritring": 200, "gold": 400},
-    "hitPoints": 100,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 135,
-    "level": 11,
-    "aggroRange": 4,
-    "attackRange": 1,
+    "drops": {"carnelianaxe": 60},
+    "hitPoints": 380,
+    "defenseLevel": 5,
+    "attackLevel": 15,
+    "level": 77,
+    "aggroRange": 5,
+    "attackRange": 9,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "respawnDelay": 95000
-  },
-
-  "piratecaptain": {
-    "name": "Pirate Captain",
-    "id": 120,
-    "drops": {"scimitar": 100, "piratearcherarmor": 100, "bluepiratearmor": 100, "marblependant": 200, "gold": 500},
-    "hitPoints": 1500,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 200,
-    "level": 46,
-    "aggroRange": 4,
-    "attackRange": 7,
-    "aggressive": false,
-    "projectileName": "projectile-iceball",
-    "attackRate": 1500,
-    "movementSpeed": 600,
-    "respawnDelay": 115000
-  },
-
-  "pirateskeleton": {
-    "name": "Pirate Skeleton",
-    "id": 122,
-    "drops": {"morningstar": 400, "redbow": 400, "gold": 300},
-    "hitPoints": 420,
-    "armour": 5,
-    "weapon": 10,
-    "experience": 79,
-    "level": 33,
-    "aggroRange": 4,
-    "attackRange": 1,
-    "aggressive": true,
-    "attackRate": 1200,
-    "movementSpeed": 600,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "projectileName": "projectile-fireball",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "queenant": {
-    "name": "Ziana",
-    "id": 123,
-    "drops": {"ironknightarmor": 25, "justicebow": 25, "whip": 25, "gold": 100},
-    "hitPoints": 2000,
-    "armour": 50,
-    "weapon": 100,
-    "experience": 750,
-    "level": 54,
-    "aggroRange": 5,
+    "name": "Queen Ant",
+    "drops": {"ironknightarmor": 300, "justicebow": 300, "whip": 300},
+    "hitPoints": 4200,
+    "defenseLevel": 85,
+    "attackLevel": 70,
+    "level": 94,
+    "aggroRange": 14,
     "attackRange": 1,
-    "aggressive": true,
+    "alwaysAggressive": true,
+    "roaming": true,
     "attackRate": 1500,
+    "roamDistance": 12,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "respawnDelay": 95000
+    "respawnDelay": 80000,
+    "healRate": 1000,
+    "achievement": "queenant",
+    "plugin": "queenant",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "skydinosaur": {
     "name": "Fulgur",
-    "id": 126,
-    "drops": {"conferencecall": 25, "essentialrage": 50, "gold": 100},
+    "drops": {"conferencecall": 25, "essentialrage": 50},
     "hitPoints": 50000,
-    "armour": 400,
-    "weapon": 200,
-    "experience": 52500,
+    "defenseLevel": 400,
+    "attackLevel": 200,
     "level": 435,
     "aggroRange": 4,
     "attackRange": 2,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1800,
     "movementSpeed": 500,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "squid": {
     "name": "Great Squid",
-    "id": 127,
-    "drops": {"searage": 10, "frostarmor": 25, "bluewingarcherarmor": 25, "gold": 250},
+    "drops": {"searage": 50, "squidarmor": 50},
     "hitPoints": 2800,
-    "armour": 45,
-    "weapon": 30,
-    "experience": 2250,
+    "defenseLevel": 45,
+    "attackLevel": 30,
     "level": 71,
     "aggroRange": 7,
     "attackRange": 4,
     "aggressive": true,
     "projectileName": "projectile-terror",
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 1200,
-    "respawnDelay": 95000
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "snowlady": {
+    "name": "Queen of Snow",
+    "drops": {"gbwingarmor": 50, "gbwingarcherarmor": 75},
+    "hitPoints": 2800,
+    "defenseLevel": 10,
+    "attackLevel": 90,
+    "level": 180,
+    "aggroRange": 7,
+    "attackRange": 4,
+    "aggressive": true,
+    "projectileName": "projectile-iceball",
+    "roaming": true,
+    "attackRate": 1300,
+    "movementSpeed": 1200,
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "frostqueen": {
+    "name": "Frost Queen",
+    "drops": {"frostarmor": 50, "frostring": 50},
+    "hitPoints": 2800,
+    "defenseLevel": 10,
+    "attackLevel": 90,
+    "level": 180,
+    "aggroRange": 7,
+    "attackRange": 4,
+    "aggressive": true,
+    "projectileName": "projectile-iceball",
+    "roaming": true,
+    "attackRate": 1300,
+    "movementSpeed": 1200,
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "eliminator": {
+    "name": "Eliminator",
+    "hitPoints": 2000,
+    "defenseLevel": 45,
+    "attackLevel": 30,
+    "level": 65,
+    "aggroRange": 7,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 500,
+    "respawnDelay": 95000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
+  },
+
+  "santa": {
+    "name": "Santa",
+    "drops": {"candybar": 75, "candybow": 25},
+    "hitPoints": 7500,
+    "defenseLevel": 95,
+    "attackLevel": 105,
+    "level": 240,
+    "aggroRange": 18,
+    "attackRange": 16,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 500,
+    "respawnDelay": 180000,
+    "projectileName": "projectile-gift",
+    "plugin": "santa",
+    "roamingDistance": 16,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "brownmouse": {
     "name": "Brown Mouse",
-    "id": 129,
-    "drops": {"ratarcherarmor": 30, "ratarmor": 30, "gold": 80},
+    "drops": {"ratarcherarmor": 220, "ratarmor": 220},
     "hitPoints": 140,
-    "armour": 1,
-    "weapon": 1,
-    "experience": 40,
+    "defenseLevel": 1,
+    "attackLevel": 1,
     "level": 22,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "respawnDelay": 35000
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
-  "pickle": {
-    "name": "Pickle Brick",
-    "id": 130,
-    "drops": {"pickle": 1, "gold": 100},
-    "hitPoints": 5000,
-    "armour": 3,
-    "weapon": 25,
-    "experience": 200,
-    "level": 60,
-    "aggroRange": 1,
-    "attackRange": 1,
-    "aggressive": false,
+  "picklemob": {
+    "name": "Sea Cucumber",
+    "hitPoints": 1250,
+    "defenseLevel": 34,
+    "attackLevel": 35,
+    "level": 88,
+    "aggroRange": 4,
+    "attackRange": 10,
+    "alwaysAggressive": true,
+    "roaming": true,
     "attackRate": 1300,
     "movementSpeed": 1000,
-    "respawnDelay": 65000
+    "respawnDelay": 65000,
+    "projectileName": "projectile-terror",
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "icerat": {
     "name": "Ice Rat",
-    "id": 131,
     "hitPoints": 75,
-    "armour": 2,
-    "weapon": 5,
-    "experience": 47,
+    "defenseLevel": 2,
+    "attackLevel": 5,
     "level": 10,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1500,
     "movementSpeed": 500,
-    "respawnDelay": 10000
+    "respawnDelay": 10000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+    
   },
 
   "icebat": {
     "name": "Frozen Bat",
-    "id": 132,
-    "drops": {"manaflask": 20, "flask": 50},
     "hitPoints": 125,
-    "armour": 2,
-    "weapon": 6,
-    "experience": 52,
+    "defenseLevel": 2,
+    "attackLevel": 6,
     "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
+    "roaming": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "respawnDelay": 20000
+    "respawnDelay": 20000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   },
 
   "icecrab": {
     "name": "Ice Crab",
-    "id": 133,
-    "drops": {"bigflask": 50},
     "hitPoints": 50,
-    "armour": 2,
-    "weapon": 3,
-    "experience": 8,
+    "defenseLevel": 2,
+    "attackLevel": 3,
     "level": 19,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
+    "roaming": true,
     "attackRate": 1200,
     "movementSpeed": 300,
-    "respawnDelay": 20000
+    "respawnDelay": 20000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
   }
 }

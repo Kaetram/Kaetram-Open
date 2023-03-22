@@ -3,11 +3,7 @@
 
 name: Kaetram-Open CI
 
-on:
-    push:
-        branches: [master, develop]
-    pull_request:
-        branches: [master, develop]
+on: [push, pull_request]
 
 jobs:
     build:
@@ -23,14 +19,19 @@ jobs:
 
         steps:
             - name: Checkout on ${{ runner.os }}
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
+
             - name: Use Node.js v${{ matrix.node-version }}
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
+                  cache: 'yarn'
+
+            - name: Enable Corepack
+              run: corepack enable
+
             - name: Install Dependencies
               run: yarn install
+
             - name: Build Packages
               run: yarn build
-            # - name: Run Tests
-            #   run: yarn test

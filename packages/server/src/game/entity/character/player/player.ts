@@ -1,64 +1,73 @@
-import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-
-import Incoming from '../../../../controllers/incoming';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
-import Hit from '../combat/hit';
-import Abilities from './abilities/abilities';
+import Friends from './friends';
+import Handler from './handler';
+import Quests from './quests';
+import Skills from './skills';
+import Abilities from './abilities';
+import Achievements from './achievements';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Handler from './handler';
-import Mana from '../points/mana';
-import Warp from './warp';
+import Equipments from './equipments';
+import Statistics from './statistics';
+import Trade from './trade';
+import Incoming from './incoming';
 
-import type { ExperienceCombatData } from '@kaetram/common/types/messages';
-import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Area from '../../../map/areas/area';
-import type Connection from '../../../../network/connection';
-import type World from '../../../world';
-import type NPC from '../../npc/npc';
-import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import Map from '../../../map/map';
+import Pet from '../pet/pet';
+import Mana from '../points/mana';
+import Character from '../character';
+import Formulas from '../../../../info/formulas';
+
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
 import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import { Team } from '@kaetram/common/api/minigame';
 import {
-    Audio,
-    Bubble,
     Camera,
     Chat,
-    Death,
-    Experience,
+    Guild,
     Heal,
     Movement,
+    Music,
+    Network,
     Notification,
     Overlay,
+    Player as PlayerPacket,
+    Pointer,
+    PVP,
+    Rank,
+    Respawn,
+    Spawn,
     Sync,
     Teleport,
-    Welcome,
-    Pointer
-} from '@kaetram/server/src/network/packets';
-import Packet from '@kaetram/server/src/network/packet';
-import Equipments from './equipments';
-import Quests from './quests';
-import Regions from '../../../map/regions';
-import Entities from '@kaetram/server/src/controllers/entities';
-import { EntityData } from '../../entity';
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import Container from './containers/container';
-import Item from '../../objects/item';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
-import { PointerData } from '@kaetram/common/types/pointer';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import Tree from '../../../globals/impl/tree';
-import Skills from './skills';
+    Welcome
+} from '@kaetram/common/network/impl';
+
+import type NPC from '../../npc/npc';
+import type Skill from './skill/skill';
+import type Map from '../../../map/map';
+import type World from '../../../world';
+import type Item from '../../objects/item';
+import type Area from '../../../map/areas/area';
+import type Regions from '../../../map/regions';
+import type Connection from '../../../../network/connection';
+import type Resource from '../../../globals/impl/resource';
+import type Minigame from '../../../minigames/minigame';
+import type Entities from '../../../../controllers/entities';
+import type Packet from '@kaetram/common/network/packet';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PlayerData } from '@kaetram/common/types/player';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
 
 type KillCallback = (character: Character) => void;
-type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
 type DoorCallback = (door: ProcessedDoor) => void;
-
+type RegionCallback = (region: number) => void;
+type RecentRegionsCallback = (regions: number[]) => void;
 export interface PlayerRegions {
     regions: string;
     gameVersion: string;
@@ -71,14 +80,6 @@ export interface ObjectData {
     };
 }
 
-interface PlayerData extends EntityData {
-    rights: number;
-    pvp: boolean;
-    orientation: number;
-
-    equipments: EquipmentData[];
-}
-
 export default class Player extends Character {
     public map: Map;
     private regions: Regions;
@@ -86,145 +87,170 @@ export default class Player extends Character {
 
     public incoming: Incoming;
 
-    private handler: Handler;
-
-    public quests: Quests;
-    public skills: Skills;
-    public equipment: Equipments;
-    public mana: Mana = new Mana(Modules.Defaults.MANA);
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
+
+    public abilities: Abilities;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+    public statistics: Statistics;
+    public friends: Friends;
+    public trade: Trade;
+
+    public handler: Handler;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
     public canTalk = true;
+    public noclip = false;
+    public jailed = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
+    public invalidMovement = 0;
+    public overrideMovementSpeed = -1;
 
-    private permanentPVP = false;
-
+    // Player info
     public password = '';
     public email = '';
+    public userAgent = '';
+    public guild = '';
 
-    public rights = 0;
-    public experience = 0;
+    public rank: Modules.Ranks = Modules.Ranks.None;
+
+    // Stores the last attack style for each type of weapon.
+    public lastStyles: { [type: string]: Modules.AttackStyle } = {};
+
+    // Pet information
+    public pet!: Pet;
+
+    // Warps
+    public lastWarp = 0;
+
+    // Ban and mute values
     public ban = 0; // epoch timestamp
     public mute = 0;
-    public lastLogin = 0;
-    public pvpKills = 0;
-    public pvpDeaths = 0;
-    public orientation = Modules.Orientation.Down;
+
+    // Player miscellaneous data
     public mapVersion = -1;
-
-    public talkIndex = 0;
     public cheatScore = 0;
-    public defaultMovementSpeed = 250; // For fallback.
+    public movementStart = 0;
+    public pingTime = 0;
 
-    // TODO - REFACTOR THESE ------------
+    private lastNotify = 0;
+    private lastEdible = 0;
 
-    public webSocketClient;
+    private currentSong: string | undefined;
 
-    public abilities;
-    public warp;
+    public minigameArea: Area | undefined = undefined;
 
-    public team?: string; // TODO
-    public userAgent!: string;
-
-    private disconnectTimeout: NodeJS.Timeout | null = null;
-    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
-    public lastRegionChange = Date.now();
-
-    private currentSong: string | null = null;
-
+    // Region data
     public regionsLoaded: number[] = [];
-    public treesLoaded: { [instance: string]: Modules.TreeState } = {};
+    public resourcesLoaded: { [instance: string]: Modules.ResourceState } = {};
     public lightsLoaded: number[] = [];
 
+    // NPC talking
     public npcTalk = '';
+    public talkIndex = 0;
+
+    // Minigame status of the player.
+    public minigame?: Opcodes.Minigame;
+    public team?: Team;
+
     // Currently open store of the player.
     public storeOpen = '';
 
-    public movementStart!: number;
-    public pingTime!: number;
+    private cameraArea: Area | undefined;
+    public overlayArea: Area | undefined;
 
-    private lastNotify!: number;
-
-    private nextExperience: number | undefined;
-    private prevExperience!: number;
-
-    public profileDialogOpen?: boolean;
-    public inventoryOpen?: boolean;
-    public warpOpen?: boolean;
-
-    public cameraArea: Area | undefined;
-    private overlayArea: Area | undefined;
-
-    public selectedShopItem!: { id: number; index: number } | null;
-
-    //--------------------------------------
+    public readyTimeout!: NodeJS.Timeout | null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
+    public regionCallback?: RegionCallback;
+    public recentRegionsCallback?: RecentRegionsCallback;
 
-    private cheatScoreCallback?(): void;
-    private profileToggleCallback?: InterfaceCallback;
-    private inventoryToggleCallback?: InterfaceCallback;
-    private warpToggleCallback?: InterfaceCallback;
-    private orientationCallback?(): void;
+    private cheatScoreCallback?: () => void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
-        super(connection.id, world, '', -1, -1);
+        super(connection.instance, world, '', -1, -1);
 
-        this.map = world.map;
-        this.regions = world.map.regions;
-        this.entities = world.entities;
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.entities = this.world.entities;
 
         this.incoming = new Incoming(this);
-        this.equipment = new Equipments(this);
-        this.quests = new Quests(this);
-        this.skills = new Skills(this);
-        this.handler = new Handler(this);
-        this.warp = new Warp(this);
-
-        // TODO - Refactor
         this.abilities = new Abilities(this);
-
-        this.webSocketClient = connection.type === 'WebSocket';
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+        this.statistics = new Statistics(this);
+        this.friends = new Friends(this);
+        this.trade = new Trade(this);
+        this.handler = new Handler(this);
     }
 
     /**
-     * Inserts the `data` into the player object.
+     * Begins the loading process by first inserting the database
+     * information into the player object. The loading process works
+     * as follows, a request to load the equipment data is made,
+     * once that is completed, the callback in the player handler
+     * begins loading the inventory, then the bank and quests, then
+     * achievements, then skills, and finally the `intro` packet
+     * is sent to the client. This is because we want to load the aforementioned
+     * objects prior to entering the region since it may affect dynamic data,
+     * entity information, and other stuff. The region system must have the player
+     * fully loaded from the database prior to calculating region data.
      * @param data PlayerInfo object containing all data.
      */
 
-    public load(data: PlayerInfo): void {
+    public async load(data: PlayerInfo): Promise<void> {
+        // Store coords for when we're done loading.
+        this.x = data.x;
+        this.y = data.y;
         this.name = data.username;
-        this.rights = data.rights;
-        this.experience = data.experience;
+        this.guild = data.guild;
+        this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
-        this.lastLogin = data.lastLogin;
-        this.pvpKills = data.pvpKills;
-        this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
-
-        this.setPosition(data.x, data.y);
-
-        this.warp.setLastWarp(data.lastWarp);
-
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
         this.userAgent = data.userAgent;
+        this.regionsLoaded = data.regionsLoaded || [];
 
-        // TODO - Do not calculate max points on every login, just store it instead.
-        this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
-        this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
+        this.setPoison(data.poison.type, Date.now() - data.poison.remaining);
+        this.setLastWarp(data.lastWarp);
+
+        this.hitPoints.updateHitPoints(data.hitPoints);
+        this.mana.updateMana(data.mana);
+
+        this.friends.load(data.friends);
+
+        this.loadSkills();
+        this.loadEquipment();
+        this.loadInventory();
+        this.loadBank();
+        this.loadStatistics();
+        this.loadAbilities();
+
+        // Synchronize login with the hub's server list.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+        );
+
+        // Quests and achievements have to be loaded prior to introducing the player.
+        await this.loadQuests();
+        await this.loadAchievements();
 
         this.intro();
+
+        // Connect the player to their guild if they are in one.
+        if (this.guild) this.world.guilds.connect(this, this.guild);
     }
 
     /**
@@ -252,11 +278,19 @@ export default class Player extends Character {
     }
 
     /**
-     * Loads the quest data from the bank.
+     * Loads the quest data from the database.
      */
 
-    public loadQuests(): void {
-        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    public async loadQuests(): Promise<void> {
+        this.quests.load(await this.database.loader?.loadQuests(this));
+    }
+
+    /**
+     * Loads the achievement data from the database.
+     */
+
+    public async loadAchievements(): Promise<void> {
+        this.achievements.load(await this.database.loader?.loadAchievements(this));
     }
 
     /**
@@ -268,176 +302,209 @@ export default class Player extends Character {
     }
 
     /**
+     * Loads the statistics data from the database.
+     */
+
+    public loadStatistics(): void {
+        this.database.loader?.loadStatistics(this, this.statistics.load.bind(this.statistics));
+    }
+
+    /**
+     * Loads the abilities data from the database.
+     */
+
+    public loadAbilities(): void {
+        this.database.loader?.loadAbilities(this, this.abilities.load.bind(this.abilities));
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
      */
 
     public intro(): void {
-        if (this.ban > Date.now()) {
-            this.connection.sendUTF8('ban');
-            this.connection.close(`Player: ${this.username} is banned.`);
-        }
+        if (this.ban > Date.now()) return this.connection.reject('ban');
 
         if (this.hitPoints.getHitPoints() < 0)
             this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
-        let info = {
-            instance: this.instance,
-            username: Utils.formatName(this.username),
-            x: this.x,
-            y: this.y,
-            rights: this.rights,
-            hitPoints: this.hitPoints.serialize(),
-            mana: this.mana.serialize(),
-            experience: this.experience,
-            nextExperience: this.nextExperience,
-            prevExperience: this.prevExperience,
-            level: this.level,
-            lastLogin: this.lastLogin,
-            pvpKills: this.pvpKills,
-            pvpDeaths: this.pvpDeaths,
-            orientation: this.orientation,
-            movementSpeed: this.getMovementSpeed()
-        };
+        // Timeout the player if the ready packet is not received within 10 seconds.
+        this.readyTimeout = setTimeout(() => {
+            if (!this.ready) this.connection.reject('error');
+        }, 10_000);
 
-        /**
-         * Send player data to client here
-         */
+        this.setPosition(this.x, this.y);
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(info));
+        this.send(new Welcome(this.serialize(false, true, true)));
     }
 
-    public destroy(): void {
-        this.combat.stop();
-        this.skills.stop();
+    /**
+     * Handles the player respawning in the world.
+     */
 
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
+    public respawn(): void {
+        // Cannot respawn if the player is not marked as dead.
+        if (!this.dead) return log.warning(`Invalid respawn request.`);
 
-        this.disconnectTimeout = null;
+        this.dead = false;
 
-        this.handler = null!;
-        this.inventory = null!;
-        this.abilities = null!;
-        this.skills = null!;
-        this.quests = null!;
-        this.bank = null!;
-        this.warp = null!;
+        let spawn = this.getSpawn();
 
-        this.connection = null!;
-    }
+        this.teleport(spawn.x, spawn.y);
 
-    public addExperience(exp: number): void {
-        this.experience += exp;
+        // Signal to other players that the player is spawning.
+        this.sendToRegions(new Spawn(this), true);
 
-        let oldLevel = this.level;
+        this.send(new Respawn(this));
 
-        this.level = Formulas.expToLevel(this.experience);
-        this.nextExperience = Formulas.nextExp(this.experience);
-        this.prevExperience = Formulas.prevExp(this.experience);
-
-        if (oldLevel !== this.level) {
-            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.healHitPoints(this.hitPoints.maxPoints);
-
-            this.updateRegion();
-
-            this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
-        }
-
-        let data = {
-            id: this.instance,
-            level: this.level
-        } as ExperienceCombatData;
-
-        /**
-         * Sending two sets of data as other users do not need to
-         * know the experience of another player.. (yet).
-         */
-
-        this.sendToRegions(new Experience(Opcodes.Experience.Combat, data), true);
-
-        data.amount = exp;
-        data.experience = this.experience;
-        data.nextExperience = this.nextExperience;
-        data.prevExperience = this.prevExperience;
-
-        this.send(new Experience(Opcodes.Experience.Combat, data));
+        this.hitPoints.reset();
+        this.mana.reset();
 
         this.sync();
     }
 
     /**
-     * Passed from the superclass...
+     * Sends a welcome notification when the player logs in the game. If the player is new
+     * then we will send a slightly different welcome message. If there are other players
+     * online, we will also send a notification to the player with the player count.
      */
-    public override heal(amount: number): void {
-        super.heal(amount);
 
-        this.mana.increment(amount);
+    public welcome(): void {
+        if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
+
+        this.notify(`Welcome back to ${config.name}!`);
+
+        let population = this.world.getPopulation();
+
+        if (population > 1)
+            this.notify(`There are currently ${population} players online.`, '', '', true);
+    }
+
+    /**
+     * Override of the heal superclass function. Heals by a specified amount, and givne the
+     * type, we will heal only the hitpoints or the mana with a special effect associated. If no
+     * type is specified, then it proceeds to heal both hitpoints and mana.
+     * @param amount The amount we are healing by.
+     * @param type The type of heal we are performing ('passive' | 'hitpoints' | 'mana');
+     */
+
+    public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
+        switch (type) {
+            case 'passive': {
+                // Increment mana by 1% of the max mana.
+                if (!this.mana.isFull())
+                    this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
+
+                // Increment hitpoints by 0.5% of the max hitpoints.
+                super.heal(Math.floor(this.hitPoints.getMaxHitPoints() * 0.005));
+
+                break;
+            }
+
+            case 'hitpoints':
+            case 'mana': {
+                if (type === 'hitpoints') this.hitPoints.increment(amount);
+                else if (type === 'mana') this.mana.increment(amount);
+
+                this.sendToRegions(
+                    new Heal({
+                        instance: this.instance,
+                        type,
+                        amount
+                    })
+                );
+                break;
+            }
+        }
 
         this.sync();
     }
 
-    public healHitPoints(amount: number): void {
-        let type = 'health' as const;
+    /**
+     * Updates the region that the player is currently in.
+     */
 
-        this.hitPoints.increment(amount);
-
-        this.sync();
-
-        this.sendToRegions(
-            new Heal({
-                id: this.instance,
-                type,
-                amount
-            })
-        );
-    }
-
-    public healManaPoints(amount: number): void {
-        let type = 'mana' as const;
-
-        this.mana.increment(amount);
-
-        this.sync();
-
-        this.sendToRegions(
-            new Heal({
-                id: this.instance,
-                type,
-                amount
-            })
-        );
-    }
-
-    public eat(id: number): void {
-        log.warning('player.eat() reimplement.');
-    }
-
-    public updateRegion(force = false): void {
+    public updateRegion(): void {
         this.regions.sendRegion(this);
     }
 
-    public teleport(x: number, y: number, withAnimation = false): void {
+    /**
+     * Synchronizes the display info of the entities.
+     */
+
+    public updateEntities(): void {
+        this.regions.sendDisplayInfo(this);
+    }
+
+    /**
+     * Synchronizes the player's client entity list and server entities in a region.
+     */
+
+    public updateEntityList(): void {
+        this.regions.sendEntities(this);
+    }
+
+    /**
+     * Synchronizes the player's client entity positions and server entities in a region.
+     */
+
+    public updateEntityPositions(): void {
+        this.regions.sendEntityPositions(this);
+    }
+
+    /**
+     * Performs a teleport to a specified destination. We send a teleport packet
+     * then proceed to update the player's position server-sided.
+     * @param x The new x grid coordinate.
+     * @param y The new y grid coordinate.
+     * @param withAnimation Whether or not to display a special effect when teleporting.
+     */
+
+    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+        if (this.dead) return;
+
+        if (before) this.sendTeleportPacket(x, y, withAnimation);
+
+        this.setPosition(x, y, false);
+        this.world.cleanCombat(this);
+
+        if (before) return;
+
+        this.sendTeleportPacket(x, y, withAnimation);
+    }
+
+    /**
+     * Sends the teleport packet to the nearby regions.
+     * @param x The new x grid coordinate.
+     * @param y The new y grid coordinate.
+     * @param withAnimation Whether or not to animate the teleportation.
+     */
+
+    private sendTeleportPacket(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
             new Teleport({
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y,
                 withAnimation
             })
         );
-
-        this.setPosition(x, y, false, true);
-        this.world.cleanCombat(this);
     }
 
-    public incrementCheatScore(amount: number): void {
+    /**
+     * Increases the amount of times the cheat detection system
+     * noticed something fishy.
+     * @param amount The amount we are increasing the cheat score by.
+     */
+
+    public incrementCheatScore(reason = '', amount = 1): void {
         if (this.combat.started) return;
+        if (reason) log.debug(`[${this.username}] ${reason}`);
 
         this.cheatScore += amount;
 
@@ -445,90 +512,530 @@ export default class Player extends Character {
     }
 
     /**
-     * We route all object clicks through the player instance
-     * in order to organize data more neatly.
+     * Verifies that the movement is valid and not no-clipping through collisions.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @returns Whether or not the location is colliding.
      */
-    public handleObject(id: string): void {
-        //
-    }
 
-    public handleBankOpen(): void {
-        //
+    private verifyCollision(x: number, y: number): boolean {
+        let isColliding = this.map.isColliding(x, y, this) && !this.noclip;
+
+        if (isColliding) {
+            /**
+             * If the old coordinate values are invalid or they may cause a loop
+             * in the `teleport` function, we instead send the player to the spawn point.
+             */
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            ) {
+                this.sendToSpawn();
+                return true;
+            }
+
+            // Send player to the last valid position.
+            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
+            this.teleport(this.oldX, this.oldY);
+        }
+
+        return isColliding;
     }
 
     /**
-     * Handles the select event when clicking a container.
-     * @param container The container we are handling.
-     * @param index The index in the container we selected.
+     * Used to verify an anomaly within the player's step movement. We check a variety
+     * of factors to avoid false-positives.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @param timestamp Timestamp at which the packet was originally sent.
      */
 
-    public handleContainerSelect(container: Container, index: number, slotType?: SlotType): void {
-        let slot: SlotData | undefined, item: Item;
+    private verifyMovement(x: number, y: number, timestamp: number): boolean {
+        let now = Date.now(),
+            stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
+            regionDiff = now - this.lastRegionChange,
+            timestampDiff = now - timestamp;
 
-        log.debug(`Received container select: ${container.type} - ${index} - ${slotType}`);
+        // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
+        if (timestampDiff > 35 && stepDiff < 35) return false;
 
-        // TODO - Cleanup and document, this is a preliminary prototype.
-        switch (container.type) {
-            case Modules.ContainerType.Inventory:
-                log.debug(`Selected item index: ${index}`);
+        // Firstly ensure that the last step was behaving normally.
+        if (stepDiff >= this.getMovementSpeed()) return false;
 
-                slot = container.remove(index);
+        // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
+        if (regionDiff < 1500) return false;
 
-                if (!slot) return;
+        // Check if the player is currently going into a door.
+        if (this.map.isDoor(x, y)) return false;
 
-                item = container.getItem(slot);
+        return true;
+    }
 
-                if (item.isEquippable()) this.equipment.equip(item);
+    /**
+     * Handles the action of attacking a target. We receive a packet from the client
+     * with the instance of the target and perform checks prior to initiating combat.
+     * @param instance The instance of the target we are attacking.
+     */
+
+    public handleTargetAttack(instance: string): void {
+        // Prevent targetting yourself.
+        if (instance === this.instance) return;
+
+        let target = this.entities.get(instance);
+
+        // Ignore if the target is not a character that can actually be attacked.
+        if (!target?.isCharacter() || target.dead) return;
+
+        // Ensure that the player can actually attack the target.
+        if (!this.canAttack(target)) return;
+
+        // Clear the cheat score
+        this.cheatScore = 0;
+
+        // Start combat with the target.
+        this.combat.attack(target);
+    }
+
+    /**
+     * Handler for when a container slot is selected at a specified index. Depending
+     * on the type, we act accordingly. If we click an inventory, we check if the item
+     * is equippable or consumable and remove it from the inventory. If we click a bank
+     * element, we must move it from the inventory to the bank or vice versa.
+     * @param type The type of container we are working with.
+     * @param index Index at which we are selecting the item.
+     */
+
+    public handleContainerSelect(
+        type: Modules.ContainerType,
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
+    ): void {
+        let item: Item;
+
+        switch (type) {
+            case Modules.ContainerType.Inventory: {
+                item = this.inventory.getItem(this.inventory.get(fromIndex));
+
+                if (!item) return;
+
+                // Checks if the player can eat and uses the item's plugin to handle the action.
+                if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
+                    this.inventory.remove(fromIndex, 1);
+                    this.lastEdible = Date.now();
+                }
+
+                if (item.isEquippable() && item.canEquip(this)) {
+                    this.inventory.remove(fromIndex, item.count);
+                    this.equipment.equip(item);
+                }
 
                 break;
+            }
 
-            case Modules.ContainerType.Bank:
-                if (!slotType) return;
+            case Modules.ContainerType.Bank: {
+                let from =
+                        fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
+                    to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
 
-                // Move item from the bank to the inventory.
-                if (slotType === 'inventory') container.move(this.inventory, index);
-                // Move item from the inventory to the bank.
-                else if (slotType === 'bank') this.inventory.move(container, index);
+                from.move(fromIndex, to, toIndex);
 
                 break;
+            }
         }
     }
 
-    public updatePVP(pvp: boolean, permanent = false): void {
+    /**
+     * Handles the removing of an item from a container. This can be an inventory or a bank.
+     * In the case of the inventory, we check that the player isn't dropping an item in front
+     * of a door.
+     * @param type The type of container we are working with.
+     * @param index The index at which we are removing the item.
+     * @param count The amount of items we are removing.
+     */
+
+    public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
+        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
+
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
+            return this.notify('You cannot drop items while standing in a door.');
+
+        container.remove(index, count, true);
+    }
+
+    /**
+     * Handles the swap action of a container. This is when we want to move items around.
+     * @param type The type of container we are working with.
+     * @param fromIndex The index at which we are swapping the item.
+     * @param toIndex The index at which we are swapping the item with.
+     */
+
+    public handleContainerSwap(
+        type: Modules.ContainerType,
+        fromIndex: number,
+        toIndex: number
+    ): void {
+        if (isNaN(fromIndex) || isNaN(toIndex) || fromIndex < 0 || toIndex < 0)
+            return log.warning(
+                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
+            );
+
+        let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
+
+        container.swap(fromIndex, container, toIndex);
+    }
+
+    /**
+     * Handles the interaction with a global object. This can be a tree,
+     * a sign, etc.
+     * @param instance The string identifier of the object. Generally
+     * represents a coordinate that we use to find the object.
+     */
+
+    public handleObjectInteraction(instance: string): void {
+        this.cheatScore = 0;
+
+        // Attempt to first find a sign with the given instance.
+        let sign = this.world.globals.getSigns().get(instance);
+
+        if (sign) return sign.talk(this);
+
+        // If no sign was found, we attempt to find a tree.
+        let coords = instance.split('-'),
+            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            tree = this.world.globals.getTrees().findResource(index);
+
+        if (tree) return this.skills.getLumberjacking().cut(this, tree);
+
+        // If we don't find a tree then we try finding a rock.
+
+        let rock = this.world.globals.getRocks().findResource(index);
+
+        if (rock) return this.skills.getMining().mine(this, rock);
+    }
+
+    /**
+     * Compares the user agent and regions loaded against values from the database. We also
+     * ensure that the map version of the player when he last logged in is the same as the
+     * most recent one. If these conditions aren't met we signal to the server that the player
+     * has no map data saved.
+     * @param userAgent The user agent string.
+     * @param regionsLoaded Number of regions that the client has loaded.
+     */
+
+    public handleUserAgent(userAgent: string, regionsLoaded = 0): void {
+        // Client's number of regions loaded, user agent, and map version must match.
+        if (
+            this.regionsLoaded.length === regionsLoaded &&
+            this.userAgent === userAgent &&
+            this.mapVersion === this.map.version
+        )
+            return;
+        // Update user agent and map version, and reset loaded regions information.
+        this.userAgent = userAgent;
+        this.mapVersion = this.map.version;
+        this.regionsLoaded = [];
+
+        log.debug(`Reset user agent and regions loaded for ${this.username}.`);
+    }
+
+    /**
+     * Handles the experience gained from hitting a mob. Experience is determined by the attack
+     * style the player currently has selected. Weapons have varying attack styles and the player
+     * selects them depending on the skill they wish to train.
+     * @param damage The amount of damage the player dealt.
+     */
+
+    public handleExperience(damage: number): void {
+        // Ignore invalid damage values.
+        if (damage < 1) return;
+
+        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+            weapon = this.equipment.getWeapon();
+
         /**
-         * No need to update if the state is the same
+         * If the player doesn't have enough mana then we halve the experience gain.
          */
 
-        if (!this.region) return;
+        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
 
-        if (this.pvp === pvp || this.permanentPVP) return;
+        /**
+         * Since there are four combat skills, we evenly distribute the experience between them.
+         * Depending on the attack style, we add a different amount of experience to each skill.
+         */
+
+        this.skills.get(Modules.Skills.Health).addExperience(Math.ceil(experience / 4), false);
+
+        // Archery directs experience to the archery skill.
+        if (this.isArcher())
+            return this.skills
+                .get(Modules.Skills.Archery)
+                .addExperience(Math.ceil(experience * 0.75), false);
+
+        // Magic directs experience to the magic skill.
+        if (this.isMagic())
+            return this.skills
+                .get(Modules.Skills.Magic)
+                .addExperience(Math.ceil(experience * 0.75), false);
+
+        /**
+         * The rest of the experiences are distributed according to the attack style selected.
+         */
+
+        switch (weapon.attackStyle) {
+            // Stab gives the remaining accuracy experience.
+            case Modules.AttackStyle.Stab: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Slash gives the remaining strength experience.
+            case Modules.AttackStyle.Slash: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Defense gives the remaining defence experience.
+            case Modules.AttackStyle.Defensive: {
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+
+            // Crush gives accuracy + strength experience.
+            case Modules.AttackStyle.Crush: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Shared experience evenly distributes the experience between all skills.
+            case Modules.AttackStyle.Shared: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                break;
+            }
+
+            // Axe hacking attack style gives strength + defence experience.
+            case Modules.AttackStyle.Hack: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                break;
+            }
+
+            // Axe chop gives accuracy + defence experience.
+            case Modules.AttackStyle.Chop: {
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                break;
+            }
+
+            // Default (unarmed)
+            default: {
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Handles the request for a movement to a new position. This is the preliminary check for
+     * anti-cheating.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param target If the player is requesting movement towards an entity.
+     * @param following Whether or not the player is actively following an entity.
+     */
+
+    public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        if (this.map.isDoor(x, y) || (target && following)) return;
+        if (this.inCombat()) return;
+
+        let diffX = Math.abs(this.x - x),
+            diffY = Math.abs(this.y - y);
+
+        if (diffX > 1 || diffY > 1) {
+            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+            this.invalidMovement++;
+
+            log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
+        }
+    }
+
+    /**
+     * Handles the beginning of the player's movement. We mark down when the player has started moving
+     * and check against the movement speed with the server value. We stop skills and combat when
+     * movement has commenced.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param speed The movement speed of the player.
+     * @param target A character target instance if the player is moving towards a character.
+     */
+
+    public handleMovementStarted(x: number, y: number, speed: number, target: string): void {
+        this.movementStart = Date.now();
+
+        // Invalid movement speed reported by the client.
+        if (speed !== this.getMovementSpeed())
+            this.incrementCheatScore(`${this.username} Received incorrect movement speed.`);
+
+        // Stop combat and skills every time thre is movement.
+        this.skills.stop();
+
+        if (!target) this.combat.stop();
+
+        // Mark the player as moving.
+        this.moving = true;
+    }
+
+    /**
+     * A movement step occurs every time a player traverses to the next tile.
+     * @param x The current x coordinate of the player as reported by the client.
+     * @param y The current y coordinate of the player as reported by the client.
+     * @param timestamp The time when the packet was sent (UNIX timestamp).
+     */
+
+    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
+        if (this.status.has(Modules.Effects.Stun) || this.isInvalidMovement()) return;
+
+        if (this.verifyMovement(x, y, timestamp))
+            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
+
+        this.setPosition(x, y);
+
+        this.lastStep = Date.now();
+    }
+
+    /**
+     * Handles the player coming to a stop after movement has finished.
+     * @param x The player's x coordinate as reported by the client.
+     * @param y The player's y coordinate as reported by the client.
+     * @param target A character target instance if the player is stopping at an entity.
+     * @param orientation The orientation of the player as reported by the client.
+     */
+
+    public handleMovementStop(x: number, y: number, target: string, orientation: number): void {
+        let entity = this.entities.get(target);
+
+        // No start movement received.
+        if (!this.moving) this.incrementCheatScore('Did not receive movement started packet.');
+
+        // Update orientation
+        this.setOrientation(orientation);
+
+        // Player has stopped on top of an item.
+        if (entity?.isItem()) {
+            // Prevent picking up dropped items that belong to other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(
+                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                );
+
+            this.inventory.add(entity);
+        }
+
+        // Update the player's position.
+        if (!this.isInvalidMovement()) this.setPosition(x, y);
+
+        // Handle doors when the player stops on one.
+        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer())) {
+            let door = this.map.getDoor(x, y);
+
+            this.doorCallback?.(door);
+        }
+
+        // Movement has come to an end.
+        this.moving = false;
+        this.lastMovement = Date.now();
+    }
+
+    /**
+     * Updates the PVP status of the player and syncs it up with the
+     * other players in the region.
+     * @param pvp The PVP status we are detecting.
+     */
+
+    public updatePVP(pvp: boolean): void {
+        // Skip if pvp state is the same or it's permanent
+        if (this.pvp === pvp) return;
 
         if (this.pvp && !pvp) this.notify('You are no longer in a PvP zone!');
         else this.notify('You have entered a PvP zone!');
 
         this.pvp = pvp;
-        this.permanentPVP = permanent;
 
-        // TODO - Redo the packet
-        //this.sendToAdjacentRegions(this.region, new PVP(this.instance, this.pvp));
+        this.send(
+            new PVP({
+                state: this.pvp
+            })
+        );
     }
+
+    /**
+     * Detects a change in the overlay area. If the player steps in an overlay
+     * area, we send the information to the client. If the player exits the area,
+     * we remove the overlay.
+     * @param overlay An area containing overlay data or an undefined object.
+     */
 
     public updateOverlay(overlay: Area | undefined): void {
+        // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
+        if (!overlay) this.overlayArea?.removePlayer(this);
+
+        // Store for comparison.
         this.overlayArea = overlay;
 
-        if (overlay && overlay.id) {
-            this.lightsLoaded = [];
+        // No overlay object or invalid object, remove the overlay.
+        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
 
-            this.send(
-                new Overlay(Opcodes.Overlay.Set, {
-                    image: overlay.fog || 'empty',
-                    colour: `rgba(0,0,0,${overlay.darkness})`
-                })
-            );
-        } else this.send(new Overlay(Opcodes.Overlay.Remove));
+        // New overlay is being loaded, remove lights.
+        this.lightsLoaded = [];
+
+        this.send(
+            new Overlay(Opcodes.Overlay.Set, {
+                image: overlay.fog || 'blank',
+                colour: `rgba(0, 0, 0, ${overlay.darkness})`
+            })
+        );
+
+        if (overlay.isStatusArea()) overlay.addPlayer(this);
     }
+
+    /**
+     * Detects a camera region and sends a packet to the client.
+     * @param camera Camera area containing camera data or an undefined object.
+     */
 
     public updateCamera(camera: Area | undefined): void {
         if (this.cameraArea === camera) return;
@@ -537,104 +1044,247 @@ export default class Player extends Character {
 
         if (camera)
             switch (camera.type) {
-                case 'lockX':
+                case 'lockX': {
                     this.send(new Camera(Opcodes.Camera.LockX));
                     break;
+                }
 
-                case 'lockY':
+                case 'lockY': {
                     this.send(new Camera(Opcodes.Camera.LockY));
                     break;
+                }
 
-                case 'player':
+                case 'player': {
                     this.send(new Camera(Opcodes.Camera.Player));
                     break;
+                }
             }
         else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }
 
+    /**
+     * Receives information about the current music area the player is in.
+     * @param info The music area information, could be undefined.
+     */
+
     public updateMusic(info?: Area): void {
-        if (!info || info.song === this.currentSong) return;
+        let song = info?.song;
 
-        this.currentSong = info.song;
+        if (song === this.currentSong) return;
 
-        this.send(new Audio(info.song));
+        this.currentSong = song;
+
+        this.send(new Music(song));
     }
 
-    public revertPoints(): void {
-        this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
-        this.mana.setMana(this.mana.getMaxMana());
+    /**
+     * Updates the current minigame area the player is in. It also creates a callback
+     * to the area itself when the player enters (or exits).
+     * @param info The area the player is entering, or undefined if they are exiting.
+     */
 
-        this.sync();
+    public updateMinigame(info?: Area): void {
+        if (info === this.minigameArea) return;
+
+        let entering = info !== undefined && this.minigameArea === undefined;
+
+        if (entering) {
+            info?.enterCallback?.(this);
+            this.notify('Welcome to the TeamWar lobby!');
+        } else this.minigameArea?.exitCallback?.(this);
+
+        this.minigameArea = info;
     }
 
-    public toggleProfile(state: boolean): void {
-        this.profileDialogOpen = state;
+    /**
+     * Dynamically set movement speed depending on player's equipment, level,
+     * abilities, and some other factors that will be added in the future.
+     * @returns The movement speed of the player.
+     */
 
-        this.profileToggleCallback?.(state);
-    }
+    public getMovementSpeed(): number {
+        let speed =
+                this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
+                    ? Modules.Defaults.MOVEMENT_SPEED
+                    : this.overrideMovementSpeed, // Start with default.
+            armour = this.equipment.getArmour(),
+            boots = this.equipment.getBoots();
 
-    public toggleInventory(state: boolean): void {
-        this.inventoryOpen = state;
+        // Update the movement speed with that of the armour currently wielded.
+        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
 
-        this.inventoryToggleCallback?.(state);
-    }
+        // Check the boots for movement modifiers
+        if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
-    public toggleWarp(state: boolean): void {
-        this.warpOpen = state;
+        // Apply a 10% speed boost if the player running effect is present.
+        if (this.status.has(Modules.Effects.Running)) speed = Math.floor(speed * 0.9);
 
-        this.warpToggleCallback?.(state);
-    }
+        // Apply a 20% speed boost if the player is using the hot sauce.
+        if (this.status.has(Modules.Effects.HotSauce)) speed = Math.floor(speed * 0.8);
 
-    public getMana(): number {
-        return this.mana.getMana();
-    }
+        // Apply freezing movement speed effect, make the player move 25% slower.
+        if (
+            this.status.has(Modules.Effects.Freezing) &&
+            !this.status.has(Modules.Effects.SnowPotion)
+        )
+            speed = Math.floor(speed * 1.25);
 
-    public getMaxMana(): number {
-        return this.mana.getMaxMana();
-    }
+        // Update the movement speed if there is a change from default.
+        if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
 
-    private getMovementSpeed(): number {
-        // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
-        //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
-
-        // /*
-        //  * Here we can handle equipment/potions/abilities that alter
-        //  * the player's movement speed. We then just broadcast it.
-        //  */
-
-        // this.movementSpeed = movementSpeed;
-
-        return this.defaultMovementSpeed;
+        return speed;
     }
 
     /**
      * Setters
      */
 
-    public override setPosition(x: number, y: number, forced = false, teleport = false): void {
-        if (this.dead) return;
+    /**
+     * Updates the movement speed of the player.
+     * @param movementSpeed The new movement speed of the player.
+     */
 
-        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
-        else super.setPosition(x, y);
+    public setMovementSpeed(movementSpeed: number): void {
+        this.movementSpeed = movementSpeed;
 
+        // Sync to other players in the region.
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Speed, {
+                instance: this.instance,
+                movementSpeed
+            })
+        );
+    }
+
+    /**
+     * Updates the running status of the player and sends an update of the movement
+     * speed to the client. We use the the `getMovementSpeed()` function to calculate
+     * the speed of the player. We do this since there may be other effects present,
+     * so we want the speed to stack with other effects rather than be overwritten.
+     * @param running Whether or not the player is running.
+     */
+
+    public setRunning(running: boolean, hotSauce = false): void {
+        log.debug(`${this.username} is running: ${running}`);
+
+        if (running) this.status.add(Modules.Effects.Running);
+        else this.status.remove(Modules.Effects.Running);
+
+        if (hotSauce) this.status.add(Modules.Effects.HotSauce);
+        else this.status.remove(Modules.Effects.HotSauce);
+
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Speed, {
+                instance: this.instance,
+                movementSpeed: this.getMovementSpeed()
+            })
+        );
+    }
+
+    /**
+     * Sets the status of the dualists mark effect and updates
+     * the combat loop to represent the new attack rate.
+     * @param dualistsMark Effect status of the dualists mark.
+     */
+
+    public setDualistsMark(dualistsMark: boolean): void {
+        if (dualistsMark) this.status.add(Modules.Effects.DualistsMark);
+        else this.status.remove(Modules.Effects.DualistsMark);
+
+        this.combat.updateLoop();
+    }
+
+    /**
+     * Adds a temporary status effect for the snow potion. This prevents the player
+     * from taking cold-based damage and also protects them against freezing effects.
+     */
+
+    public setSnowPotion(): void {
+        // Remove freezing effect if it has been caused by a timeout (attack).
+        if (this.status.hasTimeout(Modules.Effects.Freezing))
+            this.status.remove(Modules.Effects.Freezing);
+
+        this.status.addWithTimeout(
+            Modules.Effects.SnowPotion,
+            Modules.Constants.SNOW_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to freezing effects has worn off.');
+            }
+        );
+
+        this.notify(
+            `You are now immune to freezing effects for ${
+                Modules.Constants.SNOW_POTION_DURATION / 1000
+            } seconds.`
+        );
+    }
+
+    /**
+     * Adds a temporary status effect for the fire potion. This prevents the player
+     * from repeatedly taking fire damage as result of the burn effect.
+     */
+
+    public setFirePotion(): void {
+        // Remove burning effect if present
+        if (this.status.has(Modules.Effects.Burning)) this.status.remove(Modules.Effects.Burning);
+
+        this.status.addWithTimeout(
+            Modules.Effects.FirePotion,
+            Modules.Constants.FIRE_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to fire effects has worn off.');
+            }
+        );
+
+        this.notify(
+            `You are now immune to fire effects for ${
+                Modules.Constants.FIRE_POTION_DURATION / 1000
+            } seconds.`
+        );
+    }
+
+    /**
+     * Updates the player's rank and sends a packet to the client.
+     * @param rank The new rank of the player, defaults to `None`.
+     */
+
+    public setRank(rank: Modules.Ranks = Modules.Ranks.None): void {
+        this.rank = rank;
+
+        this.send(new Rank(rank));
+    }
+
+    /**
+     * Override for the superclass `setPosition` function. Since the player must always be
+     * synced up to nearby players, this function sends a packet to the nearby region about
+     * every movement. It also checks gainst no-clipping and player positionining. In the event
+     * no clip is detected, we teleport the player to their old valid position. If the player
+     * is out of bounds (generally happens when a new character is created and x/y values are
+     * -1) we teleport them to their respective spawn point.
+     * @param x The new grid x coordinate we are moving to.
+     * @param y The new grd y coordinate we are moving to.
+     * @param forced Forced parameters ignores current actions and forces the player to move.
+     * @param skip Whether or not to skip sending a packet to nearby regions.
+     */
+
+    public override setPosition(x: number, y: number, forced = false, skip = false): void {
+        if (this.dead || this.verifyCollision(x, y)) return;
+
+        // Sets the player's new position.
+        super.setPosition(x, y);
+
+        if (skip) return;
+
+        // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
                 instance: this.instance,
                 x,
                 y,
-                forced,
-                teleport
+                forced
             }),
             true
         );
-    }
-
-    public setOrientation(orientation: number): void {
-        this.orientation = orientation;
-
-        if (this.orientationCallback)
-            // Will be necessary in the future.
-            this.orientationCallback;
     }
 
     /**
@@ -644,24 +1294,96 @@ export default class Player extends Character {
 
     public override setRegion(region: number): void {
         super.setRegion(region);
+
         if (region !== -1) this.regionCallback?.(region);
+    }
+
+    /**
+     * Override for the recent region function with an added callback.
+     * @param regions The regions the player just left from.
+     */
+
+    public override setRecentRegions(regions: number[]): void {
+        super.setRecentRegions(regions);
+
+        if (regions.length > 0) this.recentRegionsCallback?.(regions);
+    }
+
+    /**
+     * Updates the lastWarp time variable. Primarily used to reload
+     * the last warped time after logging out and back in.
+     * @param lastWarp The date in milliseconds of the last warp. Defaults to now.
+     */
+
+    public setLastWarp(lastWarp: number = Date.now()): void {
+        this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
+    }
+
+    /**
+     * Creates an instance of a pet based on the key provided. The pet then
+     * starts following the player.
+     * @param key The key of t he pet we want to create.
+     */
+
+    public setPet(key: string): void {
+        if (this.pet) return this.notify(`You already have a pet!`);
+
+        // Create a new pet instance based on the key.
+        this.pet = new Pet(this, key, this.x, this.y);
+    }
+
+    /**
+     * Override for the superclass display info. Uses the player's team
+     * to determine what colour to draw the username.
+     * @returns Display info containing the name colour.
+     */
+
+    public override getDisplayInfo(): EntityDisplayInfo {
+        return {
+            instance: this.instance,
+            colour: this.team === Team.Red ? 'red' : 'blue'
+        };
+    }
+
+    /**
+     * Override for the superclass `hasDisplayInfo()`. Relies on whether
+     * or not the player is in a minigame currently.
+     * @returns Whether or not the player is in a minigame.
+     */
+
+    public override hasDisplayInfo(): boolean {
+        return this.inMinigame();
+    }
+
+    /**
+     * @returns Whether or not the player has enough mana to attack.
+     */
+
+    public hasManaForAttack(): boolean {
+        return this.mana.getMana() >= this.equipment.getWeapon().manaCost;
+    }
+
+    /**
+     * @returns Whether or not the player has enough arrows to shoot the bow.
+     */
+
+    public override hasArrows(): boolean {
+        if (!this.quests.isTutorialFinished()) return true;
+
+        return this.equipment.getArrows().count > 0;
+    }
+
+    /**
+     * @returns Whether or not the player has a weapon with the bloodsucking enchantment.
+     */
+
+    public override hasBloodsucking(): boolean {
+        return this.equipment.getWeapon().isBloodsucking();
     }
 
     /**
      * Getters
      */
-
-    public hasMaxMana(): boolean {
-        return this.mana.getMana() >= this.mana.getMaxMana();
-    }
-
-    public override hasSpecialAttack(): boolean {
-        return false;
-    }
-
-    public canBeStunned(): boolean {
-        return true;
-    }
 
     /**
      * Grabs the spawn point on the player depending on whether or not he
@@ -673,51 +1395,48 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
+        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
+
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
-    public getHit(target: Character): Hit | undefined {
-        let weapon = this.equipment.getWeapon(),
-            defaultDamage = Formulas.getDamage(this, target),
-            isSpecial = Utils.randomInt(0, 100) < 30 + weapon.abilityLevel * 3;
+    /**
+     * Calculates the total experience by adding up all the skills experience.
+     * @returns Integer representing the total experience.
+     */
 
-        if (!isSpecial || !this.hasSpecialAttack())
-            return new Hit(Modules.Hits.Damage, defaultDamage);
+    public getTotalExperience(): number {
+        let total = 0;
 
-        let multiplier: number, damage: number;
+        this.skills.forEachSkill((skill: Skill) => (total += skill.experience));
 
-        switch (weapon.ability) {
-            case Modules.Enchantment.Critical:
-                /**
-                 * Still experimental, not sure how likely it is that you're
-                 * gonna do a critical strike. I just do not want it getting
-                 * out of hand, it's easier to buff than to nerf..
-                 */
-
-                multiplier = 1 + weapon.abilityLevel;
-                damage = defaultDamage * multiplier;
-
-                return new Hit(Modules.Hits.Critical, damage);
-
-            case Modules.Enchantment.Stun:
-                return new Hit(Modules.Hits.Stun, defaultDamage);
-
-            case Modules.Enchantment.Explosive:
-                return new Hit(Modules.Hits.Explosive, defaultDamage);
-        }
+        return total;
     }
+
+    /**
+     * @returns Finds and returns a minigame based on the player's minigame.
+     */
+
+    public getMinigame(): Minigame | undefined {
+        return this.world.minigames.get(this.minigame);
+    }
+
+    /**
+     * Adds a region id to the list of loaded regions.
+     * @param region The region id we are adding.
+     */
 
     public loadRegion(region: number): void {
         this.regionsLoaded.push(region);
     }
 
     /**
-     * Adds a tree to our loaded tree instances.
-     * @param tree The tree we are adding.
+     * Adds a resource to our loaded resource instances.
+     * @param resource The resource we are adding.
      */
 
-    public loadTree(tree: Tree): void {
-        this.treesLoaded[tree.instance] = tree.state;
+    public loadResource(resource: Resource): void {
+        this.resourcesLoaded[resource.instance] = resource.state;
     }
 
     public hasLoadedRegion(region: number): boolean {
@@ -725,47 +1444,165 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the tree is within our loaded trees and that the state matches.
-     * @param tree The tree we are chceking.
-     * @returns If the tree is loaded and the state matches.
+     * Checks if the resource is within our loaded resources and that the state matches.
+     * @param resource The resource we are chceking.
+     * @returns If the resource is loaded and the state matches.
      */
 
-    public hasLoadedTree(tree: Tree): boolean {
-        return tree.instance in this.treesLoaded && this.treesLoaded[tree.instance] === tree.state;
+    public hasLoadedResource(resource: Resource): boolean {
+        return (
+            resource.instance in this.resourcesLoaded &&
+            this.resourcesLoaded[resource.instance] === resource.state
+        );
     }
 
     public hasLoadedLight(light: number): boolean {
         return this.lightsLoaded.includes(light);
     }
 
-    public timeout(): void {
-        if (!this.connection) return;
+    /**
+     * Sends a ping request to the client. This is used to calculate the latency.
+     */
 
-        this.connection.sendUTF8('timeout');
-        this.connection.close('Player timed out.');
-    }
+    public ping(): void {
+        this.pingTime = Date.now();
 
-    public refreshTimeout(): void {
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
-
-        this.disconnectTimeout = setTimeout(() => {
-            this.timeout();
-        }, this.timeoutDuration);
-    }
-
-    public isMuted(): boolean {
-        let time = Date.now();
-
-        return this.mute - time > 0;
+        this.send(new Network(Opcodes.Network.Ping));
     }
 
     /**
-     * Checks if the weapon the player is currently wielding is a ranged weapon.
-     * @returns If the weapon slot is a ranged weapon.
+     * Removes the player from any areas that keep track of players.
      */
 
-    public override isRanged(): boolean {
-        return this.equipment.getWeapon().rangedWeapon;
+    public clearAreas(): void {
+        if (!this.inFreezingArea()) return;
+
+        this.overlayArea!.removePlayer(this);
+    }
+
+    /**
+     * Resets the NPC instance and talking index. If a parameter is specified
+     * then we set that NPC's instance as the one we are talking to.
+     * @param instance Optional parameter to set the NPC instance to.
+     */
+
+    public resetTalk(instance?: string): void {
+        this.talkIndex = 0;
+        this.npcTalk = instance || '';
+    }
+
+    /**
+     * @returns Checks if the date-time of the mute is greater than current epoch. If it is
+     * the player is muted.
+     */
+
+    public isMuted(): boolean {
+        return this.mute - Date.now() > 0;
+    }
+
+    /**
+     * Checks if the player is currently in  a minigame.
+     */
+
+    public inMinigame(): boolean {
+        return this.minigame !== undefined;
+    }
+
+    /**
+     * @returns Whether the player has the cheater rank.
+     */
+
+    public isCheater(): boolean {
+        return this.rank === Modules.Ranks.Cheater;
+    }
+
+    /**
+     * @returns Whether the player's rank is artist.
+     */
+
+    public isArtist(): boolean {
+        return this.rank === Modules.Ranks.Artist;
+    }
+
+    /**
+     * @returns Whether or not the player's rank is a moderator.
+     */
+
+    public isMod(): boolean {
+        return this.rank === Modules.Ranks.Moderator;
+    }
+
+    /**
+     * @returns Whether or not the player's rank is an administrator.
+     */
+
+    public isAdmin(): boolean {
+        return this.rank === Modules.Ranks.Admin || config.skipDatabase;
+    }
+
+    /**
+     * Accounts younger than 1 minute are considered new accounts.
+     * @returns Whether the account's creation date is within the last minute.
+     */
+
+    public isNew(): boolean {
+        return Date.now() - this.statistics.creationTime < 60_000;
+    }
+
+    /**
+     * @returns Whether or not the player's invalid movement count is greater than the threshold.
+     */
+
+    private isInvalidMovement(): boolean {
+        return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
+    }
+
+    /**
+     * @returns Whether or not the player is using archery-based weapons.
+     */
+
+    public isArcher(): boolean {
+        return this.equipment.getWeapon().isArcher();
+    }
+
+    /**
+     * Players obtain their poisoning abilities from their weapon. Certain
+     * weapons may be imbued with a poison effect. This checks if that status
+     * is active.
+     * @returns Whether or not the weapon is poisonous.
+     */
+
+    public override isPoisonous(): boolean {
+        // If the player is an archer, we use the arrows to determine the poisonous status.
+        if (this.isArcher()) return this.equipment.getArrows().poisonous;
+
+        return this.equipment.getWeapon().poisonous;
+    }
+
+    /**
+     * @returns Whether or not the player uses magic-based weapons.
+     */
+
+    public override isMagic(): boolean {
+        return this.equipment.getWeapon().isMagic();
+    }
+
+    /**
+     * Checks whether or not the player is in a freezing area. This is used
+     * to determine stacking of freezing effect (e.g. from ice arrows).
+     * @returns Whether or not the player is in a freezing area.
+     */
+
+    public inFreezingArea(): boolean {
+        return !!this.overlayArea?.isStatusArea();
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last edible.
+     */
+
+    private canEat(): boolean {
+        return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
     }
 
     /**
@@ -786,42 +1623,126 @@ export default class Player extends Character {
         });
     }
 
+    /**
+     * A player's old region is the one they just left from. We grab the first
+     * region in the array and send a surrounding region request based on that.
+     * @param packet Packet we are sending to the player.
+     */
+
+    public sendToRecentRegions(packet: Packet): void {
+        this.world.push(PacketType.RegionList, {
+            list: this.recentRegions,
+            packet
+        });
+    }
+
+    /**
+     * Teleports the player back to their spawn point.
+     */
+
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
 
-        this.setPosition(spawnPoint.x, spawnPoint.y);
+        this.teleport(spawnPoint.x, spawnPoint.y, true);
     }
 
-    public sendMessage(playerName: string, message: string): void {
+    /**
+     * Entrypoint for sending a private message across servers. This function is bypassed
+     * when we receive a message from another server and we use `sendMessage` instead.
+     * @param playerName The username of the player we are sending the message to.
+     * @param message The string contents of the message.
+     */
+
+    public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
+            this.world.client.send(
+                new Chat({ source: this.username, message, target: playerName })
+            );
             return;
         }
 
-        if (!this.world.isOnline(playerName)) {
-            this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
-            return;
-        }
+        if (!this.world.isOnline(playerName))
+            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
 
+        this.sendMessage(playerName, message);
+    }
+
+    /**
+     * Sends the message to the player specified in the current server.
+     * @param playerName The username of the player we are sending the message to.
+     * @param message The string contents of the message.
+     */
+
+    public sendMessage(playerName: string, message: string, source = ''): void {
         let otherPlayer = this.world.getPlayerByName(playerName),
-            oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
-            formattedName = Utils.formatName(this.username); // Formatted username of current instance.
+            oFormattedName = Utils.formatName(playerName), // Formated username of the player receiving the message.
+            formattedName = Utils.formatName(source || this.username); // Formatted username of the source
 
-        otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
-        this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
+        if (source) this.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
+        else otherPlayer.notify(message, 'aquamarine', `[From ${formattedName}]`, true);
+
+        if (!source) this.notify(message, 'aquamarine', `[To ${oFormattedName}]`, true);
     }
 
     /**
      * Function to be used for syncing up health,
-     * mana, exp, and other variables
+     * mana, exp, and other variables.
      */
 
     public sync(): void {
         // Update attack range each-time we sync.
-        this.attackRange = this.isRanged() ? 7 : 1;
+        this.attackRange = this.equipment.getWeapon().attackRange;
+
+        this.getMovementSpeed();
+
+        // Synchronize health, mana and experience with the player.
+        this.skills.sync();
 
         // Sync the player information to the surrounding regions.
-        this.sendToRegions(new Sync(this.serialize(true)));
+        this.sendToRegions(new Sync(this.serialize(true)), true);
+    }
+
+    /**
+     * Sends a chat message with the specified text string. The message
+     * can be global or only sent to nearby regions.
+     * @param message The string data we are sending to the client.
+     * @param global Whether or not the message is relayed to all players in the world or just region.
+     * @param withBubble Whether or not to display a visual bubble with message in it.
+     * @param colour The colour of the message. Defaults client-sided if not specified.
+     */
+
+    public chat(message: string, global = false, withBubble = true, colour = ''): void {
+        if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
+
+        log.debug(`[${this.username}] ${message}`);
+
+        let name = Utils.formatName(this.username);
+
+        if (this.rank !== Modules.Ranks.None) {
+            name = `[${Modules.RankTitles[this.rank]}] ${name}`;
+            colour = global ? 'rgba(191, 161, 63, 1.0)' : Modules.RankColours[this.rank];
+        }
+
+        let source = `${global ? '[Global]' : ''} ${name}`;
+
+        // Relay the message to the discord channel if it is enabled.
+        this.world.discord.sendMessage(source, message, undefined, true);
+
+        // Relay the hub so that it can handle the discord relay.
+        this.world.client.send(new Chat({ source, message }));
+
+        if (global) return this.world.globalMessage(name, message, colour);
+
+        let packet = new Chat({
+            instance: this.instance,
+            message,
+            withBubble,
+            colour
+        });
+
+        log.chat(`${this.username}: ${message}`);
+
+        this.sendToRegions(packet);
     }
 
     /**
@@ -832,7 +1753,7 @@ export default class Player extends Character {
      * @param colour The colour of the popup's text.
      */
 
-    public popup(title: string, message: string, colour: string): void {
+    public popup(title: string, message: string, colour = '#00000'): void {
         if (!title) return;
 
         title = Utils.parseMessage(title);
@@ -851,61 +1772,54 @@ export default class Player extends Character {
      * Sends a chatbox message to the player.
      * @param message String text we want to display to the player.
      * @param colour Optional parameter indicating text colour.
+     * @param bypass Allows sending notifications without the timeout.
      */
 
-    public notify(message: string, colour?: string): void {
+    public notify(message: string, colour = '', source = '', bypass = false): void {
         if (!message) return;
 
         // Prevent notify spams
-        if (Date.now() - this.lastNotify < 250) return;
+        if (!bypass && Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
         this.send(
             new Notification(Opcodes.Notification.Text, {
                 message,
-                colour
+                colour,
+                source
             })
         );
 
         this.lastNotify = Date.now();
     }
 
-    public pointer(type: Opcodes.Pointer, info: PointerData): void {
+    /**
+     * Sends a message to the player's guild controller's interface.
+     * @param message The message we are sending to the player.
+     */
+
+    public guildNotify(message: string): void {
+        this.send(new Guild(Opcodes.Guild.Error, { message }));
+    }
+
+    /**
+     * Sends a pointer data packet to the player. Removes all
+     * existing pointers first to prevent multiple pointers.
+     * @param opcode The pointer opcode we are sending.
+     * @param info Information for the pointer such as position.
+     */
+
+    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
         // Remove all existing pointers first.
         this.send(new Pointer(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(type in Opcodes.Pointer)) return;
+        if (!(opcode in Opcodes.Pointer)) return;
 
         info.instance = this.instance;
 
-        this.send(new Pointer(type, info));
-    }
-
-    /**
-     * Sends a chat packet that can be used to
-     * show special messages to the player.
-     */
-
-    public chat(
-        source: string,
-        text: string,
-        colour?: string,
-        isGlobal = false,
-        withBubble = false
-    ): void {
-        if (!source || !text) return;
-
-        this.send(
-            new Chat({
-                name: source,
-                text,
-                colour,
-                isGlobal,
-                withBubble
-            })
-        );
+        this.send(new Pointer(opcode, info));
     }
 
     /**
@@ -913,14 +1827,19 @@ export default class Player extends Character {
      * them in between tiles. Should only be used if they are
      * being transported elsewhere.
      */
-    public stopMovement(force = false): void {
+
+    public stopMovement(forced = false): void {
         this.send(
             new Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
-                force
+                forced
             })
         );
     }
+
+    /**
+     * Saves the player data to the database.
+     */
 
     public save(): void {
         if (config.skipDatabase || this.isGuest || !this.ready) return;
@@ -928,88 +1847,345 @@ export default class Player extends Character {
         this.database.creator?.save(this);
     }
 
-    public hasAggressionTimer(): boolean {
-        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
-    }
-
-    public finishedQuest(id: number): boolean {
-        return false;
-        // let quest = this.quests?.getQuest(id);
-
-        // return quest?.isFinished() || false;
-    }
-
-    public finishedAchievement(id: number): boolean {
-        return false;
-        // if (!this.quests) return false;
-
-        // let achievement = this.quests.getAchievement(id);
-
-        // if (!achievement) return true;
-
-        // return achievement.isFinished();
-    }
-
-    public finishAchievement(id: number): void {
-        // if (!this.quests) return;
-        // let achievement = this.quests.getAchievement(id);
-        // if (!achievement || achievement.isFinished()) return;
-        // achievement.finish();
-    }
-
     /**
      * Serializes the player character to be sent to
      * nearby regions. This contains all the data
      * about the player that other players should
      * be able to see.
+     * @param withEquipment Whether or not to include equipment batch data.
+     * @param withExperience Whether or not to incluide experience data.
+     * @param withMana Whether or not to include mana data.
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment?: boolean): PlayerData {
+    public override serialize(
+        withEquipment = false,
+        withExperience = false,
+        withMana = false
+    ): PlayerData {
         let data = super.serialize() as PlayerData;
 
-        data.rights = this.rights;
-        data.level = this.level;
+        // Sprite key is the armour key.
+        data.key =
+            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
+        data.name = Utils.formatName(this.username);
+        data.rank = this.rank;
+        data.level = this.skills.getCombatLevel();
         data.hitPoints = this.hitPoints.getHitPoints();
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
-        data.orientation = this.orientation;
         data.movementSpeed = this.getMovementSpeed();
+
+        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
 
+        if (withExperience) data.experience = this.getTotalExperience();
+
+        if (withMana) {
+            data.mana = this.mana.getMana();
+            data.maxMana = this.mana.getMaxMana();
+        }
+
         return data;
     }
 
-    public onOrientation(callback: () => void): void {
-        this.orientationCallback = callback;
+    /**
+     * Override for the superclass attack stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total attack stats for the player.
+     */
+
+    public override getAttackStats(): Stats {
+        return this.equipment.totalAttackStats;
     }
+
+    /**
+     * Override for the superclass defence stats function. We instead
+     * use the player's total equipment stats.
+     * @return The total defence stats for the player.
+     */
+
+    public override getDefenseStats(): Stats {
+        return this.equipment.totalDefenseStats;
+    }
+
+    /**
+     * Override for the superclass bonuses function. We use the total
+     * equipment bonuses instead.
+     * @returns The total equipment bonuses.
+     */
+
+    public override getBonuses(): Bonuses {
+        return this.equipment.totalBonuses;
+    }
+
+    /**
+     * Subclass implementation that uses the appropriate type of weapon
+     * to determine the player's accuracy bonus.
+     * @returns The player's accuracy bonus based on their weapon type.
+     */
+
+    public override getAccuracyBonus(): number {
+        if (this.isArcher()) return this.getBonuses().archery;
+        if (this.isMagic()) return this.getBonuses().magic;
+
+        return this.getBonuses().accuracy;
+    }
+
+    /**
+     * @returns The player's current accuracy level from the skills controller.
+     */
+
+    public override getAccuracyLevel(): number {
+        // We use magic level for accuracy when the player is using a magic weapon.
+        if (this.isMagic()) return this.skills.get(Modules.Skills.Magic).level;
+        if (this.isArcher()) return this.skills.get(Modules.Skills.Archery).level;
+
+        return this.skills.get(Modules.Skills.Accuracy).level;
+    }
+
+    /**
+     * @returns The player's current strength level from the skills controller.
+     */
+
+    public override getStrengthLevel(): number {
+        return this.skills.get(Modules.Skills.Strength).level;
+    }
+
+    /**
+     * @returns The player's archery level from the skills controller.
+     */
+
+    public override getArcheryLevel(): number {
+        return this.skills.get(Modules.Skills.Archery).level;
+    }
+
+    /**
+     * @returns The player's defense level from the skills controller.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.skills.get(Modules.Skills.Defense).level;
+    }
+
+    /**
+     * @returns The player's magic level from the skills controller.
+     */
+
+    private getMagicLevel(): number {
+        return this.skills.get(Modules.Skills.Magic).level;
+    }
+
+    /**
+     * @param weaponType The weapon type we are checking for.
+     * @returns The player's last attack style. Will return undefined and then a default
+     * value will be used.
+     */
+
+    public getLastAttackStyle(weaponType: string): Modules.AttackStyle {
+        return this.lastStyles[weaponType];
+    }
+
+    /**
+     * Override for the damage bonus getter. Player also considers the magic
+     * bonus when using a magic weapons.
+     * @returns The bonus that the player will be using for max damage calculation
+     * given their current weapon damage type.
+     */
+
+    public override getDamageBonus(): number {
+        // Handle magic bonuses
+        if (this.isMagic()) {
+            // If the player does not have enough mana for the attack decrease the damage.
+            if (!this.hasManaForAttack()) return -3;
+
+            // Return the total magic bonus.
+            return this.getBonuses().magic;
+        }
+
+        // Return the archery bonus if using ranged weapons.
+        if (this.isArcher()) return this.getBonuses().archery;
+
+        return this.getBonuses().strength;
+    }
+
+    /**
+     * Override for the player's primary skill used in damage calculation.
+     * @returns The damage level of the primary skill given the player's
+     * current weapon damage type.
+     */
+
+    public override getSkillDamageLevel(): number {
+        if (this.isMagic()) return this.getMagicLevel();
+        if (this.isArcher()) return this.getArcheryLevel();
+
+        return this.getStrengthLevel();
+    }
+
+    /**
+     * Override for the damage absoprption modifier. Effects such as thick
+     * skin lessent the max damage an entity is able to deal.
+     * @returns Modifier number value between 0 and 1, closer to 0 the higher the damage reduction.
+     */
+
+    public override getDamageReduction(): number {
+        let reduction = 1;
+
+        // Thick skin increases damage reduction by 20%.
+        if (this.status.has(Modules.Effects.ThickSkin)) reduction -= 0.2;
+
+        // Attack style defensive boosts defence by 10%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
+
+        // Shared attack style defensive boosts defence by 4%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Shared) reduction -= 0.04;
+
+        return reduction;
+    }
+
+    /**
+     * Gets the player's currently selected attack style for the weapon
+     * they are wielding. We use this to determine combat bonuses and whatnot.
+     * @returns The attack style the weapon currently has selected.
+     */
+
+    public override getAttackStyle(): Modules.AttackStyle {
+        return this.equipment.getWeapon().attackStyle;
+    }
+
+    /**
+     * Subclass implementation for player's damage type. The damage hit type is selected
+     * based on the arrows or the weapon the player has equipped.
+     * @returns The damage type of the player's current weapon.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        // Attempt to apply the arrow effects if the player is using ranged weapons.
+        if (this.isArcher()) {
+            let arrows = this.equipment.getArrows();
+
+            /**
+             * Depending on the type of weapon the player is using, we will either use
+             * the burning/freezing effect of the arrows or the weapon itself.
+             */
+
+            if (arrows.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+            if (arrows.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+            // We use the player's bow to determine the damage type if the arrows do not have any effects.
+            let weapon = this.equipment.getWeapon();
+
+            if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+        } else {
+            let weapon = this.equipment.getWeapon();
+
+            /**
+             * Weapon effects may vary. Here we do a roll against the weapon's enchantments
+             * and their level to determine which damage type we will use.
+             */
+
+            if (weapon.isCritical() && Formulas.getEffectChance()) return Modules.Hits.Critical;
+        }
+
+        // Default case for damage.
+        return Modules.Hits.Normal;
+    }
+
+    /**
+     * @returns Returns the projectile sprite name for the character.
+     */
+
+    public override getProjectileName(): string {
+        // Use `Character` default `projectileName` in tutorial.
+        if (!this.quests.isTutorialFinished()) return this.projectileName;
+
+        // Use the projectile name of the arrows if the player is using ranged weapons.
+        if (this.isArcher()) return this.equipment.getArrows().projectileName;
+
+        return this.equipment.getWeapon().projectileName;
+    }
+
+    /**
+     * This function assumes that we already checked that the player has the bloodsucking
+     * enchantment.
+     * @returns The bloodsucking enchantment level the player currently has on his weapon.
+     */
+
+    public override getBloodsuckingLevel(): number {
+        return (
+            this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1
+        );
+    }
+
+    /**
+     * An override function for the player's attack rate since it
+     * is dependent on their weapon at the moment. We may be doing
+     * calculations from special equipments/effects in the future.
+     * @returns The attack rate in milliseconds. See Modules.Defaults
+     * for the default attack speed value.
+     */
+
+    public override getAttackRate(): number {
+        // Dualists mark status effect boosts attack speed by 200 milliseconds.
+        if (this.status.has(Modules.Effects.DualistsMark))
+            return this.equipment.getWeapon().attackRate - 200;
+
+        return this.equipment.getWeapon().attackRate;
+    }
+
+    /**
+     * Callback for when the current character kills another character.
+     * @param callback Contains the character object that was killed.
+     */
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
     }
 
+    /**
+     * Callback for when the player talks to an NPC.
+     * @param callback Contains the NPC object the player is talking to.
+     */
+
     public onTalkToNPC(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
+    /**
+     * Callback for when the player has entered through a door.
+     * @param callback Contains information about the door player is entering through.
+     */
+
     public onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
-    public onProfile(callback: InterfaceCallback): void {
-        this.profileToggleCallback = callback;
-    }
 
-    public onInventory(callback: InterfaceCallback): void {
-        this.inventoryToggleCallback = callback;
-    }
-
-    public onWarp(callback: InterfaceCallback): void {
-        this.warpToggleCallback = callback;
-    }
+    /**
+     * Callback for when the cheat score has increased.
+     */
 
     public onCheatScore(callback: () => void): void {
         this.cheatScoreCallback = callback;
+    }
+
+    /**
+     * Callback whenever the entity's region changes.
+     * @param callback Contains the new region the entity is in.
+     */
+
+    public onRegion(callback: RegionCallback): void {
+        this.regionCallback = callback;
+    }
+
+    /**
+     * Callback for when the regions the player just left from
+     * are updated.
+     * @param callback Contains the regions the player just left from.
+     */
+
+    public onRecentRegions(callback: RecentRegionsCallback): void {
+        this.recentRegionsCallback = callback;
     }
 }

@@ -1,31 +1,26 @@
-import _ from 'lodash';
-
-import World from '../game/world';
-
 import storeData from '../../data/stores.json';
+import Item from '../game/entity/objects/item';
 
 import log from '@kaetram/common/util/log';
+import StoreEn from '@kaetram/common/text/en/store';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Store as StorePacket } from '@kaetram/common/network/impl';
 
-import NPC from '../game/entity/npc/npc';
-import Item from '../game/entity/objects/item';
-import Player from '../game/entity/character/player/player';
-
-import StoreEn from '@kaetram/common/text/store-en';
-
-import { Opcodes, Modules } from '@kaetram/common/network';
-import { Store as StorePacket } from '../network/packets';
 import type {
+    RawStore,
     SerializedStoreInfo,
     SerializedStoreItem,
-    StoreData,
-    StoreItem,
-    RawStore
+    StoreData
 } from '@kaetram/common/types/stores';
+import type Player from '../game/entity/character/player/player';
+import type NPC from '../game/entity/npc/npc';
+import type World from '../game/world';
 
 interface StoreInfo {
     items: Item[];
     refresh: number;
     currency: string;
+    restricted?: boolean;
     lastUpdate?: number;
 }
 
@@ -46,16 +41,14 @@ export default class Stores {
 
     public constructor(private world: World) {
         // Load stores from the JSON.
-        _.each(storeData, this.load.bind(this));
+        for (let key in storeData) this.load(storeData[key as keyof typeof storeData], key);
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
 
-        log.info(
-            `Loaded ${Object.keys(this.stores).length} shop${
-                Object.keys(this.stores).length > 1 ? 's' : ''
-            }.`
-        );
+        let size = Object.keys(this.stores).length;
+
+        log.info(`Loaded ${size} shop${size > 1 ? 's' : ''}.`);
     }
 
     /**
@@ -66,30 +59,36 @@ export default class Stores {
      */
 
     private load(store: StoreData, key: string): void {
-        let { refresh, currency } = store,
+        let { refresh, currency, restricted } = store,
             items: Item[] = [];
 
-        _.each(store.items, (item: StoreItem) => {
-            // Skip if an item already exists with the same key.
-            if (_.some(items, { key: item.key }))
-                return log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+        for (let item of store.items) {
+            let { key, count, price, stockAmount } = item;
 
-            let storeItem = new Item(item.key, -1, -1, false, item.count);
+            // Skip if an item already exists with the same key.
+            if (items.some(({ key: itemKey }) => itemKey === key)) {
+                log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+
+                continue;
+            }
+
+            let storeItem = new Item(key, -1, -1, false, count);
 
             // Assign price if provided, otherwise use default item price.
-            if (item.price) storeItem.price = item.price;
+            if (price) storeItem.price = price;
 
             // Stocking amount and max amount of the item in store.
-            storeItem.stockAmount = item.stockAmount || 1;
-            storeItem.maxCount = item.count;
+            storeItem.stockAmount = stockAmount || 1;
+            storeItem.maxCount = count;
 
             items.push(storeItem);
-        });
+        }
 
         this.stores[key] = {
             items,
             refresh,
             currency,
+            restricted,
             lastUpdate: Date.now()
         };
     }
@@ -99,14 +98,16 @@ export default class Stores {
      */
 
     private update(): void {
-        _.each(this.stores, (store: StoreInfo, key: string) => {
-            if (!this.canRefresh(store)) return;
+        for (let key in this.stores) {
+            let store = this.stores[key];
+
+            if (!this.canRefresh(store)) continue;
 
             this.stockItems(store);
             this.updatePlayers(key);
 
             store.lastUpdate = Date.now();
-        });
+        }
     }
 
     /**
@@ -116,12 +117,12 @@ export default class Stores {
      */
 
     private stockItems(store: StoreInfo): void {
-        _.each(store.items, (item: Item) => {
-            if (item.count >= item.maxCount) return;
+        for (let item of store.items) {
+            if (item.count === -1 || item.count >= item.maxCount) continue;
 
             // If an alternate optional stock count is provided, increment by that amount.
-            item.count += item.stockAmount;
-        });
+            if (item.stockAmount) item.count += item.stockAmount;
+        }
     }
 
     /**
@@ -165,49 +166,68 @@ export default class Stores {
      * sends the data to all the players accessing the store.
      * @param player The player that is purchasing the item.
      * @param storeKey The key of the store the item is being purchased from.
-     * @param itemKey The key of the item being purchased.
+     * @param index The index of the item we are purchasing.
      * @param count The amount of the item being purchased.
      */
 
-    public purchase(player: Player, storeKey: string, itemKey: string, count = 1): void {
+    public purchase(player: Player, storeKey: string, index: number, count = 1): void {
         if (!this.verifyStore(player, storeKey)) return;
 
         let store = this.stores[storeKey],
-            item = _.find(store.items, { key: itemKey });
+            item = store.items[index];
+
+        // Prevent cheaters from buying any of the items.
+        if (player.isCheater()) return player.notify(StoreEn.CHEATER);
+
+        // First and foremost check the user has enough space.
+        if (!player.inventory.hasSpace() && !player.inventory.hasItem(item.key))
+            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Check if item exists
         if (!item)
             return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
-        if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
+        if (item.count !== -1) {
+            if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
 
-        // Prevent buying more than store has stock. Default to max stock.
-        count = item.count < count ? item.count : count;
+            // Prevent buying more than store has stock. Default to max stock.
+            count = item.count < count ? item.count : count;
+        }
 
         // Find total price of item by multiplying count against price.
         let currency = player.inventory.getIndex(store.currency, item.price * count);
 
-        if (currency === -1) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
+        // If no inventory slot index with currency is found, stop the purchase.
+        if (currency < 0) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Clone the item we are adding
-        let itemToAdd = _.clone(item);
+        let itemToAdd = item.copy();
 
         itemToAdd.count = count;
 
         // Add the item to the player's inventory.
-        if (!player.inventory.add(itemToAdd)) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+        let amount = player.inventory.add(itemToAdd);
 
-        // Decrement the item count by the amount we are buying.
-        item.count -= count;
+        if (amount < 1) return;
 
-        // Remove item from store if it is out of stock and not original to the store.
-        if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
-            store.items = _.filter(store.items, (storeItem) => {
-                return storeItem.key !== itemKey;
-            });
+        if (item.count > 0) {
+            // Decrement the item count by the amount we are buying.
+            item.count -= amount;
 
-        player.inventory.remove(currency, item.price * count);
+            // Remove item from store if it is out of stock and not original to the store.
+            if (item.count < 1 && this.isOriginalItem(storeKey, item.key))
+                store.items = store.items.filter((storeItem) => {
+                    return storeItem.key !== item.key;
+                });
+        }
 
+        player.inventory.remove(currency, item.price * amount);
+
+        log.stores(
+            `Player ${player.username} purchased ${amount} ${item.key} for ${item.price * amount} ${
+                store.currency
+            }.`
+        );
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
     }
@@ -217,36 +237,60 @@ export default class Stores {
      * items they do not originally have in stock. In that case we add
      * the specific item to the stock.
      * @param player The player that is selling the item.
-     * @param storeKey The store the player is selling to.
-     * @param itemKey The item the player is selling.
+     * @param key The key of the store we are currently in.
+     * @param index The index of the item in the player's inventory.
      * @param count The amount of the item being sold.
      */
 
-    public sell(player: Player, storeKey: string, itemKey: string, count = 1, index: number): void {
-        if (!this.verifyStore(player, storeKey)) return;
+    public sell(player: Player, key: string, index: number, count = 1): void {
+        if (!this.verifyStore(player, key)) return;
 
-        let store = this.stores[storeKey],
-            item = player.inventory.getItem(player.inventory.get(index));
+        // Ensure the count is correct.
+        if (count < 1) return player.notify(StoreEn.INVALID_ITEM_COUNT);
 
-        if (item.key !== itemKey)
-            return log.warning(`${player.username} ${StoreEn.SELL_INVALID_ITEM}`);
+        let slot = player.inventory.get(index);
 
-        // Check if store already contains the item.
-        let storeItem = _.find(store.items, { key: itemKey }),
-            price = storeItem ? storeItem.price : item.price;
+        // Ensure the item in the slot exists.
+        if (slot.isEmpty())
+            return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
+
+        let store = this.stores[key];
+
+        // Disable selling in restricted stores.
+        if (store.restricted) return player.notify(StoreEn.RESTRICTED_STORE);
+
+        /**
+         * Although a lot of these checks are similar to `select()` they are necessary
+         * here just in case someone is messing with the client; which, in an open-source
+         * project, is to be expected and frankly, quite reasonable.
+         */
+
+        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Temporary fix until we have a more suitable UI.
+        ({ count } = slot);
+
+        // Find the item in the store if it exists.
+        let item = player.inventory.getItem(slot),
+            storeItem = store.items.find((item) => item.key === slot.key),
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
+
+        // Items without prices (quest items) cannot be sold.
+        if (price < 0) return player.notify(StoreEn.CANNOT_SELL_ITEM);
 
         player.inventory.remove(index, count);
 
-        // Attempt to add currency type and amount to the player's inventory.
-        if (!player.inventory.add(this.getCurrency(store.currency, Math.ceil((price * count) / 2))))
-            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+        // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
+        if (player.inventory.add(this.getCurrency(store.currency, price)) < 1)
+            return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
-        // Increment item amount in the store otherwise add item to store.
-        if (storeItem) storeItem.count += count;
-        else store.items.push(item);
+        // Increment the item count or add to store only if the player isn't a cheater :)
+        if (!player.isCheater())
+            if (!storeItem?.count) store.items.push(item);
+            else if (storeItem?.count !== -1) storeItem.count += count;
 
         // Sync up new store data to all players.
-        this.updatePlayers(storeKey);
+        this.updatePlayers(key);
     }
 
     /**
@@ -254,38 +298,55 @@ export default class Stores {
      * in the player's inventory and return the result back. If the item is in the store
      * then we refer to that price instead.
      * @param player The player we are selecting an item for sale of.
-     * @param storeKey The store that the action takes place in.
-     * @param itemKey The key of the item attempted to be sold.
+     * @param key The store that the action takes place in.
      * @param index The selected inventory slot index from the client (used for verification).
+     * @param count Optional parameter for how much of an item to select (to be implemented client side).
      */
 
-    public select(
-        player: Player,
-        storeKey: string,
-        itemKey: string,
-        count = 1,
-        index: number
-    ): void {
-        if (!this.verifyStore(player, storeKey) || isNaN(index)) return;
+    public select(player: Player, key: string, index: number, count = 1): void {
+        if (!this.verifyStore(player, key) || isNaN(index)) return;
 
-        let store = this.stores[storeKey],
-            item = _.find(store.items, { key: itemKey });
+        // Grab the inventory slot at the specified index.
+        let slot = player.inventory.get(index);
 
-        // Check if item exists
-        if (!item) item = player.inventory.getItem(player.inventory.get(index));
-
-        if (item.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
-
-        if (item.key !== itemKey)
+        // This shouldn't get called unless there is a bug or client was messed with.
+        if (slot.isEmpty())
             return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
+        let store = this.stores[key];
+
+        // Check that the player isn't trying to sell the currency to the store.
+        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Temporary fix until we have a more suitable UI.
+        ({ count } = slot);
+
+        // Create an instance of an item and try to check if that item exists in the store.
+        let item = player.inventory.getItem(slot),
+            storeItem = store.items.find((item) => item.key === slot.key),
+            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
+
+        // Items without prices (quest items) cannot be sold.
+        if (price < 1) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+
+        // Invalid price, this shouldn't happen.
+        if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
+
+        log.stores(
+            `Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${
+                store.currency
+            }.`
+        );
+
+        // Create the select packet for the client to process and move the item into the slot.
         player.send(
             new StorePacket(Opcodes.Store.Select, {
+                key,
                 item: {
                     key: item.key,
                     name: item.name,
                     count,
-                    price: Math.ceil(item.price / 2),
+                    price,
                     index
                 }
             })
@@ -348,7 +409,7 @@ export default class Stores {
         // This should absolutely not happen.
         if (!store) return -1;
 
-        let item = _.find(store.items, { key: itemKey });
+        let item = store.items.find((item) => item.key === itemKey);
 
         if (!item) return 1;
 
@@ -390,7 +451,7 @@ export default class Stores {
         if (!store) return false;
 
         // Return if the itemKey exists in the store's original stock.
-        return !_.some(store.items, { key: itemKey });
+        return !store.items.some((item) => item.key === itemKey);
     }
 
     /**
@@ -406,14 +467,13 @@ export default class Stores {
             items: SerializedStoreItem[] = [];
 
         // Extract all the items from the store.
-        _.each(store.items, (item: Item) =>
+        for (let item of store.items)
             items.push({
                 key: item.key,
                 name: item.name,
                 count: item.count,
                 price: item.price
-            })
-        );
+            });
 
         return {
             key,

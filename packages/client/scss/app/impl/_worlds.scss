@@ -1,0 +1,98 @@
+@use '../../abstracts/media';
+
+#world-select-button {
+    cursor: pointer;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    margin: 3.5em;
+    padding: 0.5em 1em;
+
+    font-family: AdvoCut, sans-serif, arial;
+    font-size: 24px;
+    color: #eee;
+
+    background-color: #d83939;
+    border: 2px solid #373737;
+    border-radius: 0.25em;
+
+    &:hover {
+        background-color: #e26d6d;
+        border-color: #fcda5c;
+    }
+
+    &:active {
+        background-color: #db4848;
+    }
+
+    strong {
+        display: block;
+        letter-spacing: 0.05em;
+    }
+
+    span {
+        font-size: 20px;
+    }
+}
+
+#world-select form {
+    display: flex;
+    flex-flow: column;
+    height: 65%;
+    padding: 1em 5em;
+}
+
+#worlds {
+    overflow-y: auto;
+    padding: 0 5em;
+
+    li {
+        cursor: pointer;
+
+        display: flex;
+        flex: 1;
+        justify-content: space-evenly;
+
+        padding: 0.5em 0;
+
+        &:nth-child(odd) {
+            background-color: rgb(0 0 0 / 25%);
+        }
+
+        &:hover {
+            background-color: rgb(0 0 0 / 50%);
+        }
+
+        &:active {
+            background-color: rgb(0 0 0 / 75%);
+        }
+
+        &.active {
+            color: #fcda5c;
+            background-color: rgb(0 0 0 / 75%);
+            outline: 2px solid #fcda5c;
+        }
+    }
+}
+
+.button-row {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+#cancel-worlds,
+#continue-worlds {
+    position: relative;
+}
+
+@media (--lg) {
+    #world-select form {
+        padding: 1em 7.5em;
+    }
+}

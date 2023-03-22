@@ -1,0 +1,67 @@
+@use '../../abstracts/media';
+
+.check {
+    cursor: pointer;
+    user-select: none;
+
+    position: absolute;
+    top: 100%;
+
+    display: block;
+
+    padding-left: 1em;
+
+    text-align: left;
+
+    input {
+        cursor: pointer;
+
+        position: absolute;
+        top: -200%;
+
+        width: 0;
+        height: 0;
+
+        opacity: 0;
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 0.5px;
+        left: 0;
+
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        .check {
+            .checkmark {
+                width: 8px * $i;
+                height: 8px * $i;
+                background: url('/img/interface/characterdialogsheet.png') -109px * $i -240px * $i;
+                background-size: calc(width('characterdialogsheet.png') * $i);
+            }
+
+            &:hover input ~ .checkmark,
+            input:focus ~ .checkmark {
+                background-position-x: -118px * $i;
+            }
+
+            input:active ~ .checkmark {
+                background-position-x: -127px * $i;
+            }
+
+            input:checked ~ .checkmark {
+                background-position-x: -136px * $i;
+            }
+
+            &:hover input:checked ~ .checkmark,
+            input:focus:checked ~ .checkmark {
+                background-position-x: -145px * $i;
+            }
+        }
+    }
+}

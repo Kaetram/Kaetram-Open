@@ -1,42 +1,38 @@
+import Utils from '../utils/util';
+
 import { Modules } from '@kaetram/common/network';
 
 import type Animation from './animation';
 import type Sprite from './sprite';
 import type { Animations } from './sprite';
 
-export interface EntityRenderingData {
-    scale: number;
-    angle: number;
-
-    sprite: Sprite;
-    width: number;
-    height: number;
-
-    ox: number;
-    oy: number;
-
-    shadowWidth: number;
-    shadowHeight: number;
-    shadowOffsetY: number;
-}
-
 export default abstract class Entity {
     public x = 0;
     public y = 0;
     public gridX = 0;
     public gridY = 0;
+    public nextGridX = -1;
+    public nextGridY = -1;
+
+    public movementSpeed = -1;
+    public attackRange = -1;
+    public frozen = false;
+    public dead = false;
 
     public name = '';
 
-    public type = -1;
+    public region = -1;
+
+    public healthBarVisible = false;
 
     public sprite!: Sprite;
 
     public spriteFlipX = false;
     public spriteFlipY = false;
 
+    public animation!: Animation | null;
+
     private animations!: Animations;
-    public currentAnimation!: Animation | null;
     protected idleSpeed = 450;
 
     public shadowOffsetY = 0;
@@ -49,26 +45,13 @@ export default abstract class Entity {
     public angled = false;
     public angle = 0;
 
-    public critical = false;
-    public stunned = false;
-    public terror = false;
-
-    // public nonPathable = false;
     public hasCounter = false;
 
     public countdownTime = 0;
     public counter = 0;
     public fadingDuration = 1000;
 
-    public orientation!: Modules.Orientation;
-
-    public renderingData = {
-        scale: -1,
-        angle: 0
-    } as EntityRenderingData;
-
-    // private dirty = false;
-    // private dirtyCallback?: () => void;
+    public orientation: Modules.Orientation = Modules.Orientation.Down;
 
     public fadingTime!: number;
     private blinking!: number;
@@ -76,66 +59,79 @@ export default abstract class Entity {
     public normalSprite!: Sprite;
     public hurtSprite!: Sprite;
 
+    public ready = false;
+
     private readyCallback?(): void;
 
-    public attackRange!: number;
-    public mana!: number | number[];
-    public maxMana!: number;
-    public experience!: number;
-    public level!: number;
-    public movementSpeed!: number;
-    public frozen!: boolean;
-    public teleporting!: boolean;
-    public dead!: boolean;
-    public hitPoints!: number | number[];
-    public pvp!: boolean;
+    public hitPoints = 0;
+    public maxHitPoints = 0;
+    public mana = 0;
+    public maxMana = 0;
+    public level = 1;
+    public experience = 0;
+    public teleporting = false;
+    public pvp = false;
     public nameColour!: string;
     public customScale!: number;
-    public nextGridX!: number;
-    public nextGridY!: number;
     public fadingAlpha!: number;
+    public lastUpdate = Date.now();
 
-    protected constructor(public id: string, public kind: string) {
-        // this.loadDirty();
-    }
+    public constructor(public instance = '', public type: Modules.EntityType) {}
 
-    // /**
-    //  * This is important for when the client is
-    //  * on a mobile screen. So the sprite has to be
-    //  * handled differently.
-    //  */
-    // protected loadDirty(): void {
-    //     this.dirty = true;
-
-    //     this.dirtyCallback?.();
-    // }
+    /**
+     * Fades in the entity when spawning in.
+     * @param time The duration the fade-in will take.
+     */
 
     public fadeIn(time: number): void {
         this.fading = true;
         this.fadingTime = time;
     }
 
-    public blink(speed: number): void {
+    /**
+     * Begins the blinking interval.
+     * @param speed The speed at which the blink occurs.
+     */
+
+    public blink(speed = 150): void {
         this.blinking = window.setInterval(() => this.toggleVisibility(), speed);
     }
 
-    protected stopBlinking(): void {
-        let { blinking } = this;
+    /**
+     * Stops teh blinking interval if it's running and updates the visibility.
+     */
 
-        if (blinking) clearInterval(blinking);
+    protected stopBlinking(): void {
+        if (this.blinking) clearInterval(this.blinking);
 
         this.setVisible(true);
     }
 
-    public idle(): void {
-        //
+    /**
+     * Unimplemented idle() function.
+     */
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public idle(): void {}
+
+    /**
+     * Animates the character's death animation and
+     * creates a callback if needed.
+     * @param callback Optional parameter for when the animation finishes.
+     * @param speed Optional parameter for the animation speed.
+     * @param count How many times to repeat the animation.
+     */
+
+    public animateDeath(callback?: () => void, speed = 120, count = 1): void {
+        this.setAnimation('death', speed, count, callback);
     }
 
-    public setName(name: string): void {
-        this.name = name;
-    }
+    /**
+     * Updates the sprite of the entity with a new one.
+     * @param sprite The new sprite object (obtained using the sprites controller).
+     */
 
-    public setSprite(sprite: Sprite | undefined): void {
+    public setSprite(sprite: Sprite): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
         if (this.isPlayer()) sprite.loadHurt = true;
@@ -151,6 +147,11 @@ export default abstract class Entity {
 
         sprite.onLoad(() => {
             if (sprite.loadHurt) this.hurtSprite = sprite.hurtSprite;
+
+            if (this.customScale) {
+                this.sprite.offsetX *= this.customScale;
+                this.sprite.offsetY *= this.customScale;
+            }
         });
 
         this.spriteLoaded = true;
@@ -158,37 +159,67 @@ export default abstract class Entity {
         this.readyCallback?.();
     }
 
-    public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
-        let { spriteLoaded, animations } = this;
+    /**
+     * Sets the animation of the entity.
+     * @param name The name of the animation to play.
+     * @param speed The speed at which the animation takes to play (in ms).
+     * @param count The amount of times the animation should play.
+     * @param onEndCount A function to be called upon animation completion.
+     */
 
-        if (!spriteLoaded || this.currentAnimation?.name === name) return;
+    public setAnimation(
+        name: string,
+        speed = this.idleSpeed,
+        count = 0,
+        onEndCount?: () => void
+    ): void {
+        if (!this.spriteLoaded || this.animation?.name === name) return;
 
-        let anim = animations[name];
+        let anim = this.animations[name];
 
         if (!anim) return;
 
-        this.currentAnimation = anim;
+        this.animation = anim;
 
-        let { currentAnimation } = this;
+        // Restart the attack animation if it's already playing.
+        if (name.startsWith('atk')) this.animation.reset();
 
-        if (name.startsWith('atk')) currentAnimation.reset();
+        this.animation.setSpeed(speed);
 
-        currentAnimation.setSpeed(speed);
-
-        currentAnimation.setCount(count, onEndCount || (() => this.idle()));
+        // Run the onEndCount function when the animation finishes or go to idle.
+        this.animation.setCount(count, onEndCount || (() => this.idle()));
     }
+
+    /**
+     * Sets the absolute pixel coordinate position of the entity.
+     * @param x The new x pixel coordinate.
+     * @param y The new y pixel coordinate.
+     */
 
     private setPosition(x: number, y: number): void {
         this.x = x;
         this.y = y;
     }
 
-    public setGridPosition(x: number, y: number): void {
-        this.gridX = x;
-        this.gridY = y;
+    /**
+     * Updates the grid position of the entity. Grid coordinates are pixel coordinates
+     * divided by the tlesize and floored.
+     * @param gridX The new grid x coordinate.
+     * @param gridY The new grid y coordinate.
+     */
 
-        this.setPosition(x * 16, y * 16);
+    public setGridPosition(gridX: number, gridY: number): void {
+        this.gridX = gridX;
+        this.gridY = gridY;
+        this.region = Utils.getRegion(gridX, gridY);
+
+        this.setPosition(gridX * Utils.tileSize, gridY * Utils.tileSize);
     }
+
+    /**
+     * Sets the countdown to a value to start counting down from.
+     * @param count New value for the countdown.
+     */
 
     public setCountdown(count: number): void {
         this.counter = count;
@@ -198,110 +229,162 @@ export default abstract class Entity {
         this.hasCounter = true;
     }
 
+    /**
+     * Sets the visibility of the entity.
+     * @param visible New visibility value.
+     */
+
     private setVisible(visible: boolean): void {
         this.visible = visible;
     }
+
+    /**
+     * Updates the current idle speed of the entity.
+     * @param idleSpeed New idle speed to set.
+     */
 
     public setIdleSpeed(idleSpeed: number): void {
         this.idleSpeed = idleSpeed;
     }
 
-    public hasWeapon(): boolean {
-        return false;
-    }
+    /**
+     * Returns the distance between the current entity and another entity.
+     * @param entity The entity we are finding the distance to.
+     * @returns Integer value of the distance (in tiles).
+     */
 
     public getDistance(entity: Entity): number {
-        let { gridX, gridY } = this,
-            x = Math.abs(gridX - entity.gridX),
-            y = Math.abs(gridY - entity.gridY);
+        let { gridX, gridY } = this;
 
-        return x > y ? x : y;
+        return Math.abs(gridX - entity.gridX) + Math.abs(gridY - entity.gridY);
     }
 
-    // getCoordDistance(toX: number, toY: number): number {
-    //     let x = Math.abs(this.gridX - toX);
-    //     let y = Math.abs(this.gridY - toY);
-
-    //     return x > y ? x : y;
-    // }
-
-    // inAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 2 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // inExtraAttackRadius(entity: Entity): boolean {
-    //     return (
-    //         entity &&
-    //         this.getDistance(entity) < 3 &&
-    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-    //     );
-    // }
-
-    // getSprite(): string {
-    //     return this.sprite.name;
-    // }
+    /**
+     * Returns the angle of the entity in radians.
+     * @returns Angle number value.
+     */
 
     public getAngle(): number {
-        return 0;
+        return this.angle;
     }
+
+    /**
+     * Changes the values of the entity visibility.
+     */
 
     private toggleVisibility(): void {
         this.setVisible(!this.visible);
     }
 
+    /**
+     * Whether or not the entity is visible and should be drawn in the renderer.
+     * @returns The visibility status of the entity.
+     */
+
     public isVisible(): boolean {
         return this.visible;
     }
+
+    /**
+     * Default value of whether or not to draw names above the entity. Overriden
+     * in the subclass implementations as needed.
+     * @returns Defaults to true.
+     */
 
     public drawNames(): boolean {
         return true;
     }
 
+    /**
+     * Default value of whether or not the entity has a shadow underneath it. This
+     * gets overriden by subclass implementations as needed.
+     * @returns Defaults to false.
+     */
+
     public hasShadow(): boolean {
         return false;
     }
 
-    public hasPath(): boolean {
+    /**
+     * Default implementation for medal.
+     * @returns Defaults to false.
+     */
+
+    public hasMedal(): boolean {
         return false;
     }
+
+    /**
+     * @returns Whether or not the entity is a player type.
+     */
 
     public isPlayer(): boolean {
         return this.type === Modules.EntityType.Player;
     }
 
+    /**
+     * @returns Whether or not the entity is a player type.
+     */
+
     public isMob(): boolean {
         return this.type === Modules.EntityType.Mob;
     }
+
+    /**
+     * @returns Whether or not the entity is an NPC type.
+     */
 
     public isNPC(): boolean {
         return this.type === Modules.EntityType.NPC;
     }
 
+    /**
+     * @returns Whether or not the entity is an item type.
+     */
+
     public isItem(): boolean {
         return this.type === Modules.EntityType.Item;
     }
+
+    /**
+     * @returns Whether or not the entity is a chest type.
+     */
 
     public isChest(): boolean {
         return this.type === Modules.EntityType.Chest;
     }
 
+    /**
+     * @returns Whether or not the entity is a projectile type.
+     */
+
     public isProjectile(): boolean {
         return this.type === Modules.EntityType.Projectile;
     }
+
+    /**
+     * @returns Whether or not the entity is an object type.
+     */
 
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
     }
 
-    // onReady(callback: () => void): void {
-    //     this.readyCallback = callback;
-    // }
+    /**
+     * Default implementation for `isModerator()`
+     * @returns False by default.
+     */
 
-    // onDirty(callback: () => void): void {
-    //     this.dirtyCallback = callback;
-    // }
+    public isModerator(): boolean {
+        return false;
+    }
+
+    /**
+     * Default implementation for `isAdmin()`
+     * @returns False by default.
+     */
+
+    public isAdmin(): boolean {
+        return false;
+    }
 }

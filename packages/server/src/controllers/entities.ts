@@ -1,55 +1,96 @@
-import _ from 'lodash';
-
-import log from '@kaetram/common/util/log';
-
-import type World from '../game/world';
-import Map from '../game/map/map';
-import Collections from '@kaetram/server/src/game/entity/collection/collections';
-
-import Hit from '../game/entity/character/combat/hit';
-import Character from '../game/entity/character/character';
-import Mob from '../game/entity/character/mob/mob';
-import Chest from '../game/entity/objects/chest';
+import mobData from '../../data/mobs.json';
+import itemData from '../../data/items.json';
+import npcData from '../../data/npcs.json';
+import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
+import Chest from '../game/entity/objects/chest';
+import Mob from '../game/entity/character/mob/mob';
+import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
 
+import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
+import { Blink, Despawn } from '@kaetram/common/network/impl';
+
+import type { Enchantments } from '@kaetram/common/types/item';
+import type Hit from '../game/entity/character/combat/hit';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
+import type Map from '../game/map/map';
+import type World from '../game/world';
+import type Pet from '../game/entity/character/pet/pet';
+import type Regions from '../game/map/regions';
+import type Grids from '../game/map/grids';
 
 export default class Entities {
     private map: Map;
+    private regions: Regions;
+    private grids: Grids;
 
-    public readonly collections: Collections;
+    // Stores all the entities in the world.
+    private entities: { [instance: string]: Entity } = {};
+
+    public players: { [instance: string]: Player } = {};
+    private items: { [instance: string]: Item } = {};
+    private mobs: { [instance: string]: Mob } = {};
+    private chests: { [instance: string]: Chest } = {};
+    private npcs: { [instance: string]: NPC } = {};
+    private pets: { [instance: string]: Pet } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
-
-        this.collections = new Collections(this.world);
+        this.regions = this.world.map.regions;
+        this.grids = this.world.map.grids;
 
         this.load();
     }
 
     /**
-     * Parse through all the statically spawned entities in the map
-     * and create them based on their type.
+     * Looks through all the static entities in the map and spawns
+     * them according to their type. Next, we load up all the chests
+     * in the world.
      */
 
     private load(): void {
         this.map.forEachEntity((position: Position, key: string) => {
-            this.collections.forEachCollection((collection) => {
-                collection.tryLoad(position, key);
-            });
+            let type = this.getEntityType(key);
+
+            switch (type) {
+                case Modules.EntityType.Item: {
+                    return this.spawnItem(key, position.x, position.y, false);
+                }
+
+                case Modules.EntityType.NPC: {
+                    return this.spawnNPC(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.Mob: {
+                    return this.spawnMob(key, position.x, position.y);
+                }
+            }
         });
 
-        log.info(`Spawned ${this.collections.allEntities.length} entities!`);
+        log.info(`Spawned ${Object.keys(this.entities).length} entities!`);
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chest, (info) => {
-            this.spawnChest(info.items?.split(',') || [], info.x, info.y, true, info.achievement);
-        });
+        for (let info of this.map.chest)
+            this.spawnChest(
+                info.items?.split(',') || [],
+                info.x,
+                info.y,
+                true,
+                info.achievement,
+                info.mimic
+            );
 
-        log.info(`Spawned ${this.collections.chests.length} static chests!`);
+        log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
+
+        // Initialize the roaming interval for mobs
+        setInterval(
+            () => this.forEachMob((mob) => mob.roamingCallback?.()),
+            Modules.MobDefaults.ROAM_FREQUENCY
+        );
     }
 
     /**
@@ -61,8 +102,7 @@ export default class Entities {
      * @param y The y position in the grid to spawn the item.
      * @param dropped If the item is permanent or it will disappear.
      * @param count The amount of the item dropped.
-     * @param ability The ability type of the item.
-     * @param abilityLevel The ability level of the item.
+     * @param enchantments The enchantments applied to the item.
      */
 
     public spawnItem(
@@ -71,27 +111,28 @@ export default class Entities {
         y: number,
         dropped = false,
         count = 1,
-        ability = -1,
-        abilityLevel = -1
-    ): Item {
-        return <Item>this.collections.items.spawn({
-            key,
-            x,
-            y,
-            dropped,
-            count,
-            ability,
-            abilityLevel
-        });
+        enchantments: Enchantments = {},
+        owner = ''
+    ): void {
+        this.addItem(new Item(key, x, y, dropped, count, enchantments, owner));
     }
 
-    public spawnMob(key: string, x: number, y: number): Mob {
-        return <Mob>this.collections.mobs.spawn({
-            world: this.world,
-            key,
-            x,
-            y
-        });
+    /**
+     * Spawns a mob and adds it to the world. Similarly to `spawnItem` this
+     * function is used to easily spawn mobs from external means.
+     * @param key The key of the mub, used to determine its sprite.
+     * @param x The x grid coordinate of the mob spawn.
+     * @param y The y grid coordinate of the mob spawn.
+     * @param plugin Whether or not to use a plugin with the mob's key.
+     * @returns The mob object we just created.
+     */
+
+    public spawnMob(key: string, x: number, y: number, plugin = false): Mob {
+        let mob = new Mob(this.world, key, x, y, plugin);
+
+        this.addMob(mob);
+
+        return mob;
     }
 
     /**
@@ -109,13 +150,62 @@ export default class Entities {
         x: number,
         y: number,
         isStatic = false,
-        achievement?: number
+        achievement?: string,
+        mimic = false
     ): Chest {
-        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement });
+        let chest = new Chest(x, y, achievement, mimic, items);
+
+        // Static chests respawn after a certain amount of time.
+        if (isStatic) {
+            chest.static = isStatic;
+            chest.onRespawn(() => this.add(chest));
+        }
+
+        chest.onOpen((player?: Player) => {
+            this.remove(chest);
+
+            // We use the player's world instance to spawn mimic mob.
+            if (player && mimic) {
+                let mimic = this.spawnMob('mimic', chest.x, chest.y);
+
+                // Mimic's death respawns the chest. We also ensure mimic doesn't respawn.
+                if (mimic) {
+                    mimic.respawnable = false;
+                    mimic.chest = chest;
+                }
+            }
+
+            // Spawn chest items if there are any.
+            let item = chest.getItem();
+
+            if (!item) return;
+
+            this.spawnItem(item.key, chest.x, chest.y, true, item.count);
+
+            // Reward the player with an achievement if they have one.
+            if (player && chest.achievement) player.achievements.get(chest.achievement)?.finish();
+        });
+
+        this.addChest(chest);
+
+        return chest;
     }
 
     /**
-     * Creates a projectile and adds it to the world.
+     * Shorcut for creating a new NPC instance and adding it to the world.
+     * @param key The key of the NPC we are creating (for sprite and identification).
+     * @param x The x grid coordinate of the NPC spawn.
+     * @param y THe y grid coordinate of the NPC spawn.
+     */
+
+    private spawnNPC(key: string, x: number, y: number): void {
+        this.addNPC(new NPC(key, x, y));
+    }
+
+    /**
+     * Creates a projectile and adds it to the world. Projectiles are despawned
+     * server-sided after a calculated amount of time that would take
+     * them to reach their target.
      * @param owner The owner of the projectile, used to grab the projectile sprite.
      * @param target The target the projectile goes after.
      * @param hit Information about the hit type.
@@ -123,7 +213,35 @@ export default class Entities {
      */
 
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        return <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
+        let projectile = new Projectile(owner, target, hit);
+
+        // Remove on impact
+        projectile.onImpact(() => this.remove(projectile));
+
+        this.add(projectile);
+
+        return projectile;
+    }
+
+    /**
+     * Registers an entity within the world. This is used to keep track
+     * of all the entities in a single dictionary. This may contain every
+     * type of entity, including players, mobs, and items, etc.
+     * @param entity The entity we are adding to the world.
+     */
+
+    private add(entity: Entity): void {
+        if (entity.instance in this.entities)
+            log.warning(`Entity ${entity.instance} already exists.`);
+
+        this.entities[entity.instance] = entity;
+
+        // Do not have the projectiles be parsed as part of the region.
+        if (entity.isProjectile()) return;
+
+        this.regions.handle(entity);
+
+        this.grids.addToEntityGrid(entity);
     }
 
     /**
@@ -132,7 +250,37 @@ export default class Entities {
      */
 
     public addPlayer(player: Player): void {
-        this.collections.players.add(player);
+        this.add(player);
+
+        this.players[player.instance] = player;
+    }
+
+    /**
+     * Adds an item to our list of items and entities, then creates
+     * the necessary callbacks for despawning said item (and respawning
+     * if applicable).
+     * @param item The item object we are adding to the world.
+     */
+
+    private addItem(item: Item): void {
+        // Callback for removing the item from the world.
+        item.onDespawn(() => this.removeItem(item));
+
+        // Dropped items have a callback for their despawn.
+        if (item.dropped) {
+            item.despawn();
+
+            // Blinking timeout before the item despawns.
+            item.onBlink(() =>
+                this.world.push(Modules.PacketType.Broadcast, {
+                    packet: new Blink(item.instance)
+                })
+            );
+        } else item.onRespawn(() => this.addItem(item));
+
+        this.add(item);
+
+        this.items[item.instance] = item;
     }
 
     /**
@@ -142,7 +290,46 @@ export default class Entities {
      */
 
     public addMob(mob: Mob): void {
-        this.collections.mobs.add(mob);
+        this.add(mob);
+
+        this.mobs[mob.instance] = mob;
+
+        mob.addToChestArea(this.map.getChestAreas());
+    }
+
+    /**
+     * Creates an entry in the entity dictionary and the chest one.
+     * @param chest The chest object we are adding to the world.
+     */
+
+    private addChest(chest: Chest): void {
+        this.add(chest);
+
+        this.chests[chest.instance] = chest;
+    }
+
+    /**
+     * Adds an NPC object to the world entity dictionary and its
+     * own dictionary.
+     * @param npc The NPC object we are adding to the world.
+     */
+
+    private addNPC(npc: NPC): void {
+        this.add(npc);
+
+        this.npcs[npc.instance] = npc;
+    }
+
+    /**
+     * Adds a pet object to the world entity dictionary and its
+     * own dictionary.
+     * @param pet The pet object we are adding to the world.
+     */
+
+    private addPet(pet: Pet): void {
+        this.add(pet);
+
+        this.pets[pet.instance] = pet;
     }
 
     /**
@@ -151,7 +338,24 @@ export default class Entities {
      */
 
     public remove(entity: Entity): void {
-        this.collections.allEntities.remove(entity);
+        // Signal to nearby regions that the entity has been removed.
+        this.world.push(Modules.PacketType.Regions, {
+            region: entity.region,
+            packet: new Despawn({
+                instance: entity.instance
+            })
+        });
+
+        // Remove the entity from the entity grid
+        this.grids.removeFromEntityGrid(entity);
+
+        // Remove the entity from the region it is in.
+        this.regions.remove(entity);
+
+        delete this.entities[entity.instance];
+
+        // Clean combat when removing a player.
+        if (entity.isPlayer()) this.world.cleanCombat(entity as Character);
     }
 
     /**
@@ -160,7 +364,11 @@ export default class Entities {
      */
 
     public removePlayer(player: Player): void {
-        this.collections.players.remove(player);
+        this.remove(player);
+
+        delete this.players[player.instance];
+
+        this.world.network.deletePacketQueue(player);
     }
 
     /**
@@ -170,7 +378,10 @@ export default class Entities {
      */
 
     public removeChest(chest: Chest): void {
-        this.collections.chests.remove(chest);
+        this.remove(chest);
+
+        if (chest.mimic || !chest.static) delete this.chests[chest.instance];
+        else chest.respawn();
     }
 
     /**
@@ -180,31 +391,38 @@ export default class Entities {
      */
 
     public removeItem(item: Item): void {
-        this.collections.items.remove(item);
+        this.remove(item);
+
+        // Dropped items are removed permanently, static ones respawn.
+        if (item.dropped) delete this.items[item.instance];
+        else item.respawn();
     }
 
     /**
-     * Removes the mob from our mob dictionary.
-     * @param mob Mob we are removing.
+     * Removes the mob from all the entities and the mobs dictionary.
+     * @param mob The mob object that we are removing.
      */
 
     public removeMob(mob: Mob): void {
-        this.collections.mobs.remove(mob);
+        this.remove(mob);
+
+        delete this.mobs[mob.instance];
+    }
+
+    /**
+     * Removes a pet object from the world and its dictionary.
+     * @param pet The pet object we are removing.
+     */
+
+    public removePet(pet: Pet): void {
+        this.remove(pet);
+
+        delete this.pets[pet.instance];
     }
 
     /**
      * Getters
      */
-
-    /**
-     * Returns an copy of the list of Player entity objects.
-     * Changes to this list will not affect the list inside the collection
-     * @return players List of player entities
-     */
-
-    public get listOfPlayers(): { [instance: string]: Player } {
-        return this.collections.players.getAll();
-    }
 
     /**
      * Grabs an entity from our dictionary of entities.
@@ -213,7 +431,7 @@ export default class Entities {
      */
 
     public get(instance: string): Entity {
-        return this.collections.allEntities.get(instance);
+        return this.entities[instance];
     }
 
     /**
@@ -223,17 +441,33 @@ export default class Entities {
      */
 
     public getPlayer(username: string): Player | undefined {
-        return this.collections.players.get(username) as Player;
+        return Object.values(this.players).find((player: Player) => {
+            return player.username.toLowerCase() === username.toLowerCase();
+        });
     }
 
     /**
-     * Takes all the players in the world and returns their
-     * usernames in a string array.
+     * Maps all the players in the world to an array of usernames.
      * @returns A string array of all usernames.
      */
 
     public getPlayerUsernames(): string[] {
-        return this.collections.players.getUsernames();
+        return Object.values(this.players).map((player: Player) => player.username);
+    }
+
+    /**
+     * Looks for the string of the entity in all the data files
+     * and returns the type of entity it is.
+     * @param key The string key of the entity we are determining.
+     * @returns Entity type id from Modules.
+     */
+
+    private getEntityType(key: string): number {
+        if (key in itemData) return Modules.EntityType.Item;
+        if (key in npcData) return Modules.EntityType.NPC;
+        if (key in mobData) return Modules.EntityType.Mob;
+
+        return -1;
     }
 
     /**
@@ -242,7 +476,29 @@ export default class Entities {
      */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        this.collections.allEntities.forEachEntity(callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
+    }
+
+    /**
+     * Callback that iterates through all the entities and only
+     * selects those that are instances of Character.
+     * @param callback Returns a character type (mob or player for now).
+     */
+
+    public forEachCharacter(callback: (character: Character) => void): void {
+        this.forEachEntity((entity: Entity) => {
+            if (entity instanceof Character) callback(entity);
+        });
+    }
+
+    /**
+     * Iterates through all the entities and only selects those that are
+     * instances of Mob.
+     * @param callback The mob object we are iterating through.
+     */
+
+    public forEachMob(callback: (mob: Mob) => void): void {
+        for (let mob of Object.values(this.mobs)) callback(mob);
     }
 
     /**
@@ -251,6 +507,6 @@ export default class Entities {
      */
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        this.collections.players.forEachEntity(callback);
+        for (let player of Object.values(this.players)) callback(player);
     }
 }

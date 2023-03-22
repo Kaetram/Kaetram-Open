@@ -1,26 +1,51 @@
 {
   "king": {
-    "name": "King"
+    "name": "King",
+    "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
   },
 
   "villagegirl": {
-    "name": "Azaria",
-    "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
+    "name": "Wife",
+    "text": ["Please, call me Azaria."]
+  },
+
+  "villagegirl2": {
+    "name": "Village Girl",
+    "text": ["Hope you're having a good day!"]
   },
 
   "villager": {
-    "name": "Bulk Bogan",
-    "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
-          "nearby future regarding further adventures."]
+    "name": "Forester",
+    "text": ["Good day to you!"],
+    "store": "forester"
+  },
+
+  "miner": {
+    "name": "Miner",
+    "text": ["Leave me alone, I'm busy pretending to work!"],
+    "store": "miner"
   },
 
   "beachnpc": {
     "name": "Bubba",
-    "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
+    "text": [
+      "Well, thanks for the help.",
+      "Not really doing much but thanks regardless.",
+      "Though I did hear some crunbling east of here, a cave might've opened up.",
+      "This might just be an urban legend but it is said that an entire",
+      "underworld exists beneath the surface of this beach."]
   },
 
   "agent": {
-    "name": "Secret Agent"
+    "name": "Secret Agent",
+    "text": [
+      "Hello there, would you be so kind as to assist me?",
+      "It seems I have stumbled upon this strange phenomenon.",
+      "You see, this cave I am heavily guarding appears to be",
+      "exhibiting a warm-hole like situation.",
+      "Regardless, I feel its best to send a stup-",
+      "I mean, brave adventurer in there rather than me."
+    ]
   },
 
   "nyan": {
@@ -36,7 +61,13 @@
   },
 
   "guard": {
-    "name": "Guard"
+    "name": "Guard",
+    "text": ["We're seriously busy at the moment."]
+  },
+
+  "guard2": {
+    "name": "Royal Guard",
+    "text": ["Any form of defiance will be met with death."]
   },
 
   "scientist": {
@@ -48,7 +79,8 @@
   },
 
   "lavanpc": {
-    "name": "Dying Man"
+    "name": "Dying Soldier",
+    "text": ["Thank you for all your help. I will perish in your absence."]
   },
 
   "boxingman": {
@@ -69,7 +101,8 @@
   },
 
   "sorcerer": {
-    "name": "Sorcerer"
+    "name": "Sorcerer",
+    "store": "sorcerer"
   },
 
   "coder": {
@@ -109,7 +142,7 @@
   },
 
   "sponge": {
-    "name": "Picklebob"
+    "name": "Sponge"
   },
 
   "fairynpc": {
@@ -150,7 +183,8 @@
   },
 
   "snowshepherdboy": {
-    "name": "Some Boy"
+    "name": "Sherpa",
+    "text": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
   },
 
   "angelnpc": {
@@ -182,7 +216,7 @@
   },
 
   "vendingmachine": {
-    "name": "Enchantment Table",
+    "name": "Enchantment Vendor",
     "role": "enchanter"
   },
 
@@ -191,12 +225,31 @@
     "role": "banker"
   },
 
+  "purplestoremannpc": {
+    "name": "Kosmetics Vendor",
+    "store": "cosmetics"
+  },
+
   "bluestoremannpc": {
     "name": "Clerk",
     "store": "startshop"
   },
 
   "royalguard": {
-    "name": "Royal Guard"
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
+  },
+
+  "picklenpc": {
+    "name": "Sea Cucumber"
+  },
+
+  "guildnpc": {
+    "name": "Guild Master"
+  },
+
+  "santaelfnpc": {
+    "name": "Santa's Helper",
+    "text": ["What do you want? I'm busy being overworked."]
   }
 }

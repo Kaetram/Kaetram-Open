@@ -1,17 +1,17 @@
-import $ from 'jquery';
-import { io, Socket as SocketIO } from 'socket.io-client';
-
-import log from '../lib/log';
 import Messages from './messages';
 
-import type { APIData } from '@kaetram/common/types/api';
+import log from '../lib/log';
+
+import { Packets } from '@kaetram/common/network';
+
 import type Game from '../game';
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 export default class Socket {
     public messages;
 
     private config;
-    private connection!: SocketIO;
+    private connection!: WebSocket;
     private listening = false;
 
     public constructor(private game: Game) {
@@ -25,22 +25,17 @@ export default class Socket {
      * we default to normal server connection.
      */
 
-    private getServer(callback: (data?: APIData) => void): void {
+    private async getServer(): Promise<SerializedServer | undefined> {
         // Skip if hub is disabled in the config.
-        if (!this.config.hub) return callback();
-
-        // Connect to specified game world if the worldSwitch is active.
-        if (this.config.worldSwitch) return callback(this.game.world);
+        if (!this.config.hub) return;
 
         // Attempt to get API data from the hub.
-
         try {
-            $.get(`${this.config.hub}/server`, (response) => {
-                console.log(response);
-                callback(response.status === 'error' ? undefined : response);
-            });
+            let result = await fetch(`${this.config.hub}/server`);
+
+            return await result.json();
         } catch {
-            callback();
+            return;
         }
     }
 
@@ -48,29 +43,31 @@ export default class Socket {
      * Creates a websocket connection to the server.
      */
 
-    public connect(): void {
-        this.getServer((result) => {
-            let { host, port } = result || this.config,
-                url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
+    public async connect(server?: SerializedServer): Promise<void> {
+        let { host, port } = server || (await this.getServer()) || this.config,
+            url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
 
-            // Create a SocketIO connection with the url generated.
-            this.connection = io(url, {
-                forceNew: true,
-                reconnection: false
-            });
+        // Create a websocket connection with the url generated.
+        this.connection = new WebSocket(url);
 
-            // Handler for when a connection is successfully established.
-            this.connection.on('connect', this.handleConnection.bind(this));
+        // Handler for when a connection is successfully established.
+        this.connection.addEventListener('open', this.handleConnection.bind(this));
 
-            // Handler for when a connection error occurs.
-            this.connection.on('connect_error', () => this.handleConnectionError(host, port));
+        // Handler for when a message is received.
+        this.connection.addEventListener('message', (event) => this.receive(event.data));
 
-            // Handler for when a message is received.
-            this.connection.on('message', (message) => this.receive(message.message || message));
+        // Handler for when an error occurs.
+        this.connection.addEventListener('error', () => this.handleConnectionError(host, port));
 
-            // Handler for when a disconnection occurs.
-            this.connection.on('disconnect', () => this.game.handleDisconnection());
-        });
+        // Handler for when a disconnection occurs.
+        this.connection.addEventListener('close', () => this.game.handleDisconnection());
+
+        /**
+         * The audio controller can only be properly initialized when the player interacts
+         * with the website. This is the best possible place to initialize it.
+         */
+
+        this.game.audio.createContext();
     }
 
     /**
@@ -98,7 +95,10 @@ export default class Socket {
     public send(packet: number, data?: unknown): void {
         let json = JSON.stringify([packet, data]);
 
-        if (this.connection?.connected) this.connection.send(json);
+        // Ensure the connection is open before sending.
+        if (this.connection?.readyState !== WebSocket.OPEN) return;
+
+        this.connection.send(json);
     }
 
     /**
@@ -110,11 +110,11 @@ export default class Socket {
 
         log.info('Connection established...');
 
-        this.game.app.updateLoader('Preparing Handshake');
+        this.game.app.updateLoader('Preparing handshake');
 
-        this.connection.emit('client', {
-            gVer: this.config.version,
-            cType: 'HTML5'
+        // Send the handshake with the game version.
+        this.send(Packets.Handshake, {
+            gVer: this.config.version
         });
     }
 
@@ -130,8 +130,7 @@ export default class Socket {
         this.game.app.toggleLogin(false);
 
         this.game.app.sendError(
-            null,
-            this.game.isDebug()
+            window.config.debug
                 ? `Couldn't connect to ${host}:${port}`
                 : 'Could not connect to the game server.'
         );

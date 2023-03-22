@@ -15,8 +15,6 @@ enum Packets {
     Target,
     Combat,
     Animation,
-    Projectile,
-    Population,
     Points,
     Network,
     Chat,
@@ -30,7 +28,7 @@ enum Packets {
     Heal,
     Experience,
     Death,
-    Audio,
+    Music,
     NPC,
     Respawn,
     Trade,
@@ -38,14 +36,22 @@ enum Packets {
     Guild,
     Pointer,
     PVP,
-    Click,
+    Poison,
     Warp,
     Store,
     Overlay,
     Camera,
     Bubble,
-    Profession,
-    BuildUp
+    Skill,
+    Update,
+    Minigame,
+    Effect,
+    Friends,
+    Focus,
+    Rank,
+    Examine,
+    Player,
+    Relay
 }
 
 export default Packets;

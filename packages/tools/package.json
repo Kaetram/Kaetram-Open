@@ -1,21 +1,19 @@
 {
     "name": "@kaetram/tools",
+    "type": "module",
     "scripts": {
-        "helper": "ts-node map/parser/helper",
-        "exportmap": "ts-node map/parser/exporter",
+        "bot": "tsx --preserve-symlinks bot/bot",
+        "exportmap": "tsx --preserve-symlinks map/parser/exporter",
         "map": "yarn exportmap map/data/map.json"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
-        "lodash": "^4.17.21",
-        "socket.io-client": "^4.4.1"
+        "socket.io-client": "^4.5.4",
+        "tsx": "^3.12.6"
     },
     "devDependencies": {
-        "@types/lodash": "^4.14.181",
-        "@types/node": "^17.0.23",
-        "ts-node": "^10.7.0",
-        "tslib": "^2.3.1",
-        "typescript": "^4.6.3"
+        "@types/node": "^18.15.5",
+        "typescript": "^5.0.2"
     }
 }

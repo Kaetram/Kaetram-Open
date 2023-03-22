@@ -4,25 +4,34 @@
  * equipment slot instead of inventory slot.
  */
 
-import { Modules } from '@kaetram/common/network';
-import { EquipmentData } from '@kaetram/common/types/equipment';
-import Item from '../../../objects/item';
+import Utils from '@kaetram/common/util/utils';
+
+import type Item from '../../../objects/item';
+import type { Modules } from '@kaetram/common/network';
+import type { EquipmentData } from '@kaetram/common/types/equipment';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Equipment {
-    private updateCallback?: (equipment: Equipment) => void;
+    // Properties
     public name = '';
+    public poisonous = false;
+    public freezing = false;
+    public burning = false;
+    public movementModifier = -1;
+
+    // Stats
+    public attackStats: Stats = Utils.getEmptyStats();
+    public defenseStats: Stats = Utils.getEmptyStats();
+    public bonuses: Bonuses = Utils.getEmptyBonuses();
+
+    private updateCallback?: (equipment: Equipment) => void;
 
     // Basic initialization
     public constructor(
         public type: Modules.Equipment,
         public key = '',
-        public count = 1,
-        public ability = -1,
-        public abilityLevel = -1,
-        public power = 1,
-        public rangedWeapon = false,
-        public amplifier = 1,
-        public lumberjacking = -1
+        public count = -1,
+        public enchantments: Enchantments = {}
     ) {}
 
     /**
@@ -34,9 +43,11 @@ export default class Equipment {
         this.key = item.key;
         this.name = item.name;
         this.count = item.count;
-        this.ability = item.ability;
-        this.abilityLevel = item.abilityLevel;
-        this.lumberjacking = item.lumberjacking;
+        this.enchantments = item.enchantments;
+        this.poisonous = item.poisonous;
+        this.attackStats = item.attackStats;
+        this.defenseStats = item.defenseStats;
+        this.bonuses = item.bonuses;
 
         this.updateCallback?.(this);
     }
@@ -47,12 +58,20 @@ export default class Equipment {
 
     public empty(): void {
         this.key = '';
-        this.count = 1;
-        this.ability = -1;
-        this.abilityLevel = -1;
-        this.power = 0;
-        this.amplifier = 1;
-        this.lumberjacking = -1;
+
+        this.count = -1;
+        this.enchantments = {};
+
+        this.name = '';
+
+        this.poisonous = false;
+        this.freezing = false;
+        this.burning = false;
+        this.movementModifier = -1;
+
+        this.attackStats = Utils.getEmptyStats();
+        this.defenseStats = Utils.getEmptyStats();
+        this.bonuses = Utils.getEmptyBonuses();
     }
 
     /**
@@ -65,44 +84,39 @@ export default class Equipment {
     }
 
     /**
-     * Checks if the item is a lumberjacking item. Lumberjacking items are
-     * defined by equipments that have a lumberjacking value greater than 0.
-     * @returns If the lumberjacking attribute is greater than 0.
+     * @returns Whether or not the equipment has a movement modifier.
      */
 
-    public isLumberjacking(): boolean {
-        return this.lumberjacking > 0;
+    public hasMovementModifier(): boolean {
+        return this.movementModifier !== -1;
     }
 
     /**
-     * Returns the amplifier bonus used to calculate
-     * extra damage. Generally associated with pendants,
-     * rings, and boots.
-     * @returns Integer value of the amplifier.
+     * Serializes the equipment information into a JSON object that may either be
+     * saved in the database or sent to the client depending on the context.
+     * @param clientInfo Whether or not to include data that is only relevant to the client.
+     * @returns The serialized equipment data.
      */
 
-    public getAmplifier(): number {
-        return this.amplifier;
-    }
-
-    /**
-     * Serializes the information about the equipment and returns it in the format
-     * of the SEquipemnt interface object.
-     * @returns An SEquipment object containing the id, count, ability, and abilityLevel
-     */
-
-    public serialize(): EquipmentData {
-        let { type, key, name, count, ability, abilityLevel, power } = this;
-
-        return {
-            type,
-            key,
-            name,
-            count,
-            ability,
-            abilityLevel,
-            power
+    public serialize(clientInfo = false): EquipmentData {
+        let data: EquipmentData = {
+            type: this.type,
+            key: this.key,
+            count: this.count,
+            enchantments: this.enchantments
         };
+
+        // Includes information only relevant to the client.
+        if (clientInfo) {
+            data.name = this.name;
+            data.poisonous = this.poisonous;
+
+            data.attackStats = this.attackStats;
+            data.defenseStats = this.defenseStats;
+            data.bonuses = this.bonuses;
+        }
+
+        return data;
     }
 
     // Callback for when the currently equipped item is updated.

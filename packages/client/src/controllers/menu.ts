@@ -1,282 +1,481 @@
-import $ from 'jquery';
-
-import log from '../lib/log';
 import Actions from '../menu/actions';
-import Bank from '../menu/bank';
-import Enchant from '../menu/enchant';
-import Header from '../menu/header';
 import Inventory from '../menu/inventory';
+import Bank from '../menu/bank';
+import Store from '../menu/store';
+import Header from '../menu/header';
 import Profile from '../menu/profile/profile';
-import Shop from '../menu/shop';
+import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
+import Notification from '../menu/notification';
+import Settings from '../menu/settings';
+import Equipments from '../menu/equipments';
+import Achievements from '../menu/achievements';
+import Quests from '../menu/quests';
+import Friends from '../menu/friends';
+import Trade from '../menu/trade';
+import Interact from '../menu/interact';
+import Leaderboards from '../menu/leaderboards';
+import Guilds from '../menu/guilds';
+
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type Slot from '../menu/container/slot';
-import type Professions from '../menu/profile/pages/professions';
-import type Quest from '../menu/profile/pages/quest';
-import { Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
+import type Menu from '../menu/menu';
 
 export default class MenuController {
-    private notify = $('#notify');
-    private confirm = $('#confirm');
-    private message = $('#message');
-    private fade = $('#notify-fade');
-    private done = $('#notify-done');
+    private actions: Actions = new Actions();
 
-    private notification = $('#notification');
-    /** Notification title */
-    private title = $('#notification-text-title');
-    /** Notification description */
-    private description = $('#notification-text-description');
+    private inventory: Inventory;
+    private bank: Bank;
+    private store: Store;
+    private profile: Profile;
+    private enchant: Enchant;
+    private warp: Warp;
+    private notification: Notification;
+    private settings: Settings;
+    private equipments: Equipments;
+    private achievements: Achievements;
+    private quests: Quests;
+    private friends: Friends;
+    private trade: Trade;
+    private interact: Interact;
+    private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
-    private notificationTimeout!: number | null;
+    public header: Header;
 
-    public inventory!: Inventory;
-    public profile!: Profile;
-    public bank!: Bank;
-    public actions!: Actions;
-    public enchant!: Enchant;
-    public shop!: Shop;
-    private header!: Header;
-    public warp!: Warp;
+    public menus: { [key: string]: Menu };
 
-    public constructor(public game: Game) {
-        this.loadNotifications();
-        this.loadActions();
-        this.loadWarp();
-        this.loadShop();
-        this.loadEnchant();
+    public constructor(private game: Game) {
+        this.inventory = new Inventory(this.actions);
+        this.bank = new Bank(this.inventory);
+        this.store = new Store(this.inventory);
+        this.profile = new Profile(game.player);
+        this.enchant = new Enchant(this.inventory);
+        this.warp = new Warp(game.socket);
+        this.notification = new Notification();
+        this.settings = new Settings(game);
+        this.header = new Header(game.player);
+        this.equipments = new Equipments(game.player, game.sprites);
+        this.achievements = new Achievements(game.player);
+        this.quests = new Quests(game.player);
+        this.friends = new Friends(game.player);
+        this.trade = new Trade(this.inventory);
+        this.interact = new Interact(game.player);
+        this.leaderboards = new Leaderboards(game.app);
+        this.guilds = new Guilds(game);
 
-        this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
-        this.loadBank(Modules.Constants.BANK_SIZE, []);
+        this.menus = {
+            inventory: this.inventory,
+            bank: this.bank,
+            store: this.store,
+            profile: this.profile,
+            enchant: this.enchant,
+            warp: this.warp,
+            notification: this.notification,
+            settings: this.settings,
+            equipments: this.equipments,
+            achievements: this.achievements,
+            quests: this.quests,
+            friends: this.friends,
+            trade: this.trade,
+            interact: this.interact,
+            leaderboards: this.leaderboards,
+            guilds: this.guilds
+        };
 
-        this.done.on('click', () => this.hideNotify());
-    }
+        this.inventory.onSelect(this.handleInventorySelect.bind(this));
+        this.bank.onSelect(this.handleBankSelect.bind(this));
+        this.store.onSelect(this.handleStoreSelect.bind(this));
+        this.equipments.onUnequip(this.handleProfileUnequip.bind(this));
 
-    public resize(): void {
-        let { inventory, profile, bank, enchant, shop, header } = this;
+        this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+        this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
+        this.profile.onAbility(this.handleAbility.bind(this));
 
-        inventory?.resize();
+        this.enchant.onSelect(this.handleEnchantSelect.bind(this));
+        this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
 
-        profile?.resize();
+        this.warp.onSelect(this.handleWarp.bind(this));
 
-        bank?.resize();
+        this.friends.onConfirm(this.handleFriendConfirm.bind(this));
 
-        enchant?.resize();
+        this.trade.onSelect(this.handleTradeSelect.bind(this));
+        this.trade.onAccept(this.handleTradeAccept.bind(this));
+        this.trade.onClose(this.handleTradeClose.bind(this));
 
-        if (shop?.isVisible()) shop.resize();
-
-        header?.resize();
-
-        this.resizeNotification();
+        this.load();
     }
 
     /**
-     * This can be called multiple times and can be used
-     * to completely refresh the inventory.
+     * Initializes the header and a callback that automatically
+     * hides all the other menus when a menu is shown.
      */
-    public loadInventory(size: number, data: SlotData[]): void {
-        this.inventory = new Inventory(this.game, this, size, data);
+
+    private load(): void {
+        this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
 
     /**
-     * Similar structure as the inventory, just that it
-     * has two containers. The bank and the inventory.
+     * Iterates through all menus and calls the hide function.
+     * This is used when we want to hide every user interface.
      */
-    public loadBank(size: number, data: SlotData[]): void {
-        this.bank = new Bank(this.game, this, size, data);
 
-        this.loadEnchant();
-    }
-
-    public loadProfile(): void {
-        this.profile ||= new Profile(this.game);
-    }
-
-    private loadActions(): void {
-        this.actions ||= new Actions(this);
-    }
-
-    private loadEnchant(): void {
-        this.enchant ||= new Enchant(this.game, this);
-    }
-
-    private loadWarp(): void {
-        this.warp ||= new Warp(this.game);
-    }
-
-    private loadShop(): void {
-        this.shop ||= new Shop(this.game, this);
-    }
-
-    public loadHeader(): void {
-        this.header ||= new Header(this.game);
-    }
-
-    private loadNotifications(): void {
-        let ok = $('#ok'),
-            cancel = $('#cancel'),
-            done = $('#done');
-
-        /**
-         * Simple warning dialogue
-         */
-
-        ok.on('click', () => this.hideNotify());
-
-        /**
-         * Callbacks responsible for
-         * Confirmation dialogues
-         */
-
-        cancel.on('click', () => this.hideConfirm());
-
-        done.on('click', () => {
-            log.info(this.confirm[0].className);
-
-            this.hideConfirm();
+    public hide(): void {
+        this.forEachMenu((menu: Menu) => {
+            // Hide only if the menu is visible to prevent unnecessary calls to subclass `hide`.
+            if (menu.isVisible()) menu.hide();
         });
     }
 
-    public stop(): void {
-        let { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
+    /**
+     * Synchronizes the contains and the UI for all menus.
+     * @param key Optional key to synchronize a specific menu.
+     */
 
-        inventory?.clear();
+    public synchronize(key?: string): void {
+        if (key) return this.menus[key]?.synchronize();
 
-        actions?.clear();
-
-        profile?.clean();
-
-        game.input.chatHandler.clear();
-
-        bank?.clear();
-
-        enchant?.clear();
-
-        warp?.clear();
-
-        shop?.clear();
+        this.forEachMenu((menu: Menu) => menu.synchronize());
     }
 
-    public hideAll(): void {
-        let { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
+    /**
+     * Calls every menu's resize function if it is initialized.
+     */
 
-        if (inventory?.isVisible()) inventory.hide();
+    public resize(): void {
+        this.header.resize(); // Non Menu UI (for now?)
 
-        if (actions?.isVisible()) actions.hide();
-
-        if (profile?.isVisible() || profile.settings.isVisible()) profile.hide();
-
-        if (game.input.chatHandler.input.is(':visible')) game.input.chatHandler.hideInput();
-
-        if (bank?.isVisible()) bank.hide();
-
-        if (enchant?.isVisible()) enchant.hide();
-
-        if (warp?.isVisible()) warp.hide();
-
-        if (shop?.isVisible()) shop.hide();
+        this.forEachMenu((menu: Menu) => menu.resize());
     }
 
-    private resizeNotification(): void {
-        let { notification } = this;
+    /**
+     * @returns The interact menu object.
+     */
 
-        if (this.isNotificationVisible())
-            notification.css('top', `${window.innerHeight - notification.height()!}px`);
+    public getInteract(): Interact {
+        return this.interact;
     }
 
-    public showNotification(titleText: string, message: string, colour: string): void {
-        let { notification, description, title, notificationTimeout } = this,
-            top = window.innerHeight - notification.height()!;
+    /**
+     * @returns The inventory menu object.
+     */
 
-        if (this.isNotificationVisible()) {
-            this.hideNotification();
+    public getInventory(): Inventory {
+        return this.inventory;
+    }
 
-            window.setTimeout(() => this.showNotification(titleText, message, colour), 700);
+    /**
+     * @returns The bank menu object.
+     */
 
-            return;
+    public getBank(): Bank {
+        return this.bank;
+    }
+
+    /**
+     * @returns The store menu object.
+     */
+
+    public getStore(): Store {
+        return this.store;
+    }
+
+    /**
+     * @returns The profile menu object.
+     */
+
+    public getProfile(): Profile {
+        return this.profile;
+    }
+
+    /**
+     * @returns The notification menu object.
+     */
+
+    public getNotification(): Notification {
+        return this.notification;
+    }
+
+    /**
+     * @returns The enchant menu object.
+     */
+
+    public getEnchant(): Enchant {
+        return this.enchant;
+    }
+
+    /**
+     * @returns The warp menu object
+     */
+
+    public getWarp(): Warp {
+        return this.warp;
+    }
+
+    /**
+     * @returns The achievement menu object.
+     */
+
+    public getAchievements(): Achievements {
+        return this.achievements;
+    }
+
+    /**
+     * @returns The quests menu object.
+     */
+
+    public getQuests(): Quests {
+        return this.quests;
+    }
+
+    /**
+     * @returns The friends menu object.
+     */
+
+    public getFriends(): Friends {
+        return this.friends;
+    }
+
+    /**
+     * @returns The trade menu object.
+     */
+
+    public getTrade(): Trade {
+        return this.trade;
+    }
+
+    /**
+     * @returns The leaderboards menu object.
+     */
+
+    public getLeaderboards(): Leaderboards {
+        return this.leaderboards;
+    }
+
+    /**
+     * @returns The guilds menu object.
+     */
+
+    public getGuilds(): Guilds {
+        return this.guilds;
+    }
+
+    /**
+     * Callback handler for when an item in the inventory is selected.
+     * @param fromIndex Index of the item selected.
+     * @param opcode Opcode identifying the type of action performed on the item.
+     * @param toIndex Optional parameter that is used either for count (drop packet) or index (swap packet).
+     */
+
+    private handleInventorySelect(
+        opcode: Opcodes.Container,
+        fromIndex: number,
+        toIndex?: number
+    ): void {
+        this.game.socket.send(Packets.Container, {
+            opcode,
+            type: Modules.ContainerType.Inventory,
+            fromIndex,
+            value: toIndex
+        });
+    }
+
+    /**
+     * Callback handler for when an item in the bank is selected.
+     * @param type Indicates which container (inventory or bank) was selected.
+     * @param index The index within that container.
+     */
+
+    private handleBankSelect(
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
+    ): void {
+        this.game.socket.send(Packets.Container, {
+            opcode: Opcodes.Container.Select,
+            type: Modules.ContainerType.Bank,
+            fromContainer,
+            fromIndex,
+            toContainer,
+            value: toIndex
+        });
+    }
+
+    /**
+     * Callback for when a store selection occurs. This is the packet format for when
+     * an item in the inventory is selected, when it is sold, or when we are attempting
+     * to purchase an item from the store.
+     * @param opcode The type of action we are performing.
+     * @param key The key of the store that we are in.
+     * @param index The index of the item (whether in the inventory or store).
+     */
+
+    private handleStoreSelect(opcode: Opcodes.Store, key: string, index: number, count = 1): void {
+        this.game.socket.send(Packets.Store, {
+            opcode,
+            key,
+            index,
+            count
+        });
+    }
+
+    /**
+     * Callback received from one of the profile pages when
+     * an equipment slot is clicked. We send a packet to the
+     * server requesting unequipping.
+     * @param type What slot is being unequipped.
+     */
+
+    private handleProfileUnequip(type: Modules.Equipment): void {
+        this.game.socket.send(Packets.Equipment, {
+            opcode: Opcodes.Equipment.Unequip,
+            type
+        });
+    }
+
+    /**
+     * Sends a packet to the server when a player selects a different
+     * attack style.
+     * @param style The new attack style we are selecting.
+     */
+
+    private handleProfileAttackStyle(style: Modules.AttackStyle): void {
+        this.game.socket.send(Packets.Equipment, {
+            opcode: Opcodes.Equipment.Style,
+            style
+        });
+    }
+
+    /**
+     * Callback for when an action within the abilities menu occurs.
+     * Generally this will consist of activating an ability or dragging it
+     * into the quick slot menu.
+     * @param type The type of action we are performing (using ability or dragging it to a quickslot).
+     * @param key The key of the ability we are performing an action on.
+     * @param index The index of the quickslot we are dragging to (only specified when dragging).
+     */
+
+    private handleAbility(type: Opcodes.Ability, key: string, index?: number): void {
+        this.game.socket.send(Packets.Ability, {
+            opcode: type,
+            key,
+            index
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the index of the inventory slot the
+     * player has selected. The server verifies the request and sends back a
+     * packet indicating we want to move the item.
+     * @param index The index of the item the player has selected.
+     */
+
+    private handleEnchantSelect(index: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Select,
+            index
+        });
+    }
+
+    /**
+     * Sends a request to the server that the player wants to enchant an item given
+     * some shards. The server double checks the validity of the request and proceeds
+     * accordingly.
+     * @param index The index of the item we want to enchant.
+     * @param shardIndex The index of the shards we want to use for enchanting.
+     */
+
+    private handleEnchantConfirm(index: number, shardIndex: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Confirm,
+            index,
+            shardIndex
+        });
+    }
+
+    /**
+     * Sends a packet to the server about the warp that was just selected.
+     * @param id The id of the warp that was selected.
+     */
+
+    private handleWarp(id: number): void {
+        this.game.socket.send(Packets.Warp, {
+            id
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the type of friend action we are performing. If the
+     * `remove` variable is set to false then we are adding a friend, otherwise we are removing.
+     * @param username The username we are performing the action on.
+     * @param remove (Optional) Whether we are removing a friend or not (default: false).
+     */
+
+    private handleFriendConfirm(username: string, remove = false): void {
+        this.game.socket.send(Packets.Friends, {
+            opcode: remove ? Opcodes.Friends.Remove : Opcodes.Friends.Add,
+            username
+        });
+    }
+
+    /**
+     * Handles the select action for the trade interface. When the player clicks an
+     * item in the inventory we send a packet to the server that we are adding an item
+     * to the trade session. When the player clicks an item in the trade window we send
+     * a packet to the server that we are removing an item from the trade session.
+     * @param type The type of container the action is performed in, determines the add/remove opcode.
+     * @param index The index in the container that the action is performed on.
+     */
+
+    private handleTradeSelect(type: Modules.ContainerType, index: number, count?: number): void {
+        switch (type) {
+            case Modules.ContainerType.Inventory: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Add,
+                    index,
+                    count
+                });
+            }
+
+            case Modules.ContainerType.Trade: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Remove,
+                    index,
+                    count
+                });
+            }
         }
-
-        title.css('color', colour);
-
-        title.text(titleText);
-        description.text(message);
-
-        notification.addClass('active');
-        notification.css('top', `${top}px`);
-
-        if (notificationTimeout) return;
-
-        this.notificationTimeout = window.setTimeout(() => this.hideNotification(), 4000);
     }
 
-    private hideNotification(): void {
-        if (!this.isNotificationVisible()) return;
+    /**
+     * Handles the clicking of the accept button. Both players must accept to the trade
+     * in order to complete it.
+     */
 
-        let { notificationTimeout, notification } = this;
-
-        clearTimeout(notificationTimeout!);
-        this.notificationTimeout = null;
-
-        notification.removeClass('active');
-        notification.css('top', '100%');
+    private handleTradeAccept(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Accept
+        });
     }
 
-    public displayNotify(text: string): void {
-        if (this.isNotifyVisible()) return;
+    /**
+     * Sends a trade packet to the server indicating that the session has been closed.
+     */
 
-        let { notify, fade, message } = this;
-
-        notify.show();
-        fade.show();
-        message.show();
-
-        message.text(text);
+    private handleTradeClose(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Close
+        });
     }
 
-    public displayConfirm(message: string): void {
-        if (this.isConfirmVisible()) return;
+    /**
+     * Iterates through all the menus and passes a callback.
+     * @param callback Current menu being iterated through.
+     */
 
-        this.confirm.show();
-        this.confirm.text(message);
-    }
-
-    private hideNotify(): void {
-        this.fade.hide();
-        this.notify.hide();
-        this.message.hide();
-    }
-
-    private hideConfirm(): void {
-        this.confirm.hide();
-    }
-
-    public getQuestPage(): Quest {
-        return this.profile.quests;
-    }
-
-    public getProfessionPage(): Professions {
-        return this.profile.professions;
-    }
-
-    public getInventorySize(): number {
-        return this.inventory ? this.inventory.size : Modules.Constants.INVENTORY_SIZE;
-    }
-
-    public getInventoryData(): Slot[] {
-        return this.inventory ? this.inventory.container.slots : [];
-    }
-
-    private isNotifyVisible(): boolean {
-        return this.notify.css('display') === 'block';
-    }
-
-    private isConfirmVisible(): boolean {
-        return this.confirm.css('display') === 'block';
-    }
-
-    private isNotificationVisible(): boolean {
-        return this.notification.hasClass('active');
+    private forEachMenu(callback: (menu: Menu) => void): void {
+        for (let menu of Object.values(this.menus)) callback(menu);
     }
 }

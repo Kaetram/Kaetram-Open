@@ -1,37 +1,33 @@
 import Equipment from './equipment';
 
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
+
 export default class Armour extends Equipment {
     public constructor(
+        key = 'clotharmor',
         name = 'Cloth Armor',
-        string = 'clotharmor',
-        count = 1,
-        ability = -1,
-        abilityLevel = -1,
-        power = 1
+        count = -1,
+        enchantments: Enchantments = {}
     ) {
-        super(name, string, count, ability, abilityLevel, power);
+        super(key, name, count, enchantments);
     }
 
+    /**
+     * An override for the superclass where we specify
+     * the default parameters for the key and name of the armour.
+     * This will be removed once the paper-doll system
+     * is improved to use a base character properly.
+     */
+
     public override update(
-        name: string,
-        string: string,
-        count: number,
-        ability: number,
-        abilityLevel: number,
-        power = 1
+        key = 'clotharmor',
+        name = 'Cloth Armor',
+        count = -1,
+        enchantments: Enchantments = {},
+        attackStats?: Stats,
+        defenseStats?: Stats,
+        bonuses?: Bonuses
     ): void {
-        this.name = name ? name : 'Cloth Armour';
-        this.string = string ? string : 'clotharmor';
-        this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
-        this.power = power;
+        super.update(key, name, count, enchantments, attackStats, defenseStats, bonuses);
     }
-    // private defence = -1;
-    // setDefence(defence: number): void {
-    //     this.defence = defence;
-    // }
-    // getDefence(): number {
-    //     return this.defence;
-    // }
 }

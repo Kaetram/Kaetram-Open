@@ -1,11 +1,10 @@
-import _ from 'lodash';
-
-import World from '../../../world';
-import Area from '../area';
 import Areas from '../areas';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import log from '@kaetram/common/util/log';
+
+import type { ProcessedArea } from '@kaetram/common/types/map';
+import type World from '../../../world';
+import type Area from '../area';
 
 export default class Dynamic extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
@@ -19,7 +18,7 @@ export default class Dynamic extends Areas {
 
         this.link();
 
-        log.info(`Loaded ${this.areas.length / 2} dynamic areas.`);
+        log.info(`Loaded ${Math.ceil(this.areas.length / 2)} dynamic areas.`);
     }
 
     /**
@@ -27,10 +26,10 @@ export default class Dynamic extends Areas {
      */
 
     private link(): void {
-        _.each(this.areas, (area: Area) => {
-            if (!area.mapping) return;
+        for (let area of this.areas) {
+            if (!area.mapping) continue;
 
             area.mappedArea = this.get(area.mapping);
-        });
+        }
     }
 }

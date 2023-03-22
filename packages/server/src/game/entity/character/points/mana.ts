@@ -19,8 +19,8 @@ export default class Mana extends Points {
         this.manaCallback?.();
     }
 
-    public updateMana(info: number[]): void {
-        super.updatePoints(info);
+    public updateMana(mana: number, maxMana?: number): void {
+        super.updatePoints(mana, maxMana);
     }
 
     public setMana(mana: number): void {

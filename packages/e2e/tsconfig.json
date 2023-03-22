@@ -1,0 +1,7 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "types": ["@types/node", "@kaetram/common"]
+    },
+    "include": ["types/index.d.ts"]
+}

@@ -1,0 +1,122 @@
+@use '../../abstracts/media';
+
+#map-frame {
+    pointer-events: auto;
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    z-index: 100;
+    inset: 0;
+
+    display: none;
+
+    margin: auto;
+
+    background-repeat: no-repeat;
+}
+
+.map-button {
+    position: absolute;
+    background-position-y: 0;
+}
+
+#close-map-frame {
+    top: 0;
+    left: 95%;
+}
+
+.warp-button {
+    position: absolute;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #warp0 {
+            top: 40px * $i;
+            left: 120px * $i;
+            background: url('/img/interface/mapicons.png') 0 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp1 {
+            top: 55px * $i;
+            left: 25px * $i;
+            background: url('/img/interface/mapicons.png') -75px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp2 {
+            top: 70px * $i;
+            left: 175px * $i;
+            background: url('/img/interface/mapicons.png') -60px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp3 {
+            top: 120px * $i;
+            left: 135px * $i;
+            background: url('/img/interface/mapicons.png') -45px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp4 {
+            top: 120px * $i;
+            left: 75px * $i;
+            background: url('/img/interface/mapicons.png') -30px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp5 {
+            top: 140px * $i;
+            left: 20px * $i;
+            background: url('/img/interface/mapicons.png') -90px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp6 {
+            top: 80px * $i;
+            left: 90px * $i;
+            background: url('/img/interface/mapicons.png') 77px * $i 0;
+            background-size: calc(width('mapicons.png') * $i);
+        }
+
+        #warp0,
+        #warp1,
+        #warp2,
+        #warp3,
+        #warp4,
+        #warp5,
+        #warp6 {
+            &:hover {
+                background-position-y: -20px * $i;
+            }
+
+            &:active {
+                background-position-y: -40px * $i;
+            }
+        }
+
+        #map-frame {
+            width: 270px * $i;
+            height: 180px * $i;
+            background-image: url('/img/interface/mapframe.png');
+            background-size: calc(width('mapframe.png') * $i);
+        }
+
+        .map-button {
+            width: 15px * $i;
+            height: 16px * $i;
+        }
+    }
+}
+
+@media (--sm) {
+    #map-frame {
+        transform: scale(1.6);
+    }
+
+    #close-map-frame {
+        top: -6px;
+        left: 90%;
+    }
+}

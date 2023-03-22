@@ -1,14 +1,12 @@
-#!/usr/bin/env -S yarn ts-node-script
+#!/usr/bin/env -S yarn tsx
 
-import { each, isArray } from 'lodash';
-import { io } from 'socket.io-client';
+import Entity from './entity';
 
 import config from '@kaetram/common/config';
 import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
-import Entity from './entity';
+import { io } from 'socket.io-client';
 
 import type { Socket } from 'socket.io-client';
 
@@ -34,16 +32,17 @@ export default class Bot {
         }, 100);
 
         setInterval(() => {
-            each(this.#bots, (bot) => {
+            for (let bot of this.#bots) {
                 this.move(bot);
 
                 if (Utils.randomInt(0, 50) === 10) this.talk(bot);
-            });
+            }
         }, 2000);
     }
 
     private connect(): void {
         let connection = io('ws://127.0.0.1:9001', {
+            transports: ['websocket'],
             forceNew: true,
             reconnection: false
         });
@@ -53,8 +52,7 @@ export default class Bot {
 
             connection.emit('client', {
                 gVer: config.gver,
-                cType: 'HTML5',
-                bot: true
+                cType: 'HTML5'
             });
         });
 
@@ -66,10 +64,7 @@ export default class Bot {
             if (message.startsWith('[')) {
                 let data = JSON.parse(message);
 
-                if (data.length > 1)
-                    each(data, (msg) => {
-                        this.handlePackets(connection, msg);
-                    });
+                if (data.length > 1) for (let msg of data) this.handlePackets(connection, msg);
                 else this.handlePackets(connection, JSON.parse(message).shift());
             } else this.handlePackets(connection, message as never, 'utf8');
         });
@@ -78,7 +73,7 @@ export default class Bot {
     }
 
     private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
-        if (type === 'utf8' || !isArray(message)) {
+        if (type === 'utf8' || !Array.isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
 
             return;
@@ -87,10 +82,11 @@ export default class Bot {
         let [opcode, info] = message;
 
         switch (opcode) {
-            case Packets.Handshake:
+            case Packets.Handshake: {
                 this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
 
                 break;
+            }
 
             case Packets.Welcome: {
                 this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
@@ -98,15 +94,16 @@ export default class Bot {
                 break;
             }
 
-            case Packets.Combat:
+            case Packets.Combat: {
                 break;
+            }
         }
     }
 
     private send(connection: Socket, packet: number, data: (string | number)[]): void {
         let json = JSON.stringify([packet, data]);
 
-        if (connection && connection.connected) connection.send(json);
+        if (connection?.connected) connection.send(json);
     }
 
     private move(bot: Entity): void {

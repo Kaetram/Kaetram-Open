@@ -1,265 +1,250 @@
-import $ from 'jquery';
+import Menu from './menu';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import log from '../lib/log';
+import Util from '../utils/util';
+import { onDragDrop } from '../utils/press';
 
-import Container from './container/container';
+import { Modules } from '@kaetram/common/network';
 
-import type Game from '../game';
-import type Slot from './container/slot';
-import { SlotData } from '@kaetram/common/types/slot';
-import MenuController from '../controllers/menu';
+import type { SlotData } from '@kaetram/common/types/slot';
+import type Inventory from './inventory';
 
-import Utils from '../utils/util';
+type SelectCallback = (
+    fromContainer: Modules.ContainerType,
+    fromIndex: number,
+    toContainer: Modules.ContainerType,
+    toIndex?: number
+) => void;
 
-export default class Bank {
-    // player = this.game.player;
+export default class Bank extends Menu {
+    private bankList: HTMLUListElement = document.querySelector('#bank-slot > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots > ul')!;
 
-    private body = $('#bank');
-    private bankSlot = $('#bank-slot');
-    private bankInventorySlots = $('#bank-inventory-slots');
+    private selectCallback?: SelectCallback;
 
-    private container: Container;
-    private close = $('#close-bank');
+    public constructor(private inventory: Inventory) {
+        super('#bank', '#close-bank');
 
-    private scale!: number;
-
-    public constructor(
-        private game: Game,
-        private menu: MenuController,
-        private size: number,
-        data: SlotData[]
-    ) {
-        this.container = new Container(size);
-
-        this.close.css('left', '97%');
-        this.close.on('click', () => this.hide());
-
-        this.load(data);
+        this.load();
     }
 
-    public load(data: SlotData[]): void {
-        let bankList = this.bankSlot.find('ul'),
-            inventoryList = this.bankInventorySlots.find('ul');
+    /**
+     * Loads an empty bank interface with no items but the
+     * bank and inventory slots. The amount of slots are defined
+     * in the module constants.
+     */
 
-        this.clear();
+    private load(): void {
+        if (!this.bankList) return log.error('[Bank] Could not find the bank slot list.');
+        if (!this.inventoryList) return log.error('[Bank] Could not find the inventory slot list.');
 
-        for (let i = 0; i < this.size; i++) {
-            let bankSlot = $(`<div id="bank-slot${i}" class="bank-slot"></div>`),
-                bankCount = $(`<div id="bankItemCount${i}" class="item-count"></div>`),
-                slotImage = $(`<div id="bank-image${i}" class="bank-image"></div>`),
-                slotElement = $('<li></li>').append(bankSlot.append(slotImage).append(bankCount));
+        for (let i = 0; i < Modules.Constants.BANK_SIZE; i++) {
+            let slot = this.draggableSlot(
+                i,
+                Modules.ContainerType.Bank,
+                Modules.ContainerType.Inventory
+            );
 
-            bankSlot.on('click', (event) => this.click('bank', event));
-
-            bankSlot.css({
-                marginRight: `${2 * this.getScale()}px`,
-                marginBottom: `${4 * this.getScale()}px`
-            });
-
-            bankCount.css('margin-top', 0);
-
-            bankList.append(slotElement);
+            this.bankList.append(slot);
         }
 
-        let inventorySize = this.menu.getInventorySize();
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
+            let slot = this.draggableSlot(
+                i,
+                Modules.ContainerType.Inventory,
+                Modules.ContainerType.Bank
+            );
 
-        for (let j = 0; j < inventorySize; j++) {
-            let inventorySlot = $(`<div id="bankInventorySlot${j}" class="bank-slot"></div>`),
-                inventoryCount = $(`<div id="inventory-item-count${j}" class="item-count"></div>`),
-                slotImage = $(`<div id="inventoryImage${j}" class="bank-image"></div>`),
-                slotElement = $('<li></li>').append(
-                    inventorySlot.append(slotImage).append(inventoryCount)
-                );
-
-            inventorySlot.on('click', (event) => this.click('inventory', event));
-
-            inventorySlot.css({
-                marginRight: `${3 * this.getScale()}px`,
-                marginBottom: `${6 * this.getScale()}px`
-            });
-
-            inventoryCount.css('margin-top', '0');
-
-            inventoryList.append(slotElement);
+            this.inventoryList.append(slot);
         }
 
-        for (let item of data) this.add(item, Modules.ContainerType.Bank);
-
-        for (let inventoryItem of this.menu.getInventoryData())
-            this.add(inventoryItem, Modules.ContainerType.Inventory);
+        this.inventory.onBatch(this.synchronize.bind(this));
     }
 
-    public resize(): void {
-        let bankList = this.getBankList(),
-            inventoryList = this.getInventoryList();
+    /**
+     * Creates a draggable slot for the bank interface.
+     * @param index The index of the slot.
+     * @param fromContainer The type of container the slot is from.
+     * @param defaultContainer The default type of container the slot is going.
+     * @returns The slot element.
+     */
 
-        for (let [i, element] of [...bankList].entries()) {
-            let bankSlot = $(element).find(`#bank-slot${i}`),
-                image = bankSlot.find(`#bank-image${i}`),
-                slot = this.container.slots[i];
+    private draggableSlot(
+        index: number,
+        fromContainer: Modules.ContainerType,
+        defaultContainer: Modules.ContainerType
+    ): HTMLLIElement {
+        let slot = Util.createSlot(fromContainer, index, () =>
+                this.select(fromContainer, index, defaultContainer)
+            ),
+            item = slot.querySelector<HTMLDivElement>('.item-slot')!;
 
-            bankSlot.css({
-                marginRight: `${2 * this.getScale()}px`,
-                marginBottom: `${4 * this.getScale()}px`
-            });
+        onDragDrop(item, this.handleHold.bind(this), () =>
+            this.inventory.isEmpty(this.getElement(index, fromContainer))
+        );
 
-            bankSlot.find(`#bankItemCount${i}`).css({
-                fontSize: `${4 * this.getScale()}px`,
-                marginTop: '0',
-                marginLeft: '0'
-            });
+        return slot;
+    }
 
-            image.css('background-image', Utils.getImageURL(slot.key));
+    private handleHold(clone: HTMLElement, target: HTMLElement): void {
+        let fromContainer = clone?.dataset?.type,
+            fromIndex = clone?.dataset?.index,
+            toContainer = target?.dataset?.type,
+            toIndex = target?.dataset?.index;
+
+        if (!fromContainer || !fromIndex || !toContainer || !toIndex) return;
+
+        this.select(
+            parseInt(fromContainer),
+            parseInt(fromIndex),
+            parseInt(toContainer),
+            parseInt(toIndex)
+        );
+    }
+
+    /**
+     * Initializes the selection process. A callback is created so that
+     * the menu controller can send specified request to the server.
+     * @param fromContainer The type of container the item is being selected from.
+     * @param toContainer The type of container the item is being selected to.
+     * @param index The index of the item being acted on.
+     */
+
+    private select(
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
+    ): void {
+        this.selectCallback?.(fromContainer, fromIndex, toContainer, toIndex);
+    }
+
+    /**
+     * Sets the slot in the bank list at a specified index. Updates the image
+     * and the count of the item.
+     * @param index The index of the slot we are setting.
+     * @param key The key of the image, defaults to a blank string to clear the slot image.
+     * @param count The amount of an item in the slot, defaults to 0 to clear the slot.
+     */
+
+    private setSlot(slot: SlotData): void {
+        let image = this.getBankElement(slot.index).querySelector<HTMLElement>('.item-image')!,
+            countElement = this.getBankElement(slot.index).querySelector<HTMLElement>(
+                '.item-count'
+            )!;
+
+        image.style.backgroundImage = Util.getImageURL(slot.key);
+        countElement.textContent = Util.getCount(slot.count);
+    }
+
+    /**
+     * Synchronizes the slot data between the bank and the inventory.
+     */
+
+    public override synchronize(): void {
+        if (!this.isVisible()) return;
+
+        this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
+            let element = this.getInventoryElement(index),
+                image = element.querySelector<HTMLElement>('.item-image')!,
+                count = element.querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.item-image')!;
+
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
+            count.textContent = slot.textContent;
+        });
+    }
+
+    /**
+     * Loads the batch data into the bank from the server. Each
+     * slot is selected from the list element.
+     * @param slots Serialized slots received from the server. We take
+     * the index contained within these slots and attribute them
+     * to the index within our slot list.
+     */
+
+    public override batch(slots: SlotData[]): void {
+        for (let slot of slots) {
+            if (!slot.key) continue;
+
+            this.setSlot(slot);
         }
-
-        for (let [j, element] of [...inventoryList].entries()) {
-            let inventorySlot = $(element).find(`#bankInventorySlot${j}`);
-
-            inventorySlot.css({
-                marginRight: `${3 * this.getScale()}px`,
-                marginBottom: `${6 * this.getScale()}px`
-            });
-        }
     }
 
-    private click(type: string, event: JQuery.ClickEvent): void {
-        let splitElement = type === 'bank' ? 'bank-slot' : 'bankInventorySlot',
-            index = parseInt(event.currentTarget.id.split(splitElement)[1]);
+    /**
+     * Adds an item to the bank list by updating the slot data.
+     */
 
-        this.game.socket.send(Packets.Container, [
-            Modules.ContainerType.Bank,
-            Opcodes.Container.Select,
-            index,
-            type
-        ]);
+    public override add(slot: SlotData): void {
+        this.setSlot(slot);
     }
 
-    public add(info: Slot | SlotData, containerType?: number): void {
-        if (containerType === undefined) return;
+    /**
+     * Updates the slot data of the bank list.
+     */
 
-        switch (containerType) {
-            case Modules.ContainerType.Bank:
-                return this.addBank(info);
-
-            case Modules.ContainerType.Inventory:
-                return this.addInventory(info);
-        }
+    public override remove(slot: SlotData): void {
+        this.setSlot(slot);
     }
 
-    public addBank(info: Slot | SlotData): void {
-        let item = $(this.getBankList()[info.index]),
-            slot = this.container.slots[info.index];
+    /**
+     * Displays the bank interface.
+     */
 
-        if (!item || !slot) return;
+    public override show(slots: SlotData[]): void {
+        super.show();
 
-        if (slot.isEmpty()) slot.load(info.key, info.count, info.ability, info.abilityLevel);
+        this.synchronize();
 
-        slot.setCount(info.count);
-
-        let bankSlot = item.find(`#bank-slot${info.index}`),
-            cssSlot = bankSlot.find(`#bank-image${info.index}`);
-
-        cssSlot.css('background-image', Utils.getImageURL(info.key));
-
-        if (this.scale < 3) cssSlot.css('background-size', '600%');
-
-        if (slot.count > 1) console.log(bankSlot.find(`#bankItemCount${info.index}`));
-
-        if (slot.count > 1) bankSlot.find(`#bankItemCount${info.index}`).text(slot.count);
+        // Set all slots to the new data.
+        for (let slot of slots) this.setSlot(slot);
     }
 
-    public addInventory(info: Slot | SlotData): void {
-        let item = $(this.getInventoryList()[info.index]);
+    /**
+     * Hides the bank and clears all the bank slots.
+     */
 
-        if (!item) return;
-
-        let slot = item.find(`#bankInventorySlot${info.index}`),
-            image = slot.find(`#inventoryImage${info.index}`);
-
-        image.css('background-image', Utils.getImageURL(info.key));
-
-        if (info.count > 1) slot.find(`#inventory-item-count${info.index}`).text(info.count);
+    public override hide(): void {
+        super.hide();
     }
 
-    public remove(info: SlotData, containerType?: number): void {
-        if (containerType === undefined) return;
-
-        switch (containerType) {
-            case Modules.ContainerType.Bank:
-                return this.removeBank(info);
-
-            case Modules.ContainerType.Inventory:
-                return this.removeInventory(info);
-        }
-
-        // let item = $(this.getBankList()[info.index]),
-        //     slot = this.container.slots[info.index];
-        // if (!item || !slot) return;
-        // let divItem = item.find(`#bank-slot${info.index}`);
-        // slot.count -= info.count;
-        // if (slot.count < 1) {
-        //     divItem.find(`#bank-image${info.index}`).css('background-image', '');
-        //     divItem.find(`#bankItemCount${info.index}`).text('');
-        //     slot.empty();
-        // } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
+    private getElement(index: number, container: Modules.ContainerType): HTMLElement {
+        return container === Modules.ContainerType.Bank
+            ? this.getBankElement(index)
+            : this.getInventoryElement(index);
     }
 
-    public removeBank(info: SlotData): void {
-        let item = $(this.getBankList()[info.index]),
-            slot = this.container.slots[info.index];
+    /**
+     * Grabs the bank HTML element at a specified index.
+     * @param index The index of the bank slot.
+     * @returns An HTMLElement div within the list at the specified index.
+     */
 
-        if (!item || !slot) return;
-
-        let divItem = item.find(`#bank-slot${info.index}`);
-
-        slot.count -= info.count;
-
-        divItem.find(`#bank-image${info.index}`).css('background-image', '');
-        divItem.find(`#bankItemCount${info.index}`).text('');
-        slot.empty();
+    private getBankElement(index: number): HTMLElement {
+        return this.bankList.children[index].querySelector('div') as HTMLElement;
     }
 
-    public removeInventory(info: SlotData): void {
-        let item = $(this.getInventoryList()[info.index]);
-        if (!item) return;
-        /**
-         * All we're doing here is subtracting and updating the count
-         * of the items in the inventory first.
-         */
+    /**
+     * Grabs the HTMLElement at a specified index within the
+     * inventory slot list.
+     * @param index The index of the element to grab.
+     * @returns The HTMLElement at the specified index.
+     */
 
-        let slot = item.find(`#bankInventorySlot${info.index}`);
-
-        slot.find(`#inventoryImage${info.index}`).css('background-image', '');
-        slot.find(`#inventory-item-count${info.index}`).text('');
+    private getInventoryElement(index: number): HTMLElement {
+        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
     }
 
-    public display(): void {
-        this.body.fadeIn('slow');
-    }
+    /**
+     * Callback used for whenever a slot is selected. This is used
+     * by an external controller in order to make requests to the server.
+     * @param callback Contains the type of container that is
+     * being clicked, as well as the index of the slot.
+     */
 
-    public hide(): void {
-        this.body.fadeOut('fast');
-    }
-
-    public clear(): void {
-        this.bankSlot?.find('ul').empty();
-
-        this.bankInventorySlots?.find('ul').empty();
-    }
-
-    public isVisible(): boolean {
-        return this.body.css('display') === 'block';
-    }
-
-    private getScale(): number {
-        return this.game.app.getUIScale();
-    }
-
-    private getBankList(): JQuery<HTMLLIElement> {
-        return this.bankSlot.find('ul').find('li');
-    }
-
-    public getInventoryList(): JQuery<HTMLLIElement> {
-        return this.bankInventorySlots.find('ul').find('li');
+    public onSelect(callback: SelectCallback): void {
+        this.selectCallback = callback;
     }
 }

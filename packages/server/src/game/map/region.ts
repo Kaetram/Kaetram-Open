@@ -1,16 +1,19 @@
-import _ from 'lodash';
-
-import Entity from '../entity/entity';
-import Player from '../entity/character/player/player';
-import Area from './areas/area';
-import Tree from '../globals/impl/tree';
+import type { RegionTileData } from '@kaetram/common/types/map';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Light from '../globals/impl/light';
+import type Resource from '../globals/impl/resource';
+import type Area from './areas/area';
 
 export default class Region {
+    public data: RegionTileData[] = [];
+
     private entities: { [instance: string]: Entity } = {};
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
-    private trees: Tree[] = [];
+    private resources: Resource[] = [];
+    private lights: Light[] = [];
 
     public constructor(
         public x: number,
@@ -34,8 +37,8 @@ export default class Region {
      */
 
     public removePlayer(player: Player): void {
-        this.players = _.reject(this.players, (instance: string) => {
-            return instance === player.instance;
+        this.players = this.players.filter((instance: string) => {
+            return instance !== player.instance;
         });
     }
 
@@ -94,35 +97,51 @@ export default class Region {
     }
 
     /**
-     * Adds a tree to the region.
-     * @param tree The tree we are adding to the region.
+     * Adds a resource to the region.
+     * @param resource The resource we are adding to the region.
      */
 
-    public addTree(tree: Tree): void {
-        this.trees.push(tree);
+    public addResource(resource: Resource): void {
+        this.resources.push(resource);
     }
 
     /**
-     * @returns If the amount of trees in the array is greater than 0.
+     * @returns If the amount of resources in the array is greater than 0.
      */
 
-    public hasTrees(): boolean {
-        return this.trees.length > 0;
+    public hasResources(): boolean {
+        return this.resources.length > 0;
+    }
+
+    /**
+     * Adds a light object to the region.
+     * @param light The light object we are adding.
+     */
+
+    public addLight(light: Light): void {
+        this.lights.push(light);
     }
 
     /**
      * Grab a list of entity instances and remove the `reject` from the list.
+     * @param player Player object used to check dynamic visibility of the entities.
      * @param reject Entity that we are ignoring (typically a player).
      * @returns A list of entity instances.
      */
 
-    public getEntities(reject?: Entity): string[] {
-        let entities = _.keys(this.entities);
+    public getEntities(player: Player, reject?: Entity): string[] {
+        let entities: string[] = [];
 
-        if (reject)
-            entities = _.reject(entities, (instance: string) => {
-                return instance === reject.instance;
-            });
+        for (let instance in this.entities) {
+            // Ignore if a reject is present.
+            if (reject && reject.instance === instance) continue;
+
+            // Check if the entity is visible to the player.
+            if (!this.entities[instance].isVisible(player)) continue;
+
+            // Append our instance to the list.
+            entities.push(instance);
+        }
 
         return entities;
     }
@@ -185,17 +204,34 @@ export default class Region {
 
     public forEachDynamicTile(callback: (x: number, y: number, area: Area) => void): void {
         for (let area of this.dynamicAreas)
-            for (let i = area.y; i < area.y + area.height; i++)
-                for (let j = area.x; j < area.x + area.width; j++) callback(j, i, area);
+            area.forEachTile((x: number, y: number) => callback(x, y, area));
     }
 
     /**
-     * Iterates through all the trees and returns each tree.
-     * @param callback Tree that is being iterated.
+     * Iterates through all the entities in the region and returns it.
+     * @param callback Entity that is currently being iterated.
      */
 
-    public forEachTree(callback: (tree: Tree) => void): void {
-        _.each(this.trees, callback);
+    public forEachEntity(callback: (entity: Entity) => void): void {
+        for (let entity of Object.values(this.entities)) callback(entity);
+    }
+
+    /**
+     * Iterates through all the resources and returns each resource.
+     * @param callback Resource that is being iterated.
+     */
+
+    public forEachResource(callback: (resource: Resource) => void): void {
+        for (let resource of this.resources) callback(resource);
+    }
+
+    /**
+     * Iterates through all the lights in the regions and returns each light.
+     * @param callback Contains the light that is being iterated.
+     */
+
+    public forEachLight(callback: (light: Light) => void): void {
+        for (let light of this.lights) callback(light);
     }
 
     /**
@@ -204,9 +240,8 @@ export default class Region {
      */
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        _.each(this.players, (instance: string) => {
+        for (let instance of this.players)
             if (instance in this.entities) callback(this.entities[instance] as Player);
-        });
     }
 
     /**
@@ -214,6 +249,6 @@ export default class Region {
      */
 
     public forEachJoining(callback: (entity: Entity) => void): void {
-        _.each(this.joining, callback);
+        for (let entity of this.joining) callback(entity);
     }
 }

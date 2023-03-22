@@ -1,18 +1,26 @@
-import _ from 'lodash';
-import zlib from 'zlib';
-
-import log from '@kaetram/common/util/log';
+import zlib from 'node:zlib';
 
 import { Modules } from '@kaetram/common/network';
-import type { ProcessedAnimation, ProcessedMap, ProcessedTree } from '@kaetram/common/types/map';
-import type { Layer, LayerObject, MapData, Property, Tile, Tileset, Animation } from './mapdata';
+import log from '@kaetram/common/util/log';
+
+import type {
+    ProcessedAnimation,
+    ProcessedMap,
+    ProcessedResource
+} from '@kaetram/common/types/map';
+import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+
+interface Resources {
+    [key: string]: ProcessedResource;
+}
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
-    #collisionTiles: { [tileId: number]: boolean } = {};
-    #trees: { [key: string]: ProcessedTree } = {};
+    private collisionTiles: { [tileId: number]: boolean } = {};
+    private trees: Resources = {};
+    private rocks: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -41,7 +49,6 @@ export default class ProcessMap {
 
             tilesets: {},
             animations: {},
-            depth: 1,
 
             plateau: {},
 
@@ -49,12 +56,12 @@ export default class ProcessMap {
             objects: [],
             areas: {},
             cursors: {},
-            trees: []
+            trees: [],
+            rocks: []
         };
 
         this.parseTilesets();
         this.parseLayers();
-        this.parseDepth();
     }
 
     /**
@@ -65,34 +72,29 @@ export default class ProcessMap {
     private parseTilesets(): void {
         let { tilesets } = this.data;
 
-        if (!_.isArray(tilesets)) {
+        if (!Array.isArray(tilesets)) {
             log.error('Could not parse tilesets, corrupted format.');
             return;
         }
 
-        _.each(tilesets, (tileset: Tileset) => {
+        for (let tileset of tilesets) {
             /**
              * All the tilesets follow the format of `tilesheet_NUMBER`.
-             * We extrac the number in this process, which allows us to properly
+             * We extract the number in this process, which allows us to properly
              * organize them. Alongside that, we also store the first tileId
              * of each tileset (firstGID) as the key's value.
              */
 
-            let [, tilesetId] = tileset.image.split('-');
+            let [, tilesetId] = tileset.name.split('-');
 
             if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
-        });
+        }
 
-        // Convert local tree dictionary into an array for the server.
-        _.each(this.#trees, (tree: ProcessedTree) => {
-            // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
-            if (tree.stump.length !== tree.cutStump.length)
-                return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
-
-            this.map.trees.push(tree);
-        });
+        // As the last step of the tileset processing, we parse the resources and add them to the map.
+        this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
+        this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
     }
 
     /**
@@ -100,34 +102,18 @@ export default class ProcessMap {
      */
 
     private parseLayers(): void {
-        _.each(this.data.layers, (layer: Layer) => {
+        for (let layer of this.data.layers)
             switch (layer.type) {
-                case 'tilelayer':
+                case 'tilelayer': {
                     this.parseTileLayer(layer);
                     break;
+                }
 
-                case 'objectgroup':
+                case 'objectgroup': {
                     this.parseObjectLayer(layer);
                     break;
+                }
             }
-        });
-    }
-
-    /**
-     * Map depth represents the tileIndex with most
-     * amount of layers
-     */
-
-    private parseDepth(): void {
-        let depth = 1;
-
-        _.each(this.map.data, (info) => {
-            if (!_.isArray(info)) return;
-
-            if (info.length > depth) depth = info.length;
-        });
-
-        this.map.depth = depth;
     }
 
     /**
@@ -139,28 +125,35 @@ export default class ProcessMap {
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
-        _.each(tiles, (tile: Tile) => {
+        for (let tile of tiles) {
             let tileId = this.getTileId(tileset, tile);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
-            _.each(tile.properties, (property: Property) => {
+            if (!tile.properties) continue;
+
+            for (let property of tile.properties)
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
-            });
-        });
+        }
     }
+
+    /**
+     * Handles the animated tile properties.
+     * @param tileId Tile ID of the animation tile.
+     * @param firstgid The first tile ID that the animation tile bases off of.
+     * @param animations Array containing Tiled animation information.
+     */
 
     private parseAnimation(tileId: number, firstgid: number, animations: Animation[]): void {
         // Temporary storage for animation data.
         let data: ProcessedAnimation[] = [];
 
-        _.each(animations, (animation: Animation) => {
+        for (let animation of animations)
             data.push({
                 duration: animation.duration,
                 tileId: this.getId(firstgid, animation.tileid, -1)
             });
-        });
 
         this.map.animations![tileId] = data;
     }
@@ -178,25 +171,48 @@ export default class ProcessMap {
             value = (parseInt(property.value, 10) as never) || property.value,
             { high, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
 
         switch (name) {
-            case 'v':
+            case 'v': {
                 high.push(tileId);
                 break;
+            }
 
-            case 'o':
+            case 'o': {
                 objects.push(tileId);
                 break;
+            }
 
-            case 'cursor':
+            case 'cursor': {
                 cursors[tileId] = value;
                 break;
+            }
 
-            case 'tree':
-            case 'stump':
+            case 'tree': {
+                return this.parseResourceProperty(this.trees, 'data', tileId, value);
+            }
+
+            case 'stump': {
+                return this.parseResourceProperty(this.trees, 'base', tileId, value);
+            }
+
             case 'cutstump':
-                return this.parseTreeProperty(name, tileId, value);
+            case 'stumpcut': {
+                return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
+            }
+
+            case 'rock': {
+                return this.parseResourceProperty(this.rocks, 'data', tileId, value);
+            }
+
+            case 'rockbase': {
+                return this.parseResourceProperty(this.rocks, 'base', tileId, value);
+            }
+
+            case 'rockempty': {
+                return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
+            }
         }
     }
 
@@ -237,15 +253,23 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        _.each(mapData, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let i in mapData) {
+            let value = mapData[i];
+
+            if (value < 1) continue;
+
+            let index = parseInt(i);
 
             if (!data[index]) data[index] = value;
-            else if (_.isArray(data[index])) (data[index] as number[]).push(value);
+            else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
-            if (value in this.#collisionTiles) collisions.push(index);
-        });
+            // Remove flip flags for the sake of calculating collisions.
+            if (this.isFlipped(value)) value = this.removeFlipFlags(value);
+
+            // Add collision indexes to the map.
+            if (value in this.collisionTiles) collisions.push(index);
+        }
     }
 
     /**
@@ -258,11 +282,11 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            if (layer.data[index] < 1) continue;
 
-            this.map.collisions.push(index);
-        });
+            this.map.collisions.push(parseInt(index));
+        }
     }
 
     /**
@@ -276,11 +300,14 @@ export default class ProcessMap {
     private parseEntities(layer: Layer): void {
         let { entities } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            let value = layer.data[index];
 
-            if (value in this.tilesetEntities) entities[index] = this.tilesetEntities[value];
-        });
+            if (value < 1) continue;
+
+            if (value in this.tilesetEntities)
+                entities[parseInt(index)] = this.tilesetEntities[value];
+        }
     }
 
     /**
@@ -294,14 +321,16 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            let value = layer.data[index];
+
+            if (value < 1) continue;
 
             // We skip collisions
-            if (collisions.includes(value)) return;
+            if (collisions.includes(value)) continue;
 
-            plateau[index] = level;
-        });
+            plateau[parseInt(index)] = level;
+        }
     }
 
     /**
@@ -318,9 +347,7 @@ export default class ProcessMap {
 
         if (!(name in areas)) areas[name] = [];
 
-        _.each(objects, (info) => {
-            this.parseObject(name, info);
-        });
+        for (let object of objects) this.parseObject(name, object);
     }
 
     /**
@@ -335,51 +362,83 @@ export default class ProcessMap {
         this.map.areas[areaName].push({
             id,
             name,
-            x: x / this.map.tileSize,
-            y: y / this.map.tileSize,
+            x: Math.round(x / this.map.tileSize),
+            y: Math.round(y / this.map.tileSize),
             width: width / this.map.tileSize,
             height: height / this.map.tileSize,
             polygon: this.extractPolygon(object)
         });
 
-        _.each(properties, (property) => {
+        // Some objects may not have properties.
+        if (!properties) return;
+
+        for (let property of properties) {
             let index = this.map.areas[areaName].length - 1, // grab the last object (one we just added)
                 { name, value } = property;
 
             this.map.areas[areaName][index][name as never] = value;
-        });
+        }
     }
 
     /**
-     * Takes tree property data and stores it into the map trees property.
-     * If a tree already exists within said property, it appends data to it.
-     * Tree data is split into `data,` `stump,` and `cutStump.` After we
-     * store the tree data, we convert it into an array for the server to parse.
-     * @param name The name of the property.
+     * Generic implementation for parsing a resource property. This may be a tree, or a rock
+     * or anything else in the future. When we pass properties onto this function, we ensure
+     * they use the standard `data,` `base,` and `depleted` properties.
+     * @param resourceType The type of resource we are adding data onto (trees, rocks, etc.)
+     * @param name The name of the property (data, base, depleted)
+     * @param tileId The tileId being processed currently (the tile data).
+     * @param value The value represents the resource's identifier.
      */
 
-    private parseTreeProperty(name: string, tileId: number, value: never): void {
-        if (!(value in this.#trees))
-            this.#trees[value] = {
+    private parseResourceProperty(
+        resourceType: Resources,
+        name: string,
+        tileId: number,
+        value: never
+    ): void {
+        if (!(value in resourceType))
+            resourceType[value] = {
                 data: [],
-                stump: [],
-                cutStump: [],
+                base: [],
+                depleted: [],
                 type: value
             };
 
         // Organize tree data into their respective arrays.
         switch (name) {
-            case 'tree':
-                this.#trees[value].data.push(tileId);
+            case 'data': {
+                resourceType[value].data.push(tileId);
                 break;
+            }
 
-            case 'stump':
-                this.#trees[value].stump.push(tileId);
+            case 'base': {
+                resourceType[value].base.push(tileId);
                 break;
+            }
 
-            case 'cutstump':
-                this.#trees[value].cutStump.push(tileId);
+            case 'depleted': {
+                resourceType[value].depleted.push(tileId);
                 break;
+            }
+        }
+    }
+
+    /**
+     * Parses through a specified resource and creates a callback after it has been validated.
+     * @param resources The list of processed resources to look through.
+     * @param callback Contains resource currently being processed.
+     */
+
+    private parseResources(
+        resources: Resources,
+        callback: (resource: ProcessedResource) => void
+    ): void {
+        for (let resource of Object.values(resources)) {
+            // Determine whether the normal and exhausted resource match lengths, otherwise skip.
+            if (resource.base.length !== resource.depleted.length)
+                return log.error(`${resource.type} has a base and depleted length mismatch.`);
+
+            callback(resource);
         }
     }
 
@@ -397,12 +456,11 @@ export default class ProcessMap {
         let polygon: Position[] = [],
             { tileSize } = this.map;
 
-        _.each(info.polygon, (point) => {
+        for (let point of info.polygon)
             polygon.push({
                 x: (info.x + point.x) / tileSize,
                 y: (info.y + point.y) / tileSize
             });
-        });
 
         return polygon;
     }
@@ -420,9 +478,26 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        _.each(this.map.data, (value, index) => {
-            if (!value) this.map.data[index] = 0;
-        });
+        for (let index in this.map.data) if (!this.map.data[index]) this.map.data[index] = 0;
+    }
+
+    /**
+     * Tiles that undergo transformations have their tileId altered.
+     * We must temporarily remove that in order to calculate collision
+     * indexes.
+     * @param tileId The tileId with transformation flags applied.
+     * @returns The original tileId without transformation flags.
+     */
+
+    private removeFlipFlags(tileId: number): number {
+        return (
+            tileId &
+            ~(
+                Modules.MapFlags.DIAGONAL_FLAG |
+                Modules.MapFlags.VERTICAL_FLAG |
+                Modules.MapFlags.HORIZONTAL_FLAG
+            )
+        );
     }
 
     /**
@@ -438,23 +513,26 @@ export default class ProcessMap {
      */
 
     private getLayerData(data: number[], type: string): number[] {
-        if (_.isArray(data)) return data;
+        if (Array.isArray(data)) return data;
 
         let dataBuffer = Buffer.from(data, 'base64'),
             inflatedData: Buffer;
 
         switch (type) {
-            case 'zlib':
+            case 'zlib': {
                 inflatedData = zlib.inflateSync(dataBuffer);
                 break;
+            }
 
-            case 'gzip':
+            case 'gzip': {
                 inflatedData = zlib.gunzipSync(dataBuffer);
                 break;
+            }
 
-            default:
+            default: {
                 log.error('Invalid compression format detected.');
                 return [];
+            }
         }
 
         if (!inflatedData) return [];
@@ -492,6 +570,16 @@ export default class ProcessMap {
 
     private isCollisionProperty(propertyName: string): boolean {
         return propertyName === 'c' || propertyName === 'o';
+    }
+
+    /**
+     * Checks if the tileId specified has undergone any translations.
+     * @param tileId The tileId we are checking.
+     * @returns Whether the tileId is greater than the lowest bitwise flag.
+     */
+
+    private isFlipped(tileId: number): boolean {
+        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
@@ -541,7 +629,8 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks
         } = this.map;
 
         return JSON.stringify({
@@ -557,7 +646,8 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks
         });
     }
 
@@ -567,17 +657,20 @@ export default class ProcessMap {
      */
 
     public getClientMap(): string {
-        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.map;
+        let { width, height, tileSize, version, high, tilesets, animations } = this.map;
 
         return JSON.stringify({
             width,
             height,
-            depth,
+            tileSize,
             version,
             high,
             tilesets,
-            animations,
-            tileSize
+            animations
         });
+    }
+
+    public getTilesets(): { [tilesetId: number]: number } {
+        return this.map.tilesets!;
     }
 }

@@ -1,16 +1,8 @@
 {
-    "configBasedir": ".",
     "defaultSeverity": "warning",
-    "extends": "stylelint-config-standard-scss",
-    "plugins": ["stylelint-high-performance-animation"],
-    "rules": {
-        "indentation": 4,
-        "string-quotes": "single",
-        "plugin/no-low-performance-animation-properties": null
-    },
-    "ignoreFiles": [
-        "node_modules",
-        "**/*.html",
-        "**/*.ts"
+    "extends": [
+        "stylelint-config-standard-scss",
+        "stylelint-config-clean-order",
+        "stylelint-config-prettier"
     ]
 }

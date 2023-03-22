@@ -1,0 +1,128 @@
+@use 'impl/abilities';
+@use 'impl/achievements';
+@use 'impl/action';
+@use 'impl/attack';
+@use 'impl/bank';
+@use 'impl/bubbles';
+@use 'impl/buttons';
+@use 'impl/chat';
+@use 'impl/container';
+@use 'impl/dialog';
+@use 'impl/enchant';
+@use 'impl/equipments';
+@use 'impl/friends';
+@use 'impl/interact';
+@use 'impl/inventory';
+@use 'impl/map';
+@use 'impl/notifications';
+@use 'impl/page';
+@use 'impl/player';
+@use 'impl/profile';
+@use 'impl/quests';
+@use 'impl/settings';
+@use 'impl/store';
+@use 'impl/trade';
+@use 'impl/zoom';
+@use 'impl/leaderboards';
+@use 'impl/guilds';
+
+body.game {
+    background: #000;
+
+    #load-character,
+    #create-character,
+    #error {
+        display: none;
+    }
+
+    #parchment {
+        z-index: 0;
+        transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
+    }
+
+    #credits,
+    #death,
+    #news,
+    #about,
+    #git {
+        z-index: 1000;
+        opacity: 0;
+        transition: 0s opacity linear 0s;
+    }
+
+    .parchment-left {
+        left: 41%;
+        transition: 0.5s left ease-in-out;
+    }
+
+    .parchment-right {
+        right: 41%;
+        transition: 0.5s right ease-in-out;
+    }
+
+    &.credits #credits,
+    &.death #death,
+    &.news #news,
+    &.about #about,
+    &.git #git {
+        z-index: 1000;
+        opacity: 1;
+        transition: 0.5s opacity linear 0.5s;
+    }
+
+    &.credits,
+    &.death,
+    &.news,
+    &.about,
+    &.git {
+        #parchment {
+            z-index: 1000;
+            opacity: 1;
+            transition: 0.5s opacity linear 0s;
+        }
+
+        .parchment-left {
+            left: 0;
+        }
+
+        .parchment-right {
+            right: 0;
+        }
+    }
+
+    .parchment-middle {
+        width: 0;
+        margin-left: 0;
+        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out,
+            0.5s background-position ease-in-out;
+    }
+
+    #game-container {
+        opacity: 1;
+    }
+
+    footer {
+        display: none;
+        color: #8a8a8a;
+    }
+}
+
+@media (--lg) {
+    body.game {
+        .parchment-middle {
+            background-position: -633px -882px;
+        }
+
+        &.credits,
+        &.death,
+        &.news,
+        &.git,
+        &.about {
+            .parchment-middle {
+                width: 1038px;
+                margin-left: -519px;
+                background-position-x: -114px;
+            }
+        }
+    }
+}

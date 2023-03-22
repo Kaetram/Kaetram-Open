@@ -1,16 +1,18 @@
-#!/usr/bin/env -S yarn ts-node-script
+#!/usr/bin/env -S yarn tsx
 
-import fs from 'fs';
-import path from 'path';
-
-import log from '@kaetram/common/util/log';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import Parser from './parser';
 
-let resolve = (dir: string): string => path.resolve(__dirname, dir),
+import log from '@kaetram/common/util/log';
+
+let resolve = (dir: string): URL => new URL(dir, import.meta.url),
     relative = (dir: string): string => path.relative('../../../', dir),
     serverDestination = '../../../server/data/map/world.json',
-    clientDestination = '../../../client/data/maps/map.json';
+    clientDestination = '../../../client/data/maps/map.json',
+    tilesetDirectory = '../../../client/public/img/tilesets/',
+    mapDirectory = '../data/';
 
 export default class Exporter {
     /** The map file we are parsing */
@@ -41,21 +43,40 @@ export default class Exporter {
         }
 
         // Create the parser and subsequently parse the map
-        let parser = new Parser(JSON.parse(data));
+        let parser = new Parser(JSON.parse(data)),
+            tilesets = parser.getTilesets();
 
         // Write the server map file.
         fs.writeFile(resolve(serverDestination), parser.getMap(), (error) => {
-            if (error) throw `An error has occurred while writing map files:\n${error}`;
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(serverDestination)}.`);
         });
 
         // Write the client map file.
         fs.writeFile(resolve(clientDestination), parser.getClientMap(), (error) => {
-            if (error) throw `An error has occurred while writing map files:\n${error}`;
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(clientDestination)}.`);
         });
+
+        // Copy tilesets from the map to the client.
+        for (let key in tilesets) {
+            let name = `tilesheet-${parseInt(key) + 1}.png`;
+
+            fs.copyFile(
+                resolve(path.join(mapDirectory, name)),
+                resolve(path.join(tilesetDirectory, name)),
+                (error) => {
+                    if (error)
+                        throw new Error(`An error has occurred while copying tilesets:\n`, {
+                            cause: error
+                        });
+                }
+            );
+        }
     }
 
     /**

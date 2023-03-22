@@ -1,39 +1,53 @@
 import Formulas from '../../../../../info/formulas';
 
-import log from '@kaetram/common/util/log';
-
 import { Modules } from '@kaetram/common/network';
-import { SkillData } from '@kaetram/common/types/skills';
+
+import type { SkillData } from '@kaetram/common/types/skills';
 
 type ExperienceCallback = (
+    type: Modules.Skills,
     name: string,
+    withInfo: boolean,
     experience: number,
     level: number,
     newLevel?: boolean
 ) => void;
 
 export default abstract class Skill {
+    public name = '';
+    public level = 1;
     public experience = 0;
+    public nextExperience = 0;
+
+    public combat = false;
 
     private experienceCallback?: ExperienceCallback;
 
-    public constructor(public type: Modules.Skills, public name = '') {}
+    public constructor(public type: Modules.Skills) {
+        this.name = Modules.Skills[this.type];
+    }
 
     /**
      * Unimplemented `stop()` function for the subclasses.
      */
 
     public stop(): void {
-        log.debug(`[Skill] stop() uninitialized in ${this.type}`);
+        //
     }
 
     /**
-     * Converts the skill's experience to a level integer.
-     * @returns Level integer of the skill.
+     * Gets the percentage of the skill's experience to the next level.
      */
 
-    public getLevel(): number {
-        return Formulas.expToLevel(this.experience);
+    public getPercentage(): number {
+        let prevExperience = Formulas.prevExp(this.experience),
+            nextExperience = Formulas.nextExp(this.experience),
+            percentage = (this.experience - prevExperience) / (nextExperience - prevExperience);
+
+        // Update the next experience for the skill.
+        this.nextExperience = nextExperience;
+
+        return percentage < 0 ? 0 : percentage;
     }
 
     /**
@@ -42,17 +56,22 @@ export default abstract class Skill {
      * current level after adding experience, and whether the
      * experience added resulted in a level-up.
      * @param experience How much exp we are adding to the skill.
+     * @param withInfo Whether to disable the experience info.
      */
 
-    public addExperience(experience: number): void {
-        let level = this.getLevel();
+    public addExperience(experience: number, withInfo = true): void {
+        let previousLevel = this.level;
 
         this.setExperience(this.experience + experience);
 
-        // Level after adding experience.
-        let currentLevel = this.getLevel();
-
-        this.experienceCallback?.(this.name, experience, currentLevel, level !== currentLevel);
+        this.experienceCallback?.(
+            this.type,
+            this.name,
+            withInfo,
+            experience,
+            this.level,
+            this.level !== previousLevel
+        );
     }
 
     /**
@@ -61,6 +80,7 @@ export default abstract class Skill {
      */
 
     public setExperience(experience: number): void {
+        this.level = Formulas.expToLevel(experience);
         this.experience = experience;
     }
 
@@ -77,7 +97,12 @@ export default abstract class Skill {
             experience: this.experience
         };
 
-        if (includeLevel) data.level = this.getLevel();
+        if (includeLevel) {
+            data.level = this.level;
+            data.percentage = this.getPercentage();
+            data.nextExperience = this.nextExperience;
+            data.combat = this.combat;
+        }
 
         return data;
     }

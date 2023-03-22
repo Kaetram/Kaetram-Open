@@ -1,22 +1,17 @@
-import _ from 'lodash';
-
-import Player from './player';
-import Quest from './quest/quest';
-
 import QuestIndex from './quest/impl';
 
-import { Quest as QuestPacket } from '../../../../network/packets';
+import quests from '../../../../../data/quests.json';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
+import { Quest as QuestPacket } from '@kaetram/common/network/impl';
 
-// Raw quest data
-import quests from '../../../../../data/quests.json';
-import NPC from '../../npc/npc';
-import Mob from '../mob/mob';
-import { PointerData } from '@kaetram/common/types/pointer';
-
-import { PopupData } from '@kaetram/common/types/popup';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
+import type Player from './player';
+import type Quest from './quest/quest';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
 
 /**
  * Initialize all the quests on a player instance basis. The previous
@@ -32,19 +27,22 @@ export default class Quests {
 
     public constructor(private player: Player) {
         // Iterates through the raw quests in the JSON and creates an instance of them
-        _.each(quests, (rawQuest: RawQuest, key: string) => {
+        for (let key in quests) {
             // Checks if the JSON quest exists in our implementation.
-            if (!(key in QuestIndex)) return;
+            if (!(key in QuestIndex)) continue;
 
             // Create an instance and pass the quest data along.
-            let quest = new QuestIndex[key as keyof typeof QuestIndex](key, rawQuest);
+            let quest = new QuestIndex[key as keyof typeof QuestIndex](
+                key,
+                quests[key as keyof typeof quests]
+            );
 
             this.quests[key] = quest;
 
-            quest.onProgress(this.handleQuestProgress.bind(this));
-            quest.onPointer(this.handleQuestPointer.bind(this));
-            quest.onPopup(this.handleQuestPopup.bind(this));
-        });
+            quest.onProgress(this.handleProgress.bind(this));
+            quest.onPointer(this.handlePointer.bind(this));
+            quest.onPopup(this.handlePopup.bind(this));
+        }
     }
 
     /**
@@ -54,18 +52,15 @@ export default class Quests {
      */
 
     public load(questInfo: QuestData[]): void {
-        _.each(questInfo, (info: QuestData) => {
-            let quest = this.quests[info.key];
+        for (let info of questInfo) {
+            let quest = this.get(info.key);
 
-            // Skip if no quest found with the given key.
-            if (!quest) return;
-
-            // Set quest stage data without making a progress callback.
-            quest.setStage(info.stage, info.subStage, false);
-        });
+            // Set quest stage data without making a progress callback if it exists.
+            if (quest) quest.setStage(info.stage, info.subStage, false);
+        }
 
         // Trigger `loaded()` when we have no database information.
-        if (questInfo.length === 0) _.each(this.quests, (quest) => quest.loaded());
+        if (questInfo.length === 0) this.forEachQuest((quest: Quest) => quest.loaded());
 
         this.loadCallback?.();
     }
@@ -74,37 +69,45 @@ export default class Quests {
      * The callback function for when a quest advances in stages.
      * @param key The quest's key.
      * @param stage The stage we are progressing to.
+     * @param subStage The sub stage we are progressing to.
      */
 
-    private handleQuestProgress(key: string, stage: number, stageCount: number): void {
+    private handleProgress(key: string, stage: number, subStage: number): void {
         this.player.send(
             new QuestPacket(Opcodes.Quest.Progress, {
                 key,
                 stage,
-                stageCount
+                subStage
             })
         );
+
+        // Update region when quest is completed.
+        if (this.get(key).isFinished()) this.player.updateRegion();
+
+        this.player.updateEntities();
+        this.player.save();
     }
 
     /**
      * The callback handler for when a quest requests pointer information
      * to be sent to the client. Generally happens upon loading the Tutorial
      * quest.
-     * @param pointerData Pointer information from the current stage.
+     * @param pointer Pointer information from the current stage.
      */
 
-    private handleQuestPointer(pointerData: PointerData): void {
-        this.player.pointer(pointerData.type, pointerData);
+    private handlePointer(pointer: PointerData): void {
+        this.player.pointer(pointer.type, pointer);
     }
 
     /**
      * Callback handler for when the quest requests to display a popup.
-     * @param popupData Popup information such as title, text, colour.
+     * @param popup Popup information such as title, text, colour.
      */
 
-    private handleQuestPopup(popupData: PopupData): void {
-        this.player.popup(popupData.title, popupData.text, popupData.colour);
+    private handlePopup(popup: PopupData): void {
+        this.player.popup(popup.title, popup.text, popup.colour);
     }
+
     /**
      * Grabs a quest with the key specified. Will return
      * undefined if the key is invalid.
@@ -112,7 +115,7 @@ export default class Quests {
      * @returns Quest pertaining to the `key` parameter.
      */
 
-    public getQuest(key: string): Quest {
+    public get(key: string): Quest {
         return this.quests[key];
     }
 
@@ -120,17 +123,19 @@ export default class Quests {
      * Checks all the quests at their current stage if the requirement
      * is to interact with the given NPC and return the quest.
      * @param npc The NPC we are checking the quest stage against.
+     * @param includeComplete Whether to include completed quests in the search.
      * @returns The quest currently requiring interaction with the NPC.
      */
 
-    public getQuestFromNPC(npc: NPC): Quest | undefined {
-        let quest;
+    public getQuestFromNPC(npc: NPC, includeComplete = false): Quest | undefined {
+        let quest: Quest | undefined;
 
         this.forEachQuest((q: Quest) => {
-            if (q.isFinished()) return;
+            if (q.isFinished() && !includeComplete) return;
             if (!q.hasNPC(npc.key)) return;
 
-            quest = q;
+            // Return only the first quest found,
+            if (!quest) quest = q;
         });
 
         return quest;
@@ -185,6 +190,31 @@ export default class Quests {
     }
 
     /**
+     * Used for checking whether the player can attack within the tutorial. Due to people
+     * farming the tutorial area, we need to limit the times they are allowed to attack.
+     * They can only kill mobs within the tutorial if that is the current task.
+     * @returns Whether or not the tutorial task is that of a kill task.
+     */
+
+    public canAttackInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isKillTask();
+    }
+
+    /**
+     * Similar to `canAttackInTutorial` but for cutting trees. We want to prevent
+     * people from sitting in the tutorial area and continuously cutting trees.
+     * @returns Whether or not the tutorial task is that of a cut tree task.
+     */
+
+    public canCutTreesInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isCutTreeTask();
+    }
+
+    /**
      * Iterates through all the quests and serializes them (saving the
      * key and progress of each one) and returns a SerializedQuest object.
      * @returns SerializedQuest object containing array of quest data.
@@ -193,7 +223,7 @@ export default class Quests {
     public serialize(batch = false): SerializedQuest {
         let quests: QuestData[] = [];
 
-        _.each(this.quests, (quest: Quest) => quests.push(quest.serialize(batch)));
+        this.forEachQuest((quest: Quest) => quests.push(quest.serialize(batch)));
 
         return {
             quests
@@ -205,8 +235,8 @@ export default class Quests {
      * @param callback Quest currently being iterated.
      */
 
-    private forEachQuest(callback: (quest: Quest) => void): void {
-        _.each(this.quests, callback);
+    public forEachQuest(callback: (quest: Quest) => void): void {
+        for (let key in this.quests) callback(this.quests[key]);
     }
 
     /**

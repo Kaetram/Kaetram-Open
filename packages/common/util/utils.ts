@@ -2,14 +2,17 @@
  * Useful utility functions that are used all throughout the server and client.
  */
 
-import _ from 'lodash';
-import crypto from 'crypto';
-import zlib from 'zlib';
+import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 
 import log from './log';
-import config from '../config';
 
-import { Packets } from '../network';
+import config from '../config';
+import { Modules, Packets } from '../network';
+
+import ipaddr from 'ipaddr.js';
+
+import type { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
@@ -21,15 +24,7 @@ export default {
      */
 
     createInstance(identifier = 0): string {
-        return identifier.toString() + this.randomInt(1000, 100_000) + ++this.counter;
-    },
-
-    /**
-     * Extracts the type of entity by taking the last number of the instance.
-     */
-
-    getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
+        return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
     },
 
     /**
@@ -56,19 +51,18 @@ export default {
     },
 
     /**
-     * Gets a distance between two points in the grid space.
-     * @param startX Starting point x grid space coordinate.
-     * @param startY Starting point y grid space coordinate.
-     * @param toX Ending point x grid space coordinate.
-     * @param toY Ending point y grid space coordinate.
-     * @returns An integer of the amount of tiles between the two points.
+     * Creates a distribution based on weight. Instead of having an equal chance
+     * of picking out a number between min and max, we can have a higher chance
+     * of either numbers depending on the weight. Lower weight means more likely
+     * to pick numbers closer to maximum, and vice versa.
+     * @param min Minimum number (inclusive)
+     * @param max Maximum number (inclusive)
+     * @param weight 0-infinity, closer to 0 higher chance of picking maximum.
+     * @returns Random integer with weight between min and max.
      */
 
-    getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        let x = Math.abs(startX - toX),
-            y = Math.abs(startY - toY);
-
-        return x > y ? x : y;
+    randomWeightedInt(min: number, max: number, weight: number): number {
+        return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
     },
 
     /**
@@ -92,13 +86,9 @@ export default {
         let keys = Object.keys(Packets),
             filtered = [];
 
-        for (let i = 0; i < keys.length; i++)
-            if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
+        for (let key of keys) if (!key.endsWith('Opcode')) filtered.push(key);
 
-        return (
-            packet > -1 &&
-            packet < Packets[filtered[filtered.length - 1] as keyof typeof Packets] + 1
-        );
+        return packet > -1 && packet < Packets[filtered.at(-1) as keyof typeof Packets] + 1;
     },
 
     /**
@@ -132,11 +122,10 @@ export default {
                 return messageBlocks.join(' ');
             }
 
-            _.each(messageBlocks, (_block: string, index: number) => {
-                if (index % 2 !== 0)
+            for (let index in messageBlocks)
+                if (parseInt(index) % 2 !== 0)
                     // we hit a colour code.
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
-            });
 
             let codeCount = messageBlocks.length / 2 - 1;
 
@@ -156,6 +145,27 @@ export default {
 
     getChecksum(data: string): string {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
+    },
+
+    /**
+     * Gets a distance between two points in the grid space.
+     * @param startX Starting point x grid space coordinate.
+     * @param startY Starting point y grid space coordinate.
+     * @param toX Ending point x grid space coordinate.
+     * @param toY Ending point y grid space coordinate.
+     * @returns An integer of the amount of tiles between the two points.
+     */
+
+    getDistance(startX: number, startY: number, toX: number, toY: number): number {
+        return Math.abs(startX - toX) + Math.abs(startY - toY);
+    },
+
+    /**
+     * Extracts the type of entity by taking the last number of the instance.
+     */
+
+    getEntityType(instance: string): number {
+        return parseInt(instance.slice(0, 1));
     },
 
     /**
@@ -186,6 +196,27 @@ export default {
     },
 
     /**
+     * Verifies the email string against RegEx.
+     * @param email Email string to verify.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
+    },
+
+    /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
+    },
+
+    /**
      * We get the data size in bytes of `data`. This will be send to the
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
@@ -212,14 +243,13 @@ export default {
     },
 
     /**
-     * Verifies the email string against RegEx.
-     * @param email Email string to verify.
+     * Converts an IP address buffer (from UWS) into an IPv4 address.
+     * @param buffer The address buffer.
+     * @returns An IPv4 address in string format.
      */
 
-    isEmail(email: string): boolean {
-        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email
-        );
+    bufferToAddress(buffer: ArrayBuffer): string {
+        return ipaddr.process(new TextDecoder().decode(buffer)).toString();
     },
 
     /**
@@ -228,10 +258,54 @@ export default {
      * @param host The hostname of the server.
      * @param port The port of the server.
      * @param path The server API we want to send a request to.
+     * @param ssl Whether or not SSL is enabled.
      * @returns A string containing the server's URL.
      */
 
-    getUrl(host: string, port: number, path: string): string {
-        return config.ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
+    getUrl(host: string, port: number, path: string, ssl = false): string {
+        return config.ssl && !ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
+    },
+
+    /**
+     * Converts a string key into a Modules element that can be
+     * used in rewarding skills.
+     * @param key Raw key from the achievement JSON.
+     */
+
+    getSkill(key: string): Modules.Skills | undefined {
+        if (!key) return;
+
+        key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+
+        return Modules.Skills[key as keyof typeof Modules.Skills];
+    },
+
+    /**
+     * For the purpose of not repeatedly writing the same stats.
+     * @returns Empty stats values.
+     */
+
+    getEmptyStats(): Stats {
+        return {
+            crush: 0,
+            slash: 0,
+            stab: 0,
+            archery: 0,
+            magic: 0
+        };
+    },
+
+    /**
+     * Creates an empty bonuses object.
+     * @returns Empty bonuses object with default values.
+     */
+
+    getEmptyBonuses(): Bonuses {
+        return {
+            accuracy: 0,
+            strength: 0,
+            archery: 0,
+            magic: 0
+        };
     }
 };

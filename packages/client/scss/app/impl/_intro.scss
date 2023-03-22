@@ -1,0 +1,105 @@
+@use '../../abstracts/media';
+
+.footer-button {
+    color: #c6c0a3;
+    text-decoration: none;
+}
+
+body.intro {
+    #intro-container {
+        transition: 0.4s opacity linear;
+    }
+
+    footer,
+    #logo,
+    #parchment {
+        opacity: 1;
+    }
+
+    #game-container {
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 5%;
+        left: 0;
+
+        width: 100%;
+
+        font-family: AdvoCut, sans-serif;
+        font-size: 18px;
+        color: #c6c0a3;
+        text-align: center;
+        text-shadow: 0 1px 0 black;
+
+        transition: 0.2s opacity linear;
+
+        div {
+            display: inline-block;
+            padding: 0 5px;
+
+            span:hover {
+                cursor: pointer;
+                color: #fcda5c;
+            }
+        }
+
+        @media (--lg) {
+            font-size: 28px;
+        }
+    }
+
+    #load-character,
+    #create-character,
+    #world-select {
+        form {
+            position: relative;
+        }
+    }
+
+    .validation-summary {
+        height: 1em;
+        margin: 0.5em auto;
+    }
+
+    .validation-error {
+        font-size: 15px;
+        color: #800;
+        text-shadow: 2px 2px 2px #f66;
+    }
+
+    .validation-warning {
+        font-size: 15px;
+        color: rgb(168 162 16);
+        text-shadow: 2px 2px 2px #fc6;
+    }
+
+    .status {
+        font-size: 15px;
+        color: #03c;
+        text-shadow: 2px 2px 2px #39f;
+    }
+
+    .loader {
+        position: relative;
+        margin-top: 30%;
+
+        @media (--lg) {
+            font-size: 26px;
+        }
+    }
+
+    .loader-dot {
+        animation: 1s blink infinite;
+
+        &:nth-child(2) {
+            animation-delay: 250ms;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 500ms;
+        }
+    }
+}

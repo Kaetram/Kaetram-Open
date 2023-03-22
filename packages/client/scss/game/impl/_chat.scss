@@ -1,0 +1,71 @@
+@use '../../abstracts/media';
+
+#chat {
+    pointer-events: none;
+
+    position: absolute;
+    bottom: 30px;
+    left: 12px;
+
+    display: none;
+
+    p {
+        padding-left: 8px;
+        font-family: AdvoCut, sans-serif;
+    }
+}
+
+#chat-log {
+    overflow-y: scroll;
+
+    height: 100%;
+    
+    text-shadow: 2px 2px 2px black;
+
+    background: linear-gradient(0deg, rgb(0 0 0 / 40%), 20%, transparent);
+    border: 1px solid black;
+
+    // border-radius: 8px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+#chat-log::-webkit-scrollbar-thumb {
+    pointer-events: auto;
+}
+
+#chat-input {
+    pointer-events: auto;
+
+    display: none;
+
+    width: calc(100% - 6px);
+
+    background-color: rgb(0 0 0 / 75%);
+    border: 1px solid black;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+#chat-log,
+#chat-input {
+    font-family: AdvoCut, sans-serif;
+    font-size: 16px;
+    color: white;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #chat {
+            width: 250px * $i;
+            height: 100px * $i;
+        }
+    }
+
+    @media(--sm) {
+        #chat {
+            bottom: 70px;
+            left: 4px;
+        }
+    }
+}

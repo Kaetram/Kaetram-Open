@@ -1,75 +1,112 @@
-import $ from 'jquery';
+import type Player from '../entity/character/player/player';
 
-import type Game from '../game';
+/**
+ * The header is the GUI on top of the screen that displays
+ * the user's hitPoints, and exp bar. Every time there's
+ * an update to the game's player, it gets relayed here.
+ */
 
 export default class Header {
-    private player;
+    private health: HTMLElement = document.querySelector('#health')!; // The red element within the health bar.
+    private healthBar: HTMLElement = document.querySelector('#health-bar')!;
 
-    private health = $('#health');
-    private healthBar = $('#health-bar');
-    private healthBarText = $('#health-bar-text');
+    private mana: HTMLElement = document.querySelector('#mana')!;
+    private manaBar: HTMLElement = document.querySelector('#mana-bar')!;
 
-    private exp = $('#exp');
-    private expBar = $('#exp-bar');
+    private healthText: HTMLElement = document.querySelector('#health-bar-text')!; // Numerical value of the health bar.
+    private manaText: HTMLElement = document.querySelector('#mana-bar-text')!;
 
-    public constructor(private game: Game) {
-        this.player = game.player;
-
-        this.load();
+    public constructor(private player: Player) {
+        this.player.onHitPoints(this.handleHitPoints.bind(this));
+        this.player.onMana(this.handleMana.bind(this));
+        this.player.onPoison(this.handlePoison.bind(this));
     }
 
-    private load(): void {
-        this.player.onHitPoints(() => this.calculateHealthBar());
+    /**
+     * Updates the health bar on the game screen.
+     * @param hitPoints Current hit points of the player.
+     * @param maxHitPoints Maximum attainable hit points (used to calcualte percentages).
+     * @param decrease Whether or not the hit points are decreasing.
+     */
 
-        this.player.onMaxHitPoints(() => this.calculateHealthBar());
-
-        this.player.onExperience(() => this.calculateExpBar());
+    private handleHitPoints(hitPoints: number, maxHitPoints: number, decrease?: boolean): void {
+        this.setPoints(
+            this.health,
+            this.healthBar,
+            this.healthText,
+            hitPoints,
+            maxHitPoints,
+            decrease
+        );
     }
 
-    private calculateHealthBar(): void {
-        let scale = this.getScale(),
-            width = this.healthBar.width()!,
-            // 11 is due to the offset of the #health in the #health-bar
-            diff = Math.floor(
-                width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
-            ),
-            prevWidth = this.health.width()!;
+    /**
+     * Updates the mana bar on the game screen.
+     * @param mana Current mana of the player.
+     * @param maxMana Maximum attainable mana (used to calcualte percentages).
+     */
 
-        if (this.player.poison) this.toggle('poison');
-        else this.toggle(diff - 1 > prevWidth ? 'green' : 'white');
-
-        if (diff > width) diff = width;
-
-        this.health.css('width', `${diff}px`);
-        this.healthBarText.text(`${this.player.hitPoints}/${this.player.maxHitPoints}`);
+    public handleMana(mana: number, maxMana: number): void {
+        this.setPoints(this.mana, this.manaBar, this.manaText, mana, maxMana);
     }
 
-    private calculateExpBar(): void {
-        // let scale = this.getScale();
-        let width = this.expBar.width()!,
-            experience = this.player.experience - this.player.prevExperience,
-            nextExperience = this.player.nextExperience - this.player.prevExperience,
-            diff = Math.floor(width * (experience / nextExperience));
+    /**
+     * Updates the poison status by changing the colour of the health bar.
+     * @param status The current status of the player's poison.
+     */
 
-        this.exp.css('width', `${diff}px`);
+    public handlePoison(status: boolean): void {
+        this.health.style.background = status
+            ? 'linear-gradient(to right, #046E20, #19B047)'
+            : 'linear-gradient(to right, #f00, #ef5a5a)';
     }
+
+    /**
+     * Updates the width of all the bars when the window is resized.
+     */
 
     public resize(): void {
-        this.calculateHealthBar();
-        this.calculateExpBar();
+        this.handleHitPoints(this.player.hitPoints, this.player.maxHitPoints);
+        this.handleMana(this.player.mana, this.player.maxMana);
     }
 
-    private getScale(): number {
-        let scale = this.game.app.getUIScale();
+    /**
+     * Function that updates a specified element and its text value
+     * based on the points data provided.
+     * @param element The element we are updating the width of.
+     * @param barElement Used to compare against the element's width.
+     * @param textElement The text element we are adding the points info to.
+     * @param points The points value we are updating the element with.
+     * @param maxPoints The maximum points value.
+     * @param decrease Whether or not the points value is decreasing.
+     */
 
-        if (scale < 2) scale = 2;
+    private setPoints(
+        element: HTMLElement,
+        barElement: HTMLElement,
+        textElement: HTMLElement,
+        points: number,
+        maxPoints: number,
+        decrease?: boolean
+    ): void {
+        let percentage = points / maxPoints;
 
-        return scale;
+        element.style.width = `${Math.floor(barElement.offsetWidth * percentage).toString()}px`;
+
+        textElement.textContent = `${points}/${maxPoints}`;
+
+        if (decrease) this.flash(this.player.poison ? 'poison' : 'white');
     }
 
-    private toggle(tClass: string): void {
-        this.health.addClass(tClass);
+    /**
+     * Temporarily adds a class to the health (to give the visual
+     * effect of it flashing) and creates a timeout that removes
+     * it after 500 milliseconds.
+     */
 
-        window.setTimeout(() => this.health.removeClass(tClass), 500);
+    private flash(style: string): void {
+        this.health.classList.add(style);
+
+        window.setTimeout(() => this.health.classList.remove(style), 500);
     }
 }

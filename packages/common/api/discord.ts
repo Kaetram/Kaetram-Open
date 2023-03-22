@@ -1,17 +1,31 @@
-import { Client, Message, TextChannel } from 'discord.js';
-
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
+import { Client, IntentsBitField } from 'discord.js';
+
+import type { Message, TextChannel } from 'discord.js';
+
+/**
+ * It is important that the bot has the correct permissions in the Discord server
+ * to ensure optimal functionality. The bot needs to be able to send messages and
+ * modify the server topic (manage channels).
+ */
 
 export default class Discord {
     private client!: Client;
 
     private messageCallback?: (source: string, text: string, colour: string) => void;
 
-    public constructor() {
-        if (!config.discordEnabled) return;
+    public constructor(skip = false) {
+        if (!config.discordEnabled || skip) return;
 
-        this.client = new Client();
+        this.client = new Client({
+            intents: [
+                IntentsBitField.Flags.Guilds,
+                IntentsBitField.Flags.GuildMessages,
+                IntentsBitField.Flags.MessageContent,
+                IntentsBitField.Flags.GuildPresences
+            ]
+        });
 
         // Discord is successfully connected.
         this.client.on('ready', () => {
@@ -19,7 +33,7 @@ export default class Discord {
         });
 
         // Receive any message acitivty from the Discord server.
-        this.client.on('message', this.handleMessage.bind(this));
+        this.client.on('messageCreate', this.handleMessage.bind(this));
 
         // Connect to the Discord server.
         this.client.login(config.discordBotToken);
@@ -31,12 +45,35 @@ export default class Discord {
      */
 
     private handleMessage(message: Message): void {
-        if (message.channel.id !== config.discordChannelId) return;
+        try {
+            if (message.channel.id !== config.discordChannelId) return;
+            if (this.client.user?.id === message.author.id) return; // Skip if it's the bot.
+            if (!message.content) return; // Picture sent or something.
 
-        let source = `[Discord | ${message.author.username}]`,
-            text = `@goldenrod@${message.content}`;
+            let source = `[Discord | ${message.author.username}]`,
+                text = `@goldenrod@${message.content}`;
 
-        this.messageCallback?.(source, text, 'tomato');
+            this.messageCallback?.(source, text, 'tomato');
+        } catch {
+            log.error(`An error has occurred while handling a message from the Discord server.`);
+        }
+    }
+
+    /**
+     * Sets the topic of the primary Discord channel.
+     * @param message Message to set as the topic.
+     */
+
+    public setTopic(message: string): void {
+        if (!message || !config.discordEnabled || !this.client) return;
+
+        try {
+            let channel = this.getChannel();
+
+            if (channel) channel.setTopic(message).catch((error) => log.error(error));
+        } catch {
+            log.error('An error has occurred while setting the Discord channel topic.');
+        }
     }
 
     /**
@@ -50,14 +87,12 @@ export default class Discord {
     public sendMessage(
         source: string,
         text: string,
-        serverName?: string,
-        withArrow?: boolean
+        serverName = config.name,
+        withArrow = true
     ): void {
-        if (!source || !config.discordEnabled || config.debugging) return;
+        if (!source || !config.discordEnabled) return;
 
-        this.sendRawMessage(
-            `**[${serverName || config.name}]** ${source}${withArrow ? ' »' : ''} ${text}`
-        );
+        this.sendRawMessage(`**[${serverName}]** ${source}${withArrow ? ' »' : ''} ${text}`);
     }
 
     /**
@@ -68,7 +103,13 @@ export default class Discord {
     public sendRawMessage(message: string): void {
         if (!this.client) return;
 
-        (this.client.channels.cache.get(config.discordChannelId) as TextChannel).send(message);
+        try {
+            let channel = this.getChannel();
+
+            if (channel) channel.send(message).catch((error) => console.error(error));
+        } catch {
+            log.error('An error has occurred while sending a message to the Discord server.');
+        }
     }
 
     /**
@@ -78,5 +119,13 @@ export default class Discord {
 
     public onMessage(callback: (source: string, text: string, colour: string) => void): void {
         this.messageCallback = callback;
+    }
+
+    /**
+     * @returns The default channel that the bot is assigned to.
+     */
+
+    private getChannel(): TextChannel {
+        return this.client.channels.cache.get(config.discordChannelId) as TextChannel;
     }
 }

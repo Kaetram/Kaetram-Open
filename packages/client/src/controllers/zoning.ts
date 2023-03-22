@@ -1,5 +1,9 @@
 import { Modules } from '@kaetram/common/network';
 
+/**
+ * Zoning controller keeps track of the current orientation.
+ */
+
 export default class ZoningController {
     public direction!: Modules.Orientation | null;
 

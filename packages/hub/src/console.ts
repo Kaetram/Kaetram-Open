@@ -1,7 +1,7 @@
-import Server from './model/server';
-import Servers from './controllers/servers';
-
 import log from '@kaetram/common/util/log';
+
+import type Servers from './controllers/servers';
+import type Server from './model/server';
 
 export default class Console {
     public constructor(private servers: Servers) {
@@ -21,10 +21,11 @@ export default class Console {
             let username: string;
 
             switch (command) {
-                case 'server':
+                case 'server': {
                     return this.servers.findEmpty((server: Server) => console.log(server));
+                }
 
-                case 'player':
+                case 'player': {
                     username = blocks.join(' ');
 
                     if (!username) {
@@ -35,6 +36,7 @@ export default class Console {
                     console.log(this.servers.findPlayer(username));
 
                     break;
+                }
             }
         });
     }

@@ -1,4 +1,5 @@
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import config from '../config';
 
@@ -12,10 +13,45 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 
 class Log {
     private logLevel = config.debugLevel || 'all';
-    // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
+
+    private streamPath = path.resolve('../../', 'runtime.log');
+    private logStreamPath = path.resolve('../../', 'logs.log');
+    private bugStreamPath = path.resolve('../../', 'bugs.log');
+
+    private stream;
+    private logStream;
+    private bugStream;
+
+    private logFolderPath = '../logs';
+
+    private chatStream;
+    private dropsStream;
+    private generalStream;
+    private storesStream;
+    private tradesStream;
 
     private debugging = config.debugging;
+
+    public constructor() {
+        this.stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
+
+        this.logStream = fs.createWriteStream(this.logStreamPath);
+        this.bugStream = fs.createWriteStream(this.bugStreamPath);
+
+        this.chatStream = this.createLogStream('chat');
+        this.dropsStream = this.createLogStream('drops');
+        this.generalStream = this.createLogStream('general');
+        this.storesStream = this.createLogStream('stores');
+        this.tradesStream = this.createLogStream('trades');
+
+        if (!fs.existsSync(this.logFolderPath)) fs.mkdirSync(this.logFolderPath);
+    }
+
+    private createLogStream(name: string) {
+        let log = path.resolve(this.logFolderPath, `${name}.log`);
+
+        return fs.createWriteStream(log, { flags: 'a' });
+    }
 
     public info(...data: unknown[]): void {
         this.send('info', data);
@@ -47,6 +83,43 @@ class Log {
         this.send('trace', data, 35);
     }
 
+    public bug(...data: unknown[]): void {
+        this.write(new Date(), '[BUG]', data, this.bugStream);
+    }
+
+    public log(...data: unknown[]): void {
+        this.write(new Date(), '[LOG]', data, this.logStream);
+    }
+
+    // Game-specific loggers
+    public chat(...data: unknown[]): void {
+        this.write(new Date(), '[CHAT]', data, this.chatStream);
+    }
+
+    public drop(...data: unknown[]): void {
+        this.write(new Date(), '[DROP]', data, this.dropsStream);
+    }
+
+    public general(...data: unknown[]): void {
+        this.write(new Date(), '[GENERAL]', data, this.generalStream);
+    }
+
+    public stores(...data: unknown[]): void {
+        this.write(new Date(), '[STORES]', data, this.storesStream);
+    }
+
+    public trade(...data: unknown[]): void {
+        this.write(new Date(), '[TRADE]', data, this.tradesStream);
+    }
+
+    /**
+     * Formats a piece of text and creates a log in the console.
+     * @param type The type of logging we are doing.
+     * @param data Contains the text information about the log.
+     * @param color The colour of the log.
+     * @param title Title of the log (optional).
+     */
+
     private send(type: ConsoleLogType, data: unknown[], color = 1, title: string = type): void {
         let date = new Date(),
             formattedTitle = `[${title.toUpperCase()}]`,
@@ -61,10 +134,10 @@ class Log {
         console[type](date, coloredTitle + space, ...data);
     }
 
-    private write(date: Date, title: string, data: unknown[]) {
+    private write(date: Date, title: string, data: unknown[], stream = this.stream) {
         let parsed = data.map((data) => (typeof data === 'object' ? JSON.stringify(data) : data));
 
-        this.stream?.write(`${date} ${title} ${parsed.join(' ')}\n`);
+        stream?.write(`[${date}] ${title} ${parsed.join(' ')}\n`);
     }
 
     private isLoggable(type: string) {

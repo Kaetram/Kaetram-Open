@@ -1,19 +1,20 @@
 {
     "compilerOptions": {
         "strict": true,
-        "target": "es2020",
+        "target": "ESNext",
+        "module": "ESNext",
 
         "esModuleInterop": true,
-        "moduleResolution": "node",
+        "moduleResolution": "Node",
         "resolveJsonModule": true,
         "sourceMap": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
+        "preserveSymlinks": true,
 
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "strictNullChecks": true,
-        "exactOptionalPropertyTypes": true,
 
         "rootDir": ".",
         "baseUrl": "./packages",

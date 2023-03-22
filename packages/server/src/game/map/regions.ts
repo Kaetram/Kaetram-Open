@@ -1,19 +1,29 @@
-import _ from 'lodash';
+import fs from 'node:fs';
+
+import Region from './region';
+
+import Character from '../entity/character/character';
 
 import log from '@kaetram/common/util/log';
-
-import World from '../world';
-import Region from './region';
-import Map from './map';
-import Entity from '../entity/entity';
-import Player from '../entity/character/player/player';
+import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import Dynamic from './areas/impl/dynamic';
-import Area from './areas/area';
-import { List, Spawn, Map as MapPacket } from '../../network/packets';
-import { RegionData, RegionTileData } from '@kaetram/common/types/region';
-import { Tile } from '@kaetram/common/types/map';
-import Tree from '../globals/impl/tree';
+import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
+
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type {
+    RegionCache,
+    RegionData,
+    RegionTile,
+    RegionTileData,
+    Tile
+} from '@kaetram/common/types/map';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Resource from '../globals/impl/resource';
+import type World from '../world';
+import type Area from './areas/area';
+import type Dynamic from './areas/impl/dynamic';
+import type Map from './map';
 
 /**
  * Class responsible for chunking up the map.
@@ -40,7 +50,6 @@ export default class Regions {
 
     public constructor(private map: Map) {
         this.world = map.world;
-
         // Division size must be evenly divisble by the map's width and height.
         this.divisionSize = Modules.Constants.MAP_DIVISION_SIZE;
 
@@ -54,7 +63,7 @@ export default class Regions {
     }
 
     /**
-     * 16 x 16 regions.
+     * Example: 16 x 16 regions.
      * 00 1 2 3 4 5 ... 15
      * 16 x x x x x ... 31
      * 32 x x x x x ... 47
@@ -86,6 +95,9 @@ export default class Regions {
 
         // Number of regions per side.
         this.sideLength = this.map.width / this.divisionSize;
+
+        // Begin the region cache loading if the config allows it.
+        if (config.regionCache) this.loadRegionCache();
     }
 
     /**
@@ -103,9 +115,75 @@ export default class Regions {
 
             let region = this.getRegion(area.x, area.y);
 
-            if (region !== -1) this.regions[region].addDynamicArea(area);
-            else log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
+            if (region === -1) log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
+            else this.regions[region].addDynamicArea(area);
         });
+    }
+
+    /**
+     * We check for the region cache and load it into each individual region data if it exists.
+     * If no region cache is found, we create it and save it locally in the server `cache` directory.
+     * We save a local version of the region cache since it is a lot quicker for subsequent server starts
+     * to load from a local file rather than generate the data from scratch each boot up.
+     * @param update Whether or not to bypass the cache and generate the region data from scratch.
+     */
+
+    private loadRegionCache(update = false): void {
+        let cache: RegionCache = {
+                data: {},
+                version: this.map.version
+            },
+            path = './cache/regions.json';
+
+        // Firstly check if the region cache exists.
+        if (fs.existsSync(path) && !update) {
+            // Asynchronously read data from the file and parse it.
+            fs.readFile(path, 'utf8', (error, info) => {
+                if (error) throw error;
+
+                // Parse the JSON information from the cache file.
+                cache = JSON.parse(info);
+
+                // Map data has been updated, we need to regenerate the region cache.
+                if (cache.version !== this.map.version) return this.loadRegionCache(true);
+
+                // Iterate through all the regions and assign the data to them according to their index.
+                this.forEachRegion(
+                    (region: Region, index: number) => (region.data = cache.data[index])
+                );
+
+                log.debug(
+                    `Successfully loaded ${Object.keys(cache.data).length} regions from cache.`
+                );
+            });
+
+            return;
+        }
+
+        if (update) log.notice(`Map data has been updated, regenerating region cache...`);
+        else log.notice(`No region cache found, generating region cache...`);
+
+        /**
+         * Iterate through all the regions and create region tile data for each. We assign
+         * that data to both the `data` local variable and assign it to the region itself.
+         */
+
+        this.forEachRegion(
+            (region: Region, index: number) =>
+                (cache.data[index] = region.data = this.getRegionTileData(region))
+        );
+
+        // Create the directory first.
+        fs.mkdir('./cache', { recursive: true }, (error) => {
+            if (error) return log.error(error);
+
+            // Create the cache file for regions and write the stringified data to it.
+            fs.writeFile(path, JSON.stringify(cache), (error) => {
+                if (error) throw error;
+            });
+        });
+
+        log.notice(`Region cache has been successfully created.`);
     }
 
     /**
@@ -145,7 +223,8 @@ export default class Regions {
             let oldRegions = this.remove(entity),
                 newRegions = this.enter(entity, region);
 
-            if (oldRegions.length > 0) entity.oldRegions = _.difference(oldRegions, newRegions);
+            // Update the recently left regions to the entity.
+            entity.setRecentRegions(oldRegions.filter((region) => !newRegions.includes(region)));
         }
 
         return isNewRegion;
@@ -160,14 +239,11 @@ export default class Regions {
      */
 
     private handleEnter(entity: Entity, region: number): void {
-        if (!entity.isPlayer()) return;
+        if (!entity.isPlayer() || !entity.ready) return;
 
         log.debug(`Entity: ${entity.instance} entering region: ${region}.`);
 
-        //TODO
-        //if (!(entity as Player).finishedMapHandshake) return;
-
-        this.sendRegion(entity as Player);
+        this.sendRegion(entity);
     }
 
     /**
@@ -192,8 +268,7 @@ export default class Regions {
      */
 
     private joining(entity: Entity, region: number): void {
-        if (!entity) return;
-        if (region === -1) return;
+        if (!entity || region === -1) return;
 
         this.regions[region].addJoining(entity);
 
@@ -224,7 +299,7 @@ export default class Regions {
 
         entity.setRegion(region);
 
-        if (entity.isPlayer()) this.regions[region].addPlayer(entity as Player);
+        if (entity.isPlayer()) this.regions[region].addPlayer(entity);
 
         this.enterCallback?.(entity, region);
 
@@ -246,9 +321,9 @@ export default class Regions {
 
         let region = this.regions[entity.region];
 
-        if (entity.isPlayer()) region.removePlayer(entity as Player);
+        if (entity.isPlayer()) region.removePlayer(entity);
 
-        oldRegions = this.sendDespawns(entity);
+        oldRegions = this.getOldRegions(entity);
 
         entity.setRegion(-1);
 
@@ -263,9 +338,41 @@ export default class Regions {
     public sendEntities(player: Player): void {
         if (player.region === -1) return;
 
-        let entities: string[] = this.regions[player.region].getEntities(player as Entity);
+        let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
-        player.send(new List(entities));
+        player.send(new List(Opcodes.List.Spawns, { entities }));
+    }
+
+    /**
+     * Looks through all the entities in a region and sends their grid positions
+     * to the client. This is to synchronize client-server positions whenever a
+     * player teleports or changes regions.
+     * @param player The player to send entity positions to.
+     */
+
+    public sendEntityPositions(player: Player): void {
+        if (player.region === -1) return;
+
+        // Dictionary to store the positions and instances of the entities.
+        let positions: { [instance: string]: Position } = {};
+
+        // Iterate through all the entities in the region.
+        this.get(player.region).forEachEntity((entity: Entity) => {
+            // Skip non-moving entities.
+            if (!(entity instanceof Character)) return;
+
+            // Skip the player and moving entities.
+            if (entity.instance === player.instance || entity.moving) return;
+
+            // Store the position of the entity.
+            positions[entity.instance] = {
+                x: entity.x,
+                y: entity.y
+            };
+        });
+
+        // Send the positions to the client.
+        player.send(new List(Opcodes.List.Positions, { positions }));
     }
 
     /**
@@ -282,6 +389,9 @@ export default class Regions {
                 packet: new Spawn(entity)
             });
         });
+
+        // Synchronizes the display info for each entity and updates the list of entities.
+        this.regions[region].forEachPlayer((player: Player) => this.sendDisplayInfo(player));
     }
 
     /**
@@ -290,7 +400,7 @@ export default class Regions {
      * @param entity The entity that we are despawning.
      */
 
-    private sendDespawns(entity: Entity): number[] {
+    private getOldRegions(entity: Entity): number[] {
         let oldRegions: number[] = [];
 
         this.forEachSurroundingRegion(entity.region, (surroundingRegion: number) => {
@@ -307,22 +417,46 @@ export default class Regions {
     }
 
     /**
+     * Checks the entities in the region and sends the update data to the client.
+     * Since each player instance may display certain entity update data differently,
+     * this is handled on an instance basis. An example is that player 1 completed an
+     * achievement that changes the entity's nametag colour, but player 2 does did not.
+     * @param player The player we are checking the entities about.
+     */
+
+    public sendDisplayInfo(player: Player): void {
+        if (player.region === -1) return;
+
+        let displayInfos: EntityDisplayInfo[] = this.getDisplayInfo(player);
+
+        // Don't send empty data.
+        if (displayInfos.length === 0) return;
+
+        player.send(new Update(displayInfos));
+    }
+
+    /**
      * Takes a player as a parameter and uses its position to determine the
      * region data to send to the client.
      * @param player The player character that we are sending the region to.
      */
 
     public sendRegion(player: Player): void {
-        player.send(new MapPacket(Opcodes.Map.Render, this.getRegionData(player)));
+        player.send(new MapPacket(this.getRegionData(player)));
     }
 
     /**
-     * Sends a region update to all the players within the nearby regions.
-     * @param region The region to pivot the update around.
+     * Updates all the surrounding regions of the region parameter with the
+     * latest information about region data.
+     * @param region The region index to pivot the update around.
      */
 
-    public sendUpdate(region: Region): void {
-        region.forEachPlayer((player: Player) => this.sendRegion(player));
+    public sendUpdate(region: number): void {
+        this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
+            let region = this.get(surroundingRegion);
+
+            region.forEachPlayer((player: Player) => this.sendRegion(player));
+        });
     }
 
     /**
@@ -336,15 +470,14 @@ export default class Regions {
     }
 
     /**
-     * Iterates through the regions and determines which region index (in the array)
-     * belongs to the gridX and gridY specified.
+     * Calculates the region number the player is currently in.
      * @param x The player's x position in the grid (floor(x / tileSize))
      * @param y The player's y position in the grid (floor(y / tileSize))
-     * @returns The region id the coordinates are in.
+     * @returns The region number the coordinates are in.
      */
 
     public getRegion(x: number, y: number): number {
-        let region = _.findIndex(this.regions, (region: Region) => {
+        let region = this.regions.findIndex((region: Region) => {
             return region.inRegion(x, y);
         });
 
@@ -374,11 +507,11 @@ export default class Regions {
             // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            // Parse and send tree data.
-            if (region.hasTrees())
+            // Parse and send resource data.
+            if (region.hasResources())
                 data[surroundingRegion] = [
                     ...data[surroundingRegion],
-                    ...this.getRegionTreeData(region, player)
+                    ...this.getRegionResourceData(region, player)
                 ];
 
             // Parse and send dynamic areas.
@@ -392,7 +525,7 @@ export default class Regions {
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
                 data[surroundingRegion] = [
                     ...data[surroundingRegion],
-                    ...this.getRegionTileData(region)
+                    ...(config.regionCache ? region.data : this.getRegionTileData(region))
                 ];
 
                 player.loadRegion(surroundingRegion);
@@ -428,10 +561,10 @@ export default class Regions {
 
                 /**
                  * Empty static tile data should be ignored. Otherwise this
-                 * will cause issues when trying to send tree data.
+                 * will cause issues when trying to send resource data.
                  */
 
-                if (tile.data < 1) return;
+                if ((tile.data as number) < 1) return;
 
                 tileData.push(tile);
             });
@@ -440,57 +573,74 @@ export default class Regions {
     }
 
     /**
-     * Parses through all the trees within the region specified and
+     * Parses through all the resources within the region specified and
      * grabs tile data from them. It returns a RegionTileData array.
-     * @param region The region we are looking for trees in.
-     * @returns RegionTileData containing tree information.
+     * @param region The region we are looking for resources in.
+     * @returns RegionTileData containing resource information.
      */
 
-    private getRegionTreeData(region: Region, player: Player): RegionTileData[] {
+    private getRegionResourceData(region: Region, player: Player): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        // Iterate through all the trees in the region.
-        region.forEachTree((tree: Tree) => {
-            // No need to reload trees that haven't changed.
-            if (player.hasLoadedTree(tree)) return;
+        // Iterate through all the resources in the region.
+        region.forEachResource((resource: Resource) => {
+            // No need to reload resources that haven't changed.
+            if (player.hasLoadedResource(resource)) return;
 
-            // Parse tree tiles.
-            tileData = [...tileData, ...this.getTreeData(tree)];
+            // Parse resource tiles.
+            tileData = [...tileData, ...this.getResourceData(resource)];
 
-            player.loadTree(tree);
+            player.loadResource(resource);
         });
 
         return tileData;
     }
 
     /**
-     * Grabs individual tree data from a specified tree.
-     * @param tree The tree we are grabbing data for.
-     * @returns RegionTileData array containing tree information.
+     * Grabs individual resource data from a specified resource.
+     * @param resource The resource we are grabbing data for.
+     * @returns RegionTileData array containing resource information.
      */
 
-    private getTreeData(tree: Tree): RegionTileData[] {
+    private getResourceData(resource: Resource): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        tree.forEachTile((data: Tile, index: number) => {
-            // Perhaps we can optimize further by storing this directly in the tree?
-            let coord = this.map.indexToCoord(index),
-                tile: RegionTileData = {
-                    x: coord.x,
-                    y: coord.y,
-                    data
-                },
-                cursor = this.map.getCursor(data);
+        resource.forEachTile((data: RegionTile, index: number) => {
+            // Perhaps we can optimize further by storing this directly in the resource?
+            let coord = this.map.indexToCoord(index);
 
-            // Check for collision of the tile.
-            if (this.map.isCollisionIndex(index)) tile.c = true;
-            if (this.map.isObject(data)) tile.o = true;
-            if (cursor) tile.cur = cursor;
-
-            tileData.push(tile);
+            tileData.push(this.buildTile(coord.x, coord.y, index, data));
         });
 
         return tileData;
+    }
+
+    /**
+     * Iterates through the surrounding regions and updates all the entities
+     * with their custom data (if any).
+     * @param player Player we are using to update the entity instances of.
+     * @returns An array containing entity update data for each entity.
+     */
+
+    private getDisplayInfo(player: Player): EntityDisplayInfo[] {
+        let entityData: EntityDisplayInfo[] = [];
+
+        this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
+            let region = this.get(surroundingRegion);
+
+            if (!region)
+                return log.warning(
+                    `[${player.username}] Invalid surrounding region: ${surroundingRegion} for player's region: ${player.region}.`
+                );
+
+            region.forEachEntity((entity: Entity) => {
+                if (!entity.hasDisplayInfo(player)) return;
+
+                entityData.push(entity.getDisplayInfo(player));
+            });
+        });
+
+        return entityData;
     }
 
     /**
@@ -499,25 +649,37 @@ export default class Regions {
      * will be happening.
      * @param x The x position of the tile in the grid space.
      * @param y The y position of the tile in the grid space.
+     * @param index Optional parameter if we want to skip calculating the index ourselves.
+     * @param data Optional tile data parameter used to skip grabbing the tile data if we already have it.
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number): RegionTileData {
+    private buildTile(x: number, y: number, index?: number, data?: RegionTile): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
+        /**
+         * Calculate the tile data if it's not specified as a parameter and
+         * attempt to grab the cursor based on the
+         */
+
         let tile: RegionTileData = {
-            x,
-            y,
-            data: this.map.getTileData(index)
-        };
+                x,
+                y,
+                data: data || this.map.getTileData(index)
+            },
+            cursor = this.map.getCursor(tile.data as Tile);
 
         /**
          * A tile is colliding if it exists in our array of collisions (See
          * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
          * (i.e. the tile is blank) it is automatically colliding.
+         * We check if a tile is an object by verifying the data extracted.
+         * If we find a cursor we set the `cursor` property to the cursor.
          */
         if (this.map.isCollisionIndex(index)) tile.c = true;
+        if (this.map.isObject(tile.data as Tile)) tile.o = true;
+        if (cursor) tile.cur = cursor;
 
         return tile;
     }
@@ -558,7 +720,7 @@ export default class Regions {
      */
 
     public forEachSurroundingRegion(region: number, callback: RegionCallback): void {
-        _.each(this.getSurroundingRegions(region), callback);
+        for (let surrounding of this.getSurroundingRegions(region)) callback(surrounding);
     }
 
     /**
@@ -567,7 +729,7 @@ export default class Regions {
      */
 
     public forEachRegion(callback: (region: Region, index: number) => void): void {
-        _.each(this.regions, callback);
+        for (let index in this.regions) callback(this.regions[index], parseInt(index));
     }
 
     /**
@@ -577,7 +739,12 @@ export default class Regions {
 
     private getSurroundingRegions(region: number): number[] {
         let surroundingRegions = [region],
-            { sideLength } = this;
+            { sideLength, regions } = this;
+
+        if (region < 0 || region > regions.length - 1) {
+            log.warning(`Attempted to grab surrounding regions for invalid region: ${region}.`);
+            return [];
+        }
 
         // Handle regions near edge of the map and horizontally.
         // left edge piece

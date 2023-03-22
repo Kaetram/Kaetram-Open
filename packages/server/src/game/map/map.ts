@@ -1,78 +1,65 @@
-import _ from 'lodash';
-
-import { Modules } from '@kaetram/common/network';
-import Utils from '@kaetram/common/util/utils';
-
-import mapData from '../../../data/map/world.json';
-import Objects from '../../info/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
+import mapData from '../../../data/map/world.json';
+
+import { Modules } from '@kaetram/common/network';
+
 import type {
-    Tile,
+    FlatTile,
     ProcessedArea,
     ProcessedDoor,
     ProcessedMap,
-    ProcessedTree
+    ProcessedResource,
+    RegionTile,
+    RotatedTile,
+    Tile
 } from '@kaetram/common/types/map';
-
-import type { RegionTile } from '@kaetram/common/types/region';
-
+import type Player from '../entity/character/player/player';
 import type World from '../world';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
 
 export default class Map {
-    public regions: Regions;
-    public grids: Grids;
-
     // Map versioning and information
     public version = map.version;
     public width = map.width;
     public height = map.height;
     public tileSize = map.tileSize;
 
+    // Map handlers
+    public regions: Regions;
+    public grids: Grids;
+
     // Map data and collisions
     public data: (number | number[])[] = map.data;
     private collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
-    public lights!: ProcessedArea[];
-    public plateau!: { [index: number]: number };
-    public objects!: number[];
-    public cursors!: { [tileId: number]: string };
-    public doors!: { [index: number]: ProcessedDoor };
+    public plateau: { [index: number]: number } = map.plateau;
+    public objects: number[] = map.objects;
+    public cursors: { [tileId: number]: string } = map.cursors;
+    public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
-    public trees: ProcessedTree[] = map.trees || [];
+    public trees: ProcessedResource[] = map.trees || [];
+    public rocks: ProcessedResource[] = map.rocks || [];
+    public lights: ProcessedArea[] = map.areas.lights || [];
+    public signs: ProcessedArea[] = map.areas.signs || [];
 
     // Static chest areas, named as singular to prevent confusion with `chests` area.
     public chest: ProcessedArea[] = map.areas.chest || [];
 
-    private areas!: { [name: string]: Areas };
-
-    private checksum!: string;
+    private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
-        this.load();
-
-        this.regions = new Regions(this);
-        this.grids = new Grids(this);
-    }
-
-    load(): void {
-        this.lights = map.areas.lights;
-        this.plateau = map.plateau;
-        this.objects = map.objects;
-        this.cursors = map.cursors;
-
-        this.checksum = Utils.getChecksum(JSON.stringify(map));
-
-        this.areas = {};
+        this.grids = new Grids(this.width, this.height);
 
         this.loadAreas();
         this.loadDoors();
+
+        this.regions = new Regions(this);
     }
 
     /**
@@ -82,11 +69,14 @@ export default class Map {
      */
 
     private loadAreas(): void {
-        _.each(map.areas, (area, key: string) => {
-            if (!(key in AreasIndex)) return;
+        for (let key in map.areas) {
+            if (!(key in AreasIndex)) continue;
 
-            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](area, this.world);
-        });
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](
+                map.areas[key],
+                this.world
+            );
+        }
     }
 
     /**
@@ -101,23 +91,20 @@ export default class Map {
      */
 
     private loadDoors(): void {
-        this.doors = {};
-
-        // Duplicate doors using `_.cloneDeep`
-        let doorsClone = _.cloneDeep(map.areas.doors);
+        let doorsClone = map.areas.doors.map((door) => ({ ...door }));
 
         // Iterate through the doors in the map.
-        _.each(map.areas.doors, (door) => {
+        for (let door of map.areas.doors) {
             // Skip if the door does not have a destination.
-            if (!door.destination) return;
+            if (!door.destination) continue;
 
             // Find destination door in the clone list of doors.
             let index = this.coordToIndex(door.x, door.y),
-                destination = _.find(doorsClone, (cloneDoor) => {
+                destination = doorsClone.find((cloneDoor) => {
                     return door.destination === cloneDoor.id;
                 });
 
-            if (!destination) return;
+            if (!destination) continue;
 
             // Assign destination door information to the door we are parsing.
             this.doors[index] = {
@@ -125,9 +112,15 @@ export default class Map {
                 y: destination.y,
                 orientation: destination.orientation || 'd',
                 quest: door.quest || '',
-                stage: door.stage || 0
+                achievement: door.achievement || '',
+                reqAchievement: door.reqAchievement || '',
+                reqQuest: door.reqQuest || '',
+                reqItem: door.reqItem || '',
+                reqItemCount: door.reqItemCount || 0,
+                stage: door.stage || 0,
+                level: door.level || 0
             };
-        });
+        }
     }
 
     /**
@@ -202,11 +195,37 @@ export default class Map {
      * the array of collision indexes and verifies that the tile is not null.
      * @param x Grid x coordinate we are checking.
      * @param y Grid y coordinate we are checking.
+     * @param player Optional parameter used to check the dynamic tile collision.
      * @returns True if the position is a collision.
      */
 
-    public isColliding(x: number, y: number): boolean {
+    public isColliding(x: number, y: number, player?: Player): boolean {
         if (this.isOutOfBounds(x, y)) return true;
+
+        /**
+         * This is the cleanest way I could've done dynamic collision detection.
+         * It checks whether the player exists, region has valid dynamic areas,
+         * and if we can find the mapped tile. If any of those fail, the if statement
+         * nest will exit and check collisions against the static map.
+         */
+
+        // Verify dynamic tile collision if player is provided as a parameter.
+        if (player) {
+            let region = this.regions.get(this.regions.getRegion(x, y));
+
+            // Skip if there are no dynamic areas in the region.
+            if (region.hasDynamicAreas()) {
+                let dynamicArea = region.getDynamicArea(x, y);
+
+                // Skip if no dynamic area is found or it doesn't fulfill requirements.
+                if (dynamicArea?.fulfillsRequirement(player)) {
+                    let mappedTile = dynamicArea.getMappedTile(x, y);
+
+                    // Check collision if we can find a mapping tile.
+                    if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
+                }
+            }
+        }
 
         let index = this.coordToIndex(x, y);
 
@@ -246,6 +265,15 @@ export default class Map {
 
     public getDynamicAreas(): Areas {
         return this.areas.dynamic;
+    }
+
+    /**
+     * Grabs the minigame areas in the map.
+     * @returns The minigame areas parsed upon loading.
+     */
+
+    public getMinigameAreas(): Areas {
+        return this.areas.minigame;
     }
 
     /**
@@ -317,8 +345,18 @@ export default class Map {
     public getTileData(index: number): RegionTile {
         let data = this.data[index];
 
-        if (!data) return [];
+        return data ? this.parseTileData(data) : [];
+    }
 
+    /**
+     * Parses through the specified data at a given index and extracts
+     * the flipped tiles from it. Returns a formatted RegionTile ready for
+     * the client.
+     * @param data Raw data contained at an index.
+     * @returns A RegionTile object containing index tile data information.
+     */
+
+    public parseTileData(data: Tile): RegionTile {
         let isArray = Array.isArray(data),
             parsedData: RegionTile = isArray ? [] : 0;
 
@@ -327,7 +365,7 @@ export default class Map {
 
             if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
-            if (isArray) (parsedData as RegionTile[]).push(tile);
+            if (isArray) (parsedData as FlatTile).push(tile);
             else parsedData = tile;
         });
 
@@ -345,7 +383,7 @@ export default class Map {
      * @returns A parsed tile of type `RotatedTile`.
      */
 
-    public getFlippedTile(tileId: number): RegionTile {
+    public getFlippedTile(tileId: number): RotatedTile {
         let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
@@ -369,12 +407,16 @@ export default class Map {
      * Specifically used in the player's handler, it is used to check
      * various activities within the areas.
      * @param callback Returns an areas group (i.e. chest areas) and the key of the group.
+     * @param list Optional parameter used for iterating through specified areas. Prevents iterating
+     * through unnecessary areas.
      */
 
-    public forEachAreas(callback: (areas: Areas, key: string) => void): void {
-        _.each(this.areas, (a: Areas, name: string) => {
-            callback(a, name);
-        });
+    public forEachAreas(callback: (areas: Areas, key: string) => void, list: string[] = []): void {
+        for (let name in this.areas) {
+            if (list.length > 0 && !list.includes(name)) continue;
+
+            callback(this.areas[name], name);
+        }
     }
 
     /**
@@ -384,8 +426,8 @@ export default class Map {
      */
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
-        if (_.isArray(data)) _.each(data, callback);
-        else callback(data as number);
+        if (Array.isArray(data)) for (let index in data) callback(data[index], parseInt(index));
+        else callback(data);
     }
 
     /**
@@ -394,10 +436,10 @@ export default class Map {
      */
 
     public forEachEntity(callback: (position: Position, key: string) => void): void {
-        _.each(this.entities, (key: string, tileId: string) => {
+        for (let tileId in this.entities) {
             let position = this.indexToCoord(parseInt(tileId));
 
-            callback(position, key);
-        });
+            callback(position, this.entities[tileId]);
+        }
     }
 }

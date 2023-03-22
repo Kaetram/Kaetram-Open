@@ -1,14 +1,12 @@
-import axios from 'axios';
-import { json, urlencoded } from 'body-parser';
-import express from 'express';
-
 import config from '@kaetram/common/config';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import axios from 'axios';
+import express from 'express';
 
 import type Player from '../game/entity/character/player/player';
 import type World from '../game/world';
-import { Modules } from '@kaetram/common/network';
 
 interface PlayerData {
     serverId: number;
@@ -37,12 +35,12 @@ export default class API {
 
     public constructor(private world: World) {
         // API must be initialized if the hub is enabled.
-        if (!config.apiEnabled || !config.hubEnabled) return;
+        if (!config.apiEnabled && !config.hubEnabled) return;
 
         let app = express();
 
-        app.use(urlencoded({ extended: true }));
-        app.use(json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
 
         let router = express.Router();
 
@@ -55,171 +53,43 @@ export default class API {
         });
     }
 
+    /**
+     * Default routing for the server API. We just display some basic infomration
+     * about the server, such as the name, port, game version, and the amount of
+     * players currently online.
+     * @param router Router for endpoints.
+     */
+
     private handle(router: express.Router): void {
         router.get('/', (_request, response) => {
             response.json({
                 name: config.name,
-                port: config.socketioPort, // Sends the server port.
+                port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
                 playerCount: this.world.getPopulation()
             });
         });
-
-        router.post('/player', this.handlePlayer.bind(this));
-        router.post('/chat', this.handleChat.bind(this));
-        router.post('/players', this.handlePlayers.bind(this));
     }
 
-    private handlePlayer(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(response, request.body.accessToken)) return;
-    }
+    /**
+     * Checks whether the player is online on another server.
+     * @param username The username of the player we are checking for.
+     */
 
-    private handleChat(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(response, request.body.accessToken)) return;
+    public isPlayerOnline(username: string, callback: (online: boolean) => void): void {
+        if (!config.hubEnabled) return callback(false);
 
-        let text = Utils.parseMessage(request.body.text),
-            source = Utils.parseMessage(request.body.source),
-            { colour, username } = request.body;
-
-        if (username) {
-            let player = this.world.getPlayerByName(username);
-
-            player?.chat(source, text, colour);
-
-            response.json({ status: 'success' });
-
-            return;
-        }
-
-        this.world.globalMessage(source, text, colour);
-
-        response.json({ status: 'success' });
-    }
-
-    private handlePlayers(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(response, request.body.accessToken)) return;
-
-        let players: { [username: string]: Partial<PlayerData> } = {};
-
-        this.world.entities.forEachPlayer((player: Player) => {
-            players[player.username] = this.getPlayerData(player);
-        });
-
-        response.json(players);
-    }
-
-    public async pingHub(): Promise<void> {
-        let url = Utils.getUrl(config.hubHost, config.hubPort, 'ping'),
-            data = {
-                serverId: config.serverId,
-                accessToken: config.accessToken,
-                port: config.socketioPort,
-                apiPort: config.apiPort,
-                remoteServerHost: config.remoteServerHost,
-                maxPlayers: config.maxPlayers,
-                players: this.world.entities.getPlayerUsernames()
-            },
-            response = await axios.post(url, data).catch(() => {
-                log.error(`Could not connect to ${config.name} Hub.`);
-
-                this.hubConnected = false;
-            });
-
-        if (response) {
-            let { data } = response;
-
-            if (data.status === 'success' && !this.hubConnected) {
-                log.notice(`Connected to ${config.name} Hub successfully!`);
-
-                this.hubConnected = true;
-            }
-        }
-    }
-
-    public async sendChat(source: string, text: string, withArrow = false): Promise<void> {
-        if (!config.hubEnabled) return;
-
-        let url = Utils.getUrl(config.hubHost, config.hubPort, 'chat'),
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'isOnline'),
             data = {
                 hubAccessToken: config.hubAccessToken,
                 serverId: config.serverId,
-                source,
-                text,
-                withArrow
-            },
-            response = await axios
-                .post(url, data)
-                .catch(() => log.error('Could not send message to hub.'));
+                username
+            };
 
-        if (response) {
-            let { data } = response;
-
-            if (data.status === 'error') log.error(data);
-
-            // TODO - Do something with this?
-        }
-    }
-
-    public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
-        let url = Utils.getUrl(config.hubHost, config.hubPort, 'privateMessage'),
-            data = {
-                hubAccessToken: config.hubAccessToken,
-                source: Utils.formatName(source.username),
-                target: Utils.formatName(target),
-                text
-            },
-            response = await axios
-                .post(url, data)
-                .catch(() => log.error('Could not send privateMessage to hub.'));
-
-        if (response) {
-            let { data } = response;
-
-            if (data.error) {
-                source.notify(`Player @aquamarine@${target}@white@ is not online.`);
-                return;
-            }
-        }
-    }
-
-    private verifyToken(response: express.Response, token: string): boolean {
-        let status = token === config.accessToken;
-
-        if (!status)
-            this.returnError(
-                response,
-                Modules.APIConstants.MALFORMED_PARAMETERS,
-                'Invalid `accessToken` specified for /chat POST request.'
-            );
-
-        return status;
-    }
-
-    private getPlayerData(player: Player): Partial<PlayerData> {
-        if (!player) return {};
-
-        return {
-            serverId: config.serverId,
-            x: player.x,
-            y: player.y,
-            experience: player.experience,
-            level: player.level,
-            pvpKills: player.pvpKills,
-            orientation: player.orientation,
-            lastLogin: player.lastLogin,
-            mapVersion: player.mapVersion
-        };
-    }
-
-    private returnError(
-        response: express.Response,
-        error: Modules.APIConstants,
-        message: string
-    ): void {
-        response.json({
-            error,
-            message
-        });
+        axios
+            .post(url, data)
+            .then(({ data }) => callback(data.online))
+            .catch(() => log.error('Could not send `isOnline` to hub.'));
     }
 }

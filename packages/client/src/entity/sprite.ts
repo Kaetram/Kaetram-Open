@@ -1,6 +1,9 @@
-import spriteData from '../../data/sprites.json';
-import log from '../lib/log';
 import Animation from './animation';
+
+import log from '../lib/log';
+import Utils from '../utils/util';
+
+import type spriteData from '../../data/sprites.json';
 
 interface AnimationData {
     [name: string]: {
@@ -77,20 +80,14 @@ export default class Sprite {
         this.filepath = path;
         this.animationData = sprite.animations;
 
-        this.width = sprite.width;
-        this.height = sprite.height;
+        this.width = sprite.width ?? Utils.tileSize;
+        this.height = sprite.height ?? Utils.tileSize;
 
-        this.offsetX = sprite.offsetX ?? -16;
-        this.offsetY = sprite.offsetY ?? -16;
+        this.offsetX = sprite.offsetX ?? -Utils.tileSize;
+        this.offsetY = sprite.offsetY ?? -Utils.tileSize;
         // this.offsetAngle = sprite.offsetAngle ?? 0;
 
-        this.idleSpeed = sprite.idleSpeed ?? 450;
-    }
-
-    public update(): void {
-        this.loadSprite();
-
-        this.load();
+        this.idleSpeed = sprite.idleSpeed || 450;
     }
 
     public createAnimations(): Animations {
@@ -141,6 +138,7 @@ export default class Sprite {
 
             this.hurtSprite = {
                 image: canvas,
+                name: 'hurt',
                 loaded: true,
                 offsetX: this.offsetX,
                 offsetY: this.offsetY,

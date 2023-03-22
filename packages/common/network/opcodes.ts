@@ -4,10 +4,16 @@ export enum Login {
     Guest
 }
 
+export enum List {
+    Spawns,
+    Positions
+}
+
 export enum Equipment {
     Batch,
     Equip,
-    Unequip
+    Unequip,
+    Style
 }
 
 export enum Movement {
@@ -16,12 +22,9 @@ export enum Movement {
     Step,
     Stop,
     Move,
-    Orientate,
     Follow,
     Entity,
-    Freeze,
-    Stunned,
-    Zone
+    Speed
 }
 
 export enum Target {
@@ -54,8 +57,18 @@ export enum Network {
 export enum Container {
     Batch,
     Add,
-    Drop,
-    Select
+    Remove,
+    Select,
+    Swap
+}
+
+export enum Ability {
+    Batch,
+    Add,
+    Update,
+    Use,
+    QuickSlot,
+    Toggle
 }
 
 export enum Quest {
@@ -66,8 +79,7 @@ export enum Quest {
 
 export enum Achievement {
     Batch,
-    Progress,
-    Finish
+    Progress
 }
 
 export enum Notification {
@@ -78,7 +90,7 @@ export enum Notification {
 }
 
 export enum Experience {
-    Combat,
+    Sync,
     Skill
 }
 
@@ -92,24 +104,31 @@ export enum NPC {
 
 export enum Trade {
     Request,
+    Add,
+    Remove,
     Accept,
-    Decline
+    Close,
+    Open
 }
 
 export enum Enchant {
     Select,
-    Remove,
-    Enchant,
-    Update
+    Confirm
 }
 
 export enum Guild {
     Create,
+    Login,
+    Logout,
     Join,
     Leave,
     Rank,
-    Loot,
-    Update
+    Update,
+    Experience,
+    Banner,
+    List,
+    Error,
+    Chat
 }
 
 export enum Pointer {
@@ -130,21 +149,10 @@ export enum Store {
 }
 
 export enum TeamWar {
-    Enter,
-    Team,
-    Red,
-    Blue,
-    Leave,
-    Countdown
-}
-
-export enum Map {
-    Render,
-    Modify,
-    Collision,
-    Update,
-    Reset,
-    Tileset
+    Score,
+    End,
+    Lobby,
+    Exit
 }
 
 export enum Overlay {
@@ -166,7 +174,34 @@ export enum Command {
     CtrlClick
 }
 
-export enum Profession {
+export enum Skill {
     Batch,
     Update
+}
+
+export enum Minigame {
+    TeamWar
+}
+
+export enum Bubble {
+    Entity,
+    Position
+}
+
+export enum Effect {
+    Add,
+    Remove
+}
+
+export enum Friends {
+    List,
+    Add,
+    Remove,
+    Status,
+    Sync
+}
+
+export enum Player {
+    Login,
+    Logout
 }

@@ -1,24 +1,32 @@
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import type { Packets } from '@kaetram/common/network';
-import type SocketHandler from './sockethandler';
-import type { AnySocket, SocketType } from './websocket';
+import type { WebSocket } from 'uws';
+import type { ConnectionInfo, MessageCallback } from '@kaetram/common/types/network';
 
-type MessageCallback = (message: [Packets, never]) => void;
+export interface HeaderWebSocket extends WebSocket<ConnectionInfo> {
+    remoteAddress: string;
+}
 
 export default class Connection {
-    private messageCallback?: MessageCallback;
+    public address = '';
+
+    public messageCallback?: MessageCallback;
+
+    // Used for filtering duplicate messages.
+    private lastMessage = '';
+    private lastMessageTime = Date.now();
+    private messageDifference = 100; // Prevent duplicate messages coming in faster than 100ms.
+
+    private disconnectTimeout: NodeJS.Timeout | null = null;
+    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+
     private closeCallback?: () => void;
 
-    public constructor(
-        public id: string,
-        public type: SocketType,
-        public address: string,
-        private socket: AnySocket,
-        private socketHandler: SocketHandler
-    ) {
-        this.socket.on('message', this.handleMessage.bind(this));
-        this.socket.on(this.getCloseSignal(), this.handleClose.bind(this));
+    public constructor(public instance: string, private socket: HeaderWebSocket) {
+        // Convert the IP address hex string to a readable IP address.
+        this.address =
+            socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
     }
 
     /**
@@ -40,36 +48,62 @@ export default class Connection {
      */
 
     public close(details?: string): void {
+        this.socket.end();
+
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
-
-        this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
-    }
-
-    /**
-     * Attempts to parse the string and convert it to a JSON.
-     * An error is caught if the JSON fails to properly parse.
-     * @param message JSON message string to be parsed.
-     */
-
-    private handleMessage(message: string): void {
-        try {
-            this.messageCallback?.(JSON.parse(message));
-        } catch (error: unknown) {
-            log.error(`Message could not be parsed: ${message}.`);
-            log.error(error);
-        }
     }
 
     /**
      * Receives the close signal and ends the connection with the socket.
      */
 
-    private handleClose(): void {
-        log.info(`Closed socket: ${this.address}.`);
+    public handleClose(): void {
+        log.info(`Closing socket connection to: ${this.address}.`);
 
         this.closeCallback?.();
+        this.clearTimeout();
+    }
 
-        this.socketHandler.remove(this.id);
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
+     */
+
+    public refreshTimeout(duration = this.timeoutDuration): void {
+        // Clear the existing timeout and start over.
+        this.clearTimeout();
+
+        // Start a new timeout and set the player's timeout variable.
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout'), duration);
+    }
+
+    /**
+     * Clears the existing disconnect timeout.
+     */
+
+    private clearTimeout(): void {
+        if (!this.disconnectTimeout) return;
+
+        clearTimeout(this.disconnectTimeout);
+        this.disconnectTimeout = null;
+    }
+
+    /**
+     * A player may be able to spam the server with the packets that are
+     * the same. We want to ensure duplicate packets are only parsed once
+     * every `messageDifference` milliseconds. There may be cases
+     * where duplicate messages are needed, such as when a player is repeatedly
+     * clicking a store or button.
+     * @param message String message to be checked.
+     * @returns Whether or not the message is a duplicate and should be ignored.
+     */
+
+    public isDuplicate(message: string): boolean {
+        return (
+            message === this.lastMessage &&
+            Date.now() - this.lastMessageTime < this.messageDifference
+        );
     }
 
     /**
@@ -89,16 +123,6 @@ export default class Connection {
 
     public sendUTF8(message: string): void {
         this.socket.send(message);
-    }
-
-    /**
-     * Depending on the type of socket connection,
-     * we use a different keyword for determining
-     * the closing callback.
-     */
-
-    public getCloseSignal(): 'close' | 'disconnect' {
-        return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 
     /**

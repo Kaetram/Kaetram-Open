@@ -1,0 +1,43 @@
+{
+    "nisoc": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "nisocore"
+    },
+
+    "cinnabar": {
+        "levelRequirement": 5,
+        "experience": 30,
+        "difficulty": 20,
+        "item": "cinnabarore"
+    },
+
+    "pythar": {
+        "levelRequirement": 15,
+        "experience": 70,
+        "difficulty": 40,
+        "item": "pytharore"
+    },
+
+    "gold": {
+        "levelRequirement": 25,
+        "experience": 150,
+        "difficulty": 80,
+        "item": "goldore"
+    },
+
+    "ibo": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "iboore"
+    },
+
+    "moonrock": {
+        "levelRequirement": 40,
+        "experience": 300,
+        "difficulty": 220,
+        "item": "moonrockore"
+    }
+}

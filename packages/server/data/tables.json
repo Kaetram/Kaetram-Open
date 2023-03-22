@@ -1,0 +1,42 @@
+{
+    "ordinary": {
+        "gold": 3000,
+        "flask": 1200,
+        "bigflask": 720,
+        "manaflask": 760,
+        "bigmanaflask": 500,
+        "burger": 680
+    },
+
+    "arrows": {
+        "arrow": 2400,
+        "firearrow": 750,
+        "poisonarrow": 700,
+        "lightningarrow": 650,
+        "icearrow": 400
+    },
+
+    "unusual": {
+        "blackpotion": 300,
+        "hotsauce": 300,
+        "cure": 300,
+        "logs": 200,
+        "stick": 500,
+        "bead": 300,
+        "banana": 300,
+        "watermelon": 300,
+        "apple": 300
+    },
+
+    "shards": {
+        "shardt1": 200,
+        "shardt2": 150,
+        "shardt3": 100,
+        "shardt4": 50,
+        "shardt5": 20
+    },
+
+    "warriorcrab": {
+        "bead": 10000
+    }
+}

@@ -1,0 +1,100 @@
+@use '../../abstracts/media';
+
+#enchant {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    margin: auto;
+}
+
+#enchant-inventory-slots {
+    position: absolute;
+
+    overflow: hidden;
+    overflow-y: scroll;
+
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    li {
+        float: left;
+    }
+}
+
+#enchant-selected-item,
+#enchant-shards {
+    position: absolute;
+    top: 80%;
+    background-size: cover;
+}
+
+#enchant-selected-item {
+    left: 11%;
+}
+
+#enchant-shards {
+    left: 34%;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #enchant {
+            width: 129px * $i;
+            height: 155px * $i;
+            background: url('/img/interface/containers.png') 0 0;
+            background-size: calc(width('containers.png') * $i);
+        }
+
+        #enchant-selected-item,
+        #enchant-shards {
+            width: 16px * $i;
+            height: 15px * $i;
+        }
+
+        #enchant-container {
+            background-image: url('/img/interface/containers.png');
+            background-size: calc(width('containers.png') * $i);
+        }
+
+        .inventory-slots {
+            width: 96px * $i;
+            height: 80px * $i;
+        }
+
+        #shards-count {
+            width: 16px * $i;
+        }
+
+        #enchant-inventory-slots {
+            top: 16px * $i;
+            left: 20px * $i;
+            width: 96px * $i;
+            height: 92px * $i;
+
+            li {
+                .item-slot {
+                    margin-bottom: 4px * $i;
+                }
+            }
+        }
+    }
+
+    @media (--sm) {
+        #enchant-inventory-slots {
+            left: 11px;
+            width: 106px;
+
+            li {
+                .item-slot {
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+}
