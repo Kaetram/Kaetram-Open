@@ -208,7 +208,7 @@ export default class TeamWar extends Minigame {
         for (let player of this.players) {
             player.minigame = Opcodes.Minigame.TeamWar;
 
-            let position = this.getRespawnPoint(player.team);
+            let position = this.getRespawnPoint(player.team!);
 
             player.teleport(position.x, position.y, false, true);
         }
@@ -227,7 +227,7 @@ export default class TeamWar extends Minigame {
 
         // Teleport all the players back to the lobby.
         for (let player of this.players) {
-            player.minigame = -1;
+            player.minigame = undefined;
 
             let position = this.getLobbyPosition();
 

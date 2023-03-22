@@ -272,14 +272,12 @@ export default {
      * @param key Raw key from the achievement JSON.
      */
 
-    getSkill(key: string): Modules.Skills {
-        if (!key) return -1;
+    getSkill(key: string): Modules.Skills | undefined {
+        if (!key) return;
 
         key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
-        let skill = Modules.Skills[key as keyof typeof Modules.Skills];
-
-        return skill === undefined ? -1 : skill;
+        return Modules.Skills[key as keyof typeof Modules.Skills];
     },
 
     /**
