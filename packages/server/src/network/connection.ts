@@ -21,12 +21,16 @@ export default class Connection {
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
+    public closed = false;
+
     private closeCallback?: () => void;
 
     public constructor(public instance: string, private socket: HeaderWebSocket) {
         // Convert the IP address hex string to a readable IP address.
         this.address =
             socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
+
+        log.info(`Received socket connection from: ${this.address}.`);
     }
 
     /**
@@ -122,6 +126,12 @@ export default class Connection {
      */
 
     public sendUTF8(message: string): void {
+        // Prevent sending messages to a closed connection, log for debugging.
+        if (this.closed) {
+            log.warning(`Attempted to send message to closed connection.`);
+            return log.trace();
+        }
+
         this.socket.send(message);
     }
 
