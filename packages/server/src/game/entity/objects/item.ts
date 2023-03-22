@@ -216,7 +216,7 @@ export default class Item extends Entity {
          */
 
         if (this.skill) {
-            let skill = player.skills.get(Utils.getSkill(this.skill));
+            let skill = player.skills.get(Utils.getSkill(this.skill)!);
 
             // Separate conditional if skill exists.
             if (skill)
@@ -266,7 +266,7 @@ export default class Item extends Entity {
      * @returns Equipment type from Modules.
      */
 
-    public getEquipmentType(): Modules.Equipment {
+    public getEquipmentType(): Modules.Equipment | undefined {
         switch (this.itemType) {
             case 'armour':
             case 'armourarcher': {
@@ -303,8 +303,6 @@ export default class Item extends Entity {
                 return Modules.Equipment.Arrows;
             }
         }
-
-        return -1;
     }
 
     /**

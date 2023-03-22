@@ -147,7 +147,7 @@ export default {
      * @param menuAction Menu action that we are converting.
      */
 
-    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container {
+    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
             case Modules.MenuActions.Wield:
             case Modules.MenuActions.Equip:
@@ -162,10 +162,6 @@ export default {
 
             case Modules.MenuActions.Move: {
                 return Opcodes.Container.Swap;
-            }
-
-            default: {
-                return -1;
             }
         }
     },
