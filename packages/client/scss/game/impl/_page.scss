@@ -19,7 +19,6 @@
     left: 6%;
 }
 
-.item-count,
 .item-count {
     font-family: AdvoCut, sans-serif;
     color: rgb(255 255 255 / 100%);
@@ -60,7 +59,8 @@
 
         .ok,
         .ok-check {
-            background-image: url('/img/#{$i}/containers.png');
+            background-image: url('/img/interface/containers.png');
+            background-size: calc(width('containers.png') * $i);
         }
 
         .ok {
@@ -89,12 +89,13 @@
     }
 }
 
-@each $size, $i in media.$bsizes {
+@each $size, $i in media.$b-sizes {
     @media ($size) {
         .close {
             width: 16px * $i;
             height: 16px * $i;
-            background: url('/img/#{$i}/containers.png') -32px * $i -166px * $i;
+            background: url('/img/interface/containers.png') -32px * $i -166px * $i;
+            background-size: calc(width('containers.png') * $i);
 
             &:hover {
                 background-position-x: -48px * $i;

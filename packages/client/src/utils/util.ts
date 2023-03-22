@@ -102,14 +102,20 @@ export default {
      * every first letter after a space.
      * Example: 'tHiS Is a usErName' -> 'This Is A Username'
      * @param name The raw username string defaulting to '' if not specified.
+     * @param trim The amount of characters to trim the name to.
      * @returns The formatted name string.
      */
 
-    formatName(name = ''): string {
-        return name.replace(
+    formatName(name = '', trim = 0): string {
+        name = name.replace(
             /\w\S*/g,
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
+
+        // Trim the name if specified.
+        if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
+
+        return name;
     },
 
     /**
@@ -141,7 +147,7 @@ export default {
      * @param menuAction Menu action that we are converting.
      */
 
-    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container {
+    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
             case Modules.MenuActions.Wield:
             case Modules.MenuActions.Equip:
@@ -156,10 +162,6 @@ export default {
 
             case Modules.MenuActions.Move: {
                 return Opcodes.Container.Swap;
-            }
-
-            default: {
-                return -1;
             }
         }
     },

@@ -17,7 +17,7 @@ export default class Slot {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
-    private maxStackSize = Modules.Constants.MAX_STACK;
+    public maxStackSize = Modules.Constants.MAX_STACK;
 
     public constructor(
         public index: number,
@@ -120,6 +120,14 @@ export default class Slot {
 
     public isEmpty(count = this.count): boolean {
         return count < 1;
+    }
+
+    /**
+     * @returns Whether or not the item in the slot is a shard.
+     */
+
+    public isShard(): boolean {
+        return this.key.includes('shardt');
     }
 
     /**

@@ -1,3 +1,4 @@
+import type Player from './player';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 
 export default class Statistics {
@@ -13,6 +14,8 @@ export default class Statistics {
 
     // Class variables for calculating login time, etc.
     public loginTime = Date.now(); // Time when player logged in.
+
+    public constructor(private player: Player) {}
 
     /**
      * Loads the statistics data from the database.
@@ -82,7 +85,8 @@ export default class Statistics {
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,
             lastLogin: this.lastLogin,
-            loginCount: this.loginCount
+            loginCount: this.loginCount,
+            cheater: this.player.isCheater()
         };
     }
 }

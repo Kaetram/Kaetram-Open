@@ -1,8 +1,11 @@
-import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+import { Spawn } from '@kaetram/common/network/impl';
+import Formulas from '@kaetram/server/src/info/formulas';
+import Hit from '@kaetram/server/src/game/entity/character/combat/hit';
 import Handler from '@kaetram/server/src/game/entity/character/mob/handler';
 
-import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import type Character from '@kaetram/server/src/game/entity/character/character';
 
 /**
  * Default handler plugin for the mob. When a mob has a plugin associated
@@ -16,6 +19,20 @@ export default class Default extends Handler {
 
     public constructor(mob: Mob) {
         super(mob);
+    }
+
+    /**
+     * Creates an attack projectile that attacks all the attackers of the mob.
+     * @param hitType Used to determine the type of hit (e.g. poison, fire, cold, etc.)
+     */
+
+    protected attackAll(hitType = Modules.Hits.Normal, aoe = this.mob.aoe): void {
+        this.mob.forEachAttacker((attacker: Character) => {
+            let hit = new Hit(hitType, Formulas.getDamage(this.mob, attacker), true, aoe),
+                projectile = this.world.entities.spawnProjectile(this.mob, attacker, hit);
+
+            this.mob.sendToRegions(new Spawn(projectile));
+        });
     }
 
     /**
@@ -33,6 +50,12 @@ export default class Default extends Handler {
 
         // Prevent minion from respawning after death.
         minion.respawnable = false;
+
+        // Apply the same aggro range as the boss.
+        minion.aggroRange = this.mob.aggroRange;
+
+        // Make minions always aggressive
+        minion.alwaysAggressive = true;
 
         // Remove the minion from the list when it dies.
         minion.onDeathImpl(() => delete this.minions[minion.instance]);
@@ -53,7 +76,7 @@ export default class Default extends Handler {
         if (this.mob.attackers.length === 0) return;
 
         // Find an attacker out of the list of attackers.
-        let target = this.mob.attackers[Utils.randomInt(0, this.mob.attackers.length - 1)];
+        let target = this.mob.getRandomAttacker();
 
         return target;
     }

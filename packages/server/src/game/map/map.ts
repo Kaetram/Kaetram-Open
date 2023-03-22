@@ -31,7 +31,7 @@ export default class Map {
 
     // Map handlers
     public regions: Regions;
-    public grids: Grids = new Grids(this.width, this.height);
+    public grids: Grids;
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
@@ -54,6 +54,8 @@ export default class Map {
     private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
+        this.grids = new Grids(this.width, this.height);
+
         this.loadAreas();
         this.loadDoors();
 

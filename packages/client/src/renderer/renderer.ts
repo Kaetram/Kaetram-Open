@@ -770,8 +770,6 @@ export default class Renderer {
             );
         }
 
-        // // this.drawEntityBack(entity);
-
         this.entitiesContext.drawImage(
             entity.sprite.image,
             frame!.x,
@@ -806,7 +804,7 @@ export default class Renderer {
         if (!(entity instanceof Character)) return;
 
         if (entity.isPlayer()) this.drawWeapon(entity as Player);
-        if (entity.hasEffect()) this.drawEffect(entity);
+        if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
 
     /**
@@ -854,35 +852,47 @@ export default class Renderer {
     }
 
     /**
-     * Draws a special effect on top of the character.
+     * Goes through all the status effects and draws them on top of the character.
      * @param character The character we are drawing the effect of.
      */
 
-    private drawEffect(character: Character): void {
-        let sprite = this.game.sprites.get(character.getActiveEffect());
+    private drawEffects(character: Character): void {
+        for (let key of character.statusEffects) {
+            // Do not draw the freezing effect if the character has a snow potion effect.
+            if (key === Modules.Effects.Freezing && character.hasEffect(Modules.Effects.SnowPotion))
+                continue;
 
-        if (!sprite) return;
+            // Do not draw the burning effect if the character has a fire potion effect.
+            if (key === Modules.Effects.Burning && character.hasEffect(Modules.Effects.FirePotion))
+                continue;
 
-        if (!sprite.loaded) sprite.load();
+            let effect = character.getEffect(key);
 
-        let animation = character.getEffectAnimation()!,
-            { index } = animation.frame,
-            x = sprite.width * index,
-            y = sprite.height * animation.row;
+            if (!effect) continue;
 
-        this.entitiesContext.drawImage(
-            sprite.image,
-            x,
-            y,
-            sprite.width,
-            sprite.height,
-            sprite.offsetX,
-            sprite.offsetY,
-            sprite.width,
-            sprite.height
-        );
+            let sprite = this.game.sprites.get(effect.key);
 
-        animation.update(this.game.time);
+            if (!sprite.loaded) sprite.load();
+
+            let { animation } = effect,
+                { index } = animation.frame,
+                x = sprite.width * index,
+                y = sprite.height * animation.row;
+
+            this.entitiesContext.drawImage(
+                sprite.image,
+                x,
+                y,
+                sprite.width,
+                sprite.height,
+                sprite.offsetX,
+                sprite.offsetY,
+                sprite.width,
+                sprite.height
+            );
+
+            animation.update(this.game.time);
+        }
     }
 
     /**
