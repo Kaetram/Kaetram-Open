@@ -5,12 +5,22 @@ import Item from '../../../objects/item';
 import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';
-import type { ContainerItem } from '@kaetram/common/types/item';
+import type { ContainerItem, Enchantments } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
 
 interface SerializedContainer {
     slots: SlotData[];
 }
+
+type AddCallback = (slot: Slot) => void;
+type RemoveCallback = (
+    slot: Slot,
+    key: string,
+    count: number,
+    enchantments: Enchantments,
+    drop?: boolean
+) => void;
+type NotifyCallback = (message: string) => void;
 
 export default abstract class Container {
     protected slots: Slot[] = [];
@@ -19,14 +29,9 @@ export default abstract class Container {
 
     private loadCallback?: () => void;
 
-    protected addCallback?: (slot: Slot) => void;
-    protected removeCallback?: (
-        slot: Slot,
-        key: string,
-        count: number,
-        drop?: boolean | undefined
-    ) => void;
-    protected notifyCallback?: (message: string) => void;
+    protected addCallback?: AddCallback;
+    protected removeCallback?: RemoveCallback;
+    protected notifyCallback?: NotifyCallback;
 
     public constructor(public type: Modules.ContainerType, public size: number) {
         // Create `size` amount of slots with empty data.
@@ -56,7 +61,9 @@ export default abstract class Container {
      */
 
     public empty(): void {
-        this.forEachSlot((slot: Slot) => this.remove(slot.index, slot.count));
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key) this.remove(slot.index, slot.count);
+        });
     }
 
     /**
@@ -128,7 +135,7 @@ export default abstract class Container {
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
-        this.removeCallback?.(slot, serializedSlot.key, count, drop);
+        this.removeCallback?.(slot, serializedSlot.key, count, serializedSlot.enchantments, drop);
 
         return serializedSlot;
     }
@@ -416,7 +423,7 @@ export default abstract class Container {
      * Signal for when an item is added.
      */
 
-    public onAdd(callback: (slot: Slot) => void): void {
+    public onAdd(callback: AddCallback): void {
         this.addCallback = callback;
     }
 
@@ -424,9 +431,7 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(
-        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
-    ): void {
+    public onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
     }
 
@@ -435,7 +440,7 @@ export default abstract class Container {
      * @param callback A callback containing the message to notify the player with.
      */
 
-    public onNotify(callback: (message: string) => void): void {
+    public onNotify(callback: NotifyCallback): void {
         this.notifyCallback = callback;
     }
 }

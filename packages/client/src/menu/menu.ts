@@ -86,7 +86,8 @@ export default abstract class Menu {
         _var2?: unknown,
         _var3?: unknown,
         _var4?: unknown,
-        _var5?: unknown
+        _var5?: unknown,
+        _var6?: unknown
     ): void {
         this.showCallback?.();
 

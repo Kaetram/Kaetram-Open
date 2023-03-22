@@ -1,14 +1,13 @@
-import { Handshake } from './packets';
-
 import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
+import { Handshake } from '@kaetram/common/network/impl';
 
-import type Packet from './packet';
 import type World from '../game/world';
 import type Connection from './connection';
 import type Regions from '../game/map/regions';
 import type SocketHandler from './sockethandler';
+import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export default class Network {
@@ -110,7 +109,9 @@ export default class Network {
      */
 
     public broadcast(packet: Packet): void {
-        for (let queue of Object.values(this.packets)) queue.push(packet.serialize());
+        let serializedPacket = packet.serialize();
+
+        for (let queue of Object.values(this.packets)) queue.push(serializedPacket);
     }
 
     /**

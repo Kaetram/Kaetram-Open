@@ -1,9 +1,8 @@
 import AbilitiesIndex from './ability/impl/index';
 
-import { Ability as AbilityPacket } from '../../../../network/packets';
-
-import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import { Opcodes } from '@kaetram/common/network';
+import { Ability as AbilityPacket } from '@kaetram/common/network/impl';
 
 import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
 import type Ability from './ability/ability';

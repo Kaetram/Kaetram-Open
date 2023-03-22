@@ -569,6 +569,8 @@
                         <li><div id="achievements-button"></div></li>
                         <li><div id="quests-button"></div></li>
                         <li><div id="warp-button"></div></li>
+                        <li><div id="guilds-button"></div></li>
+                        <li><div id="leaderboards-button"></div></li>
                         <li><div id="profile-button"></div></li>
                         <li><div id="friends-button"></div></li>
                         <li><div id="chat-button"></div></li>
@@ -651,8 +653,6 @@
                             <div id="passiveability8" class="ability"></div>
                         </ul>
                     </div>
-
-                    <div id="guild-page" class="page"></div>
 
                     <div id="profile-navigator" class="navigator">
                         <div class="previous"></div>
@@ -830,11 +830,9 @@
 
                 <div id="enchant">
                     <div id="close-enchant" class="close"></div>
-                    <div id="confirm-enchant" class="ok"></div>
-                    <div id="enchant-container">
-                        <div id="enchant-inventory-slots" class="inventory-slots">
-                            <ul></ul>
-                        </div>
+                    <div id="confirm-enchant" class="ok-check"></div>
+                    <div id="enchant-inventory-container">
+                        <ul id="enchant-inventory-slots"></ul>
                     </div>
                     <div id="enchant-selected-item"></div>
                     <div id="enchant-shards">
@@ -844,16 +842,12 @@
 
                 <div id="store">
                     <div id="close-store" class="close"></div>
-                    <div id="store-container">
-                        <ul></ul>
-                    </div>
+                    <ul id="store-container"></ul>
 
                     <div id="store-help"></div>
 
                     <div id="store-inventory-container">
-                        <div id="store-inventory-slots">
-                            <ul></ul>
-                        </div>
+                        <ul id="store-inventory-slots"></ul>
 
                         <div id="store-sell-slot">
                             <div id="store-sell-slot-text" class="item-count"></div>
@@ -881,6 +875,24 @@
                             <div class="cancel dialog-cancel"></div>
                         </div>
                     </dialog>
+                </div>
+
+                <div id="leaderboards" class="container">
+                    <div id="close-leaderboards" class="close close-container"></div>
+
+                    <input 
+                        title="Enter a search term..."
+                        id="leaderboards-search-input"
+                        class="stroke"
+                        type="text"
+                        maxlength="32"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter a term to search...">
+                    </input>
+        
+                    <ul id="leaderboards-search"></ul>
+                    <ul id="leaderboards-results"></ul>
                 </div>
 
                 <div id="equipments" class="container">
@@ -981,9 +993,7 @@
                 <div id="action-container">
                     <div id="action-page">
                         <div class="action-item-name stroke"></div>
-
                         <div class="action-item-description"></div>
-
                         <ul></ul>
                     </div>
 
@@ -1003,6 +1013,76 @@
                             <div class="cancel dialog-cancel"></div>
                         </div>
                     </dialog>
+                </div>
+
+                <div id="guilds">
+                    <div id="close-guilds"></div>
+
+                    <div class="banner banner-grey">
+                        <div class="banner-outline"></div>
+                        <div class="banner-crest"></div>
+                    </div>
+
+                    <div id="guilds-list-container">
+                        <div id="create-guild" class="element-button-large stroke">Create</div>
+                        
+                        <div class="guilds-decoration">
+                            <p class="stroke">Guilds</p>
+                        </div>
+
+                        <ul></ul>
+
+                        <p id="guilds-info">There are no guilds available...</p>
+                    </div>
+
+                    <div id="guilds-create-container">
+                        <div class="guild-banner-decoration guild-banner-select"></div>
+                        <div class="guild-banner-decoration guild-outline-select"></div>
+
+                        <ul id="banner-colours"></ul>
+                        <ul id="banner-outline-colours"></ul>
+                        <ul id="banner-crests"></ul>
+
+                        <span id="create-error"></span>
+
+                        <div id="guild-back" class="element-button-small element-button-small-red stroke">Back</div>
+                        <div id="guild-create" class="element-button-small stroke">Create</div>
+
+                        <input
+                            id="guild-name-input"
+                            type="text"
+                            maxlength="16"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter a name..."
+                            class="guild-name-input-image stroke"></input>
+                    </div>
+
+                    <div id=guilds-info-container>
+                        <div id="guild-leave" class="element-button-small element-button-small-red stroke">Leave</div>
+
+                        <div id="guild-name" class="guilds-decoration"></div>
+                        <div id="guild-chat-log"></div>
+                        <input
+                            id="guild-chat-input"
+                            type="text"
+                            maxlength="256"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter your message here..."
+                            class="guild-chat-input-image stroke">
+                        </input>
+
+                        <ul id="member-list"></ul>
+                        <ul id="sidebar-list">
+                            <li id="sidebar-members" class="sidebar-element active">
+                                <div class="members-icon"></div>
+                            </li>
+                            <li id="sidebar-chat" class="sidebar-element">
+                                <div class="chat-icon"></div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div id="interact">

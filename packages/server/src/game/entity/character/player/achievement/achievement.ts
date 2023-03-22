@@ -71,7 +71,7 @@ export default class Achievement {
         this.itemCount = rawData.itemCount || 1;
         this.rewardItem = rawData.rewardItem || '';
         this.rewardItemCount = rawData.rewardItemCount || 1;
-        this.rewardSkill = Utils.getSkill(rawData.rewardSkill!);
+        this.rewardSkill = Utils.getSkill(rawData.rewardSkill!)!;
         this.rewardExperience = rawData.rewardExperience || 0;
         this.rewardAbility = rawData.rewardAbility || '';
         this.rewardAbilityLevel = rawData.rewardAbilityLevel || 1;
