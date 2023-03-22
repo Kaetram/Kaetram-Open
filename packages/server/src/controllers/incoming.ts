@@ -37,7 +37,7 @@ export default class Incoming {
             }
 
             case Packets.Chat: {
-                return this.handleChat(data as ChatPacket);
+                return this.handleChat(opcode as ChatPacket);
             }
 
             case Packets.Guild: {
