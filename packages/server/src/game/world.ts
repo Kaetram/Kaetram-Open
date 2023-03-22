@@ -40,17 +40,17 @@ export interface PacketData {
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map: Map = new Map(this);
-    public api: API = new API(this);
-    public stores: Stores = new Stores(this);
-    public warps: Warps = new Warps(this);
-    public globals: Globals = new Globals(this);
-    public entities: Entities = new Entities(this);
-    public network: Network = new Network(this);
-    public minigames: Minigames = new Minigames(this);
+    public map: Map;
+    public api: API;
+    public stores: Stores;
+    public warps: Warps;
+    public globals: Globals;
+    public entities: Entities;
+    public network: Network;
+    public minigames: Minigames;
     public enchanter: Enchanter = new Enchanter();
-    public guilds: Guilds = new Guilds(this);
-    public client: Client = new Client(this);
+    public guilds: Guilds;
+    public client: Client;
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -61,6 +61,17 @@ export default class World {
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+        this.map = new Map(this);
+        this.api = new API(this);
+        this.stores = new Stores(this);
+        this.warps = new Warps(this);
+        this.globals = new Globals(this);
+        this.entities = new Entities(this);
+        this.network = new Network(this);
+        this.minigames = new Minigames(this);
+        this.guilds = new Guilds(this);
+        this.client = new Client(this);
+
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));

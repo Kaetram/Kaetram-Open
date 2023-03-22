@@ -81,26 +81,26 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map: Map = this.world.map;
-    private regions: Regions = this.world.map.regions;
-    private entities: Entities = this.world.entities;
+    public map: Map;
+    private regions: Regions;
+    private entities: Entities;
 
-    public incoming: Incoming = new Incoming(this);
+    public incoming: Incoming;
 
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    public abilities: Abilities = new Abilities(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public statistics: Statistics = new Statistics(this);
-    public friends: Friends = new Friends(this);
-    public trade: Trade = new Trade(this);
+    public abilities: Abilities;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+    public statistics: Statistics;
+    public friends: Friends;
+    public trade: Trade;
 
-    public handler: Handler = new Handler(this);
+    public handler: Handler;
 
     public ready = false; // indicates if login processed finished
     public isGuest = false;
@@ -177,6 +177,22 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.instance, world, '', -1, -1);
+
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.entities = this.world.entities;
+
+        this.incoming = new Incoming(this);
+        this.abilities = new Abilities(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+        this.statistics = new Statistics(this);
+        this.friends = new Friends(this);
+        this.trade = new Trade(this);
+        this.handler = new Handler(this);
     }
 
     /**
