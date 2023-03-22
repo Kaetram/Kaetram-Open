@@ -84,7 +84,7 @@ export default class Inventory extends Menu {
     private handleAction(menuAction: Modules.MenuActions): void {
         if (menuAction === Modules.MenuActions.DropMany) return this.actions.showDropDialog();
 
-        this.selectCallback?.(Util.getContainerAction(menuAction), this.selectedSlot, 1);
+        this.selectCallback?.(Util.getContainerAction(menuAction)!, this.selectedSlot, 1);
 
         this.actions.hide();
     }

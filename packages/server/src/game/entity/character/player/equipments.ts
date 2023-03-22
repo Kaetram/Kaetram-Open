@@ -89,7 +89,7 @@ export default class Equipments {
                 `[${this.player.username}] Attempted to equip something mysterious.`
             );
 
-        let type = item.getEquipmentType(),
+        let type = item.getEquipmentType()!,
             equipment = this.get(type);
 
         if (!equipment) return;
