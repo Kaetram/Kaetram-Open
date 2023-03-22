@@ -7,6 +7,12 @@ import type Packet from '@kaetram/common/network/packet';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
+type PlayerCallback = (
+    username: string,
+    serverId: number,
+    logout: boolean,
+    population: number
+) => void;
 type ServerCallback = (id: number, name: string) => void;
 type MessageCallback = (
     source: string,
@@ -17,7 +23,7 @@ type MessageCallback = (
 export default class Servers {
     private servers: { [instance: string]: Server } = {};
 
-    public updateCallback?: () => void;
+    public playerCallback?: PlayerCallback;
     public messageCallback?: MessageCallback;
 
     private addCallback?: ServerCallback;
@@ -88,6 +94,21 @@ export default class Servers {
 
     public global(source: string, message: string, colour: string): void {
         this.broadcast(new Chat({ source, message, colour }));
+    }
+
+    /**
+     * Handles a player logging in or out of the game. We use this
+     * to update the Discord server with the amount of players online and
+     * with the logout/login activity.
+     * @param username The username of the player.
+     * @param serverId The id of the server the player is on.
+     * @param logout The type of action we are performing (defaults to false)
+     */
+
+    public handlePlayer(username: string, serverId: number, logout = false): void {
+        let total = this.getTotalPlayers();
+
+        this.playerCallback?.(username, serverId, logout, total);
     }
 
     /**
@@ -185,11 +206,14 @@ export default class Servers {
     }
 
     /**
-     * Callback for when we want to update the population of the servers.
+     * Callback for when a player logs in or out of the server. Used for updating
+     * the Discord bot with the current population.
+     * @param callback Contains the username of the player, whether they are
+     * logging in or out, and the total population across all servers.
      */
 
-    public onUpdate(callback: () => void): void {
-        this.updateCallback = callback;
+    public onPlayer(callback: PlayerCallback): void {
+        this.playerCallback = callback;
     }
 
     /**
