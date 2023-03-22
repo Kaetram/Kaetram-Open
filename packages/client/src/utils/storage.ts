@@ -47,12 +47,14 @@ let storage = window.localStorage,
     name = 'data';
 
 export default class Storage {
-    public data: StorageData = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+    public data: StorageData;
     public mapData!: IDBDatabase; // Where we store the region caching.
 
     public newVersion = false;
 
     public constructor() {
+        this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+
         this.newVersion = this.isNewVersion();
 
         if (this.newVersion) {

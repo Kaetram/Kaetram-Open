@@ -31,8 +31,8 @@ export default class Game {
     public player: Player;
     public storage: Storage;
 
-    public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+    public map: Map;
+    public camera: Camera;
 
     public zoning: Zoning = new Zoning();
     public overlays: Overlays = new Overlays();
@@ -67,6 +67,10 @@ export default class Game {
         this.storage = app.storage;
 
         this.player = new Player('', this);
+
+        this.map = new Map(this);
+        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+
         this.renderer = new Renderer(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
