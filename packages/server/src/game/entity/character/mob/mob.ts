@@ -30,8 +30,8 @@ interface ItemDrop {
 }
 
 export default class Mob extends Character {
-    public spawnX: number = this.x;
-    public spawnY: number = this.y;
+    public spawnX: number;
+    public spawnY: number;
 
     public description: string | string[] = '';
 
@@ -76,6 +76,9 @@ export default class Mob extends Character {
 
     public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
+
+        this.spawnX = this.x;
+        this.spawnY = this.y;
 
         let data = (rawData as RawData)[key];
 
