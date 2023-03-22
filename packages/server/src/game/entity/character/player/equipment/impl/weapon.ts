@@ -44,6 +44,8 @@ export default class Weapon extends Equipment {
         this.lumberjacking = item.lumberjacking;
         this.mining = item.mining;
         this.poisonous = item.poisonous;
+        this.freezing = item.freezing;
+        this.burning = item.burning;
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
@@ -86,10 +88,10 @@ export default class Weapon extends Equipment {
     public updateAttackStyle(attackStyle: Modules.AttackStyle): void {
         this.attackStyle = attackStyle;
 
-        // Rapid attack style boosts attack speed by 15%
+        // Rapid attack style boosts attack speed by 20%
         this.attackRate =
             attackStyle === Modules.AttackStyle.Fast
-                ? this.defaultAttackRate * 0.85
+                ? this.defaultAttackRate * 0.8
                 : this.defaultAttackRate;
 
         // Not applicable for ranged weapons.
@@ -154,6 +156,38 @@ export default class Weapon extends Equipment {
 
     public isMining(): boolean {
         return this.mining > 0;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the bloodsucking enchantment.
+     */
+
+    public isBloodsucking(): boolean {
+        return Modules.Enchantment.Bloodsucking in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the critical enchantment.
+     */
+
+    public isCritical(): boolean {
+        return Modules.Enchantment.Critical in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the double-edged enchantment.
+     */
+
+    public isDoubleEdged(): boolean {
+        return Modules.Enchantment.DoubleEdged in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the weapon has the freezing enchantment.
+     */
+
+    public isStun(): boolean {
+        return Modules.Enchantment.Stun in this.enchantments;
     }
 
     /**

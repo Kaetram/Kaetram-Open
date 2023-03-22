@@ -21,7 +21,7 @@ import type SpritesController from '../controllers/sprites';
 import type Messages from './messages';
 import type Entity from '../entity/entity';
 import type Item from '../entity/objects/item';
-import type NPC from '../entity/character/npc/npc';
+import type NPC from '../entity/npc/npc';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type { PlayerData } from '@kaetram/common/types/player';
@@ -59,7 +59,8 @@ import type {
     FriendsPacket,
     ListPacket,
     TradePacket,
-    HandshakePacket
+    HandshakePacket,
+    GuildPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -168,8 +169,8 @@ export default class Connection {
         this.app.updateLoader('Connecting to server');
 
         // Set the server id and instance
-        this.game.player.instance = data.instance;
-        this.game.player.serverId = data.serverId;
+        this.game.player.instance = data.instance!;
+        this.game.player.serverId = data.serverId!;
 
         // Guest login doesn't require any credentials, send the packet right away.
         if (this.app.isGuest())
@@ -178,6 +179,9 @@ export default class Connection {
         let username = this.app.getUsername(),
             password = this.app.getPassword(),
             email = this.app.getEmail();
+
+        // Assign username to palyer object (will get overriden after login is completed).
+        this.game.player.name = username.toLowerCase();
 
         // Send register packet if the user is registering.
         if (this.app.isRegistering())
@@ -401,6 +405,11 @@ export default class Connection {
                 if (info.forced) entity.stop(true);
                 break;
             }
+
+            case Opcodes.Movement.Speed: {
+                entity.movementSpeed = info.movementSpeed!;
+                break;
+            }
         }
     }
 
@@ -515,18 +524,17 @@ export default class Connection {
         let currentPlayerTarget = target.instance === this.game.player.instance,
             currentPlayerAttacker = attacker.instance === this.game.player.instance,
             isPoison = info.hit.type === Modules.Hits.Poison,
-            isTerror = info.hit.type === Modules.Hits.Terror,
-            isCold = info.hit.type === Modules.Hits.Cold;
+            isFreezing = info.hit.type === Modules.Hits.Freezing,
+            isBurning = info.hit.type === Modules.Hits.Burning;
 
         // Set the terror effect onto the target.
-        if (isTerror) target.setEffect(Modules.Effects.Terror);
-        if (isPoison) target.setEffect(Modules.Effects.Poisonball);
+        if (isPoison) target.addEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
-        if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
+        if (info.hit.type === Modules.Hits.Critical) target.addEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
-        if (!info.hit.aoe && !isPoison && !isCold) {
+        if (!info.hit.aoe && !isPoison && !isFreezing && !isBurning) {
             attacker.lookAt(target);
             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         }
@@ -632,58 +640,13 @@ export default class Connection {
      */
 
     private handleCommand(info: CommandPacket): void {
-        if (info.command.includes('toggle') && this.game.player.hasEffect())
-            return this.game.player.removeEffect();
+        if (info.command.includes('toggle') && this.game.player.hasActiveEffect())
+            return this.game.player.removeAllEffects();
 
         switch (info.command) {
             case 'debug': {
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
-            }
-
-            case 'toggleheal': {
-                this.game.player.setEffect(Modules.Effects.Healing);
-                break;
-            }
-
-            case 'toggleterror': {
-                this.game.player.setEffect(Modules.Effects.Terror);
-                break;
-            }
-
-            case 'togglefireball': {
-                this.game.player.setEffect(Modules.Effects.Fireball);
-                break;
-            }
-
-            case 'toggleiceball': {
-                this.game.player.setEffect(Modules.Effects.Iceball);
-                break;
-            }
-
-            case 'togglefire': {
-                this.game.player.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case 'togglefreeze': {
-                this.game.player.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case 'togglestun': {
-                this.game.player.setEffect(Modules.Effects.Stun);
-                break;
-            }
-
-            case 'togglepoison': {
-                this.game.player.setEffect(Modules.Effects.Poisonball);
-                break;
-            }
-
-            case 'toggleboulder': {
-                this.game.player.setEffect(Modules.Effects.Boulder);
-                break;
             }
         }
     }
@@ -860,7 +823,7 @@ export default class Connection {
             case 'hitpoints': {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                character.setEffect(Modules.Effects.Healing);
+                character.addEffect(Modules.Effects.Healing);
                 break;
             }
 
@@ -936,6 +899,9 @@ export default class Connection {
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
         this.game.player.setMana(0);
+
+        // Clear all the statuses.
+        this.game.player.removeAllEffects();
 
         // Stop the music playing.
         this.audio.stopMusic();
@@ -1080,13 +1046,7 @@ export default class Connection {
     private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
-                //this.menu.enchant.add(info.type!, info.index!);
-                break;
-            }
-
-            case Opcodes.Enchant.Remove: {
-                //this.menu.enchant.moveBack(info.type!, info.index);
-                break;
+                return this.menu.getEnchant().move(info.index, info.isShard);
             }
         }
     }
@@ -1095,8 +1055,20 @@ export default class Connection {
      * Unimplemented guild packet.
      */
 
-    private handleGuild(opcode: Opcodes.Guild): void {
-        log.debug(`Guild Opcode: ${opcode}`);
+    private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+        switch (opcode) {
+            case Opcodes.Guild.Login: {
+                this.game.player.setGuild(info);
+                break;
+            }
+
+            case Opcodes.Guild.Leave: {
+                this.game.player.setGuild();
+                break;
+            }
+        }
+
+        this.menu.getGuilds().handle(opcode, info);
     }
 
     /**
@@ -1224,7 +1196,7 @@ export default class Connection {
      * @param opcode The type of action we are performing with the camera.
      */
 
-    private handleCamera(opcode: Opcodes.Camera): void {
+    private handleCamera(_opcode: Opcodes.Camera): void {
         //
     }
 
@@ -1363,29 +1335,12 @@ export default class Connection {
         if (!entity) return;
 
         switch (opcode) {
-            case Opcodes.Effect.Speed: {
-                entity.movementSpeed = info.movementSpeed!;
-                break;
+            case Opcodes.Effect.Add: {
+                return entity.addEffect(info.effect);
             }
 
-            case Opcodes.Effect.Stun: {
-                entity.stunned = !!info.state;
-                break;
-            }
-
-            case Opcodes.Effect.Freeze: {
-                entity.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case Opcodes.Effect.Burn: {
-                entity.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case Opcodes.Effect.None: {
-                entity.setEffect(Modules.Effects.None);
-                break;
+            case Opcodes.Effect.Remove: {
+                return entity.removeEffect(info.effect);
             }
         }
     }

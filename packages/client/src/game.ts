@@ -8,18 +8,17 @@ import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
 import Player from './entity/character/player/player';
-import PlayerHandler from './entity/character/player/playerhandler';
+import Handler from './entity/character/player/handler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
-import Utils from './utils/util';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
+import { agent } from './utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -29,12 +28,11 @@ import type Entity from './entity/entity';
 import type Storage from './utils/storage';
 
 export default class Game {
+    public player: Player;
     public storage: Storage;
 
-    public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
-
-    public player: Player = new Player('');
+    public map: Map;
+    public camera: Camera;
 
     public zoning: Zoning = new Zoning();
     public overlays: Overlays = new Overlays();
@@ -67,6 +65,11 @@ export default class Game {
 
     public constructor(public app: App) {
         this.storage = app.storage;
+
+        this.player = new Player('', this);
+
+        this.map = new Map(this);
+        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
 
         this.renderer = new Renderer(this);
         this.menu = new MenuController(this);
@@ -166,7 +169,7 @@ export default class Game {
 
         this.camera.centreOn(this.player);
 
-        new PlayerHandler(this, this.player);
+        this.player.handler = new Handler(this.player);
 
         this.renderer.updateAnimatedTiles();
 
@@ -210,6 +213,43 @@ export default class Game {
         if (ignores) this.pathfinder.clearIgnores(this.map.grid);
 
         return path;
+    }
+
+    /**
+     * Used for when the player has selected low power mode and we do not
+     * actively centre the camera on the character. We check the boundaries
+     * of the camera and if the character approaches them we move the camera
+     * in the next quadrant.
+     */
+
+    public updateCameraBounds(): void {
+        // We are not using non-centred camera, so skip.
+        if (!this.zoning) return;
+
+        // Difference between the player and the camera, indicates which boundary we are approaching.
+        let x = this.player.gridX - this.camera.gridX,
+            y = this.player.gridY - this.camera.gridY;
+
+        // Left boundary
+        if (x === 0) this.zoning.setLeft();
+        // Right boundary
+        else if (x === this.camera.gridWidth - 2) this.zoning.setRight();
+        // Top boundary
+        else if (y === 0) this.zoning.setUp();
+        // Bottom boundary
+        else if (y === this.camera.gridHeight - 2) this.zoning.setDown();
+
+        // No zoning has occured, so stop here.
+        if (this.zoning.direction === null) return;
+
+        // Synchronize the camera and reset the zoning directions.
+        this.camera.zone(this.zoning.getDirection());
+
+        // Update the animated tiles.
+        this.renderer.updateAnimatedTiles();
+
+        // Reset the zoning directions.
+        this.zoning.reset();
     }
 
     /**
@@ -273,26 +313,15 @@ export default class Game {
             radius
         );
 
-        /**
-         * Create a slightly larger than a tile boundary around the entity and check
-         * if the position is within that boundary. If it is, then we have found the
-         * entity we are looking for.
-         */
-
-        for (let entity of entities) {
-            let spriteStartX = entity.x - Utils.thirdTile,
-                spriteStartY = entity.y - Utils.thirdTile,
-                spriteEndX = entity.x + Utils.tileAndAQuarter,
-                spriteEndY = entity.y + Utils.tileAndAQuarter;
-
+        // Look through all the entities we found and determine which one is closest to the mouse.
+        for (let entity of entities)
             if (
-                position.x >= spriteStartX &&
-                position.x <= spriteEndX &&
-                position.y >= spriteStartY &&
-                position.y <= spriteEndY
+                position.x >= entity.x + entity.sprite.offsetX &&
+                position.x <= entity.x + entity.sprite.offsetX + entity.sprite.width &&
+                position.y >= entity.y + entity.sprite.offsetY &&
+                position.y <= entity.y + entity.sprite.offsetY + entity.sprite.height
             )
                 return entity;
-        }
 
         return undefined;
     }
