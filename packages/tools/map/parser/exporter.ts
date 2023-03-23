@@ -43,8 +43,7 @@ export default class Exporter {
         }
 
         // Create the parser and subsequently parse the map
-        let parser = new Parser(JSON.parse(data)),
-            tilesets = parser.getTilesets();
+        let parser = new Parser(JSON.parse(data));
 
         // Write the server map file.
         fs.writeFile(resolve(serverDestination), parser.getMap(), (error) => {
@@ -63,12 +62,10 @@ export default class Exporter {
         });
 
         // Copy tilesets from the map to the client.
-        for (let key in tilesets) {
-            let name = `tilesheet-${parseInt(key) + 1}.png`;
-
+        for (let tileset of parser.getTilesets())
             fs.copyFile(
-                resolve(path.join(mapDirectory, name)),
-                resolve(path.join(tilesetDirectory, name)),
+                resolve(path.join(mapDirectory, tileset.path)),
+                resolve(path.join(tilesetDirectory, tileset.path)),
                 (error) => {
                     if (error)
                         throw new Error(`An error has occurred while copying tilesets:\n`, {
@@ -76,7 +73,6 @@ export default class Exporter {
                         });
                 }
             );
-        }
     }
 
     /**

@@ -6,7 +6,8 @@ import log from '@kaetram/common/util/log';
 import type {
     ProcessedAnimation,
     ProcessedMap,
-    ProcessedResource
+    ProcessedResource,
+    ProcessedTileset
 } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
@@ -47,7 +48,7 @@ export default class ProcessMap {
             collisions: [],
             entities: {},
 
-            tilesets: {},
+            tilesets: [],
             animations: {},
 
             plateau: {},
@@ -77,17 +78,22 @@ export default class ProcessMap {
             return;
         }
 
-        for (let tileset of tilesets) {
+        for (let key in tilesets) {
+            let tileset = tilesets[key];
+
             /**
-             * All the tilesets follow the format of `tilesheet_NUMBER`.
-             * We extract the number in this process, which allows us to properly
-             * organize them. Alongside that, we also store the first tileId
-             * of each tileset (firstGID) as the key's value.
+             * An upgrade from the hardcoded method of implementing tilesets.
+             * This system uses the ID of the tileset from Tiled to store information
+             * about the tileset. We calculate its first tile id and last tile id.
+             * We ignore the entities layer as it is not a tileset for rendering.
              */
 
-            let [, tilesetId] = tileset.name.split('-');
-
-            if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
+            if (tileset.name !== 'Entities')
+                this.map.tilesets!.push({
+                    firstGid: tileset.firstgid - 1,
+                    lastGid: tileset.firstgid - 1 + tileset.tilecount - 1,
+                    path: tileset.image
+                });
 
             this.parseTileset(tileset);
         }
@@ -670,7 +676,12 @@ export default class ProcessMap {
         });
     }
 
-    public getTilesets(): { [tilesetId: number]: number } {
+    /**
+     * Returns the tileset data.
+     * @returns The dictionary of processed tilesets.
+     */
+
+    public getTilesets(): ProcessedTileset[] {
         return this.map.tilesets!;
     }
 }
