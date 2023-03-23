@@ -18,8 +18,10 @@ export default class Connection {
     private lastMessageTime = Date.now();
     private messageDifference = 100; // Prevent duplicate messages coming in faster than 100ms.
 
-    private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+
+    private verifyInterval: NodeJS.Timeout | null = null;
+    private disconnectTimeout: NodeJS.Timeout | null = null;
 
     public closed = false;
 
@@ -29,6 +31,9 @@ export default class Connection {
         // Convert the IP address hex string to a readable IP address.
         this.address =
             socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
+
+        // Run the verification inteval every 30 seconds to ensure the connection is still open.
+        this.verifyInterval = setInterval(this.isClosed.bind(this), 30_000); // 30 seconds
 
         log.info(`Received socket connection from: ${this.address}.`);
     }
@@ -71,7 +76,9 @@ export default class Connection {
         log.info(`Closing socket connection to: ${this.address}.`);
 
         this.closeCallback?.();
+
         this.clearTimeout();
+        this.clearVerifyInterval();
     }
 
     /**
@@ -86,6 +93,17 @@ export default class Connection {
 
         // Start a new timeout and set the player's timeout variable.
         this.disconnectTimeout = setTimeout(() => this.reject('timeout'), duration);
+    }
+
+    /**
+     * Removes the connection verification interval.
+     */
+
+    private clearVerifyInterval(): void {
+        if (!this.verifyInterval) return;
+
+        clearInterval(this.verifyInterval);
+        this.verifyInterval = null;
     }
 
     /**
@@ -114,6 +132,20 @@ export default class Connection {
             message === this.lastMessage &&
             Date.now() - this.lastMessageTime < this.messageDifference
         );
+    }
+
+    /**
+     * Verifies whether the connection has been closed and the
+     * player is still online. This should not occur unless the
+     * connection improperly closes.
+     */
+
+    private isClosed(): void {
+        if (!this.closed) return;
+
+        log.warning(`Connection ${this.address} closed improperly.`);
+
+        this.handleClose();
     }
 
     /**
