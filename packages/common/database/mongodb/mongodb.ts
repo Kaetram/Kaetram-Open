@@ -101,9 +101,14 @@ export default class MongoDB {
                 bcryptjs.compare(player.password, info.password, (error: Error, result) => {
                     if (error) throw error;
 
-                    // Reject if password hashes don't match.
-                    if (result) player.load(info);
-                    else player.connection.reject('invalidlogin');
+                    // Reject if the password is incorrect.
+                    if (!result) return player.connection.reject('invalidlogin');
+
+                    // Successfully passed login checks, we can send packets now.
+                    player.authenticated = true;
+
+                    // Login successful, load player data.
+                    player.load(info);
                 });
             }
         });

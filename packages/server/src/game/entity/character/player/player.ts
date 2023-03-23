@@ -103,6 +103,7 @@ export default class Player extends Character {
     public handler: Handler;
 
     public ready = false; // indicates if login processed finished
+    public authenticated = false;
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
