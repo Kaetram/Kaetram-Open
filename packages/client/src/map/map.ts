@@ -159,8 +159,8 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        for (let tileset of this.rawTilesets)
-            this.loadTileset(tileset, (tileset: TilesetInfo) => {
+        for (let rawTileset of this.rawTilesets)
+            this.loadTileset(rawTileset, (tileset: TilesetInfo) => {
                 this.tilesets.push(tileset);
 
                 // If we've loaded all the tilesets, map is now allowed to be marked as ready.
