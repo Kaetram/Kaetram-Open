@@ -819,6 +819,149 @@
     "offsetY": -8
   },
   {
+    "id": "babydemonnpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "demonnpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "butterflynpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "girlnpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "girlnpc2",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "mayornpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "medicnpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "seanpc",
+    "width": 48,
+    "height": 48,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "spidernpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "tigernpc",
+    "width": 42,
+    "height": 42,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
+    "id": "warriornpc",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -16
+  },
+  {
     "id": "bearseonbiarmor",
     "width": 32,
     "height": 32,
@@ -3104,7 +3247,276 @@
     "offsetX": -8,
     "offsetY": -12
   },
-
+  {
+    "id": "coolguyarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "dragonmagicarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "magicarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "metalscarabarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "superheroarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "tigerarcherarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
   {
     "id": "ghost",
     "width": 32,
@@ -5879,6 +6291,141 @@
   },
   {
     "id": "gayarcherarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "antarcherarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "antladyarcherarmor",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "atk_right": {
+        "length": 5,
+        "row": 0
+      },
+      "walk_right": {
+        "length": 4,
+        "row": 1
+      },
+      "idle_right": {
+        "length": 2,
+        "row": 2
+      },
+      "atk_up": {
+        "length": 5,
+        "row": 3
+      },
+      "walk_up": {
+        "length": 4,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 2,
+        "row": 5
+      },
+      "atk_down": {
+        "length": 5,
+        "row": 6
+      },
+      "walk_down": {
+        "length": 4,
+        "row": 7
+      },
+      "idle_down": {
+        "length": 2,
+        "row": 8
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
+    "id": "astronomerarmor",
     "width": 32,
     "height": 32,
     "animations": {

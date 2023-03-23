@@ -251,5 +251,49 @@
   "santaelfnpc": {
     "name": "Santa's Helper",
     "text": ["What do you want? I'm busy being overworked."]
+  },
+
+  "babydemonnpc": {
+    "name": "Baby Demon"
+  },
+
+  "butterflynpc": {
+    "name": "Butterfly Lady"
+  },
+
+  "demonnpc": {
+    "name": "Demon Man"
+  },
+
+  "girlnpc": {
+    "name": "Angel"
+  },
+
+  "girlnpc2": {
+    "name": "Iz"
+  },
+
+  "mayornpc": {
+    "name": "Mayor"
+  },
+
+  "medicnpc": {
+    "name": "Medic"
+  },
+
+  "seanpc": {
+    "name": "Sea Lord"
+  },
+
+  "spidernpc": {
+    "name": "Spider"
+  },
+
+  "tigernpc": {
+    "name": "Tiger Man"
+  },
+
+  "warriornpc": {
+    "name": "Warrior"
   }
 }
