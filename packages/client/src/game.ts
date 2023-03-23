@@ -39,7 +39,7 @@ export default class Game {
     public pathfinder: Pathfinder = new Pathfinder();
 
     public info: InfoController = new InfoController();
-    public sprites: SpritesController = new SpritesController();
+    public sprites: SpritesController;
 
     public minigame: Minigame = new Minigame();
 
@@ -70,6 +70,7 @@ export default class Game {
 
         this.map = new Map(this);
         this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+        this.sprites = new SpritesController();
 
         this.renderer = new Renderer(this);
         this.menu = new MenuController(this);
