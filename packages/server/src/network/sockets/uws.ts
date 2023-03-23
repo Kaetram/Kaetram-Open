@@ -20,7 +20,7 @@ export default class UWS extends WebSocket {
             .get('/*', this.httpResponse.bind(this))
             .ws('/*', {
                 compression: DISABLED,
-                idleTimeout: 10,
+                idleTimeout: 15,
                 maxPayloadLength: 32 * 1024 * 1024,
 
                 upgrade: this.handleUpgrade.bind(this),
