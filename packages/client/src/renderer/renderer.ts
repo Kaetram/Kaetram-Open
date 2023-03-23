@@ -508,22 +508,22 @@ export default class Renderer {
 
         // let posX = this.game.input.selectedX,
         //     posY = this.game.input.selectedY,
-        let tD = this.game.input.getTargetData(); // target data
+        let targetData = this.game.input.getTargetData(); // target data
 
-        if (tD) {
+        if (targetData) {
             this.entitiesContext.save();
             this.setCameraView(this.entitiesContext);
 
             this.entitiesContext.drawImage(
-                tD.sprite.image,
-                tD.x,
-                tD.y,
-                tD.width,
-                tD.height,
-                tD.dx,
-                tD.dy,
-                tD.dw,
-                tD.dh
+                targetData.sprite.image,
+                targetData.x,
+                targetData.y,
+                targetData.width,
+                targetData.height,
+                targetData.dx,
+                targetData.dy,
+                targetData.dw,
+                targetData.dh
             );
 
             this.entitiesContext.restore();
