@@ -40,6 +40,8 @@ export default class Connection {
      */
 
     public reject(reason: string): void {
+        if (this.closed) return;
+
         this.sendUTF8(reason);
         this.close(reason);
     }
@@ -52,7 +54,8 @@ export default class Connection {
      */
 
     public close(details?: string): void {
-        this.socket.end();
+        // Prevent accessing a closed connection.
+        if (!this.closed) this.socket.end();
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
     }
