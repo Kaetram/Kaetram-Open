@@ -63,6 +63,8 @@ export default class ProcessMap {
 
         this.parseTilesets();
         this.parseLayers();
+
+        this.format();
     }
 
     /**
@@ -240,8 +242,6 @@ export default class ProcessMap {
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
         this.parseTileLayerData(layer.data);
-
-        this.format();
     }
 
     /**
@@ -484,7 +484,7 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        for (let index in this.map.data) if (!this.map.data[index]) this.map.data[index] = 0;
+        for (let i = 0; i < this.map.data.length; i++) if (!this.map.data[i]) this.map.data[i] = 0;
     }
 
     /**
