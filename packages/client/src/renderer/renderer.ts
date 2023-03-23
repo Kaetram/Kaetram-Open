@@ -1135,7 +1135,7 @@ export default class Renderer {
 
         if (!(tileId in this.tiles)) {
             let setWidth = tileset.width / this.tileSize,
-                relativeTileId = tileId - tileset.firstGID;
+                relativeTileId = tileId - tileset.firstGid;
 
             this.tiles[tileId] = {
                 relativeTileId,
