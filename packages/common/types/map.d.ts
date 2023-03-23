@@ -124,11 +124,9 @@ export interface ProcessedResource {
 }
 
 export interface ProcessedTileset {
-    name: string;
-    firstGID: number;
-    lastGID: number;
-    imageName: string;
-    scale: number;
+    firstGid: number;
+    lastGid: number;
+    path: string;
 }
 
 export interface ProcessedAnimation {
@@ -148,7 +146,7 @@ export interface ProcessedMap {
     entities: { [tileId: number]: string };
 
     // tilesetId: firstGid
-    tilesets?: { [tilesetId: number]: number };
+    tilesets?: ProcessedTileset[];
     animations?: { [tileId: number]: ProcessedAnimation[] };
     depth?: number;
 
