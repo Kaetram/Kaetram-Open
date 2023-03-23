@@ -51,13 +51,16 @@ export default class Connection {
      * Depending on the type of socket currently present, a different function is used
      * for closing the connection.
      * @param details Optional parameter for debugging why connection was closed.
+     * @param force Whether or not to forcefully call the close callback.
      */
 
-    public close(details?: string): void {
+    public close(details?: string, force = false): void {
         // Prevent accessing a closed connection.
         if (!this.closed) this.socket.end();
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
+
+        if (force) this.handleClose();
     }
 
     /**
