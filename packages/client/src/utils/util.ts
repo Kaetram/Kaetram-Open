@@ -234,7 +234,6 @@ export default {
     getHurtSprite(sprite: Sprite): Sprite {
         let canvas = document.createElement('canvas'),
             context = canvas.getContext('2d')!,
-            spriteData: ImageData,
             hurtSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
 
         canvas.width = sprite.image.width;
@@ -242,7 +241,8 @@ export default {
 
         // Draw an image of the sprite onto the canvas.
         context.drawImage(sprite.image, 0, 0, sprite.image.width, sprite.image.height);
-        spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
+
+        let spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
 
         /**
          * This function iterates through the pixel data. The context data stores pixel information
@@ -271,6 +271,70 @@ export default {
         hurtSprite.loaded = true;
 
         return hurtSprite;
+    },
+
+    /**
+     * A silhouette is a yellow hue that is drawn around the sprite. It is used for
+     * highlighting a sprite when hovering over it.
+     */
+
+    getSilhouetteSprite(sprite: Sprite): Sprite {
+        let canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!,
+            silhouetteSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
+
+        canvas.width = sprite.image.width;
+        canvas.height = sprite.image.height;
+
+        // Draw an image of the sprite onto the canvas.
+        context.drawImage(sprite.image, 0, 0, sprite.image.width, sprite.image.height);
+
+        let spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height),
+            cloneData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
+
+        /**
+         * We iterate each pixel (4 indices) and look for a pixel that has a zero alpha value
+         * but also has an adjacent pixel that has a non-zero alpha value. If this is the case,
+         * we set the pixel colour to (255, 255, 150) and alpha to 150.
+         */
+
+        for (let i = 0; i < cloneData.data.length; i += 4) {
+            // Non-empty pixels are skipped.
+            if (cloneData.data[i + 3] !== 0) continue;
+
+            // Extract the x and y coordinates of the pixel.
+            let x = (i / 4) % sprite.image.width,
+                y = Math.floor(i / 4 / sprite.image.width);
+
+            // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
+            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)
+                continue;
+
+            // Verify the up, down, left and right pixels.
+            let adjacentPixels = [
+                cloneData.data[i - 1], // Left
+                cloneData.data[i + 7], // Right
+                cloneData.data[i - cloneData.width * 4 + 3], // Up
+                cloneData.data[i + cloneData.width * 4 + 3] // Down
+            ];
+
+            // If any of the adjacent pixels are non-empty, we set the current pixel to yellow.
+            if (adjacentPixels.some((pixel) => pixel !== 0)) {
+                spriteData.data[i] = spriteData.data[i + 1] = 255;
+                spriteData.data[i + 2] = spriteData.data[i + 3] = 150;
+            }
+        }
+
+        // Apply the new image data onto the context
+        context.putImageData(spriteData, 0, 0);
+
+        // Update the image of the silhouette sprite.
+        silhouetteSprite.image = canvas;
+
+        // Toggle as loaded for use
+        silhouetteSprite.loaded = true;
+
+        return silhouetteSprite;
     },
 
     /**

@@ -469,7 +469,10 @@ export default class InputController {
     public moveCursor(): void {
         if (isMobile()) return;
 
-        let position = this.getCoords();
+        let position = this.getCoords(),
+            entity = this.game.searchForEntityAt(position);
+
+        if (!entity && this.entity) this.entity.updateSilhouette(false);
 
         // The entity we are currently hovering over.
         this.entity = this.game.searchForEntityAt(position);
@@ -499,6 +502,8 @@ export default class InputController {
 
             return;
         }
+
+        this.entity.updateSilhouette(true);
 
         switch (this.entity.type) {
             case Modules.EntityType.Item:
