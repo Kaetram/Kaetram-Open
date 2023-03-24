@@ -39,7 +39,9 @@ export default class Sprite {
     public animations: Animations = {};
 
     public image!: HTMLImageElement | HTMLCanvasElement;
+
     public hurtSprite!: Sprite;
+    public silhouetteSprite!: Sprite;
 
     private loadCallback?(): void;
 
@@ -90,6 +92,9 @@ export default class Sprite {
 
             if (!this.key.startsWith('item-') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
+
+            // Load the silhouette sprite for the entity.
+            this.silhouetteSprite = Utils.getSilhouetteSprite(this);
 
             // Loading only done after the hurt sprite.
             this.loading = false;
