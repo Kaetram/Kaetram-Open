@@ -210,9 +210,7 @@ export default class Character extends Entity {
 
         this.sprite = this.hurtSprite;
 
-        window.setTimeout(() => {
-            this.sprite = this.normalSprite;
-        }, 100);
+        window.setTimeout(() => (this.sprite = this.normalSprite), 100);
     }
 
     /**

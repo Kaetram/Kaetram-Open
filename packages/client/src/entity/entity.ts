@@ -124,6 +124,17 @@ export default abstract class Entity {
     }
 
     /**
+     * Updates the entity's silhouette sprite.
+     * @param active Whether or not to show the silhouette.
+     */
+
+    public updateSilhouette(active = false): void {
+        if (!this.silhouetteSprite) return;
+
+        this.sprite = active ? this.silhouetteSprite : this.normalSprite;
+    }
+
+    /**
      * Updates the sprite of the entity with a new one.
      * @param sprite The new sprite object (obtained using the sprites controller).
      */
@@ -151,12 +162,16 @@ export default abstract class Entity {
             return;
         }
 
+        // Load the hurt and silhouette sprites if they exist.
         if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
+        if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
 
         sprite.onLoad(() => {
             this.normalSprite = sprite;
 
+            // Load the hurt and silhouette sprites if they exist.
             if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
+            if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
 
             // Custom scales can be applied to certain entities.
             if (!this.customScale) return;
