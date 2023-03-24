@@ -4,7 +4,6 @@ import { Modules } from '@kaetram/common/network';
 
 import type Animation from './animation';
 import type Sprite from './sprite';
-import type { Animations } from './sprite';
 
 export default abstract class Entity {
     public x = 0;
@@ -32,23 +31,22 @@ export default abstract class Entity {
 
     public animation!: Animation | null;
 
-    private animations!: Animations;
     protected idleSpeed = 450;
 
     public shadowOffsetY = 0;
     public hidden = false;
 
-    public spriteLoaded = false;
     private visible = true;
+
     public fading = false;
 
-    public angled = false;
     public angle = 0;
+    public angled = false;
 
     public hasCounter = false;
 
-    public countdownTime = 0;
     public counter = 0;
+    public countdownTime = 0;
     public fadingDuration = 1000;
 
     public orientation: Modules.Orientation = Modules.Orientation.Down;
@@ -58,10 +56,9 @@ export default abstract class Entity {
 
     public normalSprite!: Sprite;
     public hurtSprite!: Sprite;
+    public silhouetteSprite!: Sprite;
 
     public ready = false;
-
-    private readyCallback?(): void;
 
     public hitPoints = 0;
     public maxHitPoints = 0;
@@ -132,31 +129,41 @@ export default abstract class Entity {
      */
 
     public setSprite(sprite: Sprite): void {
-        if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
+        // Load the sprite if it hasn't been loaded yet.
+        if (!sprite.loaded) {
+            sprite.load();
 
-        if (this.isPlayer()) sprite.loadHurt = true;
-
-        if (!sprite.loaded) sprite.load();
-
-        sprite.name = sprite.id;
+            // Make sure we're not setting the same sprite.
+            if (this.sprite?.key === sprite.key) return;
+        }
 
         this.sprite = sprite;
+        this.normalSprite = sprite;
 
-        this.normalSprite = this.sprite;
-        this.animations = sprite.createAnimations();
+        /**
+         * Attempt to reload the sprite if it's still loading, we do this
+         * because we want all elements of the sprite (hurt sprite, silhouette)
+         * to be fully loaded and then apply them to the entity.
+         */
+
+        if (sprite.loading) {
+            setTimeout(() => this.setSprite(sprite), 100);
+            return;
+        }
+
+        if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
 
         sprite.onLoad(() => {
-            if (sprite.loadHurt) this.hurtSprite = sprite.hurtSprite;
+            this.normalSprite = sprite;
 
-            if (this.customScale) {
-                this.sprite.offsetX *= this.customScale;
-                this.sprite.offsetY *= this.customScale;
-            }
+            if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
+
+            // Custom scales can be applied to certain entities.
+            if (!this.customScale) return;
+
+            this.sprite.offsetX *= this.customScale;
+            this.sprite.offsetY *= this.customScale;
         });
-
-        this.spriteLoaded = true;
-
-        this.readyCallback?.();
     }
 
     /**
@@ -173,13 +180,14 @@ export default abstract class Entity {
         count = 0,
         onEndCount?: () => void
     ): void {
-        if (!this.spriteLoaded || this.animation?.name === name) return;
+        // Prevent setting animation if no sprite or it's the same animation.
+        if (this.animation?.name === name) return;
 
-        let anim = this.animations[name];
+        let animation = this.sprite.animations[name];
 
-        if (!anim) return;
+        if (!animation) return;
 
-        this.animation = anim;
+        this.animation = animation;
 
         // Restart the attack animation if it's already playing.
         if (name.startsWith('atk')) this.animation.reset();

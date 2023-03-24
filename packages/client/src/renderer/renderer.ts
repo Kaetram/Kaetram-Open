@@ -543,8 +543,7 @@ export default class Renderer {
 
         this.forEachVisibleEntity((entity: Entity) => {
             // Skip entities that aren't properly loaded or are invisible.
-            if (!entity.spriteLoaded || !entity.sprite || !entity.animation || !entity.isVisible())
-                return;
+            if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
 
             this.drawEntity(entity);
         });
@@ -824,15 +823,15 @@ export default class Renderer {
         if (!weapon.loaded) weapon.load();
 
         let animation = player.animation!,
-            weaponAnimationData = weapon.animationData[animation.name];
+            weaponAnimations = weapon.animations[animation.name];
 
-        if (!weaponAnimationData) return;
+        if (!weaponAnimations) return;
 
         let { frame, row } = animation,
             index =
-                frame.index < weaponAnimationData.length
+                frame.index < weaponAnimations.length
                     ? frame.index
-                    : frame.index % weaponAnimationData.length,
+                    : frame.index % weaponAnimations.length,
             weaponX = weapon.width * index,
             weaponY = weapon.height * row,
             weaponWidth = weapon.width,

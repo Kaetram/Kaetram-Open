@@ -24,8 +24,6 @@ export default class SpritesController {
         for (let data of spriteData as SpriteData[]) {
             let sprite = new Sprite(data);
 
-            sprite.loadSprite();
-
             this.sprites[data.id] = sprite;
         }
 

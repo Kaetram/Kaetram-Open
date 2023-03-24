@@ -206,13 +206,13 @@ export default class Character extends Entity {
      */
 
     public toggleHurt(): void {
-        if (this.dead || this.teleporting) return;
+        if (this.dead || this.teleporting || !this.hurtSprite) return;
 
         this.sprite = this.hurtSprite;
 
         window.setTimeout(() => {
             this.sprite = this.normalSprite;
-        }, 75);
+        }, 100);
     }
 
     /**
