@@ -1,6 +1,5 @@
 import Animation from './animation';
 
-import log from '../lib/log';
 import Utils from '../utils/util';
 
 import type spriteData from '../../data/sprites.json';
@@ -21,135 +20,112 @@ export interface Animations {
 }
 
 export default class Sprite {
-    public id;
+    public key = '';
 
-    public name!: string;
-    public type!: string;
+    private path = '';
 
-    public loaded = false;
-    public loadHurt = false;
+    public width = Utils.tileSize;
+    public height = Utils.tileSize;
 
     public offsetX = 0;
     public offsetY = 0;
-    // private offsetAngle!: number;
 
-    public hurtSprite = {
-        loaded: false
-    } as Sprite;
+    public idleSpeed = 450;
+
+    public loaded = false;
+    public loading = false;
+    public hasDeathAnimation = false;
+
+    public animations: Animations = {};
 
     public image!: HTMLImageElement | HTMLCanvasElement;
-    private filepath!: string;
+    public hurtSprite!: Sprite;
 
     private loadCallback?(): void;
 
-    public animationData!: AnimationData;
+    public constructor(public data: SpriteData) {
+        this.key = this.data.id;
 
-    public width!: number;
-    public height!: number;
+        this.path = `/img/sprites/${this.key}.png`;
 
-    public idleSpeed!: number;
-    public hasDeathAnimation!: boolean;
+        this.width = this.data.width ?? Utils.tileSize;
+        this.height = this.data.height ?? Utils.tileSize;
 
-    public constructor(private sprite: SpriteData) {
-        this.id = sprite.id;
+        this.offsetX = this.data.offsetX ?? -Utils.tileSize;
+        this.offsetY = this.data.offsetY ?? -Utils.tileSize;
+
+        this.idleSpeed = this.data.idleSpeed || this.idleSpeed;
+
+        // Have the animations prepared for the sprite.
+        this.loadAnimations();
     }
 
+    /**
+     * Loads the sprite image information for an entity. The `load` function
+     * is called on a demand basis, instead of initializing all sprites when
+     * we load the client, we initialize it as we find entities throughout the
+     * world. This may be changed in the future.
+     */
+
     public load(): void {
+        if (this.loading || this.loaded) return;
+
+        this.loading = true;
+
         this.image = new Image();
 
-        let { image, filepath } = this;
+        this.image.crossOrigin = 'Anonymous';
+        this.image.src = this.path;
 
-        image.crossOrigin = 'Anonymous';
-        image.src = filepath;
-
-        image.addEventListener('load', () => {
-            let { loadHurt } = this;
-
+        // Callback for when the image successfully loads.
+        this.image.addEventListener('load', () => {
             this.loaded = true;
 
-            if (loadHurt) this.createHurtSprite();
+            /**
+             * We ignore small sprites and item sprites when drawing hurt sprites.
+             * The logic we're using is skipping keys that start with `item-*` and
+             * sprites whose width is less than 96 (assumed 4 animations and a small
+             * sprite of 24x24).
+             */
+
+            if (!this.key.startsWith('item-') && this.image.width > 96)
+                this.hurtSprite = Utils.getHurtSprite(this);
+
+            // Loading only done after the hurt sprite.
+            this.loading = false;
 
             this.loadCallback?.();
         });
     }
 
-    public loadSprite(): void {
-        let { sprite, id } = this,
-            path = `/img/sprites/${id}.png`;
+    /**
+     * Loads the animations for the said sprite. Parses through all of the animation
+     * objects and creates a new animation instance for each one. We also check if the
+     * sprite has a specific death animation, otherwise the generic one will be used.
+     */
 
-        this.filepath = path;
-        this.animationData = sprite.animations;
+    private loadAnimations(): void {
+        for (let name in this.data.animations) {
+            let info = this.data.animations[name];
 
-        this.width = sprite.width ?? Utils.tileSize;
-        this.height = sprite.height ?? Utils.tileSize;
+            // Use a specified death animation if it exists, set the flag to true for later use.
+            if (name === 'death') this.hasDeathAnimation = true;
 
-        this.offsetX = sprite.offsetX ?? -Utils.tileSize;
-        this.offsetY = sprite.offsetY ?? -Utils.tileSize;
-        // this.offsetAngle = sprite.offsetAngle ?? 0;
-
-        this.idleSpeed = sprite.idleSpeed || 450;
-    }
-
-    public createAnimations(): Animations {
-        let { animationData, width, height } = this,
-            animations: Animations = {};
-
-        for (let name in animationData) {
-            if (!Object.prototype.hasOwnProperty.call(animationData, name)) continue;
-
-            if (name === 'death')
-                // Check if sprite has a death animation
-                this.hasDeathAnimation = true;
-
-            let { length, row } = animationData[name];
-
-            animations[name] = new Animation(name, length, row, width, height);
+            // Create an animation for the sprite.
+            this.animations[name] = new Animation(
+                name,
+                info.length,
+                info.row,
+                this.width,
+                this.height
+            );
         }
-
-        return animations;
     }
 
     /**
-     * This is when an entity gets hit, they turn red then white.
+     * Callback for when the sprite has successfully loaded. Used to load
+     * additional extra information afterwards.
      */
-    private createHurtSprite(): void {
-        if (!this.loaded) this.load();
-
-        if (this.hurtSprite.loaded) return;
-
-        let canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!,
-            spriteData: ImageData;
-
-        canvas.width = this.image.width;
-        canvas.height = this.image.height;
-
-        try {
-            context.drawImage(this.image, 0, 0, this.image.width, this.image.height);
-
-            spriteData = context.getImageData(0, 0, this.image.width, this.image.height);
-
-            for (let i = 0; i < spriteData.data.length; i += 4) {
-                spriteData.data[i] = 255;
-                spriteData.data[i + 1] = spriteData.data[i + 2] = 75;
-            }
-
-            context.putImageData(spriteData, 0, 0);
-
-            this.hurtSprite = {
-                image: canvas,
-                name: 'hurt',
-                loaded: true,
-                offsetX: this.offsetX,
-                offsetY: this.offsetY,
-                width: this.width,
-                height: this.height,
-                type: 'hurt'
-            } as Sprite;
-        } catch (error) {
-            log.error('Could not load hurt sprite.', error);
-        }
-    }
 
     public onLoad(callback: () => void): void {
         this.loadCallback = callback;
