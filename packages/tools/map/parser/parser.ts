@@ -54,6 +54,7 @@ export default class ProcessMap {
             plateau: {},
 
             high: [],
+            obstructing: [],
             objects: [],
             areas: {},
             cursors: {},
@@ -122,6 +123,8 @@ export default class ProcessMap {
                     break;
                 }
             }
+
+        this.parseObstructingTiles();
     }
 
     /**
@@ -177,7 +180,7 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, objects, cursors } = this.map;
+            { high, obstructing, objects, cursors } = this.map;
 
         if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
 
@@ -189,6 +192,11 @@ export default class ProcessMap {
 
             case 'o': {
                 objects.push(tileId);
+                break;
+            }
+
+            case 'obs': {
+                obstructing.push(tileId);
                 break;
             }
 
@@ -446,6 +454,36 @@ export default class ProcessMap {
 
             callback(resource);
         }
+    }
+
+    /**
+     * Looks through all the tiles in the map and finds which one contain a hidden
+     * tile at their uppermost layer. We remove the layers behind the hidden tile.
+     */
+
+    private parseObstructingTiles(): void {
+        let { data, obstructing } = this.map,
+            clearedTiles = 0;
+
+        // For every tile that has a hidden property, we want to remove the tiles behind it.
+        for (let index in data) {
+            let tile = data[index];
+
+            // Ignore non-array tiles.
+            if (!Array.isArray(data)) continue;
+
+            // Find the last tile in the array.
+            let lastTile = (tile as number[])[(tile as number[]).length - 1];
+
+            // If the last tile is hidden, we remove the tile.
+            if (obstructing.includes(lastTile)) {
+                data[index] = lastTile;
+
+                clearedTiles++;
+            }
+        }
+
+        log.notice(`Found ${clearedTiles} full tiles that overlap.`);
     }
 
     /**
