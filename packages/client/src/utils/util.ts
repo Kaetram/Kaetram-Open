@@ -1,5 +1,7 @@
 import { onSecondaryPress } from './press';
 
+import Sprite from '../entity/sprite';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -219,6 +221,56 @@ export default {
             archery: 0,
             magic: 0
         };
+    },
+
+    /**
+     * Given the input of a sprite, we generate a hurt sprite. A hurt sprite
+     * is one that has all non-empty pixels turned a shade of red. We assume that
+     * the sprite is loaded upon calling this function. The hurt sprite is
+     * identical and can be a clone of the original sprite.
+     * @param sprite The sprite that we want to generate a hurt sprite for.
+     */
+
+    getHurtSprite(sprite: Sprite): Sprite {
+        let canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!,
+            spriteData: ImageData,
+            hurtSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
+
+        canvas.width = sprite.image.width;
+        canvas.height = sprite.image.height;
+
+        // Draw an image of the sprite onto the canvas.
+        context.drawImage(sprite.image, 0, 0, sprite.image.width, sprite.image.height);
+        spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
+
+        /**
+         * This function iterates through the pixel data. The context data stores pixel information
+         * in a 1D array. Each value represents a colour channel (red, green, blue, alpha). At each
+         * 4 indices, information about a single pixel is stored. For example, the first 4 indices
+         * represent the red, green, blue and alpha values of the first pixel. The next 4 indices
+         * represent the red, green, blue and alpha values of the second pixel and so on.
+         */
+
+        for (let i = 0; i < spriteData.data.length; i += 4) {
+            // Skip transparent pixels.
+            if (spriteData.data[i + 4] === 0) continue;
+
+            // 0 - red, 1 - green, 2 - blue, 3 - alpha
+            spriteData.data[i] = 255;
+            spriteData.data[i + 1] = spriteData.data[i + 2] = 75;
+        }
+
+        // Apply the new image data onto the context
+        context.putImageData(spriteData, 0, 0);
+
+        // Update the image of the hurt sprite.
+        hurtSprite.image = canvas;
+
+        // Toggle as loaded for use
+        hurtSprite.loaded = true;
+
+        return hurtSprite;
     },
 
     /**

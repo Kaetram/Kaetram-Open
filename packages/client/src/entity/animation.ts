@@ -15,7 +15,7 @@ export default class Animation {
 
     public constructor(
         public name: string,
-        private length: number,
+        public length: number,
         public row: number,
         private width: number,
         private height: number

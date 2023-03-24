@@ -549,7 +549,7 @@ export default class Connection {
         this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
 
         // Flash the target character when a hit occurs.
-        if (target.hurtSprite) target.toggleHurt();
+        if (info.hit.damage > 0) target.toggleHurt();
 
         // Show the health bar for both entities.
         attacker.triggerHealthBar();

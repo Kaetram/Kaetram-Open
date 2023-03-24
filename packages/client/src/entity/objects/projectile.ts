@@ -61,7 +61,7 @@ export default class Projectile extends Entity {
      */
 
     public getImpactEffect(): Modules.Effects {
-        switch (this.sprite.name) {
+        switch (this.sprite.key) {
             case 'projectile-boulder': {
                 return Modules.Effects.Boulder;
             }
