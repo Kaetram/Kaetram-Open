@@ -154,6 +154,7 @@ export interface ProcessedMap {
 
     high: number[];
     objects: number[];
+    obstructing?: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
     trees: ProcessedResource[];

@@ -21,6 +21,7 @@ export interface PropertyValues {
     type?: string;
     v?: never;
     o?: never;
+    obs?: never;
     tree?: string;
     stump?: string;
     cutstump?: string;
