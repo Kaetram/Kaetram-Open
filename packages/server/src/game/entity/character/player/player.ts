@@ -334,8 +334,8 @@ export default class Player extends Character {
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         this.readyTimeout = setTimeout(() => {
-            if (!this.ready) this.connection.reject('error');
-        }, 10_000);
+            if (!this.ready || this.connection.closed) this.connection.reject('error');
+        }, 5000);
 
         this.setPosition(this.x, this.y);
 
