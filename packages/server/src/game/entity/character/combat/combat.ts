@@ -112,7 +112,7 @@ export default class Combat {
      */
 
     private handleLoop(): void {
-        if (!this.character.hasTarget()) return this.stop();
+        if (!this.character.hasTarget() || this.character.target?.isDead()) return this.stop();
 
         // Do not attack while teleporting.
         if (this.character.teleporting) return;

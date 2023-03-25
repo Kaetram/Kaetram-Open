@@ -45,9 +45,6 @@ export default class Handler {
         this.world = player.world;
         this.map = player.world.map;
 
-        // Disconnect callback
-        this.player.connection.onClose(this.handleClose.bind(this));
-
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
 
@@ -126,50 +123,6 @@ export default class Handler {
 
     public startUpdateInterval(): void {
         this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
-    }
-
-    /**
-     * Callback handler for when the player's connection is closed.
-     */
-
-    private handleClose(): void {
-        // Stops character based intervals.
-        this.player.stop();
-
-        this.clear();
-
-        // Only send discord and hub packets if the player successfully authenticated.
-        if (this.player.authenticated) {
-            this.world.discord.sendMessage(this.player.username, 'has logged out!');
-
-            this.world.client.send(
-                new PlayerPacket(Opcodes.Player.Logout, {
-                    username: this.player.username,
-                    guild: this.player.guild
-                })
-            );
-        }
-
-        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
-
-        this.player.trade.close();
-
-        this.player.combat.stop();
-
-        this.player.skills.stop();
-
-        this.player.clearAreas();
-
-        this.player.minigameArea?.exitCallback?.(this.player);
-
-        this.world.cleanCombat(this.player);
-
-        this.world.syncFriendsList(this.player.username, true);
-        this.world.syncGuildMembers(this.player.guild, this.player.username, true);
-
-        this.player.save();
-
-        this.world.entities.removePlayer(this.player);
     }
 
     /**
@@ -918,7 +871,7 @@ export default class Handler {
      * Clears the timeouts and nullifies them (used for disconnection);
      */
 
-    private clear(): void {
+    public clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
 
