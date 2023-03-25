@@ -138,6 +138,8 @@ export default class Guilds {
      */
 
     public join(player: Player, identifier: string): void {
+        if (player.isGuest) return player.notify('Guests are not allowed to join a guild.');
+
         if (player.guild) return player.notify('You are already in a guild.');
 
         // Attempt to grab the guild from the database.
