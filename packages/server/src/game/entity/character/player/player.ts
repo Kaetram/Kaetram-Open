@@ -179,6 +179,8 @@ export default class Player extends Character {
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.instance, world, '', -1, -1);
 
+        this.connection.onClose(this.handleClose.bind(this));
+
         this.map = this.world.map;
         this.regions = this.world.map.regions;
         this.entities = this.world.entities;
@@ -316,6 +318,61 @@ export default class Player extends Character {
 
     public loadAbilities(): void {
         this.database.loader?.loadAbilities(this, this.abilities.load.bind(this.abilities));
+    }
+
+    /**
+     * Handles closing a connection. We have to take into consideration
+     * that a connection may have closed prior to all the controllers
+     * being initialized, so we have to check for that.
+     */
+
+    public handleClose(): void {
+        // Stops the character-based intervals
+        this.stop();
+
+        // Stops intervals in handler if it has been initialized
+        this.handler?.clear();
+
+        // If authenticated send information to the hub and Discord.
+        if (this.authenticated) {
+            this.world.discord.sendMessage(this.username, 'has logged out!');
+
+            this.world.client.send(
+                new PlayerPacket(Opcodes.Player.Logout, {
+                    username: this.username,
+                    guild: this.guild
+                })
+            );
+        }
+
+        // Send data to the minigames if present...
+        if (this.inMinigame()) this.getMinigame()?.disconnect(this);
+
+        // Stop all trading.
+        this.trade?.close();
+
+        // Stop combat.
+        this.combat?.stop();
+
+        // Stop skilling
+        this.skills?.stop();
+
+        // Clear the player from areas
+        this.clearAreas();
+        this.minigameArea?.exitCallback?.(this);
+
+        // Signal to other attacking entities that we have left.
+        this.world.cleanCombat(this);
+
+        // Synchronize friends list and guilds with the logout status
+        this.world.syncFriendsList(this.username, true);
+        this.world.syncGuildMembers(this.guild, this.username, true);
+
+        // Save the player if authenticated and ready.
+        if (this.authenticated && this.ready) this.save();
+
+        // Remove the player from the region.
+        this.entities.removePlayer(this);
     }
 
     /**
