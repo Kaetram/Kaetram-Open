@@ -195,8 +195,9 @@ export default class ProcessMap {
                 break;
             }
 
+            case 'h':
             case 'obs': {
-                obstructing.push(tileId);
+                obstructing?.push(tileId);
                 break;
             }
 
@@ -476,7 +477,7 @@ export default class ProcessMap {
             let lastTile = (tile as number[])[(tile as number[]).length - 1];
 
             // If the last tile is hidden, we remove the tile.
-            if (obstructing.includes(lastTile)) {
+            if (obstructing?.includes(lastTile)) {
                 data[index] = lastTile;
 
                 clearedTiles++;
