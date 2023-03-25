@@ -430,7 +430,7 @@ export default class Incoming {
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
                 // Ensure the packet has a valid index.
-                if (!packet.fromIndex || packet.fromIndex === -1) return;
+                if (isNaN(packet.fromIndex!) || packet.fromIndex === -1) return;
 
                 return this.player.handleContainerSelect(
                     packet.type,
