@@ -46,7 +46,7 @@ export default class Connection {
 
     public reject(reason: string): void {
         // Tried rejecting an already closed connection, attempt to destroy the player class.
-        if (this.closed) return this.handleClose();
+        if (this.closed) return this.handleClose(reason);
 
         this.sendUTF8(reason);
         this.close(reason);
