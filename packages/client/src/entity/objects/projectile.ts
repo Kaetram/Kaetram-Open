@@ -43,7 +43,7 @@ export default class Projectile extends Entity {
      */
 
     public getAnimationSpeed(): number {
-        return this.idleSpeed;
+        return this.sprite.idleSpeed;
     }
 
     /**
