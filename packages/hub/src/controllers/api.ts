@@ -77,9 +77,14 @@ export default class API {
             return;
         }
 
-        this.servers.findEmpty((server: Server) => {
-            response.json(server.serialize());
-        });
+        let server = this.servers.findEmpty();
+
+        if (!server) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        response.json(server.serialize());
     }
 
     /**
