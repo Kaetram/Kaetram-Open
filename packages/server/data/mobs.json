@@ -483,6 +483,43 @@
     }
   },
 
+  "angel": {
+    "name": "Angel",
+    "description": "Holy moly, this is nothing like how they're described in the bible.",
+    "drops": {},
+    "hitPoints": 1200,
+    "defenseLevel": 18,
+    "attackLevel": 31,
+    "level": 98,
+    "aggroRange": 6,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 450,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 40,
+      "slash": 30,
+      "stab": 30,
+      "archery": 0,
+      "magic": 61
+    },
+    "defenseStats": {
+      "crush": 35,
+      "slash": 18,
+      "stab": 29,
+      "archery": 16,
+      "magic": 52
+    },
+    "bonuses": {
+      "accuracy": 8,
+      "strength": 21,
+      "archery": 4,
+      "magic": 10
+    }
+  },
+
   "ant": {
     "name": "Worker Ant",
     "description": "A hardworking small itty bitty ant!",
@@ -536,21 +573,169 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 20,
-      "slash": 13,
-      "stab": 16,
+      "crush": 60,
+      "slash": 23,
+      "stab": 36,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": -11,
-      "slash": 19,
-      "stab": 18,
+      "crush": 21,
+      "slash": 29,
+      "stab": 8,
       "archery": 23,
       "magic": -14
     },
     "bonuses": {
-      "accuracy": -5,
+      "accuracy": 15,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "card": {
+    "name": "Poker Card",
+    "description": "What's it gonna do, gamble me to death?",
+    "drops": {"sproutring": 100},
+    "hitPoints": 1300,
+    "defenseLevel": 5,
+    "attackLevel": 10,
+    "level": 104,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 60,
+      "slash": 23,
+      "stab": 36,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 21,
+      "slash": 29,
+      "stab": 8,
+      "archery": 23,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "card2": {
+    "name": "Another Card",
+    "description": "Okay but like, how does this even make sense as a mob?",
+    "drops": {"sproutring": 100},
+    "hitPoints": 1300,
+    "defenseLevel": 15,
+    "attackLevel": 35,
+    "level": 102,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 60,
+      "slash": 23,
+      "stab": 36,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 21,
+      "slash": 29,
+      "stab": 8,
+      "archery": 23,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "cowwarrior": {
+    "name": "Cow Warrior",
+    "description": "The cows are rising up!",
+    "drops": {"cowarmor": 100},
+    "hitPoints": 800,
+    "defenseLevel": 15,
+    "attackLevel": 35,
+    "level": 54,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 30,
+      "slash": 13,
+      "stab": 26,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 11,
+      "slash": 19,
+      "stab": 8,
+      "archery": 13,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 12,
+      "strength": 7,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "rooster": {
+    "name": "Angry Rooster",
+    "description": "It's a sleeping rooster that attacks you...",
+    "drops": {},
+    "hitPoints": 800,
+    "defenseLevel": 15,
+    "attackLevel": 35,
+    "level": 54,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 30,
+      "slash": 13,
+      "stab": 26,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 11,
+      "slash": 19,
+      "stab": 8,
+      "archery": 13,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 12,
       "strength": 7,
       "archery": 0,
       "magic": 0
@@ -3149,12 +3334,84 @@
     }
   },
 
+"snowman2": {
+    "name": "Snowman",
+    "hitPoints": 750,
+    "defenseLevel": 3,
+    "attackLevel": 3,
+    "level": 43,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "rabbitman": {
+    "name": "The Rabbit Man",
+    "description": "A dude... dressed as a rabbit... why?",
+    "drops": {"rabbitarmor": 120, "swiftboots": 110},
+    "hitPoints": 385,
+    "defenseLevel": 8,
+    "attackLevel": 6,
+    "level": 37,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "snowrabbit": {
     "name": "Snow Rabbit",
     "drops": {"rabbitarmor": 100, "swiftboots": 100},
-    "hitPoints": 295,
+    "hitPoints": 340,
     "defenseLevel": 4,
-    "attackLevel": 1,
+    "attackLevel": 5,
     "level": 29,
     "aggroRange": 1,
     "attackRange": 1,

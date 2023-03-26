@@ -18,6 +18,10 @@ export default class Projectile extends Entity {
             owner.y
         );
 
+        // Apply the terror hit type if the projectile is a terror projectile.
+        if (this.key === 'projectile-terror') this.hit.type = Modules.Hits.Terror;
+
+        // Apply the terorr projectile if the hit type is terror.
         if (this.hit.type === Modules.Hits.Terror) this.key = 'projectile-terror';
 
         /**

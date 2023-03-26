@@ -31,8 +31,6 @@ export default abstract class Entity {
 
     public animation!: Animation | null;
 
-    protected idleSpeed = 450;
-
     public shadowOffsetY = 0;
     public hidden = false;
 
@@ -191,7 +189,7 @@ export default abstract class Entity {
 
     public setAnimation(
         name: string,
-        speed = this.idleSpeed,
+        speed = this.sprite.idleSpeed,
         count = 0,
         onEndCount?: () => void
     ): void {
@@ -259,15 +257,6 @@ export default abstract class Entity {
 
     private setVisible(visible: boolean): void {
         this.visible = visible;
-    }
-
-    /**
-     * Updates the current idle speed of the entity.
-     * @param idleSpeed New idle speed to set.
-     */
-
-    public setIdleSpeed(idleSpeed: number): void {
-        this.idleSpeed = idleSpeed;
     }
 
     /**
