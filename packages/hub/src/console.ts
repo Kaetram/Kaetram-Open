@@ -22,7 +22,7 @@ export default class Console {
 
             switch (command) {
                 case 'server': {
-                    return this.servers.findEmpty((server: Server) => console.log(server));
+                    return console.log(this.servers.findEmpty());
                 }
 
                 case 'player': {
