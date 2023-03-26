@@ -7,9 +7,10 @@ import { defineConfig } from 'vite';
 import ViteLegacy from '@vitejs/plugin-legacy';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import { VitePWA } from 'vite-plugin-pwa';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { internalIpV4 } from 'internal-ip';
 
-let expose = ['name', 'host', 'ssl', 'serverId'] as const;
+let expose = ['name', 'host', 'ssl', 'serverId', 'sentryDsn'] as const;
 
 interface ExposedConfig extends Pick<Config, typeof expose[number]> {
     debug: boolean;
@@ -17,6 +18,7 @@ interface ExposedConfig extends Pick<Config, typeof expose[number]> {
     minor: string;
     port: number;
     hub: string | false;
+    sentryDsn: string;
 }
 
 declare global {
@@ -59,11 +61,8 @@ function loadEnv(isProduction: boolean): ExposedConfig {
 export default defineConfig(async ({ mode }) => {
     let isProduction = mode === 'production',
         env = loadEnv(isProduction),
-        ipv4 = await internalIpV4();
-
-    return {
-        appType: 'mpa',
-        plugins: [
+        ipv4 = await internalIpV4(),
+        plugins = [
             VitePWA({
                 registerType: 'autoUpdate',
                 workbox: { cacheId: name },
@@ -96,7 +95,21 @@ export default defineConfig(async ({ mode }) => {
             }),
             ViteLegacy(),
             ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
-        ],
+        ];
+
+    if (config.sentryDsn)
+        plugins.push(
+            sentryVitePlugin({
+                include: '.',
+                org: config.sentryOrg,
+                project: config.sentryProject,
+                authToken: config.sentryAuthToken
+            })
+        );
+
+    return {
+        appType: 'mpa',
+        plugins,
         build: {
             sourcemap: true,
             chunkSizeWarningLimit: 4e3,

@@ -1,24 +1,14 @@
 import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import axios from 'axios';
 import express from 'express';
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
-import type Player from '../game/entity/character/player/player';
+import type { Integration } from '@sentry/types';
+import type { Router, Express } from 'express';
 import type World from '../game/world';
-
-interface PlayerData {
-    serverId: number;
-    x: number;
-    y: number;
-    experience: number;
-    level: number;
-    pvpKills: number;
-    orientation: number;
-    lastLogin: number;
-    mapVersion: number;
-}
 
 /**
  * API will have a variety of uses. Including communication
@@ -34,22 +24,40 @@ export default class API {
     private hubConnected = false;
 
     public constructor(private world: World) {
+        let apiEnabled = config.apiEnabled || config.hubEnabled,
+            app: Express | undefined,
+            router: Router | undefined;
+
         // API must be initialized if the hub is enabled.
-        if (!config.apiEnabled && !config.hubEnabled) return;
+        if (apiEnabled) {
+            app = express();
 
-        let app = express();
+            if (config.sentryDsn)
+                app.use(Sentry.Handlers.requestHandler())
+                    .use(Sentry.Handlers.tracingHandler())
+                    .use(Sentry.Handlers.errorHandler());
 
-        app.use(express.urlencoded({ extended: true }));
-        app.use(express.json());
+            app.use(express.urlencoded({ extended: true })).use(express.json());
 
-        let router = express.Router();
+            router = express.Router();
 
-        this.handle(router);
+            this.handleRouter(router);
 
-        app.use('/', router);
+            app.use('/', router).listen(config.apiPort, () => {
+                log.notice(`${config.name} API has successfully initialized.`);
+            });
+        }
 
-        app.listen(config.apiPort, () => {
-            log.notice(`${config.name} API has successfully initialized.`);
+        if (!config.sentryDsn) return;
+
+        let integrations: Integration[] = [new Sentry.Integrations.Http({ tracing: true })];
+
+        if (app && router) integrations.push(new Tracing.Integrations.Express({ app, router }));
+
+        Sentry.init({
+            dsn: config.sentryDsn,
+            integrations,
+            tracesSampleRate: 1
         });
     }
 
@@ -60,7 +68,7 @@ export default class API {
      * @param router Router for endpoints.
      */
 
-    private handle(router: express.Router): void {
+    private handleRouter(router: express.Router): void {
         router.get('/', (_request, response) => {
             response.json({
                 name: config.name,

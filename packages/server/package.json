@@ -8,6 +8,8 @@
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
+        "@sentry/node": "^7.45.0",
+        "@sentry/tracing": "^7.45.0",
         "axios": "^1.2.3",
         "bcryptjs": "^2.4.3",
         "discord.js": "^14.3.0",
