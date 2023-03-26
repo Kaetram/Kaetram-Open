@@ -51,6 +51,11 @@ export interface Config {
     regionCache: boolean;
     saveInterval: number;
 
+    sentryOrg: string;
+    sentryProject: string;
+    sentryAuthToken: string;
+    sentryDsn: string;
+
     discordEnabled: boolean;
     discordChannelId: string;
     discordBotToken: string;
