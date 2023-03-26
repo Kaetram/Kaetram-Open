@@ -391,12 +391,12 @@ export default class Character extends Entity {
 
         switch (action) {
             case Modules.Actions.Idle: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 
             case Modules.Actions.Orientate: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 

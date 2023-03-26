@@ -1278,6 +1278,27 @@
     }
   },
 
+  "lightningscimitar": {
+    "type": "weapon",
+    "name": "Lightning Scimitar",
+    "weaponType": "sword",
+    "price": 30000,
+    "level": 300,
+    "attackStats": {
+      "crush": 19,
+      "slash": 94,
+      "stab": 38,
+      "archery": 0,
+      "magic": 26
+    },
+    "bonuses": {
+      "accuracy": 29,
+      "strength": 39,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",

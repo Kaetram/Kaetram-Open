@@ -45,7 +45,8 @@ export default class Connection {
      */
 
     public reject(reason: string): void {
-        if (this.closed) return;
+        // Tried rejecting an already closed connection, attempt to destroy the player class.
+        if (this.closed) return this.handleClose(reason);
 
         this.sendUTF8(reason);
         this.close(reason);
@@ -72,8 +73,10 @@ export default class Connection {
      * Receives the close signal and ends the connection with the socket.
      */
 
-    public handleClose(): void {
+    public handleClose(reason?: string): void {
         log.info(`Closing socket connection to: ${this.address}.`);
+
+        if (reason) log.info(`Received reason: ${reason}.`);
 
         this.closeCallback?.();
 

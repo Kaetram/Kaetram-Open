@@ -2,19 +2,21 @@ import Animation from './animation';
 
 import Utils from '../utils/util';
 
-import type spriteData from '../../data/sprites.json';
-
-interface AnimationData {
+export interface AnimationData {
     [name: string]: {
         length: number;
         row: number;
     };
 }
-
-export type SpriteData = typeof spriteData[0] & {
-    animations: AnimationData;
-};
-
+export interface SpriteData {
+    id: string;
+    width?: number;
+    height?: number;
+    idleSpeed?: number;
+    animations?: AnimationData;
+    offsetX?: number;
+    offsetY?: number;
+}
 export interface Animations {
     [name: string]: Animation;
 }
@@ -27,8 +29,8 @@ export default class Sprite {
     public width = Utils.tileSize;
     public height = Utils.tileSize;
 
-    public offsetX = 0;
-    public offsetY = 0;
+    public offsetX = -Utils.tileSize;
+    public offsetY = -Utils.tileSize;
 
     public idleSpeed = 450;
 
@@ -50,11 +52,11 @@ export default class Sprite {
 
         this.path = `/img/sprites/${this.key}.png`;
 
-        this.width = this.data.width ?? Utils.tileSize;
-        this.height = this.data.height ?? Utils.tileSize;
+        this.width = this.data.width || this.width;
+        this.height = this.data.height || this.height;
 
-        this.offsetX = this.data.offsetX ?? -Utils.tileSize;
-        this.offsetY = this.data.offsetY ?? -Utils.tileSize;
+        this.offsetX = this.data.offsetX ?? this.offsetX;
+        this.offsetY = this.data.offsetY ?? this.offsetY;
 
         this.idleSpeed = this.data.idleSpeed || this.idleSpeed;
 
@@ -110,6 +112,9 @@ export default class Sprite {
      */
 
     private loadAnimations(): void {
+        if (!this.data.animations)
+            this.data.animations = Utils.getDefaultAnimations(this.key.startsWith('item-'));
+
         for (let name in this.data.animations) {
             let info = this.data.animations[name];
 

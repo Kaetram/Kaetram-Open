@@ -12,6 +12,6 @@ export default class NPC extends Entity {
      */
 
     public override idle(): void {
-        this.setAnimation('idle_down', this.idleSpeed);
+        this.setAnimation('idle_down', this.sprite.idleSpeed);
     }
 }
