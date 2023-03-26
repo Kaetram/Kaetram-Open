@@ -108,7 +108,6 @@ export default class EntitiesController {
 
         // Set the sprite and sprite idle speed.
         entity.setSprite(sprite);
-        entity.setIdleSpeed(sprite.idleSpeed);
 
         // Begin the idling animation.
         entity.idle();

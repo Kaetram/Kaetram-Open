@@ -472,6 +472,10 @@ export default class InputController {
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);
 
+        // Ignore if the entity is our player.
+        if (entity?.instance === this.player.instance) return;
+
+        // Remove silhouette from the previous entity.
         if (!entity && this.entity) this.entity.updateSilhouette(false);
 
         // The entity we are currently hovering over.

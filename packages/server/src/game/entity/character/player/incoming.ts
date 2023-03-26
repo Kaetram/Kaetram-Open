@@ -188,6 +188,8 @@ export default class Incoming {
             }
 
             case Opcodes.Login.Guest: {
+                // Authenticated so that we send the logout packet to the hub.
+                this.player.authenticated = true;
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
                 this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
 
@@ -427,6 +429,9 @@ export default class Incoming {
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
+                // Ensure the packet has a valid index.
+                if (isNaN(packet.fromIndex!) || packet.fromIndex === -1) return;
+
                 return this.player.handleContainerSelect(
                     packet.type,
                     packet.fromContainer,
