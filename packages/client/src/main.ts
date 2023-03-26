@@ -1,6 +1,7 @@
 import App from './app';
 import Game from './game';
 
+import './lib/sentry';
 import '../scss/main.scss';
 
 /**
@@ -9,6 +10,3 @@ import '../scss/main.scss';
  */
 
 new Game(new App());
-
-// Perhaps we may not even need this class? Instead we could just do this directly in the game?
-// Design choices for after the client is fully refactored.
