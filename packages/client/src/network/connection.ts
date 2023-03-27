@@ -9,7 +9,7 @@ import type InfoController from '../controllers/info';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from '../renderer/camera';
-import type Renderer from '../renderer/renderer2';
+import type Renderer from '../renderer/renderer';
 import type InputController from '../controllers/input';
 import type Socket from './socket';
 import type PointerController from '../controllers/pointer';

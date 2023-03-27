@@ -3,12 +3,29 @@ import Tile from './tile';
 import Utils from '../utils/util';
 import { isMobile, isTablet } from '../utils/detect';
 
+import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
+
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from './camera';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
+import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+
+interface RendererLight {
+    origX: number;
+    origY: number;
+    diff: number;
+    relative: boolean;
+    computed: boolean;
+}
+
+type RendererLamp = RendererLight & Lamp;
+
+export interface RendererLighting extends RendererLight, Lighting {
+    light: RendererLamp;
+}
 
 export type ContextType = '2d' | 'webgl';
 
@@ -52,6 +69,13 @@ export default class Renderer {
     // Animated tiles
     public animateTiles = true;
     protected animatedTiles: { [index: number]: Tile } = {};
+
+    // Lighting
+    protected lightings: RendererLighting[] = [];
+    protected darkMask: DarkMask = new DarkMask({
+        lights: [],
+        color: 'rgba(0, 0, 0, 0.84)'
+    });
 
     // Toggles for rendering
     public debugging = false;
@@ -120,7 +144,7 @@ export default class Renderer {
         this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
 
         // Update the dark mask sizes
-        //this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
@@ -224,6 +248,86 @@ export default class Renderer {
         //
     }
 
+    // -------------- Drawing Functions --------------
+
+    protected drawLighting(_lighting: RendererLighting): void {
+        //
+    }
+
+    // -------------- Light Management --------------
+
+    /**
+     * Calculates the dark mask effect for the overlay.
+     * @param color What colour we want the overlay to have, generally this is
+     * a black rgb(0,0,0) with an alpha to give the effect of darkness.
+     */
+
+    public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
+        this.darkMask.color = color;
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+    }
+
+    /**
+     * Adds a new light to the rendering screen.
+     * @param info Contains information about the light we are adding.
+     */
+
+    public addLight(info: SerializedLight): void {
+        let light = new Lamp(
+                this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
+            ) as RendererLamp,
+            lighting = new Lighting({
+                light
+                // diffuse: light.diffuse
+            }) as RendererLighting;
+
+        light.origX = light.position.x;
+        light.origY = light.position.y;
+
+        light.diff = Math.round(light.distance / this.tileSize);
+
+        if (this.hasLighting(lighting)) return;
+
+        lighting.relative = true;
+
+        this.lightings.push(lighting);
+        this.darkMask.lights.push(light);
+
+        this.drawLighting(lighting);
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+    }
+
+    public removeAllLights(): void {
+        this.lightings = [];
+        this.darkMask.lights = [];
+
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+    }
+
+    public removeNonRelativeLights(): void {
+        for (let i in this.lightings)
+            if (!this.lightings[i].light.relative) {
+                let index = parseInt(i);
+
+                this.lightings.splice(index, 1);
+                this.darkMask.lights.splice(index, 1);
+            }
+
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+    }
+
+    private hasLighting(lighting: RendererLighting): boolean {
+        for (let { light } of this.lightings)
+            if (
+                lighting.light.origX === light.origX &&
+                lighting.light.origY === light.origY &&
+                lighting.light.distance === light.distance
+            )
+                return true;
+
+        return false;
+    }
+
     // -------------- Setters --------------
 
     /**
@@ -316,6 +420,35 @@ export default class Renderer {
                 return this.crownTier7;
             }
         }
+    }
+
+    /**
+     * Creates a partial lamp object given the specified data.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param distance How far the light can reach.
+     * @param diffuse How much the light can diffuse.
+     * @param color The color of the light.
+     * @returns A partial lamp object.
+     */
+
+    private getLightData(
+        x: number,
+        y: number,
+        distance: number,
+        diffuse: number,
+        color: string
+    ): Partial<Lamp> {
+        return {
+            position: new Vec2(x, y),
+            distance,
+            diffuse,
+            color,
+            radius: 0,
+            samples: 2,
+            roughness: 0,
+            angle: 0
+        };
     }
 
     // -------------- Update functions --------------
