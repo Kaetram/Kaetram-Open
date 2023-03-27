@@ -1,7 +1,7 @@
 import Renderer from '../renderer';
 import Character from '../../entity/character/character';
 
-import { DarkMask, Vec2 } from 'illuminated';
+import { Vec2 } from 'illuminated';
 import { Modules } from '@kaetram/common/network';
 
 import type Game from '../../game';
@@ -9,7 +9,7 @@ import type Splat from '../infos/splat';
 import type Entity from '../../entity/entity';
 import type Item from '../../entity/objects/item';
 import type Player from '../../entity/character/player/player';
-import type { Lamp, Lighting } from 'illuminated';
+import type { RendererLighting } from '../renderer';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
 
 enum TileFlip {
@@ -34,20 +34,6 @@ interface RendererCell {
     dy: number;
     width: number;
     height: number;
-}
-
-interface RendererLight {
-    origX: number;
-    origY: number;
-    diff: number;
-    relative: boolean;
-    computed: boolean;
-}
-
-type RendererLamp = RendererLight & Lamp;
-
-interface RendererLighting extends RendererLight, Lighting {
-    light: RendererLamp;
 }
 
 export default class Canvas extends Renderer {
@@ -77,13 +63,6 @@ export default class Canvas extends Renderer {
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
     private contexts = [this.entitiesContext, this.textContext, this.overlayContext];
     private drawingContexts = [this.backContext, this.foreContext];
-
-    // Lighting
-    private lightings: RendererLighting[] = [];
-    private darkMask: DarkMask = new DarkMask({
-        lights: [],
-        color: 'rgba(0, 0, 0, 0.84)'
-    });
 
     public constructor(game: Game) {
         super(game);
@@ -857,7 +836,7 @@ export default class Canvas extends Renderer {
         }
     }
 
-    private drawLighting(lighting: RendererLighting): void {
+    protected override drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
             let lightX =
                     (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
@@ -1211,17 +1190,6 @@ export default class Canvas extends Renderer {
 
     private updateDrawingView(): void {
         this.forEachDrawingContext((context) => this.setCameraView(context));
-    }
-
-    /**
-     * Calculates the dark mask effect for the overlay.
-     * @param color What colour we want the overlay to have, generally this is
-     * a black rgb(0,0,0) with an alpha to give the effect of darkness.
-     */
-
-    public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
-        this.darkMask.color = color;
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     // ---------- Getters and Checkers ----------
