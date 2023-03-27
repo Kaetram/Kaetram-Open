@@ -43,7 +43,7 @@ export default class API {
 
             this.handleRouter(router);
 
-            app.use('/', router).listen(config.apiPort, () => {
+            app.use('/', router).listen(config.hubPort, () => {
                 log.notice(`${config.name} hub API is now listening on ${config.hubPort}.`);
             });
         }
