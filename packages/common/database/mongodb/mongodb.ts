@@ -141,6 +141,9 @@ export default class MongoDB {
                 // User exists and so we reject instead of double registering.
                 if (playerInfo.length > 0) return player.connection.reject('userexists');
 
+                // Successfully managed to create a new user.
+                player.authenticated = true;
+
                 log.debug(`No player data found for ${player.username}, creating user.`);
 
                 player.statistics.creationTime = Date.now();
