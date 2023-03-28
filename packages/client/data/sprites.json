@@ -381,149 +381,6 @@
     "offsetY": -8
   },
   {
-    "id": "babydemonnpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "demonnpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "butterflynpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "girlnpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "girlnpc2",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "mayornpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "medicnpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "seanpc",
-    "width": 48,
-    "height": 48,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "spidernpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "tigernpc",
-    "width": 42,
-    "height": 42,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
-    "id": "warriornpc",
-    "width": 32,
-    "height": 32,
-    "animations": {
-      "idle_down": {
-        "length": 2,
-        "row": 0
-      }
-    },
-    "offsetX": -8,
-    "offsetY": -16
-  },
-  {
     "id": "bearseonbiarmor",
     "width": 32,
     "height": 32,
@@ -1398,20 +1255,6 @@
 
   {
     "id": "clotharmor",
-    "width": 32,
-    "height": 32,
-    "offsetX": -8,
-    "offsetY": -12
-  },
-  {
-    "id": "coolguyarmor",
-    "width": 32,
-    "height": 32,
-    "offsetX": -8,
-    "offsetY": -12
-  },
-  {
-    "id": "dragonmagicarmor",
     "width": 32,
     "height": 32,
     "offsetX": -8,
@@ -2750,27 +2593,6 @@
   },
   {
     "id": "gayarcherarmor",
-    "width": 32,
-    "height": 32,
-    "offsetX": -8,
-    "offsetY": -12
-  },
-  {
-    "id": "antarcherarmor",
-    "width": 32,
-    "height": 32,
-    "offsetX": -8,
-    "offsetY": -12
-  },
-  {
-    "id": "antladyarcherarmor",
-    "width": 32,
-    "height": 32,
-    "offsetX": -8,
-    "offsetY": -12
-  },
-  {
-    "id": "astronomerarmor",
     "width": 32,
     "height": 32,
     "offsetX": -8,
@@ -9276,8 +9098,8 @@
     "id": "darkwolf",
     "width": 42,
     "height": 42,
-    "offsetX": -8,
-    "offsetY": -12
+    "offsetX": -14,
+    "offsetY": -21
   },
   {
     "id": "greenwizardrobe",

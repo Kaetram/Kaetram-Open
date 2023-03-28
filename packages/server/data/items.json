@@ -2702,38 +2702,6 @@
     }
   },
 
-  "antarcherarmor": {
-    "type": "armourarcher",
-    "name": "Ant Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "antladyarcherarmor": {
-    "type": "armourarcher",
-    "name": "Ant Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "tigerarcherarmor": {
-    "type": "armourarcher",
-    "name": "Tiger Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "metalscarabarmor": {
-    "type": "armourarcher",
-    "name": "Scarab Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
   "gayarcherarmor": {
     "type": "armourarcher",
     "name": "Sketchy Archer Armour"
@@ -4224,21 +4192,6 @@
     "name": "Taekwondo Skin"
   },
 
-  "coolguyarmor": {
-    "type": "armourskin",
-    "name": "Cool Dude Skin"
-  },
-
-  "astronomerarmor": {
-    "type": "armourskin",
-    "name": "Astronomer Skin"
-  },
-
-  "superheroarmor": {
-    "type": "armourskin",
-    "name": "Superhero Skin"
-  },
-
   "rabbitarmor": {
     "type": "armour",
     "name": "Rabbit Armour",
@@ -4537,34 +4490,6 @@
       "strength": 0,
       "archery": 0,
       "magic": 29
-    }
-  },
-
-  "dragonmagicarmor": {
-    "type": "armour",
-    "name": "Dragon Magic Armour",
-    "skill": "magic",
-    "level": 75,
-    "price": 15200,
-    "attackStats": {
-      "crush": 18,
-      "slash": 32,
-      "stab": 21,
-      "archery": 0,
-      "magic": 95
-    },
-    "defenseStats": {
-      "crush": 4,
-      "slash": 6,
-      "stab": 4,
-      "archery": 0,
-      "magic": 109
-    },
-    "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
-      "archery": -5,
-      "magic": 49
     }
   },
 
