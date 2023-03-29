@@ -14,7 +14,6 @@ varying vec2 vTextureCoord;
 
 void main()
 {
-    // squash from [-1, 1] to [0, 1]
     vec2 position = aPosition;
     position += 1.0;
     position /= 2.0;
