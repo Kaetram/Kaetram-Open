@@ -436,7 +436,7 @@ export default class InputController {
             ? this.game.searchForEntityAt(position)
             : this.game.getEntityAt(position.gridX, position.gridY);
 
-        if (this.entity) {
+        if (this.entity && this.entity.instance !== this.player.instance) {
             this.setAttackTarget();
 
             // Set target and follow a targetable entity.
