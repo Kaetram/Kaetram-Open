@@ -9,3 +9,19 @@
         url('/fonts/advocut/advocut-webfont.ttf') format('truetype'),
         url('/fonts/advocut/advocut-webfont.svg#AndinaRegular') format('svg');
 }
+
+@font-face {
+    font-family: KerrieFont;
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/kerriefont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: DorfScratch;
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/dorfscratch.ttf') format('truetype');
+}
