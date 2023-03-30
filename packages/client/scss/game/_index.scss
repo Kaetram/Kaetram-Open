@@ -25,6 +25,7 @@
 @use 'impl/zoom';
 @use 'impl/leaderboards';
 @use 'impl/guilds';
+@use 'impl/crafting';
 
 body.game {
     background: #000;
