@@ -2,7 +2,7 @@ precision mediump float;
 
 varying vec2 vTextureCoord;
 
-uniform sampler2DArray uSamplers;
+uniform sampler2D uSampler;
 uniform float uAlpha;
 uniform vec4 uTransparentColor;
 
