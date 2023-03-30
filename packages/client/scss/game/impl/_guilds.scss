@@ -202,22 +202,6 @@
             margin-top: 50%;
         }
 
-        #close-guilds {
-            width: 11px * $i;
-            height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-x: -124px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-x: -136px * $i;
-            }
-        }
-
         #create-guild {
             top: 76px * $i;
             left: -60px * $i;
