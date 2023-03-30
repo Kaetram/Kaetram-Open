@@ -38,7 +38,7 @@ export default class Map {
     private objects: number[] = [];
     private lights: number[] = [];
 
-    private tilesets: TilesetInfo[] = [];
+    public tilesets: TilesetInfo[] = [];
     private rawTilesets: ProcessedTileset[] = mapData.tilesets; // Key is tileset id, value is the firstGID
     private cursorTiles: CursorTiles = {};
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
@@ -163,8 +163,12 @@ export default class Map {
             this.loadTileset(rawTileset, (tileset: TilesetInfo) => {
                 this.tilesets.push(tileset);
 
-                // If we've loaded all the tilesets, map is now allowed to be marked as ready.
-                if (this.tilesets.length === this.rawTilesets.length) this.tilesetsLoaded = true;
+                if (this.tilesets.length === this.rawTilesets.length) {
+                    // Sort tilesets by first gid.
+                    this.tilesets = this.tilesets.sort((a, b) => a.firstGid - b.firstGid);
+
+                    this.tilesetsLoaded = true;
+                }
             });
     }
 
