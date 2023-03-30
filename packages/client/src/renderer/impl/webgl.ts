@@ -1,8 +1,8 @@
 import Renderer from '../renderer';
 import ImageVertex from '../shaders/image.vert';
 import ImageFragment from '../shaders/image.frag';
-
-import TWGL from 'twgl.js';
+import ProgramData from '../../utils/programdata';
+import log from '../../lib/log';
 
 import type Game from '../../game';
 
@@ -21,13 +21,57 @@ export default class WebGL extends Renderer {
     private textContext: WebGLRenderingContext = this.textCanvas.getContext('webgl')!;
     private cursorContext: WebGLRenderingContext = this.cursor.getContext('webgl')!;
 
+    // Drawing contexts, where we load tileset textures and draw the map.
+    private drawingContexts = [this.backContext, this.foreContext];
+
+    // Program data
+    private backgroundProgram = new ProgramData(this.backContext, ImageVertex, ImageFragment);
+    private foregroundProgram = new ProgramData(this.foreContext, ImageVertex, ImageFragment);
+
     public constructor(game: Game) {
         super(game);
+    }
 
-        // Prepare the webgl context
+    /**
+     * Loads the tileset texture information for each rendering context. The back
+     * and the front are used to separate high tiles from low tiles to give the
+     * effect of z-index in a 2D environment.
+     */
 
-        console.log(ImageVertex);
-        console.log(ImageFragment);
+    public override loadTextures(): void {
+        this.forEachDrawingContext((context: WebGLRenderingContext) => {
+            // Load the texture information for each tileset.
+            for (let tileset of this.map.tilesets) this.createTexture(context, tileset);
+        });
+    }
+
+    /**
+     * Creates a texture for a given image (the tilesheet image) and applies it
+     * to the given context.
+     * @param context The context we are applying the texture to.
+     * @param image The image we are using to create the texture.
+     */
+
+    public createTexture(context: WebGLRenderingContext, image: HTMLImageElement): void {
+        let texture = context.createTexture();
+
+        if (!texture || !image) return log.error('Failed to create texture for Webcontext.');
+
+        context.bindTexture(context.TEXTURE_2D, texture);
+        context.texImage2D(
+            context.TEXTURE_2D,
+            0,
+            context.RGBA,
+            context.RGBA,
+            context.UNSIGNED_BYTE,
+            image
+        );
+
+        // Apply texture parameters
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
     }
 
     /**
@@ -44,5 +88,14 @@ export default class WebGL extends Renderer {
 
     public override render(): void {
         //
+    }
+
+    /**
+     * Iterates through all the drawing contexts (backContext and foreContext).
+     * @param callback The context being iterated.
+     */
+
+    private forEachDrawingContext(callback: (context: WebGLRenderingContext) => void): void {
+        for (let context in this.drawingContexts) callback(this.drawingContexts[context]);
     }
 }

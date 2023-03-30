@@ -210,6 +210,15 @@ export default class Renderer {
     }
 
     /**
+     * Superclass implementation for the WebGL renderer. We start loading
+     * textures after the map has completed loading the tilesets.
+     */
+
+    public loadTextures(): void {
+        //
+    }
+
+    /**
      * Prepares the renderer for screen resizing. This is automatically
      * called through a HTML5 callback for when the screen undergoes a change.
      * We recalculate all the dimensions and positions of the canvas elements.
