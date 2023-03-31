@@ -3466,6 +3466,50 @@
     "offsetY": 0
   },
   {
+    "id": "item-nisocarrow",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-cinnabararrow",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-pythararrow",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-iboarrow",
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-nisocore",
     "offsetX": 0,
     "offsetY": 0
@@ -4907,6 +4951,11 @@
   },
   {
     "id": "item-stick",
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-feather",
     "offsetX": 0,
     "offsetY": 0
   },
@@ -9563,11 +9612,11 @@
   {
     "id": "projectile-arrow",
     "idleSpeed": 75,
-    "width": 24,
-    "height": 32,
+    "width": 16,
+    "height": 16,
     "animations": {
       "travel": {
-        "length": 1,
+        "length": 4,
         "row": 0
       }
     },
@@ -9577,11 +9626,11 @@
   {
     "id": "projectile-firearrow",
     "idleSpeed": 75,
-    "width": 24,
-    "height": 36,
+    "width": 16,
+    "height": 16,
     "animations": {
       "travel": {
-        "length": 3,
+        "length": 4,
         "row": 0
       }
     },
@@ -9591,11 +9640,11 @@
   {
     "id": "projectile-poisonarrow",
     "idleSpeed": 75,
-    "width": 24,
-    "height": 36,
+    "width": 16,
+    "height": 16,
     "animations": {
       "travel": {
-        "length": 3,
+        "length": 4,
         "row": 0
       }
     },
@@ -9605,11 +9654,11 @@
   {
     "id": "projectile-icearrow",
     "idleSpeed": 75,
-    "width": 24,
-    "height": 36,
+    "width": 16,
+    "height": 16,
     "animations": {
       "travel": {
-        "length": 3,
+        "length": 4,
         "row": 0
       }
     },
@@ -9619,11 +9668,67 @@
   {
     "id": "projectile-lightningarrow",
     "idleSpeed": 75,
-    "width": 24,
-    "height": 36,
+    "width": 16,
+    "height": 16,
     "animations": {
       "travel": {
-        "length": 3,
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "projectile-nisocarrow",
+    "idleSpeed": 75,
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "projectile-cinnabararrow",
+    "idleSpeed": 75,
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "projectile-pythararrow",
+    "idleSpeed": 75,
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "travel": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "projectile-iboarrow",
+    "idleSpeed": 75,
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "travel": {
+        "length": 4,
         "row": 0
       }
     },
