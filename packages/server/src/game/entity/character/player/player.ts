@@ -156,6 +156,9 @@ export default class Player extends Character {
     public npcTalk = '';
     public talkIndex = 0;
 
+    // Anti-cheat container
+    public canAccessContainer = false;
+
     // Minigame status of the player.
     public minigame?: Opcodes.Minigame;
     public team?: Team;
@@ -693,6 +696,8 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
+                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
@@ -935,6 +940,9 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // If the player clicked anywhere outside the bank then the bank is no longer opened.
+        this.canAccessContainer = false;
+
         if (this.map.isDoor(x, y) || (target && following)) return;
         if (this.inCombat()) return;
 
