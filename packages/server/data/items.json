@@ -5328,8 +5328,15 @@
   "stick": {
     "type": "object",
     "name": "Stick",
-    "price": 150,
-    "description": "A stick. It's a stick. What else do you want me to say about it?"
+    "price": 50,
+    "description": "A stick. It's a stick. What else do you want me to say about it? You can probably use it to craft stuff now that it has been added in the game."
+  },
+
+  "feather": {
+    "type": "object",
+    "name": "Feather",
+    "price": 50,
+    "description": "A feather, I think it came off of a bird or something. You could make arrows with this thing."
   },
 
   "candykey": {
@@ -5595,6 +5602,7 @@
     "name": "Arrow",
     "stackable": true,
     "maxStackSize": 9999,
+    "price": 5,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5607,7 +5615,7 @@
   "firearrow": {
     "type": "arrow",
     "name": "Fire Arrow",
-    "price": 2,
+    "price": 12,
     "stackable": true,
     "burning": true,
     "maxStackSize": 9999,
@@ -5623,7 +5631,7 @@
   "poisonarrow": {
     "type": "arrow",
     "name": "Poison Arrow",
-    "price": 2,
+    "price": 16,
     "stackable": true,
     "maxStackSize": 9999,
     "poisonous": true,
@@ -5639,7 +5647,7 @@
   "lightningarrow": {
     "type": "arrow",
     "name": "Lightning Arrow",
-    "price": 2,
+    "price": 18,
     "stackable": true,
     "maxStackSize": 9999,
     "bonuses": {
@@ -5654,7 +5662,7 @@
   "icearrow": {
     "type": "arrow",
     "name": "Ice Arrow",
-    "price": 2,
+    "price": 20,
     "stackable": true,
     "freezing": true,
     "maxStackSize": 9999,
@@ -5665,5 +5673,69 @@
       "magic": 0
     },
     "projectileName": "projectile-icearrow"
+  },
+
+  "nisocarrow": {
+    "type": "arrow",
+    "name": "Nisoc Arrow",
+    "price": 19,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 24,
+      "magic": 3
+    },
+    "projectileName": "projectile-nisocarrow"
+  },
+
+  "cinnabararrow": {
+    "type": "arrow",
+    "name": "Cinnabar Arrow",
+    "price": 21,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 2
+    },
+    "projectileName": "projectile-cinnabararrow"
+  },
+
+  "pythararrow": {
+    "type": "arrow",
+    "name": "Pythar Arrow",
+    "price": 23,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 4
+    },
+    "projectileName": "projectile-pythararrow"
+  },
+
+  "iboarrow": {
+    "type": "arrow",
+    "name": "Ibo Arrow",
+    "price": 25,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 12
+    },
+    "projectileName": "projectile-iboarrow"
   }
 }
