@@ -402,6 +402,26 @@
             background-size: calc(width('skills/fishing.png') * $i);
         }
 
+        .skill-image-smithing {
+            background: url('/img/interface/skills/smithing.png');
+            background-size: calc(width('skills/smithing.png') * $i);
+        }
+
+        // .skill-image-cooking {
+        //     background: url('/img/interface/skills/cooking.png');
+        //     background-size: calc(width('skills/cooking.png') * $i);
+        // }
+
+        .skill-image-fletching {
+            background: url('/img/interface/skills/fletching.png');
+            background-size: calc(width('skills/fletching.png') * $i);
+        }
+
+        .skill-image-crafting {
+            background: url('/img/interface/skills/crafting.png');
+            background-size: calc(width('skills/crafting.png') * $i);
+        }
+
         #achievement-count,
         #quest-count {
             width: 30px * $i;
