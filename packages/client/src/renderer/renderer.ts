@@ -379,6 +379,9 @@ export default class Renderer {
         this.clearDrawing();
         this.saveDrawing();
 
+        this.backContext.fillStyle = '#090a14';
+        this.backContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
         // Sets the view according to the camera.
         this.updateDrawingView();
 
