@@ -33,7 +33,7 @@ export default class Crafting extends Menu {
     private selectCallback?: SelectCallback;
     private craftCallback?: CraftCallback;
 
-    public constructor(private game: Game) {
+    public constructor() {
         super('#crafting', '#close-crafting');
 
         this.craftOne.addEventListener('click', () => this.handleAmount(1));
