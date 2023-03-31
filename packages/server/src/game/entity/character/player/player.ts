@@ -158,6 +158,7 @@ export default class Player extends Character {
 
     // Anti-cheat container
     public canAccessContainer = false;
+    public activeCraftingInterface = -1; // The skill ID
 
     // Minigame status of the player.
     public minigame?: Opcodes.Minigame;
@@ -774,10 +775,29 @@ export default class Player extends Character {
         if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
         // If we don't find a tree then we try finding a rock.
-
         let rock = this.world.globals.getRocks().findResource(index);
 
         if (rock) return this.skills.getMining().mine(this, rock);
+
+        /**
+         * Here we use the cursor (I know, it's a bit of a hack) to find the type
+         * of crafting station the the player is trying to interact with.
+         */
+
+        let cursor = this.map.getCursorFromIndex(index);
+
+        if (!cursor) return;
+
+        // Handle interactable crafting stations.
+        switch (cursor) {
+            case 'smithing': {
+                return this.world.crafting.open(this, Modules.Skills.Smithing);
+            }
+
+            case 'cooking': {
+                return this.world.crafting.open(this, Modules.Skills.Cooking);
+            }
+        }
     }
 
     /**
@@ -942,6 +962,7 @@ export default class Player extends Character {
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
+        this.activeCraftingInterface = -1;
 
         if (this.map.isDoor(x, y) || (target && following)) return;
         if (this.inCombat()) return;

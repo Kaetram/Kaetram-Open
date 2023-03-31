@@ -30,6 +30,32 @@
     vertical-align: middle;
 }
 
+#crafting-requirements {
+    position: absolute;
+
+    //overflow: auto;
+
+    display: flex;
+}
+
+#crafting-result {
+    position: absolute;
+}
+
+.crafting-option-icon {
+    background-size: cover;
+    
+    // Safari filters so the images aren't blurry.
+    filter: opacity(100%);
+}
+
+.crafting-option-count {
+    font-family: KerrieFont, sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
 .crafting-buttons {
     position: absolute;
     display: flex;
@@ -56,6 +82,16 @@
             height: 120px * $i;
         }
 
+        #crafting-requirements {
+            top: 24px * $i;
+            right: 24px * $i;
+
+            gap: 6px * $i;
+
+            width: 140px * $i;
+            height: 48px * $i;
+        }
+
         #craft-button {
             right: 46px * $i;
             bottom: 24px * $i;
@@ -63,7 +99,6 @@
             width: 96px * $i;
             height: 32px * $i;
 
-            
             font-size: 12px * $i;
 
             background: url('/img/interface/crafting.png') 0 -314px * $i;
@@ -80,11 +115,36 @@
             }
         }
 
+        #crafting-result {
+            right: 72px * $i;
+            bottom: 70px * $i;
+        }
+
         .crafting-option {
             width: 42px * $i;
             height: 44px * $i;
+            margin-bottom: 16px * $i;
+
             background: url('/img/interface/crafting.png') -96px * $i -256px * $i;
             background-size: calc(width('crafting.png') * $i);
+
+            &:hover {
+                background-position-x: -140px * $i;
+            }
+
+            &:active, &.active {
+                background-position-x: -184px * $i;
+            }
+        }
+
+        .crafting-option-icon {
+            width: 32px * $i;
+            height: 32px * $i;
+            margin: 5px * $i;
+        }
+
+        .crafting-option-count {
+            font-size: 14px * $i;
         }
 
         .crafting-buttons {
@@ -130,11 +190,11 @@
         .amount-one,
         .amount-five,
         .amount-ten {
-            &:hover {
+            &:hover, &.active {
                 background-position-y: -480px * $i;
             }
 
-            &:active, &.active {
+            &:active {
                 background-position-y: -448px * $i;
             }
         }

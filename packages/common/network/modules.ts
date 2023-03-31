@@ -176,7 +176,8 @@ export enum Skills {
     Cooking,
     Smithing,
     Crafting,
-    Fletching
+    Fletching,
+    Smelting // Not a skill, but used to differntiate smithing from smelting in the crafting.
 }
 
 // It's easier to define and swap order around here.
@@ -416,6 +417,36 @@ export let SkillExpColours = {
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
         stroke: 'rgb(7, 63, 176)'
+    },
+
+    [Skills.Fishing]: {
+        fill: 'rgb(0, 255, 255)',
+        stroke: 'rgb(0, 255, 255)'
+    },
+
+    [Skills.Cooking]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Smithing]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Crafting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Fletching]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Smelting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     }
 };
 

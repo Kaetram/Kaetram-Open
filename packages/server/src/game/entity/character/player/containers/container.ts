@@ -371,6 +371,24 @@ export default abstract class Container {
     }
 
     /**
+     * Counts the amount of an item the container contains.
+     * @param key The key of the item we are counting.
+     * @returns The amount of items we found.
+     */
+
+    public count(key: string): number {
+        let found = 0;
+
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key !== key) return;
+
+            found += slot.count;
+        });
+
+        return found;
+    }
+
+    /**
      * Since `emptySpaces` is always updated, the next available empty slot
      * is the size of the container minus the empty spaces available.
      * @returns An empty slot.

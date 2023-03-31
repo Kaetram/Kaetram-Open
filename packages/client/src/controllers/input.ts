@@ -127,6 +127,9 @@ export default class InputController {
         this.cursors.bow = this.game.sprites.get('bow');
         this.cursors.axe = this.game.sprites.get('axe_cursor');
         this.cursors.pickaxe = this.game.sprites.get('pickaxe_cursor');
+        this.cursors.cooking = this.game.sprites.get('cooking');
+        this.cursors.fishing = this.game.sprites.get('fishing');
+        this.cursors.smithing = this.game.sprites.get('smithing');
 
         log.debug('Loaded Cursors!');
     }
