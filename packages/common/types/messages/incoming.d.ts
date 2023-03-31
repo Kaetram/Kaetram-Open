@@ -111,3 +111,9 @@ export interface FriendsPacket {
     opcode: Opcodes.Friends;
     username: string;
 }
+
+export interface CraftingPacket {
+    opcode: Opcodes.Crafting;
+    key?: string;
+    count?: number;
+}

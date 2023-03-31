@@ -7,7 +7,6 @@ import { Opcodes } from '@kaetram/common/network';
 
 import type Item from '../game/entity/objects/item';
 import type Player from '../game/entity/character/player/player';
-import type Slot from '../game/entity/character/player/containers/slot';
 
 export default class Enchanter {
     /**
