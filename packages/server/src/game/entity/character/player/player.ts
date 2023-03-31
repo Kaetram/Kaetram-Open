@@ -769,7 +769,13 @@ export default class Player extends Character {
 
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
-            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            diffX = Math.abs(this.x - parseInt(coords[0])),
+            diffY = Math.abs(this.y - parseInt(coords[1]));
+
+        // Ensure that the player is close enough to the object.
+        if (diffX > 2 || diffY > 2) return;
+
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
         if (tree) return this.skills.getLumberjacking().cut(this, tree);
