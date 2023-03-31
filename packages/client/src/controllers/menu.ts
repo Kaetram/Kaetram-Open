@@ -25,6 +25,7 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private crafting: Crafting = new Crafting();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -42,7 +43,6 @@ export default class MenuController {
     private interact: Interact;
     private leaderboards: Leaderboards;
     private guilds: Guilds;
-    private crafting: Crafting;
 
     public header: Header;
 
@@ -66,7 +66,6 @@ export default class MenuController {
         this.interact = new Interact(game.player);
         this.leaderboards = new Leaderboards(game.app);
         this.guilds = new Guilds(game);
-        this.crafting = new Crafting(game);
 
         this.menus = {
             inventory: this.inventory,
