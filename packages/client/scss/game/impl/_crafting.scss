@@ -135,6 +135,10 @@
             &:active, &.active {
                 background-position-x: -184px * $i;
             }
+
+            &.disabled {
+                background-position-x: -96px * $i !important;
+            }
         }
 
         .crafting-option-icon {
