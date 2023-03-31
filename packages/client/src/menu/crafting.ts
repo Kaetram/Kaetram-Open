@@ -91,7 +91,7 @@ export default class Crafting extends Menu {
 
         // Create new requirement element and append it to the list of requirements.
         for (let requirement of requirements)
-            this.requirements.append(this.createSlot(requirement.key, requirement.count));
+            this.requirements.append(this.createSlot(requirement.key, requirement.count, true));
     }
 
     /**
@@ -141,7 +141,11 @@ export default class Crafting extends Menu {
         for (let key of keys) this.options.append(this.createSlot(key));
 
         // Select the first option by default if it exists.
-        if (keys.length > 0) this.selectCallback?.(keys[0]);
+        if (keys.length > 0) {
+            this.selectCallback?.(keys[0]);
+
+            this.options.children[0].classList.add('active');
+        }
     }
 
     /**
@@ -149,7 +153,7 @@ export default class Crafting extends Menu {
      * @param key The key of the item to craft.
      */
 
-    private createSlot(key: string, count?: number): HTMLLIElement {
+    private createSlot(key: string, count?: number, disableClick = false): HTMLLIElement {
         let element = document.createElement('li'),
             icon = document.createElement('div');
 
@@ -174,7 +178,17 @@ export default class Crafting extends Menu {
         }
 
         // Bind the click event to the select callback so that it can be sent to the server.
-        element.addEventListener('click', () => this.selectCallback?.(key));
+        if (disableClick) element.classList.add('disabled');
+        else
+            element.addEventListener('click', () => {
+                // Remove the active class from all the options.
+                for (let child of this.options.children) child.classList.remove('active');
+
+                // Add the active class to the selected option.
+                element.classList.add('active');
+
+                this.selectCallback?.(key);
+            });
 
         return element;
     }
