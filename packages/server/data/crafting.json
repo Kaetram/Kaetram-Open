@@ -1,0 +1,84 @@
+{
+    "fletching": {
+        "arrow": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "logs",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 15
+            }
+        }
+    },
+
+    "cooking": {
+        "cookedshrimp": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "rawshrimp",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "jellyfishsmoothie": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "jellyfish",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "clamchowder": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "clam",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "tunasushi": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "tuna",
+                    "count": 1
+                },
+                {
+                    "key": "kelp",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        }
+    }
+}
