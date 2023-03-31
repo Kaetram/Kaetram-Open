@@ -512,6 +512,9 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
+        if (!this.player.canAccessContainer)
+            return this.player.notify('You cannot do that right now.');
+
         switch (packet.opcode) {
             case Opcodes.Enchant.Select: {
                 return this.world.enchanter.select(this.player, packet.index!);

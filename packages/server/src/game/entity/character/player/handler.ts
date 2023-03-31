@@ -660,6 +660,10 @@ export default class Handler {
         // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
+        // Used to toggle interaction with the containers.
+        if (npc.role === 'banker' || npc.role === 'enchanter')
+            this.player.canAccessContainer = true;
+
         switch (npc.role) {
             case 'banker': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
