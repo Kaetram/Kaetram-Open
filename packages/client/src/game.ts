@@ -90,7 +90,7 @@ export default class Game {
         this.map.onReady(() => {
             app.ready();
 
-            this.renderer.loadTextures();
+            this.renderer.load();
         });
 
         app.onLogin(this.socket.connect.bind(this.socket));

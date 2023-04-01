@@ -1,19 +1,24 @@
 precision mediump float;
-
 // TODO: There is a bit too much branching here, need to try and simplify a bit
 
-#pragma define(NUM_TILESETS)
-#pragma define(NUM_TILESET_IMAGES)
+const int uTilesetCount = 6;
 
 varying vec2 vPixelCoord;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uLayer;
-#pragma declare_tileset_uniforms
 
-uniform vec2 uTilesetTileSize[NUM_TILESET_IMAGES];
-uniform vec2 uTilesetTileOffset[NUM_TILESET_IMAGES];
-uniform vec2 uInverseTilesetTextureSize[NUM_TILESET_IMAGES];
+// Hardcoded for now, just has to work.
+uniform sampler2D uTilesets0;
+uniform sampler2D uTilesets1;
+uniform sampler2D uTilesets2;
+uniform sampler2D uTilesets3;
+uniform sampler2D uTilesets4;
+uniform sampler2D uTilesets5;
+
+uniform vec2 uTilesetTileSize[uTilesetCount];
+uniform vec2 uTilesetTileOffset[uTilesetCount];
+uniform vec2 uInverseTilesetTextureSize[uTilesetCount];
 uniform float uAlpha;
 uniform int uRepeatTiles;
 
@@ -49,7 +54,7 @@ float hasFlag(float value, float flag)
 
 vec2 getTilesetTileSize(int index)
 {
-    for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
+    for (int i = 0; i < uTilesetCount; ++i)
         if (i == index)
             return uTilesetTileSize[i];
 
@@ -58,16 +63,37 @@ vec2 getTilesetTileSize(int index)
 
 vec2 getTilesetTileOffset(int index)
 {
-    for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
+    for (int i = 0; i < uTilesetCount; ++i)
         if (i == index)
             return uTilesetTileOffset[i];
 
     return vec2(0.0, 0.0);
 }
 
-vec4 getColor(int index, vec2 coord)
-{
-    #pragma get_texture_cases
+vec4 getColor(int index, vec2 coord) {
+    if (index == 0) {
+        return texture2D(uTilesets0, coord * uInverseTilesetTextureSize[0]);
+    }
+
+    if (index == 1) {
+        return texture2D(uTilesets1, coord * uInverseTilesetTextureSize[1]);
+    }
+
+    if (index == 2) {
+        return texture2D(uTilesets2, coord * uInverseTilesetTextureSize[2]);
+    }
+
+    if (index == 3) {
+        return texture2D(uTilesets3, coord * uInverseTilesetTextureSize[3]);
+    }
+
+    if (index == 4) {
+        return texture2D(uTilesets4, coord * uInverseTilesetTextureSize[4]);
+    }
+
+    if (index == 5) {
+        return texture2D(uTilesets5, coord * uInverseTilesetTextureSize[5]);
+    }
 
     return vec4(0.0, 0.0, 0.0, 0.0);
 }

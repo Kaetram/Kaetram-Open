@@ -125,6 +125,15 @@ export default class Renderer {
     }
 
     /**
+     * Superclass implementation for the WebGL renderer. We start loading
+     * textures after the map has completed loading the tilesets.
+     */
+
+    public load(): void {
+        //
+    }
+
+    /**
      * The screen width/height are calculated according to the dimensions
      * obtained from the camera. The canvas sizes are calculated according
      * to the screen width and height with the zoom factor applied. After
@@ -207,15 +216,6 @@ export default class Renderer {
         this.crownTier7 = this.game.sprites.get('crown-tier7')!;
 
         if (!this.crownTier7.loaded) this.crownTier7.load();
-    }
-
-    /**
-     * Superclass implementation for the WebGL renderer. We start loading
-     * textures after the map has completed loading the tilesets.
-     */
-
-    public loadTextures(): void {
-        //
     }
 
     /**
