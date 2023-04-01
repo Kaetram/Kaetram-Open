@@ -478,6 +478,14 @@ export default class Item extends Entity {
     }
 
     /**
+     * Check if the item is enchanted.
+     * @returns Whether or not the item has any enchantments.
+     */
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
+    }
+
+    /**
      * Check if the item is owned by the player. An item owned by the player
      * can only be picked up by that player. Once the item starts blinking,
      * its ownership is renounced.
