@@ -39,6 +39,8 @@ export default class WebGL extends Renderer {
     private tilesetOffsetBuffer: Float32Array = new Float32Array();
     private inverseTilesetTextureSizeBuffer: Float32Array = new Float32Array();
 
+    private inverseTileCount: Float32Array = new Float32Array(2);
+
     private quadBuffer = this.backContext.createBuffer()!;
     private quadVertices = new Float32Array([
         //x  y  u  v
@@ -78,21 +80,26 @@ export default class WebGL extends Renderer {
         this.tilesetOffsetBuffer = new Float32Array(this.map.tilesets.length * 2);
         this.inverseTilesetTextureSizeBuffer = new Float32Array(this.map.tilesets.length * 2);
 
-        // Load the buffer data...
-        this.loadBufferData();
+        // Set the inverse tile count.
+        this.inverseTileCount[0] = 1 / this.map.width;
+        this.inverseTileCount[1] = 1 / this.map.height;
 
+        // Load the buffer data...
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
             // Load the texture information for each tileset.
             for (let tileset of this.map.tilesets) this.createTexture(context, tileset);
-
-            this.bindTileShaders(context);
         });
 
-        // Create the texture array where we store the tileset information.
+        // GOOD UNTIL HERE.... All tileset texture data is loaded properly.
+
+        // Create the texture array where we store the tilemap information
         this.textureData = new Uint8Array(this.map.width * this.map.height * 4);
 
         // Initialize the texture data with the map information we have.
         this.loadMapTexture();
+
+        // Load the buffer data for the tileset texture information.
+        this.loadBufferData();
 
         // Synchronize the texture data with the WebGL texture.
         this.synchronize();
@@ -109,18 +116,29 @@ export default class WebGL extends Renderer {
         for (let i = 0; i < this.textureData.length; i += 4) {
             let tileInfo = this.map.data[i / 4];
 
+            if (!tileInfo) {
+                this.textureData[i] = 255;
+                this.textureData[i + 1] = 255;
+                this.textureData[i + 2] = 255;
+                this.textureData[i + 3] = 255;
+
+                continue;
+            }
+
             // Skip rotated tiles for now, we'll deal with them later.
             if ((tileInfo as RotatedTile).v) continue;
 
-            let position = this.map.indexToCoord(i / 4);
-
-            this.textureData[i] = position.x;
-            this.textureData[i + 1] = position.y;
-            // Prototype
-            this.textureData[i + 2] = Array.isArray(tileInfo)
-                ? (tileInfo[0] as number)
-                : (tileInfo as number);
+            // Wrong for now...
+            this.textureData[i] = (tileInfo as number) % (this.map.height / this.map.tileSize);
+            this.textureData[i + 1] = Math.floor(
+                (tileInfo as number) / (this.map.height / this.map.tileSize)
+            );
+            this.textureData[i + 2] = 1;
+            this.textureData[i + 3] = 0;
         }
+
+        console.log(this.textureData);
+        console.log(this.tilesetTextures);
     }
 
     /**
@@ -156,6 +174,9 @@ export default class WebGL extends Renderer {
             this.quadVertices,
             this.backContext.STATIC_DRAW
         );
+
+        // Synchronize the texture data with the WebGL texture.
+        this.bindTileShaders(this.backContext);
     }
 
     /**
@@ -256,7 +277,7 @@ export default class WebGL extends Renderer {
         context.uniform2fv(this.shader.uniforms.uTilesetTileOffset!, this.tilesetOffsetBuffer);
         context.uniform2fv(
             this.shader.uniforms.uInverseTilesetTextureSize!,
-            this.tilesetOffsetBuffer
+            this.inverseTilesetTextureSizeBuffer
         );
     }
 
@@ -309,15 +330,15 @@ export default class WebGL extends Renderer {
         this.backContext.activeTexture(this.backContext.TEXTURE0);
 
         // Bind the tile layer shaders to the context.
-        this.backContext.useProgram(this.shader.program);
+        this.bindTileShaders(this.backContext);
 
         // Uniforms for the tile shader layer... move these later
         this.backContext.uniform1f(this.shader.uniforms.uAlpha, 1);
         this.backContext.uniform1i(this.shader.uniforms.uRepeatTiles, 0);
-        this.backContext.uniform2fv(this.shader.uniforms.uInverseLayerTileCount, [
-            1 / this.map.tileSize,
-            1 / this.map.tileSize
-        ]);
+        this.backContext.uniform2fv(
+            this.shader.uniforms.uInverseLayerTileCount,
+            this.inverseTileCount
+        );
 
         this.backContext.uniform2f(this.shader.uniforms.uOffset, -x, y);
 
