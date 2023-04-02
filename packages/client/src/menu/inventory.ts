@@ -15,6 +15,7 @@ type BatchCallback = () => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
+    interactable?: boolean;
     equippable?: boolean;
 
     name?: string;
@@ -158,7 +159,8 @@ export default class Inventory extends Menu {
 
         if (doubleClick) {
             if (element.edible) this.handleAction(Modules.MenuActions.Eat);
-            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+            else if (element.equippable || element.interactable)
+                this.handleAction(Modules.MenuActions.Equip);
 
             this.actions.hide();
 
@@ -174,6 +176,7 @@ export default class Inventory extends Menu {
         let actions: Modules.MenuActions[] = [];
 
         if (element.edible) actions.push(Modules.MenuActions.Eat);
+        if (element.interactable) actions.push(Modules.MenuActions.Eat2);
         if (element.equippable) actions.push(Modules.MenuActions.Equip);
 
         // Push drop option as the last one.
@@ -249,6 +252,7 @@ export default class Inventory extends Menu {
 
         // Update the edible and equippable properties.
         slotElement.edible = slot.edible!;
+        slotElement.interactable = slot.interactable!;
         slotElement.equippable = slot.equippable!;
 
         // Add the item stats and name

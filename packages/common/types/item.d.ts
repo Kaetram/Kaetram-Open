@@ -33,6 +33,7 @@ export interface ItemData {
     name: string;
     stackable?: boolean;
     edible?: boolean;
+    interactable?: boolean;
     maxStackSize?: number;
     plugin?: string;
     price?: number;
