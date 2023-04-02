@@ -5,7 +5,8 @@
         "bigflask": 720,
         "manaflask": 760,
         "bigmanaflask": 500,
-        "burger": 680
+        "burger": 680,
+        "bowstring": 1200
     },
 
     "arrows": {

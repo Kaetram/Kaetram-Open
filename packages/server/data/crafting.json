@@ -1,8 +1,8 @@
 {
     "fletching": {
-        "arrow": {
+        "stick": {
             "level": 1,
-            "experience": 20,
+            "experience": 10,
             "requirements": [
                 {
                     "key": "logs",
@@ -11,7 +11,45 @@
             ],
 
             "result": {
-                "count": 15
+                "count": 10
+            }
+        },
+
+        "arrow": {
+            "level": 1,
+            "experience": 10,
+            "requirements": [
+                {
+                    "key": "stick",
+                    "count": 10
+                },
+                {
+                    "key": "feather",
+                    "count": 10
+                }
+            ],
+
+            "result": {
+                "count": 10
+            }
+        },
+
+        "woodenbow": {
+            "level": 1,
+            "experience": 10,
+            "requirements": [
+                {
+                    "key": "logs",
+                    "count": 1
+                },
+                {
+                    "key": "bowstring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
             }
         }
     },

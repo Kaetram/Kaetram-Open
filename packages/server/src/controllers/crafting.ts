@@ -79,6 +79,9 @@ export default class Crafting {
      */
 
     public craft(player: Player, key: string, count = 1): void {
+        // Prevent players from spamming the craft menu.
+        if (!player.canCraft()) return;
+
         // Ensure the index is valid.
         if (!key) return player.notify(`You must select an item to craft.`);
 
@@ -106,9 +109,10 @@ export default class Crafting {
             );
 
         /**
-         * Here we ensure that the player has the item in their inventory. If the count requested
-         * is greater than the amount of items in the inventory, we will set the count to the amount
-         * of items in the inventory.
+         * The actual count refers to the maximum amount of items that the player can craft. So if
+         * the player requests to craft 5x of an item, but they only have 3x of the requirements,
+         * then the actual count will be 3x. This is to prevent the player from crafting more items
+         * than they have the requirements for.
          */
 
         let actualCount = count;
@@ -119,15 +123,17 @@ export default class Crafting {
             if (!player.inventory.hasItem(requirement.key, requirement.count))
                 return player.notify(`You do not have the required items to craft that.`);
 
-            let itemCount = player.inventory.count(requirement.key);
+            let itemCount = player.inventory.count(requirement.key),
+                requestedAmount = requirement.count * count;
 
-            // If the player has less than the amount required, set the count to the amount they have.
-            if (itemCount < count) actualCount = itemCount;
+            // Requested amount is greater than the amount of items the player has.
+            if (requestedAmount > itemCount)
+                actualCount = Math.floor(itemCount / requirement.count);
         }
 
         // Remove the items from the player's inventory.
         for (let requirement of craftingItem.requirements)
-            player.inventory.removeItem(requirement.key, actualCount);
+            player.inventory.removeItem(requirement.key, requirement.count * actualCount);
 
         // Award experience to the player.
         player.skills
@@ -135,7 +141,7 @@ export default class Crafting {
             .addExperience(craftingItem.experience * actualCount);
 
         // Add the crafted item to the player's inventory.
-        player.inventory.add(new Item(key, -1, -1, false, actualCount));
+        player.inventory.add(new Item(key, -1, -1, false, craftingItem.result.count * actualCount));
     }
 
     /**

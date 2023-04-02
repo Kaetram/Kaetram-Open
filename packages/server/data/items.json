@@ -4798,258 +4798,6 @@
     "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
-  "leafcommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Common"
-  },
-
-  "leafuncommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Uncommon"
-  },
-
-  "leafrare": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Rare"
-  },
-
-  "branchcommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Common"
-  },
-
-  "branchuncommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Uncommon"
-  },
-
-  "branchrare": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Rare"
-  },
-
-  "seedcommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Common"
-  },
-
-  "seeduncommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Uncommon"
-  },
-
-  "seedrare": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Rare"
-  },
-
-  "clothcommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Common"
-  },
-
-  "clothuncommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Uncommon"
-  },
-
-  "clothcare": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Rare"
-  },
-
-  "rockcommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Common"
-  },
-
-  "rockuncommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Uncommon"
-  },
-
-  "rockrare": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Rare"
-  },
-
-  "mineralcommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Common"
-  },
-
-  "mineraluncommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Uncommon"
-  },
-
-  "mineralrare": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Rare"
-  },
-
-  "elementcommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Common"
-  },
-
-  "elementuncommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Uncommon"
-  },
-
-  "elementrare": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Rare"
-  },
-
-  "weaponhiltcommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Common Weapon Hilt"
-  },
-
-  "weaponhiltuncommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Uncommon Weapon Hilt"
-  },
-
-  "weaponhiltrare": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Rare Weapon Hilt"
-  },
-
-  "weaponbladecommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Common Weapon Blade"
-  },
-
-  "beaponbladeuncommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Uncommon Weapon Blade"
-  },
-
-  "beaponbladerare": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Rare Weapon Blade"
-  },
-
-  "armorpatchcommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Common Armor Patch"
-  },
-
-  "armorpatchuncommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Uncommon Armor Patch"
-  },
-
-  "armorpatchrare": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Rare Armor Patch"
-  },
-
-  "armorbindingcommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Common Armor Binding"
-  },
-
-  "armorbindinguncommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Uncommon Armor Binding"
-  },
-
-  "armorbindingrare": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Rare Armor Binding"
-  },
-
-  "woodcommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Common"
-  },
-
-  "wooduncommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Uncommon"
-  },
-
-  "woodrare": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Rare"
-  },
-
-  "weaponbowlimbcommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Common"
-  },
-
-  "weaponbowlimbuncommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Uncommon"
-  },
-
-  "weaponbowlimbrare": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Rare"
-  },
-
-  "weaponbowstringcommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Common"
-  },
-
-  "weaponbowstringuncommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Uncommon"
-  },
-
-  "weaponbowstringrare": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Rare"
-  },
-
   "sword1": {
     "type": "weapon",
     "name": "Best In-Slot Sword",
@@ -5193,11 +4941,27 @@
     "name": "Platinum Armour"
   },
 
+  "knife": {
+    "type": "object",
+    "name": "Knife",
+    "description": "A versatile cutting tool that will primarily be used for fletching and stuff.",
+    "price": 50,
+    "interactable": true,
+    "plugin": "knife"
+  },
+
+  "bowstring": {
+    "type": "object",
+    "name": "Bow String",
+    "description": "A bowstring, used to make bows. It says it right there in the name.",
+    "price": 50
+  },
+
   "logs": {
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 50
+    "price": 65
   },
 
   "palmlogs": {
@@ -5327,14 +5091,16 @@
 
   "stick": {
     "type": "object",
-    "name": "Stick",
-    "price": 50,
+    "name": "Shaft",
+    "price": 2,
+    "stackable": true,
     "description": "A stick. It's a stick. What else do you want me to say about it? You can probably use it to craft stuff now that it has been added in the game."
   },
 
   "feather": {
     "type": "object",
     "name": "Feather",
+    "stackable": true,
     "price": 50,
     "description": "A feather, I think it came off of a bird or something. You could make arrows with this thing."
   },

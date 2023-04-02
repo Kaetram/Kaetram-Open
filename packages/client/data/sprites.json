@@ -3546,6 +3546,17 @@
     "offsetY": 0
   },
   {
+    "id": "item-bowstring",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-logs",
     "animations": {
       "idle": {
@@ -4862,6 +4873,11 @@
     "offsetY": 0
   },
   {
+    "id": "item-knife",
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-sword2",
     "offsetX": 0,
     "offsetY": 0
@@ -4956,6 +4972,12 @@
   },
   {
     "id": "item-feather",
+    "animations": {
+      "idle": {
+        "length": 4,
+        "row": 0
+      }
+    },
     "offsetX": 0,
     "offsetY": 0
   },

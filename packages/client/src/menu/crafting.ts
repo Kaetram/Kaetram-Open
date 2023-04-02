@@ -40,9 +40,10 @@ export default class Crafting extends Menu {
         this.craftFive.addEventListener('click', () => this.handleAmount(5));
         this.craftTen.addEventListener('click', () => this.handleAmount(10));
 
-        this.craftButton.addEventListener('click', () =>
-            this.craftCallback?.(this.selectedKey, this.craftAmount)
-        );
+        this.craftButton.addEventListener('click', () => {
+            this.craftCallback?.(this.selectedKey, this.craftAmount);
+            this.hide();
+        });
     }
 
     /**
@@ -79,15 +80,13 @@ export default class Crafting extends Menu {
         this.selectedKey = key;
 
         // Set the result image.
-        let icon: HTMLDivElement = this.result.querySelector('.crafting-option-icon')!;
+        let icon: HTMLDivElement = this.result.querySelector('.crafting-option-icon')!,
+            countElement: HTMLDivElement = this.result.querySelector('.crafting-option-count')!;
 
         icon.style.backgroundImage = Utils.getImageURL(key);
 
-        if (count > 1) {
-            let countElement: HTMLDivElement = this.result.querySelector('.crafting-option-count')!;
-
-            countElement.innerHTML = `x${count}`;
-        }
+        // Set the amount of the item that we will receive as a result.
+        countElement.innerHTML = `x${count}`;
 
         // Create new requirement element and append it to the list of requirements.
         for (let requirement of requirements)
