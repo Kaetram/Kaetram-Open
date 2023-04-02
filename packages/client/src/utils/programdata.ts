@@ -65,6 +65,8 @@ export default class ProgramData {
             // If the location is valid, add it to the uniforms.
             if (location) this.uniforms[name] = location;
         }
+
+        console.log(this.uniforms);
     }
 
     /**
