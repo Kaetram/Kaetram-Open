@@ -142,6 +142,7 @@ export default class Player extends Character {
 
     private lastNotify = 0;
     private lastEdible = 0;
+    public lastCraft = 0;
 
     private currentSong: string | undefined;
 
@@ -681,6 +682,8 @@ export default class Player extends Character {
                 item = this.inventory.getItem(this.inventory.get(fromIndex));
 
                 if (!item) return;
+
+                if (item.interactable && item.plugin?.onUse(this)) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
@@ -1696,6 +1699,14 @@ export default class Player extends Character {
 
     private canEat(): boolean {
         return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last craft.
+     */
+
+    public canCraft(): boolean {
+        return Date.now() - this.lastCraft > Modules.Constants.CRAFT_COOLDOWN;
     }
 
     /**
