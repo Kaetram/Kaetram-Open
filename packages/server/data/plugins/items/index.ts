@@ -4,6 +4,7 @@ import blackpotion from './blackpotion';
 import hotsauce from './hotsauce';
 import snowpotion from './snowpotion';
 import firepotion from './firepotion';
+import knife from './knife';
 
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 
@@ -17,5 +18,6 @@ export default {
     blackpotion,
     hotsauce,
     snowpotion,
-    firepotion
+    firepotion,
+    knife
 };

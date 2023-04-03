@@ -26,7 +26,8 @@ import type {
     TradePacket,
     HandshakePacket,
     EnchantPacket,
-    GuildPacket
+    GuildPacket,
+    CraftingPacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../character';
 import type Player from './player';
@@ -126,6 +127,9 @@ export default class Incoming {
                     }
                     case Packets.Examine: {
                         return this.handleExamine(message);
+                    }
+                    case Packets.Crafting: {
+                        return this.handleCrafting(message);
                     }
                 }
             } catch (error) {
@@ -512,6 +516,9 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
+        if (!this.player.canAccessContainer)
+            return this.player.notify('You cannot do that right now.');
+
         switch (packet.opcode) {
             case Opcodes.Enchant.Select: {
                 return this.world.enchanter.select(this.player, packet.index!);
@@ -633,5 +640,26 @@ export default class Incoming {
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
         this.player.notify(entity.getDescription());
+    }
+
+    /**
+     * Handles incoming actions from the client regarding the crafting interface.
+     * @param data Contains information about the kind of action.
+     */
+
+    private handleCrafting(data: CraftingPacket): void {
+        // Ensure the player is not maliciously trying to craft something.
+        if (this.player.activeCraftingInterface === -1)
+            return this.player.notify(`You cannot do that right now.`);
+
+        switch (data.opcode) {
+            case Opcodes.Crafting.Select: {
+                return this.world.crafting.select(this.player, data.key!);
+            }
+
+            case Opcodes.Crafting.Craft: {
+                return this.world.crafting.craft(this.player, data.key!, data.count!);
+            }
+        }
     }
 }

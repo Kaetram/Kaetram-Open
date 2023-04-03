@@ -171,7 +171,13 @@ export enum Skills {
     Magic,
     Mining,
     Strength,
-    Defense
+    Defense,
+    Fishing,
+    Cooking,
+    Smithing,
+    Crafting,
+    Fletching,
+    Smelting // Not a skill, but used to differntiate smithing from smelting in the crafting.
 }
 
 // It's easier to define and swap order around here.
@@ -183,7 +189,12 @@ export let SkillsOrder = [
     Skills.Archery,
     Skills.Magic,
     Skills.Lumberjacking,
-    Skills.Mining
+    Skills.Mining,
+    Skills.Fishing,
+    Skills.Cooking,
+    Skills.Fletching,
+    Skills.Crafting,
+    Skills.Smithing
 ];
 
 export enum Enchantment {
@@ -406,6 +417,36 @@ export let SkillExpColours = {
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
         stroke: 'rgb(7, 63, 176)'
+    },
+
+    [Skills.Fishing]: {
+        fill: 'rgb(0, 255, 255)',
+        stroke: 'rgb(0, 255, 255)'
+    },
+
+    [Skills.Cooking]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Smithing]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Crafting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Fletching]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Smelting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     }
 };
 
@@ -510,6 +551,7 @@ export const Constants = {
     SKILL_LOOP: 1000, // How often we check the loop of a skill
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
+    CRAFT_COOLDOWN: 1500, // 1.5 seconds between crafting items to prevent spam.
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.

@@ -60,7 +60,8 @@ import type {
     ListPacket,
     TradePacket,
     HandshakePacket,
-    GuildPacket
+    GuildPacket,
+    CraftingPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -157,6 +158,7 @@ export default class Connection {
         this.messages.onEffect(this.handleEffect.bind(this));
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
+        this.messages.onCrafting(this.handleCrafting.bind(this));
     }
 
     /**
@@ -1371,6 +1373,17 @@ export default class Connection {
         }
 
         this.menu.getFriends().handle(opcode, info.username, info.status, info.serverId);
+    }
+
+    /**
+     * Handles receiving information about crafting. This is used to synchronize the crafting
+     * user interface with the server. When a player selects an item to craft this
+     * @param opcode Contains the type of crafting action that we want to perform.
+     * @param info Contains the information about the crafting action.
+     */
+
+    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+        this.menu.getCrafting().handle(opcode, info);
     }
 
     /**

@@ -48,7 +48,8 @@ export default class Commands {
     private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'players': {
-                let population = this.world.getPopulation(),
+                let players = this.world.entities.getPlayerUsernames(),
+                    population = players.length,
                     singular = population === 1;
 
                 this.player.notify(
@@ -56,6 +57,9 @@ export default class Commands {
                         singular ? 'person' : 'people'
                     } online.`
                 );
+
+                // Show the names of the players that are online.
+                if (this.player.isAdmin()) this.player.notify(players.join(', '));
 
                 return;
             }
