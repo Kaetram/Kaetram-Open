@@ -210,14 +210,26 @@ export default class WebGL extends Renderer {
             shader.uniforms.uInverseTilesetTextureSize!,
             this.inverseTilesetTextureSizeBuffer
         );
+    }
 
-        // Scaling and viewport
-        let scaledX = this.background.width / this.camera.zoomFactor,
-            scaledY = this.background.height / this.camera.zoomFactor,
-            viewPort = new Float32Array([scaledX, scaledY]);
+    /**
+     * Override for the canvas resizing so that it handles view port
+     * for WebGL contexts.
+     */
 
-        context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
-        context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
+    public override resize(): void {
+        super.resize();
+
+        this.forEachDrawingContext((context: WebGLRenderingContext) => {
+            // Scaling and viewport
+            let viewPort = new Float32Array([this.screenWidth, this.screenHeight]),
+                shader = this.getShader(context);
+
+            console.log(`screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}`);
+
+            context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
+            context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
+        });
     }
 
     /**
@@ -226,6 +238,8 @@ export default class WebGL extends Renderer {
 
     public override render(): void {
         this.draw();
+
+        super.render();
     }
 
     /**
