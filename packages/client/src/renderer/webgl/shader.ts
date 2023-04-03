@@ -3,7 +3,7 @@
  * apply shaders and assign it to a WebGLProgram.
  */
 
-import log from '../lib/log';
+import log from '../../lib/log';
 
 interface Attributes {
     [key: string]: number;
@@ -19,6 +19,8 @@ interface UniformAttributes {
  */
 
 export default class ProgramData {
+    public id = '';
+
     public program: WebGLProgram;
 
     // The attributes for the program.
@@ -33,6 +35,7 @@ export default class ProgramData {
         fragmentShader: string,
         attributes: Attributes = {}
     ) {
+        this.id = (context.canvas as HTMLCanvasElement).id;
         this.program = this.compile(context, vertexShader, fragmentShader, attributes)!;
 
         // Build attribute locations based on the created program.
@@ -65,8 +68,6 @@ export default class ProgramData {
             // If the location is valid, add it to the uniforms.
             if (location) this.uniforms[name] = location;
         }
-
-        console.log(this.uniforms);
     }
 
     /**
