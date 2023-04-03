@@ -15,8 +15,8 @@ import Socket from './network/socket';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
-import WebGL from './renderer/impl/webgl';
-import Canvas from './renderer/impl/canvas';
+import WebGL from './renderer/webgl/webgl';
+import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
 import { agent } from './utils/detect';
@@ -87,11 +87,7 @@ export default class Game {
 
         app.sendStatus('Loading game');
 
-        this.map.onReady(() => {
-            app.ready();
-
-            this.renderer.load();
-        });
+        this.map.onReady(() => app.ready());
 
         app.onLogin(this.socket.connect.bind(this.socket));
         app.onResize(this.resize.bind(this));

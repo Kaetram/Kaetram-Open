@@ -1,15 +1,16 @@
-import Renderer from '../renderer';
-import Character from '../../entity/character/character';
+import Renderer from './renderer';
+
+import Character from '../entity/character/character';
 
 import { Vec2 } from 'illuminated';
 import { Modules } from '@kaetram/common/network';
 
-import type Game from '../../game';
-import type Splat from '../infos/splat';
-import type Entity from '../../entity/entity';
-import type Item from '../../entity/objects/item';
-import type Player from '../../entity/character/player/player';
-import type { RendererLighting } from '../renderer';
+import type Game from '../game';
+import type Splat from './infos/splat';
+import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
+import type Player from '../entity/character/player/player';
+import type { RendererLighting } from './renderer';
 import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
 
 enum TileFlip {
