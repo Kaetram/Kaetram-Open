@@ -142,6 +142,7 @@ export default class Player extends Character {
 
     private lastNotify = 0;
     private lastEdible = 0;
+    public lastCraft = 0;
 
     private currentSong: string | undefined;
 
@@ -155,6 +156,10 @@ export default class Player extends Character {
     // NPC talking
     public npcTalk = '';
     public talkIndex = 0;
+
+    // Anti-cheat container
+    public canAccessContainer = false;
+    public activeCraftingInterface = -1; // The skill ID
 
     // Minigame status of the player.
     public minigame?: Opcodes.Minigame;
@@ -678,6 +683,8 @@ export default class Player extends Character {
 
                 if (!item) return;
 
+                if (item.interactable && item.plugin?.onUse(this)) return;
+
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
                     this.inventory.remove(fromIndex, 1);
@@ -693,6 +700,8 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
+                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
@@ -763,16 +772,41 @@ export default class Player extends Character {
 
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
-            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            diffX = Math.abs(this.x - parseInt(coords[0])),
+            diffY = Math.abs(this.y - parseInt(coords[1]));
+
+        // Ensure that the player is close enough to the object.
+        if (diffX > 2 || diffY > 2) return;
+
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
         if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
         // If we don't find a tree then we try finding a rock.
-
         let rock = this.world.globals.getRocks().findResource(index);
 
         if (rock) return this.skills.getMining().mine(this, rock);
+
+        /**
+         * Here we use the cursor (I know, it's a bit of a hack) to find the type
+         * of crafting station the the player is trying to interact with.
+         */
+
+        let cursor = this.map.getCursorFromIndex(index);
+
+        if (!cursor) return;
+
+        // Handle interactable crafting stations.
+        switch (cursor) {
+            case 'smithing': {
+                return this.world.crafting.open(this, Modules.Skills.Smithing);
+            }
+
+            case 'cooking': {
+                return this.world.crafting.open(this, Modules.Skills.Cooking);
+            }
+        }
     }
 
     /**
@@ -935,6 +969,10 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // If the player clicked anywhere outside the bank then the bank is no longer opened.
+        this.canAccessContainer = false;
+        this.activeCraftingInterface = -1;
+
         if (this.map.isDoor(x, y) || (target && following)) return;
         if (this.inCombat()) return;
 
@@ -1661,6 +1699,14 @@ export default class Player extends Character {
 
     private canEat(): boolean {
         return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last craft.
+     */
+
+    public canCraft(): boolean {
+        return Date.now() - this.lastCraft > Modules.Constants.CRAFT_COOLDOWN;
     }
 
     /**

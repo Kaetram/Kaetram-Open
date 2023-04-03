@@ -156,8 +156,7 @@ export default class Handler extends CharacterHandler {
         this.game.storage.setOrientation(this.character.orientation);
 
         // Reset the animated tiles when we stop moving.
-        if (!(this.character as Player).hasKeyboardMovement())
-            this.game.renderer.resetAnimatedTiles();
+        this.game.renderer.resetAnimatedTiles();
 
         // Reset movement and trading variables
         this.character.moving = false;

@@ -5,7 +5,8 @@
         "bigflask": 720,
         "manaflask": 760,
         "bigmanaflask": 500,
-        "burger": 680
+        "burger": 680,
+        "bowstring": 1200
     },
 
     "arrows": {
@@ -13,7 +14,11 @@
         "firearrow": 750,
         "poisonarrow": 700,
         "lightningarrow": 650,
-        "icearrow": 400
+        "icearrow": 400,
+        "nisocarrow": 300,
+        "cinnabararrow": 250,
+        "pythararrow": 250,
+        "iboarrow": 250
     },
 
     "unusual": {

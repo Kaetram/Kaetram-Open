@@ -22,6 +22,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
+    public interactable = false;
     public maxStackSize = 1; // Default max stack size.
     public plugin: Plugin | undefined;
 
@@ -103,6 +104,7 @@ export default class Item extends Entity {
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
+        this.interactable = this.data.interactable || this.interactable;
         this.maxStackSize = this.getMaxStackSize(this.data.maxStackSize);
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
@@ -475,6 +477,14 @@ export default class Item extends Entity {
 
     public hasEnchantment(id: Modules.Enchantment): boolean {
         return id in this.enchantments;
+    }
+
+    /**
+     * Check if the item is enchanted.
+     * @returns Whether or not the item has any enchantments.
+     */
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
     }
 
     /**
