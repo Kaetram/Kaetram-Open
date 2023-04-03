@@ -3454,6 +3454,7 @@ __metadata:
     stylelint-config-standard-scss: "npm:^6.1.0"
     typescript: "npm:^5.0.2"
     vite: "npm:^4.1.1"
+    vite-plugin-glsl: "npm:^1.1.2"
     vite-plugin-minify: "npm:^1.5.2"
     vite-plugin-pwa: "npm:^0.14.1"
     workbox-window: "npm:^6.5.4"
@@ -3682,7 +3683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^5.0.1":
+"@rollup/pluginutils@npm:^5.0.1, @rollup/pluginutils@npm:^5.0.2":
   version: 5.0.2
   resolution: "@rollup/pluginutils@npm:5.0.2"
   dependencies:
@@ -13342,6 +13343,17 @@ __metadata:
     core-util-is: "npm:1.0.2"
     extsprintf: "npm:^1.2.0"
   checksum: ec26653c2110a7c2cfbaf41e3f3e87a5e08cbde81f7a568603c5ae4c9459acef5a1e81cbec551f4b9d0352e4b99121ee891e77c621b8237be9ff3862764d55f5
+  languageName: node
+  linkType: hard
+
+"vite-plugin-glsl@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "vite-plugin-glsl@npm:1.1.2"
+  dependencies:
+    "@rollup/pluginutils": "npm:^5.0.2"
+  peerDependencies:
+    vite: ^3.0.0 || ^4.0.0
+  checksum: 4cec834ee0990246d0ccc7a3812c81c0495ba24571554d6bb7eb2ba9120cb9adfa8566218564cb3f4f9e91445fb7a28a797693bace7667faae205c3c727fce2e
   languageName: node
   linkType: hard
 

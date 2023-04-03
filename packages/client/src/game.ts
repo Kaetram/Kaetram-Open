@@ -15,7 +15,8 @@ import Socket from './network/socket';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
-import Renderer from './renderer/renderer';
+import WebGL from './renderer/webgl/webgl';
+import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
 import { agent } from './utils/detect';
@@ -43,7 +44,7 @@ export default class Game {
 
     public minigame: Minigame = new Minigame();
 
-    public renderer: Renderer;
+    public renderer: WebGL | Canvas;
     public input: InputController;
 
     public socket: Socket;
@@ -62,6 +63,7 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
+    public useWebGl = true;
 
     public constructor(public app: App) {
         this.storage = app.storage;
@@ -72,7 +74,7 @@ export default class Game {
         this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
         this.sprites = new SpritesController();
 
-        this.renderer = new Renderer(this);
+        this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
