@@ -58,6 +58,13 @@
     border: 0;
 }
 
+.container {
+    cursor: url('/img/hand.png'), auto;
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+
 .container-slot,
 .container-slot-large {
     margin: auto;
@@ -107,13 +114,6 @@
 @each $size, $i in media.$sizes {
     @media ($size) {
         .container {
-            cursor: url('/img/hand.png'), auto;
-
-            position: absolute;
-            inset: 0;
-
-            display: none;
-
             width: 344px * $i;
             height: 157px * $i;
             margin: auto;
@@ -160,6 +160,22 @@
         .container-slot-large > p {
             padding-top: 4px * $i;
         }
+
+        .new-close-container {
+            width: 11px * $i;
+            height: 12px * $i;
+            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-x: -124px * $i;
+            }
+
+            &:active,
+            &.active {
+                background-position-x: -136px * $i;
+            }
+        }
     }
 
     @media (--sm) {
@@ -174,4 +190,9 @@
 .close-container {
     top: -2% !important;
     left: 96% !important;
+}
+
+.new-close-container {
+    position: absolute;
+    right: 1px;
 }

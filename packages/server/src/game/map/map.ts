@@ -307,16 +307,13 @@ export default class Map {
     }
 
     /**
-     * Converts the tileIndex into a position object and returns
-     * a string formatted version of the coordinate.
-     * @param tileIndex The index we are converting to a position.
-     * @returns A string of the x and y coordinate.
+     * Obtains the cursor based on the specified tile index.
+     * @param index The tile index we are checking.
+     * @returns The cursor name if it exists.
      */
 
-    private getObjectId(tileIndex: number): string {
-        let position = this.indexToCoord(tileIndex);
-
-        return `${position.x}-${position.y}`;
+    public getCursorFromIndex(index: number): string {
+        return this.getCursor(this.data[index]);
     }
 
     /**

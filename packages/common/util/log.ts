@@ -75,6 +75,12 @@ class Log {
         this.send('error', data, 41, 'critical');
     }
 
+    public assert(assertion: boolean, ...data: unknown[]): void {
+        if (assertion) return;
+
+        this.send('error', data, 41, 'assert');
+    }
+
     public notice(...data: unknown[]): void {
         this.send('log', data, 32, 'notice');
     }

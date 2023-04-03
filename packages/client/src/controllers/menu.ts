@@ -16,6 +16,7 @@ import Trade from '../menu/trade';
 import Interact from '../menu/interact';
 import Leaderboards from '../menu/leaderboards';
 import Guilds from '../menu/guilds';
+import Crafting from '../menu/crafting';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -24,6 +25,7 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private crafting: Crafting = new Crafting();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -81,7 +83,8 @@ export default class MenuController {
             trade: this.trade,
             interact: this.interact,
             leaderboards: this.leaderboards,
-            guilds: this.guilds
+            guilds: this.guilds,
+            crafting: this.crafting
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -103,6 +106,9 @@ export default class MenuController {
         this.trade.onSelect(this.handleTradeSelect.bind(this));
         this.trade.onAccept(this.handleTradeAccept.bind(this));
         this.trade.onClose(this.handleTradeClose.bind(this));
+
+        this.crafting.onSelect(this.handleCraftingSelect.bind(this));
+        this.crafting.onCraft(this.handleCraftingConfirm.bind(this));
 
         this.load();
     }
@@ -259,6 +265,14 @@ export default class MenuController {
 
     public getGuilds(): Guilds {
         return this.guilds;
+    }
+
+    /**
+     * @returns The crafting menu object.
+     */
+
+    public getCrafting(): Crafting {
+        return this.crafting;
     }
 
     /**
@@ -467,6 +481,33 @@ export default class MenuController {
     private handleTradeClose(): void {
         this.game.socket.send(Packets.Trade, {
             opcode: Opcodes.Trade.Close
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the key of the item that was just selected.
+     * @param key Contains the key of the item that was selected.
+     */
+
+    private handleCraftingSelect(key: string): void {
+        this.game.socket.send(Packets.Crafting, {
+            opcode: Opcodes.Crafting.Select,
+            key
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the craft opcode and information about
+     * what the player wants to try and craft..
+     * @param key The key of the item we are trying to craft.
+     * @param count The amount of items we are trying to craft.
+     */
+
+    private handleCraftingConfirm(key: string, count: number): void {
+        this.game.socket.send(Packets.Crafting, {
+            opcode: Opcodes.Crafting.Craft,
+            key,
+            count
         });
     }
 

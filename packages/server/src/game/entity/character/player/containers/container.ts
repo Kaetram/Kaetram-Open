@@ -238,15 +238,20 @@ export default abstract class Container {
                 toStackSize!: number,
                 isSameItem = false;
 
+            // If the target slot is not empty, check if the item in the target slot is addable to the item in the source slot.
             if (!toEmpty) {
                 toItem = toContainer.getItem(toSlot);
                 toStackSize = toContainer.stackSize || toItem.maxStackSize;
                 isSameItem = fromItem.key === toItem.key;
 
+                let fromFull = fromItem.count > (toContainer.stackSize || fromItem.maxStackSize),
+                    toFull = toItem.count > (this.stackSize || toItem.maxStackSize);
+
+                // If we cannot stack the items, return early.
                 if (
-                    (fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
-                        toItem.count > (this.stackSize || toItem.maxStackSize)) &&
-                    !isSameItem
+                    ((fromFull || toFull) && !isSameItem) ||
+                    fromItem.isEnchanted() ||
+                    toItem.isEnchanted()
                 )
                     return;
             }
@@ -266,13 +271,16 @@ export default abstract class Container {
                 // Update the item in the target slot with the item in the source slot.
                 toSlot.update(fromItem, toContainer.stackSize);
 
-                if (toSlot.count < fromSlot.count) log.critical('WHY HAVE YOU FORSAKEN ME');
-                else {
-                    fromSlot.update(toItem, this.stackSize);
+                log.assert(
+                    toSlot.count >= fromSlot.count,
+                    'source slot count is greater than target slot count'
+                );
 
-                    toItem.count -= fromSlot.count;
-                    if (toItem.count > 0) log.critical("WHAT IS THIS I DON'T EVEN");
-                }
+                fromSlot.update(toItem, this.stackSize);
+
+                toItem.count -= fromSlot.count;
+
+                log.assert(toItem.count < 1, 'target item count is greater than 0');
             }
         }
 
@@ -326,7 +334,9 @@ export default abstract class Container {
                     // If the slot's key matches the item's key
                     slot.key === item.key &&
                     // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
-                    slot.count < stackSize
+                    slot.count < stackSize &&
+                    // And the item is not enchanted.
+                    !item.isEnchanted()
             );
 
         // If there's no slot with the same item, find an empty slot.
@@ -368,6 +378,24 @@ export default abstract class Container {
         } else contains = true;
 
         return contains;
+    }
+
+    /**
+     * Counts the amount of an item the container contains.
+     * @param key The key of the item we are counting.
+     * @returns The amount of items we found.
+     */
+
+    public count(key: string): number {
+        let found = 0;
+
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key !== key) return;
+
+            found += slot.count;
+        });
+
+        return found;
     }
 
     /**

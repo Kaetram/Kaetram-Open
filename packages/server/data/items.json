@@ -2702,38 +2702,6 @@
     }
   },
 
-  "antarcherarmor": {
-    "type": "armourarcher",
-    "name": "Ant Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "antladyarcherarmor": {
-    "type": "armourarcher",
-    "name": "Ant Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "tigerarcherarmor": {
-    "type": "armourarcher",
-    "name": "Tiger Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
-  "metalscarabarmor": {
-    "type": "armourarcher",
-    "name": "Scarab Archer Armour",
-    "skill": "archery",
-    "level": 55,
-    "price": 5500
-  },
-
   "gayarcherarmor": {
     "type": "armourarcher",
     "name": "Sketchy Archer Armour"
@@ -4224,21 +4192,6 @@
     "name": "Taekwondo Skin"
   },
 
-  "coolguyarmor": {
-    "type": "armourskin",
-    "name": "Cool Dude Skin"
-  },
-
-  "astronomerarmor": {
-    "type": "armourskin",
-    "name": "Astronomer Skin"
-  },
-
-  "superheroarmor": {
-    "type": "armourskin",
-    "name": "Superhero Skin"
-  },
-
   "rabbitarmor": {
     "type": "armour",
     "name": "Rabbit Armour",
@@ -4537,34 +4490,6 @@
       "strength": 0,
       "archery": 0,
       "magic": 29
-    }
-  },
-
-  "dragonmagicarmor": {
-    "type": "armour",
-    "name": "Dragon Magic Armour",
-    "skill": "magic",
-    "level": 75,
-    "price": 15200,
-    "attackStats": {
-      "crush": 18,
-      "slash": 32,
-      "stab": 21,
-      "archery": 0,
-      "magic": 95
-    },
-    "defenseStats": {
-      "crush": 4,
-      "slash": 6,
-      "stab": 4,
-      "archery": 0,
-      "magic": 109
-    },
-    "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
-      "archery": -5,
-      "magic": 49
     }
   },
 
@@ -4873,258 +4798,6 @@
     "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
-  "leafcommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Common"
-  },
-
-  "leafuncommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Uncommon"
-  },
-
-  "leafrare": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Rare"
-  },
-
-  "branchcommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Common"
-  },
-
-  "branchuncommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Uncommon"
-  },
-
-  "branchrare": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Rare"
-  },
-
-  "seedcommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Common"
-  },
-
-  "seeduncommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Uncommon"
-  },
-
-  "seedrare": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Rare"
-  },
-
-  "clothcommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Common"
-  },
-
-  "clothuncommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Uncommon"
-  },
-
-  "clothcare": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Rare"
-  },
-
-  "rockcommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Common"
-  },
-
-  "rockuncommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Uncommon"
-  },
-
-  "rockrare": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Rare"
-  },
-
-  "mineralcommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Common"
-  },
-
-  "mineraluncommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Uncommon"
-  },
-
-  "mineralrare": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Rare"
-  },
-
-  "elementcommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Common"
-  },
-
-  "elementuncommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Uncommon"
-  },
-
-  "elementrare": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Rare"
-  },
-
-  "weaponhiltcommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Common Weapon Hilt"
-  },
-
-  "weaponhiltuncommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Uncommon Weapon Hilt"
-  },
-
-  "weaponhiltrare": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Rare Weapon Hilt"
-  },
-
-  "weaponbladecommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Common Weapon Blade"
-  },
-
-  "beaponbladeuncommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Uncommon Weapon Blade"
-  },
-
-  "beaponbladerare": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Rare Weapon Blade"
-  },
-
-  "armorpatchcommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Common Armor Patch"
-  },
-
-  "armorpatchuncommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Uncommon Armor Patch"
-  },
-
-  "armorpatchrare": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Rare Armor Patch"
-  },
-
-  "armorbindingcommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Common Armor Binding"
-  },
-
-  "armorbindinguncommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Uncommon Armor Binding"
-  },
-
-  "armorbindingrare": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Rare Armor Binding"
-  },
-
-  "woodcommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Common"
-  },
-
-  "wooduncommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Uncommon"
-  },
-
-  "woodrare": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Rare"
-  },
-
-  "weaponbowlimbcommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Common"
-  },
-
-  "weaponbowlimbuncommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Uncommon"
-  },
-
-  "weaponbowlimbrare": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Rare"
-  },
-
-  "weaponbowstringcommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Common"
-  },
-
-  "weaponbowstringuncommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Uncommon"
-  },
-
-  "weaponbowstringrare": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Rare"
-  },
-
   "sword1": {
     "type": "weapon",
     "name": "Best In-Slot Sword",
@@ -5268,11 +4941,27 @@
     "name": "Platinum Armour"
   },
 
+  "knife": {
+    "type": "object",
+    "name": "Knife",
+    "description": "A versatile cutting tool that will primarily be used for fletching and stuff.",
+    "price": 50,
+    "interactable": true,
+    "plugin": "knife"
+  },
+
+  "bowstring": {
+    "type": "object",
+    "name": "Bow String",
+    "description": "A bowstring, used to make bows. It says it right there in the name.",
+    "price": 50
+  },
+
   "logs": {
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 50
+    "price": 65
   },
 
   "palmlogs": {
@@ -5402,9 +5091,18 @@
 
   "stick": {
     "type": "object",
-    "name": "Stick",
-    "price": 150,
-    "description": "A stick. It's a stick. What else do you want me to say about it?"
+    "name": "Shaft",
+    "price": 2,
+    "stackable": true,
+    "description": "A stick. It's a stick. What else do you want me to say about it? You can probably use it to craft stuff now that it has been added in the game."
+  },
+
+  "feather": {
+    "type": "object",
+    "name": "Feather",
+    "stackable": true,
+    "price": 50,
+    "description": "A feather, I think it came off of a bird or something. You could make arrows with this thing."
   },
 
   "candykey": {
@@ -5670,6 +5368,7 @@
     "name": "Arrow",
     "stackable": true,
     "maxStackSize": 9999,
+    "price": 5,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5682,7 +5381,7 @@
   "firearrow": {
     "type": "arrow",
     "name": "Fire Arrow",
-    "price": 2,
+    "price": 12,
     "stackable": true,
     "burning": true,
     "maxStackSize": 9999,
@@ -5698,7 +5397,7 @@
   "poisonarrow": {
     "type": "arrow",
     "name": "Poison Arrow",
-    "price": 2,
+    "price": 16,
     "stackable": true,
     "maxStackSize": 9999,
     "poisonous": true,
@@ -5714,7 +5413,7 @@
   "lightningarrow": {
     "type": "arrow",
     "name": "Lightning Arrow",
-    "price": 2,
+    "price": 18,
     "stackable": true,
     "maxStackSize": 9999,
     "bonuses": {
@@ -5729,7 +5428,7 @@
   "icearrow": {
     "type": "arrow",
     "name": "Ice Arrow",
-    "price": 2,
+    "price": 20,
     "stackable": true,
     "freezing": true,
     "maxStackSize": 9999,
@@ -5740,5 +5439,69 @@
       "magic": 0
     },
     "projectileName": "projectile-icearrow"
+  },
+
+  "nisocarrow": {
+    "type": "arrow",
+    "name": "Nisoc Arrow",
+    "price": 19,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 24,
+      "magic": 3
+    },
+    "projectileName": "projectile-nisocarrow"
+  },
+
+  "cinnabararrow": {
+    "type": "arrow",
+    "name": "Cinnabar Arrow",
+    "price": 21,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 2
+    },
+    "projectileName": "projectile-cinnabararrow"
+  },
+
+  "pythararrow": {
+    "type": "arrow",
+    "name": "Pythar Arrow",
+    "price": 23,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 4
+    },
+    "projectileName": "projectile-pythararrow"
+  },
+
+  "iboarrow": {
+    "type": "arrow",
+    "name": "Ibo Arrow",
+    "price": 25,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 12
+    },
+    "projectileName": "projectile-iboarrow"
   }
 }

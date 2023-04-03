@@ -7,6 +7,7 @@ import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Warps from '../controllers/warps';
 import Guilds from '../controllers/guilds';
+import Crafting from '../controllers/crafting';
 import API from '../network/api';
 import Network from '../network/network';
 import Client from '../network/client';
@@ -49,6 +50,7 @@ export default class World {
     public network: Network;
     public minigames: Minigames;
     public enchanter: Enchanter = new Enchanter();
+    public crafting: Crafting = new Crafting();
     public guilds: Guilds;
     public client: Client;
 

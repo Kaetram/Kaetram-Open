@@ -44,3 +44,4 @@ export { default as Friends } from './friends';
 export { default as Rank } from './rank';
 export { default as Player } from './player';
 export { default as Relay } from './relay';
+export { default as Crafting } from './crafting';
