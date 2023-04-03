@@ -3,8 +3,9 @@ import path from 'node:path';
 import { description, name } from '../../package.json';
 import config, { type Config } from '../common/config';
 
-import { defineConfig } from 'vite';
 import ViteLegacy from '@vitejs/plugin-legacy';
+import glsl from 'vite-plugin-glsl';
+import { defineConfig } from 'vite';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import { VitePWA } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
@@ -63,6 +64,7 @@ export default defineConfig(async ({ mode }) => {
         env = loadEnv(isProduction),
         ipv4 = await internalIpV4(),
         plugins = [
+            glsl(),
             VitePWA({
                 registerType: 'autoUpdate',
                 workbox: { cacheId: name },

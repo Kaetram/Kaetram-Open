@@ -19,6 +19,7 @@ export interface CursorTiles {
 
 // An extension of image with tileset information attached.
 interface TilesetInfo extends HTMLImageElement {
+    index: number;
     path: string;
     firstGid: number;
     lastGid: number;
@@ -38,7 +39,7 @@ export default class Map {
     private objects: number[] = [];
     private lights: number[] = [];
 
-    private tilesets: TilesetInfo[] = [];
+    public tilesets: TilesetInfo[] = [];
     private rawTilesets: ProcessedTileset[] = mapData.tilesets; // Key is tileset id, value is the firstGID
     private cursorTiles: CursorTiles = {};
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
@@ -159,12 +160,16 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        for (let rawTileset of this.rawTilesets)
-            this.loadTileset(rawTileset, (tileset: TilesetInfo) => {
+        for (let index in this.rawTilesets)
+            this.loadTileset(this.rawTilesets[index], parseInt(index), (tileset: TilesetInfo) => {
                 this.tilesets.push(tileset);
 
-                // If we've loaded all the tilesets, map is now allowed to be marked as ready.
-                if (this.tilesets.length === this.rawTilesets.length) this.tilesetsLoaded = true;
+                if (this.tilesets.length === this.rawTilesets.length) {
+                    // Sort tilesets by first gid.
+                    this.tilesets = this.tilesets.sort((a, b) => a.firstGid - b.firstGid);
+
+                    this.tilesetsLoaded = true;
+                }
             });
     }
 
@@ -175,13 +180,18 @@ export default class Map {
      * @param callback Parsed client tileset of type TilesetInfo.
      */
 
-    private loadTileset(tileset: ProcessedTileset, callback: (tileset: TilesetInfo) => void): void {
+    private loadTileset(
+        tileset: ProcessedTileset,
+        index: number,
+        callback: (tileset: TilesetInfo) => void
+    ): void {
         let tilesetInfo = new Image() as TilesetInfo,
             path = `/img/tilesets/${tileset.path}`; // tileset path in the client.
 
         tilesetInfo.crossOrigin = 'Anonymous';
         tilesetInfo.path = path;
         tilesetInfo.src = path;
+        tilesetInfo.index = index;
         tilesetInfo.firstGid = tileset.firstGid;
         tilesetInfo.lastGid = tileset.lastGid;
 
@@ -213,7 +223,7 @@ export default class Map {
             if (tilesetInfo.loaded) return;
 
             // Recursively call this function until the tileset is loaded.
-            this.loadTileset(tileset, callback);
+            this.loadTileset(tileset, index, callback);
 
             log.debug(`Retrying to load tileset: ${tileset.path}`);
         }, 500);
@@ -244,6 +254,9 @@ export default class Map {
 
                 log.info(`Preloaded map data with ${keys.length} regions.`);
             }
+
+            // Used for WebGL to load map texture information.
+            this.game.renderer.load();
         });
     }
 
