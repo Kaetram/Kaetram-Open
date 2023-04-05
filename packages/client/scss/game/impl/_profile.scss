@@ -422,6 +422,11 @@
             background-size: calc(width('skills/crafting.png') * $i);
         }
 
+        .skill-image-foraging {
+            background: url('/img/interface/skills/foraging.png');
+            background-size: calc(width('skills/foraging.png') * $i);
+        }
+
         #achievement-count,
         #quest-count {
             width: 30px * $i;

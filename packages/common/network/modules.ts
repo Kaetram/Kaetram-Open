@@ -177,7 +177,8 @@ export enum Skills {
     Smithing,
     Crafting,
     Fletching,
-    Smelting // Not a skill, but used to differntiate smithing from smelting in the crafting.
+    Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
+    Foraging
 }
 
 // It's easier to define and swap order around here.
@@ -191,9 +192,10 @@ export let SkillsOrder = [
     Skills.Lumberjacking,
     Skills.Mining,
     Skills.Fishing,
+    Skills.Foraging,
+    Skills.Crafting,
     Skills.Cooking,
     Skills.Fletching,
-    Skills.Crafting,
     Skills.Smithing
 ];
 
