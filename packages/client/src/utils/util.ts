@@ -97,7 +97,7 @@ export default {
     getImageURL(key = ''): string {
         if (key === '') return '';
 
-        return `url("/img/sprites/item-${key}.png")`;
+        return `url("/img/sprites/items/${key}.png")`;
     },
 
     /**
@@ -351,7 +351,7 @@ export default {
         if (item)
             return {
                 idle: {
-                    length: 6,
+                    length: 1,
                     row: 0
                 }
             };

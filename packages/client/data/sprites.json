@@ -3412,17 +3412,17 @@
     "offsetY": -25
   },
   {
-    "id": "item-adhererarcherarmor",
+    "id": "items/adhererarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-arrow",
+    "id": "items/arrow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-firearrow",
+    "id": "items/firearrow",
     "animations": {
       "idle": {
         "length": 4,
@@ -3433,7 +3433,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-poisonarrow",
+    "id": "items/poisonarrow",
     "animations": {
       "idle": {
         "length": 4,
@@ -3444,7 +3444,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-icearrow",
+    "id": "items/icearrow",
     "animations": {
       "idle": {
         "length": 4,
@@ -3455,7 +3455,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-lightningarrow",
+    "id": "items/lightningarrow",
     "animations": {
       "idle": {
         "length": 4,
@@ -3466,7 +3466,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-nisocarrow",
+    "id": "items/nisocarrow",
     "animations": {
       "idle": {
         "length": 6,
@@ -3477,7 +3477,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-cinnabararrow",
+    "id": "items/cinnabararrow",
     "animations": {
       "idle": {
         "length": 6,
@@ -3488,7 +3488,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-pythararrow",
+    "id": "items/pythararrow",
     "animations": {
       "idle": {
         "length": 6,
@@ -3499,7 +3499,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-iboarrow",
+    "id": "items/iboarrow",
     "animations": {
       "idle": {
         "length": 6,
@@ -3510,32 +3510,32 @@
     "offsetY": 0
   },
   {
-    "id": "item-nisocore",
+    "id": "items/nisocore",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cinnabarore",
+    "id": "items/cinnabarore",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pytharore",
+    "id": "items/pytharore",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldnugget",
+    "id": "items/goldnugget",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-iboore",
+    "id": "items/iboore",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-moonrockore",
+    "id": "items/moonrockore",
     "animations": {
       "idle": {
         "length": 4,
@@ -3546,7 +3546,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-bowstring",
+    "id": "items/bowstring",
     "animations": {
       "idle": {
         "length": 4,
@@ -3557,7 +3557,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-logs",
+    "id": "items/logs",
     "animations": {
       "idle": {
         "length": 4,
@@ -3568,7 +3568,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-palmlogs",
+    "id": "items/palmlogs",
     "animations": {
       "idle": {
         "length": 4,
@@ -3579,7 +3579,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-icelogs",
+    "id": "items/icelogs",
     "animations": {
       "idle": {
         "length": 4,
@@ -3590,7 +3590,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-pinelogs",
+    "id": "items/pinelogs",
     "animations": {
       "idle": {
         "length": 4,
@@ -3601,7 +3601,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-icepinelogs",
+    "id": "items/icepinelogs",
     "animations": {
       "idle": {
         "length": 4,
@@ -3612,7 +3612,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-willowlogs",
+    "id": "items/willowlogs",
     "animations": {
       "idle": {
         "length": 8,
@@ -3623,17 +3623,17 @@
     "offsetY": 0
   },
   {
-    "id": "item-icepalmlogs",
+    "id": "items/icepalmlogs",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bloodwoodlogs",
+    "id": "items/bloodwoodlogs",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pickle",
+    "id": "items/pickle",
     "width": 8,
     "height": 16,
     "animations": {
@@ -3646,167 +3646,167 @@
     "offsetY": 0
   },
   {
-    "id": "item-adhererrobe",
+    "id": "items/adhererrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-adminarmor",
+    "id": "items/adminarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-archerarmor",
+    "id": "items/archerarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-archerschooluniform",
+    "id": "items/archerschooluniform",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-axe",
+    "id": "items/axe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pickaxe",
+    "id": "items/pickaxe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rustedaxe",
+    "id": "items/rustedaxe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bamboospear",
+    "id": "items/bamboospear",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bastardsword",
+    "id": "items/bastardsword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bearseonbiarmor",
+    "id": "items/bearseonbiarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-beautifullife",
+    "id": "items/beautifullife",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-beearmor",
+    "id": "items/beearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-beetlearmor",
+    "id": "items/beetlearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-blackpotion",
+    "id": "items/blackpotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-blackspiderarmor",
+    "id": "items/blackspiderarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bloodbow",
+    "id": "items/bloodbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluedamboarmor",
+    "id": "items/bluedamboarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-piratearmor",
+    "id": "items/piratearmor",
     "offsetX": 0,
     "offsetY": 0
   },
     {
-    "id": "item-greenpiratearmor",
+    "id": "items/greenpiratearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-purplepiratearmor",
+    "id": "items/purplepiratearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redpiratearmor",
+    "id": "items/redpiratearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluescimitar",
+    "id": "items/bluescimitar",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluesword",
+    "id": "items/bluesword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluewingarcherarmor",
+    "id": "items/bluewingarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluewingarmor",
+    "id": "items/bluewingarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-book",
+    "id": "items/book",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-breaker",
+    "id": "items/breaker",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-samuraiarmor",
+    "id": "items/samuraiarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-burgerarmor",
+    "id": "items/burgerarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-burger",
+    "id": "items/burger",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-butcherknife",
+    "id": "items/butcherknife",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cactusaxe",
+    "id": "items/cactusaxe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cake",
+    "id": "items/cake",
     "width": 24,
     "height": 24,
     "animations": {
@@ -3819,22 +3819,22 @@
     "offsetY": -6
   },
   {
-    "id": "item-candybar",
+    "id": "items/candybar",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-wolfsword",
+    "id": "items/wolfsword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-deathflail",
+    "id": "items/deathflail",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-candybow",
+    "id": "items/candybow",
     "animations": {
       "idle": {
         "length": 4,
@@ -3845,27 +3845,27 @@
     "offsetY": 0
   },
   {
-    "id": "item-candykey",
+    "id": "items/candykey",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluebow",
+    "id": "items/bluebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-captainbow",
+    "id": "items/captainbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-catarmor",
+    "id": "items/catarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cd",
+    "id": "items/cd",
     "animations": {
       "idle": {
         "length": 4,
@@ -3876,202 +3876,202 @@
     "offsetY": 0
   },
   {
-    "id": "item-cheoliarcherarmor",
+    "id": "items/cheoliarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cheoliarmor",
+    "id": "items/cheoliarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-christmasarmor",
+    "id": "items/christmasarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-clotharmor",
+    "id": "items/clotharmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cockroachsuit",
+    "id": "items/cockroachsuit",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-cokearmor",
+    "id": "items/cokearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-combatuniform",
+    "id": "items/combatuniform",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-comb",
+    "id": "items/comb",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-conferencecall",
+    "id": "items/conferencecall",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-crystalarcherarmor",
+    "id": "items/crystalarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-crystalarmor",
+    "id": "items/crystalarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-crystalbow",
+    "id": "items/crystalbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-damboarmor",
+    "id": "items/damboarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-daywalker",
+    "id": "items/daywalker",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-deathbow",
+    "id": "items/deathbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-devilkazyaarmor",
+    "id": "items/devilkazyaarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-devilkazyasword",
+    "id": "items/devilkazyasword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-diamondring",
+    "id": "items/diamondring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-dinosaurarmor",
+    "id": "items/dinosaurarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-dolring",
+    "id": "items/dolring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-dovakinarcherarmor",
+    "id": "items/dovakinarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-dovakinarmor",
+    "id": "items/dovakinarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-dragonarmor",
+    "id": "items/dragonarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-emeraldring",
+    "id": "items/emeraldring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-enelarmor",
+    "id": "items/enelarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-eneltrident",
+    "id": "items/eneltrident",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-essentialrage",
+    "id": "items/essentialrage",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-evilarmor",
+    "id": "items/evilarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-fallenarcherarmor",
+    "id": "items/fallenarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-fallenarmor",
+    "id": "items/fallenarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-fireplay",
+    "id": "items/fireplay",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-firepotion",
+    "id": "items/firepotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-fireshot",
+    "id": "items/fireshot",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-firesword",
+    "id": "items/firesword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-manaflask",
+    "id": "items/manaflask",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bigflask",
+    "id": "items/bigflask",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bigmanaflask",
+    "id": "items/bigmanaflask",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gold",
+    "id": "items/gold",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-token",
+    "id": "items/token",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-forestbow",
+    "id": "items/forestbow",
     "offsetX": 0,
     "offsetY": 0
   },
@@ -4126,294 +4126,294 @@
   },
 
   {
-    "id": "item-forestguardiansword",
+    "id": "items/forestguardiansword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-frankensteinarmor",
+    "id": "items/frankensteinarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-friedpotatoarmor",
+    "id": "items/friedpotatoarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-frogarmor",
+    "id": "items/frogarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-frostarmor",
+    "id": "items/frostarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gayarcherarmor",
+    "id": "items/gayarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gayarmor",
+    "id": "items/gayarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gaybow",
+    "id": "items/gaybow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gbwingarcherarmor",
+    "id": "items/gbwingarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-gbwingarmor",
+    "id": "items/gbwingarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ghostrider",
+    "id": "items/ghostrider",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldenarcherarmor",
+    "id": "items/goldenarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldenarmor",
+    "id": "items/goldenarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldenbow",
+    "id": "items/goldenbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldensword",
+    "id": "items/goldensword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-goldring",
+    "id": "items/goldring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenarcherarmor",
+    "id": "items/greenarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenarmor",
+    "id": "items/greenarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenbow",
+    "id": "items/greenbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greendamboarmor",
+    "id": "items/greendamboarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenlightbow",
+    "id": "items/greenlightbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenlightsaber",
+    "id": "items/greenlightsaber",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenpendant",
+    "id": "items/greenpendant",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenwingarcherarmor",
+    "id": "items/greenwingarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenwingarmor",
+    "id": "items/greenwingarmor",
     "width": 18,
     "height": 18,
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-guardarcherarmor",
+    "id": "items/guardarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-guardarmor",
+    "id": "items/guardarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-halberd",
+    "id": "items/halberd",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-halloweenjkarmor",
+    "id": "items/halloweenjkarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-hammer",
+    "id": "items/hammer",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-hongcheolarmor",
+    "id": "items/hongcheolarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-huniarmor",
+    "id": "items/huniarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-hunterbow",
+    "id": "items/hunterbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-icerose",
+    "id": "items/icerose",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ironbow",
+    "id": "items/ironbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ironknightarmor",
+    "id": "items/ironknightarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-justicebow",
+    "id": "items/justicebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-justicehammer",
+    "id": "items/justicehammer",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-leatherarcherarmor",
+    "id": "items/leatherarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-leatherarmor",
+    "id": "items/leatherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-legolasarmor",
+    "id": "items/legolasarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-loveactring",
+    "id": "items/loveactring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-machete",
+    "id": "items/machete",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-magicspear",
+    "id": "items/magicspear",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-mailarcherarmor",
+    "id": "items/mailarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-mailarmor",
+    "id": "items/mailarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-marblependant",
+    "id": "items/marblependant",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-marinebow",
+    "id": "items/marinebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-memme",
+    "id": "items/memme",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-mermaidbow",
+    "id": "items/mermaidbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-miniseadragonarmor",
+    "id": "items/miniseadragonarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-morningstar",
+    "id": "items/morningstar",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ninjaarmor",
+    "id": "items/ninjaarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-paewoldo",
+    "id": "items/paewoldo",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-paladinarmor",
+    "id": "items/paladinarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pearlpendant",
+    "id": "items/pearlpendant",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pearlring",
+    "id": "items/pearlring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-leatherboots",
+    "id": "items/leatherboots",
     "animations": {
       "idle": {
         "length": 4,
@@ -4424,7 +4424,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-steelboots",
+    "id": "items/steelboots",
     "animations": {
       "idle": {
         "length": 4,
@@ -4435,7 +4435,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-goldboots",
+    "id": "items/goldboots",
     "animations": {
       "idle": {
         "length": 4,
@@ -4446,7 +4446,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-swiftboots",
+    "id": "items/swiftboots",
     "animations": {
       "idle": {
         "length": 4,
@@ -4457,7 +4457,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-lavaboots",
+    "id": "items/lavaboots",
     "animations": {
       "idle": {
         "length": 4,
@@ -4468,432 +4468,432 @@
     "offsetY": 0
   },
   {
-    "id": "item-pendant1",
+    "id": "items/pendant1",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rubypendant",
+    "id": "items/rubypendant",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-emeraldpendant",
+    "id": "items/emeraldpendant",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pinkcockroacharmor",
+    "id": "items/pinkcockroacharmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pinksword",
+    "id": "items/pinksword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-piratearcherarmor",
+    "id": "items/piratearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-blackpiratearcherarmor",
+    "id": "items/blackpiratearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenpiratearcherarmor",
+    "id": "items/greenpiratearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-purplepiratearcherarmor",
+    "id": "items/purplepiratearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redpiratearcherarmor",
+    "id": "items/redpiratearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pirateking",
+    "id": "items/pirateking",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-plasticbow",
+    "id": "items/plasticbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-platearcherarmor",
+    "id": "items/platearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-platearmor",
+    "id": "items/platearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-plunger",
+    "id": "items/plunger",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-portalarmor",
+    "id": "items/portalarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-powerarmour",
+    "id": "items/powerarmour",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-powersword",
+    "id": "items/powersword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-purplecloudkallege",
+    "id": "items/purplecloudkallege",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rabbitarmor",
+    "id": "items/rabbitarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-radisharmor",
+    "id": "items/radisharmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rainbowapro",
+    "id": "items/rainbowapro",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rainbowsword",
+    "id": "items/rainbowsword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ratarcherarmor",
+    "id": "items/ratarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ratarmor",
+    "id": "items/ratarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redarcherarmor",
+    "id": "items/redarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redarmor",
+    "id": "items/redarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluearmor",
+    "id": "items/bluearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redbow",
+    "id": "items/redbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-reddamboarmor",
+    "id": "items/reddamboarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redenelbow",
+    "id": "items/redenelbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redguardarcherarmor",
+    "id": "items/redguardarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redguardarmor",
+    "id": "items/redguardarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redlightbow",
+    "id": "items/redlightbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redlightsaber",
+    "id": "items/redlightsaber",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redmetalbow",
+    "id": "items/redmetalbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redmetalsword",
+    "id": "items/redmetalsword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redsicklebow",
+    "id": "items/redsicklebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redsickle",
+    "id": "items/redsickle",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redsword",
+    "id": "items/redsword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-icesword",
+    "id": "items/icesword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redwingarcherarmor",
+    "id": "items/redwingarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-redwingarmor",
+    "id": "items/redwingarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-regionarmor",
+    "id": "items/regionarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-ring1",
+    "id": "items/ring1",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-frostring",
+    "id": "items/frostring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-robotarmor",
+    "id": "items/robotarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rosebow",
+    "id": "items/rosebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rose",
+    "id": "items/rose",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-royalazalea",
+    "id": "items/royalazalea",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rubyring",
+    "id": "items/rubyring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-rudolfarmor",
+    "id": "items/rudolfarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sapphirering",
+    "id": "items/sapphirering",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-pytharring",
+    "id": "items/pytharring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-nisocring",
+    "id": "items/nisocring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-schooluniform",
+    "id": "items/schooluniform",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-scimitar",
+    "id": "items/scimitar",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-seadragonarmor",
+    "id": "items/seadragonarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-seahorsebow",
+    "id": "items/seahorsebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-searage",
+    "id": "items/searage",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-shadowregionarmor",
+    "id": "items/shadowregionarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sicklebow",
+    "id": "items/sicklebow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sickle",
+    "id": "items/sickle",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sidesword",
+    "id": "items/sidesword",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-skylightbow",
+    "id": "items/skylightbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-skylightsaber",
+    "id": "items/skylightsaber",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-snowfoxarcherarmor",
+    "id": "items/snowfoxarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-snowfoxarmor",
+    "id": "items/snowfoxarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-snowmanarmor",
+    "id": "items/snowmanarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-snowpotion",
+    "id": "items/snowpotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-accuracypotion",
+    "id": "items/accuracypotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-boostpotion",
+    "id": "items/boostpotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-defencepotion",
+    "id": "items/defencepotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-strengthpotion",
+    "id": "items/strengthpotion",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-beermug",
+    "id": "items/beermug",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-spear",
+    "id": "items/spear",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-spiritring",
+    "id": "items/spiritring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sproutring",
+    "id": "items/sproutring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-squeakyhammer",
+    "id": "items/squeakyhammer",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-squidarmor",
+    "id": "items/squidarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sword1",
+    "id": "items/sword1",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-knife",
+    "id": "items/knife",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-sword2",
+    "id": "items/sword2",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-lightningscimitar",
+    "id": "items/lightningscimitar",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-taekwondo",
+    "id": "items/taekwondo",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-tamagotchiring",
+    "id": "items/tamagotchiring",
     "width": 22,
     "height": 16,
     "animations": {
@@ -4906,72 +4906,72 @@
     "offsetY": 0
   },
   {
-    "id": "item-thiefarmor",
+    "id": "items/thiefarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-tigerarmor",
+    "id": "items/tigerarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-topazring",
+    "id": "items/topazring",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-trident",
+    "id": "items/trident",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-typhoon",
+    "id": "items/typhoon",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-violetbow",
+    "id": "items/violetbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-watermelonbow",
+    "id": "items/watermelonbow",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bead",
+    "id": "items/bead",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-lightningbead",
+    "id": "items/lightningbead",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-naturebead",
+    "id": "items/naturebead",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-firebead",
+    "id": "items/firebead",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-icebead",
+    "id": "items/icebead",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-stick",
+    "id": "items/stick",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-feather",
+    "id": "items/feather",
     "animations": {
       "idle": {
         "length": 4,
@@ -4982,82 +4982,82 @@
     "offsetY": 0
   },
   {
-    "id": "item-staff",
+    "id": "items/staff",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-lightningstaff",
+    "id": "items/lightningstaff",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-naturestaff",
+    "id": "items/naturestaff",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-firestaff",
+    "id": "items/firestaff",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-icestaff",
+    "id": "items/icestaff",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-whip",
+    "id": "items/whip",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-whitearcherarmor",
+    "id": "items/whitearcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-whitearmor",
+    "id": "items/whitearmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-wizardrobe",
+    "id": "items/wizardrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-bluewizardrobe",
+    "id": "items/bluewizardrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-darkwizardrobe",
+    "id": "items/darkwizardrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-greenwizardrobe",
+    "id": "items/greenwizardrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-orangewizardrobe",
+    "id": "items/orangewizardrobe",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-wolfarcherarmor",
+    "id": "items/wolfarcherarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-wolfarmor",
+    "id": "items/wolfarmor",
     "offsetX": 0,
     "offsetY": 0
   },
   {
-    "id": "item-woodenbow",
+    "id": "items/woodenbow",
     "offsetX": 0,
     "offsetY": 0
   },
@@ -5348,55 +5348,55 @@
   },
 
   {
-    "id": "item-flask",
+    "id": "items/flask",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-hotsauce",
+    "id": "items/hotsauce",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-shardt1",
+    "id": "items/shardt1",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-shardt2",
+    "id": "items/shardt2",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-shardt3",
+    "id": "items/shardt3",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-shardt4",
+    "id": "items/shardt4",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-shardt5",
+    "id": "items/shardt5",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-orange",
+    "id": "items/orange",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-watermelon",
+    "id": "items/watermelon",
     "animations": {
       "idle": {
         "length": 4,
@@ -5408,7 +5408,7 @@
   },
 
   {
-    "id": "item-clam",
+    "id": "items/clam",
     "animations": {
       "idle": {
         "length": 4,
@@ -5420,19 +5420,19 @@
   },
 
   {
-    "id": "item-clamchowder",
+    "id": "items/clamchowder",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-cookedshrimp",
+    "id": "items/cookedshrimp",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-jellyfish",
+    "id": "items/jellyfish",
     "animations": {
       "idle": {
         "length": 4,
@@ -5444,13 +5444,13 @@
   },
 
   {
-    "id": "item-jellyfishsmoothie",
+    "id": "items/jellyfishsmoothie",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-kelp",
+    "id": "items/kelp",
     "animations": {
       "idle": {
         "length": 4,
@@ -5462,7 +5462,7 @@
   },
 
   {
-    "id": "item-rawshrimp",
+    "id": "items/rawshrimp",
     "animations": {
       "idle": {
         "length": 4,
@@ -5474,7 +5474,7 @@
   },
 
   {
-    "id": "item-tuna",
+    "id": "items/tuna",
     "animations": {
       "idle": {
         "length": 4,
@@ -5486,19 +5486,19 @@
   },
 
   {
-    "id": "item-tunasushi",
+    "id": "items/tunasushi",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-apple",
+    "id": "items/apple",
     "offsetX": 0,
     "offsetY": 0
   },
 
   {
-    "id": "item-banana",
+    "id": "items/banana",
     "offsetX": 0,
     "offsetY": 0
   },
