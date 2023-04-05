@@ -2,8 +2,14 @@ import Utils from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Animation from './animation';
 import type Sprite from './sprite';
+import type NPC from './npc/npc';
+import type Item from './objects/item';
+import type Chest from './objects/chest';
+import type Animation from './animation';
+import type Mob from './character/mob/mob';
+import type Projectile from './objects/projectile';
+import type Player from './character/player/player';
 
 export default abstract class Entity {
     public x = 0;
@@ -330,7 +336,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a player type.
      */
 
-    public isPlayer(): boolean {
+    public isPlayer(): this is Player {
         return this.type === Modules.EntityType.Player;
     }
 
@@ -338,7 +344,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a player type.
      */
 
-    public isMob(): boolean {
+    public isMob(): this is Mob {
         return this.type === Modules.EntityType.Mob;
     }
 
@@ -346,7 +352,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is an NPC type.
      */
 
-    public isNPC(): boolean {
+    public isNPC(): this is NPC {
         return this.type === Modules.EntityType.NPC;
     }
 
@@ -354,7 +360,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is an item type.
      */
 
-    public isItem(): boolean {
+    public isItem(): this is Item {
         return this.type === Modules.EntityType.Item;
     }
 
@@ -362,7 +368,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a chest type.
      */
 
-    public isChest(): boolean {
+    public isChest(): this is Chest {
         return this.type === Modules.EntityType.Chest;
     }
 
@@ -370,7 +376,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a projectile type.
      */
 
-    public isProjectile(): boolean {
+    public isProjectile(): this is Projectile {
         return this.type === Modules.EntityType.Projectile;
     }
 
