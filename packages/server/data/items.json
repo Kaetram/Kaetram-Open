@@ -5035,7 +5035,7 @@
     "price": 500
   },
 
-  "goldore": {
+  "goldnugget": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",

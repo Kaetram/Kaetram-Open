@@ -11,6 +11,7 @@ import Cooking from './skill/impl/cooking';
 import Smithing from './skill/impl/smithing';
 import Crafting from './skill/impl/crafting';
 import Fletching from './skill/impl/fletching';
+import Foraging from './skill/impl/foraging';
 
 import Formulas from '../../../../info/formulas';
 
@@ -37,6 +38,7 @@ export default class Skills {
     private smithing: Smithing = new Smithing();
     private crafting: Crafting = new Crafting();
     private fletching: Fletching = new Fletching();
+    private foraging: Foraging = new Foraging();
 
     private skills: { [key: string]: Skill } = {
         [Modules.Skills.Accuracy]: this.accuracy,
@@ -51,7 +53,8 @@ export default class Skills {
         [Modules.Skills.Cooking]: this.cooking,
         [Modules.Skills.Smithing]: this.smithing,
         [Modules.Skills.Crafting]: this.crafting,
-        [Modules.Skills.Fletching]: this.fletching
+        [Modules.Skills.Fletching]: this.fletching,
+        [Modules.Skills.Foraging]: this.foraging
     };
 
     private loadCallback?: () => void;
