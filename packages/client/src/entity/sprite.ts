@@ -87,12 +87,12 @@ export default class Sprite {
 
             /**
              * We ignore small sprites and item sprites when drawing hurt sprites.
-             * The logic we're using is skipping keys that start with `item-*` and
+             * The logic we're using is skipping keys that start with `items/*` and
              * sprites whose width is less than 96 (assumed 4 animations and a small
              * sprite of 24x24).
              */
 
-            if (!this.key.startsWith('item-') && this.image.width > 96)
+            if (!this.key.startsWith('items/') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
 
             // Load the silhouette sprite for the entity.
@@ -113,7 +113,7 @@ export default class Sprite {
 
     private loadAnimations(): void {
         if (!this.data.animations)
-            this.data.animations = Utils.getDefaultAnimations(this.key.startsWith('item-'));
+            this.data.animations = Utils.getDefaultAnimations(this.key.startsWith('items/'));
 
         for (let name in this.data.animations) {
             let info = this.data.animations[name];

@@ -10,7 +10,7 @@ export default class Animation {
     public frame: Frame = { index: 0, x: 0, y: 0 };
     public count = 1;
     public bopIndex = 0;
-    public bopCount = 5; // Used for items bopping up and down.
+    public bopCount = 4; // Used for items bopping up and down.
     public decreaseBop = false;
 
     private lastTime = Date.now();
