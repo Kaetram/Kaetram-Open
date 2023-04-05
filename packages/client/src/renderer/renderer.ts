@@ -1240,6 +1240,8 @@ export default class Renderer {
      */
 
     protected isFlipped(tileInfo: RotatedTile): boolean {
+        if (!tileInfo) return false;
+
         return tileInfo.v || tileInfo.h || tileInfo.d;
     }
 

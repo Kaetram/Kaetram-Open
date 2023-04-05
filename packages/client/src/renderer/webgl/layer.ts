@@ -113,8 +113,12 @@ export default class Layer {
         }
 
         // Extract the information from the tileset and apply it to the texture data.
-        let tileset = this.map.getTilesetFromId(tileId)!,
-            relativeId = tileId - tileset.firstGid - 1,
+        let tileset = this.map.getTilesetFromId(tileId)!;
+
+        // If the tileset is invalid, then we just return.
+        if (!tileset) return;
+
+        let relativeId = tileId - tileset.firstGid - 1,
             tilesWidth = tileset.width / this.map.tileSize;
 
         // Write the texture information to the texture data array.
