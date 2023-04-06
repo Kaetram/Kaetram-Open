@@ -336,7 +336,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a player type.
      */
 
-    public isPlayer(): this is Player {
+    public isPlayer(): boolean {
         return this.type === Modules.EntityType.Player;
     }
 
@@ -344,7 +344,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a player type.
      */
 
-    public isMob(): this is Mob {
+    public isMob(): boolean {
         return this.type === Modules.EntityType.Mob;
     }
 
@@ -352,7 +352,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is an NPC type.
      */
 
-    public isNPC(): this is NPC {
+    public isNPC(): boolean {
         return this.type === Modules.EntityType.NPC;
     }
 
@@ -360,7 +360,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is an item type.
      */
 
-    public isItem(): this is Item {
+    public isItem(): boolean {
         return this.type === Modules.EntityType.Item;
     }
 
@@ -368,7 +368,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a chest type.
      */
 
-    public isChest(): this is Chest {
+    public isChest(): boolean {
         return this.type === Modules.EntityType.Chest;
     }
 
@@ -376,7 +376,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a projectile type.
      */
 
-    public isProjectile(): this is Projectile {
+    public isProjectile(): boolean {
         return this.type === Modules.EntityType.Projectile;
     }
 
