@@ -1169,10 +1169,7 @@
         "length": 1,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "seachest",
     "animations": {
@@ -1180,10 +1177,7 @@
         "length": 1,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "christmasarmor",
     "width": 32,
@@ -3412,670 +3406,6 @@
     "offsetY": -25
   },
   {
-    "id": "items/adhererarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/arrow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/firearrow",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/poisonarrow",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icearrow",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/lightningarrow",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/nisocarrow",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cinnabararrow",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pythararrow",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/iboarrow",
-    "animations": {
-      "idle": {
-        "length": 6,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/nisocore",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cinnabarore",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pytharore",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldnugget",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/iboore",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/moonrockore",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bowstring",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/logs",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/palmlogs",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icelogs",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pinelogs",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icepinelogs",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/willowlogs",
-    "animations": {
-      "idle": {
-        "length": 8,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icepalmlogs",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bloodwoodlogs",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pickle",
-    "width": 8,
-    "height": 16,
-    "animations": {
-      "idle": {
-        "length": 12,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/adhererrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/adminarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/archerarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/archerschooluniform",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/axe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pickaxe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rustedaxe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bamboospear",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bastardsword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bearseonbiarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/beautifullife",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/beearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/beetlearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/blackpotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/blackspiderarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bloodbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluedamboarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/piratearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-    {
-    "id": "items/greenpiratearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/purplepiratearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redpiratearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluescimitar",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluesword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluewingarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluewingarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/book",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/breaker",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/samuraiarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/burgerarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/burger",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/butcherknife",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cactusaxe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cake",
-    "width": 24,
-    "height": 24,
-    "animations": {
-      "idle": {
-        "length": 3,
-        "row": 0
-      }
-    },
-    "offsetX": -4,
-    "offsetY": -6
-  },
-  {
-    "id": "items/candybar",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/wolfsword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/deathflail",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/candybow",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/candykey",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/captainbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/catarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cd",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cheoliarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cheoliarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/christmasarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/clotharmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cockroachsuit",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/cokearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/combatuniform",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/comb",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/conferencecall",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/crystalarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/crystalarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/crystalbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/damboarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/daywalker",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/deathbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/devilkazyaarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/devilkazyasword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/diamondring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/dinosaurarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/dolring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/dovakinarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/dovakinarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/dragonarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/emeraldring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/enelarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/eneltrident",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/essentialrage",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/evilarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/fallenarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/fallenarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/fireplay",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/firepotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/fireshot",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/firesword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/manaflask",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bigflask",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bigmanaflask",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gold",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/token",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/forestbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
     "id": "lightningguardian",
     "width": 64,
     "height": 72,
@@ -4123,943 +3453,6 @@
     },
     "offsetX": -24,
     "offsetY": -49
-  },
-
-  {
-    "id": "items/forestguardiansword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/frankensteinarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/friedpotatoarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/frogarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/frostarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gayarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gayarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gaybow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gbwingarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/gbwingarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ghostrider",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldenarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldenarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldenbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldensword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greendamboarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenlightbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenlightsaber",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenpendant",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenwingarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenwingarmor",
-    "width": 18,
-    "height": 18,
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/guardarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/guardarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/halberd",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/halloweenjkarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/hammer",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/hongcheolarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/huniarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/hunterbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icerose",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ironbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ironknightarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/justicebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/justicehammer",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/leatherarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/leatherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/legolasarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/loveactring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/machete",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/magicspear",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/mailarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/mailarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/marblependant",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/marinebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/memme",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/mermaidbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/miniseadragonarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/morningstar",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ninjaarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/paewoldo",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/paladinarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pearlpendant",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pearlring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/leatherboots",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/steelboots",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/goldboots",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/swiftboots",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/lavaboots",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pendant1",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rubypendant",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/emeraldpendant",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pinkcockroacharmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pinksword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/piratearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/blackpiratearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenpiratearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/purplepiratearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redpiratearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pirateking",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/plasticbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/platearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/platearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/plunger",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/portalarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/powerarmour",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/powersword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/purplecloudkallege",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rabbitarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/radisharmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rainbowapro",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rainbowsword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ratarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ratarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/reddamboarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redenelbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redguardarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redguardarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redlightbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redlightsaber",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redmetalbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redmetalsword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redsicklebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redsickle",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redsword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icesword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redwingarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/redwingarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/regionarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/ring1",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/frostring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/robotarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rosebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rose",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/royalazalea",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rubyring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/rudolfarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sapphirering",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/pytharring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/nisocring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/schooluniform",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/scimitar",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/seadragonarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/seahorsebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/searage",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/shadowregionarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sicklebow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sickle",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sidesword",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/skylightbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/skylightsaber",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/snowfoxarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/snowfoxarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/snowmanarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/snowpotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/accuracypotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/boostpotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/defencepotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/strengthpotion",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/beermug",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/spear",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/spiritring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sproutring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/squeakyhammer",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/squidarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sword1",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/knife",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/sword2",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/lightningscimitar",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/taekwondo",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/tamagotchiring",
-    "width": 22,
-    "height": 16,
-    "animations": {
-      "idle": {
-        "length": 5,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/thiefarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/tigerarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/topazring",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/trident",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/typhoon",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/violetbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/watermelonbow",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bead",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/lightningbead",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/naturebead",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/firebead",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icebead",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/stick",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/feather",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/staff",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/lightningstaff",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/naturestaff",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/firestaff",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/icestaff",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/whip",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/whitearcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/whitearmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/wizardrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/bluewizardrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/darkwizardrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/greenwizardrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/orangewizardrobe",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/wolfarcherarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/wolfarmor",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-  {
-    "id": "items/woodenbow",
-    "offsetX": 0,
-    "offsetY": 0
   },
   {
     "id": "jirisanmoonbear",
@@ -5346,163 +3739,6 @@
     "offsetX": -8,
     "offsetY": -12
   },
-
-  {
-    "id": "items/flask",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/hotsauce",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/shardt1",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/shardt2",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/shardt3",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/shardt4",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/shardt5",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/orange",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/watermelon",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/clam",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/clamchowder",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/cookedshrimp",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/jellyfish",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/jellyfishsmoothie",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/kelp",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/rawshrimp",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/tuna",
-    "animations": {
-      "idle": {
-        "length": 4,
-        "row": 0
-      }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/tunasushi",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/apple",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
-  {
-    "id": "items/banana",
-    "offsetX": 0,
-    "offsetY": 0
-  },
-
   {
     "id": "mantis",
     "width": 42,
@@ -8421,10 +6657,7 @@
     "offsetY": -30
   },
   {
-    "id": "sparks",
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    "id": "sparks", "offsetX": 0, "offsetY": 0 },
   {
     "id": "spear",
     "width": 32,
@@ -9641,10 +7874,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-firearrow",
     "idleSpeed": 75,
@@ -9655,10 +7885,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-poisonarrow",
     "idleSpeed": 75,
@@ -9669,10 +7896,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-icearrow",
     "idleSpeed": 75,
@@ -9683,10 +7907,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-lightningarrow",
     "idleSpeed": 75,
@@ -9697,10 +7918,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-nisocarrow",
     "idleSpeed": 75,
@@ -9711,10 +7929,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-cinnabararrow",
     "idleSpeed": 75,
@@ -9725,10 +7940,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-pythararrow",
     "idleSpeed": 75,
@@ -9739,10 +7951,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-iboarrow",
     "idleSpeed": 75,
@@ -9753,10 +7962,7 @@
         "length": 4,
         "row": 0
       }
-    },
-    "offsetX": 0,
-    "offsetY": 0
-  },
+    }, "offsetX": 0, "offsetY": 0 },
   {
     "id": "projectile-none",
     "idleSpeed": 75,
@@ -10074,5 +8280,376 @@
     },
     "offsetX": -7,
     "offsetY": -13
-  }
+  },
+  { "id": "items/accuracypotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/adhererarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/adhererrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/adminarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/apple", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/archerarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/archerschooluniform", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/arrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/avocado", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/axe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bamboospear", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/banana", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/basket", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bastardsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bead", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bearseonbiarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/beautifullife", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/beearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/beer", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/beermug", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/beetlearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bigflask", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bigmanaflask", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/blackberry", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/blackpiratearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/blackpotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/blackspiderarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bloodbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bloodwoodlogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/blueberry", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluedamboarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluelily", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluescimitar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluesword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluewingarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluewingarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bluewizardrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/book", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/boostpotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bowcommon", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bowlimb", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bowrare", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bowstring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bowuncommon", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/branch", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/breaker", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bronzebar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/bucket", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/burger", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/burgerarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/butcherknife", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cactusaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/candybar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/candybow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/candykey", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/captainbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/carnelianaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/catarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cd", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cheese", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cheoliarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cheoliarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/christmasarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cinnabararrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cinnabarore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/clam", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/clamchowder", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cloth", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/clotharmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/coal", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cockroachsuit", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cokearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/comb", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/combatuniform", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/conferencecall", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cookedbeef", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cookedchicken", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cookedpork", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cookedshrimp", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/copperore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/crystalarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/crystalarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/crystalbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/cure", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/damboarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dandelion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/darkwizardrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/daywalker", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/deathbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/deathflail", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/defencepotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/devilkazyaarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/devilkazyasword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/diamondring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dinosaurarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dolring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dovakinarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dovakinarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/dragonarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/element", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/emeraldpendant", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/emeraldring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/enelarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/eneltrident", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/essentialrage", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/evilarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/fallenarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/fallenarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/feather", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/firearrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/fireaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/firebead", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/fireplay", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/firepotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/fireshot", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/firestaff", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/firesword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/flask", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/forestbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/forestguardiansword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/frankensteinarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/friedpotatoarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/frogarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/frostarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/frostring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gayarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gayarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gaybow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gbwingarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gbwingarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ghostrider", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gold", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldbar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldboots", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldenarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldenarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldenbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldensword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldnugget", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/goldring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/gooseberry", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greendamboarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenlightbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenlightsaber", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenpendant", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenpiratearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenpiratearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenwingarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenwingarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/greenwizardrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/guardarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/guardarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/halberd", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/halloweenjkarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/hammer", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/hongcheolarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/hotsauce", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/huniarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/hunterbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/iboarrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/iboore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icearrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icebead", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icelogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icepalmlogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icepinelogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icerose", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icestaff", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/icesword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ironbar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ironbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ironknightarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ironore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/jellyfish", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/jellyfishsmoothie", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/justicebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/justicehammer", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/kelp", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/kiwi", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/knife", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lavaboots", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/leaf", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/leatherarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/leatherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/leatherboots", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/legolasarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lightningarrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lightningbead", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lightningscimitar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lightningstaff", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/logs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/loveactring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/machete", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/magicspear", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mailarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mailarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/manaflask", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mango", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/marblependant", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/marinebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/melon-slice", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/memme", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mermaidbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/milkbottle", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mineral", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/miniseadragonarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/moonrockore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/morningstar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom1", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom2", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom3", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom4", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom5", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/mushroom6", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/naturebead", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/naturestaff", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ninjaarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/nisocarrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/nisocore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/nisocring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/null", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/onion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/orange", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/orangewizardrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/paewoldo", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/paladinarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/palmlogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/peach", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pearlpendant", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pearlring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pendant1", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pickaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pickle", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pinelogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pinkcockroacharmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pinksword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/piratearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/piratearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pirateking", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/plasticbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/platearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/platearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/platinumarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/platinumsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/plum", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/plunger", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/poisonarrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/poisonaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/portalarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/powerarmour", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/powersword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/purplecloudkallege", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/purplepiratearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/purplepiratearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pythararrow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pytharore", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/pytharring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rabbitarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/radisharmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rainbowapro", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rainbowsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/raspberry", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ratarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ratarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rawbeef", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rawchicken", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rawpork", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rawshrimp", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/reddamboarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redenelbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redguardarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redguardarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redlightbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redlightsaber", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redmetalbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redmetalsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redpiratearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redpiratearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redsickle", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redsicklebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redwingarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/redwingarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/regionarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/ring1", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/robotarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rock", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rockfish", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rose", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rosebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/royalazalea", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rubypendant", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rubyring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rudolfarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rustedaxe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/samuraiarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sapphirering", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sausage", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/schooluniform", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/scimitar", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/seadragonarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/seahorsebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/searage", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/seed", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shadowregionarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shardt1", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shardt2", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shardt3", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shardt4", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/shardt5", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sickle", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sicklebow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sidesword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/silverring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/skylightbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/skylightsaber", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/snowfoxarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/snowfoxarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/snowmanarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/snowpotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/spear", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/spiritring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sproutring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/squeakyhammer", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/squidarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/staff", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/steelboots", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/stew", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/stew2", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/stick", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/strawberry", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/strengthpotion", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/swiftboots", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sword1", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/sword2", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/taekwondo", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/tamagotchiring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/thiefarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/tigerarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/token", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/tomato", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/topazring", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/trident", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/tuna", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/tunasushi", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/typhoon", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/undefined", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/violetbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/waterbucket", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/watermelon", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/watermelonbow", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/watermelonslice", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/whip", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/whitearcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/whitearmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/willowlogs", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/wizardrobe", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/wolfarcherarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/wolfarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/wolfsword", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/woodenbow", "offsetX": 0, "offsetY": 0 }
 ]

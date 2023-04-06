@@ -4739,12 +4739,6 @@
     "plugin": "firepotion"
   },
 
-  "cake": {
-    "type": "object",
-    "name": "Cake [Quest]",
-    "undroppable": true
-  },
-
   "book": {
     "type": "object",
     "name": "Book [Quest]",
