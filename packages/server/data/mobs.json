@@ -1511,11 +1511,11 @@
     }
   },
 
-  "darkscolpion": {
+  "darkscorpion": {
     "name": "Dark Scorpion",
-    "hitPoints": 1450,
-    "defenseLevel": 10,
-    "attackLevel": 15,
+    "hitPoints": 1150,
+    "defenseLevel": 20,
+    "attackLevel": 35,
     "level": 101,
     "aggroRange": 1,
     "attackRange": 1,
@@ -1523,7 +1523,7 @@
     "roaming": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "respawnDelay": 35000,
+    "respawnDelay": 65000,
     "attackStats": {
       "crush": 15,
       "slash": 10,
@@ -1549,10 +1549,10 @@
   "darkskeleton": {
     "name": "Dark Skeleton",
     "drops": {"ring1": 300, "hammer": 600, "hunterbow": 400},
-    "hitPoints": 300,
+    "hitPoints": 740,
     "defenseLevel": 15,
-    "attackLevel": 12,
-    "level": 56,
+    "attackLevel": 32,
+    "level": 76,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -3801,18 +3801,18 @@
 
   "darkwolf": {
     "name": "Dark Wolf",
-    "drops": {},
-    "hitPoints": 950,
-    "defenseLevel": 3,
+    "drops": {"wolfsword": 85},
+    "hitPoints": 850,
+    "defenseLevel": 33,
     "attackLevel": 45,
-    "level": 78,
+    "level": 118,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
     "roaming": true,
     "attackRate": 800,
     "movementSpeed": 400,
-    "respawnDelay": 35000,
+    "respawnDelay": 75000,
     "attackStats": {
       "crush": 0,
       "slash": 0,
