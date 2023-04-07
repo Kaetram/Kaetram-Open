@@ -60,34 +60,6 @@
         }, 
         {
          "compression":"zlib",
-         "data":"eJztwQEBAAAAgJD+r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGoADwAB",
-         "encoding":"base64",
-         "height":128,
-         "id":3,
-         "name":"output_cliffs0",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":128,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "compression":"zlib",
-         "data":"eJztwQEBAAAAgJD+r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGoADwAB",
-         "encoding":"base64",
-         "height":128,
-         "id":2,
-         "name":"input_cliffs0",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":128,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "compression":"zlib",
          "data":"eJzt0zsKwlAQBdDoEkxjevejhQtzc1rYxsJliDwfJlF8fkBC5hwYhpn2cqvqd+dZ2u1tr+b36d4l2zrtdf383iz6c7Wr+8P\/DfP\/Vil\/xulV\/3PvT50Z3vn3Sf8z3Z8OfQcAAAAAAAAAgHHZN2kfm\/dupkX+sck\/NnnHJm+I67B8HCAG3Ye4dB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACi5ALq7O1A=",
          "encoding":"base64",
          "height":128,
@@ -113,40 +85,12 @@
          "width":128,
          "x":0,
          "y":0
-        }, 
-        {
-         "compression":"zlib",
-         "data":"eJzt2FlOwzAQANA4dwAKBY5VkIBrlb23omU\/C7I8USz\/QhfR96TRJHGUWIpkz6TrAADYN8vIX1udBdtymEo+S+O1q8iXG58NsEnzyM\/VtVmsBbeR7yLfR36I\/Bj5KfJNtYYAu+8i8vVWZwFsWtvzDb3gayqRvaUS2XsqkX2kEtk87sljn1UtMIzn93zHsw\/S2HMs01hjLKp5TJp5tees16QvkR33JbKTvkQ27Utk+Tsex9hpXPvuxvGnpi6cVeerOM695rAH5f5zqEcvurEf5W+dNd\/lcE31+2fz3Jfq+KhfzzvZXUt94k7Ie2\/u5Yf1Oa8H53E8re5bNOf8D6umZqv36Xo\/vuz8C94H7T7NfjlViwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL\/0A3L7LFY=",
-         "encoding":"base64",
-         "height":128,
-         "id":7,
-         "name":"input_cliffs",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":128,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "compression":"zlib",
-         "data":"eJzt2FtKw1AQBuDWPYipEXelb7qr9q3ZlZfY6lokdA4chwZBJL1938vfSUoIDDmTk9kMAIBL8pLqr8gmsp3wXpje9fxnfT\/f\/z\/g\/CxT3R3kLjg2q5gDb5HvkX3kR+Qmchu5Nj9OymOqnyJfo483V7tsIheRt5Ft5F3kp\/7DSSl7vrwX7Ku1v6+e683I8VwPfpsHD9X5Ya9Zv3+UtSi\/ozCNRbX2l9+DduR4rrep989R1z1fmhcHV\/b8+VvAf+vi+kPPV\/oOR6\/MY9+Bz1czMqe5TJ3+AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8EffpM0eoQ==",
-         "encoding":"base64",
-         "height":128,
-         "id":8,
-         "name":"output_cliffs",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":128,
-         "x":0,
-         "y":0
         }],
  "nextlayerid":13,
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.0",
+ "tiledversion":"1.9.2",
  "tileheight":16,
  "tilesets":[
         {
@@ -54923,6 +54867,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.10",
+ "version":"1.9",
  "width":128
 }
