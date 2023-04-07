@@ -7,6 +7,11 @@
                 "count": -1
             },
             {
+                "key": "knife",
+                "price": 500,
+                "count": -1
+            },
+            {
                 "key": "flask",
                 "count": 500,
                 "price": 100

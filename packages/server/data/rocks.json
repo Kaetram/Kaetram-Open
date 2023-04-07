@@ -39,5 +39,75 @@
         "experience": 300,
         "difficulty": 220,
         "item": "moonrockore"
+    },
+
+    "topaz": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "topaz"
+    },
+
+    "beryl": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "beryl"
+    },
+
+    "lapislazuli": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "lapislazuli"
+    },
+
+    "citrine": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "citrine"
+    },
+
+    "taaffeite": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "taaffeite"
+    },
+
+    "ruby": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "ruby"
+    },
+
+    "peridot": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "peridot"
+    },
+
+    "opal": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "opal"
+    },
+
+    "emerald": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "emerald"
+    },
+
+    "amethyst": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "amethyst"
     }
 }
