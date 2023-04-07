@@ -27,7 +27,7 @@ class Main {
         this.database.onReady(this.handleReady.bind(this));
         this.database.onFail(this.handleFail.bind(this));
 
-        process.on('SIGINT', this.handleSignalInterrupt.bind(this));
+        if (!config.debugging) process.on('SIGINT', this.handleSignalInterrupt.bind(this));
 
         new Loader();
     }
