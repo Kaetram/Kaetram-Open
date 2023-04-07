@@ -435,7 +435,7 @@ export default class InputController {
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        if (!this.entity) this.getEntity(position, useSearch);
+        if (!this.entity) this.entity = this.getEntity(position, useSearch);
 
         if (this.entity && this.entity.instance !== this.player.instance) {
             this.setAttackTarget();
