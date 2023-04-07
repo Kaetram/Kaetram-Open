@@ -5226,6 +5226,286 @@
     "healAmount": 850
   },
 
+  "barley": {
+    "type": "object",
+    "name": "Barley",
+    "description": "It's a fruit, no it's a sald, no it's a grain. You can probably use it to make bread or something like that.",
+    "price": 100
+  },
+
+  "blackberry": {
+    "type": "object",
+    "name": "Blackberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "borth": {
+    "type": "object",
+    "name": "Borth",
+    "description": "A nice yummy warm and nice smelling... I really don't know what it is.",
+    "price": 100
+  },
+
+  "bronzebar": {
+    "type": "object",
+    "name": "Bronze Bar",
+    "description": "A bar of bronze. It's pretty heavy.",
+    "price": 100
+  },
+  
+  "bronzeore": {
+    "type": "object",
+    "name": "Bronze Ore",
+    "description": "A piece of bronze ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "bucket": {
+    "type": "object",
+    "name": "Bucket",
+    "description": "A bucket, you can use it to put a variety of liquids in it.",
+    "price": 100
+  },
+
+  "cake": {
+    "type": "object",
+    "name": "Cake",
+    "description": "A delicious cake. It's pretty tasty.",
+    "price": 100
+  },
+
+  "cheese": {
+    "type": "object",
+    "name": "Cheese",
+    "description": "A piece of cheese. I think it came from milk.",
+    "price": 100
+  },
+
+  "cilantro": {
+    "type": "object",
+    "name": "Cilantro",
+    "description": "A leafy herb that is commonly used in Mexican cuisine. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "cloudberry": {
+    "type": "object",
+    "name": "Cloudberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "coal": {
+    "type": "object",
+    "name": "Coal",
+    "description": "A piece of coal. You can use it smelt ores.",
+    "price": 100
+  },
+
+  "rawchicken": {
+    "type": "object",
+    "name": "Raw Chicken",
+    "description": "I think I should cook this before I eat it.",
+    "price": 100
+  },
+
+  "cookedchicken": {
+    "type": "object",
+    "name": "Cooked Chicken",
+    "description": "A delicious piece of chicken. It's pretty tasty.",
+    "price": 100
+  },
+
+  "rawpork": {
+    "type": "object",
+    "name": "Raw Pork",
+    "description": "I think I should cook this before I eat it.",
+    "price": 100
+  },
+
+  "cookedpork": {
+    "type": "object",
+    "name": "Cooked Pork",
+    "description": "A delicious piece of pork. It's pretty tasty.",
+    "price": 100
+  },
+
+  "rawsausage": {
+    "type": "object",
+    "name": "Raw Sausage",
+    "description": "I think I should cook this before I eat it.",
+    "price": 100
+  },
+
+  "cookedsausage": {
+    "type": "object",
+    "name": "Cooked Sausage",
+    "description": "A delicious sausage. It's pretty tasty.",
+    "price": 100
+  },
+
+  "copperbar": {
+    "type": "object",
+    "name": "Copper Bar",
+    "description": "A bar of copper. It's pretty heavy.",
+    "price": 100
+  },
+
+  "copperore": {
+    "type": "object",
+    "name": "Copper Ore",
+    "description": "A piece of copper ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "corn": {
+    "type": "object",
+    "name": "Corn",
+    "description": "It's corn, and it's on a cob.",
+    "price": 100
+  },
+
+  "egg": {
+    "type": "object",
+    "name": "Egg",
+    "description": "A wonderful sorta round egg, it came from a chicken, I think.",
+    "price": 100
+  },
+
+  "goldore": {
+    "type": "object",
+    "name": "Gold Ore",
+    "description": "A piece of gold ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "gooseberry": {
+    "type": "object",
+    "name": "Gooseberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "ironbar": {
+    "type": "object",
+    "name": "Iron Bar",
+    "description": "A bar of iron. It's pretty heavy.",
+    "price": 100
+  },
+
+  "mango": {
+    "type": "object",
+    "name": "Mango",
+    "description": "A mango, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "milkbottle": {
+    "type": "object",
+    "name": "Milk Bottle",
+    "description": "A bottle of milk. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "mulberry": {
+    "type": "object",
+    "name": "Mulberry",
+    "description": "A berry that grows on or in bushes.",
+    "price": 100
+  },
+
+  "oat": {
+    "type": "object",
+    "name": "Oat",
+    "description": "A grain that is commonly used in bread.",
+    "price": 100
+  },
+
+  "peach": {
+    "type": "object",
+    "name": "Peach",
+    "description": "A peach, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "pineapple": {
+    "type": "object",
+    "name": "Pineapple",
+    "description": "A pineapple, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "plum": {
+    "type": "object",
+    "name": "Plum",
+    "description": "A plum, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "quinoa": {
+    "type": "object",
+    "name": "Quinoa",
+    "description": "Hello this is the developer, I really don't know what this is even used in so I can't come up with a witty description.",
+    "price": 100
+  },
+
+  "raspberry": {
+    "type": "object",
+    "name": "Raspberry",
+    "description": "A berry that grows on or around bushes..",
+    "price": 100
+  },
+
+  "rice": {
+    "type": "object",
+    "name": "Rice",
+    "description": "You can eat this after you cook it for a bit.",
+    "price": 100
+  },
+
+  "strawberry": {
+    "type": "object",
+    "name": "Strawberry",
+    "description": "A berry that grows on bushes.",
+    "price": 100
+  },
+
+  "tinbar": {
+    "type": "object",
+    "name": "Tin Bar",
+    "description": "A bar of tin. It's pretty heavy.",
+    "price": 100
+  },
+
+  "tinore": {
+    "type": "object",
+    "name": "Tin Ore",
+    "description": "A piece of tin ore.",
+    "price": 100
+  },
+
+  "tofu": {
+    "type": "object",
+    "name": "Tofu",
+    "description": "A block of tofu. I don't know what to do with this, I'm not vegan.",
+    "price": 100
+  },
+
+  "tomato": {
+    "type": "object",
+    "name": "Tomato",
+    "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "price": 100
+  },
+
+  "waterbucket": {
+    "type": "object",
+    "name": "Water Bucket",
+    "description": "A bucket of water. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
   "leatherboots": {
     "type": "boots",
     "name": "Leather Boots",
