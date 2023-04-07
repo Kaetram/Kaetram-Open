@@ -178,7 +178,9 @@ export enum Skills {
     Crafting,
     Fletching,
     Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
-    Foraging
+    Foraging,
+    Eating,
+    Loitering
 }
 
 // It's easier to define and swap order around here.
@@ -196,7 +198,9 @@ export let SkillsOrder = [
     Skills.Crafting,
     Skills.Cooking,
     Skills.Fletching,
-    Skills.Smithing
+    Skills.Smithing,
+    Skills.Eating,
+    Skills.Loitering
 ];
 
 export enum Enchantment {
@@ -449,6 +453,16 @@ export let SkillExpColours = {
     [Skills.Smelting]: {
         fill: 'rgb(255, 255, 0)',
         stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Eating]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Loitering]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     }
 };
 
