@@ -427,6 +427,16 @@
             background-size: calc(width('skills/foraging.png') * $i);
         }
 
+        .skill-image-eating {
+            background: url('/img/interface/skills/eating.png');
+            background-size: calc(width('skills/eating.png') * $i);
+        }
+
+        .skill-image-loitering {
+            background: url('/img/interface/skills/loitering.png');
+            background-size: calc(width('skills/loitering.png') * $i);
+        }
+
         #achievement-count,
         #quest-count {
             width: 30px * $i;
