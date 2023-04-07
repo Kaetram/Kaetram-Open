@@ -435,9 +435,7 @@ export default class InputController {
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        this.entity = useSearch
-            ? this.game.searchForEntityAt(position)
-            : this.game.getEntityAt(position.gridX, position.gridY);
+        if (!this.entity) this.getEntity(position, useSearch);
 
         if (this.entity && this.entity.instance !== this.player.instance) {
             this.setAttackTarget();
@@ -478,11 +476,8 @@ export default class InputController {
         // Ignore if the entity is our player.
         if (entity?.instance === this.player.instance) return;
 
-        // Remove silhouette from the previous entity.
-        if (!entity && this.entity) this.entity.updateSilhouette(false);
-
         // The entity we are currently hovering over.
-        this.entity = this.game.searchForEntityAt(position);
+        this.entity = this.getEntity(position);
 
         // Update the overlay with entity information.
         this.hud.update(this.entity);
@@ -540,6 +535,24 @@ export default class InputController {
                 break;
             }
         }
+    }
+
+    /**
+     * Handles grabbing the silhouette at the current cursor position.
+     * @param position The position of the cursor.
+     * @param useSearch Whether or not to use the search function.
+     */
+
+    private getEntity(position: Coordinate, useSearch = true): Entity | undefined {
+        let entity = useSearch
+            ? this.game.searchForEntityAt(position)
+            : this.game.getEntityAt(position.gridX, position.gridY);
+
+        // Remove the silhouette from the previous entity.
+        if (this.entity && (!entity || entity.instance !== this.entity.instance))
+            this.entity.updateSilhouette(false);
+
+        return entity;
     }
 
     /**
