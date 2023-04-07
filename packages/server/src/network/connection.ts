@@ -18,8 +18,10 @@ export default class Connection {
     private lastMessageTime = Date.now();
     private messageDifference = 100; // Prevent duplicate messages coming in faster than 100ms.
 
+    public messageRate = 0; // The amount of messages received in the last second.
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
+    private rateInterval: NodeJS.Timeout | null = null;
     private verifyInterval: NodeJS.Timeout | null = null;
     private disconnectTimeout: NodeJS.Timeout | null = null;
 
@@ -31,6 +33,9 @@ export default class Connection {
         // Convert the IP address hex string to a readable IP address.
         this.address =
             socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
+
+        // Reset the messages per second every second.
+        this.rateInterval = setInterval(() => (this.messageRate = 0), 1000); // 1 second
 
         // Run the verification inteval every 30 seconds to ensure the connection is still open.
         this.verifyInterval = setInterval(this.isClosed.bind(this), 30_000); // 30 seconds
