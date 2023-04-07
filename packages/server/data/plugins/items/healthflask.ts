@@ -1,3 +1,5 @@
+import { Modules } from '@kaetram/common/network';
+
 import type { Plugin } from '.';
 import type { ItemData } from '@kaetram/common/types/item';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
@@ -35,6 +37,9 @@ export default class HealthFlask implements Plugin {
             }
 
             player.heal(this.healAmount, 'hitpoints');
+
+            // Apply eating experience to the player.
+            player.skills.get(Modules.Skills.Eating).addExperience(Math.floor(this.healAmount / 8));
         }
 
         return true;
