@@ -560,7 +560,7 @@ export const Constants = {
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
     SPAWN_POINT: '405,27', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT: '570,11', // 'x,y' values
+    TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,
     CHEST_RESPAWN: 50_000, // 50 seconds
@@ -577,6 +577,7 @@ export const Constants = {
     FREEZING_DURATION: 60_000, // 60 seconds
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
+    LOITERING_THRESHOLD: 90_000, // 90 seconds until loitering activates
     STUN_DURATION: 10_000, // 10 seconds
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,

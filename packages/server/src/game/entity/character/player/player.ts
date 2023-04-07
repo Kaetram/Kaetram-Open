@@ -498,7 +498,7 @@ export default class Player extends Character {
 
     public loiter(): void {
         // Skip if we have not reached the loitering threshold for the region.
-        if (!this.isLoiteringThreshold()) return;
+        if (!this.quests.isTutorialFinished() || !this.isLoiteringThreshold()) return;
 
         let loitering = this.skills.get(Modules.Skills.Loitering);
 
@@ -1691,7 +1691,7 @@ export default class Player extends Character {
      */
 
     public isLoiteringThreshold(): boolean {
-        return Date.now() - this.lastRegionChange >= 90_000;
+        return Date.now() - this.lastRegionChange >= Modules.Constants.LOITERING_THRESHOLD;
     }
 
     /**
