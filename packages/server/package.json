@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "yarn start --watch",
+        "dev": "tsx --preserve-symlinks --watch ./src/main.ts",
         "build": "tsc --noEmit"
     },
     "dependencies": {

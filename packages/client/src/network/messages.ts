@@ -271,6 +271,11 @@ export default class Messages {
                 break;
             }
 
+            case 'ratelimit': {
+                this.app.sendError('You are sending packets too fast.');
+                break;
+            }
+
             default: {
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;
