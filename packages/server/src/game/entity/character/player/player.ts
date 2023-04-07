@@ -489,6 +489,23 @@ export default class Player extends Character {
     }
 
     /**
+     * Loitering occurs when the player is in a region for over 90 seconds. This will
+     * trigger the loitering skill which will give the player a small amount of experience
+     * every 20 seconds. The experience received is proportional to the player's loitering skill.
+     * In the future this experience will correlate to the amount of actions performed in the
+     * 20 second timeframe.
+     */
+
+    public loiter(): void {
+        // Skip if we have not reached the loitering threshold for the region.
+        if (!this.isLoiteringThreshold()) return;
+
+        let loitering = this.skills.get(Modules.Skills.Loitering);
+
+        loitering.addExperience(loitering.level * 6);
+    }
+
+    /**
      * Updates the region that the player is currently in.
      */
 
@@ -1535,6 +1552,11 @@ export default class Player extends Character {
         this.resourcesLoaded[resource.instance] = resource.state;
     }
 
+    /**
+     * @param region Region id of the region we are checking.
+     * @returns Whether or not the region has been added to the list of loaded regions.
+     */
+
     public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
     }
@@ -1659,6 +1681,17 @@ export default class Player extends Character {
 
     public isArcher(): boolean {
         return this.equipment.getWeapon().isArcher();
+    }
+
+    /**
+     * The threshold for loitering occurs when a player is in
+     * the same region for at least 90 seconds. This is used to level
+     * up the loitering skill when the player sits in one area doing
+     * things like crafting, smithing, etc.
+     */
+
+    public isLoiteringThreshold(): boolean {
+        return Date.now() - this.lastRegionChange >= 90_000;
     }
 
     /**

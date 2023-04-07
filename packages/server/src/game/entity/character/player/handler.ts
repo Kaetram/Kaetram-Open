@@ -117,12 +117,20 @@ export default class Handler {
     }
 
     /**
-     * Called after receiving the ready backet. Signals to the handler that we should
+     * Called after receiving the ready packet. Signals to the handler that we should
      * start loading our update interval timer.
      */
 
     public startUpdateInterval(): void {
-        this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
+        this.updateInterval = setInterval(() => {
+            if (this.isTickInterval(4)) this.detectAggro();
+            if (this.isTickInterval(32)) {
+                this.player.loiter();
+                this.player.cheatScore = 0;
+            }
+
+            this.updateTicks++;
+        }, this.updateTime);
     }
 
     /**
@@ -761,17 +769,6 @@ export default class Handler {
                 maxMana: this.player.mana.getMaxMana()
             })
         );
-    }
-
-    /**
-     * Callback function for the update that gets called every `updateTime` seconds.
-     */
-
-    private handleUpdate(): void {
-        if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(16)) this.player.cheatScore = 0;
-
-        this.updateTicks++;
     }
 
     /**
