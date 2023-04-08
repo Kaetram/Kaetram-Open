@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "tsx --preserve-symlinks --watch ./src/main.ts",
+        "dev": "tsx --preserve-symlinks ./src/main.ts",
         "build": "tsc --noEmit"
     },
     "dependencies": {
@@ -31,6 +31,6 @@
         "@types/node": "^18.15.5",
         "@types/sanitizer": "^0.0.28",
         "@types/websocket": "^1.0.5",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.4"
     }
 }
