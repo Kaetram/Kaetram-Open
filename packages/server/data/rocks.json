@@ -42,8 +42,8 @@
     },
 
     "topaz": {
-        "levelRequirement": 30,
-        "experience": 210,
+        "levelRequirement": 25,
+        "experience": 160,
         "difficulty": 160,
         "item": "topaz"
     },
@@ -51,63 +51,63 @@
     "beryl": {
         "levelRequirement": 30,
         "experience": 210,
-        "difficulty": 160,
+        "difficulty": 190,
         "item": "beryl"
     },
 
     "lapislazuli": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 45,
+        "experience": 350,
+        "difficulty": 250,
         "item": "lapislazuli"
     },
 
     "citrine": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 285,
         "item": "citrine"
     },
 
     "taaffeite": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 42,
+        "experience": 310,
+        "difficulty": 225,
         "item": "taaffeite"
     },
 
     "ruby": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 62,
+        "experience": 550,
+        "difficulty": 375,
         "item": "ruby"
     },
 
     "peridot": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 55,
+        "experience": 475,
+        "difficulty": 345,
         "item": "peridot"
     },
 
     "opal": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 20,
+        "experience": 100,
+        "difficulty": 140,
         "item": "opal"
     },
 
     "emerald": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 57,
+        "experience": 510,
+        "difficulty": 355,
         "item": "emerald"
     },
 
     "amethyst": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 160,
+        "levelRequirement": 65,
+        "experience": 580,
+        "difficulty": 445,
         "item": "amethyst"
     }
 }
