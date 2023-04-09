@@ -204,6 +204,15 @@
         "rewardExperience": 52600
     },
 
+    "miniemperor": {
+        "name": "Mini Emperor",
+        "description": "Defeat the mini emperor in the mini knight's land!",
+        "hidden": true,
+
+        "rewardSkill": "loitering",
+        "rewardExperience": 3000
+    },
+
     "gravemystery": {
         "name": "Grave Mystery",
         "description": "Discovered a cryptic set of gravestones.",

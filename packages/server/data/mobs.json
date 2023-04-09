@@ -2406,12 +2406,13 @@
     }
   },
 
-  "miniiceknight": {
+  "miniiceknight1": {
     "name": "Mini Ice Knight",
-    "hitPoints": 100,
-    "defenseLevel": 4,
-    "attackLevel": 3,
-    "level": 24,
+    "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+    "hitPoints": 1100,
+    "defenseLevel": 44,
+    "attackLevel": 23,
+    "level": 144,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -2441,12 +2442,157 @@
     }
   },
 
-  "miniknight": {
+  "miniiceknight2": {
+    "name": "Mini Ice Knight",
+    "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+    "hitPoints": 1100,
+    "defenseLevel": 44,
+    "attackLevel": 23,
+    "level": 144,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 21,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -3,
+      "slash": 14,
+      "stab": 19,
+      "archery": 12,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
+  },
+
+  "miniiceknight3": {
+    "name": "Mini Ice Knight",
+    "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+    "hitPoints": 1100,
+    "defenseLevel": 44,
+    "attackLevel": 23,
+    "level": 144,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 21,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -3,
+      "slash": 14,
+      "stab": 19,
+      "archery": 12,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
+  },
+
+  "miniiceknight4": {
+    "name": "Mini Ice Knight",
+    "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+    "hitPoints": 1100,
+    "defenseLevel": 44,
+    "attackLevel": 23,
+    "level": 144,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 21,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -3,
+      "slash": 14,
+      "stab": 19,
+      "archery": 12,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
+  },
+
+  "miniiceknight5": {
+    "name": "Mini Ice Knight",
+    "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+    "hitPoints": 1100,
+    "defenseLevel": 44,
+    "attackLevel": 23,
+    "level": 144,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1200,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 12,
+      "slash": 18,
+      "stab": 21,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -3,
+      "slash": 14,
+      "stab": 19,
+      "archery": 12,
+      "magic": 18
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 3
+    }
+  },
+
+  "miniknight1": {
     "name": "Mini Knight",
-    "hitPoints": 1450,
-    "defenseLevel": 3,
-    "attackLevel": 5,
-    "level": 56,
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -2475,6 +2621,223 @@
       "magic": 0
     }
   },
+
+  "miniknight2": {
+    "name": "Mini Knight",
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniknight3": {
+    "name": "Mini Knight",
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniknight4": {
+    "name": "Mini Knight",
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniknight5": {
+    "name": "Mini Knight",
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniknight6": {
+    "name": "Mini Knight",
+    "description": "A little ferocious tiny knight that might actually hurt me.",
+    "hitPoints": 950,
+    "defenseLevel": 23,
+    "attackLevel": 25,
+    "level": 116,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "miniemperor": {
+    "name": "Mini Emperor",
+    "description": "It looks like the leader of this band of mini knights.",
+    "hitPoints": 3950,
+    "defenseLevel": 93,
+    "attackLevel": 75,
+    "level": 316,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "achievement": "miniemperor",
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 54,
+      "slash": 49,
+      "stab": 94,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": -18,
+      "slash": 78,
+      "stab": 54,
+      "archery": 82,
+      "magic": 40
+    },
+    "bonuses": {
+      "accuracy": 15,
+      "strength": 24,
+      "archery": 0,
+      "magic": 18
+    }
+  },  
 
   "oldogre": {
     "name": "Old Ogre",
@@ -2657,9 +3020,10 @@
 
   "pinkelf": {
     "name": "Pink Elf",
-    "hitPoints": 625,
-    "defenseLevel": 8,
-    "attackLevel": 4,
+    "description": "A pink elf, it's pink, what else do you want to know.",
+    "hitPoints": 925,
+    "defenseLevel": 28,
+    "attackLevel": 24,
     "level": 123,
     "aggroRange": 1,
     "attackRange": 1,
@@ -2669,24 +3033,24 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 1,
-      "slash": 3,
-      "stab": 4,
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 4,
-      "slash": 7,
-      "stab": 8,
-      "archery": 7,
-      "magic": 5
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 5,
+      "strength": 4,
       "archery": 0,
-      "magic": 1
+      "magic": 0
     }
   },
 
@@ -2837,9 +3201,10 @@
 
   "redelf": {
     "name": "Red Elf",
-    "hitPoints": 1750,
-    "defenseLevel": 5,
-    "attackLevel": 5,
+    "description": "It's an elf, and it is red, kinda looks like the developer ran out of assets.",
+    "hitPoints": 850,
+    "defenseLevel": 35,
+    "attackLevel": 25,
     "level": 110,
     "aggroRange": 1,
     "attackRange": 1,
@@ -2849,24 +3214,24 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 3,
-      "slash": 5,
-      "stab": 5,
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
       "archery": 0,
-      "magic": 2
+      "magic": 0
     },
     "defenseStats": {
-      "crush": 3,
-      "slash": 5,
-      "stab": 5,
-      "archery": 5,
-      "magic": 2
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 5,
+      "strength": 4,
       "archery": 0,
-      "magic": 1
+      "magic": 0
     }
   },
 
@@ -3157,9 +3522,10 @@
 
   "skyelf": {
     "name": "Sky Elf",
-    "hitPoints": 2100,
-    "defenseLevel": 6,
-    "attackLevel": 6,
+    "description": "An elf that lives in the sky... What is it doing here?",
+    "hitPoints": 1000,
+    "defenseLevel": 36,
+    "attackLevel": 26,
     "level": 134,
     "aggroRange": 1,
     "attackRange": 1,
@@ -3169,22 +3535,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 5,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
@@ -3266,9 +3632,10 @@
 
   "snowelf": {
     "name": "Snow Elf",
-    "hitPoints": 3400,
-    "defenseLevel": 10,
-    "attackLevel": 15,
+    "description": "A magical tiny elf from the snow realm.",
+    "hitPoints": 920,
+    "defenseLevel": 20,
+    "attackLevel": 25,
     "level": 99,
     "aggroRange": 1,
     "attackRange": 1,
@@ -3278,22 +3645,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 14,
+      "slash": 19,
+      "stab": 24,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -8,
+      "slash": 18,
+      "stab": 24,
+      "archery": 22,
+      "magic": 20
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 5,
+      "strength": 4,
       "archery": 0,
       "magic": 0
     }
