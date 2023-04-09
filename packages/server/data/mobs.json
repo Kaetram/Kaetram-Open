@@ -4434,6 +4434,48 @@
     
   },
 
+  "hellhound": {
+    "name": "Hellhound",
+    "description": "I better keep a distance before this thing turns me into a stew!",
+    "drops": {"sidesword": 180, "goldensword": 220, "pearlpendant": 180, "pearlring": 180},
+    "hitPoints": 3850,
+    "defenseLevel": 40,
+    "attackLevel": 38,
+    "level": 344,
+    "aggroRange": 12,
+    "attackRange": 1,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 1100,
+    "movementSpeed": 420,
+    "respawnDelay": 90000,
+    "roamingDistance": 16,
+    "plugin": "hellhound",
+    "boss": true,
+    "achievement": "hellhound",
+    "attackStats": {
+      "crush": 120,
+      "slash": 140,
+      "stab": 160,
+      "archery": 100,
+      "magic": 100
+    },
+    "defenseStats": {
+      "crush": 100,
+      "slash": 100,
+      "stab": 100,
+      "archery": 40,
+      "magic": 100
+    },
+    "bonuses": {
+      "accuracy": 20,
+      "strength": 30,
+      "archery": 10,
+      "magic": 30
+    }
+    
+  },
+
   "windguardian": {
     "name": "Wind Guardian",
     "drops": {"icesword": 30},
@@ -5118,10 +5160,10 @@
 
   "icerat": {
     "name": "Ice Rat",
-    "hitPoints": 75,
+    "hitPoints": 710,
     "defenseLevel": 2,
     "attackLevel": 5,
-    "level": 10,
+    "level": 80,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -5130,34 +5172,33 @@
     "movementSpeed": 500,
     "respawnDelay": 10000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 18,
+      "slash": 29,
+      "stab": 30,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 18,
+      "slash": 24,
+      "stab": 15,
+      "archery": 18,
+      "magic": -15
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 15,
+      "strength": 16,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "icebat": {
     "name": "Frozen Bat",
-    "hitPoints": 125,
-    "defenseLevel": 2,
-    "attackLevel": 6,
-    "level": 16,
+    "hitPoints": 825,
+    "defenseLevel": 22,
+    "attackLevel": 26,
+    "level": 86,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -5166,22 +5207,22 @@
     "movementSpeed": 350,
     "respawnDelay": 20000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 18,
+      "slash": 29,
+      "stab": 34,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 18,
+      "slash": 29,
+      "stab": 30,
+      "archery": 20,
+      "magic": -15
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 19,
+      "strength": 18,
       "archery": 0,
       "magic": 0
     }
@@ -5189,10 +5230,10 @@
 
   "icecrab": {
     "name": "Ice Crab",
-    "hitPoints": 50,
-    "defenseLevel": 2,
-    "attackLevel": 3,
-    "level": 19,
+    "hitPoints": 860,
+    "defenseLevel": 22,
+    "attackLevel": 27,
+    "level": 89,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -5201,22 +5242,22 @@
     "movementSpeed": 300,
     "respawnDelay": 20000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 20,
+      "slash": 31,
+      "stab": 34,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 21,
+      "slash": 29,
+      "stab": 32,
+      "archery": 20,
+      "magic": -15
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 19,
+      "strength": 19,
       "archery": 0,
       "magic": 0
     }

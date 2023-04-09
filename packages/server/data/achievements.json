@@ -204,6 +204,15 @@
         "rewardExperience": 52600
     },
 
+    "hellhound": {
+        "name": "Hellhound",
+        "description": "Defeat the hellhound in the hell dungeon!",
+        "hidden": true,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 25600
+    },
+
     "miniemperor": {
         "name": "Mini Emperor",
         "description": "Defeat the mini emperor in the mini knight's land!",

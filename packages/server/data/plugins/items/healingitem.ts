@@ -4,7 +4,7 @@ import type { Plugin } from '.';
 import type { ItemData } from '@kaetram/common/types/item';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 
-export default class HealthFlask implements Plugin {
+export default class HealingItem implements Plugin {
     private healAmount = 0;
     private healPercent = 0;
     private manaAmount = 0;

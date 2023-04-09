@@ -1,4 +1,4 @@
-import healthflask from './healthflask';
+import healingitem from './healingitem';
 import poisoncure from './poisoncure';
 import blackpotion from './blackpotion';
 import hotsauce from './hotsauce';
@@ -13,7 +13,7 @@ export interface Plugin {
 }
 
 export default {
-    healthflask,
+    healingitem,
     poisoncure,
     blackpotion,
     hotsauce,
