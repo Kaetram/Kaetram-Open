@@ -4653,7 +4653,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 25,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 100
   },
 
@@ -4686,7 +4686,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 30,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "manaAmount": 35
   },
 
@@ -4699,7 +4699,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 7,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 200
   },
 
@@ -4712,7 +4712,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 5,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 250
   },
 
@@ -4725,7 +4725,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 10,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "manaAmount": 95
   },
 
@@ -4818,7 +4818,7 @@
     "name": "Banana",
     "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 700
   },
 
@@ -4827,7 +4827,7 @@
     "name": "Watermelon",
     "description": "A watermelon, I should probably cut this up before eating it.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 800
   },
 
@@ -4836,7 +4836,7 @@
     "name": "Apple",
     "description": "An apple, an excellent source of energy!",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 450
   },
 
@@ -4845,7 +4845,7 @@
     "name": "Orange",
     "description": "It's funny, the name of the fruit is the same as the colour and its colour.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 750
   },
 
@@ -5164,7 +5164,7 @@
     "price": 1000,
     "description": "A delicious soup made from clams. It's a bit salty though.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 750
   },
 
@@ -5181,7 +5181,7 @@
     "price": 200,
     "description": "A singular cooked shrimp, alone and dead. But still delicious.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 450
   },
 
@@ -5198,7 +5198,7 @@
     "price": 1000,
     "description": "I can't believe someone would actually think up to create something like this.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 750
   },
 
@@ -5222,7 +5222,7 @@
     "price": 1000,
     "description": "A delicious sushi made from tuna. Probably the best in-game food at the moment, or not, who knows, I'm just a piece of text.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 850
   },
 
@@ -5502,7 +5502,21 @@
   "waterbucket": {
     "type": "object",
     "name": "Water Bucket",
-    "description": "A bucket of water. It's pretty tasty when cooked.",
+    "description": "A bucket of water. You can use it to cook stuff with it.",
+    "price": 100
+  },
+
+  "bowlsmall": {
+    "type": "object",
+    "name": "Small Bowl",
+    "description": "A small bowl. Can be used to cook stuff in it.",
+    "price": 100
+  },
+
+  "bowlmedium": {
+    "type": "object",
+    "name": "Medium Bowl",
+    "description": "A medium bowl. Can be used to cook stuff in it.",
     "price": 100
   },
 
