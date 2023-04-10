@@ -613,6 +613,8 @@ export default class Player extends Character {
                 this.sendToSpawn();
                 return true;
             }
+            // Increment the cheat score.
+            this.incrementCheatScore(`Noclip detected at ${x}, ${y}.`);
 
             // Send player to the last valid position.
             this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
@@ -990,15 +992,16 @@ export default class Player extends Character {
         this.canAccessContainer = false;
         this.activeCraftingInterface = -1;
 
-        if (this.map.isDoor(x, y) || (target && following)) return;
-        if (this.inCombat()) return;
+        if (this.map.isDoor(x, y) || (target && following) || this.inCombat()) return;
 
         let diffX = Math.abs(this.x - x),
             diffY = Math.abs(this.y - y);
 
         if (diffX > 1 || diffY > 1) {
             this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+
             this.invalidMovement++;
+            this.cheatScore++;
 
             log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
         }
