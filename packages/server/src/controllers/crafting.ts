@@ -1,6 +1,7 @@
 import Item from '../game/entity/objects/item';
 import CraftingData from '../../data/crafting.json';
 
+import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
 
@@ -135,10 +136,14 @@ export default class Crafting {
         for (let requirement of craftingItem.requirements)
             player.inventory.removeItem(requirement.key, requirement.count * actualCount);
 
+        let skill = player.skills.get(player.activeCraftingInterface);
+
+        // Handle chance of failure - defaults to 100% success if not specified.
+        if (Utils.randomInt(0, 100) > (craftingItem.chance || 100) + skill.level)
+            return player.notify(`You failed to craft the item and the ingredients have vanished.`);
+
         // Award experience to the player.
-        player.skills
-            .get(player.activeCraftingInterface)
-            .addExperience(craftingItem.experience * actualCount);
+        skill.addExperience(craftingItem.experience * actualCount);
 
         // Add the crafted item to the player's inventory.
         player.inventory.add(new Item(key, -1, -1, false, craftingItem.result.count * actualCount));
