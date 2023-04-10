@@ -5,6 +5,7 @@ export default class Statistics {
     public pvpKills = 0;
     public pvpDeaths = 0;
     public mobKills: { [key: string]: number } = {};
+    public mobExamines: string[] = [];
 
     public creationTime = Date.now(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
@@ -26,6 +27,7 @@ export default class Statistics {
         this.pvpKills = data.pvpKills || this.pvpKills;
         this.pvpDeaths = data.pvpDeaths || this.pvpDeaths;
         this.mobKills = data.mobKills || this.mobKills;
+        this.mobExamines = data.mobExamines || this.mobExamines;
 
         this.creationTime = data.creationTime || this.creationTime;
         this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
@@ -44,6 +46,34 @@ export default class Statistics {
         if (!(key in this.mobKills)) this.mobKills[key] = 0;
 
         this.mobKills[key]++;
+    }
+
+    /**
+     * Handles examining a mob and rewarding the appropriate achievement.
+     * @param key The key of the mob that was examined.
+     */
+
+    public addMobExamine(key: string): void {
+        if (this.mobExamines.includes(key)) return;
+
+        this.mobExamines.push(key);
+
+        console.log(this.mobExamines);
+
+        // Handle achievements for each milestone
+        switch (this.mobExamines.length) {
+            case 10: {
+                return this.player.achievements.get('examiner10').finish();
+            }
+
+            case 25: {
+                return this.player.achievements.get('examiner25').finish();
+            }
+
+            case 50: {
+                return this.player.achievements.get('examiner50').finish();
+            }
+        }
     }
 
     /**
@@ -81,6 +111,7 @@ export default class Statistics {
             pvpKills: this.pvpKills,
             pvpDeaths: this.pvpDeaths,
             mobKills: this.mobKills,
+            mobExamines: this.mobExamines,
             creationTime: this.creationTime,
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,

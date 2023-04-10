@@ -2157,6 +2157,8 @@
 
   "icevulture": {
     "name": "Ice Vulture",
+    "description": "It's like a frozen version of the vicious bird I've seen before.",
+    "drops": { "feather": 8000 },
     "hitPoints": 300,
     "defenseLevel": 1,
     "attackLevel": 3,
@@ -3988,6 +3990,7 @@
 
   "vulture": {
     "name": "Vulture",
+    "drops": { "feather": 8000 },
     "hitPoints": 100,
     "defenseLevel": 5,
     "attackLevel": 1,

@@ -43,11 +43,11 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
+import type Item from '../../objects/item';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
 import type World from '../../../world';
-import type Item from '../../objects/item';
 import type Area from '../../../map/areas/area';
 import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
@@ -820,6 +820,10 @@ export default class Player extends Character {
         switch (cursor) {
             case 'smithing': {
                 return this.world.crafting.open(this, Modules.Skills.Smithing);
+            }
+
+            case 'smelting': {
+                return this.world.crafting.open(this, Modules.Skills.Smelting);
             }
 
             case 'cooking': {
