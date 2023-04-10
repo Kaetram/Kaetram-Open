@@ -8905,7 +8905,7 @@
                  "value":256
                 }],
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -19430,13 +19430,37 @@
                          "duration":400,
                          "tileid":1927
                         }],
-                 "id":1925
+                 "id":1925,
+                 "properties":[
+                        {
+                         "name":"h",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":1931,
                  "properties":[
                         {
                          "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":1934,
+                 "properties":[
+                        {
+                         "name":"h",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":1935,
+                 "properties":[
+                        {
+                         "name":"h",
                          "type":"string",
                          "value":""
                         }]
@@ -19696,10 +19720,7 @@
                          "duration":400,
                          "tileid":1990
                         }],
-                 "id":1989
-                }, 
-                {
-                 "id":1991,
+                 "id":1989,
                  "properties":[
                         {
                          "name":"h",
@@ -19721,6 +19742,15 @@
                  "properties":[
                         {
                          "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":1998,
+                 "properties":[
+                        {
+                         "name":"h",
                          "type":"string",
                          "value":""
                         }]
@@ -20040,7 +20070,13 @@
                          "duration":400,
                          "tileid":2054
                         }],
-                 "id":2053
+                 "id":2053,
+                 "properties":[
+                        {
+                         "name":"h",
+                         "type":"string",
+                         "value":""
+                        }]
                 }, 
                 {
                  "id":2056,
@@ -20056,6 +20092,15 @@
                  "properties":[
                         {
                          "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":2062,
+                 "properties":[
+                        {
+                         "name":"h",
                          "type":"string",
                          "value":""
                         }]
@@ -20339,6 +20384,24 @@
                  "properties":[
                         {
                          "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":2126,
+                 "properties":[
+                        {
+                         "name":"h",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":2127,
+                 "properties":[
+                        {
+                         "name":"h",
                          "type":"string",
                          "value":""
                         }]
@@ -20678,6 +20741,24 @@
                  "properties":[
                         {
                          "name":"c",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":2190,
+                 "properties":[
+                        {
+                         "name":"h",
+                         "type":"string",
+                         "value":""
+                        }]
+                }, 
+                {
+                 "id":2191,
+                 "properties":[
+                        {
+                         "name":"h",
                          "type":"string",
                          "value":""
                         }]
@@ -22199,7 +22280,8 @@
                          "type":"string",
                          "value":""
                         }]
-                }, 
+                },
+            
                 {
                  "id":2518,
                  "properties":[
@@ -22275,8 +22357,7 @@
                          "type":"string",
                          "value":""
                         }]
-                },
-            
+                }, 
                 {
                  "id":2544,
                  "properties":[
