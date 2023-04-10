@@ -15,7 +15,7 @@ export default class Entity {
     public y = -1;
 
     // Used when we want to connect without a database.
-    public username = `Bot${Utils.counter}${Utils.randomInt(0, 1000)}}`;
+    public username = `Bot${Utils.counter++}${Utils.randomInt(0, 1000)}`;
 
     private readyCallback?: () => void;
 
