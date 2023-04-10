@@ -637,6 +637,8 @@ export default class Incoming {
 
         if (!entity.isMob() && !entity.isItem()) return;
 
+        this.player.statistics.addMobExamine(entity.key);
+
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
         this.player.notify(entity.getDescription());

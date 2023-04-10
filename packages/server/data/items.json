@@ -48,7 +48,7 @@
     "weaponType": "pickaxe",
     "mining": 1,
     "level": 1,
-    "price": 10000,
+    "price": 2500,
     "attackStats": {
       "crush": 4,
       "slash": 0,
@@ -5485,6 +5485,13 @@
     "price": 100
   },
 
+  "goldbar": {
+    "type": "object",
+    "name": "Gold Bar",
+    "description": "A bar of gold. It's pretty heavy and shiny.",
+    "price": 100
+  },
+
   "tofu": {
     "type": "object",
     "name": "Tofu",
@@ -5575,7 +5582,7 @@
   "goldboots": {
     "type": "boots",
     "name": "Golden Boots",
-    "price": 12500,
+    "price": 4500,
     "attackStats": {
       "crush": 0,
       "slash": 0,
