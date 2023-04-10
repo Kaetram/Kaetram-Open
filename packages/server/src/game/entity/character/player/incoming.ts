@@ -195,7 +195,7 @@ export default class Incoming {
                 // Authenticated so that we send the logout packet to the hub.
                 this.player.authenticated = true;
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
-                this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
+                this.player.username = `guest${Utils.counter++}`; // Generate a random guest username.
 
                 this.player.load(Creator.serializePlayer(this.player));
                 return;
