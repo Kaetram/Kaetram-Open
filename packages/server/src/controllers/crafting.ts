@@ -136,7 +136,12 @@ export default class Crafting {
         for (let requirement of craftingItem.requirements)
             player.inventory.removeItem(requirement.key, requirement.count * actualCount);
 
-        let skill = player.skills.get(player.activeCraftingInterface);
+        // Get the skill for the player's active crafting interface.
+        let skill = player.skills.get(
+            player.activeCraftingInterface === Modules.Skills.Smelting
+                ? Modules.Skills.Smithing
+                : player.activeCraftingInterface
+        );
 
         // Handle chance of failure - defaults to 100% success if not specified.
         if (Utils.randomInt(0, 100) > (craftingItem.chance || 100) + skill.level)

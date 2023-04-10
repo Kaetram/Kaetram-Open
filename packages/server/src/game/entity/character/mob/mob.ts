@@ -398,6 +398,11 @@ export default class Mob extends Character {
                 count = Utils.randomInt(1, Math.ceil(this.level / 2));
                 break;
             }
+
+            case 'feather': {
+                count = Utils.randomInt(1, this.level * 2);
+                break;
+            }
         }
 
         // Something went wrong when trying to get the item drop.

@@ -20,6 +20,11 @@
         "rewardExperience": 369
     },
 
+    "examiner10": {
+        "name": "Examiner",
+        "description": "Inspect 10 random things around the world."
+    },
+
     "ahiddenpath": {
         "name": "Hidden Path",
         "description": "Discover the hidden path in Mudwich."
@@ -220,6 +225,18 @@
 
         "rewardSkill": "loitering",
         "rewardExperience": 3000
+    },
+
+    "examiner25": {
+        "name": "Examiner",
+        "description": "Inspect 25 random things around the world.",
+        "secret": true
+    },
+
+    "examiner50": {
+        "name": "Examiner",
+        "description": "Inspect 50 random things around the world.",
+        "secret": true
     },
 
     "gravemystery": {
