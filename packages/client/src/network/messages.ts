@@ -189,7 +189,7 @@ export default class Messages {
         this.app.toggleLogin(false);
 
         switch (message) {
-            case 'full': {
+            case 'worldfull': {
                 this.app.sendError('The servers are currently full!');
                 break;
             }

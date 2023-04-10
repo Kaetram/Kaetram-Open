@@ -249,7 +249,11 @@ export default {
      */
 
     bufferToAddress(buffer: ArrayBuffer): string {
-        return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        try {
+            return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        } catch {
+            return '69.69.69.69';
+        }
     },
 
     /**

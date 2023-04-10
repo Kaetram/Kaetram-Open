@@ -90,6 +90,8 @@ class Log {
     }
 
     public bug(...data: unknown[]): void {
+        this.warning(data);
+
         this.write(new Date(), '[BUG]', data, this.bugStream);
     }
 
