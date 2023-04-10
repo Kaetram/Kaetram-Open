@@ -3550,7 +3550,6 @@ __metadata:
     "@kaetram/common": "workspace:*"
     "@kaetram/server": "workspace:*"
     "@types/node": "npm:^18.15.5"
-    socket.io-client: "npm:^4.5.4"
     tsx: "npm:^3.12.6"
     typescript: "npm:^5.0.2"
     websocket: "npm:^1.0.34"
