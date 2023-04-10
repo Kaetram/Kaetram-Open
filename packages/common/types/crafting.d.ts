@@ -10,6 +10,7 @@ export interface CraftingResult {
 export interface CraftingItem {
     level: number;
     experience: number;
+    chance?: number; // Out of 100 chance of success
     requirements: CraftingRequirement[];
     result: CraftingResult;
 }
