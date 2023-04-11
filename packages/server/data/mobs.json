@@ -1477,7 +1477,7 @@
   "darkogre": {
     "name": "Dark Ogre",
     "description": "It didn't get to see much sun...",
-    "drops": {"deathflail": 3, "skylightbow": 180, "rubypendant": 100},
+    "drops": {"deathflail": 3, "skylightbow": 180, "rubypendant": 200},
     "hitPoints": 900,
     "defenseLevel": 89,
     "attackLevel": 45,
@@ -4519,7 +4519,7 @@
 
   "lightningguardian": {
     "name": "Lightning Guardian",
-    "drops": {"magicspear": 25, "essentialrage": 50, "marblependant": 25, "samuraiarmor": 50},
+    "drops": {"magicspear": 25, "essentialrage": 50, "samuraiarmor": 50},
     "hitPoints": 4500,
     "defenseLevel": 25,
     "attackLevel": 35,
@@ -4708,7 +4708,7 @@
 
   "enel": {
     "name": "Lucendi",
-    "drops": {"redenelbow": 60, "enelarmor": 60, "eneltrident": 60, "marblependant": 125},
+    "drops": {"redenelbow": 60, "enelarmor": 60, "eneltrident": 60},
     "hitPoints": 25000,
     "defenseLevel": 150,
     "attackLevel": 120,
