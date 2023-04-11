@@ -1,5 +1,6 @@
 import Item from '../game/entity/objects/item';
 import CraftingData from '../../data/crafting.json';
+import Items from '../../data/items.json';
 
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -7,6 +8,7 @@ import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../game/entity/character/player/player';
 import type { CraftingInfo } from '@kaetram/common/types/crafting';
+import type { ItemData } from '@kaetram/common/types/item';
 
 /**
  * The crafting mechanism is shared by multiple skills and works largely the same way. We use
@@ -14,6 +16,9 @@ import type { CraftingInfo } from '@kaetram/common/types/crafting';
  * fletch, cook, smith.
  */
 
+interface RawData {
+    [key: string]: ItemData;
+}
 export default class Crafting {
     /**
      * Opens the crafting interface for a player given a specified skill.
@@ -33,6 +38,7 @@ export default class Crafting {
         // Send a packet to the client to open the crafting interface and pass the keys.
         player.send(
             new CraftingPacket(Opcodes.Crafting.Open, {
+                type,
                 keys
             })
         );
@@ -65,6 +71,8 @@ export default class Crafting {
         player.send(
             new CraftingPacket(Opcodes.Crafting.Select, {
                 key,
+                name: (Items as RawData)[key].name,
+                level: craftingItem.level,
                 result: craftingItem.result.count,
                 requirements: craftingItem.requirements
             })

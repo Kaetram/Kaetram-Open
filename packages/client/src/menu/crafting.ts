@@ -2,9 +2,8 @@ import Menu from './menu';
 
 import Utils from '../utils/util';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type Game from '../game';
 import type { CraftingRequirement } from '@kaetram/common/types/crafting';
 import type { CraftingPacket } from '@kaetram/common/types/messages/outgoing';
 
@@ -15,7 +14,10 @@ export default class Crafting extends Menu {
     private options: HTMLUListElement = document.querySelector('#crafting-options')!;
     private requirements: HTMLUListElement = document.querySelector('#crafting-requirements')!;
 
+    // Result section
     private result: HTMLDivElement = document.querySelector('#crafting-result')!;
+    private level: HTMLDivElement = document.querySelector('#crafting-level')!;
+    private name: HTMLDivElement = document.querySelector('#crafting-result-name')!;
 
     // Amount buttons.
     private craftOne: HTMLDivElement = document.querySelector('#craft-one')!;
@@ -28,6 +30,9 @@ export default class Crafting extends Menu {
     // Crafting amount for sending to the server.
     private selectedKey = '';
     private craftAmount = 1;
+
+    // Data for the currently selected crafting elements.
+    private type: Modules.Skills = Modules.Skills.Crafting;
 
     // Callbacks for when the player selects an option.
     private selectCallback?: SelectCallback;
@@ -56,11 +61,17 @@ export default class Crafting extends Menu {
     public handle(opcode: Opcodes.Crafting, info: CraftingPacket): void {
         switch (opcode) {
             case Opcodes.Crafting.Open: {
-                return this.show(info.keys!);
+                return this.show(info.type!, info.keys!);
             }
 
             case Opcodes.Crafting.Select: {
-                return this.handleSelect(info.key!, info.result!, info.requirements!);
+                return this.handleSelect(
+                    info.key!,
+                    info.name!,
+                    info.level!,
+                    info.result!,
+                    info.requirements!
+                );
             }
         }
     }
@@ -68,11 +79,19 @@ export default class Crafting extends Menu {
     /**
      * Handles displaying the requirements and result for the item that the player selected.
      * @param key The key of the item that the player selected.
+     * @param name The formatted name of the item (the one the player sees).
+     * @param level The level required to craft the item.
      * @param count The amount of the item selected we will receive as a result.
      * @param requirements The requirements for the item that the player selected.
      */
 
-    private handleSelect(key: string, count: number, requirements: CraftingRequirement[]): void {
+    private handleSelect(
+        key: string,
+        name: string,
+        level: number,
+        count: number,
+        requirements: CraftingRequirement[]
+    ): void {
         // Clear the requirements and result.
         this.requirements.innerHTML = '';
 
@@ -80,13 +99,23 @@ export default class Crafting extends Menu {
         this.selectedKey = key;
 
         // Set the result image.
-        let icon: HTMLDivElement = this.result.querySelector('.crafting-option-icon')!,
-            countElement: HTMLDivElement = this.result.querySelector('.crafting-option-count')!;
+        let icon: HTMLElement = this.result.querySelector('.crafting-option-icon')!,
+            countElement: HTMLElement = this.result.querySelector('.crafting-option-count')!,
+            levelIcon: HTMLElement = this.level.querySelector('.crafting-option-icon')!,
+            levelCount = this.level.querySelector('.crafting-option-count')!;
 
+        // Update the result icons.
         icon.style.backgroundImage = Utils.getImageURL(key);
+        levelIcon.style.backgroundImage = this.getSkillIcon();
 
         // Set the amount of the item that we will receive as a result.
         countElement.innerHTML = `x${count}`;
+
+        // Set the level required to craft the item.
+        levelCount.innerHTML = `${level}`;
+
+        // Update the name of the item.
+        this.name.innerHTML = name;
 
         // Create new requirement element and append it to the list of requirements.
         for (let requirement of requirements)
@@ -130,11 +159,14 @@ export default class Crafting extends Menu {
      * @param keys Contains a string array of the available keys (used for item url path).
      */
 
-    public override show(keys: string[]): void {
+    public override show(type: Modules.Skills, keys: string[]): void {
         super.show();
 
         // Clear all the options.
         this.options.innerHTML = '';
+
+        // Update the crafting type
+        this.type = type;
 
         // Create a new option for each key and append it to the list of options.
         for (let key of keys) this.options.append(this.createSlot(key));
@@ -145,6 +177,38 @@ export default class Crafting extends Menu {
 
             this.options.children[0].classList.add('active');
         }
+
+        // Update the craft button text according to the type of interface.
+        let text = 'Craft';
+
+        switch (type) {
+            case Modules.Skills.Cooking: {
+                text = 'Cook';
+                break;
+            }
+
+            case Modules.Skills.Crafting: {
+                text = 'Craft';
+                break;
+            }
+
+            case Modules.Skills.Fletching: {
+                text = 'Fletch';
+                break;
+            }
+
+            case Modules.Skills.Smithing: {
+                text = 'Smith';
+                break;
+            }
+
+            case Modules.Skills.Smelting: {
+                text = 'Smelt';
+                break;
+            }
+        }
+
+        this.craftButton.innerHTML = text;
     }
 
     /**
@@ -190,6 +254,25 @@ export default class Crafting extends Menu {
             });
 
         return element;
+    }
+
+    /**
+     * Grabs the skill icon for the currently open interface. We use
+     * this function to handle special cases of crafting interfaces that
+     * share the same skill.
+     */
+
+    private getSkillIcon(): string {
+        let name = Modules.Skills[this.type].toLowerCase();
+
+        switch (this.type) {
+            case Modules.Skills.Smelting:
+            case Modules.Skills.Smithing: {
+                return `url(/img/interface/skills/smithing.png)`;
+            }
+        }
+
+        return `url(/img/interface/skills/${name}.png)`;
     }
 
     /**
