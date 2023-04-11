@@ -93,14 +93,35 @@
 
     "pirates": {
         "name": "Pirates",
-        "description": "There's skeleton pirates under the sea?",
-        "hidden": true
+        "description": "There's skeleton pirates under the sea?"
     },
 
     "piratestreasure": {
         "name": "Pirate's Treasure",
         "description": "Find the treasure hidden in the pirate's ship.",
         "hidden": true
+    },
+
+    "zombielovers": {
+        "name": "Zombie Lovers",
+        "description": "The worried zombie girlfriend needs your help!",
+        "npc": "zombiegf",
+        "dialogueHidden": [
+            "You! Please, you need to help me!",
+            "My boyfriend went down in that mine below and got stuck!",
+            "He looks just like one of those zombies!",
+            "Slay 20 of them just to make sure they're not my boyfriend.",
+            "What? I gotta give you a task, isn't that why you talked to me?"
+        ],
+        "dialogueStarted": [
+            "Please, slay 20 zombies for me!"
+        ],
+
+        "mob": ["zombie"],
+        "mobCount": 20,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 4269
     },
 
     "babyseadragon": {
