@@ -43,7 +43,7 @@
                     "count": 1
                 },
                 {
-                    "key": "bowstring",
+                    "key": "string",
                     "count": 1
                 }
             ],
@@ -62,7 +62,7 @@
                     "count": 15
                 },
                 {
-                    "key": "bowstring",
+                    "key": "string",
                     "count": 10
                 },
                 {
@@ -93,9 +93,55 @@
             }
         },
 
-        "jellyfishsmoothie": {
+        "stew": {
             "level": 1,
-            "experience": 20,
+            "experience": 50,
+            "requirements": [
+                {
+                    "key": "bowlsmall",
+                    "count": 1
+                },
+                {
+                    "key": "mushroom1",
+                    "count": 1
+                },
+                {
+                    "key": "tomato",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "stew2": {
+            "level": 1,
+            "experience": 65,
+            "requirements": [
+                {
+                    "key": "bowlsmall",
+                    "count": 1
+                },
+                {
+                    "key": "mushroom2",
+                    "count": 1
+                },
+                {
+                    "key": "corn",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "jellyfishsmoothie": {
+            "level": 10,
+            "experience": 45,
             "requirements": [
                 {
                     "key": "jellyfish",
@@ -109,11 +155,11 @@
         },
 
         "clamchowder": {
-            "level": 1,
-            "experience": 20,
+            "level": 15,
+            "experience": 85,
             "requirements": [
                 {
-                    "key": "clam",
+                    "key": "clamobject",
                     "count": 1
                 }
             ],
@@ -124,8 +170,8 @@
         },
 
         "tunasushi": {
-            "level": 1,
-            "experience": 20,
+            "level": 20,
+            "experience": 130,
             "requirements": [
                 {
                     "key": "tuna",
@@ -310,6 +356,21 @@
             }
         },
 
+        "silverring": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "goldring": {
             "level": 1,
             "experience": 20,
@@ -357,6 +418,51 @@
     },
 
     "crafting": {
+        "string": {
+            "level": 1,
+            "experience": 10,
+            "requirements": [
+                {
+                    "key": "bluelily",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bowlsmall": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "stick",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bowlmedium": {
+            "level": 5,
+            "experience": 30,
+            "requirements": [
+                {
+                    "key": "stick",
+                    "count": 4
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "staff": {
             "level": 1,
             "experience": 20,
@@ -377,7 +483,7 @@
             }
         },
 
-        "ligtningstaff": {
+        "lightningstaff": {
             "level": 10,
             "experience": 80,
             "requirements": [
@@ -457,36 +563,6 @@
             }
         },
 
-        "bowlsmall": {
-            "level": 5,
-            "experience": 20,
-            "requirements": [
-                {
-                    "key": "stick",
-                    "count": 2
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
-        },
-
-        "bowlmedium": {
-            "level": 10,
-            "experience": 30,
-            "requirements": [
-                {
-                    "key": "stick",
-                    "count": 4
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
-        },
-
         "bucket": {
             "level": 10,
             "experience": 35,
@@ -494,6 +570,177 @@
                 {
                     "key": "logs",
                     "count": 5
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "berylpendant": {
+            "level": 1,
+            "experience": 50,
+            "requirements": [
+                {
+                    "key": "beryl",
+                    "count": 1
+                },
+                {
+                    "key": "string",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "rubypendant": {
+            "level": 20,
+            "experience": 145,
+            "requirements": [
+                {
+                    "key": "ruby",
+                    "count": 1
+                },
+                {
+                    "key": "string",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "emeraldpendant": {
+            "level": 25,
+            "experience": 200,
+            "requirements": [
+                {
+                    "key": "emerald",
+                    "count": 1
+                },
+                {
+                    "key": "string",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ring1": {
+            "level": 1,
+            "experience": 30,
+            "requirements": [
+                {
+                    "key": "emerald",
+                    "count": 1
+                },
+                {
+                    "key": "silverring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "nisocring": {
+            "level": 5,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "nisocore",
+                    "count": 1
+                },
+                {
+                    "key": "silverring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "pytharring": {
+            "level": 5,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "pytharore",
+                    "count": 1
+                },
+                {
+                    "key": "silverring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "topazring": {
+            "level": 5,
+            "experience": 100,
+            "requirements": [
+                {
+                    "key": "topaz",
+                    "count": 1
+                },
+                {
+                    "key": "goldring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "rubyring": {
+            "level": 20,
+            "experience": 145,
+            "requirements": [
+                {
+                    "key": "ruby",
+                    "count": 1
+                },
+                {
+                    "key": "goldring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "emeraldring": {
+            "level": 25,
+            "experience": 200,
+            "requirements": [
+                {
+                    "key": "emerald",
+                    "count": 1
+                },
+                {
+                    "key": "goldring",
+                    "count": 1
                 }
             ],
 

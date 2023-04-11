@@ -1425,10 +1425,10 @@
     }
   },
 
-  "marblependant": {
+  "berylpendant": {
     "type": "pendant",
-    "name": "Diamond Pendant",
-    "price": 16500,
+    "name": "Beryl Pendant",
+    "price": 1200,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -1454,7 +1454,7 @@
   "rubypendant": {
     "type": "pendant",
     "name": "Ruby Pendant",
-    "price": 4500,
+    "price": 1500,
     "attackStats": {
       "crush": 3,
       "slash": 3,
@@ -1480,7 +1480,7 @@
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
-    "price": 10050,
+    "price": 1800,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -1732,7 +1732,7 @@
     "name": "Emerald Ring",
     "skill": "magic",
     "level": 30,
-    "price": 8650,
+    "price": 2200,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -4944,10 +4944,11 @@
     "plugin": "knife"
   },
 
-  "bowstring": {
+  "string": {
     "type": "object",
-    "name": "Bow String",
-    "description": "A bowstring, used to make bows. It says it right there in the name.",
+    "name": "String",
+    "description": "A piece of string, can probably be used to make things with it.",
+    "stackable": true,
     "price": 50
   },
 
@@ -5151,7 +5152,7 @@
     "plugin": "beermug"
   },
 
-  "clam": {
+  "clamobject": {
     "type": "object",
     "name": "Clam",
     "price": 100,
@@ -5321,7 +5322,7 @@
     "type": "object",
     "name": "Raw Pork",
     "description": "I think I should cook this before I eat it.",
-    "price": 100
+    "price": 250
   },
 
   "cookedpork": {
@@ -5489,7 +5490,7 @@
     "type": "object",
     "name": "Gold Bar",
     "description": "A bar of gold. It's pretty heavy and shiny.",
-    "price": 100
+    "price": 1200
   },
 
   "tofu": {
@@ -5503,6 +5504,17 @@
     "type": "object",
     "name": "Tomato",
     "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "plugin": "healingitem",
+    "healAmount": 100,
+    "price": 100
+  },
+
+  "potato": {
+    "type": "object",
+    "name": "Potato",
+    "description": "A potato, it's a vegetable and it's edible, though cooking it might be better.",
+    "plugin": "healingitem",
+    "healingAmount": 120,
     "price": 100
   },
 
@@ -5525,6 +5537,143 @@
     "name": "Medium Bowl",
     "description": "A medium bowl. Can be used to cook stuff in it.",
     "price": 100
+  },
+
+  "topaz": {
+    "type": "object",
+    "name": "Topaz",
+    "description": "A topaz gemstome, it's quite pretty.",
+    "price": 350
+  },
+
+  "beryl": {
+    "type": "object",
+    "name": "Beryl",
+    "description": "Beryl gemstone, it's quite pretty.",
+    "price": 650
+  },
+
+  "lapislazuli": {
+    "type": "object",
+    "name": "Lapis Lazuli",
+    "description": "A semi-precious stone, it's quite pretty.",
+    "price": 800
+  },
+
+  "citrine": {
+    "type": "object",
+    "name": "Citrine",
+    "description": "It's rather shiny and nice to hold.",
+    "price": 1100
+  },
+
+  "taaffeite": {
+    "type": "object",
+    "name": "Taaffeite",
+    "description": "A nice purple gemstone that is somewhat valuable I guess.",
+    "price": 1220
+  },
+
+  "ruby": {
+    "type": "object",
+    "name": "Ruby",
+    "description": "A very nice gemstone that can be used to made rings or pendants.",
+    "price": 1300
+  },
+
+  "peridot": {
+    "type": "object",
+    "name": "Peridot",
+    "description": "A nice green gemstone that is somewhat valuable I guess.",
+    "price": 1300
+  },
+
+  "opal": {
+    "type": "object",
+    "name": "Opal",
+    "description": "A nice gemstone that is somewhat valuable I guess.",
+    "price": 1300
+  },
+
+  "emerald": {
+    "type": "object",
+    "name": "Emerald",
+    "description": "A very nice gemstone that can be used to made rings or pendants.",
+    "price": 1400
+  },
+
+  "amethyst": {
+    "type": "object",
+    "name": "Amethyst",
+    "description": "A nice purple gemstone that is somewhat valuable I guess.",
+    "price": 1500
+  },
+
+  "bluelily": {
+    "type": "object",
+    "name": "Blue Lily",
+    "description": "A blue lily, a flower that can be used for crafting stuff.",
+    "price": 100
+  },
+
+  "stew": {
+    "type": "object",
+    "name": "Tomato Stew",
+    "description": "A stew composed of tomato, mushrooms, and a bowl.",
+    "plugin": "healingitem",
+    "healAmount": 500,
+    "price": 600
+  },
+
+  "stew2": {
+    "type": "object",
+    "name": "Corn Stew",
+    "description": "A very filling stew, possibly the best stew currently available.",
+    "plugin": "healingitem",
+    "healAmount": 800,
+    "price": 900
+  },
+
+  "mushroom1": {
+    "type": "object",
+    "name": "Shiitake",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom2": {
+    "type": "object",
+    "name": "Russula",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom3": {
+    "type": "object",
+    "name": "Kuriositas",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom4": {
+    "type": "object",
+    "name": "Matsutake",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom5": {
+    "type": "object",
+    "name": "Cortinarius",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom6": {
+    "type": "object",
+    "name": "Violet Cort",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
   },
 
   "leatherboots": {

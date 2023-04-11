@@ -951,6 +951,10 @@ export default class Commands {
                 this.player.setPet(key);
             }
 
+            case 'opencrafting': {
+                return this.world.crafting.open(this.player, Modules.Skills.Crafting);
+            }
+
             case 'toggle': {
                 let key = blocks.shift()!,
                     effect: Modules.Effects = Modules.Effects.None;
