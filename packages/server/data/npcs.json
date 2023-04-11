@@ -112,7 +112,7 @@
             "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>"]
   },
 
-  "forestNpc": {
+  "forestnpc": {
     "name": "Forester"
   },
 
@@ -252,5 +252,10 @@
   "santaelfnpc": {
     "name": "Santa's Helper",
     "text": ["What do you want? I'm busy being overworked."]
+  },
+
+  "oldlady": {
+    "name": "Old Lady",
+    "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
   }
 }

@@ -25,6 +25,29 @@
         "description": "Inspect 10 random things around the world."
     },
 
+    "boxingman": {
+        "name": "Boxing Man",
+        "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
+        "npc": "boxingman",
+        "dialogueHidden": [
+            "Hey there, you look like you can take a punch!",
+            "I'm looking for someone to beat up some stuff for me.",
+            "If you go and beat up 25 snakes, I have a special reward for you!"
+        ],
+
+        "dialogueStarted": [
+            "Beat up 25 sneks for me!",
+            "I'll show you something special if you do!"
+        ],
+
+        "mob": ["snek"],
+        "mobCount": 25,
+
+        "rewardAbility": "run",
+        "rewardSkill": "strength",
+        "rewardExperience": 2000
+    },
+
     "ahiddenpath": {
         "name": "Hidden Path",
         "description": "Discover the hidden path in Mudwich."
