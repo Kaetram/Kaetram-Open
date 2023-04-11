@@ -414,8 +414,10 @@ export interface PlayerPacket {
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface CraftingPacket {
+    type?: Modules.Skills;
     keys?: string[]; // The keys of the items we are crafting.
     key?: string; // The key of the item we are crafting.
+    name?: string; // The name of the item we are crafting.
     level?: number; // The level required to craft the item.
     requirements?: CraftingRequirement[];
     result?: number; // The amount the item we are crafting will give.

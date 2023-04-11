@@ -38,7 +38,9 @@
     display: flex;
 }
 
-#crafting-result {
+#crafting-result,
+#crafting-level,
+#crafting-result-name {
     position: absolute;
 }
 
@@ -49,7 +51,7 @@
     filter: opacity(100%);
 }
 
-.crafting-option-count {
+#crafting-result-name, .crafting-option-count {
     font-family: KerrieFont, sans-serif;
     font-size: 14px;
     color: white;
@@ -115,9 +117,24 @@
             }
         }
 
+        #crafting-result-name {
+            right: 24px * $i;
+            bottom: 78px * $i;
+            width: 140px * $i;
+            font-size: 12px * $i;
+        }
+
+        #crafting-result,
+        #crafting-level {
+            bottom: 96px * $i;
+        }
+
         #crafting-result {
-            right: 72px * $i;
-            bottom: 70px * $i;
+            right: 106px * $i;
+        }
+
+        #crafting-level {
+            right: 42px * $i;
         }
 
         .crafting-option {
