@@ -296,6 +296,26 @@
     },
 
     "smithing": {
+        "hilt2": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 1
+                },
+
+                {
+                    "key": "logs",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+        
         "sword2": {
             "level": 1,
             "experience": 20,
@@ -303,6 +323,11 @@
                 {
                     "key": "ironbar",
                     "count": 2
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
                 }
             ],
 
@@ -318,6 +343,11 @@
                 {
                     "key": "ironbar",
                     "count": 3
+                },
+
+                {
+                    "key": "logs",
+                    "count": 1
                 }
             ],
 
@@ -333,6 +363,11 @@
                 {
                     "key": "ironbar",
                     "count": 5
+                },
+
+                {
+                    "key": "logs",
+                    "count": 1
                 }
             ],
 
@@ -393,6 +428,11 @@
                 {
                     "key": "goldbar",
                     "count": 15
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
                 }
             ],
 
