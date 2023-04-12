@@ -9013,6 +9013,7 @@
   { "id": "items/poisonarrow", "offsetX": 0, "offsetY": 0 },
   { "id": "items/poisonaxe", "offsetX": 0, "offsetY": 0 },
   { "id": "items/portalarmor", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/potato", "offsetX": 0, "offsetY": 0 },
   { "id": "items/powerarmour", "offsetX": 0, "offsetY": 0 },
   { "id": "items/powersword", "offsetX": 0, "offsetY": 0 },
   { "id": "items/purplecloudkallege", "offsetX": 0, "offsetY": 0 },
@@ -9207,5 +9208,8 @@
   { "id": "saltshaker", "offsetX": 0, "offsetY": 0 },
   { "id": "vanila", "offsetX": 0, "offsetY": 0 },
   { "id": "vanillabottle", "offsetX": 0, "offsetY": 0 },
-  { "id": "vanillabowlsmall", "offsetX": 0, "offsetY": 0 }
+  { "id": "vanillabowlsmall", "offsetX": 0, "offsetY": 0 },
+  { "id": "hilt1", "offsetX": 0, "offsetY": 0 },
+  { "id": "hilt2", "offsetX": 0, "offsetY": 0 }
+  
 ]
