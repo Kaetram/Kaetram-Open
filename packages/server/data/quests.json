@@ -223,8 +223,8 @@
           "Would you be so kind as to bring me another 10?"
         ],
         "completedText": ["Please adventurer, I beg of you, just 10 more logs."],
-        "itemRequirement": "logs",
-        "itemCountRequirement": 10
+        "itemRequirement": ["logs"],
+        "itemRequirementCount": [10]
       },
 
       "2": {
@@ -234,8 +234,8 @@
           "Ah yes, you see, these logs are suitable for my needs.",
           "Thank you so much dear adventurer. Please take this reward!"
         ],
-        "itemRequirement": "logs",
-        "itemCountRequirement": 10,
+        "itemRequirement": ["logs"],
+        "itemRequirementCount": [10],
         "itemKey": "rustedaxe",
         "popup": {
           "title": "Quest completed!",
@@ -248,8 +248,8 @@
 
   "scavenger": {
     "name": "Scavenger",
-    "description": "villagegirl2",
-    "reward": ["Nothing in particular, but it'll be fun!"],
+    "description": "The local village girl needs your help to get out of her responsibilities.|Quick, there is a village girl who does not want to fulfill her duties towards her grandmother and you must go help her immediately. I think this quest involves scavenging for ingredients and stuff but I'm not particularly sure.",
+    "rewards": ["Nothing in particular, but it'll be fun!"],
     "stages": {
       "0": {
         "task": "talk",
@@ -272,6 +272,7 @@
         "task": "talk",
         "npc": "oldlady",
         "text": [
+          "Oh hello, please don't mind the random tent in my house.",
           "I've been waiting for my granddaughter to bring me some ingredients",
           "but that was months ago. Do you think you can help me out?",
           "I only ask that you bring me 2 tomatoes, 2 strawberries, and a piece of string.",
@@ -285,13 +286,13 @@
       "2": {
         "task": "talk",
         "npc": "oldlady",
-        "text": [
+        "hasItemText": [
           "Thank you so much young one. You're so helpful.",
           "Unlike that granddaughter of mine.",
           "Here, take this gold as a reward for your troubles."
         ],
-        "itemRequirement": "tomato",
-        "itemCountRequirement": 2,
+        "itemRequirement": ["tomato", "strawberry", "string"],
+        "itemRequirementCount": [2, 2, 1],
         "itemKey": "gold",
         "itemCount": 7500,
         "popup": {
@@ -331,8 +332,8 @@
           "Come back any time and I'll buy your ores at a better price",
           "than any other store!"
         ],
-        "itemRequirement": "nisocore",
-        "itemCountRequirement": 15,
+        "itemRequirement": ["nisocore"],
+        "itemRequirementCount": [15],
         "skill": "mining",
         "experience": 2000,
         "popup": {
@@ -375,8 +376,8 @@
         "hasItemText": [
           "Perfect, just perfect. These will surely be great."
         ],
-        "itemRequirement": "bead",
-        "itemCountRequirement": 3,
+        "itemRequirement": ["bead"],
+        "itemRequirementCount": [3],
         "itemKey": "staff",
         "popup": {
           "title": "Quest completed!",
@@ -431,7 +432,7 @@
         "completedText": [
           "Go on now, tell him."
         ],
-        "itemRequirement": "cd"
+        "itemRequirement": ["cd"]
       },
 
       "2": {
@@ -543,7 +544,7 @@
           "Thank you adventurer! With this gold I can finally buy a new house!",
           "Just you look at me, Mr. Sponge, homeowner!"
         ],
-        "itemRequirement": "gold",
+        "itemRequirement": ["gold"],
         "itemKey": "gold",
         "itemCount": 10000,
         "popup": {
@@ -589,7 +590,7 @@
           "Craft a small bowl and bring it to me."
         ],
 
-        "itemRequirement": "berylpendant"
+        "itemRequirement": ["berylpendant"]
       },
 
       "2": {
@@ -604,7 +605,7 @@
           "Try making a stew using a bowl, a tomato, and the cauldron."
         ],
 
-        "itemRequirement": "bowlsmall",
+        "itemRequirement": ["bowlsmall"],
         "itemKey": "tomato"
       },
 
@@ -615,7 +616,7 @@
           "Wonderful, see, you're getting the hang of it."
         ],
 
-        "itemRequirement": "stew",
+        "itemRequirement": ["stew"],
         "popup": {
           "title": "Quest completed!",
           "text": "@green@You have just finished @crimson@Arts and Craft@green@ quest.",
@@ -658,7 +659,7 @@
           "I see, you have proven yourself worthy.",
           "Take this knowledge of the snow potions, and the path shall be yours."
         ],
-        "itemRequirement": "icesword",
+        "itemRequirement": ["icesword"],
         "itemKey": "snowpotion",
         "popup": {
           "title": "Quest completed!",
