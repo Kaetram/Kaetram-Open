@@ -38,21 +38,23 @@
         "levelRequirement": 40,
         "experience": 300,
         "difficulty": 220,
-        "item": "moonrockore"
+        "item": "moonrockore",
+        "respawnTime": 90000
     },
 
     "topaz": {
-        "levelRequirement": 25,
+        "levelRequirement": 15,
         "experience": 160,
         "difficulty": 160,
         "item": "topaz"
     },
 
     "beryl": {
-        "levelRequirement": 30,
-        "experience": 210,
-        "difficulty": 190,
-        "item": "beryl"
+        "levelRequirement": 1,
+        "experience": 22,
+        "difficulty": 20,
+        "item": "beryl",
+        "respawnTime": 5000
     },
 
     "lapislazuli": {
@@ -66,32 +68,36 @@
         "levelRequirement": 50,
         "experience": 400,
         "difficulty": 285,
-        "item": "citrine"
+        "item": "citrine",
+        "respawnTime": 98000
     },
 
     "taaffeite": {
-        "levelRequirement": 42,
+        "levelRequirement": 30,
         "experience": 310,
         "difficulty": 225,
-        "item": "taaffeite"
+        "item": "taaffeite",
+        "respawnTime": 90000
     },
 
     "ruby": {
         "levelRequirement": 62,
         "experience": 550,
         "difficulty": 375,
-        "item": "ruby"
+        "item": "ruby",
+        "respawnTime": 276000
     },
 
     "peridot": {
         "levelRequirement": 55,
         "experience": 475,
         "difficulty": 345,
-        "item": "peridot"
+        "item": "peridot",
+        "respawnTime": 140000
     },
 
     "opal": {
-        "levelRequirement": 20,
+        "levelRequirement": 10,
         "experience": 100,
         "difficulty": 140,
         "item": "opal"
@@ -101,13 +107,15 @@
         "levelRequirement": 57,
         "experience": 510,
         "difficulty": 355,
-        "item": "emerald"
+        "item": "emerald",
+        "respawnTime": 180000
     },
 
     "amethyst": {
         "levelRequirement": 65,
         "experience": 580,
         "difficulty": 445,
-        "item": "amethyst"
+        "item": "amethyst",
+        "respawnTime": 300000
     }
 }
