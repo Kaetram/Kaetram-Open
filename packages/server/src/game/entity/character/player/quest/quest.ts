@@ -195,13 +195,14 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemCountRequirement } = stageData;
+        let { itemRequirement, itemRequirementCount } = stageData;
 
         // Skip if the player does not have the required item and count in the inventory.
-        if (!player.inventory.hasItem(itemRequirement!, itemCountRequirement)) return;
+        if (!this.hasAllItems(player, itemRequirement!, itemRequirementCount)) return;
 
-        // Remove the item and count from the invnetory.
-        player.inventory.removeItem(itemRequirement!, itemCountRequirement);
+        // Iterate through the items and remove them from the player's inventory.
+        for (let i = 0; i < itemRequirement!.length; i++)
+            player.inventory.removeItem(itemRequirement![i], (itemRequirementCount || [])[i]);
 
         // If the stage contains item rewards, we give it to the player.
         if (this.hasItemToGive())
@@ -305,6 +306,33 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks that the player has all the items required to progress the next
+     * stage in the quest. We parse through every item requirement and ensure
+     * that the player has the item and count specified.
+     * @param player The player that we are checking the inventory of.
+     * @param itemRequirement The item requirement array, string array of item keys.
+     * @param itemRequirementCount The item requirement count array, number array of item counts.
+     * @returns Whether or not the player has all the items.
+     */
+
+    private hasAllItems(
+        player: Player,
+        itemRequirement: string[],
+        itemRequirementCount: number[] = []
+    ): boolean {
+        let hasItems = true;
+
+        // Iterate and ensure that the player has all the items.
+        for (let i = 0; i < itemRequirement!.length; i++)
+            if (!player.inventory.hasItem(itemRequirement![i], (itemRequirementCount || [])[i])) {
+                hasItems = false;
+                break;
+            }
+
+        return hasItems;
+    }
+
+    /**
      * A check if the quest is started or it has yet to be discovered.
      * @returns Whether the stage progress is above 0.
      */
@@ -372,8 +400,8 @@ export default abstract class Quest {
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
-            itemRequirement: stage.itemRequirement! || '',
-            itemCountRequirement: stage.itemCountRequirement! || 1,
+            itemRequirement: stage.itemRequirement! || [],
+            itemRequirementCount: stage.itemRequirementCount! || [],
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
@@ -412,7 +440,7 @@ export default abstract class Quest {
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (stage.itemRequirement! && this.stage === i) {
                 // Verify that the player has the required items and return the dialogue for it.
-                if (player.inventory.hasItem(stage.itemRequirement, stage.itemCountRequirement))
+                if (this.hasAllItems(player, stage.itemRequirement, stage.itemRequirementCount))
                     return stage.hasItemText!;
 
                 // Skip to next stage iteration.

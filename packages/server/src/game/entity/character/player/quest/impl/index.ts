@@ -7,6 +7,7 @@ import ancientlands from './ancientlands';
 import minersquest from './minersquest';
 import evilsanta from './evilsanta';
 import artsandcrafts from './artsandcrafts';
+import scavenger from './scavenger';
 
 export default {
     tutorial,
@@ -17,5 +18,6 @@ export default {
     sorcery,
     minersquest,
     evilsanta,
-    artsandcrafts
+    artsandcrafts,
+    scavenger
 };
