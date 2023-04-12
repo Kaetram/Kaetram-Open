@@ -1,7 +1,11 @@
-import { Modules } from '@kaetram/common/network';
+import Trees from '../../../../data/trees.json';
+import Rocks from '../../../../data/rocks.json';
+
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
+import type { ResourceData } from '@kaetram/common/types/resource';
 import type { ProcessedResource, RegionTile } from '@kaetram/common/types/map';
 
 export default class Resource {
@@ -35,9 +39,8 @@ export default class Resource {
 
     public load(info: ProcessedResource): void {
         // Iterate through all the tile and its indexes in the resource.
-        for (let key in this.data) {
-            let index = parseInt(key),
-                flatTile = [this.data[key]].flat();
+        for (let index in this.data) {
+            let flatTile = [this.data[index]].flat();
 
             // Why would you put a resource in the void? How are you even near the resource?
             if (!Array.isArray(flatTile))
@@ -73,6 +76,9 @@ export default class Resource {
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.depleted[index]].flat().length === 0) this.depleted[index] = 0;
         }
+
+        // Apply the respawn time if specified.
+        this.setRespawnTime();
     }
 
     /**
@@ -93,6 +99,24 @@ export default class Resource {
 
             this.respawnTimeout = undefined;
         }, this.respawnTime);
+    }
+
+    /**
+     * Attempts to grab the respawn time for a given resource. If no respawn time
+     * is specified in the JSON file then we use the default specified in Modules.Constants.
+     * @returns The respawn time for this particular resource.
+     */
+
+    public getRespawnTime(): number {
+        let info =
+            this.type in Trees
+                ? (Trees as ResourceData)[this.type]
+                : (Rocks as ResourceData)[this.type];
+
+        // Return the default respawn time if not specified.
+        if (!info?.respawnTime) return this.respawnTime;
+
+        return info.respawnTime;
     }
 
     /**
@@ -120,7 +144,7 @@ export default class Resource {
      * @param time New time (in milliseconds) for the resource to respawn.
      */
 
-    public setRespawnTime(time: number): void {
+    public setRespawnTime(time = this.getRespawnTime()): void {
         this.respawnTime = time;
     }
 
