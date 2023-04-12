@@ -244,6 +244,12 @@
         "hidden": true
     },
 
+    "iceworld": {
+        "name": "Ice World",
+        "description": "Gain access into the ice world!",
+        "hidden": true
+    },
+
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Defeat the dragon laying dormant under Mudwich.",
