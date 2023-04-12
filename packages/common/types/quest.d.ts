@@ -14,10 +14,10 @@ export interface RawStage {
     mobCountRequirement?: number;
 
     /** Item required in the inventory to progress to next stage. */
-    itemRequirement?: string;
+    itemRequirement?: string[];
 
     /** How many of a given item we need to progress. */
-    itemCountRequirement?: number;
+    itemRequirementCount?: number[];
 
     /** Text for the NPC. */
     text?: DialogueItem[];
@@ -60,8 +60,8 @@ export interface StageData {
     npc?: string;
     mob?: string[];
     mobCountRequirement: number; // how many mobs we need to kill to progress
-    itemRequirement?: string;
-    itemCountRequirement?: number; // how many of an item we need for progression
+    itemRequirement?: string[];
+    itemRequirementCount?: number[]; // how many of an item we need for progression
     text?: string[];
     completedText?: string[];
     pointer?: PointerData;
