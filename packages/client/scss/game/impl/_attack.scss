@@ -47,7 +47,7 @@
             // border-bottom-right-radius: 8px * $i;
             // border-bottom-left-radius: 8px * $i;
 
-            background: url('/img/interface/main.png') -224px * $i -464px * $i no-repeat;
+            background: url('/img/interface/main.png') -32px * $i -464px * $i no-repeat;
             background-size: calc(width('main.png') * $i);
 
             .name {

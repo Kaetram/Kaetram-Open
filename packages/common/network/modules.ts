@@ -550,7 +550,7 @@ export enum BannerCrests {
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL: 135, // Maximum attainable level.
-    INVENTORY_SIZE: 20, // Maximum inventory size
+    INVENTORY_SIZE: 25, // Maximum inventory size
     BANK_SIZE: 420, // Maximum bank size
     DROP_PROBABILITY: 10_000, // 1 in 10000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol

@@ -118,6 +118,7 @@ export default class Map {
                 reqItem: door.reqItem || '',
                 reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
+                skill: door.skill || '',
                 level: door.level || 0
             };
         }
