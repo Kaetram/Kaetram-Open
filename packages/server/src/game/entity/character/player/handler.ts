@@ -1,4 +1,5 @@
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
@@ -10,7 +11,6 @@ import {
     Friends,
     NPC as NPCPacket,
     Overlay,
-    Player as PlayerPacket,
     Points,
     Poison as PoisonPacket,
     Quest,
@@ -220,9 +220,22 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+        /**
+         * Handles entering through a door that requires a level. If no skill is specified
+         * then we use the player's combat level, otherwise we use the level of the skill
+         * that was specified.
+         */
+
+        if (door.level) {
+            let level = door.skill
+                    ? this.player.skills.get(Utils.getSkill(door.skill)!).level
+                    : this.player.level,
+                message = door.skill
+                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
+                    : `Your combat level must be at least ${door.level} to enter.`;
+
+            if (level < door.level) return this.player.notify(message);
+        }
 
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {

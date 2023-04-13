@@ -133,6 +133,7 @@ export default class Quests {
         this.forEachQuest((q: Quest) => {
             if (q.isFinished() && !includeComplete) return;
             if (!q.hasNPC(npc.key)) return;
+            if (!q.hasRequirements(this.player)) return;
 
             // Return only the first quest found,
             if (!quest) quest = q;
