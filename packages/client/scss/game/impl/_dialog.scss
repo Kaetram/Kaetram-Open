@@ -48,10 +48,10 @@ dialog {
 
 @each $size, $i in media.$b-sizes {
     @media ($size) {
-        dialog {
+        .dialog {
             width: 53px * $i;
             height: 40px * $i;
-            background: url('/img/interface/main.png') -347px * $i -496px * $i no-repeat;
+            background: url('/img/interface/main.png') -144px * $i -496px * $i no-repeat;
             background-size: calc(width('main.png') * $i);
         }
 

@@ -41,7 +41,7 @@
     @media ($size) {
         #inventory {
             width: 96px * $i;
-            height: 108px * $i;
+            height: 132px * $i;
             background: url('/img/interface/main.png') -288px * $i -352px * $i no-repeat;
             background-size: calc(width('main.png') * $i);
         }
