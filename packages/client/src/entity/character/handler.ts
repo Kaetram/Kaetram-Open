@@ -40,6 +40,9 @@ export default class Handler {
         // Prevent any calculations from being made if the player clicked on the tile they are already on.
         if (this.character.gridX === x && this.character.gridY === y) return [];
 
+        // Prevent calculating paths if the tile is colliding.
+        if (this.game.map.isColliding(x, y)) return [];
+
         return this.game.findPath(this.character, x, y);
     }
 
