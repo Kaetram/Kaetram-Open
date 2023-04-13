@@ -51,6 +51,8 @@ export interface RawQuest {
     name: string;
     description: string;
     rewards?: string[];
+    skillRequirements?: { [key: string]: number }; // Skills required to start the quest.
+    questRequirements?: string[]; // Quests required to start this quest.
     hideNPCs?: string[]; // NPCs to hide after quest.-
     stages: { [id: number]: RawStage };
 }
@@ -83,6 +85,8 @@ export interface QuestData {
 
     name?: string;
     description?: string;
+    skillRequirements?: { [key: string]: number };
+    questRequirements?: string[];
     rewards?: string[];
     stageCount?: number;
 }

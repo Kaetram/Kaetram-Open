@@ -73,9 +73,12 @@ export interface ProcessedArea {
     spawnX?: number;
     spawnY?: number;
 
+    // Level requirements`
+    skill?: string;
+
     // Warp
     name?: string; //? also common
-    level?: number; // also used for doors
+    level?: number;
 
     // Camera
     type?: string;
@@ -113,6 +116,7 @@ export interface ProcessedDoor {
     reqItem: string;
     reqItemCount: number;
     stage: number;
+    skill: string;
     level: number;
 }
 
