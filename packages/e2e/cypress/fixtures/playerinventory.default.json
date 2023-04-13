@@ -199,6 +199,56 @@
             "edible": false,
             "equippable": false,
             "soulBindable": false
+        },
+        {
+            "index": 20,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 21,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 22,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 23,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
+        },
+        {
+            "index": 24,
+            "key": "",
+            "count": 0,
+            "ability": -1,
+            "abilityLevel": -1,
+            "edible": false,
+            "equippable": false,
+            "soulBindable": false
         }
     ],
     "username": "test"
