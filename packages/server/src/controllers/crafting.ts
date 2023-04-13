@@ -104,13 +104,19 @@ export default class Crafting {
         if (!craftingData)
             return player.notify(`Invalid crafting data, please submit a bug report.`);
 
-        let craftingItem = craftingData[key];
+        // The skill that is being used to craft the item.
+        let craftingItem = craftingData[key],
+            skill = player.skills.get(
+                player.activeCraftingInterface === Modules.Skills.Smelting
+                    ? Modules.Skills.Smithing
+                    : player.activeCraftingInterface
+            );
 
         // Verify the crafting data
         if (!craftingItem) return player.notify(`Invalid item selected...`);
 
         // Ensure the player has the correct level to craft the item.
-        if (player.skills.get(player.activeCraftingInterface).level < craftingItem.level)
+        if (skill.level < craftingItem.level)
             return player.notify(
                 `You ${Modules.Skills[player.activeCraftingInterface]} level must be at least ${
                     craftingItem.level
@@ -143,13 +149,6 @@ export default class Crafting {
         // Remove the items from the player's inventory.
         for (let requirement of craftingItem.requirements)
             player.inventory.removeItem(requirement.key, requirement.count * actualCount);
-
-        // Get the skill for the player's active crafting interface.
-        let skill = player.skills.get(
-            player.activeCraftingInterface === Modules.Skills.Smelting
-                ? Modules.Skills.Smithing
-                : player.activeCraftingInterface
-        );
 
         // Handle chance of failure - defaults to 100% success if not specified.
         if (Utils.randomInt(0, 100) > (craftingItem.chance || 100) + skill.level)
