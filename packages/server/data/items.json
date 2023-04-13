@@ -5504,6 +5504,7 @@
     "type": "object",
     "name": "Tomato",
     "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "edible": true,
     "plugin": "healingitem",
     "healAmount": 100,
     "price": 100
@@ -5513,6 +5514,7 @@
     "type": "object",
     "name": "Potato",
     "description": "A potato, it's a vegetable and it's edible, though cooking it might be better.",
+    "edible": true,
     "plugin": "healingitem",
     "healingAmount": 120,
     "price": 100
@@ -5620,6 +5622,7 @@
     "type": "object",
     "name": "Tomato Stew",
     "description": "A stew composed of tomato, mushrooms, and a bowl.",
+    "edible": true,
     "plugin": "healingitem",
     "healAmount": 500,
     "price": 600
@@ -5629,6 +5632,7 @@
     "type": "object",
     "name": "Corn Stew",
     "description": "A very filling stew, possibly the best stew currently available.",
+    "edible": true,
     "plugin": "healingitem",
     "healAmount": 800,
     "price": 900
@@ -5674,6 +5678,20 @@
     "name": "Violet Cort",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
+  },
+
+  "hilt1": {
+    "type": "object",
+    "name": "Hilt",
+    "description": "May be used with certain metals to produce a sword.",
+    "price": 1000
+  },
+
+  "hilt2": {
+    "type": "object",
+    "name": "Hilt",
+    "description": "May be used with certain metals to produce a sword.",
+    "price": 1000
   },
 
   "leatherboots": {
