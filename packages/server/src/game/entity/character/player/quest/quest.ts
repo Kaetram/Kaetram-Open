@@ -30,6 +30,8 @@ export default abstract class Quest {
     public name = '';
     private description = '';
     private rewards: string[] = [];
+    private skillRequirements: { [key: string]: number } = {};
+    private questRequirements: string[] = []; // List of quests required to start this quest.
     private hideNPCs: string[] = []; // NPCs to hide after quest.
     protected stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
@@ -54,6 +56,8 @@ export default abstract class Quest {
         this.name = rawData.name;
         this.description = rawData.description;
         this.rewards = rawData.rewards || [];
+        this.skillRequirements = rawData.skillRequirements || {};
+        this.questRequirements = rawData.questRequirements || [];
         this.hideNPCs = rawData.hideNPCs || [];
         this.stageCount = Object.keys(rawData.stages).length;
 
@@ -333,6 +337,25 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks if the player meets all of the skill and quest requirements.
+     * @param player The player that we are checking the requirements of.
+     * @returns Whether or not the player meets all the requirements.
+     */
+
+    public hasRequirements(player: Player): boolean {
+        // Iterate through the skills and check if the player has the required level.
+        for (let skill in this.skillRequirements)
+            if (player.skills.get(Utils.getSkill(skill)!).level < this.skillRequirements[skill])
+                return false;
+
+        // Iterate through the quests and check if the player has completed them.
+        for (let index in this.questRequirements)
+            if (!player.quests.get(this.questRequirements[index]).isFinished()) return false;
+
+        return true;
+    }
+
+    /**
      * A check if the quest is started or it has yet to be discovered.
      * @returns Whether the stage progress is above 0.
      */
@@ -512,6 +535,8 @@ export default abstract class Quest {
             data.name = this.name;
             data.description = this.description;
             data.rewards = this.rewards;
+            data.skillRequirements = this.skillRequirements;
+            data.questRequirements = this.questRequirements;
             data.stageCount = this.stageCount;
         }
 
