@@ -1,15 +1,10 @@
+import Animation from './animation';
+
 import Utils from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
 import type Sprite from './sprite';
-import type NPC from './npc/npc';
-import type Item from './objects/item';
-import type Chest from './objects/chest';
-import type Animation from './animation';
-import type Mob from './character/mob/mob';
-import type Projectile from './objects/projectile';
-import type Player from './character/player/player';
 
 export default abstract class Entity {
     public x = 0;
@@ -196,17 +191,17 @@ export default abstract class Entity {
     public setAnimation(
         name: string,
         speed = this.sprite.idleSpeed,
-        count = 0,
+        count = 1,
         onEndCount?: () => void
     ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;
 
-        let animation = this.sprite.animations[name];
+        // Copy the animation data from the sprite.
+        let { length, row, width, height } = this.sprite.animations[name];
 
-        if (!animation) return;
-
-        this.animation = animation;
+        // Create a new animation instance to prevent pointer issues.
+        this.animation = new Animation(name, length, row, width, height);
 
         // Restart the attack animation if it's already playing.
         if (name.startsWith('atk')) this.animation.reset();
