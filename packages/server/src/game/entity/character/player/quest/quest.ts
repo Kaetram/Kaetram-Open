@@ -7,7 +7,13 @@ import Utils from '@kaetram/common/util/utils';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import type {
+    QuestData,
+    RawQuest,
+    RawStage,
+    StageData,
+    HideNPC
+} from '@kaetram/common/types/quest';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
 import type Player from '../player';
@@ -20,7 +26,6 @@ type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
 type ResourceCallback = (type: Modules.Skills, resourceType: string) => void;
-
 export default abstract class Quest {
     /**
      * An abstract quest class that takes the raw quest data and
@@ -32,7 +37,7 @@ export default abstract class Quest {
     private rewards: string[] = [];
     private skillRequirements: { [key: string]: number } = {};
     private questRequirements: string[] = []; // List of quests required to start this quest.
-    private hideNPCs: string[] = []; // NPCs to hide after quest.
+    private hideNPCs: HideNPC = {}; // NPCs to hide after quest.
     protected stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     protected stageCount = 0; // How long the quest is.
@@ -58,7 +63,7 @@ export default abstract class Quest {
         this.rewards = rawData.rewards || [];
         this.skillRequirements = rawData.skillRequirements || {};
         this.questRequirements = rawData.questRequirements || [];
-        this.hideNPCs = rawData.hideNPCs || [];
+        this.hideNPCs = rawData.hideNPCs || {};
         this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
@@ -374,14 +379,18 @@ export default abstract class Quest {
     }
 
     /**
-     * Checks whether the key of the NPC is contained within the array of
-     * NPCs to hide after the quest is completed.
+     * Checks whether the NPC is visible or not depending on the
+     * status of the quest and its existence in the hideNPCs dictionary.
      * @param key The key of the NPC we are checking.
      * @returns Boolean value if the NPC is visibile or not.
      */
 
-    public isHiddenNPC(key: string): boolean {
-        return this.hideNPCs.includes(key);
+    public isNPCVisible(key: string): boolean {
+        let npc = this.hideNPCs[key];
+
+        if (!npc) return true;
+
+        return npc === 'before' ? this.isFinished() : !this.isFinished();
     }
 
     /**
