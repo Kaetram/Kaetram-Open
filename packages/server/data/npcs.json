@@ -241,6 +241,16 @@
     "text": ["There shall be no trespassing!"]
   },
 
+  "royalguard2": {
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
+  },
+
+  "royalguard3": {
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
+  },
+
   "picklenpc": {
     "name": "Sea Cucumber"
   },
@@ -257,5 +267,10 @@
   "oldlady": {
     "name": "Old Lady",
     "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
+  },
+
+  "ratnpc": {
+    "name": "Rat",
+    "text": ["Squeak!"]
   }
 }
