@@ -23,8 +23,8 @@ export default class Animation {
         public name: string,
         public length: number,
         public row: number,
-        private width: number,
-        private height: number
+        public width: number,
+        public height: number
     ) {
         this.reset();
     }
