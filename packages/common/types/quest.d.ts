@@ -53,7 +53,7 @@ export interface RawQuest {
     rewards?: string[];
     skillRequirements?: { [key: string]: number }; // Skills required to start the quest.
     questRequirements?: string[]; // Quests required to start this quest.
-    hideNPCs?: string[]; // NPCs to hide after quest.-
+    hideNPCs?: HideNPC; // NPCs to hide after quest.-
     stages: { [id: number]: RawStage };
 }
 
@@ -93,6 +93,10 @@ export interface QuestData {
 
 export interface SerializedQuest {
     quests: QuestData[];
+}
+
+export interface HideNPC {
+    [key: string]: string;
 }
 
 export type TaskType = 'talk' | 'kill' | 'pickup' | 'tree';
