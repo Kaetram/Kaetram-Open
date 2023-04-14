@@ -9,6 +9,7 @@ import evilsanta from './evilsanta';
 import artsandcrafts from './artsandcrafts';
 import scavenger from './scavenger';
 import minersquest2 from './minersquest2';
+import royaldrama from './royaldrama';
 
 export default {
     tutorial,
@@ -21,5 +22,6 @@ export default {
     evilsanta,
     artsandcrafts,
     scavenger,
-    minersquest2
+    minersquest2,
+    royaldrama
 };

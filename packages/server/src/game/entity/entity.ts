@@ -197,7 +197,7 @@ abstract class Entity {
         if (!quest) return this.visible;
 
         // Check if quest is completed and check if NPC is hidden.
-        return !(quest.isFinished() && quest.isHiddenNPC(this.key));
+        return quest.isNPCVisible(this.key);
     }
 
     /**
