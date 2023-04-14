@@ -24,9 +24,10 @@ import { agent } from './utils/detect';
 import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
-import type Character from './entity/character/character';
 import type Entity from './entity/entity';
 import type Storage from './utils/storage';
+import type Character from './entity/character/character';
+import type { TileIgnore } from './utils/pathfinder';
 
 export default class Game {
     public player: Player;
@@ -203,17 +204,20 @@ export default class Game {
         character: Character,
         x: number,
         y: number,
-        ignores: Character[] = []
+        ignores: TileIgnore[] = [],
+        cursor = ''
     ): number[][] {
         let path: number[][] = [];
 
-        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
 
-        if (ignores) for (let entity of ignores) this.pathfinder.addIgnore(entity);
+        // Special case for fishing where we remove the last path if it is colliding.
+        if (cursor === 'fishing') {
+            let last = path[path.length - 2];
 
-        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
-
-        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
+            // Remove if there is a collision  at the last path only (to allow fishing from a distance).
+            if (this.map.isColliding(last[0], last[1])) path.pop();
+        }
 
         return path;
     }
