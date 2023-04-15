@@ -20,6 +20,28 @@
     }
   },
 
+  "fishingpole": {
+    "type": "weapon",
+    "weaponType": "sword",
+    "name": "Fishing Stick",
+    "level": 2,
+    "price": 500,
+    "fishing": 1,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "axe": {
     "type": "weapon",
     "name": "Axe",
@@ -5207,14 +5229,14 @@
     "type": "object",
     "name": "Kelp",
     "price": 100,
-    "description": "Kelp is a type of seaweed that grows in the ocean. It's pretty tasty when combined with other stuff."
+    "description": "Kelp is a type of seaweed that grows in water. It's pretty tasty when combined with other stuff."
   },
 
-  "tuna": {
+  "rawtuna": {
     "type": "object",
-    "name": "Tuna",
+    "name": "Raw Tuna",
     "price": 100,
-    "description": "A fish that is commonly found in the ocean. It's pretty tasty when cooked."
+    "description": "A fish that is commonly found in water. It's pretty tasty when cooked."
   },
 
   "tunasushi": {

@@ -222,6 +222,14 @@ export default class Skills {
     }
 
     /**
+     * @returns The fishing class instance.
+     */
+
+    public getFishing(): Fishing {
+        return this.fishing;
+    }
+
+    /**
      * Calculates the total combat level by adding up all the combat-related skill levels. We subtract 1 from
      * each skill in order to keep the combat level at 1 when the player has 1 in all combat skills.
      * @returns Number representing the total combat level.

@@ -163,6 +163,7 @@ export interface ProcessedMap {
     cursors: { [tileId: number]: string };
     trees: ProcessedResource[];
     rocks: ProcessedResource[];
+    fishSpots: ProcessedResource[];
 }
 
 export interface ProcessedClientMap {

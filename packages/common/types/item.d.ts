@@ -49,6 +49,7 @@ export interface ItemData {
     movementModifier?: number;
     lumberjacking?: number;
     mining?: number;
+    fishing?: number;
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;

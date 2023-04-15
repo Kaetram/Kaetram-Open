@@ -13,6 +13,7 @@ export default class Weapon extends Equipment {
     public attackRange = 1;
     public lumberjacking = -1;
     public mining = -1;
+    public fishing = -1;
     public manaCost = 0;
 
     // Default values for resetting variables when changing attack styles.
@@ -43,6 +44,7 @@ export default class Weapon extends Equipment {
         this.attackStyles = item.getAttackStyles();
         this.lumberjacking = item.lumberjacking;
         this.mining = item.mining;
+        this.fishing = item.fishing;
         this.poisonous = item.poisonous;
         this.freezing = item.freezing;
         this.burning = item.burning;
@@ -73,6 +75,7 @@ export default class Weapon extends Equipment {
         this.attackRange = 1;
         this.lumberjacking = -1;
         this.mining = -1;
+        this.fishing = -1;
         this.archer = false;
         this.magic = false;
 
@@ -156,6 +159,15 @@ export default class Weapon extends Equipment {
 
     public isMining(): boolean {
         return this.mining > 0;
+    }
+
+    /**
+     * Whether or not the current weapon can be used for fishing.
+     * @returns Whether the fishing weapon level is greater than 0.
+     */
+
+    public isFishing(): boolean {
+        return this.fishing > 0;
     }
 
     /**
