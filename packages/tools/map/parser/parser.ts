@@ -22,6 +22,7 @@ export default class ProcessMap {
     private collisionTiles: { [tileId: number]: boolean } = {};
     private trees: Resources = {};
     private rocks: Resources = {};
+    private fishSpots: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -59,7 +60,8 @@ export default class ProcessMap {
             areas: {},
             cursors: {},
             trees: [],
-            rocks: []
+            rocks: [],
+            fishSpots: []
         };
 
         this.parseTilesets();
@@ -104,6 +106,9 @@ export default class ProcessMap {
         // As the last step of the tileset processing, we parse the resources and add them to the map.
         this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
         this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
+        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
+            this.map.fishSpots.push(fishSpot)
+        );
     }
 
     /**
@@ -206,6 +211,7 @@ export default class ProcessMap {
                 break;
             }
 
+            // Properties fo resource classification.
             case 'tree': {
                 return this.parseResourceProperty(this.trees, 'data', tileId, value);
             }
@@ -229,6 +235,16 @@ export default class ProcessMap {
 
             case 'rockempty': {
                 return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
+            }
+
+            case 'fishspot': {
+                // Fish spots share the same base and data tiles.
+                this.parseResourceProperty(this.fishSpots, 'base', tileId, value);
+                return this.parseResourceProperty(this.fishSpots, 'data', tileId, value);
+            }
+
+            case 'fishempty': {
+                return this.parseResourceProperty(this.fishSpots, 'depleted', tileId, value);
             }
         }
     }
@@ -411,6 +427,7 @@ export default class ProcessMap {
         tileId: number,
         value: never
     ): void {
+        // Create a new resource type if it does not exist.
         if (!(value in resourceType))
             resourceType[value] = {
                 data: [],
@@ -419,7 +436,7 @@ export default class ProcessMap {
                 type: value
             };
 
-        // Organize tree data into their respective arrays.
+        // Organize resource data into their respective arrays.
         switch (name) {
             case 'data': {
                 resourceType[value].data.push(tileId);
@@ -675,7 +692,8 @@ export default class ProcessMap {
             cursors,
             entities,
             trees,
-            rocks
+            rocks,
+            fishSpots
         } = this.map;
 
         return JSON.stringify({
@@ -692,7 +710,8 @@ export default class ProcessMap {
             cursors,
             entities,
             trees,
-            rocks
+            rocks,
+            fishSpots
         });
     }
 
