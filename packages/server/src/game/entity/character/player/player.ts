@@ -807,6 +807,11 @@ export default class Player extends Character {
 
         if (rock) return this.skills.getMining().mine(this, rock);
 
+        // If we don't find a rock then we try finding a fishing spot.
+        let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
+
+        if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
+
         /**
          * Here we use the cursor (I know, it's a bit of a hack) to find the type
          * of crafting station the the player is trying to interact with.

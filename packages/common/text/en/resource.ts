@@ -11,6 +11,10 @@ export default {
                 return 'You must be wielding a pickaxe in order to mine rocks.';
             }
 
+            case Modules.Skills.Fishing: {
+                return 'You must be wielding a fishing utensil in order to fish.';
+            }
+
             default: {
                 return 'INVALID_WEAPON() NOT IMPLEMENTED';
             }
@@ -24,6 +28,10 @@ export default {
 
             case Modules.Skills.Mining: {
                 return `You must be level ${level} in order to mine this rock.`;
+            }
+
+            case Modules.Skills.Fishing: {
+                return `You must be level ${level} in order to fish here.`;
             }
 
             default: {
@@ -40,6 +48,10 @@ export default {
 
             case Modules.Skills.Mining: {
                 return 'You do not have the necessary knowledge to mine this rock.';
+            }
+
+            case Modules.Skills.Fishing: {
+                return 'You are unable to fish here at the moment.';
             }
 
             default: {

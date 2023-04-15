@@ -7432,6 +7432,13 @@
     "offsetY": -20
   },
   {
+    "id": "fishingpole",
+    "width": 32,
+    "height": 32,
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
     "id": "lightningscimitar",
     "width": 48,
     "height": 48,
@@ -9156,7 +9163,7 @@
   { "id": "items/tomato", "offsetX": 0, "offsetY": 0 },
   { "id": "items/topazring", "offsetX": 0, "offsetY": 0 },
   { "id": "items/trident", "offsetX": 0, "offsetY": 0 },
-  { "id": "items/tuna", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/rawtuna", "offsetX": 0, "offsetY": 0 },
   { "id": "items/tunasushi", "offsetX": 0, "offsetY": 0 },
   { "id": "items/typhoon", "offsetX": 0, "offsetY": 0 },
   { "id": "items/undefined", "offsetX": 0, "offsetY": 0 },

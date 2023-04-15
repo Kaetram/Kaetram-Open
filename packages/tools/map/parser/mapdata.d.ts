@@ -30,6 +30,8 @@ export interface PropertyValues {
     rock?: string;
     rockbase?: string;
     rockempty?: string;
+    fishspot?: string;
+    fishempty?: string;
     cursor?: never;
 }
 
