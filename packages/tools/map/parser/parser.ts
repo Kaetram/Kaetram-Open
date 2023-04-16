@@ -23,6 +23,7 @@ export default class ProcessMap {
     private trees: Resources = {};
     private rocks: Resources = {};
     private fishSpots: Resources = {};
+    private foraging: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -61,7 +62,8 @@ export default class ProcessMap {
             cursors: {},
             trees: [],
             rocks: [],
-            fishSpots: []
+            fishSpots: [],
+            foraging: []
         };
 
         this.parseTilesets();
@@ -108,6 +110,9 @@ export default class ProcessMap {
         this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
         this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
             this.map.fishSpots.push(fishSpot)
+        );
+        this.parseResources(this.foraging, (forage: ProcessedResource) =>
+            this.map.foraging.push(forage)
         );
     }
 
@@ -225,6 +230,7 @@ export default class ProcessMap {
                 return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
             }
 
+            // Mining
             case 'rock': {
                 return this.parseResourceProperty(this.rocks, 'data', tileId, value);
             }
@@ -237,6 +243,7 @@ export default class ProcessMap {
                 return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
             }
 
+            // Fishing
             case 'fishspot': {
                 // Fish spots share the same base and data tiles.
                 this.parseResourceProperty(this.fishSpots, 'base', tileId, value);
@@ -245,6 +252,17 @@ export default class ProcessMap {
 
             case 'fishempty': {
                 return this.parseResourceProperty(this.fishSpots, 'depleted', tileId, value);
+            }
+
+            // Foraging
+            case 'forage': {
+                // Foraging spots share the same base and data tiles.
+                this.parseResourceProperty(this.foraging, 'base', tileId, value);
+                return this.parseResourceProperty(this.foraging, 'data', tileId, value);
+            }
+
+            case 'forageempty': {
+                return this.parseResourceProperty(this.foraging, 'depleted', tileId, value);
             }
         }
     }
@@ -693,7 +711,8 @@ export default class ProcessMap {
             entities,
             trees,
             rocks,
-            fishSpots
+            fishSpots,
+            foraging
         } = this.map;
 
         return JSON.stringify({
@@ -711,7 +730,8 @@ export default class ProcessMap {
             entities,
             trees,
             rocks,
-            fishSpots
+            fishSpots,
+            foraging
         });
     }
 

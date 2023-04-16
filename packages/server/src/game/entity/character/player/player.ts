@@ -463,8 +463,13 @@ export default class Player extends Character {
                 if (!this.mana.isFull())
                     this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
-                // Increment hitpoints by 0.5% of the max hitpoints.
-                super.heal(Math.floor(this.hitPoints.getMaxHitPoints() * 0.005));
+                // Base healing amount by 0.5% of the max hitpoints.
+                let healAmount = this.hitPoints.getMaxHitPoints() * 0.005;
+
+                // Use the eating level to increase the healing amount.
+                healAmount += this.skills.get(Modules.Skills.Eating).level / 10;
+
+                super.heal(Math.ceil(healAmount));
 
                 break;
             }
@@ -816,6 +821,11 @@ export default class Player extends Character {
 
         if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
 
+        // If we don't find a fishing spot, look for foragable plants.
+        let forage = this.world.globals.getForaging().findResource(index);
+
+        if (forage) return this.skills.getForaging().harvest(this, forage);
+
         /**
          * Here we use the cursor (I know, it's a bit of a hack) to find the type
          * of crafting station the the player is trying to interact with.
@@ -837,6 +847,10 @@ export default class Player extends Character {
 
             case 'cooking': {
                 return this.world.crafting.open(this, Modules.Skills.Cooking);
+            }
+
+            case 'crafting': {
+                return this.world.crafting.open(this, Modules.Skills.Crafting);
             }
         }
     }

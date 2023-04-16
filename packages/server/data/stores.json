@@ -289,5 +289,16 @@
         ],
         "refresh": 600000,
         "currency": "gold"
+    },
+
+    "fishingstore": {
+        "items": [
+            {
+                "key": "fishingpole",
+                "count": -1
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
     }
 }

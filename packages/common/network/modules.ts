@@ -463,6 +463,11 @@ export let SkillExpColours = {
     [Skills.Loitering]: {
         fill: 'rgb(255, 0, 0)',
         stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Foraging]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     }
 };
 
