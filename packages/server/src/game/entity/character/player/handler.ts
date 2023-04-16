@@ -512,7 +512,7 @@ export default class Handler {
         drop?: boolean
     ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
-        if (drop && !this.player.isCheater()) {
+        if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
