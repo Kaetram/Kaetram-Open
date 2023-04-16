@@ -15,6 +15,10 @@ export default {
                 return 'You must be wielding a fishing utensil in order to fish.';
             }
 
+            case Modules.Skills.Foraging: {
+                return 'You require a special tool to forage this.';
+            }
+
             default: {
                 return 'INVALID_WEAPON() NOT IMPLEMENTED';
             }
@@ -32,6 +36,10 @@ export default {
 
             case Modules.Skills.Fishing: {
                 return `You must be level ${level} in order to fish here.`;
+            }
+
+            case Modules.Skills.Foraging: {
+                return `You must be level ${level} in order to harvest this resource.`;
             }
 
             default: {
@@ -52,6 +60,10 @@ export default {
 
             case Modules.Skills.Fishing: {
                 return 'You are unable to fish here at the moment.';
+            }
+
+            case Modules.Skills.Foraging: {
+                return 'You are unable to harvest this resource at the moment.';
             }
 
             default: {

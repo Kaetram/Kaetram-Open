@@ -3,6 +3,7 @@ import CraftingData from '../../data/crafting.json';
 import Items from '../../data/items.json';
 
 import Utils from '@kaetram/common/util/utils';
+import CraftingEn from '@kaetram/common/text/en/crafting';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
 
@@ -118,9 +119,7 @@ export default class Crafting {
         // Ensure the player has the correct level to craft the item.
         if (skill.level < craftingItem.level)
             return player.notify(
-                `You ${Modules.Skills[player.activeCraftingInterface]} level must be at least ${
-                    craftingItem.level
-                } to craft that.`
+                CraftingEn.INVALID_LEVEL(player.activeCraftingInterface, craftingItem.level)
             );
 
         /**

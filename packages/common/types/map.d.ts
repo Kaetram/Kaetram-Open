@@ -164,6 +164,7 @@ export interface ProcessedMap {
     trees: ProcessedResource[];
     rocks: ProcessedResource[];
     fishSpots: ProcessedResource[];
+    foraging: ProcessedResource[];
 }
 
 export interface ProcessedClientMap {

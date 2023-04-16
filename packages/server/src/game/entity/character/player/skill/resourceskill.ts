@@ -144,7 +144,7 @@ export default class ResourceSkill extends Skill {
      * @returns Whether a random number generated based on player's levels equals the difficulty of the resource.
      */
 
-    private canExhaustResource(level: number, info: ResourceInfo): boolean {
+    protected canExhaustResource(level: number, info: ResourceInfo): boolean {
         // Subtract the product of the weapon's level and resource level from the resource's difficulty.
         let probability = info.difficulty - level * this.level;
 

@@ -46,6 +46,7 @@ export default class Map {
     public trees: ProcessedResource[] = map.trees || [];
     public rocks: ProcessedResource[] = map.rocks || [];
     public fishSpots: ProcessedResource[] = map.fishSpots || [];
+    public foraging: ProcessedResource[] = map.foraging || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 
