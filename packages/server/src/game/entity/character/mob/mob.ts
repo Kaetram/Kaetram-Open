@@ -400,7 +400,7 @@ export default class Mob extends Character {
             }
 
             case 'feather': {
-                count = Utils.randomInt(1, this.level * 2);
+                count = Utils.randomInt(1, this.level);
                 break;
             }
         }
