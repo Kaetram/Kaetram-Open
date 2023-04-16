@@ -142,8 +142,11 @@ export default class Cache {
      */
 
     private canAggregateData(aggregate: number): boolean {
-        let lastAggregate = isNaN(aggregate) ? 0 : this.lastAggregates[aggregate];
+        // Doesn't matter since there is no aggregate data.
+        if (config.skipDatabase) return true;
 
-        return Date.now() - lastAggregate > config.aggregateThreshold && !config.skipDatabase;
+        let lastAggregate = isNaN(aggregate) ? 0 : aggregate;
+
+        return Date.now() - lastAggregate > config.aggregateThreshold;
     }
 }
