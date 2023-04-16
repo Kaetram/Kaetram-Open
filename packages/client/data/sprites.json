@@ -3057,6 +3057,28 @@
     }
   },
   {
+    "id": "crafting",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    }
+  },
+  {
+    "id": "foraging",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    }
+  },
+  {
     "id": "fishing",
     "width": 16,
     "height": 16,

@@ -4871,6 +4871,15 @@
     "healAmount": 750
   },
 
+  "blueberry": {
+    "type": "object",
+    "name": "Blueberry",
+    "description": "A blueberry, a fruit that is blue and round. It is a good source of antioxidants.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 500
+  },
+
   "shardt1": {
     "type": "object",
     "price": 1500,

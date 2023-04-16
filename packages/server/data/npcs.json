@@ -130,7 +130,8 @@
   },
 
   "fisherman": {
-    "name": "Fisherman"
+    "name": "Fisherman",
+    "store": "fishingstore"
   },
 
   "octopus": {

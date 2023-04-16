@@ -32,6 +32,8 @@ export interface PropertyValues {
     rockempty?: string;
     fishspot?: string;
     fishempty?: string;
+    forage?: string; // A forageable tile
+    forageempty?: string; // A forageable tile that has been foraged
     cursor?: never;
 }
 
