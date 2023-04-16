@@ -2668,7 +2668,7 @@
     }
   },
 
-  "archerschoolUniform": {
+  "archerschooluniform": {
     "type": "armourarcher",
     "name": "Archer School Uniform",
     "skill": "archery",
