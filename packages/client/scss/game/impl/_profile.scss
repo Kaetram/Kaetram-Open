@@ -17,6 +17,33 @@
     overflow: auto;
 }
 
+#armour-slot-info {
+    text-align: right;
+}
+
+#arrows-count {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#profile-info {
+    position: absolute;
+    display: none;
+}
+
+#attack-style-list {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+#guilds-button, #leaderboards-button {
+    position: absolute;
+}
+
 .profession-item {
     width: 100%;
     height: 10%;
@@ -37,10 +64,6 @@
 
     background-color: rgb(51 153 255 / 40%);
     border: 2px solid #373737;
-}
-
-#armour-slot-info {
-    text-align: right;
 }
 
 .profile-info {
@@ -89,18 +112,6 @@
     transition: 0.5s width ease;
 }
 
-#arrows-count {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-}
-
-#profile-info {
-    position: absolute;
-    display: none;
-}
-
 .profile-info-title,
 .profile-info-details {
     position: absolute;
@@ -110,13 +121,6 @@
 
 .attack-style {
     position: absolute;
-}
-
-#attack-style-list {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
 }
 
 @each $size, $i in media.$sizes {
@@ -214,6 +218,32 @@
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
+        #arrows-count {
+            top: 19px * $i;
+            left: 2px * $i;
+        }
+
+        #profile-level {
+            top: 8px * $i;
+        }
+
+        #profile-experience {
+            top: 29px * $i;
+        }
+
+        #guilds-button,
+        #leaderboards-button {
+            bottom: 8px * $i;
+        }
+
+        #guilds-button {
+            left: 6px * $i;
+        }
+
+        #leaderboards-button {
+            right: 6px * $i;
+        }
+
         .slot-background {
             z-index: -1;
             background: url('/img/interface/characterdialogsheet.png') -464px * $i -256px * $i;
@@ -258,19 +288,6 @@
         .arrows-slot {
             top: 86px * $i;
             left: 79px * $i;
-        }
-
-        #arrows-count {
-            top: 19px * $i;
-            left: 2px * $i;
-        }
-
-        #profile-level {
-            top: 8px * $i;
-        }
-
-        #profile-experience {
-            top: 29px * $i;
         }
 
         .navigator {
