@@ -407,7 +407,12 @@ export default abstract class Character extends Entity {
         if (attacker?.hasBloodsucking()) this.handleBloodsucking(attacker!, damage);
 
         // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) return this.deathCallback?.(attacker);
+        if (this.isDead()) {
+            // Clear the status effects.
+            this.status.clear();
+
+            return this.deathCallback?.(attacker);
+        }
 
         // Poison only occurs when we land a hit and attacker has a poisonous weapon.
         if (attacker?.isPoisonous() && damage > 0) this.handlePoisonDamage(attacker);
