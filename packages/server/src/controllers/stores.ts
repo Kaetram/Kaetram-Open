@@ -176,6 +176,9 @@ export default class Stores {
         let store = this.stores[storeKey],
             item = store.items[index];
 
+        // Prevent hollow admins from buying any of the items.
+        if (player.isHollowAdmin()) return player.notify(StoreEn.HOLLOW_ADMIN);
+
         // Prevent cheaters from buying any of the items.
         if (player.isCheater()) return player.notify(StoreEn.CHEATER);
 
@@ -285,7 +288,7 @@ export default class Stores {
             return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Increment the item count or add to store only if the player isn't a cheater :)
-        if (!player.isCheater())
+        if (!player.isCheater() && !player.isHollowAdmin())
             if (!storeItem?.count) store.items.push(item);
             else if (storeItem?.count !== -1) storeItem.count += count;
 

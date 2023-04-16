@@ -1689,6 +1689,16 @@ export default class Player extends Character {
     }
 
     /**
+     * A hollow admin is an administrator that can perform all of the commands of
+     * an admin but cannot influence the economy of the game.
+     * @returns Whether or not the player has the hollow admin rank.
+     */
+
+    public isHollowAdmin(): boolean {
+        return this.rank === Modules.Ranks.HollowAdmin;
+    }
+
+    /**
      * Accounts younger than 1 minute are considered new accounts.
      * @returns Whether the account's creation date is within the last minute.
      */
