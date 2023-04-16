@@ -553,6 +553,10 @@ export default class Player extends Character {
         this.setPosition(x, y, false);
         this.world.cleanCombat(this);
 
+        // Stop combat and skill activity when teleporting
+        this.combat.stop();
+        this.skills.stop();
+
         if (before) return;
 
         this.sendTeleportPacket(x, y, withAnimation);
