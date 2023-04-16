@@ -281,7 +281,8 @@ export enum Ranks {
     TierFour,
     TierFive,
     TierSix,
-    TierSeven
+    TierSeven,
+    HollowAdmin
 }
 
 export let RankColours = {
@@ -298,7 +299,8 @@ export let RankColours = {
     [Ranks.TierFour]: '#a9e03a',
     [Ranks.TierFive]: '#7beb65',
     [Ranks.TierSix]: '#77e691',
-    [Ranks.TierSeven]: '#77e691'
+    [Ranks.TierSeven]: '#77e691',
+    [Ranks.HollowAdmin]: '#3bbaff'
 };
 
 export let RankTitles = {
@@ -315,7 +317,8 @@ export let RankTitles = {
     [Ranks.TierFour]: 'T4 Patron',
     [Ranks.TierFive]: 'T5 Patron',
     [Ranks.TierSix]: 'T6 Patron',
-    [Ranks.TierSeven]: 'T7 Patron'
+    [Ranks.TierSeven]: 'T7 Patron',
+    [Ranks.HollowAdmin]: 'Admin'
 };
 
 export interface Colours {
