@@ -144,6 +144,10 @@ export default class Renderer {
 
         // Load the static sprites
         this.loadStaticSprites();
+
+        // Event listeners for zooming in and out
+        this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
+        this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
     }
 
     /**
