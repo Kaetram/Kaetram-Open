@@ -3,6 +3,7 @@ export interface StatisticsData {
     pvpDeaths: number;
     mobKills: { [key: string]: number };
     mobExamines: string[];
+    resources: { [key: string]: number };
 
     creationTime: number;
     totalTimePlayed: number;

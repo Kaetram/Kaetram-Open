@@ -3,7 +3,8 @@
         "levelRequirement": 1,
         "experience": 20,
         "difficulty": 15,
-        "item": "nisocore"
+        "item": "nisocore",
+        "achievement": "firstrock"
     },
 
     "cinnabar": {
@@ -54,7 +55,8 @@
         "experience": 22,
         "difficulty": 20,
         "item": "beryl",
-        "respawnTime": 5000
+        "respawnTime": 5000,
+        "achievement": "firstrock"
     },
 
     "lapislazuli": {
@@ -117,5 +119,36 @@
         "difficulty": 375,
         "item": "amethyst",
         "respawnTime": 300000
+    },
+
+    "coal": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 5,
+        "item": "coal",
+        "achievement": "firstrock"
+    },
+
+    "copper": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "copperore",
+        "achievement": "firstrock"
+    },
+
+    "tin": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "tinore",
+        "achievement": "firstrock"
+    },
+
+    "iron": {
+        "levelRequirement": 10,
+        "experience": 40,
+        "difficulty": 15,
+        "item": "ironore"
     }
 }

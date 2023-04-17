@@ -1,6 +1,18 @@
 {
+    
+
+    "firstrock": {
+        "name": "First Rock",
+        "description": "Mine your first rock!"
+    },
+
+    "firstfish": {
+        "name": "First Fish",
+        "description": "Catch your first fish!"
+    },
+
     "ratinfestation": {
-        "name": "Rat Infestation",
+        "name": "Generic Task 1",
         "description": "Bulk Bogan needs you to defeat 20 rats!",
         "npc": "villager",
         "dialogueHidden": [
@@ -25,8 +37,23 @@
         "description": "Inspect 10 random things around the world."
     },
 
+    "lumberjacking10": {
+        "name": "Lumberjacker",
+        "description": "Chop down 10 trees."
+    },
+
+    "mining10": {
+        "name": "Miner Man",
+        "description": "Acquire 10 rocks."
+    },
+
+    "fishing10": {
+        "name": "Fisherman",
+        "description": "Catch 10 fishies."
+    },
+
     "boxingman": {
-        "name": "Boxing Man",
+        "name": "Generic Task 2",
         "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
         "npc": "boxingman",
         "dialogueHidden": [
@@ -286,6 +313,114 @@
     "examiner50": {
         "name": "Examiner",
         "description": "Inspect 50 random things around the world.",
+        "secret": true
+    },
+
+    "lumberjacking50": {
+        "name": "Lumberjacker",
+        "description": "Cut down 50 trees.",
+        "secret": true
+    },
+
+    "lumberjacking100": {
+        "name": "Lumberjacker",
+        "description": "Cut down 100 trees.",
+        "secret": true
+    },
+
+    "lumberjacking500": {
+        "name": "Lumberjacker",
+        "description": "Cut down 500 trees.",
+        "secret": true
+    },
+
+    "lumberjacking1000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 1000 trees.",
+        "secret": true
+    },
+
+    "lumberjacking5000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 5000 trees.",
+        "secret": true
+    },
+
+    "lumberjacking10000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 10000 trees.",
+        "secret": true
+    },
+
+    "mining50": {
+        "name": "Miner Man",
+        "description": "Acquire 50 ores.",
+        "secret": true
+    },
+
+    "mining100": {
+        "name": "Miner Man",
+        "description": "Acquire 100 ores.",
+        "secret": true
+    },
+
+    "mining500": {
+        "name": "Miner Man",
+        "description": "Acquire 500 ores.",
+        "secret": true
+    },
+
+    "mining1000": {
+        "name": "Miner Man",
+        "description": "Acquire 1000 ores.",
+        "secret": true
+    },
+
+    "mining5000": {
+        "name": "Miner Man",
+        "description": "Acquire 5000 ores.",
+        "secret": true
+    },
+
+    "mining10000": {
+        "name": "Miner Man",
+        "description": "Acquire 10000 ores.",
+        "secret": true
+    },
+
+    "fishing50": {
+        "name": "Fisherman",
+        "description": "Catch 50 fishies.",
+        "secret": true
+    },
+
+    "fishing100": {
+        "name": "Fisherman",
+        "description": "Catch 100 fishies.",
+        "secret": true
+    },
+
+    "fishing500": {
+        "name": "Fisherman",
+        "description": "Catch 500 fishies.",
+        "secret": true
+    },
+
+    "fishing1000": {
+        "name": "Fisherman",
+        "description": "Catch 1000 fishies.",
+        "secret": true
+    },
+
+    "fishing5000": {
+        "name": "Fisherman",
+        "description": "Catch 5000 fishies.",
+        "secret": true
+    },
+
+    "fishing10000": {
+        "name": "Fisherman",
+        "description": "Catch 10000 fishies.",
         "secret": true
     },
 
