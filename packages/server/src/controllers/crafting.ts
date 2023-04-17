@@ -149,9 +149,18 @@ export default class Crafting {
         for (let requirement of craftingItem.requirements)
             player.inventory.removeItem(requirement.key, requirement.count * actualCount);
 
-        // Handle chance of failure - defaults to 100% success if not specified.
-        if (Utils.randomInt(0, 100) > (craftingItem.chance || 100) + skill.level)
-            return player.notify(`You failed to craft the item and the ingredients have vanished.`);
+        let failures = 0;
+
+        // Roll the random chance for every count of the item.
+        for (let i = 0; i < actualCount; i++)
+            if (Utils.randomInt(0, 100) > (craftingItem.chance || 100) + skill.level) failures++;
+
+        // Remove the amount of failures from the actual count.
+        actualCount -= failures;
+
+        // Notify the players of the amount of failures.
+        if (failures > 0)
+            player.notify(`You have failed to craft ${failures}x ${(Items as RawData)[key].name}.`);
 
         // Award experience to the player.
         skill.addExperience(craftingItem.experience * actualCount);

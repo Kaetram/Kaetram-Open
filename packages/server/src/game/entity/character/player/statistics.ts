@@ -1,3 +1,5 @@
+import { Modules } from '@kaetram/common/network';
+
 import type Player from './player';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 
@@ -6,6 +8,7 @@ export default class Statistics {
     public pvpDeaths = 0;
     public mobKills: { [key: string]: number } = {};
     public mobExamines: string[] = [];
+    public resources: { [key: string]: number } = {};
 
     public creationTime = Date.now(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
@@ -28,12 +31,38 @@ export default class Statistics {
         this.pvpDeaths = data.pvpDeaths || this.pvpDeaths;
         this.mobKills = data.mobKills || this.mobKills;
         this.mobExamines = data.mobExamines || this.mobExamines;
+        this.resources = data.resources || this.resources;
 
         this.creationTime = data.creationTime || this.creationTime;
         this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
         this.averageTimePlayed = data.averageTimePlayed || this.averageTimePlayed;
         this.lastLogin = data.lastLogin || this.lastLogin;
         this.loginCount = data.loginCount + 1 || this.loginCount;
+    }
+
+    /**
+     * Handles a player harvesting a resource from a skill. When a player successfully
+     * cuts a tree, mines a rock, or fishes, this function is called to handle the
+     * statistics for that skill. When we reach one of the milestones, we finish the
+     * achievement for that milestone.
+     * @param skill The skill that the player is harvesting from.
+     */
+
+    public handleSkill(skill: Modules.Skills): void {
+        let skillName = Modules.Skills[skill].toLowerCase(),
+            intervals = [10, 50, 100, 500, 1000, 5000, 10_000];
+
+        if (!(skillName in this.resources)) this.resources[skillName] = 0;
+
+        // Increment the skill's resource count.
+        this.resources[skillName]++;
+
+        // Handle achievements for each milestone
+        for (let interval of intervals)
+            if (this.resources[skillName] === interval)
+                return this.player.achievements.get(`${skillName}${interval}`).finish();
+
+        console.log(this.resources);
     }
 
     /**
@@ -112,6 +141,7 @@ export default class Statistics {
             pvpDeaths: this.pvpDeaths,
             mobKills: this.mobKills,
             mobExamines: this.mobExamines,
+            resources: this.resources,
             creationTime: this.creationTime,
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,
