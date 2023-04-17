@@ -5283,7 +5283,7 @@
     "type": "object",
     "name": "Bronze Bar",
     "description": "A bar of bronze. It's pretty heavy.",
-    "price": 100
+    "price": 250
   },
   
   "bronzeore": {
@@ -5332,7 +5332,7 @@
     "type": "object",
     "name": "Coal",
     "description": "A piece of coal. You can use it smelt ores.",
-    "price": 100
+    "price": 75
   },
 
   "rawchicken": {
@@ -5514,6 +5514,13 @@
     "type": "object",
     "name": "Tin Ore",
     "description": "A piece of tin ore.",
+    "price": 100
+  },
+
+  "ironore": {
+    "type": "object",
+    "name": "Iron Ore",
+    "description": "A piece of iron ore.",
     "price": 100
   },
 

@@ -233,7 +233,7 @@
         },
 
         "bronzebar": {
-            "level": 10,
+            "level": 5,
             "experience": 20,
             "chance": 70,
             "requirements": [

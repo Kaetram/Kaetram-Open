@@ -92,6 +92,9 @@ export default class ResourceSkill extends Skill {
                 // Add experience to our skill.
                 this.addExperience(resourceInfo.experience);
 
+                // Increment the statistics for the player.
+                player.statistics.handleSkill(this.type);
+
                 // If resource has an achievement, attempt to award it if it hasn't been awarded yet.
                 if (resourceInfo.achievement)
                     player.achievements.get(resourceInfo.achievement)?.finish();
