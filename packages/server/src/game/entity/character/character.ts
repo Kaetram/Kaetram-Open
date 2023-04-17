@@ -900,7 +900,7 @@ export default abstract class Character extends Entity {
      */
 
     public addStatusEffect(hit: Hit): void {
-        if (hit.type === Modules.Hits.Normal) return;
+        if (this.isDead() || hit.type === Modules.Hits.Normal) return;
 
         switch (hit.type) {
             case Modules.Hits.Stun: {

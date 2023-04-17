@@ -889,6 +889,9 @@ export default class Connection {
         // Stop player movement
         this.game.player.stop(true);
 
+        // Clear all the statuses.
+        this.game.player.removeAllEffects();
+
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
@@ -901,9 +904,6 @@ export default class Connection {
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
         this.game.player.setMana(0);
-
-        // Clear all the statuses.
-        this.game.player.removeAllEffects();
 
         // Stop the music playing.
         this.audio.stopMusic();
