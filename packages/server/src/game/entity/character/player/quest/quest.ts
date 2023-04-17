@@ -95,8 +95,12 @@ export default abstract class Quest {
 
     private loadNPCs(): void {
         // Iterate through the stages and extract the NPCs
-        for (let stage of Object.values(this.stages))
-            if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
+        for (let i in this.stages)
+            if (this.stages[i].npc && !this.hasNPC(this.stages[i].npc!))
+                this.npcs.push(this.stages[i].npc!);
+
+        // Look through the hideNPCs object and extract the NPCs
+        for (let i in this.hideNPCs) if (!this.hasNPC(i)) this.npcs.push(i);
     }
 
     /**

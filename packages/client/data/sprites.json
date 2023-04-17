@@ -3646,6 +3646,19 @@
     "offsetY": -12
   },
   {
+    "id": "king2",
+    "width": 32,
+    "height": 32,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -12
+  },
+  {
     "id": "lavanpc",
     "width": 24,
     "height": 24,

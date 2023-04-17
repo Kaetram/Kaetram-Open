@@ -620,7 +620,7 @@
     "name": "Royal Drama",
     "description": "The king of Kaetram is in need of your help.|The king of Kaetram is missing and no one knows about his whereabouts. Perhaps you should go speak to the guards and see what they might not know about him.",
     "rewards": ["Access to the castle"],
-    "hideNPCs": { "king": "before" },
+    "hideNPCs": { "king": "before", "king2": "after", "royalguard2": "after" },
     "stages": {
       "0": {
         "task": "talk",
@@ -656,10 +656,22 @@
 
       "2": {
         "task": "talk",
-        "npc": "king",
+        "npc": "king2",
         "text": [
-          "Hello there, I'm the king."
-        ]
+          "Oh dear adventurer, thank you so much for finding me.",
+          "Those filthy guards threw me in the sewers and didn't look back.",
+          "I will reward you greatly for your help.",
+          "Now I have to go back to the castle and get my affairs in order."
+        ],
+
+        "itemKey": "gold",
+        "itemCount": 10000,
+
+        "popup": {
+          "title": "Quest completed!",
+          "text": "@green@You have just finished @crimson@Royal Drama@green@. You have gained 10000 gold!",
+          "colour": "#33cc33"
+        }
       }
     }
   },
