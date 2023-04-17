@@ -139,6 +139,7 @@ export default class Handler {
 
     private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+        this.player.status.clear();
 
         if (attacker) {
             attacker.clearTarget();
@@ -169,7 +170,6 @@ export default class Handler {
         this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
-        this.player.status.clear();
 
         this.player.save();
 

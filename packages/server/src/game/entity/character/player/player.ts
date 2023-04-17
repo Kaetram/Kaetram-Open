@@ -1155,13 +1155,18 @@ export default class Player extends Character {
         // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
-        if (!overlay) this.overlayArea?.removePlayer(this);
+        // Store the active overlay.
+        let tempOverlay = this.overlayArea;
 
         // Store for comparison.
         this.overlayArea = overlay;
 
         // No overlay object or invalid object, remove the overlay.
-        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
+        if (!overlay) {
+            tempOverlay?.removePlayer(this);
+
+            return this.send(new Overlay(Opcodes.Overlay.Remove));
+        }
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
