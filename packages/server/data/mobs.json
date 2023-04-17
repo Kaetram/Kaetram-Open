@@ -1299,7 +1299,7 @@
   "clam": {
     "name": "Clam",
     "description": "Now this would make a good stew!",
-    "drops": {"spear": 300},
+    "drops": {"spear": 400, "clamobject": 1000},
     "hitPoints": 450,
     "defenseLevel": 6,
     "attackLevel": 1,

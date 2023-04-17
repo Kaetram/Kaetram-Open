@@ -4,6 +4,10 @@
     "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
   },
 
+  "king2": {
+    "name": "King"
+  },
+
   "villagegirl": {
     "name": "Wife",
     "text": ["Please, call me Azaria."]

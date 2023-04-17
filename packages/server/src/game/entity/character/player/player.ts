@@ -827,15 +827,16 @@ export default class Player extends Character {
         if (forage) return this.skills.getForaging().harvest(this, forage);
 
         /**
-         * Here we use the cursor (I know, it's a bit of a hack) to find the type
-         * of crafting station the the player is trying to interact with.
+         * Here we use the cursor (I know, it's a bit of a hack) to handle
+         * interactions with objects in the world. Most of these
+         * are used by crafting stations.
          */
 
         let cursor = this.map.getCursorFromIndex(index);
 
         if (!cursor) return;
 
-        // Handle interactable crafting stations.
+        // Handle interactable objects based on the cursor.
         switch (cursor) {
             case 'smithing': {
                 return this.world.crafting.open(this, Modules.Skills.Smithing);
