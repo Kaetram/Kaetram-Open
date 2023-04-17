@@ -83,7 +83,7 @@
     "ruby": {
         "levelRequirement": 62,
         "experience": 550,
-        "difficulty": 375,
+        "difficulty": 325,
         "item": "ruby",
         "respawnTime": 276000
     },
@@ -106,7 +106,7 @@
     "emerald": {
         "levelRequirement": 57,
         "experience": 510,
-        "difficulty": 355,
+        "difficulty": 345,
         "item": "emerald",
         "respawnTime": 180000
     },
@@ -114,7 +114,7 @@
     "amethyst": {
         "levelRequirement": 65,
         "experience": 580,
-        "difficulty": 445,
+        "difficulty": 375,
         "item": "amethyst",
         "respawnTime": 300000
     }
