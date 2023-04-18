@@ -594,7 +594,7 @@ export const Constants = {
 };
 
 export enum MinigameConstants {
-    TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby
+    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby
     TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
 }
 
