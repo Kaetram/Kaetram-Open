@@ -187,8 +187,8 @@ export default {
      * @param compression Compression format, can be gzip or zlib
      */
 
-    compress(data: string, compression = 'gzip'): string | undefined {
-        if (!data) return;
+    compress(data: string, compression = 'gzip'): string {
+        if (!data) return '';
 
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
@@ -249,7 +249,11 @@ export default {
      */
 
     bufferToAddress(buffer: ArrayBuffer): string {
-        return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        try {
+            return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        } catch {
+            return '69.69.69.69';
+        }
     },
 
     /**

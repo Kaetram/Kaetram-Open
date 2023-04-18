@@ -20,6 +20,28 @@
     }
   },
 
+  "fishingpole": {
+    "type": "weapon",
+    "weaponType": "sword",
+    "name": "Fishing Stick",
+    "level": 2,
+    "price": 500,
+    "fishing": 1,
+    "attackStats": {
+      "crush": 2,
+      "slash": 6,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "axe": {
     "type": "weapon",
     "name": "Axe",
@@ -48,7 +70,7 @@
     "weaponType": "pickaxe",
     "mining": 1,
     "level": 1,
-    "price": 10000,
+    "price": 2500,
     "attackStats": {
       "crush": 4,
       "slash": 0,
@@ -1018,17 +1040,18 @@
     "name": "Pink Sword",
     "weaponType": "sword",
     "price": 30000,
-    "level": 256,
+    "skill": "accuracy",
+    "level": 70,
     "attackStats": {
-      "crush": 50,
-      "slash": 70,
+      "crush": 60,
+      "slash": 80,
       "stab": 30,
       "archery": 0,
       "magic": 20
     },
     "bonuses": {
-      "accuracy": 6,
-      "strength": 40,
+      "accuracy": 28,
+      "strength": 45,
       "archery": 0,
       "magic": 0
     }
@@ -1048,7 +1071,7 @@
       "magic": 30
     },
     "bonuses": {
-      "accuracy": 10,
+      "accuracy": 18,
       "strength": 60,
       "archery": 0,
       "magic": 0
@@ -1278,6 +1301,27 @@
     }
   },
 
+  "lightningscimitar": {
+    "type": "weapon",
+    "name": "Lightning Scimitar",
+    "weaponType": "sword",
+    "price": 30000,
+    "level": 300,
+    "attackStats": {
+      "crush": 19,
+      "slash": 94,
+      "stab": 38,
+      "archery": 0,
+      "magic": 26
+    },
+    "bonuses": {
+      "accuracy": 29,
+      "strength": 39,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "paewoldo": {
     "type": "weapon",
     "name": "Paewoldo",
@@ -1404,10 +1448,10 @@
     }
   },
 
-  "marblependant": {
+  "berylpendant": {
     "type": "pendant",
-    "name": "Diamond Pendant",
-    "price": 16500,
+    "name": "Beryl Pendant",
+    "price": 1200,
     "attackStats": {
       "crush": 18,
       "slash": 28,
@@ -1433,7 +1477,7 @@
   "rubypendant": {
     "type": "pendant",
     "name": "Ruby Pendant",
-    "price": 4500,
+    "price": 1500,
     "attackStats": {
       "crush": 3,
       "slash": 3,
@@ -1459,7 +1503,7 @@
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
-    "price": 10050,
+    "price": 1800,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -1711,7 +1755,7 @@
     "name": "Emerald Ring",
     "skill": "magic",
     "level": 30,
-    "price": 8650,
+    "price": 2200,
     "attackStats": {
       "crush": 4,
       "slash": 8,
@@ -2625,7 +2669,7 @@
     }
   },
 
-  "archerschoolUniform": {
+  "archerschooluniform": {
     "type": "armourarcher",
     "name": "Archer School Uniform",
     "skill": "archery",
@@ -3232,7 +3276,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 44,
+      "archery": 42,
       "magic": 0
     }
   },
@@ -3264,19 +3308,19 @@
     "name": "Blood Bow",
     "weaponType": "bow",
     "skill": "archery",
-    "level": 58,
+    "level": 62,
     "price": 12201,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 3,
-      "archery": 70,
+      "archery": 72,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 50,
+      "archery": 52,
       "magic": 0
     }
   },
@@ -4168,7 +4212,7 @@
 
   "taekwondo": {
     "type": "armourskin",
-    "name": "Taekwondo"
+    "name": "Taekwondo Skin"
   },
 
   "rabbitarmor": {
@@ -4353,9 +4397,9 @@
       "magic": 10
     },
     "bonuses": {
-      "accuracy": 4,
+      "accuracy": 0,
       "strength": 0,
-      "archery": -1,
+      "archery": -19,
       "magic": 4
     }
   },
@@ -4381,9 +4425,9 @@
       "magic": 18
     },
     "bonuses": {
-      "accuracy": 4,
+      "accuracy": 0,
       "strength": 0,
-      "archery": -1,
+      "archery": -18,
       "magic": 7
     }
   },
@@ -4409,9 +4453,9 @@
       "magic": 21
     },
     "bonuses": {
-      "accuracy": 4,
+      "accuracy": 0,
       "strength": 0,
-      "archery": -4,
+      "archery": -14,
       "magic": 9
     }
   },
@@ -4437,9 +4481,9 @@
       "magic": 36
     },
     "bonuses": {
-      "accuracy": 4,
-      "strength": 3,
-      "archery": -6,
+      "accuracy": 0,
+      "strength": 0,
+      "archery": -10,
       "magic": 17
     }
   },
@@ -4465,9 +4509,9 @@
       "magic": 49
     },
     "bonuses": {
-      "accuracy": 5,
-      "strength": 5,
-      "archery": -7,
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
       "magic": 29
     }
   },
@@ -4632,7 +4676,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 25,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 100
   },
 
@@ -4665,7 +4709,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 30,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "manaAmount": 35
   },
 
@@ -4678,7 +4722,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 7,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 200
   },
 
@@ -4691,7 +4735,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 5,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 250
   },
 
@@ -4704,7 +4748,7 @@
     "stackable": true,
     "edible": true,
     "maxStackSize": 10,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "manaAmount": 95
   },
 
@@ -4716,12 +4760,6 @@
     "description": "Feeling a little hot? Have you been burnt to a crisp and can't seem to shake off that burning sensation? The fire potion is the answer to your ailments!",
     "edible": true,
     "plugin": "firepotion"
-  },
-
-  "cake": {
-    "type": "object",
-    "name": "Cake [Quest]",
-    "undroppable": true
   },
 
   "book": {
@@ -4777,258 +4815,6 @@
     "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
-  "leafcommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Common"
-  },
-
-  "leafuncommon": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Uncommon"
-  },
-
-  "leafrare": {
-    "spriteName": "leaf",
-    "type": "craft",
-    "name": "Leaf Rare"
-  },
-
-  "branchcommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Common"
-  },
-
-  "branchuncommon": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Uncommon"
-  },
-
-  "branchrare": {
-    "spriteName": "branch",
-    "type": "craft",
-    "name": "Branch Rare"
-  },
-
-  "seedcommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Common"
-  },
-
-  "seeduncommon": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Uncommon"
-  },
-
-  "seedrare": {
-    "spriteName": "seed",
-    "type": "craft",
-    "name": "Seed Rare"
-  },
-
-  "clothcommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Common"
-  },
-
-  "clothuncommon": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Uncommon"
-  },
-
-  "clothcare": {
-    "spriteName": "cloth",
-    "type": "craft",
-    "name": "Cloth Rare"
-  },
-
-  "rockcommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Common"
-  },
-
-  "rockuncommon": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Uncommon"
-  },
-
-  "rockrare": {
-    "spriteName": "rock",
-    "type": "craft",
-    "name": "Rock Rare"
-  },
-
-  "mineralcommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Common"
-  },
-
-  "mineraluncommon": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Uncommon"
-  },
-
-  "mineralrare": {
-    "spriteName": "mineral",
-    "type": "craft",
-    "name": "Mineral Rare"
-  },
-
-  "elementcommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Common"
-  },
-
-  "elementuncommon": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Uncommon"
-  },
-
-  "elementrare": {
-    "spriteName": "element",
-    "type": "craft",
-    "name": "Element Rare"
-  },
-
-  "weaponhiltcommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Common Weapon Hilt"
-  },
-
-  "weaponhiltuncommon": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Uncommon Weapon Hilt"
-  },
-
-  "weaponhiltrare": {
-    "spriteName": "weaponhilt",
-    "type": "craft",
-    "name": "Rare Weapon Hilt"
-  },
-
-  "weaponbladecommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Common Weapon Blade"
-  },
-
-  "beaponbladeuncommon": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Uncommon Weapon Blade"
-  },
-
-  "beaponbladerare": {
-    "spriteName": "weaponblade",
-    "type": "craft",
-    "name": "Rare Weapon Blade"
-  },
-
-  "armorpatchcommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Common Armor Patch"
-  },
-
-  "armorpatchuncommon": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Uncommon Armor Patch"
-  },
-
-  "armorpatchrare": {
-    "spriteName": "armorpatches",
-    "type": "craft",
-    "name": "Rare Armor Patch"
-  },
-
-  "armorbindingcommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Common Armor Binding"
-  },
-
-  "armorbindinguncommon": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Uncommon Armor Binding"
-  },
-
-  "armorbindingrare": {
-    "spriteName": "armorbinding",
-    "type": "craft",
-    "name": "Rare Armor Binding"
-  },
-
-  "woodcommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Common"
-  },
-
-  "wooduncommon": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Uncommon"
-  },
-
-  "woodrare": {
-    "spriteName": "wood",
-    "type": "craft",
-    "name": "Wood Rare"
-  },
-
-  "weaponbowlimbcommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Common"
-  },
-
-  "weaponbowlimbuncommon": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Uncommon"
-  },
-
-  "weaponbowlimbrare": {
-    "spriteName": "bowlimb",
-    "type": "craft",
-    "name": "Bow Limb Rare"
-  },
-
-  "weaponbowstringcommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Common"
-  },
-
-  "weaponbowstringuncommon": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Uncommon"
-  },
-
-  "weaponbowstringrare": {
-    "spriteName": "bowstring",
-    "type": "craft",
-    "name": "Bow String Rare"
-  },
-
   "sword1": {
     "type": "weapon",
     "name": "Best In-Slot Sword",
@@ -5055,7 +4841,7 @@
     "name": "Banana",
     "description": "A banana, a fruit that is yellow and long. It is a good source of potassium and fiber.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 700
   },
 
@@ -5064,7 +4850,7 @@
     "name": "Watermelon",
     "description": "A watermelon, I should probably cut this up before eating it.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 800
   },
 
@@ -5073,7 +4859,7 @@
     "name": "Apple",
     "description": "An apple, an excellent source of energy!",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 450
   },
 
@@ -5082,8 +4868,17 @@
     "name": "Orange",
     "description": "It's funny, the name of the fruit is the same as the colour and its colour.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 750
+  },
+
+  "blueberry": {
+    "type": "object",
+    "name": "Blueberry",
+    "description": "A blueberry, a fruit that is blue and round. It is a good source of antioxidants.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 500
   },
 
   "shardt1": {
@@ -5172,11 +4967,28 @@
     "name": "Platinum Armour"
   },
 
+  "knife": {
+    "type": "object",
+    "name": "Knife",
+    "description": "A versatile cutting tool that will primarily be used for fletching and stuff.",
+    "price": 50,
+    "interactable": true,
+    "plugin": "knife"
+  },
+
+  "string": {
+    "type": "object",
+    "name": "String",
+    "description": "A piece of string, can probably be used to make things with it.",
+    "stackable": true,
+    "price": 50
+  },
+
   "logs": {
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
-    "price": 50
+    "price": 65
   },
 
   "palmlogs": {
@@ -5250,7 +5062,7 @@
     "price": 500
   },
 
-  "goldore": {
+  "goldnugget": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
@@ -5306,9 +5118,18 @@
 
   "stick": {
     "type": "object",
-    "name": "Stick",
-    "price": 150,
-    "description": "A stick. It's a stick. What else do you want me to say about it?"
+    "name": "Shaft",
+    "price": 2,
+    "stackable": true,
+    "description": "A stick. It's a stick. What else do you want me to say about it? You can probably use it to craft stuff now that it has been added in the game."
+  },
+
+  "feather": {
+    "type": "object",
+    "name": "Feather",
+    "stackable": true,
+    "price": 50,
+    "description": "A feather, I think it came off of a bird or something. You could make arrows with this thing."
   },
 
   "candykey": {
@@ -5363,7 +5184,7 @@
     "plugin": "beermug"
   },
 
-  "clam": {
+  "clamobject": {
     "type": "object",
     "name": "Clam",
     "price": 100,
@@ -5376,7 +5197,8 @@
     "price": 1000,
     "description": "A delicious soup made from clams. It's a bit salty though.",
     "edible": true,
-    "plugin": "healthflask",
+    "smallBowl": true,
+    "plugin": "healingitem",
     "healAmount": 750
   },
 
@@ -5393,7 +5215,7 @@
     "price": 200,
     "description": "A singular cooked shrimp, alone and dead. But still delicious.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 450
   },
 
@@ -5410,7 +5232,7 @@
     "price": 1000,
     "description": "I can't believe someone would actually think up to create something like this.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 750
   },
 
@@ -5418,14 +5240,21 @@
     "type": "object",
     "name": "Kelp",
     "price": 100,
-    "description": "Kelp is a type of seaweed that grows in the ocean. It's pretty tasty when combined with other stuff."
+    "description": "Kelp is a type of seaweed that grows in water. It's pretty tasty when combined with other stuff."
   },
 
-  "tuna": {
+  "rawbeef": {
     "type": "object",
-    "name": "Tuna",
+    "name": "Raw Beef",
     "price": 100,
-    "description": "A fish that is commonly found in the ocean. It's pretty tasty when cooked."
+    "description": "A piece of raw beef. It's probably not the best idea to eat it raw."
+  },
+
+  "rawtuna": {
+    "type": "object",
+    "name": "Raw Tuna",
+    "price": 100,
+    "description": "A fish that is commonly found in water. It's pretty tasty when cooked."
   },
 
   "tunasushi": {
@@ -5434,8 +5263,503 @@
     "price": 1000,
     "description": "A delicious sushi made from tuna. Probably the best in-game food at the moment, or not, who knows, I'm just a piece of text.",
     "edible": true,
-    "plugin": "healthflask",
+    "plugin": "healingitem",
     "healAmount": 850
+  },
+
+  "barley": {
+    "type": "object",
+    "name": "Barley",
+    "description": "It's a fruit, no it's a sald, no it's a grain. You can probably use it to make bread or something like that.",
+    "price": 100
+  },
+
+  "blackberry": {
+    "type": "object",
+    "name": "Blackberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "borth": {
+    "type": "object",
+    "name": "Borth",
+    "description": "A nice yummy warm and nice smelling... I really don't know what it is.",
+    "price": 100
+  },
+
+  "bronzebar": {
+    "type": "object",
+    "name": "Bronze Bar",
+    "description": "A bar of bronze. It's pretty heavy.",
+    "price": 250
+  },
+  
+  "bronzeore": {
+    "type": "object",
+    "name": "Bronze Ore",
+    "description": "A piece of bronze ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "bucket": {
+    "type": "object",
+    "name": "Bucket",
+    "description": "A bucket, you can use it to put a variety of liquids in it.",
+    "price": 100
+  },
+
+  "cake": {
+    "type": "object",
+    "name": "Cake",
+    "description": "A delicious cake. It's pretty tasty.",
+    "price": 100
+  },
+
+  "cheese": {
+    "type": "object",
+    "name": "Cheese",
+    "description": "A piece of cheese. I think it came from milk.",
+    "price": 100
+  },
+
+  "cilantro": {
+    "type": "object",
+    "name": "Cilantro",
+    "description": "A leafy herb that is commonly used in Mexican cuisine. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "cloudberry": {
+    "type": "object",
+    "name": "Cloudberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "coal": {
+    "type": "object",
+    "name": "Coal",
+    "description": "A piece of coal. You can use it smelt ores.",
+    "price": 75
+  },
+
+  "rawchicken": {
+    "type": "object",
+    "name": "Raw Chicken",
+    "description": "I think I should cook this before I eat it.",
+    "price": 100
+  },
+
+  "cookedchicken": {
+    "type": "object",
+    "name": "Cooked Chicken",
+    "description": "A delicious piece of chicken. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 300,
+    "price": 100
+  },
+
+  "rawpork": {
+    "type": "object",
+    "name": "Raw Pork",
+    "description": "I think I should cook this before I eat it.",
+    "price": 250
+  },
+
+  "cookedpork": {
+    "type": "object",
+    "name": "Cooked Pork",
+    "description": "A delicious piece of pork. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 400,
+    "price": 100
+  },
+
+  "rawsausage": {
+    "type": "object",
+    "name": "Raw Sausage",
+    "description": "I think I should cook this before I eat it.",
+    "price": 100
+  },
+
+  "cookedsausage": {
+    "type": "object",
+    "name": "Cooked Sausage",
+    "description": "A delicious sausage. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 650,
+    "price": 100
+  },
+
+  "copperbar": {
+    "type": "object",
+    "name": "Copper Bar",
+    "description": "A bar of copper. It's pretty heavy.",
+    "price": 100
+  },
+
+  "copperore": {
+    "type": "object",
+    "name": "Copper Ore",
+    "description": "A piece of copper ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "corn": {
+    "type": "object",
+    "name": "Corn",
+    "description": "It's corn, and it's on a cob.",
+    "price": 100
+  },
+
+  "egg": {
+    "type": "object",
+    "name": "Egg",
+    "description": "A wonderful sorta round egg, it came from a chicken, I think.",
+    "price": 100
+  },
+
+  "goldore": {
+    "type": "object",
+    "name": "Gold Ore",
+    "description": "A piece of gold ore. It's pretty heavy.",
+    "price": 100
+  },
+
+  "gooseberry": {
+    "type": "object",
+    "name": "Gooseberry",
+    "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "ironbar": {
+    "type": "object",
+    "name": "Iron Bar",
+    "description": "A bar of iron. It's pretty heavy.",
+    "price": 100
+  },
+
+  "mango": {
+    "type": "object",
+    "name": "Mango",
+    "description": "A mango, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "milkbottle": {
+    "type": "object",
+    "name": "Milk Bottle",
+    "description": "A bottle of milk. It's pretty tasty when cooked.",
+    "price": 100
+  },
+
+  "mulberry": {
+    "type": "object",
+    "name": "Mulberry",
+    "description": "A berry that grows on or in bushes.",
+    "price": 100
+  },
+
+  "oat": {
+    "type": "object",
+    "name": "Oat",
+    "description": "A grain that is commonly used in bread.",
+    "price": 100
+  },
+
+  "peach": {
+    "type": "object",
+    "name": "Peach",
+    "description": "A peach, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "pineapple": {
+    "type": "object",
+    "name": "Pineapple",
+    "description": "A pineapple, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "plum": {
+    "type": "object",
+    "name": "Plum",
+    "description": "A plum, it's a fruit and it's edible",
+    "price": 100
+  },
+
+  "quinoa": {
+    "type": "object",
+    "name": "Quinoa",
+    "description": "Hello this is the developer, I really don't know what this is even used in so I can't come up with a witty description.",
+    "price": 100
+  },
+
+  "raspberry": {
+    "type": "object",
+    "name": "Raspberry",
+    "description": "A berry that grows on or around bushes..",
+    "price": 100
+  },
+
+  "rice": {
+    "type": "object",
+    "name": "Rice",
+    "description": "You can eat this after you cook it for a bit.",
+    "price": 100
+  },
+
+  "strawberry": {
+    "type": "object",
+    "name": "Strawberry",
+    "description": "A berry that grows on bushes.",
+    "price": 100
+  },
+
+  "tinbar": {
+    "type": "object",
+    "name": "Tin Bar",
+    "description": "A bar of tin. It's pretty heavy.",
+    "price": 100
+  },
+
+  "tinore": {
+    "type": "object",
+    "name": "Tin Ore",
+    "description": "A piece of tin ore.",
+    "price": 100
+  },
+
+  "ironore": {
+    "type": "object",
+    "name": "Iron Ore",
+    "description": "A piece of iron ore.",
+    "price": 100
+  },
+
+  "goldbar": {
+    "type": "object",
+    "name": "Gold Bar",
+    "description": "A bar of gold. It's pretty heavy and shiny.",
+    "price": 1200
+  },
+
+  "tofu": {
+    "type": "object",
+    "name": "Tofu",
+    "description": "A block of tofu. I don't know what to do with this, I'm not vegan.",
+    "price": 100
+  },
+
+  "tomato": {
+    "type": "object",
+    "name": "Tomato",
+    "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 100,
+    "price": 100
+  },
+
+  "potato": {
+    "type": "object",
+    "name": "Potato",
+    "description": "A potato, it's a vegetable and it's edible, though cooking it might be better.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healingAmount": 120,
+    "price": 100
+  },
+
+  "chilli": {
+    "type": "object",
+    "name": "Chilli",
+    "description": "A chilli pepper, it's hot so be careful.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healingAmount": 100,
+    "price": 100
+  },
+
+  "waterbucket": {
+    "type": "object",
+    "name": "Water Bucket",
+    "description": "A bucket of water. You can use it to cook stuff with it.",
+    "price": 100
+  },
+
+  "bowlsmall": {
+    "type": "object",
+    "name": "Small Bowl",
+    "description": "A small bowl. Can be used to cook stuff in it.",
+    "price": 100
+  },
+
+  "bowlmedium": {
+    "type": "object",
+    "name": "Medium Bowl",
+    "description": "A medium bowl. Can be used to cook stuff in it.",
+    "price": 100
+  },
+
+  "topaz": {
+    "type": "object",
+    "name": "Topaz",
+    "description": "A topaz gemstome, it's quite pretty.",
+    "price": 350
+  },
+
+  "beryl": {
+    "type": "object",
+    "name": "Beryl",
+    "description": "Beryl gemstone, it's quite pretty.",
+    "price": 650
+  },
+
+  "lapislazuli": {
+    "type": "object",
+    "name": "Lapis Lazuli",
+    "description": "A semi-precious stone, it's quite pretty.",
+    "price": 800
+  },
+
+  "citrine": {
+    "type": "object",
+    "name": "Citrine",
+    "description": "It's rather shiny and nice to hold.",
+    "price": 1100
+  },
+
+  "taaffeite": {
+    "type": "object",
+    "name": "Taaffeite",
+    "description": "A nice purple gemstone that is somewhat valuable I guess.",
+    "price": 1220
+  },
+
+  "ruby": {
+    "type": "object",
+    "name": "Ruby",
+    "description": "A very nice gemstone that can be used to made rings or pendants.",
+    "price": 1300
+  },
+
+  "peridot": {
+    "type": "object",
+    "name": "Peridot",
+    "description": "A nice green gemstone that is somewhat valuable I guess.",
+    "price": 1300
+  },
+
+  "opal": {
+    "type": "object",
+    "name": "Opal",
+    "description": "A nice gemstone that is somewhat valuable I guess.",
+    "price": 1300
+  },
+
+  "emerald": {
+    "type": "object",
+    "name": "Emerald",
+    "description": "A very nice gemstone that can be used to made rings or pendants.",
+    "price": 1400
+  },
+
+  "amethyst": {
+    "type": "object",
+    "name": "Amethyst",
+    "description": "A nice purple gemstone that is somewhat valuable I guess.",
+    "price": 1500
+  },
+
+  "bluelily": {
+    "type": "object",
+    "name": "Blue Lily",
+    "description": "A blue lily, a flower that can be used for crafting stuff.",
+    "price": 100
+  },
+
+  "stew": {
+    "type": "object",
+    "name": "Tomato Stew",
+    "description": "A stew composed of tomato, mushrooms, and a bowl.",
+    "edible": true,
+    "mediumBowl": true,
+    "plugin": "healingitem",
+    "healAmount": 500,
+    "price": 600
+  },
+
+  "stew2": {
+    "type": "object",
+    "name": "Corn Stew",
+    "description": "A very filling stew, possibly the best stew currently available.",
+    "edible": true,
+    "mediumBowl": true,
+    "plugin": "healingitem",
+    "healAmount": 800,
+    "price": 900
+  },
+
+  "mushroom1": {
+    "type": "object",
+    "name": "Shiitake",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom2": {
+    "type": "object",
+    "name": "Russula",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom3": {
+    "type": "object",
+    "name": "Kuriositas",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom4": {
+    "type": "object",
+    "name": "Matsutake",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom5": {
+    "type": "object",
+    "name": "Cortinarius",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "mushroom6": {
+    "type": "object",
+    "name": "Violet Cort",
+    "description": "A mushroom that can be used for cooking.",
+    "price": 250
+  },
+
+  "hilt1": {
+    "type": "object",
+    "name": "Hilt",
+    "description": "May be used with certain metals to produce a sword.",
+    "price": 1000
+  },
+
+  "hilt2": {
+    "type": "object",
+    "name": "Hilt",
+    "description": "May be used with certain metals to produce a sword.",
+    "price": 1000
   },
 
   "leatherboots": {
@@ -5493,7 +5817,7 @@
   "goldboots": {
     "type": "boots",
     "name": "Golden Boots",
-    "price": 12500,
+    "price": 4500,
     "attackStats": {
       "crush": 0,
       "slash": 0,
@@ -5574,6 +5898,7 @@
     "name": "Arrow",
     "stackable": true,
     "maxStackSize": 9999,
+    "price": 5,
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
@@ -5586,7 +5911,7 @@
   "firearrow": {
     "type": "arrow",
     "name": "Fire Arrow",
-    "price": 2,
+    "price": 12,
     "stackable": true,
     "burning": true,
     "maxStackSize": 9999,
@@ -5602,7 +5927,7 @@
   "poisonarrow": {
     "type": "arrow",
     "name": "Poison Arrow",
-    "price": 2,
+    "price": 16,
     "stackable": true,
     "maxStackSize": 9999,
     "poisonous": true,
@@ -5618,7 +5943,7 @@
   "lightningarrow": {
     "type": "arrow",
     "name": "Lightning Arrow",
-    "price": 2,
+    "price": 18,
     "stackable": true,
     "maxStackSize": 9999,
     "bonuses": {
@@ -5633,7 +5958,7 @@
   "icearrow": {
     "type": "arrow",
     "name": "Ice Arrow",
-    "price": 2,
+    "price": 20,
     "stackable": true,
     "freezing": true,
     "maxStackSize": 9999,
@@ -5644,5 +5969,69 @@
       "magic": 0
     },
     "projectileName": "projectile-icearrow"
+  },
+
+  "nisocarrow": {
+    "type": "arrow",
+    "name": "Nisoc Arrow",
+    "price": 19,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 24,
+      "magic": 3
+    },
+    "projectileName": "projectile-nisocarrow"
+  },
+
+  "cinnabararrow": {
+    "type": "arrow",
+    "name": "Cinnabar Arrow",
+    "price": 21,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 2
+    },
+    "projectileName": "projectile-cinnabararrow"
+  },
+
+  "pythararrow": {
+    "type": "arrow",
+    "name": "Pythar Arrow",
+    "price": 23,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 4
+    },
+    "projectileName": "projectile-pythararrow"
+  },
+
+  "iboarrow": {
+    "type": "arrow",
+    "name": "Ibo Arrow",
+    "price": 25,
+    "stackable": true,
+    "freezing": true,
+    "maxStackSize": 9999,
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 28,
+      "magic": 12
+    },
+    "projectileName": "projectile-iboarrow"
   }
 }

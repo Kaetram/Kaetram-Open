@@ -60,7 +60,8 @@ import type {
     ListPacket,
     TradePacket,
     HandshakePacket,
-    GuildPacket
+    GuildPacket,
+    CraftingPacket
 } from '@kaetram/common/types/messages/outgoing';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -157,6 +158,7 @@ export default class Connection {
         this.messages.onEffect(this.handleEffect.bind(this));
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
+        this.messages.onCrafting(this.handleCrafting.bind(this));
     }
 
     /**
@@ -549,7 +551,7 @@ export default class Connection {
         this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
 
         // Flash the target character when a hit occurs.
-        if (target.hurtSprite) target.toggleHurt();
+        if (info.hit.damage > 0) target.toggleHurt();
 
         // Show the health bar for both entities.
         attacker.triggerHealthBar();
@@ -887,6 +889,9 @@ export default class Connection {
         // Stop player movement
         this.game.player.stop(true);
 
+        // Clear all the statuses.
+        this.game.player.removeAllEffects();
+
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
@@ -899,9 +904,6 @@ export default class Connection {
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
         this.game.player.setMana(0);
-
-        // Clear all the statuses.
-        this.game.player.removeAllEffects();
 
         // Stop the music playing.
         this.audio.stopMusic();
@@ -1371,6 +1373,17 @@ export default class Connection {
         }
 
         this.menu.getFriends().handle(opcode, info.username, info.status, info.serverId);
+    }
+
+    /**
+     * Handles receiving information about crafting. This is used to synchronize the crafting
+     * user interface with the server. When a player selects an item to craft this
+     * @param opcode Contains the type of crafting action that we want to perform.
+     * @param info Contains the information about the crafting action.
+     */
+
+    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+        this.menu.getCrafting().handle(opcode, info);
     }
 
     /**

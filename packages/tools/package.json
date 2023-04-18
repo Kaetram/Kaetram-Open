@@ -9,8 +9,8 @@
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
-        "socket.io-client": "^4.5.4",
-        "tsx": "^3.12.6"
+        "tsx": "^3.12.6",
+        "websocket": "^1.0.34"
     },
     "devDependencies": {
         "@types/node": "^18.15.5",

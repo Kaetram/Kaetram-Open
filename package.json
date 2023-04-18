@@ -1,6 +1,6 @@
 {
     "name": "kaetram",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "private": true,
     "packageManager": "yarn@4.0.0-rc.40",
     "author": "Veradictus",
@@ -45,7 +45,7 @@
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.8.1",
         "stylelint": "^14.16.1",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.4"
     },
     "workspaces": [
         "packages/*"

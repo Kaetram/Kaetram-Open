@@ -205,3 +205,9 @@ export enum Player {
     Login,
     Logout
 }
+
+export enum Crafting {
+    Open,
+    Select,
+    Craft
+}

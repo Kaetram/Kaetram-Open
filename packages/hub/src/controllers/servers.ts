@@ -123,18 +123,22 @@ export default class Servers {
     }
 
     /**
-     * Looks through all the servers and finds one
-     * that has enough space.
-     * @param callback Server with enough space for players.
+     * Iterates through all the servers and finds the first one that has
+     * space for the new player. If we cannot find a server then we
+     * return undefined.
+     * @returns The server that has space for a new player, or undefined if not found.
      */
 
-    public findEmpty(callback: (server: Server) => void): void {
-        this.forEachServer((server) => {
-            // -1 for a threshold of empty space.
-            if (server.players.length >= server.maxPlayers - 1) return;
+    public findEmpty(): Server | undefined {
+        for (let key in this.servers) {
+            let server = this.servers[key];
 
-            callback(server);
-        });
+            if (server.players.length >= server.maxPlayers - 1) continue;
+
+            return server;
+        }
+
+        return undefined;
     }
 
     /**

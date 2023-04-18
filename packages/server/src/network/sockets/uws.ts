@@ -20,7 +20,7 @@ export default class UWS extends WebSocket {
             .get('/*', this.httpResponse.bind(this))
             .ws('/*', {
                 compression: DISABLED,
-                idleTimeout: 10,
+                idleTimeout: 15,
                 maxPayloadLength: 32 * 1024 * 1024,
 
                 upgrade: this.handleUpgrade.bind(this),
@@ -85,8 +85,14 @@ export default class UWS extends WebSocket {
         if (!connection)
             return log.error(`No connection found for ${socket.getUserData().instance}`);
 
+        // Increment the rate for the connection.
+        connection.messageRate++;
+
+        // Reject the connection once we reach the rate limit threshold.
+        if (connection.messageRate > config.messageLimit) return connection.reject('ratelimit');
+
         try {
-            // Conver the buffer into a string.
+            // Convert the buffer into a string.
             let message = new TextDecoder().decode(data);
 
             // Prevent duplicates in a short period of time.
@@ -110,6 +116,9 @@ export default class UWS extends WebSocket {
 
         if (!connection)
             return log.error(`No connection found closing ${socket.getUserData().instance}`);
+
+        // Mark the connection as closed to prevent any further messages from being sent.
+        connection.closed = true;
 
         this.socketHandler.remove(connection.instance);
 
