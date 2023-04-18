@@ -64,4 +64,6 @@ export interface ItemData {
     description?: string;
     manaCost?: number;
     weaponType?: string;
+    smallBowl?: boolean;
+    mediumBowl?: boolean;
 }

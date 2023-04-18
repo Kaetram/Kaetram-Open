@@ -57,7 +57,14 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = ['ordinary', 'arrows', 'unusual', 'shards']; // Default drop table for all mobs.
+    private dropTables: string[] = [
+        'ordinary',
+        'arrows',
+        'unusual',
+        'shards',
+        'vegetables',
+        'mushrooms'
+    ]; // Default drop table for all mobs.
 
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
