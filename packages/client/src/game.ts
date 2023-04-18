@@ -15,7 +15,8 @@ import Socket from './network/socket';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
-import Renderer from './renderer/renderer';
+import WebGL from './renderer/webgl/webgl';
+import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
 import { agent } from './utils/detect';
@@ -23,9 +24,10 @@ import { agent } from './utils/detect';
 import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
-import type Character from './entity/character/character';
 import type Entity from './entity/entity';
 import type Storage from './utils/storage';
+import type Character from './entity/character/character';
+import type { TileIgnore } from './utils/pathfinder';
 
 export default class Game {
     public player: Player;
@@ -39,11 +41,11 @@ export default class Game {
     public pathfinder: Pathfinder = new Pathfinder();
 
     public info: InfoController = new InfoController();
-    public sprites: SpritesController = new SpritesController();
+    public sprites: SpritesController;
 
     public minigame: Minigame = new Minigame();
 
-    public renderer: Renderer;
+    public renderer: WebGL | Canvas;
     public input: InputController;
 
     public socket: Socket;
@@ -62,6 +64,7 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
+    public useWebGl = false;
 
     public constructor(public app: App) {
         this.storage = app.storage;
@@ -70,8 +73,9 @@ export default class Game {
 
         this.map = new Map(this);
         this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+        this.sprites = new SpritesController();
 
-        this.renderer = new Renderer(this);
+        this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
@@ -200,17 +204,20 @@ export default class Game {
         character: Character,
         x: number,
         y: number,
-        ignores: Character[] = []
+        ignores: TileIgnore[] = [],
+        cursor = ''
     ): number[][] {
         let path: number[][] = [];
 
-        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
 
-        if (ignores) for (let entity of ignores) this.pathfinder.addIgnore(entity);
+        // Special case for fishing where we remove the last path if it is colliding.
+        if (cursor === 'fishing') {
+            let last = path[path.length - 2];
 
-        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
-
-        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
+            // Remove if there is a collision  at the last path only (to allow fishing from a distance).
+            if (this.map.isColliding(last[0], last[1])) path.pop();
+        }
 
         return path;
     }

@@ -27,17 +27,19 @@ Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-![Demo 1](https://i.imgur.com/MvErlP4.png 'Demo 1')
+![Demo 1](https://i.imgur.com/MvErlP4.png)
 
-![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
+![Demo 2](https://i.imgur.com/jS5d3oq.png)
 
-![Demo 3](https://i.imgur.com/KrqVNFw.png 'Demo 3')
+![Demo 3](https://i.imgur.com/KrqVNFw.png)![Demo 4](https://i.imgur.com/1U7iiJo.png)
 
-![Demo 4](https://i.imgur.com/ErBNdkf.png 'Demo 4')
+![Demo 5](https://i.imgur.com/8Is0pY0.png)![Demo 6](https://i.imgur.com/ErBNdkf.png)
 
-![Demo 5](https://i.imgur.com/L0MN6LO.png 'Demo 5')
+![Demo 7](https://i.imgur.com/L0MN6LO.png)
 
-![Demo 6](https://i.imgur.com/aFXdmpv.png 'Demo 6')
+![Demo 8](https://i.imgur.com/aFXdmpv.png)
+
+![Demo 9](https://i.imgur.com/ewtLbyZ.png)
 
 ## Technologies
 
@@ -50,17 +52,21 @@ readability, performance, and compatibility. Some of the many features are as fo
 - Region/chunking system (client caches and saves data from the server as needed).
   - Dynamic tiles (tiles that change depending on player's progress in achievements/quests/etc).
   - Global objects (tiles such as trees (and more in the future) that the player can interact with).
-- Trading between players
+- Trading between players.
+- Guild system with chatting and multi-world support.
+- Enchantment system for weapons.
 - Quest and achievement system.
+- Skilling system
+- Attack style system
 - Minigame system for special in-game events.
 - Plugin-based mob behaviour (used for special mobs such as bosses).
 - Plugin-based item interaction.
-- RESTful API for cross-server communication
+- Hub system for cross-server communication/synchronization (private messages, global messages).
 - Discord server integration (in-game and discord server can communicate with eachother).
-- Cross-server private messaging and interactions.
 - Enhanced map parsing w/ support for compressed tilemaps.
 - Yarn v3 with workspaces for monorepo packaging.
-- Player synchronization amongst servers (friend lists, login status)
+- Player synchronization amongst servers (friend lists, guilds, login status).
+- In-game leaderboards using REST API.
 
 ## Get Started
 
@@ -229,7 +235,6 @@ See also the [open issues][issues] for a list of proposed features (and known is
 
 - Add special attacks to weapons
 - Add functionality to the special abilities
-- Add player-owned guilds and/or parties
 - Weapons/armours/rings/pendants enchantments
 - Diversify game content (add more skills, minigames, activities, items, etc)
 - Improve usability of the user interface on mobile devices

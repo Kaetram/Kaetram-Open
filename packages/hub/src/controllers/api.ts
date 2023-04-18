@@ -1,14 +1,17 @@
-import express, { Router } from 'express';
+import express from 'express';
 import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
+import type { Integration } from '@sentry/types';
 import type Cache from './cache';
 import type Server from '../model/server';
 import type Servers from './servers';
 import type Discord from '@kaetram/common/api/discord';
-import type { Request, Response } from 'express';
+import type { Request, Response, Express, Router } from 'express';
 import type {
     MobAggregate,
     PvpAggregate,
@@ -21,24 +24,44 @@ import type {
  */
 export default class API {
     public constructor(private servers: Servers, private discord: Discord, private cache: Cache) {
-        let app = express();
+        let apiEnabled = config.apiEnabled || config.hubEnabled,
+            app: Express | undefined,
+            router: Router | undefined;
 
-        app.use(express.urlencoded({ extended: true }));
-        app.use(express.json());
+        // API must be initialized if the hub is enabled.
+        if (apiEnabled) {
+            app = express();
 
-        let router = Router();
+            if (config.sentryDsn)
+                app.use(Sentry.Handlers.requestHandler())
+                    .use(Sentry.Handlers.tracingHandler())
+                    .use(Sentry.Handlers.errorHandler());
 
-        this.handle(router);
+            app.use(express.urlencoded({ extended: true })).use(express.json());
 
-        app.use('/', router);
+            router = express.Router();
 
-        // Listen with the hub port.
-        app.listen(config.hubPort, () => {
-            log.notice(`${config.name} hub API is now listening on ${config.hubPort}.`);
+            this.handleRouter(router);
+
+            app.use('/', router).listen(config.hubPort, () => {
+                log.notice(`${config.name} hub API is now listening on ${config.hubPort}.`);
+            });
+        }
+
+        if (!config.sentryDsn) return;
+
+        let integrations: Integration[] = [new Sentry.Integrations.Http({ tracing: true })];
+
+        if (app && router) integrations.push(new Tracing.Integrations.Express({ app, router }));
+
+        Sentry.init({
+            dsn: config.sentryDsn,
+            integrations,
+            tracesSampleRate: 1
         });
     }
 
-    private handle(router: Router): void {
+    private handleRouter(router: Router): void {
         // GET requests
         router.get('/', this.handleRoot.bind(this));
         router.get('/server', this.handleServer.bind(this));
@@ -77,9 +100,14 @@ export default class API {
             return;
         }
 
-        this.servers.findEmpty((server: Server) => {
-            response.json(server.serialize());
-        });
+        let server = this.servers.findEmpty();
+
+        if (!server) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        response.json(server.serialize());
     }
 
     /**

@@ -363,7 +363,7 @@ export default class Player extends Character {
      */
 
     public override isAdmin(): boolean {
-        return this.rank === Modules.Ranks.Admin;
+        return this.rank === Modules.Ranks.Admin || this.rank === Modules.Ranks.HollowAdmin;
     }
 
     /**

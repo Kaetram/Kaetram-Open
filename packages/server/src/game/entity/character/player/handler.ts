@@ -1,4 +1,5 @@
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
@@ -10,7 +11,6 @@ import {
     Friends,
     NPC as NPCPacket,
     Overlay,
-    Player as PlayerPacket,
     Points,
     Poison as PoisonPacket,
     Quest,
@@ -44,9 +44,6 @@ export default class Handler {
     public constructor(private player: Player) {
         this.world = player.world;
         this.map = player.world.map;
-
-        // Disconnect callback
-        this.player.connection.onClose(this.handleClose.bind(this));
 
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
@@ -120,53 +117,20 @@ export default class Handler {
     }
 
     /**
-     * Called after receiving the ready backet. Signals to the handler that we should
+     * Called after receiving the ready packet. Signals to the handler that we should
      * start loading our update interval timer.
      */
 
     public startUpdateInterval(): void {
-        this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
-    }
+        this.updateInterval = setInterval(() => {
+            if (this.isTickInterval(4)) this.detectAggro();
+            if (this.isTickInterval(32)) {
+                this.player.loiter();
+                this.player.cheatScore = 0;
+            }
 
-    /**
-     * Callback handler for when the player's connection is closed.
-     */
-
-    private handleClose(): void {
-        // Stops character based intervals.
-        this.player.stop();
-
-        this.clear();
-
-        this.world.discord.sendMessage(this.player.username, 'has logged out!');
-
-        this.world.client.send(
-            new PlayerPacket(Opcodes.Player.Logout, {
-                username: this.player.username,
-                guild: this.player.guild
-            })
-        );
-
-        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
-
-        this.player.trade.close();
-
-        this.player.combat.stop();
-
-        this.player.skills.stop();
-
-        this.player.clearAreas();
-
-        this.player.minigameArea?.exitCallback?.(this.player);
-
-        this.world.cleanCombat(this.player);
-
-        this.world.syncFriendsList(this.player.username, true);
-        this.world.syncGuildMembers(this.player.guild, this.player.username, true);
-
-        this.player.save();
-
-        this.world.entities.removePlayer(this.player);
+            this.updateTicks++;
+        }, this.updateTime);
     }
 
     /**
@@ -175,6 +139,7 @@ export default class Handler {
 
     private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+        this.player.status.clear();
 
         if (attacker) {
             attacker.clearTarget();
@@ -205,7 +170,6 @@ export default class Handler {
         this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
-        this.player.status.clear();
 
         this.player.save();
 
@@ -256,9 +220,22 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+        /**
+         * Handles entering through a door that requires a level. If no skill is specified
+         * then we use the player's combat level, otherwise we use the level of the skill
+         * that was specified.
+         */
+
+        if (door.level) {
+            let level = door.skill
+                    ? this.player.skills.get(Utils.getSkill(door.skill)!).level
+                    : this.player.level,
+                message = door.skill
+                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
+                    : `Your combat level must be at least ${door.level} to enter.`;
+
+            if (level < door.level) return this.player.notify(message);
+        }
 
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
@@ -535,7 +512,7 @@ export default class Handler {
         drop?: boolean
     ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
-        if (drop && !this.player.isCheater()) {
+        if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
@@ -704,6 +681,10 @@ export default class Handler {
         // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
+        // Used to toggle interaction with the containers.
+        if (npc.role === 'banker' || npc.role === 'enchanter')
+            this.player.canAccessContainer = true;
+
         switch (npc.role) {
             case 'banker': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
@@ -801,17 +782,6 @@ export default class Handler {
                 maxMana: this.player.mana.getMaxMana()
             })
         );
-    }
-
-    /**
-     * Callback function for the update that gets called every `updateTime` seconds.
-     */
-
-    private handleUpdate(): void {
-        if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(16)) this.player.cheatScore = 0;
-
-        this.updateTicks++;
     }
 
     /**
@@ -915,7 +885,7 @@ export default class Handler {
      * Clears the timeouts and nullifies them (used for disconnection);
      */
 
-    private clear(): void {
+    public clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
 

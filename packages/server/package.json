@@ -3,11 +3,13 @@
     "type": "module",
     "scripts": {
         "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "yarn start --watch",
+        "dev": "tsx watch --preserve-symlinks ./src/main.ts",
         "build": "tsc --noEmit"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
+        "@sentry/node": "^7.45.0",
+        "@sentry/tracing": "^7.45.0",
         "axios": "^1.2.3",
         "bcryptjs": "^2.4.3",
         "discord.js": "^14.3.0",
@@ -29,6 +31,6 @@
         "@types/node": "^18.15.5",
         "@types/sanitizer": "^0.0.28",
         "@types/websocket": "^1.0.5",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.4"
     }
 }

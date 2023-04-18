@@ -15,6 +15,7 @@ export interface SlotData {
     name?: string;
     description?: string;
     edible?: boolean;
+    interactable?: boolean;
     equippable?: boolean;
     price?: number;
     attackStats?: Stats;
