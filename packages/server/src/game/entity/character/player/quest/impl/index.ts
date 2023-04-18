@@ -10,6 +10,7 @@ import artsandcrafts from './artsandcrafts';
 import scavenger from './scavenger';
 import minersquest2 from './minersquest2';
 import royaldrama from './royaldrama';
+import clamchowder from './clamchowder';
 
 export default {
     tutorial,
@@ -23,5 +24,6 @@ export default {
     artsandcrafts,
     scavenger,
     minersquest2,
-    royaldrama
+    royaldrama,
+    clamchowder
 };

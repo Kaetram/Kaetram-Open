@@ -866,5 +866,46 @@
         }
       }
     }
+  },
+
+  "clamchowder": {
+    "name": "Clam Chowder",
+    "description": "Some human being needs your help in the ice world.|Someone, somewhere, I can't say where because I'm spoiling what's upcoming in this game needs your help to make some clam chowder. You know, I feel like I'm spoiling it already by telling you what the quest requires but knowing how these quests are setup should tell you that it may not just be about clam chowder.",
+    "reward": ["Nothing in particular"],
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "bluebikinigirlnpc",
+        "text": [
+          "Oh hello, you look particularly capable of running some errands.",
+          "You see, I was trying to cook some clam chowder but I'm missing the ingredients",
+          "primarily the clam meat.", "Could you defeat some clams and bring me some meat?",
+          "Lets say 5 of them?"
+        ],
+        "completedText": [
+          "Please bring me 5 clam meat."
+        ]
+      },
+
+      "1": {
+        "task": "talk",
+        "npc": "bluebikinigirlnpc",
+        "hasItemText": [
+          "Oh no adventurer, I almost forgot!",
+          "I don't actually need the clam chowder.",
+          "Okay, so my grandmother is very sick and I need you",
+          "to find out where she is.", "I was supposed to take care",
+          "of her but I really wanted to go to the ice beach.",
+          "I know one of the villagers might've seen her recently."
+        ],
+
+        "completedText": [
+          "Please find out where my grandmother is."
+        ],
+
+        "itemRequirement": ["clamobject"],
+        "itemCountRequirement": 5
+      }
+    }
   }
 }
