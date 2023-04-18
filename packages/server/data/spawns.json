@@ -181,5 +181,14 @@
     "achievement": "mermaidguard",
     "defenseLevel": 28,
     "level": 55
+  },
+
+  "1016-682": {
+    "name": "Dark Wolf",
+    "miniboss": true,
+    "achievement": "roadtohell",
+    "hitPoints": 1050,
+    "attackLevel": 54,
+    "attackRate": 800
   }
 }

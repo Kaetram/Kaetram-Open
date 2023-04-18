@@ -286,6 +286,15 @@
         "rewardExperience": 52600
     },
 
+    "roadtohell": {
+        "name": "Road to Hell",
+        "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 4000
+    },
+
     "hellhound": {
         "name": "Hellhound",
         "description": "Defeat the hellhound in the hell dungeon!",

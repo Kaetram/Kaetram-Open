@@ -1040,17 +1040,18 @@
     "name": "Pink Sword",
     "weaponType": "sword",
     "price": 30000,
-    "level": 256,
+    "skill": "accuracy",
+    "level": 70,
     "attackStats": {
-      "crush": 50,
-      "slash": 70,
+      "crush": 60,
+      "slash": 80,
       "stab": 30,
       "archery": 0,
       "magic": 20
     },
     "bonuses": {
-      "accuracy": 6,
-      "strength": 40,
+      "accuracy": 28,
+      "strength": 45,
       "archery": 0,
       "magic": 0
     }
@@ -1070,7 +1071,7 @@
       "magic": 30
     },
     "bonuses": {
-      "accuracy": 10,
+      "accuracy": 18,
       "strength": 60,
       "archery": 0,
       "magic": 0
@@ -3275,7 +3276,7 @@
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 44,
+      "archery": 42,
       "magic": 0
     }
   },
@@ -3307,19 +3308,19 @@
     "name": "Blood Bow",
     "weaponType": "bow",
     "skill": "archery",
-    "level": 58,
+    "level": 62,
     "price": 12201,
     "attackStats": {
       "crush": 2,
       "slash": 4,
       "stab": 3,
-      "archery": 70,
+      "archery": 72,
       "magic": 0
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
-      "archery": 50,
+      "archery": 52,
       "magic": 0
     }
   },
