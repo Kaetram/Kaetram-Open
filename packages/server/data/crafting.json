@@ -15,6 +15,36 @@
             }
         },
 
+        "bowlsmall": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "stick",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bowlmedium": {
+            "level": 5,
+            "experience": 30,
+            "requirements": [
+                {
+                    "key": "stick",
+                    "count": 4
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "arrow": {
             "level": 1,
             "experience": 10,
@@ -98,7 +128,7 @@
             "experience": 50,
             "requirements": [
                 {
-                    "key": "bowlsmall",
+                    "key": "bowlmedium",
                     "count": 1
                 },
                 {
@@ -121,7 +151,7 @@
             "experience": 65,
             "requirements": [
                 {
-                    "key": "bowlsmall",
+                    "key": "bowlmedium",
                     "count": 1
                 },
                 {
@@ -161,6 +191,80 @@
                 {
                     "key": "clamobject",
                     "count": 1
+                },
+
+                {
+                    "key": "potato",
+                    "count": 1
+                },
+
+                {
+                    "key": "bowlsmall",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "rawsausage": {
+            "level": 15,
+            "experience": 100,
+            "requirements": [
+                {
+                    "key": "rawbeef",
+                    "count": 1
+                },
+                {
+                    "key": "rawchicken",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "cookedchicken": {
+            "level": 15,
+            "experience": 100,
+            "requirements": [
+                {
+                    "key": "rawchicken",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+        
+        "cookedbeef": {
+            "level": 15,
+            "experience": 100,
+            "requirements": [
+                {
+                    "key": "rawbeef",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "cookedsausage": {
+            "level": 15,
+            "experience": 100,
+            "requirements": [
+                {
+                    "key": "rawsausage",
+                    "count": 1
                 }
             ],
 
@@ -180,6 +284,21 @@
                 {
                     "key": "kelp",
                     "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "hotsauce": {
+            "level": 25,
+            "experience": 150,
+            "requirements": [
+                {
+                    "key": "chilli",
+                    "count": 5
                 }
             ],
 
@@ -472,29 +591,14 @@
                 "count": 1
             }
         },
-
-        "bowlsmall": {
-            "level": 1,
-            "experience": 20,
+        
+        "bucket": {
+            "level": 10,
+            "experience": 35,
             "requirements": [
                 {
-                    "key": "stick",
-                    "count": 2
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
-        },
-
-        "bowlmedium": {
-            "level": 5,
-            "experience": 30,
-            "requirements": [
-                {
-                    "key": "stick",
-                    "count": 4
+                    "key": "logs",
+                    "count": 5
                 }
             ],
 
@@ -595,21 +699,6 @@
                 {
                     "key": "icebead",
                     "count": 1
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
-        },
-
-        "bucket": {
-            "level": 10,
-            "experience": 35,
-            "requirements": [
-                {
-                    "key": "logs",
-                    "count": 5
                 }
             ],
 

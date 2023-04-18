@@ -5196,6 +5196,7 @@
     "price": 1000,
     "description": "A delicious soup made from clams. It's a bit salty though.",
     "edible": true,
+    "smallBowl": true,
     "plugin": "healingitem",
     "healAmount": 750
   },
@@ -5239,6 +5240,13 @@
     "name": "Kelp",
     "price": 100,
     "description": "Kelp is a type of seaweed that grows in water. It's pretty tasty when combined with other stuff."
+  },
+
+  "rawbeef": {
+    "type": "object",
+    "name": "Raw Beef",
+    "price": 100,
+    "description": "A piece of raw beef. It's probably not the best idea to eat it raw."
   },
 
   "rawtuna": {
@@ -5346,6 +5354,9 @@
     "type": "object",
     "name": "Cooked Chicken",
     "description": "A delicious piece of chicken. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 300,
     "price": 100
   },
 
@@ -5360,6 +5371,9 @@
     "type": "object",
     "name": "Cooked Pork",
     "description": "A delicious piece of pork. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 400,
     "price": 100
   },
 
@@ -5374,6 +5388,9 @@
     "type": "object",
     "name": "Cooked Sausage",
     "description": "A delicious sausage. It's pretty tasty.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 650,
     "price": 100
   },
 
@@ -5558,6 +5575,16 @@
     "price": 100
   },
 
+  "chilli": {
+    "type": "object",
+    "name": "Chilli",
+    "description": "A chilli pepper, it's hot so be careful.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healingAmount": 100,
+    "price": 100
+  },
+
   "waterbucket": {
     "type": "object",
     "name": "Water Bucket",
@@ -5661,6 +5688,7 @@
     "name": "Tomato Stew",
     "description": "A stew composed of tomato, mushrooms, and a bowl.",
     "edible": true,
+    "mediumBowl": true,
     "plugin": "healingitem",
     "healAmount": 500,
     "price": 600
@@ -5671,6 +5699,7 @@
     "name": "Corn Stew",
     "description": "A very filling stew, possibly the best stew currently available.",
     "edible": true,
+    "mediumBowl": true,
     "plugin": "healingitem",
     "healAmount": 800,
     "price": 900

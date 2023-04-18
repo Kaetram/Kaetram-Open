@@ -50,6 +50,10 @@ export default class Item extends Entity {
     public burning = false;
     public weaponType = '';
 
+    // Bowl variables
+    public smallBowl = false;
+    public mediumBowl = false;
+
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
     public defenseStats: Stats = Utils.getEmptyStats();
@@ -129,6 +133,8 @@ export default class Item extends Entity {
         this.description = this.data.description || this.description;
         this.manaCost = this.data.manaCost || this.manaCost;
         this.weaponType = this.data.weaponType || this.weaponType;
+        this.smallBowl = this.data.smallBowl || this.smallBowl;
+        this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -550,6 +556,22 @@ export default class Item extends Entity {
 
     public isMagicWeapon(): boolean {
         return this.itemType === 'weaponmagic';
+    }
+
+    /**
+     * @returns Whether or not the item is a small bowl item.
+     */
+
+    public isSmallBowl(): boolean {
+        return this.smallBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a medium bowl item.
+     */
+
+    public isMediumBowl(): boolean {
+        return this.mediumBowl;
     }
 
     /**
