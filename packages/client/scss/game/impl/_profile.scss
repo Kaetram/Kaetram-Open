@@ -244,6 +244,42 @@
             right: 6px * $i;
         }
 
+        #guilds-button,
+        #leaderboards-button {
+            width: 14px * $i;
+            height: 15px * $i;
+
+            background: url('/img/interface/main.png') no-repeat;
+            background-position-y: -314px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+
+                #guilds-button {
+            background-position: -280px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -294px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -308px * $i;
+            }
+        }
+
+        #leaderboards-button {
+            background-position: -238px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -252px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -266px * $i;
+            }
+        }
+
         .slot-background {
             z-index: -1;
             background: url('/img/interface/characterdialogsheet.png') -464px * $i -256px * $i;
