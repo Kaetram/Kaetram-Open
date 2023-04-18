@@ -7,6 +7,11 @@
                 "count": -1
             },
             {
+                "key": "knife",
+                "price": 500,
+                "count": -1
+            },
+            {
                 "key": "flask",
                 "count": 500,
                 "price": 100
@@ -156,9 +161,9 @@
                 "price": 670
             },
             {
-                "key": "goldore",
+                "key": "goldnugget",
                 "count": 0,
-                "price": 850
+                "price": 1650
             },
             {
                 "key": "iboore",
@@ -245,5 +250,55 @@
         "refresh": 600000,
         "restricted": true,
         "currency": "token"
+    },
+
+    "ingredientsstore": {
+        "items": [
+            {
+                "key": "bluelily",
+                "count": 1000
+            },
+            {
+                "key": "tomato",
+                "count": 100
+            },
+            {
+                "key": "mushroom1",
+                "count": 100
+            },
+            {
+                "key": "mushroom2",
+                "count": 100
+            },
+            {
+                "key": "egg",
+                "count": 10
+            },
+            {
+                "key": "corn",
+                "count": 10
+            },
+            {
+                "key": "rawpork",
+                "count": 100
+            },
+            {
+                "key": "rawchicken",
+                "count": 100
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
+    },
+
+    "fishingstore": {
+        "items": [
+            {
+                "key": "fishingpole",
+                "count": -1
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
     }
 }

@@ -206,13 +206,11 @@ export default class Character extends Entity {
      */
 
     public toggleHurt(): void {
-        if (this.dead || this.teleporting) return;
+        if (this.dead || this.teleporting || !this.hurtSprite) return;
 
         this.sprite = this.hurtSprite;
 
-        window.setTimeout(() => {
-            this.sprite = this.normalSprite;
-        }, 75);
+        window.setTimeout(() => (this.sprite = this.normalSprite), 100);
     }
 
     /**
@@ -393,12 +391,12 @@ export default class Character extends Entity {
 
         switch (action) {
             case Modules.Actions.Idle: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 
             case Modules.Actions.Orientate: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 
@@ -420,6 +418,9 @@ export default class Character extends Entity {
      */
 
     public override idle(o?: Modules.Orientation): void {
+        // Prevents the idle animation from affecting the walking animation.
+        if (this.hasPath()) return;
+
         let orientation = o || this.orientation;
 
         this.performAction(orientation, Modules.Actions.Idle);

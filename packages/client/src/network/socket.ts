@@ -93,12 +93,10 @@ export default class Socket {
      */
 
     public send(packet: number, data?: unknown): void {
-        let json = JSON.stringify([packet, data]);
-
         // Ensure the connection is open before sending.
         if (this.connection?.readyState !== WebSocket.OPEN) return;
 
-        this.connection.send(json);
+        this.connection.send(JSON.stringify([packet, data]));
     }
 
     /**

@@ -100,7 +100,8 @@
 
 #sidebar-list {
     li {
-        div.members-icon, div.chat-icon {
+        div.members-icon,
+        div.chat-icon {
             position: relative;
         }
     }
@@ -118,8 +119,7 @@
     }
 }
 
-.element-button-small,
-.element-button-large {
+.element-button {
     font-family: AdvoCut, sans-serif;
     color: white;
     text-align: center;
@@ -127,15 +127,27 @@
 }
 
 .slot-element {
-    span.name, span.count, span.server {
-        position: relative;
-        font-family: AdvoCut, sans-serif;
-        color: white;
+    display: flex;
+    align-items: center;
+
+    span.count {
+        flex: 1;
         text-align: center;
     }
 
+    span.name {
+        flex: 3;
+    }
+
     span.server {
-        float: right;
+        text-align: right;
+    }
+
+    span.count,
+    span.name,
+    span.server {
+        font-family: AdvoCut, sans-serif;
+        color: white;
     }
 
     span.red {
@@ -149,13 +161,10 @@
     span.green {
         color: #0f0;
     }
-
-    div.element-button-small {
-        position: relative;
-    }
 }
 
-.guild-banner-decoration, .banner-crest {
+.guild-banner-decoration,
+.banner-crest {
     position: absolute;
 }
 
@@ -193,27 +202,13 @@
             margin-top: 50%;
         }
 
-        #close-guilds {
-            width: 11px * $i;
-            height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-x: -124px * $i;
-            }
-
-            &:active, &.active {
-                background-position-x: -136px * $i;
-            }
-        }
-
         #create-guild {
             top: 76px * $i;
             left: -60px * $i;
         }
 
-        #banner-colours, #banner-outline-colours {
+        #banner-colours,
+        #banner-outline-colours {
             top: 34px * $i;
             width: 14px * $i;
             height: 150px * $i;
@@ -270,12 +265,12 @@
         #guild-leave {
             margin-top: -18px * $i;
         }
-        
+
         #sidebar-list {
             left: 138px * $i !important;
             width: 34px * $i;
             height: 57px * $i;
-            
+
             li {
                 margin-bottom: 2px * $i;
             }
@@ -300,31 +295,13 @@
         }
 
         .slot-element {
+            box-sizing: border-box;
             width: 125px * $i;
             height: 17px * $i;
+            padding-left: 18px * $i;
+
             background: url('/img/interface/guilds/frames.png') -400px * $i;
             background-size: calc(width('guilds/frames.png') * $i);
-
-            span.count {
-                top: 5px * $i;
-                left: 5px * $i;
-                width: 22px * $i;
-            }
-
-            span.name {
-                top: 5px * $i;
-                left: 18px * $i;
-            }
-
-            span.server {
-                top: 4px * $i;
-                left: -2px * $i;
-            }
-
-            div.element-button-small {
-                top: -6px * $i;
-                left: 97px * $i;
-            }
         }
 
         .crest-element {
@@ -339,7 +316,8 @@
                 background-position-x: -152px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-x: -179px * $i;
             }
         }
@@ -358,65 +336,46 @@
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
-        .element-button-small,
-        .element-button-small-red {
+        .element-button,
+        .element-button-red {
             width: 28px * $i;
             height: 14px * $i;
 
             line-height: 14px * $i;
 
-            background: url('/img/interface/guilds/elements.png') 0 -144px * $i;
+            background: url('/img/interface/guilds/elements.png') 0 -126px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
 
             &:hover {
-                background-position-y: -159px * $i;
+                background-position-y: -141px * $i;
             }
 
-            &:active, &.active {
-                background-position-y: -174px * $i;
-            }
-        }
-
-        .element-button-small-red {
-            background-position: 28px * $i 0;
-
-            &:hover {
-                background-position-y: -15px * $i;
-            }
-
-            &:active, &.active {
-                background-position-y: -30px * $i;
+            &:active,
+            &.active {
+                background-position-y: -156px * $i;
             }
         }
 
-        .element-button-large,
-        .element-button-large-red {
-            width: 36px * $i;
-            height: 18px * $i;
-
-            line-height: 19px * $i;
-
-            background: url('/img/interface/guilds/elements.png') 0 -192px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-y: -211px * $i;
-            }
-
-            &:active, &.active {
-                background-position-y: -230px * $i;
-            }
+        .element-button-red {
+            background-position-x: -29px * $i;
         }
 
-        .element-button-large-red {
-            background-position: 36px * $i -48 * $i;
+        .element-button-large {
+            width: 28px * $i * 1.25;
+            height: 14px * $i * 1.25;
+
+            line-height: 14px * $i * 1.25;
+
+            background: url('/img/interface/guilds/elements.png') 0 -126px * $i * 1.25;
+            background-size: calc(width('guilds/elements.png') * $i * 1.25);
 
             &:hover {
-                background-position-y: -67px * $i;
+                background-position-y: -141px * $i * 1.25;
             }
 
-            &:active, &.active {
-                background-position-y: -86px * $i;
+            &:active,
+            &.active {
+                background-position-y: -156px * $i * 1.25;
             }
         }
 
@@ -429,20 +388,24 @@
             &:hover {
                 background-position-y: -105px * $i;
 
-                div.members-icon, div.chat-icon {
+                div.members-icon,
+                div.chat-icon {
                     left: 7px * $i;
                 }
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-y: -63px * $i;
 
-                div.members-icon, div.chat-icon {
+                div.members-icon,
+                div.chat-icon {
                     left: 5px * $i;
                 }
             }
 
-            div.members-icon, div.chat-icon {
+            div.members-icon,
+            div.chat-icon {
                 top: 4px * $i;
                 left: 5px * $i;
             }
@@ -539,7 +502,8 @@
             background-size: calc(width('guilds/banners-outline.png') * $i);
         }
 
-        .banner-crest, .banner-crest-icon {
+        .banner-crest,
+        .banner-crest-icon {
             background: url('/img/interface/guilds/decorations.png') no-repeat;
             background-size: calc(width('guilds/decorations.png') * $i);
         }
@@ -563,7 +527,8 @@
             background-position-y: -240px * $i;
         }
 
-        .banner-colour-button, .banner-outline-button {
+        .banner-colour-button,
+        .banner-outline-button {
             width: 14px * $i;
             height: 15px * $i;
             background: url('/img/interface/guilds/elements.png') no-repeat;
@@ -734,7 +699,7 @@
     #guild-chat-input {
         font-size: 20px;
     }
-    
+
     .guilds-decoration {
         p {
             margin-top: -24px;
@@ -743,17 +708,15 @@
     }
 
     .slot-element {
-        span.name, span.count, span.server {
+        span.name,
+        span.count,
+        span.server {
             font-size: 22px;
         }
     }
 
-    .element-button-small {
+    .element-button {
         font-size: 18px;
-    }
-
-    .element-button-large {
-        font-size: 20px;
     }
 }
 
@@ -775,7 +738,9 @@
     }
 
     .slot-element {
-        span.name, span.count, span.server {
+        span.name,
+        span.count,
+        span.server {
             font-size: 14px;
         }
     }
@@ -783,7 +748,7 @@
 
 @media (--sm) {
     #guild-name-input,
-    #guild-chat-input { 
+    #guild-chat-input {
         font-size: 8px;
     }
 
@@ -799,37 +764,14 @@
     }
 
     .slot-element {
-        span.name, span.count, span.server {
+        span.name,
+        span.count,
+        span.server {
             font-size: 8px;
         }
-
-        span.count {
-            top: -2px;
-            left: 5px;
-            width: 22px;
-        }
-
-        span.name {
-            top: -2px;
-            left: 18px;
-        }
-
-        span.server {
-            top: 4px;
-            left: -3px;
-        }
-
-        div.element-button-small {
-            top: -14px;
-            left: 97px;
-        }
     }
 
-    .element-button-small {
+    .element-button {
         font-size: 7px;
-    }
-
-    .element-button-large {
-        font-size: 8px;
     }
 }

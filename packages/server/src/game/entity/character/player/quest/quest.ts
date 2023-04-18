@@ -7,7 +7,13 @@ import Utils from '@kaetram/common/util/utils';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import type {
+    QuestData,
+    RawQuest,
+    RawStage,
+    StageData,
+    HideNPC
+} from '@kaetram/common/types/quest';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
 import type Player from '../player';
@@ -20,7 +26,6 @@ type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
 type ResourceCallback = (type: Modules.Skills, resourceType: string) => void;
-
 export default abstract class Quest {
     /**
      * An abstract quest class that takes the raw quest data and
@@ -30,7 +35,9 @@ export default abstract class Quest {
     public name = '';
     private description = '';
     private rewards: string[] = [];
-    private hideNPCs: string[] = []; // NPCs to hide after quest.
+    private skillRequirements: { [key: string]: number } = {};
+    private questRequirements: string[] = []; // List of quests required to start this quest.
+    private hideNPCs: HideNPC = {}; // NPCs to hide after quest.
     protected stage = 0; // How far along in the quest we are.
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     protected stageCount = 0; // How long the quest is.
@@ -54,7 +61,9 @@ export default abstract class Quest {
         this.name = rawData.name;
         this.description = rawData.description;
         this.rewards = rawData.rewards || [];
-        this.hideNPCs = rawData.hideNPCs || [];
+        this.skillRequirements = rawData.skillRequirements || {};
+        this.questRequirements = rawData.questRequirements || [];
+        this.hideNPCs = rawData.hideNPCs || {};
         this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
@@ -86,8 +95,12 @@ export default abstract class Quest {
 
     private loadNPCs(): void {
         // Iterate through the stages and extract the NPCs
-        for (let stage of Object.values(this.stages))
-            if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
+        for (let i in this.stages)
+            if (this.stages[i].npc && !this.hasNPC(this.stages[i].npc!))
+                this.npcs.push(this.stages[i].npc!);
+
+        // Look through the hideNPCs object and extract the NPCs
+        for (let i in this.hideNPCs) if (!this.hasNPC(i)) this.npcs.push(i);
     }
 
     /**
@@ -195,13 +208,14 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemCountRequirement } = stageData;
+        let { itemRequirement, itemRequirementCount } = stageData;
 
         // Skip if the player does not have the required item and count in the inventory.
-        if (!player.inventory.hasItem(itemRequirement!, itemCountRequirement)) return;
+        if (!this.hasAllItems(player, itemRequirement!, itemRequirementCount)) return;
 
-        // Remove the item and count from the invnetory.
-        player.inventory.removeItem(itemRequirement!, itemCountRequirement);
+        // Iterate through the items and remove them from the player's inventory.
+        for (let i = 0; i < itemRequirement!.length; i++)
+            player.inventory.removeItem(itemRequirement![i], (itemRequirementCount || [])[i]);
 
         // If the stage contains item rewards, we give it to the player.
         if (this.hasItemToGive())
@@ -305,6 +319,52 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks that the player has all the items required to progress the next
+     * stage in the quest. We parse through every item requirement and ensure
+     * that the player has the item and count specified.
+     * @param player The player that we are checking the inventory of.
+     * @param itemRequirement The item requirement array, string array of item keys.
+     * @param itemRequirementCount The item requirement count array, number array of item counts.
+     * @returns Whether or not the player has all the items.
+     */
+
+    private hasAllItems(
+        player: Player,
+        itemRequirement: string[],
+        itemRequirementCount: number[] = []
+    ): boolean {
+        let hasItems = true;
+
+        // Iterate and ensure that the player has all the items.
+        for (let i = 0; i < itemRequirement!.length; i++)
+            if (!player.inventory.hasItem(itemRequirement![i], (itemRequirementCount || [])[i])) {
+                hasItems = false;
+                break;
+            }
+
+        return hasItems;
+    }
+
+    /**
+     * Checks if the player meets all of the skill and quest requirements.
+     * @param player The player that we are checking the requirements of.
+     * @returns Whether or not the player meets all the requirements.
+     */
+
+    public hasRequirements(player: Player): boolean {
+        // Iterate through the skills and check if the player has the required level.
+        for (let skill in this.skillRequirements)
+            if (player.skills.get(Utils.getSkill(skill)!).level < this.skillRequirements[skill])
+                return false;
+
+        // Iterate through the quests and check if the player has completed them.
+        for (let index in this.questRequirements)
+            if (!player.quests.get(this.questRequirements[index]).isFinished()) return false;
+
+        return true;
+    }
+
+    /**
      * A check if the quest is started or it has yet to be discovered.
      * @returns Whether the stage progress is above 0.
      */
@@ -323,14 +383,18 @@ export default abstract class Quest {
     }
 
     /**
-     * Checks whether the key of the NPC is contained within the array of
-     * NPCs to hide after the quest is completed.
+     * Checks whether the NPC is visible or not depending on the
+     * status of the quest and its existence in the hideNPCs dictionary.
      * @param key The key of the NPC we are checking.
      * @returns Boolean value if the NPC is visibile or not.
      */
 
-    public isHiddenNPC(key: string): boolean {
-        return this.hideNPCs.includes(key);
+    public isNPCVisible(key: string): boolean {
+        let npc = this.hideNPCs[key];
+
+        if (!npc) return true;
+
+        return npc === 'before' ? this.isFinished() : !this.isFinished();
     }
 
     /**
@@ -372,8 +436,8 @@ export default abstract class Quest {
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,
-            itemRequirement: stage.itemRequirement! || '',
-            itemCountRequirement: stage.itemCountRequirement! || 1,
+            itemRequirement: stage.itemRequirement! || [],
+            itemRequirementCount: stage.itemRequirementCount! || [],
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
@@ -412,7 +476,7 @@ export default abstract class Quest {
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (stage.itemRequirement! && this.stage === i) {
                 // Verify that the player has the required items and return the dialogue for it.
-                if (player.inventory.hasItem(stage.itemRequirement, stage.itemCountRequirement))
+                if (this.hasAllItems(player, stage.itemRequirement, stage.itemRequirementCount))
                     return stage.hasItemText!;
 
                 // Skip to next stage iteration.
@@ -484,6 +548,8 @@ export default abstract class Quest {
             data.name = this.name;
             data.description = this.description;
             data.rewards = this.rewards;
+            data.skillRequirements = this.skillRequirements;
+            data.questRequirements = this.questRequirements;
             data.stageCount = this.stageCount;
         }
 

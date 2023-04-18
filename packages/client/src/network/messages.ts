@@ -11,6 +11,7 @@ import type {
     CombatCallback,
     CommandCallback,
     ContainerCallback,
+    CraftingCallback,
     DeathCallback,
     DespawnCallback,
     EffectCallback,
@@ -95,6 +96,7 @@ export default class Messages {
     private effectCallback?: EffectCallback;
     private friendsCallback?: FriendsCallback;
     private rankCallback?: RankCallback;
+    private craftingCallback?: CraftingCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -151,6 +153,7 @@ export default class Messages {
         this.messages[Packets.Effect] = () => this.effectCallback;
         this.messages[Packets.Friends] = () => this.friendsCallback;
         this.messages[Packets.Rank] = () => this.rankCallback;
+        this.messages[Packets.Crafting] = () => this.craftingCallback;
     }
 
     /**
@@ -186,7 +189,7 @@ export default class Messages {
         this.app.toggleLogin(false);
 
         switch (message) {
-            case 'full': {
+            case 'worldfull': {
                 this.app.sendError('The servers are currently full!');
                 break;
             }
@@ -265,6 +268,11 @@ export default class Messages {
 
             case 'toomany': {
                 this.app.sendError('Too many devices from your IP address are connected.');
+                break;
+            }
+
+            case 'ratelimit': {
+                this.app.sendError('You are sending packets too fast.');
                 break;
             }
 
@@ -453,5 +461,9 @@ export default class Messages {
 
     public onRank(callback: RankCallback): void {
         this.rankCallback = callback;
+    }
+
+    public onCrafting(callback: CraftingCallback): void {
+        this.craftingCallback = callback;
     }
 }

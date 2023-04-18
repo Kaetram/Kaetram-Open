@@ -6,6 +6,7 @@ import type Map from '../../../map/map';
 import type Player from './player';
 import type Game from '../../../game';
 import type EntitiesController from '../../../controllers/entities';
+import type { TileIgnore } from '../../../utils/pathfinder';
 
 export default class Handler extends CharacterHandler {
     private map: Map;
@@ -59,19 +60,21 @@ export default class Handler extends CharacterHandler {
             following: this.character.following
         });
 
-        let ignores = [];
+        let ignores: TileIgnore[] = [],
+            cursor = '';
 
         // Treats an object as a character so we can path towards it.
-        if (isObject)
-            ignores.push({
-                gridX: x,
-                gridY: y,
-                hasPath() {
-                    return false;
-                }
-            } as Player);
+        if (isObject) {
+            ignores.push({ x, y });
 
-        return this.game.findPath(this.character, x, y, ignores);
+            cursor = this.map.getTileCursor(x, y);
+
+            // Little bit of a hack, but we ignore the tiles around the object for later.
+            if (cursor === 'fishing')
+                ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
+        }
+
+        return this.game.findPath(this.character, x, y, ignores, cursor);
     }
 
     /**
@@ -156,8 +159,7 @@ export default class Handler extends CharacterHandler {
         this.game.storage.setOrientation(this.character.orientation);
 
         // Reset the animated tiles when we stop moving.
-        if (!(this.character as Player).hasKeyboardMovement())
-            this.game.renderer.resetAnimatedTiles();
+        this.game.renderer.resetAnimatedTiles();
 
         // Reset movement and trading variables
         this.character.moving = false;

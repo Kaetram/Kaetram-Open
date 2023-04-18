@@ -22,3 +22,13 @@ declare interface Coordinate {
     gridX: number;
     gridY: number;
 }
+
+declare module '*.vert' {
+    let src: string;
+    export default src;
+}
+
+declare module '*.frag' {
+    let src: string;
+    export default src;
+}
