@@ -44,5 +44,21 @@
 
     "warriorcrab": {
         "bead": 10000
+    },
+
+    "vegetables": {
+        "onion": 500,
+        "chilli": 500,
+        "potato": 500,
+        "tomato": 500
+    },
+
+    "mushrooms": {
+        "mushroom1": 600,
+        "mushroom2": 600,
+        "mushroom3": 600,
+        "mushroom4": 600,
+        "mushroom5": 600,
+        "mushroom6": 600
     }
 }

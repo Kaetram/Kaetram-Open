@@ -825,7 +825,7 @@ export default class Commands {
 
                     if (!all && entity.isPlayer()) return;
 
-                    entity.deathCallback?.();
+                    entity.deathCallback?.(this.player);
                 });
 
                 this.player.notify(

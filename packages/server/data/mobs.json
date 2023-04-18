@@ -2,7 +2,7 @@
   "rat": {
     "name": "Rat",
     "description": "Ah yes, this rat is made out of rat.",
-    "drops": {"sword1": 1},
+    "drops": {"sword1": 1, "egg": 900},
     "hitPoints": 34,
     "defenseLevel": 1,
     "attackLevel": 1,
@@ -38,7 +38,7 @@
 
   "bat": {
     "name": "Batterfly",
-    "drops": {"leatherboots": 400},
+    "drops": {"leatherboots": 400, "egg": 800},
     "description": "A bat that is also a butterfly, what a strange creature.",
     "hitPoints": 68,
     "defenseLevel": 3,
@@ -671,7 +671,7 @@
   "cowwarrior": {
     "name": "Cow Warrior",
     "description": "The cows are rising up!",
-    "drops": {"cowarmor": 100},
+    "drops": {"cowarmor": 100, "rawbeef": 4000},
     "hitPoints": 800,
     "defenseLevel": 15,
     "attackLevel": 35,
@@ -708,7 +708,7 @@
   "rooster": {
     "name": "Angry Rooster",
     "description": "It's a sleeping rooster that attacks you...",
-    "drops": {},
+    "drops": {"rawchicken": 4000, "egg": 2000},
     "hitPoints": 800,
     "defenseLevel": 15,
     "attackLevel": 35,
@@ -1299,7 +1299,7 @@
   "clam": {
     "name": "Clam",
     "description": "Now this would make a good stew!",
-    "drops": {"spear": 400, "clamobject": 1000},
+    "drops": {"spear": 400, "clamobject": 2000},
     "hitPoints": 450,
     "defenseLevel": 6,
     "attackLevel": 1,

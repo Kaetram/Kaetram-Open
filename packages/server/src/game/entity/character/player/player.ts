@@ -14,6 +14,7 @@ import Incoming from './incoming';
 import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
+import Item from '../../objects/item';
 import Formulas from '../../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
@@ -43,7 +44,6 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
-import type Item from '../../objects/item';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -717,6 +717,11 @@ export default class Player extends Character {
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
                     this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
+
+                    if (item.isSmallBowl())
+                        this.inventory.add(new Item('bowlsmall', -1, -1, false, 1));
+                    else if (item.isMediumBowl())
+                        this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
