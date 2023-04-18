@@ -45,8 +45,6 @@
         #profile-button,
         #settings-button,
         #warp-button,
-        #guilds-button,
-        #leaderboards-button,
         #audio-button,
         #achievements-button,
         #quests-button,
@@ -124,32 +122,6 @@
             &.active,
             &:active {
                 background-position-x: -350px * $i;
-            }
-        }
-
-        #guilds-button {
-            background-position: -280px * $i -329px * $i;
-
-            &:hover {
-                background-position-x: -294px * $i;
-            }
-
-            &.active,
-            &:active {
-                background-position-x: -308px * $i;
-            }
-        }
-
-        #leaderboards-button {
-            background-position: -238px * $i -329px * $i;
-
-            &:hover {
-                background-position-x: -252px * $i;
-            }
-
-            &.active,
-            &:active {
-                background-position-x: -266px * $i;
             }
         }
 
