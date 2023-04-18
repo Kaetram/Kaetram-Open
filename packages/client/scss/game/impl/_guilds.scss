@@ -295,8 +295,11 @@
         }
 
         .slot-element {
+            box-sizing: border-box;
             width: 125px * $i;
             height: 17px * $i;
+            padding-left: 18px * $i;
+
             background: url('/img/interface/guilds/frames.png') -400px * $i;
             background-size: calc(width('guilds/frames.png') * $i);
         }
@@ -475,8 +478,6 @@
         }
 
         .slot-landlord {
-            box-sizing: border-box;
-            padding-left: 18px * $i;
             background-position-y: -126px * $i;
         }
 
