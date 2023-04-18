@@ -159,5 +159,18 @@
             "- Major improvements to the backend",
             "- And many more bug fixes and improvements"
         ]
+    },
+    "alpha-2.5.0": {
+        "title": "Kaetram alpha-2.5.0",
+        "content": [
+            "- Added 8 new skills",
+            "- Added new areas/bosses/achievements/quests",
+            "- Added many new items",
+            "- Increased inventory/bank size",
+            "- Fix status effects not being removed",
+            "- Fix bug with the death animation hanging",
+            "- Fix bug with character animations",
+            "- Many new features and bug fixes"
+        ]
     }
 }
