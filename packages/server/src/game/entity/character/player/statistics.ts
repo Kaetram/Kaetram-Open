@@ -61,8 +61,6 @@ export default class Statistics {
         for (let interval of intervals)
             if (this.resources[skillName] === interval)
                 return this.player.achievements.get(`${skillName}${interval}`).finish();
-
-        console.log(this.resources);
     }
 
     /**
