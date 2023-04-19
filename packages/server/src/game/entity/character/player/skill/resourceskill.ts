@@ -21,7 +21,6 @@ export default class ResourceSkill extends Skill {
      */
 
     public randomDepletion = false;
-    private doubleReward = false;
 
     public constructor(type: Modules.Skills, private data: ResourceData) {
         super(type);
@@ -67,7 +66,7 @@ export default class ResourceSkill extends Skill {
         if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
             return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
 
-        if (!player.inventory.hasSpace()) return player.notify(ResourceEn.INVENTORY_FULL);
+        if (!this.canHold(player)) return player.notify(ResourceEn.INVENTORY_FULL);
 
         /**
          * Stops the existing loop if the player is attempting to interact with the resource
@@ -135,6 +134,17 @@ export default class ResourceSkill extends Skill {
 
     protected getItem(key: string): Item {
         return new Item(key, -1, -1, false, 1);
+    }
+
+    /**
+     * Function to check whether or not we can hold the resource. We use this
+     * because of subclass implementations where double rewards are active.
+     * @param player The player that is attempting to hold the resource.
+     * @returns Whether or not the player has space in their inventory.
+     */
+
+    protected canHold(player: Player): boolean {
+        return player.inventory.hasSpace();
     }
 
     /**
