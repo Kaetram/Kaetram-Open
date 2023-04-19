@@ -418,9 +418,12 @@ export default class Mob extends Character {
             return undefined;
         }
 
-        return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
-            ? { key, count }
-            : undefined;
+        let probability = this.world.getDropProbability();
+
+        // If the chance is greater than the drop probability, we adjust the drop
+        if (drop > probability) drop = probability;
+
+        return Utils.randomInt(0, probability) < drop ? { key, count } : undefined;
     }
 
     /**

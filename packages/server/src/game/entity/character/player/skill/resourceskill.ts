@@ -21,6 +21,7 @@ export default class ResourceSkill extends Skill {
      */
 
     public randomDepletion = false;
+    private doubleReward = false;
 
     public constructor(type: Modules.Skills, private data: ResourceData) {
         super(type);
@@ -128,10 +129,11 @@ export default class ResourceSkill extends Skill {
     /**
      * Creates an item instance of the item that the resource rewards.
      * @param key The item key we are creating.
+     * @param count The amount of the item we are creating.
      * @returns The newly created item instance.
      */
 
-    private getItem(key: string): Item {
+    protected getItem(key: string): Item {
         return new Item(key, -1, -1, false, 1);
     }
 

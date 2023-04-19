@@ -442,10 +442,14 @@ export default class Player extends Character {
 
         this.notify(`Welcome back to ${config.name}!`);
 
-        let population = this.world.getPopulation();
+        let population = this.world.getPopulation(),
+            { activeEvent } = this.world.events;
 
         if (population > 1)
             this.notify(`There are currently ${population} players online.`, '', '', true);
+
+        if (activeEvent)
+            this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
     }
 
     /**
@@ -897,7 +901,7 @@ export default class Player extends Character {
         // Ignore invalid damage values.
         if (damage < 1) return;
 
-        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+        let experience = damage * this.world.getExperiencePerHit(),
             weapon = this.equipment.getWeapon();
 
         /**

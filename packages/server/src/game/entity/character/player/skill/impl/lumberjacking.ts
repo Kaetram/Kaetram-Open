@@ -1,6 +1,8 @@
 import ResourceSkill from '../resourceskill';
+import Item from '../../../../objects/item';
 import Trees from '../../../../../../../data/trees.json';
 
+import Utils from '@kaetram/common/util/utils';
 import ResourceEn from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 
@@ -28,5 +30,16 @@ export default class Lumberjacking extends ResourceSkill {
         if (!player.quests.canCutTreesInTutorial()) return player.notify(ResourceEn.NO_REASON);
 
         this.interact(player, tree, weapon.lumberjacking);
+    }
+
+    /**
+     * Override for the skill to add support for double rewards. This is used
+     * for special weekend events.
+     * @param key The key of the item we are creating.
+     * @returns The new item instance.
+     */
+
+    protected override getItem(key: string): Item {
+        return new Item(key, -1, -1, false, Utils.doubleLumberjacking ? 2 : 1);
     }
 }
