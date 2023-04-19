@@ -18,7 +18,7 @@
         #interact {
             width: 64px * $i;
             height: 30px * $i;
-            background: url('/img/interface/main.png') -336px * $i -464px * $i no-repeat;
+            background: url('/img/interface/main.png') -144px * $i -464px * $i no-repeat;
             background-size: calc(width('main.png') * $i);
 
             ul {

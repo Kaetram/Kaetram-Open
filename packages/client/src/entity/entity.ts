@@ -1,10 +1,10 @@
+import Animation from './animation';
+
 import Utils from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Animation from './animation';
 import type Sprite from './sprite';
-import type { Animations } from './sprite';
 
 export default abstract class Entity {
     public x = 0;
@@ -32,23 +32,20 @@ export default abstract class Entity {
 
     public animation!: Animation | null;
 
-    private animations!: Animations;
-    protected idleSpeed = 450;
-
     public shadowOffsetY = 0;
     public hidden = false;
 
-    public spriteLoaded = false;
     private visible = true;
+
     public fading = false;
 
-    public angled = false;
     public angle = 0;
+    public angled = false;
 
     public hasCounter = false;
 
-    public countdownTime = 0;
     public counter = 0;
+    public countdownTime = 0;
     public fadingDuration = 1000;
 
     public orientation: Modules.Orientation = Modules.Orientation.Down;
@@ -58,10 +55,9 @@ export default abstract class Entity {
 
     public normalSprite!: Sprite;
     public hurtSprite!: Sprite;
+    public silhouetteSprite!: Sprite;
 
     public ready = false;
-
-    private readyCallback?(): void;
 
     public hitPoints = 0;
     public maxHitPoints = 0;
@@ -127,36 +123,61 @@ export default abstract class Entity {
     }
 
     /**
+     * Updates the entity's silhouette sprite.
+     * @param active Whether or not to show the silhouette.
+     */
+
+    public updateSilhouette(active = false): void {
+        if (!this.silhouetteSprite) return;
+
+        this.sprite = active ? this.silhouetteSprite : this.normalSprite;
+    }
+
+    /**
      * Updates the sprite of the entity with a new one.
      * @param sprite The new sprite object (obtained using the sprites controller).
      */
 
     public setSprite(sprite: Sprite): void {
-        if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
+        // Load the sprite if it hasn't been loaded yet.
+        if (!sprite.loaded) {
+            sprite.load();
 
-        if (this.isPlayer()) sprite.loadHurt = true;
-
-        if (!sprite.loaded) sprite.load();
-
-        sprite.name = sprite.id;
+            // Make sure we're not setting the same sprite.
+            if (this.sprite?.key === sprite.key) return;
+        }
 
         this.sprite = sprite;
+        this.normalSprite = sprite;
 
-        this.normalSprite = this.sprite;
-        this.animations = sprite.createAnimations();
+        /**
+         * Attempt to reload the sprite if it's still loading, we do this
+         * because we want all elements of the sprite (hurt sprite, silhouette)
+         * to be fully loaded and then apply them to the entity.
+         */
+
+        if (sprite.loading) {
+            setTimeout(() => this.setSprite(sprite), 100);
+            return;
+        }
+
+        // Load the hurt and silhouette sprites if they exist.
+        if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
+        if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
 
         sprite.onLoad(() => {
-            if (sprite.loadHurt) this.hurtSprite = sprite.hurtSprite;
+            this.normalSprite = sprite;
 
-            if (this.customScale) {
-                this.sprite.offsetX *= this.customScale;
-                this.sprite.offsetY *= this.customScale;
-            }
+            // Load the hurt and silhouette sprites if they exist.
+            if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
+            if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
+
+            // Custom scales can be applied to certain entities.
+            if (!this.customScale) return;
+
+            this.sprite.offsetX *= this.customScale;
+            this.sprite.offsetY *= this.customScale;
         });
-
-        this.spriteLoaded = true;
-
-        this.readyCallback?.();
     }
 
     /**
@@ -169,17 +190,18 @@ export default abstract class Entity {
 
     public setAnimation(
         name: string,
-        speed = this.idleSpeed,
-        count = 0,
+        speed = this.sprite.idleSpeed,
+        count = 1,
         onEndCount?: () => void
     ): void {
-        if (!this.spriteLoaded || this.animation?.name === name) return;
+        // Prevent setting animation if no sprite or it's the same animation.
+        if (this.animation?.name === name) return;
 
-        let anim = this.animations[name];
+        // Copy the animation data from the sprite.
+        let { length, row, width, height } = this.sprite.animations[name];
 
-        if (!anim) return;
-
-        this.animation = anim;
+        // Create a new animation instance to prevent pointer issues.
+        this.animation = new Animation(name, length, row, width, height);
 
         // Restart the attack animation if it's already playing.
         if (name.startsWith('atk')) this.animation.reset();
@@ -236,15 +258,6 @@ export default abstract class Entity {
 
     private setVisible(visible: boolean): void {
         this.visible = visible;
-    }
-
-    /**
-     * Updates the current idle speed of the entity.
-     * @param idleSpeed New idle speed to set.
-     */
-
-    public setIdleSpeed(idleSpeed: number): void {
-        this.idleSpeed = idleSpeed;
     }
 
     /**

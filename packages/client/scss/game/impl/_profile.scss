@@ -17,6 +17,33 @@
     overflow: auto;
 }
 
+#armour-slot-info {
+    text-align: right;
+}
+
+#arrows-count {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#profile-info {
+    position: absolute;
+    display: none;
+}
+
+#attack-style-list {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+#guilds-button, #leaderboards-button {
+    position: absolute;
+}
+
 .profession-item {
     width: 100%;
     height: 10%;
@@ -37,10 +64,6 @@
 
     background-color: rgb(51 153 255 / 40%);
     border: 2px solid #373737;
-}
-
-#armour-slot-info {
-    text-align: right;
 }
 
 .profile-info {
@@ -89,18 +112,6 @@
     transition: 0.5s width ease;
 }
 
-#arrows-count {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-}
-
-#profile-info {
-    position: absolute;
-    display: none;
-}
-
 .profile-info-title,
 .profile-info-details {
     position: absolute;
@@ -110,13 +121,6 @@
 
 .attack-style {
     position: absolute;
-}
-
-#attack-style-list {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
 }
 
 @each $size, $i in media.$sizes {
@@ -214,6 +218,68 @@
             background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
+        #arrows-count {
+            top: 19px * $i;
+            left: 2px * $i;
+        }
+
+        #profile-level {
+            top: 8px * $i;
+        }
+
+        #profile-experience {
+            top: 29px * $i;
+        }
+
+        #guilds-button,
+        #leaderboards-button {
+            bottom: 8px * $i;
+        }
+
+        #guilds-button {
+            left: 6px * $i;
+        }
+
+        #leaderboards-button {
+            right: 6px * $i;
+        }
+
+        #guilds-button,
+        #leaderboards-button {
+            width: 14px * $i;
+            height: 15px * $i;
+
+            background: url('/img/interface/main.png') no-repeat;
+            background-position-y: -314px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+
+                #guilds-button {
+            background-position: -280px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -294px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -308px * $i;
+            }
+        }
+
+        #leaderboards-button {
+            background-position: -238px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -252px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -266px * $i;
+            }
+        }
+
         .slot-background {
             z-index: -1;
             background: url('/img/interface/characterdialogsheet.png') -464px * $i -256px * $i;
@@ -258,19 +324,6 @@
         .arrows-slot {
             top: 86px * $i;
             left: 79px * $i;
-        }
-
-        #arrows-count {
-            top: 19px * $i;
-            left: 2px * $i;
-        }
-
-        #profile-level {
-            top: 8px * $i;
-        }
-
-        #profile-experience {
-            top: 29px * $i;
         }
 
         .navigator {
@@ -400,6 +453,41 @@
         .skill-image-fishing {
             background: url('/img/interface/skills/fishing.png');
             background-size: calc(width('skills/fishing.png') * $i);
+        }
+
+        .skill-image-smithing {
+            background: url('/img/interface/skills/smithing.png');
+            background-size: calc(width('skills/smithing.png') * $i);
+        }
+
+        .skill-image-cooking {
+            background: url('/img/interface/skills/cooking.png');
+            background-size: calc(width('skills/cooking.png') * $i);
+        }
+
+        .skill-image-fletching {
+            background: url('/img/interface/skills/fletching.png');
+            background-size: calc(width('skills/fletching.png') * $i);
+        }
+
+        .skill-image-crafting {
+            background: url('/img/interface/skills/crafting.png');
+            background-size: calc(width('skills/crafting.png') * $i);
+        }
+
+        .skill-image-foraging {
+            background: url('/img/interface/skills/foraging.png');
+            background-size: calc(width('skills/foraging.png') * $i);
+        }
+
+        .skill-image-eating {
+            background: url('/img/interface/skills/eating.png');
+            background-size: calc(width('skills/eating.png') * $i);
+        }
+
+        .skill-image-loitering {
+            background: url('/img/interface/skills/loitering.png');
+            background-size: calc(width('skills/loitering.png') * $i);
         }
 
         #achievement-count,
@@ -613,7 +701,7 @@
             width: 16px * $i;
             height: 16px * $i;
             margin-top: 10px * $i;
-            margin-left: 10px * $i;
+            margin-left: 9px * $i;
         }
 
         .profile-info-title {

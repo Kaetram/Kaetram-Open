@@ -9,13 +9,17 @@ export default class HUDController {
 
     private attackInfo = $('#attack-info');
 
-    private name = this.attackInfo.find('.name');
-    private details = this.attackInfo.find('.details');
-    private health = this.attackInfo.find('.health');
+    private name;
+    private details;
+    private health;
 
     public updateCallback?: (id: string, data: number) => void;
 
     public constructor(private input: InputController) {
+        this.name = this.attackInfo.find('.name');
+        this.details = this.attackInfo.find('.details');
+        this.health = this.attackInfo.find('.health');
+
         this.onUpdate(this.handleUpdate.bind(this));
     }
 

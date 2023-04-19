@@ -48,7 +48,8 @@ export default class Commands {
     private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'players': {
-                let population = this.world.getPopulation(),
+                let players = this.world.entities.getPlayerUsernames(),
+                    population = players.length,
                     singular = population === 1;
 
                 this.player.notify(
@@ -56,6 +57,9 @@ export default class Commands {
                         singular ? 'person' : 'people'
                     } online.`
                 );
+
+                // Show the names of the players that are online.
+                if (this.player.isAdmin()) this.player.notify(players.join(', '));
 
                 return;
             }
@@ -179,7 +183,10 @@ export default class Commands {
                 if (!player)
                     return this.player.notify(`Could not find player with name: ${username}`);
 
-                player.connection.close(`${this.player.username} kicked ${username}`);
+                player.connection.close(
+                    `${this.player.username} kicked ${username}`,
+                    command === 'forcekick'
+                );
 
                 break;
             }
@@ -818,7 +825,7 @@ export default class Commands {
 
                     if (!all && entity.isPlayer()) return;
 
-                    entity.deathCallback?.();
+                    entity.deathCallback?.(this.player);
                 });
 
                 this.player.notify(
@@ -942,6 +949,10 @@ export default class Commands {
                 if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
 
                 this.player.setPet(key);
+            }
+
+            case 'opencrafting': {
+                return this.world.crafting.open(this.player, Modules.Skills.Crafting);
             }
 
             case 'toggle': {

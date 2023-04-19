@@ -22,6 +22,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
+    public interactable = false;
     public maxStackSize = 1; // Default max stack size.
     public plugin: Plugin | undefined;
 
@@ -49,6 +50,10 @@ export default class Item extends Entity {
     public burning = false;
     public weaponType = '';
 
+    // Bowl variables
+    public smallBowl = false;
+    public mediumBowl = false;
+
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
     public defenseStats: Stats = Utils.getEmptyStats();
@@ -62,6 +67,7 @@ export default class Item extends Entity {
     public maxCount = -1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
     public mining = -1;
+    public fishing = -1;
     public attackRange = 1;
 
     public exists = true;
@@ -103,6 +109,7 @@ export default class Item extends Entity {
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
+        this.interactable = this.data.interactable || this.interactable;
         this.maxStackSize = this.getMaxStackSize(this.data.maxStackSize);
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
@@ -118,6 +125,7 @@ export default class Item extends Entity {
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
+        this.fishing = this.data.fishing || this.fishing;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
@@ -125,6 +133,8 @@ export default class Item extends Entity {
         this.description = this.data.description || this.description;
         this.manaCost = this.data.manaCost || this.manaCost;
         this.weaponType = this.data.weaponType || this.weaponType;
+        this.smallBowl = this.data.smallBowl || this.smallBowl;
+        this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -216,7 +226,7 @@ export default class Item extends Entity {
          */
 
         if (this.skill) {
-            let skill = player.skills.get(Utils.getSkill(this.skill));
+            let skill = player.skills.get(Utils.getSkill(this.skill)!);
 
             // Separate conditional if skill exists.
             if (skill)
@@ -266,7 +276,7 @@ export default class Item extends Entity {
      * @returns Equipment type from Modules.
      */
 
-    public getEquipmentType(): Modules.Equipment {
+    public getEquipmentType(): Modules.Equipment | undefined {
         switch (this.itemType) {
             case 'armour':
             case 'armourarcher': {
@@ -303,8 +313,6 @@ export default class Item extends Entity {
                 return Modules.Equipment.Arrows;
             }
         }
-
-        return -1;
     }
 
     /**
@@ -480,6 +488,14 @@ export default class Item extends Entity {
     }
 
     /**
+     * Check if the item is enchanted.
+     * @returns Whether or not the item has any enchantments.
+     */
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
+    }
+
+    /**
      * Check if the item is owned by the player. An item owned by the player
      * can only be picked up by that player. Once the item starts blinking,
      * its ownership is renounced.
@@ -540,6 +556,22 @@ export default class Item extends Entity {
 
     public isMagicWeapon(): boolean {
         return this.itemType === 'weaponmagic';
+    }
+
+    /**
+     * @returns Whether or not the item is a small bowl item.
+     */
+
+    public isSmallBowl(): boolean {
+        return this.smallBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a medium bowl item.
+     */
+
+    public isMediumBowl(): boolean {
+        return this.mediumBowl;
     }
 
     /**

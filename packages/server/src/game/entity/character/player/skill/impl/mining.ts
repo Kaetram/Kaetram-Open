@@ -1,8 +1,8 @@
 import ResourceSkill from '../resourceskill';
 import Rocks from '../../../../../../../data/rocks.json';
 
-import ResourceEn from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
+import ResourceEn from '@kaetram/common/text/en/resource';
 
 import type Player from '../../player';
 import type Resource from '../../../../../globals/impl/resource';

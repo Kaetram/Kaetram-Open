@@ -18,21 +18,32 @@ class Log {
     private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
 
-    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
-    private logStream = fs.createWriteStream(this.logStreamPath);
-    private bugStream = fs.createWriteStream(this.bugStreamPath);
+    private stream;
+    private logStream;
+    private bugStream;
 
     private logFolderPath = '../logs';
 
-    private chatStream = this.createLogStream('chat');
-    private dropsStream = this.createLogStream('drops');
-    private generalStream = this.createLogStream('general');
-    private storesStream = this.createLogStream('stores');
-    private tradesStream = this.createLogStream('trades');
+    private chatStream;
+    private dropsStream;
+    private generalStream;
+    private storesStream;
+    private tradesStream;
 
     private debugging = config.debugging;
 
     public constructor() {
+        this.stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
+
+        this.logStream = fs.createWriteStream(this.logStreamPath);
+        this.bugStream = fs.createWriteStream(this.bugStreamPath);
+
+        this.chatStream = this.createLogStream('chat');
+        this.dropsStream = this.createLogStream('drops');
+        this.generalStream = this.createLogStream('general');
+        this.storesStream = this.createLogStream('stores');
+        this.tradesStream = this.createLogStream('trades');
+
         if (!fs.existsSync(this.logFolderPath)) fs.mkdirSync(this.logFolderPath);
     }
 
@@ -64,6 +75,12 @@ class Log {
         this.send('error', data, 41, 'critical');
     }
 
+    public assert(assertion: boolean, ...data: unknown[]): void {
+        if (assertion) return;
+
+        this.send('error', data, 41, 'assert');
+    }
+
     public notice(...data: unknown[]): void {
         this.send('log', data, 32, 'notice');
     }
@@ -73,6 +90,8 @@ class Log {
     }
 
     public bug(...data: unknown[]): void {
+        this.warning(data);
+
         this.write(new Date(), '[BUG]', data, this.bugStream);
     }
 

@@ -6,6 +6,7 @@ import santa from './santa';
 import skeletonking from './skeletonking';
 import piratecaptain from './piratecaptain';
 import spider from './spider';
+import hellhound from './hellhound';
 
 export default {
     ogrelord,
@@ -15,5 +16,6 @@ export default {
     forestdragon,
     santa,
     piratecaptain,
-    spider
+    spider,
+    hellhound
 };

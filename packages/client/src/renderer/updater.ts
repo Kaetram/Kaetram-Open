@@ -38,7 +38,7 @@ export default class Updater {
     private updateEntities(): void {
         this.game.entities.forEachEntity((entity: Entity) => {
             // Nothing to render if no sprite is loaded.
-            if (!entity.spriteLoaded) return;
+            if (!entity.sprite?.loaded) return;
 
             this.updateFading(entity);
 

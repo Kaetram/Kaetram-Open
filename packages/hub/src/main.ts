@@ -7,6 +7,7 @@ import Servers from './controllers/servers';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
+import Utils from '@kaetram/common/util/utils';
 
 export default class Main {
     private cache: Cache = new Cache();
@@ -27,6 +28,7 @@ export default class Main {
         // Callbacks for the server handler.
         this.servers.onAdd(this.handleAdd.bind(this));
         this.servers.onRemove(this.handleRemove.bind(this));
+        this.servers.onPlayer(this.handlePlayer.bind(this));
         this.servers.onMessage(this.discord.sendMessage.bind(this.discord));
 
         if (this.handler.ready) log.notice(`Hub is now listening on port: ${config.hubWsPort}.`);
@@ -58,14 +60,31 @@ export default class Main {
     }
 
     /**
-     * Callback handler for when servers undergo an update in their data. This is
-     * usually for the player count that we then update the Discord bot with.
+     * Callback for when a player logs out or logs into any of the servers. We use this
+     * to send a message to the Discord bot and to update the population.
+     * @param username The username of the player that logged in or out.
+     * @param serverId The id of the server that the player logged in or out of.
+     * @param logout Whether or not the player logged out.
+     * @param population The current population of all the servers.
      */
 
-    private handleUpdate(): void {
-        let players = this.servers.getTotalPlayers();
+    private handlePlayer(
+        username: string,
+        serverId: number,
+        logout: boolean,
+        population: number
+    ): void {
+        this.discord.sendMessage(
+            Utils.formatName(username),
+            logout ? 'has logged out!' : 'has logged in!',
+            `${config.name} ${serverId}`,
+            false
+        );
 
-        this.discord.setTopic(`Currently ${players} player${players === 1 ? '' : 's'} online.`);
+        // Update the population of the Discord server.
+        this.discord.setTopic(
+            `Currently ${population} player${population === 1 ? '' : 's'} online.`
+        );
     }
 }
 
