@@ -41,4 +41,15 @@ export default class Mining extends ResourceSkill {
     protected override getItem(key: string): Item {
         return new Item(key, -1, -1, false, Utils.doubleMining ? 2 : 1);
     }
+
+    /**
+     * Override for the `canHold` function where we check the special
+     * event weekend status for double rewards.
+     * @param player The player that is cutting the tree.
+     * @returns Whether or not the player can hold the reward.
+     */
+
+    public override canHold(player: Player): boolean {
+        return player.inventory.hasSpace(Utils.doubleMining ? 2 : 1);
+    }
 }

@@ -345,11 +345,12 @@ export default abstract class Container {
 
     /**
      * Checks if there are empty spaces in the container.
+     * @param count Optional amount of empty slots we are looking for.
      * @returns Whether or not we can find a slot that is empty.
      */
 
-    public hasSpace(): boolean {
-        return !!this.getEmptySlot();
+    public hasSpace(count = 1): boolean {
+        return count > 1 ? this.getEmptySlots() >= count : !!this.getEmptySlot();
     }
 
     /**
