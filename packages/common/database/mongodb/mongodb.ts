@@ -36,7 +36,7 @@ export default class MongoDB {
         private databaseName: string,
         private tls: boolean,
         srv: boolean,
-        private authSource: string
+        authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
@@ -101,9 +101,14 @@ export default class MongoDB {
                 bcryptjs.compare(player.password, info.password, (error: Error, result) => {
                     if (error) throw error;
 
-                    // Reject if password hashes don't match.
-                    if (result) player.load(info);
-                    else player.connection.reject('invalidlogin');
+                    // Reject if the password is incorrect.
+                    if (!result) return player.connection.reject('invalidlogin');
+
+                    // Successfully passed login checks, we can send packets now.
+                    player.authenticated = true;
+
+                    // Login successful, load player data.
+                    player.load(info);
                 });
             }
         });
@@ -135,6 +140,9 @@ export default class MongoDB {
             usernameCursor.toArray().then((playerInfo) => {
                 // User exists and so we reject instead of double registering.
                 if (playerInfo.length > 0) return player.connection.reject('userexists');
+
+                // Successfully managed to create a new user.
+                player.authenticated = true;
 
                 log.debug(`No player data found for ${player.username}, creating user.`);
 
@@ -243,7 +251,7 @@ export default class MongoDB {
                     }
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 250 }
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
@@ -276,7 +284,7 @@ export default class MongoDB {
                     }
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 250 }
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as SkillExperience[]));
@@ -302,7 +310,7 @@ export default class MongoDB {
                 }
             },
             { $sort: { kills: -1 } },
-            { $limit: 250 }
+            { $limit: 150 }
         ])
             .toArray()
             .then((data) => callback(data as MobAggregate[]));
@@ -326,7 +334,8 @@ export default class MongoDB {
                     cheater: { $first: '$cheater' }
                 }
             },
-            { $sort: { kills: -1 } }
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
         ])
             .toArray()
             .then((data) => callback(data as PvpAggregate[]));

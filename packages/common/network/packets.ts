@@ -51,7 +51,8 @@ enum Packets {
     Rank,
     Examine,
     Player,
-    Relay
+    Relay,
+    Crafting
 }
 
 export default Packets;

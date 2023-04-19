@@ -4,7 +4,7 @@ import { Bubble } from '@kaetram/common/network/impl';
 import type Player from '../../entity/character/player/player';
 
 export default class Sign {
-    public instance = ''; // Instance in this case are the object's coordinates.
+    public instance; // Instance in this case are the object's coordinates.
 
     public constructor(public x: number, public y: number, public text: string[]) {
         this.instance = `${x}-${y}`;

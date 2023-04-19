@@ -33,6 +33,7 @@ export interface ItemData {
     name: string;
     stackable?: boolean;
     edible?: boolean;
+    interactable?: boolean;
     maxStackSize?: number;
     plugin?: string;
     price?: number;
@@ -48,6 +49,7 @@ export interface ItemData {
     movementModifier?: number;
     lumberjacking?: number;
     mining?: number;
+    fishing?: number;
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;
@@ -62,4 +64,6 @@ export interface ItemData {
     description?: string;
     manaCost?: number;
     weaponType?: string;
+    smallBowl?: boolean;
+    mediumBowl?: boolean;
 }

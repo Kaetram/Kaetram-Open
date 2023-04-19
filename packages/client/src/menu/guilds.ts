@@ -663,7 +663,7 @@ export default class Guilds extends Menu {
             let joinButton = document.createElement('div');
 
             // Add the class to the join button.
-            joinButton.className = 'element-button-small stroke';
+            joinButton.className = 'element-button stroke';
 
             // Add the inner HTML to the join button.
             joinButton.innerHTML = 'Join';

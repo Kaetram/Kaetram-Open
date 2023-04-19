@@ -73,9 +73,12 @@ export interface ProcessedArea {
     spawnX?: number;
     spawnY?: number;
 
+    // Level requirements`
+    skill?: string;
+
     // Warp
     name?: string; //? also common
-    level?: number; // also used for doors
+    level?: number;
 
     // Camera
     type?: string;
@@ -113,6 +116,7 @@ export interface ProcessedDoor {
     reqItem: string;
     reqItemCount: number;
     stage: number;
+    skill: string;
     level: number;
 }
 
@@ -124,11 +128,9 @@ export interface ProcessedResource {
 }
 
 export interface ProcessedTileset {
-    name: string;
-    firstGID: number;
-    lastGID: number;
-    imageName: string;
-    scale: number;
+    firstGid: number;
+    lastGid: number;
+    path: string;
 }
 
 export interface ProcessedAnimation {
@@ -148,7 +150,7 @@ export interface ProcessedMap {
     entities: { [tileId: number]: string };
 
     // tilesetId: firstGid
-    tilesets?: { [tilesetId: number]: number };
+    tilesets?: ProcessedTileset[];
     animations?: { [tileId: number]: ProcessedAnimation[] };
     depth?: number;
 
@@ -156,10 +158,13 @@ export interface ProcessedMap {
 
     high: number[];
     objects: number[];
+    obstructing?: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
     trees: ProcessedResource[];
     rocks: ProcessedResource[];
+    fishSpots: ProcessedResource[];
+    foraging: ProcessedResource[];
 }
 
 export interface ProcessedClientMap {

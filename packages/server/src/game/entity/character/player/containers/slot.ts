@@ -8,6 +8,7 @@ import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Slot {
     public edible = false;
+    public interactable = false;
     public equippable = false;
 
     public name = '';
@@ -39,6 +40,7 @@ export default class Slot {
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
+        this.interactable = item.interactable;
         this.equippable = item.isEquippable();
 
         this.name = item.name;
@@ -91,6 +93,7 @@ export default class Slot {
         this.enchantments = {};
 
         this.edible = false;
+        this.interactable = false;
         this.equippable = false;
         this.maxStackSize = Modules.Constants.MAX_STACK;
 
@@ -149,6 +152,7 @@ export default class Slot {
             data.name = this.name;
             data.description = this.description;
             data.edible = this.edible;
+            data.interactable = this.interactable;
             data.equippable = this.equippable;
             data.attackStats = this.attackStats;
             data.defenseStats = this.defenseStats;

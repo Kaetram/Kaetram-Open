@@ -217,6 +217,13 @@ export default class Trade {
         // Player is too far away to start trading.
         if (this.player.getDistance(target) > 1) return;
 
+        // Prevent hollow admins from trading.
+        if (this.player.isHollowAdmin())
+            return this.player.notify(`As an administrator you cannot influence the economy.`);
+
+        if (target.isHollowAdmin())
+            return this.player.notify(`That player is an administrator and cannot be traded with.`);
+
         // Prevent cheaters from trading.
         if (this.player.isCheater())
             return this.player.notify('Sorry but cheaters are not allowed to trade.');

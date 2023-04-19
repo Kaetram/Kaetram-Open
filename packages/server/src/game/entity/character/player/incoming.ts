@@ -26,7 +26,8 @@ import type {
     TradePacket,
     HandshakePacket,
     EnchantPacket,
-    GuildPacket
+    GuildPacket,
+    CraftingPacket
 } from '@kaetram/common/types/messages/incoming';
 import type Character from '../character';
 import type Player from './player';
@@ -127,6 +128,9 @@ export default class Incoming {
                     case Packets.Examine: {
                         return this.handleExamine(message);
                     }
+                    case Packets.Crafting: {
+                        return this.handleCrafting(message);
+                    }
                 }
             } catch (error) {
                 log.error(error);
@@ -188,8 +192,10 @@ export default class Incoming {
             }
 
             case Opcodes.Login.Guest: {
+                // Authenticated so that we send the logout packet to the hub.
+                this.player.authenticated = true;
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
-                this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
+                this.player.username = `guest${Utils.counter++}`; // Generate a random guest username.
 
                 this.player.load(Creator.serializePlayer(this.player));
                 return;
@@ -427,6 +433,9 @@ export default class Incoming {
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
+                // Ensure the packet has a valid index.
+                if (isNaN(packet.fromIndex!) || packet.fromIndex === -1) return;
+
                 return this.player.handleContainerSelect(
                     packet.type,
                     packet.fromContainer,
@@ -507,6 +516,9 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
+        if (!this.player.canAccessContainer)
+            return this.player.notify('You cannot do that right now.');
+
         switch (packet.opcode) {
             case Opcodes.Enchant.Select: {
                 return this.world.enchanter.select(this.player, packet.index!);
@@ -625,8 +637,31 @@ export default class Incoming {
 
         if (!entity.isMob() && !entity.isItem()) return;
 
+        this.player.statistics.addMobExamine(entity.key);
+
         if (!entity.description) return this.player.notify('I have no idea what that is.');
 
         this.player.notify(entity.getDescription());
+    }
+
+    /**
+     * Handles incoming actions from the client regarding the crafting interface.
+     * @param data Contains information about the kind of action.
+     */
+
+    private handleCrafting(data: CraftingPacket): void {
+        // Ensure the player is not maliciously trying to craft something.
+        if (this.player.activeCraftingInterface === -1)
+            return this.player.notify(`You cannot do that right now.`);
+
+        switch (data.opcode) {
+            case Opcodes.Crafting.Select: {
+                return this.world.crafting.select(this.player, data.key!);
+            }
+
+            case Opcodes.Crafting.Craft: {
+                return this.world.crafting.craft(this.player, data.key!, data.count!);
+            }
+        }
     }
 }

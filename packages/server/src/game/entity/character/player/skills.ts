@@ -6,15 +6,23 @@ import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
 import Mining from './skill/impl/mining';
 import Defense from './skill/impl/defense';
+import Fishing from './skill/impl/fishing';
+import Cooking from './skill/impl/cooking';
+import Smithing from './skill/impl/smithing';
+import Crafting from './skill/impl/crafting';
+import Fletching from './skill/impl/fletching';
+import Foraging from './skill/impl/foraging';
+import Eating from './skill/impl/eating';
+import Loitering from './skill/impl/loitering';
 
 import Formulas from '../../../../info/formulas';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Experience, Points, Skill as SkillPacket } from '@kaetram/common/network/impl';
 
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type Player from './player';
 import type Skill from './skill/skill';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 
 export default class Skills {
     private loaded = false;
@@ -27,6 +35,14 @@ export default class Skills {
     private strength: Strength = new Strength();
     private mining: Mining = new Mining();
     private defense: Defense = new Defense();
+    private fishing: Fishing = new Fishing();
+    private cooking: Cooking = new Cooking();
+    private smithing: Smithing = new Smithing();
+    private crafting: Crafting = new Crafting();
+    private fletching: Fletching = new Fletching();
+    private foraging: Foraging = new Foraging();
+    private eating: Eating = new Eating();
+    private loitering: Loitering = new Loitering();
 
     private skills: { [key: string]: Skill } = {
         [Modules.Skills.Accuracy]: this.accuracy,
@@ -36,7 +52,15 @@ export default class Skills {
         [Modules.Skills.Magic]: this.magic,
         [Modules.Skills.Strength]: this.strength,
         [Modules.Skills.Mining]: this.mining,
-        [Modules.Skills.Defense]: this.defense
+        [Modules.Skills.Defense]: this.defense,
+        [Modules.Skills.Fishing]: this.fishing,
+        [Modules.Skills.Cooking]: this.cooking,
+        [Modules.Skills.Smithing]: this.smithing,
+        [Modules.Skills.Crafting]: this.crafting,
+        [Modules.Skills.Fletching]: this.fletching,
+        [Modules.Skills.Foraging]: this.foraging,
+        [Modules.Skills.Eating]: this.eating,
+        [Modules.Skills.Loitering]: this.loitering
     };
 
     private loadCallback?: () => void;
@@ -195,6 +219,22 @@ export default class Skills {
 
     public getMining(): Mining {
         return this.mining;
+    }
+
+    /**
+     * @returns The fishing class instance.
+     */
+
+    public getFishing(): Fishing {
+        return this.fishing;
+    }
+
+    /**
+     * @returns The foraging class instance.
+     */
+
+    public getForaging(): Foraging {
+        return this.foraging;
     }
 
     /**

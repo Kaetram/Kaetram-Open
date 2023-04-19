@@ -2,10 +2,10 @@ import Resource from './impl/resource';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedResource } from '@kaetram/common/types/map';
 import type Map from '../map/map';
-import type Regions from '../map/regions';
 import type World from '../world';
+import type Regions from '../map/regions';
+import type { ProcessedResource } from '@kaetram/common/types/map';
 
 export default class Resources {
     private map: Map;

@@ -95,7 +95,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(entity.isItem() ? `item-${info.key}` : info.key);
+        let sprite = this.game.sprites.get(entity.isItem() ? `items/${info.key}` : info.key);
 
         // Don't add entities that don't have a sprite.
         if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
@@ -108,7 +108,6 @@ export default class EntitiesController {
 
         // Set the sprite and sprite idle speed.
         entity.setSprite(sprite);
-        entity.setIdleSpeed(sprite.idleSpeed);
 
         // Begin the idling animation.
         entity.idle();

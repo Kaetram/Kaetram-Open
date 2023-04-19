@@ -11,6 +11,7 @@ import type Servers from '../controllers/servers';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 import type { HandshakePacket } from '@kaetram/common/types/messages/hub';
+
 export default class Server {
     public id = -1;
     public name = '';
@@ -66,9 +67,6 @@ export default class Server {
 
     public broadcast(packet: Packet): void {
         this.controller.broadcast(packet, this.instance);
-
-        // If the player is logging in or out, we want to update the Discord bot population.
-        if (packet.id === Packets.Player) this.controller.updateCallback?.();
     }
 
     /**
@@ -97,11 +95,16 @@ export default class Server {
         // Ensure the player is not already in the list.
         if (this.players.includes(username)) return;
 
+        // Add the player to the list.
         this.players.push(username);
 
+        // Broadcast the login to all the servers.
         this.controller.broadcast(
             new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id, guild })
         );
+
+        // Create a callback for the player logging in.
+        this.controller.handlePlayer(username, this.id);
     }
 
     /**
@@ -110,8 +113,10 @@ export default class Server {
      */
 
     public remove(username: string, guild = ''): void {
+        // Filter out the player from the list.
         this.players = this.players.filter((player) => player !== username);
 
+        // Broadcast the logout to all the servers.
         this.controller.broadcast(
             new Packet(Packets.Player, Opcodes.Player.Logout, {
                 username,
@@ -119,6 +124,9 @@ export default class Server {
                 guild
             })
         );
+
+        // Create a callback for the player logging out.
+        this.controller.handlePlayer(username, this.id, true);
     }
 
     /**

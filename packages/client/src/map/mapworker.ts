@@ -27,7 +27,7 @@ function loadGrids() {
 
         for (let x = 0; x < width; x++) {
             data.push(0);
-            grid[y][x] = 0;
+            grid[y][x] = 1;
         }
     }
 }
