@@ -16,6 +16,8 @@ import type { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
+    doubleLumberjacking: false, // Whether or not the double lumberjacking event is active.
+    doubleMining: false, // Whether or not the double mining event is active.
 
     /**
      * Takes the type of entity and creates a UNIQUE instance id.

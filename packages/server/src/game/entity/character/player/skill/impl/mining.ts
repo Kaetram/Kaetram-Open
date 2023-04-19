@@ -1,6 +1,8 @@
 import ResourceSkill from '../resourceskill';
+import Item from '../../../../objects/item';
 import Rocks from '../../../../../../../data/rocks.json';
 
+import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import ResourceEn from '@kaetram/common/text/en/resource';
 
@@ -27,5 +29,16 @@ export default class Mining extends ResourceSkill {
 
         // Pass the info onto the super class interact function.
         this.interact(player, rock, weapon.mining);
+    }
+
+    /**
+     * Override for the skill to add support for double rewards. This is used
+     * for special weekend events.
+     * @param key The key of the item we are creating.
+     * @returns The new item instance.
+     */
+
+    protected override getItem(key: string): Item {
+        return new Item(key, -1, -1, false, Utils.doubleMining ? 2 : 1);
     }
 }
