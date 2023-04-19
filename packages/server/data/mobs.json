@@ -963,6 +963,45 @@
     }
   },
 
+  "icewizard": {
+    "name": "Ice Wizard",
+    "description": "It's like similar to some other type of wizard I've encountered before.",
+    "drops": {"berylpendant": 700},
+    "hitPoints": 470,
+    "defenseLevel": 30,
+    "attackLevel": 46,
+    "level": 92,
+    "aggroRange": 6,
+    "attackRange": 7,
+    "aggressive": true,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "projectileName": "projectile-iceball",
+    "freezing": true,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 46
+    },
+    "defenseStats": {
+      "crush": -5,
+      "slash": -9,
+      "stab": -10,
+      "archery": -7,
+      "magic": 37
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 16
+    }
+  },
+
   "babyspider": {
     "name": "Baby Spooder",
     "description": "It's cute now but give it a while...",
@@ -1368,12 +1407,13 @@
     }
   },
 
-  "crystalscolpion": {
+  "crystalscorpion": {
     "name": "Crystal Scorpion",
-    "drops": {"crystalbow": 300},
+    "description": "It's a scorpion that is made out of crystal, that's really original.",
+    "drops": {"crystalbow": 300, "crystalarmor": 400, "crystalarcherarmor": 160},
     "hitPoints": 1450,
-    "defenseLevel": 15,
-    "attackLevel": 5,
+    "defenseLevel": 35,
+    "attackLevel": 45,
     "level": 105,
     "aggroRange": 1,
     "attackRange": 1,
@@ -3670,6 +3710,7 @@
 
   "snowman": {
     "name": "Snowman",
+    "description": "A magical snowman from the snow realm.",
     "hitPoints": 750,
     "defenseLevel": 3,
     "attackLevel": 3,
@@ -3705,10 +3746,11 @@
 
 "snowman2": {
     "name": "Snowman",
-    "hitPoints": 750,
-    "defenseLevel": 3,
-    "attackLevel": 3,
-    "level": 43,
+    "description": "I wonder if it'll be resilient to fire.",
+    "hitPoints": 850,
+    "defenseLevel": 23,
+    "attackLevel": 33,
+    "level": 93,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
