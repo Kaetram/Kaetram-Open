@@ -23,8 +23,12 @@ export default class Packet {
      */
 
     public serialize(): unknown {
-        return this.opcode === undefined
-            ? [this.id, this.data, this.bufferSize]
-            : [this.id, this.opcode, this.data, this.bufferSize];
+        let packet =
+            this.opcode === undefined ? [this.id, this.data] : [this.id, this.opcode, this.data];
+
+        // Append the buffer size for compression only if it exists.
+        if (this.bufferSize) packet.push(this.bufferSize);
+
+        return packet;
     }
 }

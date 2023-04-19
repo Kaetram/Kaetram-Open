@@ -30,8 +30,8 @@ interface ItemDrop {
 }
 
 export default class Mob extends Character {
-    public spawnX: number = this.x;
-    public spawnY: number = this.y;
+    public spawnX: number;
+    public spawnY: number;
 
     public description: string | string[] = '';
 
@@ -57,7 +57,14 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = ['ordinary', 'arrows', 'unusual', 'shards']; // Default drop table for all mobs.
+    private dropTables: string[] = [
+        'ordinary',
+        'arrows',
+        'unusual',
+        'shards',
+        'vegetables',
+        'mushrooms'
+    ]; // Default drop table for all mobs.
 
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
@@ -76,6 +83,9 @@ export default class Mob extends Character {
 
     public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
+
+        this.spawnX = this.x;
+        this.spawnY = this.y;
 
         let data = (rawData as RawData)[key];
 
@@ -393,6 +403,11 @@ export default class Mob extends Character {
 
             case 'firearrow': {
                 count = Utils.randomInt(1, Math.ceil(this.level / 2));
+                break;
+            }
+
+            case 'feather': {
+                count = Utils.randomInt(1, this.level);
                 break;
             }
         }

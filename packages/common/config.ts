@@ -50,6 +50,12 @@ export interface Config {
     minor: string;
     regionCache: boolean;
     saveInterval: number;
+    messageLimit: number;
+
+    sentryOrg: string;
+    sentryProject: string;
+    sentryAuthToken: string;
+    sentryDsn: string;
 
     discordEnabled: boolean;
     discordChannelId: string;

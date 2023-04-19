@@ -7,6 +7,12 @@ import type Packet from '@kaetram/common/network/packet';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 
+type PlayerCallback = (
+    username: string,
+    serverId: number,
+    logout: boolean,
+    population: number
+) => void;
 type ServerCallback = (id: number, name: string) => void;
 type MessageCallback = (
     source: string,
@@ -17,7 +23,7 @@ type MessageCallback = (
 export default class Servers {
     private servers: { [instance: string]: Server } = {};
 
-    public updateCallback?: () => void;
+    public playerCallback?: PlayerCallback;
     public messageCallback?: MessageCallback;
 
     private addCallback?: ServerCallback;
@@ -91,6 +97,21 @@ export default class Servers {
     }
 
     /**
+     * Handles a player logging in or out of the game. We use this
+     * to update the Discord server with the amount of players online and
+     * with the logout/login activity.
+     * @param username The username of the player.
+     * @param serverId The id of the server the player is on.
+     * @param logout The type of action we are performing (defaults to false)
+     */
+
+    public handlePlayer(username: string, serverId: number, logout = false): void {
+        let total = this.getTotalPlayers();
+
+        this.playerCallback?.(username, serverId, logout, total);
+    }
+
+    /**
      * Checks that there is at least one server with space for a new player.
      * @returns Whether or not some of the servers have more player spaces than amount of players.
      */
@@ -102,18 +123,22 @@ export default class Servers {
     }
 
     /**
-     * Looks through all the servers and finds one
-     * that has enough space.
-     * @param callback Server with enough space for players.
+     * Iterates through all the servers and finds the first one that has
+     * space for the new player. If we cannot find a server then we
+     * return undefined.
+     * @returns The server that has space for a new player, or undefined if not found.
      */
 
-    public findEmpty(callback: (server: Server) => void): void {
-        this.forEachServer((server) => {
-            // -1 for a threshold of empty space.
-            if (server.players.length >= server.maxPlayers - 1) return;
+    public findEmpty(): Server | undefined {
+        for (let key in this.servers) {
+            let server = this.servers[key];
 
-            callback(server);
-        });
+            if (server.players.length >= server.maxPlayers - 1) continue;
+
+            return server;
+        }
+
+        return undefined;
     }
 
     /**
@@ -185,11 +210,14 @@ export default class Servers {
     }
 
     /**
-     * Callback for when we want to update the population of the servers.
+     * Callback for when a player logs in or out of the server. Used for updating
+     * the Discord bot with the current population.
+     * @param callback Contains the username of the player, whether they are
+     * logging in or out, and the total population across all servers.
      */
 
-    public onUpdate(callback: () => void): void {
-        this.updateCallback = callback;
+    public onPlayer(callback: PlayerCallback): void {
+        this.playerCallback = callback;
     }
 
     /**

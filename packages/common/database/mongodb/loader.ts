@@ -32,7 +32,7 @@ export default class Loader {
         let cursor = this.database.collection(collection).find({ username });
 
         cursor.toArray().then((info) => {
-            if (info.length > 1) log.warning(`[${collection}] Duplicate entry for ${username}.`);
+            if (info.length > 1) log.debug(`[${collection}] Duplicate entry for ${username}.`);
 
             // Return empty array if we can't find any data.
             if (info.length === 0) return callback();
@@ -51,7 +51,7 @@ export default class Loader {
     public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
         this.load(player.username, 'player_equipment', (info: unknown) => {
             if (!info) {
-                log.warning(`[player_equipment] No equipment found for ${player.username}.`);
+                log.debug(`[player_equipment] No equipment found for ${player.username}.`);
                 return callback([]);
             }
 
@@ -70,7 +70,7 @@ export default class Loader {
     public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_inventory', (info: unknown) => {
             if (!info) {
-                log.warning(`[player_inventory] No inventory found for ${player.username}.`);
+                log.debug(`[player_inventory] No inventory found for ${player.username}.`);
                 return callback([]);
             }
 
@@ -89,7 +89,7 @@ export default class Loader {
     public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
         this.load(player.username, 'player_bank', (info: unknown) => {
             if (!info) {
-                log.warning(`[player_bank] No bank found for ${player.username}.`);
+                log.debug(`[player_bank] No bank found for ${player.username}.`);
                 return callback([]);
             }
 
@@ -146,7 +146,7 @@ export default class Loader {
     public loadSkills(player: Player, callback: (skills: SkillData[]) => void): void {
         this.load(player.username, 'player_skills', (info: unknown) => {
             if (!info) {
-                log.warning(`[player_skills] No skills found for ${player.username}.`);
+                log.debug(`[player_skills] No skills found for ${player.username}.`);
                 return callback([]);
             }
 
@@ -165,9 +165,7 @@ export default class Loader {
     public loadStatistics(player: Player, callback: (statistics: StatisticsData) => void): void {
         this.load(player.username, 'player_statistics', (info: unknown) => {
             if (!info)
-                return log.warning(
-                    `[player_statistics] No statistics found for ${player.username}.`
-                );
+                return log.debug(`[player_statistics] No statistics found for ${player.username}.`);
 
             let [statistics] = info as StatisticsData[];
 
@@ -184,7 +182,7 @@ export default class Loader {
     public loadAbilities(player: Player, callback: (abilities: SerializedAbility) => void): void {
         this.load(player.username, 'player_abilities', (info: unknown) => {
             if (!info)
-                return log.warning(`[player_abilities] No abilities found for ${player.username}.`);
+                return log.debug(`[player_abilities] No abilities found for ${player.username}.`);
 
             let [abilities] = info as SerializedAbility[];
 
@@ -234,7 +232,7 @@ export default class Loader {
             let total = info.length;
 
             // Splice the array and return the guilds within the range.
-            callback(info.splice(from, to) as GuildData[], total);
+            callback(info as GuildData[], total);
         });
     }
 

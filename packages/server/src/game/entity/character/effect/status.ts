@@ -72,11 +72,17 @@ export default class {
     }
 
     /**
-     * Removes all the effects from the character's list of effects.
+     * Removes all the effects and timeouts from the character's list of effects.
      */
 
     public clear(): void {
         this.effects = [];
+
+        // Clear all the timeouts.
+        for (let status in this.timeouts) {
+            clearTimeout(this.timeouts[status]);
+            delete this.timeouts[status];
+        }
     }
 
     /**

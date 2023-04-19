@@ -43,7 +43,7 @@ export default class Projectile extends Entity {
      */
 
     public getAnimationSpeed(): number {
-        return this.idleSpeed;
+        return this.sprite.idleSpeed;
     }
 
     /**
@@ -61,7 +61,7 @@ export default class Projectile extends Entity {
      */
 
     public getImpactEffect(): Modules.Effects {
-        switch (this.sprite.name) {
+        switch (this.sprite.key) {
             case 'projectile-boulder': {
                 return Modules.Effects.Boulder;
             }

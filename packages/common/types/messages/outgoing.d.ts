@@ -11,6 +11,7 @@ import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 import type { SerializedSkills, SkillData } from '../skills';
 import type { AbilityData, SerializedAbility } from '../ability';
 import type { EquipmentData, SerializedEquipment } from '../equipment';
+import type { CraftingRequirement } from '../crafting';
 
 /**
  * Packet interfaces of data being sent from the server to the client.
@@ -411,3 +412,17 @@ export interface PlayerPacket {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export interface CraftingPacket {
+    type?: Modules.Skills;
+    keys?: string[]; // The keys of the items we are crafting.
+    key?: string; // The key of the item we are crafting.
+    name?: string; // The name of the item we are crafting.
+    level?: number; // The level required to craft the item.
+    requirements?: CraftingRequirement[];
+    result?: number; // The amount the item we are crafting will give.
+}
+
+export type CraftingCallback = (opcode: Opcodes.Crafting, info: CraftingPacket) => void;
+
+/////////////////////////////////////////////////////////////////////////////////

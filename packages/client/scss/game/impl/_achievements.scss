@@ -83,6 +83,27 @@
         .coin-kaetramdungeon {
             background-position: -120px * $i 0;
         }
+
+        .coin-lumberjacking50,
+        .coin-lumberjacking100,
+        .coin-lumberjacking500,
+        .coin-lumberjacking1000,
+        .coin-lumberjacking5000,
+        .coin-lumberjacking10000,
+        .coin-mining50,
+        .coin-mining100,
+        .coin-mining500,
+        .coin-mining1000,
+        .coin-mining5000,
+        .coin-mining10000,
+        .coin-fishing50,
+        .coin-fishing100,
+        .coin-fishing500,
+        .coin-fishing1000,
+        .coin-fishing5000,
+        .coin-fishing10000 {
+            background-position: -72px * $i -26px * $i;
+        }
     }
 
     @media (--md) {

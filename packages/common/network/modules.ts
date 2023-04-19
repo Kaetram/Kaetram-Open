@@ -171,7 +171,16 @@ export enum Skills {
     Magic,
     Mining,
     Strength,
-    Defense
+    Defense,
+    Fishing,
+    Cooking,
+    Smithing,
+    Crafting,
+    Fletching,
+    Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
+    Foraging,
+    Eating,
+    Loitering
 }
 
 // It's easier to define and swap order around here.
@@ -183,7 +192,15 @@ export let SkillsOrder = [
     Skills.Archery,
     Skills.Magic,
     Skills.Lumberjacking,
-    Skills.Mining
+    Skills.Mining,
+    Skills.Fishing,
+    Skills.Foraging,
+    Skills.Crafting,
+    Skills.Cooking,
+    Skills.Fletching,
+    Skills.Smithing,
+    Skills.Eating,
+    Skills.Loitering
 ];
 
 export enum Enchantment {
@@ -264,7 +281,8 @@ export enum Ranks {
     TierFour,
     TierFive,
     TierSix,
-    TierSeven
+    TierSeven,
+    HollowAdmin
 }
 
 export let RankColours = {
@@ -281,7 +299,8 @@ export let RankColours = {
     [Ranks.TierFour]: '#a9e03a',
     [Ranks.TierFive]: '#7beb65',
     [Ranks.TierSix]: '#77e691',
-    [Ranks.TierSeven]: '#77e691'
+    [Ranks.TierSeven]: '#77e691',
+    [Ranks.HollowAdmin]: '#3bbaff'
 };
 
 export let RankTitles = {
@@ -298,7 +317,8 @@ export let RankTitles = {
     [Ranks.TierFour]: 'T4 Patron',
     [Ranks.TierFive]: 'T5 Patron',
     [Ranks.TierSix]: 'T6 Patron',
-    [Ranks.TierSeven]: 'T7 Patron'
+    [Ranks.TierSeven]: 'T7 Patron',
+    [Ranks.HollowAdmin]: 'Admin'
 };
 
 export interface Colours {
@@ -406,6 +426,51 @@ export let SkillExpColours = {
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
         stroke: 'rgb(7, 63, 176)'
+    },
+
+    [Skills.Fishing]: {
+        fill: 'rgb(0, 255, 255)',
+        stroke: 'rgb(0, 255, 255)'
+    },
+
+    [Skills.Cooking]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Smithing]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Crafting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Fletching]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Smelting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Eating]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Loitering]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Foraging]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     }
 };
 
@@ -493,8 +558,8 @@ export enum BannerCrests {
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
     MAX_LEVEL: 135, // Maximum attainable level.
-    INVENTORY_SIZE: 20, // Maximum inventory size
-    BANK_SIZE: 69, // Maximum bank size
+    INVENTORY_SIZE: 25, // Maximum inventory size
+    BANK_SIZE: 420, // Maximum bank size
     DROP_PROBABILITY: 10_000, // 1 in 10000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
@@ -503,13 +568,14 @@ export const Constants = {
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
     SPAWN_POINT: '405,27', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT: '570,11', // 'x,y' values
+    TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,
     CHEST_RESPAWN: 50_000, // 50 seconds
     SKILL_LOOP: 1000, // How often we check the loop of a skill
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
+    CRAFT_COOLDOWN: 1500, // 1.5 seconds between crafting items to prevent spam.
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
@@ -519,6 +585,7 @@ export const Constants = {
     FREEZING_DURATION: 60_000, // 60 seconds
     BURNING_DURATION: 60_000, // 60 seconds
     TERROR_DURATION: 60_000, // 60 seconds
+    LOITERING_THRESHOLD: 90_000, // 90 seconds until loitering activates
     STUN_DURATION: 10_000, // 10 seconds
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,

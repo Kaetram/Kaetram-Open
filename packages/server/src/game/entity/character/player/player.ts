@@ -14,6 +14,7 @@ import Incoming from './incoming';
 import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
+import Item from '../../objects/item';
 import Formulas from '../../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
@@ -47,7 +48,6 @@ import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
 import type World from '../../../world';
-import type Item from '../../objects/item';
 import type Area from '../../../map/areas/area';
 import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
@@ -81,28 +81,29 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map: Map = this.world.map;
-    private regions: Regions = this.world.map.regions;
-    private entities: Entities = this.world.entities;
+    public map: Map;
+    private regions: Regions;
+    private entities: Entities;
 
-    public incoming: Incoming = new Incoming(this);
+    public incoming: Incoming;
 
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    public abilities: Abilities = new Abilities(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public statistics: Statistics = new Statistics(this);
-    public friends: Friends = new Friends(this);
-    public trade: Trade = new Trade(this);
+    public abilities: Abilities;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+    public statistics: Statistics;
+    public friends: Friends;
+    public trade: Trade;
 
-    public handler: Handler = new Handler(this);
+    public handler: Handler;
 
     public ready = false; // indicates if login processed finished
+    public authenticated = false;
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
@@ -141,6 +142,7 @@ export default class Player extends Character {
 
     private lastNotify = 0;
     private lastEdible = 0;
+    public lastCraft = 0;
 
     private currentSong: string | undefined;
 
@@ -155,9 +157,13 @@ export default class Player extends Character {
     public npcTalk = '';
     public talkIndex = 0;
 
+    // Anti-cheat container
+    public canAccessContainer = false;
+    public activeCraftingInterface = -1; // The skill ID
+
     // Minigame status of the player.
-    public minigame = -1; // Opcodes.Minigame
-    public team: Team = -1;
+    public minigame?: Opcodes.Minigame;
+    public team?: Team;
 
     // Currently open store of the player.
     public storeOpen = '';
@@ -177,6 +183,24 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.instance, world, '', -1, -1);
+
+        this.connection.onClose(this.handleClose.bind(this));
+
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.entities = this.world.entities;
+
+        this.incoming = new Incoming(this);
+        this.abilities = new Abilities(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+        this.statistics = new Statistics(this);
+        this.friends = new Friends(this);
+        this.trade = new Trade(this);
+        this.handler = new Handler(this);
     }
 
     /**
@@ -302,6 +326,61 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles closing a connection. We have to take into consideration
+     * that a connection may have closed prior to all the controllers
+     * being initialized, so we have to check for that.
+     */
+
+    public handleClose(): void {
+        // Stops the character-based intervals
+        this.stop();
+
+        // Stops intervals in handler if it has been initialized
+        this.handler?.clear();
+
+        // If authenticated send information to the hub and Discord.
+        if (this.authenticated) {
+            this.world.discord.sendMessage(this.username, 'has logged out!');
+
+            this.world.client.send(
+                new PlayerPacket(Opcodes.Player.Logout, {
+                    username: this.username,
+                    guild: this.guild
+                })
+            );
+        }
+
+        // Send data to the minigames if present...
+        if (this.inMinigame()) this.getMinigame()?.disconnect(this);
+
+        // Stop all trading.
+        this.trade?.close();
+
+        // Stop combat.
+        this.combat?.stop();
+
+        // Stop skilling
+        this.skills?.stop();
+
+        // Clear the player from areas
+        this.clearAreas();
+        this.minigameArea?.exitCallback?.(this);
+
+        // Signal to other attacking entities that we have left.
+        this.world.cleanCombat(this);
+
+        // Synchronize friends list and guilds with the logout status
+        this.world.syncFriendsList(this.username, true);
+        this.world.syncGuildMembers(this.guild, this.username, true);
+
+        // Save the player if authenticated and ready.
+        if (this.authenticated && this.ready) this.save();
+
+        // Remove the player from the region.
+        this.entities.removePlayer(this);
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
@@ -317,8 +396,8 @@ export default class Player extends Character {
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         this.readyTimeout = setTimeout(() => {
-            if (!this.ready) this.connection.reject('error');
-        }, 10_000);
+            if (!this.ready || this.connection.closed) this.connection.reject('error');
+        }, 5000);
 
         this.setPosition(this.x, this.y);
 
@@ -384,8 +463,13 @@ export default class Player extends Character {
                 if (!this.mana.isFull())
                     this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
-                // Increment hitpoints by 0.5% of the max hitpoints.
-                super.heal(Math.floor(this.hitPoints.getMaxHitPoints() * 0.005));
+                // Base healing amount by 0.5% of the max hitpoints.
+                let healAmount = this.hitPoints.getMaxHitPoints() * 0.005;
+
+                // Use the eating level to increase the healing amount.
+                healAmount += this.skills.get(Modules.Skills.Eating).level / 10;
+
+                super.heal(Math.ceil(healAmount));
 
                 break;
             }
@@ -407,6 +491,23 @@ export default class Player extends Character {
         }
 
         this.sync();
+    }
+
+    /**
+     * Loitering occurs when the player is in a region for over 90 seconds. This will
+     * trigger the loitering skill which will give the player a small amount of experience
+     * every 20 seconds. The experience received is proportional to the player's loitering skill.
+     * In the future this experience will correlate to the amount of actions performed in the
+     * 20 second timeframe.
+     */
+
+    public loiter(): void {
+        // Skip if we have not reached the loitering threshold for the region.
+        if (!this.quests.isTutorialFinished() || !this.isLoiteringThreshold()) return;
+
+        let loitering = this.skills.get(Modules.Skills.Loitering);
+
+        loitering.addExperience(loitering.level * 6);
     }
 
     /**
@@ -456,6 +557,10 @@ export default class Player extends Character {
 
         this.setPosition(x, y, false);
         this.world.cleanCombat(this);
+
+        // Stop combat and skill activity when teleporting
+        this.combat.stop();
+        this.skills.stop();
 
         if (before) return;
 
@@ -517,6 +622,8 @@ export default class Player extends Character {
                 this.sendToSpawn();
                 return true;
             }
+            // Increment the cheat score.
+            this.incrementCheatScore(`Noclip detected at ${x}, ${y}.`);
 
             // Send player to the last valid position.
             this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
@@ -604,10 +711,17 @@ export default class Player extends Character {
 
                 if (!item) return;
 
+                if (item.interactable && item.plugin?.onUse(this)) return;
+
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
                     this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
+
+                    if (item.isSmallBowl())
+                        this.inventory.add(new Item('bowlsmall', -1, -1, false, 1));
+                    else if (item.isMediumBowl())
+                        this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
@@ -619,6 +733,8 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
+                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
@@ -689,16 +805,60 @@ export default class Player extends Character {
 
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
-            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            diffX = Math.abs(this.x - parseInt(coords[0])),
+            diffY = Math.abs(this.y - parseInt(coords[1]));
+
+        // Ensure that the player is close enough to the object.
+        if (diffX > 2 || diffY > 2) return;
+
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
         if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
         // If we don't find a tree then we try finding a rock.
-
         let rock = this.world.globals.getRocks().findResource(index);
 
         if (rock) return this.skills.getMining().mine(this, rock);
+
+        // If we don't find a rock then we try finding a fishing spot.
+        let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
+
+        if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
+
+        // If we don't find a fishing spot, look for foragable plants.
+        let forage = this.world.globals.getForaging().findResource(index);
+
+        if (forage) return this.skills.getForaging().harvest(this, forage);
+
+        /**
+         * Here we use the cursor (I know, it's a bit of a hack) to handle
+         * interactions with objects in the world. Most of these
+         * are used by crafting stations.
+         */
+
+        let cursor = this.map.getCursorFromIndex(index);
+
+        if (!cursor) return;
+
+        // Handle interactable objects based on the cursor.
+        switch (cursor) {
+            case 'smithing': {
+                return this.world.crafting.open(this, Modules.Skills.Smithing);
+            }
+
+            case 'smelting': {
+                return this.world.crafting.open(this, Modules.Skills.Smelting);
+            }
+
+            case 'cooking': {
+                return this.world.crafting.open(this, Modules.Skills.Cooking);
+            }
+
+            case 'crafting': {
+                return this.world.crafting.open(this, Modules.Skills.Crafting);
+            }
+        }
     }
 
     /**
@@ -861,15 +1021,20 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
-        if (this.map.isDoor(x, y) || (target && following)) return;
-        if (this.inCombat()) return;
+        // If the player clicked anywhere outside the bank then the bank is no longer opened.
+        this.canAccessContainer = false;
+        this.activeCraftingInterface = -1;
+
+        if (this.map.isDoor(x, y) || (target && following) || this.inCombat()) return;
 
         let diffX = Math.abs(this.x - x),
             diffY = Math.abs(this.y - y);
 
         if (diffX > 1 || diffY > 1) {
             this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+
             this.invalidMovement++;
+            this.cheatScore++;
 
             log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
         }
@@ -995,13 +1160,18 @@ export default class Player extends Character {
         // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
-        if (!overlay) this.overlayArea?.removePlayer(this);
+        // Store the active overlay.
+        let tempOverlay = this.overlayArea;
 
         // Store for comparison.
         this.overlayArea = overlay;
 
         // No overlay object or invalid object, remove the overlay.
-        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
+        if (!overlay) {
+            tempOverlay?.removePlayer(this);
+
+            return this.send(new Overlay(Opcodes.Overlay.Remove));
+        }
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
@@ -1379,7 +1549,7 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()?.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -1401,7 +1571,7 @@ export default class Player extends Character {
      * @returns Finds and returns a minigame based on the player's minigame.
      */
 
-    public getMinigame(): Minigame {
+    public getMinigame(): Minigame | undefined {
         return this.world.minigames.get(this.minigame);
     }
 
@@ -1422,6 +1592,11 @@ export default class Player extends Character {
     public loadResource(resource: Resource): void {
         this.resourcesLoaded[resource.instance] = resource.state;
     }
+
+    /**
+     * @param region Region id of the region we are checking.
+     * @returns Whether or not the region has been added to the list of loaded regions.
+     */
 
     public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
@@ -1489,7 +1664,7 @@ export default class Player extends Character {
      */
 
     public inMinigame(): boolean {
-        return this.minigame !== -1;
+        return this.minigame !== undefined;
     }
 
     /**
@@ -1525,6 +1700,16 @@ export default class Player extends Character {
     }
 
     /**
+     * A hollow admin is an administrator that can perform all of the commands of
+     * an admin but cannot influence the economy of the game.
+     * @returns Whether or not the player has the hollow admin rank.
+     */
+
+    public isHollowAdmin(): boolean {
+        return this.rank === Modules.Ranks.HollowAdmin;
+    }
+
+    /**
      * Accounts younger than 1 minute are considered new accounts.
      * @returns Whether the account's creation date is within the last minute.
      */
@@ -1547,6 +1732,17 @@ export default class Player extends Character {
 
     public isArcher(): boolean {
         return this.equipment.getWeapon().isArcher();
+    }
+
+    /**
+     * The threshold for loitering occurs when a player is in
+     * the same region for at least 90 seconds. This is used to level
+     * up the loitering skill when the player sits in one area doing
+     * things like crafting, smithing, etc.
+     */
+
+    public isLoiteringThreshold(): boolean {
+        return Date.now() - this.lastRegionChange >= Modules.Constants.LOITERING_THRESHOLD;
     }
 
     /**
@@ -1587,6 +1783,14 @@ export default class Player extends Character {
 
     private canEat(): boolean {
         return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last craft.
+     */
+
+    public canCraft(): boolean {
+        return Date.now() - this.lastCraft > Modules.Constants.CRAFT_COOLDOWN;
     }
 
     /**
