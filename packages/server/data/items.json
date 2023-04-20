@@ -5566,6 +5566,16 @@
     "price": 100
   },
 
+  "onion": {
+    "type": "object",
+    "name": "Onion",
+    "description": "An onion, it has layers, like an ogre.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 100,
+    "price": 100
+  },
+
   "potato": {
     "type": "object",
     "name": "Potato",
