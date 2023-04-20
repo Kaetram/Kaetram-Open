@@ -906,9 +906,10 @@ export default class Player extends Character {
 
         /**
          * If the player doesn't have enough mana then we halve the experience gain.
+         * We make the experience half of what it would normally be.
          */
 
-        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
+        if (!this.hasManaForAttack()) experience = Math.floor(experience / 2);
 
         /**
          * Since there are four combat skills, we evenly distribute the experience between them.
