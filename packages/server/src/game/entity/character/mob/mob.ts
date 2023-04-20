@@ -62,6 +62,7 @@ export default class Mob extends Character {
         'arrows',
         'unusual',
         'shards',
+        'fruits',
         'vegetables',
         'mushrooms'
     ]; // Default drop table for all mobs.

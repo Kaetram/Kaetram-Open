@@ -704,10 +704,10 @@
         "npc": "iamverycoldnpc",
         "hasItemText": [
           "Wonderful, now you can use crafting in combination with other skills",
-          "to create more complex items. Craft a small bowl and bring it to me."
+          "to create more complex items. Fletch a small bowl and bring it to me."
         ],
         "completedText": [
-          "Craft a small bowl and bring it to me."
+          "Fletch me a small bowl and bring it to me."
         ],
 
         "itemRequirement": ["berylpendant"]
@@ -872,6 +872,7 @@
     "name": "Clam Chowder",
     "description": "Some human being needs your help in the ice world.|Someone, somewhere, I can't say where because I'm spoiling what's upcoming in this game needs your help to make some clam chowder. You know, I feel like I'm spoiling it already by telling you what the quest requires but knowing how these quests are setup should tell you that it may not just be about clam chowder.",
     "reward": ["Nothing in particular"],
+
     "stages": {
       "0": {
         "task": "talk",
@@ -907,12 +908,12 @@
         ],
 
         "itemRequirement": ["clamobject"],
-        "itemCountRequirement": 5
+        "itemRequirementCount": [5]
       },
       
       "2": {
         "task": "talk",
-        "npc": "villagegirl3",
+        "npc": "doctor",
         "text": [
           "Oh hey there, how is your day going?",
           "Oh you are looking for that girl's grandmother?",
@@ -929,7 +930,7 @@
 
       "3": {
         "task": "talk",
-        "npc": "villagegirl3",
+        "npc": "doctor",
         "hasItemText": [
           "Thank you so much, clam chowder is quite the delicacy around here.",
           "Maybe it has something to do with the surplus of clams.",
@@ -940,7 +941,10 @@
 
         "completedText": [
           "You should probably check out the caves nearby."
-        ]
+        ],
+
+        "itemRequirement": ["clamchowder"],
+        "itemRequirementCount": [2]
       },
 
       "4": {
@@ -975,7 +979,7 @@
         ],
 
         "itemRequirement": ["clamchowder"],
-        "itemCountRequirement": 2
+        "itemRequirementCount": [2]
       },
 
       "6": {
