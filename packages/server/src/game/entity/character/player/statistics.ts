@@ -60,7 +60,7 @@ export default class Statistics {
         // Handle achievements for each milestone
         for (let interval of intervals)
             if (this.resources[skillName] === interval)
-                return this.player.achievements.get(`${skillName}${interval}`).finish();
+                return this.player.achievements.get(`${skillName}${interval}`)?.finish();
     }
 
     /**
