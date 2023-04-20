@@ -225,7 +225,7 @@ export default class WebGL extends Renderer {
             let viewPort = new Float32Array([this.screenWidth, this.screenHeight]),
                 shader = this.getShader(context);
 
-            console.log(`screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}`);
+            context.viewport(0, 0, context.canvas.width, context.canvas.height);
 
             context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
             context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
