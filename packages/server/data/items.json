@@ -1529,13 +1529,13 @@
   "goldring": {
     "type": "ring",
     "name": "Gold Ring",
-    "price": 125000
+    "price": 2250
   },
   
   "silverring": {
     "type": "ring",
     "name": "Silver Ring",
-    "price": 52500
+    "price": 1250
   },
 
   "ring1": {
