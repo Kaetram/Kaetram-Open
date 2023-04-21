@@ -177,14 +177,15 @@
     @media (--lg) {
         #friends-container {
             right: 0;
-            right: 20px;
-            bottom: 56px;
+            right: 52px;
+            bottom: 68px;
         }
     }
 
     @media (--md) {
         #friends-container {
-            right: 32px;
+            right: 36px;
+            bottom: 48px;
         }
 
         #popup-friend-input {
@@ -198,7 +199,7 @@
 
     @media (--sm) {
         #friends-container {
-            right: 80px;
+            right: 84px;
             bottom: 99px;
             transform: scale(1.5);
         }

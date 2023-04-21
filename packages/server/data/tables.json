@@ -53,6 +53,16 @@
         "tomato": 500
     },
 
+    "fruits": {
+        "strawberry": 800,
+        "raspberry": 800,
+        "plum": 800,
+        "pineapple": 800,
+        "peach": 800,
+        "mulberry": 800,
+        "mango": 800
+    },
+
     "mushrooms": {
         "mushroom1": 600,
         "mushroom2": 600,

@@ -4,6 +4,8 @@ import type Player from './player';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 
 export default class Statistics {
+    private milestones = [10, 50, 100, 500, 1000, 5000, 10_000];
+
     public pvpKills = 0;
     public pvpDeaths = 0;
     public mobKills: { [key: string]: number } = {};
@@ -49,20 +51,20 @@ export default class Statistics {
      */
 
     public handleSkill(skill: Modules.Skills): void {
-        let skillName = Modules.Skills[skill].toLowerCase(),
-            intervals = [10, 50, 100, 500, 1000, 5000, 10_000];
+        // Skip foraging since we don't have any achievements for it.
+        if (skill === Modules.Skills.Foraging) return;
+
+        // Get the skill name and the intervals for the milestones.
+        let skillName = Modules.Skills[skill].toLowerCase();
 
         if (!(skillName in this.resources)) this.resources[skillName] = 0;
 
         // Increment the skill's resource count.
         this.resources[skillName]++;
 
-        // Handle achievements for each milestone
-        for (let interval of intervals)
-            if (this.resources[skillName] === interval)
-                return this.player.achievements.get(`${skillName}${interval}`).finish();
-
-        console.log(this.resources);
+        // Check if we have reached a milestone and award an achievement if we have.
+        if (this.milestones.includes(this.resources[skillName]))
+            this.player.achievements.get(`${skillName}${this.resources[skillName]}`)?.finish();
     }
 
     /**

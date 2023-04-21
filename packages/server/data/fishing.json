@@ -17,15 +17,15 @@
 
     "jellyfish": {
         "levelRequirement": 5,
-        "experience": 20,
-        "difficulty": 15,
+        "experience": 35,
+        "difficulty": 25,
         "item": "jellyfish"
     },
 
     "clam": {
         "levelRequirement": 10,
-        "experience": 20,
-        "difficulty": 15,
+        "experience": 55,
+        "difficulty": 40,
         "item": "clamobject"
     }
 }
