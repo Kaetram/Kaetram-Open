@@ -17,7 +17,7 @@
     "devDependencies": {
         "@sentry/browser": "^7.45.0",
         "@sentry/tracing": "^7.45.0",
-        "@sentry/vite-plugin": "^0.4.0",
+        "@sentry/vite-plugin": "^0.7.2",
         "@types/dotenv-parse-variables": "^2.0.1",
         "@types/html-minifier-terser": "^7.0.0",
         "@types/jquery": "^3.5.16",
