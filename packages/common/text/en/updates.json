@@ -172,5 +172,17 @@
             "- Fix bug with character animations",
             "- Many new features and bug fixes"
         ]
+    },
+    "alpha-2.5.1": {
+        "title": "Kaetram alpha-2.5.1",
+        "content": [
+            "- Adds missing items to the game",
+            "- Fixed collisions around the map",
+            "- Fixed freezing bug with fishing spots",
+            "- Fixes to the death animation",
+            "- Fixes fishig bug when inventory full",
+            "- Fixed pirate captain teleport bug",
+            "- Update user interface icons"
+        ]
     }
 }
