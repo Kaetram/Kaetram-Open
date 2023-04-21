@@ -64,7 +64,7 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
-    public useWebGl = false;
+    public useWebGl = true;
 
     public constructor(public app: App) {
         this.storage = app.storage;

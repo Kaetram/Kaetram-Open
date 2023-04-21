@@ -29,8 +29,8 @@ export default class WebGL extends Renderer {
     private drawingContexts = [this.backContext, this.foreContext];
 
     // Program data that contains the shader information for tiling.
-    private backShader = new ProgramData(this.backContext, LayerVertex, LayerFragment);
-    private foreShader = new ProgramData(this.foreContext, LayerVertex, LayerFragment);
+    private backShader!: ProgramData;
+    private foreShader!: ProgramData;
 
     // Storage for tileset textures and layer information.
     private tilesets: { [canvas: string]: Tileset } = {};
@@ -80,14 +80,28 @@ export default class WebGL extends Renderer {
      */
 
     public override load(): void {
+        let tilesetCount = this.map.tilesets.length;
+
+        // Initialize the shaders and format the fragment shader.
+        this.backShader = new ProgramData(
+            this.backContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
+        this.foreShader = new ProgramData(
+            this.foreContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
+
         // Set the tileset texture indices.
-        this.tilesetIndices = new Int32Array(this.map.tilesets.length);
-        this.tilesetTileSizeBuffer = new Float32Array(this.map.tilesets.length * 2);
-        this.tilesetOffsetBuffer = new Float32Array(this.map.tilesets.length * 2);
-        this.inverseTilesetTextureSizeBuffer = new Float32Array(this.map.tilesets.length * 2);
+        this.tilesetIndices = new Int32Array(tilesetCount);
+        this.tilesetTileSizeBuffer = new Float32Array(tilesetCount * 2);
+        this.tilesetOffsetBuffer = new Float32Array(tilesetCount * 2);
+        this.inverseTilesetTextureSizeBuffer = new Float32Array(tilesetCount * 2);
 
         // Initialize the tileset buffers
-        for (let i = 0; i < this.map.tilesets.length; i++) {
+        for (let i = 0; i < tilesetCount; i++) {
             // Sets the index starting from 1 for the tileset texture.
             this.tilesetIndices[i] = i + 1;
 
@@ -194,7 +208,7 @@ export default class WebGL extends Renderer {
 
         for (let index = 0; index < this.tilesetIndices.length; index++)
             context.uniform1i(
-                context.getUniformLocation(shader.program, `uTilesets${index}`),
+                context.getUniformLocation(shader.program, `uTilesets[${index}]`),
                 this.tilesetIndices[index]
             );
 
@@ -366,6 +380,17 @@ export default class WebGL extends Renderer {
 
     private getQuadBuffer(context: WebGLRenderingContext): WebGLBuffer {
         return this.isBackgroundContext(context) ? this.backQuadBuffer : this.foreQuadBuffer;
+    }
+
+    /**
+     * Since we do not support dynamically allocating array sizes in the fragment shader
+     * we need to do some hacking and manually update the constant value.
+     * @param count The number of tilesets that we are using.
+     * @returns The formatted string of the fragment shader.
+     */
+
+    private getFragmentShader(count: number): string {
+        return LayerFragment.replace('TILESET_COUNT', count.toString());
     }
 
     /**
