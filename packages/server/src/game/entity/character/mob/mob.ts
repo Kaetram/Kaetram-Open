@@ -62,6 +62,7 @@ export default class Mob extends Character {
         'arrows',
         'unusual',
         'shards',
+        'fruits',
         'vegetables',
         'mushrooms'
     ]; // Default drop table for all mobs.
@@ -313,13 +314,20 @@ export default class Mob extends Character {
 
     /**
      * Override for the superclass `setPosition` with added teleporting support.
+     * @param x The new x position of the mob.
+     * @param y The new y position of the mob.
+     * @param withTeleport Whether or not the mob is teleporting. We use this flag
+     * to block any changes in position if the mob is teleporting.
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, withTeleport = false): void {
         // Prevent changes in position if the mob is teleporting.
         if (this.teleporting) return;
 
         super.setPosition(x, y);
+
+        // We update the teleporting flag if the mob is teleporting.
+        if (withTeleport) this.teleporting = true;
     }
 
     /**
@@ -418,9 +426,12 @@ export default class Mob extends Character {
             return undefined;
         }
 
-        return Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < drop
-            ? { key, count }
-            : undefined;
+        let probability = this.world.getDropProbability();
+
+        // If the chance is greater than the drop probability, we adjust the drop
+        if (drop > probability) drop = probability;
+
+        return Utils.randomInt(0, probability) < drop ? { key, count } : undefined;
     }
 
     /**

@@ -1402,6 +1402,28 @@ export default class Renderer {
     }
 
     /**
+     * Superclass implementation for updating the tile at a specified
+     * index. This is implemented by the WebGL renderer to update the
+     * tile in the buffer.
+     * @param index The index at which to update the tile.
+     * @param data The data with which to update the tile.
+     */
+
+    public setTile(index: number, data: RegionTile): void {
+        // unimplemented
+    }
+
+    /**
+     * Superclass implementation used by the WebGL renderer when we
+     * want to update the texture information. This is used for
+     * updating the tile layer texture for each layer.
+     */
+
+    public bindTileLayers(): void {
+        //
+    }
+
+    /**
      * Iterates through each of the animated tiles.
      * @param callback Returns the tile object for that animated tile.
      */
