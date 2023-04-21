@@ -93,6 +93,9 @@ export default class Layer {
      */
 
     public clear(index: number): void {
+        // Increase the index.
+        index *= 4;
+
         this.backgroundData[index] =
             this.backgroundData[index + 1] =
             this.backgroundData[index + 2] =
