@@ -105,7 +105,11 @@ export default defineConfig(async ({ mode }) => {
                 include: '.',
                 org: config.sentryOrg,
                 project: config.sentryProject,
-                authToken: config.sentryAuthToken
+                authToken: config.sentryAuthToken,
+                sourcemaps: {
+                    // Specify the directory containing build artifacts
+                    assets: './dist/**'
+                }
             })
         );
 
