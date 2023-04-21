@@ -333,7 +333,11 @@ export default class Incoming {
 
             case Opcodes.Movement.Entity: {
                 entity = this.entities.get(targetInstance!) as Character;
-                entity?.setPosition(requestX!, requestY!);
+
+                // Skip player entities as they sync up with the movement.
+                if (entity?.isPlayer()) return;
+
+                entity.setPosition(requestX!, requestY!);
                 break;
             }
         }
