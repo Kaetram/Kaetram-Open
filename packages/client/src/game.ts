@@ -64,7 +64,7 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
-    public useWebGl = true;
+    public useWebGl = false;
 
     public constructor(public app: App) {
         this.storage = app.storage;
@@ -210,6 +210,9 @@ export default class Game {
         let path: number[][] = [];
 
         path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
+
+        // Stop if there is no path.
+        if (path.length === 0) return path;
 
         // Special case for fishing where we remove the last path if it is colliding.
         if (cursor === 'fishing') {
