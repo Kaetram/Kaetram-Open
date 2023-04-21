@@ -46,7 +46,7 @@ export default class ResourceSkill extends Skill {
         // Could not find resource interaction data for the resource.
         if (!resourceInfo)
             return log.warning(
-                `${player.username} attempted to interact with a resource with invalid data.`
+                `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
             );
 
         // Level required for this resource is too high for the yplayer.
