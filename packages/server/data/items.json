@@ -3973,6 +3973,34 @@
     }
   },
 
+  "cowarmor": {
+    "type": "armour",
+    "name": "Cow Armour",
+    "price": 4500,
+    "skill": "defense",
+    "level": 55,
+    "attackStats": {
+      "crush": 33,
+      "slash": 48,
+      "stab": 44,
+      "archery": 0,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 16,
+      "archery": 10,
+      "magic": 35
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 14,
+      "archery": 13,
+      "magic": 8
+    }
+  },
+
   "ninjaarmor": {
     "type": "armour",
     "name": "Ninja Armour",
@@ -5357,8 +5385,18 @@
     "description": "A delicious piece of chicken. It's pretty tasty.",
     "edible": true,
     "plugin": "healingitem",
-    "healAmount": 300,
-    "price": 100
+    "healAmount": 400,
+    "price": 250
+  },
+
+  "cookedbeef": {
+    "type": "object",
+    "name": "Cooked Beef",
+    "description": "A scrumptious piece of beef. You can eat it and it'll heal you.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 400,
+    "price": 250
   },
 
   "rawpork": {
