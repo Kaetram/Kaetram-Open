@@ -5,7 +5,7 @@
 
     position: absolute;
     right: 10px;
-    bottom: 56px;
+    bottom: 80px;
 
     display: none;
 
@@ -82,5 +82,11 @@
             font-size: 6px * $i;
             text-align: center;
         }
+    }
+}
+
+@media (--sm) {
+    #inventory {
+        bottom: 56px;
     }
 }
