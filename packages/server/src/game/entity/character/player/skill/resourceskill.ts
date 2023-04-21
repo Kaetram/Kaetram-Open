@@ -76,8 +76,8 @@ export default class ResourceSkill extends Skill {
         if (this.loop) this.stop();
 
         this.loop = setInterval(() => {
-            // Stops the loop if the resource has been depleted by someone else (globally).
-            if (resource.isDepleted()) return this.stop();
+            // Stops the loop when the resource is depleted or the player cannot hold the resource.
+            if (resource.isDepleted() || !this.canHold(player)) return this.stop();
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
