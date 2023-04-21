@@ -46,7 +46,7 @@ export default class ResourceSkill extends Skill {
         // Could not find resource interaction data for the resource.
         if (!resourceInfo)
             return log.warning(
-                `${player.username} attempted to interact with a resource with invalid data.`
+                `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
             );
 
         // Level required for this resource is too high for the yplayer.
@@ -66,7 +66,7 @@ export default class ResourceSkill extends Skill {
         if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
             return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
 
-        if (!player.inventory.hasSpace()) return player.notify(ResourceEn.INVENTORY_FULL);
+        if (!this.canHold(player)) return player.notify(ResourceEn.INVENTORY_FULL);
 
         /**
          * Stops the existing loop if the player is attempting to interact with the resource
@@ -76,8 +76,8 @@ export default class ResourceSkill extends Skill {
         if (this.loop) this.stop();
 
         this.loop = setInterval(() => {
-            // Stops the loop if the resource has been depleted by someone else (globally).
-            if (resource.isDepleted()) return this.stop();
+            // Stops the loop when the resource is depleted or the player cannot hold the resource.
+            if (resource.isDepleted() || !this.canHold(player)) return this.stop();
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
@@ -128,11 +128,23 @@ export default class ResourceSkill extends Skill {
     /**
      * Creates an item instance of the item that the resource rewards.
      * @param key The item key we are creating.
+     * @param count The amount of the item we are creating.
      * @returns The newly created item instance.
      */
 
-    private getItem(key: string): Item {
+    protected getItem(key: string): Item {
         return new Item(key, -1, -1, false, 1);
+    }
+
+    /**
+     * Function to check whether or not we can hold the resource. We use this
+     * because of subclass implementations where double rewards are active.
+     * @param player The player that is attempting to hold the resource.
+     * @returns Whether or not the player has space in their inventory.
+     */
+
+    protected canHold(player: Player): boolean {
+        return player.inventory.hasSpace();
     }
 
     /**

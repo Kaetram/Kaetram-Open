@@ -590,11 +590,12 @@ export const Constants = {
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,
     ATTACKER_TIMEOUT: 20_000, // 20 seconds
-    MAX_GUILD_MEMBERS: 40 // Maximum number of members in a guild
+    MAX_GUILD_MEMBERS: 40, // Maximum number of members in a guild
+    EVENTS_CHECK_INTERVAL: 3_600_000 // Every 1 hour
 };
 
 export enum MinigameConstants {
-    TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby
+    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby
     TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
 }
 

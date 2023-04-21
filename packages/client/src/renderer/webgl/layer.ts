@@ -88,6 +88,28 @@ export default class Layer {
     }
 
     /**
+     * Clears a tile from the texture data at a provided index.
+     * @param index The index at which we want to clear the tile.
+     */
+
+    public clear(index: number): void {
+        // Increase the index.
+        index *= 4;
+
+        this.backgroundData[index] =
+            this.backgroundData[index + 1] =
+            this.backgroundData[index + 2] =
+            this.backgroundData[index + 3] =
+                255;
+
+        this.foregroundData[index] =
+            this.foregroundData[index + 1] =
+            this.foregroundData[index + 2] =
+            this.foregroundData[index + 3] =
+                255;
+    }
+
+    /**
      * We add a tile to the specific texture data based on the provided index and value.
      * @param index Represents the index at which the tile will be added (index * 4 for the buffer.)
      * @param tile Contains information about the tile, this can be a flat tile (number value) or a rotated

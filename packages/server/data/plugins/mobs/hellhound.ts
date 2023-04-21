@@ -77,4 +77,20 @@ export default class Hellhound extends Default {
 
         this.minionsSpawned++;
     }
+
+    /**
+     * Override for the handle death callback. Remove the minions and
+     * reset the minion spawn count.
+     * @param attacker The attacker that killed the mob.
+     */
+
+    protected override handleDeath(attacker?: Character): void {
+        super.handleDeath(attacker);
+
+        // Clear all the minions from the list.
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
+
+        // Reset minion spawn count.
+        this.minionsSpawned = 0;
+    }
 }

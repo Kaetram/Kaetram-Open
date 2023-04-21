@@ -11,6 +11,7 @@ import Crafting from '../controllers/crafting';
 import API from '../network/api';
 import Network from '../network/network';
 import Client from '../network/client';
+import Events from '../controllers/events';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -53,6 +54,7 @@ export default class World {
     public crafting: Crafting = new Crafting();
     public guilds: Guilds;
     public client: Client;
+    public events: Events;
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -73,6 +75,7 @@ export default class World {
         this.minigames = new Minigames(this);
         this.guilds = new Guilds(this);
         this.client = new Client(this);
+        this.events = new Events(this);
 
         this.discord.onMessage(this.globalMessage.bind(this));
 
@@ -288,6 +291,31 @@ export default class World {
 
     public getPopulation(): number {
         return Object.keys(this.entities.players).length;
+    }
+
+    /**
+     * Determines whether or not to use the double drop probability
+     * based on the current special event status. These are statuses
+     * enabled during the weekends randomly.
+     * @returns The drop probability depending on the special event status.
+     */
+
+    public getDropProbability(): number {
+        if (!this.events.isDoubleDrop()) return Modules.Constants.DROP_PROBABILITY;
+
+        return this.events.doubleDropProbability;
+    }
+
+    /**
+     * Uses the events controller to determine the experience per hit if the
+     * event is currently enabled.
+     * @returns The amount of experience per hit.
+     */
+
+    public getExperiencePerHit(): number {
+        if (!this.events.isIncreasedExperience()) return Modules.Constants.EXPERIENCE_PER_HIT;
+
+        return this.events.experiencePerHit;
     }
 
     /**

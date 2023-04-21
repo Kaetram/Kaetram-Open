@@ -1529,13 +1529,13 @@
   "goldring": {
     "type": "ring",
     "name": "Gold Ring",
-    "price": 125000
+    "price": 2250
   },
   
   "silverring": {
     "type": "ring",
     "name": "Silver Ring",
-    "price": 52500
+    "price": 1250
   },
 
   "ring1": {
@@ -5560,6 +5560,16 @@
     "type": "object",
     "name": "Tomato",
     "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 100,
+    "price": 100
+  },
+
+  "onion": {
+    "type": "object",
+    "name": "Onion",
+    "description": "An onion, it has layers, like an ogre.",
     "edible": true,
     "plugin": "healingitem",
     "healAmount": 100,

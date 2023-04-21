@@ -110,6 +110,9 @@ export default class Map {
 
         // Save data after we finish parsing it.
         this.saveMapData();
+
+        // Bind the tile layer textures after we finish parsing the map.
+        if (this.game.useWebGl) this.game.renderer.bindTileLayers();
     }
 
     /**
@@ -144,6 +147,9 @@ export default class Map {
 
             // If the tile doesn't have an object but the index is in our objects array, we remove it.
             if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
+
+            // Add the tile information to the WebGL renderer if it's active.
+            if (this.game.useWebGl) this.game.renderer.setTile(index, tile.data);
         }
 
         // Store the region we just saved into our local storage.

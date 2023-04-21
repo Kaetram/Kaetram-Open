@@ -72,7 +72,7 @@ export default class Crafting {
         player.send(
             new CraftingPacket(Opcodes.Crafting.Select, {
                 key,
-                name: (Items as RawData)[key].name,
+                name: (Items as RawData)[key]?.name,
                 level: craftingItem.level,
                 result: craftingItem.result.count,
                 requirements: craftingItem.requirements
