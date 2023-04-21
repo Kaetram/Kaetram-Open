@@ -25,5 +25,12 @@
         "experience": 25,
         "difficulty": 1,
         "item": "tomato"
+    },
+
+    "peach": {
+        "levelRequirement": 5,
+        "experience": 30,
+        "difficulty": 1,
+        "item": "peach"
     }
 }
