@@ -511,7 +511,7 @@ export default class Player extends Character {
 
         let loitering = this.skills.get(Modules.Skills.Loitering);
 
-        loitering.addExperience(loitering.level * 6);
+        loitering.addExperience(loitering.level * 5);
     }
 
     /**
