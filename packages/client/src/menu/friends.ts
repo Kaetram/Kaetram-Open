@@ -9,6 +9,10 @@ import type Player from '../entity/character/player/player';
 
 type ConfirmCallback = (username: string, remove?: boolean) => void;
 
+interface FriendsElement extends HTMLLIElement {
+    username: string;
+}
+
 export default class Friends extends Menu {
     private page: HTMLDivElement = document.querySelector('#friends-page')!;
 
@@ -44,6 +48,10 @@ export default class Friends extends Menu {
         this.confirm.addEventListener('click', this.handleConfirm.bind(this));
         this.cancel.addEventListener('click', this.hidePopup.bind(this));
     }
+
+    /**
+     * Handles the resizing and adjustment of username length for the player.
+     */
 
     public override resize(): void {
         for (let key in this.player.friends) {
@@ -97,7 +105,7 @@ export default class Friends extends Menu {
 
     private handleConfirm(): void {
         let username = this.input.value,
-            remove = this.removeActive; // Before we clear its status.
+            remove = this.removeActive;
 
         // Clear the input field.
         this.input.value = '';
@@ -168,7 +176,7 @@ export default class Friends extends Menu {
      */
 
     private createElement(username: string, online = false, serverId = -1): void {
-        let element = document.createElement('li'),
+        let element = document.createElement('li') as FriendsElement,
             name = document.createElement('p'),
             world = document.createElement('p');
 
@@ -197,6 +205,9 @@ export default class Friends extends Menu {
         // Add the name element to the friend slot element.
         element.append(name, world);
 
+        // Store the username of the friend in the element.
+        element.username = username.toLowerCase();
+
         // Add the friend slot element to the friend list.
         this.list.append(element);
 
@@ -209,13 +220,10 @@ export default class Friends extends Menu {
      */
 
     private removeElement(username: string): void {
-        let friend = this.player.friends[username];
+        let element = this.get(username);
 
-        // No friend has been found.
-        if (!friend) return;
-
-        // Remove the friend from the UI list.
-        this.list.children[friend.id].remove();
+        // Delete the element from the DOM.
+        if (element) element.remove();
 
         // Remove the friend from the player's friend list.
         delete this.player.friends[username];
@@ -234,8 +242,13 @@ export default class Friends extends Menu {
         // No friend has been found.
         if (!friend) return;
 
+        let element = this.get(username);
+
+        // No element has been found.
+        if (!element) return;
+
         // Grab the friend's name element.
-        let world = this.list.children[friend.id].children[1] as HTMLParagraphElement;
+        let world = element.children[1] as HTMLParagraphElement;
 
         // If the friend is online, add the online class (makes the username green).
         if (online) {
@@ -253,6 +266,20 @@ export default class Friends extends Menu {
 
     public isPopupActive(): boolean {
         return this.popupActive;
+    }
+
+    /**
+     * Grabs a friend slot element based on the username provided.
+     * @param username The username of the friend we are grabbing.
+     * @returns A friends slot element if found, otherwise undefined.
+     */
+
+    private get(username: string): FriendsElement | undefined {
+        for (let child of this.list.children)
+            if ((child as FriendsElement).username === username.toLowerCase())
+                return child as FriendsElement;
+
+        return undefined;
     }
 
     /**
