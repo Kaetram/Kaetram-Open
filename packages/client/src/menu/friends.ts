@@ -117,7 +117,7 @@ export default class Friends extends Menu {
      */
 
     private handleMessage(username: string): void {
-        if (!this.player.friends[username].online) return;
+        if (!this.player.friends[username]?.online) return;
 
         this.messageCallback?.(username);
     }
