@@ -138,7 +138,9 @@ export default class Player extends Character {
                 quest.stage,
                 quest.stageCount!,
                 quest.subStage,
-                quest.rewards
+                quest.rewards,
+                quest.skillRequirements,
+                quest.questRequirements
             );
     }
 

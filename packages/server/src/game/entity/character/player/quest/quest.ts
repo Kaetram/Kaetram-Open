@@ -1,8 +1,9 @@
 import Item from '../../../objects/item';
+import Quests from '../../../../../../data/quests.json';
 
 import log from '@kaetram/common/util/log';
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
