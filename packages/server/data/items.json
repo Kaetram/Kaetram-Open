@@ -1529,13 +1529,13 @@
   "goldring": {
     "type": "ring",
     "name": "Gold Ring",
-    "price": 125000
+    "price": 2250
   },
   
   "silverring": {
     "type": "ring",
     "name": "Silver Ring",
-    "price": 52500
+    "price": 1250
   },
 
   "ring1": {
@@ -3973,6 +3973,34 @@
     }
   },
 
+  "cowarmor": {
+    "type": "armour",
+    "name": "Cow Armour",
+    "price": 4500,
+    "skill": "defense",
+    "level": 55,
+    "attackStats": {
+      "crush": 33,
+      "slash": 48,
+      "stab": 44,
+      "archery": 0,
+      "magic": 8
+    },
+    "defenseStats": {
+      "crush": 10,
+      "slash": 22,
+      "stab": 16,
+      "archery": 10,
+      "magic": 35
+    },
+    "bonuses": {
+      "accuracy": 14,
+      "strength": 14,
+      "archery": 13,
+      "magic": 8
+    }
+  },
+
   "ninjaarmor": {
     "type": "armour",
     "name": "Ninja Armour",
@@ -5357,8 +5385,18 @@
     "description": "A delicious piece of chicken. It's pretty tasty.",
     "edible": true,
     "plugin": "healingitem",
-    "healAmount": 300,
-    "price": 100
+    "healAmount": 400,
+    "price": 250
+  },
+
+  "cookedbeef": {
+    "type": "object",
+    "name": "Cooked Beef",
+    "description": "A scrumptious piece of beef. You can eat it and it'll heal you.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 400,
+    "price": 250
   },
 
   "rawpork": {
@@ -5560,6 +5598,16 @@
     "type": "object",
     "name": "Tomato",
     "description": "A tomato, it's a fruit and it's edible. Yes it's a fruit get over it.",
+    "edible": true,
+    "plugin": "healingitem",
+    "healAmount": 100,
+    "price": 100
+  },
+
+  "onion": {
+    "type": "object",
+    "name": "Onion",
+    "description": "An onion, it has layers, like an ogre.",
     "edible": true,
     "plugin": "healingitem",
     "healAmount": 100,

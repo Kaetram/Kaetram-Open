@@ -1518,7 +1518,7 @@
     "offsetY": -21
   },
   {
-    "id": "crystalscolpion",
+    "id": "crystalscorpion",
     "width": 64,
     "height": 72,
     "animations": {
@@ -3284,6 +3284,19 @@
   },
   {
     "id": "oldlady",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "oldlady2",
     "width": 24,
     "height": 24,
     "animations": {
@@ -7614,6 +7627,19 @@
   },
   {
     "id": "villagegirl2",
+    "width": 24,
+    "height": 24,
+    "animations": {
+      "idle_down": {
+        "length": 2,
+        "row": 0
+      }
+    },
+    "offsetX": -4,
+    "offsetY": -8
+  },
+  {
+    "id": "villagegirl3",
     "width": 24,
     "height": 24,
     "animations": {

@@ -415,11 +415,12 @@ export default class Character extends Entity {
     /**
      * Return an entity to the base idle state.
      * @param o Optional parameter if we want to update the orientation.
+     * @param force Whether or not we force the idle animation.
      */
 
-    public override idle(o?: Modules.Orientation): void {
+    public override idle(o?: Modules.Orientation, force = false): void {
         // Prevents the idle animation from affecting the walking animation.
-        if (this.hasPath()) return;
+        if (this.hasPath() && !force) return;
 
         let orientation = o || this.orientation;
 
