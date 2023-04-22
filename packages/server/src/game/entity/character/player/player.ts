@@ -442,10 +442,14 @@ export default class Player extends Character {
 
         this.notify(`Welcome back to ${config.name}!`);
 
-        let population = this.world.getPopulation();
+        let population = this.world.getPopulation(),
+            { activeEvent } = this.world.events;
 
         if (population > 1)
             this.notify(`There are currently ${population} players online.`, '', '', true);
+
+        if (activeEvent)
+            this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
     }
 
     /**
@@ -507,7 +511,7 @@ export default class Player extends Character {
 
         let loitering = this.skills.get(Modules.Skills.Loitering);
 
-        loitering.addExperience(loitering.level * 6);
+        loitering.addExperience(loitering.level * 5);
     }
 
     /**
@@ -897,14 +901,15 @@ export default class Player extends Character {
         // Ignore invalid damage values.
         if (damage < 1) return;
 
-        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+        let experience = damage * this.world.getExperiencePerHit(),
             weapon = this.equipment.getWeapon();
 
         /**
          * If the player doesn't have enough mana then we halve the experience gain.
+         * We make the experience half of what it would normally be.
          */
 
-        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
+        if (!this.hasManaForAttack()) experience = Math.floor(experience / 2);
 
         /**
          * Since there are four combat skills, we evenly distribute the experience between them.

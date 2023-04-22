@@ -222,12 +222,7 @@ export default class Incoming {
         this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
         // Synchronize friends list cross-server by sending inactive friends to hub.
-        this.world.client.send(
-            new Friends(Opcodes.Friends.Sync, {
-                username: this.player.username,
-                inactiveFriends: this.player.friends?.getInactiveFriends()
-            })
-        );
+        this.player.friends.sync();
 
         if (this.player.isDead()) this.player.deathCallback?.();
 
@@ -333,8 +328,11 @@ export default class Incoming {
 
             case Opcodes.Movement.Entity: {
                 entity = this.entities.get(targetInstance!) as Character;
-                entity?.setPosition(requestX!, requestY!);
-                break;
+
+                // Skip players or invalid entities.
+                if (!entity || entity.isPlayer()) return;
+
+                return entity.setPosition(requestX!, requestY!);
             }
         }
     }

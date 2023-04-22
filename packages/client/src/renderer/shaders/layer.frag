@@ -1,7 +1,7 @@
 precision mediump float;
 // TODO: There is a bit too much branching here, need to try and simplify a bit
 
-const int uTilesetCount = 6;
+const int uTilesetCount = TILESET_COUNT;
 
 varying vec2 vPixelCoord;
 varying vec2 vTextureCoord;
@@ -15,6 +15,7 @@ uniform sampler2D uTilesets2;
 uniform sampler2D uTilesets3;
 uniform sampler2D uTilesets4;
 uniform sampler2D uTilesets5;
+uniform sampler2D uTilesets[uTilesetCount];
 
 uniform vec2 uTilesetTileSize[uTilesetCount];
 uniform vec2 uTilesetTileOffset[uTilesetCount];
@@ -71,29 +72,9 @@ vec2 getTilesetTileOffset(int index)
 }
 
 vec4 getColor(int index, vec2 coord) {
-    if (index == 0) {
-        return texture2D(uTilesets0, coord * uInverseTilesetTextureSize[0]);
-    }
-
-    if (index == 1) {
-        return texture2D(uTilesets1, coord * uInverseTilesetTextureSize[1]);
-    }
-
-    if (index == 2) {
-        return texture2D(uTilesets2, coord * uInverseTilesetTextureSize[2]);
-    }
-
-    if (index == 3) {
-        return texture2D(uTilesets3, coord * uInverseTilesetTextureSize[3]);
-    }
-
-    if (index == 4) {
-        return texture2D(uTilesets4, coord * uInverseTilesetTextureSize[4]);
-    }
-
-    if (index == 5) {
-        return texture2D(uTilesets5, coord * uInverseTilesetTextureSize[5]);
-    }
+    for (int i = 0; i < uTilesetCount; ++i)
+        if (i == index)
+            return texture2D(uTilesets[i], coord * uInverseTilesetTextureSize[i]);
 
     return vec4(0.0, 0.0, 0.0, 0.0);
 }

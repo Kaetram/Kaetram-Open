@@ -1,8 +1,7 @@
-import log from '../lib/log';
-
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
+import type Player from '../entity/character/player/player';
 import type App from '../app';
 import type Overlays from '../renderer/overlays';
 import type InfoController from '../controllers/info';
@@ -23,7 +22,6 @@ import type Entity from '../entity/entity';
 import type Item from '../entity/objects/item';
 import type NPC from '../entity/npc/npc';
 import type Character from '../entity/character/character';
-import type Player from '../entity/character/player/player';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
@@ -422,45 +420,48 @@ export default class Connection {
      */
 
     private handleTeleport(info: TeleportPacket): void {
-        let player = this.entities.get<Player>(info.instance);
+        let entity = this.entities.get<Character>(info.instance);
 
-        if (!player) return;
+        if (!entity?.isMob() && !entity?.isPlayer()) return;
 
         this.input.selectedCellVisible = false;
 
-        // If the player is the same as our main player.
-        let currentPlayer = player.instance === this.game.player.instance;
+        // If the entity is the same as our main entity.
+        let currentPlayer = entity.instance === this.game.player.instance;
 
         // Stop and freeze the player until teleprtation is complete.
-        player.stop(true);
-        player.frozen = true;
-        player.disableAction = true;
+        entity.stop(true);
+        entity.frozen = true;
 
-        // Clears all bubbles when our main player teleports.
-        if (currentPlayer) this.bubble.clean();
-        else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
+        // Clears all bubbles when our main entity teleports.
+        if (currentPlayer) {
+            this.bubble.clean();
+
+            // Disable keyboard actions until teleportation is complete.
+            this.game.player.disableAction = true;
+        } else this.bubble.clear(entity.instance); // Clears bubble of teleporting entity.
 
         // No animation, skip straight to teleporting.
-        if (!info.withAnimation) return this.game.teleport(player, info.x, info.y);
+        if (!info.withAnimation) return this.game.teleport(entity, info.x, info.y);
 
-        // Copy the player's sprite temporarily.
-        let playerSprite = player.sprite;
+        // Copy the entity's sprite temporarily.
+        let entitySprite = entity.sprite.key;
 
         // Prevent rendering of the sword.
-        player.teleporting = true;
+        entity.teleporting = true;
 
-        // Set the player's sprite to the death animation sprite.
-        player.setSprite(this.sprites.getDeath());
+        // Set the entity's sprite to the death animation sprite.
+        entity.setSprite(this.sprites.getDeath());
 
-        player.animateDeath(() => {
-            this.game.teleport(player, info.x, info.y);
+        entity.animateDeath(() => {
+            this.game.teleport(entity, info.x, info.y);
 
             // Reset the animation.
-            player.animation = null;
+            entity.animation = null;
 
-            // Restore the player's sprite.
-            player.setSprite(playerSprite);
-            player.idle();
+            // Restore the entity's sprite.
+            entity.setSprite(this.sprites.get(entitySprite));
+            entity.idle(entity.orientation, true);
         }, 160);
     }
 

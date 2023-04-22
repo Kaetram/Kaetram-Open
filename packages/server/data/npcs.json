@@ -18,6 +18,11 @@
     "text": ["Hope you're having a good day!"]
   },
 
+  "villagegirl3": {
+    "name": "Another Village Girl",
+    "text": ["How's yous doings?"]
+  },
+
   "villager": {
     "name": "Forester",
     "text": ["Good day to you!"],
@@ -97,7 +102,8 @@
   },
 
   "doctor": {
-    "name": "Doctor"
+    "name": "Doctor",
+    "text": ["I'm a doctor, not a magician."]
   },
 
   "oddeyecat": {
@@ -272,6 +278,10 @@
   "oldlady": {
     "name": "Old Lady",
     "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
+  },
+
+  "oldlady2": {
+    "name": "Old Lady"
   },
 
   "ratnpc": {
