@@ -89,8 +89,6 @@ export default class Statistics {
 
         this.mobExamines.push(key);
 
-        console.log(this.mobExamines);
-
         // Handle achievements for each milestone
         switch (this.mobExamines.length) {
             case 10: {
