@@ -284,6 +284,9 @@ export default abstract class Character extends Entity {
      */
 
     private handleBloodsucking(attacker: Character, damage: number): void {
+        // Blood sucking has a 30% chance of occurring, so we return 70% of the time.
+        if (Utils.randomInt(0, 100) > 30) return;
+
         // 5% of the damage dealt per level of bloodsucking is healed.
         let heal = Math.floor(damage * (0.05 * attacker.getBloodsuckingLevel()));
 

@@ -7,7 +7,7 @@ import LayerVertex from '../shaders/layer.vert';
 import LayerFragment from '../shaders/layer.frag';
 
 import type Game from '../../game';
-import type { RotatedTile } from '@kaetram/common/types/map';
+import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
 
 /**
  * Huge thanks to the developer of `gl-tiled` for the point of reference in
@@ -29,8 +29,8 @@ export default class WebGL extends Renderer {
     private drawingContexts = [this.backContext, this.foreContext];
 
     // Program data that contains the shader information for tiling.
-    private backShader = new ProgramData(this.backContext, LayerVertex, LayerFragment);
-    private foreShader = new ProgramData(this.foreContext, LayerVertex, LayerFragment);
+    private backShader!: ProgramData;
+    private foreShader!: ProgramData;
 
     // Storage for tileset textures and layer information.
     private tilesets: { [canvas: string]: Tileset } = {};
@@ -80,14 +80,28 @@ export default class WebGL extends Renderer {
      */
 
     public override load(): void {
+        let tilesetCount = this.map.tilesets.length;
+
+        // Initialize the shaders and format the fragment shader.
+        this.backShader = new ProgramData(
+            this.backContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
+        this.foreShader = new ProgramData(
+            this.foreContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
+
         // Set the tileset texture indices.
-        this.tilesetIndices = new Int32Array(this.map.tilesets.length);
-        this.tilesetTileSizeBuffer = new Float32Array(this.map.tilesets.length * 2);
-        this.tilesetOffsetBuffer = new Float32Array(this.map.tilesets.length * 2);
-        this.inverseTilesetTextureSizeBuffer = new Float32Array(this.map.tilesets.length * 2);
+        this.tilesetIndices = new Int32Array(tilesetCount);
+        this.tilesetTileSizeBuffer = new Float32Array(tilesetCount * 2);
+        this.tilesetOffsetBuffer = new Float32Array(tilesetCount * 2);
+        this.inverseTilesetTextureSizeBuffer = new Float32Array(tilesetCount * 2);
 
         // Initialize the tileset buffers
-        for (let i = 0; i < this.map.tilesets.length; i++) {
+        for (let i = 0; i < tilesetCount; i++) {
             // Sets the index starting from 1 for the tileset texture.
             this.tilesetIndices[i] = i + 1;
 
@@ -111,9 +125,6 @@ export default class WebGL extends Renderer {
         this.inverseTileCount[0] = 1 / this.map.width;
         this.inverseTileCount[1] = 1 / this.map.height;
 
-        // Initialize the texture data with the map information we have.
-        this.loadMapTexture();
-
         // Load the buffer data...
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
             this.tilesets[(context.canvas as HTMLCanvasElement).id] = new Tileset(
@@ -133,27 +144,24 @@ export default class WebGL extends Renderer {
     }
 
     /**
-     * The map texture iterates through all the tile elements in the map and
-     * determines (based on the structure of the tile) which layer to place the
-     * tile on. For example, if we have a tile whose value is a number (i.e. 1),
-     * then we place the tile on the first index of the layers array. If we obtain
-     * an array of numbers (i.e. [1, 2]), then the first element is the 0 index
-     * on the layers and the second element is the 1 index on the layers.
+     * The `setTile` function handles information from the map to update a tile
+     * at a specific index. We do this so that we are always in sync with the
+     * information we receive from the server. Instead of loading the entire map
+     * as a batch, we can load the map in chunks and update the map as we receive
+     * information from the server.
+     * @param index The index at which we want to update the tile.
+     * @param data The data we want to update the tile with, may be an array or a number.
      */
 
-    private loadMapTexture(): void {
-        for (let index = 0; index < this.map.data.length; index++) {
-            let info = this.map.data[index];
+    public override setTile(index: number, data: RegionTile): void {
+        // Clear all the tiles of every layer at the specified index.
+        this.clearTile(index);
 
-            // If we find an array tile then we need to iterate through the array and pass the data to the layers.
-            if (Array.isArray(info)) {
-                for (let tile in info) this.addTile(index, info[tile], parseInt(tile));
-                continue;
-            }
+        // Add the tile if it is not an array
+        if (!Array.isArray(data)) return this.addTile(index, data);
 
-            // Otherwise just add the tile to the first layer.
-            this.addTile(index, info);
-        }
+        // If we find an array tile then we need to iterate through the array and pass the data to the layers.
+        for (let tileIndex in data) this.addTile(index, data[tileIndex], parseInt(tileIndex));
     }
 
     /**
@@ -200,7 +208,7 @@ export default class WebGL extends Renderer {
 
         for (let index = 0; index < this.tilesetIndices.length; index++)
             context.uniform1i(
-                context.getUniformLocation(shader.program, `uTilesets${index}`),
+                context.getUniformLocation(shader.program, `uTilesets[${index}]`),
                 this.tilesetIndices[index]
             );
 
@@ -210,6 +218,16 @@ export default class WebGL extends Renderer {
             shader.uniforms.uInverseTilesetTextureSize!,
             this.inverseTilesetTextureSizeBuffer
         );
+    }
+
+    /**
+     * Override for the `bindTileLayers` function. We use this function after we
+     * finish loading regions to signal to the drawing contexts that we need to
+     * re-bind the tile layers with the new texture data.
+     */
+
+    public override bindTileLayers(): void {
+        this.forEachDrawingContext((context: WebGLRenderingContext) => this.bindTexture(context));
     }
 
     /**
@@ -225,7 +243,7 @@ export default class WebGL extends Renderer {
             let viewPort = new Float32Array([this.screenWidth, this.screenHeight]),
                 shader = this.getShader(context);
 
-            console.log(`screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}`);
+            context.viewport(0, 0, context.canvas.width, context.canvas.height);
 
             context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
             context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
@@ -325,6 +343,16 @@ export default class WebGL extends Renderer {
     }
 
     /**
+     * Used for clearing a tile from all the layers when we want to dynamically
+     * update a piece of the map.
+     * @param index The index at which we are clearing the tile.
+     */
+
+    private clearTile(index: number): void {
+        for (let layer of this.layers) layer.clear(index);
+    }
+
+    /**
      * Checks whether or not the context is the background context.
      * @param context The context that we are checking.
      * @returns Whether or not the context is the background context.
@@ -352,6 +380,17 @@ export default class WebGL extends Renderer {
 
     private getQuadBuffer(context: WebGLRenderingContext): WebGLBuffer {
         return this.isBackgroundContext(context) ? this.backQuadBuffer : this.foreQuadBuffer;
+    }
+
+    /**
+     * Since we do not support dynamically allocating array sizes in the fragment shader
+     * we need to do some hacking and manually update the constant value.
+     * @param count The number of tilesets that we are using.
+     * @returns The formatted string of the fragment shader.
+     */
+
+    private getFragmentShader(count: number): string {
+        return LayerFragment.replace('TILESET_COUNT', count.toString());
     }
 
     /**

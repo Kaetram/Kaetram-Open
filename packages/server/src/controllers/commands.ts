@@ -918,6 +918,8 @@ export default class Commands {
             }
 
             case 'setrank': {
+                if (this.player.isHollowAdmin()) return;
+
                 let rankText = blocks.shift()!;
 
                 username = blocks.join(' ');
