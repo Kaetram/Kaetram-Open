@@ -14,7 +14,9 @@ export default class Task {
         public stage = 1,
         public stageCount = 1,
         public subStage?: number,
-        public rewards?: string[]
+        public rewards?: string[],
+        public skillRequirements: { [key: number]: number } = {},
+        public questRequirements: string[] = []
     ) {}
 
     /**
