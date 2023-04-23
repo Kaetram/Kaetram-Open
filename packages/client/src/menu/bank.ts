@@ -39,7 +39,7 @@ export default class Bank extends Menu {
         if (!this.inventoryList) return log.error('[Bank] Could not find the inventory slot list.');
 
         for (let i = 0; i < Modules.Constants.BANK_SIZE; i++) {
-            let slot = this.draggableSlot(
+            let slot = this.createDraggableSlot(
                 i,
                 Modules.ContainerType.Bank,
                 Modules.ContainerType.Inventory
@@ -49,7 +49,7 @@ export default class Bank extends Menu {
         }
 
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
-            let slot = this.draggableSlot(
+            let slot = this.createDraggableSlot(
                 i,
                 Modules.ContainerType.Inventory,
                 Modules.ContainerType.Bank
@@ -69,7 +69,7 @@ export default class Bank extends Menu {
      * @returns The slot element.
      */
 
-    private draggableSlot(
+    private createDraggableSlot(
         index: number,
         fromContainer: Modules.ContainerType,
         defaultContainer: Modules.ContainerType
@@ -86,19 +86,27 @@ export default class Bank extends Menu {
         return slot;
     }
 
+    /**
+     * Handles the hold event for the interface.
+     * @param clone The clone of the element being held.
+     * @param target The target of the element being held.
+     */
+
     private handleHold(clone: HTMLElement, target: HTMLElement): void {
         let fromContainer = clone?.dataset?.type,
             fromIndex = clone?.dataset?.index,
             toContainer = target?.dataset?.type,
             toIndex = target?.dataset?.index;
 
-        if (!fromContainer || !fromIndex || !toContainer || !toIndex) return;
+        // Ensure the validity of the containers and indexes.
+        if (isNaN(parseInt(fromContainer!)) || isNaN(parseInt(fromIndex!))) return;
+        if (isNaN(parseInt(toContainer!)) || isNaN(parseInt(toIndex!))) return;
 
         this.select(
-            parseInt(fromContainer),
-            parseInt(fromIndex),
-            parseInt(toContainer),
-            parseInt(toIndex)
+            parseInt(fromContainer!),
+            parseInt(fromIndex!),
+            parseInt(toContainer!),
+            parseInt(toIndex!)
         );
     }
 
