@@ -132,7 +132,7 @@ export default class Renderer {
     protected crownTier6!: Sprite;
     protected crownTier7!: Sprite;
 
-    public constructor(protected game: Game) {
+    public constructor(protected game: Game, public type = 'canvas') {
         this.map = game.map;
         this.camera = game.camera;
 
@@ -500,7 +500,7 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`FPS: ${this.fps}`, 10, 61, false, 'white');
+        this.drawText(`[${this.type}] FPS: ${this.fps}`, 10, 61, false, 'white');
     }
 
     /**

@@ -70,7 +70,7 @@ export default class WebGL extends Renderer {
     };
 
     public constructor(game: Game) {
-        super(game);
+        super(game, 'webgl');
     }
 
     /**

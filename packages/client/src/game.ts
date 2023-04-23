@@ -68,6 +68,7 @@ export default class Game {
 
     public constructor(public app: App) {
         this.storage = app.storage;
+        this.useWebGl = this.storage.isWebGl();
 
         this.player = new Player('', this);
 
@@ -88,7 +89,12 @@ export default class Game {
 
         app.sendStatus('Loading game');
 
-        this.map.onReady(() => app.ready());
+        this.map.onReady(() => {
+            app.ready();
+
+            // Initialize the renderer for WebGL.
+            this.renderer.load();
+        });
 
         app.onLogin(this.socket.connect.bind(this.socket));
         app.onResize(this.resize.bind(this));

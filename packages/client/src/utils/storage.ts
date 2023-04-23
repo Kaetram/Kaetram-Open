@@ -26,6 +26,7 @@ interface Settings {
     showNames: boolean;
     showLevels: boolean;
     disableCaching: boolean;
+    webgl: boolean;
 }
 
 interface RegionMapData {
@@ -93,7 +94,8 @@ export default class Storage {
                 debugMode: false,
                 showNames: true,
                 showLevels: true,
-                disableCaching: false
+                disableCaching: false,
+                webgl: false
             }
         };
     }
@@ -316,6 +318,17 @@ export default class Storage {
     }
 
     /**
+     * Disables or enables WebGL rendering.
+     * @param webGl The value of the webgl toggle switch.
+     */
+
+    public setWebGl(webGl: boolean): void {
+        this.data.settings.webgl = webGl;
+
+        this.save();
+    }
+
+    /**
      * Checks if the local storage version of the client
      * matches the window's config version.
      * @returns True if client version is the same as config version.
@@ -442,6 +455,14 @@ export default class Storage {
 
     public isNew(): boolean {
         return this.data.new;
+    }
+
+    /**
+     * @returns Whether or not the webgl property is on.
+     */
+
+    public isWebGl(): boolean {
+        return this.data.settings.webgl;
     }
 
     /**
