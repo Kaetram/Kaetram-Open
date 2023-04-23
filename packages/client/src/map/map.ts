@@ -260,9 +260,6 @@ export default class Map {
 
                 log.info(`Preloaded map data with ${keys.length} regions.`);
             }
-
-            // Used for WebGL to load map texture information.
-            this.game.renderer.load();
         });
     }
 
