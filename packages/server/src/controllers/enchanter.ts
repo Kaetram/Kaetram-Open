@@ -66,7 +66,7 @@ export default class Enchanter {
         if (!shardSlot.key.startsWith('shardt')) return player.notify(EnchantEn.NO_SHARD);
 
         // Item instance that we can manipulate and do checking on.
-        let item = player.inventory.getItem(itemSlot),
+        let item = player.inventory.getItem(itemSlot).copy(),
             enchantments = item.getAvailableEnchantments();
 
         // No enchantments available means the item cannot be enchanted.
@@ -98,11 +98,13 @@ export default class Enchanter {
         item.setEnchantment(enchantment, level);
 
         // Remove the item from the inventory and add the enchanted item.
-        player.inventory.remove(index, 1);
-        player.inventory.add(item);
+        itemSlot.update(item);
 
         // Send a notification to the player.
         player.notify(EnchantEn.SUCCESSFUL_ENCHANT);
+
+        // Synchronize the inventory with the new slots.
+        player.inventory.loadCallback?.();
     }
 
     /**
