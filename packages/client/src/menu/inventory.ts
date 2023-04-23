@@ -305,6 +305,12 @@ export default class Inventory extends Menu {
         return slot;
     }
 
+    /**
+     * Handles the holding action and performs the swap.
+     * @param clone The clone of the element being dragged.
+     * @param target The target element being dragged over.
+     */
+
     private handleHold(clone: HTMLElement, target: HTMLElement): void {
         let fromIndex = clone?.dataset?.index,
             toIndex = target?.dataset?.index;
