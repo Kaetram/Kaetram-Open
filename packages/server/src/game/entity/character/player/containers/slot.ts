@@ -134,6 +134,14 @@ export default class Slot {
     }
 
     /**
+     * @returns Whether or not the slot contains any enchantments.
+     */
+
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
+    }
+
+    /**
      * Returns the data in the slot in the form of a SlotData object.
      * @param clientInfo Whether or not to send the client information.
      * @returns SlotData interface object.

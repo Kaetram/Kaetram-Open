@@ -159,15 +159,30 @@ export default class Item extends Entity {
      */
 
     public copy(): this {
+        // These are weird hacks because of pointer references junk.
         return new Item(
-            this.key,
+            `${this.key}`,
             this.x,
             this.y,
             this.dropped,
             this.count,
-            this.enchantments,
+            this.copyEnchantments(),
             this.owner
         ) as this;
+    }
+
+    /**
+     * Copies the enchantments one by one in order to avoid any references
+     * to the original item's enchantments in the slot.
+     * @returns A new enchantment object that is a copy of the original.
+     */
+
+    private copyEnchantments(): Enchantments {
+        let enchantments: Enchantments = {};
+
+        for (let key in this.enchantments) enchantments[key] = this.enchantments[key];
+
+        return enchantments;
     }
 
     /**
