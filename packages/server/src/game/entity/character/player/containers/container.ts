@@ -27,7 +27,7 @@ export default abstract class Container {
 
     protected stackSize?: number;
 
-    private loadCallback?: () => void;
+    public loadCallback?: () => void;
 
     protected addCallback?: AddCallback;
     protected removeCallback?: RemoveCallback;
@@ -336,7 +336,9 @@ export default abstract class Container {
                     // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
                     slot.count < stackSize &&
                     // And the item is not enchanted.
-                    !item.isEnchanted()
+                    !item.isEnchanted() &&
+                    // And the slot is not enchanted.
+                    !slot.isEnchanted()
             );
 
         // If there's no slot with the same item, find an empty slot.
