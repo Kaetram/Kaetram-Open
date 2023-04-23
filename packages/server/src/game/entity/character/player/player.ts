@@ -739,9 +739,6 @@ export default class Player extends Character {
             case Modules.ContainerType.Bank: {
                 if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
 
-                // If the item is being moved from the bank to the inventory.
-                if (fromContainer === toContainer) return;
-
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
