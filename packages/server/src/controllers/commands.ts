@@ -957,6 +957,21 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Crafting);
             }
 
+            case 'ipban':
+            case 'unbanip': {
+                let ip = blocks.shift();
+
+                if (!ip) return log.info(`Malformed command, expected /${command} <ip>`);
+
+                this.player.database.setIpBan(ip, command === 'ipban');
+
+                log.info(`IP ${ip} has been banned.`);
+
+                // Kick all players with the same IP.
+                for (let player of this.entities.getPlayersByIp(ip))
+                    player.connection.reject('banned');
+            }
+
             case 'toggle': {
                 let key = blocks.shift()!,
                     effect: Modules.Effects = Modules.Effects.None;
