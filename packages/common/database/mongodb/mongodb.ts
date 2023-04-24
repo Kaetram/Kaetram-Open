@@ -170,6 +170,21 @@ export default class MongoDB {
     }
 
     /**
+     * Checks whether or not an IP string is contained within the database collection
+     * for IP bans. We use this to prevent connections from banned IPs.
+     * @param ip The IP string that we are checking for.
+     * @param callback Contains the result of the database check.
+     */
+
+    public isIpBanned(ip: string, callback: (banned: boolean) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let cursor = this.database.collection('ipbans').find({ ip });
+
+        cursor.toArray().then((bans) => callback(bans.length > 0));
+    }
+
+    /**
      * Removes a guild from our database.
      * @param identifier The identifier of the guild to remove.
      */
@@ -180,6 +195,23 @@ export default class MongoDB {
         let collection = this.database.collection('guilds');
 
         collection.deleteOne({ identifier });
+    }
+
+    /**
+     * Applies an IP ban to a specified IP address. We can use this function
+     * to both ban and unban an IP address.
+     * @param ip The IP string to ban or unban.
+     * @param banned Whether or not we are banning or unbanning the IP.
+     */
+
+    public setIpBan(ip: string, banned: boolean): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('ipbans');
+
+        if (banned) collection.insertOne({ ip });
+
+        if (!banned) collection.deleteOne({ ip });
     }
 
     /**
