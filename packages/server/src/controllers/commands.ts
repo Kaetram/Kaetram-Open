@@ -100,6 +100,45 @@ export default class Commands {
                 this.player.ping();
                 break;
             }
+
+            case 'guild': {
+                let subCommand = blocks.shift()!;
+
+                if (!this.player.guild) return this.player.notify('You are not in a guild.');
+
+                switch (subCommand) {
+                    case 'kick': {
+                        let username = blocks.join(' ');
+
+                        if (!username)
+                            return this.player.notify(
+                                'Malformed command, expected /guild kick [username]'
+                            );
+
+                        this.world.guilds.kick(this.player, username);
+
+                        break;
+                    }
+
+                    case 'rank': {
+                        let rank = blocks.shift()!,
+                            username = blocks.join(' ');
+
+                        if (!rank || !username)
+                            return this.player.notify(
+                                'Malformed command, expected /guild rank [rank 0-6] [username]'
+                            );
+
+                        // Prevent the player from setting the rank to landlord.
+                        if (parseInt(rank) === 7 || rank === 'landlord')
+                            return this.player.notify('You cannot set a rank to landlord.');
+
+                        this.world.guilds.setRank(this.player, username, parseInt(rank));
+                    }
+                }
+
+                break;
+            }
         }
     }
 
