@@ -2,9 +2,10 @@ import express from 'express';
 import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-import { Modules } from '@kaetram/common/network';
+import Stripe from 'stripe';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import { Modules } from '@kaetram/common/network';
 
 import type { Integration } from '@sentry/types';
 import type Cache from './cache';
@@ -18,6 +19,11 @@ import type {
     SkillExperience,
     TotalExperience
 } from '@kaetram/common/types/leaderboards';
+
+// Initialize stripe
+const stripe = new Stripe(config.stripeSecretKey, {
+    apiVersion: '2022-11-15'
+});
 
 /**
  * We use the API format from `@kaetram/server`.
@@ -69,6 +75,9 @@ export default class API {
         router.get('/leaderboards', this.handleLeaderboards.bind(this));
 
         router.post('/isOnline', this.handleIsOnline.bind(this));
+
+        // Initialize the Stripe endpoint
+        router.post(config.stripeEndpoint, this.handleStripe.bind(this));
     }
 
     /**
@@ -220,6 +229,57 @@ export default class API {
             status: 'success',
             online
         });
+    }
+
+    /**
+     * This is the webhook for Stripe payment processor. It's responsible
+     * for in-app purchases and relaying the information to the appropriate
+     * player should they be logged in on a world. If not, then we will look
+     * through the database to grant them their purchase.
+     * @param request Contains the headers and signatures from stripe.
+     * @param response The response we are sending back to stripe.
+     */
+
+    private handleStripe(request: Request, response: Response): void {
+        let signature = request.headers['stripe-signature'];
+
+        // Send an empty response if we don't have a signature.
+        if (!signature) {
+            response.send();
+
+            return log.warning('Stripe signature is missing from request.');
+        }
+
+        try {
+            // Construct an event based on the request body and signature.
+            let event = stripe.webhooks.constructEvent(
+                request.body,
+                signature,
+                config.stripeKeyLocal
+            );
+
+            // Handle events as needed.
+            switch (event.type) {
+                case 'payment_intent.succeeded': {
+                    let intentSuccess = event.data.object as Stripe.PaymentIntent;
+
+                    console.log(intentSuccess);
+
+                    // Relay information to the database/player here.
+                    break;
+                }
+
+                default: {
+                    log.warning(`Unhandled Stripe event: ${event.type}`);
+                    break;
+                }
+            }
+        } catch (error) {
+            response.status(400).send(`Webhook Error: ${(error as Error).message}`);
+            return;
+        }
+
+        response.send();
     }
 
     /**
