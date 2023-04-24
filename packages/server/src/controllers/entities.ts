@@ -456,6 +456,19 @@ export default class Entities {
     }
 
     /**
+     * Iterates through all the players and finds all the instances of the players
+     * who are connected from the same IP address.
+     * @param ip The string of the IP address we are looking for.
+     * @returns An array of player objects.
+     */
+
+    public getPlayersByIp(ip: string): Player[] {
+        return Object.values(this.players).filter(
+            (player: Player) => player.connection.address === ip
+        );
+    }
+
+    /**
      * Looks for the string of the entity in all the data files
      * and returns the type of entity it is.
      * @param key The string key of the entity we are determining.

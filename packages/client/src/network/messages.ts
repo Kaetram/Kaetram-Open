@@ -199,6 +199,11 @@ export default class Messages {
                 break;
             }
 
+            case 'banned': {
+                this.app.sendError('Your account has been disabled!');
+                break;
+            }
+
             case 'development': {
                 this.app.sendError('The game is currently in development mode.');
                 break;
