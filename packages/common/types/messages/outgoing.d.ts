@@ -293,6 +293,8 @@ export interface GuildPacket {
     message?: string;
     owner?: string;
     decoration?: Decoration;
+    experience?: number;
+    rank?: Modules.GuildRank;
 }
 
 export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;
