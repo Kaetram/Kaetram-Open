@@ -89,14 +89,14 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Leave: {
-                if (info?.username) return this.handleMemberLeave(info.username);
+                if (info?.username && info.username !== this.getUsername())
+                    return this.handleMemberLeave(info.username);
 
                 return this.handleBackButton();
             }
 
             case Opcodes.Guild.Rank: {
-                console.log(info);
-                break;
+                return this.setRank(info.username!, info.rank!);
             }
 
             case Opcodes.Guild.Update: {
@@ -247,8 +247,7 @@ export default class Guilds extends Menu {
         this.guildName.append(name);
 
         // Update the leave button to disband if we're the leader.
-        if (this.game.player.name.toLowerCase() === info.owner)
-            this.leaveButton.innerHTML = 'Disband';
+        if (this.getUsername() === info.owner) this.leaveButton.innerHTML = 'Disband';
 
         // Update the guild members list.
         for (let member of info.members!)
@@ -265,7 +264,7 @@ export default class Guilds extends Menu {
 
     private handleMemberJoin(username: string, serverId = -1): void {
         // Ignore if we're the one joining.
-        if (username === this.game.player.name.toLowerCase()) return;
+        if (username === this.getUsername()) return;
 
         this.createElement(this.memberList, Modules.GuildRank.Fledgling, username);
 
@@ -588,6 +587,21 @@ export default class Guilds extends Menu {
     }
 
     /**
+     * Updates the rank of a member in the guild interface.
+     * @param username The username of the member to update.
+     * @param rank The new rank of the member.
+     */
+
+    private setRank(username: string, rank: Modules.GuildRank): void {
+        let element = this.getElement(this.memberList, username);
+
+        if (!element) return;
+
+        // Update the class name with the new rank information.
+        element.className = `slot-element slot-${Modules.GuildRank[rank].toLowerCase()} stroke`;
+    }
+
+    /**
      * Override for the show function where we send a packet requesting
      * a list of active guilds if the player is not in a guild.
      */
@@ -685,7 +699,7 @@ export default class Guilds extends Menu {
             element.append(nameElement);
 
             let serverElement = document.createElement('span'),
-                isPlayer = this.game.player.name.toLowerCase() === element.identifier;
+                isPlayer = this.getUsername() === element.identifier;
 
             serverElement.className = `server ${isPlayer ? 'green' : 'red'}`;
 
@@ -749,6 +763,17 @@ export default class Guilds extends Menu {
             if ((element as ListElement).identifier === identifier) return element as ListElement;
 
         return undefined;
+    }
+
+    /**
+     * Shortcut function that returns the username of the player that is
+     * currently logged into the game. This is to just avoid typing out
+     * `this.game.player.name.toLowerCase()` every time.
+     * @returns The username of the player to lower case.
+     */
+
+    private getUsername(): string {
+        return this.game.player.name.toLowerCase();
     }
 
     /**

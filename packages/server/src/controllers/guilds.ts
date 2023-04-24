@@ -6,8 +6,8 @@ import { Guild as GuildPacket } from '@kaetram/common/network/impl';
 import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { GuildPacket as OutgoingGuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type { GuildData, ListInfo, Member } from '@kaetram/common/types/guild';
+import type { GuildPacket as OutgoingGuildPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Guilds {
     private database: MongoDB;
@@ -111,6 +111,12 @@ export default class Guilds {
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
             if (!guild) {
                 // Erase the guild identifier from the player.
+                player.guild = '';
+                return;
+            }
+
+            // Remove the player if they are not in the guild.
+            if (!guild.members.some((member) => member.username === player.username)) {
                 player.guild = '';
                 return;
             }
@@ -242,6 +248,52 @@ export default class Guilds {
     }
 
     /**
+     * Kicks a player from the guild based on the username. Kicking works similarly to
+     * leaving a guild, except that the player is leaving without their consent.
+     * @param player The player that is kicking someone from the guild.
+     * @param username The username of the player that is being kicked.
+     */
+
+    public kick(player: Player, username: string): void {
+        if (!player.guild)
+            return log.warning(
+                `${player.username} tried to kick someone from a guild that they're not in.`
+            );
+
+        // Grab the guild from the database.
+        this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
+            if (!guild)
+                return log.general(
+                    `Player ${player.username} tried to kick someone from a guild that doesn't exist.`
+                );
+
+            // Ensure the player is the owner of the guild.
+            if (player.username !== guild.owner)
+                return player.notify('You do not have permission to kick members from this guild.');
+
+            // Ensure the player is not kicking themselves.
+            if (player.username === username)
+                return player.notify('You cannot kick yourself from the guild.');
+
+            let otherPlayer = this.world.getPlayerByName(username);
+
+            // Remove the guild from the player being kicked if they're online.
+            if (otherPlayer) otherPlayer.guild = '';
+
+            // Sync to all the members in the guild.
+            this.synchronize(guild.members, Opcodes.Guild.Leave, {
+                username
+            });
+
+            // Remove the player from the guild's member list.
+            guild.members = guild.members.filter((member) => member.username !== username);
+
+            // Save the guild to the database.
+            this.database.creator.saveGuild(guild);
+        });
+    }
+
+    /**
      * Handles relaying a chat packet to all the members in the guild.
      * @param player The player that is sending the chat message.
      * @param message The message that the player is sending.
@@ -261,6 +313,78 @@ export default class Guilds {
                 username: player.username,
                 serverId: config.serverId,
                 message
+            });
+        });
+    }
+
+    /**
+     * Adds an experience to a guild and relays the information to all the members
+     * in the guild.
+     * @param player The player that is adding the experience.
+     * @param experience The amount of experience that is being added.
+     */
+
+    public addExperience(player: Player, experience: number): void {
+        if (!player.guild)
+            return log.warning(
+                `${player.username} tried to add experience to a guild that they're not in.`
+            );
+
+        this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
+            if (!guild)
+                return log.general(
+                    `Player ${player.username} tried to add experience to a guild that doesn't exist.`
+                );
+
+            guild.experience += experience;
+
+            this.database.creator.saveGuild(guild);
+
+            this.synchronize(guild.members, Opcodes.Guild.Experience, {
+                experience: guild.experience
+            });
+        });
+    }
+
+    /**
+     * Updates the rank of a player in the guild and relays the information to all
+     * the members in the guild.
+     * @param player The player that is updating the rank.
+     * @param username The username of the player that is having their rank updated.
+     * @param rank The rank that the player is being updated to.
+     */
+
+    public setRank(player: Player, username: string, rank: Modules.GuildRank): void {
+        if (!player.guild)
+            return log.warning(
+                `${player.username} tried to set a rank in a guild that they're not in.`
+            );
+
+        this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
+            if (!guild)
+                return log.general(
+                    `Player ${player.username} tried to set a rank in a guild that doesn't exist.`
+                );
+
+            // Ensure the player has the correct permissions to update the rank.
+            if (player.username !== guild.owner)
+                return player.notify(
+                    'You do not have permission to update the rank of this player.'
+                );
+
+            // Iterate through the members and skip if the username doesn't match.
+            for (let member of guild.members) {
+                if (member.username !== username) continue;
+
+                // Update the rank of the member.
+                member.rank = rank;
+            }
+
+            this.database.creator.saveGuild(guild);
+
+            this.synchronize(guild.members, Opcodes.Guild.Rank, {
+                username,
+                rank
             });
         });
     }
