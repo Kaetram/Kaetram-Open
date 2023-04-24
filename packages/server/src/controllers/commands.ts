@@ -957,19 +957,23 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Crafting);
             }
 
-            case 'ipban':
-            case 'unbanip': {
-                let ip = blocks.shift();
+            case 'ipban': {
+                let username = blocks.join(' ');
 
-                if (!ip) return log.info(`Malformed command, expected /${command} <ip>`);
+                if (!username)
+                    return log.info(`Malformed command, expected /${command} <username>`);
 
-                this.player.database.setIpBan(ip, command === 'ipban');
+                let player = this.world.getPlayerByName(username);
 
-                log.info(`IP ${ip} has been banned.`);
+                if (!player) return log.info(`Could not find player by name: ${username}.`);
+
+                this.player.database.setIpBan(player.connection.address, command === 'ipban');
+
+                this.player.notify(`Player ${player.username} has been IP banned`);
 
                 // Kick all players with the same IP.
-                for (let player of this.entities.getPlayersByIp(ip))
-                    player.connection.reject('banned');
+                for (let p of this.entities.getPlayersByIp(player.connection.address))
+                    p.connection.reject('banned');
             }
 
             case 'toggle': {
