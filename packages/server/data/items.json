@@ -5620,7 +5620,7 @@
     "description": "A potato, it's a vegetable and it's edible, though cooking it might be better.",
     "edible": true,
     "plugin": "healingitem",
-    "healingAmount": 120,
+    "healAmount": 120,
     "price": 100
   },
 
@@ -5630,7 +5630,7 @@
     "description": "A chilli pepper, it's hot so be careful.",
     "edible": true,
     "plugin": "healingitem",
-    "healingAmount": 100,
+    "healAmount": 100,
     "price": 100
   },
 
