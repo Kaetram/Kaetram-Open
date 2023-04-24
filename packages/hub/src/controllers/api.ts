@@ -43,7 +43,7 @@ export default class API {
                     .use(Sentry.Handlers.tracingHandler())
                     .use(Sentry.Handlers.errorHandler());
 
-            app.use(express.urlencoded({ extended: true })).use(express.json());
+            app.use(express.urlencoded({ extended: true }));
 
             router = express.Router();
 
@@ -67,6 +67,11 @@ export default class API {
         });
     }
 
+    /**
+     * The router is where we create all the API endpoints.
+     * @param router The express router we are attaching the endpoints to.
+     */
+
     private handleRouter(router: Router): void {
         // GET requests
         router.get('/', this.handleRoot.bind(this));
@@ -76,8 +81,15 @@ export default class API {
 
         router.post('/isOnline', this.handleIsOnline.bind(this));
 
-        // Initialize the Stripe endpoint
-        router.post(config.stripeEndpoint, this.handleStripe.bind(this));
+        if (config.stripeEndpoint) {
+            router.post(
+                `/${config.stripeEndpoint}`,
+                express.raw({ type: 'application/json' }),
+                this.handleStripe.bind(this)
+            );
+
+            log.notice(`Stripe endpoint is enabled at /${config.stripeEndpoint}.`);
+        }
     }
 
     /**
@@ -275,6 +287,7 @@ export default class API {
                 }
             }
         } catch (error) {
+            log.error(`Stripe webhook error: ${(error as Error).message}`);
             response.status(400).send(`Webhook Error: ${(error as Error).message}`);
             return;
         }
