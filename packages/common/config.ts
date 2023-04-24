@@ -57,6 +57,10 @@ export interface Config {
     sentryAuthToken: string;
     sentryDsn: string;
 
+    stripeEndpoint: string;
+    stripeKeyLocal: string;
+    stripeSecretKey: string;
+
     discordEnabled: boolean;
     discordChannelId: string;
     discordBotToken: string;
