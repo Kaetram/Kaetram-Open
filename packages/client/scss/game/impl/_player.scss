@@ -88,10 +88,12 @@
 }
 
 @each $size, $i in media.$sizes {
-    @if $i >= 2 {
+    @if $i == 3 {
+        $i: 4.25;
+    } @else if $i == 2 {
         $i: 3.75;
     } @else {
-        $i: 2.5;
+        $i: 3;
     }
 
     @media ($size) {
