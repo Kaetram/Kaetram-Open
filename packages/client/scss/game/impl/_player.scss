@@ -30,34 +30,43 @@
     }
 }
 
+#health,
+#mana {
+    cursor: url('/img/hand.png'), auto;
+    position: absolute;
+}
+
+#health-mask,
+.health-mask-poison,
+.health-mask-white,
+#mana-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    transition: 0.5s width ease;
+}
+
 #player-info {
     position: absolute;
     top: 10px;
     left: 10px;
 }
 
-#health-bar-text,
-#mana-bar-text {
+.health-text,
+.mana-text {
+    position: absolute;
+    z-index: 5;
+
+    width: 100%;
+
     font-family: AdvoCut, sans-serif;
+    color: white;
     text-align: center;
     vertical-align: middle;
-}
-
-#health,
-#health-info {
-    cursor: url('/img/hand.png'), auto;
-}
-
-#health {
-    /* Safari 5.1, Chrome 10+ */
-    background: linear-gradient(to right, #f00, #ef5a5a);
-    transition: 0.5s width ease;
-}
-
-#mana {
-    /* Safari 5.1, Chrome 10+ */
-    background: linear-gradient(to right, rgb(12 55 208), #257cd2);
-    transition: 0.5s width ease;
 }
 
 #exp {
@@ -78,79 +87,73 @@
     animation: flash-poison 0.5s linear infinite;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$b-sizes {
     @if $i == 3 {
         $i: 3.75;
-    } @else {
-        $i: 3;
     }
 
     @media ($size) {
-        #health,
-        #health-bar,
-        #mana,
-        #mana-bar {
-            position: absolute;
-
-            width: 77px * $i;
-            height: 10px * $i;
-            margin: 0;
-            padding: 0;
-
-            text-align: center;
-
-            border: 0;
+        #health, #health-mask {
+            width: 63px * $i;
+            height: 15px * $i;
         }
 
-        #health,
-        #health-bar {
-            top: 2px * $i;
-            left: 10px * $i;
+        #mana, #mana-mask {
+            width: 56px * $i;
+            height: 11px * $i;
         }
 
-        #health-info,
-        #mana-info {
-            position: absolute;
-
-            width: 88px * $i;
-            height: 13px * $i;
-            margin: 0;
-            padding: 0;
-
-            color: white;
-            text-align: center;
-
-            border: 0;
+        #health {
+            background: url('/img/interface/bars.png') no-repeat;
+            background-size: calc(width('bars.png') * $i);
         }
 
-        #mana,
-        #mana-bar {
-            top: 14px * $i;
-            left: 10px * $i;
+        #health-mask {
+            background: url('/img/interface/bars.png') 0 -32px * $i no-repeat;
+            background-size: calc(width('bars.png') * $i);
         }
 
-        #health-bar-text,
-        #mana-bar-text {
-            margin: 4px * $i 0 0 10px * $i;
-            font-size: 6px * $i;
+        .health-mask-poison {
+            background: url('/img/interface/bars.png') 0 -64px * $i no-repeat !important;
+            background-size: calc(width('bars.png') * $i) !important;
         }
 
-        #health-info {
-            top: 0;
-            left: 0;
-
-            background-image: url('/img/interface/main.png');
-            background-position: 0 -278px * $i;
-            background-size: calc(width('main.png') * $i);
+        .health-mask-white {
+            background: url('/img/interface/bars.png') 0 -80px * $i no-repeat !important;
+            background-size: calc(width('bars.png') * $i) !important;
         }
 
-        #mana-info {
-            top: 13px * $i;
-            left: 0;
+        #mana {
+            top: 12px * $i;
+            left: 3px * $i;
+            background: url('/img/interface/bars.png') 0 -16px * $i no-repeat;
+            background-size: calc(width('bars.png') * $i);
+        }
 
-            background-image: url('/img/interface/main.png');
-            background-position: -88px * $i -278px * $i;
-            background-size: calc(width('main.png') * $i);
+        #mana-mask {
+            background: url('/img/interface/bars.png') 0 -48px * $i no-repeat;
+            background-size: calc(width('bars.png') * $i);
+        }
+    }
+
+    @media (--lg) {
+        .health-text {
+            top: 17px;
+        }
+    }
+
+    @media (--md) {
+        .health-text {
+            top: 8px;
+        }
+
+        .mana-text {
+            top: -1px;
+        }
+
+        .health-text,
+        .mana-text {
+            font-size: 11px;
         }
     }
 }
