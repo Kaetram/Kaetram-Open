@@ -87,9 +87,11 @@
     animation: flash-poison 0.5s linear infinite;
 }
 
-@each $size, $i in media.$b-sizes {
-    @if $i == 3 {
+@each $size, $i in media.$sizes {
+    @if $i >= 2 {
         $i: 3.75;
+    } @else {
+        $i: 2.5;
     }
 
     @media ($size) {
@@ -144,11 +146,26 @@
 
     @media (--md) {
         .health-text {
-            top: 8px;
+            top: 17px;
         }
 
         .mana-text {
-            top: -1px;
+            top: 2px;
+        }
+
+        .health-text,
+        .mana-text {
+            font-size: 14px;
+        }
+    }
+
+    @media (--sm) {
+        .health-text {
+            top: 11px;
+        }
+
+        .mana-text {
+            top: 0;
         }
 
         .health-text,
