@@ -458,6 +458,9 @@ export default class InputController {
             }
         }
 
+        // Prevent movement from occuring if we are stunned.
+        if (this.player.isStunned()) return;
+
         // Move the player to the new position.
         this.player.go(position.gridX, position.gridY);
     }

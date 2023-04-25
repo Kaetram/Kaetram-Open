@@ -245,6 +245,8 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
+        if (this.isStunned()) return;
+
         this.following = true;
 
         this.setTarget(entity);
@@ -381,6 +383,15 @@ export default class Character extends Entity {
     }
 
     /**
+     * Used to determine whether the current character is stunned or not.
+     * @returns Whether or not the status effects contain the stun effect.
+     */
+
+    public isStunned(): boolean {
+        return this.statusEffects.includes(Modules.Effects.Stun);
+    }
+
+    /**
      * Performs an action and updates the orientation of the character.
      * @param orientation New orientation we are setting.
      * @param action The type of action we are performing.
@@ -501,6 +512,7 @@ export default class Character extends Entity {
         else {
             let path = this.requestPathfinding(x, y);
 
+            // Fallback pathing is used to teleport entities that cannot path correctly.
             if ((!path || path.length < 2) && fallback) return this.fallbackCallback?.(x, y);
 
             this.followPath(path);

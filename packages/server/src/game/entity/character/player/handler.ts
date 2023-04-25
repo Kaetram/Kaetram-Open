@@ -767,7 +767,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
+        log.general(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**
