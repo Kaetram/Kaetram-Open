@@ -429,12 +429,28 @@ export default abstract class Character extends Entity {
      */
 
     public follow(target?: Character): void {
+        // If the character is stunned, we stop.
+        if (this.isStunned()) return;
+
+        // If no target is specified and we don't have a target, we stop.
         if (!target && !this.hasTarget()) return;
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Follow, {
                 instance: this.instance,
                 target: target?.instance || this.target!.instance
+            })
+        );
+    }
+
+    /**
+     * Makes a character stop moving by sending a packet to the nearby regions.
+     */
+
+    public stopMovement(): void {
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Stop, {
+                instance: this.instance
             })
         );
     }
@@ -788,6 +804,15 @@ export default abstract class Character extends Entity {
 
     public isOnSameTile(): boolean {
         return this.getDistance(this.target!) === 0;
+    }
+
+    /**
+     * Indicates whether or not the character is able to move.
+     * @returns Whether or not the character has the stun status effect.
+     */
+
+    public isStunned(): boolean {
+        return this.status.has(Modules.Effects.Stun);
     }
 
     /**

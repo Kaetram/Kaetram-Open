@@ -630,7 +630,6 @@ export default class Player extends Character {
             this.incrementCheatScore(`Noclip detected at ${x}, ${y}.`);
 
             // Send player to the last valid position.
-            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
         }
 
@@ -1026,6 +1025,9 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // Stop the movement if the player is stunned.
+        if (this.isStunned()) return this.stopMovement();
+
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
         this.activeCraftingInterface = -1;
@@ -1079,7 +1081,14 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.status.has(Modules.Effects.Stun) || this.isInvalidMovement()) return;
+        if (this.isInvalidMovement()) return;
+
+        // Increment cheat score if the player is moving while stunned.
+        if (this.isStunned()) {
+            this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
+
+            this.stopMovement();
+        }
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -2013,21 +2022,6 @@ export default class Player extends Character {
         info.instance = this.instance;
 
         this.send(new Pointer(opcode, info));
-    }
-
-    /**
-     * Forcefully stopping the player will simply halt
-     * them in between tiles. Should only be used if they are
-     * being transported elsewhere.
-     */
-
-    public stopMovement(forced = false): void {
-        this.send(
-            new Movement(Opcodes.Movement.Stop, {
-                instance: this.instance,
-                forced
-            })
-        );
     }
 
     /**
