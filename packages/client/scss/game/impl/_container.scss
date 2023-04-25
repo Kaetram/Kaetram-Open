@@ -58,6 +58,23 @@
     border: 0;
 }
 
+.container-frame {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    margin: auto;
+
+    border-image: url('/img/interface/slices/container.png');
+    border-image-slice: 42% fill;
+    border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
 .container {
     cursor: url('/img/hand.png'), auto;
     position: absolute;
