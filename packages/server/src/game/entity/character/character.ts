@@ -26,6 +26,7 @@ export default abstract class Character extends Entity {
     public attackRange = 1;
     public plateauLevel = 0;
 
+    public combat: Combat;
     public hitPoints: HitPoints;
 
     public healRate: number = Modules.Constants.HEAL_RATE;

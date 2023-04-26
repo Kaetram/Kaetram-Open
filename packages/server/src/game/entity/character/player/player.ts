@@ -114,6 +114,7 @@ export default class Player extends Character {
     public overrideMovementSpeed = -1;
 
     // Player info
+    public username = '';
     public password = '';
     public email = '';
     public userAgent = '';

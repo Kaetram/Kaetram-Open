@@ -4507,19 +4507,18 @@
       "magic": 100
     },
     "defenseStats": {
-      "crush": 100,
-      "slash": 100,
-      "stab": 100,
-      "archery": 40,
-      "magic": 100
+      "crush": 160,
+      "slash": 120,
+      "stab": 130,
+      "archery": 50,
+      "magic": 130
     },
     "bonuses": {
-      "accuracy": 20,
-      "strength": 30,
-      "archery": 10,
-      "magic": 30
+      "accuracy": 50,
+      "strength": 50,
+      "archery": 20,
+      "magic": 40
     }
-    
   },
 
   "windguardian": {
@@ -4888,11 +4887,11 @@
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 100,
+      "slash": 140,
+      "stab": 120,
+      "archery": 40,
+      "magic": 60
     },
     "bonuses": {
       "accuracy": 0,
