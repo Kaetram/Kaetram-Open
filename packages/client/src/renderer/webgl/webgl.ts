@@ -183,7 +183,7 @@ export default class WebGL extends Renderer {
         for (let layer of this.layers)
             layer.bindTexture(
                 context,
-                this.getShader(context).program,
+                this.getShader(context)?.program,
                 !this.isBackgroundContext(context)
             );
     }

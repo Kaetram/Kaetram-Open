@@ -99,7 +99,7 @@ export default defineConfig(async ({ mode }) => {
             ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
         ];
 
-    if (config.sentryDsn)
+    if (config.sentryDsn && !config.debugging)
         plugins.push(
             sentryVitePlugin({
                 include: '.',

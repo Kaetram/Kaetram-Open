@@ -53,6 +53,9 @@ export default class Layer {
         program: WebGLProgram,
         foreground = false
     ): void {
+        // Program hasn't loaded yet so there's no need to bind the texture.
+        if (!program) return;
+
         // Create the textures if they do not exist.
         if (!this.backgroundTexture && !foreground)
             this.backgroundTexture = context.createTexture()!;
