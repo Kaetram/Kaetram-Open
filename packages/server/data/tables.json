@@ -1,4 +1,8 @@
 {
+    "warriorcrab": {
+        "bead": 10000
+    },
+
     "ordinary": {
         "gold": 3000,
         "flask": 1200,
@@ -40,10 +44,6 @@
         "shardt3": 100,
         "shardt4": 50,
         "shardt5": 20
-    },
-
-    "warriorcrab": {
-        "bead": 10000
     },
 
     "vegetables": {
