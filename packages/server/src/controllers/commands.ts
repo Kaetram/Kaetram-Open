@@ -65,12 +65,7 @@ export default class Commands {
             }
 
             case 'coords': {
-                this.player.send(
-                    new Notification(Opcodes.Notification.Text, {
-                        message: `x: ${this.player.x} y: ${this.player.y}`
-                    })
-                );
-                return;
+                return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }
 
             case 'global': {
@@ -380,12 +375,6 @@ export default class Commands {
 
             case 'empty': {
                 return this.player.inventory.empty();
-            }
-
-            case 'notify': {
-                this.player.notify('Hello!!!');
-
-                return;
             }
 
             case 'teleport': {

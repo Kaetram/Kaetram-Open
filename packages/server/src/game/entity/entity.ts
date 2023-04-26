@@ -29,11 +29,8 @@ abstract class Entity {
     public oldX = -1;
     public oldY = -1;
 
-    public combat!: Combat;
-
     public dead = false;
 
-    public username!: string;
     public region = -1;
     public colour = ''; // name colour displayed for the entity
     public scale = 0; // scale of the entity (default if not specified)

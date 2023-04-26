@@ -160,7 +160,7 @@ export default class Incoming {
 
     /**
      * Handles receiving a relay packet. This contains a username that we want to send the packet
-     * to across servers. The first elementin the RelayPacket array is the player's username,
+     * to across servers. The first element in the RelayPacket array is the player's username,
      * and the second is the packet that we want to send to them.
      * @param data Contains the player's username and the packet we want to send to them.
      */
