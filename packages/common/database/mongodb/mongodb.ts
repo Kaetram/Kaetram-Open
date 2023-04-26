@@ -1,13 +1,16 @@
+import crypto from 'node:crypto';
+
 import Creator from './creator';
 import Loader from './loader';
 
-import Filter from '@kaetram/common/util/filter';
-import log from '@kaetram/common/util/log';
 import bcryptjs from 'bcryptjs';
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import Filter from '@kaetram/common/util/filter';
 import { MongoClient } from 'mongodb';
 
-import type { Db } from 'mongodb';
-import type { PlayerInfo } from './creator';
+import type { Db, ObjectId } from 'mongodb';
+import type { PlayerInfo, ResetToken } from './creator';
 import type { Modules } from '@kaetram/common/network';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 import type {
@@ -98,9 +101,7 @@ export default class MongoDB {
             else {
                 let [info] = playerInfo;
 
-                bcryptjs.compare(player.password, info.password, (error: Error, result) => {
-                    if (error) throw error;
-
+                Utils.compare(player.password, info.password, (result: boolean) => {
                     // Reject if the password is incorrect.
                     if (!result) return player.connection.reject('invalidlogin');
 
@@ -148,7 +149,7 @@ export default class MongoDB {
 
                 player.statistics.creationTime = Date.now();
 
-                player.load(Creator.serializePlayer(player));
+                player.load(Creator.serialize(player));
             });
         });
     }
@@ -256,6 +257,101 @@ export default class MongoDB {
 
         collection.countDocuments().then((count) => {
             callback(count);
+        });
+    }
+
+    /**
+     * Attempts to creata a reset token, hashes it, and applies it to
+     * an account. We use this token later on to validate the reset.
+     * @param email The email address of the account we want to reset.
+     * @param callback Callback function which contains the user's ID and the
+     * generated (unhashed) token which we will use to generate a reset link.
+     */
+
+    public createResetToken(email: string, callback: (id: ObjectId, token: string) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('player_info');
+
+        // Attempt to grab the email provided from the database.
+        collection.findOne({ email }).then((playerInfo) => {
+            // If we don't find any account matching the email, just stop here.
+            if (!playerInfo) return;
+
+            let token = crypto.randomBytes(32).toString('hex');
+
+            // Create a reset token and hash it.
+            Utils.hash(token, (hash) => {
+                // Create a reset token and apply a one hour expiration.
+                let resetToken: ResetToken = {
+                    token: hash,
+                    expiration: Date.now() + 60 * 60 * 1000 // 1 hour.
+                };
+
+                // Update the account with the new reset token.
+                collection.updateOne(
+                    { email },
+                    {
+                        $set: {
+                            resetToken
+                        }
+                    },
+                    { upsert: true }
+                );
+            });
+
+            // Create a callback with the player's ID and the unhashed token.
+            callback(playerInfo._id, token);
+        });
+    }
+
+    /**
+     * Handles validating a reset token and resetting the password.
+     * @param id The id of the account we are resetting.
+     * @param password The new password we are setting.
+     * @param token The token we are using to validate the reset.
+     */
+
+    public resetPassword(id: string, password: string, token: string): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('player_info');
+
+        // Attempt to grab the account from the database.
+        collection.findOne({ _id: id }).then((playerInfo) => {
+            // If we don't find any account matching the ID, just stop here.
+            if (!playerInfo) return;
+
+            // If no reset token exists, just stop here.
+            if (!playerInfo.resetToken) return;
+
+            // If the reset token is expired, just stop here.
+            if (playerInfo.resetToken.expiration < Date.now()) return;
+
+            // If the reset token doesn't match, just stop here.
+            Utils.compare(token, playerInfo.resetToken.token, (result: boolean) => {
+                if (!result) return log.warning(`Invalid reset token for ${playerInfo.username}.`);
+
+                /**
+                 * Create a hash of the new password and store it in the database.
+                 * We also remove the reset token so it can't be used again.
+                 */
+
+                Utils.hash(password, (hash) => {
+                    collection.updateOne(
+                        { _id: id },
+                        {
+                            $set: {
+                                password: hash
+                            },
+                            $unset: {
+                                resetToken: ''
+                            }
+                        },
+                        { upsert: true }
+                    );
+                });
+            });
         });
     }
 

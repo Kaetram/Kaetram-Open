@@ -1,12 +1,17 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
-import bcryptjs from 'bcryptjs';
 
 import type { GuildData } from '@kaetram/common/types/guild';
 import type { Modules } from '@kaetram/common/network';
 import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+
+// Used for password reset
+export interface ResetToken {
+    token: string;
+    expiration: number;
+}
 
 export interface PoisonInfo {
     type: number; // Type of poison.
@@ -34,6 +39,7 @@ export interface PlayerInfo {
     lastServerId: number;
     lastAddress: string;
     guild: string;
+    resetToken?: ResetToken;
 }
 
 /**
@@ -220,31 +226,17 @@ export default class Creator {
      */
 
     public getPlayerWithHash(player: Player, callback: (playerInfo: PlayerInfo) => void): void {
-        let info = Creator.serializePlayer(player);
+        let info = Creator.serialize(player);
 
-        Creator.hashPassword(player.password, (hashString: string) => {
+        Utils.hash(player.password, (hash: string) => {
             /**
              * Replace the plaintext password with the hashString we created.
              * This is the actual string that gets stored in the database and
              * is later compared to check login validity.
              */
-            info.password = hashString;
+            info.password = hash;
 
             callback(info);
-        });
-    }
-
-    /**
-     * Takes a password in plaintext and makes a callback with the hashed version.
-     * @param password The password plaintext we are trying to hash.
-     * @param callback A callback with the hashed string.
-     */
-
-    private static hashPassword(password: string, callback: (hashString: string) => void): void {
-        bcryptjs.hash(password, 10, (error: Error, hash: string) => {
-            if (error) throw error;
-
-            callback(hash);
         });
     }
 
@@ -264,12 +256,15 @@ export default class Creator {
     }
 
     /**
-     * Takes on a `player` parameter and extracts all the info in the
-     * form of `PlayerInfo` interface. It essentially serializes the player
-     * object to a dictionary format.
+     * Serializes a player object and extracts all the basic information
+     * that will be saved in the database. This is generally used for
+     * loading the player and sending the preliminary information to the client.
+     * @param player The player object that we want to serialize.
+     * @returns A serialized object that contains the player's information, we use
+     * this and store it in the database.
      */
 
-    public static serializePlayer(player: Player): PlayerInfo {
+    public static serialize(player: Player): PlayerInfo {
         return {
             username: player.username,
             password: player.password,
@@ -293,7 +288,8 @@ export default class Creator {
             friends: player.friends.serialize(),
             lastServerId: config.serverId,
             lastAddress: player.connection.address,
-            guild: player.guild
+            guild: player.guild,
+            resetToken: undefined // Save token as undefined to prevent it from being saved.
         };
     }
 }

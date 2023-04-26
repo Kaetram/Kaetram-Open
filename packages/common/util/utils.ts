@@ -10,6 +10,7 @@ import log from './log';
 import config from '../config';
 import { Modules, Packets } from '../network';
 
+import bcryptjs from 'bcryptjs';
 import ipaddr from 'ipaddr.js';
 
 import type { Bonuses, Stats } from '../types/item';
@@ -181,6 +182,39 @@ export default {
 
     timePassed(lastEvent: number, threshold: number): boolean {
         return Date.now() - lastEvent < threshold;
+    },
+
+    /**
+     * Takes a string of data and uses bcrypt to hash it. We create
+     * a callback function to return the hash as a string.
+     * @param data The string that we want to hash.
+     * @param callback Contains the resulting hash as a string.
+     */
+
+    hash(data: string, callback: (hash: string) => void): void {
+        bcryptjs.hash(data, 10, (error: Error, hash: string) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(hash);
+        });
+    },
+
+    /**
+     * Compares a plaintext string against a hash (generally stored in the database).
+     * We use bcrypt for this and create a callback with the result.
+     * @param data The plaintext string we want to compare.
+     * @param hash The hash we want to compare against.
+     * @param callback Contains the result of the comparison.
+     */
+
+    compare(data: string, hash: string, callback: (result: boolean) => void): void {
+        bcryptjs.compare(data, hash, (error: Error, result: boolean) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(result);
+        });
     },
 
     /**

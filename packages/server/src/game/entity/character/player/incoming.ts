@@ -171,7 +171,7 @@ export default class Incoming {
 
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) {
-                this.player.load(Creator.serializePlayer(this.player));
+                this.player.load(Creator.serialize(this.player));
                 return;
             }
         }
@@ -197,7 +197,7 @@ export default class Incoming {
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
                 this.player.username = `guest${Utils.counter++}`; // Generate a random guest username.
 
-                this.player.load(Creator.serializePlayer(this.player));
+                this.player.load(Creator.serialize(this.player));
                 return;
             }
         }
