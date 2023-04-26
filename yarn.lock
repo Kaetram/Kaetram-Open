@@ -3467,6 +3467,7 @@ __metadata:
   dependencies:
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/node": "npm:^18.15.5"
+    bcryptjs: "npm:^2.4.3"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
@@ -3529,7 +3530,6 @@ __metadata:
     "@types/sanitizer": "npm:^0.0.28"
     "@types/websocket": "npm:^1.0.5"
     axios: "npm:^1.2.3"
-    bcryptjs: "npm:^2.4.3"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
