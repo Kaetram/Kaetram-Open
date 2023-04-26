@@ -101,10 +101,10 @@ export default class QueenAnt extends Default {
         // Ignore the special attack if one is already active.
         if (this.specialAttack) return this.resetSpecialAttack();
 
-        // 1 in 3 chance to trigger a special attack.
+        // 1 in 6 chance to trigger a special attack.
         if (Utils.randomInt(1, 6) !== 2) return;
 
-        // 1 in 6 chance to trigger an AoE attack alongside special attack.
+        // 1 in 12 chance to trigger an AoE attack alongside special attack.
         if (Utils.randomInt(1, 12) === 3) this.mob.aoe = 4;
 
         // Queen ant attacks with range and inflicts terror.
