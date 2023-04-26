@@ -329,16 +329,6 @@ export default class Storage {
     }
 
     /**
-     * Checks if the local storage version of the client
-     * matches the window's config version.
-     * @returns True if client version is the same as config version.
-     */
-
-    private isNewVersion(): boolean {
-        return this.data.clientVersion !== window.config.version;
-    }
-
-    /**
      * Updates the orientation in the local storage.
      * @param orientation New orientation we are saving.
      */
@@ -463,6 +453,16 @@ export default class Storage {
 
     public isWebGl(): boolean {
         return this.data.settings.webgl;
+    }
+
+    /**
+     * Checks if the local storage version of the client
+     * matches the window's config version.
+     * @returns True if client version is the same as config version.
+     */
+
+    private isNewVersion(): boolean {
+        return this.data.clientVersion !== window.config.version;
     }
 
     /**
