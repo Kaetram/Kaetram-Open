@@ -19,7 +19,7 @@ import WebGL from './renderer/webgl/webgl';
 import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
-import { agent } from './utils/detect';
+import { agent, supportsWebGl } from './utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -68,7 +68,7 @@ export default class Game {
 
     public constructor(public app: App) {
         this.storage = app.storage;
-        this.useWebGl = this.storage.isWebGl();
+        this.useWebGl = supportsWebGl() && this.storage.isWebGl();
 
         this.player = new Player('', this);
 
