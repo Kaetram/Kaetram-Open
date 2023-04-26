@@ -11,7 +11,6 @@
         "@sentry/node": "^7.45.0",
         "@sentry/tracing": "^7.45.0",
         "axios": "^1.2.3",
-        "bcryptjs": "^2.4.3",
         "discord.js": "^14.3.0",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
