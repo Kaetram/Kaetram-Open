@@ -9970,7 +9970,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -10840,9 +10840,80 @@
          "visible":false,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":80,
+         "name":"area names",
+         "objects":[
+                {
+                 "height":256,
+                 "id":1070,
+                 "name":"",
+                 "rotation":0,
+                 "text":
+                    {
+                     "bold":true,
+                     "color":"#ffffff",
+                     "fontfamily":"AdvoCut",
+                     "pixelsize":96,
+                     "text":"Mudwich",
+                     "wrap":true
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":656,
+                 "x":864,
+                 "y":928
+                }, 
+                {
+                 "height":256,
+                 "id":1072,
+                 "name":"",
+                 "rotation":0,
+                 "text":
+                    {
+                     "bold":true,
+                     "color":"#ffffff",
+                     "fontfamily":"AdvoCut",
+                     "pixelsize":96,
+                     "text":"Lakesworld",
+                     "wrap":true
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":656,
+                 "x":3104,
+                 "y":2352
+                }, 
+                {
+                 "height":256,
+                 "id":1073,
+                 "name":"",
+                 "rotation":0,
+                 "text":
+                    {
+                     "bold":true,
+                     "color":"#ffffff",
+                     "fontfamily":"AdvoCut",
+                     "pixelsize":96,
+                     "text":"Crullfeld",
+                     "wrap":true
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":656,
+                 "x":2736,
+                 "y":880
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":80,
- "nextobjectid":1070,
+ "nextlayerid":81,
+ "nextobjectid":1074,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
