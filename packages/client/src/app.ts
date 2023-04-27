@@ -43,15 +43,19 @@ export default class App {
     private registerButton: HTMLButtonElement = document.querySelector('#new-account')!;
     private cancelRegister: HTMLButtonElement = document.querySelector('#cancel-register')!;
     private cancelWorlds: HTMLButtonElement = document.querySelector('#cancel-worlds')!;
+    private cancelForget: HTMLButtonElement = document.querySelector('#cancel-forget')!;
     private continueWorlds: HTMLButtonElement = document.querySelector('#continue-worlds')!;
+    private continueForget: HTMLButtonElement = document.querySelector('#continue-forget')!;
 
     private respawn: HTMLButtonElement = document.querySelector('#respawn')!;
 
+    private emailResetInput: HTMLInputElement = document.querySelector('#email-reset-input')!;
     private rememberMe: HTMLInputElement = document.querySelector('#remember-me input')!;
     private guest: HTMLInputElement = document.querySelector('#guest input')!;
 
     private about: HTMLElement = document.querySelector('#toggle-about')!;
     private credits: HTMLElement = document.querySelector('#toggle-credits')!;
+    private resetPassword: HTMLElement = document.querySelector('#toggle-reset-password')!;
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
@@ -96,12 +100,15 @@ export default class App {
 
         this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
         this.cancelRegister.addEventListener('click', () => this.openScroll('load-character'));
+        this.cancelForget.addEventListener('click', () => this.openScroll('load-character'));
 
         this.cancelWorlds.addEventListener('click', () => this.openScroll('load-character'));
         this.continueWorlds.addEventListener('click', () => this.openScroll('load-character'));
+        this.continueForget.addEventListener('click', () => this.forgotPassword());
 
         this.about.addEventListener('click', () => this.openScroll('about'));
         this.credits.addEventListener('click', () => this.openScroll('credits'));
+        this.resetPassword.addEventListener('click', () => this.openScroll('reset-password'));
 
         this.respawn.addEventListener('click', () => this.respawnCallback?.());
 
@@ -687,6 +694,39 @@ export default class App {
 
         let players = this.worldSelectButton.querySelector('span')!;
         players.textContent = `(${server.players}/${server.maxPlayers} players)`;
+    }
+
+    /**
+     * Handles the forgot password button click. We send a message to the
+     * hub to request a password reset. If there is no hub then we do not proceed.
+     */
+
+    private async forgotPassword(): Promise<void> {
+        if (!this.config.hub) return;
+
+        // Grab the input field value for the email address.
+        let email = this.emailResetInput.value;
+
+        // Validate the input email.
+        if (!email || Util.isEmail(email))
+            return this.setValidation('validation-error', 'Please enter a valid email address.');
+
+        // Send a post request to the hub to request a password reset.
+        let res = await fetch(`${this.config.hub}/forgot`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: this.emailResetInput.value })
+        }).catch(() => null);
+
+        // If we do not get a response, then we display an error message.
+        if (!res)
+            return this.setValidation(
+                'validation-error',
+                'Please contact an administrator for support.'
+            );
+
+        // If we receive a response then just let the player know that the request was sent.
+        this.setValidation('status', 'Password reset request sent, please check your email.');
     }
 
     /**
