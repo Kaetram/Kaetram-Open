@@ -326,6 +326,37 @@
                         </form>
                     </article>
 
+                    <article id="reset-password">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            Reset Password
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form onsubmit="return false">
+                            <input
+                                type="text"
+                                id="email-reset-input"
+                                class="stroke"
+                                name="player-email"
+                                placeholder="Email Address"
+                                aria-label="Email Address"
+                                maxlength="32"
+                                autocomplete="off"
+                            />
+
+                            <button
+                                title="Cancel"
+                                aria-label="Cancel"
+                                type="button"
+                                id="cancel-forget"
+                            ></button>
+                            <button title="Submit" aria-label="Submit" type="submit" id="continue-forget"></button>
+
+                            <div class="validation-summary"></div>
+                        </form>
+                    </article>
+
                     <article id="world-select">
                         <h1>
                             <span class="left-ornament"></span>
@@ -548,6 +579,10 @@
                     <a class="footer-button" href="/privacy">
                         <span>Privacy</span>
                     </a>
+                </div>
+                <span>&ndash;</span>
+                <div id="reset" class="clickable">
+                    <span id="toggle-reset-password">Reset Password</span>
                 </div>
             </footer>
         </div>
