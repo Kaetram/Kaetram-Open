@@ -15,7 +15,6 @@
 
         background-color: transparent;
         background-image: url('/img/interface/main.png');
-        background-position-y: -336px;
         border: none;
 
         &:hover {
@@ -29,11 +28,11 @@
 }
 
 #zoom-in {
-    background-position-y: 688px;
+    background-position-y: -336px;
 }
 
 #zoom-out {
-    background-position-y: 664px;
+    background-position-y: -359px;
 }
 
 @media (--sm) {
