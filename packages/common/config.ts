@@ -52,6 +52,12 @@ export interface Config {
     saveInterval: number;
     messageLimit: number;
 
+    smtpHost: string;
+    smtpPort: number;
+    smtpUseSecure: boolean;
+    smtpUser: string;
+    smtpPassword: string;
+
     sentryOrg: string;
     sentryProject: string;
     sentryAuthToken: string;
