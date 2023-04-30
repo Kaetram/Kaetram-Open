@@ -3501,12 +3501,14 @@ __metadata:
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/express": "npm:^4.17.13"
     "@types/node": "npm:^18.15.5"
+    "@types/nodemailer": "npm:^6"
     axios: "npm:^1.2.3"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
     express: "npm:^4.18.2"
     mongodb: "npm:^4.8.1"
+    nodemailer: "npm:^6.9.1"
     nodemon: "npm:^2.0.19"
     stripe: "npm:^12.2.0"
     tsx: "npm:^3.12.6"
@@ -4084,6 +4086,15 @@ __metadata:
   version: 18.15.5
   resolution: "@types/node@npm:18.15.5"
   checksum: b046d8e4ebb94c1f811743d8be63b7e76fa03db9117ae1a7bc4589fddbb13b70c24fd5d2d4f674032b8a0ceb4db2e74725d241ccdf99f8ec61e357de2e2bbebb
+  languageName: node
+  linkType: hard
+
+"@types/nodemailer@npm:^6":
+  version: 6.4.7
+  resolution: "@types/nodemailer@npm:6.4.7"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 4fefece34940e4344ecb7d41553ccfd63bf2697124e6335dec5c358953ee53b2b27cb45dec9b306c3fc848cf4ec4344d62ecb091d1a7aadc36c0b9721ab67322
   languageName: node
   linkType: hard
 
@@ -9927,6 +9938,13 @@ __metadata:
   version: 2.0.9
   resolution: "node-releases@npm:2.0.9"
   checksum: 4862e125c24dff2f2d460555297968b1e7d026be0b2eb6acec3677a78a3c4ac1a8783700de9097de5c226b1c494538b5b1d09bf9fb9bfaa6dd02c21c38d9313a
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^6.9.1":
+  version: 6.9.1
+  resolution: "nodemailer@npm:6.9.1"
+  checksum: 6aa3e9afbf512b895c4ae519788d66d49720dc02ea3c0fb132917a6318d9776f7aeb94b0612b9fa2a971ddd1162ab48bcb8c223d16cbccf4ecf5f1ab22982095
   languageName: node
   linkType: hard
 
