@@ -194,6 +194,6 @@ export default class Network {
      */
 
     private getLastConnection(connection: Connection): number {
-        return this.socketHandler.addresses[connection.address].lastTime;
+        return this.socketHandler.addresses[connection.address]?.lastTime;
     }
 }
