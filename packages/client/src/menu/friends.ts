@@ -192,6 +192,9 @@ export default class Friends extends Menu {
         // If the friend is online, add the online class (makes the username green).
         if (online) world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
 
+        // Store the username of the friend in the element.
+        element.username = username.toLowerCase();
+
         // Set the name of the friend.
         let maxLength = this.getMaxLength();
 
@@ -205,13 +208,10 @@ export default class Friends extends Menu {
         // Add the name element to the friend slot element.
         element.append(name, world);
 
-        // Store the username of the friend in the element.
-        element.username = username.toLowerCase();
-
         // Add the friend slot element to the friend list.
         this.list.append(element);
 
-        element.addEventListener('click', () => this.handleMessage(username));
+        element.addEventListener('click', () => this.handleMessage(element.username));
     }
 
     /**
@@ -242,7 +242,11 @@ export default class Friends extends Menu {
         // No friend has been found.
         if (!friend) return;
 
+        console.log(friend);
+
         let element = this.get(username);
+
+        console.log(this.list.children);
 
         // No element has been found.
         if (!element) return;
