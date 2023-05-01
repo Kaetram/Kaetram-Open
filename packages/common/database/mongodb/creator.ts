@@ -249,7 +249,8 @@ export default class Creator {
     public static verifyPlayer(player: Player): boolean {
         if (!Utils.isValidUsername(player.username)) return false;
         if (!player.username || player.username.length === 0) return false;
-        if (!player.password || player.password.length < 3) return false;
+        if (!player.password || player.password.length < 3 || player.password.length > 64)
+            return false;
         if (player.email && !Utils.isEmail(player.email)) return false;
 
         return true;

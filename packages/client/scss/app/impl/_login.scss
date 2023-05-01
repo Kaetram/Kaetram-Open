@@ -12,6 +12,11 @@
     top: 92.5%;
 }
 
+#confirm-reset {
+    top: 120%;
+    right: 38%;
+}
+
 #login {
     left: 15%;
 }
@@ -103,6 +108,7 @@ input[type='range'] {
         #cancel-register,
         #cancel-forget,
         #cancel-worlds,
+        #confirm-reset,
         #continue-worlds {
             cursor: pointer;
 
@@ -133,6 +139,10 @@ input[type='range'] {
 
         #continue-forget {
             background-position-x: -$button-width * 4;
+        }
+
+        #confirm-reset {
+            background-position-x: -$button-width * 5;
         }
 
         .validation-error,
