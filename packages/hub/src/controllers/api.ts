@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
@@ -5,13 +6,15 @@ import log from '@kaetram/common/util/log';
 import Stripe from 'stripe';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 
-import type { Integration } from '@sentry/types';
 import type Cache from './cache';
 import type Server from '../model/server';
 import type Servers from './servers';
-import type Discord from '@kaetram/common/api/discord';
+import type Mailer from './mailer';
+import type { ObjectId } from 'mongodb';
+import type { Integration } from '@sentry/types';
 import type { Request, Response, Express, Router } from 'express';
 import type {
     MobAggregate,
@@ -29,7 +32,7 @@ const stripe = new Stripe(config.stripeSecretKey, {
  * We use the API format from `@kaetram/server`.
  */
 export default class API {
-    public constructor(private servers: Servers, private discord: Discord, private cache: Cache) {
+    public constructor(private servers: Servers, private mailer: Mailer, private cache: Cache) {
         let apiEnabled = config.apiEnabled || config.hubEnabled,
             app: Express | undefined,
             router: Router | undefined;
@@ -43,7 +46,7 @@ export default class API {
                     .use(Sentry.Handlers.tracingHandler())
                     .use(Sentry.Handlers.errorHandler());
 
-            app.use(express.urlencoded({ extended: true }));
+            app.use(express.urlencoded({ extended: true }), cors(), express.json());
 
             router = express.Router();
 
@@ -80,6 +83,8 @@ export default class API {
         router.get('/leaderboards', this.handleLeaderboards.bind(this));
 
         router.post('/isOnline', this.handleIsOnline.bind(this));
+        router.post('/api/v1/requestReset', this.handleRequestReset.bind(this));
+        router.post('/api/v1/resetPassword', this.handleResetPassword.bind(this));
 
         if (config.stripeEndpoint) {
             router.post(
@@ -100,8 +105,6 @@ export default class API {
      */
 
     private handleRoot(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         response.json({ status: `${config.name} hub is online and functional.` });
     }
 
@@ -114,8 +117,6 @@ export default class API {
      */
 
     private handleServer(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         if (!this.servers.hasSpace()) {
             response.json({ status: 'error' });
             return;
@@ -138,8 +139,6 @@ export default class API {
      */
 
     private handleAll(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         response.json(this.servers.serialize());
     }
 
@@ -151,8 +150,6 @@ export default class API {
      */
 
     private handleLeaderboards(request: Request, response: Response): void {
-        this.setHeaders(response);
-
         if (request.query.skill) {
             let skillId = parseInt(request.query.skill as string);
 
@@ -244,6 +241,49 @@ export default class API {
     }
 
     /**
+     * Handles validation of incoming data, creating a password reset token,
+     * and then sending it to the specified email address.
+     * @param request Contains the email that we are sending the reset token to.
+     * @param response The response we are sending back to the client.
+     */
+
+    private handleRequestReset(request: Request, response: Response): void {
+        let { email } = request.body;
+
+        console.log(request.body);
+        console.log(email);
+
+        // Verify the email address is valid.
+        if (!email || !Utils.isEmail(email)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        // Generate a reset token and send it to the email address.
+        this.cache.database.createResetToken(email, (id: ObjectId, token: string) => {
+            // Send the email to the user.
+            this.mailer.send(
+                email,
+                'Kaetram Account Password Reset',
+                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset?token=${token}&id=${id}`
+            );
+
+            // Send a response back to the client.
+            response.json({ status: 'success' });
+        });
+    }
+
+    /**
+     *
+     * @param request
+     * @param response
+     */
+
+    private handleResetPassword(request: Request, response: Response): void {
+        //
+    }
+
+    /**
      * This is the webhook for Stripe payment processor. It's responsible
      * for in-app purchases and relaying the information to the appropriate
      * player should they be logged in on a world. If not, then we will look
@@ -310,18 +350,5 @@ export default class API {
         if (!hubAccessToken || !serverId) return false;
 
         return hubAccessToken === config.hubAccessToken;
-    }
-
-    /**
-     * Sets CORS headers on the response to prevent errors.
-     * @param response Response to set headers on.
-     */
-
-    private setHeaders(response: Response): void {
-        response.header('Access-Control-Allow-Origin', '*');
-        response.header(
-            'Access-Control-Allow-Headers',
-            'Origin, X-Requested-With, Content-Type, Accept'
-        );
     }
 }

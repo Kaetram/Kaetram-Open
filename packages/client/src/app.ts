@@ -176,6 +176,9 @@ export default class App {
     public handleKeyDown(e: KeyboardEvent): void {
         if (this.isMenuHidden()) return this.keyDownCallback?.(e);
 
+        // Ignore the login if the reset password is open.
+        if (this.currentScroll === 'reset-password') return;
+
         if (e.key === 'Enter') this.login();
     }
 
@@ -702,20 +705,21 @@ export default class App {
      */
 
     private async forgotPassword(): Promise<void> {
-        if (!this.config.hub) return;
+        if (!this.config.hub)
+            return this.setValidation('validation-error', 'No hub is configured.');
 
         // Grab the input field value for the email address.
         let email = this.emailResetInput.value;
 
         // Validate the input email.
-        if (!email || Util.isEmail(email))
+        if (!email || !Util.isEmail(email))
             return this.setValidation('validation-error', 'Please enter a valid email address.');
 
         // Send a post request to the hub to request a password reset.
-        let res = await fetch(`${this.config.hub}/forgot`, {
+        let res = await fetch(`${this.config.hub}/api/v1/requestReset`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: this.emailResetInput.value })
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
         }).catch(() => null);
 
         // If we do not get a response, then we display an error message.
