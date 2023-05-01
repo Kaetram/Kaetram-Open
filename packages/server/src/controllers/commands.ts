@@ -144,7 +144,7 @@ export default class Commands {
      */
 
     private handleModeratorCommands(command: string, blocks: string[]): void {
-        if (!this.player.isMod() && !this.player.isAdmin()) return;
+        if (!this.player.isMod() && !this.player.isAdmin() && !this.player.isHollowAdmin()) return;
 
         switch (command) {
             case 'mute':
