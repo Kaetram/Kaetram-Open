@@ -11,6 +11,7 @@
         "@sentry/node": "^7.45.0",
         "@sentry/tracing": "^7.45.0",
         "axios": "^1.2.3",
+        "cors": "^2.8.5",
         "discord.js": "^14.3.0",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
@@ -22,6 +23,7 @@
         "uws": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
     },
     "devDependencies": {
+        "@types/cors": "^2",
         "@types/dotenv-parse-variables": "^2.0.1",
         "@types/express": "^4.17.13",
         "@types/node": "^18.15.5",

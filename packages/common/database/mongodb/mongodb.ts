@@ -3,7 +3,6 @@ import crypto from 'node:crypto';
 import Creator from './creator';
 import Loader from './loader';
 
-import bcryptjs from 'bcryptjs';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import Filter from '@kaetram/common/util/filter';

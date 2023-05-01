@@ -3498,11 +3498,13 @@ __metadata:
     "@kaetram/common": "workspace:*"
     "@sentry/node": "npm:^7.45.0"
     "@sentry/tracing": "npm:^7.45.0"
+    "@types/cors": "npm:^2"
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/express": "npm:^4.17.13"
     "@types/node": "npm:^18.15.5"
     "@types/nodemailer": "npm:^6"
     axios: "npm:^1.2.3"
+    cors: "npm:^2.8.5"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
@@ -3970,6 +3972,15 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: e3b2c9abb46d76538ec57586a4d4e98e8b54099c171536a012aaaaf56c72b74fb5d5a4b478038ac35b188c3173c489f9c323bdde447a75c036a061bf805c779d
+  languageName: node
+  linkType: hard
+
+"@types/cors@npm:^2":
+  version: 2.8.13
+  resolution: "@types/cors@npm:2.8.13"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 9c8b1c732295603fcc0e1e8e8f0a332e7ec03d10bb18b9398225e5e2fbf6a2fd64758926204d306ef100a5bdd7b35324bdc34bc57fc49ed9807446930bc678f9
   languageName: node
   linkType: hard
 
@@ -5767,6 +5778,16 @@ __metadata:
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
   checksum: f6006dfc860ac490b330431be370c58e9b8601d3affe85a08309665970431e12a672ebf1c57799795e145f4fc488c208b2ee992c42fa57faae2649c6f514845e
+  languageName: node
+  linkType: hard
+
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: "npm:^4"
+    vary: "npm:^1"
+  checksum: 8451ae4bb9710e6cc03c61283b226747397162b54d12cf77e257184e6bd568387864d6a817bba9752c2febb686fe45a14b7b0ce6f68e3e70d25df2ba6e17e80e
   languageName: node
   linkType: hard
 
@@ -10072,7 +10093,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.1.0":
+"object-assign@npm:^4, object-assign@npm:^4.1.0":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: f5cd1f2f1e82e12207e4f2377d9d7d90fbc0d9822a6afa717a6dcab6930d8925e1ebbbb25df770c31ff11335ee423459ba65ffa2e53999926c328b806b4d73d6
@@ -13457,7 +13478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: b1db20d4be443aec48b8efab73386f83d947b7033b6b2f5a0c7ba4a1f9bc0200cb4cb396712468761f8edfe48dd68a6fdee7c65689b90937a2d767c714d25883

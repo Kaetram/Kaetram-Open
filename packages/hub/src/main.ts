@@ -36,7 +36,7 @@ export default class Main {
         if (this.handler.ready) log.notice(`Hub is now listening on port: ${config.hubWsPort}.`);
 
         new Console(this.servers);
-        new API(this.servers, this.discord, this.cache);
+        new API(this.servers, this.mailer, this.cache);
     }
 
     /**

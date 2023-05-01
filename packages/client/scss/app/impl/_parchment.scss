@@ -315,10 +315,13 @@
         font-size: 20px;
     }
 
-    #parchment.create-character input,
-    #parchment.reset-password input {
+    #parchment.create-character input {
         height: 45px;
         margin-top: 24px;
+    }
+
+    #parchment.reset-password input {
+        height: 45px;
         margin-top: 120px;
         margin-bottom: 90px;
     }
@@ -356,7 +359,11 @@
         font-size: 20px;
     }
 
-    #parchment.create-character input,
+    #parchment.create-character input {
+        height: 30px;
+        margin-top: 15px;
+    }
+
     #parchment.reset-password input {
         height: 30px;
         margin-top: 80px;
@@ -396,7 +403,11 @@
         font-size: 10px;
     }
 
-    #parchment.create-character input,
+    #parchment.create-character input {
+        height: 15px;
+        margin-top: 8px;
+    }
+
     #parchment.reset-password input {
         height: 15px;
         margin-top: 40px;
