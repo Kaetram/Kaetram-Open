@@ -98,6 +98,9 @@ export default class Crafting {
         // Verify that the count is valid.
         if (isNaN(count) || count < 1) count = 1;
 
+        // Invalid counts are set to 1, prevent client manipulation.
+        if (count !== 1 && count !== 5 && count !== 10) count = 1;
+
         let skillName = Modules.Skills[player.activeCraftingInterface].toLowerCase(),
             craftingData = (CraftingData as CraftingInfo)[skillName];
 

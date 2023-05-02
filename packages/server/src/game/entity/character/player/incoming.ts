@@ -294,6 +294,12 @@ export default class Incoming {
 
         if (this.player.isDead()) return;
 
+        // Sanitize position information to prevent cheating.
+        if (requestX) requestX = Utils.sanitizeNumber(requestX);
+        if (requestY) requestY = Utils.sanitizeNumber(requestY);
+        if (playerX) playerX = Utils.sanitizeNumber(playerX);
+        if (playerY) playerY = Utils.sanitizeNumber(playerY);
+
         switch (opcode) {
             case Opcodes.Movement.Request: {
                 return this.player.handleMovementRequest(
@@ -406,10 +412,16 @@ export default class Incoming {
         this.player.chat(Filter.clean(text));
     }
 
+    /**
+     * Commands received from the server. Used by administrators to perform
+     * debugging or administrative tasks.
+     * @param message Contains the opcode and position information.
+     */
+
     private handleCommand(message: [Opcodes.Command, Coordinate]): void {
         let [opcode, position] = message;
 
-        if (this.player.rank !== Modules.Ranks.Admin) return;
+        if (!this.player.isAdmin() && !this.player.isHollowAdmin()) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
@@ -428,6 +440,10 @@ export default class Incoming {
 
     private handleContainer(packet: ContainerPacket): void {
         //log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
+
+        // Sanitize the incoming packet information.
+        if (packet.value) packet.value = Utils.sanitizeNumber(packet.value);
+        if (packet.fromIndex) packet.fromIndex = Utils.sanitizeNumber(packet.fromIndex);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
@@ -468,6 +484,9 @@ export default class Incoming {
      */
 
     private handleAbility(packet: AbilityPacket): void {
+        // Sanitize the incoming index information.
+        if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
+
         switch (packet.opcode) {
             case Opcodes.Ability.Use: {
                 return this.player.abilities.use(packet.key);
@@ -480,6 +499,9 @@ export default class Incoming {
     }
 
     private handleTrade(packet: TradePacket): void {
+        // Sanitize the incoming packet information.
+        if (packet.count) packet.count = Utils.sanitizeNumber(packet.count, true);
+
         switch (packet.opcode) {
             case Opcodes.Trade.Request: {
                 let oPlayer = this.entities.get(packet.instance!);
@@ -516,6 +538,10 @@ export default class Incoming {
     private handleEnchant(packet: EnchantPacket): void {
         if (!this.player.canAccessContainer)
             return this.player.notify('You cannot do that right now.');
+
+        // Sanitize the index and the shard index.
+        if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
+        if (packet.shardIndex) packet.shardIndex = Utils.sanitizeNumber(packet.shardIndex);
 
         switch (packet.opcode) {
             case Opcodes.Enchant.Select: {
@@ -589,6 +615,13 @@ export default class Incoming {
         // Ignore invalid packets.
         if (data.index < 0) return;
 
+        // Sanitize the packet information to prevent any funny business.
+        data.count = Utils.sanitizeNumber(data.count, true);
+        data.index = Utils.sanitizeNumber(data.index, true);
+
+        // Make sure the count is at least 1.
+        if (data.count < 1) data.count = 1;
+
         switch (data.opcode) {
             case Opcodes.Store.Buy: {
                 return this.world.stores.purchase(this.player, data.key, data.index, data.count);
@@ -651,6 +684,9 @@ export default class Incoming {
         // Ensure the player is not maliciously trying to craft something.
         if (this.player.activeCraftingInterface === -1)
             return this.player.notify(`You cannot do that right now.`);
+
+        // Sanitize the packet information to prevent any funny business.
+        if (data.count) data.count = Utils.sanitizeNumber(data.count, true);
 
         switch (data.opcode) {
             case Opcodes.Crafting.Select: {
