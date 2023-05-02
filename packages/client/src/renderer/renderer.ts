@@ -90,7 +90,7 @@ export default class Renderer {
 
     // Animated tiles
     public animateTiles = true;
-    protected animatedTiles: { [index: number]: Tile } = {};
+    public animatedTiles: { [index: number]: Tile } = {};
 
     // Lighting
     protected lightings: RendererLighting[] = [];
