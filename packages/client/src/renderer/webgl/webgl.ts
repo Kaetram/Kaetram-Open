@@ -302,21 +302,27 @@ export default class WebGL extends Renderer {
 
             context.activeTexture(context.TEXTURE0);
 
-            let shader = this.getShader(context);
+            let shader = this.getShader(context),
+                isBackground = this.isBackgroundContext(context);
 
             // Bind the tile layer shaders to the context.
             context.useProgram(shader.program);
 
-            // Uniforms for the tile shader layer... move these later
-            context.uniform1f(shader.uniforms.uAlpha, 1);
+            /**
+             * These are uniforms for the shaders, things like alpha, repeating tiles,
+             * inverse tile count. We apply a different alpha value to the background
+             * layers as opposed to foreground since we don't want the background to
+             * obstruct certain foreground elements (tree shadows).
+             */
+
+            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 2);
             context.uniform1i(shader.uniforms.uRepeatTiles, 1);
             context.uniform2fv(shader.uniforms.uInverseLayerTileCount, this.inverseTileCount);
 
             context.uniform2f(shader.uniforms.uOffset, x, y);
 
             // Do the actual drawing.
-            for (let layer of this.layers)
-                layer.draw(context, this.game.time, !this.isBackgroundContext(context));
+            for (let layer of this.layers) layer.draw(context, this.game.time, !isBackground);
         });
     }
 
