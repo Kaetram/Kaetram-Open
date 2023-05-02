@@ -95,6 +95,9 @@ export default class Item extends Entity {
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
+        // Prevent invalid count values.
+        this.count = Utils.sanitizeNumber(this.count);
+
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
@@ -165,7 +168,7 @@ export default class Item extends Entity {
             this.x,
             this.y,
             this.dropped,
-            this.count,
+            Utils.sanitizeNumber(this.count),
             this.copyEnchantments(),
             this.owner
         ) as this;
@@ -506,6 +509,7 @@ export default class Item extends Entity {
      * Check if the item is enchanted.
      * @returns Whether or not the item has any enchantments.
      */
+
     public isEnchanted(): boolean {
         return Object.keys(this.enchantments).length > 0;
     }
