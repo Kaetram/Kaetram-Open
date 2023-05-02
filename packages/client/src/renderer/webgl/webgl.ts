@@ -315,15 +315,8 @@ export default class WebGL extends Renderer {
             context.uniform2f(shader.uniforms.uOffset, x, y);
 
             // Do the actual drawing.
-            for (let layer of this.layers) {
-                context.bindTexture(
-                    context.TEXTURE_2D,
-                    this.isBackgroundContext(context)
-                        ? layer.backgroundTexture
-                        : layer.foregroundTexture
-                );
-                context.drawArrays(context.TRIANGLES, 0, 6);
-            }
+            for (let layer of this.layers)
+                layer.draw(context, this.game.time, !this.isBackgroundContext(context));
         });
     }
 
@@ -337,7 +330,8 @@ export default class WebGL extends Renderer {
      */
 
     private addTile(index: number, tile: number | RotatedTile, layerIndex = 0): void {
-        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this.map);
+        if (!this.layers[layerIndex])
+            this.layers[layerIndex] = new Layer(this.map, this.animatedTiles);
 
         this.layers[layerIndex].addTile(index, tile, this.isFlipped(tile as RotatedTile));
     }

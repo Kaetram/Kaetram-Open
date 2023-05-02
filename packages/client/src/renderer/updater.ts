@@ -28,6 +28,7 @@ export default class Updater {
         this.updateInfos();
         this.updateBubbles();
         this.updateSounds();
+        this.updateAnimatedTiles();
     }
 
     /**
@@ -217,7 +218,20 @@ export default class Updater {
      * Updates the music controller's directional audio.
      */
 
-    private updateSounds() {
+    private updateSounds(): void {
         this.game.audio.updatePlayerListener();
+    }
+
+    /**
+     * Updates the animated tiles present in the renderer.
+     */
+
+    private updateAnimatedTiles(): void {
+        // Only update if the renderer is animating tiles.
+        if (!this.game.renderer.animateTiles) return;
+
+        // Update the animated tiles.
+        for (let index in this.game.renderer.animatedTiles)
+            this.game.renderer.animatedTiles[index].animate(this.game.time);
     }
 }

@@ -2,6 +2,8 @@ import type { ProcessedAnimation } from '@kaetram/common/types/map';
 
 export default class Tile {
     public animationIndex = 0;
+    public uploaded = true;
+
     private lastTime = 0;
 
     public constructor(
@@ -24,6 +26,8 @@ export default class Tile {
             this.id = this.animationInfo[this.animationIndex].tileId;
 
             this.lastTime = time;
+
+            this.uploaded = false;
 
             if (this.animationIndex >= Object.keys(this.animationInfo).length - 1)
                 this.animationIndex = 0;
