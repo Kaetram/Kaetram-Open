@@ -1351,7 +1351,7 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
+      "crush": 28,
       "slash": 0,
       "stab": 0,
       "archery": 0,
@@ -3401,17 +3401,17 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 12,
+      "stab": 16,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
+      "crush": -10,
+      "slash": -5,
       "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "archery": 5,
+      "magic": -15
     },
     "bonuses": {
       "accuracy": 0,
@@ -3436,20 +3436,20 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 25,
+      "stab": 12,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -10,
+      "slash": 12,
+      "stab": 10,
+      "archery": 10,
+      "magic": -18
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0,
       "magic": 0
@@ -3470,24 +3470,24 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
+      "crush": 20,
       "slash": 0,
-      "stab": 0,
+      "stab": 16,
       "archery": 0,
-      "magic": 0
+      "magic": 14
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 16,
+      "slash": 25,
+      "stab": 22,
+      "archery": -18,
+      "magic": 30
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 10
     }
   },
 
@@ -3507,23 +3507,23 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 18,
+      "stab": 18,
       "archery": 0,
-      "magic": 0
+      "magic": 22
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -20,
+      "slash": 17,
+      "stab": 22,
+      "archery": 27,
+      "magic": 24
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 30
     }
   },
 
@@ -3541,21 +3541,21 @@
     "movementSpeed": 400,
     "respawDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 18,
+      "slash": 10,
+      "stab": 20,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -10,
+      "slash": 12,
+      "stab": 15,
+      "archery": 15,
+      "magic": -13
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": -5,
       "strength": 0,
       "archery": 0,
       "magic": 0
@@ -3652,17 +3652,17 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 6,
+      "stab": 4,
       "archery": 0,
-      "magic": 0
+      "magic": 2
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 5,
+      "slash": -3,
+      "stab": 2,
+      "archery": 2,
+      "magic": -7
     },
     "bonuses": {
       "accuracy": 0,
@@ -3723,24 +3723,24 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
+      "crush": 10,
+      "slash": 7,
       "stab": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 5
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": -10,
+      "slash": 8,
+      "stab": 11,
       "archery": 0,
-      "magic": 0
+      "magic": -15
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 8
     }
   },
 
@@ -3759,24 +3759,24 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
+      "crush": 15,
+      "slash": 12,
       "stab": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 10
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": -10,
+      "slash": 10,
+      "stab": 13,
       "archery": 0,
-      "magic": 0
+      "magic": -15
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 10
     }
   },
 
@@ -3797,21 +3797,21 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 7,
+      "stab": 8,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 10,
+      "slash": -6,
+      "stab": -8,
+      "archery": -5,
+      "magic": -10
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": -5,
       "archery": 0,
       "magic": 0
     }
@@ -3833,20 +3833,20 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 7,
+      "stab": 4,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": -10,
+      "slash": 3,
+      "stab": 4,
       "archery": 0,
-      "magic": 0
+      "magic": -2
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 5,
       "strength": 0,
       "archery": 0,
       "magic": 0
@@ -3869,22 +3869,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 10,
+      "slash": 15,
+      "stab": 8,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 10,
+      "slash": 7,
+      "stab": 8,
+      "archery": -2,
+      "magic": -5
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 5,
       "archery": 0,
       "magic": 0
     }
@@ -3905,20 +3905,20 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 8,
+      "stab": 10,
       "archery": 0,
-      "magic": 0
+      "magic": 5
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -6,
+      "slash": 8,
+      "stab": 7,
+      "archery": 7,
+      "magic": -5
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 4,
       "strength": 0,
       "archery": 0,
       "magic": 0
@@ -3939,22 +3939,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
+      "crush": 30,
       "slash": 0,
-      "stab": 0,
+      "stab": 26,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -16,
+      "slash": 32,
+      "stab": 36,
+      "archery": 28,
+      "magic": -25
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -3974,22 +3974,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 17,
+      "slash": 11,
+      "stab": 10,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -12,
+      "slash": 27,
+      "stab": 15,
+      "archery": 12,
+      "magic": -15
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 8,
       "archery": 0,
       "magic": 0
     }
@@ -4013,20 +4013,20 @@
       "slash": 0,
       "stab": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 12
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 15,
+      "slash": 15,
+      "stab": 15,
+      "archery": 15,
+      "magic": -17
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 4
     }
   },
 
@@ -4045,18 +4045,18 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 5,
+      "slash": 8,
+      "stab": 12,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 10,
+      "slash": 10,
+      "stab": 8,
+      "archery": -5,
+      "magic": -8
     },
     "bonuses": {
       "accuracy": 0,
@@ -4080,22 +4080,22 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 24,
+      "slash": 21,
+      "stab": 16,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 20,
+      "slash": 14,
+      "stab": 16,
+      "archery": 9,
+      "magic": -20
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 7,
       "archery": 0,
       "magic": 0
     }
@@ -4117,20 +4117,20 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 11,
+      "stab": 8,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -12,
+      "slash": 10,
+      "stab": 8,
+      "archery": 6,
+      "magic": -14
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0,
       "magic": 0
@@ -4152,26 +4152,25 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 28,
+      "slash": 33,
+      "stab": 24,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 31,
+      "slash": 27,
+      "stab": 25,
+      "archery": 20,
+      "magic": -11
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 6,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "wolf": {
@@ -4200,7 +4199,7 @@
       "slash": 10,
       "stab": 29,
       "archery": 14,
-      "magic": 6
+      "magic": -6
     },
     "bonuses": {
       "accuracy": 4,
@@ -4208,7 +4207,6 @@
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "darkwolf": {
@@ -4226,26 +4224,25 @@
     "movementSpeed": 375,
     "respawnDelay": 75000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 24,
+      "slash": 38,
+      "stab": 22,
       "archery": 0,
-      "magic": 0
+      "magic": 5
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 28,
+      "slash": 20,
+      "stab": 39,
+      "archery": 24,
+      "magic": -6
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 7,
+      "strength": 12,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "yellowbat": {
@@ -4263,25 +4260,24 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 6,
+      "stab": 4,
       "archery": 0,
-      "magic": 0
+      "magic": 2
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -12,
+      "slash": 10,
+      "stab": 8,
+      "archery": 6,
+      "magic": -14
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 2,
       "strength": 0,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "yellowmouse": {
@@ -4300,25 +4296,24 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 8,
+      "stab": 6,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": -14,
+      "slash": 8,
+      "stab": 6,
+      "archery": 5,
+      "magic": -14
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 1,
       "strength": 0,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "yellowpreta": {
@@ -4336,26 +4331,25 @@
     "movementSpeed": 400,
     "respawnDelay": 35000,
     "attackStats": {
-      "crush": 0,
+      "crush": 22,
       "slash": 0,
       "stab": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 13
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 18,
+      "slash": 20,
+      "stab": 22,
+      "archery": 19,
+      "magic": -10
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": -3,
       "strength": 0,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "zombie": {
@@ -4415,22 +4409,22 @@
     "roamDistance": 16,
     "achievement": "skeletonking",
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 20,
+      "slash": 35,
+      "stab": 33,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 20,
+      "slash": 37,
+      "stab": 40,
+      "archery": 38,
+      "magic": 18
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 15,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
@@ -4457,22 +4451,22 @@
     "boss": true,
     "achievement": "ogrelord",
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 47,
+      "slash": 36,
+      "stab": 30,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 44,
+      "slash": 26,
+      "stab": 33,
+      "archery": 25,
+      "magic": 18
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 17,
       "archery": 0,
       "magic": 0
     }
@@ -4537,26 +4531,25 @@
     "movementSpeed": 500,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 85,
+      "slash": 104,
+      "stab": 112,
       "archery": 0,
-      "magic": 0
+      "magic": 97
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 80,
+      "slash": 85,
+      "stab": 97,
+      "archery": 93,
+      "magic": 65
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 25,
+      "strength": 18,
       "archery": 0,
-      "magic": 0
+      "magic": 10
     }
-    
   },
 
   "lightningguardian": {
@@ -4574,26 +4567,25 @@
     "movementSpeed": 600,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 45,
+      "slash": 54,
+      "stab": 62,
       "archery": 0,
-      "magic": 0
+      "magic": 67
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 40,
+      "slash": 45,
+      "stab": 57,
+      "archery": 53,
+      "magic": 35
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 5,
+      "strength": 7,
       "archery": 0,
-      "magic": 0
+      "magic": 12
     }
-    
   },
 
   "darkregion": {
@@ -4611,26 +4603,25 @@
     "movementSpeed": 600,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 30,
+      "slash": 24,
+      "stab": 26,
       "archery": 0,
-      "magic": 0
+      "magic": 50
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 33,
+      "slash": 36,
+      "stab": 35,
+      "archery": 35,
+      "magic": 20
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 12
     }
-    
   },
 
   "darkregionillusion": {
@@ -4647,26 +4638,25 @@
     "movementSpeed": 800,
     "respawnDelay": -1,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 6,
+      "slash": 4,
+      "stab": 5,
       "archery": 0,
-      "magic": 0
+      "magic": 9
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 3,
+      "slash": 6,
+      "stab": 5,
+      "archery": 5,
+      "magic": 2
     },
     "bonuses": {
       "accuracy": 0,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 5
     }
-    
   },
 
   "miniseadragon": {
@@ -4685,24 +4675,24 @@
     "movementSpeed": 450,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 48,
+      "slash": 52,
+      "stab": 51,
       "archery": 0,
-      "magic": 0
+      "magic": 55
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 61,
+      "slash": 66,
+      "stab": 60,
+      "archery": 54,
+      "magic": 30
     },
     "bonuses": {
-      "accuracy": 0,
+      "accuracy": 9,
       "strength": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 8
     }
     
   },
@@ -4726,26 +4716,25 @@
     "achievement": "forestdragon",
     "plugin": "forestdragon",
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 110,
+      "slash": 128,
+      "stab": 133,
       "archery": 0,
-      "magic": 0
+      "magic": 136
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 160,
+      "slash": 120,
+      "stab": 130,
+      "archery": 50,
+      "magic": 130
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
-      "archery": 0,
-      "magic": 0
+      "accuracy": 50,
+      "strength": 50,
+      "archery": 20,
+      "magic": 40
     }
-    
   },
 
   "enel": {
@@ -4763,26 +4752,25 @@
     "movementSpeed": 800,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 130,
+      "slash": 158,
+      "stab": 163,
       "archery": 0,
-      "magic": 0
+      "magic": 186
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 190,
+      "slash": 155,
+      "stab": 156,
+      "archery": 163,
+      "magic": 180
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
-      "archery": 0,
-      "magic": 0
+      "accuracy": 70,
+      "strength": 60,
+      "archery": 30,
+      "magic": 80
     }
-    
   },
 
   "seadragon": {
@@ -4800,24 +4788,24 @@
     "movementSpeed": 600,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 82,
+      "slash": 77,
+      "stab": 78,
       "archery": 0,
-      "magic": 0
+      "magic": 85
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 100,
+      "slash": 95,
+      "stab": 88,
+      "archery": 95,
+      "magic": 80
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 48,
+      "strength": 52,
       "archery": 0,
-      "magic": 0
+      "magic": 60
     }
     
   },
@@ -4839,23 +4827,23 @@
     "projectileName": "projectile-fireball",
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 22,
+      "stab": 25,
       "archery": 0,
-      "magic": 0
+      "magic": 30
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 22,
+      "slash": 18,
+      "stab": 15,
+      "archery": 14,
+      "magic": 10
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 6,
       "archery": 0,
-      "magic": 0
+      "magic": 12
     }
     
   },
@@ -4880,11 +4868,11 @@
     "achievement": "queenant",
     "plugin": "queenant",
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 80,
+      "slash": 72,
+      "stab": 77,
       "archery": 0,
-      "magic": 0
+      "magic": 78
     },
     "defenseStats": {
       "crush": 100,
@@ -4895,7 +4883,7 @@
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 20,
       "archery": 0,
       "magic": 0
     }
@@ -4916,26 +4904,25 @@
     "movementSpeed": 500,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 170,
+      "slash": 185,
+      "stab": 180,
       "archery": 0,
-      "magic": 0
+      "magic": 150
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 190,
+      "slash": 165,
+      "stab": 160,
+      "archery": 156,
+      "magic": 150
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 52,
+      "strength":65,
       "archery": 0,
-      "magic": 0
+      "magic": 68
     }
-    
   },
 
   "squid": {
@@ -4954,26 +4941,25 @@
     "movementSpeed": 1200,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 40,
+      "slash": 47,
+      "stab": 45,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 43,
+      "slash": 38,
+      "stab": 30,
+      "archery": 28,
+      "magic": 10
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 15,
+      "strength": 10,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "snowlady": {
@@ -4992,26 +4978,25 @@
     "movementSpeed": 1200,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
+      "crush": 60,
       "slash": 0,
       "stab": 0,
       "archery": 0,
-      "magic": 0
+      "magic": 65
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 33,
+      "slash": 58,
+      "stab": 60,
+      "archery": 59,
+      "magic": 20
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 10,
+      "strength": 20,
       "archery": 0,
-      "magic": 0
+      "magic": 30
     }
-    
   },
 
   "frostqueen": {
@@ -5031,25 +5016,24 @@
     "respawnDelay": 95000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "slash": 50,
+      "stab": 58,
+      "archery": 60,
+      "magic": 65
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 43,
+      "slash": 62,
+      "stab": 65,
+      "archery": 59,
+      "magic": 22
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 10,
+      "strength": 20,
       "archery": 0,
-      "magic": 0
+      "magic": 30
     }
-    
   },
 
   "eliminator": {
@@ -5066,26 +5050,25 @@
     "movementSpeed": 500,
     "respawnDelay": 95000,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
+      "crush": 44,
+      "slash": 47,
+      "stab": 49,
+      "archery": 41,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 38,
+      "slash": 50,
+      "stab": 48,
+      "archery": 49,
+      "magic": 30
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 15,
+      "strength": 13,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "santa": {
@@ -5106,24 +5089,24 @@
     "plugin": "santa",
     "roamingDistance": 16,
     "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "crush": 145,
+      "slash": 120,
+      "stab": 137,
       "archery": 0,
-      "magic": 0
+      "magic": 150
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 160,
+      "slash": 152,
+      "stab": 145,
+      "archery": 140,
+      "magic": 120
     },
     "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
+      "accuracy": 54,
+      "strength": 80,
       "archery": 0,
-      "magic": 0
+      "magic": 63
     }
     
   },
@@ -5144,17 +5127,17 @@
     "respawnDelay": 35000,
     "attackStats": {
       "crush": 0,
-      "slash": 0,
-      "stab": 0,
+      "slash": 12,
+      "stab": 16,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
+      "crush": -10,
+      "slash": -5,
       "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "archery": 5,
+      "magic": -15
     },
     "bonuses": {
       "accuracy": 0,
@@ -5162,7 +5145,6 @@
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "picklemob": {
@@ -5180,26 +5162,25 @@
     "respawnDelay": 65000,
     "projectileName": "projectile-terror",
     "attackStats": {
-      "crush": 0,
+      "crush": 37,
       "slash": 0,
       "stab": 0,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 0
+      "crush": 30,
+      "slash": 21,
+      "stab": 19,
+      "archery": 17,
+      "magic": 15
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 0,
+      "strength": 5,
       "archery": 0,
       "magic": 0
     }
-    
   },
 
   "icerat": {
