@@ -1,5 +1,6 @@
-import type { RotatedTile } from '@kaetram/common/types/map';
+import type Tile from '../tile';
 import type Map from '../../map/map';
+import type { RotatedTile } from '@kaetram/common/types/map';
 
 /**
  * A layer is a class object that corresponds with a layer in the map data. This is used to
@@ -13,6 +14,10 @@ enum FlipFlags {
     FlippedAntiDiagonal = 0x20_00_00_00,
     FlippedVertical = 0x40_00_00_00,
     FlippedHorizontal = 0x80_00_00_00
+}
+
+interface AnimatedTiles {
+    [index: number]: Tile;
 }
 
 export default class Layer {
@@ -31,7 +36,7 @@ export default class Layer {
     public backgroundTexture!: WebGLTexture;
     public foregroundTexture!: WebGLTexture;
 
-    public constructor(private map: Map) {
+    public constructor(private map: Map, private animatedTiles: AnimatedTiles) {
         this.backgroundData = new Uint8Array(this.map.width * this.map.height * 4);
         this.foregroundData = new Uint8Array(this.map.width * this.map.height * 4);
 
@@ -77,6 +82,18 @@ export default class Layer {
         context.useProgram(program);
 
         // Upload the texture data to the GPU.
+        this.upload(context, foreground);
+    }
+
+    /**
+     * Function used to request the GPU to update the texture data by
+     * uploading the latest information (after we make modifications)
+     * to the GPU.
+     * @param context The context on which we want to upload the texture data.
+     * @param foreground Whether we want this data to be uploaded to the foreground or background texture.
+     */
+
+    private upload(context: WebGLRenderingContext, foreground = false): void {
         context.texImage2D(
             context.TEXTURE_2D,
             0,
@@ -151,6 +168,49 @@ export default class Layer {
         textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
         textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as RotatedTile) : 0; // tile flags
+    }
+
+    /**
+     * Function called every frame to draw the map for the specified layer.
+     * @param context The context on which we are drawing the map.
+     * @param time The game tick epoch time.
+     * @param foreground Whether or not the context specified is the foreground or background.
+     */
+
+    public draw(context: WebGLRenderingContext, time: number, foreground = false): void {
+        // Bind the texture according to whether we want to draw the foreground or background.
+        context.bindTexture(
+            context.TEXTURE_2D,
+            foreground ? this.foregroundTexture : this.backgroundTexture
+        );
+
+        // Draw the triangles
+        context.drawArrays(context.TRIANGLES, 0, 6);
+
+        // Skip for now.
+        if (foreground) return;
+
+        // Whether or not at least one tile requires an upload.
+        let upload = false;
+
+        // Update the animated tiles and do necessary uploads.
+        for (let index in this.animatedTiles) {
+            let tile = this.animatedTiles[index];
+
+            if (!tile.uploaded) {
+                // We update the tile in the texture data.
+                this.addTile(tile.index, tile.id + 1, tile.isFlipped);
+
+                // We request an upload for the entire texture data.
+                upload = true;
+
+                // We mark the tile as uploaded.
+                tile.uploaded = true;
+            }
+        }
+
+        // If the upload flag is toggled then we upload the entire texture data.
+        if (upload) this.upload(context, foreground);
     }
 
     /**

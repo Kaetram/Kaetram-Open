@@ -117,9 +117,6 @@ export default class Canvas extends Renderer {
              * and if we are currently animating tiles before proceeding.
              */
             if (index in this.animatedTiles && this.animateTiles) {
-                // Advance the timing of the animated tiles with the current epoch.
-                this.animatedTiles[index].animate(this.game.time);
-
                 // Prevent double draws when drawing flipped animated tiles.
                 if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
 
