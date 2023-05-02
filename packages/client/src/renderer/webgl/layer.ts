@@ -187,8 +187,11 @@ export default class Layer {
         // Draw the triangles
         context.drawArrays(context.TRIANGLES, 0, 6);
 
-        // Skip for now.
-        if (foreground) return;
+        /**
+         * This is not as efficient as I would like it, and may have unnecessary overhead.
+         * I will have each layer contain its own animated tiles, and loop through those excluding
+         * foreground/background tiles where appropriate. For now this is alright.
+         */
 
         // Whether or not at least one tile requires an upload.
         let upload = false;
