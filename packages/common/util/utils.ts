@@ -232,6 +232,23 @@ export default {
     },
 
     /**
+     * Sanitizes a number and ensures it is non-fractional.
+     * @param number The number we want to sanitize.
+     * @param strict Ensures that the number is not negative.
+     * @returns A sanitized number.
+     */
+
+    sanitizeNumber(number: number, strict = false): number {
+        // If the number is not a number, we return 0.
+        if (isNaN(number)) return 0;
+
+        // A fractional number is not allowed, we revert it to positive and floor it.
+        if (number % 1 !== 0 || strict) return Math.floor(Math.max(0, number));
+
+        return Math.floor(number);
+    },
+
+    /**
      * Verifies the email string against RegEx.
      * @param email Email string to verify.
      */
