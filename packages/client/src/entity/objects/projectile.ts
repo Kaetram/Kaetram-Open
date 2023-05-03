@@ -16,7 +16,7 @@ export default class Projectile extends Entity {
 
     private impactCallback?(): void;
 
-    public constructor(instance: string, public owner: Entity) {
+    public constructor(instance: string, public owner: Entity, private hitType: Modules.Hits) {
         super(instance, Modules.EntityType.Projectile);
     }
 
@@ -61,6 +61,12 @@ export default class Projectile extends Entity {
      */
 
     public getImpactEffect(): Modules.Effects {
+        switch (this.hitType) {
+            case Modules.Hits.Explosive: {
+                return Modules.Effects.Fireball;
+            }
+        }
+
         switch (this.sprite.key) {
             case 'projectile-boulder': {
                 return Modules.Effects.Boulder;
