@@ -53,9 +53,6 @@ export default class BubbleController {
         x = (x - this.game.camera.x) * zoomFactor;
         y = (y - this.game.camera.y) * zoomFactor - tileSize * 2 - offsetY;
 
-        console.log(this.game.camera.x, this.game.camera.y);
-        console.log(`x: ${x}, y: ${y}`);
-
         bubble.element.style.left = `${x - offset + 3}px`;
         bubble.element.style.top = `${y}px`;
     }
