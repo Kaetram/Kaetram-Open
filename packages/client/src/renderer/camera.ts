@@ -1,5 +1,4 @@
 import { Modules } from '@kaetram/common/network';
-import $ from 'jquery';
 
 import type Character from '../entity/character/character';
 
@@ -12,7 +11,7 @@ let MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
-    public border: JQuery = $('#border');
+    public border: HTMLElement = document.querySelector('#border')!;
 
     // x and y are absolute pixel coordinates
     public x = 0;
@@ -52,8 +51,8 @@ export default class Camera {
      */
 
     public update(): void {
-        let borderWidth = this.border.width()!,
-            borderHeight = this.border.height()!;
+        let borderWidth = this.border.offsetWidth,
+            borderHeight = this.border.offsetHeight;
 
         /**
          * The grid width and height are defined by how many tiles we can fit into

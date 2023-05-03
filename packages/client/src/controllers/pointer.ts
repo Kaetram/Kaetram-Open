@@ -1,7 +1,6 @@
 import Arrow from '../renderer/pointers/arrow';
 
 import { Opcodes } from '@kaetram/common/network';
-import $ from 'jquery';
 
 import type Entity from '../entity/entity';
 import type Game from '../game';
@@ -12,7 +11,7 @@ export default class PointerController {
 
     private pointers: { [id: string]: Arrow } = {};
 
-    private container = $('#bubbles');
+    private container: HTMLElement = document.querySelector('#bubbles')!;
 
     public constructor(private game: Game) {
         this.camera = this.game.camera;
@@ -25,13 +24,20 @@ export default class PointerController {
 
         switch (type) {
             case Opcodes.Pointer.Button: {
-                pointers[id] = new Arrow(id, $(`#${name}`), type);
+                let element = document.createElement('div');
+
+                element.id = name!;
+
+                pointers[id] = new Arrow(id, element, type);
 
                 break;
             }
 
             default: {
-                let element = $(`<div id="${id}" class="pointer"></div>`);
+                let element = document.createElement('div');
+
+                element.id = id;
+                element.className = 'pointer';
 
                 this.setSize(element);
 
@@ -52,27 +58,23 @@ export default class PointerController {
                         offsetX = 0,
                         offsetY = 0;
 
-                    element.css({
-                        left: `${x * scale - offsetX}px`,
-                        top: `${y * scale - offsetY}px`
-                    });
+                    element.style.left = `${x * scale - offsetX}px`;
+                    element.style.top = `${y * scale - offsetY}px`;
 
                     break;
                 }
             }
     }
 
-    private setSize(element: JQuery): void {
+    private setSize(element: HTMLElement): void {
         let pointer = '/img/pointer.png';
 
-        element.css({
-            top: '30px',
-            width: '64px',
-            height: '64px',
-            margin: 'inherit',
-            marginTop: '-18px',
-            background: `url("${pointer}") no-repeat -4px`
-        });
+        element.style.top = '30px';
+        element.style.width = '64px';
+        element.style.height = '64px';
+        element.style.margin = 'inherit';
+        element.style.marginTop = '-18px';
+        element.style.background = `url("${pointer}") no-repeat -4px`;
     }
 
     public clean(): void {
@@ -95,56 +97,43 @@ export default class PointerController {
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = game.map.tileSize * this.getZoom(), // 16 * scale
             x = (posX - camera.x) * this.getZoom(),
-            width = parseInt(element.css('width')),
+            width = parseInt(element.style.width),
             offset = width / 2 - tileSize / 2,
             y = (posY - camera.y) * this.getZoom() - tileSize,
             outX = x / canvasWidth,
             outY = y / canvasHeight;
 
-        if (outX >= 1.5)
-            // Right
-            element.css({
-                left: '',
-                right: 0,
-                top: '50%',
-                bottom: '',
-                transform: 'rotate(-90deg)'
-            });
-        else if (outY >= 1.5)
-            // Bottom
-            element.css({
-                left: '50%',
-                right: '',
-                top: '',
-                bottom: 0,
-                transform: ''
-            });
-        else if (outX <= 0)
-            // Left
-            element.css({
-                left: 0,
-                right: '',
-                top: '50%',
-                bottom: '',
-                transform: 'rotate(90deg)'
-            });
-        else if (outY <= 0)
-            // Top
-            element.css({
-                left: '',
-                right: '50%',
-                top: 0,
-                bottom: '',
-                transform: 'rotate(180deg)'
-            });
-        else
-            element.css({
-                left: `${x - offset}px`,
-                right: '',
-                top: `${y}px`,
-                bottom: '',
-                transform: ''
-            });
+        if (outX >= 1.5) {
+            element.style.left = '';
+            element.style.right = '0';
+            element.style.top = '50%';
+            element.style.bottom = '';
+            element.style.transform = 'rotate(-90deg)';
+        } else if (outY >= 1.5) {
+            element.style.left = '';
+            element.style.right = '0';
+            element.style.top = '50%';
+            element.style.bottom = '';
+            element.style.transform = 'rotate(-90deg)';
+        } else if (outX <= 0) {
+            element.style.left = '0';
+            element.style.right = '';
+            element.style.top = '50%';
+            element.style.bottom = '';
+            element.style.transform = 'rotate(90deg)';
+        } else if (outY <= 0) {
+            element.style.left = '';
+            element.style.right = '50%';
+            element.style.top = '0';
+            element.style.bottom = '';
+            element.style.transform = 'rotate(180deg)';
+        } else {
+            element.style.left = `${x - offset}px`;
+            element.style.right = '';
+            element.style.top = `${y}px`;
+            element.style.bottom = '';
+            element.style.transform = '';
+        }
     }
 
     public setToEntity(entity: Entity): void {
@@ -176,10 +165,8 @@ export default class PointerController {
 
         pointer.setPosition(x, y);
 
-        pointer.element.css({
-            left: `${x * scale - offsetX}px`,
-            top: `${y * scale - offsetY}px`
-        });
+        pointer.element.style.left = `${x * scale - offsetX}px`;
+        pointer.element.style.top = `${y * scale - offsetY}px`;
     }
 
     public update(): void {

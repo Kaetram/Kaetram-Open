@@ -22,7 +22,7 @@ export default class ChatController {
     /**
      * Handles key input from the handler. Pressing the ENTER
      * key will trigger the chat input similar to the button.
-     * @param key The key identifier from the JQuery KeyDownEvent.
+     * @param key The string of the key that was pressed.
      */
 
     public keyDown(key: string): void {
