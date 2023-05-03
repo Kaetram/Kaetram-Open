@@ -267,6 +267,10 @@ export default class WebGL extends Renderer {
      */
 
     private draw(x = this.camera.x, y = this.camera.y): void {
+        // Used for low power mode
+        if (this.hasRenderedFrame()) return;
+
+        // Iterate through the drawing contexts and apply the necessary transformations/attributes.
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
             context.enable(context.BLEND);
             context.blendEquation(this.blendMode.equation);
@@ -322,8 +326,11 @@ export default class WebGL extends Renderer {
             context.uniform2f(shader.uniforms.uOffset, x, y);
 
             // Do the actual drawing.
-            for (let layer of this.layers) layer.draw(context, this.game.time, !isBackground);
+            for (let layer of this.layers)
+                layer.draw(context, this.game.time, !isBackground, this.isLowPowerMode());
         });
+
+        this.saveFrame();
     }
 
     /**
@@ -336,8 +343,7 @@ export default class WebGL extends Renderer {
      */
 
     private addTile(index: number, tile: number | RotatedTile, layerIndex = 0): void {
-        if (!this.layers[layerIndex])
-            this.layers[layerIndex] = new Layer(this.map, this.animatedTiles);
+        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this.map);
 
         this.layers[layerIndex].addTile(index, tile, this.isFlipped(tile as RotatedTile));
     }

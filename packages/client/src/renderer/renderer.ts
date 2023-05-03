@@ -90,7 +90,7 @@ export default class Renderer {
 
     // Animated tiles
     public animateTiles = true;
-    public animatedTiles: { [index: number]: Tile } = {};
+    private renderedFrame: number[] = [];
 
     // Lighting
     protected lightings: RendererLighting[] = [];
@@ -263,9 +263,6 @@ export default class Renderer {
 
         // Recalculate canvas sizes.
         this.loadSizes();
-
-        // Re-calculate visible animated tiles.
-        this.updateAnimatedTiles();
 
         // Dimensions may mess with centration, so we force it.
         this.camera.centreOn(this.game.player);
@@ -1128,6 +1125,20 @@ export default class Renderer {
         return false;
     }
 
+    /**
+     * Checks whether or not the current frame has already been rendererd in order
+     * to prevent drawing when there is no movement during low power mode.
+     * @returns Whether or not the current frame has been rendered.
+     */
+
+    protected hasRenderedFrame(): boolean {
+        if (this.forceRendering || !this.isLowPowerMode()) return false;
+
+        if (this.stopRendering) return true;
+
+        return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
+    }
+
     // -------------- Context Management --------------
 
     /**
@@ -1166,6 +1177,20 @@ export default class Renderer {
 
     private save(): void {
         this.forEachContext((context: CanvasRenderingContext2D) => context.save());
+    }
+
+    /**
+     * Saves the currently rendered frame in order to prevent unnecessary redraws
+     * during low power mode.
+     */
+
+    protected saveFrame(): void {
+        if (!this.isLowPowerMode()) return;
+
+        this.renderedFrame[0] = this.camera.x;
+        this.renderedFrame[1] = this.camera.y;
+
+        this.forceRendering = false;
     }
 
     /**
@@ -1274,6 +1299,14 @@ export default class Renderer {
     }
 
     /**
+     * @returns Whether the current rendering engine is WebGL.
+     */
+
+    public isWebGl(): boolean {
+        return this.type === 'webgl';
+    }
+
+    /**
      * Given a key we return the sprite associated with the medal.
      * @param key The key of the medal.
      * @returns A sprite element or undefined if the key is invalid.
@@ -1355,50 +1388,21 @@ export default class Renderer {
     // -------------- Update functions --------------
 
     /**
-     * Used for synchronization of all animated tiles when the player
-     * stops moving or every couple of steps.
-     */
-
-    public resetAnimatedTiles(): void {
-        // Reset the animation frame index for each animated tile.
-        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
-    }
-
-    /**
-     * Iterates through all the currently visible tiles and appends tiles
-     * that are animated to our list of animated tiles. This function ensures
-     * that animated tiles are initialzied only once and stored for the
-     * duration of the client's session.
+     * Superclass implementation for updating animated tiles. These are
+     * implemented by the Canvas2D rendering engine to update the
+     * animated tiles currently within the player's field of vision.
      */
 
     public updateAnimatedTiles(): void {
-        if (!this.animateTiles) return;
+        //
+    }
 
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile as RotatedTile);
+    /**
+     * Superclass implementation for resetting the animated tiles.
+     */
 
-            if (isFlipped) tile = (tile as RotatedTile).tileId;
-
-            /**
-             * We don't want to reinitialize animated tiles that already exist
-             * and are within the visible camera proportions. This way we can parse
-             * it every time the tile moves slightly.
-             */
-
-            if (!this.map.isAnimatedTile(tile as number)) return;
-
-            /**
-             * Push the pre-existing tiles.
-             */
-
-            if (!(index in this.animatedTiles))
-                this.animatedTiles[index] = new Tile(
-                    tile as number,
-                    index,
-                    this.map.getTileAnimation(tile as number),
-                    isFlipped
-                );
-        }, 2);
+    public resetAnimatedTiles(): void {
+        //
     }
 
     /**
@@ -1409,7 +1413,7 @@ export default class Renderer {
      * @param data The data with which to update the tile.
      */
 
-    public setTile(index: number, data: RegionTile): void {
+    public setTile(_index: number, _data: RegionTile): void {
         // unimplemented
     }
 
@@ -1421,15 +1425,6 @@ export default class Renderer {
 
     public bindTileLayers(): void {
         //
-    }
-
-    /**
-     * Iterates through each of the animated tiles.
-     * @param callback Returns the tile object for that animated tile.
-     */
-
-    protected forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile in this.animatedTiles) callback(this.animatedTiles[tile]);
     }
 
     /**

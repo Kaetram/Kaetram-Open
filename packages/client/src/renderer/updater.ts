@@ -3,6 +3,7 @@ import Projectile from '../entity/objects/projectile';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Renderer from './renderer';
 import type SpritesController from '../controllers/sprites';
 import type Entity from '../entity/entity';
 import type Game from '../game';
@@ -10,12 +11,14 @@ import type Game from '../game';
 export default class Updater {
     private tileSize: number;
 
+    private renderer: Renderer;
     private sprites: SpritesController;
 
     public constructor(private game: Game) {
         this.tileSize = game.map.tileSize;
 
         this.sprites = game.sprites;
+        this.renderer = game.renderer;
     }
 
     public update(): void {
@@ -227,11 +230,16 @@ export default class Updater {
      */
 
     private updateAnimatedTiles(): void {
-        // Only update if the renderer is animating tiles.
-        if (!this.game.renderer.animateTiles) return;
+        /**
+         * If we're using WebGL then animated tiles are handled on a per-layer
+         * basis during the draw calls. Otherwise, we update them here for
+         * Canvas2D rendering. We also disable animated tiles if the renderer
+         * says so.
+         */
+        if (this.renderer.isWebGl() || !this.renderer.animateTiles) return;
 
         // Update the animated tiles.
-        for (let index in this.game.renderer.animatedTiles)
-            this.game.renderer.animatedTiles[index].animate(this.game.time);
+        for (let index in this.renderer.animatedTiles)
+            this.renderer.animatedTiles[index].animate(this.game.time);
     }
 }
