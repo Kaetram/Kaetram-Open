@@ -1,4 +1,5 @@
-import type Tile from '../tile';
+import Tile from '../tile';
+
 import type Map from '../../map/map';
 import type { RotatedTile } from '@kaetram/common/types/map';
 
@@ -36,7 +37,10 @@ export default class Layer {
     public backgroundTexture!: WebGLTexture;
     public foregroundTexture!: WebGLTexture;
 
-    public constructor(private map: Map, private animatedTiles: AnimatedTiles) {
+    // Animated tiles pertaining to this layer.
+    private animatedTiles: AnimatedTiles = {};
+
+    public constructor(private map: Map) {
         this.backgroundData = new Uint8Array(this.map.width * this.map.height * 4);
         this.foregroundData = new Uint8Array(this.map.width * this.map.height * 4);
 
@@ -113,6 +117,9 @@ export default class Layer {
      */
 
     public clear(index: number): void {
+        // Remove the tile from the animated tiles.
+        delete this.animatedTiles[index];
+
         // Increase the index.
         index *= 4;
 
@@ -141,7 +148,8 @@ export default class Layer {
     public addTile(index: number, tile: number | RotatedTile, flipped = false): void {
         // Grab the index in the respective texture data array.
         let tileId = flipped ? (tile as RotatedTile).tileId : (tile as number),
-            textureData = this.map.isHighTile(tileId) ? this.foregroundData : this.backgroundData,
+            isHighTile = this.map.isHighTile(tileId),
+            textureData = isHighTile ? this.foregroundData : this.backgroundData,
             dataIndex = index * 4;
 
         // If the tileId is 0 or invalid it means it's an empty tile, so we just update the texture data with 255.
@@ -168,6 +176,19 @@ export default class Layer {
         textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
         textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as RotatedTile) : 0; // tile flags
+
+        // Skip if the tile is already animated.
+        if (index in this.animatedTiles) return;
+
+        // Create an animated tile if the tile is animated.
+        if (this.map.isAnimatedTile(tileId))
+            this.animatedTiles[index] = new Tile(
+                tileId,
+                index,
+                this.map.getTileAnimation(tileId),
+                flipped,
+                isHighTile
+            );
     }
 
     /**
@@ -175,9 +196,15 @@ export default class Layer {
      * @param context The context on which we are drawing the map.
      * @param time The game tick epoch time.
      * @param foreground Whether or not the context specified is the foreground or background.
+     * @param lowPower Whether or not we are in low power mode, disables animated tiles.
      */
 
-    public draw(context: WebGLRenderingContext, time: number, foreground = false): void {
+    public draw(
+        context: WebGLRenderingContext,
+        time: number,
+        foreground = false,
+        lowPower = false
+    ): void {
         // Bind the texture according to whether we want to draw the foreground or background.
         context.bindTexture(
             context.TEXTURE_2D,
@@ -187,11 +214,8 @@ export default class Layer {
         // Draw the triangles
         context.drawArrays(context.TRIANGLES, 0, 6);
 
-        /**
-         * This is not as efficient as I would like it, and may have unnecessary overhead.
-         * I will have each layer contain its own animated tiles, and loop through those excluding
-         * foreground/background tiles where appropriate. For now this is alright.
-         */
+        // Do not draw animated tiles if we are in low power mode.
+        if (lowPower) return;
 
         // Whether or not at least one tile requires an upload.
         let upload = false;
@@ -199,6 +223,12 @@ export default class Layer {
         // Update the animated tiles and do necessary uploads.
         for (let index in this.animatedTiles) {
             let tile = this.animatedTiles[index];
+
+            // Skip if the tile's layering doesn't match the current layer.
+            if (tile.isHighTile && !foreground) continue;
+
+            // Update using the current game tick.
+            tile.animate(time);
 
             if (!tile.uploaded) {
                 // We update the tile in the texture data.
