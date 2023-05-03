@@ -3,10 +3,11 @@ import Projectile from '../entity/objects/projectile';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Renderer from './renderer';
-import type SpritesController from '../controllers/sprites';
-import type Entity from '../entity/entity';
 import type Game from '../game';
+import type Canvas from './canvas';
+import type Renderer from './renderer';
+import type Entity from '../entity/entity';
+import type SpritesController from '../controllers/sprites';
 
 export default class Updater {
     private tileSize: number;
@@ -239,7 +240,7 @@ export default class Updater {
         if (this.renderer.isWebGl() || !this.renderer.animateTiles) return;
 
         // Update the animated tiles.
-        for (let index in this.renderer.animatedTiles)
-            this.renderer.animatedTiles[index].animate(this.game.time);
+        for (let index in (this.renderer as Canvas).animatedTiles)
+            (this.renderer as Canvas).animatedTiles[index].animate(this.game.time);
     }
 }
