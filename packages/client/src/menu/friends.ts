@@ -242,11 +242,7 @@ export default class Friends extends Menu {
         // No friend has been found.
         if (!friend) return;
 
-        console.log(friend);
-
         let element = this.get(username);
-
-        console.log(this.list.children);
 
         // No element has been found.
         if (!element) return;
