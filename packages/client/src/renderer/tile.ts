@@ -2,6 +2,8 @@ import type { ProcessedAnimation } from '@kaetram/common/types/map';
 
 export default class Tile {
     public animationIndex = 0;
+
+    // WebGL rendering functions.
     public uploaded = true;
 
     private lastTime = 0;
@@ -10,7 +12,8 @@ export default class Tile {
         public id: number, // The tileId
         public index: number, // Index position of the tile.
         public animationInfo: ProcessedAnimation[],
-        public isFlipped = false
+        public isFlipped = false,
+        public isHighTile = false
     ) {}
 
     /**
