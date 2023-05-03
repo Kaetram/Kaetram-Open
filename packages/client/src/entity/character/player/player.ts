@@ -273,6 +273,20 @@ export default class Player extends Character {
     }
 
     /**
+     * Override for the idling function which also adds checking for keyboard
+     * movement and prevents setting idle during keyboard movement.
+     * @param o Optional parameter if we want to update the orientation.
+     * @param force Whether or not we force the idle animation.
+     */
+
+    public override idle(o?: Modules.Orientation, force = false): void {
+        // Check for moving instead of path if keyboard movement is enabled.
+        if (this.hasKeyboardMovement() && this.moving) return;
+
+        super.idle(o, force);
+    }
+
+    /**
      * @returns The key of the currently equipped armour.
      */
 
