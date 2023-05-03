@@ -191,7 +191,7 @@ export default class EntitiesController {
 
         attacker.lookAt(target);
 
-        let projectile = new Projectile(info.instance, attacker);
+        let projectile = new Projectile(info.instance, attacker, info.hitType!);
 
         projectile.name = info.name;
 
@@ -216,7 +216,7 @@ export default class EntitiesController {
             if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                Modules.Hits.Normal,
+                info.hitType!,
                 info.damage!,
                 target.x,
                 target.y,
