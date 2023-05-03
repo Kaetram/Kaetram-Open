@@ -7,7 +7,11 @@ export default class Arrow {
     private blinkInterval!: number;
     private visible = true;
 
-    public constructor(public id: string, public element: JQuery, public type: Opcodes.Pointer) {
+    public constructor(
+        public id: string,
+        public element: HTMLElement,
+        public type: Opcodes.Pointer
+    ) {
         this.load();
     }
 
@@ -47,8 +51,8 @@ export default class Arrow {
      */
 
     private show(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.addClass('active');
-        else this.element.show();
+        if (this.type === Opcodes.Pointer.Button) this.element.classList.add('active');
+        else this.element.style.display = 'block';
     }
 
     /**
@@ -56,7 +60,7 @@ export default class Arrow {
      */
 
     private hide(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.removeClass('active');
-        else this.element.hide();
+        if (this.type === Opcodes.Pointer.Button) this.element.classList.remove('active');
+        else this.element.style.display = 'none';
     }
 }
