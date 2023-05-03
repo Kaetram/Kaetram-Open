@@ -250,9 +250,6 @@ export default class API {
     private handleRequestReset(request: Request, response: Response): void {
         let { email } = request.body;
 
-        console.log(request.body);
-        console.log(email);
-
         // Verify the email address is valid.
         if (!email || !Utils.isEmail(email)) {
             response.json({ error: 'invalid' });

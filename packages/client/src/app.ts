@@ -567,8 +567,7 @@ export default class App {
     }
 
     /**
-     * @returns The jQuery HTML element of the username field
-     * depending on the currently open scroll.
+     * @returns The HTML username input element of the currently open scroll.
      */
 
     private getUsernameField(): HTMLInputElement {
@@ -588,8 +587,7 @@ export default class App {
     }
 
     /**
-     * @returns The JQuery HTML element of the password field
-     * depending on the currently open scroll.
+     * @returns The HTML password input element of the currently open scroll.
      */
 
     private getPasswordField(): HTMLInputElement {
