@@ -181,12 +181,30 @@ export default class Handler {
      * Callback handler for when the player is hit.
      * @param damage The amount of damage dealt.
      * @param attacker Who is attacking the player.
+     * @param isThorns Whether the damage is from thorns.
      */
 
-    private handleHit(damage: number, attacker?: Character): void {
+    private handleHit(damage: number, attacker?: Character, isThorns = false): void {
         if (!attacker || this.player.isDead()) return;
 
         this.player.addAttacker(attacker);
+
+        // Prevent endless loops of thorn damage.
+        if (isThorns) return;
+
+        let thornsLevel = this.player.equipment.getArmour().getThornsLevel();
+
+        // Stop if we do not have thorns on the armour.
+        if (!thornsLevel) return;
+
+        // 40% chance to activate thorns.
+        if (Utils.randomInt(0, 100) > 40) return;
+
+        // Thorns damage is 10% per level of thorns enchantment.
+        let thornsDamage = Math.floor(damage * thornsLevel * 0.1);
+
+        // Send damage packet to the attacker.
+        attacker.hit(thornsDamage, this.player);
     }
 
     /**
