@@ -18,7 +18,7 @@ import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type PoisonCallback = (type: number, exists: boolean) => void;
-type HitCallback = (damage: number, attacker?: Character) => void;
+type HitCallback = (damage: number, attacker?: Character, isThorns?: boolean) => void;
 type DeathCallback = (attacker?: Character) => void;
 
 export default abstract class Character extends Entity {
@@ -389,9 +389,10 @@ export default abstract class Character extends Entity {
      * @param attacker The attacker dealing the damage.
      * @param damage The amount of damage being dealt.
      * @param aoe Whether or not the damage is AoE based.
+     * @param isThorns Whether or not the damage is from thorns.
      */
 
-    public hit(damage: number, attacker?: Character, aoe = 0): void {
+    public hit(damage: number, attacker?: Character, aoe = 0, isThorns = false): void {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.status.has(Modules.Effects.Invincible)) return;
 
@@ -405,7 +406,7 @@ export default abstract class Character extends Entity {
         if (aoe) this.handleAoE(damage, attacker, aoe);
 
         // Hit callback on each hit.
-        this.hitCallback?.(damage, attacker);
+        this.hitCallback?.(damage, attacker, isThorns);
 
         // If the character has bloodsucking, we let the handler take care of it.
         if (attacker?.hasBloodsucking()) this.handleBloodsucking(attacker!, damage);
