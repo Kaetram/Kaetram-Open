@@ -2266,6 +2266,12 @@ export default class Player extends Character {
             let weapon = this.equipment.getWeapon();
 
             if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+
+            // Apply the area-of-effect damage if the weapon is explosive.
+            if (weapon.isExplosive() && Formulas.getEffectChance()) {
+                this.aoe = 1;
+                return Modules.Hits.Explosive;
+            }
         } else {
             let weapon = this.equipment.getWeapon();
 

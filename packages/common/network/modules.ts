@@ -96,7 +96,8 @@ export enum Hits {
     Profession,
     Freezing,
     Burning,
-    Terror
+    Terror,
+    Explosive
 }
 
 export enum Equipment {
@@ -329,6 +330,15 @@ export interface Colours {
 export let DamageColours = {
     // Received damage
     [Hits.Normal]: {
+        fill: 'rgb(255, 50, 50)',
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'white',
+            stroke: '#373737'
+        }
+    },
+
+    [Hits.Explosive]: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
