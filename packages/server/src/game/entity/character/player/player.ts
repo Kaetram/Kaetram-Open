@@ -11,7 +11,6 @@ import Statistics from './statistics';
 import Trade from './trade';
 import Incoming from './incoming';
 
-import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Item from '../../objects/item';
@@ -44,6 +43,7 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
+import type Pet from '../pet/pet';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -126,7 +126,7 @@ export default class Player extends Character {
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Pet information
-    public pet!: Pet;
+    public pet: Pet | undefined;
 
     // Warps
     public lastWarp = 0;
@@ -1495,10 +1495,33 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.pet) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`You already have a pet!`);
 
         // Create a new pet instance based on the key.
-        this.pet = new Pet(this, key, this.x, this.y);
+        this.pet = this.entities.spawnPet(this, key);
+    }
+
+    /**
+     * Removes the player's pet and adds it to their inventory if they have space.
+     */
+
+    public removePet(): void {
+        if (!this.hasPet()) return;
+
+        // Ensure the player has enough space in their inventory.
+        if (!this.inventory.hasSpace()) {
+            this.notify(`You do not have enough inventory space to store your pet.`);
+            return;
+        }
+
+        // Create a pet item and add it to the player's inventory.
+        this.inventory.add(new Item(this.pet!.key, -1, -1, false, 1));
+
+        // Remove the pet from the world
+        this.entities.remove(this.pet!);
+
+        // Remove the pet from the player.
+        this.pet = undefined;
     }
 
     /**
@@ -1548,6 +1571,14 @@ export default class Player extends Character {
 
     public override hasBloodsucking(): boolean {
         return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
+     * @returns Whether or not the player currently has a pet.
+     */
+
+    public hasPet(): boolean {
+        return !!this.pet;
     }
 
     /**
