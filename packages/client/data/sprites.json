@@ -9316,6 +9316,7 @@
   { "id": "items/vanillabottle", "offsetX": 0, "offsetY": 0 },
   { "id": "items/vanillabowlsmall", "offsetX": 0, "offsetY": 0 },
   { "id": "items/hilt1", "offsetX": 0, "offsetY": 0 },
-  { "id": "items/hilt2", "offsetX": 0, "offsetY": 0 }
+  { "id": "items/hilt2", "offsetX": 0, "offsetY": 0 },
+  { "id": "items/lootbag", "offsetX": 6, "offsetY": -8 }
   
 ]
