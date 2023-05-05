@@ -8,6 +8,7 @@ import Mob from '../game/entity/character/mob/mob';
 import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
 import LootBag from '../game/entity/objects/lootbag';
+import Pet from '../game/entity/character/pet/pet';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -19,7 +20,6 @@ import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type Map from '../game/map/map';
 import type World from '../game/world';
-import type Pet from '../game/entity/character/pet/pet';
 import type Regions from '../game/map/regions';
 import type Grids from '../game/map/grids';
 
@@ -238,6 +238,22 @@ export default class Entities {
         this.add(projectile);
 
         return projectile;
+    }
+
+    /**
+     * Spawns a new pet in the world and sends the spawn to the
+     * nearby players.
+     * @param owner The owner of the pet, who is spawning the pet.
+     * @param key The key of the pet we are spawning.
+     * @returns The pet object that was created.
+     */
+
+    public spawnPet(owner: Player, key: string): Pet {
+        let pet = new Pet(owner, key);
+
+        this.addPet(pet);
+
+        return pet;
     }
 
     /**

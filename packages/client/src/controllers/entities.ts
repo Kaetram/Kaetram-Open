@@ -4,6 +4,7 @@ import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Projectile from '../entity/objects/projectile';
+import Pet from '../entity/character/pet/pet';
 import log from '../lib/log';
 import Grids from '../renderer/grids';
 
@@ -12,6 +13,7 @@ import { Modules } from '@kaetram/common/network';
 import type Character from '../entity/character/character';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
+import type { PetData } from '@kaetram/common/types/pet';
 import type Entity from '../entity/entity';
 import type Game from '../game';
 import type SpritesController from './sprites';
@@ -88,6 +90,11 @@ export default class EntitiesController {
 
             case Modules.EntityType.Player: {
                 entity = this.createPlayer(info as PlayerData);
+                break;
+            }
+
+            case Modules.EntityType.Pet: {
+                entity = this.createPet(info as PetData);
                 break;
             }
         }
@@ -251,6 +258,18 @@ export default class EntitiesController {
         player.ready = true;
 
         return player;
+    }
+
+    /**
+     * Create a new pet object based on the info provided.
+     * @param info Contains the key, instance, and owner of the pet.
+     * @returns A pet object.
+     */
+
+    private createPet(info: PetData): Pet {
+        let pet = new Pet(info.instance, info.owner, this.game);
+
+        return pet;
     }
 
     /**

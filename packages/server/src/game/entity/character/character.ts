@@ -827,6 +827,14 @@ export default abstract class Character extends Entity {
      */
 
     protected canAttack(target: Character): boolean {
+        // Prevent pets from being attacked.
+        if (target.isPet()) {
+            if (this.isPlayer())
+                this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
+
+            return false;
+        }
+
         if (target.isMob()) {
             // Restrict the mobs in tutorial from being attacked by the player.
             if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
