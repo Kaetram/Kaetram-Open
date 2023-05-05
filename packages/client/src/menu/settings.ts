@@ -176,5 +176,7 @@ export default class Settings extends Menu {
 
     private handleWebGl(): void {
         this.game.storage.setWebGl(this.webGlCheckbox.checked);
+
+        window.location.reload();
     }
 }
