@@ -168,33 +168,45 @@
     position: absolute;
 }
 
-.banner-outline {
-    position: relative;
+.banner,
+.banner-outline,
+.banner-outline-2,
+.banner-outline-3,
+.banner-outline-4,
+.banner-outline-5 {
+    position: absolute;
 }
 
+
 @each $size, $i in media.$sizes {
+    @if $i == 3 {
+        $i: 4;
+    } @else if $i == 2 {
+        $i: 3;
+    } @else if $i == 1 {
+        $i: 2;
+    }
+
     @media ($size) {
         #guilds {
-            width: 241px * $i;
-            height: 201px * $i;
-            background: url('/img/interface/guilds/frames.png') no-repeat;
-            background-size: calc(width('guilds/frames.png') * $i);
+            width: 240px * $i;
+            height: 116px * $i;
         }
 
         #guilds-list-container,
         #guilds-info-container {
-            top: 32px * $i;
-            right: 18px * $i;
+            top: 18px * $i;
+            left: 64px * $i;
+
+            // top: 40px * $i;
+            // right: -144px * $i;
 
             width: 140px * $i;
-            height: 158px * $i;
-
-            background: url('/img/interface/guilds/frames.png') -256px * $i -16px * $i no-repeat;
-            background-size: calc(width('guilds/frames.png') * $i);
+            height: 84px * $i;
 
             ul {
-                top: 12px * $i;
-                left: 8px * $i;
+                top: 24px * $i;
+                left: 16px * $i;
             }
         }
 
@@ -203,8 +215,8 @@
         }
 
         #create-guild {
-            top: 76px * $i;
-            left: -60px * $i;
+            top: 64px * $i;
+            left: -63px * $i;
         }
 
         #banner-colours,
@@ -481,25 +493,55 @@
             background-position-y: -126px * $i;
         }
 
-        .banner {
-            width: 66px * $i;
-            height: 218px * $i;
-            margin-top: -1px * $i;
-            margin-left: 8px * $i;
+        .banner,
+        .banner-outline,
+        .banner-outline-2,
+        .banner-outline-3,
+        .banner-outline-4,
+        .banner-outline-5 {
+            width: 50px * $i;
+            height: 128px * $i;
+        }
 
+        .banner {
+            top: -6px * $i;
+            left: 12px * $i;
             background: url('/img/interface/guilds/banners.png') no-repeat;
             background-size: calc(width('guilds/banners.png') * $i);
         }
 
+        .banner-outline,
+        .banner-outline-2,
+        .banner-outline-3,
+        .banner-outline-4,
+        .banner-outline-5 {
+            top: 6px * $i;
+        }
+
+
         .banner-outline {
-            top: 1px * $i;
+            background: url('/img/interface/guilds/outline1.png') 0 0 no-repeat;
+            background-size: calc(width('guilds/outline1.png') * $i);
+        }
 
-            width: 56px * $i;
-            height: 211px * $i;
-            margin-left: 5px * $i;
+        .banner-outline-2 {
+            background: url('/img/interface/guilds/outline2.png') 0 0 no-repeat;
+            background-size: calc(width('guilds/outline2.png') * $i);
+        }
 
-            background: url('/img/interface/guilds/banners-outline.png') no-repeat;
-            background-size: calc(width('guilds/banners-outline.png') * $i);
+        .banner-outline-3 {
+            background: url('/img/interface/guilds/outline3.png') 0 0 no-repeat;
+            background-size: calc(width('guilds/outline3.png') * $i);
+        }
+
+        .banner-outline-4 {
+            background: url('/img/interface/guilds/outline4.png') 0 0 no-repeat;
+            background-size: calc(width('guilds/outline4.png') * $i);
+        }
+
+        .banner-outline-5 {
+            background: url('/img/interface/guilds/outline5.png') 0 0 no-repeat;
+            background-size: calc(width('guilds/outline5.png') * $i);
         }
 
         .banner-crest,
@@ -543,76 +585,76 @@
             background-position-x: -92px * $i;
         }
 
-        .banner-green {
+        .banner-grey {
             background-position-x: 0;
         }
 
-        .banner-blue {
-            background-position-x: -67px * $i;
+        .banner-green {
+            background-position-x: -50px * $i;
+        }
+
+        .banner-fuchsia {
+            background-position-x: -100px * $i;
         }
 
         .banner-red {
-            background-position-x: -134px * $i;
+            background-position-x: -150px * $i;
         }
 
-        .banner-grey {
-            background-position-x: -201px * $i;
+        .banner-brown {
+            background-position-x: -200px * $i;
         }
 
-        .banner-black {
-            background-position-x: -268px * $i;
+        .banner-cyan {
+            background-position-x: -250px * $i;
         }
 
-        .banner-tangerine {
-            background-position-x: -335px * $i;
+        .banner-darkgrey {
+            background-position-x: -300px * $i;
         }
 
-        .banner-yellow {
-            background-position-x: -402px * $i;
+        .banner-teal {
+            background-position-x: -350px * $i;
         }
 
-        .banner-purple {
-            background-position-x: -469px * $i;
+        .banner-goldenyellow {
+            background-position-x: -400px * $i;
         }
 
-        .banner-pink {
-            background-position-x: -536px * $i;
+        .banner-outline-goldenyellow {
+            background-position-x: 0;
+        }
+
+        .banner-outline-fuchsia {
+            background-position-x: -50px * $i;
+        }
+
+        .banner-outline-red {
+            background-position-x: -100px * $i;
+        }
+
+        .banner-outline-brown {
+            background-position-x: -150px * $i;
+        }
+
+        .banner-outline-cyan {
+            background-position-x: -200px * $i;
+        }
+
+        .banner-outline-darkgrey {
+            background-position-x: -250px * $i;
+        }
+
+        .banner-outline-teal {
+            background-position-x: -300px * $i;
         }
 
         .banner-outline-green {
-            background-position-x: -67px * $i;
-        }
-
-        .banner-outline-blue {
-            background-position-x: -134px * $i;
-        }
-
-        .banner-outline-orange {
-            background-position-x: -201px * $i;
-        }
-
-        .banner-outline-white {
-            background-position-x: -268px * $i;
+            background-position-x: -350px * $i;
         }
 
         .banner-outline-grey {
-            background-position-x: -335px * $i;
-        }
-
-        .banner-outline-tangerine {
-            background-position-x: -402px * $i;
-        }
-
-        .banner-outline-yellow {
-            background-position-x: -469px * $i;
-        }
-
-        .banner-outline-purple {
-            background-position-x: -536px * $i;
-        }
-
-        .banner-outline-pink {
-            background-position-x: -603px * $i;
+            background-position-x: -400px * $i;
         }
 
         .banner-colour-button-green,

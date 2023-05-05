@@ -744,7 +744,7 @@ export default class Guilds extends Menu {
 
         // Update the outline and crest if specified
         outlineElement.className = `banner-outline${
-            this.bannerOutline ? ` banner-outline-${this.bannerOutline}` : ''
+            this.bannerOutline ? ` banner-${this.bannerOutline}` : ''
         }`;
 
         if (this.bannerCrest)

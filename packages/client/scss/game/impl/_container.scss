@@ -64,13 +64,26 @@
     position: absolute;
     inset: 0;
 
-    display: none;
-
     margin: auto;
 
     border-image: url('/img/interface/slices/container.png');
     border-image-slice: 42% fill;
     border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
+.container-subframe {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    margin: auto;
+
+    border-image: url('/img/interface/slices/subframe.png');
+    border-image-slice: 42% fill;
+    border-image-width: 64px;
     border-image-outset: 0;
     border-image-repeat: stretch;
 }
