@@ -2,14 +2,7 @@ import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
 import Friend from './friend';
-import Armour from './equipment/armour';
-import ArmourSkin from './equipment/armourskin';
-import Boots from './equipment/boots';
-import Pendant from './equipment/pendant';
-import Ring from './equipment/ring';
-import Weapon from './equipment/weapon';
-import WeaponSkin from './equipment/weaponskin';
-import Arrows from './equipment/arrows';
+import Equipment from './equipment';
 
 import Character from '../character';
 
@@ -24,7 +17,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
-import type { GuildData, Member } from '@kaetram/common/types/guild';
+import type { GuildData } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -58,16 +51,7 @@ export default class Player extends Character {
     public override maxMana = 0;
 
     // Mapping of all equipments to their type.
-    public equipments = {
-        [Modules.Equipment.Armour]: new Armour(),
-        [Modules.Equipment.ArmourSkin]: new ArmourSkin(),
-        [Modules.Equipment.Boots]: new Boots(),
-        [Modules.Equipment.Pendant]: new Pendant(),
-        [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon(),
-        [Modules.Equipment.WeaponSkin]: new WeaponSkin(),
-        [Modules.Equipment.Arrows]: new Arrows()
-    };
+    public equipments: { [key: number]: Equipment } = {};
 
     public skills: { [key: number]: Skill } = {};
     public abilities: { [key: string]: Ability } = {};
@@ -82,6 +66,24 @@ export default class Player extends Character {
 
     public constructor(instance: string, game: Game) {
         super(instance, Modules.EntityType.Player, game);
+
+        this.createEquipments();
+    }
+
+    /**
+     * Iterates through the available equipment types and creates an empty
+     * equipment object for each type. Since we're dealing with an enum, we
+     * check that what we're iterating over is the number/integer value.
+     */
+
+    public createEquipments(): void {
+        for (let key in Modules.Equipment) {
+            let type = parseInt(key);
+
+            if (isNaN(type)) continue;
+
+            this.equipments[type] = new Equipment();
+        }
     }
 
     /**
@@ -295,7 +297,7 @@ export default class Player extends Character {
         if (this.equipments[Modules.Equipment.ArmourSkin].key)
             return this.equipments[Modules.Equipment.ArmourSkin].key;
 
-        return this.equipments[Modules.Equipment.Armour].key;
+        return 'player/base';
     }
 
     /**
@@ -310,11 +312,13 @@ export default class Player extends Character {
         return this.equipments[Modules.Equipment.Weapon].key;
     }
 
+    //// Shortcut functions for getting equipment objects. ////
+
     /**
      * @returns The armour object of the player.
      */
 
-    public getArmour(): Armour {
+    public getArmour(): Equipment {
         return this.equipments[Modules.Equipment.Armour];
     }
 
@@ -322,7 +326,7 @@ export default class Player extends Character {
      * @returns The armour skin object of the player.
      */
 
-    public getArmourSkin(): ArmourSkin {
+    public getArmourSkin(): Equipment {
         return this.equipments[Modules.Equipment.ArmourSkin];
     }
 
@@ -330,7 +334,7 @@ export default class Player extends Character {
      * @returns The boots object of the player.
      */
 
-    public getBoots(): Boots {
+    public getBoots(): Equipment {
         return this.equipments[Modules.Equipment.Boots];
     }
 
@@ -338,7 +342,7 @@ export default class Player extends Character {
      * @returns The arrows object of the player.
      */
 
-    public getArrows(): Arrows {
+    public getArrows(): Equipment {
         return this.equipments[Modules.Equipment.Arrows];
     }
 
@@ -346,7 +350,7 @@ export default class Player extends Character {
      * @returns The pendant object of the player.
      */
 
-    public getPendant(): Pendant {
+    public getPendant(): Equipment {
         return this.equipments[Modules.Equipment.Pendant];
     }
 
@@ -354,7 +358,7 @@ export default class Player extends Character {
      * @returns The ring object of the player.
      */
 
-    public getRing(): Ring {
+    public getRing(): Equipment {
         return this.equipments[Modules.Equipment.Ring];
     }
 
@@ -362,7 +366,7 @@ export default class Player extends Character {
      * @returns The weapon object of the player.
      */
 
-    public getWeapon(): Weapon {
+    public getWeapon(): Equipment {
         return this.equipments[Modules.Equipment.Weapon];
     }
 
@@ -370,7 +374,7 @@ export default class Player extends Character {
      * @returns The weapon skin object of the player.
      */
 
-    public getWeaponSkin(): WeaponSkin {
+    public getWeaponSkin(): Equipment {
         return this.equipments[Modules.Equipment.WeaponSkin];
     }
 
@@ -710,6 +714,22 @@ export default class Player extends Character {
 
     public hasFriend(username: string): boolean {
         return username.toLowerCase() in this.friends;
+    }
+
+    /**
+     * Iterates through each equipment and executes a callback with the equipment as a parameter.
+     * @param callback Contains the equipment currently being iterated.
+     * @param ignoreEmpty Whether or not we want to iterate through all equipment or just the ones that exist.
+     */
+
+    public forEachEquipment(callback: (equipment: Equipment) => void, ignoreEmpty = false): void {
+        for (let key in this.equipments) {
+            let equipment = this.equipments[key as never] as Equipment;
+
+            if (ignoreEmpty && !equipment.exists()) continue;
+
+            callback(equipment);
+        }
     }
 
     /**
