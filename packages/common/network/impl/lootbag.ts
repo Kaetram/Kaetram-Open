@@ -2,10 +2,10 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { SlotData } from '@kaetram/common/types/slot';
+import type { LootBagPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class LootBag extends Packet {
-    public constructor(slots: SlotData[]) {
-        super(Packets.LootBag, undefined, slots);
+    public constructor(info: LootBagPacket) {
+        super(Packets.LootBag, undefined, info);
     }
 }
