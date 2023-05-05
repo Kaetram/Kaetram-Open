@@ -7,6 +7,7 @@ import Chest from '../game/entity/objects/chest';
 import Mob from '../game/entity/character/mob/mob';
 import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
+import LootBag from '../game/entity/objects/lootbag';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -36,6 +37,7 @@ export default class Entities {
     private chests: { [instance: string]: Chest } = {};
     private npcs: { [instance: string]: NPC } = {};
     private pets: { [instance: string]: Pet } = {};
+    private lootBags: { [instance: string]: LootBag } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -115,6 +117,21 @@ export default class Entities {
         owner = ''
     ): void {
         this.addItem(new Item(key, x, y, dropped, count, enchantments, owner));
+    }
+
+    /**
+     * Spawns a loot bag in the world and adds the provided items onto its container.
+     * @param x The x grid coordinate of the loot bag spawn.
+     * @param y The y grid coordinate of the loot bag spawn.
+     * @param owner The instance of the player that has priority over the loot bag.
+     * @param items The list of item entities that the loot bag will contain.
+     */
+
+    public spawnLootBag(x: number, y: number, owner: string, items: Item[]): void {
+        // Do not spawn a loot bag if it is empty.
+        if (items.length === 0) return;
+
+        this.addLootBag(new LootBag(x, y, owner, items));
     }
 
     /**
@@ -284,6 +301,20 @@ export default class Entities {
     }
 
     /**
+     * Adds a loot bag to the game world and handles the necessary
+     * callbacks for despawning it.
+     * @param lootBag The loot bag object we are adding to the world.
+     */
+
+    private addLootBag(lootBag: LootBag): void {
+        lootBag.onEmpty(() => this.removeLootBag(lootBag));
+
+        this.add(lootBag);
+
+        this.lootBags[lootBag.instance] = lootBag;
+    }
+
+    /**
      * Adds the mob instance to its dictionary and its
      * chest area if existent.
      * @param mob Mob instance we are adding.
@@ -396,6 +427,17 @@ export default class Entities {
         // Dropped items are removed permanently, static ones respawn.
         if (item.dropped) delete this.items[item.instance];
         else item.respawn();
+    }
+
+    /**
+     * Removes the loot bag from the world and sends the despawn packet.
+     * @param lootBag The loot bag object we are removing.
+     */
+
+    public removeLootBag(lootBag: LootBag): void {
+        this.remove(lootBag);
+
+        delete this.lootBags[lootBag.instance];
     }
 
     /**

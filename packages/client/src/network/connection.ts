@@ -23,6 +23,7 @@ import type Item from '../entity/objects/item';
 import type NPC from '../entity/npc/npc';
 import type Character from '../entity/character/character';
 import type { PlayerData } from '@kaetram/common/types/player';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
@@ -59,9 +60,9 @@ import type {
     TradePacket,
     HandshakePacket,
     GuildPacket,
-    CraftingPacket
+    CraftingPacket,
+    LootBagPacket
 } from '@kaetram/common/types/messages/outgoing';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -157,6 +158,7 @@ export default class Connection {
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
         this.messages.onCrafting(this.handleCrafting.bind(this));
+        this.messages.onLootBag(this.handleLootBag.bind(this));
     }
 
     /**
@@ -1377,6 +1379,15 @@ export default class Connection {
     }
 
     /**
+     * Updates the rank of the current player. Packet contains the new rank.
+     * @param rank The new rank we are updating the player to.
+     */
+
+    private handleRank(rank: Modules.Ranks): void {
+        this.game.player.setRank(rank);
+    }
+
+    /**
      * Handles receiving information about crafting. This is used to synchronize the crafting
      * user interface with the server. When a player selects an item to craft this
      * @param opcode Contains the type of crafting action that we want to perform.
@@ -1388,12 +1399,13 @@ export default class Connection {
     }
 
     /**
-     * Updates the rank of the current player. Packet contains the new rank.
-     * @param rank The new rank we are updating the player to.
+     * Handles incoming packet regarding a loot bag. This just displays the loot bag
+     * menu and allows the player to interact with it.
+     * @param slots
      */
 
-    private handleRank(rank: Modules.Ranks): void {
-        this.game.player.setRank(rank);
+    private handleLootBag(info: LootBagPacket): void {
+        console.log(info);
     }
 
     /**

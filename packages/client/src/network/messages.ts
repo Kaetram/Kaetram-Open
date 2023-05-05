@@ -1,5 +1,6 @@
 import { Packets } from '@kaetram/common/network';
 
+import type App from '../app';
 import type {
     AbilityCallback,
     AchievementCallback,
@@ -23,6 +24,7 @@ import type {
     GuildCallback,
     HandshakeCallback,
     HealCallback,
+    LootBagCallback,
     MapCallback,
     MinigameCallback,
     MovementCallback,
@@ -47,7 +49,6 @@ import type {
     UpdateCallback,
     WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
-import type App from '../app';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
@@ -97,6 +98,7 @@ export default class Messages {
     private friendsCallback?: FriendsCallback;
     private rankCallback?: RankCallback;
     private craftingCallback?: CraftingCallback;
+    private lootBagCallback?: LootBagCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -154,6 +156,7 @@ export default class Messages {
         this.messages[Packets.Friends] = () => this.friendsCallback;
         this.messages[Packets.Rank] = () => this.rankCallback;
         this.messages[Packets.Crafting] = () => this.craftingCallback;
+        this.messages[Packets.LootBag] = () => this.lootBagCallback;
     }
 
     /**
@@ -470,5 +473,9 @@ export default class Messages {
 
     public onCrafting(callback: CraftingCallback): void {
         this.craftingCallback = callback;
+    }
+
+    public onLootBag(callback: LootBagCallback): void {
+        this.lootBagCallback = callback;
     }
 }
