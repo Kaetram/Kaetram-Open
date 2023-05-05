@@ -59,12 +59,6 @@
         "id": "agent",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -72,12 +66,6 @@
         "id": "ancientmanumentnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -85,12 +73,6 @@
         "id": "angelnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -280,12 +262,6 @@
         "id": "beachnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -502,12 +478,6 @@
         "id": "bluebikinigirlnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -605,12 +575,6 @@
         "id": "bluestoremannpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -667,12 +631,6 @@
         "id": "boxingman",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -994,12 +952,6 @@
         "id": "coder",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -7
     },
@@ -1428,12 +1380,6 @@
         "id": "desertnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1493,12 +1439,6 @@
         "id": "doctor",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1551,12 +1491,6 @@
         "id": "elfnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1623,12 +1557,6 @@
         "id": "fairynpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1726,12 +1654,6 @@
         "id": "firstsonangelnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1739,12 +1661,6 @@
         "id": "fisherman",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -1879,12 +1795,6 @@
         "id": "forestnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2037,49 +1947,49 @@
     },
 
     {
-        "id": "crown-artist",
+        "id": "crowns/crown-artist",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier1",
+        "id": "crowns/crown-tier1",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier2",
+        "id": "crowns/crown-tier2",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier3",
+        "id": "crowns/crown-tier3",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier4",
+        "id": "crowns/crown-tier4",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier5",
+        "id": "crowns/crown-tier5",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier6",
+        "id": "crowns/crown-tier6",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crown-tier7",
+        "id": "crowns/crown-tier7",
         "width": 17,
         "height": 16
     },
@@ -2167,12 +2077,6 @@
         "id": "guard",
         "width": 25,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -5,
         "offsetY": -8
     },
@@ -2180,12 +2084,6 @@
         "id": "guard2",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -8,
         "offsetY": -12
     },
@@ -2193,12 +2091,6 @@
         "id": "royalguard",
         "width": 25,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -5,
         "offsetY": -8
     },
@@ -2206,12 +2098,6 @@
         "id": "royalguard2",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -20
     },
@@ -2219,12 +2105,6 @@
         "id": "royalguard3",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -12,
         "offsetY": -20
     },
@@ -2470,12 +2350,6 @@
         "id": "iamverycoldnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2483,12 +2357,6 @@
         "id": "oldlady",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2496,12 +2364,6 @@
         "id": "oldlady2",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2509,12 +2371,6 @@
         "id": "iceelfnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2522,12 +2378,6 @@
         "id": "guildnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -2535,12 +2385,6 @@
         "id": "picklenpc",
         "width": 16,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -2,
         "offsetY": -8
     },
@@ -2548,12 +2392,6 @@
         "id": "santaelfnpc",
         "width": 16,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": 0,
         "offsetY": -10
     },
@@ -2818,12 +2656,6 @@
         "id": "king",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -8,
         "offsetY": -12
     },
@@ -2831,12 +2663,6 @@
         "id": "king2",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -8,
         "offsetY": -12
     },
@@ -2844,12 +2670,6 @@
         "id": "lavanpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -3052,12 +2872,6 @@
         "id": "mermaidnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -3740,12 +3554,6 @@
         "id": "mojojojonpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -3798,12 +3606,6 @@
         "id": "momangelnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -3818,12 +3620,6 @@
         "id": "nyan",
         "width": 49,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 6,
-                "row": 0
-            }
-        },
         "offsetX": -22,
         "offsetY": -6
     },
@@ -3831,12 +3627,6 @@
         "id": "octocat",
         "width": 32,
         "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 4,
-                "row": 0
-            }
-        },
         "offsetX": -8,
         "offsetY": -12
     },
@@ -3844,12 +3634,6 @@
         "id": "octopus",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -3857,12 +3641,6 @@
         "id": "oddeyecat",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4248,12 +4026,6 @@
         "id": "pirategirlnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4403,12 +4175,6 @@
         "id": "priest",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4664,12 +4430,6 @@
         "id": "redbikinigirlnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4871,12 +4631,6 @@
         "id": "redstoremannpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4884,12 +4638,6 @@
         "id": "purplestoremannpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -4897,12 +4645,6 @@
         "id": "greenstoremannpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5072,12 +4814,6 @@
         "id": "scientist",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5134,12 +4870,6 @@
         "id": "secondsonangelnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5159,12 +4889,6 @@
         "id": "shepherdboy",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5732,12 +5456,6 @@
         "id": "snowshepherdboy",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5797,12 +5515,6 @@
         "id": "soldier",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -5974,12 +5686,6 @@
         "id": "sponge",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6103,12 +5809,6 @@
         "id": "superiorangelnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6170,12 +5870,6 @@
         "id": "vampire",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6183,12 +5877,6 @@
         "id": "vendingmachine",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6196,12 +5884,6 @@
         "id": "villagegirl",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6209,12 +5891,6 @@
         "id": "villagegirl2",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6222,12 +5898,6 @@
         "id": "villagegirl3",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6235,12 +5905,6 @@
         "id": "villager",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6248,12 +5912,6 @@
         "id": "miner",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6688,12 +6346,6 @@
         "id": "zombiegf",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },
@@ -6746,12 +6398,6 @@
         "id": "redbikinigirlnpc",
         "width": 24,
         "height": 24,
-        "animations": {
-            "idle_down": {
-                "length": 2,
-                "row": 0
-            }
-        },
         "offsetX": -4,
         "offsetY": -8
     },

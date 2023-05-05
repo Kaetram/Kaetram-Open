@@ -339,62 +339,116 @@ export default {
     },
 
     /**
-     * Grabs the default animations for a sprite. We do this to alleviate
-     * the amount of information in the sprites.json file. We account for
-     * two types of sprites: items and characters.
-     * @param item Whether or not we are grabbing the default animations for an item.
-     * @returns The animation data for the sprite.
+     * Provides a default animation for a given type of entity. When we do not
+     * specify the animations in the `sprites.json` we use this as a default
+     * based on the type of entity.
+     * @param type The type of entity we want to get the default animations for.
+     * @returns The default animations for the given entity type.
      */
 
-    getDefaultAnimations(item = false): AnimationData {
-        // Default animations for an item.
-        if (item)
-            return {
-                idle: {
-                    length: 1,
-                    row: 0
-                }
-            };
-
-        // Default animations for a player/mob character.
-        return {
-            atk_right: {
-                length: 5,
-                row: 0
-            },
-            walk_right: {
-                length: 4,
-                row: 1
-            },
-            idle_right: {
-                length: 2,
-                row: 2
-            },
-            atk_up: {
-                length: 5,
-                row: 3
-            },
-            walk_up: {
-                length: 4,
-                row: 4
-            },
-            idle_up: {
-                length: 2,
-                row: 5
-            },
-            atk_down: {
-                length: 5,
-                row: 6
-            },
-            walk_down: {
-                length: 4,
-                row: 7
-            },
-            idle_down: {
-                length: 2,
-                row: 8
+    getDefaultAnimations(type: string): AnimationData {
+        switch (type) {
+            case 'items': {
+                return {
+                    idle: {
+                        length: 1,
+                        row: 0
+                    }
+                };
             }
-        };
+
+            case 'npcs': {
+                return {
+                    idle_down: {
+                        length: 2,
+                        row: 0
+                    }
+                };
+            }
+
+            case 'mobs': {
+                return {
+                    atk_right: {
+                        length: 5,
+                        row: 0
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_right: {
+                        length: 2,
+                        row: 2
+                    },
+                    atk_up: {
+                        length: 5,
+                        row: 3
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 4
+                    },
+                    idle_up: {
+                        length: 2,
+                        row: 5
+                    },
+                    atk_down: {
+                        length: 5,
+                        row: 6
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 7
+                    },
+                    idle_down: {
+                        length: 2,
+                        row: 8
+                    }
+                };
+            }
+
+            default: {
+                // Default animations for a player/mob character.
+                return {
+                    idle_down: {
+                        length: 4,
+                        row: 0
+                    },
+                    idle_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_up: {
+                        length: 4,
+                        row: 2
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 3
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 4
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 5
+                    },
+                    atk_down: {
+                        length: 4,
+                        row: 6
+                    },
+                    atk_right: {
+                        length: 4,
+                        row: 7
+                    },
+                    atk_up: {
+                        length: 4,
+                        row: 8
+                    }
+                };
+            }
+        }
     },
 
     /**
