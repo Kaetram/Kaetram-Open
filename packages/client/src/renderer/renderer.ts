@@ -7,6 +7,7 @@ import { isMobile, isTablet } from '../utils/detect';
 import { Modules } from '@kaetram/common/network';
 import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
+import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from './camera';
@@ -680,51 +681,65 @@ export default class Renderer {
 
         if (!(entity instanceof Character)) return;
 
-        if (entity.isPlayer()) this.drawWeapon(entity as Player);
+        // Iterate through the drawable equipments and draw them.
+        (entity as Player).forEachEquipment(
+            (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
+            true
+        );
+
         if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
 
     /**
-     * Draws the weapon sprite on top of the player entity. We skip
-     * this function if there is no weapon, the player is dead, or
-     * they are teleporting.
-     * @param player The player we are drawing the weapon for.
+     * Responsible for drawing an equipment element on top of the player. This is
+     * done using the paperdoll method, each equipment is another sprite sheet
+     * that is drawn on top of the player's sprite.
+     * @param player The player we are drawing the equipment for.
+     * @param equipment The equipment information we are drawing.
      */
 
-    private drawWeapon(player: Player): void {
-        if (!player.hasWeapon() || player.dead || player.teleporting) return;
+    private drawEquipment(player: Player, equipment: Equipment): void {
+        if (player.dead || player.teleporting) return;
 
-        let weapon = this.game.sprites.get(player.getWeaponSpriteName());
+        // Equipment sprite based on the key of the slot.
+        let sprite = this.game.sprites.get(equipment.key);
 
-        if (!weapon) return;
+        if (!sprite) return;
 
-        if (!weapon.loaded) weapon.load();
+        if (!sprite.loaded) sprite.load();
 
-        let animation = player.animation!,
-            weaponAnimations = weapon.animations[animation.name];
+        this.drawSprite(player, sprite);
+    }
 
-        if (!weaponAnimations) return;
+    /**
+     * Extracts the animation frame and draws the provided sprite for the character.
+     * @param character The character used to determine the animation frames.
+     * @param sprite The sprite that we are drawing for the character.
+     */
 
-        let { frame, row } = animation,
+    private drawSprite(character: Character, sprite: Sprite): void {
+        let animation = character.animation!,
+            animationData = sprite.animations[animation.name],
+            { frame, row } = animation,
             index =
-                frame.index < weaponAnimations.length
+                frame.index < animationData.length
                     ? frame.index
-                    : frame.index % weaponAnimations.length,
-            weaponX = weapon.width * index,
-            weaponY = weapon.height * row,
-            weaponWidth = weapon.width,
-            weaponHeight = weapon.height;
+                    : frame.index % animationData.length,
+            spriteX = sprite.width * index,
+            spriteY = sprite.height * row,
+            spriteWidth = sprite.width,
+            spriteHeight = sprite.height;
 
         this.entitiesContext.drawImage(
-            weapon.image,
-            weaponX,
-            weaponY,
-            weaponWidth,
-            weaponHeight,
-            weapon.offsetX,
-            weapon.offsetY,
-            weaponWidth,
-            weaponHeight
+            sprite.image,
+            spriteX,
+            spriteY,
+            spriteWidth,
+            spriteHeight,
+            sprite.offsetX,
+            sprite.offsetY,
+            spriteWidth,
+            spriteHeight
         );
     }
 

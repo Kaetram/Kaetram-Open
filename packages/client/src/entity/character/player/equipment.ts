@@ -1,23 +1,21 @@
-import Util from '../../../../utils/util';
+import Util from '../../../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
-export default abstract class Equipment {
+export default class Equipment {
+    public key = '';
+    public name = '';
+    public count = -1;
+    public enchantments: Enchantments = {};
+
     public attackStats: Stats = Util.getEmptyStats();
     public defenseStats: Stats = Util.getEmptyStats();
     public bonuses: Bonuses = Util.getEmptyBonuses();
 
     public attackStyle: Modules.AttackStyle = Modules.AttackStyle.None;
     public attackStyles: Modules.AttackStyle[] = [];
-
-    public constructor(
-        public key = '',
-        public name = '',
-        public count = -1,
-        public enchantments: Enchantments = {}
-    ) {}
 
     /**
      * An update function that is called when the equipment is equipped.
