@@ -1,5 +1,12 @@
 [
     {
+        "id": "player/base",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+    {
         "id": "mobs/angel",
         "width": 32,
         "height": 32,
@@ -1902,49 +1909,49 @@
     },
 
     {
-        "id": "crowns/crown-artist",
+        "id": "crowns/artist",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier1",
+        "id": "crowns/tier1",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier2",
+        "id": "crowns/tier2",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier3",
+        "id": "crowns/tier3",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier4",
+        "id": "crowns/tier4",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier5",
+        "id": "crowns/tier5",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier6",
+        "id": "crowns/tier6",
         "width": 16,
         "height": 16
     },
 
     {
-        "id": "crowns/crown-tier7",
+        "id": "crowns/tier7",
         "width": 17,
         "height": 16
     },
