@@ -101,7 +101,9 @@ export enum Hits {
 }
 
 export enum Equipment {
-    Armour,
+    Helmet,
+    Chestplate,
+    Legs,
     Boots,
     Pendant,
     Ring,

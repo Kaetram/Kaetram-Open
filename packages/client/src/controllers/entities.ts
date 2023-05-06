@@ -101,7 +101,6 @@ export default class EntitiesController {
                 entity = this.createPlayer(info as PlayerData);
 
                 prefix = 'player';
-                info.key = 'base'; // temporary
                 break;
             }
         }

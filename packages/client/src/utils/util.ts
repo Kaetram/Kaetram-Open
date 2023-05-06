@@ -424,27 +424,27 @@ export default {
                     },
                     walk_down: {
                         length: 4,
-                        row: 3
+                        row: 6
                     },
                     walk_right: {
                         length: 4,
-                        row: 4
+                        row: 7
                     },
                     walk_up: {
                         length: 4,
-                        row: 5
+                        row: 8
                     },
                     atk_down: {
                         length: 4,
-                        row: 6
+                        row: 3
                     },
                     atk_right: {
                         length: 4,
-                        row: 7
+                        row: 4
                     },
                     atk_up: {
                         length: 4,
-                        row: 8
+                        row: 5
                     }
                 };
             }

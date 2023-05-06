@@ -6,7 +6,141 @@
         "idleSpeed": 250,
         "offsetX": -8
     },
+
+    {
+        "id": "player/helmet/cobalthelmet",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/helmet/ironhelmet",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/legs/cobaltlegs",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/legs/ironlegs",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/skin/danbo",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/skin/danboblue",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/skin/danbogreen",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/skin/danbored",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
     
+    {
+        "id": "player/skin/taekwondo",
+        "width": 32,
+        "height": 32,
+        "idleSpeed": 250,
+        "offsetX": -8
+    },
+
+    {
+        "id": "player/weapon/bronzeaxe",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/cobaltaxe",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/fishingpole",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/goldaxe",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/icesword",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/ironaxe",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
+
+    {
+        "id": "player/weapon/sword",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "offsetX": -16,
+        "offsetY": -24
+    },
 
     {
         "id": "mobs/angel",

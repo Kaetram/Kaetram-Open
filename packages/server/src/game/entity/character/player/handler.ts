@@ -192,7 +192,7 @@ export default class Handler {
         // Prevent endless loops of thorn damage.
         if (isThorns) return;
 
-        let thornsLevel = this.player.equipment.getArmour().getThornsLevel();
+        let thornsLevel = this.player.equipment.getChestplate().getThornsLevel();
 
         // Stop if we do not have thorns on the armour.
         if (!thornsLevel) return;
