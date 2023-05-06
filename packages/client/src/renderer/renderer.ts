@@ -204,43 +204,43 @@ export default class Renderer {
 
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
 
-        this.silverMedal = this.game.sprites.get('silvermedal')!;
+        this.silverMedal = this.game.sprites.get('crowns/silvermedal')!;
 
         if (!this.silverMedal.loaded) this.silverMedal.load();
 
-        this.goldMedal = this.game.sprites.get('goldmedal')!;
+        this.goldMedal = this.game.sprites.get('crowns/goldmedal')!;
 
         if (!this.goldMedal.loaded) this.goldMedal.load();
 
-        this.crownArtist = this.game.sprites.get('crown-artist')!;
+        this.crownArtist = this.game.sprites.get('crowns/artist')!;
 
         if (!this.crownArtist.loaded) this.crownArtist.load();
 
-        this.crownTier1 = this.game.sprites.get('crown-tier1')!;
+        this.crownTier1 = this.game.sprites.get('crowns/tier1')!;
 
         if (!this.crownTier1.loaded) this.crownTier1.load();
 
-        this.crownTier2 = this.game.sprites.get('crown-tier2')!;
+        this.crownTier2 = this.game.sprites.get('crowns/tier2')!;
 
         if (!this.crownTier2.loaded) this.crownTier2.load();
 
-        this.crownTier3 = this.game.sprites.get('crown-tier3')!;
+        this.crownTier3 = this.game.sprites.get('crowns/tier3')!;
 
         if (!this.crownTier3.loaded) this.crownTier3.load();
 
-        this.crownTier4 = this.game.sprites.get('crown-tier4')!;
+        this.crownTier4 = this.game.sprites.get('crowns/tier4')!;
 
         if (!this.crownTier4.loaded) this.crownTier4.load();
 
-        this.crownTier5 = this.game.sprites.get('crown-tier5')!;
+        this.crownTier5 = this.game.sprites.get('crowns/tier5')!;
 
         if (!this.crownTier5.loaded) this.crownTier5.load();
 
-        this.crownTier6 = this.game.sprites.get('crown-tier6')!;
+        this.crownTier6 = this.game.sprites.get('crowns/tier6')!;
 
         if (!this.crownTier6.loaded) this.crownTier6.load();
 
-        this.crownTier7 = this.game.sprites.get('crown-tier7')!;
+        this.crownTier7 = this.game.sprites.get('crowns/tier7')!;
 
         if (!this.crownTier7.loaded) this.crownTier7.load();
     }
@@ -682,10 +682,11 @@ export default class Renderer {
         if (!(entity instanceof Character)) return;
 
         // Iterate through the drawable equipments and draw them.
-        (entity as Player).forEachEquipment(
-            (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
-            true
-        );
+        if (entity.isPlayer())
+            (entity as Player).forEachEquipment(
+                (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
+                true
+            );
 
         if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
