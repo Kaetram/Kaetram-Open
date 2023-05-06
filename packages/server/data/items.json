@@ -1,4 +1,286 @@
 {
+  "sword": {
+    "type": "sword",
+    "name": "Sword",
+    "attackStats": {
+      "crush": 1,
+      "slash": 3,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "icesword": {
+    "type": "sword",
+    "name": "Ice Sword",
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 3,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "bronzeaxe": {
+    "type": "axe",
+    "name": "Bronze Axe",
+    "lumberjacking": 1,
+    "price": 100,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "cobaltaxe": {
+    "type": "axe",
+    "name": "Cobalt Axe",
+    "lumberjacking": 2,
+    "price": 200,
+    "attackStats": {
+      "crush": 4,
+      "slash": 6,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "goldaxe": {
+    "type": "axe",
+    "name": "Gold Axe",
+    "lumberjacking": 5,
+    "price": 400,
+    "attackStats": {
+      "crush": 6,
+      "slash": 8,
+      "stab": 6,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 4,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 3,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "fishingpole": {
+    "type": "axe",
+    "name": "Fishing Pole",
+    "fishing": 1,
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ironhelmet": {
+    "type": "helmet",
+    "name": "Iron Helmet",
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "cobalthelmet": {
+    "type": "helmet",
+    "name": "Cobalt Helmet",
+    "price": 200,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 5,
+      "stab": 5,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ironlegs": {
+    "type": "legs",
+    "name": "Iron Legs",
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "cobaltlegs": {
+    "type": "legs",
+    "name": "Cobalt Legs",
+    "price": 200,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 5,
+      "stab": 5,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "danbo": {
+    "type": "armourskin",
+    "name": "Danbo"
+  },
+
+  "danboblue": {
+    "type": "armourskin",
+    "name": "Danbo"
+  },
+
+  "danbogreen": {
+    "type": "armourskin",
+    "name": "Danbo"
+  },
+
+  "danbored": {
+    "type": "armourskin",
+    "name": "Danbo"
+  },
+
   "pendant1": {
     "type": "pendant",
     "name": "Pendant",
@@ -667,27 +949,6 @@
     "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
 
-  "sword1": {
-    "type": "weapon",
-    "name": "Best In-Slot Sword",
-    "weaponType": "sword",
-    "level": 1,
-    "price": 100000,
-    "attackStats": {
-      "crush": -69,
-      "slash": -69,
-      "stab": -69,
-      "archery": -69,
-      "magic": -420
-    },
-    "bonuses": {
-      "accuracy": -69,
-      "strength": -69,
-      "archery": -69,
-      "magic": -69
-    }
-  },
-
   "banana": {
     "type": "object",
     "name": "Banana",
@@ -771,52 +1032,6 @@
     "name": "Shard - Tier 5",
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
-  },
-
-  "ghost": {
-    "type": "armour",
-    "name": "Ghost"
-  },
-
-  "pickle": {
-    "type": "armourskin",
-    "name": "Pickle Armour"
-  },
-
-  "bluearmor": {
-    "type": "armour",
-    "name": "Crystal Armour"
-  },
-
-  "icesword": {
-    "type": "weapon",
-    "name": "Ice Sword",
-    "weaponType": "sword",
-    "level": 94,
-    "attackStats": {
-      "crush": 8,
-      "slash": 22,
-      "stab": 12,
-      "archery": 0,
-      "magic": 8
-    },
-    "bonuses": {
-      "accuracy": 4,
-      "strength": 4,
-      "archery": 0,
-      "magic": 0
-    },
-    "price": 1000
-  },
-
-  "platinumsword": {
-    "type": "weaponskin",
-    "name": "Platinum Sword"
-  },
-
-  "platinumarmor": {
-    "type": "armour",
-    "name": "Platinum Armour"
   },
 
   "knife": {
