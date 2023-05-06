@@ -1,4 +1,6 @@
-import Armour from './equipment/impl/armour';
+import Helmet from './equipment/impl/helmet';
+import Chestplate from './equipment/impl/chestplate';
+import Legs from './equipment/impl/legs';
 import ArmourSkin from './equipment/impl/armourskin';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
@@ -19,7 +21,9 @@ import type Equipment from './equipment/equipment';
 import type Player from './player';
 
 export default class Equipments {
-    private armour: Armour = new Armour();
+    private helmet: Helmet = new Helmet();
+    private chestplate: Chestplate = new Chestplate();
+    private legs: Legs = new Legs();
     private armourSkin: ArmourSkin = new ArmourSkin();
     private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
@@ -31,7 +35,9 @@ export default class Equipments {
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
     private equipments: Equipment[] = [
-        this.armour,
+        this.helmet,
+        this.chestplate,
+        this.legs,
         this.boots,
         this.pendant,
         this.ring,
@@ -233,12 +239,30 @@ export default class Equipments {
      */
 
     /**
-     * Grabs the armour equipment of the player.
-     * @returns Armour equipment type.
+     * Grabs the helmet equipment of the player.
+     * @returns Helmet equipment object.
      */
 
-    public getArmour(): Armour {
-        return this.get(Modules.Equipment.Armour) as Armour;
+    public getHelmet(): Helmet {
+        return this.get(Modules.Equipment.Helmet) as Helmet;
+    }
+
+    /**
+     * Grabs the chestplate equipment of the player.
+     * @returns Chestplate equipment object.
+     */
+
+    public getChestplate(): Chestplate {
+        return this.get(Modules.Equipment.Chestplate) as Chestplate;
+    }
+
+    /**
+     * Grabs the legs equipment of the player.
+     * @returns Legs equipment object.
+     */
+
+    public getLegs(): Legs {
+        return this.get(Modules.Equipment.Legs) as Legs;
     }
 
     /**
@@ -252,7 +276,7 @@ export default class Equipments {
 
     /**
      * Grabs the boots equipment of the player.
-     * @returns Botos equipment type.
+     * @returns Botos equipment object.
      */
 
     public getBoots(): Boots {
@@ -261,7 +285,7 @@ export default class Equipments {
 
     /**
      * Grabs the pendant equipment of the player.
-     * @returns Pendant equipment type.
+     * @returns Pendant equipment object.
      */
 
     public getPendant(): Pendant {
@@ -270,7 +294,7 @@ export default class Equipments {
 
     /**
      * Grabs the ring equipment of the player.
-     * @returns Ring equipment type.
+     * @returns Ring equipment object.
      */
 
     public getRing(): Ring {
@@ -279,7 +303,7 @@ export default class Equipments {
 
     /**
      * Grabs the weapon equipment of the player.
-     * @returns Weapon equipment type.
+     * @returns Weapon equipment object.
      */
 
     public getWeapon(): Weapon {
@@ -288,7 +312,7 @@ export default class Equipments {
 
     /**
      * Grabs the arrows equipment of the player.
-     * @returns Arrow equipment type.
+     * @returns Arrow equipment object.
      */
 
     public getArrows(): Arrows {
