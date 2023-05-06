@@ -6,6 +6,8 @@
         "idleSpeed": 250,
         "offsetX": -8
     },
+    
+
     {
         "id": "mobs/angel",
         "width": 32,
@@ -7163,5 +7165,21 @@
     { "id": "items/vanillabottle", "offsetX": 0, "offsetY": 0 },
     { "id": "items/vanillabowlsmall", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hilt1", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/hilt2", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/hilt2", "offsetX": 0, "offsetY": 0 },
+
+    { "id": "items/cobalthelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironhelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltlegs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironlegs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/danbo", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/danboblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/danbogreen", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/danbored", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzeaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/fishingpole", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/icesword", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sword", "offsetX": 0, "offsetY": 0 }
 ]
