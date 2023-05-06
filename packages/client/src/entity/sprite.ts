@@ -35,7 +35,7 @@ export default class Sprite {
     public offsetX = 0;
     public offsetY = 0;
 
-    public idleSpeed = 450;
+    public idleSpeed = 250;
 
     public loaded = false;
     public loading = false;

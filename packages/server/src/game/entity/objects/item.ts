@@ -296,9 +296,16 @@ export default class Item extends Entity {
 
     public getEquipmentType(): Modules.Equipment | undefined {
         switch (this.itemType) {
-            case 'armour':
-            case 'armourarcher': {
-                return Modules.Equipment.Armour;
+            case 'helmet': {
+                return Modules.Equipment.Helmet;
+            }
+
+            case 'chestplate': {
+                return Modules.Equipment.Chestplate;
+            }
+
+            case 'legs': {
+                return Modules.Equipment.Legs;
             }
 
             case 'armourskin': {
@@ -537,9 +544,9 @@ export default class Item extends Entity {
 
     public isEquippable(): boolean {
         return (
-            this.itemType === 'armour' ||
-            this.itemType === 'armourarcher' ||
-            this.itemType === 'armourskin' ||
+            this.itemType === 'helmet' ||
+            this.itemType === 'chestplate' ||
+            this.itemType === 'legs' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||

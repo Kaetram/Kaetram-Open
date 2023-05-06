@@ -3,15 +3,14 @@ import Equipment from '../equipment';
 import { Modules } from '@kaetram/common/network';
 
 import type { Enchantments } from '@kaetram/common/types/item';
-import type Item from '../../../../objects/item';
 
-export default class Armour extends Equipment {
+export default class Chestplate extends Equipment {
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
-        super(Modules.Equipment.Armour, key, count, enchantments);
+        super(Modules.Equipment.Chestplate, key, count, enchantments);
     }
 
     /**
-     * @returns Whether or not the armour has the thorns enchantment.
+     * @returns Whether or not the chestplate has the thorns enchantment.
      */
 
     public hasThorns(): boolean {
@@ -19,7 +18,7 @@ export default class Armour extends Equipment {
     }
 
     /**
-     * Obtains the thorns level for the armour.
+     * Obtains the thorns level for the chestplate.
      * @returns The level of the thorns enchantment, otherwise we return 0.
      */
 
@@ -27,15 +26,5 @@ export default class Armour extends Equipment {
         if (!this.hasThorns()) return 0;
 
         return this.enchantments[Modules.Enchantment.Thorns].level;
-    }
-
-    /**
-     * Override function that adds the equipment's power level.
-     */
-
-    public override update(item: Item): void {
-        super.update(item);
-
-        this.movementModifier = item.movementModifier;
     }
 }

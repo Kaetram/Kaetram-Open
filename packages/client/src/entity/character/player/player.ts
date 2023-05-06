@@ -50,6 +50,9 @@ export default class Player extends Character {
     public override mana = 0;
     public override maxMana = 0;
 
+    protected override attackAnimationSpeed = 120;
+    protected override walkAnimationSpeed = 160;
+
     // Mapping of all equipments to their type.
     public equipments: { [key: number]: Equipment } = {};
 
@@ -220,8 +223,10 @@ export default class Player extends Character {
 
         if (!key) return this.unequip(type);
 
+        let prefix = this.getType(type);
+
         this.equipments[type].update(
-            key,
+            prefix ? `player/${prefix}/${key}` : `items/${key}`,
             name,
             count,
             enchantments,
@@ -319,7 +324,7 @@ export default class Player extends Character {
      */
 
     public getArmour(): Equipment {
-        return this.equipments[Modules.Equipment.Armour];
+        return this.equipments[Modules.Equipment.Helmet];
     }
 
     /**
@@ -500,6 +505,35 @@ export default class Player extends Character {
 
             default: {
                 return Modules.Medals.None;
+            }
+        }
+    }
+
+    /**
+     * Used for obtaining the path for the type of equipment.
+     * @param type The type of equipment we are trying to get the path for.
+     */
+
+    private getType(type: Modules.Equipment): string {
+        switch (type) {
+            case Modules.Equipment.Helmet: {
+                return 'helmet';
+            }
+
+            case Modules.Equipment.Chestplate: {
+                return 'chestplate';
+            }
+
+            case Modules.Equipment.Legs: {
+                return 'legs';
+            }
+
+            case Modules.Equipment.Weapon: {
+                return 'weapon';
+            }
+
+            default: {
+                return '';
             }
         }
     }

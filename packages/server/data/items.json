@@ -1,7 +1,8 @@
 {
   "sword": {
-    "type": "sword",
+    "type": "weapon",
     "name": "Sword",
+    "weaponType": "sword",
     "attackStats": {
       "crush": 1,
       "slash": 3,
@@ -25,8 +26,9 @@
   },
 
   "icesword": {
-    "type": "sword",
+    "type": "weapon",
     "name": "Ice Sword",
+    "weaponType": "sword",
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -50,8 +52,9 @@
   },
 
   "bronzeaxe": {
-    "type": "axe",
+    "type": "weapon",
     "name": "Bronze Axe",
+    "weaponType": "axe",
     "lumberjacking": 1,
     "price": 100,
     "attackStats": {
@@ -77,8 +80,9 @@
   },
 
   "cobaltaxe": {
-    "type": "axe",
+    "type": "weapon",
     "name": "Cobalt Axe",
+    "weaponType": "axe",
     "lumberjacking": 2,
     "price": 200,
     "attackStats": {
@@ -104,8 +108,9 @@
   },
 
   "goldaxe": {
-    "type": "axe",
+    "type": "weapon",
     "name": "Gold Axe",
+    "weaponType": "axe",
     "lumberjacking": 5,
     "price": 400,
     "attackStats": {
@@ -131,7 +136,7 @@
   },
 
   "fishingpole": {
-    "type": "axe",
+    "type": "weapon",
     "name": "Fishing Pole",
     "fishing": 1,
     "price": 100,
