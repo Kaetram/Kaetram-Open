@@ -1,83 +1,83 @@
 [
     {
-        "id": "angel",
+        "id": "mobs/angel",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "card",
+        "id": "mobs/card",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "card2",
+        "id": "mobs/card2",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "snowman2",
+        "id": "mobs/snowman2",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "rabbitman",
+        "id": "mobs/rabbitman",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "cowwarrior",
+        "id": "mobs/cowwarrior",
         "width": 42,
         "height": 42,
         "offsetX": -13,
         "offsetY": -18
     },
     {
-        "id": "rooster",
+        "id": "mobs/rooster",
         "width": 42,
         "height": 42,
         "offsetX": -13,
         "offsetY": -18
     },
     {
-        "id": "adherer",
+        "id": "mobs/adherer",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "agent",
+        "id": "mobs/agent",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "ancientmanumentnpc",
+        "id": "mobs/ancientmanumentnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "angelnpc",
+        "id": "mobs/angelnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "ant",
+        "id": "mobs/ant",
         "width": 48,
         "height": 48,
         "animations": {
@@ -122,7 +122,7 @@
         "offsetY": -28
     },
     {
-        "id": "babyspider",
+        "id": "mobs/babyspider",
         "width": 32,
         "height": 32,
         "animations": {
@@ -167,7 +167,7 @@
         "offsetY": -13
     },
     {
-        "id": "bat",
+        "id": "mobs/bat",
         "idleSpeed": 100,
         "width": 32,
         "height": 48,
@@ -213,7 +213,7 @@
         "offsetY": -24
     },
     {
-        "id": "icebat",
+        "id": "mobs/icebat",
         "idleSpeed": 100,
         "width": 32,
         "height": 48,
@@ -259,14 +259,14 @@
         "offsetY": -24
     },
     {
-        "id": "beachnpc",
+        "id": "npcs/beachnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "bee",
+        "id": "mobs/bee",
         "width": 20,
         "height": 19,
         "animations": {
@@ -315,7 +315,7 @@
         "offsetY": -8
     },
     {
-        "id": "beetle",
+        "id": "mobs/beetle",
         "width": 64,
         "height": 72,
         "animations": {
@@ -364,7 +364,7 @@
         "offsetY": -54
     },
     {
-        "id": "blackpirateskeleton",
+        "id": "mobs/blackpirateskeleton",
         "width": 32,
         "height": 32,
         "animations": {
@@ -409,28 +409,28 @@
         "offsetY": -15
     },
     {
-        "id": "blackwizard",
+        "id": "mobs/blackwizard",
         "width": 48,
         "height": 48,
         "offsetX": -16,
         "offsetY": -22
     },
     {
-        "id": "icewizard",
+        "id": "mobs/icewizard",
         "width": 48,
         "height": 48,
         "offsetX": -16,
         "offsetY": -22
     },
     {
-        "id": "ancientwizard",
+        "id": "mobs/ancientwizard",
         "width": 48,
         "height": 48,
         "offsetX": -16,
         "offsetY": -22
     },
     {
-        "id": "blazespider",
+        "id": "mobs/blazespider",
         "width": 48,
         "height": 48,
         "animations": {
@@ -475,14 +475,14 @@
         "offsetY": -22
     },
     {
-        "id": "bluebikinigirlnpc",
+        "id": "npcs/bluebikinigirlnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "greencockroach",
+        "id": "mobs/greencockroach",
         "width": 42,
         "height": 42,
         "animations": {
@@ -527,7 +527,7 @@
         "offsetY": -21
     },
     {
-        "id": "bluepreta",
+        "id": "mobs/bluepreta",
         "width": 32,
         "height": 32,
         "animations": {
@@ -572,14 +572,14 @@
         "offsetY": -13
     },
     {
-        "id": "bluestoremannpc",
+        "id": "npcs/bluestoremannpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "boss",
+        "id": "mobs/boss",
         "width": 64,
         "height": 72,
         "animations": {
@@ -628,19 +628,19 @@
         "offsetY": -36
     },
     {
-        "id": "boxingman",
+        "id": "npcs/boxingman",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "bronzemedal",
+        "id": "crowns/bronzemedal",
         "width": 12,
         "height": 12
     },
     {
-        "id": "brownmouse",
+        "id": "mobs/brownmouse",
         "width": 26,
         "height": 26,
         "animations": {
@@ -685,7 +685,7 @@
         "offsetY": -8
     },
     {
-        "id": "bucklerbenef",
+        "id": "effects/bucklerbenef",
         "width": 32,
         "height": 32,
         "animations": {
@@ -730,7 +730,7 @@
         "offsetY": -32
     },
     {
-        "id": "cactus",
+        "id": "mobs/cactus",
         "width": 48,
         "height": 48,
         "animations": {
@@ -775,7 +775,7 @@
         "offsetY": -28
     },
     {
-        "id": "cat",
+        "id": "mobs/cat",
         "width": 48,
         "height": 48,
         "animations": {
@@ -820,7 +820,7 @@
         "offsetY": -25
     },
     {
-        "id": "chest",
+        "id": "objects/chest",
         "animations": {
             "idle_down": {
                 "length": 1,
@@ -831,7 +831,7 @@
         "offsetY": 0
     },
     {
-        "id": "seachest",
+        "id": "objects/seachest",
         "animations": {
             "idle_down": {
                 "length": 1,
@@ -842,7 +842,7 @@
         "offsetY": 0
     },
     {
-        "id": "clam",
+        "id": "mobs/clam",
         "width": 32,
         "height": 32,
         "animations": {
@@ -888,7 +888,7 @@
     },
 
     {
-        "id": "picklemob",
+        "id": "mobs/picklemob",
         "width": 32,
         "height": 32,
         "offsetX": -8,
@@ -896,7 +896,7 @@
     },
 
     {
-        "id": "ghost",
+        "id": "mobs/ghost",
         "width": 32,
         "height": 32,
         "offsetX": -8,
@@ -904,7 +904,7 @@
     },
 
     {
-        "id": "cobra",
+        "id": "mobs/cobra",
         "width": 28,
         "height": 28,
         "animations": {
@@ -949,14 +949,14 @@
         "offsetY": -10
     },
     {
-        "id": "coder",
+        "id": "npcs/coder",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -7
     },
     {
-        "id": "crab",
+        "id": "mobs/crab",
         "width": 32,
         "height": 32,
         "idleSpeed": 300,
@@ -1006,7 +1006,7 @@
         "offsetY": -8
     },
     {
-        "id": "icecrab",
+        "id": "mobs/icecrab",
         "width": 32,
         "height": 32,
         "idleSpeed": 300,
@@ -1056,7 +1056,7 @@
         "offsetY": -8
     },
     {
-        "id": "effect-critical",
+        "id": "effects/critical",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1069,7 +1069,7 @@
         "offsetY": -21
     },
     {
-        "id": "crystalscorpion",
+        "id": "mobs/crystalscorpion",
         "width": 64,
         "height": 72,
         "animations": {
@@ -1114,7 +1114,7 @@
         "offsetY": -32
     },
     {
-        "id": "cursedhahoemask",
+        "id": "mobs/cursedhahoemask",
         "width": 64,
         "height": 72,
         "animations": {
@@ -1163,7 +1163,7 @@
         "offsetY": -49
     },
     {
-        "id": "cursedjangseung",
+        "id": "mobs/cursedjangseung",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1208,7 +1208,7 @@
         "offsetY": -30
     },
     {
-        "id": "darkogre",
+        "id": "mobs/darkogre",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1253,21 +1253,21 @@
         "offsetY": -25
     },
     {
-        "id": "darkregionillusion",
+        "id": "mobs/darkregionillusion",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "darkregion",
+        "id": "mobs/darkregion",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "darkscorpion",
+        "id": "mobs/darkscorpion",
         "width": 64,
         "height": 72,
         "animations": {
@@ -1312,7 +1312,7 @@
         "offsetY": -32
     },
     {
-        "id": "darkskeleton",
+        "id": "mobs/darkskeleton",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1370,21 +1370,21 @@
         "offsetY": -4
     },
     {
-        "id": "deathknight",
+        "id": "mobs/deathknight",
         "width": 42,
         "height": 42,
         "offsetX": -13,
         "offsetY": -17
     },
     {
-        "id": "desertnpc",
+        "id": "npcs/desertnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "desertscorpion",
+        "id": "mobs/desertscorpion",
         "width": 64,
         "height": 72,
         "animations": {
@@ -1429,21 +1429,21 @@
         "offsetY": -32
     },
     {
-        "id": "devilkazya",
+        "id": "mobs/devilkazya",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "doctor",
+        "id": "npcs/doctor",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "earthworm",
+        "id": "mobs/earthworm",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1488,28 +1488,28 @@
         "offsetY": -22
     },
     {
-        "id": "elfnpc",
+        "id": "npcs/elfnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "eliminator",
+        "id": "mobs/eliminator",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "enel",
+        "id": "mobs/enel",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "eye",
+        "id": "mobs/eye",
         "width": 40,
         "height": 48,
         "animations": {
@@ -1554,59 +1554,14 @@
         "offsetY": -18
     },
     {
-        "id": "fairynpc",
+        "id": "npcs/fairynpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "firebenef",
-        "width": 48,
-        "height": 48,
-        "animations": {
-            "atk_right": {
-                "length": 5,
-                "row": 0
-            },
-            "walk_right": {
-                "length": 5,
-                "row": 0
-            },
-            "idle_right": {
-                "length": 5,
-                "row": 0
-            },
-            "atk_up": {
-                "length": 5,
-                "row": 0
-            },
-            "walk_up": {
-                "length": 5,
-                "row": 0
-            },
-            "idle_up": {
-                "length": 5,
-                "row": 0
-            },
-            "atk_down": {
-                "length": 5,
-                "row": 0
-            },
-            "walk_down": {
-                "length": 5,
-                "row": 0
-            },
-            "idle_down": {
-                "length": 5,
-                "row": 0
-            }
-        },
-        "offsetX": -17,
-        "offsetY": -21
-    },
-    {
-        "id": "firespider",
+        "id": "mobs/firespider",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1651,21 +1606,21 @@
         "offsetY": -22
     },
     {
-        "id": "firstsonangelnpc",
+        "id": "npcs/firstsonangelnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "fisherman",
+        "id": "npcs/fisherman",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "effect-flaredance",
+        "id": "effects/flaredance",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1678,7 +1633,7 @@
         "offsetY": -21
     },
     {
-        "id": "effect-feathers",
+        "id": "effects/feathers",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1691,14 +1646,14 @@
         "offsetY": -21
     },
     {
-        "id": "flaredeathknight",
+        "id": "mobs/flaredeathknight",
         "width": 42,
         "height": 42,
         "offsetX": -13,
         "offsetY": -17
     },
     {
-        "id": "fluffy",
+        "id": "mobs/fluffy",
         "width": 28,
         "height": 32,
         "animations": {
@@ -1747,7 +1702,7 @@
         "offsetY": -8
     },
     {
-        "id": "forestdragon",
+        "id": "mobs/forestdragon",
         "width": 64,
         "height": 72,
         "animations": {
@@ -1792,14 +1747,14 @@
         "offsetY": -30
     },
     {
-        "id": "forestnpc",
+        "id": "npcs/forestnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "frog",
+        "id": "mobs/frog",
         "width": 32,
         "height": 32,
         "animations": {
@@ -1844,7 +1799,7 @@
         "offsetY": -13
     },
     {
-        "id": "frostqueen",
+        "id": "mobs/frostqueen",
         "width": 48,
         "height": 48,
         "animations": {
@@ -1889,14 +1844,14 @@
         "offsetY": -22
     },
     {
-        "id": "ghostrider",
+        "id": "mobs/ghostrider",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "goblin",
+        "id": "mobs/goblin",
         "width": 26,
         "height": 26,
         "animations": {
@@ -1941,7 +1896,7 @@
         "offsetY": -9
     },
     {
-        "id": "goldmedal",
+        "id": "crowns/goldmedal",
         "width": 12,
         "height": 12
     },
@@ -2001,21 +1956,21 @@
     },
 
     {
-        "id": "golem",
+        "id": "mobs/golem",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -17
     },
     {
-        "id": "greenfish",
+        "id": "mobs/greenfish",
         "width": 32,
         "height": 32,
         "offsetX": -5,
         "offsetY": -13
     },
     {
-        "id": "greenpirateskeleton",
+        "id": "mobs/greenpirateskeleton",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2060,56 +2015,56 @@
         "offsetY": -15
     },
     {
-        "id": "guardmace",
+        "id": "mobs/guardmace",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "guardsword",
+        "id": "mobs/guardsword",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "guard",
+        "id": "npcs/guard",
         "width": 25,
         "height": 24,
         "offsetX": -5,
         "offsetY": -8
     },
     {
-        "id": "guard2",
+        "id": "npcs/guard2",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "royalguard",
+        "id": "npcs/royalguard",
         "width": 25,
         "height": 24,
         "offsetX": -5,
         "offsetY": -8
     },
     {
-        "id": "royalguard2",
+        "id": "npcs/royalguard2",
         "width": 32,
         "height": 32,
         "offsetX": -4,
         "offsetY": -20
     },
     {
-        "id": "royalguard3",
+        "id": "npcs/royalguard3",
         "width": 32,
         "height": 32,
         "offsetX": -12,
         "offsetY": -20
     },
     {
-        "id": "ratnpc",
+        "id": "npcs/ratnpc",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2122,7 +2077,7 @@
         "offsetY": -10
     },
     {
-        "id": "hand",
+        "id": "cursors/hand",
         "width": 14,
         "height": 14,
         "animations": {
@@ -2133,7 +2088,7 @@
         }
     },
     {
-        "id": "cooking",
+        "id": "cursors/cooking",
         "width": 16,
         "height": 16,
         "animations": {
@@ -2144,7 +2099,7 @@
         }
     },
     {
-        "id": "smithing",
+        "id": "cursors/smithing",
         "width": 16,
         "height": 16,
         "animations": {
@@ -2155,7 +2110,7 @@
         }
     },
     {
-        "id": "crafting",
+        "id": "cursors/crafting",
         "width": 16,
         "height": 16,
         "animations": {
@@ -2166,7 +2121,7 @@
         }
     },
     {
-        "id": "foraging",
+        "id": "cursors/foraging",
         "width": 16,
         "height": 16,
         "animations": {
@@ -2177,7 +2132,7 @@
         }
     },
     {
-        "id": "fishing",
+        "id": "cursors/fishing",
         "width": 16,
         "height": 16,
         "animations": {
@@ -2188,7 +2143,7 @@
         }
     },
     {
-        "id": "effect-heal2",
+        "id": "effects/heal2",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2201,7 +2156,7 @@
         "offsetY": -10
     },
     {
-        "id": "hellspider",
+        "id": "mobs/hellspider",
         "width": 64,
         "height": 72,
         "animations": {
@@ -2250,7 +2205,7 @@
         "offsetY": -33
     },
     {
-        "id": "hermitcrab",
+        "id": "mobs/hermitcrab",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2295,7 +2250,7 @@
         "offsetY": -10
     },
     {
-        "id": "hobgoblin",
+        "id": "mobs/hobgoblin",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2340,84 +2295,77 @@
         "offsetY": -13
     },
     {
-        "id": "hongcheol",
+        "id": "mobs/hongcheol",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -15
     },
     {
-        "id": "iamverycoldnpc",
+        "id": "npcs/iamverycoldnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "oldlady",
+        "id": "npcs/oldlady",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "oldlady2",
+        "id": "npcs/oldlady2",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "iceelfnpc",
+        "id": "npcs/iceelfnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "guildnpc",
+        "id": "npcs/guildnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "picklenpc",
+        "id": "npcs/picklenpc",
         "width": 16,
         "height": 24,
         "offsetX": -2,
         "offsetY": -8
     },
     {
-        "id": "santaelfnpc",
+        "id": "npcs/santaelfnpc",
         "width": 16,
         "height": 24,
         "offsetX": 0,
         "offsetY": -10
     },
     {
-        "id": "icegolem",
+        "id": "mobs//icegolem",
         "width": 32,
         "height": 32,
         "offsetX": -5,
         "offsetY": -12
     },
     {
-        "id": "iceknight",
+        "id": "mobs//iceknight",
         "width": 42,
         "height": 42,
         "offsetX": -13,
         "offsetY": -17
     },
     {
-        "id": "icerose",
-        "width": 32,
-        "height": 32,
-        "offsetX": -8,
-        "offsetY": -13
-    },
-    {
-        "id": "icevulture",
+        "id": "mobs/icevulture",
         "width": 48,
         "height": 48,
         "animations": {
@@ -2462,14 +2410,14 @@
         "offsetY": -25
     },
     {
-        "id": "infectedguard",
+        "id": "mobs/infectedguard",
         "width": 32,
         "height": 32,
         "offsetX": -7,
         "offsetY": -13
     },
     {
-        "id": "ironogre",
+        "id": "mobs/ironogre",
         "width": 48,
         "height": 48,
         "animations": {
@@ -2514,7 +2462,7 @@
         "offsetY": -25
     },
     {
-        "id": "lightningguardian",
+        "id": "mobs/lightningguardian",
         "width": 64,
         "height": 72,
         "animations": {
@@ -2563,7 +2511,7 @@
         "offsetY": -49
     },
     {
-        "id": "jirisanmoonbear",
+        "id": "mobs/jirisanmoonbear",
         "width": 48,
         "height": 48,
         "animations": {
@@ -2608,7 +2556,7 @@
         "offsetY": -26
     },
     {
-        "id": "kaonashi",
+        "id": "mobs/kaonashi",
         "width": 48,
         "height": 48,
         "animations": {
@@ -2653,28 +2601,28 @@
         "offsetY": -22
     },
     {
-        "id": "king",
+        "id": "npcs/king",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "king2",
+        "id": "npcs/king2",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "lavanpc",
+        "id": "npcs/lavanpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "windguardian",
+        "id": "mobs/windguardian",
         "width": 64,
         "height": 72,
         "animations": {
@@ -2723,7 +2671,7 @@
         "offsetY": -49
     },
     {
-        "id": "livingarmor",
+        "id": "mobs/livingarmor",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2768,7 +2716,7 @@
         "offsetY": -13
     },
     {
-        "id": "loot",
+        "id": "cursors/loot",
         "width": 14,
         "height": 14,
         "animations": {
@@ -2779,7 +2727,7 @@
         }
     },
     {
-        "id": "mantis",
+        "id": "mobs/mantis",
         "width": 42,
         "height": 42,
         "animations": {
@@ -2824,7 +2772,7 @@
         "offsetY": -21
     },
     {
-        "id": "mermaid",
+        "id": "mobs/mermaid",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2869,14 +2817,14 @@
         "offsetY": -13
     },
     {
-        "id": "mermaidnpc",
+        "id": "npcs/mermaidnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "mimic",
+        "id": "mobs/mimic",
         "width": 32,
         "height": 32,
         "animations": {
@@ -2921,7 +2869,7 @@
         "offsetY": -11
     },
     {
-        "id": "minidragon",
+        "id": "mobs/minidragon",
         "width": 32,
         "height": 48,
         "animations": {
@@ -2966,7 +2914,7 @@
         "offsetY": -22
     },
     {
-        "id": "miniemperor",
+        "id": "mobs/miniemperor",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3011,7 +2959,7 @@
         "offsetY": -12
     },
     {
-        "id": "miniiceknight1",
+        "id": "mobs/miniiceknight1",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3056,7 +3004,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniiceknight2",
+        "id": "mobs/miniiceknight2",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3101,7 +3049,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniiceknight3",
+        "id": "mobs/miniiceknight3",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3146,7 +3094,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniiceknight4",
+        "id": "mobs/miniiceknight4",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3191,7 +3139,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniiceknight5",
+        "id": "mobs/miniiceknight5",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3236,7 +3184,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight1",
+        "id": "mobs/miniknight1",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3281,7 +3229,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight2",
+        "id": "mobs/miniknight2",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3326,7 +3274,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight3",
+        "id": "mobs/miniknight3",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3371,7 +3319,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight4",
+        "id": "mobs/miniknight4",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3416,7 +3364,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight5",
+        "id": "mobs/miniknight5",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3461,7 +3409,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniknight6",
+        "id": "mobs/miniknight6",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3506,7 +3454,7 @@
         "offsetY": -13
     },
     {
-        "id": "miniseadragon",
+        "id": "mobs/miniseadragon",
         "width": 32,
         "height": 48,
         "animations": {
@@ -3551,14 +3499,14 @@
         "offsetY": -22
     },
     {
-        "id": "mojojojonpc",
+        "id": "npcs/mojojojonpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "moleking",
+        "id": "mobs/moleking",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3603,49 +3551,49 @@
         "offsetY": -13
     },
     {
-        "id": "momangelnpc",
+        "id": "npcs/momangelnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "nightmareregion",
+        "id": "mobs/nightmareregion",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "nyan",
+        "id": "npcs/nyan",
         "width": 49,
         "height": 24,
         "offsetX": -22,
         "offsetY": -6
     },
     {
-        "id": "octocat",
+        "id": "npcs/octocat",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "octopus",
+        "id": "npcs/octopus",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "oddeyecat",
+        "id": "npcs/oddeyecat",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "ogre",
+        "id": "mobs/ogre",
         "width": 48,
         "height": 48,
         "animations": {
@@ -3690,7 +3638,7 @@
         "offsetY": -24
     },
     {
-        "id": "ogrelord",
+        "id": "mobs/ogrelord",
         "width": 48,
         "height": 48,
         "animations": {
@@ -3735,7 +3683,7 @@
         "offsetY": -25
     },
     {
-        "id": "hellhound",
+        "id": "mobs/hellhound",
         "width": 64,
         "height": 72,
         "animations": {
@@ -3780,7 +3728,7 @@
         "offsetY": -48
     },
     {
-        "id": "oldogre",
+        "id": "mobs/oldogre",
         "width": 48,
         "height": 48,
         "animations": {
@@ -3825,7 +3773,7 @@
         "offsetY": -25
     },
     {
-        "id": "orc",
+        "id": "mobs/orc",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3870,14 +3818,14 @@
         "offsetY": -13
     },
     {
-        "id": "pain",
+        "id": "mobs/pain",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "penguin",
+        "id": "mobs/penguin",
         "width": 48,
         "height": 48,
         "animations": {
@@ -3922,14 +3870,14 @@
         "offsetY": -25
     },
     {
-        "id": "pierrot",
+        "id": "mobs/pierrot",
         "width": 32,
         "height": 32,
         "offsetX": -5,
         "offsetY": -13
     },
     {
-        "id": "pinkelf",
+        "id": "mobs/pinkelf",
         "width": 32,
         "height": 32,
         "animations": {
@@ -3974,7 +3922,7 @@
         "offsetY": -12
     },
     {
-        "id": "piratecaptain",
+        "id": "mobs/piratecaptain",
         "width": 64,
         "height": 64,
         "animations": {
@@ -4023,21 +3971,21 @@
         "offsetY": -36
     },
     {
-        "id": "pirategirlnpc",
+        "id": "npcs/pirategirlnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "pirateking",
+        "id": "mobs/pirateking",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "pirateskeleton",
+        "id": "mobs/pirateskeleton",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4082,7 +4030,7 @@
         "offsetY": -13
     },
     {
-        "id": "poisonspider",
+        "id": "mobs/poisonspider",
         "width": 48,
         "height": 48,
         "animations": {
@@ -4127,7 +4075,7 @@
         "offsetY": -22
     },
     {
-        "id": "preta",
+        "id": "mobs/preta",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4172,14 +4120,14 @@
         "offsetY": -13
     },
     {
-        "id": "priest",
+        "id": "npcs/priest",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "effect-provocation",
+        "id": "effects/provocation",
         "width": 32,
         "height": 64,
         "animations": {
@@ -4192,7 +4140,7 @@
         "offsetY": -42
     },
     {
-        "id": "purplepreta",
+        "id": "mobs/purplepreta",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4237,7 +4185,7 @@
         "offsetY": -13
     },
     {
-        "id": "queenant",
+        "id": "mobs/queenant",
         "width": 64,
         "height": 72,
         "animations": {
@@ -4286,7 +4234,7 @@
         "offsetY": -54
     },
     {
-        "id": "queenspider",
+        "id": "mobs/queenspider",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4331,7 +4279,7 @@
         "offsetY": -13
     },
     {
-        "id": "rat",
+        "id": "mobs/rat",
         "width": 48,
         "height": 48,
         "idleSpeed": 250,
@@ -4379,7 +4327,7 @@
         }
     },
     {
-        "id": "icerat",
+        "id": "mobs/icerat",
         "width": 48,
         "height": 48,
         "idleSpeed": 200,
@@ -4427,14 +4375,14 @@
         }
     },
     {
-        "id": "redbikinigirlnpc",
+        "id": "npcs/redbikinigirlnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "redcockroach",
+        "id": "mobs/redcockroach",
         "width": 42,
         "height": 42,
         "animations": {
@@ -4479,7 +4427,7 @@
         "offsetY": -21
     },
     {
-        "id": "redelf",
+        "id": "mobs/redelf",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4524,21 +4472,21 @@
         "offsetY": -12
     },
     {
-        "id": "redfish",
+        "id": "mobs/redfish",
         "width": 32,
         "height": 32,
         "offsetX": -5,
         "offsetY": -13
     },
     {
-        "id": "redguard",
+        "id": "mobs/redguard",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -13
     },
     {
-        "id": "redmouse",
+        "id": "mobs/redmouse",
         "width": 26,
         "height": 26,
         "animations": {
@@ -4583,7 +4531,7 @@
         "offsetY": -8
     },
     {
-        "id": "redpirateskeleton",
+        "id": "mobs/redpirateskeleton",
         "width": 48,
         "height": 48,
         "animations": {
@@ -4628,28 +4576,28 @@
         "offsetY": -23
     },
     {
-        "id": "redstoremannpc",
+        "id": "npcs/redstoremannpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "purplestoremannpc",
+        "id": "npcs/purplestoremannpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "greenstoremannpc",
+        "id": "npcs/greenstoremannpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "regionhenchman",
+        "id": "mobs/regionhenchman",
         "width": 64,
         "height": 72,
         "animations": {
@@ -4694,7 +4642,7 @@
         "offsetY": -39
     },
     {
-        "id": "rhaphidophoridae",
+        "id": "mobs/rhaphidophoridae",
         "width": 48,
         "height": 48,
         "animations": {
@@ -4739,7 +4687,7 @@
         "offsetY": -22
     },
     {
-        "id": "rick",
+        "id": "npcs/rick",
         "width": 32,
         "height": 32,
         "animations": {
@@ -4752,21 +4700,21 @@
         "offsetY": -12
     },
     {
-        "id": "rudolf",
+        "id": "mobs/rudolf",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "santaelf",
+        "id": "mobs/santaelf",
         "width": 32,
         "height": 32,
         "offsetX": -8,
         "offsetY": -12
     },
     {
-        "id": "santa",
+        "id": "mobs/santa",
         "width": 64,
         "height": 72,
         "animations": {
@@ -4811,14 +4759,14 @@
         "offsetY": -55
     },
     {
-        "id": "scientist",
+        "id": "npcs/scientist",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "seadragon",
+        "id": "mobs/seadragon",
         "width": 64,
         "height": 72,
         "animations": {
@@ -4867,7 +4815,7 @@
         "offsetY": -39
     },
     {
-        "id": "secondsonangelnpc",
+        "id": "npcs/secondsonangelnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
@@ -4879,21 +4827,21 @@
         "height": 16
     },
     {
-        "id": "shadowregion",
+        "id": "mobs/shadowregion",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "shepherdboy",
+        "id": "npcs/shepherdboy",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "shieldbenef",
+        "id": "effects/shieldbenef",
         "width": 32,
         "height": 30,
         "animations": {
@@ -4938,12 +4886,12 @@
         "offsetY": -10
     },
     {
-        "id": "silvermedal",
+        "id": "crowns/silvermedal",
         "width": 12,
         "height": 12
     },
     {
-        "id": "skeleton2",
+        "id": "mobs/skeleton2",
         "width": 48,
         "height": 48,
         "animations": {
@@ -4988,7 +4936,7 @@
         "offsetY": -20
     },
     {
-        "id": "skeleton",
+        "id": "mobs/skeleton",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5033,7 +4981,7 @@
         "offsetY": -20
     },
     {
-        "id": "skeletonking",
+        "id": "mobs/skeletonking",
         "width": 64,
         "height": 72,
         "animations": {
@@ -5082,7 +5030,7 @@
         "offsetY": -36
     },
     {
-        "id": "skydinosaur",
+        "id": "mobs/skydinosaur",
         "width": 64,
         "height": 72,
         "animations": {
@@ -5131,7 +5079,7 @@
         "offsetY": -49
     },
     {
-        "id": "skyelf",
+        "id": "mobs/skyelf",
         "width": 32,
         "height": 32,
         "animations": {
@@ -5176,14 +5124,14 @@
         "offsetY": -12
     },
     {
-        "id": "slime",
+        "id": "mobs/slime",
         "width": 32,
         "height": 32,
         "offsetX": -6,
         "offsetY": -12
     },
     {
-        "id": "smalldevil",
+        "id": "mobs/smalldevil",
         "width": 42,
         "height": 42,
         "animations": {
@@ -5228,7 +5176,7 @@
         "offsetY": -16
     },
     {
-        "id": "snek",
+        "id": "mobs/snek",
         "width": 28,
         "height": 28,
         "animations": {
@@ -5273,7 +5221,7 @@
         "offsetY": -10
     },
     {
-        "id": "snowelf",
+        "id": "mobs/snowelf",
         "width": 32,
         "height": 32,
         "animations": {
@@ -5318,7 +5266,7 @@
         "offsetY": -12
     },
     {
-        "id": "snowlady",
+        "id": "mobs/snowlady",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5363,7 +5311,7 @@
         "offsetY": -25
     },
     {
-        "id": "snowman",
+        "id": "mobs/snowman",
         "width": 32,
         "height": 32,
         "animations": {
@@ -5408,7 +5356,7 @@
         "offsetY": -13
     },
     {
-        "id": "snowrabbit",
+        "id": "mobs/snowrabbit",
         "width": 32,
         "height": 32,
         "animations": {
@@ -5453,21 +5401,21 @@
         "offsetY": -13
     },
     {
-        "id": "snowshepherdboy",
+        "id": "npcs/snowshepherdboy",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "snowwolf",
+        "id": "mobs/snowwolf",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "soldierant",
+        "id": "mobs/soldierant",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5512,14 +5460,14 @@
         "offsetY": -27
     },
     {
-        "id": "soldier",
+        "id": "npcs/soldier",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "sorcerer",
+        "id": "npcs/sorcerer",
         "width": 26,
         "height": 26,
         "animations": {
@@ -5532,7 +5480,7 @@
         "offsetY": -9
     },
     {
-        "id": "soybeanbug",
+        "id": "mobs/soybeanbug",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5582,14 +5530,7 @@
         "offsetY": 0
     },
     {
-        "id": "spear",
-        "width": 32,
-        "height": 32,
-        "offsetX": -8,
-        "offsetY": -12
-    },
-    {
-        "id": "spectre",
+        "id": "mobs/spectre",
         "width": 34,
         "height": 34,
         "animations": {
@@ -5634,7 +5575,7 @@
         "offsetY": -13
     },
     {
-        "id": "spider",
+        "id": "mobs/spider",
         "width": 35,
         "height": 35,
         "animations": {
@@ -5683,14 +5624,14 @@
         "offsetY": -8
     },
     {
-        "id": "sponge",
+        "id": "npcs/sponge",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "squid",
+        "id": "mobs/squid",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5735,7 +5676,7 @@
         "offsetY": -30
     },
     {
-        "id": "effect-stun",
+        "id": "effects/stun",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5748,7 +5689,7 @@
         "offsetY": -38
     },
     {
-        "id": "suicideghost",
+        "id": "mobs/suicideghost",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5793,7 +5734,7 @@
         "offsetY": -30
     },
     {
-        "id": "effect-supercat",
+        "id": "effects/supercat",
         "width": 32,
         "height": 64,
         "animations": {
@@ -5806,18 +5747,11 @@
         "offsetY": -42
     },
     {
-        "id": "superiorangelnpc",
+        "id": "npcs/superiorangelnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
-    },
-    {
-        "id": "taekwondo",
-        "width": 32,
-        "height": 32,
-        "offsetX": -8,
-        "offsetY": -12
     },
     {
         "id": "talk",
@@ -5831,7 +5765,7 @@
         }
     },
     {
-        "id": "axe_cursor",
+        "id": "cursors/axe",
         "width": 14,
         "height": 14,
         "animations": {
@@ -5843,7 +5777,7 @@
     },
 
     {
-        "id": "pickaxe_cursor",
+        "id": "cursors/pickaxe",
         "width": 14,
         "height": 14,
         "animations": {
@@ -5867,56 +5801,56 @@
         }
     },
     {
-        "id": "vampire",
+        "id": "npcs/vampire",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "vendingmachine",
+        "id": "npcs/vendingmachine",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "villagegirl",
+        "id": "npcs/villagegirl",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "villagegirl2",
+        "id": "npcs/villagegirl2",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "villagegirl3",
+        "id": "npcs/villagegirl3",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "villager",
+        "id": "npcs/villager",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "miner",
+        "id": "npcs/miner",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "vulture",
+        "id": "mobs/vulture",
         "width": 48,
         "height": 48,
         "animations": {
@@ -5961,7 +5895,7 @@
         "offsetY": -25
     },
     {
-        "id": "whitebear",
+        "id": "mobs/whitebear",
         "width": 48,
         "height": 48,
         "animations": {
@@ -6006,7 +5940,7 @@
         "offsetY": -22
     },
     {
-        "id": "whitemouse",
+        "id": "mobs/whitemouse",
         "width": 26,
         "height": 26,
         "animations": {
@@ -6051,7 +5985,7 @@
         "offsetY": -8
     },
     {
-        "id": "whitetiger",
+        "id": "mobs/whitetiger",
         "width": 64,
         "height": 72,
         "animations": {
@@ -6100,7 +6034,7 @@
         "offsetY": -54
     },
     {
-        "id": "wizard",
+        "id": "mobs/wizard",
         "width": 26,
         "height": 26,
         "animations": {
@@ -6149,14 +6083,14 @@
         "offsetY": -9
     },
     {
-        "id": "darkwolf",
+        "id": "mobs/darkwolf",
         "width": 42,
         "height": 42,
         "offsetX": -14,
         "offsetY": -21
     },
     {
-        "id": "wolf",
+        "id": "mobs/wolf",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6246,14 +6180,14 @@
         "offsetY": -24
     },
     {
-        "id": "yellowfish",
+        "id": "mobs/yellowfish",
         "width": 32,
         "height": 32,
         "offsetX": -5,
         "offsetY": -13
     },
     {
-        "id": "yellowmouse",
+        "id": "mobs/yellowmouse",
         "width": 26,
         "height": 26,
         "animations": {
@@ -6298,7 +6232,7 @@
         "offsetY": -8
     },
     {
-        "id": "yellowpreta",
+        "id": "mobs/yellowpreta",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6343,14 +6277,14 @@
         "offsetY": -13
     },
     {
-        "id": "zombiegf",
+        "id": "npcs/zombiegf",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "zombie",
+        "id": "mobs/zombie",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6395,14 +6329,14 @@
         "offsetY": -13
     },
     {
-        "id": "redbikinigirlnpc",
+        "id": "npcs/redbikinigirlnpc",
         "width": 24,
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
     },
     {
-        "id": "projectile-fireball",
+        "id": "projectiles/fireball",
         "idleSpeed": 75,
         "width": 48,
         "height": 48,
@@ -6416,7 +6350,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-fireball2",
+        "id": "projectiles/fireball2",
         "idleSpeed": 75,
         "width": 48,
         "height": 48,
@@ -6430,7 +6364,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-iceball",
+        "id": "projectiles/iceball",
         "idleSpeed": 75,
         "width": 48,
         "height": 48,
@@ -6445,7 +6379,7 @@
     },
 
     {
-        "id": "projectile-bluelightning",
+        "id": "projectiles/bluelightning",
         "width": 50,
         "height": 50,
         "animations": {
@@ -6458,7 +6392,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-redlightning",
+        "id": "projectiles/redlightning",
         "width": 50,
         "height": 50,
         "animations": {
@@ -6471,7 +6405,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-greenbolt",
+        "id": "projectiles/greenbolt",
         "width": 50,
         "height": 50,
         "animations": {
@@ -6484,7 +6418,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-purplebolt",
+        "id": "projectiles/purplebolt",
         "width": 50,
         "height": 50,
         "animations": {
@@ -6497,7 +6431,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-yellowlightning",
+        "id": "projectiles/yellowlightning",
         "width": 50,
         "height": 50,
         "animations": {
@@ -6510,7 +6444,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-poisonball",
+        "id": "projectiles/poisonball",
         "width": 40,
         "height": 40,
         "animations": {
@@ -6523,7 +6457,7 @@
         "offsetY": -17
     },
     {
-        "id": "projectile-boulder",
+        "id": "projectiles/boulder",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6535,7 +6469,7 @@
         }
     },
     {
-        "id": "projectile-arrow",
+        "id": "projectiles/arrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6549,7 +6483,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-firearrow",
+        "id": "projectiles/firearrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6563,7 +6497,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-poisonarrow",
+        "id": "projectiles/poisonarrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6577,7 +6511,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-icearrow",
+        "id": "projectiles/icearrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6591,7 +6525,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-lightningarrow",
+        "id": "projectiles/lightningarrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6605,7 +6539,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-nisocarrow",
+        "id": "projectiles/nisocarrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6619,7 +6553,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-cinnabararrow",
+        "id": "projectiles/cinnabararrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6633,7 +6567,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-pythararrow",
+        "id": "projectiles/pythararrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6647,7 +6581,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-iboarrow",
+        "id": "projectiles/iboarrow",
         "idleSpeed": 75,
         "width": 16,
         "height": 16,
@@ -6661,7 +6595,7 @@
         "offsetY": 0
     },
     {
-        "id": "projectile-none",
+        "id": "projectiles/none",
         "idleSpeed": 75,
         "width": 64,
         "height": 64,
@@ -6675,7 +6609,7 @@
         "offsetY": -32
     },
     {
-        "id": "projectile-tornado",
+        "id": "projectiles/tornado",
         "idleSpeed": 75,
         "width": 48,
         "height": 64,
@@ -6689,7 +6623,7 @@
         "offsetY": -37
     },
     {
-        "id": "projectile-terror",
+        "id": "projectiles/terror",
         "idleSpeed": 75,
         "width": 64,
         "height": 64,
@@ -6703,7 +6637,7 @@
         "offsetY": -32
     },
     {
-        "id": "projectile-gift",
+        "id": "projectiles/gift",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6717,7 +6651,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-gift2",
+        "id": "projectiles/gift2",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6731,7 +6665,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-gift3",
+        "id": "projectiles/gift3",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6745,7 +6679,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-gift4",
+        "id": "projectiles/gift4",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6759,7 +6693,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-gift5",
+        "id": "projectiles/gift5",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6773,7 +6707,7 @@
         "offsetY": -24
     },
     {
-        "id": "projectile-gift6",
+        "id": "projectiles/gift6",
         "idleSpeed": 75,
         "width": 32,
         "height": 32,
@@ -6787,7 +6721,7 @@
         "offsetY": -24
     },
     {
-        "id": "effect-fireball",
+        "id": "effects/fireball",
         "width": 48,
         "height": 48,
         "animations": {
@@ -6800,7 +6734,7 @@
         "offsetY": -16
     },
     {
-        "id": "effect-poisonball",
+        "id": "effects/poisonball",
         "width": 40,
         "height": 40,
         "animations": {
@@ -6813,7 +6747,7 @@
         "offsetY": -14
     },
     {
-        "id": "effect-burn",
+        "id": "effects/burn",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6826,7 +6760,7 @@
         "offsetY": -16
     },
     {
-        "id": "effect-freeze",
+        "id": "effects/freeze",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6839,7 +6773,7 @@
         "offsetY": -16
     },
     {
-        "id": "effect-lavaball",
+        "id": "effects/lavaball",
         "width": 48,
         "height": 48,
         "animations": {
@@ -6852,7 +6786,7 @@
         "offsetY": -24
     },
     {
-        "id": "effect-heal",
+        "id": "effects/heal",
         "width": 48,
         "height": 48,
         "animations": {
@@ -6863,7 +6797,7 @@
         }
     },
     {
-        "id": "effect-iceball",
+        "id": "effects/iceball",
         "width": 48,
         "height": 48,
         "animations": {
@@ -6876,7 +6810,7 @@
         "offsetY": -15
     },
     {
-        "id": "effect-boulder",
+        "id": "effects/boulder",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6889,7 +6823,7 @@
         "offsetY": -12
     },
     {
-        "id": "spell",
+        "id": "cursors/spell",
         "animations": {
             "idle_down": {
                 "length": 1,
@@ -6898,7 +6832,7 @@
         }
     },
     {
-        "id": "effect-terror",
+        "id": "effects/terror",
         "width": 64,
         "height": 64,
         "animations": {
@@ -6911,7 +6845,7 @@
         "offsetY": -32
     },
     {
-        "id": "effect-terror2",
+        "id": "effects/terror2",
         "width": 32,
         "height": 32,
         "animations": {
@@ -6924,7 +6858,7 @@
         "offsetY": -16
     },
     {
-        "id": "icegoblin",
+        "id": "mobs/icegoblin",
         "width": 32,
         "height": 32,
         "animations": {
