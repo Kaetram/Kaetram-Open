@@ -194,16 +194,16 @@
         .new-close-container {
             width: 11px * $i;
             height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
+            background: url('/img/interface/guilds/elements.png') -64px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
 
             &:hover {
-                background-position-x: -124px * $i;
+                background-position-x: -76px * $i;
             }
 
             &:active,
             &.active {
-                background-position-x: -136px * $i;
+                background-position-x: -88px * $i;
             }
         }
     }

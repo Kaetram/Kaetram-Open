@@ -10,6 +10,7 @@ export interface Member {
 export interface Decoration {
     banner: Modules.BannerColours;
     outline: Modules.BannerOutline;
+    outlineColour: Modules.BannerColours;
     crest: Modules.BannerCrest;
 }
 

@@ -44,12 +44,6 @@
 }
 
 #banner-colours,
-#banner-outline-colours {
-    position: absolute;
-    overflow: auto;
-    display: table-cell;
-}
-
 #banner-crests {
     position: absolute;
     overflow: auto;
@@ -92,10 +86,10 @@
     position: absolute;
 
     font-family: AdvoCut, sans-serif;
-    font-size: 15px;
-    color: #800;
+    font-size: 16px;
+    color: rgb(233 31 31);
     text-align: center;
-    text-shadow: 2px 2px 2px #f66;
+    text-shadow: 1px 1px 1px rgb(226 101 101);
 }
 
 #sidebar-list {
@@ -105,6 +99,16 @@
             position: relative;
         }
     }
+}
+
+#banner-colour-button,
+#banner-outline-button {
+    position: absolute;
+}
+
+.colour-button-arrow-left,
+.colour-button-arrow-right {
+    position: absolute;
 }
 
 .guilds-decoration {
@@ -205,9 +209,20 @@
             height: 84px * $i;
 
             ul {
-                top: 24px * $i;
-                left: 16px * $i;
+                top: 6px * $i;
+                left: 6px * $i;
+
+                li {
+                    margin-bottom: 2px * $i;
+                }
             }
+        }
+
+        #guilds-create-container {
+            top: 0;
+            left: 64px * $i;
+            width: 140px * $i;
+            height: 102px * $i;
         }
 
         #guilds-info {
@@ -215,15 +230,15 @@
         }
 
         #create-guild {
-            top: 64px * $i;
-            left: -63px * $i;
+            top: 68px * $i;
+            left: -59px * $i;
         }
 
-        #banner-colours,
-        #banner-outline-colours {
-            top: 34px * $i;
-            width: 14px * $i;
-            height: 150px * $i;
+        #banner-colours {
+            top: 20px * $i;
+            right: 6px * $i;
+            width: 74px * $i;
+            height: 64px * $i;
         }
 
         #banner-crests {
@@ -233,16 +248,8 @@
             height: 100px * $i;
         }
 
-        #banner-colours {
-            left: 82px * $i;
-        }
-
-        #banner-outline-colours {
-            left: 102px * $i;
-        }
-
         #guild-name-input {
-            top: 16px * $i;
+            top: 5px * $i;
             right: 24px * $i;
         }
 
@@ -259,19 +266,19 @@
         }
 
         #guild-back {
-            right: 74px * $i;
-            bottom: 14px * $i;
+            right: 102px * $i;
+            bottom: 2px * $i;
         }
 
         #guild-create {
-            right: 28px * $i;
-            bottom: 14px * $i;
+            right: 10px * $i;
+            bottom: 2px * $i;
         }
 
         #create-error {
-            right: 20px * $i;
-            bottom: 36px * $i;
-            width: 92px * $i;
+            right: 38px * $i;
+            bottom: 6px * $i;
+            width: 64px * $i;
         }
 
         #guild-leave {
@@ -286,6 +293,19 @@
             li {
                 margin-bottom: 2px * $i;
             }
+        }
+
+        #banner-colour-button,
+        #banner-outline-button {
+            left: 18px * $i;
+        }
+
+        #banner-colour-button {
+            top: 24px * $i;
+        }
+
+        #banner-outline-button {
+            top: 52px * $i;
         }
 
         .guild-chat {
@@ -308,12 +328,21 @@
 
         .slot-element {
             box-sizing: border-box;
-            width: 125px * $i;
-            height: 17px * $i;
+            width: 117px * $i;
+            height: 22px * $i;
             padding-left: 18px * $i;
 
-            background: url('/img/interface/guilds/frames.png') -400px * $i;
-            background-size: calc(width('guilds/frames.png') * $i);
+            background: url('/img/interface/guilds/elements.png') -128px * $i -103px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-y: -126px * $i;
+            }
+
+            &:active,
+            &.active {
+                background-position-y: -80px * $i;
+            }
         }
 
         .crest-element {
@@ -351,44 +380,27 @@
         .element-button,
         .element-button-red {
             width: 28px * $i;
-            height: 14px * $i;
+            height: 16px * $i;
 
             line-height: 14px * $i;
 
-            background: url('/img/interface/guilds/elements.png') 0 -126px * $i;
+            background: url('/img/interface/guilds/elements.png') 0 -144px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
 
             &:hover {
-                background-position-y: -141px * $i;
+                line-height: 12px * $i;
+                background-position-y: -128px * $i;
             }
 
             &:active,
             &.active {
-                background-position-y: -156px * $i;
+                line-height: 16px * $i;
+                background-position-y: -158px * $i;
             }
         }
 
         .element-button-red {
-            background-position-x: -29px * $i;
-        }
-
-        .element-button-large {
-            width: 28px * $i * 1.25;
-            height: 14px * $i * 1.25;
-
-            line-height: 14px * $i * 1.25;
-
-            background: url('/img/interface/guilds/elements.png') 0 -126px * $i * 1.25;
-            background-size: calc(width('guilds/elements.png') * $i * 1.25);
-
-            &:hover {
-                background-position-y: -141px * $i * 1.25;
-            }
-
-            &:active,
-            &.active {
-                background-position-y: -156px * $i * 1.25;
-            }
+            background-position-x: -32px * $i;
         }
 
         .sidebar-element {
@@ -425,8 +437,8 @@
 
         .guild-name-input-image {
             width: 76px * $i;
-            height: 17px * $i;
-            background: url('/img/interface/guilds/elements.png') -126px * $i -17px * $i;
+            height: 13px * $i;
+            background: url('/img/interface/guilds/elements.png') -144px * $i -19px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
@@ -455,10 +467,6 @@
         .guild-outline-select {
             left: 104px * $i;
             background-position-x: -94px * $i;
-        }
-
-        .slot-guild {
-            background-position-y: -144px * $i;
         }
 
         .slot-fledgling {
@@ -569,20 +577,62 @@
             background-position-y: -240px * $i;
         }
 
-        .banner-colour-button,
-        .banner-outline-button {
-            width: 14px * $i;
-            height: 15px * $i;
+        .banner-colour-button {
+            width: 20px * $i;
+            height: 20px * $i;
             background: url('/img/interface/guilds/elements.png') no-repeat;
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
-        .banner-colour-button {
-            background-position-x: -70px * $i;
+        .banner-colour-button-outline {
+            width: 20px * $i;
+            height: 20px * $i;
+            background: url('/img/interface/guilds/elements.png') -144px * $i -160px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-y: -181px * $i;
+            }
+
+            &:active, &.active {
+                background-position-y: -202px * $i;
+            }
+        }
+        
+        .banner-colour-button-teal {
+            background-position: -165px * $i -160px * $i
         }
 
-        .banner-outline-button {
-            background-position-x: -92px * $i;
+        .banner-colour-button-green {
+            background-position: -186px * $i -160px * $i
+        }
+
+        .banner-colour-button-grey {
+            background-position: -207px * $i -160px * $i
+        }
+
+        .banner-colour-button-darkgrey {
+            background-position: -228px * $i -160px * $i
+        }
+
+        .banner-colour-button-red {
+            background-position: -249px * $i -160px * $i
+        }
+
+        .banner-colour-button-goldenyellow {
+            background-position: -165px * $i -181px * $i
+        }
+
+        .banner-colour-button-fuchsia {
+            background-position: -186px * $i -181px * $i
+        }
+
+        .banner-colour-button-brown {
+            background-position: -207px * $i -181px * $i
+        }
+
+        .banner-colour-button-cyan {
+            background-position: -228px * $i -181px * $i
         }
 
         .banner-grey {
@@ -657,55 +707,6 @@
             background-position-x: -400px * $i;
         }
 
-        .banner-colour-button-green,
-        .banner-outline-button-green {
-            background-position-y: -15px * $i;
-        }
-
-        .banner-colour-button-blue,
-        .banner-outline-button-blue {
-            background-position-y: -31px * $i;
-        }
-
-        .banner-colour-button-red,
-        .banner-outline-button-orange {
-            background-position-y: -47px * $i;
-        }
-
-        .banner-colour-button-grey,
-        .banner-outline-button-white {
-            background-position-y: -63px * $i;
-        }
-
-        .banner-colour-button-black,
-        .banner-outline-button-grey {
-            background-position-y: -79px * $i;
-        }
-
-        .banner-colour-button-tangerine,
-        .banner-outline-button-tangerine {
-            background-position-y: -95px * $i;
-        }
-
-        .banner-colour-button-yellow,
-        .banner-outline-button-yellow {
-            background-position-y: -111px * $i;
-        }
-
-        .banner-colour-button-purple,
-        .banner-outline-button-purple {
-            background-position-y: -127px * $i;
-        }
-
-        .banner-colour-button-pink,
-        .banner-outline-button-pink {
-            background-position-y: -143px * $i;
-        }
-
-        .banner-crest-none {
-            background-position-x: -1px * $i;
-        }
-
         .banner-crest-star {
             background-position-x: -55px * $i;
         }
@@ -732,6 +733,115 @@
 
         .banner-crest-icon-phoenix {
             background-position-x: -48px * $i;
+        }
+
+        .colour-select-button {
+            width: 22px * $i;
+            height: 22px * $i;
+            background: url('/img/interface/guilds/elements.png') no-repeat;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .colour-button-arrow-right {
+            top: 3px * $i;
+            left: 24px * $i;
+
+            width: 9px * $i;
+            height: 16px * $i;
+
+            background: url('/img/interface/guilds/elements.png') -94px * $i -128px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &.disabled {
+                background-position-x: -84px * $i;
+            }
+        }
+
+        .colour-button-arrow-left {
+            top: 3px * $i;
+            left: -11px * $i;
+
+            width: 9px * $i;
+            height: 16px * $i;
+
+            background: url('/img/interface/guilds/elements.png') -64px * $i -128px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &.disabled {
+                background-position-x: -74px * $i;
+            }
+        }
+        
+        .button-banner-colour {
+            background-position: -115px * $i -176px * $i;
+
+            &:hover {
+                background-position: -69px * $i -176px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -92px * $i -176px * $i;
+            }
+        }
+
+        .outline-button-1 {
+            background-position: -46px * $i -199px * $i;
+
+            &:hover {
+                background-position: 0 -199px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -23px * $i -199px * $i;
+            }
+        }
+
+        .outline-button-2 {
+            background-position: -46px * $i -176px * $i;
+
+            &:hover {
+                background-position: 0 -176px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -23px * $i -176px * $i;
+            }
+        }
+
+        .outline-button-3 {
+            background-position: -46px * $i -222px * $i;
+
+            &:hover {
+                background-position: 0 -222px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -23px * $i -222px * $i;
+            }
+        }
+
+        .outline-button-4 {
+            background-position: -115px * $i -199px * $i;
+
+            &:hover {
+                background-position: -69px * $i -199px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -92px * $i -199px * $i;
+            }
+        }
+
+        .outline-button-5 {
+            background-position: -115px * $i -222px * $i;
+
+            &:hover {
+                background-position: -69px * $i -222px * $i;
+            }
+
+            &:active, &.active {
+                background-position: -92px * $i -222px * $i;
+            }
         }
     }
 }

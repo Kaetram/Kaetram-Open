@@ -551,15 +551,11 @@ export enum BannerColour {
 }
 
 export enum BannerOutline {
-    Green = 'green',
-    Blue = 'blue',
-    Orange = 'orange',
-    White = 'white',
-    Grey = 'grey',
-    Tangerine = 'tangerine',
-    Yellow = 'yellow',
-    Purple = 'purple',
-    Pink = 'pink'
+    StyleOne,
+    StyleTwo,
+    StyleThree,
+    StyleFour,
+    StyleFive
 }
 
 export enum BannerCrests {
