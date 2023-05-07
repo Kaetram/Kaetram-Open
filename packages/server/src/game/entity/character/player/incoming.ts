@@ -567,6 +567,7 @@ export default class Incoming {
                     packet.name!,
                     packet.colour!,
                     packet.outline!,
+                    packet.outlineColour!,
                     packet.crest!
                 );
             }
