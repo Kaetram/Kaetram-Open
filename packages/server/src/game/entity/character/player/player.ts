@@ -260,6 +260,9 @@ export default class Player extends Character {
 
         // Connect the player to their guild if they are in one.
         if (this.guild) this.world.guilds.connect(this, this.guild);
+
+        // Spawn the pet if the player has one.
+        if (data.pet) this.setPet(data.pet);
     }
 
     /**
@@ -379,6 +382,9 @@ export default class Player extends Character {
 
         // Remove the player from the region.
         this.entities.removePlayer(this);
+
+        // Despawn the pet from the world.
+        if (this.hasPet()) this.world.entities.removePet(this.pet!);
     }
 
     /**
@@ -555,7 +561,7 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
         if (this.dead) return;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
@@ -1499,6 +1505,9 @@ export default class Player extends Character {
 
         // Create a new pet instance based on the key.
         this.pet = this.entities.spawnPet(this, key);
+
+        // Begin the pet following the player.
+        this.pet.follow(this);
     }
 
     /**
@@ -1515,7 +1524,7 @@ export default class Player extends Character {
         }
 
         // Create a pet item and add it to the player's inventory.
-        this.inventory.add(new Item(this.pet!.key, -1, -1, false, 1));
+        this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
 
         // Remove the pet from the world
         this.entities.remove(this.pet!);
