@@ -295,7 +295,7 @@ export default class Entities {
      * @param item The item object we are adding to the world.
      */
 
-    private addItem(item: Item): void {
+    public addItem(item: Item): void {
         // Callback for removing the item from the world.
         item.onDespawn(() => this.removeItem(item));
 

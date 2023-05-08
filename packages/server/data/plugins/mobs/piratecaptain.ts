@@ -73,19 +73,7 @@ export default class PirateCaptain extends Default {
         this.mob.attackRange = 14;
 
         // Update the position and teleport the captain with an animation.
-        this.mob.setPosition(position.x, position.y, true);
-
-        this.mob.sendToRegions(
-            new Teleport({
-                instance: this.mob.instance,
-                x: position.x,
-                y: position.y,
-                withAnimation: true
-            })
-        );
-
-        // Remove the teleporting property after 400ms.
-        setTimeout(() => (this.mob.teleporting = false), 400);
+        this.mob.teleport(position.x, position.y, true);
     }
 
     /**

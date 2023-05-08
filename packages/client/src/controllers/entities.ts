@@ -94,7 +94,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Pet: {
-                entity = this.createPet(info as PetData);
+                entity = this.createPet(info as PetData)!;
                 break;
             }
         }
@@ -266,8 +266,10 @@ export default class EntitiesController {
      * @returns A pet object.
      */
 
-    private createPet(info: PetData): Pet {
+    private createPet(info: PetData): Pet | undefined {
         let pet = new Pet(info.instance, info.owner, this.game);
+
+        pet.movementSpeed = info.movementSpeed;
 
         return pet;
     }

@@ -313,24 +313,6 @@ export default class Mob extends Character {
     }
 
     /**
-     * Override for the superclass `setPosition` with added teleporting support.
-     * @param x The new x position of the mob.
-     * @param y The new y position of the mob.
-     * @param withTeleport Whether or not the mob is teleporting. We use this flag
-     * to block any changes in position if the mob is teleporting.
-     */
-
-    public override setPosition(x: number, y: number, withTeleport = false): void {
-        // Prevent changes in position if the mob is teleporting.
-        if (this.teleporting) return;
-
-        super.setPosition(x, y);
-
-        // We update the teleporting flag if the mob is teleporting.
-        if (withTeleport) this.teleporting = true;
-    }
-
-    /**
      * The drop function works by picking a random item from the mob's personal
      * drop list. We randomly select an item and roll its chance against the overall
      * drop chance. We add the item to the list if the roll is successful. We continue
