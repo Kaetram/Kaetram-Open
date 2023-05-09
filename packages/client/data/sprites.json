@@ -16,6 +16,11 @@
     { "id": "player/weapon/icesword", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
     { "id": "player/weapon/ironaxe", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
     { "id": "player/weapon/sword", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/aquastaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/weapon/lightningstaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/weapon/naturestaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/weapon/firestaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/weapon/cursestaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
 
     { "id": "cursors/hand", "width": 14, "height": 14 },
     { "id": "cursors/axe", "width": 14, "height": 14 },
@@ -7184,5 +7189,10 @@
     { "id": "items/goldaxe", "offsetX": 0, "offsetY": 0 },
     { "id": "items/icesword", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironaxe", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/sword", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/sword", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/aquastaff", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/lightningstaff", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/naturestaff", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/firestaff", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cursestaff", "offsetX": 0, "offsetY": 0 }
 ]
