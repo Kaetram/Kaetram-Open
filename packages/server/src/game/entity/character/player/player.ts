@@ -1282,11 +1282,7 @@ export default class Player extends Character {
                 this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
                     ? Modules.Defaults.MOVEMENT_SPEED
                     : this.overrideMovementSpeed, // Start with default.
-            armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
-
-        // Update the movement speed with that of the armour currently wielded.
-        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
 
         // Check the boots for movement modifiers
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
@@ -2094,8 +2090,7 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key =
-            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
+        data.key = this.equipment.getArmourSkin().key || 'base';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();

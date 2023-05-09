@@ -40,7 +40,7 @@ export default class State extends Menu {
             this.unequipCallback?.(Modules.Equipment.WeaponSkin)
         );
         this.armour.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Armour)
+            this.unequipCallback?.(Modules.Equipment.Helmet)
         );
         this.armourSkin.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.ArmourSkin)

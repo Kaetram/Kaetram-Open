@@ -45,8 +45,8 @@ export default class Character extends Entity {
     public movement = new Transition();
     public handler: Handler;
 
-    private readonly attackAnimationSpeed = 50;
-    private readonly walkAnimationSpeed = 120;
+    protected attackAnimationSpeed = 50;
+    protected walkAnimationSpeed = 120;
 
     public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
