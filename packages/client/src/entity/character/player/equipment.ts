@@ -11,7 +11,7 @@ export default class Equipment {
     public enchantments: Enchantments = {};
 
     // Used for ignoring rendering of the equipment.
-    public ignoreDraw = false;
+    public drawable = false;
 
     public attackStats: Stats = Util.getEmptyStats();
     public defenseStats: Stats = Util.getEmptyStats();
