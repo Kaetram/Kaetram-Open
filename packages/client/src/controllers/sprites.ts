@@ -31,6 +31,8 @@ export default class SpritesController {
         log.debug('Finished loading sprite data...');
 
         this.preloadSprites();
+
+        console.log(this.sprites);
     }
 
     /**

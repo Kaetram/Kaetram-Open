@@ -60,36 +60,49 @@ export default class EntitiesController {
         // Entity already exists, don't respawn.
         if (info.instance in this.entities) return;
 
-        let entity!: Entity;
+        let entity!: Entity,
+            prefix = ''; // Prefix for the type of entity.
 
         switch (info.type) {
             case Modules.EntityType.Chest: {
                 entity = this.createChest(info.instance);
+
+                prefix = 'objects';
                 break;
             }
 
             case Modules.EntityType.NPC: {
                 entity = this.createNPC(info.instance);
+
+                prefix = 'npcs';
                 break;
             }
 
             case Modules.EntityType.Item: {
                 entity = this.createItem(info);
+
+                prefix = 'items';
                 break;
             }
 
             case Modules.EntityType.Mob: {
                 entity = this.createMob(info);
+
+                prefix = 'mobs';
                 break;
             }
 
             case Modules.EntityType.Projectile: {
                 entity = this.createProjectile(info)!;
+
+                prefix = 'projectiles';
                 break;
             }
 
             case Modules.EntityType.Player: {
                 entity = this.createPlayer(info as PlayerData);
+
+                prefix = 'player';
                 break;
             }
 
@@ -102,7 +115,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(entity.isItem() ? `items/${info.key}` : info.key);
+        let sprite = this.game.sprites.get(`${prefix}/${info.key}`);
 
         // Don't add entities that don't have a sprite.
         if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
