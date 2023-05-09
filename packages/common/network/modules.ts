@@ -36,7 +36,8 @@ export enum EntityType {
     Chest,
     Projectile,
     Object,
-    Pet
+    Pet,
+    LootBag
 }
 
 export enum AbilityType {
@@ -540,27 +541,23 @@ export enum GuildRank {
 }
 
 export enum BannerColour {
-    Green = 'green',
-    Blue = 'blue',
-    Red = 'red',
     Grey = 'grey',
-    Black = 'black',
-    Tangerine = 'tangerine',
-    Yellow = 'yellow',
-    Purple = 'purple',
-    Pink = 'pink'
+    Green = 'green',
+    Fuchsia = 'fuchsia',
+    Red = 'red',
+    Brown = 'brown',
+    Cyan = 'cyan',
+    DarkGrey = 'darkgrey',
+    Teal = 'teal',
+    GoldenYellow = 'goldenyellow'
 }
 
 export enum BannerOutline {
-    Green = 'green',
-    Blue = 'blue',
-    Orange = 'orange',
-    White = 'white',
-    Grey = 'grey',
-    Tangerine = 'tangerine',
-    Yellow = 'yellow',
-    Purple = 'purple',
-    Pink = 'pink'
+    StyleOne,
+    StyleTwo,
+    StyleThree,
+    StyleFour,
+    StyleFive
 }
 
 export enum BannerCrests {

@@ -35,6 +35,9 @@ export default class Slot {
      */
 
     public update(item: Item, stackSize = item.maxStackSize): void {
+        if (!item.exists)
+            return log.debug(`Item doesn't exist: ${item.key}, deleting from existence.`);
+
         this.key = item.key;
         this.count = Math.min(item.count, stackSize);
         this.enchantments = item.enchantments;

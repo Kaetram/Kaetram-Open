@@ -64,6 +64,10 @@ export default class Commands {
                 return;
             }
 
+            case 'pickup': {
+                return this.player.removePet();
+            }
+
             case 'coords': {
                 return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }

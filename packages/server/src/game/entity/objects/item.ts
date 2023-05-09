@@ -39,6 +39,9 @@ export default class Item extends Entity {
     // Points usage
     public manaCost = 0;
 
+    // Pet information
+    public pet = '';
+
     // Item information
     public description = '';
     public projectileName = 'projectile-arrow';
@@ -138,6 +141,7 @@ export default class Item extends Entity {
         this.weaponType = this.data.weaponType || this.weaponType;
         this.smallBowl = this.data.smallBowl || this.smallBowl;
         this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
+        this.pet = this.data.pet || this.pet;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -598,6 +602,14 @@ export default class Item extends Entity {
 
     public isMediumBowl(): boolean {
         return this.mediumBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a pet type, used to spawn pets.
+     */
+
+    public isPetItem(): boolean {
+        return this.pet !== '';
     }
 
     /**

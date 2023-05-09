@@ -6,8 +6,8 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { Spawn, Friends } from '@kaetram/common/network/impl';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Spawn } from '@kaetram/common/network/impl';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type Entities from '../../../../controllers/entities';
@@ -567,6 +567,7 @@ export default class Incoming {
                     packet.name!,
                     packet.colour!,
                     packet.outline!,
+                    packet.outlineColour!,
                     packet.crest!
                 );
             }

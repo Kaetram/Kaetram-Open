@@ -1854,6 +1854,22 @@
     "price": 1000
   },
 
+  "ratpet": {
+    "type": "pet",
+    "name": "Rat Pet",
+    "pet": "rat",
+    "description": "A little cute rat that follows you around.",
+    "price": 1000
+  },
+
+  "rathatpet": {
+    "type": "pet",
+    "name": "Rat Hat Pet",
+    "pet": "rathat",
+    "description": "A little cute rat with a little cute hat that follows you around.",
+    "price": 1000
+  },
+
   "leatherboots": {
     "type": "boots",
     "name": "Leather Boots",
