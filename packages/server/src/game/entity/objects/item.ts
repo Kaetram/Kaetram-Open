@@ -312,8 +312,8 @@ export default class Item extends Entity {
                 return Modules.Equipment.Legs;
             }
 
-            case 'armourskin': {
-                return Modules.Equipment.ArmourSkin;
+            case 'skin': {
+                return Modules.Equipment.Skin;
             }
 
             case 'weapon':
@@ -551,7 +551,7 @@ export default class Item extends Entity {
             this.itemType === 'helmet' ||
             this.itemType === 'chestplate' ||
             this.itemType === 'legs' ||
-            this.itemType === 'armourskin' ||
+            this.itemType === 'skin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||
