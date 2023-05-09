@@ -88,7 +88,7 @@ export default class Player extends Character {
             this.equipments[type] = new Equipment();
         }
 
-        console.log(this.equipments);
+        this.equipments[Modules.Equipment.Weapon].drawable = true;
     }
 
     /**
@@ -244,11 +244,7 @@ export default class Player extends Character {
         }
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
-        if (type === Modules.Equipment.Skin) {
-            this.getHelmet().ignoreDraw = true;
-            this.getChestplate().ignoreDraw = true;
-            this.getLegs().ignoreDraw = true;
-        }
+        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(false);
     }
 
     /**
@@ -278,11 +274,8 @@ export default class Player extends Character {
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
 
-        if (type === Modules.Equipment.Skin) {
-            this.getHelmet().ignoreDraw = false;
-            this.getChestplate().ignoreDraw = false;
-            this.getLegs().ignoreDraw = false;
-        }
+        // Make the normal equipments drawable again.
+        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(true);
     }
 
     /**
@@ -740,6 +733,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Toggles the drawable state of player equipments. These are used by
+     * the player's skin to hide rendering of equipments.
+     * @param state The state we want to set for the drawable state.
+     */
+
+    private toggleDrawableEquipments(state = false): void {
+        this.getHelmet().drawable = state;
+        this.getChestplate().drawable = state;
+        this.getLegs().drawable = state;
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
@@ -799,7 +804,7 @@ export default class Player extends Character {
         for (let key in this.equipments) {
             let equipment = this.equipments[key as never] as Equipment;
 
-            if (equipment.ignoreDraw) continue;
+            if (!equipment.drawable) continue;
             if (ignoreEmpty && !equipment.exists()) continue;
 
             callback(equipment);
