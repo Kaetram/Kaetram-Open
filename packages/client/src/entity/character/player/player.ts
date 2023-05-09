@@ -87,6 +87,8 @@ export default class Player extends Character {
 
             this.equipments[type] = new Equipment();
         }
+
+        console.log(this.equipments);
     }
 
     /**
@@ -240,6 +242,13 @@ export default class Player extends Character {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
         }
+
+        // Disable drawing for the other equipment slots if we're wearing a skin.
+        if (type === Modules.Equipment.Skin) {
+            this.getHelmet().ignoreDraw = true;
+            this.getChestplate().ignoreDraw = true;
+            this.getLegs().ignoreDraw = true;
+        }
     }
 
     /**
@@ -268,6 +277,12 @@ export default class Player extends Character {
         // Decrement count if provided, otherwise reset the equipment slot.
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
+
+        if (type === Modules.Equipment.Skin) {
+            this.getHelmet().ignoreDraw = false;
+            this.getChestplate().ignoreDraw = false;
+            this.getLegs().ignoreDraw = false;
+        }
     }
 
     /**
@@ -299,8 +314,8 @@ export default class Player extends Character {
 
     public getSpriteName(): string {
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.ArmourSkin].key)
-            return this.equipments[Modules.Equipment.ArmourSkin].key;
+        if (this.equipments[Modules.Equipment.Skin].key)
+            return this.equipments[Modules.Equipment.Skin].key;
 
         return 'player/base';
     }
@@ -320,11 +335,27 @@ export default class Player extends Character {
     //// Shortcut functions for getting equipment objects. ////
 
     /**
-     * @returns The armour object of the player.
+     * @returns The helmet object of the player.
      */
 
-    public getArmour(): Equipment {
+    public getHelmet(): Equipment {
         return this.equipments[Modules.Equipment.Helmet];
+    }
+
+    /**
+     * @returns The chestplate object of the player.
+     */
+
+    public getChestplate(): Equipment {
+        return this.equipments[Modules.Equipment.Chestplate];
+    }
+
+    /**
+     * @returns The legs equipment object.
+     */
+
+    public getLegs(): Equipment {
+        return this.equipments[Modules.Equipment.Legs];
     }
 
     /**
@@ -332,7 +363,7 @@ export default class Player extends Character {
      */
 
     public getArmourSkin(): Equipment {
-        return this.equipments[Modules.Equipment.ArmourSkin];
+        return this.equipments[Modules.Equipment.Skin];
     }
 
     /**
@@ -530,6 +561,14 @@ export default class Player extends Character {
 
             case Modules.Equipment.Weapon: {
                 return 'weapon';
+            }
+
+            case Modules.Equipment.WeaponSkin: {
+                return 'weaponskin';
+            }
+
+            case Modules.Equipment.Skin: {
+                return 'skin';
             }
 
             default: {
@@ -760,6 +799,7 @@ export default class Player extends Character {
         for (let key in this.equipments) {
             let equipment = this.equipments[key as never] as Equipment;
 
+            if (equipment.ignoreDraw) continue;
             if (ignoreEmpty && !equipment.exists()) continue;
 
             callback(equipment);

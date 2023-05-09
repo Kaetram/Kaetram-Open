@@ -105,13 +105,13 @@ export enum Equipment {
     Helmet,
     Chestplate,
     Legs,
+    Skin,
     Boots,
     Pendant,
     Ring,
-    Weapon,
     Arrows,
-    WeaponSkin,
-    ArmourSkin
+    Weapon,
+    WeaponSkin
 }
 
 export enum AttackStyle {

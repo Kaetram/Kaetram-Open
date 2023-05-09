@@ -1,5 +1,3 @@
-import Tile from './tile';
-
 import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
