@@ -79,12 +79,12 @@
     }
   },
 
-  "cobaltaxe": {
+  "ironaxe": {
     "type": "weapon",
-    "name": "Cobalt Axe",
+    "name": "Iron Axe",
     "weaponType": "axe",
-    "lumberjacking": 2,
-    "price": 200,
+    "lumberjacking": 1,
+    "price": 100,
     "attackStats": {
       "crush": 4,
       "slash": 6,
@@ -104,6 +104,34 @@
       "strength": 2,
       "archery": 0,
       "magic": 0
+    }
+  },
+
+  "cobaltaxe": {
+    "type": "weapon",
+    "name": "Cobalt Axe",
+    "weaponType": "axe",
+    "lumberjacking": 2,
+    "price": 200,
+    "attackStats": {
+      "crush": 4,
+      "slash": 6,
+      "stab": 4,
+      "archery": 0,
+      "magic": 4
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 2
     }
   },
 
@@ -266,6 +294,129 @@
     }
   },
 
+  "aquastaff": {
+    "type": "weaponmagic",
+    "name": "Aqua Staff",
+    "weaponType": "staff",
+    "price": 1500,
+    "manaCost": 2,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 21
+    },
+    "bonuses": {
+      "accuracy": 0,
+      "strength": 0,
+      "archery": 0,
+      "magic": 12
+    },
+    "attackRange": 9,
+    "projectileName": "purplebolt"
+  },
+
+  "lightningstaff": {
+    "type": "weaponmagic",
+    "name": "Lightning Staff",
+    "weaponType": "staff",
+    "skill": "magic",
+    "price": 7500,
+    "manaCost": 4,
+    "level": 10,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 28
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 0,
+      "archery": 0,
+      "magic": 19
+    },
+    "attackRange": 9,
+    "projectileName": "yellowlightning"
+  },
+
+  "naturestaff": {
+    "type": "weaponmagic",
+    "name": "Nature Staff",
+    "weaponType": "staff",
+    "skill": "magic",
+    "price": 12500,
+    "manaCost": 6,
+    "level": 17,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 36
+    },
+    "bonuses": {
+      "accuracy": 9,
+      "strength": 0,
+      "archery": 0,
+      "magic": 26
+    },
+    "attackRange": 9,
+    "projectileName": "greenbolt"
+  },
+
+  "firestaff": {
+    "type": "weaponmagic",
+    "name": "Fire Staff",
+    "weaponType": "staff",
+    "skill": "magic",
+    "price": 22500,
+    "manaCost": 7,
+    "level": 25,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 44
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 0,
+      "magic": 38
+    },
+    "attackRange": 9,
+    "projectileName": "fireball"
+  },
+
+  "cursestaff": {
+    "type": "weaponmagic",
+    "name": "Ice Staff",
+    "weaponType": "staff",
+    "skill": "magic",
+    "price": 40000,
+    "manaCost": 9,
+    "level": 35,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 51
+    },
+    "bonuses": {
+      "accuracy": 10,
+      "strength": 0,
+      "archery": 0,
+      "magic": 48
+    },
+    "attackRange": 9,
+    "projectileName": "terror"
+  },
+
   "danbo": {
     "type": "armourskin",
     "name": "Danbo"
@@ -284,6 +435,11 @@
   "danbored": {
     "type": "armourskin",
     "name": "Danbo"
+  },
+
+  "taekwondo": {
+    "type": "armourskin",
+    "name": "Taekwondo"
   },
 
   "pendant1": {

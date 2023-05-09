@@ -102,8 +102,8 @@
         "width": 48,
         "height": 48,
         "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
+        "offsetX": -8,
+        "offsetY": -16
     },
 
     {
@@ -140,6 +140,104 @@
         "idleSpeed": 250,
         "offsetX": -16,
         "offsetY": -24
+    },
+
+    {
+        "id": "pets/rat",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "animations": {
+            "death": {
+                "length": 4,
+                "row": 0
+            },
+            "atk_right": {
+                "length": 6,
+                "row": 1
+            },
+            "walk_right": {
+                "length": 3,
+                "row": 2
+            },
+            "idle_right": {
+                "length": 2,
+                "row": 3
+            },
+            "atk_up": {
+                "length": 4,
+                "row": 4
+            },
+            "walk_up": {
+                "length": 4,
+                "row": 5
+            },
+            "idle_up": {
+                "length": 4,
+                "row": 6
+            },
+            "atk_down": {
+                "length": 4,
+                "row": 7
+            },
+            "walk_down": {
+                "length": 4,
+                "row": 8
+            },
+            "idle_down": {
+                "length": 4,
+                "row": 9
+            }
+        }
+    },
+
+        {
+        "id": "pets/rathat",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "animations": {
+            "death": {
+                "length": 4,
+                "row": 0
+            },
+            "atk_right": {
+                "length": 6,
+                "row": 1
+            },
+            "walk_right": {
+                "length": 3,
+                "row": 2
+            },
+            "idle_right": {
+                "length": 2,
+                "row": 3
+            },
+            "atk_up": {
+                "length": 4,
+                "row": 4
+            },
+            "walk_up": {
+                "length": 4,
+                "row": 5
+            },
+            "idle_up": {
+                "length": 4,
+                "row": 6
+            },
+            "atk_down": {
+                "length": 4,
+                "row": 7
+            },
+            "walk_down": {
+                "length": 4,
+                "row": 8
+            },
+            "idle_down": {
+                "length": 4,
+                "row": 9
+            }
+        }
     },
 
     {

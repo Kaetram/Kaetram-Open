@@ -551,6 +551,7 @@ export default class Item extends Entity {
             this.itemType === 'helmet' ||
             this.itemType === 'chestplate' ||
             this.itemType === 'legs' ||
+            this.itemType === 'armourskin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||
