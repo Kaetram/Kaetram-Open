@@ -8,6 +8,7 @@ export interface AnimationData {
         row: number;
     };
 }
+
 export interface SpriteData {
     id: string;
     width?: number;
@@ -17,6 +18,7 @@ export interface SpriteData {
     offsetX?: number;
     offsetY?: number;
 }
+
 export interface Animations {
     [name: string]: Animation;
 }
@@ -24,15 +26,16 @@ export interface Animations {
 export default class Sprite {
     public key = '';
 
+    private type = '';
     private path = '';
 
     public width = Utils.tileSize;
     public height = Utils.tileSize;
 
-    public offsetX = -Utils.tileSize;
-    public offsetY = -Utils.tileSize;
+    public offsetX = 0;
+    public offsetY = 0;
 
-    public idleSpeed = 450;
+    public idleSpeed = 250;
 
     public loaded = false;
     public loading = false;
@@ -48,15 +51,15 @@ export default class Sprite {
     private loadCallback?(): void;
 
     public constructor(public data: SpriteData) {
-        this.key = this.data.id;
+        this.key = data.id;
 
-        this.path = `/img/sprites/${this.key}.png`;
+        this.path = `/img/sprites/${data.id}.png`;
 
-        this.width = this.data.width || this.width;
-        this.height = this.data.height || this.height;
+        this.width = this.data.width ?? Utils.tileSize;
+        this.height = this.data.height ?? Utils.tileSize;
 
-        this.offsetX = this.data.offsetX ?? this.offsetX;
-        this.offsetY = this.data.offsetY ?? this.offsetY;
+        this.offsetX = this.data.offsetX ?? -Utils.tileSize;
+        this.offsetY = this.data.offsetY ?? -Utils.tileSize;
 
         this.idleSpeed = this.data.idleSpeed || this.idleSpeed;
 
@@ -85,14 +88,8 @@ export default class Sprite {
         this.image.addEventListener('load', () => {
             this.loaded = true;
 
-            /**
-             * We ignore small sprites and item sprites when drawing hurt sprites.
-             * The logic we're using is skipping keys that start with `items/*` and
-             * sprites whose width is less than 96 (assumed 4 animations and a small
-             * sprite of 24x24).
-             */
-
-            if (!this.key.startsWith('items/') && this.image.width > 96)
+            // Ignore drawing hurt sprites for item types and very small sprites.
+            if (this.key.includes('items') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
 
             // Load the silhouette sprite for the entity.
@@ -113,7 +110,7 @@ export default class Sprite {
 
     private loadAnimations(): void {
         if (!this.data.animations)
-            this.data.animations = Utils.getDefaultAnimations(this.key.startsWith('items/'));
+            this.data.animations = Utils.getDefaultAnimations(this.getType());
 
         for (let name in this.data.animations) {
             let info = this.data.animations[name];
@@ -130,6 +127,19 @@ export default class Sprite {
                 this.height
             );
         }
+    }
+
+    /**
+     * The type is determined by the first element in the path of the key. So
+     * if the path is `items/leather` then the type is `items`. This is used
+     * for default animations.
+     * @returns The type of the sprite.
+     */
+
+    private getType(): string {
+        if (!this.key.includes('/')) return 'items';
+
+        return this.key.split('/')[0];
     }
 
     /**
