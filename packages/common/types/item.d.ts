@@ -66,4 +66,5 @@ export interface ItemData {
     weaponType?: string;
     smallBowl?: boolean;
     mediumBowl?: boolean;
+    pet?: string;
 }

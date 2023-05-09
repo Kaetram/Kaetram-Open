@@ -67,9 +67,9 @@ export default class InputController {
      * This is the animation for the target
      * cell spinner sprite (only on desktop)
      */
-    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
     public chatHandler: Chat;
     public hud: HUDController;
+    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
 
     public entity: Entity | undefined;
     public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.

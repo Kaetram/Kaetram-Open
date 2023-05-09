@@ -1,3 +1,5 @@
+import Item from '../../objects/item';
+
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -18,7 +20,6 @@ import {
     Trade
 } from '@kaetram/common/network/impl';
 
-import type { Enchantments } from '@kaetram/common/types/item';
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -30,6 +31,7 @@ import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Player from './player';
+import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
@@ -160,6 +162,9 @@ export default class Handler {
             }),
             true
         );
+
+        // Despawn the pet from the world.
+        if (this.player.hasPet()) this.world.entities.removePet(this.player.pet!);
 
         // Clear the player's target.
         this.player.damageTable = {};
@@ -323,7 +328,20 @@ export default class Handler {
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
 
         // Make the pet follow the player with every movement.
-        this.player.pet?.follow(this.player);
+        if (this.player.hasPet()) {
+            let distance = this.player.getDistance(this.player.pet!);
+
+            // Send a new follow packet if the pet is too far away.
+            if (distance > 3) this.player.pet?.follow(this.player);
+
+            // If the distance exceeds 10 tiles, we despawn and respawn the pet.
+            if (distance > 10) {
+                this.world.entities.removePet(this.player.pet!);
+                this.player.pet = this.world.entities.spawnPet(this.player, this.player.pet!.key);
+
+                this.player.pet?.follow(this.player);
+            }
+        }
     }
 
     /**
@@ -531,14 +549,12 @@ export default class Handler {
     ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
         if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
-            this.world.entities.spawnItem(
-                key, // Key of the item before an action is done on the slot.
-                this.player.x,
-                this.player.y,
-                true,
-                count, // Note this is the amount we are dropping.
-                enchantments
-            );
+            let item = new Item(key, this.player.x, this.player.y, true, count, enchantments);
+
+            // Pets spawn an entity, and items spawn in the world.
+            if (item.isPetItem()) this.player.setPet(item.pet);
+            else this.world.entities.addItem(item);
+
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 

@@ -39,6 +39,7 @@ export interface PlayerInfo {
     lastServerId: number;
     lastAddress: string;
     guild: string;
+    pet: string;
     resetToken?: ResetToken;
 }
 
@@ -290,6 +291,7 @@ export default class Creator {
             lastServerId: config.serverId,
             lastAddress: player.connection.address,
             guild: player.guild,
+            pet: player.pet ? player.pet.key : '',
             resetToken: undefined // Save token as undefined to prevent it from being saved.
         };
     }

@@ -5,6 +5,7 @@ import Utils from '../utils/util';
 import { Modules } from '@kaetram/common/network';
 
 import type Sprite from './sprite';
+import type Pet from './character/pet/pet';
 
 export default abstract class Entity {
     public x = 0;
@@ -373,6 +374,14 @@ export default abstract class Entity {
 
     public isProjectile(): boolean {
         return this.type === Modules.EntityType.Projectile;
+    }
+
+    /**
+     * @returns Whether or not the entity is a pet type.
+     */
+
+    public isPet(): this is Pet {
+        return this.type === Modules.EntityType.Pet;
     }
 
     /**
