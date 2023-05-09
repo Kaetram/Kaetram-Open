@@ -297,7 +297,7 @@
         "offsetY": -12
     },
     {
-        "id": "mobs/agent",
+        "id": "npcs/agent",
         "width": 24,
         "height": 24,
         "offsetX": -4,

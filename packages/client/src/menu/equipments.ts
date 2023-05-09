@@ -60,7 +60,7 @@ export default class Equipments extends Menu {
             this.unequipCallback?.(Modules.Equipment.Helmet)
         );
         this.armourSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
+            this.unequipCallback?.(Modules.Equipment.Skin)
         );
         this.pendant.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Pendant)
@@ -85,7 +85,7 @@ export default class Equipments extends Menu {
         this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         // Cloth armour shouldn't be displayed in the UI.
         this.armour.style.backgroundImage = Util.getImageURL(
-            this.player.getArmour().key === 'clotharmor' ? '' : this.player.getArmour().key
+            this.player.getHelmet().key === 'clotharmor' ? '' : this.player.getHelmet().key
         );
         this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);

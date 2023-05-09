@@ -1,7 +1,7 @@
 import Helmet from './equipment/impl/helmet';
 import Chestplate from './equipment/impl/chestplate';
 import Legs from './equipment/impl/legs';
-import ArmourSkin from './equipment/impl/armourskin';
+import Skin from './equipment/impl/skin';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
@@ -24,7 +24,7 @@ export default class Equipments {
     private helmet: Helmet = new Helmet();
     private chestplate: Chestplate = new Chestplate();
     private legs: Legs = new Legs();
-    private armourSkin: ArmourSkin = new ArmourSkin();
+    private armourSkin: Skin = new Skin();
     private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
     private ring: Ring = new Ring();
@@ -38,13 +38,13 @@ export default class Equipments {
         this.helmet,
         this.chestplate,
         this.legs,
+        this.armourSkin,
         this.boots,
         this.pendant,
         this.ring,
-        this.weapon,
         this.arrows,
-        this.weaponSkin,
-        this.armourSkin
+        this.weapon,
+        this.weaponSkin
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -270,8 +270,8 @@ export default class Equipments {
      * @returns The armour skin equipment type.
      */
 
-    public getArmourSkin(): ArmourSkin {
-        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
+    public getSkin(): Skin {
+        return this.get(Modules.Equipment.Skin) as Skin;
     }
 
     /**
