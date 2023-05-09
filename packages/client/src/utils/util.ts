@@ -97,6 +97,11 @@ export default {
     getImageURL(key = ''): string {
         if (key === '') return '';
 
+        let blocks = key.split('/');
+
+        // Use the last block as the key if we are extracting a key path.
+        if (blocks.length > 1) key = blocks[blocks.length - 1];
+
         return `url("/img/sprites/items/${key}.png")`;
     },
 
