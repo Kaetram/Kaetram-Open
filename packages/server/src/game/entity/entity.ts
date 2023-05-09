@@ -4,12 +4,12 @@ import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type Combat from './character/combat/combat';
 import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
 import type Projectile from './objects/projectile';
 import type Mob from './character/mob/mob';
+import type Pet from './character/pet/pet';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -258,6 +258,15 @@ abstract class Entity {
 
     public isProjectile(): this is Projectile {
         return this.type === Modules.EntityType.Projectile;
+    }
+
+    /**
+     * Checks whether or not the entity is a pet.
+     * @returns Whether the type is equal to the EntityType pet.
+     */
+
+    public isPet(): this is Pet {
+        return this.type === Modules.EntityType.Pet;
     }
 
     /**

@@ -28,6 +28,7 @@ export default class Guilds {
         name: string,
         banner: Modules.BannerColour,
         outline: Modules.BannerOutline,
+        outlineColour: Modules.BannerColour,
         crest: Modules.BannerCrests
     ): void {
         // Ensure the player isn't already in a guild.
@@ -72,6 +73,7 @@ export default class Guilds {
                 decoration: {
                     banner,
                     outline,
+                    outlineColour,
                     crest
                 }
             };

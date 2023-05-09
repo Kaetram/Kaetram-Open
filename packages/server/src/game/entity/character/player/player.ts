@@ -11,7 +11,6 @@ import Statistics from './statistics';
 import Trade from './trade';
 import Incoming from './incoming';
 
-import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Item from '../../objects/item';
@@ -44,6 +43,7 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
+import type Pet from '../pet/pet';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -126,7 +126,7 @@ export default class Player extends Character {
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Pet information
-    public pet!: Pet;
+    public pet: Pet | undefined;
 
     // Warps
     public lastWarp = 0;
@@ -260,6 +260,9 @@ export default class Player extends Character {
 
         // Connect the player to their guild if they are in one.
         if (this.guild) this.world.guilds.connect(this, this.guild);
+
+        // Spawn the pet if the player has one.
+        if (data.pet) this.setPet(data.pet);
     }
 
     /**
@@ -379,6 +382,9 @@ export default class Player extends Character {
 
         // Remove the player from the region.
         this.entities.removePlayer(this);
+
+        // Despawn the pet from the world.
+        if (this.hasPet()) this.world.entities.removePet(this.pet!);
     }
 
     /**
@@ -555,7 +561,7 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
         if (this.dead) return;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
@@ -1491,10 +1497,36 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.pet) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`You already have a pet!`);
 
         // Create a new pet instance based on the key.
-        this.pet = new Pet(this, key, this.x, this.y);
+        this.pet = this.entities.spawnPet(this, key);
+
+        // Begin the pet following the player.
+        this.pet.follow(this);
+    }
+
+    /**
+     * Removes the player's pet and adds it to their inventory if they have space.
+     */
+
+    public removePet(): void {
+        if (!this.hasPet()) return;
+
+        // Ensure the player has enough space in their inventory.
+        if (!this.inventory.hasSpace()) {
+            this.notify(`You do not have enough inventory space to store your pet.`);
+            return;
+        }
+
+        // Create a pet item and add it to the player's inventory.
+        this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
+
+        // Remove the pet from the world
+        this.entities.remove(this.pet!);
+
+        // Remove the pet from the player.
+        this.pet = undefined;
     }
 
     /**
@@ -1544,6 +1576,14 @@ export default class Player extends Character {
 
     public override hasBloodsucking(): boolean {
         return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
+     * @returns Whether or not the player currently has a pet.
+     */
+
+    public hasPet(): boolean {
+        return !!this.pet;
     }
 
     /**

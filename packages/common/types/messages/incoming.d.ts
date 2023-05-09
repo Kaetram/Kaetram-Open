@@ -92,6 +92,7 @@ export interface GuildPacket {
     name?: string;
     colour?: Modules.BannerColour;
     outline?: Modules.BannerOutline;
+    outlineColour?: Modules.BannerColour;
     crest?: Modules.BannerCrest;
     message?: string;
 }

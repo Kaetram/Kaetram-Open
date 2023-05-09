@@ -10,7 +10,13 @@ import Formulas from '../../../info/formulas';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Combat as CombatPacket, Effect, Movement, Points } from '@kaetram/common/network/impl';
+import {
+    Combat as CombatPacket,
+    Effect,
+    Movement,
+    Points,
+    Teleport
+} from '@kaetram/common/network/impl';
 
 import type World from '../../world';
 import type Packet from '@kaetram/common/network/packet';
@@ -446,6 +452,29 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Handles teleporting an entity to a specific location.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @param withAnimation Whether or not to teleport with an animation.
+     */
+
+    public teleport(x: number, y: number, withAnimation = false): void {
+        this.setPosition(x, y, true);
+
+        this.sendToRegions(
+            new Teleport({
+                instance: this.instance,
+                x,
+                y,
+                withAnimation
+            })
+        );
+
+        // Untoggle the teleporting flag after 500ms.
+        setTimeout(() => (this.teleporting = false), 500);
+    }
+
+    /**
      * Makes a character stop moving by sending a packet to the nearby regions.
      */
 
@@ -827,6 +856,14 @@ export default abstract class Character extends Entity {
      */
 
     protected canAttack(target: Character): boolean {
+        // Prevent pets from being attacked.
+        if (target.isPet()) {
+            if (this.isPlayer())
+                this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
+
+            return false;
+        }
+
         if (target.isMob()) {
             // Restrict the mobs in tutorial from being attacked by the player.
             if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
@@ -874,15 +911,23 @@ export default abstract class Character extends Entity {
     /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
+     * We also add a teleport flag that we can use to prevent the character from
+     * performing actions during the teleportation process.
      * @param x The new x grid position.
      * @param y The new y grid position.
+     * @param withTeleport Whether or not the character is teleporting.
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, withTeleport = false): void {
+        if (this.teleporting) return;
+
         super.setPosition(x, y);
 
         // Updates the character's position in the grid.
         this.world.map.grids.updateEntity(this);
+
+        // Update the teleporting flag if we're teleporting.
+        if (withTeleport) this.teleporting = true;
     }
 
     /**

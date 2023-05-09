@@ -177,7 +177,7 @@ export default class MongoDB {
      */
 
     public isIpBanned(ip: string, callback: (banned: boolean) => void): void {
-        if (!this.hasDatabase()) return;
+        if (!this.hasDatabase()) return callback(false);
 
         let cursor = this.database.collection('ipbans').find({ ip });
 
