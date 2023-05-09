@@ -1,147 +1,33 @@
 [
-    {
-        "id": "player/base",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
+    { "id": "player/base", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/helmet/cobalthelmet", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/helmet/ironhelmet", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/legs/cobaltlegs", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/legs/ironlegs", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/skin/danbo", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/skin/danboblue", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/skin/danbogreen", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/skin/danbored", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/skin/taekwondo", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/weapon/bronzeaxe", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/cobaltaxe", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/fishingpole", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -8, "offsetY": -16 },
+    { "id": "player/weapon/goldaxe", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/icesword", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/ironaxe", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/sword", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -24 },
 
-    {
-        "id": "player/helmet/cobalthelmet",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/helmet/ironhelmet",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/legs/cobaltlegs",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/legs/ironlegs",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/skin/danbo",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/skin/danboblue",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/skin/danbogreen",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/skin/danbored",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-    
-    {
-        "id": "player/skin/taekwondo",
-        "width": 32,
-        "height": 32,
-        "idleSpeed": 250,
-        "offsetX": -8
-    },
-
-    {
-        "id": "player/weapon/bronzeaxe",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
-    {
-        "id": "player/weapon/cobaltaxe",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
-    {
-        "id": "player/weapon/fishingpole",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -8,
-        "offsetY": -16
-    },
-
-    {
-        "id": "player/weapon/goldaxe",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
-    {
-        "id": "player/weapon/icesword",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
-    {
-        "id": "player/weapon/ironaxe",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
-    {
-        "id": "player/weapon/sword",
-        "width": 48,
-        "height": 48,
-        "idleSpeed": 250,
-        "offsetX": -16,
-        "offsetY": -24
-    },
-
+    { "id": "cursors/hand", "width": 14, "height": 14 },
+    { "id": "cursors/axe", "width": 14, "height": 14 },
+    { "id": "cursors/pickaxe", "width": 14, "height": 14 },
+    { "id": "cursors/sword", "width": 14, "height": 14 },
+    { "id": "cursors/loot", "width": 14, "height": 14 },
+    { "id": "cursors/cooking" },
+    { "id": "cursors/smithing" },
+    { "id": "cursors/crafting" },
+    { "id": "cursors/foraging" },
+    { "id": "cursors/fishing" },
+    { "id": "cursors/spell" },
     {
         "id": "pets/rat",
         "width": 48,
@@ -2318,85 +2204,6 @@
         "offsetY": -10
     },
     {
-        "id": "cursors/hand",
-        "width": 14,
-        "height": 14,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/cooking",
-        "width": 16,
-        "height": 16,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/smithing",
-        "width": 16,
-        "height": 16,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/crafting",
-        "width": 16,
-        "height": 16,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/foraging",
-        "width": 16,
-        "height": 16,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/fishing",
-        "width": 16,
-        "height": 16,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "effects/heal2",
-        "width": 32,
-        "height": 32,
-        "animations": {
-            "effect": {
-                "length": 10,
-                "row": 0
-            }
-        },
-        "offsetX": -8,
-        "offsetY": -10
-    },
-    {
         "id": "mobs/hellspider",
         "width": 64,
         "height": 72,
@@ -2955,17 +2762,6 @@
         },
         "offsetX": -7,
         "offsetY": -13
-    },
-    {
-        "id": "cursors/loot",
-        "width": 14,
-        "height": 14,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
     },
     {
         "id": "mobs/mantis",
@@ -5997,36 +5793,7 @@
     {
         "id": "talk",
         "width": 14,
-        "height": 14,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
-        "id": "cursors/axe",
-        "width": 14,
-        "height": 14,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-
-    {
-        "id": "cursors/pickaxe",
-        "width": 14,
-        "height": 14,
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
+        "height": 14
     },
     {
         "id": "target",
@@ -7064,15 +6831,6 @@
         "offsetY": -12
     },
     {
-        "id": "cursors/spell",
-        "animations": {
-            "idle_down": {
-                "length": 1,
-                "row": 0
-            }
-        }
-    },
-    {
         "id": "effects/terror",
         "width": 64,
         "height": 64,
@@ -7097,6 +6855,19 @@
         },
         "offsetX": -8,
         "offsetY": -16
+    },
+    {
+        "id": "effects/heal2",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 10,
+                "row": 0
+            }
+        },
+        "offsetX": -8,
+        "offsetY": -10
     },
     {
         "id": "mobs/icegoblin",
