@@ -348,7 +348,8 @@ export default {
 
     getDefaultAnimations(type: string): AnimationData {
         switch (type) {
-            case 'items': {
+            case 'items':
+            case 'cursors': {
                 return {
                     idle: {
                         length: 1,
