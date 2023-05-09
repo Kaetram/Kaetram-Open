@@ -108,6 +108,8 @@ export default class EntitiesController {
 
             case Modules.EntityType.Pet: {
                 entity = this.createPet(info as PetData)!;
+
+                prefix = 'pets';
                 break;
             }
         }
