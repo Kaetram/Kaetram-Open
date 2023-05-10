@@ -11,12 +11,12 @@ import Grids from '../renderer/grids';
 import { Modules } from '@kaetram/common/network';
 
 import type Character from '../entity/character/character';
+import type Game from '../game';
+import type Entity from '../entity/entity';
+import type SpritesController from './sprites';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PetData } from '@kaetram/common/types/pet';
-import type Entity from '../entity/entity';
-import type Game from '../game';
-import type SpritesController from './sprites';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -282,9 +282,16 @@ export default class EntitiesController {
      */
 
     private createPet(info: PetData): Pet | undefined {
-        let pet = new Pet(info.instance, info.owner, this.game);
+        let pet = new Pet(info.instance, info.owner, this.game),
+            owner = this.get<Player>(info.owner);
 
         pet.movementSpeed = info.movementSpeed;
+
+        // Add the pet as the owner's follower.
+        if (owner) {
+            owner.addFollower(pet);
+            pet.setTarget(owner);
+        }
 
         return pet;
     }
@@ -332,6 +339,14 @@ export default class EntitiesController {
     public removeEntity(entity: Entity): void {
         // Prevent any syncing from happening when the player is removed.
         if (entity.isPlayer()) entity.ready = false;
+
+        // Special case handling for pets.
+        if (entity.isPet()) {
+            let owner = this.get<Player>(entity.owner) as Player;
+
+            // Remove the pet from the owner's list of followers.
+            if (owner) owner.removeFollower(entity);
+        }
 
         this.unregisterPosition(entity);
 

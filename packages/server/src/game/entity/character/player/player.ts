@@ -1032,6 +1032,9 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // Immediately clear the target to prevent combat from sticking to previous target.
+        if (target !== this.target?.instance) this.target = undefined;
+
         // Stop the movement if the player is stunned.
         if (this.isStunned()) return this.stopMovement();
 
@@ -1137,7 +1140,9 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer() || entity?.isPet())) {
+        if (this.map.isDoor(x, y)) {
+            if (entity?.isMob()) return;
+
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
