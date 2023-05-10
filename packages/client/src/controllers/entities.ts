@@ -1,19 +1,19 @@
-import Mob from '../entity/character/mob/mob';
-import NPC from '../entity/npc/npc';
-import Player from '../entity/character/player/player';
-import Chest from '../entity/objects/chest';
-import Item from '../entity/objects/item';
-import Projectile from '../entity/objects/projectile';
-import Pet from '../entity/character/pet/pet';
 import log from '../lib/log';
+import NPC from '../entity/npc/npc';
 import Grids from '../renderer/grids';
+import Item from '../entity/objects/item';
+import Chest from '../entity/objects/chest';
+import Mob from '../entity/character/mob/mob';
+import Pet from '../entity/character/pet/pet';
+import Player from '../entity/character/player/player';
+import Projectile from '../entity/objects/projectile';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Character from '../entity/character/character';
 import type Game from '../game';
 import type Entity from '../entity/entity';
 import type SpritesController from './sprites';
+import type Character from '../entity/character/character';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PetData } from '@kaetram/common/types/pet';
