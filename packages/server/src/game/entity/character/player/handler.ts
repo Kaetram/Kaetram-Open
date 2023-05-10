@@ -332,7 +332,7 @@ export default class Handler {
             let distance = this.player.getDistance(this.player.pet!);
 
             // Send a new follow packet if the pet is too far away.
-            if (distance > 3) this.player.pet?.follow(this.player);
+            if (distance > 2) this.player.pet?.follow(this.player);
 
             // If the distance exceeds 10 tiles, we despawn and respawn the pet.
             if (distance > 10) {
