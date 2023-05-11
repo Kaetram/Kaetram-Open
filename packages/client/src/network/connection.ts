@@ -1,6 +1,7 @@
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
+import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type App from '../app';
 import type Overlays from '../renderer/overlays';
@@ -21,7 +22,6 @@ import type Messages from './messages';
 import type Entity from '../entity/entity';
 import type Item from '../entity/objects/item';
 import type NPC from '../entity/npc/npc';
-import type Character from '../entity/character/character';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
@@ -359,8 +359,8 @@ export default class Connection {
      */
 
     private handleMovement(opcode: Opcodes.Movement, info: MovementPacket): void {
-        let entity = this.entities.get<Character>(info.instance),
-            target: Entity;
+        let entity = this.entities.get<Character>(info.instance) as Character,
+            target: Character;
 
         /**
          * We are receiving movement for an entity that doesn't exist,
@@ -398,6 +398,8 @@ export default class Connection {
                         return;
 
                     entity.follow(target);
+
+                    if (entity.isPet()) target.addFollower(entity);
                 }
 
                 break;

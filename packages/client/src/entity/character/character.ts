@@ -45,8 +45,8 @@ export default class Character extends Entity {
     public movement = new Transition();
     public handler: Handler;
 
-    private readonly attackAnimationSpeed = 50;
-    private readonly walkAnimationSpeed = 120;
+    protected attackAnimationSpeed = 50;
+    protected walkAnimationSpeed = 120;
 
     public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
@@ -232,6 +232,8 @@ export default class Character extends Entity {
      */
 
     public trade(entity: Entity): void {
+        if (this.dead) return;
+
         this.trading = true;
 
         this.follow(entity);
@@ -245,7 +247,9 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
-        if (this.isStunned()) return;
+        if (this.isStunned() || this.dead) return;
+
+        if (this.isPlayer() && entity.isMob()) console.trace('Following entity:', entity.instance);
 
         this.following = true;
 
@@ -261,6 +265,8 @@ export default class Character extends Entity {
      */
 
     public pursue(character: Character): void {
+        if (this.dead) return;
+
         this.setTarget(character);
         this.move(character.gridX, character.gridY);
 
