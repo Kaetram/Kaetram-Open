@@ -47,13 +47,13 @@ export default class Handler {
     }
 
     /**
-     * Empty implementation for when the character begins pathing. This is handled specifically
-     * by the player handler subclass.
+     * Simply updates the moving state of the character when pathing begins. Some subclass
+     * implementations such as the player may expand upon this.
      * @param path The path in a 2D array containing the x and y coordinates of each tile.
      */
 
     protected handleStartPathing(_path: number[][]): void {
-        // log.info('Unimplemented handleStartPathing');
+        this.character.moving = true;
     }
 
     /**
@@ -110,15 +110,15 @@ export default class Handler {
     }
 
     /**
-     * Unimplemented base function for when the character stops pathing. This is used
-     * by the player handler implementation to send a packet to the server and update
-     * camera information and other things.
+     * Updates the moving state for the character. The player subclass may
+     * implement this function differently and will be responsible for sending
+     * packets, updating camera, verifying distances, and more.
      * @param _x The x grid coordinate of the tile the player stopped on.
      * @param _y The y grid coordinate of the tile the player stopped on.
      */
 
     protected handleStopPathing(_x: number, _y: number): void {
-        // log.info('Unimplemented handleStopPathing');
+        this.character.moving = false;
     }
 
     /**
