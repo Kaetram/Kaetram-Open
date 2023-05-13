@@ -2,6 +2,7 @@ import CharacterHandler from '../handler';
 
 import { Packets, Opcodes } from '@kaetram/common/network';
 
+import type Character from '../character';
 import type Map from '../../../map/map';
 import type Player from './player';
 import type Game from '../../../game';
