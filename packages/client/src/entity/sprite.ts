@@ -29,7 +29,7 @@ export default class Sprite {
     private type = '';
     private path = '';
 
-    public width = Utils.tileSize;
+    public width = Utils.tileSize; // Default tile size of 16 if not specified.
     public height = Utils.tileSize;
 
     public offsetX = 0;
@@ -55,8 +55,8 @@ export default class Sprite {
 
         this.path = `/img/sprites/${data.id}.png`;
 
-        this.width = this.data.width ?? Utils.tileSize;
-        this.height = this.data.height ?? Utils.tileSize;
+        this.width = this.data.width ?? this.width;
+        this.height = this.data.height ?? this.height;
 
         this.offsetX = this.data.offsetX ?? -Utils.tileSize;
         this.offsetY = this.data.offsetY ?? -Utils.tileSize;
