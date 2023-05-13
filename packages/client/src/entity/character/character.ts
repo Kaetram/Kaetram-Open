@@ -247,9 +247,7 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
-        if (this.isStunned() || this.dead) return;
-
-        if (this.isPlayer() && entity.isMob()) console.trace('Following entity:', entity.instance);
+        if (this.dead || this.isStunned()) return;
 
         this.following = true;
 
@@ -265,7 +263,7 @@ export default class Character extends Entity {
      */
 
     public pursue(character: Character): void {
-        if (this.dead) return;
+        if (this.dead || this.isStunned()) return;
 
         this.setTarget(character);
         this.move(character.gridX, character.gridY);

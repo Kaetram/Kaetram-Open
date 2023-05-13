@@ -1032,6 +1032,9 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // Immediately clear the target to prevent combat from sticking to previous target.
+        if (target !== this.target?.instance) this.target = undefined;
+
         // Stop the movement if the player is stunned.
         if (this.isStunned()) return this.stopMovement();
 
@@ -1137,7 +1140,9 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer())) {
+        if (this.map.isDoor(x, y)) {
+            if (entity?.isMob()) return;
+
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
@@ -1282,11 +1287,7 @@ export default class Player extends Character {
                 this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
                     ? Modules.Defaults.MOVEMENT_SPEED
                     : this.overrideMovementSpeed, // Start with default.
-            armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
-
-        // Update the movement speed with that of the armour currently wielded.
-        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
 
         // Check the boots for movement modifiers
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
@@ -2094,8 +2095,7 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key =
-            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
+        data.key = this.equipment.getSkin().key || 'base';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
