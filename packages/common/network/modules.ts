@@ -602,7 +602,7 @@ export const Constants = {
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,
     ATTACKER_TIMEOUT: 20_000, // 20 seconds
-    MAX_GUILD_MEMBERS: 40, // Maximum number of members in a guild
+    MAX_GUILD_MEMBERS: 50, // Maximum number of members in a guild
     EVENTS_CHECK_INTERVAL: 3_600_000 // Every 1 hour
 };
 
@@ -637,7 +637,12 @@ export enum MobDefaults {
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
     ROAM_FREQUENCY = 17_000, // Roam interval every 35 seconds
+    HEALTH_LEVEL = 1,
+    ACCURACY_LEVEL = 1,
+    STRENGTH_LEVEL = 1,
     DEFENSE_LEVEL = 1,
+    MAGIC_LEVEL = 1,
+    ARCHERY_LEVEL = 1,
     ATTACK_LEVEL = 1
 }
 
