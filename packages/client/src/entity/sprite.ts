@@ -92,8 +92,8 @@ export default class Sprite {
             if (this.key.includes('items') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
 
-            // Load the silhouette sprite for the entity.
-            this.silhouetteSprite = Utils.getSilhouetteSprite(this);
+            // Load the silhouette sprite for the entity if it has one.
+            if (this.hasSilhouette()) this.silhouetteSprite = Utils.getSilhouetteSprite(this);
 
             // Loading only done after the hurt sprite.
             this.loading = false;
@@ -140,6 +140,19 @@ export default class Sprite {
         if (!this.key.includes('/')) return 'items';
 
         return this.key.split('/')[0];
+    }
+
+    /**
+     * Checks whether or not to draw a silhouette based on the sprite type.
+     * We do not need to have a silhouette for everything, only for mobs,
+     * players, and npcs.
+     * @returns Whether or not the sprite has a silhouette.
+     */
+
+    private hasSilhouette(): boolean {
+        let type = this.getType();
+
+        return type === 'mobs' || type === 'player' || type === 'npcs';
     }
 
     /**
