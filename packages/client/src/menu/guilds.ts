@@ -28,9 +28,8 @@ export default class Guilds extends Menu {
     private backButton: HTMLElement = document.querySelector('#guild-back')!;
     private createConfirmButton: HTMLButtonElement = document.querySelector('#guild-create')!;
 
+    // The colour buttons for the banner (used when creating a guild).
     private bannerColours: HTMLUListElement = document.querySelector('#banner-colours')!;
-    // private bannerOutlines: HTMLUListElement = document.querySelector('#banner-outline-colours')!;
-    // private bannerCrests: HTMLUListElement = document.querySelector('#banner-crests')!;
 
     private nameInput: HTMLInputElement = document.querySelector('#guild-name-input')!;
 
@@ -176,6 +175,7 @@ export default class Guilds extends Menu {
     private handleBackButton(): void {
         // Reset the banner decorations and update it.
         this.bannerColour = Modules.BannerColour.Grey;
+        this.bannerOutline = Modules.BannerOutline.StyleOne;
         this.bannerOutlineColour = Modules.BannerColour.GoldenYellow;
         this.bannerCrest = Modules.BannerCrests.None;
 
@@ -331,9 +331,6 @@ export default class Guilds extends Menu {
             case 'sidebar-members': {
                 this.memberList.style.display = 'block';
 
-                // Remove the active class from the other sidebar.
-                this.infoContainer.className = '';
-
                 // Hide the chat input.
                 this.chatInput.style.display = 'none';
 
@@ -346,9 +343,6 @@ export default class Guilds extends Menu {
             case 'sidebar-chat': {
                 // Hide the members list.
                 this.memberList.style.display = 'none';
-
-                // Add the chat class to the container.
-                this.infoContainer.className = 'guild-chat';
 
                 // Show the chat input.
                 this.chatInput.style.display = 'block';
@@ -659,8 +653,12 @@ export default class Guilds extends Menu {
 
         if (!element) return;
 
+        let image = element.querySelector('.slot-image');
+
+        if (!image) return;
+
         // Update the class name with the new rank information.
-        element.className = `slot-element slot-${Modules.GuildRank[rank].toLowerCase()} stroke`;
+        image.className = `slot-image slot-image-${Modules.GuildRank[rank].toLowerCase()}`;
     }
 
     /**
@@ -710,18 +708,23 @@ export default class Guilds extends Menu {
     ): void {
         let element = document.createElement('li') as ListElement,
             nameElement = document.createElement('span'),
+            imageElement = document.createElement('div'),
             isGuild = type === 'guild',
             slotType = type === 'guild' ? 'guild' : Modules.GuildRank[type].toLowerCase();
 
         // Assign the name as the identifier for the element
         element.identifier = name;
 
-        // Add the classes to the element and name element.
-        element.className = `slot-element slot-${slotType} stroke`;
+        // Add the classes to the element, name element, and image element.
+        element.className = `slot-element stroke`;
         nameElement.className = `name`;
+        imageElement.className = `slot-image`;
 
         // Set the name of the element, format it if it's a player name.
         nameElement.innerHTML = isGuild ? name : Util.formatName(name, 14);
+
+        // Add the image element first.
+        element.append(imageElement);
 
         // Conditional for dealing with guild element creation.
         if (isGuild) {
@@ -744,8 +747,11 @@ export default class Guilds extends Menu {
             );
         }
 
-        // Append just the name element.
+        // Case for when we are dealing with members within a guild.
         if (!isGuild) {
+            // Handle the image element for when we are in a guild.
+            imageElement.classList.add(`slot-image-${slotType}`);
+
             element.append(nameElement);
 
             let serverElement = document.createElement('span'),
@@ -753,7 +759,7 @@ export default class Guilds extends Menu {
 
             serverElement.className = `server ${isPlayer ? 'green' : 'red'}`;
 
-            serverElement.innerHTML = isPlayer ? 'Online' : 'Offline';
+            serverElement.innerHTML = isPlayer ? `Kaetram ${this.game.player.serverId}` : 'Offline';
 
             element.append(serverElement);
         }
