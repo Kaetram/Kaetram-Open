@@ -29,7 +29,7 @@ export default class Sprite {
     private type = '';
     private path = '';
 
-    public width = Utils.tileSize;
+    public width = Utils.tileSize; // Default tile size of 16 if not specified.
     public height = Utils.tileSize;
 
     public offsetX = 0;
@@ -55,8 +55,8 @@ export default class Sprite {
 
         this.path = `/img/sprites/${data.id}.png`;
 
-        this.width = this.data.width ?? Utils.tileSize;
-        this.height = this.data.height ?? Utils.tileSize;
+        this.width = this.data.width ?? this.width;
+        this.height = this.data.height ?? this.height;
 
         this.offsetX = this.data.offsetX ?? -Utils.tileSize;
         this.offsetY = this.data.offsetY ?? -Utils.tileSize;
@@ -92,8 +92,8 @@ export default class Sprite {
             if (this.key.includes('items') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
 
-            // Load the silhouette sprite for the entity.
-            this.silhouetteSprite = Utils.getSilhouetteSprite(this);
+            // Load the silhouette sprite for the entity if it has one.
+            if (this.hasSilhouette()) this.silhouetteSprite = Utils.getSilhouetteSprite(this);
 
             // Loading only done after the hurt sprite.
             this.loading = false;
@@ -140,6 +140,19 @@ export default class Sprite {
         if (!this.key.includes('/')) return 'items';
 
         return this.key.split('/')[0];
+    }
+
+    /**
+     * Checks whether or not to draw a silhouette based on the sprite type.
+     * We do not need to have a silhouette for everything, only for mobs,
+     * players, and npcs.
+     * @returns Whether or not the sprite has a silhouette.
+     */
+
+    private hasSilhouette(): boolean {
+        let type = this.getType();
+
+        return type === 'mobs' || type === 'player' || type === 'npcs';
     }
 
     /**

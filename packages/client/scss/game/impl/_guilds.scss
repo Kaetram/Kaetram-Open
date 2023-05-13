@@ -37,6 +37,10 @@
     right: 1px;
 }
 
+#guilds-info {
+    color: white;
+}
+
 #create-guild,
 #guild-back,
 #guild-create {
@@ -328,9 +332,9 @@
 
         .slot-element {
             box-sizing: border-box;
-            width: 117px * $i;
+            width: 125px * $i;
             height: 22px * $i;
-            padding-left: 18px * $i;
+            padding-left: 4px * $i;
 
             background: url('/img/interface/guilds/elements.png') -128px * $i -103px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
@@ -342,6 +346,14 @@
             &:active,
             &.active {
                 background-position-y: -80px * $i;
+            }
+
+            span.name {
+                margin-left: 6px * $i;
+            }
+
+            span.server {
+                margin-right: 10px * $i;
             }
         }
 
@@ -469,36 +481,45 @@
             background-position-x: -94px * $i;
         }
 
-        .slot-fledgling {
-            background-position-y: 0;
+        .slot-image {
+            width: 14px * $i;
+            height: 14px * $i;
+            margin-top: 3px * $i;
+
+            background: url('/img/interface/guilds/elements.png') no-repeat;
+            background-size: calc(width('guilds/elements.png') * $i);
         }
 
-        .slot-emergent {
-            background-position-y: -18px * $i;
+        .slot-image-fledgling {
+            background-position: -256px * $i -48px * $i;
         }
 
-        .slot-established {
-            background-position-y: -36px * $i;
+        .slot-image-emergent {
+            background-position: -240px * $i -48px * $i;
         }
 
-        .slot-adept {
-            background-position-y: -54px * $i;
+        .slot-image-established {
+            background-position: -224px * $i -48px * $i;
         }
 
-        .slot-veteran {
-            background-position-y: -72px * $i;
+        .slot-image-adept {
+            background-position: -208px * $i -48px * $i;
         }
 
-        .slot-elite {
-            background-position-y: -90px * $i;
+        .slot-image-veteran {
+            background-position: -192px * $i -48px * $i;
         }
 
-        .slot-master {
-            background-position-y: -108px * $i;
+        .slot-image-elite {
+            background-position: -176px * $i -48px * $i;
         }
 
-        .slot-landlord {
-            background-position-y: -126px * $i;
+        .slot-image-master {
+            background-position: -160px * $i -48px * $i;
+        }
+
+        .slot-image-landlord {
+            background-position: -144px * $i -48px * $i;
         }
 
         .banner,

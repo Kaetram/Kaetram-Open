@@ -5,8 +5,16 @@ export interface MobData {
     drops?: { [itemKey: string]: number };
     dropTables?: string[];
     level?: number;
+    health?: number;
+    accuracy?: number;
+    strength?: number;
+    defense?: number;
+    magic?: number;
+    archery?: number;
     attackLevel?: number;
-    defenseLevel?: number;
+    attackStats?: Stats;
+    defenseStats?: Stats;
+    bonuses?: Bonuses;
     attackRange?: number;
     aggroRange?: number;
     aggressive?: boolean;
