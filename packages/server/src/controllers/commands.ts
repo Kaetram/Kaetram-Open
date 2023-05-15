@@ -1008,6 +1008,14 @@ export default class Commands {
                     p.connection.reject('banned');
             }
 
+            case 'countdown': {
+                let time = parseInt(blocks.shift()!);
+
+                if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
+
+                this.player.countdown(time);
+            }
+
             case 'toggle': {
                 let key = blocks.shift()!,
                     effect: Modules.Effects = Modules.Effects.None;

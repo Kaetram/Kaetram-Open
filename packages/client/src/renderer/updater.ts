@@ -111,7 +111,7 @@ export default class Updater {
                     ? entity.x + (isLeft ? -this.tileSize : this.tileSize)
                     : entity.y + (isUp ? -this.tileSize : this.tileSize),
                 entity.movementSpeed,
-                (value) => {
+                (value: number) => {
                     if (isHorizontal) entity.x = value;
                     if (isVertical) entity.y = value;
 

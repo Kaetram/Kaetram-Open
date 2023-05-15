@@ -25,7 +25,6 @@ type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
     public rank: Modules.Ranks = Modules.Ranks.None;
-    public wanted = false;
 
     public serverId = -1;
 

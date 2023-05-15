@@ -438,7 +438,6 @@ export default class Renderer {
 
         this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
-            this.setCameraView(this.textContext);
             this.textContext.globalAlpha = info.opacity;
             this.drawText(
                 `${info.getText()}`,
@@ -447,7 +446,8 @@ export default class Renderer {
                 true,
                 info.fill,
                 info.stroke,
-                26
+                26,
+                true
             );
             this.textContext.restore();
         });
@@ -865,65 +865,51 @@ export default class Renderer {
     }
 
     /**
-     * Draws an itme name for a player or item entity.
+     * Responsible for drawing text above an entity. This includes the name, level,
+     * and additionally, item amounts and counters.
      * @param entity The entity we're drawing the name for.
      */
 
-    private drawName(entity: Player & Item): void {
-        if (
-            entity.hidden ||
-            entity.healthBarVisible ||
-            !entity.level ||
-            !entity.drawNames() ||
-            (!this.drawNames && !this.drawLevels)
-        )
-            return;
+    private drawName(entity: Character & Item): void {
+        if (entity.isPet()) return;
 
-        let colour = entity.wanted ? 'red' : 'white';
+        let x = entity.x + 8, // Default offsets
+            y = entity.y - 10,
+            colour = 'white',
+            stroke = 'rgba(0, 0, 0, 1)',
+            fontSize = 11;
 
-        // If entity has any rank aside from default then we use their colour.
-        if (entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
+        // Handle the counter if an entity has one.
+        if (entity.hasCounter())
+            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
 
-        // Draw the yellow name above the entity if it's the same entity as our current player.
+        // Handle the item amount if the entity is an item.
+        if (entity.isItem() && entity.count > 1)
+            return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
+
+        if (entity.hidden || entity.healthBarVisible || !(entity instanceof Character)) return;
+
+        let drawNames = this.drawNames && entity.drawNames(),
+            nameY = this.drawLevels ? y - 7 : y - 4,
+            levelY = this.drawLevels ? y : y - 7,
+            levelText = `Level ${entity.level}`;
+
+        // If there's a rank aside from default then we use that rank's colour.
+        if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
+            colour = Modules.RankColours[entity.rank];
+
+        // If the entity is the same as our character, we draw a gold name.1
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
+        // If an entity has a custom name colour we use that.
         if (entity.nameColour) colour = entity.nameColour;
 
-        this.textContext.save();
-        this.setCameraView(this.textContext);
-        this.textContext.font = '11px AdvoCut';
+        // Draw the name if we're drawing names.
+        if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
-        if (entity.hasCounter) {
-            // TODO - Move this countdown elsewhere.
-            if (this.game.time - entity.countdownTime > 1000) {
-                entity.countdownTime = this.game.time;
-                entity.counter--;
-            }
-
-            if (entity.counter <= 0) entity.hasCounter = false;
-
-            this.drawText(entity.counter.toString(), entity.x + 8, entity.y - 10, true, colour);
-        } else {
-            let x = entity.x + 8,
-                y = entity.y - Math.floor(entity.sprite.height / 5);
-
-            if (this.drawNames && entity instanceof Character) {
-                let nameY = this.drawLevels && !entity.isNPC() ? y - 7 : y - 4;
-
-                this.drawText(entity.name, x, nameY, true, colour, 'rbga(0, 0, 0, 1)');
-
-                // Draw the medal if the entity has one.
-                if (entity.hasMedal()) this.drawMedal(entity.getMedalKey(), x, nameY);
-            }
-
-            if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
-                this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
-
-            if (entity.isItem() && entity.count > 1)
-                this.drawText(entity.count.toString(), x, y, true, colour);
-        }
-
-        this.textContext.restore();
+        // Draw the level if we're drawing levels.
+        if (this.drawLevels)
+            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
 
     private drawMinigameGUI(): void {
@@ -1043,26 +1029,27 @@ export default class Renderer {
         centered: boolean,
         colour: string,
         strokeColour?: string,
-        fontSize: number = this.fontSize
+        fontSize: number = this.fontSize,
+        setViews = false
     ): void {
-        let strokeSize = 3,
-            context = this.textContext;
+        let strokeSize = 3;
 
-        context.save();
+        this.textContext.save();
 
-        if (centered) context.textAlign = 'center';
+        if (centered) this.textContext.textAlign = 'center';
+        if (setViews) this.setCameraView(this.textContext);
 
         // Decrease font size relative to zoom out.
         fontSize += this.camera.zoomFactor * 2;
 
-        context.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
-        context.lineWidth = strokeSize;
-        context.font = `${fontSize}px AdvoCut`;
-        context.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
-        context.fillStyle = colour || 'white';
-        context.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
+        this.textContext.lineWidth = strokeSize;
+        this.textContext.font = `${fontSize}px AdvoCut`;
+        this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.fillStyle = colour || 'white';
+        this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
 
-        context.restore();
+        this.textContext.restore();
     }
 
     // -------------- Light Management --------------
