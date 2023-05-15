@@ -12,6 +12,7 @@ import type {
     CombatCallback,
     CommandCallback,
     ContainerCallback,
+    CountdownCallback,
     CraftingCallback,
     DeathCallback,
     DespawnCallback,
@@ -99,6 +100,7 @@ export default class Messages {
     private rankCallback?: RankCallback;
     private craftingCallback?: CraftingCallback;
     private lootBagCallback?: LootBagCallback;
+    private countdownCallback?: CountdownCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -157,6 +159,7 @@ export default class Messages {
         this.messages[Packets.Rank] = () => this.rankCallback;
         this.messages[Packets.Crafting] = () => this.craftingCallback;
         this.messages[Packets.LootBag] = () => this.lootBagCallback;
+        this.messages[Packets.Countdown] = () => this.countdownCallback;
     }
 
     /**
@@ -477,5 +480,9 @@ export default class Messages {
 
     public onLootBag(callback: LootBagCallback): void {
         this.lootBagCallback = callback;
+    }
+
+    public onCountdown(callback: CountdownCallback): void {
+        this.countdownCallback = callback;
     }
 }

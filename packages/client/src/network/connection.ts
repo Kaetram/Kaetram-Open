@@ -1,27 +1,26 @@
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
-import type Character from '../entity/character/character';
-import type Player from '../entity/character/player/player';
 import type App from '../app';
-import type Overlays from '../renderer/overlays';
-import type InfoController from '../controllers/info';
 import type Game from '../game';
 import type Map from '../map/map';
-import type Camera from '../renderer/camera';
-import type Renderer from '../renderer/renderer';
-import type InputController from '../controllers/input';
 import type Socket from './socket';
-import type PointerController from '../controllers/pointer';
-import type AudioController from '../controllers/audio';
-import type EntitiesController from '../controllers/entities';
-import type BubbleController from '../controllers/bubble';
-import type MenuController from '../controllers/menu';
-import type SpritesController from '../controllers/sprites';
 import type Messages from './messages';
-import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
 import type NPC from '../entity/npc/npc';
+import type Camera from '../renderer/camera';
+import type Item from '../entity/objects/item';
+import type Overlays from '../renderer/overlays';
+import type Renderer from '../renderer/renderer';
+import type MenuController from '../controllers/menu';
+import type InfoController from '../controllers/info';
+import type InputController from '../controllers/input';
+import type AudioController from '../controllers/audio';
+import type BubbleController from '../controllers/bubble';
+import type Character from '../entity/character/character';
+import type SpritesController from '../controllers/sprites';
+import type Player from '../entity/character/player/player';
+import type PointerController from '../controllers/pointer';
+import type EntitiesController from '../controllers/entities';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
@@ -61,7 +60,8 @@ import type {
     HandshakePacket,
     GuildPacket,
     CraftingPacket,
-    LootBagPacket
+    LootBagPacket,
+    CountdownPacket
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Connection {
@@ -159,6 +159,7 @@ export default class Connection {
         this.messages.onRank(this.handleRank.bind(this));
         this.messages.onCrafting(this.handleCrafting.bind(this));
         this.messages.onLootBag(this.handleLootBag.bind(this));
+        this.messages.onCountdown(this.handleCountdown.bind(this));
     }
 
     /**
@@ -1408,6 +1409,19 @@ export default class Connection {
 
     private handleLootBag(info: LootBagPacket): void {
         console.log(info);
+    }
+
+    /**
+     * Handles countdown packet. Used to display a countdown above the player.
+     * @param info Contains the instance and the counter information.
+     */
+
+    private handleCountdown(info: CountdownPacket): void {
+        let entity = this.entities.get(info.instance);
+
+        if (!entity) return;
+
+        entity.setCountdown(info.time);
     }
 
     /**

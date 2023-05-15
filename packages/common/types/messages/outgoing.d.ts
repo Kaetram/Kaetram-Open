@@ -270,7 +270,6 @@ export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// TODO
 export interface EnchantPacket {
     index: number;
     isShard?: boolean;
@@ -435,5 +434,14 @@ export interface LootBagPacket {
 }
 
 export type LootBagCallback = (info: LootBagPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface CountdownPacket {
+    instance: string;
+    time: number;
+}
+
+export type CountdownCallback = (info: CountdownPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
