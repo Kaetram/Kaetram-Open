@@ -12,6 +12,7 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Combat as CombatPacket,
+    Countdown,
     Effect,
     Movement,
     Points,
@@ -472,6 +473,20 @@ export default abstract class Character extends Entity {
 
         // Untoggle the teleporting flag after 500ms.
         setTimeout(() => (this.teleporting = false), 500);
+    }
+
+    /**
+     * Creates a countdown packet and sends it to the nearby regions.
+     * @param time The amount of time to countdown.
+     */
+
+    public countdown(time: number): void {
+        this.sendToRegions(
+            new Countdown({
+                instance: this.instance,
+                time
+            })
+        );
     }
 
     /**
