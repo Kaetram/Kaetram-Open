@@ -1,7 +1,7 @@
 name: Kaetram
 on:
     push:
-        branches: [game-content]
+        branches: [game-content, beta]
 
 jobs:
     build:
