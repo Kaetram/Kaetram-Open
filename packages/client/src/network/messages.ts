@@ -287,6 +287,11 @@ export default class Messages {
                 break;
             }
 
+            case 'invalidpassword': {
+                this.app.sendError('The password you have entered is invalid.');
+                break;
+            }
+
             default: {
                 this.app.sendError('An unknown error has occurred, please submit a bug report.');
                 break;

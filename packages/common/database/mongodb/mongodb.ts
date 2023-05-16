@@ -6,12 +6,12 @@ import Loader from './loader';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import Filter from '@kaetram/common/util/filter';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
-import type { Db, ObjectId } from 'mongodb';
-import type { PlayerInfo, ResetToken } from './creator';
-import type { Modules } from '@kaetram/common/network';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type { Db } from 'mongodb';
+import type { Modules } from '@kaetram/common/network';
+import type { PlayerInfo, ResetToken } from './creator';
 import type {
     MobAggregate,
     PvpAggregate,
@@ -267,15 +267,18 @@ export default class MongoDB {
      * generated (unhashed) token which we will use to generate a reset link.
      */
 
-    public createResetToken(email: string, callback: (id: ObjectId, token: string) => void): void {
-        if (!this.hasDatabase()) return;
+    public createResetToken(
+        email: string,
+        callback: (id?: ObjectId, token?: string) => void
+    ): void {
+        if (!this.hasDatabase()) return callback();
 
         let collection = this.database.collection('player_info');
 
         // Attempt to grab the email provided from the database.
         collection.findOne({ email }).then((playerInfo) => {
             // If we don't find any account matching the email, just stop here.
-            if (!playerInfo) return;
+            if (!playerInfo) return callback();
 
             let token = crypto.randomBytes(32).toString('hex');
 
@@ -309,27 +312,37 @@ export default class MongoDB {
      * @param id The id of the account we are resetting.
      * @param password The new password we are setting.
      * @param token The token we are using to validate the reset.
+     * @param callback Contains the result of the reset.
      */
 
-    public resetPassword(id: string, password: string, token: string): void {
-        if (!this.hasDatabase()) return;
+    public resetPassword(
+        id: string,
+        token: string,
+        password: string,
+        callback: (status: boolean) => void
+    ): void {
+        if (!this.hasDatabase()) return callback(false);
 
-        let collection = this.database.collection('player_info');
+        let collection = this.database.collection('player_info'),
+            objectId = new ObjectId(id);
 
         // Attempt to grab the account from the database.
-        collection.findOne({ _id: id }).then((playerInfo) => {
+        collection.findOne({ _id: objectId }).then((playerInfo) => {
             // If we don't find any account matching the ID, just stop here.
-            if (!playerInfo) return;
+            if (!playerInfo) return callback(false);
 
             // If no reset token exists, just stop here.
-            if (!playerInfo.resetToken) return;
+            if (!playerInfo.resetToken) return callback(false);
 
             // If the reset token is expired, just stop here.
-            if (playerInfo.resetToken.expiration < Date.now()) return;
+            if (playerInfo.resetToken.expiration < Date.now()) return callback(false);
 
             // If the reset token doesn't match, just stop here.
             Utils.compare(token, playerInfo.resetToken.token, (result: boolean) => {
-                if (!result) return log.warning(`Invalid reset token for ${playerInfo.username}.`);
+                if (!result) {
+                    log.warning(`Invalid reset token for ${playerInfo.username}.`);
+                    return callback(false);
+                }
 
                 /**
                  * Create a hash of the new password and store it in the database.
@@ -338,7 +351,7 @@ export default class MongoDB {
 
                 Utils.hash(password, (hash) => {
                     collection.updateOne(
-                        { _id: id },
+                        { _id: objectId },
                         {
                             $set: {
                                 password: hash
@@ -350,6 +363,8 @@ export default class MongoDB {
                         { upsert: true }
                     );
                 });
+
+                callback(true);
             });
         });
     }

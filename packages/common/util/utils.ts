@@ -270,6 +270,16 @@ export default {
     },
 
     /**
+     * Verifies that the password is within the proper parameters
+     * of length and characters.
+     * @param text The plaintext password we are trying to validate.
+     */
+
+    isValidPassword(text = ''): boolean {
+        return text.length >= 3 && text.length <= 64;
+    },
+
+    /**
      * We get the data size in bytes of `data`. This will be send to the
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
