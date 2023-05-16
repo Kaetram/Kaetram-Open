@@ -353,6 +353,12 @@ export default class App {
                     this.getPasswordField()
                 );
 
+            if (this.getPassword().length > 64)
+                return this.sendError(
+                    'Password must be less than 64 characters long.',
+                    this.getPasswordField()
+                );
+
             // Check that the password matches the password confirmation.
             if (this.getPassword() !== this.getPasswordConfirmation())
                 return this.sendError('Passwords do not match.', this.passwordConfirmation);

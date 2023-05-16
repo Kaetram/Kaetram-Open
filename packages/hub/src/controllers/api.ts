@@ -257,12 +257,18 @@ export default class API {
         }
 
         // Generate a reset token and send it to the email address.
-        this.cache.database.createResetToken(email, (id: ObjectId, token: string) => {
+        this.cache.database.createResetToken(email, (id?: ObjectId, token?: string) => {
+            // We just return success to prevent brute-force attacks, better for the user to not know if the email exists or not.
+            if (!id || !token) {
+                response.json({ status: 'success' });
+                return;
+            }
+
             // Send the email to the user.
             this.mailer.send(
                 email,
                 'Kaetram Account Password Reset',
-                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset?token=${token}&id=${id}`
+                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset/?token=${token}&id=${id}`
             );
 
             // Send a response back to the client.
@@ -271,13 +277,25 @@ export default class API {
     }
 
     /**
-     *
-     * @param request
-     * @param response
+     * Handles the resetting of password. Verifies that the ID, token, and password
+     * are valid and then updates the password in the database.
+     * @param request Contains the body with the id, token, and password.
+     * @param response Response that we send back to the client.
      */
 
     private handleResetPassword(request: Request, response: Response): void {
-        //
+        let { id, token, password } = request.body;
+
+        // Verify the token, id, and passwords are valid.
+        if (!id || !token || !Utils.isValidPassword(password)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        // Attempt to reset the password.
+        this.cache.database.resetPassword(id, token, password, (status: boolean) => {
+            response.json({ status: status ? 'success' : 'invalid' });
+        });
     }
 
     /**
