@@ -258,15 +258,15 @@
         }
 
         #guild-chat-input {
-            right: 13px * $i;
-            bottom: 6px * $i;
+            right: 18px * $i;
+            bottom: 4px * $i;
         }
 
         #guild-chat-log {
-            top: 10px * $i;
-            left: 16px * $i;
-            width: 108px * $i;
-            height: 120px * $i;
+            top: 6px * $i;
+            left: 6px * $i;
+            width: 128px * $i;
+            height: 52px * $i;
         }
 
         #guild-back {
@@ -290,8 +290,9 @@
         }
 
         #sidebar-list {
-            left: 138px * $i !important;
-            width: 34px * $i;
+            top: 16px * $i !important;
+            left: 139px * $i !important;
+            width: 44px * $i;
             height: 57px * $i;
 
             li {
@@ -376,16 +377,16 @@
         }
 
         .members-icon {
-            width: 15px * $i;
-            height: 11px * $i;
-            background: url('/img/interface/guilds/elements.png') -208px * $i -20px * $i;
+            width: 12px * $i;
+            height: 12px * $i;
+            background: url('/img/interface/guilds/elements.png') -272px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
         .chat-icon {
             width: 15px * $i;
             height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -208px * $i 0;
+            background: url('/img/interface/guilds/elements.png') -256px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
         }
 
@@ -416,49 +417,57 @@
         }
 
         .sidebar-element {
-            width: 34px * $i;
-            height: 19px * $i;
-            background: url('/img/interface/guilds/elements.png') 0 -84px * $i;
+            width: 43px * $i;
+            height: 22px * $i;
+            background: url('/img/interface/guilds/elements.png') 0 -80px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
 
             &:hover {
-                background-position-y: -105px * $i;
+                background-position-y: -103px * $i;
 
                 div.members-icon,
                 div.chat-icon {
-                    left: 7px * $i;
+                    left: 10px * $i;
                 }
             }
 
             &:active,
             &.active {
-                background-position-y: -63px * $i;
+                background-position-y: -57px * $i;
 
                 div.members-icon,
                 div.chat-icon {
-                    left: 5px * $i;
+                    left: 6px * $i;
                 }
             }
 
             div.members-icon,
             div.chat-icon {
-                top: 4px * $i;
-                left: 5px * $i;
+                top: 5px * $i;
+                left: 6px * $i;
             }
         }
 
         .guild-name-input-image {
             width: 76px * $i;
             height: 13px * $i;
-            background: url('/img/interface/guilds/elements.png') -144px * $i -19px * $i;
+            background: url('/img/interface/guilds/elements.png') -176px * $i -208px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
+
+            &:active, &.active, &:focus {
+                background-position-y: -224px * $i;
+            }
         }
 
         .guild-chat-input-image {
-            width: 112px * $i;
-            height: 17px * $i;
-            background: url('/img/interface/guilds/elements.png') -224px * $i 0;
+            width: 96px * $i;
+            height: 19px * $i;
+            background: url('/img/interface/guilds/elements.png') -144px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
+
+            &:active, &.active, &:focus {
+                background-position-y: -20px * $i;
+            }
         }
 
         .guild-banner-decoration {
