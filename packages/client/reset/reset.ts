@@ -80,10 +80,19 @@ export default class Main {
                 'Something went wrong. Please try again later.'
             );
 
+        let json = await response.json();
+
+        // Generic response error.
+        if (json?.status !== 'success')
+            return this.setValidation(
+                'validation-error',
+                'Your password reset link has expired. Please try again.'
+            );
+
         this.setValidation('status', 'Password reset successfully, redirecting in 5 seconds...');
 
         // Redirect to the login page after 5 seconds.
-        setTimeout(() => (window.location.href = '/login'), 5000);
+        setTimeout(() => (window.location.href = '/'), 5000);
     }
 
     /**
