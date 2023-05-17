@@ -36,6 +36,7 @@
     { "id": "cursors/pickaxe", "width": 14, "height": 14 },
     { "id": "cursors/sword", "width": 14, "height": 14 },
     { "id": "cursors/loot", "width": 14, "height": 14 },
+    { "id": "cursors/talk", "width": 14, "height": 14 },
     { "id": "cursors/cooking" },
     { "id": "cursors/smithing" },
     { "id": "cursors/crafting" },
@@ -5682,11 +5683,6 @@
         "height": 24,
         "offsetX": -4,
         "offsetY": -8
-    },
-    {
-        "id": "talk",
-        "width": 14,
-        "height": 14
     },
     {
         "id": "target",
