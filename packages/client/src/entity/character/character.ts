@@ -56,55 +56,55 @@ export default class Character extends Entity {
 
     private effects: { [id: number]: EffectInfo } = {
         [Modules.Effects.Critical]: {
-            key: 'effect-critical',
+            key: 'effects/critical',
             animation: new Animation('effect', 10, 0, 48, 48)
         },
         [Modules.Effects.Terror]: {
-            key: 'effect-terror',
+            key: 'effects/terror',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.TerrorStatus]: {
-            key: 'effect-terror2',
+            key: 'effects/terror2',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 200
         },
         [Modules.Effects.Stun]: {
-            key: 'effect-stun',
+            key: 'effects/stun',
             animation: new Animation('effect', 6, 0, 48, 48),
             perpetual: true
         },
         [Modules.Effects.Healing]: {
-            key: 'effect-heal',
+            key: 'effects/heal',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Fireball]: {
-            key: 'effect-fireball',
+            key: 'effects/fireball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Iceball]: {
-            key: 'effect-iceball',
+            key: 'effects/iceball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Burning]: {
-            key: 'effect-burn',
+            key: 'effects/burn',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 150
         },
         [Modules.Effects.Freezing]: {
-            key: 'effect-freeze',
+            key: 'effects/freeze',
             animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
             speed: 200
         },
         [Modules.Effects.Poisonball]: {
-            key: 'effect-poisonball',
+            key: 'effects/poisonball',
             animation: new Animation('effect', 10, 0, 40, 40),
             speed: 175
         },
         [Modules.Effects.Boulder]: {
-            key: 'effect-boulder',
+            key: 'effects/boulder',
             animation: new Animation('effect', 7, 0, 32, 32)
         }
     };
