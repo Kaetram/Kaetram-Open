@@ -39,6 +39,21 @@ export default {
     },
 
     /**
+     * Calculates the Pythagorean distance between two points. Yes this is one
+     * of the few times that high-school math is useful, so it wasn't all for
+     * nothing.
+     * @param fromX The starting x coordinate.
+     * @param fromY The starting y coordinate.
+     * @param toX The ending x coordinate.
+     * @param toY The ending y coordinate.
+     * @returns The distance between the two points in floating point.
+     */
+
+    distance(fromX: number, fromY: number, toX: number, toY: number): number {
+        return Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
+    },
+
+    /**
      * Creates a new slot element based using the bank-slot class. This creates
      * an empty skeleton that we can then place items in. A callback event listener
      * is also created alongside the slot. Whenever a slot is pressed, its type
