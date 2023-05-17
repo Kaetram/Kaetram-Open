@@ -1367,15 +1367,6 @@
     "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
   },
 
-  "accuracypotion": {
-    "type": "object",
-    "name": "Accuracy Potion",
-    "price": 1000,
-    "description": "If there's one thing I know is that potions in this world are always sketchy and do something else from what their name implies. I hope that's not the case here.",
-    "edible": true,
-    "plugin": "accuracypotion"
-  },
-
   "boostpotion": {
     "type": "object",
     "name": "Boost Potion",
@@ -1384,14 +1375,27 @@
     "edible": true,
     "plugin": "boostpotion"
   },
+
+  "accuracypotion": {
+    "type": "object",
+    "name": "Accuracy Potion",
+    "price": 1000,
+    "description": "If there's one thing I know is that potions in this world are always sketchy and do something else from what their name implies. I hope that's not the case here.",
+    "edible": true,
+    "effect": "accuracy",
+    "duration": 60000,
+    "plugin": "effectpotion"
+  },
   
-  "defencepotion": {
+  "defensepotion": {
     "type": "object",
     "name": "Defence Potion",
     "price": 1000,
     "description": "Drinking this will make give you some serious defense for a short period of time.",
     "edible": true,
-    "plugin": "defencepotion"
+    "effect": "defense",
+    "duration": 60000,
+    "plugin": "effectpotion"
   },
 
   "strengthpotion": {
@@ -1400,7 +1404,9 @@
     "price": 1000,
     "description": "Do you wanna partake in maximum damage contests? This potion is probably your best friend.",
     "edible": true,
-    "plugin": "strengthpotion"
+    "effect": "strength",
+    "duration": 60000,
+    "plugin": "effectpotion"
   },
 
   "beermug": {

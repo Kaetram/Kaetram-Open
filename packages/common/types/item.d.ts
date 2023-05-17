@@ -67,4 +67,6 @@ export interface ItemData {
     smallBowl?: boolean;
     mediumBowl?: boolean;
     pet?: string;
+    effect?: string;
+    duration?: number;
 }

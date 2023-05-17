@@ -6841,7 +6841,7 @@
     { "id": "items/corn", "offsetX": 0, "offsetY": 0 },
     { "id": "items/cure", "offsetX": 0, "offsetY": 0 },
     { "id": "items/dandelion", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/defencepotion", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/defensepotion", "offsetX": 0, "offsetY": 0 },
     { "id": "items/diamondring", "offsetX": 0, "offsetY": 0 },
     { "id": "items/dolring", "offsetX": 0, "offsetY": 0 },
     { "id": "items/egg", "offsetX": 0, "offsetY": 0 },

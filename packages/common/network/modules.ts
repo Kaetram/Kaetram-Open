@@ -245,7 +245,10 @@ export enum Effects {
     FirePotion,
     Burning,
     Freezing,
-    Invincible
+    Invincible,
+    AccuracyPotion,
+    StrengthPotion,
+    DefensePotion
 }
 
 export enum DamageStyle {
