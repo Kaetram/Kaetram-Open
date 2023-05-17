@@ -17,6 +17,9 @@ export default abstract class Entity {
     public nextGridX = -1;
     public nextGridY = -1;
 
+    // Used to calculate distances between entities.
+    public distance = -1;
+
     public movementSpeed = -1;
     public attackRange = -1;
     public frozen = false;
