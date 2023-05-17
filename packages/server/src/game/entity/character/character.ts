@@ -63,7 +63,7 @@ export default abstract class Character extends Entity {
     // Effects applied onto the character.
     public statusEffects: Modules.Effects[] = [];
 
-    public projectileName = 'projectile-arrow';
+    public projectileName = 'arrow';
 
     public lastStep = -1;
     public lastMovement = -1;
