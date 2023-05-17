@@ -81,7 +81,7 @@
             top: 24px * $i;
             left: 30px * $i;
             width: 174px * $i;
-            height: 120px * $i;
+            height: 154px * $i;
         }
 
         #crafting-requirements {
@@ -140,7 +140,7 @@
         .crafting-option {
             width: 42px * $i;
             height: 44px * $i;
-            margin-bottom: 16px * $i;
+            margin-bottom: 8px * $i;
 
             background: url('/img/interface/crafting.png') -96px * $i -256px * $i;
             background-size: calc(width('crafting.png') * $i);
@@ -169,7 +169,7 @@
         }
 
         .crafting-buttons {
-            bottom: 60px * $i;
+            bottom: 28px * $i;
             left: 32px * $i;
             gap: 12px * $i;
         }
