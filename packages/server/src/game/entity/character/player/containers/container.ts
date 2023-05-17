@@ -91,6 +91,9 @@ export default abstract class Container {
             // Update the slot with the new item count
             slot.update(itemCopy, this.stackSize);
 
+            // Slot update failed, we can't add the item
+            if (slot.isEmpty()) return -2;
+
             // Set the total to the new item count
             total += slot.count;
 
