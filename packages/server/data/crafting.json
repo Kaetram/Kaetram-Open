@@ -420,7 +420,7 @@
             "experience": 20,
             "requirements": [
                 {
-                    "key": "ironbar",
+                    "key": "tinbar",
                     "count": 1
                 },
 
@@ -435,12 +435,12 @@
             }
         },
         
-        "sword2": {
+        "coppersword": {
             "level": 1,
             "experience": 20,
             "requirements": [
                 {
-                    "key": "ironbar",
+                    "key": "copperbar",
                     "count": 2
                 },
 
@@ -455,12 +455,92 @@
             }
         },
 
-        "axe": {
-            "level": 3,
-            "experience": 35,
+        "tinsword": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "tinbar",
+                    "count": 2
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bronzesword": {
+            "level": 5,
+            "experience": 45,
+            "requirements": [
+                {
+                    "key": "bronzebar",
+                    "count": 5
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ironsword": {
+            "level": 10,
+            "experience": 80,
             "requirements": [
                 {
                     "key": "ironbar",
+                    "count": 5
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "goldsword": {
+            "level": 15,
+            "experience": 120,
+            "requirements": [
+                {
+                    "key": "goldbar",
+                    "count": 15
+                },
+
+                {
+                    "key": "hilt2",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bronzeaxe": {
+            "level": 1,
+            "experience": 35,
+            "requirements": [
+                {
+                    "key": "bronzebar",
                     "count": 3
                 },
 
@@ -475,18 +555,158 @@
             }
         },
 
-        "pickaxe": {
-            "level": 5,
-            "experience": 50,
+        "ironaxe": {
+            "level": 10,
+            "experience": 80,
             "requirements": [
                 {
                     "key": "ironbar",
-                    "count": 5
+                    "count": 4
                 },
 
                 {
                     "key": "logs",
                     "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "goldaxe": {
+            "level": 20,
+            "experience": 120,
+            "requirements": [
+                {
+                    "key": "goldbar",
+                    "count": 10
+                },
+
+                {
+                    "key": "logs",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "copperhelmet": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "copperbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "tinhelmet": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "tinbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "bronzehelmet": {
+            "level": 5,
+            "experience": 45,
+            "requirements": [
+                {
+                    "key": "bronzebar",
+                    "count": 5
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ironhelmet": {
+            "level": 10,
+            "experience": 80,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 5
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "goldhelmet": {
+            "level": 15,
+            "experience": 120,
+            "requirements": [
+                {
+                    "key": "goldbar",
+                    "count": 15
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "copperlegs": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "copperbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "tinlegs": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "tinbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ironlegs": {
+            "level": 10,
+            "experience": 80,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 5
                 }
             ],
 
@@ -532,26 +752,6 @@
                 {
                     "key": "goldbar",
                     "count": 2
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
-        },
-
-        "goldensword": {
-            "level": 62,
-            "experience": 350,
-            "requirements": [
-                {
-                    "key": "goldbar",
-                    "count": 15
-                },
-
-                {
-                    "key": "hilt2",
-                    "count": 1
                 }
             ],
 
