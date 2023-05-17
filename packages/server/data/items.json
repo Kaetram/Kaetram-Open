@@ -1,7 +1,7 @@
 {
-  "sword": {
+  "coppersword": {
     "type": "weapon",
-    "name": "Sword",
+    "name": "Copper Sword",
     "weaponType": "sword",
     "attackStats": {
       "crush": 1,
@@ -20,6 +20,214 @@
     "bonuses": {
       "accuracy": 1,
       "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "tinsword": {
+    "type": "weapon",
+    "name": "Tin Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 1,
+      "slash": 2,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 3,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "bronzesword": {
+    "type": "weapon",
+    "name": "Bronze Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 3,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ironsword": {
+    "type": "weapon",
+    "name": "Iron Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 4,
+      "slash": 6,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "goldsword": {
+    "type": "weapon",
+    "name": "Gold Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 6,
+      "slash": 10,
+      "stab": 7,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "nisocsword": {
+    "type": "weapon",
+    "name": "Nisoc Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 8,
+      "slash": 8,
+      "stab": 8,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 4,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "cinnabarsword": {
+    "type": "weapon",
+    "name": "Cinnabar Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 10,
+      "slash": 10,
+      "stab": 10,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 5,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "pytharsword": {
+    "type": "weapon",
+    "name": "Pythar Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 12,
+      "slash": 12,
+      "stab": 12,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 4,
+      "slash": 4,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 6,
+      "strength": 5,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "ibosword": {
+    "type": "weapon",
+    "name": "Ibo Sword",
+    "weaponType": "sword",
+    "attackStats": {
+      "crush": 14,
+      "slash": 14,
+      "stab": 14,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 5,
+      "stab": 5,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 7,
+      "strength": 6,
       "archery": 0,
       "magic": 0
     }
@@ -190,6 +398,84 @@
     }
   },
 
+  "copperhelmet": {
+    "type": "helmet",
+    "name": "Copper Helmet",
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "tinhelmet": {
+    "type": "helmet",
+    "name": "Tin Helmet",
+    "price": 100,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "bronzehelmet": {
+    "type": "helmet",
+    "name": "Bronze Helmet",
+    "price": 100,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 5,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "ironhelmet": {
     "type": "helmet",
     "name": "Iron Helmet",
@@ -216,6 +502,32 @@
     }
   },
 
+  "goldhelmet": {
+    "type": "helmet",
+    "name": "Gold Helmet",
+    "price": 100,
+    "attackStats": {
+      "crush": 2,
+      "slash": 4,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 5,
+      "slash": 6,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 3,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "cobalthelmet": {
     "type": "helmet",
     "name": "Cobalt Helmet",
@@ -235,8 +547,60 @@
       "magic": 0
     },
     "bonuses": {
-      "accuracy": 2,
-      "strength": 2,
+      "accuracy": 3,
+      "strength": 4,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "copperlegs": {
+    "type": "legs",
+    "name": "Copper Legs",
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "tinlegs": {
+    "type": "legs",
+    "name": "Tin Legs",
+    "price": 100,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
       "archery": 0,
       "magic": 0
     }
