@@ -2175,7 +2175,7 @@
       "archery": 7,
       "magic": 0
     },
-    "projectileName": "projectile-arrow"
+    "projectileName": "arrow"
   },
 
   "firearrow": {
@@ -2191,7 +2191,7 @@
       "archery": 12,
       "magic": 0
     },
-    "projectileName": "projectile-firearrow"
+    "projectileName": "firearrow"
   },
 
   "poisonarrow": {
@@ -2207,7 +2207,7 @@
       "archery": 18,
       "magic": 0
     },
-    "projectileName": "projectile-poisonarrow"
+    "projectileName": "poisonarrow"
   },
 
   "lightningarrow": {
@@ -2222,7 +2222,7 @@
       "archery": 20,
       "magic": 0
     },
-    "projectileName": "projectile-lightningarrow"
+    "projectileName": "lightningarrow"
   },
 
   "icearrow": {
@@ -2238,7 +2238,7 @@
       "archery": 24,
       "magic": 0
     },
-    "projectileName": "projectile-icearrow"
+    "projectileName": "icearrow"
   },
 
   "nisocarrow": {
@@ -2254,7 +2254,7 @@
       "archery": 24,
       "magic": 3
     },
-    "projectileName": "projectile-nisocarrow"
+    "projectileName": "nisocarrow"
   },
 
   "cinnabararrow": {
@@ -2270,7 +2270,7 @@
       "archery": 28,
       "magic": 2
     },
-    "projectileName": "projectile-cinnabararrow"
+    "projectileName": "cinnabararrow"
   },
 
   "pythararrow": {
@@ -2286,7 +2286,7 @@
       "archery": 28,
       "magic": 4
     },
-    "projectileName": "projectile-pythararrow"
+    "projectileName": "pythararrow"
   },
 
   "iboarrow": {
@@ -2302,6 +2302,6 @@
       "archery": 28,
       "magic": 12
     },
-    "projectileName": "projectile-iboarrow"
+    "projectileName": "iboarrow"
   }
 }
