@@ -7,6 +7,7 @@ import Mob from '../entity/character/mob/mob';
 import Pet from '../entity/character/pet/pet';
 import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
+import Effect from '../entity/objects/effect';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -110,6 +111,13 @@ export default class EntitiesController {
                 entity = this.createPet(info as PetData)!;
 
                 prefix = 'pets';
+                break;
+            }
+
+            case Modules.EntityType.Effect: {
+                entity = this.createEffect(info as EntityData);
+
+                prefix = 'effectentity';
                 break;
             }
         }
@@ -294,6 +302,16 @@ export default class EntitiesController {
         }
 
         return pet;
+    }
+
+    /**
+     * Creates a new effect object based on the info provided.
+     * @param info Contains the key and instance of the effect.
+     * @returns A new effect object.
+     */
+
+    private createEffect(info: EntityData): Effect {
+        return new Effect(info.instance);
     }
 
     /**
