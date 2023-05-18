@@ -37,7 +37,8 @@ export enum EntityType {
     Projectile,
     Object,
     Pet,
-    LootBag
+    LootBag,
+    Effect
 }
 
 export enum AbilityType {
