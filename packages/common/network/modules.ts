@@ -114,6 +114,15 @@ export enum Equipment {
     WeaponSkin
 }
 
+export let EquipmentRenderOrder = [
+    Equipment.Helmet,
+    Equipment.Legs,
+    Equipment.Chestplate,
+    Equipment.Skin,
+    Equipment.Weapon,
+    Equipment.WeaponSkin
+];
+
 export enum AttackStyle {
     None,
 
