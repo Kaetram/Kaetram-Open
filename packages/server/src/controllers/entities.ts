@@ -9,6 +9,7 @@ import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
 import LootBag from '../game/entity/objects/lootbag';
 import Pet from '../game/entity/character/pet/pet';
+import Effect from '../game/entity/objects/effect';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -38,6 +39,7 @@ export default class Entities {
     private npcs: { [instance: string]: NPC } = {};
     private pets: { [instance: string]: Pet } = {};
     private lootBags: { [instance: string]: LootBag } = {};
+    private effects: { [instance: string]: Effect } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -257,6 +259,18 @@ export default class Entities {
     }
 
     /**
+     * Spawns an effect-based entity at a specific location and adds
+     * it to the world.
+     * @param key The key of the effect we are spawning.
+     * @param x The x grid coordinate of the effect spawn.
+     * @param y The y grid coordinate of the effect spawn.
+     */
+
+    public spawnEffect(key: string, x: number, y: number): void {
+        this.addEffect(new Effect(key, x, y));
+    }
+
+    /**
      * Registers an entity within the world. This is used to keep track
      * of all the entities in a single dictionary. This may contain every
      * type of entity, including players, mobs, and items, etc.
@@ -380,6 +394,18 @@ export default class Entities {
     }
 
     /**
+     * Adds an effect entity to the world entity dictionary and
+     * its own dictionary.
+     * @param effect The effect entity we are adding to the world.
+     */
+
+    private addEffect(effect: Effect): void {
+        this.add(effect);
+
+        this.effects[effect.instance] = effect;
+    }
+
+    /**
      * Removes the entity from the entity dictionary and sends a despawn
      * callback to the nearby regions the entity is in.
      */
@@ -476,6 +502,17 @@ export default class Entities {
         this.remove(pet);
 
         delete this.pets[pet.instance];
+    }
+
+    /**
+     * Removes the effect from the world and its dictionary.
+     * @param effect The effect object we are removing.
+     */
+
+    public removeEffect(effect: Effect): void {
+        this.remove(effect);
+
+        delete this.effects[effect.instance];
     }
 
     /**
