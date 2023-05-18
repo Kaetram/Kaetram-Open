@@ -554,6 +554,32 @@
     }
   },
 
+  "ironchestplate": {
+    "type": "chestplate",
+    "name": "Iron Chestplate",
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 5,
+      "stab": 4,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 2,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "copperlegs": {
     "type": "legs",
     "name": "Copper Legs",

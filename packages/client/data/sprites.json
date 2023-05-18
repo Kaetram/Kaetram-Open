@@ -6,6 +6,7 @@
     { "id": "player/helmet/tinhelmet", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
     { "id": "player/helmet/bronzehelmet", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
     { "id": "player/helmet/goldhelmet", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
+    { "id": "player/chestplate/ironchestplate", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
     { "id": "player/legs/cobaltlegs", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
     { "id": "player/legs/copperlegs", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
     { "id": "player/legs/tinlegs", "width": 32, "height": 32, "idleSpeed": 250, "offsetX": -8 },
@@ -7085,5 +7086,12 @@
     { "id": "items/lightningstaff", "offsetX": 0, "offsetY": 0 },
     { "id": "items/naturestaff", "offsetX": 0, "offsetY": 0 },
     { "id": "items/firestaff", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/cursestaff", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/cursestaff", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/copperlegs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/tinlegs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/copperhelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/tinhelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzehelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldhelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironchestplate", "offsetX": 0, "offsetY": 0 }
 ]
