@@ -55,6 +55,8 @@
     "type": "weapon",
     "name": "Bronze Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 5,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -81,6 +83,8 @@
     "type": "weapon",
     "name": "Iron Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 10,
     "attackStats": {
       "crush": 4,
       "slash": 6,
@@ -107,6 +111,8 @@
     "type": "weapon",
     "name": "Gold Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 20,
     "attackStats": {
       "crush": 6,
       "slash": 10,
@@ -133,6 +139,8 @@
     "type": "weapon",
     "name": "Nisoc Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 15,
     "attackStats": {
       "crush": 8,
       "slash": 8,
@@ -159,6 +167,8 @@
     "type": "weapon",
     "name": "Cinnabar Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 20,
     "attackStats": {
       "crush": 10,
       "slash": 10,
@@ -185,6 +195,8 @@
     "type": "weapon",
     "name": "Pythar Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 25,
     "attackStats": {
       "crush": 12,
       "slash": 12,
@@ -211,6 +223,8 @@
     "type": "weapon",
     "name": "Ibo Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 35,
     "attackStats": {
       "crush": 14,
       "slash": 14,
@@ -237,6 +251,8 @@
     "type": "weapon",
     "name": "Ice Sword",
     "weaponType": "sword",
+    "skill": "accuracy",
+    "level": 7,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -293,6 +309,8 @@
     "weaponType": "axe",
     "lumberjacking": 1,
     "price": 100,
+    "skill": "strength",
+    "level": 10,
     "attackStats": {
       "crush": 4,
       "slash": 6,
@@ -319,6 +337,8 @@
     "type": "weapon",
     "name": "Cobalt Axe",
     "weaponType": "axe",
+    "skill": "strength",
+    "level": 15,
     "lumberjacking": 2,
     "price": 200,
     "attackStats": {
@@ -349,6 +369,8 @@
     "weaponType": "axe",
     "lumberjacking": 5,
     "price": 400,
+    "skill": "strength",
+    "level": 20,
     "attackStats": {
       "crush": 6,
       "slash": 8,
@@ -454,6 +476,8 @@
     "type": "helmet",
     "name": "Bronze Helmet",
     "price": 100,
+    "skill": "defense",
+    "level": 5,
     "attackStats": {
       "crush": 2,
       "slash": 3,
@@ -480,6 +504,8 @@
     "type": "helmet",
     "name": "Iron Helmet",
     "price": 100,
+    "skill": "defense",
+    "level": 10,
     "attackStats": {
       "crush": 1,
       "slash": 1,
@@ -506,6 +532,8 @@
     "type": "helmet",
     "name": "Gold Helmet",
     "price": 100,
+    "skill": "defense",
+    "level": 20,
     "attackStats": {
       "crush": 2,
       "slash": 4,
@@ -532,6 +560,8 @@
     "type": "helmet",
     "name": "Cobalt Helmet",
     "price": 200,
+    "skill": "defense",
+    "level": 15,
     "attackStats": {
       "crush": 2,
       "slash": 2,
@@ -558,6 +588,8 @@
     "type": "chestplate",
     "name": "Iron Chestplate",
     "price": 100,
+    "skill": "defense",
+    "level": 10,
     "attackStats": {
       "crush": 1,
       "slash": 1,
@@ -636,6 +668,8 @@
     "type": "legs",
     "name": "Iron Legs",
     "price": 100,
+    "skill": "defense",
+    "level": 10,
     "attackStats": {
       "crush": 1,
       "slash": 1,
@@ -662,6 +696,8 @@
     "type": "legs",
     "name": "Cobalt Legs",
     "price": 200,
+    "skill": "defense",
+    "level": 15,
     "attackStats": {
       "crush": 2,
       "slash": 2,

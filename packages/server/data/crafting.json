@@ -807,7 +807,7 @@
             }
         },
 
-        "staff": {
+        "aquastaff": {
             "level": 1,
             "experience": 20,
             "requirements": [
@@ -887,7 +887,7 @@
             }
         },
 
-        "icestaff": {
+        "cursestaff": {
             "level": 55,
             "experience": 600,
             "requirements": [
