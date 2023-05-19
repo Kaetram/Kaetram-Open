@@ -60,14 +60,14 @@ export default class ChatController {
         element.style.color = colour || 'white';
         if (notify) element.style.fontWeight = 'bold';
 
-        // Scroll to the bottom of the chat log.
-        this.log.append(element);
-        this.log.scrollTop = this.log.scrollHeight;
-
         this.displayChatBox();
 
         // Start the timeout for hiding the chatbox.
         this.hideChatBox();
+
+        // Scroll to the bottom of the chat log.
+        this.log.append(element);
+        this.log.scrollTop = this.log.scrollHeight;
     }
 
     /**

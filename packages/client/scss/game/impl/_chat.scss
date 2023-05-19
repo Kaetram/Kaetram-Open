@@ -1,7 +1,8 @@
 @use '../../abstracts/media';
 
 #chat {
-    pointer-events: none;
+    pointer-events: auto;
+    scroll-behavior: smooth;
 
     position: absolute;
     bottom: 12px;
