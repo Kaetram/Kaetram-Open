@@ -229,12 +229,6 @@ export enum Enchantment {
     DoubleEdged
 }
 
-export enum AoEType {
-    Character,
-    Player,
-    Mob
-}
-
 // Client sided special effects.
 export enum Effects {
     None,
