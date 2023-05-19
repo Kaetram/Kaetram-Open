@@ -341,6 +341,9 @@ export default class Game {
          */
 
         for (let entity of entities) {
+            // Skip pets from the search.
+            if (entity.isPet()) continue;
+
             let entityX = entity.x - entity.sprite.offsetX / 2,
                 entityY = entity.y - entity.sprite.offsetY / 2,
                 distance = Utils.distance(position.x, position.y, entityX, entityY);
