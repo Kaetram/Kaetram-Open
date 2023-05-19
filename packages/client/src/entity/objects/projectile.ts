@@ -68,24 +68,24 @@ export default class Projectile extends Entity {
         }
 
         switch (this.sprite.key) {
-            case 'boulder': {
+            case 'projectiles/boulder': {
                 return Modules.Effects.Boulder;
             }
 
-            case 'poisonball': {
+            case 'projectiles/poisonball': {
                 return Modules.Effects.Poisonball;
             }
 
-            case 'fireball':
-            case 'gift6': {
+            case 'projectiles/fireball':
+            case 'projectiles/gift6': {
                 return Modules.Effects.Fireball;
             }
 
-            case 'iceball': {
+            case 'projectiles/iceball': {
                 return Modules.Effects.Iceball;
             }
 
-            case 'terror': {
+            case 'projectiles/terror': {
                 return Modules.Effects.Terror;
             }
         }
