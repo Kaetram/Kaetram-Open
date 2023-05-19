@@ -40,7 +40,6 @@ export default abstract class Character extends Entity {
     public movementSpeed: number = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public orientation: number = Modules.Orientation.Down;
-    public aoeType: number = Modules.AoEType.Character;
     public damageType: Modules.Hits = Modules.Hits.Normal;
 
     /* States */
@@ -179,9 +178,10 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Handles the damage of an AoE attack. We iterate through all the nearby entities
-     * within the character's AoE type and range, then apply damage proportional
-     * to the distance from the character. The farther away, the lesser the damage.
+     * Handles the damage of an AoE attack. We look through all the nearby characters
+     * and apply the damage to them. The filtering for said characters is handled in
+     * the `forEachNearbyCharacter` function. See that for more information. The damage
+     * is inversely proportional to the distance from the attacker.
      * @param damage The initial damage performed by the attack.
      * @param attacker Who is performing the initial attack.
      * @param range The AoE range of the attack.
@@ -189,12 +189,6 @@ export default abstract class Character extends Entity {
 
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
-            // Ignore mob-on-mob AoE damage.
-            if (character.isMob() && this.isMob()) return;
-
-            // Ignore player-on-player AoE damage unless PvP is enabled.
-            if (character.isPlayer() && this.isPlayer() && !this.pvp && !character.pvp) return;
-
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
                     Modules.Hits.Normal,
@@ -1130,11 +1124,12 @@ export default abstract class Character extends Entity {
     // End of packet sending functions
 
     /**
-     * Iterates through all the entities nearby and returns the ones within range. The condition for
-     * entity filtering is based on the type of AoE damage the character is producing. This varies
-     * depending on the instance. Players will deal damage to all characters if within a PvP area,
-     * otherwise the default is to only deal damage to mobs. But mobs will only deal damage to players.
-     * @param callback A character object.
+     * Iterates through all the nearby entities and looks for the character instances such
+     * as mobs and players. Depending on who is casting the AoE damage, we filter out the
+     * entities. In the case of mobs, we don't want the AoE to affect other mobs. When it
+     * comes to players, we only want that damage to affect other players if they are in
+     * a PvP area.
+     * @param callback Contains the character instance that is nearby.
      * @param range The range of the AoE damage.
      */
 
@@ -1146,14 +1141,16 @@ export default abstract class Character extends Entity {
                 // Ignores the current character.
                 if (entity.instance === this.instance) return;
 
-                if (
-                    this.aoeType === Modules.AoEType.Player
-                        ? entity.isPlayer()
-                        : this.aoeType === Modules.AoEType.Mob
-                        ? entity.isMob()
-                        : entity.isMob() || entity.isPlayer()
-                )
-                    callback(entity as Character);
+                // Ignore non-character entities and pets.
+                if (!(entity instanceof Character) || entity.isPet()) return;
+
+                // Ignore mobs if the character is a mob.
+                if (this.isMob() && entity.isMob()) return;
+
+                // Ignore player-on-player AoE if the players are not in a PvP area.
+                if (this.isPlayer() && entity.isPlayer() && !this.pvp && !entity.pvp) return;
+
+                callback(entity as Character);
             },
             range
         );
