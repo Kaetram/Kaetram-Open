@@ -190,14 +190,16 @@ export default class Character extends Entity {
     }
 
     /**
-     * Override for the superclass function so that the character's `setAnimation` is called.
-     * @param callback Optional parameter for when the animation finishes.
-     * @param speed Optional parameter for the animation speed.
-     * @param count How many times to repeat the animation.
+     * Takes in consideration the death animations that may be playing and
+     * ignores updating the silhouette if so.
+     * @param active Whether or not we should update the silhouette.
      */
 
-    public override animateDeath(callback?: () => void, speed = 120, count = 0): void {
-        this.setAnimation('death', speed, count, callback);
+    public override updateSilhouette(active?: boolean): void {
+        // Default the effect to the normal sprite if the character's death animation is playing.
+        if (this.hasDeathAnimation()) active = false;
+
+        super.updateSilhouette(active);
     }
 
     /**
@@ -384,6 +386,17 @@ export default class Character extends Entity {
 
     public hasFollowers(): boolean {
         return Object.keys(this.followers).length > 0;
+    }
+
+    /**
+     * Used for when an entity is in the dying animation stage. This is used
+     * to prevent the character animation from freaking out when under certain
+     * circumstances.
+     * @returns Whether the character's animation is death or the sprite key is death.
+     */
+
+    private hasDeathAnimation(): boolean {
+        return this.animation?.name === 'death' || this.sprite.key === 'death';
     }
 
     /**
