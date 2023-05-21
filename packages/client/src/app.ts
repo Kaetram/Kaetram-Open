@@ -364,7 +364,7 @@ export default class App {
                 return this.sendError('Passwords do not match.', this.passwordConfirmation);
 
             // Verify email against regex.
-            if (this.getEmail() !== '' && !Util.isEmail(this.getEmail()))
+            if (!Util.isEmail(this.getEmail()))
                 return this.sendError(`The email you've entered is not valid.`, this.emailField);
         }
 
