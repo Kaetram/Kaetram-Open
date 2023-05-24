@@ -11985,12 +11985,12 @@ __metadata:
   linkType: hard
 
 "socket.io-parser@npm:~4.2.1":
-  version: 4.2.2
-  resolution: "socket.io-parser@npm:4.2.2"
+  version: 4.2.3
+  resolution: "socket.io-parser@npm:4.2.3"
   dependencies:
     "@socket.io/component-emitter": "npm:~3.1.0"
     debug: "npm:~4.3.1"
-  checksum: a540232b3652d586dbbef8cb3cbfb002fdad931600293ad3333a055ff267746a06018b192e24bff270c7f6fac3ffb6a237f5a0fb3ba41543981e649a514393e5
+  checksum: ee024d796b7810bf04c23378aea13336deb061afdeeb2eda57731e0430e905fb1e815af920f8a394fcb197c8c30e898cd2751dbb49a84e02331c2c19e5a5aae7
   languageName: node
   linkType: hard
 
