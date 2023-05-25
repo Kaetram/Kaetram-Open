@@ -43,7 +43,7 @@
           "Take this axe and cut down 2 trees for me."
         ],
         "completedText": ["What are you waiting for?", "Go cut me some trees."],
-        "itemKey": "axe",
+        "itemKey": "bronzeaxe",
         "popup": {
           "title": "Item acquired!",
           "text": "You've just received an axe! Equip it using your inventory!",
