@@ -64,6 +64,7 @@
     position: absolute;
     inset: 0;
 
+    box-sizing: border-box;
     margin: auto;
 
     border-image: url('/img/interface/slices/container.png');
@@ -141,7 +142,7 @@
     color: rgb(255 255 255);
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$container-sizes {
     @media ($size) {
         .container {
             width: 344px * $i;
@@ -224,5 +225,6 @@
 
 .new-close-container {
     position: absolute;
-    right: 1px;
+    top: 0;
+    right: 0;
 }
