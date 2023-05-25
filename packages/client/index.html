@@ -235,14 +235,16 @@
                             />
 
                             <label id="remember-me" class="check">
-                                <div id="remember-me-text">Remember Me</div>
                                 <input type="checkbox" aria-labelledby="remember-me-text" />
                                 <span class="checkmark"></span>
+
+                                <span id="remember-me-text">Remember Me</span>
                             </label>
                             <label id="guest" class="check">
-                                <div id="guest-text">Play as a guest</div>
                                 <input type="checkbox" aria-labelledby="guest-text" />
                                 <span class="checkmark"></span>
+
+                                <span id="guest-text">Play as a guest</span>
                             </label>
 
                             <button
@@ -351,7 +353,12 @@
                                 type="button"
                                 id="cancel-forget"
                             ></button>
-                            <button title="Submit" aria-label="Submit" type="submit" id="continue-forget"></button>
+                            <button
+                                title="Submit"
+                                aria-label="Submit"
+                                type="submit"
+                                id="continue-forget"
+                            ></button>
 
                             <div class="validation-summary"></div>
                         </form>
@@ -653,7 +660,6 @@
                         </div>
                         <div id="equipment-button"></div>
 
-                        
                         <div id="guilds-button"></div>
                         <div id="leaderboards-button"></div>
                     </div>
@@ -697,84 +703,122 @@
                     </div>
                 </div>
 
-                <div id="settings-page" class="page">
-                    <div id="sliders">
-                        <input
-                            title="Music Volume"
-                            id="music"
-                            class="input"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="music-volume-text"
-                        />
-                        <input
-                            title="Sound Volume"
-                            id="sound"
-                            class="input"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="sound-volume-text"
-                        />
-                        <input
-                            title="Brightness"
-                            id="brightness"
-                            class="input"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="brightnessText"
-                        />
-                    </div>
+                <div id="settings-page" class="container-frame">
+                    <div id="close-settings" class="new-close-container"></div>
 
-                    <div id="texts">
-                        <p id="music-volume-text">Music Volume</p>
-                        <p id="sound-volume-text">Sound Volume</p>
-                        <p id="brightness-text">Brightness</p>
-                        <p id="audio-enabled-checkbox-text">Audio Enabled</p>
-                        <p id="low-power-checkbox-text">Low Power Mode</p>
-                        <p id="debug-mode-checkbox-text">Debug Mode</p>
-                        <p id="show-names-checkbox-text">Show Names</p>
-                        <p id="show-levels-checkbox-text">Show Levels</p>
-                        <p id="disable-region-caching-text">Disable Caching</p>
-                        <p id="webgl-text">Enable WebGL</p>
-                    </div>
+                    <div id="settings-container">
+                        <div id="input-settings">
+                            <label>
+                                <span id="music-volume-text">Music Volume</span>
 
-                    <div id="info"></div>
+                                <input
+                                    title="Music Volume"
+                                    id="music"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="100"
+                                    aria-labelledby="music-volume-text"
+                                />
+                            </label>
 
-                    <div id="check-marks">
-                        <label id="audio-enabled-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="low-power-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="debug-mode-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="show-names-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="show-levels-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="disable-region-caching-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="disable-region-caching-text" />
-                            <span class="checkmark"></span>
-                        </label>
-                        <label id="webgl-checkbox" class="check">
-                            <input type="checkbox" aria-labelledby="webgl-text" />
-                            <span class="checkmark"></span>
-                        </label>
+                            <label>
+                                <span id="sound-volume-text">Sound Volume</span>
+
+                                <input
+                                    title="Sound Volume"
+                                    id="sound"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="100"
+                                    aria-labelledby="sound-volume-text"
+                                />
+                            </label>
+
+                            <label>
+                                <span id="brightness-text">Brightness</span>
+
+                                <input
+                                    title="Brightness"
+                                    id="brightness"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="100"
+                                    aria-labelledby="brightness-text"
+                                />
+                            </label>
+
+                            <label id="audio-enabled-checkbox" class="check">
+                                <span id="audio-enabled-checkbox-text">Audio Enabled</span>
+
+                                <input
+                                    type="checkbox"
+                                    aria-labelledby="audio-enabled-checkbox-text"
+                                />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="low-power-checkbox" class="check">
+                                <span id="low-power-checkbox-text">Low Power Mode</span>
+
+                                <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="debug-mode-checkbox" class="check">
+                                <span id="debug-mode-checkbox-text">Debug Mode</span>
+
+                                <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="show-names-checkbox" class="check">
+                                <span id="show-names-checkbox-text">Show Names</span>
+
+                                <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="show-levels-checkbox" class="check">
+                                <span id="show-levels-checkbox-text">Show Levels</span>
+
+                                <input
+                                    type="checkbox"
+                                    aria-labelledby="show-levels-checkbox-text"
+                                />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="disable-region-caching-checkbox" class="check">
+                                <span id="disable-region-caching-text">Disable Caching</span>
+
+                                <input
+                                    type="checkbox"
+                                    aria-labelledby="disable-region-caching-text"
+                                />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label id="webgl-checkbox" class="check">
+                                <span id="webgl-text">Enable WebGL</span>
+
+                                <input type="checkbox" aria-labelledby="webgl-text" />
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+
+                        <div id="action-settings">
+                            <div
+                                role="button"
+                                id="logout-button"
+                                class="element-button element-button-red stroke"
+                                onclick="location.reload()"
+                            >
+                                Log Out
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -930,8 +974,8 @@
                         maxlength="32"
                         autocomplete="off"
                         data-lpignore="true"
-                        placeholder="Enter a term to search...">
-                    </input>
+                        placeholder="Enter a term to search..."
+                    />
 
                     <ul id="leaderboards-search"></ul>
                     <ul id="leaderboards-results"></ul>
@@ -1010,7 +1054,7 @@
 
                         <div class="quest-log-h1 stroke">Reward</div>
                         <div id="quest-log-rewards" class="quest-log-p"></div>
-                        
+
                         <div class="quest-log-h1 stroke">Requirements</div>
                         <div id="quest-log-requirements" class="quest-log-p">None C:</div>
                     </div>
@@ -1088,7 +1132,7 @@
 
                     <div id="craft-button" class="stroke">Craft</div>
                 </div>
-                
+
                 <div id="guilds" class="container-frame">
                     <div id="close-guilds" class="new-close-container"></div>
 
@@ -1098,7 +1142,9 @@
                     </div>
 
                     <div id="guilds-list-container" class="container-subframe">
-                        <div id="create-guild" class="element-button element-button stroke">Create</div>
+                        <div id="create-guild" class="element-button element-button stroke">
+                            Create
+                        </div>
 
                         <div class="guilds-decoration">
                             <p class="stroke">Guilds</p>
@@ -1112,15 +1158,23 @@
                     <div id="guilds-create-container" class="container-subframe">
                         <span id="create-error"></span>
 
-                        <div id="banner-colour-button" class="colour-select-button button-banner-colour active"></div>
-                        <div id="banner-outline-button" class="colour-select-button outline-button-1">
+                        <div
+                            id="banner-colour-button"
+                            class="colour-select-button button-banner-colour active"
+                        ></div>
+                        <div
+                            id="banner-outline-button"
+                            class="colour-select-button outline-button-1"
+                        >
                             <div class="colour-button-arrow-left"></div>
                             <div class="colour-button-arrow-right"></div>
                         </div>
 
                         <ul id="banner-colours"></ul>
 
-                        <div id="guild-back" class="element-button element-button-red stroke">Back</div>
+                        <div id="guild-back" class="element-button element-button-red stroke">
+                            Back
+                        </div>
                         <div id="guild-create" class="element-button stroke">Create</div>
 
                         <input
@@ -1130,11 +1184,14 @@
                             autocomplete="off"
                             data-lpignore="true"
                             placeholder="Enter a name..."
-                            class="guild-name-input-image stroke"></input>
+                            class="guild-name-input-image stroke"
+                        />
                     </div>
 
-                    <div id=guilds-info-container class="container-subframe">
-                        <div id="guild-leave" class="element-button element-button-red stroke">Leave</div>
+                    <div id="guilds-info-container" class="container-subframe">
+                        <div id="guild-leave" class="element-button element-button-red stroke">
+                            Leave
+                        </div>
 
                         <div id="guild-name" class="guilds-decoration"></div>
                         <div id="guild-chat-log"></div>
@@ -1145,8 +1202,8 @@
                             autocomplete="off"
                             data-lpignore="true"
                             placeholder="Enter your message here..."
-                            class="guild-chat-input-image stroke">
-                        </input>
+                            class="guild-chat-input-image stroke"
+                        />
 
                         <ul id="member-list"></ul>
                         <ul id="sidebar-list">
