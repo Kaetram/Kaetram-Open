@@ -53,15 +53,15 @@ input[type='range'] {
         linear,
         left top,
         right top,
-        color-stop(1, #4d4d4d),
-        color-stop(1, #c5c5c5)
+        color-stop(1, #c5c5c5),
+        color-stop(1, #4d4d4d)
     );
 
     appearance: none;
 
     &::-webkit-slider-thumb {
-        background-color: #707070;
-        border: 1px solid #000;
+        background-color: #4d4d4d;
+        border: 2px solid #7f7f7f;
 
         appearance: none !important;
 
