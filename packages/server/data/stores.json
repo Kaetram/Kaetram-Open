@@ -1,104 +1,304 @@
 {
-  "startshop": {
-    "items": [
-      {
-        "key": "flask",
-        "count": 20,
-        "price": 75
-      },
-      {
-        "key": "manaflask",
-        "count": 10,
-        "price": 200
-      },
-      {
-        "key": "burger",
-        "count": 5,
-        "price": 1000
-      },
-      {
-        "key": "bigflask",
-        "count": 3,
-        "price": 2000
-      },
-      {
-        "key": "sword2",
-        "count": 10,
-        "price": 100
-      },
-      {
-        "key": "bluesword",
-        "count": 3,
-        "price": 200
-      },
-      {
-        "key": "woodenbow",
-        "count": 10,
-        "price": 100
-      },
-      {
-        "key": "plasticbow",
-        "count": 5,
-        "price": 200
-      },
-      {
-        "key": "leatherarcherarmor",
-        "count": 5,
-        "price": 500
-      },
-      {
-        "key": "mailarcherarmor",
-        "count": 1,
-        "price": 1000
-      },
-      {
-        "key": "pendant1",
-        "count": 1,
-        "price": 10000
-      },
-      {
-        "key": "ring1",
-        "count": 1,
-        "price": 10000
-      }
-    ],
-    "refresh": 60000,
-    "currency": "gold"
-  },
+    "startshop": {
+        "items": [
+            {
+                "key": "arrow",
+                "price": 5,
+                "count": -1
+            },
+            {
+                "key": "knife",
+                "price": 500,
+                "count": -1
+            },
+            {
+                "key": "flask",
+                "count": 500,
+                "price": 100
+            },
+            {
+                "key": "manaflask",
+                "count": 500,
+                "price": 85
+            },
+            {
+                "key": "burger",
+                "count": 100,
+                "price": 450
+            },
+            {
+                "key": "bigflask",
+                "count": 100,
+                "price": 550
+            },
+            {
+                "key": "bigmanaflask",
+                "count": 100,
+                "price": 500
+            },
+            {
+                "key": "axe",
+                "count": 20,
+                "price": 75
+            },
+            {
+                "key": "pickaxe",
+                "count": 5,
+                "price": 2500
+            },
+            {
+                "key": "sword2",
+                "count": 5,
+                "price": 100
+            },
+            {
+                "key": "bluesword",
+                "count": 3,
+                "price": 200
+            },
+            {
+                "key": "woodenbow",
+                "count": 5,
+                "price": 100
+            },
+            {
+                "key": "plasticbow",
+                "count": 3,
+                "price": 200
+            },
+            {
+                "key": "mailarcherarmor",
+                "count": 1,
+                "price": 1000
+            },
+            {
+                "key": "pendant1",
+                "count": 1
+            },
+            {
+                "key": "ring1",
+                "count": 1
+            }
+        ],
+        "refresh": 30000,
+        "currency": "gold"
+    },
+    "forester": {
+        "items": [
+            {
+                "key": "rustedaxe",
+                "count": 15
+            },
+            {
+                "key": "fireaxe",
+                "count": 5
+            },
+            {
+                "key": "poisonaxe",
+                "count": 5
+            },
+            {
+                "key": "cactusaxe",
+                "count": 3
+            },
+            {
+                "key": "goldaxe",
+                "count": 3
+            },
+            {
+                "key": "carnelianaxe",
+                "count": 1
+            }
+        ],
+        "refresh": 120000,
+        "currency": "gold"
+    },
+    "sorcerer": {
+        "items": [
+            {
+                "key": "staff",
+                "count": 5
+            },
+            {
+                "key": "lightningstaff",
+                "count": 3
+            },
+            {
+                "key": "naturestaff",
+                "count": 3
+            },
+            {
+                "key": "firestaff",
+                "count": 3
+            },
+            {
+                "key": "icestaff",
+                "count": 3
+            }
+        ],
+        "refresh": 180000,
+        "currency": "gold"
+    },
+    "miner": {
+        "items": [
+            {
+                "key": "pickaxe",
+                "count": 5
+            },
+            {
+                "key": "nisocore",
+                "count": 1,
+                "price": 220
+            },
+            {
+                "key": "cinnabarore",
+                "count": 0,
+                "price": 460
+            },
+            {
+                "key": "pytharore",
+                "count": 0,
+                "price": 670
+            },
+            {
+                "key": "goldnugget",
+                "count": 0,
+                "price": 1650
+            },
+            {
+                "key": "iboore",
+                "count": 0,
+                "price": 1250
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
+    },
+    "cosmetics": {
+        "items": [
+            {
+                "key": "taekwondo",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "huniarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "damboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "bluedamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "greendamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "reddamboarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "robotarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "dinosaurarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "rainbowapro",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "radisharmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "frankensteinarmor",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "pickle",
+                "count": 5,
+                "price": 30
+            },
+            {
+                "key": "catarmor",
+                "count": 5,
+                "price": 45
+            },
+            {
+                "key": "burgerarmor",
+                "count": 5,
+                "price": 90
+            }
+        ],
+        "refresh": 600000,
+        "restricted": true,
+        "currency": "token"
+    },
 
-  "forester": {
-    "items": [
-      {
-        "key": "axe",
-        "count": 20,
-        "price": 75
-      },
-      {
-        "key": "rustedaxe",
-        "count": 15
-      },
-      {
-        "key": "fireaxe",
-        "count": 5
-      },
-      {
-        "key": "poisonaxe",
-        "count": 5
-      },
-      {
-        "key": "cactusaxe",
-        "count": 3
-      },
-      {
-        "key": "goldaxe",
-        "count": 3
-      },
-      {
-        "key": "carnelianaxe",
-        "count": 1
-      }
-    ],
-    "refresh": 600000,
-    "currency": "gold"
-  }
+    "ingredientsstore": {
+        "items": [
+            {
+                "key": "bluelily",
+                "count": 1000
+            },
+            {
+                "key": "tomato",
+                "count": 100
+            },
+            {
+                "key": "mushroom1",
+                "count": 100
+            },
+            {
+                "key": "mushroom2",
+                "count": 100
+            },
+            {
+                "key": "egg",
+                "count": 10
+            },
+            {
+                "key": "corn",
+                "count": 10
+            },
+            {
+                "key": "rawpork",
+                "count": 100
+            },
+            {
+                "key": "rawchicken",
+                "count": 100
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
+    },
+
+    "fishingstore": {
+        "items": [
+            {
+                "key": "fishingpole",
+                "count": -1
+            }
+        ],
+        "refresh": 600000,
+        "currency": "gold"
+    }
 }

@@ -1,6 +1,3 @@
-import _ from 'lodash-es';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
-
 import Actions from '../menu/actions';
 import Inventory from '../menu/inventory';
 import Bank from '../menu/bank';
@@ -11,17 +8,24 @@ import Enchant from '../menu/enchant';
 import Warp from '../menu/warp';
 import Notification from '../menu/notification';
 import Settings from '../menu/settings';
-import QuickSlots from '../menu/quickslots';
 import Equipments from '../menu/equipments';
 import Achievements from '../menu/achievements';
 import Quests from '../menu/quests';
 import Friends from '../menu/friends';
+import Trade from '../menu/trade';
+import Interact from '../menu/interact';
+import Leaderboards from '../menu/leaderboards';
+import Guilds from '../menu/guilds';
+import Crafting from '../menu/crafting';
 
-import type Menu from '../menu/menu';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+
 import type Game from '../game';
+import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private crafting: Crafting = new Crafting();
 
     private inventory: Inventory;
     private bank: Bank;
@@ -35,6 +39,10 @@ export default class MenuController {
     private achievements: Achievements;
     private quests: Quests;
     private friends: Friends;
+    private trade: Trade;
+    private interact: Interact;
+    private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public header: Header;
 
@@ -45,7 +53,7 @@ export default class MenuController {
         this.bank = new Bank(this.inventory);
         this.store = new Store(this.inventory);
         this.profile = new Profile(game.player);
-        this.enchant = new Enchant();
+        this.enchant = new Enchant(this.inventory);
         this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
@@ -54,6 +62,10 @@ export default class MenuController {
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
         this.friends = new Friends(game.player);
+        this.trade = new Trade(this.inventory);
+        this.interact = new Interact(game.player);
+        this.leaderboards = new Leaderboards(game.app);
+        this.guilds = new Guilds(game);
 
         this.menus = {
             inventory: this.inventory,
@@ -67,18 +79,36 @@ export default class MenuController {
             equipments: this.equipments,
             achievements: this.achievements,
             quests: this.quests,
-            friends: this.friends
+            friends: this.friends,
+            trade: this.trade,
+            interact: this.interact,
+            leaderboards: this.leaderboards,
+            guilds: this.guilds,
+            crafting: this.crafting
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
         this.bank.onSelect(this.handleBankSelect.bind(this));
         this.store.onSelect(this.handleStoreSelect.bind(this));
-        this.equipments.onSelect(this.handleProfileUnequip.bind(this));
+        this.equipments.onUnequip(this.handleProfileUnequip.bind(this));
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
+        this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
         this.profile.onAbility(this.handleAbility.bind(this));
 
+        this.enchant.onSelect(this.handleEnchantSelect.bind(this));
+        this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
+
+        this.warp.onSelect(this.handleWarp.bind(this));
+
         this.friends.onConfirm(this.handleFriendConfirm.bind(this));
+
+        this.trade.onSelect(this.handleTradeSelect.bind(this));
+        this.trade.onAccept(this.handleTradeAccept.bind(this));
+        this.trade.onClose(this.handleTradeClose.bind(this));
+
+        this.crafting.onSelect(this.handleCraftingSelect.bind(this));
+        this.crafting.onCraft(this.handleCraftingConfirm.bind(this));
 
         this.load();
     }
@@ -89,8 +119,6 @@ export default class MenuController {
      */
 
     private load(): void {
-        new QuickSlots(this.game.player);
-
         this.forEachMenu((menu: Menu) => menu.onShow(() => this.hide()));
     }
 
@@ -100,7 +128,10 @@ export default class MenuController {
      */
 
     public hide(): void {
-        this.forEachMenu((menu: Menu) => menu.hide());
+        this.forEachMenu((menu: Menu) => {
+            // Hide only if the menu is visible to prevent unnecessary calls to subclass `hide`.
+            if (menu.isVisible()) menu.hide();
+        });
     }
 
     /**
@@ -122,6 +153,14 @@ export default class MenuController {
         this.header.resize(); // Non Menu UI (for now?)
 
         this.forEachMenu((menu: Menu) => menu.resize());
+    }
+
+    /**
+     * @returns The interact menu object.
+     */
+
+    public getInteract(): Interact {
+        return this.interact;
     }
 
     /**
@@ -165,6 +204,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The enchant menu object.
+     */
+
+    public getEnchant(): Enchant {
+        return this.enchant;
+    }
+
+    /**
      * @returns The warp menu object
      */
 
@@ -197,18 +244,54 @@ export default class MenuController {
     }
 
     /**
-     * Callback handler for when an item in the inventory is selected.
-     * @param index Index of the item selected.
-     * @param opcode Opcode identifying the type of action performed on the item.
-     * @param tIndex Optional parameter passed when we specify a selected slot to swap with.
+     * @returns The trade menu object.
      */
 
-    private handleInventorySelect(index: number, opcode: Opcodes.Container, tIndex?: number): void {
+    public getTrade(): Trade {
+        return this.trade;
+    }
+
+    /**
+     * @returns The leaderboards menu object.
+     */
+
+    public getLeaderboards(): Leaderboards {
+        return this.leaderboards;
+    }
+
+    /**
+     * @returns The guilds menu object.
+     */
+
+    public getGuilds(): Guilds {
+        return this.guilds;
+    }
+
+    /**
+     * @returns The crafting menu object.
+     */
+
+    public getCrafting(): Crafting {
+        return this.crafting;
+    }
+
+    /**
+     * Callback handler for when an item in the inventory is selected.
+     * @param fromIndex Index of the item selected.
+     * @param opcode Opcode identifying the type of action performed on the item.
+     * @param toIndex Optional parameter that is used either for count (drop packet) or index (swap packet).
+     */
+
+    private handleInventorySelect(
+        opcode: Opcodes.Container,
+        fromIndex: number,
+        toIndex?: number
+    ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
-            index,
-            tIndex
+            fromIndex,
+            value: toIndex
         });
     }
 
@@ -218,12 +301,19 @@ export default class MenuController {
      * @param index The index within that container.
      */
 
-    private handleBankSelect(type: Modules.ContainerType, index: number): void {
+    private handleBankSelect(
+        fromContainer: Modules.ContainerType,
+        fromIndex: number,
+        toContainer: Modules.ContainerType,
+        toIndex?: number
+    ): void {
         this.game.socket.send(Packets.Container, {
             opcode: Opcodes.Container.Select,
             type: Modules.ContainerType.Bank,
-            subType: type,
-            index
+            fromContainer,
+            fromIndex,
+            toContainer,
+            value: toIndex
         });
     }
 
@@ -260,6 +350,19 @@ export default class MenuController {
     }
 
     /**
+     * Sends a packet to the server when a player selects a different
+     * attack style.
+     * @param style The new attack style we are selecting.
+     */
+
+    private handleProfileAttackStyle(style: Modules.AttackStyle): void {
+        this.game.socket.send(Packets.Equipment, {
+            opcode: Opcodes.Equipment.Style,
+            style
+        });
+    }
+
+    /**
      * Callback for when an action within the abilities menu occurs.
      * Generally this will consist of activating an ability or dragging it
      * into the quick slot menu.
@@ -273,6 +376,47 @@ export default class MenuController {
             opcode: type,
             key,
             index
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the index of the inventory slot the
+     * player has selected. The server verifies the request and sends back a
+     * packet indicating we want to move the item.
+     * @param index The index of the item the player has selected.
+     */
+
+    private handleEnchantSelect(index: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Select,
+            index
+        });
+    }
+
+    /**
+     * Sends a request to the server that the player wants to enchant an item given
+     * some shards. The server double checks the validity of the request and proceeds
+     * accordingly.
+     * @param index The index of the item we want to enchant.
+     * @param shardIndex The index of the shards we want to use for enchanting.
+     */
+
+    private handleEnchantConfirm(index: number, shardIndex: number): void {
+        this.game.socket.send(Packets.Enchant, {
+            opcode: Opcodes.Enchant.Confirm,
+            index,
+            shardIndex
+        });
+    }
+
+    /**
+     * Sends a packet to the server about the warp that was just selected.
+     * @param id The id of the warp that was selected.
+     */
+
+    private handleWarp(id: number): void {
+        this.game.socket.send(Packets.Warp, {
+            id
         });
     }
 
@@ -291,11 +435,88 @@ export default class MenuController {
     }
 
     /**
+     * Handles the select action for the trade interface. When the player clicks an
+     * item in the inventory we send a packet to the server that we are adding an item
+     * to the trade session. When the player clicks an item in the trade window we send
+     * a packet to the server that we are removing an item from the trade session.
+     * @param type The type of container the action is performed in, determines the add/remove opcode.
+     * @param index The index in the container that the action is performed on.
+     */
+
+    private handleTradeSelect(type: Modules.ContainerType, index: number, count?: number): void {
+        switch (type) {
+            case Modules.ContainerType.Inventory: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Add,
+                    index,
+                    count
+                });
+            }
+
+            case Modules.ContainerType.Trade: {
+                return this.game.socket.send(Packets.Trade, {
+                    opcode: Opcodes.Trade.Remove,
+                    index,
+                    count
+                });
+            }
+        }
+    }
+
+    /**
+     * Handles the clicking of the accept button. Both players must accept to the trade
+     * in order to complete it.
+     */
+
+    private handleTradeAccept(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Accept
+        });
+    }
+
+    /**
+     * Sends a trade packet to the server indicating that the session has been closed.
+     */
+
+    private handleTradeClose(): void {
+        this.game.socket.send(Packets.Trade, {
+            opcode: Opcodes.Trade.Close
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the key of the item that was just selected.
+     * @param key Contains the key of the item that was selected.
+     */
+
+    private handleCraftingSelect(key: string): void {
+        this.game.socket.send(Packets.Crafting, {
+            opcode: Opcodes.Crafting.Select,
+            key
+        });
+    }
+
+    /**
+     * Sends a packet to the server with the craft opcode and information about
+     * what the player wants to try and craft..
+     * @param key The key of the item we are trying to craft.
+     * @param count The amount of items we are trying to craft.
+     */
+
+    private handleCraftingConfirm(key: string, count: number): void {
+        this.game.socket.send(Packets.Crafting, {
+            opcode: Opcodes.Crafting.Craft,
+            key,
+            count
+        });
+    }
+
+    /**
      * Iterates through all the menus and passes a callback.
      * @param callback Current menu being iterated through.
      */
 
     private forEachMenu(callback: (menu: Menu) => void): void {
-        _.each(this.menus, callback);
+        for (let menu of Object.values(this.menus)) callback(menu);
     }
 }

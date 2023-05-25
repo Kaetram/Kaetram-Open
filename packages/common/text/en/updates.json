@@ -69,5 +69,120 @@
             "- Various user interface improvements",
             "- Backend fixes"
         ]
+    },
+    "alpha-2.3.1": {
+        "title": "Kaetram alpha-2.3.1",
+        "content": [
+            "- Added special effects to some projectiles",
+            "- Fixes some user interface quirks",
+            "- Fixes some private messaging issues",
+            "- Minor improvements to ranged combat",
+            "- Fixes a bug with the overlay sizing",
+            "- New caching system for the client map"
+        ]
+    },
+    "alpha-2.3.2": {
+        "title": "Kaetram alpha-2.3.2",
+        "content": [
+            "- New inventory interface",
+            "- Fixes mobs being unattackable after they moved",
+            "- Mob position sync when returning to game tab (browsers)",
+            "- Fix bug with combat continuing after closing the game",
+            "- Backend optimizations",
+            "- Chat UI fixes on mobile"
+        ]
+    },
+    "alpha-2.3.3": {
+        "title": "Kaetram alpha-2.3.3",
+        "content": [
+            "- Mining skill",
+            "- Magic is now publicly available",
+            "- Added support for in-game special ranks",
+            "- Added new quests, bosses, weapons, rings, pendants, and areas",
+            "- Fixes to disconnection issues due to high-latency",
+            "- Fixes and updates to multiple interfaces",
+            "- Improvements to clicking moving mobs and ranged combat",
+            "- Combat formula and defense stats of mobs updated",
+            "- Support for multiple game worlds now completed"
+        ]
+    },
+    "alpha-2.3.4": {
+        "title": "Kaetram alpha-2.3.4",
+        "content": [
+            "- Added arrows to archery",
+            "- Added boots",
+            "- Added following functionality",
+            "- Right-click interaction with mobs and items",
+            "- Zooming now available on mobile",
+            "- Fixes player stuck online bug",
+            "- Fixes bug where items would disappear when unequipping",
+            "- Fixes and improvements to the user interface",
+            "- Fixes WASD interaction with NPCs/mobs"    
+        ]
+    },
+    "alpha-2.3.5": {
+        "title": "Kaetram alpha-2.3.5",
+        "content": [
+            "- Added player trading",
+            "- Added shared exp (based on damage contributions to mob)",
+            "- Added priority drops (whoever does most damage has priority to an item)",
+            "- Polished bank/store containers",
+            "- Tweaked item prices, drop rates, stats, and descriptions",
+            "- Bank is now stackable for all items",
+            "- Graphical rehaul on many sprites",
+            "- Buy/drop/etc X amount",
+            "- Various bug fixes and backend improvements"
+        ]
+    },
+    "alpha-2.4.0": {
+        "title": "Kaetram alpha-2.4.0",
+        "content": [
+            "- Added Defense skill, attack styles, and secret achievements",
+            "- Added freezing effect and snow potion functionality",
+            "- Added PVP areas, new quests, and new areas",
+            "- Experience gain is now on a per-hit basis",
+            "- New interfaces for profile, skills, and friends list",
+            "- Fix bank/inventory/store-related bugs",
+            "- Fix cross-server private messaging",
+            "- Loads of backend improvements and optimizations"
+        ]
+    },
+    "alpha-2.4.1": {
+        "title": "Kaetram alpha-2.4.1",
+        "content": [
+            "- Added guilds",
+            "- Added leaderboards",
+            "- Added special effects to arrows",
+            "- Added weapon enchanting",
+            "- Adjusted stats for mobs and items",
+            "- Enahanced mob attack logic",
+            "- Major improvements to the backend",
+            "- And many more bug fixes and improvements"
+        ]
+    },
+    "alpha-2.5.0": {
+        "title": "Kaetram alpha-2.5.0",
+        "content": [
+            "- Added 8 new skills",
+            "- Added new areas/bosses/achievements/quests",
+            "- Added many new items",
+            "- Increased inventory/bank size",
+            "- Fix status effects not being removed",
+            "- Fix bug with the death animation hanging",
+            "- Fix bug with character animations",
+            "- Many new features and bug fixes"
+        ]
+    },
+    "alpha-2.5.1": {
+        "title": "Kaetram alpha-2.5.1",
+        "content": [
+            "- Adds missing items to the game",
+            "- Fixed collisions around the map",
+            "- Fixed freezing bug with fishing spots",
+            "- Fixes to the death animation",
+            "- Fixes fishing bug when inventory full",
+            "- Fixed pirate captain teleport bug",
+            "- Update user interface icons"
+        ]
     }
 }

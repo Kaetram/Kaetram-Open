@@ -27,15 +27,14 @@
 }
 
 #remember-me {
-    left: 20%;
+    left: 18%;
 }
 
 #guest {
-    left: 64%;
+    left: 61%;
 }
 
 #guest-text {
-    top: 5%;
     left: 110%;
 }
 
@@ -72,7 +71,7 @@ input[type='range'] {
         #guest-text {
             height: 8px * $i;
             padding-left: 5px * $i;
-            font-size: 8px * $i;
+            font-size: 10px * $i;
         }
 
         #login {
@@ -106,7 +105,8 @@ input[type='range'] {
             height: $button-height;
 
             background-color: transparent;
-            background-image: url('/img/#{$i}/buttons.png');
+            background-image: url('/img/interface/buttons.png');
+            background-size: calc(width('buttons.png') * $i);
             border: none;
 
             &:hover,
@@ -125,6 +125,7 @@ input[type='range'] {
         }
 
         .validation-error,
+        .validation-warning,
         .status {
             font-size: 8px * $i;
         }
@@ -145,18 +146,12 @@ input[type='range'] {
                 border-radius: 2px * $i;
             }
         }
-
-        .stroke {
-            text-shadow: 1px * $i 1px * $i 0 #373737, 1px * $i -1px * $i 0 #373737,
-                0 1px * $i 0 #373737, 1px * $i 0 0 #373737, -1px * $i 1px * $i 0 #373737,
-                -1px * $i -1px * $i 0 #373737, 0 -1px * $i 0 #373737, 0 1px * $i 0 #373737,
-                -1px * $i 0 0 #373737;
-        }
     }
 }
 
 @media (--lg) {
     .validation-error,
+    .validation-warning,
     .status {
         font-size: 24px;
     }
@@ -169,7 +164,7 @@ input[type='range'] {
 
     #remember-me-text,
     #guest-text {
-        width: 168px;
+        width: 225px;
     }
 
     .validation-summary {
@@ -180,18 +175,24 @@ input[type='range'] {
 @media (--md) {
     #remember-me-text,
     #guest-text {
-        width: 112px;
+        width: 150px;
     }
 
     input[type='range']::-webkit-slider-thumb {
         height: 15px;
+    }
+
+    .stroke {
+        text-shadow: 1px 1px 0 #373737, 1px -1px 0 #373737, 0 1px 0 #373737, 1px 0 0 #373737,
+            -1px 1px 0 #373737, -1px -1px 0 #373737, 0 -1px 0 #373737, 0 1px 0 #373737,
+            -1px 0 0 #373737;
     }
 }
 
 @media (--sm) {
     #remember-me-text,
     #guest-text {
-        width: 70px;
+        width: 100px;
     }
 
     #yes {

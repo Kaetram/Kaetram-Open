@@ -1,30 +1,25 @@
-import config from '@kaetram/common/config';
-import _ from 'lodash-es';
-
 import Player from '../game/entity/character/player/player';
 
-import { Handshake } from './packets';
+import config from '@kaetram/common/config';
+import { Handshake } from '@kaetram/common/network/impl';
 
-import type Entities from '../controllers/entities';
-import type MongoDB from '../database/mongodb/mongodb';
-import type Regions from '../game/map/regions';
 import type World from '../game/world';
 import type Connection from './connection';
-import type Packet from './packet';
+import type Regions from '../game/map/regions';
 import type SocketHandler from './sockethandler';
+import type Packet from '@kaetram/common/network/packet';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export default class Network {
-    private entities: Entities;
     private database: MongoDB;
     private socketHandler: SocketHandler;
 
     private regions: Regions;
 
-    private timeoutThreshold = 4000;
-    private packets: { [id: string]: unknown[] } = {};
+    private timeoutThreshold = 5000;
+    private packets: { [instance: string]: unknown[] } = {};
 
     public constructor(private world: World) {
-        this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
 
@@ -39,15 +34,15 @@ export default class Network {
      */
 
     public parse(): void {
-        for (let id in this.packets)
-            if (this.packets[id].length > 0) {
-                let connection = this.socketHandler.get(id);
+        for (let instance in this.packets)
+            if (this.packets[instance].length > 0) {
+                let connection = this.socketHandler.get(instance);
 
                 if (connection) {
-                    connection.send(this.packets[id]);
+                    connection.send(this.packets[instance]);
 
-                    this.packets[id] = [];
-                } else this.socketHandler.remove(id);
+                    this.packets[instance] = [];
+                } else this.socketHandler.remove(instance);
             }
     }
 
@@ -62,12 +57,26 @@ export default class Network {
         let player = new Player(this.world, this.database, connection),
             timeDifference = Date.now() - this.getLastConnection(connection);
 
-        if (!config.debugging && timeDifference < this.timeoutThreshold)
-            return connection.reject('toofast');
+        if (!config.debugging) {
+            // Check that the connections aren't coming too fast.
+            if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
+
+            // Ensure that we don't have too many connections from the same IP address.
+            if (this.socketHandler.isMaxConnections(connection.address))
+                return connection.reject('toomany');
+        }
+
+        this.socketHandler.updateLastTime(connection.address);
 
         this.createPacketQueue(player);
 
-        this.send(player, new Handshake());
+        this.send(
+            player,
+            new Handshake({
+                instance: player.instance,
+                serverId: config.serverId
+            })
+        );
     }
 
     /**
@@ -100,9 +109,9 @@ export default class Network {
      */
 
     public broadcast(packet: Packet): void {
-        _.each(this.packets, (queue: unknown[]) => {
-            queue.push(packet.serialize());
-        });
+        let serializedPacket = packet.serialize();
+
+        for (let queue of Object.values(this.packets)) queue.push(serializedPacket);
     }
 
     /**
@@ -124,7 +133,7 @@ export default class Network {
      */
 
     public sendToPlayers(players: Player[], packet: Packet): void {
-        _.each(players, (player: Player) => this.send(player, packet));
+        for (let player of players) this.send(player, packet);
     }
 
     /**
@@ -169,9 +178,7 @@ export default class Network {
      */
 
     public sendToRegionList(list: number[], packet: Packet, ignore?: string): void {
-        _.each(list, (region: number) => {
-            this.sendToRegion(region, packet, ignore);
-        });
+        for (let region of list) this.sendToRegion(region, packet, ignore);
     }
 
     /**
@@ -180,6 +187,6 @@ export default class Network {
      */
 
     private getLastConnection(connection: Connection): number {
-        return this.socketHandler.addressTimes[connection.address];
+        return this.socketHandler.addresses[connection.address].lastTime;
     }
 }

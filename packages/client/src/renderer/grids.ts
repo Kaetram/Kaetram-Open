@@ -47,4 +47,22 @@ export default class Grids {
     public removeFromRenderingGrid({ instance, gridX, gridY }: Entity): void {
         delete this.renderingGrid[gridY][gridX][instance];
     }
+
+    /**
+     * Looks about a grid coordinate for entities and returns them.
+     * @param gridX The x grid coordinate we are looking around.
+     * @param gridY The y grid coordinate we are looking around.
+     * @param radius How many tiles we are looking around.
+     */
+
+    public getEntitiesAround(gridX: number, gridY: number, radius = 2): Entity[] {
+        let entities: Entity[] = [];
+
+        for (let i = gridY - radius; i < gridY + radius; i++)
+            for (let j = gridX - radius; j < gridX + radius; j++)
+                if (this.map.isOutOfBounds(j, i)) continue;
+                else entities = [...entities, ...Object.values(this.renderingGrid[i][j])];
+
+        return entities;
+    }
 }

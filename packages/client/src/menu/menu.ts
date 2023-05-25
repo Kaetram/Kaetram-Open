@@ -3,6 +3,8 @@ import log from '../lib/log';
 import Util from '../utils/util';
 
 export default abstract class Menu {
+    public hideOnShow = true;
+
     protected container: HTMLElement;
     protected close: HTMLElement;
     protected button: HTMLElement;
@@ -61,7 +63,7 @@ export default abstract class Menu {
      * @param _data Unknown data that may contain information about an item.
      */
 
-    public add(_data: unknown): void {
+    public add(_data: unknown, _data1: unknown, _data2: unknown, data3: unknown): void {
         log.debug(`Unimplemented menu add() function.`);
     }
 
@@ -70,18 +72,23 @@ export default abstract class Menu {
      * @param _data Unknown data that may contain information to remove an item.
      */
 
-    public remove(_data: unknown): void {
+    public remove(_data: unknown, _data1?: unknown): void {
         log.debug(`Unimplemented menu remove() function.`);
     }
 
     /**
      * Called by subclasses when we want to display the interface.
-     * @param _var1 Unknown data that may be passed when opening the menu subclass.
-     * @param _var2 Unknown data that may be passed when opening the menu subclass.
-     * @param _var3 Unknown data that may be passed when opening the menu subclass.
+     * @param _var* Unknown data that may be passed when opening the menu subclass.
      */
 
-    public show(_var1?: unknown, _var2?: unknown, _var3?: unknown): void {
+    public show(
+        _var1?: unknown,
+        _var2?: unknown,
+        _var3?: unknown,
+        _var4?: unknown,
+        _var5?: unknown,
+        _var6?: unknown
+    ): void {
         this.showCallback?.();
 
         this.button?.classList.add('active');
@@ -94,8 +101,6 @@ export default abstract class Menu {
      */
 
     public hide(): void {
-        if (!this.isVisible()) return;
-
         this.button?.classList.remove('active');
 
         Util.fadeOut(this.container);

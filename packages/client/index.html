@@ -181,6 +181,16 @@
         <title>Kaetram</title>
 
         <script type="module" src="./src/main.ts"></script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SLX5NNTBX4"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'G-SLX5NNTBX4');
+        </script>
     </head>
     <body class="intro">
         <noscript>
@@ -210,7 +220,7 @@
                                 placeholder="Username"
                                 aria-label="Username"
                                 maxlength="32"
-                                autocomplete="username"
+                                autocomplete="off"
                                 autofocus
                             />
                             <input
@@ -221,7 +231,7 @@
                                 placeholder="Password"
                                 aria-label="Password"
                                 maxlength="64"
-                                autocomplete="current-password"
+                                autocomplete="off"
                             />
 
                             <label id="remember-me" class="check">
@@ -269,7 +279,7 @@
                                 placeholder="Username"
                                 aria-label="Username"
                                 maxlength="32"
-                                autocomplete="username"
+                                autocomplete="off"
                             />
                             <input
                                 type="password"
@@ -279,7 +289,7 @@
                                 placeholder="Password"
                                 aria-label="Password"
                                 maxlength="64"
-                                autocomplete="new-password"
+                                autocomplete="off"
                             />
                             <input
                                 type="password"
@@ -289,7 +299,7 @@
                                 placeholder="Confirm Password"
                                 aria-label="Confirm Password"
                                 maxlength="64"
-                                autocomplete="new-password"
+                                autocomplete="off"
                             />
                             <input
                                 type="email"
@@ -299,7 +309,7 @@
                                 placeholder="Email Address (optional)"
                                 aria-label="Email Address"
                                 maxlength="64"
-                                autocomplete="email"
+                                autocomplete="off"
                             />
 
                             <!-- <p></p> -->
@@ -387,15 +397,14 @@
                                 target="_blank"
                                 href="https://opengameart.org/content/kyrises-free-16x16-rpg-icon-pack"
                                 >Kyrise</a
-                            >
-                            &amp;
+                            >,
                             <a
                                 rel="noopener noreferrer"
                                 class="clickable"
                                 target="_blank"
                                 href="https://game-icons.net"
                                 >Game-Icons.net</a
-                            >
+                            >, &amp; Boo
                             <br />
                             <br />
                             Music by
@@ -567,6 +576,11 @@
                     </ul>
                 </div>
 
+                <div id="zoom-buttons">
+                    <button id="zoom-in"></button>
+                    <button id="zoom-out"></button>
+                </div>
+
                 <div id="ability-shortcut" hidden>
                     <div id="ability-quickslot1" class="ability-quickslot"></div>
                     <div id="ability-quickslot2" class="ability-quickslot"></div>
@@ -574,35 +588,47 @@
                     <div id="ability-quickslot4" class="ability-quickslot"></div>
                 </div>
 
-                <div id="drop-dialog">
-                    <div id="drop-title">Input drop count.</div>
-                    <div align="center">
-                        <input
-                            title="drop-count"
-                            type="text"
-                            id="drop-count"
-                            size="6"
-                            maxlength="11"
-                        />
-                        <span id="drop-accept">&nbsp;Accept&nbsp;</span>
-                        <span id="drop-cancel">&nbsp;Cancel&nbsp;</span>
-                    </div>
-                </div>
-
                 <div id="profile-dialog">
                     <div id="state-page" class="page">
-                        <div id="profile-name" class="profile-info"></div>
                         <div id="profile-level" class="profile-info"></div>
                         <div id="profile-experience" class="profile-info"></div>
+                        <ul id="attack-style-list">
+                            <li class="attack-style-box">
+                                <div class="attack-style attack-style-stab"></div>
+                            </li>
+                            <li class="attack-style-box">
+                                <div class="attack-style attack-style-slash"></div>
+                            </li>
+                            <li class="attack-style-box">
+                                <div class="attack-style attack-style-defensive"></div>
+                            </li>
+                            <li class="attack-style-box">
+                                <div class="attack-style attack-style-chop"></div>
+                            </li>
+                        </ul>
                         <div class="profile-slot weapon-slot"></div>
+                        <div class="profile-slot weapon-skin-slot"></div>
                         <div class="profile-slot armour-slot"></div>
+                        <div class="profile-slot armour-skin-slot"></div>
                         <div class="profile-slot pendant-slot"></div>
-                        <div class="ring-slot profile-slot"></div>
+                        <div class="profile-slot ring-slot"></div>
                         <div class="profile-slot boots-slot"></div>
+                        <div class="profile-slot arrows-slot">
+                            <div id="arrows-count" class="stroke"></div>
+                        </div>
                         <div id="equipment-button"></div>
+
+                        
+                        <div id="guilds-button"></div>
+                        <div id="leaderboards-button"></div>
                     </div>
 
                     <div id="skills-page" class="page">
+                        <div id="profile-info">
+                            <div class="profile-info-skill-image"></div>
+                            <div class="profile-info-title stroke"></div>
+                            <div class="profile-info-details stroke"></div>
+                        </div>
                         <div id="skills-list"><ul></ul></div>
                     </div>
 
@@ -629,8 +655,6 @@
                             <div id="passiveability8" class="ability"></div>
                         </ul>
                     </div>
-
-                    <div id="guild-page" class="page"></div>
 
                     <div id="profile-navigator" class="navigator">
                         <div class="previous"></div>
@@ -714,8 +738,8 @@
                     </div>
                 </div>
 
-                <div id="friends-page" class="page">
-                    <div id="friends-container">
+                <div id="friends-container" class="page">
+                    <div id="friends-page">
                         <ul id="friends-list"></ul>
 
                         <div id="add-friend" class="add"></div>
@@ -750,12 +774,17 @@
                     <div id="warp0" class="map-button"></div>
                     <div id="warp1" class="map-button"></div>
                     <div id="warp2" class="map-button"></div>
-                    <!-- <div id="warp3" class="map-button"></div>
-                    <div id="warp4" class="map-button"></div> -->
+                    <div id="warp3" class="map-button"></div>
+                    <div id="warp4" class="map-button"></div>
+                    <div id="warp5" class="map-button"></div>
                     <div id="close-map-frame" class="close"></div>
                 </div>
 
-                <div id="inventory"><ul></ul></div>
+                <div id="inventory">
+                    <div id="inventory-container">
+                        <ul></ul>
+                    </div>
+                </div>
 
                 <div id="bank">
                     <div id="close-bank" class="close"></div>
@@ -763,25 +792,49 @@
                         <div id="bank-slot"><ul></ul></div>
                     </div>
                     <div id="bank-inventory-container">
-                        <div id="bank-inventory-slots" class="inventory-slots">
+                        <div id="bank-inventory-slots">
                             <ul></ul>
                         </div>
                     </div>
                 </div>
 
-                <div id="trade">
+                <div id="trade-container">
                     <div id="close-trade" class="close"></div>
-                    <div id="trade-player-container"></div>
-                    <div id="trade-o-player-container"></div>
+                    <div id="trade-player-name" class="stroke"></div>
+                    <div id="trade-oplayer-name" class="stroke"></div>
+                    <div id="trade-status"></div>
+
+                    <div id="trade-inventory-slots">
+                        <ul></ul>
+
+                        <dialog id="trade-count">
+                            <div class="dialog-title">Input Amount</div>
+
+                            <input
+                                title="Count"
+                                type="number"
+                                class="dialog-count"
+                                size="6"
+                                maxlength="11"
+                            />
+
+                            <div class="dialog-buttons">
+                                <div class="confirm dialog-accept"></div>
+                                <div class="cancel dialog-cancel"></div>
+                            </div>
+                        </dialog>
+                    </div>
+                    <div id="trade-player-slots"><ul></ul></div>
+                    <div id="trade-oplayer-slots"><ul></ul></div>
+
+                    <div id="trade-accept" class="accept-button"></div>
                 </div>
 
                 <div id="enchant">
                     <div id="close-enchant" class="close"></div>
-                    <div id="confirm-enchant" class="ok"></div>
-                    <div id="enchant-container">
-                        <div id="enchant-inventory-slots" class="inventory-slots">
-                            <ul></ul>
-                        </div>
+                    <div id="confirm-enchant" class="ok-check"></div>
+                    <div id="enchant-inventory-container">
+                        <ul id="enchant-inventory-slots"></ul>
                     </div>
                     <div id="enchant-selected-item"></div>
                     <div id="enchant-shards">
@@ -791,11 +844,12 @@
 
                 <div id="store">
                     <div id="close-store" class="close"></div>
-                    <div id="store-container"><ul></ul></div>
+                    <ul id="store-container"></ul>
+
+                    <div id="store-help"></div>
+
                     <div id="store-inventory-container">
-                        <div id="store-inventory-slots" class="inventory-slots">
-                            <ul></ul>
-                        </div>
+                        <ul id="store-inventory-slots"></ul>
 
                         <div id="store-sell-slot">
                             <div id="store-sell-slot-text" class="item-count"></div>
@@ -804,8 +858,43 @@
                             <div id="store-sell-slot-return-text" class="item-count"></div>
                         </div>
 
-                        <div id="confirm-sell" class="ok"></div>
+                        <div id="confirm-sell" class="ok-check"></div>
                     </div>
+
+                    <dialog id="store-buy">
+                        <div class="dialog-title">Input Buy Amount</div>
+
+                        <input
+                            title="Count"
+                            type="number"
+                            class="dialog-count"
+                            size="6"
+                            maxlength="11"
+                        />
+
+                        <div class="dialog-buttons">
+                            <div class="confirm dialog-accept"></div>
+                            <div class="cancel dialog-cancel"></div>
+                        </div>
+                    </dialog>
+                </div>
+
+                <div id="leaderboards" class="container">
+                    <div id="close-leaderboards" class="close close-container"></div>
+
+                    <input
+                        title="Enter a search term..."
+                        id="leaderboards-search-input"
+                        class="stroke"
+                        type="text"
+                        maxlength="32"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter a term to search...">
+                    </input>
+
+                    <ul id="leaderboards-search"></ul>
+                    <ul id="leaderboards-results"></ul>
                 </div>
 
                 <div id="equipments" class="container">
@@ -813,15 +902,20 @@
                     <div id="equipment-stats"></div>
                     <div id="equipment-slots" class="page state-page">
                         <div id="equipment-container">
-                            <div class="profile-slot weapon-slot"></div>
-                            <div class="profile-slot armour-slot"></div>
-                            <div class="profile-slot pendant-slot"></div>
-                            <div class="ring-slot profile-slot"></div>
-                            <div class="profile-slot boots-slot"></div>
+                            <div class="profile-slot equip-weapon-slot"></div>
+                            <div class="profile-slot equip-weapon-skin-slot"></div>
+                            <div class="profile-slot equip-armour-slot"></div>
+                            <div class="profile-slot equip-armour-skin-slot"></div>
+                            <div class="profile-slot equip-pendant-slot"></div>
+                            <div class="profile-slot equip-ring-slot"></div>
+                            <div class="profile-slot equip-boots-slot"></div>
+                            <div class="profile-slot equip-arrows-slot"></div>
                         </div>
                     </div>
+
                     <div id="player-image-armour" class="player-image"></div>
                     <div id="player-image-weapon" class="player-image"></div>
+
                     <div id="player-image-navigator">
                         <div class="previous"></div>
                         <div class="next"></div>
@@ -833,6 +927,7 @@
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
+                        <p class="archery">Archery:</p>
                         <p class="magic">Magic:</p>
                     </div>
                     <div id="defense-stats">
@@ -841,6 +936,7 @@
                         <p class="crush">Crush:</p>
                         <p class="slash">Slash:</p>
                         <p class="stab">Stab:</p>
+                        <p class="archery">Archery:</p>
                         <p class="magic">Magic:</p>
                     </div>
                     <div id="bonuses">
@@ -849,6 +945,7 @@
                         <p class="accuracy">Accuracy:</p>
                         <p class="strength">Strength:</p>
                         <p class="archery">Archery:</p>
+                        <p class="magic">Magic:</p>
                     </div>
                 </div>
 
@@ -896,6 +993,128 @@
                 </div>
 
                 <div id="action-container">
+                    <div id="action-page">
+                        <div class="action-item-name stroke"></div>
+                        <div class="action-item-description"></div>
+                        <ul></ul>
+                    </div>
+
+                    <dialog id="action-drop">
+                        <div class="dialog-title">Input Drop Amount</div>
+
+                        <input
+                            title="Count"
+                            type="number"
+                            class="dialog-count"
+                            size="6"
+                            maxlength="11"
+                        />
+
+                        <div class="dialog-buttons">
+                            <div class="confirm dialog-accept"></div>
+                            <div class="cancel dialog-cancel"></div>
+                        </div>
+                    </dialog>
+                </div>
+
+                <div id="crafting">
+                    <div id="close-crafting" class="new-close-container"></div>
+
+                    <ul id="crafting-options"></ul>
+                    <ul id="crafting-requirements"></ul>
+
+                    <div id="crafting-result" class="crafting-option disabled">
+                        <div class="crafting-option-icon"></div>
+                        <div class="crafting-option-count stroke"></div>
+                    </div>
+
+                    <div id="crafting-level" class="crafting-option disabled">
+                        <div class="crafting-option-icon"></div>
+                        <div class="crafting-option-count stroke"></div>
+                    </div>
+
+                    <div id="crafting-result-name" class="stroke"></div>
+
+                    <ul class="crafting-buttons">
+                        <li id="craft-one" class="amount-button amount-one active"></li>
+                        <li id="craft-five" class="amount-button amount-five"></li>
+                        <li id="craft-ten" class="amount-button amount-ten"></li>
+                    </ul>
+
+                    <div id="craft-button" class="stroke">Craft</div>
+                </div>
+
+                <div id="guilds">
+                    <div id="close-guilds" class="new-close-container"></div>
+
+                    <div class="banner banner-grey">
+                        <div class="banner-outline"></div>
+                        <div class="banner-crest"></div>
+                    </div>
+
+                    <div id="guilds-list-container">
+                        <div id="create-guild" class="element-button element-button-large stroke">Create</div>
+
+                        <div class="guilds-decoration">
+                            <p class="stroke">Guilds</p>
+                        </div>
+
+                        <ul></ul>
+
+                        <p id="guilds-info">There are no guilds available...</p>
+                    </div>
+
+                    <div id="guilds-create-container">
+                        <div class="guild-banner-decoration guild-banner-select"></div>
+                        <div class="guild-banner-decoration guild-outline-select"></div>
+
+                        <ul id="banner-colours"></ul>
+                        <ul id="banner-outline-colours"></ul>
+                        <ul id="banner-crests"></ul>
+
+                        <span id="create-error"></span>
+
+                        <div id="guild-back" class="element-button element-button-red stroke">Back</div>
+                        <div id="guild-create" class="element-button stroke">Create</div>
+
+                        <input
+                            id="guild-name-input"
+                            type="text"
+                            maxlength="16"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter a name..."
+                            class="guild-name-input-image stroke"></input>
+                    </div>
+
+                    <div id=guilds-info-container>
+                        <div id="guild-leave" class="element-button element-button-red stroke">Leave</div>
+
+                        <div id="guild-name" class="guilds-decoration"></div>
+                        <div id="guild-chat-log"></div>
+                        <input
+                            id="guild-chat-input"
+                            type="text"
+                            maxlength="256"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter your message here..."
+                            class="guild-chat-input-image stroke">
+                        </input>
+
+                        <ul id="member-list"></ul>
+                        <ul id="sidebar-list">
+                            <li id="sidebar-members" class="sidebar-element active">
+                                <div class="members-icon"></div>
+                            </li>
+                            <li id="sidebar-chat" class="sidebar-element">
+                                <div class="chat-icon"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="interact">
                     <ul></ul>
                 </div>
 

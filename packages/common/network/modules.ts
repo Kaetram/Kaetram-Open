@@ -2,11 +2,8 @@
 
 import { Pointer } from './opcodes';
 
-// Preset objects and values for various usages.
-export default {
-    EmptyPointer: {
-        type: Pointer.Remove
-    }
+export let EmptyPointer = {
+    type: Pointer.Remove
 };
 
 export enum PacketType {
@@ -20,7 +17,8 @@ export enum PacketType {
 
 export enum ContainerType {
     Bank,
-    Inventory
+    Inventory,
+    Trade
 }
 
 export enum Orientation {
@@ -37,7 +35,8 @@ export enum EntityType {
     Mob,
     Chest,
     Projectile,
-    Object
+    Object,
+    Pet
 }
 
 export enum AbilityType {
@@ -68,15 +67,25 @@ export enum Actions {
 }
 
 export enum MenuActions {
-    Use = 'Use',
-    Drop = 'Drop',
-    Equip = 'Equip',
-    Eat = 'Eat',
-    Move = 'Move'
+    DropOne = 'drop-one',
+    DropMany = 'drop-many',
+    Wield = 'wield',
+    Equip = 'equip',
+    Attack = 'attack',
+    Eat = 'eat',
+    Eat2 = 'eat2',
+    Move = 'move',
+    Trade = 'trade',
+    Potion = 'potion',
+    Follow = 'follow',
+    Examine = 'examine',
+    AddFriend = 'addfriend'
 }
 
+export enum InteractActions {}
+
 export enum Hits {
-    Damage,
+    Normal,
     Poison,
     Heal,
     Mana,
@@ -84,17 +93,10 @@ export enum Hits {
     LevelUp,
     Critical,
     Stun,
-    Explosive,
-    Profession
-}
-
-export enum Projectiles {
-    Arrow,
-    Boulder,
-    FireBall,
-    IceBall,
-    Terror,
-    Tornado
+    Profession,
+    Freezing,
+    Burning,
+    Terror
 }
 
 export enum Equipment {
@@ -102,7 +104,33 @@ export enum Equipment {
     Boots,
     Pendant,
     Ring,
-    Weapon
+    Weapon,
+    Arrows,
+    WeaponSkin,
+    ArmourSkin
+}
+
+export enum AttackStyle {
+    None,
+
+    // Melee
+    Stab, // Accuracy experience and boosts accuracy
+    Slash, // Strength experience and boosts maximum damage
+    Defensive, // Defense experience and boosts damage absorbed
+    Crush, // Accuracy + Strength experience and boosts accuracy/damage
+    Shared, // Accuracy + Strength + Defense experience and boosts all
+    Hack, // Strength + Defense experience boosts damage and absorbs damage
+    Chop, // Accuracy + Defense experience boosts accuracy and absorbs damage
+
+    // Archery
+    Accurate, // Higher accuracy but slower
+    Fast, // Faster but lower accuracy
+
+    // Magic
+    Focused, // Slower but higher damage/accuracy
+
+    // Archery and Magic
+    LongRange // Increased attack range and less accurate
 }
 
 export enum Hovering {
@@ -128,8 +156,11 @@ export enum PoisonTypes {
 
 export enum Warps {
     Mudwich,
-    Undersea,
-    Lakesworld
+    Aynor,
+    Lakesworld,
+    Patsow,
+    Crullfield,
+    Undersea
 }
 
 export enum Skills {
@@ -139,18 +170,49 @@ export enum Skills {
     Health,
     Magic,
     Mining,
-    Strength
+    Strength,
+    Defense,
+    Fishing,
+    Cooking,
+    Smithing,
+    Crafting,
+    Fletching,
+    Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
+    Foraging,
+    Eating,
+    Loitering
 }
+
+// It's easier to define and swap order around here.
+export let SkillsOrder = [
+    Skills.Health,
+    Skills.Accuracy,
+    Skills.Strength,
+    Skills.Defense,
+    Skills.Archery,
+    Skills.Magic,
+    Skills.Lumberjacking,
+    Skills.Mining,
+    Skills.Fishing,
+    Skills.Foraging,
+    Skills.Crafting,
+    Skills.Cooking,
+    Skills.Fletching,
+    Skills.Smithing,
+    Skills.Eating,
+    Skills.Loitering
+];
 
 export enum Enchantment {
     Bloodsucking,
     Critical,
     Evasion,
-    Spike,
+    Thorns,
     Explosive,
     Stun,
     AntiStun,
-    Splash
+    Splash,
+    DoubleEdged
 }
 
 export enum AoEType {
@@ -159,22 +221,105 @@ export enum AoEType {
     Mob
 }
 
+// Client sided special effects.
 export enum Effects {
     None,
     Critical,
-    Terror,
+    Terror, // Initial terror effect.
+    TerrorStatus, // The terror effect that persists
     Stun,
     Healing,
     Fireball,
+    Iceball,
+    Poisonball,
+    Boulder,
+    Running,
+    HotSauce,
+    DualistsMark,
+    ThickSkin,
+    SnowPotion,
+    FirePotion,
     Burning,
-    Freezing
+    Freezing,
+    Invincible
+}
+
+export enum DamageStyle {
+    None,
+    Crush,
+    Slash,
+    Stab,
+    Magic,
+    Archery
 }
 
 export enum Medals {
     None,
     Silver,
-    Gold
+    Gold,
+    Artist,
+    Tier1,
+    Tier2,
+    Tier3,
+    Tier4,
+    Tier5,
+    Tier6,
+    Tier7
 }
+
+export enum Ranks {
+    None,
+    Moderator,
+    Admin,
+    Veteran,
+    Patron,
+    Artist,
+    Cheater,
+    TierOne, // Patron tiers
+    TierTwo,
+    TierThree,
+    TierFour,
+    TierFive,
+    TierSix,
+    TierSeven,
+    HollowAdmin
+}
+
+export let RankColours = {
+    [Ranks.None]: '',
+    [Ranks.Moderator]: '#02f070',
+    [Ranks.Admin]: '#3bbaff',
+    [Ranks.Veteran]: '#d84343',
+    [Ranks.Patron]: '#db753c',
+    [Ranks.Artist]: '#b552f7',
+    [Ranks.Cheater]: '#ffffff',
+    [Ranks.TierOne]: '#db963c',
+    [Ranks.TierTwo]: '#e6c843',
+    [Ranks.TierThree]: '#d6e34b',
+    [Ranks.TierFour]: '#a9e03a',
+    [Ranks.TierFive]: '#7beb65',
+    [Ranks.TierSix]: '#77e691',
+    [Ranks.TierSeven]: '#77e691',
+    [Ranks.HollowAdmin]: '#3bbaff'
+};
+
+export let RankTitles = {
+    [Ranks.None]: '',
+    [Ranks.Moderator]: 'Mod',
+    [Ranks.Admin]: 'Admin',
+    [Ranks.Veteran]: 'Veteran',
+    [Ranks.Patron]: 'Patron',
+    [Ranks.Artist]: 'Artist',
+    [Ranks.Cheater]: 'Cheater',
+    [Ranks.TierOne]: 'T1 Patron',
+    [Ranks.TierTwo]: 'T2 Patron',
+    [Ranks.TierThree]: 'T3 Patron',
+    [Ranks.TierFour]: 'T4 Patron',
+    [Ranks.TierFive]: 'T5 Patron',
+    [Ranks.TierSix]: 'T6 Patron',
+    [Ranks.TierSeven]: 'T7 Patron',
+    [Ranks.HollowAdmin]: 'Admin'
+};
 
 export interface Colours {
     fill: string;
@@ -183,7 +328,7 @@ export interface Colours {
 
 export let DamageColours = {
     // Received damage
-    [Hits.Damage]: {
+    [Hits.Normal]: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
@@ -229,6 +374,16 @@ export let DamageColours = {
     [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
+    },
+
+    [Hits.Freezing]: {
+        fill: 'rgb(52, 195, 235)',
+        stroke: 'rgb(14, 138, 227)'
+    },
+
+    [Hits.Burning]: {
+        fill: 'rgb(227, 170, 14)',
+        stroke: 'rgb(235, 135, 52)'
     }
 };
 
@@ -266,6 +421,56 @@ export let SkillExpColours = {
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
         stroke: 'rgb(189, 172, 151)'
+    },
+
+    [Skills.Defense]: {
+        fill: 'rgb(110, 158, 255)',
+        stroke: 'rgb(7, 63, 176)'
+    },
+
+    [Skills.Fishing]: {
+        fill: 'rgb(0, 255, 255)',
+        stroke: 'rgb(0, 255, 255)'
+    },
+
+    [Skills.Cooking]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Smithing]: {
+        fill: 'rgb(132, 57, 45)',
+        stroke: 'rgb(101, 48, 35)'
+    },
+
+    [Skills.Crafting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Fletching]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Smelting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Eating]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Loitering]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
+    },
+
+    [Skills.Foraging]: {
+        fill: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     }
 };
 
@@ -284,9 +489,9 @@ export let EntityScale = {
 export let PoisonInfo = {
     [PoisonTypes.Venom]: {
         name: 'Venom',
-        damage: 2,
+        damage: 5,
         duration: 30,
-        rate: 3 // every second
+        rate: 2 // every 2 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
@@ -308,29 +513,89 @@ export enum NPCRole {
     Clerk
 }
 
-export const enum Constants {
-    MAX_STACK = 2_147_483_647, // Maximum default stack size for a stackable item.
-    MAX_LEVEL = 135, // Maximum attainable level.
-    INVENTORY_SIZE = 20, // Maximum inventory size
-    BANK_SIZE = 69, // Maximum bank size
-    DROP_PROBABILITY = 1000, // 1 in 1000
-    MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
-    HEAL_RATE = 5000, // healing every 5 seconds
-    STORE_UPDATE_FREQUENCY = 20_000, // update store every 20 seconds
-    MAP_DIVISION_SIZE = 48, // The size of a region the map is split into.
-    SPAWN_POINT = '405,27', // Default starting point outside the tutorial
-    TUTORIAL_QUEST_KEY = 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT = '570,11', // 'x,y' values
-    RESOURCE_RESPAWN = 30_000,
-    TREE_RESPAWN = 25_000,
-    SKILL_LOOP = 1000, // How often we check the loop of a skill
-    MAX_ACCURACY = 0.45, // Maximum attainable accuracy for a character.
-    EDIBLE_COOLDOWN = 1500, // 1.5 seconds between eating foods to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD = 3 // Amount of invalid movements before ignoring packets.
+export enum GuildRank {
+    Fledgling,
+    Emergent,
+    Established,
+    Adept,
+    Veteran,
+    Elite,
+    Master,
+    Landlord
 }
 
+export enum BannerColour {
+    Green = 'green',
+    Blue = 'blue',
+    Red = 'red',
+    Grey = 'grey',
+    Black = 'black',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerOutline {
+    Green = 'green',
+    Blue = 'blue',
+    Orange = 'orange',
+    White = 'white',
+    Grey = 'grey',
+    Tangerine = 'tangerine',
+    Yellow = 'yellow',
+    Purple = 'purple',
+    Pink = 'pink'
+}
+
+export enum BannerCrests {
+    None = 'none',
+    Star = 'star',
+    Hawk = 'hawk',
+    Phoenix = 'phoenix'
+}
+
+export const Constants = {
+    MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
+    MAX_LEVEL: 135, // Maximum attainable level.
+    INVENTORY_SIZE: 25, // Maximum inventory size
+    BANK_SIZE: 420, // Maximum bank size
+    DROP_PROBABILITY: 10_000, // 1 in 10000
+    MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
+    HEAL_RATE: 7000, // healing every 7 seconds
+    EFFECT_RATE: 10_000, // effects every 10 seconds
+    STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
+    MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
+    SPAWN_POINT: '405,27', // Default starting point outside the tutorial
+    TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
+    TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
+    RESOURCE_RESPAWN: 30_000,
+    TREE_RESPAWN: 25_000,
+    CHEST_RESPAWN: 50_000, // 50 seconds
+    SKILL_LOOP: 1000, // How often we check the loop of a skill
+    MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
+    EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
+    CRAFT_COOLDOWN: 1500, // 1.5 seconds between crafting items to prevent spam.
+    INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
+    ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
+    MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
+    EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
+    SNOW_POTION_DURATION: 60_000, // 60 seconds
+    FIRE_POTION_DURATION: 60_000, // 60 seconds
+    FREEZING_DURATION: 60_000, // 60 seconds
+    BURNING_DURATION: 60_000, // 60 seconds
+    TERROR_DURATION: 60_000, // 60 seconds
+    LOITERING_THRESHOLD: 90_000, // 90 seconds until loitering activates
+    STUN_DURATION: 10_000, // 10 seconds
+    COLD_EFFECT_DAMAGE: 10,
+    BURNING_EFFECT_DAMAGE: 20,
+    ATTACKER_TIMEOUT: 20_000, // 20 seconds
+    MAX_GUILD_MEMBERS: 40, // Maximum number of members in a guild
+    EVENTS_CHECK_INTERVAL: 3_600_000 // Every 1 hour
+};
+
 export enum MinigameConstants {
-    TEAM_WAR_COUNTDOWN = 45, // 180 seconds (3 minutes) in the lobby
+    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby
     TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
 }
 
@@ -350,18 +615,16 @@ export enum Defaults {
 
 export enum ItemDefaults {
     RESPAWN_DELAY = 30_000, // 30 seconds
-    DESPAWN_DURATION = 17_000, // 17 seconds of blinking before despawning
-    BLINK_DELAY = 40_000 // 40 seconds until item starts blinking.
+    DESPAWN_DURATION = 34_000, // 34 seconds of blinking before despawning
+    BLINK_DELAY = 30_000 // 40 seconds until item starts blinking.
 }
 
 // Defaults that apply specifically to mobs
 export enum MobDefaults {
-    EXPERIENCE = 1, // Default 1 exp granted if not specified
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
-    ROAM_FREQUENCY = 10_000, // Roam interval every 10 seconds
-    ROAM_RETRIES = 5, // 5 retries if the new spot is not possible
+    ROAM_FREQUENCY = 17_000, // Roam interval every 35 seconds
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
 }

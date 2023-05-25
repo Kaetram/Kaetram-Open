@@ -4,7 +4,6 @@
     position: absolute;
     left: 40%;
     display: none;
-    background-color: rgb(0 0 0 / 50%);
 
     .name,
     .health {
@@ -42,14 +41,21 @@
             top: 0;
 
             width: 100px * $i;
-            height: 25px * $i;
+            height: 32px * $i;
 
-            border: 2px * $i solid #373737;
-            border-bottom-right-radius: 8px * $i;
-            border-bottom-left-radius: 8px * $i;
+            // border: 2px * $i solid #373737;
+            // border-bottom-right-radius: 8px * $i;
+            // border-bottom-left-radius: 8px * $i;
+
+            background: url('/img/interface/main.png') -32px * $i -464px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
+
+            .name {
+                margin-top: 3px * $i;
+            }
 
             .details {
-                margin-top: 9px * $i;
+                margin-top: 12px * $i;
             }
 
             .health {

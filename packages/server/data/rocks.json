@@ -1,0 +1,154 @@
+{
+    "nisoc": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "nisocore",
+        "achievement": "firstrock"
+    },
+
+    "cinnabar": {
+        "levelRequirement": 5,
+        "experience": 30,
+        "difficulty": 20,
+        "item": "cinnabarore"
+    },
+
+    "pythar": {
+        "levelRequirement": 15,
+        "experience": 70,
+        "difficulty": 40,
+        "item": "pytharore"
+    },
+
+    "gold": {
+        "levelRequirement": 25,
+        "experience": 150,
+        "difficulty": 80,
+        "item": "goldnugget"
+    },
+
+    "ibo": {
+        "levelRequirement": 30,
+        "experience": 210,
+        "difficulty": 160,
+        "item": "iboore"
+    },
+
+    "moonrock": {
+        "levelRequirement": 40,
+        "experience": 300,
+        "difficulty": 220,
+        "item": "moonrockore",
+        "respawnTime": 90000
+    },
+
+    "topaz": {
+        "levelRequirement": 15,
+        "experience": 160,
+        "difficulty": 160,
+        "item": "topaz"
+    },
+
+    "beryl": {
+        "levelRequirement": 1,
+        "experience": 22,
+        "difficulty": 20,
+        "item": "beryl",
+        "respawnTime": 5000,
+        "achievement": "firstrock"
+    },
+
+    "lapislazuli": {
+        "levelRequirement": 45,
+        "experience": 350,
+        "difficulty": 250,
+        "item": "lapislazuli"
+    },
+
+    "citrine": {
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 285,
+        "item": "citrine",
+        "respawnTime": 98000
+    },
+
+    "taaffeite": {
+        "levelRequirement": 30,
+        "experience": 310,
+        "difficulty": 225,
+        "item": "taaffeite",
+        "respawnTime": 90000
+    },
+
+    "ruby": {
+        "levelRequirement": 62,
+        "experience": 550,
+        "difficulty": 325,
+        "item": "ruby",
+        "respawnTime": 276000
+    },
+
+    "peridot": {
+        "levelRequirement": 55,
+        "experience": 475,
+        "difficulty": 345,
+        "item": "peridot",
+        "respawnTime": 140000
+    },
+
+    "opal": {
+        "levelRequirement": 10,
+        "experience": 100,
+        "difficulty": 140,
+        "item": "opal"
+    },
+
+    "emerald": {
+        "levelRequirement": 57,
+        "experience": 510,
+        "difficulty": 345,
+        "item": "emerald",
+        "respawnTime": 180000
+    },
+
+    "amethyst": {
+        "levelRequirement": 65,
+        "experience": 580,
+        "difficulty": 375,
+        "item": "amethyst",
+        "respawnTime": 300000
+    },
+
+    "coal": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 5,
+        "item": "coal",
+        "achievement": "firstrock"
+    },
+
+    "copper": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "copperore",
+        "achievement": "firstrock"
+    },
+
+    "tin": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "tinore",
+        "achievement": "firstrock"
+    },
+
+    "iron": {
+        "levelRequirement": 10,
+        "experience": 40,
+        "difficulty": 15,
+        "item": "ironore"
+    }
+}

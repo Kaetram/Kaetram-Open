@@ -1,21 +1,19 @@
-import { Packets } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Menu from './menu';
 
 import log from '../lib/log';
-
-import Menu from './menu';
 
 import type Socket from '../network/socket';
 
 export default class Warp extends Menu {
     private list: NodeListOf<HTMLElement> = document.querySelectorAll('.map-button')!;
 
+    private selectCallback?: (id: number) => void;
+
     public constructor(private socket: Socket) {
         super('#map-frame', '#close-map-frame', '#warp-button');
 
-        _.each(this.list, (element: HTMLElement) =>
-            element.addEventListener('click', () => this.handleWarp(element))
-        );
+        for (let element of this.list)
+            element.addEventListener('click', () => this.handleWarp(element));
     }
 
     /**
@@ -30,10 +28,17 @@ export default class Warp extends Menu {
 
         if (isNaN(id)) return log.error('Invalid warp element clicked.');
 
-        this.socket.send(Packets.Warp, {
-            id
-        });
+        this.selectCallback?.(id);
 
         this.hide();
+    }
+
+    /**
+     * Callback for when the warp is clicked.
+     * @param callback Contains the id of the warp.
+     */
+
+    public onSelect(callback: (id: number) => void): void {
+        this.selectCallback = callback;
     }
 }

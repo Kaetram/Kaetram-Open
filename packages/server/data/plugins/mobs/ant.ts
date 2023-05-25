@@ -1,6 +1,6 @@
-import Utils from '@kaetram/common/util/utils';
-
 import Default from './default';
+
+import Utils from '@kaetram/common/util/utils';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -57,6 +57,6 @@ export default class Ant extends Default {
         // Heal only if the target is near.
         if (!this.mob.isNearTarget()) return;
 
-        (this.mob.target as Mob).heal(35, 'hitpoints');
+        this.mob.target.heal(35, 'hitpoints');
     }
 }

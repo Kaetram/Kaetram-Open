@@ -1,12 +1,11 @@
-import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
-
 import Resource from './impl/resource';
 
-import type { ProcessedResource } from '@kaetram/common/types/map';
+import log from '@kaetram/common/util/log';
+
 import type Map from '../map/map';
-import type Regions from '../map/regions';
 import type World from '../world';
+import type Regions from '../map/regions';
+import type { ProcessedResource } from '@kaetram/common/types/map';
 
 export default class Resources {
     private map: Map;
@@ -33,16 +32,18 @@ export default class Resources {
      */
 
     protected load(): void {
-        _.each(this.map.data, (tile: number | number[], index: number) => {
+        for (let index in this.map.data) {
+            let tile = this.map.data[index];
+
             this.map.forEachTile(tile, (tileId: number) => {
                 let info = this.getResource(tileId);
 
                 if (!info) return;
 
                 // Create the tree.
-                this.createResource(info, index);
+                this.createResource(info, parseInt(index));
             });
-        });
+        }
     }
 
     /**
@@ -55,7 +56,8 @@ export default class Resources {
     protected createResource(info: ProcessedResource, index: number): void {
         let resource = new Resource(info.type),
             coords = this.map.indexToCoord(index),
-            region = this.regions.get(this.regions.getRegion(coords.x, coords.y));
+            regionIndex = this.regions.getRegion(coords.x, coords.y),
+            region = this.regions.get(regionIndex);
 
         // Load actual resource tile data.
         this.search(info, resource, index);
@@ -73,14 +75,14 @@ export default class Resources {
          * at least one tile in between resource.
          */
 
-        if (_.size(resource.data) !== info.data.length)
+        if (Object.keys(resource.data).length !== info.data.length)
             log.warning(`Resource x: ${coords.x} y: ${coords.y} contains partial data.`);
 
         // Add our resource to our list of resources.
         this.resources[resource.instance] = resource;
 
         // Send an update when a resource's state undergoes a change.
-        resource.onStateChange(() => this.regions.sendUpdate(region));
+        resource.onStateChange(() => this.regions.sendUpdate(regionIndex));
     }
 
     /**
@@ -93,7 +95,7 @@ export default class Resources {
      */
 
     private search(info: ProcessedResource, resource: Resource, index: number): boolean {
-        let intersection = _.intersection([this.map.data[index]].flat(), info.data);
+        let intersection = [this.map.data[index]].flat().filter((tile) => info.data.includes(tile));
 
         // If we find no intersection, then tile contains no resource data.
         if (intersection.length === 0) return false;
@@ -123,7 +125,7 @@ export default class Resources {
      */
 
     public findResource(index: number): Resource | undefined {
-        return _.find(this.resources, (resource: Resource) => index in resource.data);
+        return Object.values(this.resources).find((resource) => index in resource.data);
     }
 
     /**
@@ -134,6 +136,6 @@ export default class Resources {
      */
 
     private getResource(tileId: number): ProcessedResource | undefined {
-        return _.find(this.data, (resource: ProcessedResource) => resource.data.includes(tileId));
+        return this.data.find((resource) => resource.data.includes(tileId));
     }
 }

@@ -1,14 +1,16 @@
-import { Modules, Packets, Opcodes } from '@kaetram/common/network';
+import Chat from './chat';
+import HUDController from './hud';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
 import { isMobile } from '../utils/detect';
+import Character from '../entity/character/character';
 
-import Chat from './chat';
-import HUDController from './hud';
+import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
-import type Character from '../entity/character/character';
+import type Interact from '../menu/interact';
 import type Friends from '../menu/friends';
+import type Inventory from '../menu/inventory';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
@@ -16,6 +18,9 @@ import type Game from '../game';
 import type Camera from '../renderer/camera';
 import type App from '../app';
 import type Map from '../map/map';
+import type Trade from '../menu/trade';
+import type Leaderboards from '../menu/leaderboards';
+import type Guilds from '../menu/guilds';
 
 interface TargetData {
     sprite: Sprite;
@@ -35,6 +40,11 @@ export default class InputController {
     private camera: Camera;
     public player: Player;
     private friends: Friends;
+    private interact: Interact;
+    private inventory: Inventory;
+    private trade: Trade;
+    private leaderboards: Leaderboards;
+    private guilds: Guilds;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -62,6 +72,7 @@ export default class InputController {
     public hud: HUDController;
 
     public entity: Entity | undefined;
+    public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.
 
     public constructor(private game: Game) {
         this.app = game.app;
@@ -69,6 +80,11 @@ export default class InputController {
         this.camera = game.camera;
         this.player = game.player;
         this.friends = game.menu.getFriends();
+        this.inventory = game.menu.getInventory();
+        this.interact = game.menu.getInteract();
+        this.trade = game.menu.getTrade();
+        this.leaderboards = game.menu.getLeaderboards();
+        this.guilds = game.menu.getGuilds();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -87,9 +103,12 @@ export default class InputController {
             this.moveCursor();
         });
 
+        this.interact.onButton(this.handleInteract.bind(this));
+        this.interact.onClose(() => (this.interactEntity = undefined));
+
         this.friends.onMessage((username: string) => this.chatHandler.privateMessage(username));
 
-        this.targetAnimation.setSpeed(50);
+        this.targetAnimation.setSpeed(150);
     }
 
     /**
@@ -107,6 +126,12 @@ export default class InputController {
         this.cursors.spell = this.game.sprites.get('spell');
         this.cursors.bow = this.game.sprites.get('bow');
         this.cursors.axe = this.game.sprites.get('axe_cursor');
+        this.cursors.pickaxe = this.game.sprites.get('pickaxe_cursor');
+        this.cursors.cooking = this.game.sprites.get('cooking');
+        this.cursors.fishing = this.game.sprites.get('fishing');
+        this.cursors.smithing = this.game.sprites.get('smithing');
+        this.cursors.crafting = this.game.sprites.get('crafting');
+        this.cursors.foraging = this.game.sprites.get('foraging');
 
         log.debug('Loaded Cursors!');
     }
@@ -137,19 +162,21 @@ export default class InputController {
      * A right click is called a ContextMenuEvent. Here we determine
      * the coordinates of the click, and use that to activate the
      * action menu at that location.
-     * @param event DOM event containing click position information.
+     * @param position The position of the press.
      */
 
-    private handleRightClick(event: PointerEvent): void {
-        this.setCoords(event);
+    private handleRightClick(pos: { x: number; y: number }): void {
+        this.setCoords(pos);
 
         let position = this.getCoords(),
-            entity = this.game.getEntityAt(position.x, position.y);
+            entity = this.game.searchForEntityAt(position);
 
-        if (!entity) return;
+        // Ignore if no entity or the entity is the player.
+        if (!entity || entity.instance === this.player.instance) return this.interact.hide();
 
-        console.log(entity);
-        //this.game.menu.actions.show();
+        this.interact.show(this.mouse, entity, this.game.pvp);
+
+        this.interactEntity = entity;
     }
 
     /**
@@ -160,7 +187,18 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
-        // Popups are UI elements that are displayed on top of the game.
+        if (this.guilds.isVisible()) return this.guilds.keyDown(event.key);
+
+        // Redirect input to the leaderboards handler if the leaderboards are visible.
+        if (this.leaderboards.isVisible()) return this.leaderboards.keyDown(event.key);
+
+        // Redirect input to the trade handler if the trade input is visible.
+        if (this.trade.isInputDialogueVisible()) return this.trade.keyDown(event.key);
+
+        // Redirect input to the inventory handler if the inventory is visible.
+        if (this.inventory.isDropDialogVisible()) return this.inventory.keyDown(event.key);
+
+        // Redirect input to the friends handler if the friends input is visible.
         if (this.friends.isPopupActive()) return this.friends.keyDown(event.key);
 
         // Redirect input to the chat handler if the chat input is visible.
@@ -170,24 +208,28 @@ export default class InputController {
 
         switch (event.key) {
             case 'w':
+            case 'ц':
             case 'ArrowUp': {
                 this.player.moveUp = true;
                 return;
             }
 
             case 'a':
+            case 'ф':
             case 'ArrowLeft': {
                 this.player.moveLeft = true;
                 return;
             }
 
             case 's':
+            case 'ы':
             case 'ArrowDown': {
                 this.player.moveDown = true;
                 return;
             }
 
             case 'd':
+            case 'в':
             case 'ArrowRight': {
                 this.player.moveRight = true;
                 return;
@@ -221,9 +263,12 @@ export default class InputController {
             case 't': {
                 target = this.game.entities.get(this.player.lastTarget);
 
-                console.log(target);
+                if (!target) return;
 
-                if (target) this.player.follow(target);
+                this.setAttackTarget();
+                this.setPosition(target.gridX, target.gridY);
+
+                this.player.follow(target);
 
                 return;
             }
@@ -237,16 +282,19 @@ export default class InputController {
 
             case '+':
             case '=': {
-                this.game.camera.zoom(0.1);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(0.2);
             }
 
             case '-':
             case '_': {
-                this.game.camera.zoom(-0.1);
-                this.game.renderer.resize();
-                return;
+                return this.game.zoom(-0.2);
+            }
+
+            case '0':
+            case ')': {
+                this.camera.setZoom();
+
+                return this.game.zoom(0);
             }
         }
     }
@@ -288,6 +336,54 @@ export default class InputController {
     }
 
     /**
+     * Receives an interact menu action from the interact handler. We use the entity
+     * in the input to determine the course of action.
+     * @param menuAction Which button in the interact menu was pressed.
+     */
+
+    private handleInteract(menuAction: Modules.MenuActions): void {
+        // No entity to interact with, perhaps this was called with the interact menu closed?
+        if (!this.interactEntity) return;
+
+        switch (menuAction) {
+            case Modules.MenuActions.Attack: {
+                return this.move({
+                    x: this.interactEntity.x,
+                    y: this.interactEntity.y,
+                    gridX: this.interactEntity.gridX,
+                    gridY: this.interactEntity.gridY
+                });
+            }
+
+            case Modules.MenuActions.Trade: {
+                this.game.player.trade(this.interactEntity);
+                break;
+            }
+
+            case Modules.MenuActions.Follow: {
+                if (this.interactEntity instanceof Character)
+                    this.game.player.pursue(this.interactEntity);
+                break;
+            }
+
+            case Modules.MenuActions.Examine: {
+                this.game.socket.send(Packets.Examine, [this.interactEntity.instance]);
+                break;
+            }
+
+            case Modules.MenuActions.AddFriend: {
+                this.game.socket.send(Packets.Friends, {
+                    opcode: Opcodes.Friends.Add,
+                    username: this.interactEntity.name
+                });
+                break;
+            }
+        }
+
+        this.interact.hide();
+    }
+
+    /**
      * Receives position data from the updater and attempts
      * to move the player to the specified grid coordinates.
      * We essentially pass the coordinates through the same
@@ -299,12 +395,12 @@ export default class InputController {
      * requested grid coordinates.
      */
 
-    public keyMove(position: Position): void {
+    public keyMove(position: Coordinate): void {
         if (this.player.hasPath()) return;
 
-        this.move(position);
-
         this.keyMovement = true;
+
+        this.move(position);
     }
 
     /**
@@ -315,8 +411,8 @@ export default class InputController {
      * @param position The grid coordinates of the position we're requesting.
      */
 
-    private move(position: Position): void {
-        if (this.player.stunned) return;
+    private move(position: Coordinate, useSearch = !this.keyMovement): void {
+        if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
         this.setPassiveTarget();
@@ -325,7 +421,7 @@ export default class InputController {
         if (this.player.disableAction || this.game.zoning.direction) return;
 
         // Prevent input outside map boundaries.
-        if (this.game.map.isOutOfBounds(position.x, position.y)) return;
+        if (this.game.map.isOutOfBounds(position.gridX, position.gridY)) return;
 
         // If chat is open on mobile we automatically toggle it so it gets out of the way.
         if (isMobile() && this.chatHandler.inputVisible()) this.chatHandler.toggle();
@@ -334,16 +430,16 @@ export default class InputController {
         this.game.menu.hide();
 
         // Handle object interaction.
-        if (this.game.map.isObject(position.x, position.y))
+        if (this.game.map.isObject(position.gridX, position.gridY))
             return this.player.setObjectTarget(position);
 
         // Remove player's targets prior to an action.
         this.player.removeTarget();
 
         // Handle NPC interaction.
-        this.entity = this.game.getEntityAt(position.x, position.y);
+        this.entity = this.getEntity(position, useSearch);
 
-        if (this.entity) {
+        if (this.entity && this.entity.instance !== this.player.instance) {
             this.setAttackTarget();
 
             // Set target and follow a targetable entity.
@@ -353,16 +449,17 @@ export default class InputController {
                 if (this.isAttackable(this.entity))
                     (this.entity as Character).addAttacker(this.player);
 
-                this.game.socket.send(Packets.Target, [
-                    Opcodes.Target.Attack,
-                    this.entity.instance
-                ]);
+                if (this.player.isRanged())
+                    this.game.socket.send(Packets.Target, [
+                        Opcodes.Target.Attack,
+                        this.entity.instance
+                    ]);
                 return;
             }
         }
 
         // Move the player to the new position.
-        this.player.go(position.x, position.y);
+        this.player.go(position.gridX, position.gridY);
     }
 
     /**
@@ -375,10 +472,14 @@ export default class InputController {
     public moveCursor(): void {
         if (isMobile()) return;
 
-        let position = this.getCoords();
+        let position = this.getCoords(),
+            entity = this.game.searchForEntityAt(position);
+
+        // Ignore if the entity is our player.
+        if (entity?.instance === this.player.instance) return;
 
         // The entity we are currently hovering over.
-        this.entity = this.game.getEntityAt(position.x, position.y);
+        this.entity = this.getEntity(position);
 
         // Update the overlay with entity information.
         this.hud.update(this.entity);
@@ -389,8 +490,8 @@ export default class InputController {
              * case for checking if the hovering coordinates are objects.
              */
 
-            if (this.map.isObject(position.x, position.y)) {
-                let cursor = this.map.getTileCursor(position.x, position.y);
+            if (this.map.isObject(position.gridX, position.gridY)) {
+                let cursor = this.map.getTileCursor(position.gridX, position.gridY);
 
                 // Default to the talk if no cursor is specified for the object.
                 this.setCursor(this.cursors[cursor || 'talk']);
@@ -405,6 +506,8 @@ export default class InputController {
 
             return;
         }
+
+        this.entity.updateSilhouette(true);
 
         switch (this.entity.type) {
             case Modules.EntityType.Item:
@@ -434,6 +537,24 @@ export default class InputController {
                 break;
             }
         }
+    }
+
+    /**
+     * Handles grabbing the silhouette at the current cursor position.
+     * @param position The position of the cursor.
+     * @param useSearch Whether or not to use the search function.
+     */
+
+    private getEntity(position: Coordinate, useSearch = true): Entity | undefined {
+        let entity = useSearch
+            ? this.game.searchForEntityAt(position)
+            : this.game.getEntityAt(position.gridX, position.gridY);
+
+        // Remove the silhouette from the previous entity.
+        if (this.entity && (!entity || entity.instance !== this.entity.instance))
+            this.entity.updateSilhouette(false);
+
+        return entity;
     }
 
     /**
@@ -494,12 +615,12 @@ export default class InputController {
      * @param event The event object containing the mouse's position.
      */
 
-    public setCoords(event: MouseEvent | PointerEvent): void {
+    public setCoords(position: { x: number; y: number }): void {
         let { width, height } = this.game.renderer.background;
 
         // Set the mouse position to the x and y coordinates within the event.
-        this.mouse.x = event.pageX;
-        this.mouse.y = event.pageY;
+        this.mouse.x = position.x;
+        this.mouse.y = position.y;
 
         // Add horizontal boundaries to the mouse.
         if (this.mouse.x >= width) this.mouse.x = width - 1;
@@ -511,12 +632,15 @@ export default class InputController {
     }
 
     /**
-     * @returns A bow sprite if the player is ranged, otherwise a sword
-     * when targeting an entity.
+     * @returns If a player uses a ranged magic weapon we display the spell icon,
+     * if they are using a ranged weapon we display the bow, otherwise a sword.
      */
 
     private getAttackCursor(): Sprite {
-        return this.cursors[this.player.isRanged() ? 'bow' : 'sword'];
+        if (this.player.isMagic()) return this.cursors.spell;
+        if (this.player.isRanged()) return this.cursors.bow;
+
+        return this.cursors.sword;
     }
 
     /**
@@ -525,14 +649,15 @@ export default class InputController {
      * @returns A position object containing the grid coordinates.
      */
 
-    public getCoords(): Position {
-        let tileScale = this.map.tileSize * this.camera.zoomFactor,
-            offsetX = this.mouse.x % tileScale,
-            offsetY = this.mouse.y % tileScale,
-            x = Math.round((this.mouse.x - offsetX) / tileScale) + this.game.camera.gridX,
-            y = Math.round((this.mouse.y - offsetY) / tileScale) + this.game.camera.gridY;
+    public getCoords(): Coordinate {
+        let offsetX = this.mouse.x % this.camera.zoomFactor,
+            offsetY = this.mouse.y % this.camera.zoomFactor,
+            x = (this.mouse.x - offsetX) / this.camera.zoomFactor + this.camera.x,
+            y = (this.mouse.y - offsetY) / this.camera.zoomFactor + this.camera.y,
+            gridX = Math.floor(x / this.map.tileSize),
+            gridY = Math.floor(y / this.map.tileSize);
 
-        return { x, y };
+        return { x, y, gridX, gridY };
     }
 
     /**

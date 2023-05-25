@@ -1,153 +1,81 @@
 @use '../../abstracts/media';
 
-#profile-dialog,
-#settings-page {
+dialog {
+    cursor: url('/img/hand.png'), auto;
+
     position: absolute;
-    right: 0;
-    bottom: 45px;
+    inset: 0;
+
     display: none;
-}
 
-#bank-inventory-container,
-#enchant-container {
-    float: left;
-}
+    margin: auto;
+    padding: 0;
 
-.inventory-slots {
-    position: absolute;
-    top: 13%;
-    left: 6%;
-}
-
-.item-count,
-.inventory-item-count {
     font-family: AdvoCut, sans-serif;
-    color: rgb(255 255 255 / 100%);
+    font-size: 16px;
+    color: #e3e3e3;
+
+    background-color: rgb(45 45 45 / 80%);
+    border: none;
 }
 
-.close {
-    position: absolute;
-    top: -3%;
-    left: 92%;
+.dialog-count {
+    display: block;
+
+    margin: 0 auto;
+
+    font-family: AdvoCut, sans-serif;
+    color: white;
+
+    background-color: rgb(0 0 0 / 50%);
 }
 
-.ok {
-    position: absolute;
+.dialog-title {
+    text-align: center;
 }
 
+.dialog-accept,
+.dialog-cancel {
+    cursor: pointer;
+    cursor: url('/img/hand.png'), auto;
+}
 
-@each $size, $i in media.$sizes {
+.dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+@each $size, $i in media.$b-sizes {
     @media ($size) {
-        #bank-inventory-container,
-        #enchant-container {
-            width: 129px * $i;
-            height: 127px * $i;
-            background-position: 0 0;
+        .dialog {
+            width: 53px * $i;
+            height: 40px * $i;
+            background: url('/img/interface/main.png') -144px * $i -496px * $i no-repeat;
+            background-size: calc(width('main.png') * $i);
         }
 
-        .item-count {
-            width: 16px * $i;
-            height: 7px * $i;
-            margin-left: $i;
-            text-align: center;
+        .dialog-count {
+            width: 40px * $i;
+            margin-bottom: 1px * $i;
         }
 
-        #store-sell-slot-return-text,
-        #store-sell-slot-text,
-        #shards-count {
-            margin-top: 19px * $i;
-        }
-    }
-}
-
-@media (--lg) {
-    .item-count {
-        font-size: 14px;
-    }
-
-    .close {
-        width: 48px;
-        height: 48px;
-        background: url('/img/3/containers.png') -96px -498px;
-
-        &:active {
-            background-position-x: -144px;
-        }
-
-        &:hover {
-            background-position-x: -192px;
+        .dialog-title {
+            margin-top: 3px * $i;
+            margin-bottom: 3px * $i;
+            font-size: 6px * $i;
         }
     }
 
-    .ok {
-        width: 42px;
-        height: 42px;
-        background: url('/img/3/containers.png') -1143px -183px;
-
-        &:hover {
-            background-position-x: -1143px;
-        }
-    }
-}
-
-@media (--md) {
-    .item-count {
-        font-size: 11px;
-    }
-
-    .ok {
-        width: 28px;
-        height: 28px;
-        background-position: -762px -122px;
-    }
-
-    .ok,
-    .done {
-        width: 27px;
-        height: 14px;
-        background: url('/img/2/containers.png') -642px -108px;
-
-        &:hover {
-            background-position: -642px -108px;
-        }
-    }
-
-    .close {
-        width: 32px;
-        height: 32px;
-        background: url('/img/2/containers.png') -64px -332px;
-
-        &:active {
-            background-position-x: -96px;
+    @media (--sm) {
+        .dialog-title {
+            font-size: 10px;
         }
 
-        &:hover {
-            background-position-x: -128px;
+        .dialog-buttons {
+            transform: scale(2);
+            margin-top: 8px;
+            padding: 0 30px;
         }
-    }
-
-    .ok:hover {
-        background-position: -762px -94px;
-    }
-}
-
-@media (--sm) {
-    .ok,
-    .done {
-        top: 55%;
-        left: 85%;
-
-        width: 14px;
-        height: 14px;
-
-        background: url('/img/1/containers.png') -387px -79px;
-
-        &:hover {
-            background-position-y: -65px;
-        }
-    }
-
-    .item-count {
-        font-size: 6px;
     }
 }

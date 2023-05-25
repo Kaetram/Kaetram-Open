@@ -1,0 +1,74 @@
+{
+    "ordinary": {
+        "gold": 3000,
+        "flask": 1200,
+        "bigflask": 720,
+        "manaflask": 760,
+        "bigmanaflask": 500,
+        "burger": 680,
+        "string": 1200,
+        "feather": 1000
+    },
+
+    "arrows": {
+        "arrow": 2400,
+        "firearrow": 750,
+        "poisonarrow": 700,
+        "lightningarrow": 650,
+        "icearrow": 400,
+        "nisocarrow": 300,
+        "cinnabararrow": 250,
+        "pythararrow": 250,
+        "iboarrow": 250
+    },
+
+    "unusual": {
+        "blackpotion": 300,
+        "hotsauce": 300,
+        "cure": 300,
+        "logs": 200,
+        "stick": 500,
+        "bead": 300,
+        "banana": 300,
+        "watermelon": 300,
+        "apple": 300
+    },
+
+    "shards": {
+        "shardt1": 200,
+        "shardt2": 150,
+        "shardt3": 100,
+        "shardt4": 50,
+        "shardt5": 20
+    },
+
+    "warriorcrab": {
+        "bead": 10000
+    },
+
+    "vegetables": {
+        "onion": 500,
+        "chilli": 500,
+        "potato": 500,
+        "tomato": 500
+    },
+
+    "fruits": {
+        "strawberry": 800,
+        "raspberry": 800,
+        "plum": 800,
+        "pineapple": 800,
+        "peach": 800,
+        "mulberry": 800,
+        "mango": 800
+    },
+
+    "mushrooms": {
+        "mushroom1": 600,
+        "mushroom2": 600,
+        "mushroom3": 600,
+        "mushroom4": 600,
+        "mushroom5": 600,
+        "mushroom6": 600
+    }
+}

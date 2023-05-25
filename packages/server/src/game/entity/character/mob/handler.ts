@@ -1,6 +1,7 @@
+import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Bubble } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
+import { Modules } from '@kaetram/common/network';
+import { Bubble } from '@kaetram/common/network/impl';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -58,9 +59,14 @@ export default class Handler {
      */
 
     protected handleHit(damage: number, attacker?: Character): void {
-        if (this.mob.dead || !attacker) return;
+        if (!attacker) return;
 
-        if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
+        if (attacker.isPlayer()) attacker.handleExperience(damage);
+
+        // This may get called simulatneously with the death callback, so we check here.
+        if (this.mob.isDead()) return;
+
+        this.mob.addAttacker(attacker);
 
         if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
     }
@@ -70,22 +76,32 @@ export default class Handler {
      */
 
     protected handleDeath(attacker?: Character): void {
-        // Stops the attacker's combat if the character is dead.
-        if (attacker) attacker.combat.stop();
+        // The damage table is used to calculate who should receive priority over the mob's drop.
+        let damageTable = this.mob.getDamageTable();
 
-        // Add exo to the attacker if it's a player.
-        if (attacker?.isPlayer()) attacker.killCallback?.(this.mob);
+        for (let index in damageTable) {
+            let element = damageTable[index],
+                [instance] = element,
+                entity = this.world.entities.get(instance);
 
-        // Spawn item drops.
-        let drops = this.mob.getDrops();
+            // Ignore non-player entities.
+            if (!entity?.isPlayer()) continue;
 
-        if (drops.length > 0)
-            _.each(drops, (drop) =>
-                this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count)
-            );
+            // Kill callback is sent to the player who dealt most amount of damage.
+            if (parseInt(index) === 0) {
+                // Register the kill as belonging to the player who dealt most amount of damage.
+                entity.killCallback?.(this.mob);
+
+                // Drop the mob's loot and pass the owner's username.
+                this.mob.drop(entity.username);
+            }
+        }
 
         // Stop the combat.
         this.mob.combat.stop();
+
+        // Clear status effects.
+        this.mob.status.clear();
 
         // Remove entity from chest area.
         this.mob.area?.removeEntity(this.mob, attacker);
@@ -124,11 +140,9 @@ export default class Handler {
      * mobs do not walk outside a predefined boundary of theirs.
      */
 
-    protected handleRoaming(retries = 0): void {
+    protected handleRoaming(): void {
         // Prevent roaming.
         if (!this.mob.roaming) return;
-
-        if (retries < 0) return;
 
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
@@ -142,16 +156,10 @@ export default class Handler {
         if (combat.started) return;
 
         // Prevent mobs from going outside of their roaming radius.
-        if (distance < roamDistance) {
-            this.handleRoaming(--retries);
-            return;
-        }
+        if (distance > roamDistance) return;
 
         // No need to move if the new position is the same as the current.
-        if (newX === x && newY === y) {
-            this.handleRoaming(--retries);
-            return;
-        }
+        if (newX === x && newY === y) return;
 
         /**
          * A plateau defines an imaginary z-axis in a 2D space. A mob is essentially
@@ -165,16 +173,10 @@ export default class Handler {
         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
         // Check if the new position is a collision.
-        if (this.map.isColliding(newX, newY)) {
-            this.handleRoaming(--retries);
-            return;
-        }
+        if (this.map.isColliding(newX, newY)) return;
 
         // Don't have mobs block a door.
-        if (this.map.isDoor(newX, newY)) {
-            this.handleRoaming(--retries);
-            return;
-        }
+        if (this.map.isDoor(newX, newY)) return;
 
         this.mob.move(newX, newY);
     }
@@ -222,6 +224,39 @@ export default class Handler {
      */
 
     protected handleCombatLoop(): void {
-        //
+        if (this.mob.instance === this.mob.target?.instance) {
+            log.general(`Mob ${this.mob.key} is attacking itself.`);
+
+            return this.mob.combat.stop();
+        }
+
+        // Parses through the attackers and removes them if they are too far away.
+        this.mob.forEachAttacker((attacker: Character) => {
+            /**
+             * If an attacker goes too far away from the mob then we remove him as
+             * an attacker. If he has not attacked the mob for a certain amount of
+             * time and he is not within the mob's attack range, then we remove him
+             * as an attacker.
+             */
+
+            if (
+                this.mob.getDistance(attacker) > this.mob.roamDistance * 2 ||
+                (!this.mob.isNearTarget() &&
+                    attacker.getLastAttack() > Modules.Constants.ATTACKER_TIMEOUT)
+            )
+                this.mob.removeAttacker(attacker);
+        });
+
+        // Ignore if we have only one attacker.
+        if (this.mob.getAttackerCount() < 2 || !this.mob.canChangeTarget()) return;
+
+        // Alternate targets if another one is nearby.
+        let newTarget = this.mob.getRandomAttacker();
+
+        // New target is too far away, so we ignore it.
+        if (this.mob.getDistance(newTarget) >= this.mob.attackRange) return;
+
+        // We have a new target, so we attack it.
+        this.mob.combat.attack(newTarget);
     }
 }

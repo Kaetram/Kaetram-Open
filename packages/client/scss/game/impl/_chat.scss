@@ -10,6 +10,7 @@
     display: none;
 
     p {
+        padding-left: 8px;
         font-family: AdvoCut, sans-serif;
     }
 }
@@ -18,7 +19,7 @@
     overflow-y: scroll;
 
     height: 100%;
-
+    
     text-shadow: 2px 2px 2px black;
 
     background: linear-gradient(0deg, rgb(0 0 0 / 40%), 20%, transparent);
@@ -58,6 +59,13 @@
         #chat {
             width: 250px * $i;
             height: 100px * $i;
+        }
+    }
+
+    @media(--sm) {
+        #chat {
+            bottom: 70px;
+            left: 4px;
         }
     }
 }

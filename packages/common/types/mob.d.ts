@@ -1,8 +1,9 @@
 export interface MobData {
     name: string;
-    experience?: number;
+    description?: string | string[];
     hitPoints?: number;
     drops?: { [itemKey: string]: number };
+    dropTables?: string[];
     level?: number;
     attackLevel?: number;
     defenseLevel?: number;
@@ -14,6 +15,8 @@ export interface MobData {
     respawnDelay?: number;
     movementSpeed?: number;
     poisonous?: boolean;
+    freezing?: boolean;
+    burning?: boolean;
     hiddenName?: boolean;
     projectileName?: string;
     roaming?: boolean;
@@ -23,4 +26,8 @@ export interface MobData {
     miniboss?: boolean;
     roamDistance?: number;
     healRate?: number;
+}
+
+export interface RawData {
+    [key: string]: MobData;
 }

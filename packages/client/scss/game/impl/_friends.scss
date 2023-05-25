@@ -1,6 +1,6 @@
 @use '../../abstracts/media';
 
-#friends-page {
+#friends-container {
     position: absolute;
     right: 0;
     bottom: 45px;
@@ -15,6 +15,16 @@
     margin: auto;
 
     font-family: AdvoCut, sans-serif;
+
+    li {
+        p:first-child {
+            color: #fff;
+        }
+
+        p:last-child {
+            float: right;
+        }
+    }
 }
 
 #popup-container {
@@ -53,20 +63,21 @@
 
 .confirm,
 .cancel {
-    position: absolute;
+    position: inherit;
     bottom: 0;
 }
 
 @each $size, $i in media.$sizes {
     @media ($size) {
-        #friends-page {
+        #friends-container {
             display: none;
         }
 
-        #friends-container {
+        #friends-page {
             width: 100%;
             height: 100%;
-            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -248px * $i -217px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #friends-list {
@@ -74,16 +85,27 @@
             height: 172px * $i;
             margin-top: 14px * $i;
             padding-left: 2px * $i;
+
+            li {
+                p:first-child {
+                    padding-left: 6px * $i;
+                }
+
+                p:last-child {
+                    padding-right: 6px * $i;
+                }
+            }
         }
 
-        #friends-list > ul > li:last-child {
+        #friends-list > li:last-child {
             margin-bottom: 1px * $i;
         }
 
         #add-popup {
             width: 96px * $i;
             height: 38px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -146px * $i -272px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #popup-friend-input {
@@ -105,9 +127,12 @@
         .add,
         .remove {
             bottom: 8px * $i;
+
             width: 21px * $i;
             height: 17px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+
+            background-image: url('/img/interface/characterdialogsheet.png');
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-x: -42px * $i;
@@ -136,7 +161,8 @@
         .cancel {
             width: 21px * $i;
             height: 14px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 no-repeat;
+            background-image: url('/img/interface/characterdialogsheet.png');
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-x: -42px * $i;
@@ -149,30 +175,42 @@
     }
 
     @media (--lg) {
-        #friends-page {
+        #friends-container {
             right: 0;
+            right: 52px;
+            bottom: 68px;
         }
     }
 
     @media (--md) {
-        #friends-page {
-            right: 32px;
+        #friends-container {
+            right: 36px;
+            bottom: 48px;
+        }
+
+        #popup-friend-input {
+            top: 12px;
+        }
+
+        #friends-page > ul > li > p {
+            font-size: 20px;
         }
     }
 
     @media (--sm) {
-        #friends-page {
-            right: 80px;
+        #friends-container {
+            right: 84px;
             bottom: 99px;
             transform: scale(1.5);
         }
 
         #popup-friend-input {
-            font-size: 8px;
+            top: 6px;
+            font-size: 7px;
         }
 
-        #friends-container > ul > li > p {
-            font-size: 12px;
+        #friends-page > ul > li > p {
+            font-size: 10px;
         }
     }
 }

@@ -27,11 +27,18 @@
         "item": "logs"
     },
 
+    "oak5": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 10,
+        "item": "logs"
+    },
+
     "snowoak": {
         "levelRequirement": 20,
         "experience": 75,
         "difficulty": 90,
-        "item": "logs"
+        "item": "icelogs"
     },
 
     "tutorialsnowoak": {
@@ -46,7 +53,7 @@
         "levelRequirement": 5,
         "experience": 15,
         "difficulty": 25,
-        "item": "logs"
+        "item": "palmlogs"
     },
 
     "iceoak": {
@@ -70,6 +77,13 @@
         "item": "icelogs"
     },
 
+    "iceoak4": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "icelogs"
+    },
+
     "icepalm": {
         "levelRequirement": 15,
         "experience": 55,
@@ -81,14 +95,14 @@
         "levelRequirement": 20,
         "experience": 75,
         "difficulty": 80,
-        "item": "logs"
+        "item": "icepinelogs"
     },
 
     "willow": {
         "levelRequirement": 30,
         "experience": 150,
         "difficulty": 160,
-        "item": "logs"
+        "item": "willowlogs"
     },
 
     "bloodwood": {

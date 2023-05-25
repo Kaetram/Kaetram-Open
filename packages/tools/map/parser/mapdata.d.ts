@@ -21,10 +21,19 @@ export interface PropertyValues {
     type?: string;
     v?: never;
     o?: never;
+    h?: never;
+    obs?: never;
     tree?: string;
     stump?: string;
     cutstump?: string;
-    rock?: never;
+    stumpcut?: string;
+    rock?: string;
+    rockbase?: string;
+    rockempty?: string;
+    fishspot?: string;
+    fishempty?: string;
+    forage?: string; // A forageable tile
+    forageempty?: string; // A forageable tile that has been foraged
     cursor?: never;
 }
 

@@ -1,22 +1,22 @@
-import { Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import _ from 'lodash';
-
-import { Ability as AbilityPacket } from '../../../../network/packets';
-
 import AbilitiesIndex from './ability/impl/index';
+
+import log from '@kaetram/common/util/log';
+import { Opcodes } from '@kaetram/common/network';
+import { Ability as AbilityPacket } from '@kaetram/common/network/impl';
 
 import type { AbilityData, SerializedAbility } from '@kaetram/common/types/ability';
 import type Ability from './ability/ability';
 import type Player from './player';
 
 type AddCallback = (ability: Ability) => void;
+type ToggleCallback = (key: string) => void;
 
 export default class Abilities {
     private abilities: { [key: string]: Ability } = {}; // All the abilities that the player has.
 
     private loadCallback?: () => void;
     private addCallback?: AddCallback;
+    public toggleCallback?: ToggleCallback;
 
     public constructor(private player: Player) {}
 
@@ -27,9 +27,8 @@ export default class Abilities {
      */
 
     public load(info: SerializedAbility): void {
-        _.each(info.abilities, (ability: AbilityData) =>
-            this.add(ability.key, ability.level, ability.quickSlot, true)
-        );
+        for (let ability of info.abilities)
+            this.add(ability.key, ability.level, ability.quickSlot, true);
 
         this.loadCallback?.();
     }
@@ -129,9 +128,8 @@ export default class Abilities {
 
     public setQuickSlot(key: string, quickSlot: number): void {
         // Clears a quick slot from another ability if it is found.
-        _.each(this.abilities, (ability: Ability) => {
+        for (let ability of Object.values(this.abilities))
             if (ability.hasQuickSlot(quickSlot)) ability.setQuickSlot(-1);
-        });
 
         // Updates the quick slot of the ability.
         this.abilities[key]?.setQuickSlot(quickSlot);
@@ -157,9 +155,8 @@ export default class Abilities {
     public serialize(includeType = false): SerializedAbility {
         let abilities: AbilityData[] = [];
 
-        _.each(this.abilities, (ability: Ability) =>
-            abilities.push(ability.serialize(includeType))
-        );
+        for (let ability of Object.values(this.abilities))
+            abilities.push(ability.serialize(includeType));
 
         return {
             abilities
@@ -181,5 +178,15 @@ export default class Abilities {
 
     public onAdd(callback: AddCallback): void {
         this.addCallback = callback;
+    }
+
+    /**
+     * Callback for when the ability is toggled. This occurs
+     * when the ability is activated or when it is deactivated.
+     * @param callback Contains the key of the ability that was toggled.
+     */
+
+    public onToggle(callback: ToggleCallback): void {
+        this.toggleCallback = callback;
     }
 }

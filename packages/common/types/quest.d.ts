@@ -14,10 +14,10 @@ export interface RawStage {
     mobCountRequirement?: number;
 
     /** Item required in the inventory to progress to next stage. */
-    itemRequirement?: string;
+    itemRequirement?: string[];
 
     /** How many of a given item we need to progress. */
-    itemCountRequirement?: number;
+    itemRequirementCount?: number[];
 
     /** Text for the NPC. */
     text?: DialogueItem[];
@@ -41,13 +41,19 @@ export interface RawStage {
     /** If a tree must be cut. */
     tree?: string;
     treeCount?: number; // Amount of tress to be cut.
+
+    /** Skill experience rewards */
+    skill?: string;
+    experience?: number;
 }
 
 export interface RawQuest {
     name: string;
     description: string;
     rewards?: string[];
-    hideNPCs?: string[]; // NPCs to hide after quest.-
+    skillRequirements?: { [key: string]: number }; // Skills required to start the quest.
+    questRequirements?: string[]; // Quests required to start this quest.
+    hideNPCs?: HideNPC; // NPCs to hide after quest.-
     stages: { [id: number]: RawStage };
 }
 
@@ -56,8 +62,8 @@ export interface StageData {
     npc?: string;
     mob?: string[];
     mobCountRequirement: number; // how many mobs we need to kill to progress
-    itemRequirement?: string;
-    itemCountRequirement?: number; // how many of an item we need for progression
+    itemRequirement?: string[];
+    itemRequirementCount?: number[]; // how many of an item we need for progression
     text?: string[];
     completedText?: string[];
     pointer?: PointerData;
@@ -68,6 +74,8 @@ export interface StageData {
     abilityLevel?: number;
     tree?: string;
     treeCount?: number;
+    skill?: string;
+    experience?: number;
 }
 
 export interface QuestData {
@@ -77,12 +85,18 @@ export interface QuestData {
 
     name?: string;
     description?: string;
+    skillRequirements?: { [key: string]: number };
+    questRequirements?: string[];
     rewards?: string[];
     stageCount?: number;
 }
 
 export interface SerializedQuest {
     quests: QuestData[];
+}
+
+export interface HideNPC {
+    [key: string]: string;
 }
 
 export type TaskType = 'talk' | 'kill' | 'pickup' | 'tree';

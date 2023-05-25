@@ -1,32 +1,35 @@
+import Entity from '../entity';
+
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
-
-import Entity from '../entity';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type Character from '../character/character';
 import type Hit from '../character/combat/hit';
 
 export default class Projectile extends Entity {
-    public hitType = Modules.Hits.Damage;
     private impactCallback?: () => void;
 
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
         super(
             Utils.createInstance(Modules.EntityType.Projectile),
-            owner.projectileName,
+            owner.getProjectileName(),
             owner.x,
             owner.y
         );
 
-        this.key = owner.projectileName;
+        // Apply the terror hit type if the projectile is a terror projectile.
+        if (this.key === 'projectile-terror') this.hit.type = Modules.Hits.Terror;
+
+        // Apply the terorr projectile if the hit type is terror.
+        if (this.hit.type === Modules.Hits.Terror) this.key = 'projectile-terror';
 
         /**
          * The rough speed of the projectile is 1 tile per 100ms, so we use that
          * to calculate the approximate time it takes for impact to occur.
          */
 
-        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 100);
+        setTimeout(this.handleImpact.bind(this), this.owner.getDistance(this.target) * 90);
     }
 
     /**
@@ -36,6 +39,9 @@ export default class Projectile extends Entity {
 
     private handleImpact(): void {
         this.target?.hit(this.hit.getDamage(), this.owner, this.hit.aoe);
+
+        // Updates the status effect based on the hit type.
+        this.target?.addStatusEffect(this.hit);
 
         // Despawn callback.
         this.impactCallback?.();
@@ -52,7 +58,7 @@ export default class Projectile extends Entity {
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
         data.damage = this.hit.getDamage() || 0;
-        data.hitType = this.hitType;
+        data.hitType = this.hit.type;
 
         return data;
     }

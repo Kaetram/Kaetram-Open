@@ -1,9 +1,11 @@
-import _ from 'lodash';
+import config from '@kaetram/common/config';
+import { Friends as FriendsPacket } from '@kaetram/common/network/impl';
+import { Opcodes } from '@kaetram/common/network';
 
-import type { Friend } from '@kaetram/common/types/friends';
 import type Player from './player';
+import type { Friend } from '@kaetram/common/types/friends';
 
-type SyncCallback = (username: string, status: boolean) => void;
+type SyncCallback = (username: string, status: boolean, serverId: number) => void;
 
 export default class Friends {
     // A friend object has a key of the username and a value of the online status
@@ -25,9 +27,14 @@ export default class Friends {
         // Nothing to load.
         if (friends.length === 0) return;
 
-        _.each(friends, (username: string) => {
-            this.list[username] = this.player.world.isOnline(username);
-        });
+        for (let username of friends) {
+            let online = this.player.world.isOnline(username);
+
+            this.list[username] = {
+                online,
+                serverId: online ? config.serverId : -1
+            };
+        }
 
         this.loadCallback?.();
     }
@@ -57,10 +64,18 @@ export default class Friends {
             if (!exists) return this.player.notify('No player with that username exists.');
 
             // Add the friend and check if they are online.
-            this.list[username] = this.player.world.isOnline(username);
+            let online = this.player.world.isOnline(username);
+
+            this.list[username] = {
+                online,
+                serverId: online ? config.serverId : -1
+            };
 
             // Add the friend to the list and pass on the online status to the client.
-            this.addCallback?.(username, this.list[username]);
+            this.addCallback?.(username, this.list[username].online, this.list[username].serverId);
+
+            // If the friend we just added is not online we ask to sync across all servers.
+            if (!online) this.sync([username]);
         });
     }
 
@@ -70,7 +85,7 @@ export default class Friends {
      */
 
     public remove(player: Player | string): void {
-        let username = typeof player === 'string' ? player : player.username;
+        let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // No username was found in the list.
         if (!this.hasFriend(username))
@@ -82,11 +97,40 @@ export default class Friends {
     }
 
     /**
+     * Relays a message to the hub to check across all servers whether a list
+     * of players are online or not. We use this to synchronize the friends list
+     * after we check the current server for online players.
+     * @param inactiveFriends Optional parameter that defaults to the
+     * current list of inactive friends if not specified.
+     */
+
+    public sync(inactiveFriends: string[] = this.getInactiveFriends()): void {
+        // Skip if there are no inactive friends.
+        if (inactiveFriends.length === 0) return;
+
+        // Relay the message to the hub.
+        this.player.world.client.send(
+            new FriendsPacket(Opcodes.Friends.Sync, {
+                username: this.player.username,
+                inactiveFriends
+            })
+        );
+    }
+
+    /**
      * @returns A list of all friends.
      */
 
     public getFriendsList(): Friend {
         return this.list;
+    }
+
+    /**
+     * @returns A string list of all the players that are inactive.
+     */
+
+    public getInactiveFriends(): string[] {
+        return Object.keys(this.list).filter((username) => !this.list[username].online);
     }
 
     /**
@@ -102,12 +146,31 @@ export default class Friends {
      * Updates the online status for a friend.
      * @param username The username of the friend.
      * @param status The online status of the friend.
+     * @param serverId The server ID of the friend.
      */
 
-    public setStatus(username: string, status: boolean): void {
-        this.list[username] = status;
+    public setStatus(username: string, status: boolean, serverId: number): void {
+        let friend = this.list[username];
 
-        this.statusCallback?.(username, status);
+        if (!friend) return;
+
+        friend.online = status;
+        friend.serverId = status ? serverId : -1;
+
+        this.statusCallback?.(username, status, friend.serverId);
+    }
+
+    /**
+     * Takes a list of active friends and appends it onto the current list.
+     * @param list The list of active friends.
+     */
+
+    public setActiveFriends(list: Friend): void {
+        for (let username in list) {
+            let friend = list[username];
+
+            this.setStatus(username, friend.online, friend.serverId);
+        }
     }
 
     /**

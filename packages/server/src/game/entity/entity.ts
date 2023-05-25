@@ -1,3 +1,5 @@
+import Character from './character/character';
+
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
@@ -7,6 +9,7 @@ import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
 import type Projectile from './objects/projectile';
+import type Mob from './character/mob/mob';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -107,10 +110,7 @@ abstract class Entity {
      */
 
     public getDistance(entity: Entity): number {
-        let x = Math.abs(this.x - entity.x),
-            y = Math.abs(this.y - entity.y);
-
-        return x > y ? x : y;
+        return Math.abs(this.x - entity.x) + Math.abs(this.y - entity.y);
     }
 
     /**
@@ -197,7 +197,16 @@ abstract class Entity {
         if (!quest) return this.visible;
 
         // Check if quest is completed and check if NPC is hidden.
-        return !(quest.isFinished() && quest.isHiddenNPC(this.key));
+        return quest.isNPCVisible(this.key);
+    }
+
+    /**
+     * Used to check whether the entity is a character that can move and perform combat.
+     * @returns Whether the entity is a character.
+     */
+
+    public isCharacter(): this is Character {
+        return this instanceof Character;
     }
 
     /**
@@ -205,7 +214,7 @@ abstract class Entity {
      * @returns Whether the type is equal to the EntityType mob.
      */
 
-    public isMob(): boolean {
+    public isMob(): this is Mob {
         return this.type === Modules.EntityType.Mob;
     }
 

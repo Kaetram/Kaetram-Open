@@ -11,11 +11,6 @@
     background-color: rgb(0 0 0 / 20%);
 
     transition: 1s opacity linear;
-
-    // width: 490px;
-    // height: 266px;
-    // margin: -126px auto auto -245px;
-    // position: absolute;
 }
 
 #background,
@@ -40,7 +35,7 @@
     user-select: none;
 
     @media (--sm) {
-        cursor: url('/img/3/hand.png'), auto;
+        cursor: url('/img/hand.png'), auto;
     }
 }
 
@@ -61,52 +56,79 @@
 
     background: none;
     border: 0;
-
-    // background: url('/img/1/border.png') no-repeat;
-    // background-size: 100% 100%;
 }
 
-.container-slot {
+.container {
+    cursor: url('/img/hand.png'), auto;
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+
+.container-slot,
+.container-slot-large {
     margin: auto;
 }
 
-.container-slot > p {
+.container-slot.flex,
+.container-slot-large.flex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container-slot > p,
+.container-slot-large > p {
     font-size: 20px;
     color: rgb(168 16 5);
     text-align: center;
 }
 
-.container-slot > p.yellow {
+.container-slot > p.left,
+.container-slot-large > p.left {
+    float: left;
+    text-align: left;
+}
+
+.container-slot > p.right,
+.container-slot-large > p.right {
+    float: right;
+    text-align: right;
+}
+
+.container-slot > p.yellow,
+.container-slot-large > p.yellow {
     color: rgb(168 168 5);
 }
 
-.container-slot > p.green {
+.container-slot > p.green,
+.container-slot-large > p.green {
     color: rgb(16 168 5);
+}
+
+.container-slot > p.white,
+.container-slot-large > p.white {
+    color: rgb(255 255 255);
 }
 
 @each $size, $i in media.$sizes {
     @media ($size) {
         .container {
-            cursor: url('/img/3/hand.png'), auto;
-
-            position: absolute;
-            inset: 0;
-
-            display: none;
-
             width: 344px * $i;
             height: 157px * $i;
             margin: auto;
 
-            background: url('/img/#{$i}/spritesheet.png') 0 -80px * $i no-repeat;
+            background: url('/img/interface/spritesheet.png') 0 -80px * $i no-repeat;
+            background-size: calc(width('spritesheet.png') * $i);
         }
-
 
         .container-slot {
             width: 102px * $i;
             height: 15px * $i;
             margin-top: 2px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') -144px * $i -256px * $i;
+
+            background: url('/img/interface/characterdialogsheet.png') -144px * $i -256px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-y: -320px * $i;
@@ -117,13 +139,48 @@
             }
         }
 
-        .container-slot > p {
+        .container-slot-large {
+            width: 166px * $i;
+            height: 15px * $i;
+            margin-top: 2px * $i;
+
+            background: url('/img/interface/leaderboards.png') 0 -160px * $i;
+            background-size: calc(width('leaderboards.png') * $i);
+
+            &:hover {
+                background-position-y: -176px * $i;
+            }
+
+            &:active {
+                background-position-y: -192px * $i;
+            }
+        }
+
+        .container-slot > p,
+        .container-slot-large > p {
             padding-top: 4px * $i;
+        }
+
+        .new-close-container {
+            width: 11px * $i;
+            height: 12px * $i;
+            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-x: -124px * $i;
+            }
+
+            &:active,
+            &.active {
+                background-position-x: -136px * $i;
+            }
         }
     }
 
     @media (--sm) {
-        .container-slot > p {
+        .container-slot > p,
+        .container-slot-large > p {
             padding-top: 2px;
             font-size: 10px;
         }
@@ -133,4 +190,9 @@
 .close-container {
     top: -2% !important;
     left: 96% !important;
+}
+
+.new-close-container {
+    position: absolute;
+    right: 1px;
 }

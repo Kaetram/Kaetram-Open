@@ -1,540 +1,178 @@
-import _ from 'lodash-es';
-import sanitizer from 'sanitizer';
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import Filter from '@kaetram/common/util/filter';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Packets, Opcodes } from '@kaetram/common/network';
+import { Guild } from '@kaetram/common/network/impl';
+import Packet from '@kaetram/common/network/packet';
 
-import Creator from '../database/mongodb/creator';
-import { Spawn } from '../network/packets';
-
-import Commands from './commands';
-
-import type MongoDB from '../database/mongodb/mongodb';
-import type Entities from './entities';
 import type World from '../game/world';
-import type Connection from '../network/connection';
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type {
-    AbilityPacket,
-    ContainerPacket,
-    EquipmentPacket,
-    LoginPacket,
-    MovementPacket,
-    ReadyPacket,
-    StorePacket,
-    WarpPacket,
-    FriendsPacket
-} from '@kaetram/common/types/messages/incoming';
-import type Character from '../game/entity/character/character';
-import type Player from '../game/entity/character/player/player';
-import type Entity from '../game/entity/entity';
-import type NPC from '../game/entity/npc/npc';
-import type Chest from '../game/entity/objects/chest';
+    ChatPacket,
+    FriendsPacket,
+    PlayerPacket,
+    RelayPacket
+} from '@kaetram/common/types/messages/hub';
+
+/**
+ * This incoming is the global incoming controller. This is responsible for
+ * communication between the server and the client. If you are an active developer
+ * of Kaetram you'll find yourself confused as to why there are two incoming
+ * controllers. The player-based one was relocated in the player directory.
+ * Coming up with names for network handlers is hard and more confusing than it's worth.
+ */
 
 export default class Incoming {
-    private world: World;
-    private connection: Connection;
-    private entities: Entities;
-    private database: MongoDB;
-    private commands: Commands;
-
-    public constructor(private player: Player) {
-        this.connection = player.connection;
-        this.world = player.world;
-        this.entities = this.world.entities;
-        this.database = player.database;
-        this.commands = new Commands(player);
-
-        this.connection.onMessage(([packet, message]) => {
-            if (!Utils.validPacket(packet)) {
-                log.error(`Non-existent packet received: ${packet} data: `);
-                log.error(message);
-
-                return;
-            }
-
-            player.refreshTimeout();
-
-            // Prevent server from crashing due to a packet malfunction.
-            try {
-                switch (packet) {
-                    case Packets.Login: {
-                        return this.handleLogin(message);
-                    }
-                    case Packets.Ready: {
-                        return this.handleReady(message);
-                    }
-                    case Packets.List: {
-                        return this.player.updateEntityList();
-                    }
-                    case Packets.Who: {
-                        return this.handleWho(message);
-                    }
-                    case Packets.Equipment: {
-                        return this.handleEquipment(message);
-                    }
-                    case Packets.Movement: {
-                        return this.handleMovement(message);
-                    }
-                    case Packets.Target: {
-                        return this.handleTarget(message);
-                    }
-                    case Packets.Network: {
-                        return this.handleNetwork(message);
-                    }
-                    case Packets.Chat: {
-                        return this.handleChat(message);
-                    }
-                    case Packets.Command: {
-                        return this.handleCommand(message);
-                    }
-                    case Packets.Container: {
-                        return this.handleContainer(message);
-                    }
-                    case Packets.Ability: {
-                        return this.handleAbility(message);
-                    }
-                    case Packets.Respawn: {
-                        return this.player.respawn();
-                    }
-                    case Packets.Trade: {
-                        return this.handleTrade(message);
-                    }
-                    case Packets.Enchant: {
-                        return this.handleEnchant(message);
-                    }
-                    case Packets.Warp: {
-                        return this.handleWarp(message);
-                    }
-                    case Packets.Store: {
-                        return this.handleStore(message);
-                    }
-                    case Packets.Friends: {
-                        return this.handleFriends(message);
-                    }
-                }
-            } catch (error) {
-                log.error(error);
-            }
-        });
-    }
+    public constructor(private world: World) {}
 
     /**
-     * Handles the login process for Kaetram.
-     * @param data The packet data for the login. Generally contains
-     * username, password, (email if registering). If it's a guest login,
-     * then we proceed with no username/password and no database saving.
+     * Entrypoint for handling incoming packets from the hub. We organize them in an
+     * array. First element is the packet type, the second is the opcode, and lastly
+     * we have whatever data the hub decided to send.
      */
 
-    private handleLogin(data: LoginPacket): void {
-        let { opcode, username, password, email } = data;
-
-        if (username) {
-            // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-            this.player.username = username.toLowerCase().slice(0, 32).trim();
-
-            if (password) this.player.password = password.slice(0, 32);
-            if (email) this.player.email = email;
-
-            // Reject connection if player is already logged in.
-            if (this.world.isOnline(this.player.username))
-                return this.connection.reject('loggedin');
-
-            // Proceed directly to login with default player data if skip database is present.
-            if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
-        }
-
-        // Handle login for each particular case.
-        switch (opcode) {
-            case Opcodes.Login.Login: {
-                return this.database.login(this.player);
+    public handle([packet, opcode, data]: [number, unknown, unknown]): void {
+        switch (packet) {
+            case Packets.Player: {
+                return this.handlePlayer(opcode as number, data as PlayerPacket);
             }
 
-            case Opcodes.Login.Register: {
-                return this.database.register(this.player);
+            case Packets.Chat: {
+                return this.handleChat(opcode as ChatPacket);
             }
 
-            case Opcodes.Login.Guest: {
-                this.player.isGuest = true; // Makes sure player doesn't get saved to database.
-                this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
+            case Packets.Guild: {
+                return this.handleGuild(opcode as number, data as GuildPacket);
+            }
 
-                return this.player.load(Creator.serializePlayer(this.player));
+            case Packets.Friends: {
+                return this.handleFriends(data as FriendsPacket);
+            }
+
+            case Packets.Relay: {
+                return this.handleRelay(opcode as RelayPacket);
             }
         }
     }
 
-    private handleReady(data: ReadyPacket): void {
-        let { regionsLoaded, userAgent } = data;
-
-        this.player.handleUserAgent(userAgent, regionsLoaded);
-
-        this.player.handler.startUpdateInterval();
-
-        this.player.ready = true;
-
-        this.player.updateRegion();
-        this.player.updateEntities();
-        this.player.updateEntityList();
-
-        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
-        this.world.discord.sendMessage(this.player.username, 'has logged in!');
-        this.world.linkFriends(this.player);
-
-        if (this.player.isDead()) this.player.deathCallback?.();
-    }
-
     /**
-     * Packet contains list of entity instances that the client is requesting to spawn. The client compares
-     * all the entities in the region to the entities it has spawned and the difference is sent here. The difference
-     * represents the entities that the client doesn't have spawned.
-     * @param message Contains a list of entity instances
+     * Responsible for synchronizing the player's login or logout actions with the controllers
+     * in the server. This updates the friends list/guilds/etc of other players and notifies
+     * them that the player has logged in or out (if applicable).
+     * @param opcode What type of action the player is performing (logging in or out)
+     * @param data Contains the player's username and server id.
      */
 
-    private handleWho(message: string[]): void {
-        _.each(message, (instance: string) => {
-            let entity = this.entities.get(instance);
-
-            if (!entity || entity.dead) return;
-
-            /* We handle player-specific entity statuses here. */
-            this.player.send(
-                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+    private handlePlayer(opcode: Opcodes.Player, data: PlayerPacket): void {
+        // Synchronize the player's login or logout to the guild members.
+        if (data.guild)
+            this.world.syncGuildMembers(
+                data.guild,
+                data.username,
+                opcode === Opcodes.Player.Logout,
+                data.serverId
             );
-        });
+
+        // Synchronize the player's login or logout to the friends list.
+        return this.world.syncFriendsList(
+            data.username,
+            opcode === Opcodes.Player.Logout,
+            data.serverId
+        );
     }
 
     /**
-     * Handles equipment packet. Generally involved in unequipping.
-     * @param data Contains information about which slot to unequip.
+     * Handles the event received from the hub about chat messages. This can be used
+     * for private messages or global messages (from the Discord bot).
+     * @param chat Contains information about the message.
      */
 
-    private handleEquipment(data: EquipmentPacket): void {
-        switch (data.opcode) {
-            case Opcodes.Equipment.Unequip: {
-                return this.player.equipment.unequip(data.type);
-            }
+    private handleChat(data: ChatPacket) {
+        // Not found occurs when the hub could not find the player anywhere.
+        if (data.notFound) {
+            let player = this.world.getPlayerByName(data.source!);
+
+            return player?.notify(`Player @aquamarine@${data.target}@white@ is not online.`);
         }
-    }
 
-    private handleMovement(data: MovementPacket): void {
-        let {
-                opcode,
-                requestX,
-                requestY,
-                playerX,
-                playerY,
-                movementSpeed,
-                targetInstance,
-                orientation,
-                following
-            } = data,
-            entity: Entity;
+        // Success is an event sent from the hub when the message was successfully delivered.
+        if (data.success) {
+            let player = this.world.getPlayerByName(data.source!);
 
-        if (this.player.dead) return;
-
-        switch (opcode) {
-            case Opcodes.Movement.Request: {
-                return this.player.handleMovementRequest(
-                    playerX!,
-                    playerY!,
-                    targetInstance!,
-                    following!
-                );
-            }
-
-            case Opcodes.Movement.Started: {
-                return this.player.handleMovementStarted(
-                    playerX!,
-                    playerY!,
-                    movementSpeed!,
-                    targetInstance!
-                );
-            }
-
-            case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!);
-            }
-
-            case Opcodes.Movement.Stop: {
-                return this.player.handleMovementStop(
-                    playerX!,
-                    playerY!,
-                    targetInstance!,
-                    orientation
-                );
-            }
-
-            case Opcodes.Movement.Entity: {
-                entity = this.entities.get(targetInstance!) as Character;
-                entity?.setPosition(requestX!, requestY!);
-                break;
-            }
+            return player?.notify(
+                data.message!,
+                'aquamarine',
+                `[To ${Utils.formatName(data.target!)}]`,
+                true
+            );
         }
-    }
 
-    private handleTarget(message: [Opcodes.Target, string]): void {
-        let [opcode, instance] = message;
+        // No target means that the message is globally sent.
+        if (!data.target)
+            return this.world.globalMessage(
+                data.source!,
+                data.message!,
+                data.colour || 'tomato',
+                true
+            );
 
-        switch (opcode) {
-            case Opcodes.Target.Talk: {
-                let entity = this.entities.get(instance);
+        // Find who the message is targeted towards and attempt to send them a message.
+        let target = this.world.getPlayerByName(data.target!);
 
-                if (!entity || !this.player.isAdjacent(entity)) return;
-
-                this.player.cheatScore = 0;
-
-                if (entity.isChest()) {
-                    let chest = entity as unknown as Chest;
-                    chest.openChest(this.player);
-                    return;
-                }
-
-                if (entity.dead) return;
-
-                this.player.npcTalkCallback?.(entity as NPC);
-
-                break;
-            }
-
-            case Opcodes.Target.Attack: {
-                let target = this.entities.get(instance) as Character;
-
-                if (!target || target.dead || !this.canAttack(this.player, target)) return;
-
-                this.player.cheatScore = 0;
-
-                this.player.combat.attack(target);
-
-                break;
-            }
-
-            case Opcodes.Target.None: {
-                // Nothing do to here.
-
-                break;
-            }
-
-            case Opcodes.Target.Object: {
-                return this.player.handleObjectInteraction(instance);
-            }
-        }
-    }
-
-    private handleNetwork(message: [Opcodes.Network]): void {
-        let [opcode] = message;
-
-        switch (opcode) {
-            case Opcodes.Network.Pong: {
-                let time = Date.now();
-
-                this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
-
-                break;
-            }
-        }
+        target?.sendMessage(data.target!, data.message!, data.source!);
     }
 
     /**
-     * Receives a raw chat input from the client, sanitizes it, and parses
-     * whether it is just a message or a command.
-     * @param message Raw string input from the client.
+     * Receives information from the hub regarding a guild. Generally this is used when a
+     * player logs in and requests to verify the online status of their guild's members.
+     * We receive a packet here and relay the list of members to the player's client.
+     * @param opcode The type of action that the hub is performing (update usually).
+     * @param data Contains information about the opcode.
      */
 
-    private handleChat(message: [string]): void {
-        // Message sanitization.
-        let text = sanitizer.escape(sanitizer.sanitize(message[0]));
-
-        if (!text || text.length === 0 || !/\S/.test(text)) return;
-
-        // Handle commands if the prefix is / or ;
-        if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
-
-        this.player.chat(Filter.clean(text));
-    }
-
-    private handleCommand(message: [Opcodes.Command, Position]): void {
-        let [opcode, position] = message;
-
-        if (this.player.rights < 2) return;
-
+    private handleGuild(opcode: Opcodes.Guild, data: GuildPacket): void {
         switch (opcode) {
-            case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.x, position.y, true);
+            case Opcodes.Guild.Update: {
+                if (!data.username || !data.members) return;
 
-                break;
-            }
-        }
-    }
+                let player = this.world.getPlayerByName(data.username);
 
-    /**
-     * Handles data associated with containers. This can include removing
-     * or selecting items in the container. Depending on the type, we route
-     * to the appropriate action.
-     * @param packet Packet data containing type of container and opcode information.
-     */
+                // Send the packet to the player's client.
+                if (player) player.send(new Guild(Opcodes.Guild.Update, { members: data.members }));
 
-    private handleContainer(packet: ContainerPacket): void {
-        let container =
-            packet.type === Modules.ContainerType.Inventory
-                ? this.player.inventory
-                : this.player.bank;
-
-        log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
-
-        switch (packet.opcode) {
-            case Opcodes.Container.Select: {
-                return this.player.handleContainerSelect(
-                    packet.type,
-                    packet.index!,
-                    packet.subType
-                );
-            }
-
-            case Opcodes.Container.Remove: {
-                container.remove(packet.index!, undefined, true);
                 return;
             }
-
-            case Opcodes.Container.Swap: {
-                container.swap(packet.index!, packet.tIndex!);
-                break;
-            }
         }
     }
 
     /**
-     * Handles incoming abilities actions from the client. Things such as using
-     * an ability or moving one to a quick slot.
-     * @param packet Contains infomration about which ability to use and where to move it.
-     */
-
-    private handleAbility(packet: AbilityPacket): void {
-        switch (packet.opcode) {
-            case Opcodes.Ability.Use: {
-                return this.player.abilities.use(packet.key);
-            }
-
-            case Opcodes.Ability.QuickSlot: {
-                return this.player.abilities.setQuickSlot(packet.key, packet.index!);
-            }
-        }
-    }
-
-    private handleTrade(message: [Opcodes.Trade, string]): void {
-        let [opcode] = message,
-            oPlayer = this.entities.get(message[1]);
-
-        if (!oPlayer) return;
-
-        switch (opcode) {
-            case Opcodes.Trade.Request: {
-                break;
-            }
-
-            case Opcodes.Trade.Accept: {
-                break;
-            }
-
-            case Opcodes.Trade.Decline: {
-                break;
-            }
-        }
-    }
-
-    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
-        // let [opcode] = message;
-        // switch (opcode) {
-        //     case Opcodes.Enchant.Select: {
-        //         let index = message[1] as number,
-        //             item = this.player.inventory.slots[index],
-        //             type: EnchantType = 'item';
-        //         if (item.id < 1) return;
-        //         if (Items.isShard(item.id)) type = 'shards';
-        //         this.player.enchant.add(type, item);
-        //         break;
-        //     }
-        //     case Opcodes.Enchant.Remove:
-        //         this.player.enchant.remove(message[1] as EnchantType);
-        //         break;
-        //     case Opcodes.Enchant.Enchant:
-        //         this.player.enchant.enchant();
-        //         break;
-        // }
-    }
-
-    /**
-     * Receives a warp packet from the client containing the
-     * id of the warp selected. The server then verifies
-     * the request (whether the player can warp there or not
-     * and if the requirements are fulfilled) and sends a teleport
-     * packet later on.
-     * @param data Contains information about the warp (such as id).
-     */
-
-    private handleWarp(data: WarpPacket): void {
-        this.world.warps.warp(this.player, data.id);
-    }
-
-    /**
-     * Receives store interaction packets from the client. This contains
-     * the store key, the index of the item selected, and how much of the
-     * item we are purchasing/sellling/selecting.
-     * @param data Store packet data containing the store key, index, and amount.
-     */
-
-    private handleStore(data: StorePacket): void {
-        log.debug(`Received store packet: ${data.opcode}`);
-
-        // Ignore invalid packets.
-        if (data.index < 0) return;
-
-        switch (data.opcode) {
-            case Opcodes.Store.Buy: {
-                return this.world.stores.purchase(this.player, data.key, data.index, data.count);
-            }
-
-            case Opcodes.Store.Sell: {
-                return this.world.stores.sell(this.player, data.key, data.index, data.count);
-            }
-
-            case Opcodes.Store.Select: {
-                return this.world.stores.select(this.player, data.key, data.index, data.count);
-            }
-        }
-    }
-
-    /**
-     * Handles incoming packets from the client about the friends list. Contains
-     * instructions such as adding or removing a friend from the list.
-     * @param data Contains the opcode (type of action) and the username.
+     * Receives information from the server regarding a player's active friends. When a player first
+     * logs in, we check the server they're currently on for who is online. We then ask the hub to check
+     * remaining non-active friends on other servers. Here we receive the information from the hub and
+     * update the player's friends list.
+     * @param data Contains the player's username and their active friends (alongside their serverId).
      */
 
     private handleFriends(data: FriendsPacket): void {
-        switch (data.opcode) {
-            case Opcodes.Friends.Add: {
-                return this.player.friends.add(data.username);
-            }
+        let player = this.world.getPlayerByName(data.username!);
 
-            case Opcodes.Friends.Remove: {
-                return this.player.friends.remove(data.username);
-            }
-        }
+        if (data.activeFriends) player?.friends.setActiveFriends(data.activeFriends);
     }
 
     /**
-     * Used to prevent client-sided manipulation. The client will send the packet to start combat
-     * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
+     * Handles receiving a relay packet. This contains a username that we want to send the packet
+     * to across servers. The first elementin the RelayPacket array is the player's username,
+     * and the second is the packet that we want to send to them.
+     * @param data Contains the player's username and the packet we want to send to them.
      */
-    private canAttack(attacker: Character, target: Character): boolean {
-        if (attacker.isMob() || target.isMob()) return true;
 
-        return (
-            attacker.isPlayer() &&
-            target.isPlayer() &&
-            attacker.pvp &&
-            target.pvp &&
-            attacker.team !== target.team
-        );
+    private handleRelay(data: RelayPacket): void {
+        let [username, info] = data,
+            player = this.world.getPlayerByName(username);
+
+        // Could hypothetically happen if the player is in the process of logging out.
+        if (!player) return log.debug(`Could not find player ${username} to relay packet.`);
+
+        // Relays the packet to the player's packet handler.
+        player.send(new Packet(info[0], info[1], info[2]));
     }
 }

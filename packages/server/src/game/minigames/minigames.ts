@@ -1,8 +1,7 @@
+import Index from './impl/index';
+
 import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash';
-
-import Index from './impl/index';
 
 import type Area from '../map/areas/area';
 import type Areas from '../map/areas/areas';
@@ -19,18 +18,15 @@ export default class Minigames {
     private areas: Areas;
 
     public constructor(private world: World) {
-        this.areas = this.world.map.getMinigameAreas();
+        this.areas = world.map.getMinigameAreas();
 
         // Iterate through the minigame keys in the index and initialize them.
-        _.each(
-            Object.keys(Index),
-            (key: string) =>
-                (this.minigames[key] = new Index[key as keyof typeof Index](this.world))
-        );
+        for (let key in Index)
+            this.minigames[key] = new Index[key as keyof typeof Index](this.world);
 
         log.info(
-            `Finished loading ${_.size(this.minigames)} minigame${
-                _.size(this.minigames) > 1 ? 's' : ''
+            `Finished loading ${Object.keys(this.minigames).length} minigame${
+                Object.keys(this.minigames).length > 1 ? 's' : ''
             }.`
         );
 
@@ -60,7 +56,7 @@ export default class Minigames {
      * @returns The minigame object if found, otherwise undefined.
      */
 
-    public get(opcode: Opcodes.Minigame): Minigame {
+    public get(opcode: Opcodes.Minigame | undefined): Minigame | undefined {
         switch (opcode) {
             case Opcodes.Minigame.TeamWar: {
                 return this.minigames.teamwar;

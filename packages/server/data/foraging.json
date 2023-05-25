@@ -1,0 +1,36 @@
+{
+    "blueberry": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 1,
+        "item": "blueberry"
+    },
+
+    "corn": {
+        "levelRequirement": 5,
+        "experience": 15,
+        "difficulty": 1,
+        "item": "corn"
+    },
+
+    "bluelily": {
+        "levelRequirement": 10,
+        "experience": 20,
+        "difficulty": 1,
+        "item": "bluelily"
+    },
+
+    "tomato": {
+        "levelRequirement": 15,
+        "experience": 25,
+        "difficulty": 1,
+        "item": "tomato"
+    },
+
+    "peach": {
+        "levelRequirement": 5,
+        "experience": 30,
+        "difficulty": 1,
+        "item": "peach"
+    }
+}

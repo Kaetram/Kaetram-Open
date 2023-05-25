@@ -1,0 +1,185 @@
+import Skill from './skill';
+
+import Item from '../../../objects/item';
+
+import log from '@kaetram/common/util/log';
+import ResourceEn from '@kaetram/common/text/en/resource';
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+import { Animation } from '@kaetram/common/network/impl';
+
+import type Player from '../player';
+import type Resource from '../../../../globals/impl/resource';
+import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
+
+export default class ResourceSkill extends Skill {
+    private loop?: NodeJS.Timeout | undefined;
+
+    /**
+     * Used to determine if the resources goes to its depleted state after a successful
+     * harvest, or if there are multiple harvests per resource (fishing spots).
+     */
+
+    public randomDepletion = false;
+
+    public constructor(type: Modules.Skills, private data: ResourceData) {
+        super(type);
+    }
+
+    /**
+     * The interaction logic for the resource. Essentially makes sure that the player has
+     * the correct requirements. If a loop doesn't exist, then we start one.
+     * @param player The player that is interacting with the resource.
+     * @param resource The resource instance that we are attempting to interact with.
+     * @param hasWeapon Whether the player is wielding the correct weapon (passed by superclass).
+     * @param weaponLevel The resource capability level of the weapon (lumberjacking for trees, mining for rocks, etc)
+     */
+
+    public interact(player: Player, resource: Resource, weaponLevel = 0): void {
+        if (resource.isDepleted())
+            return log.debug(
+                `${player.username} attempted to interact with an exhausted resource.`
+            );
+
+        let resourceInfo = this.data[resource.type];
+
+        // Could not find resource interaction data for the resource.
+        if (!resourceInfo)
+            return log.warning(
+                `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
+            );
+
+        // Level required for this resource is too high for the yplayer.
+        if (resourceInfo.levelRequirement > this.level)
+            return player.notify(
+                ResourceEn.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+            );
+
+        // Unable to interact with the resource if the player hasn't completed the required achievement.
+        if (
+            resourceInfo.reqAchievement &&
+            !player.achievements.get(resourceInfo.reqAchievement)?.isFinished()
+        )
+            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+
+        // Unable to interact with the resource if the player hasn't completed the required quest.
+        if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
+            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+
+        if (!this.canHold(player)) return player.notify(ResourceEn.INVENTORY_FULL);
+
+        /**
+         * Stops the existing loop if the player is attempting to interact with the resource
+         * by continually clicking on it. This also allows the player to click between
+         * resources.
+         */
+        if (this.loop) this.stop();
+
+        this.loop = setInterval(() => {
+            // Stops the loop when the resource is depleted or the player cannot hold the resource.
+            if (resource.isDepleted() || !this.canHold(player)) return this.stop();
+
+            // Send the animation packet to the region player is in.
+            player.sendToRegion(
+                new Animation({ instance: player.instance, action: Modules.Actions.Attack })
+            );
+
+            // Use probability to check if we can exhaust the resource.
+            if (this.canExhaustResource(weaponLevel, resourceInfo)) {
+                // Add the logs to the inventory.
+                player.inventory.add(this.getItem(resourceInfo.item));
+
+                // Add experience to our skill.
+                this.addExperience(resourceInfo.experience);
+
+                // Increment the statistics for the player.
+                player.statistics.handleSkill(this.type);
+
+                // If resource has an achievement, attempt to award it if it hasn't been awarded yet.
+                if (resourceInfo.achievement)
+                    player.achievements.get(resourceInfo.achievement)?.finish();
+
+                // If the resource has a quest then we will call the resource callback.
+                if (resourceInfo.quest)
+                    player.quests
+                        .get(resourceInfo.quest)
+                        ?.resourceCallback?.(this.type, resource.type);
+
+                // Deplete the resource and send the signal to the region
+                if (this.shouldDeplete()) resource.deplete();
+            }
+        }, Modules.Constants.SKILL_LOOP);
+    }
+
+    /**
+     * Stops the resource interaction loop. Called when the player
+     * successfully depletes the resource or when the resource is depleted
+     * by someone else.
+     */
+
+    public override stop(): void {
+        if (!this.loop) return;
+
+        clearTimeout(this.loop);
+
+        this.loop = undefined;
+    }
+
+    /**
+     * Creates an item instance of the item that the resource rewards.
+     * @param key The item key we are creating.
+     * @param count The amount of the item we are creating.
+     * @returns The newly created item instance.
+     */
+
+    protected getItem(key: string): Item {
+        return new Item(key, -1, -1, false, 1);
+    }
+
+    /**
+     * Function to check whether or not we can hold the resource. We use this
+     * because of subclass implementations where double rewards are active.
+     * @param player The player that is attempting to hold the resource.
+     * @returns Whether or not the player has space in their inventory.
+     */
+
+    protected canHold(player: Player): boolean {
+        return player.inventory.hasSpace();
+    }
+
+    /**
+     * A randomized function which when returns true will deplete the resource. The probability
+     * of successfully depleting the resource is dependant on the weapon level, lumberjacking level,
+     * and the difficulty of the resource.
+     *
+     * Literally do not ask me how I came up with this. I don't know how I wrote it back
+     * in 2019, but here it is. It works, that's what matters. It feels 'random enough.'
+     * @param level The player's weapon lumberjacking level.
+     * @param info The information about the resource we are attempting to exhaust.
+     * @returns Whether a random number generated based on player's levels equals the difficulty of the resource.
+     */
+
+    protected canExhaustResource(level: number, info: ResourceInfo): boolean {
+        // Subtract the product of the weapon's level and resource level from the resource's difficulty.
+        let probability = info.difficulty - level * this.level;
+
+        // Prevent probability from going too low.
+        if (probability < 2) probability = 2;
+
+        return Utils.randomInt(0, probability) === 2;
+    }
+
+    /**
+     * Some resources have multiple harvests before they become exhausted.
+     * We use a 1/10 chance to determine if the resource should be exhausted.
+     * @returns Whether or not we should deplete the resource.
+     */
+
+    private shouldDeplete(): boolean {
+        // If the resource is not random, then we will always deplete it.
+        if (!this.randomDepletion) return true;
+
+        // 1 in 10 chance.
+        return Utils.randomInt(0, 10) === 4;
+    }
+}

@@ -7,11 +7,13 @@ export interface EquipmentData {
     name?: string;
     count: number;
     enchantments: Enchantments;
-    ranged?: boolean; // Specifically for weapon type.
+    attackRange?: number; // Specifically for weapon type.
     poisonous?: boolean;
     attackStats?: Stats;
     defenseStats?: Stats;
     bonuses?: Bonuses;
+    attackStyle?: Modules.AttackStyle;
+    attackStyles?: Modules.AttackStyle[];
 }
 
 export interface SerializedEquipment {

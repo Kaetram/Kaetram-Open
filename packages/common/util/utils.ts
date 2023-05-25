@@ -5,17 +5,19 @@
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 
-import _ from 'lodash-es';
+import log from './log';
 
 import config from '../config';
 import { Modules, Packets } from '../network';
 
-import log from './log';
+import ipaddr from 'ipaddr.js';
 
 import type { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
+    doubleLumberjacking: false, // Whether or not the double lumberjacking event is active.
+    doubleMining: false, // Whether or not the double mining event is active.
 
     /**
      * Takes the type of entity and creates a UNIQUE instance id.
@@ -25,14 +27,6 @@ export default {
 
     createInstance(identifier = 0): string {
         return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
-    },
-
-    /**
-     * Extracts the type of entity by taking the last number of the instance.
-     */
-
-    getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
     },
 
     /**
@@ -71,22 +65,6 @@ export default {
 
     randomWeightedInt(min: number, max: number, weight: number): number {
         return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
-    },
-
-    /**
-     * Gets a distance between two points in the grid space.
-     * @param startX Starting point x grid space coordinate.
-     * @param startY Starting point y grid space coordinate.
-     * @param toX Ending point x grid space coordinate.
-     * @param toY Ending point y grid space coordinate.
-     * @returns An integer of the amount of tiles between the two points.
-     */
-
-    getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        let x = Math.abs(startX - toX),
-            y = Math.abs(startY - toY);
-
-        return x > y ? x : y;
     },
 
     /**
@@ -146,11 +124,10 @@ export default {
                 return messageBlocks.join(' ');
             }
 
-            _.each(messageBlocks, (_block: string, index: number) => {
-                if (index % 2 !== 0)
+            for (let index in messageBlocks)
+                if (parseInt(index) % 2 !== 0)
                     // we hit a colour code.
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
-            });
 
             let codeCount = messageBlocks.length / 2 - 1;
 
@@ -173,6 +150,27 @@ export default {
     },
 
     /**
+     * Gets a distance between two points in the grid space.
+     * @param startX Starting point x grid space coordinate.
+     * @param startY Starting point y grid space coordinate.
+     * @param toX Ending point x grid space coordinate.
+     * @param toY Ending point y grid space coordinate.
+     * @returns An integer of the amount of tiles between the two points.
+     */
+
+    getDistance(startX: number, startY: number, toX: number, toY: number): number {
+        return Math.abs(startX - toX) + Math.abs(startY - toY);
+    },
+
+    /**
+     * Extracts the type of entity by taking the last number of the instance.
+     */
+
+    getEntityType(instance: string): number {
+        return parseInt(instance.slice(0, 1));
+    },
+
+    /**
      * Helper function to avoid repetitive instances of comparison between
      * the unix epoch minus an event. Cleans up the code a bit.
      *
@@ -191,12 +189,33 @@ export default {
      * @param compression Compression format, can be gzip or zlib
      */
 
-    compress(data: string, compression = 'gzip'): string | undefined {
-        if (!data) return;
+    compress(data: string, compression = 'gzip'): string {
+        if (!data) return '';
 
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
             : zlib.deflateSync(data).toString('base64');
+    },
+
+    /**
+     * Verifies the email string against RegEx.
+     * @param email Email string to verify.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
+    },
+
+    /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
     },
 
     /**
@@ -226,14 +245,17 @@ export default {
     },
 
     /**
-     * Verifies the email string against RegEx.
-     * @param email Email string to verify.
+     * Converts an IP address buffer (from UWS) into an IPv4 address.
+     * @param buffer The address buffer.
+     * @returns An IPv4 address in string format.
      */
 
-    isEmail(email: string): boolean {
-        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email
-        );
+    bufferToAddress(buffer: ArrayBuffer): string {
+        try {
+            return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        } catch {
+            return '69.69.69.69';
+        }
     },
 
     /**
@@ -256,14 +278,12 @@ export default {
      * @param key Raw key from the achievement JSON.
      */
 
-    getSkill(key: string): Modules.Skills {
-        if (!key) return -1;
+    getSkill(key: string): Modules.Skills | undefined {
+        if (!key) return;
 
         key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
-        let skill = Modules.Skills[key as keyof typeof Modules.Skills];
-
-        return skill === undefined ? -1 : skill;
+        return Modules.Skills[key as keyof typeof Modules.Skills];
     },
 
     /**
@@ -276,6 +296,7 @@ export default {
             crush: 0,
             slash: 0,
             stab: 0,
+            archery: 0,
             magic: 0
         };
     },
@@ -289,7 +310,8 @@ export default {
         return {
             accuracy: 0,
             strength: 0,
-            archery: 0
+            archery: 0,
+            magic: 0
         };
     }
 };

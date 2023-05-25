@@ -1,18 +1,17 @@
-import { io } from 'socket.io-client';
+import Messages from './messages';
 
 import log from '../lib/log';
 
-import Messages from './messages';
+import { Packets } from '@kaetram/common/network';
 
-import type { SerializedServer } from '@kaetram/common/types/api';
-import type { Socket as SocketIO } from 'socket.io-client';
 import type Game from '../game';
+import type { SerializedServer } from '@kaetram/common/types/api';
 
 export default class Socket {
     public messages;
 
     private config;
-    private connection!: SocketIO;
+    private connection!: WebSocket;
     private listening = false;
 
     public constructor(private game: Game) {
@@ -48,27 +47,20 @@ export default class Socket {
         let { host, port } = server || (await this.getServer()) || this.config,
             url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
 
-        // Create a SocketIO connection with the url generated.
-        this.connection = io(url, {
-            transports: ['websocket'],
-            forceNew: true,
-            reconnection: false
-        });
+        // Create a websocket connection with the url generated.
+        this.connection = new WebSocket(url);
 
         // Handler for when a connection is successfully established.
-        this.connection.on('connect', this.handleConnection.bind(this));
-
-        // Handler for when a connection error occurs.
-        this.connection.on('connect_error', (err) => {
-            console.error(`connect_error due to ${err.message}`);
-            this.handleConnectionError(host, port);
-        });
+        this.connection.addEventListener('open', this.handleConnection.bind(this));
 
         // Handler for when a message is received.
-        this.connection.on('message', (message) => this.receive(message.message || message));
+        this.connection.addEventListener('message', (event) => this.receive(event.data));
+
+        // Handler for when an error occurs.
+        this.connection.addEventListener('error', () => this.handleConnectionError(host, port));
 
         // Handler for when a disconnection occurs.
-        this.connection.on('disconnect', () => this.game.handleDisconnection());
+        this.connection.addEventListener('close', () => this.game.handleDisconnection());
 
         /**
          * The audio controller can only be properly initialized when the player interacts
@@ -101,9 +93,10 @@ export default class Socket {
      */
 
     public send(packet: number, data?: unknown): void {
-        let json = JSON.stringify([packet, data]);
+        // Ensure the connection is open before sending.
+        if (this.connection?.readyState !== WebSocket.OPEN) return;
 
-        if (this.connection?.connected) this.connection.send(json);
+        this.connection.send(JSON.stringify([packet, data]));
     }
 
     /**
@@ -117,9 +110,9 @@ export default class Socket {
 
         this.game.app.updateLoader('Preparing handshake');
 
-        this.connection.emit('client', {
-            gVer: this.config.version,
-            cType: 'HTML5'
+        // Send the handshake with the game version.
+        this.send(Packets.Handshake, {
+            gVer: this.config.version
         });
     }
 

@@ -6,18 +6,18 @@
 
 import Utils from '@kaetram/common/util/utils';
 
+import type Item from '../../../objects/item';
 import type { Modules } from '@kaetram/common/network';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
-import type Item from '../../../objects/item';
 
 export default class Equipment {
     // Properties
     public name = '';
-
-    public ranged = false;
-    public lumberjacking = -1;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
+    public movementModifier = -1;
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -30,7 +30,7 @@ export default class Equipment {
     public constructor(
         public type: Modules.Equipment,
         public key = '',
-        public count = 1,
+        public count = -1,
         public enchantments: Enchantments = {}
     ) {}
 
@@ -39,15 +39,12 @@ export default class Equipment {
      * @param item Item instance used to update the slot with.
      */
 
-    public update(item: Item, count = 1): void {
+    public update(item: Item): void {
         this.key = item.key;
         this.name = item.name;
-        this.count = count;
+        this.count = item.count;
         this.enchantments = item.enchantments;
-
-        this.lumberjacking = item.lumberjacking;
         this.poisonous = item.poisonous;
-
         this.attackStats = item.attackStats;
         this.defenseStats = item.defenseStats;
         this.bonuses = item.bonuses;
@@ -62,14 +59,15 @@ export default class Equipment {
     public empty(): void {
         this.key = '';
 
-        this.count = 1;
+        this.count = -1;
         this.enchantments = {};
 
         this.name = '';
 
-        this.ranged = false;
-        this.lumberjacking = -1;
         this.poisonous = false;
+        this.freezing = false;
+        this.burning = false;
+        this.movementModifier = -1;
 
         this.attackStats = Utils.getEmptyStats();
         this.defenseStats = Utils.getEmptyStats();
@@ -86,13 +84,11 @@ export default class Equipment {
     }
 
     /**
-     * Checks if the item is a lumberjacking item. Lumberjacking items are
-     * defined by equipments that have a lumberjacking value greater than 0.
-     * @returns If the lumberjacking attribute is greater than 0.
+     * @returns Whether or not the equipment has a movement modifier.
      */
 
-    public isLumberjacking(): boolean {
-        return this.lumberjacking > 0;
+    public hasMovementModifier(): boolean {
+        return this.movementModifier !== -1;
     }
 
     /**
@@ -113,7 +109,6 @@ export default class Equipment {
         // Includes information only relevant to the client.
         if (clientInfo) {
             data.name = this.name;
-            data.ranged = this.ranged;
             data.poisonous = this.poisonous;
 
             data.attackStats = this.attackStats;

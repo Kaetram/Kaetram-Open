@@ -5,9 +5,11 @@ export interface SkillData {
     experience: number;
     level?: number;
     percentage?: number;
+    nextExperience?: number;
     combat?: boolean;
 }
 
 export interface SerializedSkills {
     skills: SkillData[];
+    cheater: boolean;
 }

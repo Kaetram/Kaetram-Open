@@ -1,16 +1,14 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash';
+import Menu from './menu';
 
 import Util from '../utils/util';
 
-import Menu from './menu';
+import { Modules } from '@kaetram/common/network';
 
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type SpritesController from '../controllers/sprites';
-import type Equipment from '../entity/character/player/equipment/equipment';
 import type Player from '../entity/character/player/player';
 
-type SelectCallback = (type: Modules.Equipment) => void;
+type UnequipCallback = (type: Modules.Equipment) => void;
 
 export default class Equipments extends Menu {
     // Player image elements
@@ -18,11 +16,17 @@ export default class Equipments extends Menu {
     private playerWeapon: HTMLElement = document.querySelector('#player-image-weapon')!;
 
     // Equipment slots elements
-    private weapon: HTMLElement = document.querySelector('#equipment-container > .weapon-slot')!;
-    private armour: HTMLElement = document.querySelector('#equipment-container > .armour-slot')!;
-    private pendant: HTMLElement = document.querySelector('#equipment-container > .pendant-slot')!;
-    private ring: HTMLElement = document.querySelector('#equipment-container > .ring-slot')!;
-    private boots: HTMLElement = document.querySelector('#equipment-container > .boots-slot')!;
+    private weapon: HTMLElement = document.querySelector('.equip-weapon-slot')!;
+    private weaponSkin: HTMLElement = document.querySelector('.equip-weapon-skin-slot')!;
+    private armour: HTMLElement = document.querySelector('.equip-armour-slot')!;
+    private armourSkin: HTMLElement = document.querySelector('.equip-armour-skin-slot')!;
+    private pendant: HTMLElement = document.querySelector('.equip-pendant-slot')!;
+    private ring: HTMLElement = document.querySelector('.equip-ring-slot')!;
+    private boots: HTMLElement = document.querySelector('.equip-boots-slot')!;
+    private arrow: HTMLElement = document.querySelector('.equip-arrows-slot')!;
+
+    // Counts
+    private arrowsCount: HTMLElement = document.querySelector('#arrows-count')!;
 
     // Navigation elements
     private previous: HTMLElement = document.querySelector('#player-image-navigator > .previous')!;
@@ -36,7 +40,7 @@ export default class Equipments extends Menu {
     // Class properties
     private imageOrientation: Modules.Orientation = Modules.Orientation.Down;
 
-    private selectCallback?: SelectCallback;
+    private unequipCallback?: UnequipCallback;
 
     public constructor(private player: Player, private sprites: SpritesController) {
         super('#equipments', '#close-equipments', '#equipment-button');
@@ -47,16 +51,25 @@ export default class Equipments extends Menu {
 
         // Equipment slot event listeners -- definitely not stolen from the state page :)
         this.weapon.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Weapon)
+            this.unequipCallback?.(Modules.Equipment.Weapon)
+        );
+        this.weaponSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
         );
         this.armour.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Armour)
+            this.unequipCallback?.(Modules.Equipment.Armour)
+        );
+        this.armourSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
         this.pendant.addEventListener('click', () =>
-            this.selectCallback?.(Modules.Equipment.Pendant)
+            this.unequipCallback?.(Modules.Equipment.Pendant)
         );
-        this.ring.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Ring));
-        this.boots.addEventListener('click', () => this.selectCallback?.(Modules.Equipment.Boots));
+        this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
+        this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
+        this.arrow.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Arrows)
+        );
     }
 
     /**
@@ -69,13 +82,21 @@ export default class Equipments extends Menu {
 
         // Synchronize equipment data
         this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
+        this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         // Cloth armour shouldn't be displayed in the UI.
         this.armour.style.backgroundImage = Util.getImageURL(
             this.player.getArmour().key === 'clotharmor' ? '' : this.player.getArmour().key
         );
+        this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
+        this.arrow.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
+
+        // Synchronize arrow count
+        let arrowCount = this.player.getArrows().count;
+
+        this.arrowsCount.innerHTML = arrowCount < 1 ? '' : `+${arrowCount}`;
     }
 
     /**
@@ -126,28 +147,31 @@ export default class Equipments extends Menu {
             bonuses: Bonuses = Util.getEmptyBonuses();
 
         // iterate through all the equipments and add up the stats.
-        _.each(this.player.equipments, (equipment: Equipment) => {
-            if (!equipment.exists()) return;
+        for (let equipment of Object.values(this.player.equipments)) {
+            if (!equipment.exists()) continue;
 
             attackStats.crush += equipment.attackStats.crush;
             attackStats.slash += equipment.attackStats.slash;
             attackStats.stab += equipment.attackStats.stab;
+            attackStats.archery += equipment.attackStats.archery;
             attackStats.magic += equipment.attackStats.magic;
 
             defenseStats.crush += equipment.defenseStats.crush;
             defenseStats.slash += equipment.defenseStats.slash;
             defenseStats.stab += equipment.defenseStats.stab;
+            defenseStats.archery += equipment.defenseStats.archery;
             defenseStats.magic += equipment.defenseStats.magic;
 
             bonuses.accuracy += equipment.bonuses.accuracy;
             bonuses.strength += equipment.bonuses.strength;
             bonuses.archery += equipment.bonuses.archery;
-        });
+            bonuses.magic += equipment.bonuses.magic;
+        }
 
-        let stats = ['Crush', 'Slash', 'Stab', 'Magic'],
-            bonsuses = ['Accuracy', 'Strength', 'Archery'];
+        let stats = ['Crush', 'Slash', 'Stab', 'Archery', 'Magic'],
+            statBonuses = ['Accuracy', 'Strength', 'Archery', 'Magic'];
 
-        _.each(stats, (stat: string) => {
+        for (let stat of stats) {
             let lStat = stat.toLowerCase(),
                 attackElement = this.attackStats.querySelector(`.${lStat.toLowerCase()}`)!,
                 defenseElement = this.defenseStats.querySelector(`.${lStat.toLowerCase()}`)!,
@@ -156,15 +180,15 @@ export default class Equipments extends Menu {
 
             attackElement.textContent = `${stat}: ${attackStat > 0 ? '+' : ''}${attackStat}`;
             defenseElement.textContent = `${stat}: ${defenseStat > 0 ? '+' : ''}${defenseStat}`;
-        });
+        }
 
-        _.each(bonsuses, (bonus: string) => {
+        for (let bonus of statBonuses) {
             let lBonus = bonus.toLowerCase(),
                 bonusElement = this.bonuses.querySelector(`.${lBonus.toLowerCase()}`)!,
                 bonusStat = bonuses[lBonus as keyof Bonuses];
 
             bonusElement.textContent = `${bonus}: ${bonusStat > 0 ? '+' : ''}${bonusStat}`;
-        });
+        }
     }
 
     /**
@@ -208,7 +232,7 @@ export default class Equipments extends Menu {
             this.playerWeapon.style.backgroundPosition = `0 -${index * weaponSprite.height}px`;
         } else this.playerWeapon.style.backgroundImage = 'none';
 
-        // Flip both armour and weapon if we are rendering the right orientation.
+        // Flip the player image if we are rendering the right orientation.
         this.playerArmour.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
         this.playerWeapon.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
     }
@@ -241,7 +265,7 @@ export default class Equipments extends Menu {
      * @param callback Contains the slot type we are selecting.
      */
 
-    public onSelect(callback: SelectCallback): void {
-        this.selectCallback = callback;
+    public onUnequip(callback: UnequipCallback): void {
+        this.unequipCallback = callback;
     }
 }

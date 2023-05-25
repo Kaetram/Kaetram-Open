@@ -1,6 +1,3 @@
-import { Packets } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
 import EntitiesController from './controllers/entities';
@@ -11,41 +8,44 @@ import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
 import Player from './entity/character/player/player';
-import PlayerHandler from './entity/character/player/playerhandler';
+import Handler from './entity/character/player/handler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
-import Renderer from './renderer/renderer';
+import WebGL from './renderer/webgl/webgl';
+import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
-import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
+import { agent } from './utils/detect';
+
+import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
-import type Character from './entity/character/character';
 import type Entity from './entity/entity';
 import type Storage from './utils/storage';
+import type Character from './entity/character/character';
+import type { TileIgnore } from './utils/pathfinder';
 
 export default class Game {
+    public player: Player;
     public storage: Storage;
 
-    public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
-
-    public player: Player = new Player('');
+    public map: Map;
+    public camera: Camera;
 
     public zoning: Zoning = new Zoning();
     public overlays: Overlays = new Overlays();
     public pathfinder: Pathfinder = new Pathfinder();
 
     public info: InfoController = new InfoController();
-    public sprites: SpritesController = new SpritesController();
+    public sprites: SpritesController;
 
     public minigame: Minigame = new Minigame();
 
-    public renderer: Renderer;
+    public renderer: WebGL | Canvas;
     public input: InputController;
 
     public socket: Socket;
@@ -64,11 +64,18 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
+    public useWebGl = false;
 
     public constructor(public app: App) {
         this.storage = app.storage;
 
-        this.renderer = new Renderer(this);
+        this.player = new Player('', this);
+
+        this.map = new Map(this);
+        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+        this.sprites = new SpritesController();
+
+        this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
@@ -157,11 +164,16 @@ export default class Game {
         this.player.setSprite(this.sprites.get(this.player.getSpriteName()));
         this.player.idle();
 
-        if (this.storage) this.player.setOrientation(this.storage.data.player.orientation);
+        if (this.storage) {
+            this.player.setOrientation(this.storage.data.player.orientation);
+            this.camera.setZoom(this.storage.data.player.zoom);
+
+            this.renderer.resize();
+        }
 
         this.camera.centreOn(this.player);
 
-        new PlayerHandler(this, this.player);
+        this.player.handler = new Handler(this.player);
 
         this.renderer.updateAnimatedTiles();
 
@@ -192,19 +204,62 @@ export default class Game {
         character: Character,
         x: number,
         y: number,
-        ignores: Character[] = []
+        ignores: TileIgnore[] = [],
+        cursor = ''
     ): number[][] {
         let path: number[][] = [];
 
-        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
 
-        if (ignores) _.each(ignores, (entity) => this.pathfinder.addIgnore(entity));
+        // Stop if there is no path.
+        if (path.length === 0) return path;
 
-        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
+        // Special case for fishing where we remove the last path if it is colliding.
+        if (cursor === 'fishing') {
+            let last = path[path.length - 2];
 
-        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
+            // Remove if there is a collision  at the last path only (to allow fishing from a distance).
+            if (this.map.isColliding(last[0], last[1])) path.pop();
+        }
 
         return path;
+    }
+
+    /**
+     * Used for when the player has selected low power mode and we do not
+     * actively centre the camera on the character. We check the boundaries
+     * of the camera and if the character approaches them we move the camera
+     * in the next quadrant.
+     */
+
+    public updateCameraBounds(): void {
+        // We are not using non-centred camera, so skip.
+        if (!this.zoning) return;
+
+        // Difference between the player and the camera, indicates which boundary we are approaching.
+        let x = this.player.gridX - this.camera.gridX,
+            y = this.player.gridY - this.camera.gridY;
+
+        // Left boundary
+        if (x === 0) this.zoning.setLeft();
+        // Right boundary
+        else if (x === this.camera.gridWidth - 2) this.zoning.setRight();
+        // Top boundary
+        else if (y === 0) this.zoning.setUp();
+        // Bottom boundary
+        else if (y === this.camera.gridHeight - 2) this.zoning.setDown();
+
+        // No zoning has occured, so stop here.
+        if (this.zoning.direction === null) return;
+
+        // Synchronize the camera and reset the zoning directions.
+        this.camera.zone(this.zoning.getDirection());
+
+        // Update the animated tiles.
+        this.renderer.updateAnimatedTiles();
+
+        // Reset the zoning directions.
+        this.zoning.reset();
     }
 
     /**
@@ -243,7 +298,7 @@ export default class Game {
         if (!this.entities) return;
 
         let entities = this.entities.grids.renderingGrid[y][x],
-            keys = _.keys(entities),
+            keys = Object.keys(entities),
             index = keys.indexOf(this.player.instance);
 
         // Remove player instance from the keys of entities.
@@ -251,6 +306,34 @@ export default class Game {
 
         // Returns entity if there is a key, otherwise just undefined.
         return entities[keys[0]];
+    }
+
+    /**
+     * Looks through the entity rendering grid within the specified radius to find
+     * any entities that are within the boundaries of the position provided.
+     * @param position The position we are checking around (usually the mouse position).
+     * @param radius How many tiles away from the position we are checking.
+     * @returns An entity if found, otherwise undefined.
+     */
+
+    public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
+        let entities = this.entities.grids.getEntitiesAround(
+            position.gridX!,
+            position.gridY!,
+            radius
+        );
+
+        // Look through all the entities we found and determine which one is closest to the mouse.
+        for (let entity of entities)
+            if (
+                position.x >= entity.x + entity.sprite.offsetX &&
+                position.x <= entity.x + entity.sprite.offsetX + entity.sprite.width &&
+                position.y >= entity.y + entity.sprite.offsetY &&
+                position.y <= entity.y + entity.sprite.offsetY + entity.sprite.height
+            )
+                return entity;
+
+        return undefined;
     }
 
     /**
@@ -281,5 +364,17 @@ export default class Game {
             this.camera.centreOn(this.player);
             this.renderer.updateAnimatedTiles();
         }
+    }
+
+    /**
+     * Zooms out the game and updates the camera.
+     * @param amount Amount to zoom in or out by.
+     */
+
+    public zoom(amount: number): void {
+        this.camera.zoom(amount);
+        this.storage.setZoom(this.camera.zoomFactor);
+
+        this.renderer.resize();
     }
 }

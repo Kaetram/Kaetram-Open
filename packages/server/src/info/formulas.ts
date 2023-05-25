@@ -3,7 +3,6 @@ import Utils from '@kaetram/common/util/utils';
 
 import type { Stats } from '@kaetram/common/types/item';
 import type Character from '../game/entity/character/character';
-import type Player from '../game/entity/character/player/player';
 
 export default {
     LevelExp: [] as number[],
@@ -25,46 +24,116 @@ export default {
      */
 
     getDamage(attacker: Character, target: Character, critical = false): number {
-        let accuracyBonus = attacker.getBonuses().accuracy,
+        let accuracyBonus = attacker.getAccuracyBonus(),
             accuracyLevel = attacker.getAccuracyLevel(),
-            stats = this.getStatsDifference(attacker.getAttackStats(), target.getDefenseStats()),
+            accuracyModifier = this.getAccuracyWeight(attacker, target),
+            defenseLevel = target.getDefenseLevel(),
             maxDamage = this.getMaxDamage(attacker, critical),
             accuracy: number = Modules.Constants.MAX_ACCURACY;
 
         /**
-         * Take for example the following mock-up values used to calculate accuracy:
-         * accuracyBonus = +13
-         * accuracyLevel = 35
-         * accuracy = 0.45 // MAX_ACCURACY
+         * The damage output is calculated by taking the attacker's maximum damage output
+         * and comparing against the accuracy calculated relative to the target's stats,
+         * defense level, as well as the attacker's accuracy level, bonus, and stats.
+         * We use four modifiers to output the final damage, and a weighted randomInt
+         * distribution (think graphs skewed to the right or left depending on the accuracy).
+         * The maximum damage takes in consideration tha player's strength level, their
+         * weapon bonuses, (or their magic/archery if that's what they're using).
          *
-         * accuracy += (1 / accuracyBonus) * 0.8
-         * If the maximum attainable bonus is 100, then accuracy is only disrupted by 0.008
-         * otherwise if the player has 1 accuracy bonus (0 defaults to 1), then the formula
-         * disrupts the accuracy by 0.8. A 0.45 accuracy has a chance of 2.45% of attaining
-         * max damage, whereas an accuracy of 1.25 has merely a chance of 0.62%.
+         * The accuracy works backwards, 0.45 being the most accurate, and any number heigher
+         * skews the graph towards the lower-end (higher likelihood of hitting lower damage).
          *
-         * The same principle applies to the accuracy level. The defense and offense stats
-         * are used to calculate a discrepancy in a similar fashion. If the taget's defense
-         * is overwhelmed by the attacker's attack, then the amount added to the accuracy
-         * modifier is smaller.
+         * The accuracy consists of four parts, the accuracy bonus, the accuracy level,
+         * the defense level of the target, and the accuracy modifier.
+         *
+         * The accuracy bonus is the bonus given by the attacker's equipment. We picked a maximum
+         * of 55 since that is currently the maximum acquirable bonus from equipments the best
+         * equipments. It's a linear scaling from 0-1, with highest bonus giving us the highest
+         * accuracy. Note that this is subject to changes in the nearby future, and we do not
+         * intend to keep it entirely linear.
+         *
+         * The next is the linear scaling of the accuracy level against the maximum level. The
+         * higher your accuracy level, the higher the accuracy. This modifier has an absolute lowest
+         * value of 0.01 (most accurate at maximum level) and highest value of 1.35
+         * (lowest accuracy at level 1 accuracy).
+         *
+         * The next is a linear scale of the target's defense level. The higher their defense level the
+         * more it will affect our accuracy. The way this was calculated was by considering the maximum
+         * level a player will be able to reach (135). If we attack a player with maximum defense, our
+         * accuracy will be throttled by 1.015. If we attack a player with level 1 defense, our accuracy
+         * will be affected by 0.0075 (giving us more accuracy).
+         *
+         * Lastly this is the accuracy modifier of the attack stats. The attack stats are compared against
+         * the target's defense stats and take into considering the primary attack style of the attacker
+         * versus the primary defense style. For example, if we use slash against a target with a high defense
+         * in slash, then our accuracy is lower than if we use slash against a target with a low defense in slash.
+         * In order to minimize the accuracy of an attacker, your defense style must be the attacker's attack style.
+         * If our attack stats are negative due to the target's extremely high defense stats, we append a 1.5
+         * reduction in accuracy by default.
+         *
+         * All of these modifiers added together determine how much we stray away from the highest accuracy - 0.45.
          */
 
-        // Append the accuracy bonus property and ensure the value is not 0.
-        accuracy += (1 / (accuracyBonus === 0 ? 1 : accuracyBonus)) * 0.8;
+        // Linearly increase accuracy based on accuracy bonus, prevent from going over 50.
+        accuracy += accuracyBonus > 70 ? 0 : 1 - accuracyBonus / 70;
 
         // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
-        accuracy += (1 / accuracyLevel) * 1.25;
+        accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
+
+        // Append the defense level of the target to the accuracy modifier.
+        accuracy += defenseLevel * 0.0175;
 
         // We use the scalar difference of the stats to append onto the accuracy.
-        accuracy += Math.abs((1 / stats) * 1.25);
+        accuracy += accuracyModifier < 0 ? 1.5 : -(Math.sqrt(accuracyModifier) / 22.36) + 1;
 
-        // Critical damage boosts accuracy by a factor of 0.05;
-        if (critical) accuracy -= 0.05;
+        // Critical damage boosts accuracy by a factor of 0.15;
+        if (critical) accuracy -= 0.15;
+
+        // Apply the attack style modifiers.
+        switch (attacker.getAttackStyle()) {
+            case Modules.AttackStyle.Fast:
+            case Modules.AttackStyle.LongRange: {
+                // Rapid attack style decreases accuracy by a factor of 0.05;
+                accuracy += 0.05;
+                break;
+            }
+
+            case Modules.AttackStyle.Stab:
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Accurate: {
+                // Rapid attack style increases accuracy by a factor of 0.11;
+                accuracy -= 0.11;
+                break;
+            }
+
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Chop: {
+                // Rapid attack style increases accuracy by a factor of 0.07
+                accuracy -= 0.07;
+                break;
+            }
+
+            case Modules.AttackStyle.Shared: {
+                // Shared attack style increases accuracy by a factor of 0.05
+                accuracy -= 0.05;
+                break;
+            }
+        }
+
+        // Terror decreases overall accuracy, so we increase it by 1.
+        if (attacker.status.has(Modules.Effects.Terror)) accuracy += 1;
 
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
 
-        return Utils.randomWeightedInt(0, maxDamage, accuracy);
+        // We use the weighted randomInt distribution to determine the damage.
+        let randomDamage = Utils.randomWeightedInt(0, maxDamage, accuracy);
+
+        // Limit the damage to the target's remaining health.
+        if (randomDamage > target.hitPoints.getHitPoints())
+            randomDamage = target.hitPoints.getHitPoints();
+
+        return randomDamage;
     },
 
     /**
@@ -78,41 +147,147 @@ export default {
             level = character.getSkillDamageLevel(),
             damage = (bonus + level) * 1.25;
 
-        // Apply the critical damage multiplier onto the damage.
+        // Apply a 50% max damage boost upon critical damage.
         if (critical) damage *= 1.5;
 
         // Player characters get a boost of 5 damage.
         if (character.isPlayer()) damage += 5;
 
+        // Different attack styles give different bonuses.
+        switch (character.getAttackStyle()) {
+            // Focused attack style boosts maximum damage by 10%
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Slash: {
+                damage *= 1.1;
+                break;
+            }
+
+            // Crush gives a 5% boost.
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Hack: {
+                damage *= 1.05;
+                break;
+            }
+
+            // Shared attack style gives a 3% boost.
+            case Modules.AttackStyle.Shared: {
+                damage *= 1.03;
+                break;
+            }
+        }
+
+        // Ensure the damage is not negative.
+        if (damage < 0) damage = 0;
+
         return damage;
     },
 
     /**
-     * Calculates the total scalar difference between the attacker's stats and the target's.
-     * We subtract the target's stats from that of the attacker's and then add all of their
-     * values together.
-     * @param attackerStats The stats of the entity doing the attacking.
-     * @param targetStats The stats of the entity being attacked.
-     * @returns Scalar value representing the total stat difference.
+     * Calculates the accuracy modifier for a character given their attack and defense stats.
+     * The accuracy modifier is used to determine the likelihood of attaining maximum damage
+     * in a hit. The higher the accuracy modifier, the more likely to attain maximum damage.
+     * @param attacker The attacking character.
+     * @param target The defending character.
+     * @returns A float of the accuracy modifier (to be used for calculating likelihood of attaining max damage).
      */
 
-    getStatsDifference(attackerStats: Stats, targetStats: Stats): number {
-        let diff = {
-            crush: attackerStats.crush - targetStats.crush,
-            slash: attackerStats.slash - targetStats.slash,
-            stab: attackerStats.stab - targetStats.stab
-        };
+    getAccuracyWeight(attacker: Character, target: Character): number {
+        let attackerStats = attacker.getAttackStats(),
+            targetStats = target.getDefenseStats(),
+            attackStyle = this.getPrimaryStyle(attackerStats), // primary attack style of the attacker
+            defenseStyle = this.getPrimaryStyle(targetStats), // primary defense style of the target
+            weights: Stats = {
+                crush: (attackerStats.crush - targetStats.crush) / 3,
+                slash: (attackerStats.slash - targetStats.slash) / 3,
+                stab: (attackerStats.stab - targetStats.stab) / 3,
+                magic: (attackerStats.magic - targetStats.magic) / 3,
+                archery: (attackerStats.archery - targetStats.archery) / 3
+            },
+            totalWeight =
+                weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
+
+        // Negative values add no weight to the accuracy modifier.
+        if (weights.crush < 0) totalWeight -= weights.crush;
+        if (weights.slash < 0) totalWeight -= weights.slash;
+        if (weights.stab < 0) totalWeight -= weights.stab;
+        if (weights.magic < 0) totalWeight -= weights.magic;
+        if (weights.archery < 0) totalWeight -= weights.archery;
+
+        // If our attack style is the same or none then we do not have any advantage in our accuracy.
+        if (attackStyle === defenseStyle || attackStyle === Modules.DamageStyle.None)
+            return totalWeight || 1;
 
         /**
-         * We exclude magic from this calculation since it will be processed separately
-         * whenever that feature is implemented.
+         * If we have a attack style against a defense style that is not the same, then we can
+         * remove the 1/3th of the weight and append the full weight of the attack style to the
+         * accuracy modifier.
          */
 
-        return diff.crush + diff.slash + diff.stab;
+        switch (attackStyle) {
+            case Modules.DamageStyle.Crush: {
+                totalWeight += weights.crush * 2;
+                break;
+            }
+
+            case Modules.DamageStyle.Slash: {
+                totalWeight += weights.slash * 2;
+                break;
+            }
+
+            case Modules.DamageStyle.Stab: {
+                totalWeight += weights.stab * 2;
+                break;
+            }
+
+            case Modules.DamageStyle.Magic: {
+                totalWeight += weights.magic * 2;
+                break;
+            }
+
+            case Modules.DamageStyle.Archery: {
+                totalWeight += weights.archery * 2;
+                break;
+            }
+        }
+
+        return totalWeight || 1;
     },
 
-    getCritical(_attacker: Player, _target: Character): number {
-        return 0;
+    /**
+     * Compares every attack stat against every other attack stat and extracts which attack
+     * stat is the greatest. This gives us tth primary attack style of the charater based
+     * on their overall stats
+     * @param stats The stats object to look through (either attack or defense).
+     * @returns The primary style of attack.
+     */
+
+    getPrimaryStyle(stats: Stats): Modules.DamageStyle {
+        return stats.crush > stats.slash && // If crush is greater than slash
+            stats.crush > stats.stab && // and crush is greater than stab
+            stats.crush > stats.magic && // and crush is greater than magic
+            stats.crush > stats.archery // and crush is greater than archery
+            ? Modules.DamageStyle.Crush // then return crush
+            : stats.slash > stats.crush && // Else if slash is greater than crush
+              stats.slash > stats.stab && // and slash is greater than stab
+              stats.slash > stats.magic && // and slash is greater than magic
+              stats.slash > stats.archery // and slash is greater than archery
+            ? Modules.DamageStyle.Slash // then return slash
+            : stats.stab > stats.crush && // Else if stab is greater than crush
+              stats.stab > stats.slash && // and stab is greater than slash
+              stats.stab > stats.magic && // and stab is greater than magic
+              stats.stab > stats.archery // and stab is greater than archery
+            ? Modules.DamageStyle.Stab // then return stab
+            : stats.magic > stats.crush && // Else if magic is greater than crush
+              stats.magic > stats.slash && // and magic is greater than slash
+              stats.magic > stats.stab && // and magic is greater than stab
+              stats.magic > stats.archery // and magic is greater than archery
+            ? Modules.DamageStyle.Magic // then return magic
+            : stats.archery > stats.crush && // Else if archery is greater than crush
+              stats.archery > stats.slash && // and archery is greater than slash
+              stats.archery > stats.stab && // and archery is greater than stab
+              stats.archery > stats.magic // and archery is greater than magic
+            ? Modules.DamageStyle.Archery // then return archery
+            : Modules.DamageStyle.None; // Else return none
     },
 
     getWeaponBreak(attacker: Character, target: Character): boolean | undefined {
@@ -129,15 +304,6 @@ export default {
         return breakChance > 75;
     },
 
-    getAoEDamage(attacker: Character, target: Character): number {
-        /**
-         * Preliminary setup until this function is expanded
-         * and fits in the necessary algorithms.
-         */
-
-        return this.getDamage(attacker, target);
-    },
-
     nextExp(experience: number): number {
         if (experience < 0) return -1;
 
@@ -150,7 +316,7 @@ export default {
     prevExp(experience: number): number {
         if (experience < 0) return 0;
 
-        for (let i = Modules.Constants.MAX_LEVEL as number; i > 0; i--)
+        for (let i = Modules.Constants.MAX_LEVEL; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
 
         return 0;
@@ -162,6 +328,16 @@ export default {
         for (let i = 1; i < this.LevelExp.length; i++) if (experience < this.LevelExp[i]) return i;
 
         return Modules.Constants.MAX_LEVEL;
+    },
+
+    /**
+     * Calculates the experience required to go from one level to another.
+     * @param startLevel The level we are starting from.
+     * @param endLevel The level we are ending at.
+     */
+
+    levelsToExperience(startLevel: number, endLevel: number): number {
+        return this.LevelExp[endLevel] - this.LevelExp[startLevel];
     },
 
     /**
@@ -181,7 +357,7 @@ export default {
      */
 
     getMaxMana(level: number): number {
-        return 10 + level * 8;
+        return 20 + level * 24;
     },
 
     /**
@@ -196,5 +372,22 @@ export default {
     getPoisonChance(level: number): number {
         // Chance is per 235 - level, each level increases the chance in poisioning.
         return Utils.randomInt(0, 235 - level);
+    },
+
+    /**
+     * @returns Whether or not the effect chance was successful.
+     */
+
+    getEffectChance(): boolean {
+        return Utils.randomInt(0, 100) < 5;
+    },
+
+    /**
+     * Calculates the chance of an item to be enchanted.
+     * @param tier The tier of the shards the player is using.
+     */
+
+    getEnchantChance(tier: number): boolean {
+        return Utils.randomInt(0, 100) < 8 * tier;
     }
 };

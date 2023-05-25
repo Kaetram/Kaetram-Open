@@ -1,8 +1,8 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import _ from 'lodash';
-
 import log from '../../../lib/log';
 import Menu from '../../menu';
+import QuickSlots from '../../quickslots';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Ability from '../../../entity/character/player/ability';
 import type Player from '../../../entity/character/player/player';
@@ -21,9 +21,11 @@ export default class Abilities extends Menu {
 
     private draggedElement = '';
 
+    //private quickSlots: QuickSlots;
+
     private selectCallback?: SelectCallback;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#abilities-page');
 
         // Loads the event listeners for when we click on an ability.
@@ -39,6 +41,14 @@ export default class Abilities extends Menu {
             element.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
             element.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, i));
         }
+
+        // // Load the quickslots.
+        // this.quickSlots = new QuickSlots(this.player);
+
+        // // Redirect the quick slots select callback through this class' select callback.
+        // this.quickSlots.onSelect((type: Opcodes.Ability, key: string) =>
+        //     this.selectCallback?.(type, key)
+        // );
     }
 
     /**
@@ -46,7 +56,7 @@ export default class Abilities extends Menu {
      * @param player The player object we are synchronizing abilities from.
      */
 
-    public override synchronize(player: Player): void {
+    public override synchronize(): void {
         // Hide all abilities and start from scratch.
         this.hideAll();
 
@@ -58,10 +68,10 @@ export default class Abilities extends Menu {
          * the adequate index and add it to the appropriate list.
          */
 
-        _.each(player.abilities, (ability: Ability) => {
+        for (let ability of Object.values(this.player.abilities))
             switch (ability.type) {
                 case Modules.AbilityType.Active: {
-                    this.setActiveAbility(activeIndex, ability.key, ability.level);
+                    this.setActiveAbility(activeIndex, ability.key, ability.level, ability.active);
                     activeIndex++;
                     break;
                 }
@@ -72,7 +82,6 @@ export default class Abilities extends Menu {
                     break;
                 }
             }
-        });
     }
 
     /**
@@ -189,7 +198,7 @@ export default class Abilities extends Menu {
      * @param level The level of the ability.
      */
 
-    public setActiveAbility(index: number, key: string, level = 1): void {
+    public setActiveAbility(index: number, key: string, level = 1, active = false): void {
         let ability = this.activeAbilities.children[index] as AbilityElement;
 
         // Invalid index is provided.
@@ -201,6 +210,16 @@ export default class Abilities extends Menu {
         this.setAbility(ability, key, level);
 
         ability.key = key;
+
+        let icon = ability.querySelector('.ability-icon')!;
+
+        if (!icon) return;
+
+        // Toggle the ability if it has been activated.
+        if (active) icon.classList.add('active');
+        else icon.classList.remove('active');
+
+        //this.quickSlots.toggleAbility(key, active);
     }
 
     /**

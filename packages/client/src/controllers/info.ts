@@ -1,5 +1,3 @@
-import _ from 'lodash-es';
-
 import Splat from '../renderer/infos/splat';
 import Utils from '../utils/util';
 
@@ -54,7 +52,7 @@ export default class InfoController {
      */
 
     public isEmpty(): boolean {
-        return _.size(this.infos) === 0;
+        return Object.keys(this.infos).length === 0;
     }
 
     /**
@@ -72,6 +70,6 @@ export default class InfoController {
      */
 
     public forEachInfo(callback: (info: Splat) => void): void {
-        _.each(this.infos, callback);
+        for (let info of Object.values(this.infos)) callback(info);
     }
 }

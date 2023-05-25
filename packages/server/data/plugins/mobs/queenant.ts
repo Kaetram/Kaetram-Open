@@ -1,7 +1,7 @@
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash';
-
 import Default from './default';
+
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
@@ -32,7 +32,7 @@ export default class QueenAnt extends Default {
     protected override handleMovement(): void {
         super.handleMovement();
 
-        _.each(this.minions, (minion: Mob) => minion.follow(this.mob));
+        for (let minion of Object.values(this.minions)) minion.follow(this.mob);
     }
 
     /**
@@ -47,7 +47,7 @@ export default class QueenAnt extends Default {
         if (!this.isHalfHealth() || this.minionsSpawned) return;
 
         // Spawn minions using the positions surrounding the Queen Ant.
-        _.each(this.positions, (position: Position) => {
+        for (let position of this.positions) {
             let minion = super.spawn('ant', position.x, position.y, true);
 
             // Prevent minion from roaming.
@@ -58,7 +58,7 @@ export default class QueenAnt extends Default {
 
             // Minions immediately start following the Queen Ant.
             minion.follow(this.mob);
-        });
+        }
 
         this.minionsSpawned = true;
     }
@@ -72,7 +72,7 @@ export default class QueenAnt extends Default {
         super.handleDeath(attacker);
 
         // Removes all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = false;
     }
@@ -90,14 +90,13 @@ export default class QueenAnt extends Default {
         if (this.specialAttack) return this.resetSpecialAttack();
 
         // 1 in 3 chance to trigger a special attack.
-        if (Utils.randomInt(1, 3) !== 2) return;
+        if (Utils.randomInt(1, 6) !== 2) return;
 
         // 1 in 6 chance to trigger an AoE attack alongside special attack.
-        if (Utils.randomInt(1, 6) === 3) this.mob.aoe = 4;
+        if (Utils.randomInt(1, 12) === 3) this.mob.aoe = 4;
 
         // Queen ant attacks with range and inflicts terror.
-        this.mob.attackRange = 6;
-        this.mob.projectileName = 'projectile-terror';
+        this.attackAll(Modules.Hits.Terror);
 
         this.specialAttack = true;
     }
@@ -119,9 +118,6 @@ export default class QueenAnt extends Default {
 
         // Update the mob's range distance.
         this.mob.attackRange = useRanged ? 10 : 1;
-
-        // Updates the projectile per combat loop to reset the special attack.
-        if (useRanged) this.mob.projectileName = 'projectile-boulder';
     }
 
     /**

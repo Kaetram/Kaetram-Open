@@ -14,14 +14,44 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
 class Log {
     private logLevel = config.debugLevel || 'all';
 
-    private logStreamPath = path.resolve('../../', 'runtime.log');
+    private streamPath = path.resolve('../../', 'runtime.log');
+    private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
 
-    // Stream can be used to keep a log of what happened.
-    private stream = config.fsDebugging ? fs.createWriteStream(this.logStreamPath) : null; // Write to a different stream
-    private bugStream = fs.createWriteStream(this.bugStreamPath);
+    private stream;
+    private logStream;
+    private bugStream;
+
+    private logFolderPath = '../logs';
+
+    private chatStream;
+    private dropsStream;
+    private generalStream;
+    private storesStream;
+    private tradesStream;
 
     private debugging = config.debugging;
+
+    public constructor() {
+        this.stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
+
+        this.logStream = fs.createWriteStream(this.logStreamPath);
+        this.bugStream = fs.createWriteStream(this.bugStreamPath);
+
+        this.chatStream = this.createLogStream('chat');
+        this.dropsStream = this.createLogStream('drops');
+        this.generalStream = this.createLogStream('general');
+        this.storesStream = this.createLogStream('stores');
+        this.tradesStream = this.createLogStream('trades');
+
+        if (!fs.existsSync(this.logFolderPath)) fs.mkdirSync(this.logFolderPath);
+    }
+
+    private createLogStream(name: string) {
+        let log = path.resolve(this.logFolderPath, `${name}.log`);
+
+        return fs.createWriteStream(log, { flags: 'a' });
+    }
 
     public info(...data: unknown[]): void {
         this.send('info', data);
@@ -45,6 +75,12 @@ class Log {
         this.send('error', data, 41, 'critical');
     }
 
+    public assert(assertion: boolean, ...data: unknown[]): void {
+        if (assertion) return;
+
+        this.send('error', data, 41, 'assert');
+    }
+
     public notice(...data: unknown[]): void {
         this.send('log', data, 32, 'notice');
     }
@@ -54,7 +90,34 @@ class Log {
     }
 
     public bug(...data: unknown[]): void {
+        this.warning(data);
+
         this.write(new Date(), '[BUG]', data, this.bugStream);
+    }
+
+    public log(...data: unknown[]): void {
+        this.write(new Date(), '[LOG]', data, this.logStream);
+    }
+
+    // Game-specific loggers
+    public chat(...data: unknown[]): void {
+        this.write(new Date(), '[CHAT]', data, this.chatStream);
+    }
+
+    public drop(...data: unknown[]): void {
+        this.write(new Date(), '[DROP]', data, this.dropsStream);
+    }
+
+    public general(...data: unknown[]): void {
+        this.write(new Date(), '[GENERAL]', data, this.generalStream);
+    }
+
+    public stores(...data: unknown[]): void {
+        this.write(new Date(), '[STORES]', data, this.storesStream);
+    }
+
+    public trade(...data: unknown[]): void {
+        this.write(new Date(), '[TRADE]', data, this.tradesStream);
     }
 
     /**

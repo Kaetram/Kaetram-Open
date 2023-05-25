@@ -1,8 +1,5 @@
-import _ from 'lodash-es';
-
 import AStar from '../lib/astar';
 
-import type Character from '../entity/character/character';
 import type { FunctionTypes } from '../lib/astar';
 
 /**
@@ -12,11 +9,13 @@ import type { FunctionTypes } from '../lib/astar';
  * the pathinding is calculated (re-adding it using `clearIgnores`).
  */
 
+export interface TileIgnore {
+    x: number;
+    y: number;
+    fake?: boolean;
+}
 export default class PathFinder {
     private mode: FunctionTypes = 'DEFAULT';
-
-    // List of entities that we are ignoring.
-    private ignores: Character[] = [];
 
     /**
      * Finds and returns a pathing from the startX and startY (representing
@@ -36,11 +35,19 @@ export default class PathFinder {
         startX: number,
         startY: number,
         endX: number,
-        endY: number
+        endY: number,
+        ignores: TileIgnore[] = []
     ): number[][] {
-        this.handleIgnore(grid, true);
+        // Parse through the ignores and remove collision from the grid.
+        this.handleIgnore(grid, ignores, true);
 
-        return AStar(grid, [startX, startY], [endX, endY], this.mode);
+        // Store the result as a variable so we can re-add collision to the grid.
+        let result = AStar(grid, [startX, startY], [endX, endY], this.mode);
+
+        // Parse through the ignores and re-add collision to the grid.
+        this.handleIgnore(grid, ignores);
+
+        return result;
     }
 
     /**
@@ -51,33 +58,24 @@ export default class PathFinder {
      * @param ignored Whether or not to remove or add collision to the grid.
      */
 
-    private handleIgnore(grid: number[][], ignored: boolean): void {
-        _.each(this.ignores, (entity) => {
-            let x = entity.hasPath() ? entity.nextGridX : entity.gridX,
-                y = entity.hasPath() ? entity.nextGridY : entity.gridY;
+    private handleIgnore(grid: number[][], ignores: TileIgnore[], ignored = false): void {
+        for (let ignore of ignores) {
+            // Skip invalid ignores.
+            if (ignore.x < 0 || ignore.y < 0) continue;
 
-            if (x >= 0 && y >= 0) grid[y][x] = ignored ? 0 : 1;
-        });
-    }
+            /**
+             * This functionally essentially marks colliding tile as non-colliding so that the pathfinder
+             * can find a path to said tile. There are instances however, where we want to mark nearby
+             * tiles as non-colliding, which also includes non-colliding tiles. What happens is that when
+             * we re-add collision to the grid, we re-add collision to the non-colliding tiles as well.
+             * We mark these tiles as `fake` so that we can ignore them when re-adding collision to the grid.
+             */
 
-    /**
-     * Adds a character object to the ignore list.
-     * @param character The character object we are adding.
-     */
+            if (ignore.fake) continue;
 
-    public addIgnore(character: Character): void {
-        if (!character) return;
+            if (grid[ignore.y][ignore.x] === 0) ignore.fake = true;
 
-        this.ignores.push(character);
-    }
-
-    /**
-     * Places back the collision property on the grid.
-     * @param grid The grid we from the map object.
-     */
-
-    public clearIgnores(grid: number[][]): void {
-        this.handleIgnore(grid, false);
-        this.ignores = [];
+            grid[ignore.y][ignore.x] = ignored ? 0 : 1;
+        }
     }
 }

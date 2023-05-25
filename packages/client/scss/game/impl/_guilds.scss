@@ -1,0 +1,777 @@
+@use '../../abstracts/media';
+
+#guilds {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    margin: auto;
+}
+
+#guilds-list-container,
+#guilds-info-container {
+    position: absolute;
+
+    p {
+        font-family: AdvoCut, sans-serif;
+        text-align: center;
+    }
+
+    ul {
+        position: absolute;
+        overflow: auto;
+        height: 86%;
+    }
+}
+
+#guilds-create-container,
+#guilds-info-container {
+    display: none;
+}
+
+#close-guilds {
+    position: absolute;
+    right: 1px;
+}
+
+#create-guild,
+#guild-back,
+#guild-create {
+    position: absolute;
+}
+
+#banner-colours,
+#banner-outline-colours {
+    position: absolute;
+    overflow: auto;
+    display: table-cell;
+}
+
+#banner-crests {
+    position: absolute;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#guild-name-input,
+#guild-chat-input {
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
+    color: #fff;
+    text-align: center;
+
+    background-color: transparent;
+    border: none;
+}
+
+#guild-chat-input {
+    display: none;
+}
+
+#guild-chat-log {
+    position: absolute;
+
+    overflow: auto;
+    display: none;
+
+    font-family: AdvoCut, sans-serif;
+    color: #fff;
+
+    p {
+        text-align: left;
+        text-shadow: 2px 2px 2px black;
+    }
+}
+
+#create-error {
+    position: absolute;
+
+    font-family: AdvoCut, sans-serif;
+    font-size: 15px;
+    color: #800;
+    text-align: center;
+    text-shadow: 2px 2px 2px #f66;
+}
+
+#sidebar-list {
+    li {
+        div.members-icon,
+        div.chat-icon {
+            position: relative;
+        }
+    }
+}
+
+.guilds-decoration {
+    position: absolute;
+    inset: 0 0 auto 0;
+    margin: auto;
+
+    p {
+        font-family: AdvoCut, sans-serif;
+        color: #fff;
+        text-align: center;
+    }
+}
+
+.element-button {
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.slot-element {
+    display: flex;
+    align-items: center;
+
+    span.count {
+        flex: 1;
+        text-align: center;
+    }
+
+    span.name {
+        flex: 3;
+    }
+
+    span.server {
+        text-align: right;
+    }
+
+    span.count,
+    span.name,
+    span.server {
+        font-family: AdvoCut, sans-serif;
+        color: white;
+    }
+
+    span.red {
+        color: #f00;
+    }
+
+    span.yellow {
+        color: #ff0;
+    }
+
+    span.green {
+        color: #0f0;
+    }
+}
+
+.guild-banner-decoration,
+.banner-crest {
+    position: absolute;
+}
+
+.banner-outline {
+    position: relative;
+}
+
+@each $size, $i in media.$sizes {
+    @media ($size) {
+        #guilds {
+            width: 241px * $i;
+            height: 201px * $i;
+            background: url('/img/interface/guilds/frames.png') no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+        }
+
+        #guilds-list-container,
+        #guilds-info-container {
+            top: 32px * $i;
+            right: 18px * $i;
+
+            width: 140px * $i;
+            height: 158px * $i;
+
+            background: url('/img/interface/guilds/frames.png') -256px * $i -16px * $i no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+
+            ul {
+                top: 12px * $i;
+                left: 8px * $i;
+            }
+        }
+
+        #guilds-info {
+            margin-top: 50%;
+        }
+
+        #create-guild {
+            top: 76px * $i;
+            left: -60px * $i;
+        }
+
+        #banner-colours,
+        #banner-outline-colours {
+            top: 34px * $i;
+            width: 14px * $i;
+            height: 150px * $i;
+        }
+
+        #banner-crests {
+            top: 50px * $i;
+            right: 26px * $i;
+            width: 78px * $i;
+            height: 100px * $i;
+        }
+
+        #banner-colours {
+            left: 82px * $i;
+        }
+
+        #banner-outline-colours {
+            left: 102px * $i;
+        }
+
+        #guild-name-input {
+            top: 16px * $i;
+            right: 24px * $i;
+        }
+
+        #guild-chat-input {
+            right: 13px * $i;
+            bottom: 6px * $i;
+        }
+
+        #guild-chat-log {
+            top: 10px * $i;
+            left: 16px * $i;
+            width: 108px * $i;
+            height: 120px * $i;
+        }
+
+        #guild-back {
+            right: 74px * $i;
+            bottom: 14px * $i;
+        }
+
+        #guild-create {
+            right: 28px * $i;
+            bottom: 14px * $i;
+        }
+
+        #create-error {
+            right: 20px * $i;
+            bottom: 36px * $i;
+            width: 92px * $i;
+        }
+
+        #guild-leave {
+            margin-top: -18px * $i;
+        }
+
+        #sidebar-list {
+            left: 138px * $i !important;
+            width: 34px * $i;
+            height: 57px * $i;
+
+            li {
+                margin-bottom: 2px * $i;
+            }
+        }
+
+        .guild-chat {
+            background-position: -528px * $i 0 * $i !important;
+        }
+
+        .guilds-decoration {
+            top: -12px * $i;
+
+            width: 78px * $i;
+            height: 6px * $i;
+
+            background: url('/img/interface/guilds/frames.png') -286px * $i -8px * $i no-repeat;
+            background-size: calc(width('guilds/frames.png') * $i);
+
+            p {
+                margin-top: -6px * $i;
+            }
+        }
+
+        .slot-element {
+            box-sizing: border-box;
+            width: 125px * $i;
+            height: 17px * $i;
+            padding-left: 18px * $i;
+
+            background: url('/img/interface/guilds/frames.png') -400px * $i;
+            background-size: calc(width('guilds/frames.png') * $i);
+        }
+
+        .crest-element {
+            width: 24px * $i;
+            height: 32px * $i;
+            margin-top: 1px * $i;
+
+            background: url('/img/interface/guilds/elements.png') -125px * $i -37px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-x: -152px * $i;
+            }
+
+            &:active,
+            &.active {
+                background-position-x: -179px * $i;
+            }
+        }
+
+        .members-icon {
+            width: 15px * $i;
+            height: 11px * $i;
+            background: url('/img/interface/guilds/elements.png') -208px * $i -20px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .chat-icon {
+            width: 15px * $i;
+            height: 12px * $i;
+            background: url('/img/interface/guilds/elements.png') -208px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .element-button,
+        .element-button-red {
+            width: 28px * $i;
+            height: 14px * $i;
+
+            line-height: 14px * $i;
+
+            background: url('/img/interface/guilds/elements.png') 0 -126px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-y: -141px * $i;
+            }
+
+            &:active,
+            &.active {
+                background-position-y: -156px * $i;
+            }
+        }
+
+        .element-button-red {
+            background-position-x: -29px * $i;
+        }
+
+        .element-button-large {
+            width: 28px * $i * 1.25;
+            height: 14px * $i * 1.25;
+
+            line-height: 14px * $i * 1.25;
+
+            background: url('/img/interface/guilds/elements.png') 0 -126px * $i * 1.25;
+            background-size: calc(width('guilds/elements.png') * $i * 1.25);
+
+            &:hover {
+                background-position-y: -141px * $i * 1.25;
+            }
+
+            &:active,
+            &.active {
+                background-position-y: -156px * $i * 1.25;
+            }
+        }
+
+        .sidebar-element {
+            width: 34px * $i;
+            height: 19px * $i;
+            background: url('/img/interface/guilds/elements.png') 0 -84px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+
+            &:hover {
+                background-position-y: -105px * $i;
+
+                div.members-icon,
+                div.chat-icon {
+                    left: 7px * $i;
+                }
+            }
+
+            &:active,
+            &.active {
+                background-position-y: -63px * $i;
+
+                div.members-icon,
+                div.chat-icon {
+                    left: 5px * $i;
+                }
+            }
+
+            div.members-icon,
+            div.chat-icon {
+                top: 4px * $i;
+                left: 5px * $i;
+            }
+        }
+
+        .guild-name-input-image {
+            width: 76px * $i;
+            height: 17px * $i;
+            background: url('/img/interface/guilds/elements.png') -126px * $i -17px * $i;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .guild-chat-input-image {
+            width: 112px * $i;
+            height: 17px * $i;
+            background: url('/img/interface/guilds/elements.png') -224px * $i 0;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .guild-banner-decoration {
+            top: 16px * $i;
+
+            width: 9px * $i;
+            height: 12px * $i;
+
+            background: url('/img/interface/guilds/elements.png') no-repeat;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .guild-banner-select {
+            left: 84px * $i;
+            background-position-x: -72px * $i;
+        }
+
+        .guild-outline-select {
+            left: 104px * $i;
+            background-position-x: -94px * $i;
+        }
+
+        .slot-guild {
+            background-position-y: -144px * $i;
+        }
+
+        .slot-fledgling {
+            background-position-y: 0;
+        }
+
+        .slot-emergent {
+            background-position-y: -18px * $i;
+        }
+
+        .slot-established {
+            background-position-y: -36px * $i;
+        }
+
+        .slot-adept {
+            background-position-y: -54px * $i;
+        }
+
+        .slot-veteran {
+            background-position-y: -72px * $i;
+        }
+
+        .slot-elite {
+            background-position-y: -90px * $i;
+        }
+
+        .slot-master {
+            background-position-y: -108px * $i;
+        }
+
+        .slot-landlord {
+            background-position-y: -126px * $i;
+        }
+
+        .banner {
+            width: 66px * $i;
+            height: 218px * $i;
+            margin-top: -1px * $i;
+            margin-left: 8px * $i;
+
+            background: url('/img/interface/guilds/banners.png') no-repeat;
+            background-size: calc(width('guilds/banners.png') * $i);
+        }
+
+        .banner-outline {
+            top: 1px * $i;
+
+            width: 56px * $i;
+            height: 211px * $i;
+            margin-left: 5px * $i;
+
+            background: url('/img/interface/guilds/banners-outline.png') no-repeat;
+            background-size: calc(width('guilds/banners-outline.png') * $i);
+        }
+
+        .banner-crest,
+        .banner-crest-icon {
+            background: url('/img/interface/guilds/decorations.png') no-repeat;
+            background-size: calc(width('guilds/decorations.png') * $i);
+        }
+
+        .banner-crest {
+            top: 72px * $i;
+            left: 15px * $i;
+
+            width: 52px * $i;
+            height: 52px * $i;
+
+            background-position: -1px * $i -1px * $i;
+        }
+
+        .banner-crest-icon {
+            width: 16px * $i;
+            height: 15px * $i;
+            margin-top: 10px * $i;
+            margin-left: 4px * $i;
+
+            background-position-y: -240px * $i;
+        }
+
+        .banner-colour-button,
+        .banner-outline-button {
+            width: 14px * $i;
+            height: 15px * $i;
+            background: url('/img/interface/guilds/elements.png') no-repeat;
+            background-size: calc(width('guilds/elements.png') * $i);
+        }
+
+        .banner-colour-button {
+            background-position-x: -70px * $i;
+        }
+
+        .banner-outline-button {
+            background-position-x: -92px * $i;
+        }
+
+        .banner-green {
+            background-position-x: 0;
+        }
+
+        .banner-blue {
+            background-position-x: -67px * $i;
+        }
+
+        .banner-red {
+            background-position-x: -134px * $i;
+        }
+
+        .banner-grey {
+            background-position-x: -201px * $i;
+        }
+
+        .banner-black {
+            background-position-x: -268px * $i;
+        }
+
+        .banner-tangerine {
+            background-position-x: -335px * $i;
+        }
+
+        .banner-yellow {
+            background-position-x: -402px * $i;
+        }
+
+        .banner-purple {
+            background-position-x: -469px * $i;
+        }
+
+        .banner-pink {
+            background-position-x: -536px * $i;
+        }
+
+        .banner-outline-green {
+            background-position-x: -67px * $i;
+        }
+
+        .banner-outline-blue {
+            background-position-x: -134px * $i;
+        }
+
+        .banner-outline-orange {
+            background-position-x: -201px * $i;
+        }
+
+        .banner-outline-white {
+            background-position-x: -268px * $i;
+        }
+
+        .banner-outline-grey {
+            background-position-x: -335px * $i;
+        }
+
+        .banner-outline-tangerine {
+            background-position-x: -402px * $i;
+        }
+
+        .banner-outline-yellow {
+            background-position-x: -469px * $i;
+        }
+
+        .banner-outline-purple {
+            background-position-x: -536px * $i;
+        }
+
+        .banner-outline-pink {
+            background-position-x: -603px * $i;
+        }
+
+        .banner-colour-button-green,
+        .banner-outline-button-green {
+            background-position-y: -15px * $i;
+        }
+
+        .banner-colour-button-blue,
+        .banner-outline-button-blue {
+            background-position-y: -31px * $i;
+        }
+
+        .banner-colour-button-red,
+        .banner-outline-button-orange {
+            background-position-y: -47px * $i;
+        }
+
+        .banner-colour-button-grey,
+        .banner-outline-button-white {
+            background-position-y: -63px * $i;
+        }
+
+        .banner-colour-button-black,
+        .banner-outline-button-grey {
+            background-position-y: -79px * $i;
+        }
+
+        .banner-colour-button-tangerine,
+        .banner-outline-button-tangerine {
+            background-position-y: -95px * $i;
+        }
+
+        .banner-colour-button-yellow,
+        .banner-outline-button-yellow {
+            background-position-y: -111px * $i;
+        }
+
+        .banner-colour-button-purple,
+        .banner-outline-button-purple {
+            background-position-y: -127px * $i;
+        }
+
+        .banner-colour-button-pink,
+        .banner-outline-button-pink {
+            background-position-y: -143px * $i;
+        }
+
+        .banner-crest-none {
+            background-position-x: -1px * $i;
+        }
+
+        .banner-crest-star {
+            background-position-x: -55px * $i;
+        }
+
+        .banner-crest-hawk {
+            background-position-x: -109px * $i;
+        }
+
+        .banner-crest-phoenix {
+            background-position-x: -163px * $i;
+        }
+
+        .banner-crest-icon-none {
+            background-position-x: 0;
+        }
+
+        .banner-crest-icon-star {
+            background-position-x: -16px * $i;
+        }
+
+        .banner-crest-icon-hawk {
+            background-position-x: -32px * $i;
+        }
+
+        .banner-crest-icon-phoenix {
+            background-position-x: -48px * $i;
+        }
+    }
+}
+
+@media (--lg) {
+    #guild-name-input,
+    #guild-chat-input {
+        font-size: 20px;
+    }
+
+    .guilds-decoration {
+        p {
+            margin-top: -24px;
+            font-size: 28px;
+        }
+    }
+
+    .slot-element {
+        span.name,
+        span.count,
+        span.server {
+            font-size: 22px;
+        }
+    }
+
+    .element-button {
+        font-size: 18px;
+    }
+}
+
+@media (--md) {
+    #guild-name-input,
+    #guild-chat-input {
+        font-size: 14px;
+    }
+
+    #guild-chat-log {
+        font-size: 14px;
+    }
+
+    .guilds-decoration {
+        p {
+            margin-top: -22px;
+            font-size: 20px;
+        }
+    }
+
+    .slot-element {
+        span.name,
+        span.count,
+        span.server {
+            font-size: 14px;
+        }
+    }
+}
+
+@media (--sm) {
+    #guild-name-input,
+    #guild-chat-input {
+        font-size: 8px;
+    }
+
+    #guild-chat-log {
+        font-size: 10px;
+    }
+
+    .guilds-decoration {
+        p {
+            margin-top: -12px;
+            font-size: 10px;
+        }
+    }
+
+    .slot-element {
+        span.name,
+        span.count,
+        span.server {
+            font-size: 8px;
+        }
+    }
+
+    .element-button {
+        font-size: 7px;
+    }
+}

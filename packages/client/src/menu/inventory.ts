@@ -1,30 +1,40 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
+import { onDragDrop } from '../utils/press';
 
-import Menu from './menu';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type { SlotData } from '@kaetram/common/types/slot';
 import type Actions from './actions';
+import type { SlotData } from '@kaetram/common/types/slot';
+import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, tIndex?: number) => void;
+type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
+type BatchCallback = () => void;
 
 interface SlotElement extends HTMLElement {
     edible?: boolean;
+    interactable?: boolean;
     equippable?: boolean;
+
+    name?: string;
+    count?: number;
+    description?: string;
+    attackStats?: Stats;
+    defenseStats?: Stats;
+    bonuses?: Bonuses;
+    enchantments?: Enchantments;
 }
 
 export default class Inventory extends Menu {
-    private list: HTMLUListElement = document.querySelector('#inventory > ul')!;
+    private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
     // Used for when we open the action menu interface.
     private selectedSlot = -1;
 
     private selectCallback?: SelectCallback;
-
-    private touchClone: HTMLElement | undefined;
+    private batchCallback?: BatchCallback;
 
     public constructor(private actions: Actions) {
         super('#inventory', undefined, '#inventory-button');
@@ -32,6 +42,7 @@ export default class Inventory extends Menu {
         this.load();
 
         this.actions.onButton((action: Modules.MenuActions) => this.handleAction(action));
+        this.actions.onDrop((count: number) => this.handleDrop(count));
     }
 
     /**
@@ -49,14 +60,43 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * Creates a select callback using the action parameter specified.
-     * @param action Which type of action is being performed.
+     * Handles pressing down a key while the dialogue is open. We redirect any keys
+     * from the keyboard into this class when the dialogue is open.
+     * @param key The key that was pressed.
      */
 
-    private handleAction(action: Modules.MenuActions): void {
-        this.selectCallback?.(this.selectedSlot, Util.getContainerAction(action));
+    public keyDown(key: string): void {
+        switch (key) {
+            case 'Escape': {
+                return this.actions.hideDropDialog();
+            }
+
+            case 'Enter': {
+                return this.actions.handleDrop();
+            }
+        }
+    }
+
+    /**
+     * Creates a select callback using the action parameter specified.
+     * @param menuAction Which type of action is being performed.
+     */
+
+    private handleAction(menuAction: Modules.MenuActions): void {
+        if (menuAction === Modules.MenuActions.DropMany) return this.actions.showDropDialog();
+
+        this.selectCallback?.(Util.getContainerAction(menuAction)!, this.selectedSlot, 1);
 
         this.actions.hide();
+    }
+
+    /**
+     * Drops an item from the inventory based on the count specified.
+     * @param count The amount of items we are dropping.
+     */
+
+    private handleDrop(count: number): void {
+        return this.selectCallback?.(Opcodes.Container.Remove, this.selectedSlot, count);
     }
 
     /**
@@ -68,11 +108,13 @@ export default class Inventory extends Menu {
      */
 
     public override batch(slots: SlotData[]): void {
-        _.each(slots, (slot: SlotData) => {
-            if (!slot.key) return;
+        for (let slot of slots) {
+            if (!slot.key) continue;
 
-            this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
-        });
+            this.setSlot(slot);
+        }
+
+        this.batchCallback?.();
     }
 
     /**
@@ -81,7 +123,7 @@ export default class Inventory extends Menu {
      */
 
     public override add(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+        this.setSlot(slot);
     }
 
     /**
@@ -91,7 +133,7 @@ export default class Inventory extends Menu {
      */
 
     public override remove(slot: SlotData): void {
-        this.setSlot(slot.index, slot.key, slot.count, slot.edible, slot.equippable);
+        this.setSlot(slot);
     }
 
     /**
@@ -117,7 +159,10 @@ export default class Inventory extends Menu {
 
         if (doubleClick) {
             if (element.edible) this.handleAction(Modules.MenuActions.Eat);
-            else if (element.equippable) this.handleAction(Modules.MenuActions.Equip);
+            else if (element.equippable || element.interactable)
+                this.handleAction(Modules.MenuActions.Equip);
+
+            this.actions.hide();
 
             return;
         }
@@ -131,14 +176,23 @@ export default class Inventory extends Menu {
         let actions: Modules.MenuActions[] = [];
 
         if (element.edible) actions.push(Modules.MenuActions.Eat);
+        if (element.interactable) actions.push(Modules.MenuActions.Eat2);
         if (element.equippable) actions.push(Modules.MenuActions.Equip);
 
         // Push drop option as the last one.
-        actions.push(Modules.MenuActions.Drop);
+        actions.push(Modules.MenuActions.DropOne);
 
-        let position = this.getPosition(element);
+        if (element.count! > 1) actions.push(Modules.MenuActions.DropMany);
 
-        this.actions.show(actions, position.x, position.y);
+        this.actions.show(
+            actions,
+            element.name!,
+            element.attackStats!,
+            element.defenseStats!,
+            element.bonuses!,
+            element.enchantments!,
+            element.description
+        );
     }
 
     /**
@@ -159,134 +213,13 @@ export default class Inventory extends Menu {
     }
 
     /**
-     * Event handler for when a slot begins the dragging and dropping
-     * process. We update the current index of the slot that is being
-     * selected for later use.
-     * @param index The index of the slot being dragged.
+     * Swaps the currently selected slot with the target slot.
+     * @param fromIndex Index of the slot we are swapping from.
+     * @param toIndex Index of the slot we are swapping to.
      */
 
-    private dragStart(event: Event, index: number): void {
-        if (this.isEmpty(this.getElement(index))) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            return;
-        }
-
-        this.selectedSlot = index;
-    }
-
-    /**
-     * The drop event within the drag and drop actions. The target represents
-     * the slot that the item is being dropped into.
-     * @param event Contains event data about the target.
-     */
-
-    private dragDrop(event: DragEvent, index: number): void {
-        let element = event.target as HTMLElement;
-
-        if (!element) return;
-
-        // Remove the selected slot class property.
-        element.classList.remove('item-slot-focused');
-
-        if (this.selectedSlot === -1) return;
-
-        // Create a callback used when we swap an item from `selectedSlot` to index.
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, index);
-
-        // Reset the selected slot after.
-        this.selectedSlot = -1;
-    }
-
-    /**
-     * Event handler for when a slot is being dragged over (but not dropped).
-     * We use this to give the user feedback on which slot they are hovering.
-     * @param event Contains event data and the slot element that is being hovered.
-     */
-
-    private dragOver(event: DragEvent): void {
-        // Check that a target exists firstly.
-        if (!event.target || !(event.target as HTMLElement).draggable) return;
-
-        event.preventDefault();
-
-        // Add the slot focused class property.
-        (event.target as HTMLElement).classList.add('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when an item being dragged exits a valid slot area.
-     * @param event Contains the target slot that is exited.
-     */
-
-    private dragLeave(event: DragEvent): void {
-        // Remove the slot focused class.
-        (event.target as HTMLElement).classList.remove('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when a slot begins being touched on a mobile device.
-     * @param index Index of the slot being touched.
-     */
-
-    private touchStart(index: number): void {
-        if (this.isEmpty(this.getElement(index))) return;
-
-        this.selectedSlot = index;
-    }
-
-    /**
-     * Event handler for when a slot is being moved on a mobile device.
-     * @param event Contains event data about the slot being moved.
-     * @param item The item being moved.
-     */
-
-    private touchMove(event: TouchEvent, item: HTMLDivElement) {
-        if (this.selectedSlot === -1) return;
-
-        let [touch] = event.touches;
-
-        item.classList.add('item-slot-focused');
-
-        this.touchClone ??= item.cloneNode(true) as HTMLElement;
-
-        this.touchClone.style.position = 'absolute';
-        this.touchClone.style.top = `${touch.clientY - item.clientHeight / 2}px`;
-        this.touchClone.style.left = `${touch.clientX - item.clientWidth / 2}px`;
-        this.touchClone.style.opacity = '0.75';
-
-        document.querySelector('#game-container')?.append(this.touchClone);
-    }
-    /**
-     * Event handler for when a slot touch is being cancelled.
-     * @param item The item being cancelled.
-     */
-
-    private touchCancel(item: HTMLDivElement) {
-        this.touchClone?.remove();
-        this.touchClone = undefined;
-
-        item.classList.remove('item-slot-focused');
-    }
-
-    /**
-     * Event handler for when a slot touch is being ended.
-     * @param event Contains event data about the slot being ended.
-     * @param item The item being ended.
-     */
-
-    private touchEnd(event: TouchEvent, item: HTMLDivElement) {
-        this.touchCancel(item);
-
-        let [touch] = event.changedTouches,
-            element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement | null,
-            index = element?.dataset?.index;
-
-        if (!index || this.selectedSlot === -1) return;
-
-        // Create a callback used when we swap an item from `selectedSlot` to index.
-        this.selectCallback?.(this.selectedSlot, Opcodes.Container.Swap, parseInt(index));
+    public swap(fromIndex: number, toIndex: number): void {
+        this.selectCallback?.(Opcodes.Container.Swap, fromIndex, toIndex);
 
         // Reset the selected slot after.
         this.selectedSlot = -1;
@@ -296,31 +229,40 @@ export default class Inventory extends Menu {
      * Sets the slot's image and count at a specified index. If no key is provided
      * then we remove the slot's `backgroundImage` property and set the count to
      * an empty string.
-     * @param index Index at which we are updating the slot data.
-     * @param key Optional parameter that is used to get the image for the slot.
-     * @param count Integer value to assign to the slot.
-     * @param edible Boolean value that determines if the item in the slot is edible.
-     * @param equippable Boolean value that determines if the item in the slot is equippable.
+     * @param slot Contains information about the slot element.
      */
 
-    private setSlot(index: number, key = '', count = 1, edible = false, equippable = false): void {
-        let slotElement = this.getElement(index);
+    private setSlot(slot: SlotData): void {
+        let slotElement = this.getElement(slot.index);
 
-        if (!slotElement) return log.error(`Could not find slot element at: ${index}`);
+        if (!slotElement) return log.error(`Could not find slot element at: ${slot.index}`);
 
-        let countElement = slotElement.querySelector('.inventory-item-count');
+        let imageElement: HTMLElement = slotElement.querySelector('.item-image')!,
+            countElement = slotElement.querySelector('.item-count');
 
-        if (countElement) countElement.textContent = Util.getCount(count);
+        if (!imageElement) return log.error(`Could not find image element at: ${slot.index}`);
 
-        slotElement.style.backgroundImage = key ? Util.getImageURL(key) : '';
+        if (countElement) countElement.textContent = Util.getCount(slot.count);
+
+        imageElement.style.backgroundImage = slot.key ? Util.getImageURL(slot.key) : '';
 
         // Set data properties for easy testing (see Cypress best practices)
-        slotElement.dataset.key = key;
-        slotElement.dataset.count = `${count}`;
+        slotElement.dataset.key = slot.key;
+        slotElement.dataset.count = `${slot.count}`;
 
         // Update the edible and equippable properties.
-        slotElement.edible = edible;
-        slotElement.equippable = equippable;
+        slotElement.edible = slot.edible!;
+        slotElement.interactable = slot.interactable!;
+        slotElement.equippable = slot.equippable!;
+
+        // Add the item stats and name
+        slotElement.name = slot.name!;
+        slotElement.count = slot.count!;
+        slotElement.description = this.formatDescription(slot.name!, slot.count, slot.description!);
+        slotElement.attackStats = slot.attackStats!;
+        slotElement.defenseStats = slot.defenseStats!;
+        slotElement.bonuses = slot.bonuses!;
+        slotElement.enchantments = slot.enchantments!;
     }
 
     /**
@@ -332,16 +274,21 @@ export default class Inventory extends Menu {
     private createSlot(index: number): HTMLLIElement {
         let slot = document.createElement('li'),
             item = document.createElement('div'),
+            image = document.createElement('div'),
             count = document.createElement('div');
 
         item.dataset.index = `${index}`;
 
-        // Assign the class to the slot and make it draggable.
-        item.draggable = true;
         item.classList.add('item-slot');
 
+        // Add the item image element onto the slot.
+        image.classList.add('item-image');
+
         // Add the class element onto the count.
-        count.classList.add('inventory-item-count');
+        count.classList.add('item-count');
+
+        // Append the image onto the item slot.
+        item.append(image);
 
         // Append the count onto the item slot.
         item.append(count);
@@ -352,17 +299,19 @@ export default class Inventory extends Menu {
         // Add the click event listeners to the slot.
         slot.addEventListener('click', () => this.select(index));
         slot.addEventListener('dblclick', () => this.select(index, true));
-        slot.addEventListener('dragstart', (event) => this.dragStart(event, index));
-        slot.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, index));
-        slot.addEventListener('dragover', (event: DragEvent) => this.dragOver(event));
-        slot.addEventListener('dragleave', (event: DragEvent) => this.dragLeave(event));
 
-        slot.addEventListener('touchstart', () => this.touchStart(index));
-        slot.addEventListener('touchmove', (event) => this.touchMove(event, item));
-        slot.addEventListener('touchcancel', () => this.touchCancel(item));
-        slot.addEventListener('touchend', (event) => this.touchEnd(event, item));
+        onDragDrop(item, this.handleHold.bind(this), () => this.isEmpty(this.getElement(index)));
 
         return slot;
+    }
+
+    private handleHold(clone: HTMLElement, target: HTMLElement): void {
+        let fromIndex = clone?.dataset?.index,
+            toIndex = target?.dataset?.index;
+
+        if (!fromIndex || !toIndex) return;
+
+        this.swap(parseInt(fromIndex), parseInt(toIndex));
     }
 
     /**
@@ -380,14 +329,41 @@ export default class Inventory extends Menu {
     }
 
     /**
+     * Includes the exact count in the description of an item. Applies for things like
+     * gold, tokens, or large stackable items.
+     * @param name The name of the item
+     * @param count The count of the item
+     * @param description The original description of the item.
+     * @returns String containing the formatted description.
+     */
+
+    private formatDescription(name: string, count: number, description: string): string {
+        return count < 1000
+            ? description
+            : `${description} You have a stack of ${count.toLocaleString(
+                  'en-US'
+              )} ${name.toLowerCase()}. `;
+    }
+
+    /**
      * Checks whether the specified element is empty by verifying its
      * background image property.
      * @param element SlotElement that we are checking.
      * @returns Whether or not the background image style is an empty string or not.
      */
 
-    private isEmpty(element: SlotElement): boolean {
-        return element.style.backgroundImage === '';
+    public isEmpty(element: SlotElement): boolean {
+        let image: HTMLElement = element.querySelector('.item-image')!;
+
+        return !image || image.style.backgroundImage === '';
+    }
+
+    /**
+     * @returns Whether or not the actions menu has the drop dialog visible.
+     */
+
+    public isDropDialogVisible(): boolean {
+        return this.actions.dropDialog.style.display === 'block';
     }
 
     /**
@@ -396,24 +372,18 @@ export default class Inventory extends Menu {
      * @returns An HTMLElement for the slot.
      */
 
-    private getElement(index: number): SlotElement {
+    public getElement(index: number): SlotElement {
         return this.list.children[index].querySelector('div') as HTMLElement;
     }
 
     /**
-     * Retrieves the absolute position of an element
-     * relative to the screen.
-     * @param element The element we are extracting position of.
-     * @returns A position object containing the x and y coordinates.
+     * Returns the number value of the count at a specified index.
+     * @param index The index at which we are grabbing the count.
+     * @returns The number value of the count or 0 if it is not found.
      */
 
-    private getPosition(element: HTMLElement): Position {
-        let boundingRect = element.getBoundingClientRect();
-
-        return {
-            x: boundingRect.left - boundingRect.width,
-            y: boundingRect.top - boundingRect.height * 2
-        };
+    public getCount(index: number): number {
+        return this.getElement(index)?.count || 0;
     }
 
     /**
@@ -449,5 +419,13 @@ export default class Inventory extends Menu {
 
     public onSelect(callback: SelectCallback): void {
         this.selectCallback = callback;
+    }
+
+    /**
+     * Callback for when a batch is loaded
+     */
+
+    public onBatch(callback: BatchCallback): void {
+        this.batchCallback = callback;
     }
 }

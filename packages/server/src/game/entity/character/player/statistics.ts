@@ -1,8 +1,16 @@
+import { Modules } from '@kaetram/common/network';
+
+import type Player from './player';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 
 export default class Statistics {
+    private milestones = [10, 50, 100, 500, 1000, 5000, 10_000];
+
     public pvpKills = 0;
     public pvpDeaths = 0;
+    public mobKills: { [key: string]: number } = {};
+    public mobExamines: string[] = [];
+    public resources: { [key: string]: number } = {};
 
     public creationTime = Date.now(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
@@ -13,6 +21,8 @@ export default class Statistics {
     // Class variables for calculating login time, etc.
     public loginTime = Date.now(); // Time when player logged in.
 
+    public constructor(private player: Player) {}
+
     /**
      * Loads the statistics data from the database.
      * @param data Contains the statistics data.
@@ -21,11 +31,78 @@ export default class Statistics {
     public load(data: StatisticsData): void {
         this.pvpKills = data.pvpKills || this.pvpKills;
         this.pvpDeaths = data.pvpDeaths || this.pvpDeaths;
+        this.mobKills = data.mobKills || this.mobKills;
+        this.mobExamines = data.mobExamines || this.mobExamines;
+        this.resources = data.resources || this.resources;
+
         this.creationTime = data.creationTime || this.creationTime;
         this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
         this.averageTimePlayed = data.averageTimePlayed || this.averageTimePlayed;
         this.lastLogin = data.lastLogin || this.lastLogin;
         this.loginCount = data.loginCount + 1 || this.loginCount;
+    }
+
+    /**
+     * Handles a player harvesting a resource from a skill. When a player successfully
+     * cuts a tree, mines a rock, or fishes, this function is called to handle the
+     * statistics for that skill. When we reach one of the milestones, we finish the
+     * achievement for that milestone.
+     * @param skill The skill that the player is harvesting from.
+     */
+
+    public handleSkill(skill: Modules.Skills): void {
+        // Skip foraging since we don't have any achievements for it.
+        if (skill === Modules.Skills.Foraging) return;
+
+        // Get the skill name and the intervals for the milestones.
+        let skillName = Modules.Skills[skill].toLowerCase();
+
+        if (!(skillName in this.resources)) this.resources[skillName] = 0;
+
+        // Increment the skill's resource count.
+        this.resources[skillName]++;
+
+        // Check if we have reached a milestone and award an achievement if we have.
+        if (this.milestones.includes(this.resources[skillName]))
+            this.player.achievements.get(`${skillName}${this.resources[skillName]}`)?.finish();
+    }
+
+    /**
+     * Appends a mob kill onto the statistics. A mob is killed by a player
+     * when they deal the primary amount of damage on the damage table.
+     * @param key The key of the mob that was killed.
+     */
+
+    public addMobKill(key: string): void {
+        if (!(key in this.mobKills)) this.mobKills[key] = 0;
+
+        this.mobKills[key]++;
+    }
+
+    /**
+     * Handles examining a mob and rewarding the appropriate achievement.
+     * @param key The key of the mob that was examined.
+     */
+
+    public addMobExamine(key: string): void {
+        if (this.mobExamines.includes(key)) return;
+
+        this.mobExamines.push(key);
+
+        // Handle achievements for each milestone
+        switch (this.mobExamines.length) {
+            case 10: {
+                return this.player.achievements.get('examiner10').finish();
+            }
+
+            case 25: {
+                return this.player.achievements.get('examiner25').finish();
+            }
+
+            case 50: {
+                return this.player.achievements.get('examiner50').finish();
+            }
+        }
     }
 
     /**
@@ -62,11 +139,15 @@ export default class Statistics {
         return {
             pvpKills: this.pvpKills,
             pvpDeaths: this.pvpDeaths,
+            mobKills: this.mobKills,
+            mobExamines: this.mobExamines,
+            resources: this.resources,
             creationTime: this.creationTime,
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,
             lastLogin: this.lastLogin,
-            loginCount: this.loginCount
+            loginCount: this.loginCount,
+            cheater: this.player.isCheater()
         };
     }
 }

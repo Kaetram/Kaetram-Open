@@ -2,21 +2,28 @@ import zlib from 'node:zlib';
 
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
 
 import type {
     ProcessedAnimation,
     ProcessedMap,
-    ProcessedResource
+    ProcessedResource,
+    ProcessedTileset
 } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+
+interface Resources {
+    [key: string]: ProcessedResource;
+}
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
-    #collisionTiles: { [tileId: number]: boolean } = {};
-    #trees: { [key: string]: ProcessedResource } = {};
+    private collisionTiles: { [tileId: number]: boolean } = {};
+    private trees: Resources = {};
+    private rocks: Resources = {};
+    private fishSpots: Resources = {};
+    private foraging: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -43,20 +50,26 @@ export default class ProcessMap {
             collisions: [],
             entities: {},
 
-            tilesets: {},
+            tilesets: [],
             animations: {},
 
             plateau: {},
 
             high: [],
+            obstructing: [],
             objects: [],
             areas: {},
             cursors: {},
-            trees: []
+            trees: [],
+            rocks: [],
+            fishSpots: [],
+            foraging: []
         };
 
         this.parseTilesets();
         this.parseLayers();
+
+        this.format();
     }
 
     /**
@@ -67,34 +80,40 @@ export default class ProcessMap {
     private parseTilesets(): void {
         let { tilesets } = this.data;
 
-        if (!_.isArray(tilesets)) {
+        if (!Array.isArray(tilesets)) {
             log.error('Could not parse tilesets, corrupted format.');
             return;
         }
 
-        _.each(tilesets, (tileset: Tileset) => {
+        for (let key in tilesets) {
+            let tileset = tilesets[key];
+
             /**
-             * All the tilesets follow the format of `tilesheet_NUMBER`.
-             * We extrac the number in this process, which allows us to properly
-             * organize them. Alongside that, we also store the first tileId
-             * of each tileset (firstGID) as the key's value.
+             * An upgrade from the hardcoded method of implementing tilesets.
+             * This system uses the ID of the tileset from Tiled to store information
+             * about the tileset. We calculate its first tile id and last tile id.
+             * We ignore the entities layer as it is not a tileset for rendering.
              */
 
-            let [, tilesetId] = tileset.name.split('-');
-
-            if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
+            if (tileset.name !== 'Entities')
+                this.map.tilesets!.push({
+                    firstGid: tileset.firstgid - 1,
+                    lastGid: tileset.firstgid - 1 + tileset.tilecount - 1,
+                    path: tileset.image
+                });
 
             this.parseTileset(tileset);
-        });
+        }
 
-        // Convert local tree dictionary into an array for the server.
-        _.each(this.#trees, (tree: ProcessedResource) => {
-            // Ensure stumps and cut stumps match lengths. Otherwise skip the tree.
-            if (tree.base.length !== tree.depleted.length)
-                return log.error(`${tree.type} has a stump and cut stump length mismatch.`);
-
-            this.map.trees.push(tree);
-        });
+        // As the last step of the tileset processing, we parse the resources and add them to the map.
+        this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
+        this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
+        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
+            this.map.fishSpots.push(fishSpot)
+        );
+        this.parseResources(this.foraging, (forage: ProcessedResource) =>
+            this.map.foraging.push(forage)
+        );
     }
 
     /**
@@ -102,7 +121,7 @@ export default class ProcessMap {
      */
 
     private parseLayers(): void {
-        _.each(this.data.layers, (layer: Layer) => {
+        for (let layer of this.data.layers)
             switch (layer.type) {
                 case 'tilelayer': {
                     this.parseTileLayer(layer);
@@ -114,7 +133,8 @@ export default class ProcessMap {
                     break;
                 }
             }
-        });
+
+        this.parseObstructingTiles();
     }
 
     /**
@@ -126,16 +146,17 @@ export default class ProcessMap {
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
-        _.each(tiles, (tile: Tile) => {
+        for (let tile of tiles) {
             let tileId = this.getTileId(tileset, tile);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
-            _.each(tile.properties, (property: Property) => {
+            if (!tile.properties) continue;
+
+            for (let property of tile.properties)
                 if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
                 else this.parseProperties(tileId, property);
-            });
-        });
+        }
     }
 
     /**
@@ -149,12 +170,11 @@ export default class ProcessMap {
         // Temporary storage for animation data.
         let data: ProcessedAnimation[] = [];
 
-        _.each(animations, (animation: Animation) => {
+        for (let animation of animations)
             data.push({
                 duration: animation.duration,
                 tileId: this.getId(firstgid, animation.tileid, -1)
             });
-        });
 
         this.map.animations![tileId] = data;
     }
@@ -170,9 +190,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, objects, cursors } = this.map;
+            { high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
 
         switch (name) {
             case 'v': {
@@ -185,15 +205,64 @@ export default class ProcessMap {
                 break;
             }
 
+            case 'h':
+            case 'obs': {
+                obstructing?.push(tileId);
+                break;
+            }
+
             case 'cursor': {
                 cursors[tileId] = value;
                 break;
             }
 
-            case 'tree':
-            case 'stump':
-            case 'cutstump': {
-                return this.parseTreeProperty(name, tileId, value);
+            // Properties fo resource classification.
+            case 'tree': {
+                return this.parseResourceProperty(this.trees, 'data', tileId, value);
+            }
+
+            case 'stump': {
+                return this.parseResourceProperty(this.trees, 'base', tileId, value);
+            }
+
+            case 'cutstump':
+            case 'stumpcut': {
+                return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
+            }
+
+            // Mining
+            case 'rock': {
+                return this.parseResourceProperty(this.rocks, 'data', tileId, value);
+            }
+
+            case 'rockbase': {
+                return this.parseResourceProperty(this.rocks, 'base', tileId, value);
+            }
+
+            case 'rockempty': {
+                return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
+            }
+
+            // Fishing
+            case 'fishspot': {
+                // Fish spots share the same base and data tiles.
+                this.parseResourceProperty(this.fishSpots, 'base', tileId, value);
+                return this.parseResourceProperty(this.fishSpots, 'data', tileId, value);
+            }
+
+            case 'fishempty': {
+                return this.parseResourceProperty(this.fishSpots, 'depleted', tileId, value);
+            }
+
+            // Foraging
+            case 'forage': {
+                // Foraging spots share the same base and data tiles.
+                this.parseResourceProperty(this.foraging, 'base', tileId, value);
+                return this.parseResourceProperty(this.foraging, 'data', tileId, value);
+            }
+
+            case 'forageempty': {
+                return this.parseResourceProperty(this.foraging, 'depleted', tileId, value);
             }
         }
     }
@@ -216,8 +285,6 @@ export default class ProcessMap {
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
         this.parseTileLayerData(layer.data);
-
-        this.format();
     }
 
     /**
@@ -235,19 +302,23 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        _.each(mapData, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let i in mapData) {
+            let value = mapData[i];
+
+            if (value < 1) continue;
+
+            let index = parseInt(i);
 
             if (!data[index]) data[index] = value;
-            else if (_.isArray(data[index])) (data[index] as number[]).push(value);
+            else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
             // Remove flip flags for the sake of calculating collisions.
             if (this.isFlipped(value)) value = this.removeFlipFlags(value);
 
             // Add collision indexes to the map.
-            if (value in this.#collisionTiles) collisions.push(index);
-        });
+            if (value in this.collisionTiles) collisions.push(index);
+        }
     }
 
     /**
@@ -260,11 +331,11 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            if (layer.data[index] < 1) continue;
 
-            this.map.collisions.push(index);
-        });
+            this.map.collisions.push(parseInt(index));
+        }
     }
 
     /**
@@ -278,11 +349,14 @@ export default class ProcessMap {
     private parseEntities(layer: Layer): void {
         let { entities } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            let value = layer.data[index];
 
-            if (value in this.tilesetEntities) entities[index] = this.tilesetEntities[value];
-        });
+            if (value < 1) continue;
+
+            if (value in this.tilesetEntities)
+                entities[parseInt(index)] = this.tilesetEntities[value];
+        }
     }
 
     /**
@@ -296,14 +370,16 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        _.each(layer.data, (value: number, index: number) => {
-            if (value < 1) return;
+        for (let index in layer.data) {
+            let value = layer.data[index];
+
+            if (value < 1) continue;
 
             // We skip collisions
-            if (collisions.includes(value)) return;
+            if (collisions.includes(value)) continue;
 
-            plateau[index] = level;
-        });
+            plateau[parseInt(index)] = level;
+        }
     }
 
     /**
@@ -320,9 +396,7 @@ export default class ProcessMap {
 
         if (!(name in areas)) areas[name] = [];
 
-        _.each(objects, (info) => {
-            this.parseObject(name, info);
-        });
+        for (let object of objects) this.parseObject(name, object);
     }
 
     /**
@@ -344,51 +418,108 @@ export default class ProcessMap {
             polygon: this.extractPolygon(object)
         });
 
-        _.each(properties, (property) => {
+        // Some objects may not have properties.
+        if (!properties) return;
+
+        for (let property of properties) {
             let index = this.map.areas[areaName].length - 1, // grab the last object (one we just added)
                 { name, value } = property;
 
             this.map.areas[areaName][index][name as never] = value;
-        });
+        }
     }
 
     /**
-     * Takes tree property data and stores it into the map trees property.
-     * If a tree already exists within said property, it appends data to it.
-     * Tree data is split into `data,` `stump,` and `cutStump.` After we
-     * store the tree data, we convert it into an array for the server to parse.
-     * @param name The name of the property.
-     * @param tileId The tileId currently processing.
-     * @param value Property value of the tree.
+     * Generic implementation for parsing a resource property. This may be a tree, or a rock
+     * or anything else in the future. When we pass properties onto this function, we ensure
+     * they use the standard `data,` `base,` and `depleted` properties.
+     * @param resourceType The type of resource we are adding data onto (trees, rocks, etc.)
+     * @param name The name of the property (data, base, depleted)
+     * @param tileId The tileId being processed currently (the tile data).
+     * @param value The value represents the resource's identifier.
      */
 
-    private parseTreeProperty(name: string, tileId: number, value: never): void {
-        if (!(value in this.#trees))
-            this.#trees[value] = {
+    private parseResourceProperty(
+        resourceType: Resources,
+        name: string,
+        tileId: number,
+        value: never
+    ): void {
+        // Create a new resource type if it does not exist.
+        if (!(value in resourceType))
+            resourceType[value] = {
                 data: [],
                 base: [],
                 depleted: [],
                 type: value
             };
 
-        // Organize tree data into their respective arrays.
+        // Organize resource data into their respective arrays.
         switch (name) {
-            case 'tree': {
-                this.#trees[value].data.push(tileId);
+            case 'data': {
+                resourceType[value].data.push(tileId);
                 break;
             }
 
-            case 'stump': {
-                this.#trees[value].base.push(tileId);
+            case 'base': {
+                resourceType[value].base.push(tileId);
                 break;
             }
 
-            case 'cutstump':
-            case 'stumpcut': {
-                this.#trees[value].depleted.push(tileId);
+            case 'depleted': {
+                resourceType[value].depleted.push(tileId);
                 break;
             }
         }
+    }
+
+    /**
+     * Parses through a specified resource and creates a callback after it has been validated.
+     * @param resources The list of processed resources to look through.
+     * @param callback Contains resource currently being processed.
+     */
+
+    private parseResources(
+        resources: Resources,
+        callback: (resource: ProcessedResource) => void
+    ): void {
+        for (let resource of Object.values(resources)) {
+            // Determine whether the normal and exhausted resource match lengths, otherwise skip.
+            if (resource.base.length !== resource.depleted.length)
+                return log.error(`${resource.type} has a base and depleted length mismatch.`);
+
+            callback(resource);
+        }
+    }
+
+    /**
+     * Looks through all the tiles in the map and finds which one contain a hidden
+     * tile at their uppermost layer. We remove the layers behind the hidden tile.
+     */
+
+    private parseObstructingTiles(): void {
+        let { data, obstructing } = this.map,
+            clearedTiles = 0;
+
+        // For every tile that has a hidden property, we want to remove the tiles behind it.
+        for (let index in data) {
+            let tile = data[index];
+
+            // Ignore non-array tiles.
+            if (!Array.isArray(data)) continue;
+
+            // Find the last tile in the array.
+            let lastTile = (tile as number[])[(tile as number[]).length - 1];
+
+            // If the last tile is hidden, we remove the tile.
+            if (obstructing?.includes(lastTile)) {
+                data[index] = lastTile;
+
+                clearedTiles++;
+            }
+        }
+
+        log.notice(`Found ${clearedTiles} full tiles that overlap.`);
     }
 
     /**
@@ -405,12 +536,11 @@ export default class ProcessMap {
         let polygon: Position[] = [],
             { tileSize } = this.map;
 
-        _.each(info.polygon, (point) => {
+        for (let point of info.polygon)
             polygon.push({
                 x: (info.x + point.x) / tileSize,
                 y: (info.y + point.y) / tileSize
             });
-        });
 
         return polygon;
     }
@@ -428,9 +558,7 @@ export default class ProcessMap {
      */
 
     private format(): void {
-        _.each(this.map.data, (value, index) => {
-            if (!value) this.map.data[index] = 0;
-        });
+        for (let i = 0; i < this.map.data.length; i++) if (!this.map.data[i]) this.map.data[i] = 0;
     }
 
     /**
@@ -465,7 +593,7 @@ export default class ProcessMap {
      */
 
     private getLayerData(data: number[], type: string): number[] {
-        if (_.isArray(data)) return data;
+        if (Array.isArray(data)) return data;
 
         let dataBuffer = Buffer.from(data, 'base64'),
             inflatedData: Buffer;
@@ -581,7 +709,10 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks,
+            fishSpots,
+            foraging
         } = this.map;
 
         return JSON.stringify({
@@ -597,7 +728,10 @@ export default class ProcessMap {
             objects,
             cursors,
             entities,
-            trees
+            trees,
+            rocks,
+            fishSpots,
+            foraging
         });
     }
 
@@ -620,7 +754,12 @@ export default class ProcessMap {
         });
     }
 
-    public getTilesets(): { [tilesetId: number]: number } {
+    /**
+     * Returns the tileset data.
+     * @returns The dictionary of processed tilesets.
+     */
+
+    public getTilesets(): ProcessedTileset[] {
         return this.map.tilesets!;
     }
 }

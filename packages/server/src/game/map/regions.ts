@@ -1,13 +1,13 @@
 import fs from 'node:fs';
 
-import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
-
-import { List, Map as MapPacket, Spawn, Update } from '../../network/packets';
-
 import Region from './region';
+
+import Character from '../entity/character/character';
+
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
 
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type {
@@ -224,7 +224,7 @@ export default class Regions {
                 newRegions = this.enter(entity, region);
 
             // Update the recently left regions to the entity.
-            entity.setRecentRegions(_.difference(oldRegions, newRegions));
+            entity.setRecentRegions(oldRegions.filter((region) => !newRegions.includes(region)));
         }
 
         return isNewRegion;
@@ -340,7 +340,39 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
-        player.send(new List(entities));
+        player.send(new List(Opcodes.List.Spawns, { entities }));
+    }
+
+    /**
+     * Looks through all the entities in a region and sends their grid positions
+     * to the client. This is to synchronize client-server positions whenever a
+     * player teleports or changes regions.
+     * @param player The player to send entity positions to.
+     */
+
+    public sendEntityPositions(player: Player): void {
+        if (player.region === -1) return;
+
+        // Dictionary to store the positions and instances of the entities.
+        let positions: { [instance: string]: Position } = {};
+
+        // Iterate through all the entities in the region.
+        this.get(player.region).forEachEntity((entity: Entity) => {
+            // Skip non-moving entities.
+            if (!(entity instanceof Character)) return;
+
+            // Skip the player and moving entities.
+            if (entity.instance === player.instance || entity.moving) return;
+
+            // Store the position of the entity.
+            positions[entity.instance] = {
+                x: entity.x,
+                y: entity.y
+            };
+        });
+
+        // Send the positions to the client.
+        player.send(new List(Opcodes.List.Positions, { positions }));
     }
 
     /**
@@ -393,6 +425,8 @@ export default class Regions {
      */
 
     public sendDisplayInfo(player: Player): void {
+        if (player.region === -1) return;
+
         let displayInfos: EntityDisplayInfo[] = this.getDisplayInfo(player);
 
         // Don't send empty data.
@@ -412,12 +446,17 @@ export default class Regions {
     }
 
     /**
-     * Sends a region update to all the players within the nearby regions.
-     * @param region The region to pivot the update around.
+     * Updates all the surrounding regions of the region parameter with the
+     * latest information about region data.
+     * @param region The region index to pivot the update around.
      */
 
-    public sendUpdate(region: Region): void {
-        region.forEachPlayer((player: Player) => this.sendRegion(player));
+    public sendUpdate(region: number): void {
+        this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
+            let region = this.get(surroundingRegion);
+
+            region.forEachPlayer((player: Player) => this.sendRegion(player));
+        });
     }
 
     /**
@@ -438,7 +477,7 @@ export default class Regions {
      */
 
     public getRegion(x: number, y: number): number {
-        let region = _.findIndex(this.regions, (region: Region) => {
+        let region = this.regions.findIndex((region: Region) => {
             return region.inRegion(x, y);
         });
 
@@ -525,7 +564,7 @@ export default class Regions {
                  * will cause issues when trying to send resource data.
                  */
 
-                if (tile.data < 1) return;
+                if ((tile.data as number) < 1) return;
 
                 tileData.push(tile);
             });
@@ -681,7 +720,7 @@ export default class Regions {
      */
 
     public forEachSurroundingRegion(region: number, callback: RegionCallback): void {
-        _.each(this.getSurroundingRegions(region), callback);
+        for (let surrounding of this.getSurroundingRegions(region)) callback(surrounding);
     }
 
     /**
@@ -690,7 +729,7 @@ export default class Regions {
      */
 
     public forEachRegion(callback: (region: Region, index: number) => void): void {
-        _.each(this.regions, callback);
+        for (let index in this.regions) callback(this.regions[index], parseInt(index));
     }
 
     /**

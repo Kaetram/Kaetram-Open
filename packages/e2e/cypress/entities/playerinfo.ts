@@ -6,7 +6,7 @@ export interface PlayerInfo {
     y: number;
     userAgent: string | null;
     experience: number;
-    rights: number;
+    rank: number;
     poison: string;
     hitPoints: number;
     mana: number;

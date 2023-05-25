@@ -1,6 +1,6 @@
-import { Packets } from '@kaetram/common/network';
-
 import Util from '../utils/util';
+
+import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
 
@@ -41,7 +41,7 @@ export default class ChatController {
 
         this.toggle();
 
-        this.input.value = `/pm ${username} `;
+        this.input.value = `/pm *${username}* `;
         this.input.focus();
     }
 
@@ -51,6 +51,7 @@ export default class ChatController {
      * @param source Who is sending the message (username).
      * @param message The contents of the message being sent.
      * @param colour Optional parameter for the colour of the message.
+     * @param notify Optional parameter for whether to bold the message.
      */
 
     public add(source: string, message: string, colour = '', notify = false): void {
@@ -123,6 +124,8 @@ export default class ChatController {
         this.input.focus();
         this.input.value = '';
 
+        this.log.scrollTop = this.log.scrollHeight;
+
         Util.fadeIn(this.input);
     }
 
@@ -148,6 +151,8 @@ export default class ChatController {
 
         this.input.blur();
         this.input.value = '';
+
+        this.log.scrollTop = this.log.scrollHeight;
 
         Util.fadeOut(this.input);
     }

@@ -1,19 +1,28 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { Experience, Points, Skill as SkillPacket } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
-
-import Formulas from '../../../../info/formulas';
-
 import Accuracy from './skill/impl/accuracy';
 import Archery from './skill/impl/archery';
 import Health from './skill/impl/health';
 import Lumberjacking from './skill/impl/lumberjacking';
 import Magic from './skill/impl/magic';
 import Strength from './skill/impl/strength';
+import Mining from './skill/impl/mining';
+import Defense from './skill/impl/defense';
+import Fishing from './skill/impl/fishing';
+import Cooking from './skill/impl/cooking';
+import Smithing from './skill/impl/smithing';
+import Crafting from './skill/impl/crafting';
+import Fletching from './skill/impl/fletching';
+import Foraging from './skill/impl/foraging';
+import Eating from './skill/impl/eating';
+import Loitering from './skill/impl/loitering';
 
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import Formulas from '../../../../info/formulas';
+
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Experience, Points, Skill as SkillPacket } from '@kaetram/common/network/impl';
+
 import type Player from './player';
 import type Skill from './skill/skill';
+import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 
 export default class Skills {
     private loaded = false;
@@ -24,6 +33,16 @@ export default class Skills {
     private lumberjacking: Lumberjacking = new Lumberjacking();
     private magic: Magic = new Magic();
     private strength: Strength = new Strength();
+    private mining: Mining = new Mining();
+    private defense: Defense = new Defense();
+    private fishing: Fishing = new Fishing();
+    private cooking: Cooking = new Cooking();
+    private smithing: Smithing = new Smithing();
+    private crafting: Crafting = new Crafting();
+    private fletching: Fletching = new Fletching();
+    private foraging: Foraging = new Foraging();
+    private eating: Eating = new Eating();
+    private loitering: Loitering = new Loitering();
 
     private skills: { [key: string]: Skill } = {
         [Modules.Skills.Accuracy]: this.accuracy,
@@ -31,7 +50,17 @@ export default class Skills {
         [Modules.Skills.Health]: this.health,
         [Modules.Skills.Lumberjacking]: this.lumberjacking,
         [Modules.Skills.Magic]: this.magic,
-        [Modules.Skills.Strength]: this.strength
+        [Modules.Skills.Strength]: this.strength,
+        [Modules.Skills.Mining]: this.mining,
+        [Modules.Skills.Defense]: this.defense,
+        [Modules.Skills.Fishing]: this.fishing,
+        [Modules.Skills.Cooking]: this.cooking,
+        [Modules.Skills.Smithing]: this.smithing,
+        [Modules.Skills.Crafting]: this.crafting,
+        [Modules.Skills.Fletching]: this.fletching,
+        [Modules.Skills.Foraging]: this.foraging,
+        [Modules.Skills.Eating]: this.eating,
+        [Modules.Skills.Loitering]: this.loitering
     };
 
     private loadCallback?: () => void;
@@ -47,11 +76,11 @@ export default class Skills {
 
     public load(data: SkillData[]): void {
         // Load each skill from the database (empty if new player).
-        _.each(data, (skillData: SkillData) => {
+        for (let skillData of data) {
             let skill = this.get(skillData.type);
 
             if (skill) skill.setExperience(skillData.experience);
-        });
+        }
 
         // Create a callback that links to `handleExperience` for every skill.
         this.forEachSkill((skill: Skill) => skill.onExperience(this.handleExperience.bind(this)));
@@ -115,6 +144,7 @@ export default class Skills {
      * Handles skill-based experience gain.
      * @param type The skill that gained experience.
      * @param name The name of the skill.
+     * @param withINfo Whether or not to display the experience popup on the client.
      * @param experience The amount of experience the skill has.
      * @param level The amount of levels the skill has.
      * @param newLevel Whether the player has gained a new level.
@@ -123,9 +153,10 @@ export default class Skills {
     private handleExperience(
         type: Modules.Skills,
         name: string,
+        withInfo: boolean,
         experience: number,
         level: number,
-        newLevel?: boolean
+        newLevel = false
     ): void {
         if (newLevel) {
             this.player.popup(
@@ -142,13 +173,14 @@ export default class Skills {
             this.sync();
         }
 
-        this.player.send(
-            new Experience(Opcodes.Experience.Skill, {
-                instance: this.player.instance,
-                amount: experience,
-                skill: type
-            })
-        );
+        if (withInfo)
+            this.player.send(
+                new Experience(Opcodes.Experience.Skill, {
+                    instance: this.player.instance,
+                    amount: experience,
+                    skill: type
+                })
+            );
 
         this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
     }
@@ -169,7 +201,7 @@ export default class Skills {
      */
 
     public getCombatSkills(): Skill[] {
-        return _.filter(this.skills, (skill: Skill) => skill.combat);
+        return Object.values(this.skills).filter((skill: Skill) => skill.combat);
     }
 
     /**
@@ -182,6 +214,30 @@ export default class Skills {
     }
 
     /**
+     * @returns The mining class instance.
+     */
+
+    public getMining(): Mining {
+        return this.mining;
+    }
+
+    /**
+     * @returns The fishing class instance.
+     */
+
+    public getFishing(): Fishing {
+        return this.fishing;
+    }
+
+    /**
+     * @returns The foraging class instance.
+     */
+
+    public getForaging(): Foraging {
+        return this.foraging;
+    }
+
+    /**
      * Calculates the total combat level by adding up all the combat-related skill levels. We subtract 1 from
      * each skill in order to keep the combat level at 1 when the player has 1 in all combat skills.
      * @returns Number representing the total combat level.
@@ -191,7 +247,6 @@ export default class Skills {
         let level = 1,
             skills = this.getCombatSkills();
 
-        // Faster than using lodash.
         for (let skill of skills) level += skill.level - 1;
 
         return level;
@@ -210,7 +265,8 @@ export default class Skills {
         this.forEachSkill((skill: Skill) => skills.push(skill.serialize(includeLevel)));
 
         return {
-            skills
+            skills,
+            cheater: this.player.isCheater()
         };
     }
 
@@ -220,7 +276,7 @@ export default class Skills {
      */
 
     public forEachSkill(callback: (skill: Skill) => void): void {
-        _.each(this.skills, callback);
+        for (let skill of Object.values(this.skills)) callback(skill);
     }
 
     /**

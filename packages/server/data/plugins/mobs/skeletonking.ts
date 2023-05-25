@@ -1,40 +1,23 @@
-import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash';
-
 import Default from './default';
 
-import type Character from '@kaetram/server/src/game/entity/character/character';
+import Utils from '@kaetram/common/util/utils';
+
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import type Character from '@kaetram/server/src/game/entity/character/character';
 
 const MAX_MINIONS = 6;
 
 export default class SkeletonKing extends Default {
     // Two positions where the minions will spawn.
     private positions: Position[] = [
-        { x: 143, y: 403 },
-        { x: 152, y: 403 }
+        { x: 22, y: 684 },
+        { x: 28, y: 684 }
     ];
 
     private minionsSpawned = 0;
 
     public constructor(mob: Mob) {
         super(mob);
-    }
-
-    /**
-     * Override for the handle death callback. The skeleton king must remove
-     * all of its minions upon death.
-     * @param attacker The attacker that killed the skeleton king.
-     */
-
-    protected override handleDeath(attacker?: Character): void {
-        super.handleDeath(attacker);
-
-        // Clear all the minions from the list.
-        _.each(this.minions, (minion: Mob) => minion.deathCallback?.());
-
-        // Reset minion spawn count.
-        this.minionsSpawned = 0;
     }
 
     /**
@@ -49,6 +32,22 @@ export default class SkeletonKing extends Default {
 
         // Add a random chance (1/4) to spawn a minion.
         if (Utils.randomInt(1, 4) === 2) this.spawnMob();
+    }
+
+    /**
+     * Override for the handle death callback. The skeleton king must remove
+     * all of its minions upon death.
+     * @param attacker The attacker that killed the skeleton king.
+     */
+
+    protected override handleDeath(attacker?: Character): void {
+        super.handleDeath(attacker);
+
+        // Clear all the minions from the list.
+        for (let minion of Object.values(this.minions)) minion.deathCallback?.();
+
+        // Reset minion spawn count.
+        this.minionsSpawned = 0;
     }
 
     /**

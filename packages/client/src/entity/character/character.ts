@@ -1,10 +1,16 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
+import Handler from './handler';
 
 import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
-import EntityHandler from '../entityhandler';
+
+import { Modules } from '@kaetram/common/network';
+
+import type Game from '../../game';
+
+type RequestPathingCallback = (x: number, y: number) => number[][];
+type StartPathingCallback = (path: number[][]) => void;
+type StopPathingCallback = (gridX: number, gridY: number, forced: boolean) => void;
 
 type HitPointsCallback = (hitPoints: number, maxHitPoints: number, decrease?: boolean) => void;
 type FallbackCallback = (x: number, y: number) => void;
@@ -17,11 +23,11 @@ interface EffectInfo {
 }
 
 export default class Character extends Entity {
-    public healthBarVisible = false;
-
     public moving = false;
     public following = false;
     public stunned = false;
+    public forced = false;
+    public trading = false;
 
     private interrupted = false;
 
@@ -30,21 +36,17 @@ export default class Character extends Entity {
 
     public lastTarget = '';
 
+    // List of active status effects currently applied on the player.
+    public statusEffects: Modules.Effects[] = [];
+
     private attackers: { [id: string]: Character } = {};
+    private followers: { [id: string]: Character } = {};
 
     public movement = new Transition();
+    public handler: Handler;
 
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 120;
-
-    public override nextGridX = -1;
-    public override nextGridY = -1;
-    public override movementSpeed = -1;
-    public override attackRange = 1;
-    public override frozen = false;
-    public override dead = false;
-
-    public override orientation = Modules.Orientation.Down;
 
     public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
@@ -52,7 +54,7 @@ export default class Character extends Entity {
     private step!: number;
     private healthBarTimeout!: number | null;
 
-    private effects: { [id: string]: EffectInfo } = {
+    private effects: { [id: number]: EffectInfo } = {
         [Modules.Effects.Critical]: {
             key: 'effect-critical',
             animation: new Animation('effect', 10, 0, 48, 48)
@@ -60,6 +62,12 @@ export default class Character extends Entity {
         [Modules.Effects.Terror]: {
             key: 'effect-terror',
             animation: new Animation('effect', 8, 0, 64, 64)
+        },
+        [Modules.Effects.TerrorStatus]: {
+            key: 'effect-terror2',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
         },
         [Modules.Effects.Stun]: {
             key: 'effect-stun',
@@ -74,38 +82,50 @@ export default class Character extends Entity {
             key: 'effect-fireball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
+        [Modules.Effects.Iceball]: {
+            key: 'effect-iceball',
+            animation: new Animation('effect', 8, 0, 64, 64)
+        },
         [Modules.Effects.Burning]: {
             key: 'effect-burn',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 150
         },
         [Modules.Effects.Freezing]: {
             key: 'effect-freeze',
-            animation: new Animation('effect', 4, 0, 64, 64),
+            animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
-            speed: 150
+            speed: 200
+        },
+        [Modules.Effects.Poisonball]: {
+            key: 'effect-poisonball',
+            animation: new Animation('effect', 10, 0, 40, 40),
+            speed: 175
+        },
+        [Modules.Effects.Boulder]: {
+            key: 'effect-boulder',
+            animation: new Animation('effect', 7, 0, 32, 32)
         }
     };
 
-    private secondStepCallback?(): void;
-    private beforeStepCallback?(): void;
-    private stepCallback?(): void;
-    private stopPathingCallback?(gridX: number, gridY: number, forced: boolean): void;
-    private startPathingCallback?(path: number[][]): void;
-    private moveCallback?(): void;
-    private requestPathCallback?(x: number, y: number): number[][] | null;
+    private requestPathCallback?: RequestPathingCallback;
+    private startPathingCallback?: StartPathingCallback;
+    private beforeStepCallback?: () => void;
+    private stepCallback?: () => void;
+    private secondStepCallback?: () => void;
+    private stopPathingCallback?: StopPathingCallback;
+    private moveCallback?: () => void;
+
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
 
-    public forced!: boolean;
-
-    public handler: EntityHandler = new EntityHandler(this);
-
-    public constructor(instance: string, type: Modules.EntityType) {
+    public constructor(instance: string, type: Modules.EntityType, public game: Game) {
         super(instance, type);
 
         this.loadAnimations();
+
+        this.handler = new Handler(this);
     }
 
     /**
@@ -114,18 +134,25 @@ export default class Character extends Entity {
 
     private loadAnimations(): void {
         // Iterate through all the effects and load default speed and end callback events.
-        _.each(this.effects, (effect: EffectInfo) => {
+        for (let key in this.effects) {
+            let effect = this.effects[key],
+                keyValue = parseInt(key);
+
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
 
             // Remove effect once it has finished playing.
             effect.animation.setCount(1, () => {
-                if (!effect.perpetual) this.removeEffect();
+                if (!effect.perpetual) this.removeEffect(keyValue);
+
+                // Terror effect has a secondary effect that is added to the character.
+                if (keyValue === Modules.Effects.Terror)
+                    this.addEffect(Modules.Effects.TerrorStatus);
 
                 effect.animation.reset();
                 effect.animation.count = 1;
             });
-        });
+        }
     }
 
     /**
@@ -179,13 +206,11 @@ export default class Character extends Entity {
      */
 
     public toggleHurt(): void {
-        if (this.dead || this.teleporting) return;
+        if (this.dead || this.teleporting || !this.hurtSprite) return;
 
         this.sprite = this.hurtSprite;
 
-        window.setTimeout(() => {
-            this.sprite = this.normalSprite;
-        }, 75);
+        window.setTimeout(() => (this.sprite = this.normalSprite), 100);
     }
 
     /**
@@ -199,6 +224,17 @@ export default class Character extends Entity {
         this.stop();
 
         this.orientation = Modules.Orientation.Down;
+    }
+
+    /**
+     * Follows the player then requests a trade with them.
+     * @param entity The entity we are trying to trade with.
+     */
+
+    public trade(entity: Entity): void {
+        this.trading = true;
+
+        this.follow(entity);
     }
 
     /**
@@ -216,6 +252,20 @@ export default class Character extends Entity {
     }
 
     /**
+     * Pursues a character. Similar to following except no attacking
+     * is done and the character will not stop following until you
+     * click on something else.
+     * @param character The character we will be pursuing.
+     */
+
+    public pursue(character: Character): void {
+        this.setTarget(character);
+        this.move(character.gridX, character.gridY);
+
+        character.addFollower(this);
+    }
+
+    /**
      * Not technically a following action, but it is used since
      * it removes the last step from the path.
      * @param x The x grid coordinate of the position we are moving towards.
@@ -229,12 +279,52 @@ export default class Character extends Entity {
     }
 
     /**
+     * Add a status effect to the character if it doesn't already have it.
+     * @param effect The status effect we are trying to add.
+     */
+
+    public addEffect(effect: Modules.Effects): void {
+        if (this.hasEffect(effect)) return;
+
+        this.statusEffects.push(effect);
+    }
+
+    /**
      * Adds an attacker to the dictionary of attackers.
      * @param character Character we are adding to the dictionary.
      */
 
     public addAttacker(character: Character): void {
         this.attackers[character.instance] = character;
+    }
+
+    /**
+     * Adds a follower to the dictionary of followers.
+     * @param character Character we are adding to the dictionary.
+     */
+
+    public addFollower(character: Character): void {
+        this.followers[character.instance] = character;
+    }
+
+    /**
+     * Removes a status effect from the character.
+     * @param effect The status effect we are trying to remove.
+     */
+
+    public removeEffect(effect: Modules.Effects): void {
+        // We also want to make sure we remove the terror status effect alongside the terror.
+        if (effect === Modules.Effects.Terror) this.removeEffect(Modules.Effects.TerrorStatus);
+
+        this.statusEffects = this.statusEffects.filter((e) => e !== effect);
+    }
+
+    /**
+     * Clears the list of status effects.
+     */
+
+    public removeAllEffects(): void {
+        this.statusEffects = [];
     }
 
     /**
@@ -247,11 +337,47 @@ export default class Character extends Entity {
     }
 
     /**
+     * Removes a follower from the list of followers.
+     * @param character The character we are trying to remove.
+     */
+
+    public removeFollower(character: Character): void {
+        delete this.followers[character.instance];
+    }
+
+    /**
+     * Whether or not the character has a status effect.
+     * @param effect The status effect we are checking for.
+     * @returns If the status effect is included in the array of status effects or not.
+     */
+
+    public hasEffect(effect: Modules.Effects): boolean {
+        return this.statusEffects.includes(effect);
+    }
+
+    /**
+     * Whether or not the character has at least one status effect.
+     * @returns Whether the status effects array is empty or not.
+     */
+
+    public hasActiveEffect(): boolean {
+        return this.statusEffects.length > 0;
+    }
+
+    /**
      * @returns Whether or not the character has any attackers.
      */
 
     public hasAttackers(): boolean {
         return Object.keys(this.attackers).length > 0;
+    }
+
+    /**
+     * @returns Whether or not the character has any followers.
+     */
+
+    public hasFollowers(): boolean {
+        return Object.keys(this.followers).length > 0;
     }
 
     /**
@@ -265,12 +391,12 @@ export default class Character extends Entity {
 
         switch (action) {
             case Modules.Actions.Idle: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 
             case Modules.Actions.Orientate: {
-                this.setAnimation('idle', this.idleSpeed);
+                this.setAnimation('idle', this.sprite.idleSpeed);
                 break;
             }
 
@@ -289,9 +415,13 @@ export default class Character extends Entity {
     /**
      * Return an entity to the base idle state.
      * @param o Optional parameter if we want to update the orientation.
+     * @param force Whether or not we force the idle animation.
      */
 
-    public override idle(o?: Modules.Orientation): void {
+    public override idle(o?: Modules.Orientation, force = false): void {
+        // Prevents the idle animation from affecting the walking animation.
+        if (this.hasPath() && !force) return;
+
         let orientation = o || this.orientation;
 
         this.performAction(orientation, Modules.Actions.Idle);
@@ -393,12 +523,9 @@ export default class Character extends Entity {
     }
 
     /**
-     * We can have the movement remain client sided because
-     * the server side will be responsible for determining
-     * whether or not the player should have reached the
-     * location and ban all hackers. That and the fact
-     * the movement speed is constantly updated to avoid
-     * hacks previously present in BQ.
+     * This code will remain present throughout the alpha. Once we begin moving
+     * the pathfinder to the server-side, a tick-based system will be implemented
+     * to calculate steps and movement there rather than the client.
      */
 
     public nextStep(): void {
@@ -454,7 +581,7 @@ export default class Character extends Entity {
             if (this.stopPathingCallback)
                 this.stopPathingCallback(this.gridX, this.gridY, this.forced);
 
-            this.forced &&= false;
+            this.forced = false;
         }
     }
 
@@ -508,6 +635,11 @@ export default class Character extends Entity {
         this.nextStep();
     }
 
+    /**
+     * Stops the character's movement and resets the pathing variables.
+     * @param force Whether or not to stop movement without finishing the current step.
+     */
+
     public stop(force = false): void {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
@@ -522,45 +654,28 @@ export default class Character extends Entity {
     }
 
     /**
-     * @returns Whether or not the character has an active effect.
+     * Whether or not the player can attack its target given its position.
+     * @returns True if the player is within the attack range of its target.
      */
 
-    public hasEffect(): boolean {
-        return this.effect !== Modules.Effects.None;
+    public canAttackTarget(): boolean {
+        if (!this.hasTarget()) return false;
+
+        if (!this.target!.isMob() && !this.target!.isPlayer()) return false;
+
+        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+
+        return true;
     }
 
     /**
-     * Resets the currently active effect for the character.
+     * Returns an effect object from the effects list.
+     * @param effect The effect we are looking for.
+     * @returns The effect object.
      */
 
-    public removeEffect(): void {
-        this.effect = Modules.Effects.None;
-    }
-
-    /**
-     * Updates the value of the currently active effect.
-     * @param effect The effect we add to the character.
-     */
-
-    public setEffect(effect: Modules.Effects): void {
-        this.effect = effect;
-    }
-
-    /**
-     * @returns The animation object of the currently active effect (or undefined).
-     */
-
-    public getEffectAnimation(): Animation {
-        return this.effects[this.effect]?.animation;
-    }
-
-    /**
-     * Returns the key of the currently active effect or an empty string if none.
-     * @returns The current key of the effect.
-     */
-
-    public getActiveEffect(): string {
-        return this.effects[this.effect]?.key || '';
+    public getEffect(effect: Modules.Effects): EffectInfo {
+        return this.effects[effect];
     }
 
     /**
@@ -592,10 +707,6 @@ export default class Character extends Entity {
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
 
-    public forEachAttacker(callback: (attacker: Character) => void): void {
-        _.each(this.attackers, (attacker) => callback(attacker));
-    }
-
     public override hasShadow(): boolean {
         return true;
     }
@@ -612,12 +723,12 @@ export default class Character extends Entity {
         return !!this.newDestination;
     }
 
+    /**
+     * Removes the current target from the character.
+     */
+
     public removeTarget(): void {
         this.target = null;
-    }
-
-    public forget(): void {
-        this.attackers = {};
     }
 
     public moved(): void {
@@ -639,17 +750,26 @@ export default class Character extends Entity {
         return target ? this.target === target : !!this.target;
     }
 
-    public setObjectTarget(position: Position): void {
+    /**
+     * Mocks a entity-based target function and targets an object instead.
+     * @param position The position of the object we are targeting.
+     */
+
+    public setObjectTarget(position: Coordinate): void {
         /**
          * All we are doing is mimicking the `setTarget` entity
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${position.x}-${position.y}`, Modules.EntityType.Object);
-        character.setGridPosition(position.x, position.y);
+        let character = new Character(
+            `${position.gridX}-${position.gridY}`,
+            Modules.EntityType.Object,
+            this.game
+        );
+        character.setGridPosition(position.gridX, position.gridY);
 
         this.setTarget(character);
-        this.followPosition(position.x, position.y);
+        this.followPosition(position.gridX, position.gridY);
     }
 
     /**
@@ -685,11 +805,29 @@ export default class Character extends Entity {
     }
 
     /**
+     * Iterates through all the attackers in the list and returns them.
+     * @param callback The attacker currently being iterated.
+     */
+
+    public forEachAttacker(callback: (attacker: Character) => void): void {
+        for (let attacker of Object.values(this.attackers)) callback(attacker);
+    }
+
+    /**
+     * Iterates through all the followers in the list and returns them.
+     * @param callback The follower currently being iterated.
+     */
+
+    public forEachFollower(callback: (follower: Character) => void): void {
+        for (let follower of Object.values(this.followers)) callback(follower);
+    }
+
+    /**
      * Initial action where we request a new position for the character to move to.
      * @param callback Contains the x and y grid coordinates of the position requested.
      */
 
-    public onRequestPath(callback: (x: number, y: number) => number[][] | null): void {
+    public onRequestPath(callback: RequestPathingCallback): void {
         this.requestPathCallback = callback;
     }
 
@@ -698,7 +836,7 @@ export default class Character extends Entity {
      * @param callback Contains the path to follow.
      */
 
-    public onStartPathing(callback: (path: number[][]) => void): void {
+    public onStartPathing(callback: StartPathingCallback): void {
         this.startPathingCallback = callback;
     }
 
@@ -707,7 +845,7 @@ export default class Character extends Entity {
      * @param callback The grid x and y coordinates the player stopped pathing at.
      */
 
-    public onStopPathing(callback: (gridX: number, gridY: number) => void): void {
+    public onStopPathing(callback: StopPathingCallback): void {
         this.stopPathingCallback = callback;
     }
 

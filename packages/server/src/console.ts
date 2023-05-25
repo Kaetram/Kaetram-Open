@@ -1,8 +1,9 @@
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type MongoDB from './database/mongodb/mongodb';
-import type Player from './game/entity/character/player/player';
 import type World from './game/world';
+import type Player from './game/entity/character/player/player';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 /**
  * The console lives on top of the server. It allows an admin to directly
@@ -43,7 +44,7 @@ export default class Console {
                 }
 
                 case 'total': {
-                    this.database.registeredCount((count) => {
+                    this.database.registeredCount((count: number) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
@@ -54,6 +55,9 @@ export default class Console {
                     this.world.entities.forEachPlayer((player: Player) => {
                         player.connection.reject('updated');
                     });
+
+                    // No connections allowed for the remaining instance of the server.
+                    this.world.allowConnections = false;
 
                     break;
                 }
@@ -82,8 +86,7 @@ export default class Console {
 
                     if (!player) return log.info('An error has occurred.');
 
-                    if (command === 'timeout') player.timeout();
-                    else player.connection.close();
+                    player.connection.close();
 
                     break;
                 }
@@ -98,7 +101,9 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'setadmin' ? 2 : 1;
+                    player.setRank(
+                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator
+                    );
 
                     player.sync();
 
@@ -119,21 +124,13 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.rights = command === 'removeadmin' ? 2 : 1;
+                    player.setRank();
 
-                    log.info(
-                        `${player.username} is now a ${
-                            command === 'removeadmin' ? 'admin' : 'mod'
-                        }!`
-                    );
+                    player.notify(`Your ranks have been stripped from you.`);
+
+                    player.sync();
 
                     break;
-                }
-
-                case 'resetpositions': {
-                    log.info(`Resetting all player positions.`);
-
-                    return this.database.resetPositions();
                 }
 
                 case 'save': {

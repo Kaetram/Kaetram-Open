@@ -1,7 +1,7 @@
-import { Modules } from '@kaetram/common/network';
-
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
+
+import { Modules } from '@kaetram/common/network';
 
 import type SpritesController from '../controllers/sprites';
 import type Entity from '../entity/entity';
@@ -38,7 +38,7 @@ export default class Updater {
     private updateEntities(): void {
         this.game.entities.forEachEntity((entity: Entity) => {
             // Nothing to render if no sprite is loaded.
-            if (!entity.spriteLoaded) return;
+            if (!entity.sprite?.loaded) return;
 
             this.updateFading(entity);
 
@@ -156,8 +156,10 @@ export default class Updater {
     private updateKeyboard(): void {
         let { player, input } = this.game,
             position = {
-                x: player.gridX,
-                y: player.gridY
+                x: -1,
+                y: -1,
+                gridX: player.gridX,
+                gridY: player.gridY
             };
 
         /**
@@ -167,10 +169,10 @@ export default class Updater {
         if (player.moving || player.teleporting || player.frozen || !player.hasKeyboardMovement())
             return;
 
-        if (player.moveUp) position.y--;
-        else if (player.moveDown) position.y++;
-        else if (player.moveRight) position.x++;
-        else if (player.moveLeft) position.x--;
+        if (player.moveUp) position.gridY--;
+        else if (player.moveDown) position.gridY++;
+        else if (player.moveRight) position.gridX++;
+        else if (player.moveLeft) position.gridX--;
 
         input.keyMove(position);
     }

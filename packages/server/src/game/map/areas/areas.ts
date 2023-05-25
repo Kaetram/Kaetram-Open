@@ -1,7 +1,6 @@
-import log from '@kaetram/common/util/log';
-import _ from 'lodash-es';
-
 import Area from './area';
+
+import log from '@kaetram/common/util/log';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import type World from '../../world';
@@ -23,7 +22,7 @@ export default abstract class Areas {
         mapAreas: ProcessedArea[],
         callback?: (area: Area, mapArea: ProcessedArea) => void
     ): void {
-        _.each(mapAreas, (a) => {
+        for (let a of mapAreas) {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
             // Add polygon if present.
@@ -35,7 +34,7 @@ export default abstract class Areas {
 
             // Callback the last element in our list alongside the processed area info
             callback?.(this.areas.at(-1)!, a);
-        });
+        }
     }
 
     /**
@@ -55,7 +54,7 @@ export default abstract class Areas {
      */
 
     public get(id: number): Area | undefined {
-        return _.find(this.areas, (area: Area) => {
+        return this.areas.find((area: Area) => {
             return area.id === id;
         });
     }
@@ -69,7 +68,7 @@ export default abstract class Areas {
      */
 
     public inArea(x: number, y: number): Area | undefined {
-        return _.find(this.areas, (area: Area) => {
+        return this.areas.find((area: Area) => {
             return area.contains(x, y);
         });
     }
@@ -80,6 +79,6 @@ export default abstract class Areas {
      */
 
     public forEachArea(callback: (area: Area) => void): void {
-        _.each(this.areas, callback);
+        for (let area of this.areas) callback(area);
     }
 }

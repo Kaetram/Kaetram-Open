@@ -1,9 +1,5 @@
-import { Modules } from '@kaetram/common/network';
-import _ from 'lodash-es';
-
-import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
-import NPC from '../entity/character/npc/npc';
+import NPC from '../entity/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
@@ -11,6 +7,9 @@ import Projectile from '../entity/objects/projectile';
 import log from '../lib/log';
 import Grids from '../renderer/grids';
 
+import { Modules } from '@kaetram/common/network';
+
+import type Character from '../entity/character/character';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type Entity from '../entity/entity';
@@ -96,7 +95,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(entity.isItem() ? `item-${info.key}` : info.key);
+        let sprite = this.game.sprites.get(entity.isItem() ? `items/${info.key}` : info.key);
 
         // Don't add entities that don't have a sprite.
         if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
@@ -109,15 +108,11 @@ export default class EntitiesController {
 
         // Set the sprite and sprite idle speed.
         entity.setSprite(sprite);
-        entity.setIdleSpeed(sprite.idleSpeed);
 
         // Begin the idling animation.
         entity.idle();
 
         this.addEntity(entity);
-
-        // Start the entity handler.
-        if (entity instanceof Character) entity.handler.load(this.game);
     }
 
     /**
@@ -158,7 +153,7 @@ export default class EntitiesController {
      */
 
     private createMob(info: EntityData): Mob {
-        let mob = new Mob(info.instance);
+        let mob = new Mob(info.instance, this.game);
 
         mob.setHitPoints(info.hitPoints!, info.maxHitPoints);
 
@@ -216,10 +211,12 @@ export default class EntitiesController {
              * The logic is handled in the backend.
              */
 
-            if (info.hitType === Modules.Hits.Explosive) target.setEffect(Modules.Effects.Fireball);
+            let impactEffect = projectile.getImpactEffect();
+
+            if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                Modules.Hits.Damage,
+                Modules.Hits.Normal,
                 info.damage!,
                 target.x,
                 target.y,
@@ -245,11 +242,13 @@ export default class EntitiesController {
      */
 
     private createPlayer(info: PlayerData): Player {
-        let player = new Player(info.instance);
+        let player = new Player(info.instance, this.game);
 
         player.load(info);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
+
+        player.ready = true;
 
         return player;
     }
@@ -295,6 +294,9 @@ export default class EntitiesController {
      */
 
     public removeEntity(entity: Entity): void {
+        // Prevent any syncing from happening when the player is removed.
+        if (entity.isPlayer()) entity.ready = false;
+
         this.unregisterPosition(entity);
 
         delete this.entities[entity.instance];
@@ -368,12 +370,12 @@ export default class EntitiesController {
     public clean(): void {
         if (this.decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => {
-            // Prevent cleaning an entity that may have been removed from a differnet packet.
-            if (!entity) return;
+        for (let entity of this.decrepit) {
+            // Prevent cleaning an entity that may have been removed from a different packet.
+            if (!entity) continue;
 
             this.removeEntity(entity);
-        });
+        }
     }
 
     /**
@@ -384,10 +386,10 @@ export default class EntitiesController {
      */
 
     public cleanDisplayInfo(): void {
-        _.each(this.entities, (entity: Entity) => {
+        for (let entity of Object.values(this.entities)) {
             entity.nameColour = '';
             entity.customScale = 0;
-        });
+        }
     }
 
     /**
@@ -396,10 +398,9 @@ export default class EntitiesController {
      */
 
     public clearPlayers(exception: Player): void {
-        _.each(this.entities, (entity) => {
+        for (let entity of Object.values(this.entities))
             if (entity.isPlayer() && entity.instance !== exception.instance)
                 this.removeEntity(entity);
-        });
     }
 
     /**
@@ -418,6 +419,6 @@ export default class EntitiesController {
      */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, callback);
+        for (let entity of Object.values(this.entities)) callback(entity);
     }
 }

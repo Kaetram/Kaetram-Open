@@ -1,20 +1,21 @@
 import { exit } from 'node:process';
 
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-
 import Console from './console';
-import Database from './database/database';
 import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
 
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import Database from '@kaetram/common/database/database';
+
 import type Connection from './network/connection';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 class Main {
     private world?: World;
-    private socketHandler = new SocketHandler();
-    private database = new Database(config.database).getDatabase()!;
+    private socketHandler: SocketHandler = new SocketHandler();
+    private database: MongoDB = new Database(config.database).getDatabase()!;
 
     private ready = false;
 
@@ -26,7 +27,7 @@ class Main {
         this.database.onReady(this.handleReady.bind(this));
         this.database.onFail(this.handleFail.bind(this));
 
-        process.on('SIGINT', this.handleSignalInterrupt.bind(this));
+        if (!config.debugging) process.on('SIGINT', this.handleSignalInterrupt.bind(this));
 
         new Loader();
     }
@@ -52,7 +53,7 @@ class Main {
      * @param connection The new connection we received from the WebSocket.
      */
     private handleConnection(connection: Connection): void {
-        if (!this.ready) {
+        if (!this.ready || !this.world?.allowConnections) {
             connection.reject('disallowed');
             return;
         }
@@ -78,6 +79,8 @@ class Main {
 
         if (withoutDatabase)
             log.notice('Running without database - Server is now accepting connections.');
+
+        log.notice(`Server is now listening on port: ${config.port}.`);
     }
 
     /**
@@ -112,7 +115,7 @@ class Main {
         log.info(`Shutting down Kaetram game engine.`);
 
         // Actually exit the process.
-        exit();
+        setTimeout(() => exit(0), 2000);
     }
 }
 

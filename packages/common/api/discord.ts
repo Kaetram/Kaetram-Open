@@ -70,7 +70,7 @@ export default class Discord {
         try {
             let channel = this.getChannel();
 
-            if (channel) channel.setTopic(message);
+            if (channel) channel.setTopic(message).catch((error) => log.error(error));
         } catch {
             log.error('An error has occurred while setting the Discord channel topic.');
         }
@@ -87,14 +87,12 @@ export default class Discord {
     public sendMessage(
         source: string,
         text: string,
-        serverName?: string,
-        withArrow?: boolean
+        serverName = config.name,
+        withArrow = true
     ): void {
         if (!source || !config.discordEnabled) return;
 
-        this.sendRawMessage(
-            `**[${serverName || config.name}]** ${source}${withArrow ? ' »' : ''} ${text}`
-        );
+        this.sendRawMessage(`**[${serverName}]** ${source}${withArrow ? ' »' : ''} ${text}`);
     }
 
     /**
@@ -108,7 +106,7 @@ export default class Discord {
         try {
             let channel = this.getChannel();
 
-            if (channel) channel.send(message);
+            if (channel) channel.send(message).catch((error) => console.error(error));
         } catch {
             log.error('An error has occurred while sending a message to the Discord server.');
         }

@@ -1,12 +1,14 @@
 import { Modules } from '@kaetram/common/network';
 import $ from 'jquery';
 
-import type Player from '../entity/character/player/player';
+import type Character from '../entity/character/character';
 
 const MAXIMUM_ZOOM = 6,
-    MINIMUM_ZOOM = 2.8,
+    DEFAULT_ZOOM = 3,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
+
+let MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
@@ -104,6 +106,20 @@ export default class Camera {
     }
 
     /**
+     * Sets the zoom factor of the camera and clamps the limits.
+     * @param zoom The new zoom factor, defaults to DEFAULT_ZOOM value.
+     */
+
+    public setZoom(zoom = DEFAULT_ZOOM): void {
+        this.zoomFactor = zoom;
+
+        if (isNaN(this.zoomFactor)) this.zoomFactor = DEFAULT_ZOOM;
+
+        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
+        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+    }
+
+    /**
      * A clip takes place when we want to move the camera to the
      * edges of the nearest tile. For example, if we decentre the
      * camera while the player is moving, this will leave
@@ -141,14 +157,14 @@ export default class Camera {
      * The camera is centered about the specified player character. This
      * is generally the main character playing the game (unless cutscenes)
      * will be implemented later.
-     * @param player The player entity we are centering the camera on.
+     * @param character The player entity we are centering the camera on.
      */
 
-    public centreOn(player: Player): void {
+    public centreOn(character: Character): void {
         let width = Math.floor(this.gridWidth / 2),
             height = Math.floor(this.gridHeight / 2),
-            nextX = player.x - width * this.tileSize,
-            nextY = player.y - height * this.tileSize;
+            nextX = character.x - width * this.tileSize,
+            nextY = character.y - height * this.tileSize;
 
         /**
          * We check whether the x and y coordinates that are about
@@ -159,12 +175,12 @@ export default class Camera {
 
         if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
             this.x = nextX;
-            this.gridX = Math.round(player.x / this.tileSize) - width;
+            this.gridX = Math.round(character.x / this.tileSize) - width;
         } else this.offsetX(nextX); // Bind to the x edge.
 
         if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
             this.y = nextY;
-            this.gridY = Math.round(player.y / this.tileSize) - height;
+            this.gridY = Math.round(character.y / this.tileSize) - height;
         } else this.offsetY(nextY); // Bind to the y edge.
     }
 
@@ -263,18 +279,27 @@ export default class Camera {
 
     /**
      * Zooms in our out the camera. Depending on the zoomAmount, if it's negative
-     * we zoom out, if it's positive we zoom in. The function also checks
-     * maximum zoom.
+     * we zoom out, if it's positive we zoom in.
      * @param zoomAmount Float value we are zooming by.
      */
 
-    public zoom(zoomAmount: number): void {
-        this.zoomFactor += zoomAmount;
+    public zoom(zoomAmount = 0): void {
+        let zoom = parseFloat((this.zoomFactor + zoomAmount).toFixed(1));
 
-        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
-        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+        this.setZoom(zoom);
+    }
 
-        this.zoomFactor = parseFloat(this.zoomFactor.toFixed(1));
+    /**
+     * Updates the minimum zoom when the screen is resized. Mobiles devices
+     * have a smaller screen size so we allow more zooming out. Once the
+     * device returns to normal proportions, we limit the zoom again.
+     */
+
+    public updateMinimumZoom(mobile = false): void {
+        // Update the minimum zoom.
+        MINIMUM_ZOOM = mobile ? 2 : 2.6;
+
+        this.zoom();
     }
 
     /**

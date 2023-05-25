@@ -1,16 +1,13 @@
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
-import { camelCase } from 'lodash-es';
 
 import type { DatabaseTypes } from './types/database';
 
 export interface Config {
     name: string;
     host: string;
+    port: number;
     ssl: boolean;
-
-    socketioPort: number;
-    websocketPort: number;
 
     serverId: number;
     accessToken: string;
@@ -19,10 +16,12 @@ export interface Config {
 
     hubEnabled: boolean;
     hubHost: string;
-    hubPort: number;
-    hubPing: number;
+    hubWsHost: string;
+    hubPort: number; // API port for hub
+    hubWsPort: number; // Websocket port for hub
     hubAccessToken: string;
     remoteServerHost: string;
+    remoteApiHost: string;
 
     clientRemoteHost: string;
     clientRemotePort: number;
@@ -40,13 +39,23 @@ export interface Config {
     mongodbDatabase: string;
     mongodbSrv: boolean;
     mongodbTls: boolean;
+    mongodbAuthSource: string;
+    aggregateThreshold: number;
 
     tutorialEnabled: boolean;
     overrideAuth: boolean;
     maxPlayers: number;
     updateTime: number;
     gver: string;
+    minor: string;
     regionCache: boolean;
+    saveInterval: number;
+    messageLimit: number;
+
+    sentryOrg: string;
+    sentryProject: string;
+    sentryAuthToken: string;
+    sentryDsn: string;
 
     discordEnabled: boolean;
     discordChannelId: string;
@@ -58,6 +67,12 @@ export interface Config {
 }
 
 console.debug(`Loading env values from [.env] with fallback to [.env.defaults]`);
+
+function camelCase(str: string): string {
+    return str
+        .toLowerCase()
+        .replace(/([_-][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
+}
 
 let { NODE_ENV } = process.env,
     env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
@@ -71,13 +86,14 @@ if (NODE_ENV) {
 let envConfig = dotenvParseVariables(env),
     config = {} as Config;
 
-for (let key of Object.keys(envConfig)) {
+for (let key in envConfig) {
     let camelCaseKey = camelCase(key) as keyof Config;
 
     config[camelCaseKey] = envConfig[key] as never;
 }
 
 config.hubHost = config.hubHost || config.host;
+config.hubWsHost = config.hubWsHost || config.hubHost;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(

@@ -1,6 +1,5 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import _ from 'lodash-es';
 
 import type { Modules } from '@kaetram/common/network';
 import type { AchievementData, RawAchievement } from '@kaetram/common/types/achievement';
@@ -30,9 +29,10 @@ type TalkCallback = (npc: NPC, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
 
 export default class Achievement {
-    private name = '';
+    public name = '';
     private description = '';
     private hidden = false;
+    public secret = false;
     private stage = 0; // Current stage of the achievement.
     private stageCount = 0; // How long the achievement is.
     private npc = '';
@@ -60,6 +60,7 @@ export default class Achievement {
         this.name = rawData.name;
         this.description = rawData.description || '';
         this.hidden = !!rawData.hidden;
+        this.secret = !!rawData.secret;
         this.npc = rawData.npc || '';
         this.dialogueHidden = rawData.dialogueHidden || [];
         this.dialogueStarted = rawData.dialogueStarted || [];
@@ -70,7 +71,7 @@ export default class Achievement {
         this.itemCount = rawData.itemCount || 1;
         this.rewardItem = rawData.rewardItem || '';
         this.rewardItemCount = rawData.rewardItemCount || 1;
-        this.rewardSkill = Utils.getSkill(rawData.rewardSkill!);
+        this.rewardSkill = Utils.getSkill(rawData.rewardSkill!)!;
         this.rewardExperience = rawData.rewardExperience || 0;
         this.rewardAbility = rawData.rewardAbility || '';
         this.rewardAbilityLevel = rawData.rewardAbilityLevel || 1;
@@ -167,11 +168,12 @@ export default class Achievement {
 
         this.stage = stage;
 
+        // Don't send callbacks when loading from database.
+        if (loading) return;
+
         // Handle quest progress callback after updating stage to grab latest name.
         if (isProgress)
             this.progressCallback?.(this.key, stage, this.getName(), this.getDescription());
-
-        if (loading) return;
 
         /**
          * We use an else-if to ensure that if the achievement is discovered and finished at the
@@ -230,7 +232,7 @@ export default class Achievement {
      */
 
     public hasMob(mob: Mob): boolean {
-        return _.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
+        return Array.isArray(this.mob) ? this.mob.includes(mob.key) : mob.key === this.mob;
     }
 
     /**
@@ -290,6 +292,8 @@ export default class Achievement {
                 this.rewardAbilityLevel === 1
                     ? `@green@ You have unlocked the @crimson@${this.rewardAbility}@green@ ability.`
                     : `@green@ Your @crimson@${this.rewardAbility} ability is now level ${this.rewardAbilityLevel}@green@.`;
+        else if (this.secret)
+            text = `@green@You have completed the secret achievement @crimson@${this.getName()}@green@!`;
 
         return {
             title: 'Achievement Completed!',
@@ -316,6 +320,9 @@ export default class Achievement {
             data.name = this.getName();
             data.description = this.getDescription();
             data.stageCount = this.stageCount;
+
+            // Only send secret achievement information if the achievemnet is secret.
+            if (this.secret) data.secret = this.secret;
         }
 
         return data;

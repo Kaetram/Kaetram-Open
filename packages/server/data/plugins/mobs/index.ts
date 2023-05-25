@@ -4,6 +4,9 @@ import ogrelord from './ogrelord';
 import queenant from './queenant';
 import santa from './santa';
 import skeletonking from './skeletonking';
+import piratecaptain from './piratecaptain';
+import spider from './spider';
+import hellhound from './hellhound';
 
 export default {
     ogrelord,
@@ -11,5 +14,8 @@ export default {
     queenant,
     ant,
     forestdragon,
-    santa
+    santa,
+    piratecaptain,
+    spider,
+    hellhound
 };

@@ -1,10 +1,12 @@
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
-
 import Character from '../game/entity/character/character';
 import Item from '../game/entity/objects/item';
-import { Command, Network, Notification, NPC, Pointer, Store } from '../network/packets';
+import Formulas from '../info/formulas';
+
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import Filter from '@kaetram/common/util/filter';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Command, Notification, NPC, Pointer, Store } from '@kaetram/common/network/impl';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';
@@ -33,16 +35,21 @@ export default class Commands {
         let command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
-
-        if (this.player.isMod()) this.handleModeratorCommands(command, blocks);
-
-        if (this.player.isAdmin()) this.handleAdminCommands(command, blocks);
+        this.handleModeratorCommands(command, blocks);
+        this.handleAdminCommands(command, blocks);
     }
+
+    /**
+     * Commands that are accessible to all the players.
+     * @param command The command that was entered.
+     * @param blocks Associated string blocks after the command.
+     */
 
     private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'players': {
-                let population = this.world.getPopulation(),
+                let players = this.world.entities.getPlayerUsernames(),
+                    population = players.length,
                     singular = population === 1;
 
                 this.player.notify(
@@ -51,10 +58,8 @@ export default class Commands {
                     } online.`
                 );
 
-                if (this.player.isAdmin())
-                    this.entities.forEachPlayer((player: Player) => {
-                        this.player.notify(player.username);
-                    });
+                // Show the names of the players that are online.
+                if (this.player.isAdmin()) this.player.notify(players.join(', '));
 
                 return;
             }
@@ -69,51 +74,84 @@ export default class Commands {
             }
 
             case 'global': {
-                return this.player.chat(blocks.join(' '), true, false, 'rgba(191, 161, 63, 1.0)');
+                return this.player.chat(
+                    Filter.clean(blocks.join(' ')),
+                    true,
+                    false,
+                    'rgba(191, 161, 63, 1.0)'
+                );
             }
 
             case 'pm':
             case 'msg': {
-                let otherPlayer = blocks.shift()!,
-                    message = blocks.join(' ');
+                let asterikBlocks = blocks.join(' ').split('*'),
+                    [, username] = asterikBlocks;
 
-                this.player.sendMessage(otherPlayer, message);
+                if (!username) return;
 
-                return;
+                let message = blocks.slice(username.split(' ').length).join(' ');
+
+                this.player.sendPrivateMessage(username.toLowerCase(), message);
+
+                break;
             }
 
             case 'ping': {
-                this.player.pingTime = Date.now();
-                this.player.send(new Network(Opcodes.Network.Ping));
+                this.player.ping();
                 break;
             }
         }
     }
 
+    /**
+     * Commands only accessible to moderators and administrators.
+     * @param command The command that was entered.
+     * @param blocks The associated string blocks after the command.
+     */
+
     private handleModeratorCommands(command: string, blocks: string[]): void {
+        if (!this.player.isMod() && !this.player.isAdmin()) return;
+
         switch (command) {
             case 'mute':
             case 'ban': {
                 let duration = parseInt(blocks.shift()!),
-                    targetName = blocks.join(' '),
-                    user: Player = this.world.getPlayerByName(targetName);
+                    targetName = blocks.join(' ');
 
-                if (!user) return;
+                if (!duration || !targetName)
+                    return this.player.notify(
+                        'Malformed command, expected /ban(mute) [duration] [username]'
+                    );
 
-                if (!duration) duration = 24;
+                let user: Player = this.world.getPlayerByName(targetName);
 
-                let timeFrame = Date.now() + duration * 60 * 60;
+                if (!user)
+                    return this.player.notify(`Could not find player with name: ${targetName}.`);
 
-                if (command === 'mute') user.mute = timeFrame;
-                else if (command === 'ban') {
-                    user.ban = timeFrame;
+                // Moderators can only mute/ban people within certain limits.
+                if (this.player.isMod()) {
+                    if (command === 'mute' && duration > 168) duration = 168;
+                    if (command === 'ban' && duration > 72) duration = 72;
+                }
+
+                // Convert hours to milliseconds.
+                duration *= 60 * 60 * 1000;
+
+                let timeFrame = Date.now() + duration;
+
+                if (command === 'mute') {
+                    user.mute = timeFrame;
                     user.save();
+
+                    this.player.notify(`${user.username} has been muted for ${duration} hours.`);
+                } else if (command === 'ban') {
+                    user.ban = timeFrame;
 
                     user.connection.sendUTF8('ban');
                     user.connection.close('banned');
-                }
 
-                user.save();
+                    this.player.notify(`${user.username} has been banned for ${duration} hours.`);
+                }
 
                 return;
             }
@@ -122,18 +160,48 @@ export default class Commands {
                 let uTargetName = blocks.join(' '),
                     uUser = this.world.getPlayerByName(uTargetName);
 
-                if (!uTargetName) return;
+                if (!uTargetName) return this.player.notify(`Player ${uTargetName} not found.`);
 
                 uUser.mute = Date.now() - 3600;
 
                 uUser.save();
 
+                this.player.notify(`${uUser.username} has been unmuted.`);
+
                 return;
+            }
+
+            case 'kick':
+            case 'forcekick': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kick username`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.connection.close(
+                    `${this.player.username} kicked ${username}`,
+                    command === 'forcekick'
+                );
+
+                break;
             }
         }
     }
 
+    /**
+     * The commands only accessible to administrators.
+     * @param command The command that was entered.
+     * @param blocks The associated string blocks after the command.
+     */
+
     private handleAdminCommands(command: string, blocks: string[]): void {
+        if (!this.player.isAdmin()) return;
+
         let username: string,
             player: Player,
             x: number,
@@ -163,13 +231,101 @@ export default class Commands {
 
                 if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 
-                if (item.stackable) {
-                    item.count = count;
+                item.count = count;
 
-                    this.player.inventory.add(item);
-                } else for (let i = 0; i < count; i++) this.player.inventory.add(item);
+                this.player.inventory.add(item);
 
                 return;
+            }
+
+            case 'take': {
+                let index = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!index || !username)
+                    return this.player.notify(
+                        'Invalid command, usage /take [index] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank,
+                    slot = containerType.get(index);
+
+                if (!slot.key)
+                    return this.player.notify(`Player ${username} has no item at index ${index}.`);
+
+                containerType.remove(index, slot.count);
+
+                this.player.notify(`Took ${slot.count}x ${slot.key} from ${username}.`);
+
+                return;
+            }
+
+            case 'takeitem': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!),
+                    container = blocks.shift()!,
+                    username = blocks.join(' ');
+
+                if (!key || !username || (container !== 'inventory' && container !== 'bank'))
+                    return this.player.notify(
+                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} not found.`);
+
+                let containerType = container === 'inventory' ? player.inventory : player.bank;
+
+                containerType.removeItem(key, count);
+
+                this.player.notify(`Took ${count}x ${key} from ${username}.`);
+
+                return;
+            }
+
+            case 'copybank':
+            case 'copyinventory': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify('Invalid command, usage /copybank [username]');
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} is not online.`);
+
+                if (command === 'copybank') {
+                    this.player.bank.empty();
+
+                    player.bank.forEachSlot((slot) =>
+                        this.player.bank.add(this.player.bank.getItem(slot))
+                    );
+                } else {
+                    this.player.inventory.empty();
+
+                    player.inventory.forEachSlot((slot) =>
+                        this.player.inventory.add(this.player.inventory.getItem(slot))
+                    );
+                }
+
+                this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
+            }
+
+            case 'drop': {
+                let key = blocks.shift(),
+                    count = parseInt(blocks.shift()!);
+
+                if (!key) return;
+
+                if (!count) count = 1;
+
+                this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
             }
 
             case 'remove': {
@@ -221,11 +377,17 @@ export default class Commands {
                 return;
             }
 
-            case 'nohit': {
-                log.info('invincinil');
+            case 'nohit':
+            case 'invincible': {
+                if (this.player.status.has(Modules.Effects.Invincible)) {
+                    this.player.status.remove(Modules.Effects.Invincible);
 
-                this.player.invincible = !this.player.invincible;
+                    this.player.notify('You are no longer invincible.');
+                } else {
+                    this.player.status.add(Modules.Effects.Invincible);
 
+                    this.player.notify('You are now invincible.');
+                }
                 return;
             }
 
@@ -327,6 +489,34 @@ export default class Commands {
                 return;
             }
 
+            case 'setlevel': {
+                key = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+                username = blocks.join(' ');
+
+                if (!username || !key || !x)
+                    return this.player.notify(
+                        'Malformed command, expected /setlevel [skill] [level] [username]'
+                    );
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Player ${username} is not online.`);
+
+                key = key.charAt(0).toUpperCase() + key.slice(1);
+
+                let skill = player.skills.get(Modules.Skills[key as keyof typeof Modules.Skills]);
+
+                if (!skill) return this.player.notify('Invalid skill.');
+
+                if (x < skill.level) {
+                    skill.setExperience(0);
+                    skill.addExperience(0);
+                } else skill.addExperience(Formulas.levelsToExperience(skill.level, x));
+
+                return;
+            }
+
             case 'resetskills': {
                 // Skills aren't meant to go backwards so you gotta sync and stuff lmao.
                 this.player.skills.forEachSkill((skill: Skill) => {
@@ -368,7 +558,7 @@ export default class Commands {
             }
 
             case 'timeout': {
-                this.player.timeout();
+                this.player.connection.reject('timeout');
 
                 break;
             }
@@ -393,17 +583,9 @@ export default class Commands {
                     // Just to not break stuff.
                     movementSpeed = 75;
 
-                this.player.setMovementSpeed(movementSpeed);
+                this.player.overrideMovementSpeed = movementSpeed;
 
                 break;
-            }
-
-            case 'toggle': {
-                key = blocks.shift()!;
-
-                if (!key) return this.player.notify('No key specified.');
-
-                return this.player.send(new Command({ command: `toggle${key}` }));
             }
 
             case 'popup': {
@@ -451,7 +633,7 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                if (entity.isMob()) (entity as Mob).move(x, y);
+                if (entity.isMob()) entity.move(x, y);
 
                 break;
             }
@@ -478,7 +660,7 @@ export default class Commands {
             }
 
             case 'kill': {
-                username = blocks.shift()!;
+                username = blocks.join(' ');
 
                 if (!username)
                     return this.player.notify(
@@ -596,7 +778,7 @@ export default class Commands {
                 region.forEachEntity((entity: Entity) => {
                     if (!entity.isMob()) return;
 
-                    (entity as Mob).roamingCallback?.();
+                    entity.roamingCallback?.();
                 });
 
                 break;
@@ -633,13 +815,17 @@ export default class Commands {
             }
 
             case 'nuke': {
+                let all = !!blocks.shift();
+
                 region = this.world.map.regions.get(this.player.region);
 
                 region.forEachEntity((entity: Entity) => {
                     if (!(entity instanceof Character)) return;
                     if (entity.instance === this.player.instance) return;
 
-                    entity.deathCallback?.();
+                    if (!all && entity.isPlayer()) return;
+
+                    entity.deathCallback?.(this.player);
                 });
 
                 this.player.notify(
@@ -653,22 +839,6 @@ export default class Commands {
                 this.player.noclip = !this.player.noclip;
 
                 this.player.notify(`Noclip: ${this.player.noclip}`);
-                break;
-            }
-
-            case 'kick': {
-                username = blocks.shift()!;
-
-                if (!username)
-                    return this.player.notify(`Malformed command, expected /kick username`);
-
-                player = this.world.getPlayerByName(username);
-
-                if (!player)
-                    return this.player.notify(`Could not find player with name: ${username}`);
-
-                player.connection.close();
-
                 break;
             }
 
@@ -730,6 +900,110 @@ export default class Commands {
             case 'bank': {
                 this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
+            }
+
+            case 'openbank': {
+                let username = blocks.shift()!;
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /openbank username`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return this.player.notify(`Could not find player: ${username}`);
+
+                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+
+                break;
+            }
+
+            case 'setrank': {
+                if (this.player.isHollowAdmin()) return;
+
+                let rankText = blocks.shift()!;
+
+                username = blocks.join(' ');
+
+                if (!username || !rankText)
+                    return this.player.notify(`Malformed command, expected /setrank username rank`);
+
+                player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.world.database.setRank(
+                        username,
+                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+                    );
+
+                let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
+
+                if (isNaN(rank)) return this.player.notify(`Invalid rank: ${rankText}`);
+
+                player.setRank(rank);
+                player.sync();
+
+                break;
+            }
+
+            case 'setpet': {
+                let key = blocks.shift()!;
+
+                if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
+
+                this.player.setPet(key);
+            }
+
+            case 'opencrafting': {
+                return this.world.crafting.open(this.player, Modules.Skills.Crafting);
+            }
+
+            case 'toggle': {
+                let key = blocks.shift()!,
+                    effect: Modules.Effects = Modules.Effects.None;
+
+                switch (key) {
+                    case 'cold':
+                    case 'freeze':
+                    case 'freezing': {
+                        if (this.player.status.has(Modules.Effects.Freezing))
+                            return this.player.status.remove(Modules.Effects.Freezing);
+
+                        effect = Modules.Effects.Freezing;
+                        break;
+                    }
+
+                    case 'fire':
+                    case 'burn':
+                    case 'burning': {
+                        if (this.player.status.has(Modules.Effects.Burning))
+                            return this.player.status.remove(Modules.Effects.Burning);
+
+                        effect = Modules.Effects.Burning;
+                        break;
+                    }
+
+                    case 'terror': {
+                        if (this.player.status.has(Modules.Effects.Terror))
+                            return this.player.status.remove(Modules.Effects.Terror);
+
+                        effect = Modules.Effects.Terror;
+                        break;
+                    }
+
+                    case 'stun': {
+                        if (this.player.status.has(Modules.Effects.Stun))
+                            return this.player.status.remove(Modules.Effects.Stun);
+
+                        effect = Modules.Effects.Stun;
+                        break;
+                    }
+
+                    default: {
+                        return this.player.status.clear();
+                    }
+                }
+
+                return this.player.status.add(effect);
             }
         }
     }

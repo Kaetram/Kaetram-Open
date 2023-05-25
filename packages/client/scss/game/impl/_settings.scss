@@ -110,9 +110,21 @@
     }
 }
 
+@media (--lg) {
+    #settings-page {
+        bottom: 68px;
+    }
+}
+
+@media (--md) {
+    #settings-page {
+        bottom: 48px;
+    }
+}
+
 @media (--sm) {
     #settings-page {
-        right: 31px;
+        right: 38px;
         bottom: 99px;
         transform: scale(1.5);
     }

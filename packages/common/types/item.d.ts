@@ -17,6 +17,7 @@ export interface Stats {
     crush: number;
     slash: number;
     stab: number;
+    archery: number;
     magic: number;
 }
 
@@ -24,6 +25,7 @@ export interface Bonuses {
     accuracy: number;
     strength: number;
     archery: number;
+    magic: number;
 }
 
 export interface ItemData {
@@ -31,6 +33,7 @@ export interface ItemData {
     name: string;
     stackable?: boolean;
     edible?: boolean;
+    interactable?: boolean;
     maxStackSize?: number;
     plugin?: string;
     price?: number;
@@ -41,8 +44,12 @@ export interface ItemData {
     quest?: string; // Quest requirement for the item.
     attackRate?: number;
     poisonous?: boolean;
-    movementSpeed?: number;
+    freezing?: boolean;
+    burning?: boolean;
+    movementModifier?: number;
     lumberjacking?: number;
+    mining?: number;
+    fishing?: number;
     healAmount?: number;
     healPercent?: number;
     manaAmount?: number;
@@ -52,4 +59,11 @@ export interface ItemData {
     defenseStats?: Stats;
     undroppable?: boolean;
     respawnDelay?: number;
+    attackRange?: number;
+    projectileName?: string;
+    description?: string;
+    manaCost?: number;
+    weaponType?: string;
+    smallBowl?: boolean;
+    mediumBowl?: boolean;
 }

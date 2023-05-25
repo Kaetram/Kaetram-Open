@@ -4,16 +4,35 @@
     "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
   },
 
+  "king2": {
+    "name": "King"
+  },
+
   "villagegirl": {
     "name": "Wife",
-    "text": [
-      "Please, call me Azaria."]
+    "text": ["Please, call me Azaria."]
+  },
+
+  "villagegirl2": {
+    "name": "Village Girl",
+    "text": ["Hope you're having a good day!"]
+  },
+
+  "villagegirl3": {
+    "name": "Another Village Girl",
+    "text": ["How's yous doings?"]
   },
 
   "villager": {
     "name": "Forester",
     "text": ["Good day to you!"],
     "store": "forester"
+  },
+
+  "miner": {
+    "name": "Miner",
+    "text": ["Leave me alone, I'm busy pretending to work!"],
+    "store": "miner"
   },
 
   "beachnpc": {
@@ -83,7 +102,8 @@
   },
 
   "doctor": {
-    "name": "Doctor"
+    "name": "Doctor",
+    "text": ["I'm a doctor, not a magician."]
   },
 
   "oddeyecat": {
@@ -91,7 +111,8 @@
   },
 
   "sorcerer": {
-    "name": "Sorcerer"
+    "name": "Sorcerer",
+    "store": "sorcerer"
   },
 
   "coder": {
@@ -101,7 +122,7 @@
             "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>"]
   },
 
-  "forestNpc": {
+  "forestnpc": {
     "name": "Forester"
   },
 
@@ -119,7 +140,8 @@
   },
 
   "fisherman": {
-    "name": "Fisherman"
+    "name": "Fisherman",
+    "store": "fishingstore"
   },
 
   "octopus": {
@@ -160,7 +182,8 @@
   },
 
   "iamverycoldnpc": {
-    "name": "Babushka"
+    "name": "Babushka",
+    "store": "ingredientsstore"
   },
 
   "iceelfnpc": {
@@ -205,13 +228,18 @@
   },
 
   "vendingmachine": {
-    "name": "Enchantment Table",
+    "name": "Enchantment Vendor",
     "role": "enchanter"
   },
 
   "redstoremannpc": {
     "name": "Banker",
     "role": "banker"
+  },
+
+  "purplestoremannpc": {
+    "name": "Kosmetics Vendor",
+    "store": "cosmetics"
   },
 
   "bluestoremannpc": {
@@ -222,5 +250,42 @@
   "royalguard": {
     "name": "Royal Guard",
     "text": ["There shall be no trespassing!"]
+  },
+
+  "royalguard2": {
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
+  },
+
+  "royalguard3": {
+    "name": "Royal Guard",
+    "text": ["There shall be no trespassing!"]
+  },
+
+  "picklenpc": {
+    "name": "Sea Cucumber"
+  },
+
+  "guildnpc": {
+    "name": "Guild Master"
+  },
+
+  "santaelfnpc": {
+    "name": "Santa's Helper",
+    "text": ["What do you want? I'm busy being overworked."]
+  },
+
+  "oldlady": {
+    "name": "Old Lady",
+    "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
+  },
+
+  "oldlady2": {
+    "name": "Old Lady"
+  },
+
+  "ratnpc": {
+    "name": "Rat",
+    "text": ["Squeak!"]
   }
 }

@@ -1,13 +1,15 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
+import Menu from './menu';
 
 import log from '../lib/log';
 import Util from '../utils/util';
+import { isMobile } from '../utils/detect';
+import { onSecondaryPress } from '../utils/press';
 
-import Menu from './menu';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
+import type Inventory from './inventory';
 import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
 import type { SerializedStoreItem } from '@kaetram/common/types/stores';
-import type Inventory from './inventory';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
@@ -17,6 +19,12 @@ export default class Store extends Menu {
 
     private selectedIndex = -1; // Index of currently selected item.
     private selectedCount = -1; // Amount of currently selected item.
+
+    private selectedBuyIndex = -1; // Index of currently selected item to buy.
+
+    private storeContainer: HTMLElement = document.querySelector('#store-container')!;
+
+    private storeHelp: HTMLElement = document.querySelector('#store-help')!;
 
     private confirmSell: HTMLElement = document.querySelector('#confirm-sell')!;
 
@@ -29,32 +37,43 @@ export default class Store extends Menu {
     )!;
 
     // Lists
-    private storeList: HTMLUListElement = document.querySelector('#store-container > ul')!;
-    private inventoryList: HTMLUListElement = document.querySelector(
-        '#store-inventory-slots > ul'
-    )!;
+    private storeList: HTMLUListElement = document.querySelector('#store-container')!;
+    private inventoryList: HTMLUListElement = document.querySelector('#store-inventory-slots')!;
+
+    // Buy dialog elements
+    public buyDialog: HTMLElement = document.querySelector('#store-buy')!;
+    private buyCount: HTMLInputElement = document.querySelector('#store-buy .dialog-count')!;
+    private buyAccept: HTMLElement = document.querySelector('#store-buy .dialog-accept')!;
+    private buyCancel: HTMLElement = document.querySelector('#store-buy .dialog-cancel')!;
 
     private selectCallback?: SelectCallback;
 
     public constructor(private inventory: Inventory) {
         super('#store', '#close-store');
 
-        this.load();
+        this.resize();
 
         this.sellSlot.addEventListener('click', this.synchronize.bind(this));
         this.confirmSell.addEventListener('click', this.sell.bind(this));
-    }
 
-    /**
-     * Loads the empty inventory slots based on the size of the inventory.
-     * Creates an event listener for each slot that direts to `select()`.
-     */
+        this.buyCancel.addEventListener('click', this.hideBuyDialog.bind(this));
+        this.buyAccept.addEventListener('click', this.handleBuy.bind(this));
 
-    private load(): void {
+        // Create the slot elements for the inventory container.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
             this.inventoryList.append(
                 Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
             );
+    }
+
+    /**
+     * Updates the helper text when the user resizes the screen.
+     */
+
+    public override resize(): void {
+        let action = isMobile() ? 'Long tap' : 'Right click';
+
+        this.storeHelp.textContent = `${action} to buy multiple items.`;
     }
 
     /**
@@ -96,11 +115,45 @@ export default class Store extends Menu {
     /**
      * Sends a callback signal with the buy opcode.
      * @param index The index of the item we are trying to purchase.
-     * @param count Optional paramater for the amount of an item we are trying to buy.
+     * @param count Optional parameter for the amount of an item we are trying to buy.
      */
 
     private buy(index: number, count = 1): void {
         this.selectCallback?.(Opcodes.Store.Buy, this.key, index, count);
+    }
+
+    /**
+     * Buy dialog handler. Takes the value of the input field and sends it to the server.
+     */
+
+    private handleBuy(): void {
+        this.buy(this.selectedBuyIndex, this.buyCount.valueAsNumber);
+
+        this.hideBuyDialog();
+    }
+
+    /**
+     * Hides the description and shows the drop dialog. Also
+     * focuses on the input field for the drop dialog.
+     */
+
+    public showBuyDialog(): void {
+        Util.fadeIn(this.buyDialog);
+
+        this.storeContainer.classList.add('dimmed');
+
+        this.buyCount.value = '1';
+        this.buyCount.focus();
+    }
+
+    /**
+     * Hides the drop dialog and brings back the description info.
+     */
+
+    private hideBuyDialog(): void {
+        Util.fadeOut(this.buyDialog);
+
+        this.storeContainer.classList.remove('dimmed');
     }
 
     /**
@@ -113,10 +166,13 @@ export default class Store extends Menu {
         this.clearSellSlot();
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image = this.getElement(index).querySelector<HTMLElement>('.bank-image')!,
-                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!;
+            let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
+                count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
+                slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
-            image.style.backgroundImage = slot.style.backgroundImage;
+            if (!slotImage) return;
+
+            image.style.backgroundImage = slotImage.style.backgroundImage;
             count.textContent = slot.textContent;
         });
     }
@@ -175,14 +231,14 @@ export default class Store extends Menu {
         //Refreshes the inventory container prior to moving.s
         this.synchronize();
 
-        let image = this.getElement(info.item!.index!).querySelector<HTMLElement>('.bank-image')!,
+        let image = this.getElement(info.item!.index!).querySelector<HTMLElement>('.item-image')!,
             count = this.getElement(info.item!.index!).querySelector<HTMLElement>('.item-count')!;
 
         if (!image || !count) return log.error(`[Store] Could not find image and count elements.`);
 
         // Updates the sell slot.
         this.sellSlot.style.backgroundImage = image.style.backgroundImage;
-        this.sellSlot.textContent = count.textContent;
+        this.sellSlotText.textContent = count.textContent;
         this.sellSlotReturn.style.backgroundImage = Util.getImageURL(this.currency);
         this.sellSlotReturnText.textContent = info.item!.price.toString() || '';
 
@@ -203,35 +259,35 @@ export default class Store extends Menu {
 
     private createStoreItem(item: SerializedStoreItem, index: number): HTMLElement {
         let listElement = document.createElement('li'),
-            itemElement = document.createElement('div'),
             image = document.createElement('div'),
             name = document.createElement('div'),
             count = document.createElement('div'),
-            price = document.createElement('div'),
-            buyButton = document.createElement('div');
+            price = document.createElement('div');
 
         // Add the class to the elements.
-        itemElement.classList.add('store-item');
+        listElement.classList.add('store-item');
         image.classList.add('store-item-image');
-        name.classList.add('store-item-name');
-        count.classList.add('store-item-count');
-        price.classList.add('store-item-price');
-        buyButton.classList.add('store-item-buy');
+        name.classList.add('store-item-name', 'stroke');
+        count.classList.add('store-item-count', 'stroke');
+        price.classList.add('store-item-price', 'stroke');
 
         // Set the text HTML values for the children elements.
-        count.textContent = item.count.toString();
+        if (item.count !== -1) count.textContent = `x${item.count.toString()}`;
         name.textContent = item.name;
-        price.textContent = item.price.toString();
-        buyButton.textContent = 'Buy';
+        price.textContent = `${item.price.toString()}${this.currency[0]}`;
 
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);
 
-        buyButton.addEventListener('click', () => this.buy(index));
+        listElement.addEventListener('click', () => this.buy(index));
+        onSecondaryPress(listElement, () => {
+            this.selectedBuyIndex = index;
+
+            this.showBuyDialog();
+        });
 
         // Append all the elements together and nest them.
-        itemElement.append(image, name, count, price, buyButton);
-        listElement.append(itemElement);
+        listElement.append(image, name, count, price);
 
         return listElement;
     }

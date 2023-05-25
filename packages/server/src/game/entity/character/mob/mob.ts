@@ -1,20 +1,21 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-import { SpecialEntityTypes } from '@kaetram/common/network/modules';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Heal, Movement } from '@kaetram/server/src/network/packets';
-import _ from 'lodash-es';
+import MobHandler from './handler';
 
 import rawData from '../../../../../data/mobs.json';
+import dropTables from '../../../../../data/tables.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
 import Spawns from '../../../../../data/spawns.json';
+import Formulas from '../../../../info/formulas';
 import Character from '../character';
 
-import MobHandler from './handler';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Heal, Movement } from '@kaetram/common/network/impl';
+import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { MobData } from '@kaetram/common/types/mob';
+import type { RawData, MobData } from '@kaetram/common/types/mob';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
@@ -23,13 +24,16 @@ import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 
-interface RawData {
-    [key: string]: MobData;
+interface ItemDrop {
+    key: string;
+    count: number;
 }
 
 export default class Mob extends Character {
-    public spawnX: number = this.x;
-    public spawnY: number = this.y;
+    public spawnX: number;
+    public spawnY: number;
+
+    public description: string | string[] = '';
 
     // An achievement that is completed upon defeating the mob.
     public achievement = '';
@@ -41,6 +45,8 @@ export default class Mob extends Character {
     public miniboss = false;
     public roaming = false;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public aggressive = false;
     public alwaysAggressive = false;
     private hiddenName = false;
@@ -51,7 +57,16 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
+    private dropTables: string[] = [
+        'ordinary',
+        'arrows',
+        'unusual',
+        'shards',
+        'fruits',
+        'vegetables',
+        'mushrooms'
+    ]; // Default drop table for all mobs.
+
     public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
@@ -60,13 +75,18 @@ export default class Mob extends Character {
 
     private handler?: MobHandler | DefaultPlugin;
 
+    private lastChangedTarget = 0;
+
     private respawnCallback?: () => void;
 
     public talkCallback?: (message: string) => void;
-    public roamingCallback?: (retries?: number) => void;
+    public roamingCallback?: () => void;
 
     public constructor(world: World, key: string, x: number, y: number, plugin?: boolean) {
         super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
+
+        this.spawnX = this.x;
+        this.spawnY = this.y;
 
         let data = (rawData as RawData)[key];
 
@@ -91,12 +111,12 @@ export default class Mob extends Character {
      */
 
     private loadData(data: MobData): void {
-        this.experience = data.experience || this.experience;
-
         if (data.hitPoints) this.hitPoints.updateHitPoints(data.hitPoints);
 
         this.name = data.name || this.name;
+        this.description = data.description || this.description;
         this.drops = data.drops || this.drops;
+        this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
         this.attackLevel = data.attackLevel || this.attackLevel;
         this.defenseLevel = data.defenseLevel || this.defenseLevel;
@@ -110,6 +130,8 @@ export default class Mob extends Character {
         this.boss = data.boss || this.boss;
         this.miniboss = data.miniboss || this.miniboss;
         this.poisonous = data.poisonous || this.poisonous;
+        this.freezing = data.freezing || this.freezing;
+        this.burning = data.burning || this.burning;
         this.hiddenName = data.hiddenName || this.hiddenName;
         this.achievement = data.achievement || this.achievement;
         this.projectileName = data.projectileName || this.projectileName;
@@ -121,16 +143,6 @@ export default class Mob extends Character {
 
         // Handle hiding the entity's name.
         if (this.hiddenName) this.name = '';
-
-        // The roaming interval if the mob is a roaming entity.
-        if (this.roaming)
-            setTimeout(() => {
-                this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES);
-                setInterval(
-                    () => this.roamingCallback?.(Modules.MobDefaults.ROAM_RETRIES),
-                    Modules.MobDefaults.ROAM_FREQUENCY
-                );
-            }, Utils.randomInt(0, Modules.MobDefaults.ROAM_FREQUENCY - 1));
     }
 
     /**
@@ -186,23 +198,26 @@ export default class Mob extends Character {
 
     private loadStats(): void {
         this.attackStats = {
-            crush: this.attackLevel * 2,
-            stab: this.attackLevel * 2,
-            slash: this.attackLevel * 2,
+            crush: this.attackLevel,
+            stab: this.attackLevel,
+            slash: this.attackLevel,
+            archery: this.attackLevel,
             magic: this.attackLevel
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel * 2,
-            stab: this.defenseLevel * 2,
-            slash: this.defenseLevel * 2,
+            crush: this.defenseLevel,
+            stab: this.defenseLevel,
+            slash: this.defenseLevel,
+            archery: this.defenseLevel,
             magic: this.defenseLevel
         };
 
         this.bonuses = {
             accuracy: this.attackLevel,
             strength: this.attackLevel,
-            archery: this.attackRange + this.attackLevel
+            archery: this.attackRange + this.attackLevel,
+            magic: this.attackLevel
         };
     }
 
@@ -239,6 +254,7 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
+        this.damageTable = {};
 
         this.combat.stop();
 
@@ -257,6 +273,21 @@ export default class Mob extends Character {
         this.combat.stop();
 
         this.world.entities.removeMob(this);
+    }
+
+    /**
+     * Handles the dropping of items from the mob.
+     * @param owner The leading attacker in the mob's death. Only they will be able
+     * to pick up the drop for a certain period of time.
+     */
+
+    public drop(owner = ''): void {
+        let drops = this.getDrops();
+
+        if (drops.length === 0) return;
+
+        for (let drop of drops)
+            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
     }
 
     /**
@@ -282,23 +313,135 @@ export default class Mob extends Character {
     }
 
     /**
-     * Primitive function for drop generation. Will be rewritten.
+     * Override for the superclass `setPosition` with added teleporting support.
+     * @param x The new x position of the mob.
+     * @param y The new y position of the mob.
+     * @param withTeleport Whether or not the mob is teleporting. We use this flag
+     * to block any changes in position if the mob is teleporting.
      */
 
-    public getDrops(): { key: string; count: number }[] {
-        if (!this.drops) return [];
+    public override setPosition(x: number, y: number, withTeleport = false): void {
+        // Prevent changes in position if the mob is teleporting.
+        if (this.teleporting) return;
 
-        let drops: { key: string; count: number }[] = [];
+        super.setPosition(x, y);
 
-        _.each(this.drops, (chance: number, key: string) => {
-            if (Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) > chance) return;
+        // We update the teleporting flag if the mob is teleporting.
+        if (withTeleport) this.teleporting = true;
+    }
 
-            let count = key === 'gold' ? Utils.randomInt(this.level, this.level * 10) : 1;
+    /**
+     * The drop function works by picking a random item from the mob's personal
+     * drop list. We randomly select an item and roll its chance against the overall
+     * drop chance. We add the item to the list if the roll is successful. We continue
+     * by looking through the mob's drop tables and doing the same thing. We then
+     * return the list of items that the mob will drop.
+     * @returns A list of items that the mob will drop.
+     */
 
-            drops.push({ key, count });
-        });
+    public getDrops(): ItemDrop[] {
+        let drops: ItemDrop[] = [], // The items that the mob will drop
+            randomItem = this.getRandomItem(this.drops);
+
+        // Add a random item from the mob's personal list of drops.
+        if (randomItem) drops.push(randomItem);
+
+        // Add items from the mob's drop table.
+        drops = [...drops, ...this.getDropTableItems()];
 
         return drops;
+    }
+
+    /**
+     * Looks through the drop tables of the mob and iterates through those to get items.
+     * @returns List of items from the drop table.
+     */
+
+    private getDropTableItems(): ItemDrop[] {
+        let drops: ItemDrop[] = [];
+
+        for (let key of Object.values(this.dropTables)) {
+            let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+
+            // Something went wrong.
+            if (table) {
+                let randomItem = this.getRandomItem(table);
+
+                // Add a random item from the table.
+                if (randomItem) drops.push(randomItem);
+            } else log.warning(`Mob ${this.key} has an invalid drop table.`);
+        }
+
+        return drops;
+    }
+
+    /**
+     * Given a list of items (whether from the mob's drops) or the drop table, we will pick
+     * a random item then roll that item's chance against the overall drop chance. We return
+     * the item if the roll is successful, otherwise undefined.
+     * @param items The list of items to pick from.
+     * @returns Returns an `ItemDrop` object containing the key and the count.
+     */
+
+    private getRandomItem(items: { [key: string]: number }): ItemDrop | undefined {
+        let keys = Object.keys(items);
+
+        // No items to pick from.
+        if (keys.length === 0) return undefined;
+
+        let key = keys[Utils.randomInt(0, keys.length - 1)],
+            drop = items[key],
+            count = 1;
+
+        switch (key) {
+            case 'gold': {
+                count = Utils.randomInt(this.level, this.level * 10);
+                break;
+            }
+
+            case 'flask': {
+                count = Utils.randomInt(1, 3);
+                break;
+            }
+
+            case 'arrow': {
+                count = Utils.randomInt(1, this.level);
+                break;
+            }
+
+            case 'firearrow': {
+                count = Utils.randomInt(1, Math.ceil(this.level / 2));
+                break;
+            }
+
+            case 'feather': {
+                count = Utils.randomInt(1, this.level);
+                break;
+            }
+        }
+
+        // Something went wrong when trying to get the item drop.
+        if (!drop) {
+            log.warning(`Mob ${this.key} has an invalid drop.`);
+            return undefined;
+        }
+
+        let probability = this.world.getDropProbability();
+
+        // If the chance is greater than the drop probability, we adjust the drop
+        if (drop > probability) drop = probability;
+
+        return Utils.randomInt(0, probability) < drop ? { key, count } : undefined;
+    }
+
+    /**
+     * Sorts the damage table from highest to lowest. The highest damage dealing player
+     * will receive priority over the drops the mob has.
+     * @returns Sorted damage table from highest to lowest.
+     */
+
+    public getDamageTable(): [string, number][] {
+        return Object.entries(this.damageTable).sort((a, b) => b[1] - a[1]);
     }
 
     /**
@@ -327,7 +470,15 @@ export default class Mob extends Character {
 
     public canAggro(player: Player): boolean {
         // Skip if mob has a target or the player targeted isn't fully loaded yet.
-        if (this.target || !player.ready) return false;
+        if (!player.ready) return false;
+
+        // Prevent aggro if we already have a target.
+        if (this.target) {
+            // However, for bosses, we want to add the player to the list of attackers.
+            if (this.boss) this.addAttacker(player);
+
+            return false;
+        }
 
         // Check for aggressive properties of the mob.
         if (!this.aggressive && !this.alwaysAggressive) return false;
@@ -420,6 +571,19 @@ export default class Mob extends Character {
     }
 
     /**
+     * Returns the description if it's just a string, otherwise it picks a random description
+     * from the array.
+     * @returns A string containing the description for the mob.
+     */
+
+    public getDescription(): string {
+        if (Array.isArray(this.description))
+            return this.description[Utils.randomInt(0, this.description.length - 1)];
+
+        return this.description;
+    }
+
+    /**
      * A mob contains special data if it is a mini-boss/boss, is part of an area,
      * or is part of a player's active quest.
      * @param player Optional paramater used to check mob's information against player's
@@ -456,6 +620,15 @@ export default class Mob extends Character {
 
     public override isPoisonous(): boolean {
         return this.poisonous;
+    }
+
+    /**
+     * We restrict how many times a mob can change targets in a short period of time.
+     * @returns Whether or not the last target change was more than 13 seconds ago.
+     */
+
+    public canChangeTarget(): boolean {
+        return Date.now() - this.lastChangedTarget > 13_000;
     }
 
     /**
@@ -546,6 +719,29 @@ export default class Mob extends Character {
 
     public override getArcheryLevel(): number {
         return this.attackLevel;
+    }
+
+    /**
+     * Subclass implementation for grabbing the defense level. For a mob
+     * the defense level is specified in the mob data object.
+     * @returns The defense level of the mob.
+     */
+
+    public override getDefenseLevel(): number {
+        return this.defenseLevel;
+    }
+
+    /**
+     * Subclass implementation for damage type. Special mobs may have a freezing,
+     * burning or other damage types that apply a special effect on the target.
+     * @returns The damage type of the mob.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        if (this.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+        if (this.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+        return this.damageType;
     }
 
     /**

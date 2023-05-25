@@ -1,8 +1,6 @@
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -16,9 +14,11 @@ import {
     Points,
     Poison as PoisonPacket,
     Quest,
-    Skill
-} from '../../../../network/packets';
+    Skill,
+    Trade
+} from '@kaetram/common/network/impl';
 
+import type { Enchantments } from '@kaetram/common/types/item';
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -29,7 +29,6 @@ import type Slot from './containers/slot';
 import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
-import type Mob from '../mob/mob';
 import type Player from './player';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
@@ -46,14 +45,12 @@ export default class Handler {
         this.world = player.world;
         this.map = player.world.map;
 
-        // Disconnect callback
-        this.player.connection.onClose(this.handleClose.bind(this));
-
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
 
         // Hit callback
         this.player.onHit(this.handleHit.bind(this));
+        this.player.combat.onAttack(this.handleAttack.bind(this));
 
         // Movement-related callbacks
         this.player.onDoor(this.handleDoor.bind(this));
@@ -66,6 +63,7 @@ export default class Handler {
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.bank.onLoaded(this.handleBank.bind(this));
         this.player.quests.onLoaded(this.handleQuests.bind(this));
         this.player.achievements.onLoaded(this.handleAchievements.bind(this));
         this.player.skills.onLoaded(this.handleSkills.bind(this));
@@ -90,9 +88,17 @@ export default class Handler {
         // Equipment callbacks
         this.player.equipment.onEquip(this.handleEquip.bind(this));
         this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+        this.player.equipment.onAttackStyle(this.handleAttackStyle.bind(this));
 
         // Ability callbacks
         this.player.abilities.onAdd(this.handleAbilityAdd.bind(this));
+        this.player.abilities.onToggle(this.handleAbilityToggle.bind(this));
+
+        // Trade callbacks
+        this.player.trade.onOpen(this.handleTradeOpen.bind(this));
+        this.player.trade.onAdd(this.handleTradeAdd.bind(this));
+        this.player.trade.onRemove(this.handleTradeRemove.bind(this));
+        this.player.trade.onAccept(this.handleTradeAccept.bind(this));
 
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
@@ -111,42 +117,20 @@ export default class Handler {
     }
 
     /**
-     * Called after receiving the ready backet. Signals to the handler that we should
+     * Called after receiving the ready packet. Signals to the handler that we should
      * start loading our update interval timer.
      */
 
     public startUpdateInterval(): void {
-        this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
-    }
+        this.updateInterval = setInterval(() => {
+            if (this.isTickInterval(4)) this.detectAggro();
+            if (this.isTickInterval(32)) {
+                this.player.loiter();
+                this.player.cheatScore = 0;
+            }
 
-    /**
-     * Callback handler for when the player's connection is closed.
-     */
-
-    private handleClose(): void {
-        this.player.stopHealing();
-
-        this.clear();
-
-        if (this.player.ready) {
-            if (config.discordEnabled)
-                this.world.discord.sendMessage(this.player.username, 'has logged out!');
-
-            if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
-        }
-
-        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
-
-        this.player.clearAreas();
-
-        this.player.minigameArea?.exitCallback?.(this.player);
-
-        this.world.entities.removePlayer(this.player);
-
-        this.world.cleanCombat(this.player);
-
-        this.world.linkFriends(this.player, true);
+            this.updateTicks++;
+        }, this.updateTime);
     }
 
     /**
@@ -155,6 +139,7 @@ export default class Handler {
 
     private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+        this.player.status.clear();
 
         if (attacker) {
             attacker.clearTarget();
@@ -176,11 +161,16 @@ export default class Handler {
             true
         );
 
+        // Clear the player's target.
+        this.player.damageTable = {};
+
         // Remove the poison status.
         this.player.setPoison();
 
+        this.world.cleanCombat(this.player);
         this.player.skills.stop();
         this.player.combat.stop();
+
         this.player.save();
 
         // Send death packet only to the player.
@@ -194,9 +184,31 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (!attacker) return;
+        if (!attacker || this.player.isDead()) return;
 
-        if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
+        this.player.addAttacker(attacker);
+    }
+
+    /**
+     * Callback for when the player performs an attack.
+     */
+
+    private handleAttack(): void {
+        if (this.player.isMagic()) {
+            let { manaCost } = this.player.equipment.getWeapon();
+
+            if (!this.player.hasManaForAttack())
+                return this.player.notify('You are low on mana, your attacks will be weaker.');
+
+            this.player.mana.decrement(manaCost);
+        }
+
+        if (this.player.isArcher()) {
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
+
+            this.player.equipment.decrementArrows();
+        }
     }
 
     /**
@@ -208,6 +220,23 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
+        /**
+         * Handles entering through a door that requires a level. If no skill is specified
+         * then we use the player's combat level, otherwise we use the level of the skill
+         * that was specified.
+         */
+
+        if (door.level) {
+            let level = door.skill
+                    ? this.player.skills.get(Utils.getSkill(door.skill)!).level
+                    : this.player.level,
+                message = door.skill
+                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
+                    : `Your combat level must be at least ${door.level} to enter.`;
+
+            if (level < door.level) return this.player.notify(message);
+        }
+
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
             let quest = this.player.quests.get(door.quest);
@@ -215,23 +244,46 @@ export default class Handler {
             return quest.doorCallback?.(door, this.player);
         }
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
-
-        // Do not pass through doors that require an achievement which hasn't been completed.
-        if (door.reqAchievement && !this.player.achievements.get(door.reqAchievement)?.isFinished())
-            return;
-
-        // Ensure quest requirement is fullfilled before passing through the door.
-        if (door.reqQuest && !this.player.quests.get(door.reqQuest)?.isFinished()) return;
-
         // If the door has an achievement associated with it, it gets completed here.
         if (door.achievement) this.player.achievements.get(door.achievement)?.finish();
 
+        // Some doors may require players to complete achievements before they can pass through.
+        if (door.reqAchievement) {
+            let achievement = this.player.achievements.get(door.reqAchievement);
+
+            if (!achievement?.isFinished())
+                return this.player.notify(
+                    `You need to complete the achievement ${achievement?.name} to pass through this door.`
+                );
+        }
+
+        // Ensure quest requirement is fullfilled before passing through the door.
+        if (door.reqQuest) {
+            let quest = this.player.quests.get(door.reqQuest);
+
+            if (!quest?.isFinished())
+                return this.player.notify(
+                    `You need to complete the quest ${quest?.name} to pass through this door.`
+                );
+        }
+
+        // Handle door requiring an item to proceed (and remove the item from the player's inventory).
+        if (door.reqItem) {
+            let count = door.reqItemCount || 1;
+
+            if (!this.player.inventory.hasItem(door.reqItem, count))
+                return this.player.notify(
+                    'You do not have the required key to pass through this door.'
+                );
+
+            this.player.inventory.removeItem(door.reqItem, count);
+
+            this.player.notify(`The key crumbles to dust as you pass through the door.`);
+        }
+
         this.player.teleport(door.x, door.y);
 
-        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
+        log.debug(`[${this.player.username}] Going through door: ${door.x} - ${door.y}`);
     }
 
     /**
@@ -251,6 +303,9 @@ export default class Handler {
 
         this.player.storeOpen = '';
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
+
+        // Make the pet follow the player with every movement.
+        this.player.pet?.follow(this.player);
     }
 
     /**
@@ -264,6 +319,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.player.updateEntityList();
+        this.player.updateEntityPositions();
 
         this.player.lastRegionChange = Date.now();
     }
@@ -274,7 +330,7 @@ export default class Handler {
      */
 
     private handleRecentRegions(regions: number[]): void {
-        log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
+        //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
             new Despawn({
@@ -304,7 +360,7 @@ export default class Handler {
     private handleEquip(equipment: Equipment): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Equip, {
-                data: equipment
+                data: equipment.serialize(true)
             })
         );
 
@@ -315,13 +371,28 @@ export default class Handler {
     /**
      * Callback for when the equipment is removed.
      * @param type The equipment type we are removing.
+     * @param count (Optional) The amount of items we are removing.
      */
 
-    private handleUnequip(type: Modules.Equipment): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type }));
+    private handleUnequip(type: Modules.Equipment, count?: number): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, { type, count }));
 
         // Sync to nearby players.
         this.player.sync();
+    }
+
+    /**
+     * Callback for when the attack style is changed and needs to be relayed to the client.
+     * @param attackStyle The new attack style that the player has selected.
+     */
+
+    private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Style, {
+                attackStyle,
+                attackRange: this.player.attackRange
+            })
+        );
     }
 
     /**
@@ -334,6 +405,54 @@ export default class Handler {
     }
 
     /**
+     * Sends a message to the client to toggle the ability status.
+     * @param key The key of the ability we are toggling.
+     */
+
+    private handleAbilityToggle(key: string): void {
+        this.player.send(new AbilityPacket(Opcodes.Ability.Toggle, { key, level: -1 }));
+    }
+
+    /**
+     * Callback for when the trade is opened. Relays a message to the player.
+     * @param instance The instance of the player we are trading with.
+     */
+
+    private handleTradeOpen(instance: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Open, { instance }));
+    }
+
+    /**
+     * Callback for when an item is added to the trade.
+     * @param instance The instance of the player who is adding the item.
+     * @param index The index of the item (in the inventory) that we are adding.
+     * @param count The amount of the item we are adding.
+     */
+
+    private handleTradeAdd(instance: string, index: number, count: number, key: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Add, { instance, index, count, key }));
+    }
+
+    /**
+     * Removes an item from the trade.
+     * @param instance The instance of the player who is removing the item.
+     * @param index The index of the item in the trade screen that we are removing.
+     */
+
+    private handleTradeRemove(instance: string, index: number): void {
+        this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
+    }
+
+    /**
+     * Relays a message to the client that the trade has been accepted by one of the players.
+     * @param message The message to display in the trade status window.
+     */
+
+    private handleTradeAccept(message?: string): void {
+        this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
+    }
+
+    /**
      * Callback for when the inventory is loaded. Relay message to the client.
      */
 
@@ -342,7 +461,21 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                data: this.player.inventory.serialize()
+                data: this.player.inventory.serialize(true)
+            })
+        );
+    }
+
+    /**
+     * Callback for when the bank is loaded. Relay message to the client.
+     */
+
+    private handleBank(): void {
+        // Send Batch packet to the client.
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Bank,
+                data: this.player.bank.serialize(true)
             })
         );
     }
@@ -367,25 +500,34 @@ export default class Handler {
      * @param slot The slot of the item we removed.
      * @param key The key of the slot we removed.
      * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
+     * @param enchantments The enchantments of the item we are dropping.
      * @param drop If the item should spawn in the world upon removal.
      */
 
-    private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        // Spawn the item in the world if drop is true.
-        if (drop)
+    private handleInventoryRemove(
+        slot: Slot,
+        key: string,
+        count: number,
+        enchantments: Enchantments,
+        drop?: boolean
+    ): void {
+        // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
+        if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
             this.world.entities.spawnItem(
                 key, // Key of the item before an action is done on the slot.
                 this.player.x,
                 this.player.y,
                 true,
                 count, // Note this is the amount we are dropping.
-                slot.enchantments
+                enchantments
             );
+            log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
+        }
 
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -451,7 +593,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
-                slot: slot.serialize()
+                slot: slot.serialize(true)
             })
         );
     }
@@ -472,13 +614,15 @@ export default class Handler {
      * Callback for when a friend is added to the friends list.
      * @param username The username of the friend we just added.
      * @param status The online status of the friend we just added.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsAdd(username: string, status: boolean): void {
+    private handleFriendsAdd(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Add, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }
@@ -499,13 +643,15 @@ export default class Handler {
      * Synchronizes with the client the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend we are updating.
+     * @param serverId The game world ID the friend is in.
      */
 
-    private handleFriendsStatus(username: string, status: boolean): void {
+    private handleFriendsStatus(username: string, status: boolean, serverId: number): void {
         this.player.send(
             new Friends(Opcodes.Friends.Status, {
                 username,
-                status
+                status,
+                serverId
             })
         );
     }
@@ -535,9 +681,13 @@ export default class Handler {
         // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
+        // Used to toggle interaction with the containers.
+        if (npc.role === 'banker' || npc.role === 'enchanter')
+            this.player.canAccessContainer = true;
+
         switch (npc.role) {
             case 'banker': {
-                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
                 return;
             }
             case 'enchanter': {
@@ -555,8 +705,6 @@ export default class Handler {
      */
 
     private handleKill(character: Character): void {
-        log.debug(`Received kill callback for: ${character.instance}.`);
-
         // Have the minigame handle the kill if present.
         if (character.isPlayer()) {
             if (this.player.inMinigame()) this.player.getMinigame()?.kill(this.player);
@@ -568,27 +716,27 @@ export default class Handler {
         // Skip if the kill is not a mob entity.
         if (!character.isMob()) return;
 
-        // Handle the experience upon killing a mob.
-        this.player.handleExperience((character as Mob).experience);
+        // Add the mob kill to the player's statistics.
+        this.player.statistics.addMobKill(character.key);
 
         /**
          * Special mobs (such as minibosses and bosses) have achievements
          * associated with them. Upon killing them, we complete the achievement.
          */
 
-        let mobAchievement = (character as Mob).achievement;
+        let mobAchievement = character.achievement;
 
         if (mobAchievement) this.player.achievements.get(mobAchievement).finish();
 
         // Checks if the mob has a active quest associated with it.
-        let quest = this.player.quests.getQuestFromMob(character as Mob);
+        let quest = this.player.quests.getQuestFromMob(character);
 
-        if (quest) quest.killCallback?.(character as Mob);
+        if (quest) quest.killCallback?.(character);
 
         // Checks if the mob has an active achievement associated with it.
-        let achievement = this.player.achievements.getAchievementFromEntity(character as Mob);
+        let achievement = this.player.achievements.getAchievementFromEntity(character);
 
-        if (achievement) achievement.killCallback?.(character as Mob);
+        if (achievement) achievement.killCallback?.(character);
     }
 
     /**
@@ -619,7 +767,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`Cheat score - ${this.player.cheatScore}`);
+        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**
@@ -634,17 +782,6 @@ export default class Handler {
                 maxMana: this.player.mana.getMaxMana()
             })
         );
-    }
-
-    /**
-     * Callback function for the update that gets called every `updateTime` seconds.
-     */
-
-    private handleUpdate(): void {
-        if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(10)) this.player.cheatScore = 0;
-
-        this.updateTicks++;
     }
 
     /**
@@ -726,7 +863,7 @@ export default class Handler {
             if (!entity.isMob()) return;
 
             // Check if the mob can aggro the player and initiate the combat.
-            if ((entity as Mob).canAggro(this.player)) (entity as Mob).combat.attack(this.player);
+            if (entity.canAggro(this.player)) entity.combat.attack(this.player);
         });
     }
 
@@ -748,10 +885,11 @@ export default class Handler {
      * Clears the timeouts and nullifies them (used for disconnection);
      */
 
-    private clear(): void {
-        this.player.clearTimeout();
-
+    public clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
+
+        clearInterval(this.player.readyTimeout!);
+        this.player.readyTimeout = null;
     }
 }

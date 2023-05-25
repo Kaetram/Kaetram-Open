@@ -1,18 +1,22 @@
-import _ from 'lodash-es';
-import { Modules } from '@kaetram/common/network';
-
-import Character from '../character';
-
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
 import Friend from './friend';
 import Armour from './equipment/armour';
+import ArmourSkin from './equipment/armourskin';
 import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import WeaponSkin from './equipment/weaponskin';
+import Arrows from './equipment/arrows';
 
+import Character from '../character';
+
+import { Modules } from '@kaetram/common/network';
+
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type Game from '../../../game';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
@@ -20,14 +24,17 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
+import type { GuildData, Member } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
-    public rights = 0;
+    public rank: Modules.Ranks = Modules.Ranks.None;
     public wanted = false;
+
+    public serverId = -1;
 
     public pvpKills = -1;
     public pvpDeaths = -1;
@@ -42,6 +49,8 @@ export default class Player extends Character {
 
     public medal: Modules.Medals = Modules.Medals.None;
 
+    public guild!: Partial<GuildData> | undefined;
+
     public override hitPoints = 0;
     public override maxHitPoints = 0;
 
@@ -51,10 +60,13 @@ export default class Player extends Character {
     // Mapping of all equipments to their type.
     public equipments = {
         [Modules.Equipment.Armour]: new Armour(),
+        [Modules.Equipment.ArmourSkin]: new ArmourSkin(),
         [Modules.Equipment.Boots]: new Boots(),
         [Modules.Equipment.Pendant]: new Pendant(),
         [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon()
+        [Modules.Equipment.Weapon]: new Weapon(),
+        [Modules.Equipment.WeaponSkin]: new WeaponSkin(),
+        [Modules.Equipment.Arrows]: new Arrows()
     };
 
     public skills: { [key: number]: Skill } = {};
@@ -68,8 +80,8 @@ export default class Player extends Character {
     private abilityCallback?: AbilityCallback;
     private manaCallback?: ManaCallback;
 
-    public constructor(instance: string) {
-        super(instance, Modules.EntityType.Player);
+    public constructor(instance: string, game: Game) {
+        super(instance, Modules.EntityType.Player, game);
     }
 
     /**
@@ -85,10 +97,11 @@ export default class Player extends Character {
         this.level = data.level!;
         this.movementSpeed = data.movementSpeed!;
         this.orientation = data.orientation!;
-        this.rights = data.rights!;
+        this.attackRange = data.attackRange!;
 
         if (data.displayInfo) this.nameColour = data.displayInfo.colour!;
 
+        this.setRank(data.rank);
         this.setOrientation(data.orientation);
 
         if (!sync) this.setGridPosition(data.x, data.y);
@@ -97,7 +110,7 @@ export default class Player extends Character {
 
         this.setMana(data.mana!, data.maxMana);
 
-        if (data.equipments) _.each(data.equipments, this.equip.bind(this));
+        if (data.equipments) for (let equipment of data.equipments) this.equip(equipment);
     }
 
     /**
@@ -107,7 +120,7 @@ export default class Player extends Character {
      */
 
     public loadSkills(skills: SkillData[]): void {
-        _.each(skills, (skill: SkillData) => this.setSkill(skill));
+        for (let skill of skills) this.setSkill(skill);
     }
 
     /**
@@ -136,14 +149,21 @@ export default class Player extends Character {
      */
 
     public loadAchievements(achievements: AchievementData[]): void {
-        for (let [i, achievement] of achievements.entries())
-            this.achievements[achievement.key] = new Task(
-                i,
-                achievement.name!,
-                achievement.description!,
-                achievement.stage,
-                achievement.stageCount!
-            );
+        for (let i in achievements) {
+            let achievement = achievements[i],
+                task = new Task(
+                    parseInt(i),
+                    achievement.name!,
+                    achievement.description!,
+                    achievement.stage,
+                    achievement.stageCount!
+                );
+
+            // Secret tasks are displayed slightly different.
+            if (achievement.secret) task.secret = true;
+
+            this.achievements[achievement.key] = task;
+        }
     }
 
     /**
@@ -152,9 +172,8 @@ export default class Player extends Character {
      */
 
     public loadAbilities(abilities: AbilityData[]): void {
-        _.each(abilities, (ability: AbilityData) =>
-            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot)
-        );
+        for (let ability of abilities)
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot);
     }
 
     /**
@@ -165,11 +184,13 @@ export default class Player extends Character {
     public loadFriends(friends: FriendType): void {
         let i = 0;
 
-        _.each(friends, (status: boolean, username: string) => {
-            this.friends[username] = new Friend(i, username, status);
+        for (let username in friends) {
+            let info = friends[username];
+
+            this.friends[username] = new Friend(i, username, info.online, info.serverId);
 
             i++;
-        });
+        }
     }
 
     /**
@@ -179,8 +200,19 @@ export default class Player extends Character {
      */
 
     public equip(equipment: EquipmentData): void {
-        let { type, name, key, count, enchantments, ranged, attackStats, defenseStats, bonuses } =
-            equipment;
+        let {
+            type,
+            name,
+            key,
+            count,
+            enchantments,
+            attackRange,
+            attackStats,
+            defenseStats,
+            bonuses,
+            attackStyle,
+            attackStyles
+        } = equipment;
 
         if (!key) return this.unequip(type);
 
@@ -189,31 +221,44 @@ export default class Player extends Character {
             name,
             count,
             enchantments,
-            ranged,
             attackStats,
             defenseStats,
             bonuses
         );
+
+        // Updates the weapon attack range and attack style.
+        if (type === Modules.Equipment.Weapon) {
+            this.attackRange = attackRange || 1;
+            this.setAttackStyle(attackStyle!, attackStyles!);
+        }
     }
 
     /**
      * Adds a new friend to the list.
      * @param username The username of the friend.
-     * @param status The online status of the friend.
+     * @param status Whether the friend is online or not.
      */
 
-    public addFriend(username: string, status: boolean): void {
-        this.friends[username] = new Friend(_.size(this.friends), username, status);
+    public addFriend(username: string, status: boolean, serverId: number): void {
+        this.friends[username] = new Friend(
+            Object.keys(this.friends).length,
+            username,
+            status,
+            serverId
+        );
     }
 
     /**
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
+     * @param count Optional parameter to remove a certain amount of items.
      */
 
-    public unequip(type: Modules.Equipment): void {
-        this.equipments[type].update();
+    public unequip(type: Modules.Equipment, count = -1): void {
+        // Decrement count if provided, otherwise reset the equipment slot.
+        if (count > 0) this.equipments[type].count = count;
+        else this.equipments[type].update();
     }
 
     /**
@@ -230,7 +275,23 @@ export default class Player extends Character {
      */
 
     public getSpriteName(): string {
+        // Use the armour skin if it exists.
+        if (this.equipments[Modules.Equipment.ArmourSkin].key)
+            return this.equipments[Modules.Equipment.ArmourSkin].key;
+
         return this.equipments[Modules.Equipment.Armour].key;
+    }
+
+    /**
+     * @returns The key of the currently equipped weapon.
+     */
+
+    public getWeaponSpriteName(): string {
+        // Use the weapon skin if it exists.
+        if (this.equipments[Modules.Equipment.WeaponSkin].key)
+            return this.equipments[Modules.Equipment.WeaponSkin].key;
+
+        return this.equipments[Modules.Equipment.Weapon].key;
     }
 
     /**
@@ -242,11 +303,27 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The armour skin object of the player.
+     */
+
+    public getArmourSkin(): ArmourSkin {
+        return this.equipments[Modules.Equipment.ArmourSkin];
+    }
+
+    /**
      * @returns The boots object of the player.
      */
 
     public getBoots(): Boots {
         return this.equipments[Modules.Equipment.Boots];
+    }
+
+    /**
+     * @returns The arrows object of the player.
+     */
+
+    public getArrows(): Arrows {
+        return this.equipments[Modules.Equipment.Arrows];
     }
 
     /**
@@ -274,6 +351,30 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The weapon skin object of the player.
+     */
+
+    public getWeaponSkin(): WeaponSkin {
+        return this.equipments[Modules.Equipment.WeaponSkin];
+    }
+
+    /**
+     * @returns Whether the player has the administrator rank.
+     */
+
+    public override isAdmin(): boolean {
+        return this.rank === Modules.Ranks.Admin || this.rank === Modules.Ranks.HollowAdmin;
+    }
+
+    /**
+     * @returns Whether the player has the moderator rank.
+     */
+
+    public override isModerator(): boolean {
+        return this.rank === Modules.Ranks.Moderator;
+    }
+
+    /**
      * Adds up the experience from every skill and returns the total.
      * @returns Integer value of the total experience.
      */
@@ -281,9 +382,7 @@ export default class Player extends Character {
     public getTotalExperience(): number {
         let total = 0;
 
-        _.each(this.skills, (skill: Skill) => {
-            total += skill.experience;
-        });
+        for (let skill of Object.values(this.skills)) total += skill.experience;
 
         return total;
     }
@@ -302,8 +401,85 @@ export default class Player extends Character {
                 return 'goldmedal';
             }
 
+            case Modules.Medals.Artist: {
+                return 'crown-artist';
+            }
+
+            case Modules.Medals.Tier1: {
+                return 'crown-tier1';
+            }
+
+            case Modules.Medals.Tier2: {
+                return 'crown-tier2';
+            }
+
+            case Modules.Medals.Tier3: {
+                return 'crown-tier3';
+            }
+
+            case Modules.Medals.Tier4: {
+                return 'crown-tier4';
+            }
+
+            case Modules.Medals.Tier5: {
+                return 'crown-tier5';
+            }
+
+            case Modules.Medals.Tier6: {
+                return 'crown-tier6';
+            }
+
+            case Modules.Medals.Tier7: {
+                return 'crown-tier7';
+            }
+
             default: {
                 return '';
+            }
+        }
+    }
+
+    /**
+     * Returns a medal based on the player's rank.
+     * @returns The medal type for the player's rank.
+     */
+
+    private getRankMedal(): Modules.Medals {
+        switch (this.rank) {
+            case Modules.Ranks.Artist: {
+                return Modules.Medals.Artist;
+            }
+
+            case Modules.Ranks.TierOne: {
+                return Modules.Medals.Tier1;
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return Modules.Medals.Tier2;
+            }
+
+            case Modules.Ranks.TierThree: {
+                return Modules.Medals.Tier3;
+            }
+
+            case Modules.Ranks.TierFour: {
+                return Modules.Medals.Tier4;
+            }
+
+            case Modules.Ranks.TierFive: {
+                return Modules.Medals.Tier5;
+            }
+
+            case Modules.Ranks.TierSix: {
+                return Modules.Medals.Tier6;
+            }
+
+            case Modules.Ranks.TierSeven: {
+                return Modules.Medals.Tier7;
+            }
+
+            default: {
+                return Modules.Medals.None;
             }
         }
     }
@@ -327,10 +503,15 @@ export default class Player extends Character {
      * @param arg0 Contains skill data such as type, experience, level, etc.
      */
 
-    public setSkill({ type, experience, level, percentage }: SkillData): void {
+    public setSkill({ type, experience, level, percentage, nextExperience }: SkillData): void {
         if (!this.skills[type]) this.skills[type] = new Skill(type);
 
-        this.skills[type as Modules.Skills].update(experience, level!, percentage!);
+        this.skills[type as Modules.Skills].update(
+            experience,
+            nextExperience!,
+            level!,
+            percentage!
+        );
     }
 
     /**
@@ -354,6 +535,18 @@ export default class Player extends Character {
      */
 
     public setAchievement(key: string, stage: number, name: string, description: string): void {
+        // Secret achievements that are not loaded initially.
+        if (!(key in this.achievements)) {
+            let task = new Task(Object.keys(this.achievements).length - 1, name, description);
+
+            // Only secret achievements are created this way.
+            task.secret = true;
+
+            this.achievements[key] = task;
+
+            return;
+        }
+
         this.achievements[key]?.update(stage, undefined, name, description);
     }
 
@@ -395,10 +588,62 @@ export default class Player extends Character {
      * Updates the online status of a friend.
      * @param username The username of the friend we are updating.
      * @param status The online status of the friend.
+     * @param serverId The server id of the friend.
      */
 
-    public setFriendStatus(username: string, status: boolean): void {
+    public setFriendStatus(username: string, status: boolean, serverId: number): void {
         this.friends[username].online = status;
+        this.friends[username].serverId = serverId;
+    }
+
+    /**
+     * Updates the attack styles of the weapon. This occurs when a player already has a weapon
+     * equipped and they change their attack style.
+     * @param style The active attack style of the weapon.
+     * @param styles (Optional) The list of all attack styles of the weapon.
+     */
+
+    public setAttackStyle(style: Modules.AttackStyle, styles?: Modules.AttackStyle[]): void {
+        this.getWeapon().attackStyle = style;
+
+        // May be null when we're swapping attack styles.
+        if (styles) this.getWeapon().attackStyles = styles;
+    }
+
+    /**
+     * Updates the player's rank and synchronizes the medals.
+     * @param rank The new rank of the player.
+     */
+
+    public setRank(rank: Modules.Ranks): void {
+        this.rank = rank;
+        this.medal = this.getRankMedal();
+    }
+
+    /**
+     * Synchronizes the guild connect packet with the player's guild information.
+     * @param packet Contains information about the guild we are updating.
+     */
+
+    public setGuild(packet?: GuildPacket): void {
+        if (!packet) {
+            this.guild = undefined;
+            return;
+        }
+
+        this.guild = {
+            name: packet.name,
+            members: packet.members
+        };
+    }
+
+    /**
+     * Updates the active status of an ability.
+     * @param key The key of the ability we are updating.
+     */
+
+    public toggleAbility(key: string): void {
+        this.abilities[key]?.toggle();
     }
 
     /**
@@ -406,7 +651,15 @@ export default class Player extends Character {
      */
 
     public isRanged(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].ranged;
+        return this.attackRange > 1;
+    }
+
+    /**
+     * @returns Whether or not the player has a ranged-based magic weapon.
+     */
+
+    public isMagic(): boolean {
+        return this.getWeapon().bonuses.magic > 0 && this.isRanged();
     }
 
     /**
@@ -432,6 +685,15 @@ export default class Player extends Character {
 
     public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+    }
+
+    /**
+     * @param username The username of the friend we are checking.
+     * @returns Whether or not the player has a friend with the given username.
+     */
+
+    public hasFriend(username: string): boolean {
+        return username.toLowerCase() in this.friends;
     }
 
     /**

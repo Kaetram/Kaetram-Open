@@ -1,10 +1,10 @@
-import { Modules } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import PluginIndex from '@kaetram/server/data/plugins/items';
-
 import rawData from '../../../../data/items.json';
 import Entity from '../entity';
+
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+import PluginIndex from '@kaetram/server/data/plugins/items';
 
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
@@ -22,7 +22,8 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
-    public maxStackSize: number = Modules.Constants.MAX_STACK;
+    public interactable = false;
+    public maxStackSize = 1; // Default max stack size.
     public plugin: Plugin | undefined;
 
     // Store variables
@@ -35,9 +36,23 @@ export default class Item extends Entity {
     private achievement = '';
     private quest = '';
 
+    // Points usage
+    public manaCost = 0;
+
+    // Item information
+    public description = '';
+    public projectileName = 'projectile-arrow';
+
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
+    public weaponType = '';
+
+    // Bowl variables
+    public smallBowl = false;
+    public mediumBowl = false;
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -47,10 +62,13 @@ export default class Item extends Entity {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Miscellaneous variables
-    public movementSpeed = -1;
-    public stockAmount = 1; // Used for stores to increase count by this amount.
-    public maxCount = 1; // Used for stores to know maximum limit.
+    public movementModifier = -1;
+    public stockAmount?: number; // Used for stores to increase count by this amount.
+    public maxCount = -1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
+    public mining = -1;
+    public fishing = -1;
+    public attackRange = 1;
 
     public exists = true;
     public undroppable = false;
@@ -71,8 +89,9 @@ export default class Item extends Entity {
         x: number,
         y: number,
         public dropped = false,
-        public count = 1,
-        public enchantments: Enchantments = {}
+        public count = -1,
+        public enchantments: Enchantments = {},
+        public owner = ''
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
@@ -84,16 +103,14 @@ export default class Item extends Entity {
             return;
         }
 
-        // Count cannot be less than 1
-        if (this.count < 1) this.count = 1;
-
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
         this.key = this.data.spriteName || this.key;
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
-        this.maxStackSize = this.data.maxStackSize || this.maxStackSize;
+        this.interactable = this.data.interactable || this.interactable;
+        this.maxStackSize = this.getMaxStackSize(this.data.maxStackSize);
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
         this.level = this.data.level || this.level;
@@ -103,10 +120,21 @@ export default class Item extends Entity {
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.poisonous = this.data.poisonous || this.poisonous;
-        this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
+        this.freezing = this.data.freezing || this.freezing;
+        this.burning = this.data.burning || this.burning;
+        this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
+        this.mining = this.data.mining || this.mining;
+        this.fishing = this.data.fishing || this.fishing;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
+        this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
+        this.projectileName = this.data.projectileName || this.projectileName;
+        this.description = this.data.description || this.description;
+        this.manaCost = this.data.manaCost || this.manaCost;
+        this.weaponType = this.data.weaponType || this.weaponType;
+        this.smallBowl = this.data.smallBowl || this.smallBowl;
+        this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -123,6 +151,23 @@ export default class Item extends Entity {
         }
 
         this.plugin = new PluginIndex[this.data.plugin! as keyof typeof PluginIndex](this.data);
+    }
+
+    /**
+     * Copies an item and returns a clone of it.
+     * @returns A copy of the item and all its properties
+     */
+
+    public copy(): this {
+        return new Item(
+            this.key,
+            this.x,
+            this.y,
+            this.dropped,
+            this.count,
+            this.enchantments,
+            this.owner
+        ) as this;
     }
 
     /**
@@ -151,6 +196,9 @@ export default class Item extends Entity {
         this.blinkTimeout = setTimeout(() => {
             this.blinkCallback?.();
 
+            // Clear the owner of the item when it starts blinking.
+            this.owner = '';
+
             this.despawnTimeout = setTimeout(() => this.despawnCallback?.(), this.despawnDuration);
         }, this.blinkDelay);
     }
@@ -161,39 +209,6 @@ export default class Item extends Entity {
 
     public respawn(): void {
         setTimeout(() => this.respawnCallback?.(), this.respawnDelay);
-    }
-
-    /**
-     * Returns the type of equipment the item classifies as.
-     * @returns Equipment type from Modules.
-     */
-
-    public getEquipmentType(): Modules.Equipment {
-        switch (this.itemType) {
-            case 'armour':
-            case 'armourarcher': {
-                return Modules.Equipment.Armour;
-            }
-
-            case 'weapon':
-            case 'weaponarcher': {
-                return Modules.Equipment.Weapon;
-            }
-
-            case 'pendant': {
-                return Modules.Equipment.Pendant;
-            }
-
-            case 'boots': {
-                return Modules.Equipment.Boots;
-            }
-
-            case 'ring': {
-                return Modules.Equipment.Ring;
-            }
-        }
-
-        return -1;
     }
 
     /**
@@ -211,7 +226,7 @@ export default class Item extends Entity {
          */
 
         if (this.skill) {
-            let skill = player.skills.get(Utils.getSkill(this.skill));
+            let skill = player.skills.get(Utils.getSkill(this.skill)!);
 
             // Separate conditional if skill exists.
             if (skill)
@@ -257,6 +272,50 @@ export default class Item extends Entity {
     }
 
     /**
+     * Returns the type of equipment the item classifies as.
+     * @returns Equipment type from Modules.
+     */
+
+    public getEquipmentType(): Modules.Equipment | undefined {
+        switch (this.itemType) {
+            case 'armour':
+            case 'armourarcher': {
+                return Modules.Equipment.Armour;
+            }
+
+            case 'armourskin': {
+                return Modules.Equipment.ArmourSkin;
+            }
+
+            case 'weapon':
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return Modules.Equipment.Weapon;
+            }
+
+            case 'weaponskin': {
+                return Modules.Equipment.WeaponSkin;
+            }
+
+            case 'pendant': {
+                return Modules.Equipment.Pendant;
+            }
+
+            case 'boots': {
+                return Modules.Equipment.Boots;
+            }
+
+            case 'ring': {
+                return Modules.Equipment.Ring;
+            }
+
+            case 'arrow': {
+                return Modules.Equipment.Arrows;
+            }
+        }
+    }
+
+    /**
      * Grabs the weapon requirement level for the current item object.
      * @returns The weapon requirement level in a number format.
      */
@@ -265,6 +324,189 @@ export default class Item extends Entity {
         if (this.level !== -1) return this.level;
 
         return 0;
+    }
+
+    /**
+     * @returns The description of the item.
+     */
+
+    public getDescription(): string {
+        return this.description;
+    }
+
+    /**
+     * Extracts the max stack size of an item based on the type of item
+     * and whether it has a specified max stack size in the configuration.
+     * @param maxStackSize The maximum stack size from the configuration.
+     */
+
+    public getMaxStackSize(maxStackSize?: number): number {
+        if (this.stackable) return maxStackSize || Modules.Constants.MAX_STACK;
+
+        return this.maxStackSize;
+    }
+
+    /**
+     * @returns The default attack range for an item if none is specified in the configuraiton.
+     */
+
+    private getDefaultAttackRange(): number {
+        return this.isArcherWeapon() ? Modules.Constants.ARCHER_ATTACK_RANGE : this.attackRange;
+    }
+
+    /**
+     * Depending on the weapon attack type, we determine
+     * which attack styles apply to the item.
+     * @return A list of attack styles that apply to the item.
+     */
+
+    public getAttackStyles(): Modules.AttackStyle[] {
+        // Why would you want to attack with a non-weapon?
+        if (!this.isWeapon()) return [];
+
+        // If the item has a specified attack style, we use that.
+        switch (this.weaponType) {
+            case 'sword': {
+                return [
+                    Modules.AttackStyle.Stab,
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Shared,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'bigsword': {
+                return [
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'axe': {
+                return [
+                    Modules.AttackStyle.Hack,
+                    Modules.AttackStyle.Chop,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'pickaxe': {
+                return [Modules.AttackStyle.Stab, Modules.AttackStyle.Defensive];
+            }
+
+            case 'blunt': {
+                return [
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'spear': {
+                return [
+                    Modules.AttackStyle.Stab,
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'bow': {
+                return [
+                    Modules.AttackStyle.Accurate,
+                    Modules.AttackStyle.Fast,
+                    Modules.AttackStyle.LongRange
+                ];
+            }
+
+            case 'whip': {
+                return [Modules.AttackStyle.Slash, Modules.AttackStyle.Defensive];
+            }
+
+            case 'staff': {
+                return [Modules.AttackStyle.Focused, Modules.AttackStyle.LongRange];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Depending on the item type, they may have different enchantments available. We return
+     * a list of enchantments that we pick from based on the item type.
+     * @returns A list of enchantments that are available for the item or empty if not applicable.
+     */
+
+    public getAvailableEnchantments(): Modules.Enchantment[] {
+        switch (this.itemType) {
+            case 'weapon': {
+                return [
+                    Modules.Enchantment.Bloodsucking,
+                    Modules.Enchantment.Critical,
+                    Modules.Enchantment.DoubleEdged
+                ];
+            }
+
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return [Modules.Enchantment.Explosive, Modules.Enchantment.Stun];
+            }
+
+            case 'armour':
+            case 'armourarcher': {
+                return [
+                    Modules.Enchantment.Evasion,
+                    Modules.Enchantment.Thorns,
+                    Modules.Enchantment.AntiStun
+                ];
+            }
+
+            default: {
+                return [];
+            }
+        }
+    }
+
+    /**
+     * Grabs the enchantment level for an item based on the enchantment id. We
+     * assume that we already checked the item has the enchantment.
+     * @param enchantment The enchantment id we are checking for.
+     * @returns The level of the enchantment.
+     */
+
+    public getEnchantmentLevel(enchantment: number): number {
+        return this.enchantments[enchantment].level;
+    }
+
+    /**
+     * @param id The enchantment id we are checking for.
+     * @returns Whether or not the item has the enchantment.
+     */
+
+    public hasEnchantment(id: Modules.Enchantment): boolean {
+        return id in this.enchantments;
+    }
+
+    /**
+     * Check if the item is enchanted.
+     * @returns Whether or not the item has any enchantments.
+     */
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
+    }
+
+    /**
+     * Check if the item is owned by the player. An item owned by the player
+     * can only be picked up by that player. Once the item starts blinking,
+     * its ownership is renounced.
+     * @param username Username of the player we are checking the ownership of.
+     * @returns Whether or not the item is owned by the player.
+     */
+
+    public isOwner(username: string): boolean {
+        if (!this.owner) return true;
+
+        return this.owner === username;
     }
 
     /**
@@ -278,37 +520,68 @@ export default class Item extends Entity {
         return (
             this.itemType === 'armour' ||
             this.itemType === 'armourarcher' ||
+            this.itemType === 'armourskin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
+            this.itemType === 'weaponmagic' ||
+            this.itemType === 'weaponskin' ||
             this.itemType === 'pendant' ||
             this.itemType === 'boots' ||
-            this.itemType === 'ring'
+            this.itemType === 'ring' ||
+            this.itemType === 'arrow'
         );
     }
 
     /**
-     * Checks if the item is a ranged weapon.
+     * @returns Whether or not the item is a weapon.
+     */
+
+    public isWeapon(): boolean {
+        return this.itemType.includes('weapon');
+    }
+
+    /**
+     * Verifies whether or not the weapon is an archer weapon. We use this
+     * to default an attack range for range combat.
      * @returns If the itemType is of type `weaponarcher`.
      */
 
-    public isRangedWeapon(): boolean {
+    public isArcherWeapon(): boolean {
         return this.itemType === 'weaponarcher';
     }
 
     /**
-     * @returns Whether or not the item type is a weapon or archer weapon.
+     * @returns Whether or not the weapon is a magic-based weapon.
      */
 
-    private isWeapon(): boolean {
-        return this.itemType === 'weapon' || this.itemType === 'weaponarcher';
+    public isMagicWeapon(): boolean {
+        return this.itemType === 'weaponmagic';
     }
 
     /**
-     * @returns Whether or not the item type is that of a armour or archer armour.
+     * @returns Whether or not the item is a small bowl item.
      */
 
-    private isArmour(): boolean {
-        return this.itemType === 'armour' || this.itemType === 'armourarcher';
+    public isSmallBowl(): boolean {
+        return this.smallBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a medium bowl item.
+     */
+
+    public isMediumBowl(): boolean {
+        return this.mediumBowl;
+    }
+
+    /**
+     * Sets an enchantment onto an item or updates the level if it already exists.
+     * @param id The id of the enchantment.
+     * @param level The level of the enchantment.
+     */
+
+    public setEnchantment(id: Modules.Enchantment, level: number): void {
+        this.enchantments[id] = { level };
     }
 
     /**

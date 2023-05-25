@@ -58,7 +58,7 @@ export default class Splat {
         // Text gets marked as MISS if this is a damage type and the value is 0.
         if (this.isDamage() && value < 1) this.text = 'MISS';
 
-        if (this.isPoison()) this.prefix = '--';
+        if (this.isPoison() || this.isFreezing()) this.prefix = '--';
         if (this.isPoints()) this.prefix = '++';
 
         if (this.isExperience()) {
@@ -111,6 +111,15 @@ export default class Splat {
     }
 
     /**
+     * Checks whether the hit type is that of cold damage.
+     * @returns Whether or not the splat type is cold.
+     */
+
+    private isFreezing(): boolean {
+        return this.type === Modules.Hits.Freezing;
+    }
+
+    /**
      * Checks if the splat type is that of experience of profession. We
      * separate these two since their prefix contains a '+' and suffix a 'EXP';
      * @returns Whether the type equals the enum Experience or Profession.
@@ -138,7 +147,7 @@ export default class Splat {
 
     private isDamage(): boolean {
         return (
-            this.type === Modules.Hits.Damage ||
+            this.type === Modules.Hits.Normal ||
             this.type === Modules.Hits.Stun ||
             this.type === Modules.Hits.Critical
         );
