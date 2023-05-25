@@ -306,7 +306,7 @@
                                 id="register-email-input"
                                 class="stroke"
                                 name="player-email"
-                                placeholder="Email Address (optional)"
+                                placeholder="Email Address"
                                 aria-label="Email Address"
                                 maxlength="64"
                                 autocomplete="off"
@@ -321,6 +321,37 @@
                                 id="cancel-register"
                             ></button>
                             <button title="Play" aria-label="Play" type="submit" id="play"></button>
+
+                            <div class="validation-summary"></div>
+                        </form>
+                    </article>
+
+                    <article id="reset-password">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            Reset Password
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form onsubmit="return false">
+                            <input
+                                type="text"
+                                id="email-reset-input"
+                                class="stroke"
+                                name="player-email"
+                                placeholder="Email Address"
+                                aria-label="Email Address"
+                                maxlength="32"
+                                autocomplete="off"
+                            />
+
+                            <button
+                                title="Cancel"
+                                aria-label="Cancel"
+                                type="button"
+                                id="cancel-forget"
+                            ></button>
+                            <button title="Submit" aria-label="Submit" type="submit" id="continue-forget"></button>
 
                             <div class="validation-summary"></div>
                         </form>
@@ -549,6 +580,10 @@
                         <span>Privacy</span>
                     </a>
                 </div>
+                <span>&ndash;</span>
+                <div id="reset" disabled class="clickable">
+                    <span id="toggle-reset-password">Reset Password</span>
+                </div>
             </footer>
         </div>
 
@@ -706,6 +741,7 @@
                         <p id="show-names-checkbox-text">Show Names</p>
                         <p id="show-levels-checkbox-text">Show Levels</p>
                         <p id="disable-region-caching-text">Disable Caching</p>
+                        <p id="webgl-text">Enable WebGL</p>
                     </div>
 
                     <div id="info"></div>
@@ -733,6 +769,10 @@
                         </label>
                         <label id="disable-region-caching-checkbox" class="check">
                             <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="webgl-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="webgl-text" />
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -964,10 +1004,15 @@
                     <div id="quest-log">
                         <div id="quest-log-title" class="quest-log-h1 stroke">Quest Title</div>
                         <div id="quest-log-shortdesc" class="quest-log-p"></div>
-                        <div class="quest-log-h1 stroke">Quest Description</div>
+
+                        <div class="quest-log-h1 stroke">Description</div>
                         <div id="quest-log-description" class="quest-log-p"></div>
-                        <div class="quest-log-h1 stroke">Quest Reward</div>
+
+                        <div class="quest-log-h1 stroke">Reward</div>
                         <div id="quest-log-rewards" class="quest-log-p"></div>
+                        
+                        <div class="quest-log-h1 stroke">Requirements</div>
+                        <div id="quest-log-requirements" class="quest-log-p">None C:</div>
                     </div>
                 </div>
 
@@ -1043,17 +1088,17 @@
 
                     <div id="craft-button" class="stroke">Craft</div>
                 </div>
-
-                <div id="guilds">
+                
+                <div id="guilds" class="container-frame">
                     <div id="close-guilds" class="new-close-container"></div>
 
                     <div class="banner banner-grey">
-                        <div class="banner-outline"></div>
+                        <div id="banner-outline" class="banner-outline"></div>
                         <div class="banner-crest"></div>
                     </div>
 
-                    <div id="guilds-list-container">
-                        <div id="create-guild" class="element-button element-button-large stroke">Create</div>
+                    <div id="guilds-list-container" class="container-subframe">
+                        <div id="create-guild" class="element-button element-button stroke">Create</div>
 
                         <div class="guilds-decoration">
                             <p class="stroke">Guilds</p>
@@ -1061,18 +1106,19 @@
 
                         <ul></ul>
 
-                        <p id="guilds-info">There are no guilds available...</p>
+                        <p id="guilds-info" class="stroke">There are no guilds available...</p>
                     </div>
 
-                    <div id="guilds-create-container">
-                        <div class="guild-banner-decoration guild-banner-select"></div>
-                        <div class="guild-banner-decoration guild-outline-select"></div>
+                    <div id="guilds-create-container" class="container-subframe">
+                        <span id="create-error"></span>
+
+                        <div id="banner-colour-button" class="colour-select-button button-banner-colour active"></div>
+                        <div id="banner-outline-button" class="colour-select-button outline-button-1">
+                            <div class="colour-button-arrow-left"></div>
+                            <div class="colour-button-arrow-right"></div>
+                        </div>
 
                         <ul id="banner-colours"></ul>
-                        <ul id="banner-outline-colours"></ul>
-                        <ul id="banner-crests"></ul>
-
-                        <span id="create-error"></span>
 
                         <div id="guild-back" class="element-button element-button-red stroke">Back</div>
                         <div id="guild-create" class="element-button stroke">Create</div>
@@ -1087,7 +1133,7 @@
                             class="guild-name-input-image stroke"></input>
                     </div>
 
-                    <div id=guilds-info-container>
+                    <div id=guilds-info-container class="container-subframe">
                         <div id="guild-leave" class="element-button element-button-red stroke">Leave</div>
 
                         <div id="guild-name" class="guilds-decoration"></div>
@@ -1132,16 +1178,13 @@
                 </div>
 
                 <div id="player-info">
-                    <div id="health"></div>
-                    <div id="health-bar"></div>
-                    <div id="health-info">
-                        <div id="health-bar-text"></div>
+                    <div id="health">
+                        <div id="health-mask"></div>
+                        <div class="health-text"></div>
                     </div>
-
-                    <div id="mana"></div>
-                    <div id="mana-bar"></div>
-                    <div id="mana-info">
-                        <div id="mana-bar-text"></div>
+                    <div id="mana">
+                        <div id="mana-mask"></div>
+                        <div class="mana-text"></div>
                     </div>
                 </div>
             </div>

@@ -155,6 +155,11 @@ export enum TeamWar {
     Exit
 }
 
+export enum Coursing {
+    Lobby,
+    Exit
+}
+
 export enum Overlay {
     Set,
     Remove,
@@ -180,7 +185,14 @@ export enum Skill {
 }
 
 export enum Minigame {
-    TeamWar
+    TeamWar,
+    Coursing
+}
+
+export enum MinigameState {
+    Lobby,
+    End,
+    Exit
 }
 
 export enum Bubble {

@@ -1,5 +1,7 @@
-import type { RotatedTile } from '@kaetram/common/types/map';
+import Tile from '../tile';
+
 import type Map from '../../map/map';
+import type { RotatedTile } from '@kaetram/common/types/map';
 
 /**
  * A layer is a class object that corresponds with a layer in the map data. This is used to
@@ -13,6 +15,10 @@ enum FlipFlags {
     FlippedAntiDiagonal = 0x20_00_00_00,
     FlippedVertical = 0x40_00_00_00,
     FlippedHorizontal = 0x80_00_00_00
+}
+
+interface AnimatedTiles {
+    [index: number]: Tile;
 }
 
 export default class Layer {
@@ -30,6 +36,9 @@ export default class Layer {
     // The texture object for foreground and background.
     public backgroundTexture!: WebGLTexture;
     public foregroundTexture!: WebGLTexture;
+
+    // Animated tiles pertaining to this layer.
+    private animatedTiles: AnimatedTiles = {};
 
     public constructor(private map: Map) {
         this.backgroundData = new Uint8Array(this.map.width * this.map.height * 4);
@@ -53,6 +62,9 @@ export default class Layer {
         program: WebGLProgram,
         foreground = false
     ): void {
+        // Program hasn't loaded yet so there's no need to bind the texture.
+        if (!program) return;
+
         // Create the textures if they do not exist.
         if (!this.backgroundTexture && !foreground)
             this.backgroundTexture = context.createTexture()!;
@@ -74,6 +86,18 @@ export default class Layer {
         context.useProgram(program);
 
         // Upload the texture data to the GPU.
+        this.upload(context, foreground);
+    }
+
+    /**
+     * Function used to request the GPU to update the texture data by
+     * uploading the latest information (after we make modifications)
+     * to the GPU.
+     * @param context The context on which we want to upload the texture data.
+     * @param foreground Whether we want this data to be uploaded to the foreground or background texture.
+     */
+
+    private upload(context: WebGLRenderingContext, foreground = false): void {
         context.texImage2D(
             context.TEXTURE_2D,
             0,
@@ -93,6 +117,9 @@ export default class Layer {
      */
 
     public clear(index: number): void {
+        // Remove the tile from the animated tiles.
+        delete this.animatedTiles[index];
+
         // Increase the index.
         index *= 4;
 
@@ -121,7 +148,8 @@ export default class Layer {
     public addTile(index: number, tile: number | RotatedTile, flipped = false): void {
         // Grab the index in the respective texture data array.
         let tileId = flipped ? (tile as RotatedTile).tileId : (tile as number),
-            textureData = this.map.isHighTile(tileId) ? this.foregroundData : this.backgroundData,
+            isHighTile = this.map.isHighTile(tileId),
+            textureData = isHighTile ? this.foregroundData : this.backgroundData,
             dataIndex = index * 4;
 
         // If the tileId is 0 or invalid it means it's an empty tile, so we just update the texture data with 255.
@@ -148,6 +176,74 @@ export default class Layer {
         textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
         textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as RotatedTile) : 0; // tile flags
+
+        // Skip if the tile is already animated.
+        if (index in this.animatedTiles) return;
+
+        // Create an animated tile if the tile is animated.
+        if (this.map.isAnimatedTile(tileId))
+            this.animatedTiles[index] = new Tile(
+                tileId,
+                index,
+                this.map.getTileAnimation(tileId),
+                flipped,
+                isHighTile
+            );
+    }
+
+    /**
+     * Function called every frame to draw the map for the specified layer.
+     * @param context The context on which we are drawing the map.
+     * @param time The game tick epoch time.
+     * @param foreground Whether or not the context specified is the foreground or background.
+     * @param lowPower Whether or not we are in low power mode, disables animated tiles.
+     */
+
+    public draw(
+        context: WebGLRenderingContext,
+        time: number,
+        foreground = false,
+        lowPower = false
+    ): void {
+        // Bind the texture according to whether we want to draw the foreground or background.
+        context.bindTexture(
+            context.TEXTURE_2D,
+            foreground ? this.foregroundTexture : this.backgroundTexture
+        );
+
+        // Draw the triangles
+        context.drawArrays(context.TRIANGLES, 0, 6);
+
+        // Do not draw animated tiles if we are in low power mode.
+        if (lowPower) return;
+
+        // Whether or not at least one tile requires an upload.
+        let upload = false;
+
+        // Update the animated tiles and do necessary uploads.
+        for (let index in this.animatedTiles) {
+            let tile = this.animatedTiles[index];
+
+            // Skip if the tile's layering doesn't match the current layer.
+            if (tile.isHighTile && !foreground) continue;
+
+            // Update using the current game tick.
+            tile.animate(time);
+
+            if (!tile.uploaded) {
+                // We update the tile in the texture data.
+                this.addTile(tile.index, tile.id + 1, tile.isFlipped);
+
+                // We request an upload for the entire texture data.
+                upload = true;
+
+                // We mark the tile as uploaded.
+                tile.uploaded = true;
+            }
+        }
+
+        // If the upload flag is toggled then we upload the entire texture data.
+        if (upload) this.upload(context, foreground);
     }
 
     /**

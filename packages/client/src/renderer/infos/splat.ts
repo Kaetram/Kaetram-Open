@@ -149,7 +149,8 @@ export default class Splat {
         return (
             this.type === Modules.Hits.Normal ||
             this.type === Modules.Hits.Stun ||
-            this.type === Modules.Hits.Critical
+            this.type === Modules.Hits.Critical ||
+            this.type === Modules.Hits.Explosive
         );
     }
 

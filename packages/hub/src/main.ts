@@ -3,6 +3,7 @@ import API from './controllers/api';
 import Cache from './controllers/cache';
 import Handler from './network/handler';
 import Servers from './controllers/servers';
+import Mailer from './controllers/mailer';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
@@ -14,6 +15,7 @@ export default class Main {
     private servers: Servers = new Servers();
     private handler: Handler = new Handler(); // The network handler.
     private discord: Discord = new Discord();
+    private mailer: Mailer = new Mailer();
 
     public constructor() {
         log.notice(`Initializing ${config.name} Hub ${config.gver}.`);
@@ -34,7 +36,7 @@ export default class Main {
         if (this.handler.ready) log.notice(`Hub is now listening on port: ${config.hubWsPort}.`);
 
         new Console(this.servers);
-        new API(this.servers, this.discord, this.cache);
+        new API(this.servers, this.mailer, this.cache);
     }
 
     /**

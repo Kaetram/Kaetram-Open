@@ -54,29 +54,36 @@ export default class Network {
      */
 
     public handleConnection(connection: Connection): void {
-        let player = new Player(this.world, this.database, connection),
-            timeDifference = Date.now() - this.getLastConnection(connection);
+        this.database.isIpBanned(connection.address, (banned: boolean) => {
+            // Ensure that the connection is not banned.
+            if (banned) return connection.reject('banned');
 
-        if (!config.debugging) {
-            // Check that the connections aren't coming too fast.
-            if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
+            // Create the player instance and check the time difference between the last connection.
+            let player = new Player(this.world, this.database, connection),
+                timeDifference = Date.now() - this.getLastConnection(connection);
 
-            // Ensure that we don't have too many connections from the same IP address.
-            if (this.socketHandler.isMaxConnections(connection.address))
-                return connection.reject('toomany');
-        }
+            // Skip if we are in debug mode.
+            if (!config.debugging) {
+                // Check that the connections aren't coming too fast.
+                if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
 
-        this.socketHandler.updateLastTime(connection.address);
+                // Ensure that we don't have too many connections from the same IP address.
+                if (this.socketHandler.isMaxConnections(connection.address))
+                    return connection.reject('toomany');
+            }
 
-        this.createPacketQueue(player);
+            this.socketHandler.updateLastTime(connection.address);
 
-        this.send(
-            player,
-            new Handshake({
-                instance: player.instance,
-                serverId: config.serverId
-            })
-        );
+            this.createPacketQueue(player);
+
+            this.send(
+                player,
+                new Handshake({
+                    instance: player.instance,
+                    serverId: config.serverId
+                })
+            );
+        });
     }
 
     /**
@@ -187,6 +194,6 @@ export default class Network {
      */
 
     private getLastConnection(connection: Connection): number {
-        return this.socketHandler.addresses[connection.address].lastTime;
+        return this.socketHandler.addresses[connection.address]?.lastTime;
     }
 }

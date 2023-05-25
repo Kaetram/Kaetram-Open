@@ -3428,7 +3428,6 @@ __metadata:
     "@sentry/vite-plugin": "npm:^0.7.2"
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/html-minifier-terser": "npm:^7.0.0"
-    "@types/jquery": "npm:^3.5.16"
     "@types/node": "npm:^18.15.5"
     "@types/pako": "npm:^2.0.0"
     "@types/workbox-build": "npm:^5.0.1"
@@ -3439,7 +3438,6 @@ __metadata:
     gl-tiled: "npm:^1.0.0"
     illuminated: "npm:^1.3.0"
     internal-ip: "npm:^7.0.0"
-    jquery: "npm:^3.6.3"
     pako: "npm:^2.1.0"
     postcss: "npm:^8.4.20"
     postcss-assets: "npm:^6.0.0"
@@ -3467,6 +3465,7 @@ __metadata:
   dependencies:
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/node": "npm:^18.15.5"
+    bcryptjs: "npm:^2.4.3"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
@@ -3497,16 +3496,21 @@ __metadata:
     "@kaetram/common": "workspace:*"
     "@sentry/node": "npm:^7.45.0"
     "@sentry/tracing": "npm:^7.45.0"
+    "@types/cors": "npm:^2"
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/express": "npm:^4.17.13"
     "@types/node": "npm:^18.15.5"
+    "@types/nodemailer": "npm:^6"
     axios: "npm:^1.2.3"
+    cors: "npm:^2.8.5"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
     express: "npm:^4.18.2"
     mongodb: "npm:^4.8.1"
+    nodemailer: "npm:^6.9.1"
     nodemon: "npm:^2.0.19"
+    stripe: "npm:^12.2.0"
     tsx: "npm:^3.12.6"
     typescript: "npm:^5.0.2"
     uws: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
@@ -3528,7 +3532,6 @@ __metadata:
     "@types/sanitizer": "npm:^0.0.28"
     "@types/websocket": "npm:^1.0.5"
     axios: "npm:^1.2.3"
-    bcryptjs: "npm:^2.4.3"
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
@@ -3970,6 +3973,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cors@npm:^2":
+  version: 2.8.13
+  resolution: "@types/cors@npm:2.8.13"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 9c8b1c732295603fcc0e1e8e8f0a332e7ec03d10bb18b9398225e5e2fbf6a2fd64758926204d306ef100a5bdd7b35324bdc34bc57fc49ed9807446930bc678f9
+  languageName: node
+  linkType: hard
+
 "@types/dotenv-parse-variables@npm:^2.0.1":
   version: 2.0.1
   resolution: "@types/dotenv-parse-variables@npm:2.0.1"
@@ -4021,15 +4033,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jquery@npm:^3.5.16":
-  version: 3.5.16
-  resolution: "@types/jquery@npm:3.5.16"
-  dependencies:
-    "@types/sizzle": "npm:*"
-  checksum: f20672f693063e184e0d7178b3471e3b1d754e369bb6aa92486ecba11b797653cfb2c405ceb930e4ba040b81e2f4ac119e35c0deb82dd482df2cb30fe8cc71df
-  languageName: node
-  linkType: hard
-
 "@types/json-schema@npm:^7.0.9":
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
@@ -4065,6 +4068,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=8.1.0":
+  version: 18.16.0
+  resolution: "@types/node@npm:18.16.0"
+  checksum: e2a407946adcc00c72f05cad85e57b14e8ae615eedcf834daa39186bf7ff136c802519504c391cc8f3b6935726e6ada1ef1dd1546d5c88d0051185f6dc41dd07
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^14.14.31":
   version: 14.18.21
   resolution: "@types/node@npm:14.18.21"
@@ -4076,6 +4086,15 @@ __metadata:
   version: 18.15.5
   resolution: "@types/node@npm:18.15.5"
   checksum: b046d8e4ebb94c1f811743d8be63b7e76fa03db9117ae1a7bc4589fddbb13b70c24fd5d2d4f674032b8a0ceb4db2e74725d241ccdf99f8ec61e357de2e2bbebb
+  languageName: node
+  linkType: hard
+
+"@types/nodemailer@npm:^6":
+  version: 6.4.7
+  resolution: "@types/nodemailer@npm:6.4.7"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 4fefece34940e4344ecb7d41553ccfd63bf2697124e6335dec5c358953ee53b2b27cb45dec9b306c3fc848cf4ec4344d62ecb091d1a7aadc36c0b9721ab67322
   languageName: node
   linkType: hard
 
@@ -4154,7 +4173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sizzle@npm:*, @types/sizzle@npm:^2.3.2":
+"@types/sizzle@npm:^2.3.2":
   version: 2.3.3
   resolution: "@types/sizzle@npm:2.3.3"
   checksum: a0b945a0802399b36a46499b6f6ccbf32703dcf54696a69c299daa4ab53c658f7f95efce5d2b15c99ca26ae4d6ff032c909d60d70d2d69c19cf5715168275fd1
@@ -5748,6 +5767,16 @@ __metadata:
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
   checksum: f6006dfc860ac490b330431be370c58e9b8601d3affe85a08309665970431e12a672ebf1c57799795e145f4fc488c208b2ee992c42fa57faae2649c6f514845e
+  languageName: node
+  linkType: hard
+
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: "npm:^4"
+    vary: "npm:^1"
+  checksum: 8451ae4bb9710e6cc03c61283b226747397162b54d12cf77e257184e6bd568387864d6a817bba9752c2febb686fe45a14b7b0ce6f68e3e70d25df2ba6e17e80e
   languageName: node
   linkType: hard
 
@@ -8836,13 +8865,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.6.3":
-  version: 3.6.3
-  resolution: "jquery@npm:3.6.3"
-  checksum: 02f0d766d02908cf764839177b0b18baa9896814cbb16eb1dc67c15821ac10573cc22e4c455495a85064930602cf66ca9419f989284bf802f2210bdad9b5486d
-  languageName: node
-  linkType: hard
-
 "js-sdsl@npm:^4.1.4":
   version: 4.2.0
   resolution: "js-sdsl@npm:4.2.0"
@@ -9922,6 +9944,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nodemailer@npm:^6.9.1":
+  version: 6.9.1
+  resolution: "nodemailer@npm:6.9.1"
+  checksum: 6aa3e9afbf512b895c4ae519788d66d49720dc02ea3c0fb132917a6318d9776f7aeb94b0612b9fa2a971ddd1162ab48bcb8c223d16cbccf4ecf5f1ab22982095
+  languageName: node
+  linkType: hard
+
 "nodemon@npm:^2.0.19":
   version: 2.0.19
   resolution: "nodemon@npm:2.0.19"
@@ -10046,7 +10075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.1.0":
+"object-assign@npm:^4, object-assign@npm:^4.1.0":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: f5cd1f2f1e82e12207e4f2377d9d7d90fbc0d9822a6afa717a6dcab6930d8925e1ebbbb25df770c31ff11335ee423459ba65ffa2e53999926c328b806b4d73d6
@@ -11086,6 +11115,15 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.0.4"
   checksum: 337966e2e957a7d2a69821c528f3d18a8b346ddb0f16cc08d11c6206aed3b6624927781ff437aa3909e54ad32ebdee2c5396ad4094b1c722760774f7082f6124
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.11.0":
+  version: 6.11.1
+  resolution: "qs@npm:6.11.1"
+  dependencies:
+    side-channel: "npm:^1.0.4"
+  checksum: 5c9a1a3e1f2a7f53ca71d50ccabc4edb3018692b5d31a31ecad8db7a39d80c8f8ac5ed4cf49a881bac226f6b1c6e4add361e792e3146240c49d90cc610d738f4
   languageName: node
   linkType: hard
 
@@ -12442,6 +12480,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stripe@npm:^12.2.0":
+  version: 12.2.0
+  resolution: "stripe@npm:12.2.0"
+  dependencies:
+    "@types/node": "npm:>=8.1.0"
+    qs: "npm:^6.11.0"
+  checksum: 905893f6fa9a3ea7784d7e4301769efd9f7fbaf4e14db689f56f6cce7ecca8b72b5d1e4d77422ee4a526a1cdb6325af765a0169238d97303c3ef781e73639e19
+  languageName: node
+  linkType: hard
+
 "strtok3@npm:^7.0.0-alpha.9":
   version: 7.0.0
   resolution: "strtok3@npm:7.0.0"
@@ -13412,7 +13460,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: b1db20d4be443aec48b8efab73386f83d947b7033b6b2f5a0c7ba4a1f9bc0200cb4cb396712468761f8edfe48dd68a6fdee7c65689b90937a2d767c714d25883

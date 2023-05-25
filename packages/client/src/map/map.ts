@@ -168,6 +168,9 @@ export default class Map {
     private loadTilesets(): void {
         for (let index in this.rawTilesets)
             this.loadTileset(this.rawTilesets[index], parseInt(index), (tileset: TilesetInfo) => {
+                // Prevent adding the tileset if it already exists.
+                for (let set of this.tilesets) if (set.src === tileset.src) return;
+
                 this.tilesets.push(tileset);
 
                 if (this.tilesets.length === this.rawTilesets.length) {
@@ -192,7 +195,7 @@ export default class Map {
         callback: (tileset: TilesetInfo) => void
     ): void {
         let tilesetInfo = new Image() as TilesetInfo,
-            path = `/img/tilesets/${tileset.path}`; // tileset path in the client.
+            path = `/img/tilesets/${tileset.relativePath}`; // tileset path in the client.
 
         tilesetInfo.crossOrigin = 'Anonymous';
         tilesetInfo.path = path;
@@ -260,9 +263,6 @@ export default class Map {
 
                 log.info(`Preloaded map data with ${keys.length} regions.`);
             }
-
-            // Used for WebGL to load map texture information.
-            this.game.renderer.load();
         });
     }
 

@@ -1,10 +1,13 @@
 import Default from './default';
 
+import Mobs from '../../mobs.json';
+
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import type { RawData } from '@kaetram/common/types/mob';
 
 export default class QueenAnt extends Default {
     private positions: Position[];
@@ -58,13 +61,21 @@ export default class QueenAnt extends Default {
 
             // Minions immediately start following the Queen Ant.
             minion.follow(this.mob);
+
+            minion.onDeathImpl(() => {
+                if (Object.keys(this.minions).length > 0) return;
+
+                this.mob.attackRate = (Mobs as RawData)[this.mob.key].attackRate!;
+            });
         }
 
         this.minionsSpawned = true;
+
+        this.mob.attackRate = 750;
     }
 
     /**
-     * Override for the respawn function. We reset the boss back
+     * Override for the respawn function. We reset the boss backonDeathImpl
      * to default status and remove all the minion wave checks.
      */
 
@@ -75,6 +86,7 @@ export default class QueenAnt extends Default {
         for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = false;
+        this.mob.attackRate = (Mobs as RawData)[this.mob.key].attackRate!;
     }
 
     /**
@@ -89,10 +101,10 @@ export default class QueenAnt extends Default {
         // Ignore the special attack if one is already active.
         if (this.specialAttack) return this.resetSpecialAttack();
 
-        // 1 in 3 chance to trigger a special attack.
+        // 1 in 6 chance to trigger a special attack.
         if (Utils.randomInt(1, 6) !== 2) return;
 
-        // 1 in 6 chance to trigger an AoE attack alongside special attack.
+        // 1 in 12 chance to trigger an AoE attack alongside special attack.
         if (Utils.randomInt(1, 12) === 3) this.mob.aoe = 4;
 
         // Queen ant attacks with range and inflicts terror.

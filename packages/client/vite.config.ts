@@ -99,7 +99,7 @@ export default defineConfig(async ({ mode }) => {
             ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
         ];
 
-    if (config.sentryDsn)
+    if (config.sentryDsn && !config.debugging)
         plugins.push(
             sentryVitePlugin({
                 include: '.',
@@ -122,7 +122,8 @@ export default defineConfig(async ({ mode }) => {
             rollupOptions: {
                 input: {
                     index: path.resolve(__dirname, 'index.html'),
-                    privacy: path.resolve(__dirname, 'privacy.html')
+                    privacy: path.resolve(__dirname, 'privacy.html'),
+                    reset: path.resolve(__dirname, 'reset/index.html')
                 }
             }
         },

@@ -95,11 +95,12 @@ export default class ProcessMap {
              * We ignore the entities layer as it is not a tileset for rendering.
              */
 
-            if (tileset.name !== 'Entities')
+            if (!tileset.name.toLowerCase().includes('entities'))
                 this.map.tilesets!.push({
                     firstGid: tileset.firstgid - 1,
                     lastGid: tileset.firstgid - 1 + tileset.tilecount - 1,
-                    path: tileset.image
+                    path: tileset.image,
+                    relativePath: this.getRelativePath(tileset.image)
                 });
 
             this.parseTileset(tileset);
@@ -688,6 +689,20 @@ export default class ProcessMap {
 
     private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
         return this.getId(tileset.firstgid, tile.id, offset);
+    }
+
+    /**
+     * Extracts a relative path for the client to use when laoding the tileset
+     * image. Some tilesets may be placed in subdirectories, so we want to eliminate
+     * the first directory if that's the case (since when we export the map and copy
+     * the files to the client it is removed).
+     * @param path The complete path to the tileset image.
+     */
+
+    private getRelativePath(image: string): string {
+        let path = image.split('/');
+
+        return path.length > 1 ? path.slice(1).join('/') : image;
     }
 
     /**

@@ -1,16 +1,20 @@
+import cors from 'cors';
 import express from 'express';
 import mobs from '@kaetram/server/data/mobs.json';
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-import { Modules } from '@kaetram/common/network';
+import Stripe from 'stripe';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
-import type { Integration } from '@sentry/types';
 import type Cache from './cache';
 import type Server from '../model/server';
 import type Servers from './servers';
-import type Discord from '@kaetram/common/api/discord';
+import type Mailer from './mailer';
+import type { ObjectId } from 'mongodb';
+import type { Integration } from '@sentry/types';
 import type { Request, Response, Express, Router } from 'express';
 import type {
     MobAggregate,
@@ -19,11 +23,16 @@ import type {
     TotalExperience
 } from '@kaetram/common/types/leaderboards';
 
+// Initialize stripe
+const stripe = new Stripe(config.stripeSecretKey, {
+    apiVersion: '2022-11-15'
+});
+
 /**
  * We use the API format from `@kaetram/server`.
  */
 export default class API {
-    public constructor(private servers: Servers, private discord: Discord, private cache: Cache) {
+    public constructor(private servers: Servers, private mailer: Mailer, private cache: Cache) {
         let apiEnabled = config.apiEnabled || config.hubEnabled,
             app: Express | undefined,
             router: Router | undefined;
@@ -37,7 +46,7 @@ export default class API {
                     .use(Sentry.Handlers.tracingHandler())
                     .use(Sentry.Handlers.errorHandler());
 
-            app.use(express.urlencoded({ extended: true })).use(express.json());
+            app.use(express.urlencoded({ extended: true }), cors(), express.json());
 
             router = express.Router();
 
@@ -61,6 +70,11 @@ export default class API {
         });
     }
 
+    /**
+     * The router is where we create all the API endpoints.
+     * @param router The express router we are attaching the endpoints to.
+     */
+
     private handleRouter(router: Router): void {
         // GET requests
         router.get('/', this.handleRoot.bind(this));
@@ -69,6 +83,18 @@ export default class API {
         router.get('/leaderboards', this.handleLeaderboards.bind(this));
 
         router.post('/isOnline', this.handleIsOnline.bind(this));
+        router.post('/api/v1/requestReset', this.handleRequestReset.bind(this));
+        router.post('/api/v1/resetPassword', this.handleResetPassword.bind(this));
+
+        if (config.stripeEndpoint) {
+            router.post(
+                `/${config.stripeEndpoint}`,
+                express.raw({ type: 'application/json' }),
+                this.handleStripe.bind(this)
+            );
+
+            log.notice(`Stripe endpoint is enabled at /${config.stripeEndpoint}.`);
+        }
     }
 
     /**
@@ -79,8 +105,6 @@ export default class API {
      */
 
     private handleRoot(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         response.json({ status: `${config.name} hub is online and functional.` });
     }
 
@@ -93,8 +117,6 @@ export default class API {
      */
 
     private handleServer(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         if (!this.servers.hasSpace()) {
             response.json({ status: 'error' });
             return;
@@ -117,8 +139,6 @@ export default class API {
      */
 
     private handleAll(_request: Request, response: Response): void {
-        this.setHeaders(response);
-
         response.json(this.servers.serialize());
     }
 
@@ -130,8 +150,6 @@ export default class API {
      */
 
     private handleLeaderboards(request: Request, response: Response): void {
-        this.setHeaders(response);
-
         if (request.query.skill) {
             let skillId = parseInt(request.query.skill as string);
 
@@ -223,6 +241,116 @@ export default class API {
     }
 
     /**
+     * Handles validation of incoming data, creating a password reset token,
+     * and then sending it to the specified email address.
+     * @param request Contains the email that we are sending the reset token to.
+     * @param response The response we are sending back to the client.
+     */
+
+    private handleRequestReset(request: Request, response: Response): void {
+        let { email } = request.body;
+
+        // Verify the email address is valid.
+        if (!email || !Utils.isEmail(email)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        // Generate a reset token and send it to the email address.
+        this.cache.database.createResetToken(email, (id?: ObjectId, token?: string) => {
+            // We just return success to prevent brute-force attacks, better for the user to not know if the email exists or not.
+            if (!id || !token) {
+                response.json({ status: 'success' });
+                return;
+            }
+
+            // Send the email to the user.
+            this.mailer.send(
+                email,
+                'Kaetram Account Password Reset',
+                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset/?token=${token}&id=${id}`
+            );
+
+            // Send a response back to the client.
+            response.json({ status: 'success' });
+        });
+    }
+
+    /**
+     * Handles the resetting of password. Verifies that the ID, token, and password
+     * are valid and then updates the password in the database.
+     * @param request Contains the body with the id, token, and password.
+     * @param response Response that we send back to the client.
+     */
+
+    private handleResetPassword(request: Request, response: Response): void {
+        let { id, token, password } = request.body;
+
+        // Verify the token, id, and passwords are valid.
+        if (!id || !token || !Utils.isValidPassword(password)) {
+            response.json({ error: 'invalid' });
+            return;
+        }
+
+        // Attempt to reset the password.
+        this.cache.database.resetPassword(id, token, password, (status: boolean) => {
+            response.json({ status: status ? 'success' : 'invalid' });
+        });
+    }
+
+    /**
+     * This is the webhook for Stripe payment processor. It's responsible
+     * for in-app purchases and relaying the information to the appropriate
+     * player should they be logged in on a world. If not, then we will look
+     * through the database to grant them their purchase.
+     * @param request Contains the headers and signatures from stripe.
+     * @param response The response we are sending back to stripe.
+     */
+
+    private handleStripe(request: Request, response: Response): void {
+        let signature = request.headers['stripe-signature'];
+
+        // Send an empty response if we don't have a signature.
+        if (!signature) {
+            response.send();
+
+            return log.warning('Stripe signature is missing from request.');
+        }
+
+        try {
+            // Construct an event based on the request body and signature.
+            let event = stripe.webhooks.constructEvent(
+                request.body,
+                signature,
+                config.stripeKeyLocal
+            );
+
+            // Handle events as needed.
+            switch (event.type) {
+                case 'payment_intent.succeeded': {
+                    let intentSuccess = event.data.object as Stripe.PaymentIntent;
+
+                    console.log(intentSuccess);
+
+                    // Relay information to the database/player here.
+                    break;
+                }
+
+                default: {
+                    log.warning(`Unhandled Stripe event: ${event.type}`);
+                    break;
+                }
+            }
+        } catch (error) {
+            log.error(`Stripe webhook error: ${(error as Error).message}`);
+            response.status(400).send(`Webhook Error: ${(error as Error).message}`);
+            return;
+        }
+
+        response.send();
+    }
+
+    /**
      * Verifies the integrity of the request and if the tokens
      * are valid.
      * @param request Contains server information that we will verify.
@@ -237,18 +365,5 @@ export default class API {
         if (!hubAccessToken || !serverId) return false;
 
         return hubAccessToken === config.hubAccessToken;
-    }
-
-    /**
-     * Sets CORS headers on the response to prevent errors.
-     * @param response Response to set headers on.
-     */
-
-    private setHeaders(response: Response): void {
-        response.header('Access-Control-Allow-Origin', '*');
-        response.header(
-            'Access-Control-Allow-Headers',
-            'Origin, X-Requested-With, Content-Type, Accept'
-        );
     }
 }

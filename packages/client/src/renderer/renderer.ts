@@ -1,5 +1,3 @@
-import Tile from './tile';
-
 import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
@@ -7,6 +5,7 @@ import { isMobile, isTablet } from '../utils/detect';
 import { Modules } from '@kaetram/common/network';
 import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
+import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from './camera';
@@ -90,7 +89,7 @@ export default class Renderer {
 
     // Animated tiles
     public animateTiles = true;
-    protected animatedTiles: { [index: number]: Tile } = {};
+    private renderedFrame: number[] = [];
 
     // Lighting
     protected lightings: RendererLighting[] = [];
@@ -132,7 +131,7 @@ export default class Renderer {
     protected crownTier6!: Sprite;
     protected crownTier7!: Sprite;
 
-    public constructor(protected game: Game) {
+    public constructor(protected game: Game, public type = 'canvas') {
         this.map = game.map;
         this.camera = game.camera;
 
@@ -203,43 +202,43 @@ export default class Renderer {
 
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
 
-        this.silverMedal = this.game.sprites.get('silvermedal')!;
+        this.silverMedal = this.game.sprites.get('crowns/silvermedal')!;
 
         if (!this.silverMedal.loaded) this.silverMedal.load();
 
-        this.goldMedal = this.game.sprites.get('goldmedal')!;
+        this.goldMedal = this.game.sprites.get('crowns/goldmedal')!;
 
         if (!this.goldMedal.loaded) this.goldMedal.load();
 
-        this.crownArtist = this.game.sprites.get('crown-artist')!;
+        this.crownArtist = this.game.sprites.get('crowns/artist')!;
 
         if (!this.crownArtist.loaded) this.crownArtist.load();
 
-        this.crownTier1 = this.game.sprites.get('crown-tier1')!;
+        this.crownTier1 = this.game.sprites.get('crowns/tier1')!;
 
         if (!this.crownTier1.loaded) this.crownTier1.load();
 
-        this.crownTier2 = this.game.sprites.get('crown-tier2')!;
+        this.crownTier2 = this.game.sprites.get('crowns/tier2')!;
 
         if (!this.crownTier2.loaded) this.crownTier2.load();
 
-        this.crownTier3 = this.game.sprites.get('crown-tier3')!;
+        this.crownTier3 = this.game.sprites.get('crowns/tier3')!;
 
         if (!this.crownTier3.loaded) this.crownTier3.load();
 
-        this.crownTier4 = this.game.sprites.get('crown-tier4')!;
+        this.crownTier4 = this.game.sprites.get('crowns/tier4')!;
 
         if (!this.crownTier4.loaded) this.crownTier4.load();
 
-        this.crownTier5 = this.game.sprites.get('crown-tier5')!;
+        this.crownTier5 = this.game.sprites.get('crowns/tier5')!;
 
         if (!this.crownTier5.loaded) this.crownTier5.load();
 
-        this.crownTier6 = this.game.sprites.get('crown-tier6')!;
+        this.crownTier6 = this.game.sprites.get('crowns/tier6')!;
 
         if (!this.crownTier6.loaded) this.crownTier6.load();
 
-        this.crownTier7 = this.game.sprites.get('crown-tier7')!;
+        this.crownTier7 = this.game.sprites.get('crowns/tier7')!;
 
         if (!this.crownTier7.loaded) this.crownTier7.load();
     }
@@ -263,9 +262,6 @@ export default class Renderer {
 
         // Recalculate canvas sizes.
         this.loadSizes();
-
-        // Re-calculate visible animated tiles.
-        this.updateAnimatedTiles();
 
         // Dimensions may mess with centration, so we force it.
         this.camera.centreOn(this.game.player);
@@ -442,7 +438,6 @@ export default class Renderer {
 
         this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
-            this.setCameraView(this.textContext);
             this.textContext.globalAlpha = info.opacity;
             this.drawText(
                 `${info.getText()}`,
@@ -451,7 +446,8 @@ export default class Renderer {
                 true,
                 info.fill,
                 info.stroke,
-                26
+                26,
+                true
             );
             this.textContext.restore();
         });
@@ -500,7 +496,7 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`FPS: ${this.fps}`, 10, 61, false, 'white');
+        this.drawText(`[${this.type}] FPS: ${this.fps}`, 10, 61, false, 'white');
     }
 
     /**
@@ -683,51 +679,66 @@ export default class Renderer {
 
         if (!(entity instanceof Character)) return;
 
-        if (entity.isPlayer()) this.drawWeapon(entity as Player);
+        // Iterate through the drawable equipments and draw them.
+        if (entity.isPlayer())
+            (entity as Player).forEachEquipment(
+                (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
+                true
+            );
+
         if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
 
     /**
-     * Draws the weapon sprite on top of the player entity. We skip
-     * this function if there is no weapon, the player is dead, or
-     * they are teleporting.
-     * @param player The player we are drawing the weapon for.
+     * Responsible for drawing an equipment element on top of the player. This is
+     * done using the paperdoll method, each equipment is another sprite sheet
+     * that is drawn on top of the player's sprite.
+     * @param player The player we are drawing the equipment for.
+     * @param equipment The equipment information we are drawing.
      */
 
-    private drawWeapon(player: Player): void {
-        if (!player.hasWeapon() || player.dead || player.teleporting) return;
+    private drawEquipment(player: Player, equipment: Equipment): void {
+        if (player.dead || player.teleporting) return;
 
-        let weapon = this.game.sprites.get(player.getWeaponSpriteName());
+        // Equipment sprite based on the key of the slot.
+        let sprite = this.game.sprites.get(equipment.key);
 
-        if (!weapon) return;
+        if (!sprite) return;
 
-        if (!weapon.loaded) weapon.load();
+        if (!sprite.loaded) sprite.load();
 
-        let animation = player.animation!,
-            weaponAnimations = weapon.animations[animation.name];
+        this.drawSprite(player, sprite);
+    }
 
-        if (!weaponAnimations) return;
+    /**
+     * Extracts the animation frame and draws the provided sprite for the character.
+     * @param character The character used to determine the animation frames.
+     * @param sprite The sprite that we are drawing for the character.
+     */
 
-        let { frame, row } = animation,
+    private drawSprite(character: Character, sprite: Sprite): void {
+        let animation = character.animation!,
+            animationData = sprite.animations[animation.name],
+            { frame, row } = animation,
             index =
-                frame.index < weaponAnimations.length
+                frame.index < animationData.length
                     ? frame.index
-                    : frame.index % weaponAnimations.length,
-            weaponX = weapon.width * index,
-            weaponY = weapon.height * row,
-            weaponWidth = weapon.width,
-            weaponHeight = weapon.height;
+                    : frame.index % animationData.length,
+            spriteX = sprite.width * index,
+            spriteY = sprite.height * row,
+            spriteWidth = sprite.width,
+            spriteHeight = sprite.height;
 
         this.entitiesContext.drawImage(
-            weapon.image,
-            weaponX,
-            weaponY,
-            weaponWidth,
-            weaponHeight,
-            weapon.offsetX,
-            weapon.offsetY,
-            weaponWidth,
-            weaponHeight
+            sprite.image,
+            spriteX,
+            spriteY,
+            spriteWidth,
+            spriteHeight,
+            sprite.offsetX,
+            sprite.offsetY,
+            spriteWidth,
+            spriteHeight
         );
     }
 
@@ -854,65 +865,51 @@ export default class Renderer {
     }
 
     /**
-     * Draws an itme name for a player or item entity.
+     * Responsible for drawing text above an entity. This includes the name, level,
+     * and additionally, item amounts and counters.
      * @param entity The entity we're drawing the name for.
      */
 
-    private drawName(entity: Player & Item): void {
-        if (
-            entity.hidden ||
-            entity.healthBarVisible ||
-            !entity.level ||
-            !entity.drawNames() ||
-            (!this.drawNames && !this.drawLevels)
-        )
-            return;
+    private drawName(entity: Character & Item): void {
+        if (entity.isPet()) return;
 
-        let colour = entity.wanted ? 'red' : 'white';
+        let x = entity.x + 8, // Default offsets
+            y = entity.y - 10,
+            colour = 'white',
+            stroke = 'rgba(0, 0, 0, 1)',
+            fontSize = 11;
 
-        // If entity has any rank aside from default then we use their colour.
-        if (entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
+        // Handle the counter if an entity has one.
+        if (entity.hasCounter())
+            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
 
-        // Draw the yellow name above the entity if it's the same entity as our current player.
+        // Handle the item amount if the entity is an item.
+        if (entity.isItem() && entity.count > 1)
+            return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
+
+        if (entity.hidden || entity.healthBarVisible || !(entity instanceof Character)) return;
+
+        let drawNames = this.drawNames && entity.drawNames(),
+            nameY = this.drawLevels ? y - 7 : y - 4,
+            levelY = this.drawLevels ? y : y - 7,
+            levelText = `Level ${entity.level}`;
+
+        // If there's a rank aside from default then we use that rank's colour.
+        if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
+            colour = Modules.RankColours[entity.rank];
+
+        // If the entity is the same as our character, we draw a gold name.1
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
+        // If an entity has a custom name colour we use that.
         if (entity.nameColour) colour = entity.nameColour;
 
-        this.textContext.save();
-        this.setCameraView(this.textContext);
-        this.textContext.font = '11px AdvoCut';
+        // Draw the name if we're drawing names.
+        if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
-        if (entity.hasCounter) {
-            // TODO - Move this countdown elsewhere.
-            if (this.game.time - entity.countdownTime > 1000) {
-                entity.countdownTime = this.game.time;
-                entity.counter--;
-            }
-
-            if (entity.counter <= 0) entity.hasCounter = false;
-
-            this.drawText(entity.counter.toString(), entity.x + 8, entity.y - 10, true, colour);
-        } else {
-            let x = entity.x + 8,
-                y = entity.y - Math.floor(entity.sprite.height / 5);
-
-            if (this.drawNames && entity instanceof Character) {
-                let nameY = this.drawLevels && !entity.isNPC() ? y - 7 : y - 4;
-
-                this.drawText(entity.name, x, nameY, true, colour, 'rbga(0, 0, 0, 1)');
-
-                // Draw the medal if the entity has one.
-                if (entity.hasMedal()) this.drawMedal(entity.getMedalKey(), x, nameY);
-            }
-
-            if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
-                this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
-
-            if (entity.isItem() && entity.count > 1)
-                this.drawText(entity.count.toString(), x, y, true, colour);
-        }
-
-        this.textContext.restore();
+        // Draw the level if we're drawing levels.
+        if (this.drawLevels)
+            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
 
     private drawMinigameGUI(): void {
@@ -1032,26 +1029,27 @@ export default class Renderer {
         centered: boolean,
         colour: string,
         strokeColour?: string,
-        fontSize: number = this.fontSize
+        fontSize: number = this.fontSize,
+        setViews = false
     ): void {
-        let strokeSize = 3,
-            context = this.textContext;
+        let strokeSize = 3;
 
-        context.save();
+        this.textContext.save();
 
-        if (centered) context.textAlign = 'center';
+        if (centered) this.textContext.textAlign = 'center';
+        if (setViews) this.setCameraView(this.textContext);
 
         // Decrease font size relative to zoom out.
         fontSize += this.camera.zoomFactor * 2;
 
-        context.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
-        context.lineWidth = strokeSize;
-        context.font = `${fontSize}px AdvoCut`;
-        context.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
-        context.fillStyle = colour || 'white';
-        context.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
+        this.textContext.lineWidth = strokeSize;
+        this.textContext.font = `${fontSize}px AdvoCut`;
+        this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.fillStyle = colour || 'white';
+        this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
 
-        context.restore();
+        this.textContext.restore();
     }
 
     // -------------- Light Management --------------
@@ -1128,6 +1126,20 @@ export default class Renderer {
         return false;
     }
 
+    /**
+     * Checks whether or not the current frame has already been rendererd in order
+     * to prevent drawing when there is no movement during low power mode.
+     * @returns Whether or not the current frame has been rendered.
+     */
+
+    protected hasRenderedFrame(): boolean {
+        if (this.forceRendering || !this.isLowPowerMode()) return false;
+
+        if (this.stopRendering) return true;
+
+        return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
+    }
+
     // -------------- Context Management --------------
 
     /**
@@ -1166,6 +1178,20 @@ export default class Renderer {
 
     private save(): void {
         this.forEachContext((context: CanvasRenderingContext2D) => context.save());
+    }
+
+    /**
+     * Saves the currently rendered frame in order to prevent unnecessary redraws
+     * during low power mode.
+     */
+
+    protected saveFrame(): void {
+        if (!this.isLowPowerMode()) return;
+
+        this.renderedFrame[0] = this.camera.x;
+        this.renderedFrame[1] = this.camera.y;
+
+        this.forceRendering = false;
     }
 
     /**
@@ -1274,6 +1300,14 @@ export default class Renderer {
     }
 
     /**
+     * @returns Whether the current rendering engine is WebGL.
+     */
+
+    public isWebGl(): boolean {
+        return this.type === 'webgl';
+    }
+
+    /**
      * Given a key we return the sprite associated with the medal.
      * @param key The key of the medal.
      * @returns A sprite element or undefined if the key is invalid.
@@ -1355,50 +1389,21 @@ export default class Renderer {
     // -------------- Update functions --------------
 
     /**
-     * Used for synchronization of all animated tiles when the player
-     * stops moving or every couple of steps.
-     */
-
-    public resetAnimatedTiles(): void {
-        // Reset the animation frame index for each animated tile.
-        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
-    }
-
-    /**
-     * Iterates through all the currently visible tiles and appends tiles
-     * that are animated to our list of animated tiles. This function ensures
-     * that animated tiles are initialzied only once and stored for the
-     * duration of the client's session.
+     * Superclass implementation for updating animated tiles. These are
+     * implemented by the Canvas2D rendering engine to update the
+     * animated tiles currently within the player's field of vision.
      */
 
     public updateAnimatedTiles(): void {
-        if (!this.animateTiles) return;
+        //
+    }
 
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile as RotatedTile);
+    /**
+     * Superclass implementation for resetting the animated tiles.
+     */
 
-            if (isFlipped) tile = (tile as RotatedTile).tileId;
-
-            /**
-             * We don't want to reinitialize animated tiles that already exist
-             * and are within the visible camera proportions. This way we can parse
-             * it every time the tile moves slightly.
-             */
-
-            if (!this.map.isAnimatedTile(tile as number)) return;
-
-            /**
-             * Push the pre-existing tiles.
-             */
-
-            if (!(index in this.animatedTiles))
-                this.animatedTiles[index] = new Tile(
-                    tile as number,
-                    index,
-                    this.map.getTileAnimation(tile as number),
-                    isFlipped
-                );
-        }, 2);
+    public resetAnimatedTiles(): void {
+        //
     }
 
     /**
@@ -1409,7 +1414,7 @@ export default class Renderer {
      * @param data The data with which to update the tile.
      */
 
-    public setTile(index: number, data: RegionTile): void {
+    public setTile(_index: number, _data: RegionTile): void {
         // unimplemented
     }
 
@@ -1421,15 +1426,6 @@ export default class Renderer {
 
     public bindTileLayers(): void {
         //
-    }
-
-    /**
-     * Iterates through each of the animated tiles.
-     * @param callback Returns the tile object for that animated tile.
-     */
-
-    protected forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile in this.animatedTiles) callback(this.animatedTiles[tile]);
     }
 
     /**

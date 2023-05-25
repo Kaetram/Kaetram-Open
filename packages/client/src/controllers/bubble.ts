@@ -1,11 +1,9 @@
 import Blob from '../renderer/bubbles/blob';
 
-import $ from 'jquery';
-
 import type Game from '../game';
 
 export default class BubbleController {
-    private container: JQuery = $('#bubbles');
+    private container: HTMLElement = document.querySelector('#bubbles')!;
 
     // Each entity's instance is associated with a bubble for the duration of a bubble.
     private bubbles: { [instance: string]: Blob } = {};
@@ -32,7 +30,7 @@ export default class BubbleController {
         this.bubbles[instance] = new Blob(instance, message, duration, position);
 
         // Add the newly created bubble element to the container of bubbles.
-        this.bubbles[instance].element.appendTo(this.container);
+        this.container.append(this.bubbles[instance].element);
     }
 
     /**
@@ -48,14 +46,15 @@ export default class BubbleController {
         let bubble = this.bubbles[instance],
             { zoomFactor } = this.game.camera,
             tileSize = this.game.renderer.tileSize * zoomFactor,
-            width = parseInt(bubble.element.css('width')) + 24,
+            width = bubble.element.offsetWidth,
             offset = width / 2 - tileSize / 2,
             offsetY = -20;
 
         x = (x - this.game.camera.x) * zoomFactor;
         y = (y - this.game.camera.y) * zoomFactor - tileSize * 2 - offsetY;
 
-        bubble.element.css({ left: `${x - offset + 3}px`, top: `${y}px` });
+        bubble.element.style.left = `${x - offset + 3}px`;
+        bubble.element.style.top = `${y}px`;
     }
 
     /**

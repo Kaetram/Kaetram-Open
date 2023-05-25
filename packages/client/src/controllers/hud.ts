@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import Utils from '../utils/util';
 
 import type Character from '../entity/character/character';
 import type Entity from '../entity/entity';
@@ -7,19 +7,15 @@ import type InputController from './input';
 export default class HUDController {
     private hovering!: Entity | undefined;
 
-    private attackInfo = $('#attack-info');
+    private attackInfo: HTMLElement = document.querySelector('#attack-info')!;
 
-    private name;
-    private details;
-    private health;
+    private name: HTMLElement = this.attackInfo.querySelector('.name')!;
+    private details: HTMLElement = this.attackInfo.querySelector('.details')!;
+    private health: HTMLElement = this.attackInfo.querySelector('.health')!;
 
     public updateCallback?: (id: string, data: number) => void;
 
     public constructor(private input: InputController) {
-        this.name = this.attackInfo.find('.name');
-        this.details = this.attackInfo.find('.details');
-        this.health = this.attackInfo.find('.health');
-
         this.onUpdate(this.handleUpdate.bind(this));
     }
 
@@ -46,13 +42,13 @@ export default class HUDController {
         this.hovering = entity;
 
         // Updates the entity name.
-        name.html(entity.name);
+        name.innerHTML = entity.name;
 
         // Check if the entity and set the health bar if it has health.
         if (this.hasHealth()) this.setHealth((entity as Character).hitPoints);
         else {
-            health.hide();
-            details.html('');
+            health.style.display = 'none';
+            details.innerHTML = '';
         }
     }
 
@@ -80,12 +76,13 @@ export default class HUDController {
     private setHealth(hitPoints: number): void {
         if (!this.hasHealth()) return;
 
-        this.health.show();
+        this.health.style.display = 'block';
 
         let { maxHitPoints } = this.hovering as Character;
 
-        this.health.css('width', `${Math.ceil((hitPoints / maxHitPoints) * 100) - 10}%`);
-        this.details.html(`${hitPoints} / ${maxHitPoints}`);
+        this.health.style.width = `${Math.ceil((hitPoints / maxHitPoints) * 100) - 10}%`;
+
+        this.details.innerHTML = `${hitPoints} / ${maxHitPoints}`;
     }
 
     /**
@@ -117,7 +114,7 @@ export default class HUDController {
      */
 
     private display(): void {
-        this.attackInfo.fadeIn('fast');
+        Utils.fadeIn(this.attackInfo);
     }
 
     /**
@@ -125,7 +122,7 @@ export default class HUDController {
      */
 
     private hide(): void {
-        this.attackInfo.fadeOut('fast');
+        Utils.fadeOut(this.attackInfo);
     }
 
     /**
@@ -134,7 +131,7 @@ export default class HUDController {
      */
 
     private isVisible(): boolean {
-        return this.attackInfo.css('display') === 'block';
+        return this.attackInfo.style.display === 'block';
     }
 
     /**

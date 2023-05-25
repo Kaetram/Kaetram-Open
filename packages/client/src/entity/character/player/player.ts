@@ -2,14 +2,7 @@ import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
 import Friend from './friend';
-import Armour from './equipment/armour';
-import ArmourSkin from './equipment/armourskin';
-import Boots from './equipment/boots';
-import Pendant from './equipment/pendant';
-import Ring from './equipment/ring';
-import Weapon from './equipment/weapon';
-import WeaponSkin from './equipment/weaponskin';
-import Arrows from './equipment/arrows';
+import Equipment from './equipment';
 
 import Character from '../character';
 
@@ -24,7 +17,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
-import type { GuildData, Member } from '@kaetram/common/types/guild';
+import type { GuildData } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -32,7 +25,6 @@ type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
     public rank: Modules.Ranks = Modules.Ranks.None;
-    public wanted = false;
 
     public serverId = -1;
 
@@ -57,17 +49,11 @@ export default class Player extends Character {
     public override mana = 0;
     public override maxMana = 0;
 
+    protected override attackAnimationSpeed = 120;
+    protected override walkAnimationSpeed = 160;
+
     // Mapping of all equipments to their type.
-    public equipments = {
-        [Modules.Equipment.Armour]: new Armour(),
-        [Modules.Equipment.ArmourSkin]: new ArmourSkin(),
-        [Modules.Equipment.Boots]: new Boots(),
-        [Modules.Equipment.Pendant]: new Pendant(),
-        [Modules.Equipment.Ring]: new Ring(),
-        [Modules.Equipment.Weapon]: new Weapon(),
-        [Modules.Equipment.WeaponSkin]: new WeaponSkin(),
-        [Modules.Equipment.Arrows]: new Arrows()
-    };
+    public equipments: { [key: number]: Equipment } = {};
 
     public skills: { [key: number]: Skill } = {};
     public abilities: { [key: string]: Ability } = {};
@@ -82,6 +68,26 @@ export default class Player extends Character {
 
     public constructor(instance: string, game: Game) {
         super(instance, Modules.EntityType.Player, game);
+
+        this.createEquipments();
+    }
+
+    /**
+     * Iterates through the available equipment types and creates an empty
+     * equipment object for each type. Since we're dealing with an enum, we
+     * check that what we're iterating over is the number/integer value.
+     */
+
+    public createEquipments(): void {
+        for (let key in Modules.Equipment) {
+            let type = parseInt(key);
+
+            if (isNaN(type)) continue;
+
+            this.equipments[type] = new Equipment();
+        }
+
+        this.equipments[Modules.Equipment.Weapon].drawable = true;
     }
 
     /**
@@ -138,7 +144,9 @@ export default class Player extends Character {
                 quest.stage,
                 quest.stageCount!,
                 quest.subStage,
-                quest.rewards
+                quest.rewards,
+                quest.skillRequirements,
+                quest.questRequirements
             );
     }
 
@@ -216,8 +224,10 @@ export default class Player extends Character {
 
         if (!key) return this.unequip(type);
 
+        let prefix = this.getType(type);
+
         this.equipments[type].update(
-            key,
+            prefix ? `player/${prefix}/${key}` : `items/${key}`,
             name,
             count,
             enchantments,
@@ -231,6 +241,9 @@ export default class Player extends Character {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
         }
+
+        // Disable drawing for the other equipment slots if we're wearing a skin.
+        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(false);
     }
 
     /**
@@ -259,6 +272,9 @@ export default class Player extends Character {
         // Decrement count if provided, otherwise reset the equipment slot.
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
+
+        // Make the normal equipments drawable again.
+        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(true);
     }
 
     /**
@@ -271,15 +287,29 @@ export default class Player extends Character {
     }
 
     /**
+     * Override for the idling function which also adds checking for keyboard
+     * movement and prevents setting idle during keyboard movement.
+     * @param o Optional parameter if we want to update the orientation.
+     * @param force Whether or not we force the idle animation.
+     */
+
+    public override idle(o?: Modules.Orientation, force = false): void {
+        // Check for moving instead of path if keyboard movement is enabled.
+        if (this.hasKeyboardMovement() && this.moving) return;
+
+        super.idle(o, force);
+    }
+
+    /**
      * @returns The key of the currently equipped armour.
      */
 
     public getSpriteName(): string {
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.ArmourSkin].key)
-            return this.equipments[Modules.Equipment.ArmourSkin].key;
+        if (this.equipments[Modules.Equipment.Skin].key)
+            return this.equipments[Modules.Equipment.Skin].key;
 
-        return this.equipments[Modules.Equipment.Armour].key;
+        return 'player/base';
     }
 
     /**
@@ -294,27 +324,45 @@ export default class Player extends Character {
         return this.equipments[Modules.Equipment.Weapon].key;
     }
 
+    //// Shortcut functions for getting equipment objects. ////
+
     /**
-     * @returns The armour object of the player.
+     * @returns The helmet object of the player.
      */
 
-    public getArmour(): Armour {
-        return this.equipments[Modules.Equipment.Armour];
+    public getHelmet(): Equipment {
+        return this.equipments[Modules.Equipment.Helmet];
+    }
+
+    /**
+     * @returns The chestplate object of the player.
+     */
+
+    public getChestplate(): Equipment {
+        return this.equipments[Modules.Equipment.Chestplate];
+    }
+
+    /**
+     * @returns The legs equipment object.
+     */
+
+    public getLegs(): Equipment {
+        return this.equipments[Modules.Equipment.Legs];
     }
 
     /**
      * @returns The armour skin object of the player.
      */
 
-    public getArmourSkin(): ArmourSkin {
-        return this.equipments[Modules.Equipment.ArmourSkin];
+    public getArmourSkin(): Equipment {
+        return this.equipments[Modules.Equipment.Skin];
     }
 
     /**
      * @returns The boots object of the player.
      */
 
-    public getBoots(): Boots {
+    public getBoots(): Equipment {
         return this.equipments[Modules.Equipment.Boots];
     }
 
@@ -322,7 +370,7 @@ export default class Player extends Character {
      * @returns The arrows object of the player.
      */
 
-    public getArrows(): Arrows {
+    public getArrows(): Equipment {
         return this.equipments[Modules.Equipment.Arrows];
     }
 
@@ -330,7 +378,7 @@ export default class Player extends Character {
      * @returns The pendant object of the player.
      */
 
-    public getPendant(): Pendant {
+    public getPendant(): Equipment {
         return this.equipments[Modules.Equipment.Pendant];
     }
 
@@ -338,7 +386,7 @@ export default class Player extends Character {
      * @returns The ring object of the player.
      */
 
-    public getRing(): Ring {
+    public getRing(): Equipment {
         return this.equipments[Modules.Equipment.Ring];
     }
 
@@ -346,7 +394,7 @@ export default class Player extends Character {
      * @returns The weapon object of the player.
      */
 
-    public getWeapon(): Weapon {
+    public getWeapon(): Equipment {
         return this.equipments[Modules.Equipment.Weapon];
     }
 
@@ -354,7 +402,7 @@ export default class Player extends Character {
      * @returns The weapon skin object of the player.
      */
 
-    public getWeaponSkin(): WeaponSkin {
+    public getWeaponSkin(): Equipment {
         return this.equipments[Modules.Equipment.WeaponSkin];
     }
 
@@ -480,6 +528,43 @@ export default class Player extends Character {
 
             default: {
                 return Modules.Medals.None;
+            }
+        }
+    }
+
+    /**
+     * Used for obtaining the path for the type of equipment.
+     * @param type The type of equipment we are trying to get the path for.
+     */
+
+    private getType(type: Modules.Equipment): string {
+        switch (type) {
+            case Modules.Equipment.Helmet: {
+                return 'helmet';
+            }
+
+            case Modules.Equipment.Chestplate: {
+                return 'chestplate';
+            }
+
+            case Modules.Equipment.Legs: {
+                return 'legs';
+            }
+
+            case Modules.Equipment.Weapon: {
+                return 'weapon';
+            }
+
+            case Modules.Equipment.WeaponSkin: {
+                return 'weaponskin';
+            }
+
+            case Modules.Equipment.Skin: {
+                return 'skin';
+            }
+
+            default: {
+                return '';
             }
         }
     }
@@ -647,6 +732,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Toggles the drawable state of player equipments. These are used by
+     * the player's skin to hide rendering of equipments.
+     * @param state The state we want to set for the drawable state.
+     */
+
+    private toggleDrawableEquipments(state = false): void {
+        this.getHelmet().drawable = state;
+        this.getChestplate().drawable = state;
+        this.getLegs().drawable = state;
+    }
+
+    /**
      * @returns If the weapon the player currently wields is a ranged weapon.
      */
 
@@ -694,6 +791,24 @@ export default class Player extends Character {
 
     public hasFriend(username: string): boolean {
         return username.toLowerCase() in this.friends;
+    }
+
+    /**
+     * Iterates through the renderable equipments and executes the callback. This function
+     * is used by the rendering system to draw the paperdoll equipments.
+     * @param callback Contains the equipment currently being iterated.
+     * @param ignoreEmpty Whether or not we want to iterate through all equipment or just the ones that exist.
+     */
+
+    public forEachEquipment(callback: (equipment: Equipment) => void, ignoreEmpty = false): void {
+        for (let type of Modules.EquipmentRenderOrder) {
+            let equipment = this.equipments[type as never] as Equipment;
+
+            if (!equipment.drawable) continue;
+            if (ignoreEmpty && !equipment.exists()) continue;
+
+            callback(equipment);
+        }
     }
 
     /**

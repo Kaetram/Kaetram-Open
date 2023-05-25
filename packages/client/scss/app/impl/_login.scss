@@ -6,15 +6,23 @@
 }
 
 #cancel-register,
+#cancel-forget,
+#continue-forget,
 #play {
     top: 92.5%;
+}
+
+#confirm-reset {
+    top: 120%;
+    right: 38%;
 }
 
 #login {
     left: 15%;
 }
 
-#cancel-register {
+#cancel-register,
+#cancel-forget {
     left: 10%;
 }
 
@@ -22,7 +30,8 @@
     left: 60%;
 }
 
-#play {
+#play,
+#continue-forget {
     left: 65%;
 }
 
@@ -83,6 +92,7 @@ input[type='range'] {
         }
 
         #cancel-register,
+        #cancel-forget,
         #cancel-worlds {
             background-position-x: -$button-width * 3;
         }
@@ -92,10 +102,13 @@ input[type='range'] {
         }
 
         #play,
+        #continue-forget,
         #login,
         #new-account,
         #cancel-register,
+        #cancel-forget,
         #cancel-worlds,
+        #confirm-reset,
         #continue-worlds {
             cursor: pointer;
 
@@ -122,6 +135,14 @@ input[type='range'] {
                 cursor: wait;
                 background-position-y: -$button-height * 3;
             }
+        }
+
+        #continue-forget {
+            background-position-x: -$button-width * 4;
+        }
+
+        #confirm-reset {
+            background-position-x: -$button-width * 5;
         }
 
         .validation-error,

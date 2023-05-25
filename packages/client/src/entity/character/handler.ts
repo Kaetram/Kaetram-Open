@@ -47,13 +47,13 @@ export default class Handler {
     }
 
     /**
-     * Empty implementation for when the character begins pathing. This is handled specifically
-     * by the player handler subclass.
+     * Simply updates the moving state of the character when pathing begins. Some subclass
+     * implementations such as the player may expand upon this.
      * @param path The path in a 2D array containing the x and y coordinates of each tile.
      */
 
     protected handleStartPathing(_path: number[][]): void {
-        // log.info('Unimplemented handleStartPathing');
+        this.character.moving = true;
     }
 
     /**
@@ -73,27 +73,11 @@ export default class Handler {
     protected handleStep(): void {
         this.entities.registerPosition(this.character);
 
-        /**
-         * The following iterates through all the attackers and signals to them
-         * to update their following to the target's latest position (this character).
-         */
-
-        this.character.forEachAttacker((attacker) => {
-            // Clear the attackers if their target doesn't match this character (or it doesn't exist).
-            if (!attacker.target || attacker.target.instance !== this.character.instance)
-                return this.character.removeAttacker(attacker);
-
-            // If the attacker is too far away from the target, make them follow their target.
-            if (!attacker.canAttackTarget()) attacker.follow(this.character);
-        });
+        // Iterate through the attackers and ensure they're pursuing this character.
+        this.handleAttackers();
 
         // Essentially the same as the above, but for followers.
-        this.character.forEachFollower((follower: Character) => {
-            if (!follower.target || follower.target.instance !== this.character.instance)
-                return this.character.removeFollower(follower);
-
-            follower.follow(this.character);
-        });
+        this.handleFollowers();
 
         /**
          * We temporarily rely on a consensus between multiple clients to establish
@@ -126,15 +110,15 @@ export default class Handler {
     }
 
     /**
-     * Unimplemented base function for when the character stops pathing. This is used
-     * by the player handler implementation to send a packet to the server and update
-     * camera information and other things.
+     * Updates the moving state for the character. The player subclass may
+     * implement this function differently and will be responsible for sending
+     * packets, updating camera, verifying distances, and more.
      * @param _x The x grid coordinate of the tile the player stopped on.
      * @param _y The y grid coordinate of the tile the player stopped on.
      */
 
     protected handleStopPathing(_x: number, _y: number): void {
-        // log.info('Unimplemented handleStopPathing');
+        this.character.moving = false;
     }
 
     /**
@@ -155,5 +139,37 @@ export default class Handler {
 
     protected handleFallback(x: number, y: number): void {
         this.game.teleport(this.character, x, y);
+    }
+
+    /**
+     * Iterates through all the attackers and makes sure they are following
+     * this current character. We are extracting this function in particular
+     * to allow its use in subclasses.
+     */
+
+    protected handleAttackers(): void {
+        this.character.forEachAttacker((attacker) => {
+            // Clear the attackers if their target doesn't match this character (or it doesn't exist).
+            if (!attacker.target || attacker.target.instance !== this.character.instance)
+                return this.character.removeAttacker(attacker);
+
+            // If the attacker is too far away from the target, make them follow their target.
+            if (!attacker.canAttackTarget()) attacker.follow(this.character);
+        });
+    }
+
+    /**
+     * Resposnible for going through each follower and making sure
+     * they are following this current character. We are extracting
+     * this function in particular to allow its use in subclasses.
+     */
+
+    protected handleFollowers(): void {
+        this.character.forEachFollower((follower: Character) => {
+            if (!follower.target || follower.target.instance !== this.character.instance)
+                return this.character.removeFollower(follower);
+
+            follower.follow(this.character);
+        });
     }
 }

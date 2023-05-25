@@ -44,7 +44,7 @@ export default class Santa extends Default {
 
         // Generate a random projectile between 1 and 6 and set the projectile name.
         let projectile = Utils.randomInt(1, 6),
-            name = `projectile-gift${projectile === 1 ? '' : projectile}`;
+            name = `gift${projectile === 1 ? '' : projectile}`;
 
         this.mob.projectileName = name;
 
