@@ -20,6 +20,9 @@ export default class Inventory extends Container {
     public override add(item: Item): number {
         let amount = super.add(item);
 
+        // -2 represents an error when adding an item fails for not existing.
+        if (amount === -2) return 0;
+
         if (amount < 1) {
             this.notifyCallback?.(InventoryEn.NOT_ENOUGH_SPACE);
             return 0;

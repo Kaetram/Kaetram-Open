@@ -1,5 +1,6 @@
 import { Packets } from '@kaetram/common/network';
 
+import type App from '../app';
 import type {
     AbilityCallback,
     AchievementCallback,
@@ -11,6 +12,7 @@ import type {
     CombatCallback,
     CommandCallback,
     ContainerCallback,
+    CountdownCallback,
     CraftingCallback,
     DeathCallback,
     DespawnCallback,
@@ -23,6 +25,7 @@ import type {
     GuildCallback,
     HandshakeCallback,
     HealCallback,
+    LootBagCallback,
     MapCallback,
     MinigameCallback,
     MovementCallback,
@@ -47,7 +50,6 @@ import type {
     UpdateCallback,
     WelcomeCallback
 } from '@kaetram/common/types/messages/outgoing';
-import type App from '../app';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
@@ -97,6 +99,8 @@ export default class Messages {
     private friendsCallback?: FriendsCallback;
     private rankCallback?: RankCallback;
     private craftingCallback?: CraftingCallback;
+    private lootBagCallback?: LootBagCallback;
+    private countdownCallback?: CountdownCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -154,6 +158,8 @@ export default class Messages {
         this.messages[Packets.Friends] = () => this.friendsCallback;
         this.messages[Packets.Rank] = () => this.rankCallback;
         this.messages[Packets.Crafting] = () => this.craftingCallback;
+        this.messages[Packets.LootBag] = () => this.lootBagCallback;
+        this.messages[Packets.Countdown] = () => this.countdownCallback;
     }
 
     /**
@@ -196,6 +202,11 @@ export default class Messages {
 
             case 'error': {
                 this.app.sendError('The server has responded with an error!');
+                break;
+            }
+
+            case 'banned': {
+                this.app.sendError('Your account has been disabled!');
                 break;
             }
 
@@ -273,6 +284,11 @@ export default class Messages {
 
             case 'ratelimit': {
                 this.app.sendError('You are sending packets too fast.');
+                break;
+            }
+
+            case 'invalidpassword': {
+                this.app.sendError('The password you have entered is invalid.');
                 break;
             }
 
@@ -465,5 +481,13 @@ export default class Messages {
 
     public onCrafting(callback: CraftingCallback): void {
         this.craftingCallback = callback;
+    }
+
+    public onLootBag(callback: LootBagCallback): void {
+        this.lootBagCallback = callback;
+    }
+
+    public onCountdown(callback: CountdownCallback): void {
+        this.countdownCallback = callback;
     }
 }

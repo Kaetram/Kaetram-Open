@@ -19,7 +19,8 @@ import WebGL from './renderer/webgl/webgl';
 import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
 import Pathfinder from './utils/pathfinder';
-import { agent } from './utils/detect';
+import Utils from './utils/util';
+import { agent, supportsWebGl } from './utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -68,6 +69,7 @@ export default class Game {
 
     public constructor(public app: App) {
         this.storage = app.storage;
+        this.useWebGl = supportsWebGl() && this.storage.isWebGl();
 
         this.player = new Player('', this);
 
@@ -88,7 +90,12 @@ export default class Game {
 
         app.sendStatus('Loading game');
 
-        this.map.onReady(() => app.ready());
+        this.map.onReady(() => {
+            app.ready();
+
+            // Initialize the renderer for WebGL.
+            this.renderer.load();
+        });
 
         app.onLogin(this.socket.connect.bind(this.socket));
         app.onResize(this.resize.bind(this));
@@ -318,22 +325,38 @@ export default class Game {
 
     public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
         let entities = this.entities.grids.getEntitiesAround(
-            position.gridX!,
-            position.gridY!,
-            radius
-        );
+                position.gridX!,
+                position.gridY!,
+                radius
+            ),
+            closest: Entity | undefined,
+            boundary = this.map.tileSize * 1.5;
 
-        // Look through all the entities we found and determine which one is closest to the mouse.
-        for (let entity of entities)
-            if (
-                position.x >= entity.x + entity.sprite.offsetX &&
-                position.x <= entity.x + entity.sprite.offsetX + entity.sprite.width &&
-                position.y >= entity.y + entity.sprite.offsetY &&
-                position.y <= entity.y + entity.sprite.offsetY + entity.sprite.height
-            )
-                return entity;
+        /**
+         * The `position` parameter contains the absolute x and y coordinates
+         * of the cursor. We iterate through the entities and try to find
+         * the distance between the cursor and the entity. We then compare
+         * the distance to the previous entity and if it is smaller, we
+         * replace the previous entity with the current one.
+         */
 
-        return undefined;
+        for (let entity of entities) {
+            // Skip pets from the search.
+            if (entity.isPet()) continue;
+
+            let entityX = entity.x - entity.sprite.offsetX / 2,
+                entityY = entity.y - entity.sprite.offsetY / 2,
+                distance = Utils.distance(position.x, position.y, entityX, entityY);
+
+            if (distance > boundary) continue;
+
+            if (!closest || distance < closest.distance) {
+                closest = entity;
+                closest.distance = distance;
+            }
+        }
+
+        return closest;
     }
 
     /**

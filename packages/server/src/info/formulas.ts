@@ -120,6 +120,14 @@ export default {
             }
         }
 
+        // TODO - These potions will add a level to their respective skill, and will be removed after 60 seconds.
+
+        // Increase accuracy if the attacker has the accuracy potion effect.
+        if (attacker.status.has(Modules.Effects.AccuracyPotion)) accuracy -= 0.07;
+
+        // Decrease accuracy if the target has the defense potion effect.
+        if (target.status.has(Modules.Effects.DefensePotion)) accuracy += 0.08;
+
         // Terror decreases overall accuracy, so we increase it by 1.
         if (attacker.status.has(Modules.Effects.Terror)) accuracy += 1;
 
@@ -175,6 +183,9 @@ export default {
                 break;
             }
         }
+
+        // Apply a 10% damage boost if the character has the strength potion effect.
+        if (character.status.has(Modules.Effects.StrengthPotion)) damage *= 1.1;
 
         // Ensure the damage is not negative.
         if (damage < 0) damage = 0;

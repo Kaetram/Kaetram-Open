@@ -4,7 +4,10 @@ import Utils from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Player from './character/player/player';
+import type Item from './objects/item';
 import type Sprite from './sprite';
+import type Pet from './character/pet/pet';
 
 export default abstract class Entity {
     public x = 0;
@@ -13,6 +16,9 @@ export default abstract class Entity {
     public gridY = 0;
     public nextGridX = -1;
     public nextGridY = -1;
+
+    // Used to calculate distances between entities.
+    public distance = -1;
 
     public movementSpeed = -1;
     public attackRange = -1;
@@ -42,10 +48,9 @@ export default abstract class Entity {
     public angle = 0;
     public angled = false;
 
-    public hasCounter = false;
-
+    // Counter variables
     public counter = 0;
-    public countdownTime = 0;
+
     public fadingDuration = 1000;
 
     public orientation: Modules.Orientation = Modules.Orientation.Down;
@@ -71,6 +76,8 @@ export default abstract class Entity {
     public customScale!: number;
     public fadingAlpha!: number;
     public lastUpdate = Date.now();
+
+    public counterInterval!: NodeJS.Timeout | undefined;
 
     public constructor(public instance = '', public type: Modules.EntityType) {}
 
@@ -246,9 +253,17 @@ export default abstract class Entity {
     public setCountdown(count: number): void {
         this.counter = count;
 
-        this.countdownTime = Date.now();
+        // Initialize a counter interval
+        this.counterInterval = setInterval(() => {
+            // Clear the counter if we've reached 0.
+            if (this.counter <= 0) {
+                clearInterval(this.counterInterval);
+                this.counterInterval = undefined;
+                return;
+            }
 
-        this.hasCounter = true;
+            this.counter--;
+        }, 1000);
     }
 
     /**
@@ -328,10 +343,19 @@ export default abstract class Entity {
     }
 
     /**
+     * Whether or not the entity has a counter above it.
+     * @returns Whether the counter value is greater than 0.
+     */
+
+    public hasCounter(): boolean {
+        return this.counter > 0;
+    }
+
+    /**
      * @returns Whether or not the entity is a player type.
      */
 
-    public isPlayer(): boolean {
+    public isPlayer(): this is Player {
         return this.type === Modules.EntityType.Player;
     }
 
@@ -355,7 +379,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is an item type.
      */
 
-    public isItem(): boolean {
+    public isItem(): this is Item {
         return this.type === Modules.EntityType.Item;
     }
 
@@ -373,6 +397,14 @@ export default abstract class Entity {
 
     public isProjectile(): boolean {
         return this.type === Modules.EntityType.Projectile;
+    }
+
+    /**
+     * @returns Whether or not the entity is a pet type.
+     */
+
+    public isPet(): this is Pet {
+        return this.type === Modules.EntityType.Pet;
     }
 
     /**

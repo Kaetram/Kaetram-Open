@@ -18,9 +18,9 @@ class Log {
     private logStreamPath = path.resolve('../../', 'logs.log');
     private bugStreamPath = path.resolve('../../', 'bugs.log');
 
-    private stream;
-    private logStream;
-    private bugStream;
+    private stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
+    private logStream = fs.createWriteStream(this.logStreamPath);
+    private bugStream = fs.createWriteStream(this.bugStreamPath);
 
     private logFolderPath = '../logs';
 
@@ -33,11 +33,6 @@ class Log {
     private debugging = config.debugging;
 
     public constructor() {
-        this.stream = config.fsDebugging ? fs.createWriteStream(this.streamPath) : null;
-
-        this.logStream = fs.createWriteStream(this.logStreamPath);
-        this.bugStream = fs.createWriteStream(this.bugStreamPath);
-
         this.chatStream = this.createLogStream('chat');
         this.dropsStream = this.createLogStream('drops');
         this.generalStream = this.createLogStream('general');

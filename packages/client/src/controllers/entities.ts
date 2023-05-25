@@ -1,20 +1,23 @@
-import Mob from '../entity/character/mob/mob';
-import NPC from '../entity/npc/npc';
-import Player from '../entity/character/player/player';
-import Chest from '../entity/objects/chest';
-import Item from '../entity/objects/item';
-import Projectile from '../entity/objects/projectile';
 import log from '../lib/log';
+import NPC from '../entity/npc/npc';
 import Grids from '../renderer/grids';
+import Item from '../entity/objects/item';
+import Chest from '../entity/objects/chest';
+import Mob from '../entity/character/mob/mob';
+import Pet from '../entity/character/pet/pet';
+import Player from '../entity/character/player/player';
+import Projectile from '../entity/objects/projectile';
+import Effect from '../entity/objects/effect';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Game from '../game';
+import type Entity from '../entity/entity';
+import type SpritesController from './sprites';
 import type Character from '../entity/character/character';
 import type { EntityData } from '@kaetram/common/types/entity';
 import type { PlayerData } from '@kaetram/common/types/player';
-import type Entity from '../entity/entity';
-import type Game from '../game';
-import type SpritesController from './sprites';
+import type { PetData } from '@kaetram/common/types/pet';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -58,36 +61,63 @@ export default class EntitiesController {
         // Entity already exists, don't respawn.
         if (info.instance in this.entities) return;
 
-        let entity!: Entity;
+        let entity!: Entity,
+            prefix = ''; // Prefix for the type of entity.
 
         switch (info.type) {
             case Modules.EntityType.Chest: {
                 entity = this.createChest(info.instance);
+
+                prefix = 'objects';
                 break;
             }
 
             case Modules.EntityType.NPC: {
                 entity = this.createNPC(info.instance);
+
+                prefix = 'npcs';
                 break;
             }
 
             case Modules.EntityType.Item: {
                 entity = this.createItem(info);
+
+                prefix = 'items';
                 break;
             }
 
             case Modules.EntityType.Mob: {
                 entity = this.createMob(info);
+
+                prefix = 'mobs';
                 break;
             }
 
             case Modules.EntityType.Projectile: {
                 entity = this.createProjectile(info)!;
+
+                prefix = 'projectiles';
                 break;
             }
 
             case Modules.EntityType.Player: {
                 entity = this.createPlayer(info as PlayerData);
+
+                prefix = 'player';
+                break;
+            }
+
+            case Modules.EntityType.Pet: {
+                entity = this.createPet(info as PetData)!;
+
+                prefix = 'pets';
+                break;
+            }
+
+            case Modules.EntityType.Effect: {
+                entity = this.createEffect(info as EntityData);
+
+                prefix = 'effectentity';
                 break;
             }
         }
@@ -95,7 +125,7 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(entity.isItem() ? `items/${info.key}` : info.key);
+        let sprite = this.game.sprites.get(`${prefix}/${info.key}`);
 
         // Don't add entities that don't have a sprite.
         if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
@@ -191,7 +221,7 @@ export default class EntitiesController {
 
         attacker.lookAt(target);
 
-        let projectile = new Projectile(info.instance, attacker);
+        let projectile = new Projectile(info.instance, attacker, info.hitType!);
 
         projectile.name = info.name;
 
@@ -216,7 +246,7 @@ export default class EntitiesController {
             if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                Modules.Hits.Normal,
+                info.hitType!,
                 info.damage!,
                 target.x,
                 target.y,
@@ -251,6 +281,37 @@ export default class EntitiesController {
         player.ready = true;
 
         return player;
+    }
+
+    /**
+     * Create a new pet object based on the info provided.
+     * @param info Contains the key, instance, and owner of the pet.
+     * @returns A pet object.
+     */
+
+    private createPet(info: PetData): Pet | undefined {
+        let pet = new Pet(info.instance, info.owner, this.game),
+            owner = this.get<Player>(info.owner);
+
+        pet.movementSpeed = info.movementSpeed;
+
+        // Add the pet as the owner's follower.
+        if (owner) {
+            owner.addFollower(pet);
+            pet.setTarget(owner);
+        }
+
+        return pet;
+    }
+
+    /**
+     * Creates a new effect object based on the info provided.
+     * @param info Contains the key and instance of the effect.
+     * @returns A new effect object.
+     */
+
+    private createEffect(info: EntityData): Effect {
+        return new Effect(info.instance);
     }
 
     /**
@@ -296,6 +357,14 @@ export default class EntitiesController {
     public removeEntity(entity: Entity): void {
         // Prevent any syncing from happening when the player is removed.
         if (entity.isPlayer()) entity.ready = false;
+
+        // Special case handling for pets.
+        if (entity.isPet()) {
+            let owner = this.get<Player>(entity.owner) as Player;
+
+            // Remove the pet from the owner's list of followers.
+            if (owner) owner.removeFollower(entity);
+        }
 
         this.unregisterPosition(entity);
 

@@ -64,13 +64,12 @@ export default class Commands {
                 return;
             }
 
+            case 'pickup': {
+                return this.player.removePet();
+            }
+
             case 'coords': {
-                this.player.send(
-                    new Notification(Opcodes.Notification.Text, {
-                        message: `x: ${this.player.x} y: ${this.player.y}`
-                    })
-                );
-                return;
+                return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }
 
             case 'global': {
@@ -100,6 +99,45 @@ export default class Commands {
                 this.player.ping();
                 break;
             }
+
+            case 'guild': {
+                let subCommand = blocks.shift()!;
+
+                if (!this.player.guild) return this.player.notify('You are not in a guild.');
+
+                switch (subCommand) {
+                    case 'kick': {
+                        let username = blocks.join(' ');
+
+                        if (!username)
+                            return this.player.notify(
+                                'Malformed command, expected /guild kick [username]'
+                            );
+
+                        this.world.guilds.kick(this.player, username);
+
+                        break;
+                    }
+
+                    case 'rank': {
+                        let rank = blocks.shift()!,
+                            username = blocks.join(' ');
+
+                        if (!rank || !username)
+                            return this.player.notify(
+                                'Malformed command, expected /guild rank [rank 0-6] [username]'
+                            );
+
+                        // Prevent the player from setting the rank to landlord.
+                        if (parseInt(rank) === 7 || rank === 'landlord')
+                            return this.player.notify('You cannot set a rank to landlord.');
+
+                        this.world.guilds.setRank(this.player, username, parseInt(rank));
+                    }
+                }
+
+                break;
+            }
         }
     }
 
@@ -110,7 +148,7 @@ export default class Commands {
      */
 
     private handleModeratorCommands(command: string, blocks: string[]): void {
-        if (!this.player.isMod() && !this.player.isAdmin()) return;
+        if (!this.player.isMod() && !this.player.isAdmin() && !this.player.isHollowAdmin()) return;
 
         switch (command) {
             case 'mute':
@@ -341,12 +379,6 @@ export default class Commands {
 
             case 'empty': {
                 return this.player.inventory.empty();
-            }
-
-            case 'notify': {
-                this.player.notify('Hello!!!');
-
-                return;
             }
 
             case 'teleport': {
@@ -955,6 +987,33 @@ export default class Commands {
 
             case 'opencrafting': {
                 return this.world.crafting.open(this.player, Modules.Skills.Crafting);
+            }
+
+            case 'ipban': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return log.info(`Malformed command, expected /${command} <username>`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player) return log.info(`Could not find player by name: ${username}.`);
+
+                this.player.database.setIpBan(player.connection.address, command === 'ipban');
+
+                this.player.notify(`Player ${player.username} has been IP banned`);
+
+                // Kick all players with the same IP.
+                for (let p of this.entities.getPlayersByIp(player.connection.address))
+                    p.connection.reject('banned');
+            }
+
+            case 'countdown': {
+                let time = parseInt(blocks.shift()!);
+
+                if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
+
+                this.player.countdown(time);
             }
 
             case 'toggle': {

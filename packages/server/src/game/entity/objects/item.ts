@@ -39,9 +39,12 @@ export default class Item extends Entity {
     // Points usage
     public manaCost = 0;
 
+    // Pet information
+    public pet = '';
+
     // Item information
     public description = '';
-    public projectileName = 'projectile-arrow';
+    public projectileName = 'arrow';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
@@ -95,6 +98,9 @@ export default class Item extends Entity {
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
+        // Prevent invalid count values.
+        this.count = Utils.sanitizeNumber(this.count);
+
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
@@ -135,6 +141,7 @@ export default class Item extends Entity {
         this.weaponType = this.data.weaponType || this.weaponType;
         this.smallBowl = this.data.smallBowl || this.smallBowl;
         this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
+        this.pet = this.data.pet || this.pet;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -159,15 +166,30 @@ export default class Item extends Entity {
      */
 
     public copy(): this {
+        // These are weird hacks because of pointer references junk.
         return new Item(
-            this.key,
+            `${this.key}`,
             this.x,
             this.y,
             this.dropped,
-            this.count,
-            this.enchantments,
+            Utils.sanitizeNumber(this.count),
+            this.copyEnchantments(),
             this.owner
         ) as this;
+    }
+
+    /**
+     * Copies the enchantments one by one in order to avoid any references
+     * to the original item's enchantments in the slot.
+     * @returns A new enchantment object that is a copy of the original.
+     */
+
+    private copyEnchantments(): Enchantments {
+        let enchantments: Enchantments = {};
+
+        for (let key in this.enchantments) enchantments[key] = this.enchantments[key];
+
+        return enchantments;
     }
 
     /**
@@ -278,13 +300,20 @@ export default class Item extends Entity {
 
     public getEquipmentType(): Modules.Equipment | undefined {
         switch (this.itemType) {
-            case 'armour':
-            case 'armourarcher': {
-                return Modules.Equipment.Armour;
+            case 'helmet': {
+                return Modules.Equipment.Helmet;
             }
 
-            case 'armourskin': {
-                return Modules.Equipment.ArmourSkin;
+            case 'chestplate': {
+                return Modules.Equipment.Chestplate;
+            }
+
+            case 'legs': {
+                return Modules.Equipment.Legs;
+            }
+
+            case 'skin': {
+                return Modules.Equipment.Skin;
             }
 
             case 'weapon':
@@ -491,6 +520,7 @@ export default class Item extends Entity {
      * Check if the item is enchanted.
      * @returns Whether or not the item has any enchantments.
      */
+
     public isEnchanted(): boolean {
         return Object.keys(this.enchantments).length > 0;
     }
@@ -518,9 +548,10 @@ export default class Item extends Entity {
 
     public isEquippable(): boolean {
         return (
-            this.itemType === 'armour' ||
-            this.itemType === 'armourarcher' ||
-            this.itemType === 'armourskin' ||
+            this.itemType === 'helmet' ||
+            this.itemType === 'chestplate' ||
+            this.itemType === 'legs' ||
+            this.itemType === 'skin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||
@@ -572,6 +603,14 @@ export default class Item extends Entity {
 
     public isMediumBowl(): boolean {
         return this.mediumBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a pet type, used to spawn pets.
+     */
+
+    public isPetItem(): boolean {
+        return this.pet !== '';
     }
 
     /**

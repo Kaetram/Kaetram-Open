@@ -67,9 +67,9 @@ export default class InputController {
      * This is the animation for the target
      * cell spinner sprite (only on desktop)
      */
-    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
     public chatHandler: Chat;
     public hud: HUDController;
+    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
 
     public entity: Entity | undefined;
     public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.
@@ -117,21 +117,21 @@ export default class InputController {
      */
 
     public loadCursors(): void {
-        this.cursors.hand = this.game.sprites.get('hand');
-        this.cursors.sword = this.game.sprites.get('sword');
-        this.cursors.loot = this.game.sprites.get('loot');
-        this.cursors.target = this.game.sprites.get('target');
-        this.cursors.arrow = this.game.sprites.get('arrow');
-        this.cursors.talk = this.game.sprites.get('talk');
-        this.cursors.spell = this.game.sprites.get('spell');
-        this.cursors.bow = this.game.sprites.get('bow');
-        this.cursors.axe = this.game.sprites.get('axe_cursor');
-        this.cursors.pickaxe = this.game.sprites.get('pickaxe_cursor');
-        this.cursors.cooking = this.game.sprites.get('cooking');
-        this.cursors.fishing = this.game.sprites.get('fishing');
-        this.cursors.smithing = this.game.sprites.get('smithing');
-        this.cursors.crafting = this.game.sprites.get('crafting');
-        this.cursors.foraging = this.game.sprites.get('foraging');
+        this.cursors.hand = this.game.sprites.get('cursors/hand');
+        this.cursors.sword = this.game.sprites.get('cursors/sword');
+        this.cursors.loot = this.game.sprites.get('cursors/loot');
+        this.cursors.target = this.game.sprites.get('cursors/target');
+        this.cursors.arrow = this.game.sprites.get('cursors/arrow');
+        this.cursors.talk = this.game.sprites.get('cursors/talk');
+        this.cursors.spell = this.game.sprites.get('cursors/spell');
+        this.cursors.bow = this.game.sprites.get('cursors/bow');
+        this.cursors.axe = this.game.sprites.get('cursors/axe');
+        this.cursors.pickaxe = this.game.sprites.get('cursors/pickaxe');
+        this.cursors.cooking = this.game.sprites.get('cursors/cooking');
+        this.cursors.fishing = this.game.sprites.get('cursors/fishing');
+        this.cursors.smithing = this.game.sprites.get('cursors/smithing');
+        this.cursors.crafting = this.game.sprites.get('cursors/crafting');
+        this.cursors.foraging = this.game.sprites.get('cursors/foraging');
 
         log.debug('Loaded Cursors!');
     }
@@ -457,6 +457,9 @@ export default class InputController {
                 return;
             }
         }
+
+        // Prevent movement from occuring if we are stunned.
+        if (this.player.isStunned()) return;
 
         // Move the player to the new position.
         this.player.go(position.gridX, position.gridY);

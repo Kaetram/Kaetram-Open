@@ -39,6 +39,21 @@ export default {
     },
 
     /**
+     * Calculates the Pythagorean distance between two points. Yes this is one
+     * of the few times that high-school math is useful, so it wasn't all for
+     * nothing.
+     * @param fromX The starting x coordinate.
+     * @param fromY The starting y coordinate.
+     * @param toX The ending x coordinate.
+     * @param toY The ending y coordinate.
+     * @returns The distance between the two points in floating point.
+     */
+
+    distance(fromX: number, fromY: number, toX: number, toY: number): number {
+        return Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
+    },
+
+    /**
      * Creates a new slot element based using the bank-slot class. This creates
      * an empty skeleton that we can then place items in. A callback event listener
      * is also created alongside the slot. Whenever a slot is pressed, its type
@@ -96,6 +111,11 @@ export default {
 
     getImageURL(key = ''): string {
         if (key === '') return '';
+
+        let blocks = key.split('/');
+
+        // Use the last block as the key if we are extracting a key path.
+        if (blocks.length > 1) key = blocks[blocks.length - 1];
 
         return `url("/img/sprites/items/${key}.png")`;
     },
@@ -339,62 +359,117 @@ export default {
     },
 
     /**
-     * Grabs the default animations for a sprite. We do this to alleviate
-     * the amount of information in the sprites.json file. We account for
-     * two types of sprites: items and characters.
-     * @param item Whether or not we are grabbing the default animations for an item.
-     * @returns The animation data for the sprite.
+     * Provides a default animation for a given type of entity. When we do not
+     * specify the animations in the `sprites.json` we use this as a default
+     * based on the type of entity.
+     * @param type The type of entity we want to get the default animations for.
+     * @returns The default animations for the given entity type.
      */
 
-    getDefaultAnimations(item = false): AnimationData {
-        // Default animations for an item.
-        if (item)
-            return {
-                idle: {
-                    length: 1,
-                    row: 0
-                }
-            };
-
-        // Default animations for a player/mob character.
-        return {
-            atk_right: {
-                length: 5,
-                row: 0
-            },
-            walk_right: {
-                length: 4,
-                row: 1
-            },
-            idle_right: {
-                length: 2,
-                row: 2
-            },
-            atk_up: {
-                length: 5,
-                row: 3
-            },
-            walk_up: {
-                length: 4,
-                row: 4
-            },
-            idle_up: {
-                length: 2,
-                row: 5
-            },
-            atk_down: {
-                length: 5,
-                row: 6
-            },
-            walk_down: {
-                length: 4,
-                row: 7
-            },
-            idle_down: {
-                length: 2,
-                row: 8
+    getDefaultAnimations(type: string): AnimationData {
+        switch (type) {
+            case 'items':
+            case 'cursors': {
+                return {
+                    idle: {
+                        length: 1,
+                        row: 0
+                    }
+                };
             }
-        };
+
+            case 'npcs': {
+                return {
+                    idle_down: {
+                        length: 2,
+                        row: 0
+                    }
+                };
+            }
+
+            case 'mobs': {
+                return {
+                    atk_right: {
+                        length: 5,
+                        row: 0
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_right: {
+                        length: 2,
+                        row: 2
+                    },
+                    atk_up: {
+                        length: 5,
+                        row: 3
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 4
+                    },
+                    idle_up: {
+                        length: 2,
+                        row: 5
+                    },
+                    atk_down: {
+                        length: 5,
+                        row: 6
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 7
+                    },
+                    idle_down: {
+                        length: 2,
+                        row: 8
+                    }
+                };
+            }
+
+            default: {
+                // Default animations for a player/mob character.
+                return {
+                    idle_down: {
+                        length: 4,
+                        row: 0
+                    },
+                    idle_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_up: {
+                        length: 4,
+                        row: 2
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 6
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 7
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 8
+                    },
+                    atk_down: {
+                        length: 4,
+                        row: 3
+                    },
+                    atk_right: {
+                        length: 4,
+                        row: 4
+                    },
+                    atk_up: {
+                        length: 4,
+                        row: 5
+                    }
+                };
+            }
+        }
     },
 
     /**

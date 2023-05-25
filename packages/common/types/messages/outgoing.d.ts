@@ -270,7 +270,6 @@ export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// TODO
 export interface EnchantPacket {
     index: number;
     isShard?: boolean;
@@ -293,6 +292,8 @@ export interface GuildPacket {
     message?: string;
     owner?: string;
     decoration?: Decoration;
+    experience?: number;
+    rank?: Modules.GuildRank;
 }
 
 export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;
@@ -426,3 +427,21 @@ export interface CraftingPacket {
 export type CraftingCallback = (opcode: Opcodes.Crafting, info: CraftingPacket) => void;
 
 /////////////////////////////////////////////////////////////////////////////////
+
+export interface LootBagPacket {
+    instance: string;
+    items: SlotData[];
+}
+
+export type LootBagCallback = (info: LootBagPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface CountdownPacket {
+    instance: string;
+    time: number;
+}
+
+export type CountdownCallback = (info: CountdownPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////

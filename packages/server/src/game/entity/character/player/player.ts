@@ -11,7 +11,6 @@ import Statistics from './statistics';
 import Trade from './trade';
 import Incoming from './incoming';
 
-import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
 import Item from '../../objects/item';
@@ -44,6 +43,7 @@ import {
     Welcome
 } from '@kaetram/common/network/impl';
 
+import type Pet from '../pet/pet';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
@@ -114,6 +114,7 @@ export default class Player extends Character {
     public overrideMovementSpeed = -1;
 
     // Player info
+    public username = '';
     public password = '';
     public email = '';
     public userAgent = '';
@@ -125,7 +126,7 @@ export default class Player extends Character {
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Pet information
-    public pet!: Pet;
+    public pet: Pet | undefined;
 
     // Warps
     public lastWarp = 0;
@@ -259,6 +260,9 @@ export default class Player extends Character {
 
         // Connect the player to their guild if they are in one.
         if (this.guild) this.world.guilds.connect(this, this.guild);
+
+        // Spawn the pet if the player has one.
+        if (data.pet) this.setPet(data.pet);
     }
 
     /**
@@ -378,6 +382,9 @@ export default class Player extends Character {
 
         // Remove the player from the region.
         this.entities.removePlayer(this);
+
+        // Despawn the pet from the world.
+        if (this.hasPet()) this.world.entities.removePet(this.pet!);
     }
 
     /**
@@ -554,7 +561,7 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
         if (this.dead) return;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
@@ -630,7 +637,6 @@ export default class Player extends Character {
             this.incrementCheatScore(`Noclip detected at ${x}, ${y}.`);
 
             // Send player to the last valid position.
-            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
         }
 
@@ -1026,6 +1032,12 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+        // Immediately clear the target to prevent combat from sticking to previous target.
+        if (target !== this.target?.instance) this.target = undefined;
+
+        // Stop the movement if the player is stunned.
+        if (this.isStunned()) return this.stopMovement();
+
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
         this.activeCraftingInterface = -1;
@@ -1079,7 +1091,14 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.status.has(Modules.Effects.Stun) || this.isInvalidMovement()) return;
+        if (this.isInvalidMovement()) return;
+
+        // Increment cheat score if the player is moving while stunned.
+        if (this.isStunned()) {
+            this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
+
+            this.stopMovement();
+        }
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -1121,7 +1140,9 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer())) {
+        if (this.map.isDoor(x, y)) {
+            if (entity?.isMob()) return;
+
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
@@ -1266,11 +1287,7 @@ export default class Player extends Character {
                 this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
                     ? Modules.Defaults.MOVEMENT_SPEED
                     : this.overrideMovementSpeed, // Start with default.
-            armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
-
-        // Update the movement speed with that of the armour currently wielded.
-        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
 
         // Check the boots for movement modifiers
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
@@ -1485,10 +1502,36 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.pet) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`You already have a pet!`);
 
         // Create a new pet instance based on the key.
-        this.pet = new Pet(this, key, this.x, this.y);
+        this.pet = this.entities.spawnPet(this, key);
+
+        // Begin the pet following the player.
+        this.pet.follow(this);
+    }
+
+    /**
+     * Removes the player's pet and adds it to their inventory if they have space.
+     */
+
+    public removePet(): void {
+        if (!this.hasPet()) return;
+
+        // Ensure the player has enough space in their inventory.
+        if (!this.inventory.hasSpace()) {
+            this.notify(`You do not have enough inventory space to store your pet.`);
+            return;
+        }
+
+        // Create a pet item and add it to the player's inventory.
+        this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
+
+        // Remove the pet from the world
+        this.entities.remove(this.pet!);
+
+        // Remove the pet from the player.
+        this.pet = undefined;
     }
 
     /**
@@ -1538,6 +1581,14 @@ export default class Player extends Character {
 
     public override hasBloodsucking(): boolean {
         return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
+     * @returns Whether or not the player currently has a pet.
+     */
+
+    public hasPet(): boolean {
+        return !!this.pet;
     }
 
     /**
@@ -2016,21 +2067,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Forcefully stopping the player will simply halt
-     * them in between tiles. Should only be used if they are
-     * being transported elsewhere.
-     */
-
-    public stopMovement(forced = false): void {
-        this.send(
-            new Movement(Opcodes.Movement.Stop, {
-                instance: this.instance,
-                forced
-            })
-        );
-    }
-
-    /**
      * Saves the player data to the database.
      */
 
@@ -2059,8 +2095,7 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key =
-            this.equipment.getArmourSkin().key || this.equipment.getArmour().key || 'clotharmor';
+        data.key = this.equipment.getSkin().key || 'base';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
@@ -2271,6 +2306,12 @@ export default class Player extends Character {
             let weapon = this.equipment.getWeapon();
 
             if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+
+            // Apply the area-of-effect damage if the weapon is explosive.
+            if (weapon.isExplosive() && Formulas.getEffectChance()) {
+                this.aoe = 1;
+                return Modules.Hits.Explosive;
+            }
         } else {
             let weapon = this.equipment.getWeapon();
 

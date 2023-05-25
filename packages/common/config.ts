@@ -52,10 +52,20 @@ export interface Config {
     saveInterval: number;
     messageLimit: number;
 
+    smtpHost: string;
+    smtpPort: number;
+    smtpUseSecure: boolean;
+    smtpUser: string;
+    smtpPassword: string;
+
     sentryOrg: string;
     sentryProject: string;
     sentryAuthToken: string;
     sentryDsn: string;
+
+    stripeEndpoint: string;
+    stripeKeyLocal: string;
+    stripeSecretKey: string;
 
     discordEnabled: boolean;
     discordChannelId: string;

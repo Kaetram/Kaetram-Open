@@ -30,6 +30,7 @@ interface ItemDrop {
 }
 
 export default class Mob extends Character {
+    private data: MobData;
     public spawnX: number;
     public spawnY: number;
 
@@ -67,8 +68,12 @@ export default class Mob extends Character {
         'mushrooms'
     ]; // Default drop table for all mobs.
 
-    public defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
-    public attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
+    public health: number = Modules.MobDefaults.HEALTH_LEVEL;
+    public accuracy: number = Modules.MobDefaults.ACCURACY_LEVEL;
+    public strength: number = Modules.MobDefaults.STRENGTH_LEVEL;
+    public magic: number = Modules.MobDefaults.MAGIC_LEVEL;
+    public archery: number = Modules.MobDefaults.ARCHERY_LEVEL;
+    public defense = Modules.MobDefaults.DEFENSE_LEVEL;
     public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
@@ -88,15 +93,15 @@ export default class Mob extends Character {
         this.spawnX = this.x;
         this.spawnY = this.y;
 
-        let data = (rawData as RawData)[key];
+        this.data = (rawData as RawData)[key];
 
-        if (!data) {
+        if (!this.data) {
             log.error(`[Mob] Could not find data for ${key}.`);
             return;
         }
 
-        this.loadData(data);
-        this.loadPlugin(plugin ? key : data.plugin!); // plugin boolean is used to load plugin based on key.
+        this.loadData(this.data);
+        this.loadPlugin(plugin ? key : this.data.plugin!); // plugin boolean is used to load plugin based on key.
         this.loadSpawns();
         this.loadStats();
 
@@ -118,8 +123,15 @@ export default class Mob extends Character {
         this.drops = data.drops || this.drops;
         this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
-        this.attackLevel = data.attackLevel || this.attackLevel;
-        this.defenseLevel = data.defenseLevel || this.defenseLevel;
+        this.health = data.health || this.health;
+        this.accuracy = data.accuracy || this.accuracy;
+        this.strength = data.strength || this.strength;
+        this.magic = data.magic || this.magic;
+        this.archery = data.archery || this.magic;
+        this.attackStats = data.attackStats || this.attackStats;
+        this.defenseStats = data.defenseStats || this.defenseStats;
+        this.bonuses = data.bonuses || this.bonuses;
+        this.defense = data.defense || this.defense;
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
         this.aggressive = data.aggressive || this.aggressive;
@@ -198,26 +210,26 @@ export default class Mob extends Character {
 
     private loadStats(): void {
         this.attackStats = {
-            crush: this.attackLevel,
-            stab: this.attackLevel,
-            slash: this.attackLevel,
-            archery: this.attackLevel,
-            magic: this.attackLevel
+            crush: this.attackStats.crush,
+            stab: this.attackStats.stab,
+            slash: this.attackStats.slash,
+            archery: this.attackStats.archery,
+            magic: this.attackStats.magic
         };
 
         this.defenseStats = {
-            crush: this.defenseLevel,
-            stab: this.defenseLevel,
-            slash: this.defenseLevel,
-            archery: this.defenseLevel,
-            magic: this.defenseLevel
+            crush: this.defenseStats.crush,
+            stab: this.defenseStats.stab,
+            slash: this.defenseStats.slash,
+            archery: this.defenseStats.archery,
+            magic: this.defenseStats.magic
         };
 
         this.bonuses = {
-            accuracy: this.attackLevel,
-            strength: this.attackLevel,
-            archery: this.attackRange + this.attackLevel,
-            magic: this.attackLevel
+            accuracy: this.bonuses.accuracy,
+            strength: this.bonuses.strength,
+            archery: this.bonuses.archery,
+            magic: this.bonuses.magic
         };
     }
 
@@ -310,24 +322,6 @@ export default class Mob extends Character {
                 y
             })
         });
-    }
-
-    /**
-     * Override for the superclass `setPosition` with added teleporting support.
-     * @param x The new x position of the mob.
-     * @param y The new y position of the mob.
-     * @param withTeleport Whether or not the mob is teleporting. We use this flag
-     * to block any changes in position if the mob is teleporting.
-     */
-
-    public override setPosition(x: number, y: number, withTeleport = false): void {
-        // Prevent changes in position if the mob is teleporting.
-        if (this.teleporting) return;
-
-        super.setPosition(x, y);
-
-        // We update the teleporting flag if the mob is teleporting.
-        if (withTeleport) this.teleporting = true;
     }
 
     /**
@@ -698,7 +692,7 @@ export default class Mob extends Character {
      */
 
     public override getAccuracyLevel(): number {
-        return this.attackLevel;
+        return this.accuracy;
     }
 
     /**
@@ -708,7 +702,7 @@ export default class Mob extends Character {
      */
 
     public override getStrengthLevel(): number {
-        return this.attackLevel;
+        return this.strength;
     }
 
     /**
@@ -718,7 +712,7 @@ export default class Mob extends Character {
      */
 
     public override getArcheryLevel(): number {
-        return this.attackLevel;
+        return this.archery;
     }
 
     /**
@@ -728,7 +722,7 @@ export default class Mob extends Character {
      */
 
     public override getDefenseLevel(): number {
-        return this.defenseLevel;
+        return this.defense;
     }
 
     /**

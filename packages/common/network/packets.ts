@@ -52,7 +52,9 @@ enum Packets {
     Examine,
     Player,
     Relay,
-    Crafting
+    Crafting,
+    LootBag,
+    Countdown
 }
 
 export default Packets;

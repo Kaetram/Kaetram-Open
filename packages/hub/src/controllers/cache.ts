@@ -21,7 +21,7 @@ export default class Cache {
      * so that we do not make database requests repeatedly, and instead use
      * existing ones. The cache is updated after a specified amount of time.
      */
-    private database: MongoDB = new Database(config.database).getDatabase()!;
+    public database: MongoDB = new Database(config.database).getDatabase()!;
 
     private pvpAggregate: PvpAggregate[] = [];
     private totalExperience: TotalExperience[] = [];
